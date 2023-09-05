@@ -460,13 +460,17 @@
   <ItemGroup>
     <PackageReference Include="AdvancedStringBuilder" Version="0.1.0" />
     <PackageReference Include="EcmaScript.Net" Version="2.0.0" />
+    <PackageReference Include="FluentFTP" Version="47.1.0" />
     <PackageReference Include="JavaScriptEngineSwitcher.Core" Version="3.3.0" />
     <PackageReference Include="JavaScriptEngineSwitcher.V8" Version="3.17.4" />
     <PackageReference Include="JavaScriptEngineSwitcher.V8.Native.win-x64" Version="3.17.4" />
     <PackageReference Include="JSPool" Version="4.0.0" />
     <PackageReference Include="LibSassHost" Version="1.3.3" />
     <PackageReference Include="LibSassHost.Native.win-x64" Version="1.3.3" />
-    <PackageReference Include="Lucene.Net" Version="3.0.3" />
+    <PackageReference Include="Lucene.Net" Version="4.8.0-beta00016" />
+    <PackageReference Include="Lucene.Net.Analysis.Common" Version="4.8.0-beta00016" />
+    <PackageReference Include="Lucene.Net.Queries" Version="4.8.0-beta00016" />
+    <PackageReference Include="Lucene.Net.QueryParser" Version="4.8.0-beta00016" />
     <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="13.1.3" />
     <PackageReference Include="Magick.NET.Core" Version="13.1.3" />
     <PackageReference Include="Microsoft.ClearScript.Core" Version="7.2.4" />
@@ -480,12 +484,11 @@
     <PackageReference Include="System.ComponentModel.Composition" Version="7.0.0" />
     <PackageReference Include="System.Composition" Version="7.0.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+    <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
     <PackageReference Include="System.Management" Version="7.0.2" />
-    <PackageReference Include="System.Net.FtpClient" Version="1.0.5824.34026" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="System.Runtime.Caching" Version="7.0.0" />
     <PackageReference Include="System.Runtime.Handles" Version="4.3.0" />
-    <PackageReference Include="System.Web.Http.Common" Version="4.0.20126.16343" />
     <PackageReference Include="System.Web.Services.Description" Version="6.0.0" />
     <PackageReference Include="TidyHtml5ManagedRepack" Version="1.1.4" />
     <PackageReference Include="Antlr4" Version="4.6.6" />
@@ -508,6 +511,7 @@
     <Compile Remove="CMS\httpHandler.vb" />
     <Compile Remove="ood.vb" />
     <Compile Remove="Tools\FLVHandler.vb" />
+    <Compile Remove="Tools\FTPHelper.vb" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Protean.Tools_Net7\Protean.Tools_Net7.csproj" />
@@ -518,7 +522,7 @@
     <Company>Eonic Digital LLP</Company>
     <Product>ProteanCMS</Product>
     <Copyright>Copyright | Eonic Digital LLP.  2023</Copyright>
-    <FileVersion>6.0.60.340</FileVersion>
+    <FileVersion>7.0.0.0</FileVersion>
     <NeutralLanguage>en</NeutralLanguage>
     <InformationalVersion>0.0.0.708</InformationalVersion>
   </PropertyGroup>

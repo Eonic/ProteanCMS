@@ -269,59 +269,59 @@ Public Class Services
     End Function
 
     ' <WebMethod(Description:="Sends Email From Website xForm with Attachment (from physical file)")>
-    Public Function emailerWithFTPAttachment(ByRef oBodyXML As XmlElement, ByRef xsltPath As String, ByRef fromName As String, ByRef fromEmail As String, ByRef recipientEmail As String, ByRef SubjectLine As String, ByVal ccRecipient As String, ByVal bccRecipient As String, ByVal cSeperator As String, ByVal cAttachmentFilePath As String, ByVal bDeleteAfterSend As Boolean, ByVal FTPServer As String, ByVal FTPUsername As String, ByVal FTPPassword As String, ByVal FTPFolder As String) As Object
+    'Public Function emailerWithFTPAttachment(ByRef oBodyXML As XmlElement, ByRef xsltPath As String, ByRef fromName As String, ByRef fromEmail As String, ByRef recipientEmail As String, ByRef SubjectLine As String, ByVal ccRecipient As String, ByVal bccRecipient As String, ByVal cSeperator As String, ByVal cAttachmentFilePath As String, ByVal bDeleteAfterSend As Boolean, ByVal FTPServer As String, ByVal FTPUsername As String, ByVal FTPPassword As String, ByVal FTPFolder As String) As Object
 
-        Dim sMessage As String
+    '    Dim sMessage As String
 
 
-        Dim cProcessInfo As String = "emailerWithAttachment"
-        Try
+    '    Dim cProcessInfo As String = "emailerWithAttachment"
+    '    Try
 
-            Dim oMsg As Protean.Messaging = New Protean.Messaging(myWeb.msException)
-            'oMsg.addAttachment(cAttachmentFilePath, bDeleteAfterSend)
+    '        Dim oMsg As Protean.Messaging = New Protean.Messaging(myWeb.msException)
+    '        'oMsg.addAttachment(cAttachmentFilePath, bDeleteAfterSend)
 
-            'oMsg.deleteAttachment(cAttachmentFilePath)
+    '        'oMsg.deleteAttachment(cAttachmentFilePath)
 
-            Dim FileName As String = cAttachmentFilePath.Substring(cAttachmentFilePath.LastIndexOf("/") + 1)
-            FTPFolder = FTPFolder.Trim("/") & "/" & Replace(fromName, " ", "-")
+    '        Dim FileName As String = cAttachmentFilePath.Substring(cAttachmentFilePath.LastIndexOf("/") + 1)
+    '        FTPFolder = FTPFolder.Trim("/") & "/" & Replace(fromName, " ", "-")
 
-            'Dim miUri As String = "ftp://" & FTPServer & "/" & FTPFolder & "/" & Replace(fromName, " ", "-") & "/" & FileName
-            'Dim miRequest As Net.FtpWebRequest = Net.WebRequest.Create(miUri)
-            'miRequest.Credentials = New Net.NetworkCredential(FTPUserName, FTPPassword)
-            'miRequest.Method = Net.WebRequestMethods.Ftp.UploadFile
-            Try
-                'Dim bFile() As Byte = System.IO.File.ReadAllBytes(cAttachmentFilePath)
-                'Dim miStream As System.IO.Stream = miRequest.GetRequestStream()
-                'miStream.Write(bFile, 0, bFile.Length)
-                'miStream.Close()
-                'miStream.Dispose()
+    '        'Dim miUri As String = "ftp://" & FTPServer & "/" & FTPFolder & "/" & Replace(fromName, " ", "-") & "/" & FileName
+    '        'Dim miRequest As Net.FtpWebRequest = Net.WebRequest.Create(miUri)
+    '        'miRequest.Credentials = New Net.NetworkCredential(FTPUserName, FTPPassword)
+    '        'miRequest.Method = Net.WebRequestMethods.Ftp.UploadFile
+    '        Try
+    '            'Dim bFile() As Byte = System.IO.File.ReadAllBytes(cAttachmentFilePath)
+    '            'Dim miStream As System.IO.Stream = miRequest.GetRequestStream()
+    '            'miStream.Write(bFile, 0, bFile.Length)
+    '            'miStream.Close()
+    '            'miStream.Dispose()
 
-                Dim ftp As New FTPHelper(FTPServer, FTPUsername, FTPPassword)
-                Dim UploadClient As New System.Net.WebClient()
-                Dim DownloadClient As New System.Net.WebClient()
+    '            Dim ftp As New FTPHelper(FTPServer, FTPUsername, FTPPassword)
+    '            Dim UploadClient As New System.Net.WebClient()
+    '            Dim DownloadClient As New System.Net.WebClient()
 
-                ftp.Connect()
-                ftp.CreateDirectory("/" & FTPFolder, True)
-                ftp.UploadFile(UploadClient, cAttachmentFilePath, FTPFolder & "/" & FileName, False)
+    '            ftp.Connect()
+    '            ftp.CreateDirectory("/" & FTPFolder, True)
+    '            ftp.UploadFile(UploadClient, cAttachmentFilePath, FTPFolder & "/" & FileName, False)
 
-                If bDeleteAfterSend Then
-                    Dim fsh As Protean.fsHelper = New fsHelper
-                    fsh.DeleteFile(cAttachmentFilePath)
-                End If
+    '            If bDeleteAfterSend Then
+    '                Dim fsh As Protean.fsHelper = New fsHelper
+    '                fsh.DeleteFile(cAttachmentFilePath)
+    '            End If
 
-            Catch ex As Exception
-                'Throw New Exception(ex.Message & "FTP Failed")
-                oBodyXML.SetAttribute("error", "FTP Failed: " & ex.Message)
-            End Try
-            sMessage = oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, , , , ccRecipient, bccRecipient, cSeperator)
+    '        Catch ex As Exception
+    '            'Throw New Exception(ex.Message & "FTP Failed")
+    '            oBodyXML.SetAttribute("error", "FTP Failed: " & ex.Message)
+    '        End Try
+    '        sMessage = oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, , , , ccRecipient, bccRecipient, cSeperator)
 
-            Return sMessage
+    '        Return sMessage
 
-        Catch ex As System.Exception
-            Return ex.Message & " - " & ex.GetBaseException.Message
-        End Try
+    '    Catch ex As System.Exception
+    '        Return ex.Message & " - " & ex.GetBaseException.Message
+    '    End Try
 
-    End Function
+    'End Function
 
     '  <WebMethod()>
     Public Function LuceneIndex() As XmlDocument

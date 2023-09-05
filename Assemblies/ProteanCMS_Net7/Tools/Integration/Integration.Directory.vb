@@ -409,7 +409,8 @@ Namespace Integration.Directory
                                         Dim textWriter As New System.IO.StringWriter
                                         Dim oTransform As New Protean.XmlHelper.Transform(myWeb, styleFile, False)
                                         oTransform.mbDebug = gbDebug
-                                        oTransform.ProcessTimed(postableContentDocument, textWriter)
+                                        ' oTransform.ProcessTimed(postableContentDocument, textWriter)
+                                        oTransform.Process(postableContentDocument, textWriter)
                                         oTransform.Close()
                                         oTransform = Nothing
 

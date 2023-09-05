@@ -272,7 +272,8 @@ Public Class Setup
                 End If
 
                 oTransform.Compiled = False
-                oTransform.ProcessTimed(moPageXml, goResponse)
+                ' oTransform.ProcessTimed(moPageXml, goResponse)
+                oTransform.Process(moPageXml, goResponse)
                 oTransform = Nothing
 
                 If Not cPostFlushActions = "" Then
@@ -308,7 +309,8 @@ Public Class Setup
 
             Dim oTransform As New Protean.XmlHelper.Transform(myWeb, styleFile, False)
             oTransform.mbDebug = gbDebug
-            oTransform.ProcessTimed(moPageXml, icPageWriter)
+            oTransform.Process(moPageXml, icPageWriter)
+            '    oTransform.ProcessTimed(moPageXml, icPageWriter)
             oTransform = Nothing
 
             cPageHTML = Replace(icPageWriter.ToString, "<?xml version=""1.0"" encoding=""utf-16""?>", "")

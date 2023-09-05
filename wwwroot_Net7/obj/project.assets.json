@@ -1,0 +1,133 @@
+{
+  "version": 3,
+  "targets": {
+    "net6.0": {
+      "Protean.Tools_Net7/1.0.0": {
+        "type": "project",
+        "framework": "Unsupported,Version=v0.0",
+        "compile": {
+          "bin/placeholder/Protean.Tools_Net7.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Protean.Tools_Net7.dll": {}
+        }
+      },
+      "ProteanCMS_Net7/1.0.0": {
+        "type": "project",
+        "framework": "Unsupported,Version=v0.0",
+        "compile": {
+          "bin/placeholder/ProteanCMS_Net7.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/ProteanCMS_Net7.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Protean.Tools_Net7/1.0.0": {
+      "type": "project",
+      "path": "../Assemblies/Protean.Tools_Net7/Protean.Tools_Net7.csproj",
+      "msbuildProject": "../Assemblies/Protean.Tools_Net7/Protean.Tools_Net7.csproj"
+    },
+    "ProteanCMS_Net7/1.0.0": {
+      "type": "project",
+      "path": "../Assemblies/ProteanCMS_Net7/ProteanCMS_Net7.vbproj",
+      "msbuildProject": "../Assemblies/ProteanCMS_Net7/ProteanCMS_Net7.vbproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net6.0": [
+      "Protean.Tools_Net7 >= 1.0.0",
+      "ProteanCMS_Net7 >= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\trevo\\.nuget\\packages\\": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\HostingSpaces\\ProteanCMS\\wwwroot_Net7\\wwwroot_Net7.csproj",
+      "projectName": "wwwroot_Net7",
+      "projectPath": "C:\\HostingSpaces\\ProteanCMS\\wwwroot_Net7\\wwwroot_Net7.csproj",
+      "packagesPath": "C:\\Users\\trevo\\.nuget\\packages\\",
+      "outputPath": "C:\\HostingSpaces\\ProteanCMS\\wwwroot_Net7\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\trevo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net6.0"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "projectReferences": {
+            "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools_Net7\\Protean.Tools_Net7.csproj": {
+              "projectPath": "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools_Net7\\Protean.Tools_Net7.csproj"
+            },
+            "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\ProteanCMS_Net7\\ProteanCMS_Net7.vbproj": {
+              "projectPath": "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\ProteanCMS_Net7\\ProteanCMS_Net7.vbproj"
+            }
+          }
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "net6.0": {
+        "targetAlias": "net6.0",
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.AspNetCore.App": {
+            "privateAssets": "none"
+          },
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
+      }
+    }
+  },
+  "logs": [
+    {
+      "code": "NU1201",
+      "level": "Error",
+      "message": "Project Protean.Tools_Net7 is not compatible with net6.0 (.NETCoreApp,Version=v6.0). Project Protean.Tools_Net7 supports: net7.0 (.NETCoreApp,Version=v7.0)",
+      "libraryId": "Protean.Tools_Net7",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    },
+    {
+      "code": "NU1201",
+      "level": "Error",
+      "message": "Project ProteanCMS_Net7 is not compatible with net6.0 (.NETCoreApp,Version=v6.0). Project ProteanCMS_Net7 supports: net7.0-windows7.0 (.NETCoreApp,Version=v7.0)",
+      "libraryId": "ProteanCMS_Net7",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    }
+  ]
+}

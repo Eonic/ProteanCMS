@@ -661,9 +661,9 @@ Public Class Indexer
                 'If bNewIndex Then bCreate = True 'override creation dependant on type of index
                 Dim indexDir As Lucene.Net.Store.Directory = Lucene.Net.Store.FSDirectory.Open(mcIndexWriteFolder)
 
-                Dim maxLen As New IndexWriter.MaxFieldLength(10000)
+            '   Dim maxLen As New IndexWriter.MaxFieldLength(10000)
 
-                oIndexWriter = New IndexWriter(indexDir, New StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_CURRENT), bCreate, maxLen) 'create the index writer
+            '   oIndexWriter = New IndexWriter(indexDir, New Lucene.Net.Analysis.Analyzer(Lucene.Net.Util.Version.LUCENE_CURRENT), bCreate) 'create the index writer
 
 
 
@@ -789,8 +789,8 @@ Public Class Indexer
         Dim metaType As String = ""
 
         ' The abstract field and type specific fields
-        Dim metaField As AbstractField = Nothing
-        Dim metaNumericField As NumericField
+        Dim metaField As Lucene.Net.Documents.DoubleField = Nothing
+        Dim metaNumericField As Lucene.Net.Documents.DoubleField
 
         ' type specific value conversion
         Dim convertedNumber As Object = Nothing
@@ -831,7 +831,7 @@ Public Class Indexer
                                                         ) Then
 
                         ' Create the numeric field
-                        metaNumericField = New NumericField(
+                        metaNumericField = New DoubleField(
                                                         metaName,
                                                         storeContent,
                                                          True
@@ -842,10 +842,10 @@ Public Class Indexer
                         Select Case metaType
 
                             Case "float"
-                                metaNumericField.SetFloatValue(convertedNumber)
+                                metaNumericField.SetDoubleValue(convertedNumber)
 
                             Case Else
-                                metaNumericField.SetLongValue(convertedNumber)
+                                metaNumericField.SetDoubleValue(convertedNumber)
 
                         End Select
 
@@ -866,7 +866,7 @@ Public Class Indexer
 
                         metaField = New Field(
                                                     metaName,
-                                                    DateTools.DateToString(metaContentValue, DateTools.Resolution.SECOND),
+                                                    DateTools.DateToString(CDate(metaContentValue), DateResolution.SECOND),
                                                     storeContent,
                                                     indexContent
                                                     )
@@ -1037,7 +1037,7 @@ Public Class Indexer
         'PerfMon.Log("Indexer", "StopIndex")
         Dim cProcessInfo As String = ""
         Try
-            oIndexWriter.Optimize()
+            'oIndexWriter.Optimize()
             oIndexWriter.Dispose()
             EmptyFolder(mcIndexReadFolder)
             CopyFolderContents(mcIndexWriteFolder, mcIndexReadFolder)

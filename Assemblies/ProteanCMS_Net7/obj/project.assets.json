@@ -73,6 +73,19 @@
           "lib/netstandard2.0/EcmaScript.NET.dll": {}
         }
       },
+      "FluentFTP/47.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/FluentFTP.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/FluentFTP.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Fonet.Core/1.0.2": {
         "type": "package",
         "dependencies": {
@@ -85,6 +98,19 @@
         },
         "runtime": {
           "lib/netcoreapp2.2/Fonet.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "J2N/2.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/J2N.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/J2N.dll": {
             "related": ".xml"
           }
         }
@@ -183,19 +209,86 @@
           }
         }
       },
-      "Lucene.Net/3.0.3": {
+      "Lucene.Net/4.8.0-beta00016": {
         "type": "package",
         "dependencies": {
-          "SharpZipLib": "0.86.0"
+          "J2N": "2.0.0",
+          "Microsoft.Extensions.Configuration.Abstractions": "2.0.0"
         },
         "compile": {
-          "lib/NET40/Lucene.Net.dll": {
-            "related": ".pdb;.XML"
+          "lib/net6.0/Lucene.Net.dll": {
+            "related": ".xml"
           }
         },
         "runtime": {
-          "lib/NET40/Lucene.Net.dll": {
-            "related": ".pdb;.XML"
+          "lib/net6.0/Lucene.Net.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Lucene.Net.Analysis.Common/4.8.0-beta00016": {
+        "type": "package",
+        "dependencies": {
+          "Lucene.Net": "4.8.0-beta00016"
+        },
+        "compile": {
+          "lib/net6.0/Lucene.Net.Analysis.Common.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Lucene.Net.Analysis.Common.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Lucene.Net.Queries/4.8.0-beta00016": {
+        "type": "package",
+        "dependencies": {
+          "Lucene.Net": "4.8.0-beta00016"
+        },
+        "compile": {
+          "lib/net6.0/Lucene.Net.Queries.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Lucene.Net.Queries.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Lucene.Net.QueryParser/4.8.0-beta00016": {
+        "type": "package",
+        "dependencies": {
+          "Lucene.Net.Analysis.Common": "4.8.0-beta00016",
+          "Lucene.Net.Queries": "4.8.0-beta00016",
+          "Lucene.Net.Sandbox": "4.8.0-beta00016"
+        },
+        "compile": {
+          "lib/net6.0/Lucene.Net.QueryParser.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Lucene.Net.QueryParser.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Lucene.Net.Sandbox/4.8.0-beta00016": {
+        "type": "package",
+        "dependencies": {
+          "Lucene.Net": "4.8.0-beta00016"
+        },
+        "compile": {
+          "lib/net6.0/Lucene.Net.Sandbox.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Lucene.Net.Sandbox.dll": {
+            "related": ".xml"
           }
         }
       },
@@ -371,6 +464,22 @@
           "lib/netcoreapp2.0/_._": {}
         }
       },
+      "Microsoft.Extensions.Configuration.Abstractions/2.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.Primitives": "2.0.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/Microsoft.Extensions.Configuration.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.Extensions.Configuration.Abstractions.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.Extensions.DependencyInjection.Abstractions/6.0.0": {
         "type": "package",
         "compile": {
@@ -396,6 +505,22 @@
         },
         "runtime": {
           "lib/net6.0/Microsoft.Extensions.ObjectPool.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.Extensions.Primitives/2.0.0": {
+        "type": "package",
+        "dependencies": {
+          "System.Runtime.CompilerServices.Unsafe": "4.4.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/Microsoft.Extensions.Primitives.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.Extensions.Primitives.dll": {
             "related": ".xml"
           }
         }
@@ -1612,19 +1737,6 @@
           }
         }
       },
-      "System.Net.FtpClient/1.0.5824.34026": {
-        "type": "package",
-        "compile": {
-          "lib/net40/System.Net.FtpClient.dll": {
-            "related": ".XML"
-          }
-        },
-        "runtime": {
-          "lib/net40/System.Net.FtpClient.dll": {
-            "related": ".XML"
-          }
-        }
-      },
       "System.Net.Http/4.3.4": {
         "type": "package",
         "dependencies": {
@@ -2746,19 +2858,6 @@
           }
         }
       },
-      "System.Web.Http.Common/4.0.20126.16343": {
-        "type": "package",
-        "compile": {
-          "lib/net40/System.Web.Http.Common.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net40/System.Web.Http.Common.dll": {
-            "related": ".xml"
-          }
-        }
-      },
       "System.Web.Services.Description/6.0.0": {
         "type": "package",
         "compile": {
@@ -3114,6 +3213,31 @@
         "lib/netstandard2.0/EcmaScript.NET.dll"
       ]
     },
+    "FluentFTP/47.1.0": {
+      "sha512": "kO9LorSVlNtXgMmkuSE98cVSYH8KMn8Vx5v9DTyHnZcMcdTlkB8BQfe8zOK+2bNaixAsmjEbUeLvA8qSRyJLvA==",
+      "type": "package",
+      "path": "fluentftp/47.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.TXT",
+        "fluentftp.47.1.0.nupkg.sha512",
+        "fluentftp.nuspec",
+        "lib/net462/FluentFTP.dll",
+        "lib/net462/FluentFTP.xml",
+        "lib/net472/FluentFTP.dll",
+        "lib/net472/FluentFTP.xml",
+        "lib/net5.0/FluentFTP.dll",
+        "lib/net5.0/FluentFTP.xml",
+        "lib/net6.0/FluentFTP.dll",
+        "lib/net6.0/FluentFTP.xml",
+        "lib/netstandard2.0/FluentFTP.dll",
+        "lib/netstandard2.0/FluentFTP.xml",
+        "lib/netstandard2.1/FluentFTP.dll",
+        "lib/netstandard2.1/FluentFTP.xml",
+        "logo-nuget.png"
+      ]
+    },
     "Fonet.Core/1.0.2": {
       "sha512": "+xbMxmkZfYpxn7nhVy2mbT40DGPHhiHUrcF+ykei8QM9E6D2ulwpbBsc1NitC8ior395KkHY6VGjfypu2FnN3g==",
       "type": "package",
@@ -3125,6 +3249,34 @@
         "fonet.core.nuspec",
         "lib/netcoreapp2.2/Fonet.dll",
         "lib/netcoreapp2.2/Fonet.xml"
+      ]
+    },
+    "J2N/2.0.0": {
+      "sha512": "M5bwDajAARZiyqupU+rHQJnsVLxNBOHJ8vKYHd8LcLIb1FgLfzzcJvc31Qo5Xz/GEHFjDF9ScjKL/ks/zRTXuA==",
+      "type": "package",
+      "path": "j2n/2.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "j2n-icon-100x100.png",
+        "j2n.2.0.0.nupkg.sha512",
+        "j2n.nuspec",
+        "lib/net40/J2N.dll",
+        "lib/net40/J2N.xml",
+        "lib/net45/J2N.dll",
+        "lib/net45/J2N.xml",
+        "lib/net5.0/J2N.dll",
+        "lib/net5.0/J2N.xml",
+        "lib/net6.0/J2N.dll",
+        "lib/net6.0/J2N.xml",
+        "lib/netcoreapp3.0/J2N.dll",
+        "lib/netcoreapp3.0/J2N.xml",
+        "lib/netstandard2.0/J2N.dll",
+        "lib/netstandard2.0/J2N.xml",
+        "lib/netstandard2.1/J2N.dll",
+        "lib/netstandard2.1/J2N.xml",
+        "readme.md"
       ]
     },
     "JavaScriptEngineSwitcher.Core/3.3.0": {
@@ -3270,21 +3422,119 @@
         "tools/Uninstall.ps1"
       ]
     },
-    "Lucene.Net/3.0.3": {
-      "sha512": "A/70q4eDcuuafQeDB9eaiDP9FQG7X29T4VIYRphS7Wk8kAM9gNcfVqYyd0H8BJ1BTpA5C1ORm9RzFn4BiNavrw==",
+    "Lucene.Net/4.8.0-beta00016": {
+      "sha512": "DCtUbE/NIrisNI7hRwU+UKS3Cr6S2vH1XB9wvEHHI3anu5OUpX1Fkr/PDC7oFCaol/QCvzVLbLZVizAT1aTLpA==",
       "type": "package",
-      "path": "lucene.net/3.0.3",
+      "path": "lucene.net/4.8.0-beta00016",
+      "hasTools": true,
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "lib/NET35/Lucene.Net.XML",
-        "lib/NET35/Lucene.Net.dll",
-        "lib/NET35/Lucene.Net.pdb",
-        "lib/NET40/Lucene.Net.XML",
-        "lib/NET40/Lucene.Net.dll",
-        "lib/NET40/Lucene.Net.pdb",
-        "lucene.net.3.0.3.nupkg.sha512",
-        "lucene.net.nuspec"
+        "LICENSE.txt",
+        "NOTICE.txt",
+        "analyzers/dotnet/cs/Lucene.Net.CodeAnalysis.CSharp.dll",
+        "analyzers/dotnet/vb/Lucene.Net.CodeAnalysis.VisualBasic.dll",
+        "lib/net45/Lucene.Net.dll",
+        "lib/net45/Lucene.Net.xml",
+        "lib/net6.0/Lucene.Net.dll",
+        "lib/net6.0/Lucene.Net.xml",
+        "lib/netstandard2.0/Lucene.Net.dll",
+        "lib/netstandard2.0/Lucene.Net.xml",
+        "lib/netstandard2.1/Lucene.Net.dll",
+        "lib/netstandard2.1/Lucene.Net.xml",
+        "lucene-net-icon-128x128.png",
+        "lucene.net.4.8.0-beta00016.nupkg.sha512",
+        "lucene.net.nuspec",
+        "tools/install.ps1",
+        "tools/uninstall.ps1"
+      ]
+    },
+    "Lucene.Net.Analysis.Common/4.8.0-beta00016": {
+      "sha512": "7pjEAIliWdih6E3I0hCE8hKcKKRx1LLzeQBslF1fhvzE1Sal4NyHd8RFJHV1Z+yHlBw4gCyyVIDZADiIoyqwxg==",
+      "type": "package",
+      "path": "lucene.net.analysis.common/4.8.0-beta00016",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "NOTICE.txt",
+        "lib/net45/Lucene.Net.Analysis.Common.dll",
+        "lib/net45/Lucene.Net.Analysis.Common.xml",
+        "lib/net6.0/Lucene.Net.Analysis.Common.dll",
+        "lib/net6.0/Lucene.Net.Analysis.Common.xml",
+        "lib/netstandard2.0/Lucene.Net.Analysis.Common.dll",
+        "lib/netstandard2.0/Lucene.Net.Analysis.Common.xml",
+        "lib/netstandard2.1/Lucene.Net.Analysis.Common.dll",
+        "lib/netstandard2.1/Lucene.Net.Analysis.Common.xml",
+        "lucene-net-icon-128x128.png",
+        "lucene.net.analysis.common.4.8.0-beta00016.nupkg.sha512",
+        "lucene.net.analysis.common.nuspec"
+      ]
+    },
+    "Lucene.Net.Queries/4.8.0-beta00016": {
+      "sha512": "XBzdMDlan68V2ZlhAlP8Fd+Xx2Le8ec7cEN1kFF45Sipa3Q8L/tilJfwS9VHvMTvGkwPM/yj62eGbfGBgIMR8Q==",
+      "type": "package",
+      "path": "lucene.net.queries/4.8.0-beta00016",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "NOTICE.txt",
+        "lib/net45/Lucene.Net.Queries.dll",
+        "lib/net45/Lucene.Net.Queries.xml",
+        "lib/net6.0/Lucene.Net.Queries.dll",
+        "lib/net6.0/Lucene.Net.Queries.xml",
+        "lib/netstandard2.0/Lucene.Net.Queries.dll",
+        "lib/netstandard2.0/Lucene.Net.Queries.xml",
+        "lib/netstandard2.1/Lucene.Net.Queries.dll",
+        "lib/netstandard2.1/Lucene.Net.Queries.xml",
+        "lucene-net-icon-128x128.png",
+        "lucene.net.queries.4.8.0-beta00016.nupkg.sha512",
+        "lucene.net.queries.nuspec"
+      ]
+    },
+    "Lucene.Net.QueryParser/4.8.0-beta00016": {
+      "sha512": "5dVvjXmzPaK8GD/eblJopTJMQmO6c6fvVPfBIOw46+jyZR+yESkUnWF1LtLoLXZQNrl4Dx8LKdes5G1QAM7eGA==",
+      "type": "package",
+      "path": "lucene.net.queryparser/4.8.0-beta00016",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "NOTICE.txt",
+        "lib/net45/Lucene.Net.QueryParser.dll",
+        "lib/net45/Lucene.Net.QueryParser.xml",
+        "lib/net6.0/Lucene.Net.QueryParser.dll",
+        "lib/net6.0/Lucene.Net.QueryParser.xml",
+        "lib/netstandard2.0/Lucene.Net.QueryParser.dll",
+        "lib/netstandard2.0/Lucene.Net.QueryParser.xml",
+        "lib/netstandard2.1/Lucene.Net.QueryParser.dll",
+        "lib/netstandard2.1/Lucene.Net.QueryParser.xml",
+        "lucene-net-icon-128x128.png",
+        "lucene.net.queryparser.4.8.0-beta00016.nupkg.sha512",
+        "lucene.net.queryparser.nuspec"
+      ]
+    },
+    "Lucene.Net.Sandbox/4.8.0-beta00016": {
+      "sha512": "wMsRZtbNx0wvX3mtNjpOwQmKx3Ij4UGHWIYHbvnzMWlPUTgtOpYSj02REL4hOxI71WBZylpGB5EWfQ2eEld63g==",
+      "type": "package",
+      "path": "lucene.net.sandbox/4.8.0-beta00016",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "NOTICE.txt",
+        "lib/net45/Lucene.Net.Sandbox.dll",
+        "lib/net45/Lucene.Net.Sandbox.xml",
+        "lib/net6.0/Lucene.Net.Sandbox.dll",
+        "lib/net6.0/Lucene.Net.Sandbox.xml",
+        "lib/netstandard2.0/Lucene.Net.Sandbox.dll",
+        "lib/netstandard2.0/Lucene.Net.Sandbox.xml",
+        "lib/netstandard2.1/Lucene.Net.Sandbox.dll",
+        "lib/netstandard2.1/Lucene.Net.Sandbox.xml",
+        "lucene-net-icon-128x128.png",
+        "lucene.net.sandbox.4.8.0-beta00016.nupkg.sha512",
+        "lucene.net.sandbox.nuspec"
       ]
     },
     "Magick.NET-Q8-AnyCPU/13.1.3": {
@@ -3537,6 +3787,19 @@
         "version.txt"
       ]
     },
+    "Microsoft.Extensions.Configuration.Abstractions/2.0.0": {
+      "sha512": "rHFrXqMIvQNq51H8RYTO4IWmDOYh8NUzyqGlh0xHWTP6XYnKk7Ryinys2uDs+Vu88b3AMlM3gBBSs78m6OQpYQ==",
+      "type": "package",
+      "path": "microsoft.extensions.configuration.abstractions/2.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.0/Microsoft.Extensions.Configuration.Abstractions.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Configuration.Abstractions.xml",
+        "microsoft.extensions.configuration.abstractions.2.0.0.nupkg.sha512",
+        "microsoft.extensions.configuration.abstractions.nuspec"
+      ]
+    },
     "Microsoft.Extensions.DependencyInjection.Abstractions/6.0.0": {
       "sha512": "xlzi2IYREJH3/m6+lUrQlujzX8wDitm4QGnUu6kUXTQAWPuZY8i+ticFJbzfqaetLA6KR/rO6Ew/HuYD+bxifg==",
       "type": "package",
@@ -3579,6 +3842,19 @@
         "lib/netstandard2.0/Microsoft.Extensions.ObjectPool.xml",
         "microsoft.extensions.objectpool.6.0.16.nupkg.sha512",
         "microsoft.extensions.objectpool.nuspec"
+      ]
+    },
+    "Microsoft.Extensions.Primitives/2.0.0": {
+      "sha512": "ukg53qNlqTrK38WA30b5qhw0GD7y3jdI9PHHASjdKyTcBHTevFM2o23tyk3pWCgAV27Bbkm+CPQ2zUe1ZOuYSA==",
+      "type": "package",
+      "path": "microsoft.extensions.primitives/2.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.0/Microsoft.Extensions.Primitives.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Primitives.xml",
+        "microsoft.extensions.primitives.2.0.0.nupkg.sha512",
+        "microsoft.extensions.primitives.nuspec"
       ]
     },
     "Microsoft.IdentityModel.Logging/6.8.0": {
@@ -6006,43 +6282,6 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "System.Net.FtpClient/1.0.5824.34026": {
-      "sha512": "U3Ak8SSgMlcyot3jdcE7Ns53/mi8ZicXfhSIsAC53/Lt5ESbe6Byle40+w1B7pd7ZDLEKemhbCtltkA6luXF4g==",
-      "type": "package",
-      "path": "system.net.ftpclient/1.0.5824.34026",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net40/System.Net.FtpClient.XML",
-        "lib/net40/System.Net.FtpClient.dll",
-        "source/AssemblyInfo.cs",
-        "source/Extensions/GetChecksum.cs",
-        "source/Extensions/MD5.cs",
-        "source/Extensions/XCRC.cs",
-        "source/Extensions/XMD5.cs",
-        "source/Extensions/XSHA1.cs",
-        "source/Extensions/XSHA256.cs",
-        "source/Extensions/XSHA512.cs",
-        "source/FtpClient.cs",
-        "source/FtpDataStream.cs",
-        "source/FtpEnums.cs",
-        "source/FtpExceptions.cs",
-        "source/FtpExtensionAttribute.cs",
-        "source/FtpExtensions.cs",
-        "source/FtpHash.cs",
-        "source/FtpListItem.cs",
-        "source/FtpReply.cs",
-        "source/FtpSocketStream.cs",
-        "source/FtpTrace.cs",
-        "source/IFtpClient.cs",
-        "source/IFtpListItem.cs",
-        "source/IFtpReply.cs",
-        "source/System.Net.FtpClient.NET2.csproj",
-        "source/System.Net.FtpClient.csproj",
-        "system.net.ftpclient.1.0.5824.34026.nupkg.sha512",
-        "system.net.ftpclient.nuspec"
-      ]
-    },
     "System.Net.Http/4.3.4": {
       "sha512": "aOa2d51SEbmM+H+Csw7yJOuNZoHkrP2XnAurye5HWYgGVVU54YZDvsLUYRv6h18X3sPnjNCANmN7ZhIPiqMcjA==",
       "type": "package",
@@ -8310,19 +8549,6 @@
         "system.threading.timer.nuspec"
       ]
     },
-    "System.Web.Http.Common/4.0.20126.16343": {
-      "sha512": "3tybnaxSQAWu2aLSAh+7PRZ8Cw4f/DIECPJZ5yBcnm5sQKjr95zViCasYH3p6Z1hxATSTmlecvCcvlt/FDy+8w==",
-      "type": "package",
-      "path": "system.web.http.common/4.0.20126.16343",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net40/System.Web.Http.Common.dll",
-        "lib/net40/System.Web.Http.Common.xml",
-        "system.web.http.common.4.0.20126.16343.nupkg.sha512",
-        "system.web.http.common.nuspec"
-      ]
-    },
     "System.Web.Services.Description/6.0.0": {
       "sha512": "Mooat6O2xUK34uGAFBi564JHmvYrhEjLWpEUIZTemPPZQD1KQ5m87tYKVJ1gurS+KiKPEYNgKcP1mn6LMhU9xA==",
       "type": "package",
@@ -8600,13 +8826,17 @@
       "AdvancedStringBuilder >= 0.1.0",
       "Antlr4 >= 4.6.6",
       "EcmaScript.Net >= 2.0.0",
+      "FluentFTP >= 47.1.0",
       "JSPool >= 4.0.0",
       "JavaScriptEngineSwitcher.Core >= 3.3.0",
       "JavaScriptEngineSwitcher.V8 >= 3.17.4",
       "JavaScriptEngineSwitcher.V8.Native.win-x64 >= 3.17.4",
       "LibSassHost >= 1.3.3",
       "LibSassHost.Native.win-x64 >= 1.3.3",
-      "Lucene.Net >= 3.0.3",
+      "Lucene.Net >= 4.8.0-beta00016",
+      "Lucene.Net.Analysis.Common >= 4.8.0-beta00016",
+      "Lucene.Net.Queries >= 4.8.0-beta00016",
+      "Lucene.Net.QueryParser >= 4.8.0-beta00016",
       "Magick.NET-Q8-AnyCPU >= 13.1.3",
       "Magick.NET.Core >= 13.1.3",
       "Microsoft.CSharp >= 4.7.0",
@@ -8625,8 +8855,8 @@
       "System.Configuration.ConfigurationManager >= 7.0.0",
       "System.Data.SqlClient >= 4.8.5",
       "System.Diagnostics.DiagnosticSource >= 7.0.2",
+      "System.Drawing.Common >= 7.0.0",
       "System.Management >= 7.0.2",
-      "System.Net.FtpClient >= 1.0.5824.34026",
       "System.Net.Http >= 4.3.4",
       "System.Runtime.Caching >= 7.0.0",
       "System.Runtime.CompilerServices.Unsafe >= 6.0.0",
@@ -8637,30 +8867,24 @@
       "System.ServiceModel.NetTcp >= 6.0.0",
       "System.ServiceModel.Primitives >= 6.0.0",
       "System.ServiceModel.Security >= 6.0.0",
-      "System.Web.Http.Common >= 4.0.20126.16343",
       "System.Web.Services.Description >= 6.0.0",
       "TidyHtml5ManagedRepack >= 1.1.4"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\trevors\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\trevo\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\ProteanCMS_Net7\\ProteanCMS_Net7.vbproj",
+      "projectUniqueName": "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\ProteanCMS_Net7\\ProteanCMS_Net7.vbproj",
       "projectName": "ProteanCMS_Net7",
-      "projectPath": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\ProteanCMS_Net7\\ProteanCMS_Net7.vbproj",
-      "packagesPath": "C:\\Users\\trevors\\.nuget\\packages\\",
-      "outputPath": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\ProteanCMS_Net7\\obj\\",
+      "projectPath": "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\ProteanCMS_Net7\\ProteanCMS_Net7.vbproj",
+      "packagesPath": "C:\\Users\\trevo\\.nuget\\packages\\",
+      "outputPath": "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\ProteanCMS_Net7\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\trevors\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\trevo\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -8674,8 +8898,8 @@
         "net7.0-windows7.0": {
           "targetAlias": "net7.0-windows",
           "projectReferences": {
-            "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools_Net7\\Protean.Tools_Net7.csproj": {
-              "projectPath": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools_Net7\\Protean.Tools_Net7.csproj"
+            "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools_Net7\\Protean.Tools_Net7.csproj": {
+              "projectPath": "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools_Net7\\Protean.Tools_Net7.csproj"
             }
           }
         }
@@ -8701,6 +8925,10 @@
           "EcmaScript.Net": {
             "target": "Package",
             "version": "[2.0.0, )"
+          },
+          "FluentFTP": {
+            "target": "Package",
+            "version": "[47.1.0, )"
           },
           "JSPool": {
             "target": "Package",
@@ -8728,7 +8956,19 @@
           },
           "Lucene.Net": {
             "target": "Package",
-            "version": "[3.0.3, )"
+            "version": "[4.8.0-beta00016, )"
+          },
+          "Lucene.Net.Analysis.Common": {
+            "target": "Package",
+            "version": "[4.8.0-beta00016, )"
+          },
+          "Lucene.Net.Queries": {
+            "target": "Package",
+            "version": "[4.8.0-beta00016, )"
+          },
+          "Lucene.Net.QueryParser": {
+            "target": "Package",
+            "version": "[4.8.0-beta00016, )"
           },
           "Magick.NET-Q8-AnyCPU": {
             "target": "Package",
@@ -8798,13 +9038,13 @@
             "target": "Package",
             "version": "[7.0.2, )"
           },
+          "System.Drawing.Common": {
+            "target": "Package",
+            "version": "[7.0.0, )"
+          },
           "System.Management": {
             "target": "Package",
             "version": "[7.0.2, )"
-          },
-          "System.Net.FtpClient": {
-            "target": "Package",
-            "version": "[1.0.5824.34026, )"
           },
           "System.Net.Http": {
             "target": "Package",
@@ -8846,10 +9086,6 @@
             "target": "Package",
             "version": "[6.0.0, )"
           },
-          "System.Web.Http.Common": {
-            "target": "Package",
-            "version": "[4.0.20126.16343, )"
-          },
           "System.Web.Services.Description": {
             "target": "Package",
             "version": "[6.0.0, )"
@@ -8881,37 +9117,5 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'Lucene.Net 3.0.3' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net7.0-windows7.0'. This package may not be fully compatible with your project.",
-      "libraryId": "Lucene.Net",
-      "targetGraphs": [
-        "net7.0-windows7.0"
-      ]
-    },
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'System.Net.FtpClient 1.0.5824.34026' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net7.0-windows7.0'. This package may not be fully compatible with your project.",
-      "libraryId": "System.Net.FtpClient",
-      "targetGraphs": [
-        "net7.0-windows7.0"
-      ]
-    },
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'System.Web.Http.Common 4.0.20126.16343' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net7.0-windows7.0'. This package may not be fully compatible with your project.",
-      "libraryId": "System.Web.Http.Common",
-      "targetGraphs": [
-        "net7.0-windows7.0"
-      ]
-    }
-  ]
+  }
 }

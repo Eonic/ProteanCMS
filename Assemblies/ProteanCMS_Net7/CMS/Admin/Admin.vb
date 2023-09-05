@@ -2914,7 +2914,7 @@ AfterProcessFlow:
                     myWeb.mnArtId = myWeb.moRequest("artid")
                 Else
 
-                    Int64.TryParse(myWeb.moRequest("id"), myWeb.mnArtId)
+                    Integer.TryParse(myWeb.moRequest("id"), myWeb.mnArtId)
 
                 End If
 

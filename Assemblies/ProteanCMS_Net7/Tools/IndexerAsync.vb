@@ -24,6 +24,7 @@ Imports System.Text.RegularExpressions
 Imports Protean.Tools.FileHelper
 Imports System
 Imports System.Linq
+Imports Lucene.Net.Util
 
 Public Class IndexerAsync
 
@@ -400,24 +401,24 @@ Public Class IndexerAsync
             End If
             EmptyFolder(mcIndexWriteFolder)
             If gbDebug Then
-                    EmptyFolder(mcIndexCopyFolder)
-                End If
+                EmptyFolder(mcIndexCopyFolder)
+            End If
+            Dim bCreate As Boolean = True 'check if file exists or if we need to create an index
+            If IO.File.Exists(mcIndexWriteFolder & "segments") Then bCreate = False
+            'If bNewIndex Then bCreate = True 'override creation dependant on type of index
+            Dim indexDir As Lucene.Net.Store.Directory = Lucene.Net.Store.FSDirectory.Open(mcIndexWriteFolder)
 
-                Dim bCreate As Boolean = True 'check if file exists or if we need to create an index
-                If IO.File.Exists(mcIndexWriteFolder & "segments") Then bCreate = False
-                'If bNewIndex Then bCreate = True 'override creation dependant on type of index
-                Dim indexDir As Lucene.Net.Store.Directory = Lucene.Net.Store.FSDirectory.Open(mcIndexWriteFolder)
+            ' Dim maxLen As New IndexWriter.MaxFieldLength(10000)
 
-                Dim maxLen As New IndexWriter.MaxFieldLength(10000)
+            Dim myAnalyser As New StandardAnalyzer(LuceneVersion.LUCENE_46)
+            Dim writerCfg As New IndexWriterConfig(LuceneVersion.LUCENE_46, myAnalyser)
 
-                oIndexWriter = New IndexWriter(indexDir, New StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_CURRENT), bCreate, maxLen) 'create the index writer
+            oIndexWriter = New IndexWriter(indexDir, writerCfg) 'create the index writer
 
-                'TS added to limit memory usage
-                oIndexWriter.SetRAMBufferSizeMB(500)
-                oIndexWriter.SetMaxBufferedDeleteTerms(50)
-                oIndexWriter.SetMaxBufferedDocs(100)
-
-
+            'TS added to limit memory usage
+            '  oIndexWriter.RamSizeInBytes = 500
+            ' oIndexWriter.SetMaxBufferedDeleteTerms(50)
+            '  oIndexWriter.SetMaxBufferedDocs(100)
         Catch ex As Exception
             cExError &= ex.StackTrace.ToString & vbCrLf
             returnException(myWeb.msException, mcModuleName, "StartIndex", ex, "", cProcessInfo, gbDebug)
@@ -480,7 +481,7 @@ Public Class IndexerAsync
         'PerfMon.Log("Indexer", "StopIndex")
         Dim cProcessInfo As String = ""
         Try
-            oIndexWriter.Optimize()
+            'oIndexWriter.Optimize()
             oIndexWriter.Commit()
             oIndexWriter.Dispose()
             EmptyFolder(mcIndexReadFolder)
@@ -968,7 +969,7 @@ Public Class IndexerAsync
             If System.IO.File.Exists(sFile) Then
                 Try
                     Dim F As Short = FreeFile()
-                    FileOpen(F, sFile, OpenMode.Binary, OpenAccess.ReadWrite, OpenShare.LockReadWrite)
+                    FileOpen(F, sFile, OpenMode.CREATE_OR_APPEND, OpenAccess.ReadWrite, OpenShare.LockReadWrite)
                     FileClose(F)
                 Catch
                     Return True
@@ -1092,8 +1093,8 @@ Public Class IndexerAsync
             Dim metaType As String = ""
 
             ' The abstract field and type specific fields
-            Dim metaField As AbstractField = Nothing
-            Dim metaNumericField As NumericField
+            Dim metaField As DoubleField = Nothing
+            Dim metaNumericField As DoubleField
 
             ' type specific value conversion
             Dim convertedNumber As Object = Nothing
@@ -1134,7 +1135,7 @@ Public Class IndexerAsync
                                                         ) Then
 
                             ' Create the numeric field
-                            metaNumericField = New NumericField(
+                            metaNumericField = New DoubleField(
                                                         metaName,
                                                         storeContent,
                                                          True
@@ -1145,10 +1146,10 @@ Public Class IndexerAsync
                             Select Case metaType
 
                                 Case "float"
-                                    metaNumericField.SetFloatValue(convertedNumber)
+                                    metaNumericField.SetDoubleValue(convertedNumber)
 
                                 Case Else
-                                    metaNumericField.SetLongValue(convertedNumber)
+                                    metaNumericField.SetDoubleValue(convertedNumber)
 
                             End Select
 
@@ -1169,7 +1170,7 @@ Public Class IndexerAsync
 
                             metaField = New Field(
                                                     metaName,
-                                                    DateTools.DateToString(metaContentValue, DateTools.Resolution.SECOND),
+                                                    DateTools.DateToString(CDate(metaContentValue), DateResolution.SECOND),
                                                     storeContent,
                                                     indexContent
                                                     )

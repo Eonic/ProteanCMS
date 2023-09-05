@@ -696,7 +696,13 @@ Partial Public Class fsHelper
 
             Dim dir As New DirectoryInfo(mcStartFolder & cFolderPath & "\")
             If dir.Exists Then
-                postedFile.SaveAs(mcStartFolder & cFolderPath & "\" & filename)
+
+                Dim FileStream = File.Create(mcStartFolder & cFolderPath & "\" & filename)
+                postedFile.InputStream.Seek(0, SeekOrigin.Begin)
+                postedFile.InputStream.CopyTo(FileStream)
+                FileStream.Close()
+                ' postedFile.InputStream.SaveAs(mcStartFolder & cFolderPath & "\" & filename)
+
                 Return postedFile.FileName
             Else
                 Return "this root folder does not exist:" & mcStartFolder

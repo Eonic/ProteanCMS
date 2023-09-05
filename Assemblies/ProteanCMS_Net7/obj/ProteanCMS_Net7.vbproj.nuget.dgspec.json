@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\ProteanCMS_Net7\\ProteanCMS_Net7.vbproj": {}
+    "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\ProteanCMS_Net7\\ProteanCMS_Net7.vbproj": {}
   },
   "projects": {
-    "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools_Net7\\Protean.Tools_Net7.csproj": {
+    "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools_Net7\\Protean.Tools_Net7.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools_Net7\\Protean.Tools_Net7.csproj",
+        "projectUniqueName": "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools_Net7\\Protean.Tools_Net7.csproj",
         "projectName": "Protean.Tools_Net7",
-        "projectPath": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools_Net7\\Protean.Tools_Net7.csproj",
-        "packagesPath": "C:\\Users\\trevors\\.nuget\\packages\\",
-        "outputPath": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools_Net7\\obj\\",
+        "projectPath": "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools_Net7\\Protean.Tools_Net7.csproj",
+        "packagesPath": "C:\\Users\\trevo\\.nuget\\packages\\",
+        "outputPath": "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools_Net7\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\trevors\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\trevo\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -137,21 +133,17 @@
         }
       }
     },
-    "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\ProteanCMS_Net7\\ProteanCMS_Net7.vbproj": {
+    "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\ProteanCMS_Net7\\ProteanCMS_Net7.vbproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\ProteanCMS_Net7\\ProteanCMS_Net7.vbproj",
+        "projectUniqueName": "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\ProteanCMS_Net7\\ProteanCMS_Net7.vbproj",
         "projectName": "ProteanCMS_Net7",
-        "projectPath": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\ProteanCMS_Net7\\ProteanCMS_Net7.vbproj",
-        "packagesPath": "C:\\Users\\trevors\\.nuget\\packages\\",
-        "outputPath": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\ProteanCMS_Net7\\obj\\",
+        "projectPath": "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\ProteanCMS_Net7\\ProteanCMS_Net7.vbproj",
+        "packagesPath": "C:\\Users\\trevo\\.nuget\\packages\\",
+        "outputPath": "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\ProteanCMS_Net7\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\trevors\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\trevo\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -165,8 +157,8 @@
           "net7.0-windows7.0": {
             "targetAlias": "net7.0-windows",
             "projectReferences": {
-              "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools_Net7\\Protean.Tools_Net7.csproj": {
-                "projectPath": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools_Net7\\Protean.Tools_Net7.csproj"
+              "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools_Net7\\Protean.Tools_Net7.csproj": {
+                "projectPath": "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools_Net7\\Protean.Tools_Net7.csproj"
               }
             }
           }
@@ -192,6 +184,10 @@
             "EcmaScript.Net": {
               "target": "Package",
               "version": "[2.0.0, )"
+            },
+            "FluentFTP": {
+              "target": "Package",
+              "version": "[47.1.0, )"
             },
             "JSPool": {
               "target": "Package",
@@ -219,7 +215,19 @@
             },
             "Lucene.Net": {
               "target": "Package",
-              "version": "[3.0.3, )"
+              "version": "[4.8.0-beta00016, )"
+            },
+            "Lucene.Net.Analysis.Common": {
+              "target": "Package",
+              "version": "[4.8.0-beta00016, )"
+            },
+            "Lucene.Net.Queries": {
+              "target": "Package",
+              "version": "[4.8.0-beta00016, )"
+            },
+            "Lucene.Net.QueryParser": {
+              "target": "Package",
+              "version": "[4.8.0-beta00016, )"
             },
             "Magick.NET-Q8-AnyCPU": {
               "target": "Package",
@@ -289,13 +297,13 @@
               "target": "Package",
               "version": "[7.0.2, )"
             },
+            "System.Drawing.Common": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
             "System.Management": {
               "target": "Package",
               "version": "[7.0.2, )"
-            },
-            "System.Net.FtpClient": {
-              "target": "Package",
-              "version": "[1.0.5824.34026, )"
             },
             "System.Net.Http": {
               "target": "Package",
@@ -336,10 +344,6 @@
             "System.ServiceModel.Security": {
               "target": "Package",
               "version": "[6.0.0, )"
-            },
-            "System.Web.Http.Common": {
-              "target": "Package",
-              "version": "[4.0.20126.16343, )"
             },
             "System.Web.Services.Description": {
               "target": "Package",
