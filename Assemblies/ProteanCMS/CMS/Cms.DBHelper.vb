@@ -7833,7 +7833,7 @@ restart:
 
         Public Function CreateLibraryImages(ByVal savedId As Integer, ByVal cRelatedLibraryImage As String, ByVal cSkipAttribute As String, Optional ByVal cRelatedImageType As String = "") As String
             Try
-                Dim oLibraryImageXForm As XmlElement
+                'myWeb.moCtx.Request.
                 Dim oLibraryImageInstance As XmlElement
 
                 If cRelatedLibraryImage <> "" Then
@@ -7865,8 +7865,8 @@ restart:
                         Dim imgElementDetail As XmlElement = oLibraryImageInstance.SelectSingleNode("tblContent/cContentXmlDetail/Content/Images/img[@class='display']")
                         'Dim oImg As System.Drawing.Bitmap = New System.Drawing.Bitmap(goServer.MapPath("/") & cImage.Trim.Replace("/", "\"))
                         Dim oImg As System.Drawing.Bitmap
-                        If goConfig("ReviewImageRootPath") <> Nothing Then
-                            oImg = New System.Drawing.Bitmap(goConfig("ReviewImageRootPath") & cImage.Trim.Replace("/", "\"))
+                        If myWeb.moCtx.Request.Form("reviewimagepath") <> Nothing Then
+                            oImg = New System.Drawing.Bitmap(myWeb.moCtx.Request.Form("reviewimagepath") & cImage.Trim.Replace("/", "\"))
                         Else
                             oImg = New System.Drawing.Bitmap(goServer.MapPath("/") & cImage.Trim.Replace("/", "\"))
                         End If

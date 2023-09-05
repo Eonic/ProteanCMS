@@ -1107,9 +1107,9 @@ Partial Public Class fsHelper
                 Dim fullName As String = Path.GetFileName(file.FileName).Replace("'", "")
                 statuses.Add(New FilesStatus(fullName.Replace(" ", "-"), file.ContentLength))
                 context.Server.MapPath("/")
-
-                If goConfig("ReviewImageRootPath") <> Nothing Then
-                    cleanUploadedPaths = "/" & mcStartFolder.Replace(goConfig("ReviewImageRootPath"), "").Replace("\", "/") & cfileName
+                'We will add one node in ReviewFeedback.xml form and use it instead of config key = context.Request.Form("reviewimagepath")
+                If context.Request.Form("reviewimagepath") <> Nothing Then
+                    cleanUploadedPaths = "/" & mcStartFolder.Replace(context.Request.Form("reviewimagepath"), "").Replace("\", "/") & cfileName
                 Else
                     cleanUploadedPaths = "/" & mcStartFolder.Replace(context.Server.MapPath("/"), "").Replace("\", "/") & cfileName
                 End If
