@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+
+  
+  <ModuleTypes>
+    <ModuleGroup name="Basic Content" icon="fas fa-pencil-alt">
+      <Module type="GoogleMapv3" formPath="google-map-v3" icon="fas fa-map-marked" name="Google Map"></Module>
+    </ModuleGroup>
+  </ModuleTypes>
+  
+</PageLayouts>

@@ -1,24 +1,24 @@
 {
   "version": 2,
-  "dgSpecHash": "j/5ZOnHuLp1J5tffJ1YxffsJiEeBC8Jh7CG4D5Ev7VgXt6bP5wJUsXexo/5vGCKVnlJL1QkIUZNOoxpczdaf7w==",
+  "dgSpecHash": "TcstDAPaJW685/UUn7MEv2KYxoQGBlvoM+Nx3pJZG4trjEH4oIGTb1YkBWLI4B4Ql76fplx9yTSxyPNK/xkb3Q==",
   "success": false,
-  "projectFilePath": "C:\\HostingSpaces\\ProteanCMS\\wwwroot_Net7\\wwwroot_Net7.csproj",
+  "projectFilePath": "D:\\HostingSpaces\\ProteanCMS\\wwwroot_Net7\\wwwroot_Net7.csproj",
   "expectedPackageFiles": [],
   "logs": [
     {
-      "code": "NU1201",
+      "code": "NU1105",
       "level": "Error",
-      "message": "Project Protean.Tools_Net7 is not compatible with net6.0 (.NETCoreApp,Version=v6.0). Project Protean.Tools_Net7 supports: net7.0 (.NETCoreApp,Version=v7.0)",
-      "libraryId": "Protean.Tools_Net7",
+      "message": "Unable to find project information for 'D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools_Net7\\Protean.Tools_Net7.csproj'. If you are using Visual Studio, this may be because the project is unloaded or not part of the current solution so run a restore from the command-line. Otherwise, the project file may be invalid or missing targets required for restore.",
+      "libraryId": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools_Net7\\Protean.Tools_Net7.csproj",
       "targetGraphs": [
         "net6.0"
       ]
     },
     {
-      "code": "NU1201",
+      "code": "NU1105",
       "level": "Error",
-      "message": "Project ProteanCMS_Net7 is not compatible with net6.0 (.NETCoreApp,Version=v6.0). Project ProteanCMS_Net7 supports: net7.0-windows7.0 (.NETCoreApp,Version=v7.0)",
-      "libraryId": "ProteanCMS_Net7",
+      "message": "Unable to find project information for 'D:\\HostingSpaces\\ProteanCMS\\Assemblies\\ProteanCMS_Net7\\ProteanCMS_Net7.vbproj'. If you are using Visual Studio, this may be because the project is unloaded or not part of the current solution so run a restore from the command-line. Otherwise, the project file may be invalid or missing targets required for restore.",
+      "libraryId": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\ProteanCMS_Net7\\ProteanCMS_Net7.vbproj",
       "targetGraphs": [
         "net6.0"
       ]

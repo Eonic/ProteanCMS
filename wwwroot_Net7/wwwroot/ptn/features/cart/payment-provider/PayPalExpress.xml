@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+	<model>
+		<instance>
+			<provider name="PayPalExpress" validGroups="all" validCurrencies="GBP">
+				<description value="PayPal"/>
+				<currency value="GBP"/>
+				<accountId value="trevor_1261070496_biz@eonic.co.uk"/>
+				<accountPassword value="1261070605"/>
+				<accountSignature value="A4m3KxoRe0qrA96SgRhyNzsfS.dQABUZcuZ6tM6z1aiNQKkgmEfCsVJe"/>
+				<opperationMode value="true"/>
+				<PaymentAction value="Sale"/>
+				<LocaleCode value="GB"/>
+				<AddressOveride value="1"/>
+				<AllowNote value="1"/>
+				<ReqConfirmShipping value="0"/>
+				<NoShipping value="0"/>
+        <VATonShipping value="off" />        
+				<PageStyle value=""/>
+				<cpp-header-image value=""/>
+				<cpp-header-border-color value=""/>
+				<cpp-header-back-color value=""/>
+				<cpp-payflow-color value=""/>
+			</provider>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+		<bind nodeset="provider">
+			<bind id="description" nodeset="description/@value" required="true()" type="string"/>
+			<bind id="accountId" nodeset="accountId/@value" required="true()" type="string"/>
+			<bind id="accountPassword" nodeset="accountPassword/@value" required="true()" type="string"/>
+			<bind id="accountSignature" nodeset="accountSignature/@value" required="true()" type="string"/>
+			<bind id="currency" nodeset="currency/@value" required="true()" type="string"/>
+			<bind id="opperationMode" nodeset="opperationMode/@value" required="true()" type="string"/>
+			<bind id="PaymentAction" nodeset="PaymentAction/@value" required="true()" type="string"/>
+			<bind id="LocaleCode" nodeset="LocaleCode/@value" required="true()" type="string"/>
+			<bind id="AddressOveride" nodeset="AddressOveride/@value" required="true()" type="string"/>
+			<bind id="ReqConfirmShipping" nodeset="ReqConfirmShipping/@value" required="true()" type="string"/>
+			<bind id="NoShipping" nodeset="NoShipping/@value" required="true()" type="string"/>
+      <bind id="VATonShipping" nodeset="VATonShipping/@value" required="true()" type="string"/>
+			<bind id="AllowNote" nodeset="AllowNote/@value" required="true()" type="string"/>
+			<bind id="PageStyle" nodeset="PageStyle/@value" required="false()" type="string"/>
+			<bind id="cpp-header-image" nodeset="cpp-header-image/@value" required="false()" type="string"/>
+			<bind id="cpp-header-border-color" nodeset="cpp-header-border-color/@value" required="false()" type="string"/>
+			<bind id="cpp-header-back-color" nodeset="cpp-header-back-color/@value" required="false()" type="string"/>
+			<bind id="cpp-payflow-color" nodeset="cpp-payflow-color/@value" required="false()" type="string"/>
+		</bind>
+	</model>
+	<group ref="EditContent" class="2col">
+		<label>PayPal Express Settings</label>
+    <group>
+      <group>
+		<input bind="description" class="long">
+			<label>Description</label>
+		</input>
+		<input bind="accountId">
+			<label>API Username</label>
+		</input>
+		<input bind="accountPassword">
+			<label>API Password</label>
+		</input>
+		<input bind="accountSignature">
+			<label>API Signature</label>
+		</input>
+		<input bind="currency">
+			<label>Default Currency</label>
+		</input>
+		<select1 bind="opperationMode" appearance="full" class="required">
+			<label>Opperation Mode</label>
+			<item>
+				<label>Live</label>
+				<value>live</value>
+			</item>
+			<item>
+				<label>Test</label>
+				<value>true</value>
+			</item>
+		</select1>
+    </group>
+    </group>
+    <group>
+      <group>
+		<select1 bind="PaymentAction" appearance="full" class="required">
+			<label>PaymentAction</label>
+			<item>
+				<label>Sale</label>
+				<value>Sale</value>
+			</item>
+			<item>
+				<label>Authorization</label>
+				<value>Authorization</value>
+			</item>
+			<item>
+				<label>Order</label>
+				<value>Order</value>
+			</item>
+		</select1>
+		<select1 bind="LocaleCode" appearance="full" class="required">
+			<label>Locale</label>
+			<item>
+				<label>United Kingdom</label>
+				<value>GB</value>
+			</item>
+			<item>
+				<label>Portugal</label>
+				<value>PT</value>
+			</item>
+			<item>
+				<label>France</label>
+				<value>FR</value>
+			</item>
+		</select1>
+		<select1 bind="AddressOveride" appearance="full" class="required">
+			<label>Address Overide</label>
+			<item>
+				<label>False</label>
+				<value>0</value>
+			</item>
+			<item>
+				<label>True</label>
+				<value>1</value>
+			</item>
+			<hint>
+				TRUE indicates that the PayPal pages shoulddisplay the shipping address set by you in this SetExpressCheckout request, not the shipping address on file with PayPal for this customer.
+				Displaying the PayPal street address on file does not allow the customer toedit that address.
+			</hint>
+		</select1>
+		<select1 bind="ReqConfirmShipping" appearance="full" class="required">
+			<label>Confirm Shipping Address</label>
+			<item>
+				<label>False</label>
+				<value>0</value>
+			</item>
+			<item>
+				<label>True</label>
+				<value>1</value>
+			</item>
+			<hint>
+				TRUE indicates that you require that the customer’sshipping address on file with PayPal be a confirmed address.
+				Note: Setting this field overrides the setting you have specified in your Merchant Account Profile
+			</hint>
+		</select1>
+		<select1 bind="NoShipping" appearance="full" class="required">
+			<label>No Shipping Address Required</label>
+			<item>
+				<label>False</label>
+				<value>0</value>
+			</item>
+			<item>
+				<label>True</label>
+				<value>1</value>
+			</item>
+			<hint>
+				TRUE indicates that on the PayPal pages, no shipping address fields should be displayed whatsoever
+			</hint>
+		</select1>
+        <select1 bind="VATonShipping" appearance="full" class="required">
+          <label>VAT on Shipping</label>
+          <item>
+            <label>False</label>
+            <value>off</value>
+          </item>
+          <item>
+            <label>True</label>
+            <value>on</value>
+          </item>
+          <hint>
+            TRUE indicates that the cart automatically calculates the VAT and the VAT on shipping is included in the total VAT.
+          </hint>
+        </select1>
+		<select1 bind="AllowNote" appearance="full" class="required">
+			<label>Allow Note</label>
+			<item>
+				<label>False</label>
+				<value>0</value>
+			</item>
+			<item>
+				<label>True</label>
+				<value>1</value>
+			</item>
+			<hint>
+				TRUE indicates that the customer may enter a note to the merchant on the PayPal page during checkout. The noteis returned in the GetExpressCheckoutDetails responseand the DoExpressCheckoutPayment response.
+			</hint>
+		</select1>
+      </group>
+		<group>
+			<label>Customise Paypal Pages</label>
+			<input bind="PageStyle">
+				<label>Page Style</label>
+				<hint>Setsthe Custom Payment Page Style for payment pages associated with thisbutton/link. This value corresponds to the HTML variable page_stylefor customizing payment pages. The value is the same as the PageStyle Name you chose when adding or editing the page style fromthe Profile subtab of the My Account tabof your PayPal account.
+				Character length and limitations:30 single-byte alphabetic characters.</hint>
+			</input>
+			<input bind="cpp-header-image">
+				<label>Header Image</label>
+				<hint>
+					URLfor the image you want to appear at the top left of the paymentpage. The image has a maximum size of 750 pixels wide by 90 pixelshigh. PayPal recommends that you provide an image that is storedon a secure (https) server. If you do not specify an image, thebusiness name is displayed.
+					Character length and limit: 127single-byte alphanumeric characters
+				</hint>
+			</input>
+			<input bind="cpp-header-border-color" class="colorPicker">
+				<label>Header Border Colour</label>
+				<hint>
+					Sets the border color around the header of the payment page. The borderis a 2-pixel perimeter around the header space, which is 750 pixelswide by 90 pixels high. By default, the color is black.
+					Characterlength and limitation: Six character HTML hexadecimal color codein ASCII.
+				</hint>
+			</input>
+			<input bind="cpp-header-back-color" class="colorPicker">
+				<label>Header Background Colour</label>
+				<hint>
+					Setsthe background color for the header of the payment page. By default, thecolor is white.
+					Character length and limitation: Six characterHTML hexadecimal color code in ASCII.
+				</hint>
+			</input>
+			<input bind="cpp-payflow-color" class="colorPicker">
+				<label>Payflow Colour</label>
+				<hint>
+					Setsthe background color for the payment page. By default, the coloris white.
+					Character length and limitation: Six character HTMLhexadecimal color code in ASCII.
+				</hint>
+			</input>
+		</group>
+		<submit submission="" ref="ewSubmit" class="principle">
+			<label>Save Settings</label>
+		</submit>
+    </group>
+    </group>
+</Content>

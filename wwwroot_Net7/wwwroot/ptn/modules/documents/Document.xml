@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+  <model>
+    <instance>
+      <tblContent>
+        <nContentKey/>
+        <nContentPrimaryId/>
+        <nVersion/>
+        <cContentForiegnRef/>
+        <cContentName/>
+        <cContentSchemaName>Document</cContentSchemaName>
+        <cContentXmlBrief>
+          <Content>
+            <Body/>
+            <Title/>
+            <Author/>
+            <Path/>
+            <PublishDate/>
+          </Content>
+        </cContentXmlBrief>
+        <cContentXmlDetail/>
+        <nAuditId/>
+        <nAuditKey/>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nStatus>1</nStatus>
+        <cDescription/>
+      </tblContent>
+    </instance>
+    <submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+    <bind id="cContentDocTitle" nodeset="tblContent/cContentName" required="true()" type="string"/>
+    <bind id="dExpireDate" nodeset="tblContent/dExpireDate" required="false()" type="string"/>
+    <bind id="nStatus" nodeset="tblContent/nStatus" required="true()" type="string"/>
+    <bind id="cDescription" nodeset="tblContent/cDescription" required="false()" type="string"/>
+    <bind nodeset="tblContent/cContentXmlBrief/Content">
+      <bind id="cContentDocTitle" nodeset="Title" required="true()" type="string"/>
+      <bind id="cContentBody" nodeset="Body" required="false()" type="string"/>
+      <bind id="cContentDocAuthor" nodeset="Author" required="false()" type="string"/>
+      <bind id="cContentDocPath" nodeset="Path" required="false()" type="string"/>
+      <bind id="dPublishDate" nodeset="PublishDate" required="false()" type="string"/>
+    </bind>
+    <bind id="dPublishDate" nodeset="tblContent/dPublishDate" required="false()" type="string"/>
+    <!--bind id="cContentRecRead" nodeset="tblContent/cContentXmlDetail/Content/group/div[@class='recRead']" required="false()" type="string"/-->
+  </model>
+	<group ref="EditContent">
+		<label>Document Module</label>
+		<group class="tabs">
+			<group>
+				<label>
+					<i class="fas fa-pen"> </i>
+					<span class="space"> </span>
+					<span>Content</span>
+				</label>
+				<group>
+					<input bind="cContentDocTitle" class="required short">
+						<label>Document Title</label>
+					</input>
+					<input bind="cContentDocAuthor" class="short">
+						<label>Document Author</label>
+					</input>
+				</group>
+				<group ref="Content2">
+					<label>Document Path</label>
+					<input bind="cContentDocPath" class="required pickDocument">
+					</input>
+				</group>
+				<group class="Content3">
+					<label>Document Description</label>
+					<textarea bind="cContentBody" class="TextArea xhtml" rows="19" cols="70">
+					</textarea>
+				</group>
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-tachometer-alt"> </i>
+					<span class="space"> </span>
+					<span>Animate</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='animate']"/>
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-cog"> </i>
+					<span class="space"> </span>
+					<span>Advanced Settings</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+			</group>
+		</group>
+	</group>
+
+
+
+	<group ref="submit" class="contentSubmit">
+    <submit submission="" ref="ewSubmit" class="principle">
+      <label>Save Document</label>
+    </submit>
+  </group>
+</Content>

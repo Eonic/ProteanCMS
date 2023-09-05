@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Content type="xform" name="EditPage">
+  <model>
+    <instance>
+      <tblContentStructure>
+        <nStructKey/>
+        <nStructParId/>
+        <cStructForiegnRef/>
+        <cStructName/>
+        <cStructDescription>
+          <!-- SEE COMMENTS IN BIND -->
+          <DisplayName title="" linkType="internal" exclude="false" noindex="false" nonav="false"/>
+          <Images>
+            <img class="icon" />
+            <img class="thumbnail" />
+            <img class="detail" />
+          </Images>
+          <Description/>
+        </cStructDescription>
+        <cUrl/>
+        <nStructOrder/>
+        <cStructLayout>Modules_1_Column</cStructLayout>
+        <cVersionLang/>
+        <nAuditId/>
+        <nAuditKey/>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nStatus>1</nStatus>
+        <cDescription/>
+      </tblContentStructure>
+    </instance>
+    <submission id="EditEage" action="" method="post" event="form_check(this)"/>
+    <bind id="nStructParId" nodeset="tblContentStructure/nStructParId" required="true()" type="string"/>
+    <bind id="cStructName" nodeset="tblContentStructure/cStructName" required="true()" type="string"/>
+    <bind id="cDisplayName" nodeset="tblContentStructure/cStructDescription/DisplayName" required="false()" type="string"/>
+    <bind id="cStructDescription" nodeset="tblContentStructure/cStructDescription/Description" required="false()" type="string"/>
+    <bind id="thumbnail" nodeset="tblContentStructure/cStructDescription/Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
+    <bind id="cUrl" nodeset="tblContentStructure/cUrl" required="false()" type="string"/>
+    <bind id="dPublishDate" nodeset="tblContentStructure/dPublishDate" required="false()" type="string"/>
+    <bind id="dExpireDate" nodeset="tblContentStructure/dExpireDate" required="false()" type="string"/>
+    <bind id="nStatus" nodeset="tblContentStructure/nStatus" required="true()" type="string"/>
+    <bind id="cDescription" nodeset="tblContentStructure/cDescription" required="false()" type="string"/>
+  </model>
+  <group ref="EditPage" class="2col">
+    <label>Edit E-Mail</label>
+    <group>
+      <group>
+        <input bind="nStructParId" class="hidden">
+          <label>ParId</label>
+        </input>
+        
+        <input bind="dPublishDate" class="calendar">
+          <label>Publish Date</label>
+        </input>
+        <input bind="dExpireDate" class="calendar">
+          <label>Expire Date</label>
+        </input>
+        
+        <input bind="cDescription">
+          <label>Change Notes</label>
+        </input>
+      </group>
+    </group>
+	  <group class="col2">
+      <group>
+        <input bind="cStructName" class="required">
+          <label>Mail Name</label>
+        </input>
+		  <input bind="cDisplayName">
+			  <label>Subject Line</label>
+		  </input>
+		  <!--NOT NEEDED HERE -<textarea bind="cStructDescription" class="xhtml" rows="10">
+			  <label>Description</label>
+		  </textarea>-->
+        <select1 bind="nStatus" appearance="full">
+          <label>Status</label>
+          <item>
+            <label>Live</label>
+            <value>1</value>
+          </item>
+          <item>
+            <label>Hidden</label>
+            <value>0</value>
+          </item>
+        </select1>
+      </group>	  
+	  </group>
+  </group>
+	<group ref="submit" class="contentSubmit">
+	  <submit submission="" ref="submit" class="principle">
+		<label>Save E-Mail</label>
+	  </submit>
+   </group>
+</Content>
