@@ -299,7 +299,6 @@ Partial Public Class Cms
                     End If
 
                     If moCtx.Request.Files.Count > 0 Then
-                        'replace product to content in all code here 
                         If encryptedContentId = cPageContentId Then
                             moFSHelper.initialiseVariables(fsHelper.LibraryType.Image)
                             If cContentName IsNot Nothing Then
