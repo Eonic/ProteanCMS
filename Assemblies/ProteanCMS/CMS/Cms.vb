@@ -59,7 +59,6 @@ Public Class Cms
     Public mcContentType As String = Mime.MediaTypeNames.Text.Html
     Public mcContentDisposition As String = ""
     Public mnProteanCMSError As Long = 0
-    Public cleanUploadedPath As List(Of String) = New List(Of String)
 
     Public msException As String = ""
 
