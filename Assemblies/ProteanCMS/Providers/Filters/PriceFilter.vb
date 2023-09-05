@@ -11,7 +11,7 @@ Imports Microsoft.Ajax.Utilities
 Imports Microsoft.ClearScript.Util
 Imports Protean.Cms
 Imports Protean.xForm
-Imports SoundInTheory.DynamicImage.Filters
+
 
 
 Namespace Providers
