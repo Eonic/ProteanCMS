@@ -2788,7 +2788,9 @@ restart:
                                 Next
                             End If
                         End If
+
                     End If
+
                 End If
                 PerfMonLog("DBHelper", "setObjectInstance", "endsave")
 
