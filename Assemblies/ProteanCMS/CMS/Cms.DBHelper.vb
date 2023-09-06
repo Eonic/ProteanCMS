@@ -2754,44 +2754,7 @@ restart:
                 Else
                     nKey = nVersionId
                 End If
-                'Add code to remove emailactivityid from review email activityxml when one review 
-                ' feedback is submitted.
-                'Instead of hardcoded comparision can we have config key to check content type for 
-                ' Tracking the email activity.
-                If goRequest("type") IsNot Nothing Then
-                    If goRequest("type").ToLower() = "review" Then
-                        Dim custEmail As String = String.Empty
-                        Dim EncryptedKey As String = myWeb.moRequest.UrlReferrer.Query
-                        Dim logArray() As String
-                        logArray = Split(EncryptedKey, "=")
-                        EncryptedKey = logArray(1)
-                        If oInstance.SelectSingleNode("tblContent/cContentXmlBrief/Content/ReviewerEmail/node()") IsNot Nothing Then
-                            custEmail = oInstance.SelectSingleNode("tblContent/cContentXmlBrief/Content/ReviewerEmail/node()").Value
-                            Dim dtCheckLognode As New DataTable
-                            Dim sSql As String = "select nEmailActivityKey, cActivityXml from tblEmailActivityLog where cEmailRecipient='" & custEmail & "' and CONVERT(XML, cActivityXml).value('(/OrderContacts/OrderContact/ReviewTokenKey)[1]', 'Nvarchar(500)')='" & EncryptedKey & "'"
-                            dtCheckLognode = GetDataSet(sSql, "Application", "JobApplications").Tables(0)
-                            If dtCheckLognode.Rows.Count > 0 Then
-                                Dim oDRreview As DataRow
-                                For Each oDRreview In dtCheckLognode.Rows
-                                    Dim nEmailActivityKey As String = oDRreview("nEmailActivityKey")
-                                    Dim cActivityXML As String = oDRreview("cActivityXml")
-                                    Dim oActivityInstance As XmlElement = moPageXml.CreateElement("instance")
-                                    oActivityInstance.InnerXml = cActivityXML
-                                    If oActivityInstance.InnerXml <> Nothing Then
-                                        If oActivityInstance.SelectSingleNode("OrderContacts/reviewActivityID") IsNot Nothing Then
-                                            Dim nodeReviewlog As XmlNode = oActivityInstance.SelectSingleNode("/OrderContacts")
-                                            nodeReviewlog.RemoveChild(nodeReviewlog.LastChild)
-                                            Dim sqlUpdateXML As String = "update tblEmailActivityLog set cActivityXml = '" & nodeReviewlog.OuterXml & "' where nEmailActivityKey=" + nEmailActivityKey
-                                            ExeProcessSql(sqlUpdateXML.ToString())
-                                        End If
-                                    End If
-                                Next
-                            End If
-                        End If
 
-                    End If
-
-                End If
                 PerfMonLog("DBHelper", "setObjectInstance", "endsave")
 
                 If ObjectType = objectTypes.ContentStructure Then
@@ -7833,7 +7796,7 @@ restart:
 
         Public Function CreateLibraryImages(ByVal savedId As Integer, ByVal cRelatedLibraryImage As String, ByVal cSkipAttribute As String, Optional ByVal cRelatedImageType As String = "") As String
             Try
-                Dim oLibraryImageXForm As XmlElement
+                'myWeb.moCtx.Request.
                 Dim oLibraryImageInstance As XmlElement
 
                 If cRelatedLibraryImage <> "" Then
@@ -7865,7 +7828,9 @@ restart:
                         Dim imgElementDetail As XmlElement = oLibraryImageInstance.SelectSingleNode("tblContent/cContentXmlDetail/Content/Images/img[@class='display']")
                         'Dim oImg As System.Drawing.Bitmap = New System.Drawing.Bitmap(goServer.MapPath("/") & cImage.Trim.Replace("/", "\"))
                         Dim oImg As System.Drawing.Bitmap
-                        If goConfig("ReviewImageRootPath") <> Nothing Then
+                        If myWeb.moCtx.Request.Form("cReviewPhysicalPath") <> Nothing AndAlso myWeb.moCtx.Request.Form("cReviewPhysicalPath") <> String.Empty Then
+                            oImg = New System.Drawing.Bitmap(myWeb.moCtx.Request.Form("cReviewPhysicalPath") & cImage.Trim.Replace("/", "\"))
+                        ElseIf goConfig("ReviewImageRootPath") <> Nothing AndAlso goConfig("ReviewImageRootPath") <> String.Empty Then
                             oImg = New System.Drawing.Bitmap(goConfig("ReviewImageRootPath") & cImage.Trim.Replace("/", "\"))
                         Else
                             oImg = New System.Drawing.Bitmap(goServer.MapPath("/") & cImage.Trim.Replace("/", "\"))

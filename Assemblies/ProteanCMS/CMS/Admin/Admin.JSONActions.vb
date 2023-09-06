@@ -6,6 +6,8 @@ Imports System.Collections
 Imports System.Web.Configuration
 Imports System.Configuration
 Imports Alphaleonis.Win32.Filesystem
+Imports System.Drawing.Imaging
+Imports System.Data.SqlClient
 
 Partial Public Class Cms
 
@@ -471,7 +473,59 @@ Partial Public Class Cms
                     Return ex.Message
                 End Try
             End Function
+            Public Function SendReviewCompleteEmail(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+                Dim JsonResult As String = ""
+                Dim ReviewId As String = String.Empty
+                Dim fsHelper As New fsHelper()
 
+                Try
+                    If Not inputJson Is Nothing Then
+                        If inputJson("ReviewId").ToString() IsNot Nothing Then
+                            ReviewId = inputJson("ReviewId").ToString()
+                        End If
+                    Else
+                        ReviewId = myWeb.moRequest("id")
+                    End If
+                    'Send Email
+                    Dim oMsg As New Protean.Messaging()
+                    Dim doc = New XmlDocument()
+                    Dim strUrl As String = "https://www.intotheblue.co.uk"
+                    Dim CustomerName As String = String.Empty
+                    Dim strEmail As String = ""
+                    Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
+                    Dim xsltPath As String = moMailConfig("ReviewCompleteEmailTemplatePath")
+
+                    Dim dtReviewerEmail As DataTable = New DataTable()
+                    Dim arrParms = New System.Collections.Hashtable()
+                    arrParms.Add("ReviewId", ReviewId)
+                    Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable("spSendEmailAfterSubmitReview", CommandType.StoredProcedure, arrParms)
+                        If oDr IsNot Nothing Then
+                            While oDr.Read()
+                                Dim ReviewContentXML As XmlNode = doc.CreateElement("ReviewContentXML")
+                                Dim cContentXmlDetail As String = Convert.ToString(oDr("cContentXmlDetail"))
+                                If cContentXmlDetail <> "" Then
+                                    ReviewContentXML.InnerXml = cContentXmlDetail
+                                    CustomerName = Convert.ToString(ReviewContentXML.SelectSingleNode("Content/Reviewer/node()").Value)
+
+                                    If ReviewContentXML.SelectSingleNode("Content/ReviewerEmail/node()") IsNot Nothing Then
+                                        strEmail = Convert.ToString(ReviewContentXML.SelectSingleNode("Content/ReviewerEmail/node()").Value)
+                                        Dim xmlDetails As XmlElement = doc.CreateElement("Order")
+                                        xmlDetails.InnerXml = "<strUrl>" & strUrl & "</strUrl>"
+                                        xmlDetails.InnerXml = xmlDetails.InnerXml & "<CustomerName>" & CustomerName & "</CustomerName>"
+                                        'Send Email
+                                        oMsg.emailer(xmlDetails, xsltPath, "INTOTHEBLUE experience completion", moMailConfig("FromEmail"), strEmail, "Thank you")
+                                    End If
+                                End If
+                            End While
+                        End If
+                    End Using
+
+                    Return JsonResult
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ReplaceRegularExpression", ex, ""))
+                    Return ex.Message
+                End Try
+            End Function
 
         End Class
 #End Region
