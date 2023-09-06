@@ -2614,7 +2614,7 @@ function ValidateAndSendReviewEmail(event) {
     
     if (form_check(event)) {
         if ($("#nStatus_1").prop("checked") && $("#nEmailSent_True").prop("checked") == false) {
-            debugger            
+                       
             var reviewid = this.getQueryStringParam('id');
             var inputJson = { ReviewId: reviewid };
             $("#nEmailSent_True").prop("checked", "checked");
