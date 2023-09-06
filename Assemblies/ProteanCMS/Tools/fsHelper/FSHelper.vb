@@ -1108,8 +1108,10 @@ Partial Public Class fsHelper
                 statuses.Add(New FilesStatus(fullName.Replace(" ", "-"), file.ContentLength))
                 context.Server.MapPath("/")
                 'We will add one node in ReviewFeedback.xml form and use it instead of config key = context.Request.Form("reviewimagepath")
-                If context.Request.Form("reviewimagepath") <> Nothing Then
-                    cleanUploadedPaths = "/" & mcStartFolder.Replace(context.Request.Form("reviewimagepath"), "").Replace("\", "/") & cfileName
+                If context.Request.Form("cReviewPhysicalPath") <> Nothing AndAlso context.Request.Form("cReviewPhysicalPath") <> String.Empty Then
+                    cleanUploadedPaths = "/" & mcStartFolder.Replace(context.Request.Form("cReviewPhysicalPath"), "").Replace("\", "/") & cfileName
+                ElseIf goConfig("ReviewImageRootPath") <> Nothing AndAlso goConfig("ReviewImageRootPath") <> String.Empty Then
+                    cleanUploadedPaths = "/" & mcStartFolder.Replace(goConfig("ReviewImageRootPath"), "").Replace("\", "/") & cfileName
                 Else
                     cleanUploadedPaths = "/" & mcStartFolder.Replace(context.Server.MapPath("/"), "").Replace("\", "/") & cfileName
                 End If
