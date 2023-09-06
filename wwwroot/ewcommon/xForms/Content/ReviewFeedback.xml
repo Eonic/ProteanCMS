@@ -163,7 +163,7 @@
 				<div class="stars">
 
 					<span bind="cContentRating" class="required">
-						<label class="myrating">Rating</label>
+						<label class="myrating">Rating*</label>
 						<a class="star-1" onClick="starclick(1)">
 							<i class="rating__star far fa-star"></i>
 						</a>
