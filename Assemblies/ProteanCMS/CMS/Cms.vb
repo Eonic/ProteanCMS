@@ -60,7 +60,6 @@ Public Class Cms
     Public mcContentDisposition As String = ""
     Public mnProteanCMSError As Long = 0
 
-
     Public msException As String = ""
 
     ' Clone Page Info
@@ -1252,7 +1251,7 @@ Public Class Cms
 
                     End If
 
-                        If bPageCache And Not ibIndexMode And Not gnResponseCode = 404 Then
+                    If bPageCache And Not ibIndexMode And Not gnResponseCode = 404 Then
 
                         sCachePath = goServer.UrlDecode(mcOriginalURL)
                         If sCachePath.Contains("?") Then
@@ -2609,20 +2608,6 @@ Public Class Cms
             End If
 
             Select Case AjaxCmd
-                Case "ReviewFileUpload"
-                    Try
-
-                        Dim oFsh As fsHelper = New fsHelper
-                        oFsh.initialiseVariables(fsHelper.LibraryType.Image)
-                        oFsh.moPageXML = moPageXml
-                        Dim ProductName As String = moRequest("cProductName")
-                        If ProductName IsNot Nothing Then
-                            oFsh.UploadRequest(moCtx, ProductName)
-                        End If
-                        oFsh = Nothing
-                    Catch ex As Exception
-                        returnException(msException, mcModuleName, "LibProcess", ex, "", sProcessInfo, gbDebug)
-                    End Try
                 Case "BespokeProvider"
                     'Dim assemblyInstance As [Assembly]
                     Dim calledType As Type
@@ -2709,9 +2694,18 @@ Public Class Cms
                                 xFrmContent = moAdXfm.xFrmEditContent(nContentId, moRequest("type"), nPageId, moRequest("name"), , nContentId, , moRequest("formName"), "0" & moRequest("verId"))
                                 If moAdXfm.valid Then
                                     'if we have a parent releationship lets add it
-                                    If moRequest("contentParId") <> "" Then
-                                        moDbHelper.insertContentRelation(moRequest("contentParId"), nContentId, IIf(moRequest("2way") = "true", True, False))
+                                    If moRequest("type") IsNot Nothing Then
+                                        If moRequest("type").ToLower() = "review" Then
+                                            If moRequest("contentParId") <> "" Then
+                                                moDbHelper.insertContentRelation(moRequest("contentParId"), nContentId, IIf(moRequest("2way") = "false", True, False))
+                                            End If
+                                        Else
+                                            If moRequest("contentParId") <> "" Then
+                                                moDbHelper.insertContentRelation(moRequest("contentParId"), nContentId, IIf(moRequest("2way") = "true", True, False))
+                                            End If
+                                        End If
                                     End If
+
                                     'simply output the content detail XML
                                     '  As this is content that we must've been able to get,
                                     '  we should be able to see it.
@@ -6357,7 +6351,6 @@ Public Class Cms
                 If moRequest("singleContentType") <> "" Then
                     'sql for content on page and permissions etc
                     Dim sFilterSql As String = GetStandardFilterSQLForContent()
-                    sFilterSql = sFilterSql & " and nstructid=" & mnPageId
                     Dim cSort As String = "|ASC_cl.nDisplayOrder"
                     Select Case moRequest("sortby")
                         Case "name"
@@ -6372,6 +6365,22 @@ Public Class Cms
                     ' Set the paging variables, if provided.
                     If Not (moRequest("startPos") Is Nothing) AndAlso IsNumeric(moRequest("startPos")) Then nStart = CInt(moRequest("startPos"))
                     If Not (moRequest("rows") Is Nothing) AndAlso IsNumeric(moRequest("rows")) Then nRows = CInt(moRequest("rows"))
+                    ' In admin mode want active and hidden products separatly
+                    If Me.mbAdminMode Then
+                        If Not (moRequest("status") Is Nothing) AndAlso IsNumeric(moRequest("status")) Then
+                            Dim nstatus As Integer = CInt(moRequest("status"))
+                            If nstatus = 0 Then
+                                sFilterSql = sFilterSql & " and nstructid=" & mnPageId & " and a.nStatus!=1"
+                                nStart = 0
+                                nRows = CInt(moRequest("TotalCount"))  ' getting all hidden products in list
+                            Else
+                                sFilterSql = sFilterSql & " and nstructid=" & mnPageId & " and a.nStatus=" & nstatus
+                            End If
+                        End If
+                    Else
+                        sFilterSql = sFilterSql & " and nstructid=" & mnPageId
+                    End If
+
                     If moSession("FilterWhereCondition") IsNot Nothing AndAlso moSession("FilterWhereCondition") <> String.Empty Then
                         Dim whereSQL As String = moSession("FilterWhereCondition")
                         GetPageContentFromSelectFilterPagination(whereSQL,,,,,, oPageElmt,,,,, moRequest("singleContentType"), False, nStart, nRows)

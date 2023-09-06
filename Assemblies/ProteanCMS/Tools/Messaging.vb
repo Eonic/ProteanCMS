@@ -314,8 +314,7 @@ Public Class Messaging
                                 Optional ByVal cSeperator As String = "",
                                 Optional ByRef odbHelper As Protean.Cms.dbHelper = Nothing,
                                 Optional ByVal cPickupHost As String = "",
-                                Optional ByVal cPickupLocation As String = "",
-                                Optional ByVal isTrackActivityEmailLogKey As Boolean = False
+                                Optional ByVal cPickupLocation As String = ""
                             ) As Object
         'PerfMon.Log("Messaging", "emailer")
         If cSeperator Is Nothing Then
@@ -774,9 +773,7 @@ Public Class Messaging
                             End If
                             Dim logId As Long = odbHelper.emailActivity(mnUserId, cActivityDetail, oMailn.To.ToString, oMailn.From.ToString, oXml.OuterXml)
                             odbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Email, mnUserId, SessionId, Now, logId, 0, activitySchema)
-                            ' check optional para 'isTrackActivityEmailLogKey =true' for review and then 
-                            ' Add update Activity Xml with inserted activity id
-                            ' Add new node in xml for this id
+
                         Else
                             odbHelper.emailActivity(mnUserId, cActivityDetail, oMailn.To.ToString, oMailn.From.ToString)
                             odbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Email, mnUserId, SessionId, Now, 0, 0, "")

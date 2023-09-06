@@ -96,14 +96,18 @@ Public Class API
                 Try
                     jObj = Newtonsoft.Json.Linq.JObject.Parse(jsonString)
                 Catch ex As Exception
-                    'Not a valid json string
+                    'Not a valid json string we want to make the request anyway
                     Dim query As String = System.Web.HttpUtility.UrlDecode(jsonString)
                     Dim formData As System.Collections.Specialized.NameValueCollection = System.Web.HttpUtility.ParseQueryString(query)
-                    paramDictionary = formData.AllKeys.ToDictionary(Function(k) k, Function(k) formData(k))
+                    Try
+                        paramDictionary = formData.AllKeys.ToDictionary(Function(k) k, Function(k) formData(k))
+                    Catch
+                    End Try
                 End Try
             End If
 
             Dim calledType As Type
+
 
             If LCase(ProviderName) = "cms.cart" Or LCase(ProviderName) = "cms.content" Or LCase(ProviderName) = "cms.admin" Then ProviderName = ""
 
