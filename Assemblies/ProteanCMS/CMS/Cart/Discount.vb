@@ -6,6 +6,7 @@ Imports System.Collections
 Imports System.Data
 Imports System.Data.SqlClient
 Imports System
+Imports Microsoft.Ajax.Utilities
 
 Partial Public Class Cms
     Partial Public Class Cart
@@ -136,8 +137,6 @@ Partial Public Class Cms
                 Dim oDiscountMessageNew As String = "The promo code you have provided is invalid for this transaction"
 
                 Try
-                    Dim cUserGroupIds As String = getUserGroupIDs() 'get the user groups
-                    Dim cPromoCodeUserEntered As String = getUserEnteredPromoCode(oNotesElmt, oCartXML) 'Check for promotional codes 
 
                     'get cart contentIds
                     Dim strItemIds As New Text.StringBuilder
@@ -146,9 +145,25 @@ Partial Public Class Cms
                         strItemIds.Append(",")
                     Next
                     Dim cCartItemIds As String = strItemIds.ToString
+                    Dim cPromoCodeUserEntered As String = getUserEnteredPromoCode(oNotesElmt, oCartXML) 'Check for promotional codes 
+                    Dim bDefaultPromoCode As Boolean = False
+
+                    If (cPromoCodeUserEntered = String.Empty) Then
+                        strSQL.Append("select distinct cDiscountName from tblCartDiscountRules inner join tblAudit on nAuditId=nAuditKey and nStatus=1 ")
+                        strSQL.Append(" and isnull(dExpireDate,getdate())>=getdate()  where isnull(cDiscountUserCode,'')=''")
+                        Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(strSQL.ToString())
+                            If oDr IsNot Nothing And oDr.HasRows() Then
+                                bDefaultPromoCode = True
+                            End If
+                        End Using
+                    End If
 
 
-                    If cCartItemIds <> "" Then
+                    If cCartItemIds <> "" And (bDefaultPromoCode Or cPromoCodeUserEntered <> String.Empty) Then
+
+                        Dim cUserGroupIds As String = getUserGroupIDs() 'get the user groups
+
+
                         ''comment----------
                         '' we selecting all discounts applicable to all Items of the cart.
                         '' we passing through the cart item ids at any promocode that has been entered
@@ -481,10 +496,12 @@ Partial Public Class Cms
                                         doc.LoadXml(additionalInfo)
 
                                         If (doc.InnerXml.Contains("cFreeShippingMethods")) Then
-                                            strcFreeShippingMethods = doc.SelectSingleNode("additionalXml").SelectSingleNode("cFreeShippingMethods").InnerText
-                                            'Initializing the attribute NonDiscountedShippingCost which will get update once promocode applied
-                                            oCartXML.SetAttribute("NonDiscountedShippingCost", "0")
-                                            oCartXML.SetAttribute("freeShippingMethods", strcFreeShippingMethods)
+                                            If (doc.SelectSingleNode("additionalXml").SelectSingleNode("cFreeShippingMethods").InnerText <> String.Empty) Then
+                                                strcFreeShippingMethods = doc.SelectSingleNode("additionalXml").SelectSingleNode("cFreeShippingMethods").InnerText
+                                                'Initializing the attribute NonDiscountedShippingCost which will get update once promocode applied
+                                                oCartXML.SetAttribute("NonDiscountedShippingCost", "0")
+                                                oCartXML.SetAttribute("freeShippingMethods", strcFreeShippingMethods)
+                                            End If
                                         End If
                                         If (doc.InnerXml.Contains("bFreeGiftBox")) Then
                                             strbFreeGiftBox = doc.SelectSingleNode("additionalXml").SelectSingleNode("bFreeGiftBox").InnerText
@@ -526,14 +543,30 @@ Partial Public Class Cms
 
                         strSQL.Append(" SELECT tblCartDiscountRules.cDiscountCode, tblCartDiscountRules.bDiscountIsPercent, ")
                         strSQL.Append("tblCartDiscountRules.nDiscountCompoundBehaviour, tblCartDiscountRules.nDiscountValue from tblCartDiscountRules where cDiscountCode='" + cPromoCodeUserEntered + "'")
-                        oDsDiscounts = myWeb.moDbHelper.GetDataSet(strSQL.ToString, "Discount", "Discounts")
-
-
-                        dDisountAmount = oDsDiscounts.Tables("Discount").Rows(0)("nDiscountValue")
+                        'oDsDiscounts = myWeb.moDbHelper.GetDataSet(strSQL.ToString, "Discount", "Discounts")
+                        'dDisountAmount = oDsDiscounts.Tables("Discount").Rows(0)("nDiscountValue")
+                        Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(strSQL.ToString)
+                            If oDr.HasRows Then
+                                While oDr.Read()
+                                    dDisountAmount = oDr("nDiscountValue")
+                                End While
+                            End If
+                        End Using
                         Return dDisountAmount
                     Else
+                        Dim oItemElmt As XmlElement
+                        For Each oItemElmt In oCartXML.SelectNodes("Item")
+                            'later sites are dependant on these values
+                            oItemElmt.SetAttribute("originalPrice", Round(oItemElmt.GetAttribute("price"), , , mbRoundUp))
+                            oItemElmt.SetAttribute("unitSaving", 0)
+                            oItemElmt.SetAttribute("itemSaving", 0)
+                            oItemElmt.SetAttribute("discount", 0)
+                            oItemElmt.SetAttribute("itemTotal", oItemElmt.GetAttribute("price") * oItemElmt.GetAttribute("quantity"))
 
+                        Next
                         Return 0
+
+
                     End If
 
                     oDsDiscounts.Dispose()

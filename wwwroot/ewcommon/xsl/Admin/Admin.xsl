@@ -178,13 +178,12 @@
         <xsl:text>~/ewcommon/js/vuejs/axios.min.js,</xsl:text>
         <xsl:text>~/ewcommon/js/vuejs/polyfill.js,</xsl:text>
         <xsl:text>~/ewcommon/js/vuejs/protean-vue.js,</xsl:text>
-		  <xsl:text>~/ewcommon/js/ewAdmin.js</xsl:text>
+		<xsl:text>~/ewcommon/js/ewAdmin.js</xsl:text>
       </xsl:with-param>
       <xsl:with-param name="bundle-path">
         <xsl:text>~/Bundles/Admin</xsl:text>
       </xsl:with-param>
     </xsl:call-template>
-
     <xsl:apply-templates select="." mode="siteAdminJs"/>
     <xsl:apply-templates select="." mode="LayoutAdminJs"/>
   </xsl:template>
@@ -1879,7 +1878,7 @@
                 <xsl:otherwise>
                   <li>
                     <a href="{$appPath}?rebundle=true" class="btn btn-warning">
-                      <i class="fa fa-recycle">
+                      <i class="fas fa-recycle">
                         <xsl:text> </xsl:text>
                       </i>
                       <xsl:text> </xsl:text>Rebundle JS / CSS files
@@ -1887,6 +1886,14 @@
                   </li>
                 </xsl:otherwise>
               </xsl:choose>
+				<li>
+					<a href="{$appPath}?recompile=true" class="btn btn-warning bs-please-wait" data-pleasewaitmessage="Recompiling - Please wait a moment.">
+						<i class="fas fa-recycle">
+							<xsl:text> </xsl:text>
+						</i>
+						<xsl:text> </xsl:text>Recompile XSLT and Rebundle
+					</a>
+				</li>
               <xsl:if test="ContentDetail/Status/Status/DBVersion/node()!=ContentDetail/Status/Status/LatestDBVersion/node() and User/@name='Admin'">
                 <li>
                   <a href="/ewcommon/setup/?ewCmd=UpgradeDB" class="btn btn-default">
@@ -4957,24 +4964,33 @@
     <xsl:param name="desc"/>
     <xsl:param name="name"/>
     <xsl:param name="type"/>
+	  <xsl:for-each select="/Page/Contents/Content[@name=$name and @type=$type]">
+		  
+	  </xsl:for-each>
     <tr>
       <td>
         <xsl:value-of select="$desc"/>
       </td>
       <td>
-        <xsl:choose>
+		 <xsl:choose>
           <xsl:when test="/Page/Contents/Content[@position = $name]">
-            <xsl:value-of select="/Page/Contents/Content[@position = $name]/@moduleType"/>
+			  <xsl:for-each select="/Page/Contents/Content[@position = $name]/@moduleType">
+			  <xsl:value-of select="@moduleType"/><br/>
+		  </xsl:for-each>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:copy-of select="/Page/Contents/Content[@name=$name and @type = $type and @type!='=CookiePolicy']/node()"/>
+			  <xsl:for-each select="/Page/Contents/Content[@name=$name and @type=$type and @type!='=CookiePolicy']">
+				  <xsl:copy-of select="node()"/>
+				  <br/>
+			  </xsl:for-each>
           </xsl:otherwise>
         </xsl:choose>
       </td>
       <td>
-        <xsl:choose>
-          <xsl:when test="/Page/Contents/Content[@name=$name and @type = $type and @parId!=/Page/@id]">
-            <a href="{$appPath}?ewCmd=EditContent&amp;pgid={/Page/@id}&amp;id={/Page/Contents/Content[@name=$name and @type=$type]/@id}" title="Edit master on page: {/Page/Menu/descendant-or-self::MenuItem[@id=/Page/Contents/Content[@name=$name and @type = $type]/@parId]/@name}" class="btn btn-xs btn-primary">
+		  
+        
+          <xsl:for-each select="/Page/Contents/Content[@name=$name and @type=$type and @parId!=/Page/@id]">
+            <a href="{$appPath}?ewCmd=EditContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Edit master on page: {/Page/Menu/descendant-or-self::MenuItem[@id=/Page/Contents/Content[@name=$name and @type = $type]/@parId]/@name}" class="btn btn-xs btn-primary">
               <i class="fa fa-edit fa-white">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Edit Master
@@ -4984,35 +5000,35 @@
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Add Here
             </a>
-          </xsl:when>
-          <xsl:when test="/Page/Contents/Content[@name=$name and @type = $type] | /Page/Contents/Content[@type = 'Module' and @position = $name]">
+          </xsl:for-each>
+          <xsl:for-each select="/Page/Contents/Content[@name=$name and @type = $type] | /Page/Contents/Content[@type = 'Module' and @position = $name]">
             <a href="{$appPath}?ewCmd=EditContent&amp;pgid={/Page/@id}&amp;id={/Page/Contents/Content[@name=$name and @type=$type]/@id}" title="Click here to edit this content" class="btn btn-xs btn-primary">
               <i class="fa fa-edit fa-white">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Edit
             </a>
             <xsl:if test="/Page/Contents/Content[@name=$name and @type = $type and @status='1'] | /Page/Contents/Content[@type = 'Module' and @position = $name and @status='1']">
-              <a href="{$appPath}?ewCmd=HideContent&amp;pgid={/Page/@id}&amp;id={/Page/Contents/Content[@name=$name and @type = $type]/@id}" title="Click here to hide this item" class="btn btn-xs btn-danger">
+              <a href="{$appPath}?ewCmd=HideContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to hide this item" class="btn btn-xs btn-danger">
                 <i class="fa fa-ban fa-white">
                   <xsl:text> </xsl:text>
                 </i><xsl:text> </xsl:text>Hide
               </a>
             </xsl:if>
             <xsl:if test="/Page/Contents/Content[@name=$name and @type = $type and @status='0'] | /Page/Contents/Content[@type = 'Module' and @position = $name and @status='0']">
-              <a href="{$appPath}?ewCmd=ShowContent&amp;pgid={/Page/@id}&amp;id={/Page/Contents/Content[@name=$name and @type = $type]/@id}" title="Click here to show this item" class="btn btn-xs btn-success">
+              <a href="{$appPath}?ewCmd=ShowContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to show this item" class="btn btn-xs btn-success">
                 <i class="fa fa-check-circle-o fa-white">
                   <xsl:text> </xsl:text>
                 </i><xsl:text> </xsl:text>Show
               </a>
-              <a href="{$appPath}?ewCmd=DeleteContent&amp;pgid={/Page/@id}&amp;id={/Page/Contents/Content[@name=$name and @type = $type]/@id}" title="Click here to delete this item" class="btn btn-xs btn-danger">
+              <a href="{$appPath}?ewCmd=DeleteContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to delete this item" class="btn btn-xs btn-danger">
                 <i class="fa fa-remove-circle fa-white">
                   <xsl:text> </xsl:text>
                 </i><xsl:text> </xsl:text>Delete
               </a>
               <br/>
             </xsl:if>
-          </xsl:when>
-          <xsl:otherwise>
+          </xsl:for-each>
+          <xsl:if test="not(/Page/Contents/Content[@name=$name and @type=$type])">
             <xsl:choose>
               <xsl:when test="$type='Module'">
                 <a class="btn btn-default btn-xs pull-right" href="{$appPath}?ewCmd=AddModule&amp;pgid={/Page/@id}&amp;position={$name}">
@@ -5027,8 +5043,7 @@
                 </a>
               </xsl:otherwise>
             </xsl:choose>
-          </xsl:otherwise>
-        </xsl:choose>
+          </xsl:if>
       </td>
     </tr>
 
@@ -12186,22 +12201,37 @@
         <xsl:value-of select="@versionid"/>
       </xsl:if>
     </xsl:variable>
-    <td class="btn-group">
+	<xsl:variable name="reviewproductid">
+		<xsl:if test="@reviewProductID!=''">			 
+			<xsl:value-of select="@reviewProductID"/>
+		</xsl:if>
+	</xsl:variable>	
+    <td class="btn-group">		
+	 <xsl:choose>
+			<xsl:when test="@Type='Review'">
+				<a href="{$appPath}?ewCmd=EditContent&amp;id={$reviewproductid}&amp;ewRedirCmd=AwaitingApproval" class="btn btn-xs btn-default" title="Click here to edit this content">
+					<i class="fa fa-eye">
+						<xsl:text> </xsl:text>
+					</i>
+					<xsl:text> </xsl:text>Releated Product
+				</a>
+			</xsl:when>
+			<xsl:otherwise>
+				<a href="{$appPath}?ewCmd=PreviewOn&amp;pgid={@pageid}&amp;artid={@id}{$versionId}" class="btn btn-xs btn-default" title="Click here to edit this content">
+					<i class="fa fa-eye">
+						<xsl:text> </xsl:text>
+					</i>
+					<xsl:text> </xsl:text>Preview
+				</a>
 
-
-      <a href="{$appPath}?ewCmd=PreviewOn&amp;pgid={@pageid}&amp;artid={@id}{$versionId}" class="btn btn-xs btn-default" title="Click here to edit this content">
-        <i class="fa fa-eye">
-          <xsl:text> </xsl:text>
-        </i>
-        <xsl:text> </xsl:text>Preview
-      </a>
-
-      <a href="{$appPath}?ewCmd=ContentVersions&amp;id={@id}{$versionId}" class="btn btn-xs btn-default" title="Click here to edit this content">
-        <i class="fa fa-history">
-          <xsl:text> </xsl:text>
-        </i>
-        <xsl:text> </xsl:text>History
-      </a>
+				<a href="{$appPath}?ewCmd=ContentVersions&amp;id={@id}{$versionId}" class="btn btn-xs btn-default" title="Click here to edit this content">
+					<i class="fa fa-history">
+						<xsl:text> </xsl:text>
+					</i>
+					<xsl:text> </xsl:text>History
+				</a>
+			</xsl:otherwise>
+	  </xsl:choose>     
 
       <a href="{$appPath}?ewCmd=EditContent&amp;id={@id}{$versionId}&amp;ewRedirCmd=AwaitingApproval" class="btn btn-xs btn-primary" title="Click here to edit this content">
         <i class="fa fa-pencil fa-white">
@@ -13965,7 +13995,7 @@
 				<xsl:value-of select="cContentSchemaName/node()"/>
 			</td>
 			<td colspan="2">
-				<xsl:value-of select="@cDefinitionName"/>
+				<xsl:value-of select="cDefinitionName/node()"/>
 			</td>
 			<td colspan="2">
 				<xsl:value-of select="cContentValueXpath/node()"/>

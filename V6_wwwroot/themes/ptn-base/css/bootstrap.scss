@@ -3,6 +3,7 @@
 @import "variables";
 
 @import "../../../ptn/libs/bs5/scss/bootstrap";
+@import "../../../ptn/libs/animate.css/animate.scss";
 
 //Protean Modules
 @import "../../../ptn/core/modules/modules";
@@ -10,8 +11,6 @@
 
 //Theme specific
 @import "five-cols";
-@import "animate.css";
-@import "anim.css";
 @import "variables2";
 @import "accessibility";
 @import "utilities";
@@ -31,3 +30,5 @@
 @import "forms";
 @import "cart";
 @import "header-nav";
+@import "custom";
+@import "minimal-skin";

@@ -23,6 +23,7 @@ Imports System.Collections.Generic
 Imports Imazen.WebP
 Imports System.Drawing
 Imports System.Data.SqlClient
+Imports System.Configuration
 
 Partial Public Module xmlTools
 
@@ -2025,26 +2026,22 @@ Partial Public Module xmlTools
 
             Try
 
-                'Convert JSX files
-                'Dim bundleFilePaths As String() = Split(CommaSeparatedFilenames, ",")
-                '  Dim filename As String
-                ' For Each filename In bundleFilePaths
-                ' If filename.EndsWith(".jsx") Then
-                '    Dim ReactEnv As React.IReactEnvironment =
-                '    React.IReactEnvironment.Babel.TransformAndSaveFile(filename)
-
-                'End If
-                ' Next
 
                 Dim bReset As Boolean = False
                 If myWeb Is Nothing Or gbDebug Then
                     'likely to be in error condition
                     sReturnString = CommaSeparatedFilenames.Replace("~", "")
                 Else
-                    If Not myWeb.moRequest("reBundle") Is Nothing Then
-                        bReset = True
+                    'Dim fsh As New Protean.fsHelper(myWeb.moCtx)
+                    If Not myWeb.moRequest("rebundle") Is Nothing Then
+                        ''code for deleting script.js file from the bundle folders.
+
+
+                        If myWeb.mbAdminMode Then
+                            bReset = True
+                        End If
                     End If
-                    Dim bAppVarExists As Boolean = False
+                        Dim bAppVarExists As Boolean = False
                     If Not myWeb.moCtx.Application.Get(TargetPath) Is Nothing Then
                         bAppVarExists = True
                     End If
@@ -2064,6 +2061,9 @@ Partial Public Module xmlTools
                         sReturnString = myWeb.moCtx.Application.Get(TargetPath)
 
                     Else
+
+
+
                         Dim appPath As String = myWeb.moRequest.ApplicationPath
                         If appPath.EndsWith("ewcommon") Then
                             CommaSeparatedFilenames = CommaSeparatedFilenames.Replace("~/", "~/../")
@@ -2129,7 +2129,6 @@ Partial Public Module xmlTools
                         '  Dim instance As New CustomBundleResolver(Bundles, CtxBase)
 
                         Dim scriptFile As String
-
                         scriptFile = TargetPath & "/script.js"
 
                         Dim fsh As New Protean.fsHelper(myWeb.moCtx)
@@ -2137,9 +2136,12 @@ Partial Public Module xmlTools
 
                         Dim br As Optimization.BundleResponse = Bundles.GetBundleFor(TargetPath).GenerateBundleResponse(BundlesCtx)
                         Dim info As Byte() = New System.Text.UTF8Encoding(True).GetBytes(br.Content)
-                        'fsh.DeleteFile(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "js" & scriptFile.TrimStart("~")))
+
+
+
 
                         scriptFile = fsh.SaveFile("script.js", TargetPath, info)
+
 
                         If scriptFile.StartsWith("ERROR: ") Then
                             myWeb.bPageCache = False
@@ -2251,97 +2253,98 @@ Partial Public Module xmlTools
                         Dim oImp As Protean.Tools.Security.Impersonate = Nothing
                         If myWeb.impersonationMode Then
                             oImp = New Protean.Tools.Security.Impersonate
-                            If oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), True, myWeb.moConfig("AdminGroup")) Then
-                                sReturnString = "Admin Account logon Failure"
+                            If oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), True, myWeb.moConfig("AdminGroup")) = False Then
+                                sReturnString = "Admin-Account-Logon-Failure"
+                                Return sReturnString
                                 Exit Try
                             End If
                         End If
 
                         Dim appPath As String = myWeb.moRequest.ApplicationPath
-                            If appPath.EndsWith("ewcommon") Then
-                                CommaSeparatedFilenames = CommaSeparatedFilenames.Replace("~/", "~/../")
-                            End If
+                        If appPath.EndsWith("ewcommon") Then
+                            CommaSeparatedFilenames = CommaSeparatedFilenames.Replace("~/", "~/../")
+                        End If
 
-                            'set the services urls list and call the handler request
-                            Dim oCssWebClient As CssWebClient = New CssWebClient(myWeb.moCtx, myWeb.msException) With {.ServiceUrlsList = Split(CommaSeparatedFilenames, ",").ToList()}
-                            oCssWebClient.SendCssHttpHandlerRequest()
+                        'set the services urls list and call the handler request
+                        Dim oCssWebClient As CssWebClient = New CssWebClient(myWeb.moCtx, myWeb.msException) With {.ServiceUrlsList = Split(CommaSeparatedFilenames, ",").ToList()}
+                        oCssWebClient.SendCssHttpHandlerRequest()
 
-                            Dim scriptFile As String = ""
-                            Dim fsh As New Protean.fsHelper(myWeb.moCtx)
+                        Dim scriptFile As String = ""
+                        Dim fsh As New Protean.fsHelper(myWeb.moCtx)
 
-                            fsh.initialiseVariables(fsHelper.LibraryType.Style)
+                        fsh.initialiseVariables(fsHelper.LibraryType.Style)
 
-                            scriptFile = String.Format("{0}/style.css", TargetPath)
-                            sReturnError = "error getting " & CommaSeparatedFilenames
-                            'sReturnError = "error getting " & oCssWebClient.FullCssFile
+                        scriptFile = String.Format("{0}/style.css", TargetPath)
+                        sReturnError = "error getting " & CommaSeparatedFilenames
+                        'sReturnError = "error getting " & oCssWebClient.FullCssFile
 
-                            Dim info As Byte() = New System.Text.UTF8Encoding(True).GetBytes(oCssWebClient.FullCssFile)
-                            'fsh.DeleteFile(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "css" & scriptFile.TrimStart("~")))
-                            'TS commented out as modified save file to overwrite by using WriteAllBytes
-                            Dim cnt As Integer
-                            Dim maxAttempt As String = 5
-                            Try
-                                For cnt = 1 To maxAttempt
-                                    scriptFile = fsh.SaveFile("style.css", TargetPath, info)
-                                    If Not scriptFile.Contains("ERROR:") Then
-                                        Exit For
-                                    End If
-                                Next
-                            Catch ex As Exception
-                                If (cnt < maxAttempt) Then
-                                    Threading.Thread.Sleep(500 * cnt)
+                        Dim info As Byte() = New System.Text.UTF8Encoding(True).GetBytes(oCssWebClient.FullCssFile)
+                        'fsh.DeleteFile(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "css" & scriptFile.TrimStart("~")))
+                        'TS commented out as modified save file to overwrite by using WriteAllBytes
+                        Dim cnt As Integer
+                        Dim maxAttempt As String = 5
+                        Try
+                            For cnt = 1 To maxAttempt
+                                scriptFile = fsh.SaveFile("style.css", TargetPath, info)
+                                If Not scriptFile.Contains("ERROR:") Then
+                                    Exit For
                                 End If
-                            End Try
-
-                            If scriptFile.Contains("ERROR:") Then
-                                myWeb.bPageCache = False
-                                scriptFile = "/" & myWeb.moConfig("ProjectPath") & "css" & String.Format("{0}/style.css", TargetPath)
-                            End If  'we can try adding addional error handling here if we have exact code returned from issue
-
-                            If scriptFile.StartsWith(TargetPath.TrimStart("~"), StringComparison.InvariantCultureIgnoreCase) Then
-                                sReturnString = "/" & myWeb.moConfig("ProjectPath") & "css" & scriptFile
-                            Else
-                                myWeb.bPageCache = False
-                                sReturnString = "/" & myWeb.moConfig("ProjectPath") & "css" & scriptFile
-                            End If
-
-
-                            'hdlrClient will store the resultant cssSplits, store them to disk and application state, and return the file list to the xslt transformation
-                            For i As Integer = 0 To oCssWebClient.CssSplits.Count - 1
-                                scriptFile = String.Format("{0}/style{1}.css", TargetPath, i)
-
-                                info = New System.Text.UTF8Encoding(True).GetBytes(oCssWebClient.CssSplits(i))
-                                'fsh.DeleteFile(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "css" & TargetFile.TrimStart("~") & "/" & String.Format("style{0}.css", i)))
-                                'TS commented out as modified save file to overwrite by using WriteAllBytes
-                                scriptFile = "/" & myWeb.moConfig("ProjectPath") & "css" & fsh.SaveFile(String.Format("style{0}.css", i), TargetPath, info)
-
-                                If scriptFile.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css" & "ERROR: ") Then
-                                    myWeb.bPageCache = False
-
-                                End If
-
-                                If scriptFile.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css" & TargetPath.TrimStart("~")) Then
-                                    'file has been saved successfully.
-                                    sReturnString += "," & scriptFile
-                                Else
-                                    'we have a file save error we should try again next request.
-                                    sReturnError += scriptFile
-                                End If
-
-
                             Next
+                        Catch ex As Exception
+                            If (cnt < maxAttempt) Then
+                                Threading.Thread.Sleep(500 * cnt)
+                            End If
+                        End Try
 
-                            If sReturnString.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css") Then
-                                'check the file exists before we set the application variable...
-                                If VirtualFileExists("/" & myWeb.moConfig("ProjectPath") & "css" & TargetPath.Replace("~", "") & "/style.css") Then
-                                    myWeb.moCtx.Application.Set(TargetPath, sReturnString)
-                                End If
-                            Else
-                                sReturnString = sReturnString & sReturnError
+                        If scriptFile.Contains("ERROR:") Then
+                            myWeb.bPageCache = False
+                            scriptFile = "/" & myWeb.moConfig("ProjectPath") & "css" & String.Format("{0}/style.css", TargetPath)
+                        End If  'we can try adding addional error handling here if we have exact code returned from issue
+
+                        If scriptFile.StartsWith(TargetPath.TrimStart("~"), StringComparison.InvariantCultureIgnoreCase) Then
+                            sReturnString = "/" & myWeb.moConfig("ProjectPath") & "css" & scriptFile
+                        Else
+                            myWeb.bPageCache = False
+                            sReturnString = "/" & myWeb.moConfig("ProjectPath") & "css" & scriptFile
+                        End If
+
+
+                        'hdlrClient will store the resultant cssSplits, store them to disk and application state, and return the file list to the xslt transformation
+                        For i As Integer = 0 To oCssWebClient.CssSplits.Count - 1
+                            scriptFile = String.Format("{0}/style{1}.css", TargetPath, i)
+
+                            info = New System.Text.UTF8Encoding(True).GetBytes(oCssWebClient.CssSplits(i))
+                            'fsh.DeleteFile(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "css" & TargetFile.TrimStart("~") & "/" & String.Format("style{0}.css", i)))
+                            'TS commented out as modified save file to overwrite by using WriteAllBytes
+                            scriptFile = "/" & myWeb.moConfig("ProjectPath") & "css" & fsh.SaveFile(String.Format("style{0}.css", i), TargetPath, info)
+
+                            If scriptFile.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css" & "ERROR: ") Then
+                                myWeb.bPageCache = False
+
                             End If
 
-                            oCssWebClient = Nothing
-                            fsh = Nothing
+                            If scriptFile.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css" & TargetPath.TrimStart("~")) Then
+                                'file has been saved successfully.
+                                sReturnString += "," & scriptFile
+                            Else
+                                'we have a file save error we should try again next request.
+                                sReturnError += scriptFile
+                            End If
+
+
+                        Next
+
+                        If sReturnString.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css") Then
+                            'check the file exists before we set the application variable...
+                            If VirtualFileExists("/" & myWeb.moConfig("ProjectPath") & "css" & TargetPath.Replace("~", "") & "/style.css") Then
+                                myWeb.moCtx.Application.Set(TargetPath, sReturnString)
+                            End If
+                        Else
+                            sReturnString = sReturnString & sReturnError
+                        End If
+
+                        oCssWebClient = Nothing
+                        fsh = Nothing
 
                         If myWeb.impersonationMode Then
                             If Not IsNothing(oImp) Then

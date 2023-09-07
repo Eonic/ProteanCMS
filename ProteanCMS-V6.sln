@@ -7,7 +7,7 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ProteanCMS", "Assemblies\Pr
 EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "V6_wwwroot", "V6_wwwroot\", "{F029CDA1-F973-463A-BA08-6FCBA7C77919}"
 	ProjectSection(WebsiteProperties) = preProject
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.7.2"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.8"
 		ProjectReferences = "{76e7c871-9cec-4795-b6f2-66439dcd9367}|Protean.Tools.dll;{12AF6171-9AAB-4C4D-A83B-85FE18A334C1}|Protean.Tools.Csharp.dll;{7d93fd23-f739-4f09-a1b0-f5a8d0451533}|ProteanCMS.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_52108"
 		Debug.AspNetCompiler.PhysicalPath = "V6_wwwroot\"

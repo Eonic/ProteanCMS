@@ -27,6 +27,9 @@ Imports System.Web.UI
 Imports System.Web
 Imports Microsoft.Ajax.Utilities
 Imports DelegateWrappers
+Imports System.Drawing.Imaging
+Imports System.Net
+Imports System.Threading
 
 Partial Public Class fsHelper
 
@@ -49,7 +52,10 @@ Partial Public Class fsHelper
     Public ImpersonationMode As Boolean = False
 
     Private _thumbnailPath As String = "/~ptn"
+    'Public cleanUploadedPaths As New List(Of String)()
 
+    Public uploadReviewImageRootPath As String = ""
+    Public cleanUploadedPaths As String
     Shared _libraryTypeExtensions()() As String = {
                                                  New String() {},
                                                  New String() {"png", "jpg", "gif", "jpeg", "bmp"},
@@ -520,7 +526,9 @@ Partial Public Class fsHelper
 
             If dir.Exists Then
                 Dim f As FileInfo
+                dir.Attributes = FileAttributes.Normal
                 For Each f In dir.GetFiles()
+                    f.Attributes = FileAttributes.Normal
                     f.Delete()
                 Next f
                 Dim d As DirectoryInfo
@@ -530,7 +538,8 @@ Partial Public Class fsHelper
             Else
                 Return "this folder does not exist"
             End If
-            oImp.UndoImpersonation()
+
+
             If ImpersonationMode Then
                 oImp.UndoImpersonation()
                 oImp = Nothing
@@ -717,7 +726,7 @@ Partial Public Class fsHelper
             End If
             'here we will fix any unsafe web charactors in the name
             filename = Replace(filename, " ", "-")
-
+            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
             If IO.File.Exists(mcStartFolder & cFolderPath & "\" & filename) Then
                 Return Replace(Replace(cFolderPath, "..\", "/"), "\", "/") & "/" & filename
             Else
@@ -807,13 +816,21 @@ Partial Public Class fsHelper
 
     Public Function MoveFile(ByVal FileName As String, ByVal cFolderSource As String, ByVal cFolderDestination As String, Optional ByVal bOverwrite As Boolean = False) As Boolean
         'PerfMon.Log("fsHelper", "MoveFile")
-        Try
 
+        Dim cProcessInfo As String = "Moving " & FileName & " to " & cFolderDestination
+        Try
             Dim dir As New DirectoryInfo(goServer.MapPath("/" & mcRoot) & cFolderSource.Replace("/", "\"))
             Dim DestDir As New DirectoryInfo(goServer.MapPath("/" & mcRoot) & cFolderDestination.Replace("/", "\"))
 
             If dir.Exists And DestDir.Exists Then
-                IO.File.Copy(dir.FullName & "\" & FileName, DestDir.FullName & "\" & FileName.Replace(" ", "-"), bOverwrite)
+                If Not IO.File.Exists(DestDir.FullName & "\" & FileName.Replace(" ", "-")) Then
+                    IO.File.Copy(dir.FullName & "\" & FileName, DestDir.FullName & "\" & FileName.Replace(" ", "-"), bOverwrite)
+                End If
+
+                IO.File.SetAttributes(dir.FullName & "\" & FileName, FileAttributes.Normal)
+
+                Thread.Sleep(50)
+
                 IO.File.Delete(dir.FullName & "\" & FileName)
                 Return True
             Else
@@ -821,7 +838,10 @@ Partial Public Class fsHelper
             End If
 
         Catch ex As Exception
-            Return ex.Message
+            ' Return ex.Message
+            returnException(msException, mcModuleName, "MoveFile", ex, "", cProcessInfo, gbDebug)
+            Return False
+
         End Try
     End Function
 
@@ -954,23 +974,38 @@ Partial Public Class fsHelper
 
     End Function
 
-
-    Public Sub UploadRequest(ByVal context As System.Web.HttpContext)
+    Public Function ContainsSpecialChars(ByVal sfilename As String) As Boolean
+        Return sfilename.IndexOfAny("[~`!@#$%^&*()-+=|{}':;,<>/?]".ToCharArray) <> -1
+    End Function
+    Public Function UploadRequest(ByVal context As System.Web.HttpContext, Optional ByVal UploadDirPath As String = "") As String
         Try
 
 
             context.Response.AddHeader("Pragma", "no-cache")
             context.Response.AddHeader("Cache-Control", "Private, no - cache")
 
-            mcStartFolder = context.Server.MapPath(context.Request("storageRoot").Replace("\", "/").Replace("""", ""))
-            mcRoot = context.Server.MapPath("/")
+            If UploadDirPath IsNot Nothing And UploadDirPath <> "" Then
 
-            HandleUploads(context)
+                mcStartFolder = mcStartFolder & UploadDirPath.Replace("/", "\")
+                If Not Directory.Exists(mcStartFolder) Then
+                    Directory.CreateDirectory(mcStartFolder)
+                End If
+                mcRoot = context.Server.MapPath("/")
+                HandleUploads(context)
+                Return cleanUploadedPaths
+            Else
+                mcStartFolder = context.Server.MapPath(context.Request("storageRoot").Replace("\", "/").Replace("""", ""))
+                mcRoot = context.Server.MapPath("/")
+                HandleUploads(context)
+                Return String.Empty
+            End If
+
 
         Catch ex As Exception
             'catch errorr
+            Return ex.Message
         End Try
-    End Sub
+    End Function
 
     Private Sub HandleUploads(ByVal context As System.Web.HttpContext)
 
@@ -1043,6 +1078,7 @@ Partial Public Class fsHelper
             cCleanfileName = Regex.Replace(cCleanfileName, "-{2,}", "-", RegexOptions.None)
             Return cCleanfileName
 
+
         Catch ex As Exception
             'RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ReplaceRegularExpression", ex, ""))
             Return ex.Message
@@ -1057,16 +1093,9 @@ Partial Public Class fsHelper
 
             Try
                 If Not mcStartFolder.EndsWith("\") Then mcStartFolder = mcStartFolder & "\"
-                'Dim fileNameFixed As String = Path.GetFileName(file.FileName).Replace(" ", "-").Replace("'", "")
 
                 Dim cfileName As String = CleanfileName(file.FileName)
 
-
-
-                'If Not (IO.File.Exists(goServer.MapPath(goConfig("ProjectPath") & "\images\" & fileNameFixed))) Then
-                '    Dim img As System.Drawing.Image = System.Drawing.Image.FromStream(context.Request.Files(i).InputStream)
-                '    Dim SizeInMB As Decimal = (CType(file.InputStream.Length, Decimal) / CDec(1024 * 1024))
-                '    If Not (SizeInMB > 4.0) Then
                 file.SaveAs(mcStartFolder & cfileName)
 
                 If LCase(mcStartFolder & cfileName).EndsWith(".jpg") Or LCase(mcStartFolder & cfileName).EndsWith(".jpeg") Or LCase(mcStartFolder & cfileName).EndsWith(".png") Then
@@ -1074,17 +1103,19 @@ Partial Public Class fsHelper
                     Dim moWebCfg As Object = WebConfigurationManager.GetWebApplicationSection("protean/web")
                     eImg.UploadProcessing(moWebCfg("WatermarkText"), mcRoot & moWebCfg("WatermarkImage"))
                 End If
+
                 Dim fullName As String = Path.GetFileName(file.FileName).Replace("'", "")
                 statuses.Add(New FilesStatus(fullName.Replace(" ", "-"), file.ContentLength))
+                context.Server.MapPath("/")
+                'We will add one node in ReviewFeedback.xml form and use it instead of config key = context.Request.Form("reviewimagepath")
+                If context.Request.Form("cReviewPhysicalPath") <> Nothing AndAlso context.Request.Form("cReviewPhysicalPath") <> String.Empty Then
+                    cleanUploadedPaths = "/" & mcStartFolder.Replace(context.Request.Form("cReviewPhysicalPath"), "").Replace("\", "/") & cfileName
+                ElseIf goConfig("ReviewImageRootPath") <> Nothing AndAlso goConfig("ReviewImageRootPath") <> String.Empty Then
+                    cleanUploadedPaths = "/" & mcStartFolder.Replace(goConfig("ReviewImageRootPath"), "").Replace("\", "/") & cfileName
+                Else
+                    cleanUploadedPaths = "/" & mcStartFolder.Replace(context.Server.MapPath("/"), "").Replace("\", "/") & cfileName
+                End If
 
-
-
-                '    Else
-                '        'alert: image size is bigger than 4 MB
-                '    End If
-                'Else
-                '    'alert: Image with Same  name already exist
-                'End If
 
             Catch ex As Exception
                 statuses.Add(New FilesStatus("failed", 0))

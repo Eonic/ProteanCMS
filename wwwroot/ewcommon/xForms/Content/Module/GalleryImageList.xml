@@ -189,7 +189,7 @@
           <item>
             <label>Alphabetical</label>
             <!-- This can be @attribute or Node() name() to sort by -->
-            <value>Headline</value>
+            <value>Title</value>
             <toggle case="cSortBy_2" event="DOMActivate"/>
           </item>
           <item>

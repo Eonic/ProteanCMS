@@ -193,8 +193,8 @@
     <xsl:apply-templates select="." mode="footer1" />
   </xsl:template>
 
-  <xsl:template match="Page" mode="footer1">
-    <div id="pagefooter" class="Site clearfix">
+  <!--<xsl:template match="Page" mode="footer1">
+    <footer id="pagefooter" class="Site clearfix">
       <div class="footer-inner">
         <div class="clearfix footer-main">
           <div class="container">
@@ -236,6 +236,6 @@
           </div>
         </div>
       </div>
-    </div>
-  </xsl:template>
+    </footer>
+  </xsl:template>-->
 </xsl:stylesheet>

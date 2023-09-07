@@ -1,18 +1,77 @@
-﻿.Site {
-    .card {
-        margin-bottom: $grid-gutter-y;
+﻿@mixin card-contrast($color) {
+    color: color-contrast($color);
+
+    h1, h2, h3, h4, h5, h6 {
+        color: color-contrast($color);
     }
 
-    .card.bg-primary,
-    .card.bg-dark {
-        @extend .text-white;
+    a {
+        color: color-contrast($color);
+    }
 
-        a {
-            @extend .link-light;
-        }
+    a.btn-custom {
+        border: 2px solid color-contrast($color);
+        background: transparent;
+    }
+}
 
-        .btn-primary {
+@mixin card-color-bg {
+    .card-header,
+    .card-footer {
+        background: none;
+        border: none;
+    }
+
+    .card.bg-primary {
+        @include card-contrast($primary);
+
+        .btn-custom,
+        .btn-primary{
             @extend .btn-dark;
         }
     }
+
+    .card.bg-secondary {
+        @include card-contrast($secondary);
+    }
+
+    .card.bg-info {
+        @include card-contrast($info);
+    }
+
+    .card.bg-light {
+        @include card-contrast($light);
+    }
+
+    .card.bg-dark {
+        @include card-contrast($dark);
+    }
+}
+
+.Site {
+    .card {
+        margin-bottom: $grid-gutter-height;
+
+        .card-header {
+            padding-bottom:0;
+            .card-title {
+                margin-bottom: 0;
+            }
+
+            a {
+                text-decoration: none;
+
+                &:hover {
+                    text-decoration: underline;
+                    text-underline-offset: 0.2rem;
+                    text-decoration-thickness: 1px;
+                }
+            }
+        }
+    }
+
+    @include card-color-bg;
+}
+.alert {
+    margin-bottom: $grid-gutter-height;
 }

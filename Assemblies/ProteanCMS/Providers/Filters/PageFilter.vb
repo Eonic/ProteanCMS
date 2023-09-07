@@ -88,7 +88,7 @@ Namespace Providers
                             'Dim sValue As String
                             Dim cnt As Integer
                             Dim aPages() As String = oXml.InnerText.Split(",")
-                            If (aPages.Length <> 0) Then
+                            If (aPages.Length <> 0 And aPages.Length <> Nothing) Then
                                 For cnt = 0 To aPages.Length - 1
                                     sText = oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + aPages(cnt) + "']").FirstChild().FirstChild().InnerText
 
@@ -155,7 +155,7 @@ Namespace Providers
                 Dim cPageIds As String = String.Empty
                 Try
                     If (aWeb.moRequest.Form("PageFilter") IsNot Nothing) Then
-                        cWhereSql = cWhereSql & " and nStructId IN(" + aWeb.moRequest.Form("PageFilter") & ")"
+                        cWhereSql = cWhereSql & "  nStructId IN(" + aWeb.moRequest.Form("PageFilter") & ")"
                     End If
 
                 Catch ex As Exception

@@ -21,10 +21,10 @@
 
     <xsl:variable name="adminContextSectionPage" select="/Page/AdminMenu/MenuItem/MenuItem[descendant-or-self::MenuItem[@cmd=/Page/@editContext]]"/>
     <xsl:variable name="CMSLogo">
-      <xsl:call-template name="eonicwebLogo"/>
+      <xsl:call-template name="proteanLogo"/>
     </xsl:variable>
     <xsl:variable name="CMSName">
-      <xsl:call-template name="eonicwebProductName"/>
+      <xsl:call-template name="proteanProductName"/>
     </xsl:variable>
 
     <!-- ADMIN HEADER-->
@@ -619,10 +619,10 @@
   <!--############### PREVIEW #######################-->
   <!--<xsl:template match="PreviewMenu">
     <xsl:variable name="CMSLogo">
-      <xsl:call-template name="eonicwebLogo"/>
+      <xsl:call-template name="proteanLogo"/>
     </xsl:variable>
     <xsl:variable name="CMSName">
-      <xsl:call-template name="eonicwebProductName"/>
+      <xsl:call-template name="proteanProductName"/>
     </xsl:variable>
     <div class="ewAdmin">
       <div id="adminHeader" class="affix-top">
@@ -630,7 +630,7 @@
           <div id="adminLogo">
             <img src="{$CMSLogo}" alt="{$CMSName}" class="cms-logo"/>
             <span class="hidden">
-              <xsl:call-template name="eonicwebCMSName"/>
+              <xsl:call-template name="proteanCMSName"/>
             </span>
           </div>
 
@@ -661,10 +661,10 @@
 
   <xsl:template match="PreviewMenu">
     <xsl:variable name="CMSLogo">
-      <xsl:call-template name="eonicwebLogo"/>
+      <xsl:call-template name="proteanLogo"/>
     </xsl:variable>
     <xsl:variable name="CMSName">
-      <xsl:call-template name="eonicwebProductName"/>
+      <xsl:call-template name="proteanProductName"/>
     </xsl:variable>
     <div class="ewAdmin">
       <div id="adminHeader" class="affix-top">

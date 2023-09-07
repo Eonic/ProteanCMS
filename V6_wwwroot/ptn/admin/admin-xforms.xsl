@@ -936,17 +936,17 @@
 			theme: "silver",
 			width: "auto",
 			relative_urls: false,
-			plugins: "table paste link image ewimage media visualchars searchreplace emoticons anchor lists advlist code visualblocks contextmenu fullscreen searchreplace wordcount",
+			plugins: "table paste link image ptnimage media visualchars searchreplace emoticons anchor lists advlist code visualblocks contextmenu fullscreen searchreplace wordcount",
 			entity_enconding: "numeric",
-      image_advtab: true,
-      menubar: "edit insert view format table tools",
-      toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image ewimage",
+            image_advtab: true,
+            menubar: "edit insert view format table tools",
+            toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | ptnimage",
 			convert_fonts_to_spans: true,
 			gecko_spellcheck: true,
 			theme_advanced_toolbar_location: "top",
 			theme_advanced_toolbar_align: "left",
 			paste_create_paragraphs: false,
-      link_list: tinymcelinklist,
+            link_list: tinymcelinklist,
 			paste_use_dialog: true,</xsl:text>
     <xsl:apply-templates select="." mode="tinymceStyles"/>
     <xsl:apply-templates select="." mode="tinymceContentCSS"/>
@@ -3103,6 +3103,9 @@
             <xsl:value-of select="ancestor::select1/@data-fv-notempty-message"/>
           </xsl:attribute>
         </xsl:if>
+		  <xsl:if test="contains($class,'readonly')">
+			  <xsl:attribute name="disabled">disabled</xsl:attribute>
+		  </xsl:if>
       </input>
       <label for="{$ref}_{$value}">
         <xsl:if test="not(contains($class,'multiline'))">
@@ -3166,7 +3169,6 @@
           <xsl:text> multiline</xsl:text>
         </xsl:if>
       </xsl:attribute>
-
       <input type="{$type}">
         <xsl:if test="$ref!=''">
           <xsl:attribute name="name">
@@ -3580,6 +3582,17 @@
       </div>
     </fieldset>
   </xsl:template>
+
+
+	<xsl:template match="alert[@class='item-deleted']" mode="xform">
+		<div class="alert alert-warning">			
+			<span class="alert-msg">
+				<xsl:if test="Content/@moduleType">
+				Module Type: <xsl:value-of select="Content/@moduleType"/>
+				</xsl:if>
+			</span>
+		</div>
+	</xsl:template>
 
 
 </xsl:stylesheet>

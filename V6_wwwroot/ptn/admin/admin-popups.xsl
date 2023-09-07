@@ -13,12 +13,11 @@
   </xsl:template>
 
   <xsl:template match="Page">
-    <div class="modal-dialog" id="popup1">
-      <div class="modal-content">
+ <div>
           <xsl:apply-templates select="." mode="Admin"/>
-      </div>
+    
       <xsl:apply-templates select="." mode="LayoutAdminJs"/>
-    </div>
+</div>
   </xsl:template>
 
   <xsl:template match="Page" mode="SubmitPath">
@@ -153,7 +152,7 @@
 									<!-- The file input field used as target for the file upload widget -->
 									<input id="fileupload" type="file" name="files[]" multiple="" class="fileUploadCheck"/>
 								</span>
-
+						
 								<!--not for popup window or for root..!-->
 								<xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup')) and not(@path='')">
 									<xsl:if test="parent::folder">
@@ -300,19 +299,22 @@
         <xsl:text>list-group-item level-</xsl:text>
         <xsl:value-of select="$level"/>
         <xsl:if test="@active='true'">
-          <xsl:text> active </xsl:text>
+          <xsl:text> active collapsable</xsl:text>
         </xsl:if>
+		  <xsl:if test="folder">
+			  <xsl:text> expandable</xsl:text>
+		  </xsl:if>
       </xsl:attribute>
-      <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" data-toggle="modal" data-target="#modal-{/Page/Request/QueryString/Item[@name='targetField']/node()}">
+      <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}">
         <i>
           <xsl:attribute name="class">
             <xsl:text>fa fa-lg</xsl:text>
             <xsl:choose>
               <xsl:when test="@active='true'">
-                <xsl:text> fa-folder-open-o</xsl:text>
+                <xsl:text> fa-folder-open</xsl:text>
               </xsl:when>
               <xsl:otherwise>
-                <xsl:text> fa-folder-o</xsl:text>
+                <xsl:text> fa-folder</xsl:text>
               </xsl:otherwise>
             </xsl:choose>
             <xsl:if test="folder"> activeParent</xsl:if>
@@ -538,7 +540,7 @@
                     </xsl:if>
                   </div>
                 </div>
-                <a rel="popover" data-toggle="popover" data-trigger="hover" data-container=".pickImageModal" data-contentwrapper="#imgpopover{position()}" data-placement="top">
+                <a rel="popover" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-container=".pickImageModal" data-bs-contentwrapper="#imgpopover{position()}" data-bs-placement="top">
                   <xsl:choose>
 					  <xsl:when test="@width&gt;125 and @height&gt;125">
 						  <img class="lazy" src="/ptn/core/images/loader.gif" data-src="/{@root}{translate(parent::folder/@path,'\', '/')}/{@thumbnail}"/>
@@ -626,6 +628,9 @@
   </xsl:template>
 
 	<xsl:template match="Content" mode="xform">
+		
+			
+		
 		<form method="{model/submission/@method}" action="">
 			<xsl:attribute name="class">
 				<xsl:text>xform </xsl:text>
@@ -697,6 +702,9 @@
 
 		</form>
 		<xsl:apply-templates select="descendant-or-self::*" mode="xform_modal"/>
+		<script>
+			preparePickImageModal($('#modal-<xsl:value-of select="$page/Request/QueryString/Item[@name='targetField']/node()"/>'));
+		</script>
 	</xsl:template>
 
 	<xsl:template match="group[parent::Content]" mode="xform">
@@ -728,4 +736,180 @@
 		
 	</xsl:template>
 
+
+	<xsl:template match="Page[@layout='ImageLib' or @layout='DocsLib' or @layout='MediaLib']" mode="LayoutAdminJs">
+
+		<xsl:variable name="MaxUploadWidth">
+			<xsl:apply-templates select="." mode="MaxUploadWidth"/>
+		</xsl:variable>
+		<xsl:variable name="MaxUploadHeight">
+			<xsl:apply-templates select="." mode="MaxUploadHeight"/>
+		</xsl:variable>
+		<xsl:variable name="rootPath">
+			<xsl:choose>
+				<xsl:when test="@layout='ImageLib'">
+					<xsl:call-template name="getSettings">
+						<xsl:with-param name="sectionName" select="'web'"/>
+						<xsl:with-param name="valueName" select="'ImageRootPath'"/>
+					</xsl:call-template>
+				</xsl:when>
+				<xsl:when test="@layout='DocsLib'">
+					<xsl:call-template name="getSettings">
+						<xsl:with-param name="sectionName" select="'web'"/>
+						<xsl:with-param name="valueName" select="'DocRootPath'"/>
+					</xsl:call-template>
+				</xsl:when>
+				<xsl:when test="@layout='MediaLib'">
+					<xsl:call-template name="getSettings">
+						<xsl:with-param name="sectionName" select="'web'"/>
+						<xsl:with-param name="valueName" select="'MediaRootPath'"/>
+					</xsl:call-template>
+				</xsl:when>
+			</xsl:choose>
+		</xsl:variable>
+
+		<xsl:variable name="partPath"  select="translate(descendant::folder[@active='true']/@path,'\','/')"/>
+
+		<xsl:variable name="targetPath">
+			<xsl:text>/</xsl:text>
+			<xsl:choose>
+				<xsl:when test="starts-with($rootPath,'/')">
+					<xsl:value-of select="substring-after($rootPath,'/')"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$rootPath"/>
+				</xsl:otherwise>
+			</xsl:choose>
+			<xsl:choose>
+				<xsl:when test="starts-with($partPath,'/')">
+					<xsl:value-of select="substring-after($partPath,'/')"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$partPath"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
+		<xsl:variable name="submitPath">
+			<xsl:apply-templates select="." mode="SubmitPath"/>
+		</xsl:variable>
+
+		<xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup'))">
+
+
+			<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+			<script src="/ptn/libs/blueimp-file-upload/js/vendor/jquery.ui.widget.js">/* */</script>
+			<!-- The Templates plugin is included to render the upload/download listings
+		<script src="https://blueimp.github.io/JavaScript-Templates/js/tmpl.min.js">/* */</script> -->
+			<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+			<script src="https://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js">/* */</script>
+			<!-- The Canvas to Blob plugin is included for image resizing functionality -->
+			<script src="https://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js">/* */</script>
+			<!-- blueimp Gallery script -->
+			<script src="https://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js">/* */</script>
+			<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+			<script src="/ptn/libs/blueimp-file-upload/js/jquery.iframe-transport.js">/* */</script>
+			<!-- The basic File Upload plugin -->
+			<script src="/ptn/libs/blueimp-file-upload/js/jquery.fileupload.js">/* */</script>
+			<!-- The File Upload processing plugin -->
+			<!--
+		<script src="/ptn/admin/fileupload/js/jquery.fileupload-process.js">/* */</script>
+		-->
+			<!-- The File Upload image preview & resize plugin -->
+			<!--
+		<script src="/ptn/admin/fileupload/js/jquery.fileupload-image.js">/* */</script>
+		-->
+			<!-- The File Upload audio preview plugin -->
+			<!--
+		<script src="/ptn/admin/fileupload/js/jquery.fileupload-audio.js">/* */</script>
+		-->
+			<!-- The File Upload video preview plugin -->
+			<!--
+		<script src="/ptn/admin/fileupload/js/jquery.fileupload-video.js">/* */</script>
+		-->
+			<!-- The File Upload validation plugin -->
+			<!--
+		<script src="/ptn/admin/fileupload/js/jquery.fileupload-validate.js">/* */</script>
+		-->
+			<!-- The File Upload user interface plugin -->
+			<!--
+		<script src="/ptn/admin/fileupload/js/jquery.fileupload-ui.js">/* */</script>-->
+
+			<!-- The Load Image plugin is included for the preview images and image resizing functionality 
+      <script src="/ptn/admin/fileupload/js/load-image.all.min.js">/* */</script>-->
+			<!-- The Canvas to Blob plugin is included for image resizing functionality
+      <script src="/ptn/admin/fileupload/js/loadimage/vendor/canvas-to-blob.js">/* */</script> -->
+			<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+			<script src="/ptn/libs/jquery.lazy/jquery.lazy.min.js">/* */</script>
+		</xsl:if>
+
+		<script>
+			<xsl:text>
+
+        var uploadUrl = '/?ewCmd=</xsl:text><xsl:value-of select="$page/@ewCmd"/>\u0026<xsl:text>ewCmd2=FileUpload</xsl:text>\u0026<xsl:text>storageRoot=</xsl:text><xsl:value-of select="$targetPath"/><xsl:text>'
+function primeFileUpload(){
+        $('#fileupload').fileupload({
+        url: uploadUrl,
+        dataType: 'json',
+        sequentialUploads: true,
+        dropZone:$('#uploadFiles'),
+        </xsl:text>
+			<xsl:if test="$MaxUploadWidth!='0'">
+				<xsl:text>disableImageResize: /Android(?!.*Chrome)|Opera/.test(navigator.userAgent),</xsl:text>
+				<xsl:text>imageMaxWidth: </xsl:text>
+				<xsl:value-of select="$MaxUploadWidth"/>
+				<xsl:text>,</xsl:text>
+				<xsl:text>imageMaxHeight: </xsl:text>
+				<xsl:value-of select="$MaxUploadHeight"/>
+				<xsl:text>,</xsl:text>
+			</xsl:if>
+			<xsl:apply-templates select="." mode="fileTypeScript"/>
+
+			<xsl:text>
+        done: function (e, data) {
+        $.each(data.files, function (index, file) {
+			var targetPath = '</xsl:text><xsl:value-of select="$targetPath"/>';
+			var deletePath = '<xsl:value-of select="translate(descendant::folder[@active='true']/@path,'\','/')"/>';
+			<xsl:apply-templates select="." mode="newItemScript"/>
+			$('#files').prepend(newItem);
+			$('#files .item-image .panel').prepareLibImages();
+			$("[data-bs-toggle=popover]").popover({
+			html: true,
+			container: '#files',
+			trigger: 'hover',
+			viewport: '#files',
+			content: function () {
+			return $(this).prev('.popoverContent').html();
+			}
+			});
+
+			});
+			preparePickImageModal($('#modal-<xsl:value-of select="$page/Request/QueryString/Item[@name='targetField']/node()"/>'));
+
+			},
+
+			progressall: function (e, data) {
+			var progress = parseInt(data.loaded / data.total * 100, 10);
+			$('.progress .progress-bar').css('width',progress + '%');
+			$('.progress .progress-bar').attr('aria-valuenow',progress);
+			$('.progress .loading-counter').css('display','block');
+			$('.progress .loading-counter .count').html(progress);
+			}
+			});
+			
+			};
+			primeFileUpload();
+		</script>
+
+		<script>
+			$(function() {
+			$('.lazy').lazy();
+			});
+		</script>
+
+		<script>
+			preparePickImageModal($('#modal-<xsl:value-of select="$page/Request/QueryString/Item[@name='targetField']/node()"/>'));
+		</script>
+	</xsl:template>
+	
 </xsl:stylesheet>

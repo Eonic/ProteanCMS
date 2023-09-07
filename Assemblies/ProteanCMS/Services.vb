@@ -133,7 +133,7 @@ Public Class Services
             If CheckUserIP() Then
                 Dim myWeb As New Protean.Cms(moCtx)
                 Dim oMsg As Protean.Messaging = New Protean.Messaging(myWeb.msException)
-                sMessage = oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, , , , ccRecipient, bccRecipient, cSeperator)
+                sMessage = oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, , , , ccRecipient, bccRecipient, cSeperator, , , )
             Else
                 sMessage = "<div class=""error"">Please check SOAP IP Settings for " & GetIpAddress(moRequest) & "</div>"
             End If

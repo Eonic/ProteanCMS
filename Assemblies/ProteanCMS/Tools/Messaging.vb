@@ -773,6 +773,7 @@ Public Class Messaging
                             End If
                             Dim logId As Long = odbHelper.emailActivity(mnUserId, cActivityDetail, oMailn.To.ToString, oMailn.From.ToString, oXml.OuterXml)
                             odbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Email, mnUserId, SessionId, Now, logId, 0, activitySchema)
+
                         Else
                             odbHelper.emailActivity(mnUserId, cActivityDetail, oMailn.To.ToString, oMailn.From.ToString)
                             odbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Email, mnUserId, SessionId, Now, 0, 0, "")

@@ -1811,8 +1811,11 @@ RedoCheck:
                         If bEmailClient Then
                             Dim RenewalEmailCC As String = ""
                             If oSubConfig("RenewalEmailCCXpath") <> "" Then
-                                RenewalEmailCC = myWeb.moCart.moCartXml.SelectSingleNode(oSubConfig("RenewalEmailCCXpath")).Value
+                                If Not myWeb.moCart.moCartXml.SelectSingleNode(oSubConfig("RenewalEmailCCXpath")) Is Nothing Then
+                                    RenewalEmailCC = myWeb.moCart.moCartXml.SelectSingleNode(oSubConfig("RenewalEmailCCXpath")).Value
+                                End If
                             End If
+
                             myWeb.moCart.emailReceipts(myWeb.moCart.moCartXml, RenewalEmailCC)
                         End If
 

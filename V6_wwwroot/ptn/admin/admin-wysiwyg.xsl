@@ -154,20 +154,20 @@
 	<!-- -->
 	<xsl:template match="Page" mode="adminFooter">
 		<xsl:variable name="supportEmail">
-			<xsl:call-template name="eonicwebSupportEmail"/>
+			<xsl:call-template name="proteanSupportEmail"/>
 		</xsl:variable>
 		<xsl:variable name="supportWebsite">
-			<xsl:call-template name="eonicwebWebsite"/>
+			<xsl:call-template name="proteanWebsite"/>
 		</xsl:variable>
 		<div id="footer">
 			<div id="footerCopyright" class="text-muted">
 
 				<xsl:text>© </xsl:text>
-				<xsl:call-template name="eonicwebCopyright"/>
+				<xsl:call-template name="proteanCopyright"/>
 				<xsl:text> 2002-</xsl:text>
 				<xsl:value-of select="substring(//ServerVariables/Item[@name='Date'],1,4)"/>
 				<xsl:text> | </xsl:text>
-				<xsl:call-template name="eonicwebSupportTelephone"/>
+				<xsl:call-template name="proteanSupportTelephone"/>
 				<xsl:text> | </xsl:text>
 				<a href="mailto:{$supportEmail}" title="Email Eonic">
 					<xsl:value-of select="$supportEmail"/>
@@ -457,6 +457,7 @@
 		<xsl:param name="text"/>
 		<xsl:param name="position"/>
 		<xsl:param name="class"/>
+		<xsl:param name="id"/>
 		<xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddModule'] and $adminMode">
 			<xsl:attribute name="class">
 				<xsl:text>moduleContainer</xsl:text>
@@ -481,7 +482,9 @@
 		</xsl:if>
 
 		<xsl:if test="/Page/Contents/Content[@position = $position]">
-			<xsl:apply-templates select="/Page/Contents/Content[@type='Module' and @position = $position]" mode="displayModule"/>
+			<xsl:apply-templates select="/Page/Contents/Content[@type='Module' and @position = $position]" mode="displayModule">
+				<xsl:with-param name="id" select="$id"/>
+			</xsl:apply-templates>
 		</xsl:if>
 
 	</xsl:template>

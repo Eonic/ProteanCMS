@@ -1,0 +1,48 @@
+﻿header{
+    border-bottom: 1px solid $grey;
+}
+
+footer#pagefooter {
+    border-top: 1px solid $grey;
+}
+
+.main-nav .dropdown-menu {
+    border-top: 1px solid $grey;
+    border-bottom: 1px solid $grey;
+
+    @include media-breakpoint-up($nav-breakpoint) {
+        border: 1px solid $grey;
+    }
+}
+
+.header-menu-below .main-nav {
+    @include media-breakpoint-up($nav-breakpoint) {
+        border-top: 1px solid $grey;
+        //border-bottom: 1px solid $grey;
+    }
+}
+.author {
+    border-bottom: 1px solid $grey;
+}
+
+.detail-container > .detail {
+    h2 {
+        font-size: 1.5rem;
+        margin-bottom: 0.1rem;
+    }
+}
+/*dl {
+    border-bottom: 1px solid $grey;
+    padding-bottom:1rem;
+    margin-bottom:1rem;
+}*/
+.backlink {
+    margin-bottom: 2rem;
+}
+
+.back-link {
+    @extend .btn;
+    @extend .btn-outline-primary;
+}
+
+

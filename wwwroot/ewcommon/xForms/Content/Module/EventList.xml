@@ -30,6 +30,7 @@
     <bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
     <bind nodeset="tblContent/cContentXmlBrief/Content">
       <bind id="cPosition" nodeset="@position" required="true()" type="string"/>
+	  <bind id="cAction" nodeset="@action" required="false()" type="string"/>
       <bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
       <bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
       <bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
@@ -215,6 +216,17 @@
             <toggle case="cSortBy_5" event="DOMActivate"/>
           </item>
         </select1>
+	<select1 bind="cAction" appearance="full">
+					<label>Show past events</label>
+					<item>
+						<label>Off</label>
+						<value></value>
+					</item>
+					<item>
+						<label>On</label>
+						<value>Protean.Cms+Content+Modules.ListHistoricEvents</value>
+					</item>					
+				</select1>
         <switch class="disable">
           <case id="cSortBy_1">
             <select1 bind="cPageOrder" appearance="minimal" class="form-group">
