@@ -149,7 +149,7 @@
 														<xsl:value-of select="@buttonClass"/>
 													</xsl:when>
 													<xsl:otherwise>
-														<xsl:text>btn-primary </xsl:text>
+														<xsl:text>btn-outline-light </xsl:text>
 													</xsl:otherwise>
 												</xsl:choose>
 												<xsl:text> </xsl:text>

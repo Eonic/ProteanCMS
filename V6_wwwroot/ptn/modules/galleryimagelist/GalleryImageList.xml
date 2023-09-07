@@ -10,7 +10,7 @@
 				<cContentName/>
 				<cContentSchemaName>Module</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content moduleType="GalleryImageList" contentType="LibraryImage" box="" title="" link="" linkType="internal" linkText="More images" sortBy="publish" order="descending" cols="" stepBy="" stepCount="0" display="all" position="" crop="" carousel="false" autoplay="true" autoPlaySpeed="2000" lightbox="true"/>
+					<Content moduleType="GalleryImageList" contentType="LibraryImage" box="" title="" link="" linkType="internal" linkText="More images" sortBy="publish" order="descending" cols="" stepBy="" stepCount="0" display="all" position="" crop="false" noStretch="true" carousel="false" autoplay="true" autoPlaySpeed="2000" lightbox="true"/>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
 				<nAuditId/>
@@ -43,6 +43,7 @@
 			<bind id="cStepBy" nodeset="@stepBy" required="false()" type="string"/>
 			<bind id="cPageOrder" nodeset="@order" required="false()" type="string"/>
 			<bind id="cCrop" nodeset="@crop" required="false()" type="string"/>
+			<bind id="cNoStretch" nodeset="@noStretch" required="false()" type="string"/>
 			<bind id="cLightbox" nodeset="@lightbox" required="false()" type="string"/>
 			<bind id="cTitles" nodeset="@showTitle" required="false()" type="string"/>
 			<bind id="carousel" nodeset="@carousel" required="false()" type="string"/>
@@ -263,7 +264,7 @@
 
 				</group>
 				<group class="row">
-					<group class="col-lg-4">
+					<group class="col-lg-3">
 						<select1 bind="cCrop" appearance="full" class="vshort inline-items">
 							<label>Crop</label>
 							<item>
@@ -277,7 +278,21 @@
 						</select1>
 
 					</group>
-					<group class="col-lg-4">
+					<group class="col-lg-3">
+						<select1 bind="cNoStretch" appearance="full" class="vshort inline-items">
+							<label>Scale Up Small Images</label>
+							<item>
+								<label>Yes</label>
+								<value>true</value>
+							</item>
+							<item>
+								<label>No</label>
+								<value>false</value>
+							</item>
+						</select1>
+
+					</group>
+					<group class="col-lg-3">
 						<select1 bind="cTitles" appearance="full" class="vshort inline-items">
 							<label>Show Titles</label>
 							<item>
@@ -303,7 +318,7 @@
 							</item>
 						</select1>
 					</group>-->
-					<group class="col-md-4">
+					<group class="col-md-3">
 						<select1 bind="alignment">
 							<label>
 								Align Horizontally

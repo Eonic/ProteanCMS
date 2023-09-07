@@ -375,7 +375,7 @@
 					<xsl:value-of select="@userlang"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:value-of select="@translang"/>
+					<xsl:value-of select="@lang"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
@@ -519,7 +519,11 @@
 
 	<xsl:template match="Page" mode="LayoutAdminJs"></xsl:template>
 
-	<xsl:template match="Page" mode="headerOnlyJS"></xsl:template>
+	<xsl:template match="Page" mode="headerOnlyJS">
+		<xsl:apply-templates select="/Page/Contents/Content" mode="headerOnlyContentJS"/>
+	</xsl:template>
+	
+	<xsl:template match="Content" mode="headerOnlyContentJS"></xsl:template>
 
 	<xsl:template match="Content" mode="opengraph-namespace">
 		<xsl:text>og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#</xsl:text>
@@ -1061,7 +1065,7 @@
 
 	<xsl:template match="Page" mode="metadata">
 		<!--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />-->
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
 		<xsl:if test="Contents/Content[@name='MetaDescription' or @name='metaDescription'] or ContentDetail">
 			<xsl:apply-templates select="." mode="getMetaDescription"/>
@@ -4196,12 +4200,16 @@
 		<xsl:param name="linkText"/>
 		<xsl:param name="altText"/>
 		<xsl:param name="linkType"/>
+		<xsl:param name="stretchLink"/>
 		<div class="morelink">
 			<span>
 				<a href="{$link}" title="{$altText}" class="btn btn-custom" itemprop="mainEntityOfPage">
 					<xsl:if test="not(substring($link,1,1)='/') and ((contains($link,'http://') or contains($link,'tel:')) and $linkType='external')">
 						<xsl:attribute name="rel">external</xsl:attribute>
 						<xsl:attribute name="class">extLink</xsl:attribute>
+					</xsl:if>
+					<xsl:if test="$stretchLink='true'">
+						<xsl:attribute name="class">btn btn-custom stretched-link</xsl:attribute>
 					</xsl:if>
 					<xsl:choose>
 						<xsl:when test="$linkText!=''">
@@ -4211,7 +4219,7 @@
 							<xsl:call-template name="term2042" />
 						</xsl:otherwise>
 					</xsl:choose>
-					<span class="d-none">
+					<span class="visually-hidden">
 						<xsl:text>about </xsl:text>
 						<xsl:value-of select="$altText"/>
 					</span>
@@ -4322,7 +4330,7 @@
 
 		<div class="morelink">
 			<span>
-				<a href="{$link}" title="Click here to go to {link}" class="extLink btn btn-primary">
+				<a href="{$link}" title="Click here to go to {link}" class="extLink btn btn-custom">
 					<xsl:if test="contains($link,'www.') or contains($link,'WWW.') or contains($link,'http://') or contains($link,'HTTP://')">
 						<xsl:attribute name="rel">external</xsl:attribute>
 					</xsl:if>
@@ -4341,7 +4349,7 @@
 						<xsl:otherwise>
 							<xsl:call-template name="term2042" />
 							<xsl:text> </xsl:text>
-							<span class="d-none">
+							<span class="visually-hidden">
 								<xsl:text>about </xsl:text>
 								<xsl:value-of select="altText"/>
 							</span>
@@ -4385,7 +4393,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 					<xsl:if test="$altText !=''">
-						<span class="d-none">
+						<span class="visually-hidden">
 							<!-- about -->
 							<xsl:call-template name="term2023" />
 							<xsl:text>&#160;</xsl:text>
@@ -4641,7 +4649,7 @@
 		<td>
 			<a href="/{$appPath}?ewCmd=Profile&amp;DirType=User&amp;id={ancestor::user/@id}">
 				<span class="btn btn-primary btn-xs">
-					<i class="fa fa-user fa-white">
+					<i class="fa fa-user">
 						<xsl:text> </xsl:text>
 					</i>
 				</span>
@@ -5673,7 +5681,7 @@
   -->
 	<xsl:template match="Content | MenuItem | Discount | productDetail" mode="displayThumbnail">
 		<xsl:param name="crop" select="true()" />
-		<xsl:param name="no-stretch" select="false()" />
+		<xsl:param name="no-stretch" select="true()" />
 		<xsl:param name="width"/>
 		<xsl:param name="height"/>
 		<xsl:param name="forceResize"/>
@@ -5778,6 +5786,7 @@
 		<xsl:if test="Images/img[@src and @src!='']">
 			<xsl:call-template  name="displayResponsiveImage">
 				<xsl:with-param name="crop" select="$crop"/>
+				<xsl:with-param name="no-stretch" select="$no-stretch"/>
 				<xsl:with-param name="width" select="$max-width"/>
 				<xsl:with-param name="height" select="$max-height"/>
 				<xsl:with-param name="max-width-xxs" select="$max-width-xxs"/>
@@ -5801,7 +5810,7 @@
 
 	<xsl:template name="displayResponsiveImage">
 		<xsl:param name="crop"/>
-		<xsl:param name="no-stretch" select="false()" />
+		<xsl:param name="no-stretch" select="true()" />
 		<xsl:param name="width"/>
 		<xsl:param name="height"/>
 		<xsl:param name="max-width-xxs"/>
@@ -6959,13 +6968,13 @@
 				<xsl:choose>
 					<xsl:when test="$detailSrc!=''">
 
-						<span class="picture {$class}">
+						<span class="{$class}">
 							<xsl:if test="$showImage = 'noshow'">
 								<xsl:attribute name="class">
-									<xsl:text>picture hidden</xsl:text>
+									<xsl:text>hidden</xsl:text>
 								</xsl:attribute>
 							</xsl:if>
-							<a data-src="{$detailSrc}" data-fancybox="">
+							<a data-src="{$detailSrc}" data-fancybox="" class="detail-img">
 								<xsl:variable name="newimageSize" select="ew:ImageSize($displaySrc)"/>
 								<xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
 								<xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>
@@ -6988,7 +6997,7 @@
 						<xsl:variable name="newimageSize" select="ew:ImageSize($displaySrc)"/>
 						<xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
 						<xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>
-						<img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="detail photo" id="{$imgId}"/>
+						<img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="img-fluid" id="{$imgId}"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
@@ -9265,9 +9274,9 @@
 							</xsl:call-template>
 						</xsl:if>
 					</xsl:variable>
-					<section class="wrapper-sm {@background}">
+					<section>
 						<xsl:attribute name="class">
-							<xsl:text>wrapper-sm </xsl:text>
+							<xsl:text>wrapper-sm section-spacing </xsl:text>
 							<xsl:value-of select="@background"/>
 							<xsl:apply-templates select="." mode="hideScreens" />
 							<xsl:if test="@marginBelow='false'">

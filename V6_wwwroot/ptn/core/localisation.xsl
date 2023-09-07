@@ -1831,10 +1831,10 @@
   <xsl:template name="term3001">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">
-        <xsl:text>Your Shopping Cart</xsl:text>
+        <xsl:text>Your Shopping Basket</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Your Shopping Cart</xsl:text>
+        <xsl:text>Your Shopping Basket</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -1853,10 +1853,10 @@
   <xsl:template name="term3003">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">
-        <xsl:text>Click here to view full details of your shopping cart</xsl:text>
+        <xsl:text>View full details of your shopping basket</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Click here to view full details of your shopping cart</xsl:text>
+        <xsl:text>View full details of your shopping basket</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -2077,7 +2077,7 @@
         <xsl:text>Ya Receipt - Thank you for your order.</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Your Invoice - Thank you for your order.</xsl:text>
+        <xsl:text>Thank you for your order</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -2090,7 +2090,7 @@
         <xsl:text>Invoice Date</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Invoice Date</xsl:text>
+        <xsl:text>Order Date</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -2101,7 +2101,7 @@
         <xsl:text>Invoice Reference</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Invoice Reference</xsl:text>
+        <xsl:text>Order Reference</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -2193,7 +2193,7 @@
           <strong>The order has timed out and cannot continue</strong>, this may be due to some of the following reasons:
         </p>
         <ol>
-          <li>You may have disabled cookies or they are undetectable.  The shopping cart requires cookies to be enabled in order to proceed.</li>
+          <li>You may have disabled cookies or they are undetectable.  The shopping basket requires cookies to be enabled in order to proceed.</li>
           <li>The order had been left for over ten minutes without any updates.  The details are automatically removed for security purposes.</li>
           <li>The session has been lost due to network connection issues at your end, our end or somewhere in between.  The details are automatically removed for security purposes.</li>
         </ol>
@@ -2207,7 +2207,7 @@
           <strong>The order has timed out and cannot continue</strong>, this may be due to some of the following reasons:
         </p>
         <ol>
-          <li>You may have disabled cookies or they are undetectable.  The shopping cart requires cookies to be enabled in order to proceed.</li>
+          <li>You may have disabled cookies or they are undetectable.  The shopping basket requires cookies to be enabled in order to proceed.</li>
           <li>The order had been left for over ten minutes without any updates.  The details are automatically removed for security purposes.</li>
           <li>The session has been lost due to network connection issues at your end, our end or somewhere in between.  The details are automatically removed for security purposes.</li>
         </ol>
@@ -2614,10 +2614,10 @@
   <xsl:template name="term3058">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">
-        <xsl:text>Add to Cart</xsl:text>
+        <xsl:text>Add to basket</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Add to Cart</xsl:text>
+        <xsl:text>Add to basket</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -2839,7 +2839,7 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:text>          
-          Close Invoice and Return to Site</xsl:text>
+          Back to Home</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -2950,10 +2950,10 @@
   <xsl:template name="term3088">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">
-        <xsl:text>You may have disabled cookies or they are undetectable. The shopping cart requires cookies to be enabled in order to proceed.</xsl:text>
+        <xsl:text>You may have disabled cookies or they are undetectable. The shopping basket requires cookies to be enabled in order to proceed.</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>You may have disabled cookies or they are undetectable. The shopping cart requires cookies to be enabled in order to proceed.</xsl:text>
+        <xsl:text>You may have disabled cookies or they are undetectable. The shopping basket requires cookies to be enabled in order to proceed.</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -3008,7 +3008,7 @@
         <xsl:text>Ye Arrh back to Port</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Back to Home Page</xsl:text>
+        <xsl:text>Back to Home</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -3402,10 +3402,10 @@
   <xsl:template name="term4031">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">
-        <xsl:text>Your Address Details</xsl:text>
+        <xsl:text>Your Details</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Your Address Details</xsl:text>
+        <xsl:text>Your Details</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>

@@ -18,6 +18,7 @@ Imports Microsoft.Ajax.Utilities
 Imports Protean.Cms
 Imports System.Configuration
 
+
 Partial Public Class Cms
 
     Public Class Cart
@@ -1394,7 +1395,7 @@ processFlow:
                         mcPaymentMethod = Nothing
                         myWeb.moSession("mcPaymentMethod") = Nothing
 
-                        GetCart(oElmt)
+                        'GetCart(oElmt)
                         addressSubProcess(oElmt, "Billing Address")
                         GetCart(oElmt)
                         If mcCartCmd <> "Billing" Then
@@ -2879,13 +2880,24 @@ processFlow:
                         ' Get Shipping Group from query if assigned to that product and add new node in order and use this node for displaying messages for x50 and t03 category.
                         If myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure) Then
                             Dim sSqlShippingGroup As String = "select csm.nShipOptKey,CPC.cCatName  from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey left join tblAudit A ON p.nAuditId= A.nAuditKey left join tblCartCatProductRelations cpr on p.nContentKey = cpr.nContentId left join tblCartProductCategories CPC ON cpr.nCatId= cpc.nCatKey Left JOIN tblCartShippingProductCategoryRelations cspcr ON cpr.nCatId= cspcr.nCatId LEFT join tblCartShippingMethods csm on csm.nShipOptKey=cspcr.nShipOptId where nCartOrderId=" & nCartIdUse & " and nCartItemKey=" & oRow("id") & " and cCatSchemaName = 'Shipping' and nItemId <>0 and cspcr.nRuleType=1 order by nShipOptCost asc"
-                            oDsShippingOptionKey = moDBHelper.getDataSetForUpdate(sSqlShippingGroup, "Item", "Cart")
-                            If oDsShippingOptionKey.Tables(0).Rows.Count > 0 Then
-                                ShippingOptionKey = Convert.ToInt64(oDsShippingOptionKey.Tables(0).Rows(0).ItemArray(0))
-                                oRow("nShippingGroup") = oDsShippingOptionKey.Tables(0).Rows(0).ItemArray(1)
-                                oRow("nshippingType") = oDsShippingOptionKey.Tables(0).Rows(0).ItemArray(0)
-                                updateGCgetValidShippingOptionsDS(ShippingOptionKey)
-                            End If
+                            'oDsShippingOptionKey = moDBHelper.getDataSetForUpdate(sSqlShippingGroup, "Item", "Cart")
+                            'If oDsShippingOptionKey.Tables(0).Rows.Count > 0 Then
+                            '    ShippingOptionKey = Convert.ToInt64(oDsShippingOptionKey.Tables(0).Rows(0).ItemArray(0))
+                            '    oRow("nShippingGroup") = oDsShippingOptionKey.Tables(0).Rows(0).ItemArray(1)
+                            '    oRow("nshippingType") = oDsShippingOptionKey.Tables(0).Rows(0).ItemArray(0)
+                            '    updateGCgetValidShippingOptionsDS(ShippingOptionKey)
+                            'End If
+
+                            Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(sSqlShippingGroup)
+                                If oDr IsNot Nothing Then
+                                    While oDr.Read()
+                                        ShippingOptionKey = Convert.ToInt64(oDr("nShipOptKey"))
+                                        oRow("nShippingGroup") = oDr("cCatName")
+                                        oRow("nshippingType") = ShippingOptionKey
+                                        updateGCgetValidShippingOptionsDS(ShippingOptionKey)
+                                    End While
+                                End If
+                            End Using
                         End If
 
 
@@ -6619,7 +6631,7 @@ processFlow:
 
         End Sub
 
-        Public Function AddItem(ByVal nProductId As Long, ByVal nQuantity As Long, ByVal oProdOptions As Array, Optional ByVal cProductText As String = "", Optional ByVal nPrice As Double = 0, Optional ProductXml As String = "", Optional UniqueProduct As Boolean = False, Optional overideUrl As String = "", Optional bDepositOnly As Boolean = False) As Boolean
+        Public Function AddItem(ByVal nProductId As Long, ByVal nQuantity As Long, ByVal oProdOptions As Array, Optional ByVal cProductText As String = "", Optional ByVal nPrice As Double = 0, Optional ProductXml As String = "", Optional UniqueProduct As Boolean = False, Optional overideUrl As String = "", Optional bDepositOnly As Boolean = False, Optional cProductOption As String = "", Optional dProductOptionPrice As Double = 0) As Boolean
             myWeb.PerfMon.Log("Cart", "AddItem")
             Dim cSQL As String = "Select * From tblCartItem WHERE nCartOrderID = " & mnCartId & " AND nItemiD =" & nProductId
             Dim oDS As New DataSet
@@ -6632,7 +6644,7 @@ processFlow:
             Dim oProdXml As New XmlDocument
             Dim strPrice1 As String
             Dim nTaxRate As Long = 0
-            Dim giftMessageNode As XmlNode
+            'Dim giftMessageNode As XmlNode
             Dim itemLimit As Int16 = 5000
             Dim i As Integer
             Try
@@ -6890,6 +6902,8 @@ processFlow:
 
                             If (myWeb.moRequest("OptionName_" & nProductId) IsNot Nothing) Then
                                 AddProductOption(nItemID, myWeb.moRequest("OptionName_" & nProductId), myWeb.moRequest("OptionValue_" & nProductId))
+                            ElseIf (cProductOption <> String.Empty) Then
+                                AddProductOption(nItemID, cProductOption, dProductOptionPrice)
                             End If
                         Else
                             'Existing
@@ -9201,8 +9215,8 @@ SaveNotes:      ' this is so we can skip the appending of new node
         Private Function updateGCgetValidShippingOptionsDS(ByVal nShipOptKey As String) As String
             Try
 
-                Dim ods As DataSet
-                Dim oRow As DataRow
+                'Dim ods As DataSet
+                'Dim oRow As DataRow
                 Dim sSql As String
                 Dim cShippingDesc As String
                 Dim nShippingCost As String
@@ -9210,25 +9224,30 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
                 sSql = "select * from tblCartShippingMethods "
                 sSql = sSql & " where nShipOptKey in ( " & nShipOptKey & ")"
-                ods = moDBHelper.GetDataSet(sSql, "Order", "Cart")
+                'ods = moDBHelper.GetDataSet(sSql, "Order", "Cart")
 
                 'Check if shipping option contains multiple option then get lowest 
                 If InStr(1, nShipOptKey, ",") > 0 Then
                     nShipOptKey = nShipOptKey.Split(","c)(0)
                 End If
-                For Each oRow In ods.Tables("Order").Rows
-                    cShippingDesc = oRow("cShipOptName") & "-" & oRow("cShipOptCarrier")
-                    nShippingCost = oRow("nShipOptCost")
-                    cSqlUpdate = "UPDATE tblCartOrder Set cShippingDesc='" & SqlFmt(cShippingDesc) & "', nShippingCost=" & SqlFmt(nShippingCost) & ", nShippingMethodId = " & nShipOptKey & " WHERE nCartOrderKey=" & mnCartId
-                    moDBHelper.ExeProcessSql(cSqlUpdate)
-                Next
+                'For Each oRow In ods.Tables("Order").Rows
 
-                ' If (cShippingDesc = "Evoucher-UK Parcel") Then
-                '    Dim cSqlpkgopUpdate As String = "Update tblCartItem set cItemName='Evoucher', nPrice=0 WHERE isNull(nParentId,0)<>0 and nCartOrderId=" & mnCartId
-                '    moDBHelper.ExeProcessSql(cSqlpkgopUpdate)
+                '    cShippingDesc = oRow("cShipOptName") & "-" & oRow("cShipOptCarrier")
+                '    nShippingCost = oRow("nShipOptCost")
+                '    cSqlUpdate = "UPDATE tblCartOrder Set cShippingDesc='" & SqlFmt(cShippingDesc) & "', nShippingCost=" & SqlFmt(nShippingCost) & ", nShippingMethodId = " & nShipOptKey & " WHERE nCartOrderKey=" & mnCartId
+                '    moDBHelper.ExeProcessSql(cSqlUpdate)
+                'Next
 
-                'End If
-                'UpdatePackagingANdDeliveryType(mnCartId, nShipOptKey)
+                Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(sSql)
+                    If oDr IsNot Nothing Then
+                        While oDr.Read()
+                            cShippingDesc = oDr("cShipOptName") & "-" & oDr("cShipOptCarrier")
+                            nShippingCost = oDr("nShipOptCost")
+                            cSqlUpdate = "UPDATE tblCartOrder Set cShippingDesc='" & SqlFmt(cShippingDesc) & "', nShippingCost=" & SqlFmt(nShippingCost) & ", nShippingMethodId = " & nShipOptKey & " WHERE nCartOrderKey=" & mnCartId
+                            moDBHelper.ExeProcessSql(cSqlUpdate)
+                        End While
+                    End If
+                End Using
                 Return Nothing
             Catch ex As Exception
 
@@ -9567,11 +9586,13 @@ SaveNotes:      ' this is so we can skip the appending of new node
                     Dim oRowSO As DataRow
                     For Each oRowSO In oDsShipOptions.Tables(0).Rows
                         If bChangedDelivery Then
+                            ' If (cOrderofDeliveryOption = oRowSO("nShipOptKey")) Then
                             updateGCgetValidShippingOptionsDS(oRowSO("nShipOptKey"))
                             DeliveryOption = oRowSO("cShipOptName")
                             'pass total item cost including packaging amount
                             DeliveryOption = DeliveryOption & "#" & total & "#" & oRowSO("nShipOptKey")
                             bChangedDelivery = False
+                            ' End If
                         End If
                     Next
                 End If
@@ -9696,7 +9717,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 SaveCartXML(oCartListElmt, mnCartId)
                 Return cResult
             Catch ex As Exception
-                returnException(myWeb.msException, mcModuleName, "CheckPromocodeAppliedForDelivery", ex, "", "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "CreateDuplicateOrder", ex, "", "", gbDebug)
                 Return Nothing
             End Try
         End Function

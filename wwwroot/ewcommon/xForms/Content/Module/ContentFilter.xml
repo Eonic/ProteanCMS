@@ -92,7 +92,7 @@
   
   <group ref="submit" class="contentSubmit">
     <submit submission="" ref="ewSubmit" class="principle">
-      <label>Save Product Filter</label>
+      <label>Save Content Filter</label>
     </submit>
   </group>
 </Content>

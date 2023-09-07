@@ -135,6 +135,8 @@ Partial Public Class Cms
                                 Dim sProductName As String = ""
                                 Dim bPackegingRequired As Boolean = False
                                 Dim sOverideURL As String = ""
+                                Dim sProductOptionName As String = ""
+                                Dim dProductOptionPrice As Double = 0
                                 If item.ContainsKey("UniqueProduct") Then
                                     bUnique = item("UniqueProduct")
                                 End If
@@ -147,7 +149,15 @@ Partial Public Class Cms
                                 If item.ContainsKey("url") Then
                                     sOverideURL = item("url")
                                 End If
-                                myCart.AddItem(item("contentId"), item("qty"), Nothing, sProductName, cProductPrice, "", bUnique, sOverideURL)
+
+                                If item.ContainsKey("productOption") Then
+                                    sProductOptionName = item("productOption")
+                                End If
+                                If item.ContainsKey("productOptionPrice") Then
+                                    dProductOptionPrice = item("productOptionPrice")
+                                End If
+
+                                myCart.AddItem(item("contentId"), item("qty"), Nothing, sProductName, cProductPrice, "", bUnique, sOverideURL, False, sProductOptionName, dProductOptionPrice)
 
                             Next
                         End If
@@ -365,11 +375,22 @@ Partial Public Class Cms
                 If myCart.mnProcessId > 4 Then
                     Return ""
                 Else
-                    Dim country As String = jObj("country")
 
-                    Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
-                    'check config setting here so that it will take order option which is optional.
+                    Dim country As String = String.Empty
                     Dim cOrderofDeliveryOption As String = myCart.moCartConfig("ShippingTotalIsNotZero")
+                    Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
+                    If (jObj("country") IsNot Nothing) Then
+                        If (jObj("country") <> String.Empty) Then
+                            country = jObj("country")
+                        End If
+                    End If
+                    If (jObj("ShipOptKey") IsNot Nothing) Then
+                        If (jObj("ShipOptKey") <> String.Empty) Then
+                            cOrderofDeliveryOption = jObj("ShipOptKey")
+                        End If
+                    End If
+                    'check config setting here so that it will take order option which is optional.
+
                     cOrderofDeliveryOption = myCart.updateDeliveryOptionByCountry(CartXml.FirstChild, country, cOrderofDeliveryOption)
                     If (myCart.CheckPromocodeAppliedForDelivery() <> "") Then
                         RemoveDiscountCode(myApi, jObj)

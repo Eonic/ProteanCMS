@@ -310,8 +310,8 @@
   <xsl:template match="label[ancestor::Content[@name='UserLogon'] and parent::group/@ref='UserDetails' and  ancestor::Page/@adminMode='true']" mode="legend">
 
     <xsl:choose>
-      <xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
-        <xsl:call-template name="eonicwebAdminSystemName"/>
+      <xsl:when test="$page/Settings/add[@key='web.proteanProductName']/@value!=''">
+        <xsl:call-template name="proteanAdminSystemName"/>
       </xsl:when>
       <xsl:otherwise>
         <div class="text-center">
@@ -567,20 +567,20 @@
   <!-- -->
   <xsl:template match="Page" mode="adminFooter">
     <xsl:variable name="supportEmail">
-      <xsl:call-template name="eonicwebSupportEmail"/>
+      <xsl:call-template name="proteanSupportEmail"/>
     </xsl:variable>
     <xsl:variable name="supportWebsite">
-      <xsl:call-template name="eonicwebWebsite"/>
+      <xsl:call-template name="proteanWebsite"/>
     </xsl:variable>
     <div id="footer">
       <div id="footerCopyright" class="text-muted">
 
         <xsl:text>© </xsl:text>
-        <xsl:call-template name="eonicwebCopyright"/>
+        <xsl:call-template name="proteanCopyright"/>
         <xsl:text> 2002-</xsl:text>
         <xsl:value-of select="substring(//ServerVariables/Item[@name='Date'],1,4)"/>
         <xsl:text> | </xsl:text>
-        <xsl:call-template name="eonicwebSupportTelephone"/>
+        <xsl:call-template name="proteanSupportTelephone"/>
         <xsl:text> | </xsl:text>
         <a href="mailto:{$supportEmail}" title="Email Support">
           <xsl:value-of select="$supportEmail"/>
@@ -681,10 +681,10 @@
   </xsl:template>
   <xsl:template match="Page[@layout='AdmHome']" mode="Admin">
     <xsl:variable name="supportEmail">
-      <xsl:call-template name="eonicwebSupportEmail"/>
+      <xsl:call-template name="proteanSupportEmail"/>
     </xsl:variable>
     <xsl:variable name="supportWebsite">
-      <xsl:call-template name="eonicwebWebsite"/>
+      <xsl:call-template name="proteanWebsite"/>
     </xsl:variable>  
     <section>
       <div class="container-fluid">
@@ -746,8 +746,8 @@
                     </div>
                     <div class="card-body">
                       <xsl:choose>
-                        <xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
-                          <!--xsl:value-of select="$page/Settings/add[@key='web.eonicwebProductName']/@value"/-->
+                        <xsl:when test="$page/Settings/add[@key='web.proteanProductName']/@value!=''">
+                          <!--xsl:value-of select="$page/Settings/add[@key='web.proteanProductName']/@value"/-->
                         </xsl:when>
                         <xsl:otherwise>
                           <h3>
@@ -764,7 +764,7 @@
                       <h4 >Get Help</h4>
                     </div>
                     <div class="card-body">
-                      <xsl:if test="not($page/Settings/add[@key='web.eonicwebProductName']/@value!='')">
+                      <xsl:if test="not($page/Settings/add[@key='web.proteanProductName']/@value!='')">
                         <p>
                           <a href="https://www.facebook.com/proteancms" class="" target="_new">
                             <i class="fab fa-facebook-square fa-lg">&#160;</i>&#160;Follow ProteanCMS
@@ -780,7 +780,7 @@
                       </xsl:if>
                       <p>
                         <i class="fa fa-phone">&#160;</i>
-                        <xsl:call-template name="eonicwebSupportTelephone"/>
+                        <xsl:call-template name="proteanSupportTelephone"/>
                       </p>
                       <p>
                         <a href="mailto:{$supportEmail}" title="Email Support">
@@ -1532,20 +1532,20 @@
         <xsl:if test="@status='1'">
 
           <a href="{$appPath}?ewCmd=HideContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to hide this item" class="btn btn-xs btn-primary">
-            <i class="fa fa-eye-slash">&#160;</i>&#160;Hide
+            <i class="fas fa-eye-slash">&#160;</i>&#160;Hide
           </a>
 
         </xsl:if>
         <xsl:if test="@status='0'">
 
           <a href="{$appPath}?ewCmd=ShowContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to show this item" class="btn btn-xs btn-primary">
-            <i class="fa fa-eye">&#160;</i>&#160;Show
+            <i class="fas fa-eye">&#160;</i>&#160;Show
           </a>
         </xsl:if>
         <xsl:if test="@status='0'">
 
           <a href="{$appPath}?ewCmd=DeleteContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to delete this item" class="btn btn-xs btn-danger">
-            <i class="fa fa-trash-o">&#160;</i>
+            <i class="fas fa-trash">&#160;</i>
           </a>
 
         </xsl:if>
@@ -1810,14 +1810,14 @@
         <xsl:if test="@status='0'">
           <li>
             <a href="{$appPath}?ewCmd=ShowContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to show this item">
-              <i class="fa fa-check-square-o">&#160;</i>&#160;Show
+              <i class="fas fa-check-square">&#160;</i>&#160;Show
             </a>
           </li>
         </xsl:if>
         <xsl:if test="@status='0'">
           <li>
             <a href="{$appPath}?ewCmd=DeleteContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to delete this item">
-              <i class="fa fa-trash-o">&#160;</i>&#160;Delete
+              <i class="fas fa-trash">&#160;</i>&#160;Delete
             </a>
           </li>
         </xsl:if>
@@ -2177,6 +2177,7 @@
         <xsl:with-param name="valueName" select="'MenuTreeDepth'"/>
       </xsl:call-template>
     </xsl:variable>
+	  
     <xsl:variable name="menuLevelDepth">
       <xsl:choose>
         <xsl:when test="$getMenuLevelDepth = ''">
@@ -2187,6 +2188,52 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
+	  
+	  <xsl:variable name="siteURL">
+		  <xsl:call-template name="getSiteURL"/>
+	  </xsl:variable>
+	  
+	  <xsl:variable name="adminUrl">
+
+						  <xsl:value-of select="$siteURL"/>
+						  <xsl:value-of select="@url"/>
+						  <xsl:value-of select="/Page/@pageExt"/>
+						  <xsl:if test="/Page/@adminMode and /Page/@pageExt!='' and /Page/@ewCmd!='ByType'">
+							  <xsl:text>?pgid=</xsl:text>
+							  <xsl:value-of select="@id"/>
+						  </xsl:if>
+				
+	  </xsl:variable>
+	  <xsl:variable name="redirectUrl">
+		  <xsl:variable name="url" select="@url"/>
+		  <xsl:choose>
+			  <xsl:when test="@url!=''">
+				  <xsl:choose>
+					  <xsl:when test="format-number(@url,'0')!='NaN'">
+						  <xsl:value-of select="$siteURL"/>
+						  <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$url]/@url"/>
+					  </xsl:when>
+					  <xsl:when test="contains(@url,'http')">
+						  <xsl:value-of select="@url"/>
+					  </xsl:when>
+					  <xsl:otherwise>
+						  <xsl:value-of select="$siteURL"/>
+						  <xsl:value-of select="@url"/>
+						  <xsl:value-of select="/Page/@pageExt"/>
+						  <xsl:if test="/Page/@adminMode and /Page/@pageExt!='' and /Page/@ewCmd!='ByType'">
+							  <xsl:text>?pgid=</xsl:text>
+							  <xsl:value-of select="@id"/>
+						  </xsl:if>
+					  </xsl:otherwise>
+				  </xsl:choose>
+			  </xsl:when>
+			  <xsl:otherwise>
+				  <xsl:value-of select="$siteURL"/>
+				  <xsl:text>/</xsl:text>
+			  </xsl:otherwise>
+		  </xsl:choose>
+	  </xsl:variable>
+	  
 
     <li id="node{@id}" data-tree-level="{$level}" data-tree-parent="{./parent::MenuItem/@id}">
       <xsl:attribute name="class">
@@ -2202,7 +2249,7 @@
 
       <div class="pageCell">
         <xsl:variable name="pageLink">
-          <xsl:apply-templates select="." mode="getHref" />
+			<xsl:value-of select="$adminUrl"/>
           <xsl:text>&amp;ewCmd=Normal</xsl:text>
           <xsl:if test="@cloneparent &gt; 0">
             <xsl:text>&amp;context=</xsl:text>
@@ -2234,6 +2281,9 @@
 
 
         </a>
+		  
+		  
+		  
       </div>
       <div class="optionButtons">
 
@@ -2311,7 +2361,7 @@
               <!--span class="hidden"> | </span-->
               <xsl:if test="@status='1'">
                 <!--a href="{$appPath}?ewCmd=HidePage&amp;pgid={@id}" class="adminButton hide" title="Click here to hide this page">Hide</a-->
-                <a onclick="$('#MenuTree').hideButton({@id});" class="btn btn-xs btn-primary btn-hide" title="Click here to hide this page">
+                <a class="btn btn-xs btn-primary btn-hide" title="Click here to hide this page">
                   <i class="fas fa-eye-slash fa-white">
                     <xsl:text> </xsl:text>
                   </i><xsl:text> </xsl:text>
@@ -2321,13 +2371,13 @@
               </xsl:if>
               <xsl:if test="@status='0'">
                 <!--a href="{$appPath}?ewCmd=ShowPage&amp;pgid={@id}" class="adminButton show" title="Click here to hide this page">Show</a-->
-                <a onclick="$('#MenuTree').showButton({@id});" class="btn btn-xs btn-primary btn-show" title="Click here to show this page">
+                <a class="btn btn-xs btn-primary btn-show" title="Click here to show this page">
                   <i class="fas fa-eye fa-white">
                     <xsl:text> </xsl:text>
                   </i><xsl:text> </xsl:text>Show
                 </a>
                 <!--span class="hidden"> | </span-->
-                <a href="{$appPath}?ewCmd=DeletePage&amp;pgid={@id}" class="text-danger plain-link" title="Click here to delete this page">
+                <a href="{$appPath}?ewCmd=DeletePage&amp;pgid={@id}" class="text-danger plain-link btn-del" title="Click here to delete this page">
                   <i class="fas fa-trash-alt">
                     <xsl:text> </xsl:text>
                   </i><xsl:text> </xsl:text>Delete
@@ -3788,6 +3838,11 @@
             <xsl:with-param name="name">CookiePolicy</xsl:with-param>
             <xsl:with-param name="type">CookiePolicy</xsl:with-param>
           </xsl:call-template>
+			<xsl:call-template name="editNamedContent">
+				<xsl:with-param name="desc"><span>CookieFirst from <a href="https://www.cookiefirst.com/">https://www.cookiefirst.com//</a></span></xsl:with-param>
+				<xsl:with-param name="name">CookieFirst</xsl:with-param>
+				<xsl:with-param name="type">CookieFirst</xsl:with-param>
+			</xsl:call-template>
         </table>
       </div>
       <div class="tab-pane" id="settings">
@@ -4348,6 +4403,7 @@
       $('.lazy').lazy();
       });
     </script>
+
   </xsl:template>
 
 
@@ -8082,7 +8138,7 @@
           <div class="card card-default">
             <div class="card-body">
               <p>
-                <xsl:call-template name="eonicwebProductName"/>allows for sophisticated reports to be developed and deployed for whatever you might need.
+                <xsl:call-template name="proteanProductName"/>allows for sophisticated reports to be developed and deployed for whatever you might need.
               </p>
               <p>If you require additional reports please contact your website developer for a quote.</p>
             </div>
@@ -9151,8 +9207,8 @@
               </p>
               <p>
                 <strong>
-                  <xsl:call-template name="eonicwebProductName"/> Error
-                </strong> will be presented when <xsl:call-template name="eonicwebProductName"/> encounters an error.
+                  <xsl:call-template name="proteanProductName"/> Error
+                </strong> will be presented when <xsl:call-template name="proteanProductName"/> encounters an error.
               </p>
             </div>
           </div>
@@ -12165,8 +12221,8 @@
         <div class="card-body">
           <xsl:choose>
             <xsl:when test="Images/img[@class='detail']/@src!=''">
-              <a href="http://www.eonicweb.com/{Images/img[@class='detail']/@src}" class="responsive-lightbox">
-                <img src="http://www.eonicweb.com/{Images/img[@class='detail']/@src}" class="img-fluid"/>
+              <a href="http://www.proteancms.com/{Images/img[@class='detail']/@src}" class="responsive-lightbox">
+                <img src="http://www.proteancms.com/{Images/img[@class='detail']/@src}" class="img-fluid"/>
               </a>
             </xsl:when>
             <xsl:otherwise>
@@ -12420,88 +12476,68 @@
         </div>
         &#160;   &#160;   &#160;
       </div>
-
       <div class="col-md-4">
-        <lable class="countLable hidden"></lable>
+        <lable class="countLabel hidden"></lable>
         &#160;   &#160;   &#160;
         <!--<lable class="endLable hidden">You reached at end</lable>-->
       </div>
     </div>
 
 
-    <div class="control-wrapper RedirectPage" id="RedirectPage">
-      <div id="loadSpin" class="loadSpin modal " tabindex="-1" >
+    <div class="control-wrapper RedirectPage" id="RedirectPage">      
+		<div id="loadSpin" class="modal loadSpin fade" tabindex="-1" >
         <div class="modal-dialog">
           <div class="modal-content">
             <!--<div class="modal-body">-->
-            <lable class="modalLable hidden"></lable>
+            <lable class="modalLabel hidden"></lable>
             <!--<div id="redirectLoad" v-if="loading" class="vueloadimg" v-show="true" >
               <i class="fas fa-spinner fa-spin"> </i>
             </div>-->
-
-
             <!--</div>-->
           </div>
         </div>
       </div>
-      <div class="form-group">
-        <div class="form-group input-containing col-md-6">
-          <label >Old URL</label>
-        </div>
-        <div class="form-group input-containing col-md-6">
-          <label  >New URL</label>
-        </div>
-
-      </div>
+		
       <div id="addNewUrl" class="form-group  repeat-group newAddFormInline">
-        <fieldset class="rpt-00 row">
-          <div class="form-group input-containing col-md-5">
-
+        <fieldset class="form-group rpt-00 row">
+          <div class=" input-containing col-md-5">
             <div class="control-wrapper input-wrapper appearance-">
-
+			 <label for="OldUrlform">Old URL</label>
               <input type="text" name="OldUrlform" id="OldUrlmodal" class="textbox form-control"/>
             </div>
           </div>
-          <div class="form-group input-containing col-md-5">
-
+          <div class=" input-containing col-md-5">
             <div class="control-wrapper input-wrapper appearance-">
+				<label for="NewUrlform">Old URL</label>
               <input type="text" name="NewUrlform" id="NewUrlModal" class="textbox form-control"/>
             </div>
           </div>
-          <div class="form-group input-containing col-md-2">
-
+          <div class="input-containing col-md-2">
             <div class="control-wrapper input-wrapper appearance-">
               <button type="button"  class="btn btn-primary addRedirectbtn">
                 Add new Url
               </button>
             </div>
           </div>
-
         </fieldset>
       </div>
       <div>
-        <div class="form-group repeat-group ListOfNewAddedUrls"  v-for="(urls,index) in newAddedUrlList">
-          <fieldset>
+        <div class="row form-group repeat-group ListOfNewAddedUrls"  v-for="(urls,index) in newAddedUrlList">
             <div class="form-group input-containing col-md-5" >
-
               <div class="control-wrapper input-wrapper">
-
                 <input type="text" name="OldUrl" v-bind:id="'Old_' + index"  class="form-control addUrlText" v-bind:value="urls.oldUrl"/>
               </div>
             </div>
             <div class="form-group input-containing col-md-5">
-
               <div class="control-wrapper input-wrapper">
                 <input type="text" name="NewUrl" v-bind:id="'New_' + index"  class="form-control addUrlText" v-bind:value="urls.NewUrl"/>
               </div>
             </div>
-            <div class="form-group input-containing col-md-1">
+            <div class="form-group input-containing col-md-2">
               <button type="button"  class="btn btn-primary btn-updateNewUrl hidden" >
                 Update
               </button>
-              <lable class="tempLableSaveNew hidden">Saved..</lable>
-            </div>
-            <div class="form-group input-containing col-md-1">
+              <label class="tempLableSaveNew hidden">Saved..</label>
 
               <div class="control-wrapper input-wrapper">
                 <button type="button"  class="btn btn-danger delAddNewUrl">
@@ -12509,8 +12545,6 @@
                 </button>
               </div>
             </div>
-
-          </fieldset>
         </div>
       </div>
       <div class="scolling-pane">

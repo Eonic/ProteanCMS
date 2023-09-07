@@ -1601,6 +1601,22 @@ function initialiseGeocoderButton() {
 
 }
 
+function initialiseGetVimeoDataButton() {
+    $('a.get-vimeo-data').click(function (e) {
+        e.preventDefault();
+        var id = $("input#cVimeoCode").val();
+        id = id.split('?')[0];
+        jsonURL = "https://vimeo.com/api/v2/video/" + id + ".json";
+        $.getJSON(jsonURL, function (result) {
+            $("#cVimeoDuration").val(result[0].duration);
+            $("#cVimeoDescrtipion").val(result[0].description);
+            $("#cVimeoThumbnail").val(result[0].thumbnail_medium);
+            $("#cModuleTitle").val(result[0].title);
+        });
+    });
+ };
+
+
 //User Guide
 
 $(function () {
@@ -2592,4 +2608,28 @@ function CompressImage(path) {
 function showAdminAlert(message) { 
     $('#AdminAlertModal #errorMessage').html(message);
     $('#AdminAlertModal').modal('show');
+}
+
+function ValidateAndSendReviewEmail(event) {
+    
+    if (form_check(event)) {
+        if ($("#nStatus_1").prop("checked") && $("#nEmailSent_True").prop("checked") == false) {
+                       
+            var reviewid = this.getQueryStringParam('id');
+            var inputJson = { ReviewId: reviewid };
+            $("#nEmailSent_True").prop("checked", "checked");
+            var dataurl = '/ewapi/Cms.Admin/SendReviewCompleteEmail'
+            $.ajax({
+                url: dataurl,
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(inputJson),
+                success: function (data) {                    
+                }
+            });
+        }
+
+    } else {
+        return false;
+    }
 }

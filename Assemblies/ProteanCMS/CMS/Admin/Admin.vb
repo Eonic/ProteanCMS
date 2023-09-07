@@ -25,6 +25,8 @@ Imports System
 Imports System.Reflection
 Imports Lucene.Net.Support
 Imports System.ServiceModel.Channels
+Imports ICSharpCode.SharpZipLib.Zip.ExtendedUnixData
+Imports Protean.proteancms.com
 
 Partial Public Class Cms
     Public Class Admin
@@ -43,12 +45,11 @@ Partial Public Class Cms
         'Public moXformEditor As XFormEditor
 
         Private mcPagePath As String
-
+        Public goServer As System.Web.HttpServerUtility
         'preview mode info
         Public mbPreviewMode As Boolean 'Is Preview mode on?
         Public myWeb As Cms
         Public moConfig As System.Collections.Specialized.NameValueCollection
-
         Public nAdditionId As Integer
         Public moDeniedAdminMenuElmt As XmlElement
 
@@ -657,6 +658,7 @@ ProcessFlow:
                         mcEwCmd = "Normal"
                         sAdminLayout = ""
                         EditContext = "Normal"
+                        myWeb.moSession("ContentEdit") = ""
 
                         If Not myWeb.mbPopupMode Then
                             If myWeb.moRequest("pgid") <> "" Then
@@ -1363,6 +1365,22 @@ ProcessFlow:
                     Case "ContentVersions"
                         sAdminLayout = "ContentVersions"
                         oPageDetail.AppendChild(myWeb.moDbHelper.getContentVersions(myWeb.moRequest("id")))
+
+                    Case "AlertEmail"
+                        sAdminLayout = "AdminXForm"
+                        Dim RecordType As String = myWeb.moRequest("recordType") 'Content
+                        Dim ObjectId As Long = myWeb.moRequest("id") 'ContentId
+                        Dim AlertEmailXform As String = myWeb.moRequest("xFormName")
+                        'AlertEmailXform = myWeb.moServer.mapPath("/xforms/alertEmail/" & AlertEmailXform & ".xml")
+
+                        'oPageDetail.AppendChild(moAdXfm.xFrmAlertEmail(RecordType, ObjectId, AlertEmailXform))
+
+                        'xFrmAlertEmail we have an xform file where the contentXml becomes the instance
+                        'xform specifies the xslt for the email template
+                        'when submitted sends the email
+
+                        'We want to log this activity to the activity log.
+                        'We should also show the history of emails from the activity log as part of the form so we do not accidently send twice.
 
 
                         'Menu Stuff
@@ -2304,7 +2322,9 @@ ProcessFlow:
                         FilterIndex(oPageDetail, sAdminLayout)
 
                     Case "ResetWebConfig"
-                        ResetWebConfig(oPageDetail, sAdminLayout)
+                        ResetWebConfig()
+
+
                 End Select
 
                 SupplimentalProcess(sAdminLayout, oPageDetail)
@@ -4344,7 +4364,7 @@ from tblContentIndexDef"
             Dim cProcessInfo As String = ""
             Dim ThemeLessFile As String = ""
             Dim ThemePath As String = "/themes/"
-            Dim VariablePrefix As String = "\\$" ' $ needs escaping.
+            Dim VariablePrefix As String = "\$" ' $ needs escaping.
             If myWeb.moConfig("cssFramework") <> "bs5" Then
                 ThemePath = "/ewThemes/"
                 VariablePrefix = "@"
@@ -4777,7 +4797,7 @@ SP:
                     End If
 
                 Case "ManageUserSubscription"
-
+                    myWeb.moSession("tempInstance") = Nothing
                     oSub.GetSubscriptionDetail(oPageDetail, myWeb.moRequest("id"))
                     sAdminLayout = "ManageUserSubscription"
                     'If oADX.valid Then
@@ -5121,27 +5141,25 @@ SP:
         End Sub
 
 
-        Private Sub ResetWebConfig(ByRef oPageDetail As XmlElement, ByRef sAdminLayout As String)
+        Private Sub ResetWebConfig()
             Dim sProcessInfo As String = ""
 
             Try
                 Dim myConfiguration As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("~")
-                'Dim appSettingsSection As DefaultSection = DirectCast(WebConfigurationManager.GetSection("ABC"), DefaultSection)
-                Dim flag As String = myConfiguration.AppSettings.Settings.Item("resetFlag").Value.ToString()
-                If flag = "True" Then
-                    myConfiguration.AppSettings.Settings.Item("resetFlag").Value = "False"
+                Dim flag As String = myConfiguration.AppSettings.Settings.Item("recompile").Value.ToString()
+                If flag.ToLower() = "true" Then
+                    Protean.Config.UpdateConfigValue(myWeb, "", "recompile", "false")
                 Else
-                    myConfiguration.AppSettings.Settings.Item("resetFlag").Value = "True"
+                    Protean.Config.UpdateConfigValue(myWeb, "", "recompile", "true")
                 End If
-                myConfiguration.Save()
-
                 myWeb.moResponse.Redirect(myWeb.mcRequestDomain)
-
 
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "ResetWebConfig", ex, "", sProcessInfo, gbDebug)
             End Try
         End Sub
+
+
 
         Private Sub ReIndexing(ByRef aWeb As Protean.Cms)
             myWeb = aWeb
@@ -5180,6 +5198,7 @@ SP:
                 returnException(myWeb.msException, mcModuleName, "ReIndexing", ex, "", sProcessInfo, gbDebug)
             End Try
         End Sub
+
     End Class
 
 

@@ -227,7 +227,7 @@
   <xsl:template match="Content[@type='SearchResult']" mode="displayBrief">
     <xsl:if test="@url!=''">
       <div class="searchResult">
-        <a href="{translate(@url,'\','/')}" alt="Click here to go to {@pagetitle}">
+        <a href="{translate(@url,'\','/')}" alt="{@name}">
           <xsl:choose>
             <xsl:when test="@contenttype!='Download'">
               <xsl:choose>

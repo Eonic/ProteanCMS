@@ -17,7 +17,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyCopyright("Copyright | Eonic Digital LLP.  2023")>
 <Assembly: AssemblyTrademark("ProteanCMS")>
 
-<Assembly: System.Runtime.InteropServices.ComVisible(False)> 
+<Assembly: System.Runtime.InteropServices.ComVisible(False)>
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
 <Assembly: Guid("111C3222-3102-4693-9CEC-A72880ECC921")>
@@ -33,13 +33,13 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 
 
-<Assembly: AssemblyVersion("6.0.60.181")>
+<Assembly: AssemblyVersion("6.0.65.0")>
 
 <Assembly: AssemblyDelaySign(False)>
 <Assembly: AssemblyKeyFile("../../../eonic.snk")>
 <Assembly: AssemblyKeyName("")>
 
-<Assembly: AssemblyFileVersion("6.0.60.181")>
+<Assembly: AssemblyFileVersion("6.0.65.0")>
 <Assembly: NeutralResourcesLanguageAttribute("en")>
 
-<Assembly: AssemblyInformationalVersion("0.0.0.549")>
+<Assembly: AssemblyInformationalVersion("0.0.0.694")>

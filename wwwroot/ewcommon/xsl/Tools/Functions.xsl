@@ -284,13 +284,22 @@
   </xsl:variable>
 	
   <xsl:variable name="GoogleGA4MeasurementID">
-    <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
+    <xsl:if test="not(/Page/@adminMode)">
       <xsl:call-template name="getXmlSettings">
         <xsl:with-param name="sectionName" select="'web'"/>
         <xsl:with-param name="valueName" select="'GoogleGA4MeasurementID'"/>
       </xsl:call-template>
     </xsl:if>
   </xsl:variable>
+
+	<xsl:variable name="GoogleAdConversionID">
+		<xsl:if test="not(/Page/@adminMode)">
+			<xsl:call-template name="getXmlSettings">
+				<xsl:with-param name="sectionName" select="'web'"/>
+				<xsl:with-param name="valueName" select="'GoogleAdConversionID'"/>
+			</xsl:call-template>
+		</xsl:if>
+	</xsl:variable>
 
   <xsl:variable name="GoogleOptimizeID">
     <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
@@ -518,15 +527,48 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template match="Page" mode="google-ga4-params">
+	<xsl:template match="Page" mode="google-ga4-config-params">
 		<!-- for overloading on specific actions -->
+		<!--
+		<xsl:if test="$page/Request/GoogleCampaign">
+		'{		
+		        <xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">
+					'campaign_source': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_source']"/>'
+				</xsl:if>
+				<xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_medium']!=''">
+					<xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">,</xsl:if>
+					'campaign_medium': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_medium']"/>'
+				</xsl:if>
+		}
+		</xsl:if>
+		-->
 	</xsl:template>
+
+
+	<xsl:template match="Page[User]" mode="google-ga4-config-params">
+	
+		, {
+		<xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">
+			'campaign_source': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_source']"/>'
+		</xsl:if>
+		<xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_medium']!=''">
+			<xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">,</xsl:if>
+			'campaign_medium': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_medium']"/>',
+		</xsl:if>
+		'user_id': '<xsl:value-of select="User/@id"/>'
+		}
+	</xsl:template>
+
 
   <xsl:template match="Page" mode="google-ga4-event">
       <!-- for overloading on specific actions -->
   </xsl:template>
 
-	<xsl:template match="Page[//Content[descendant-or-self::alert/node()='Message Sent']]" mode="google-ga4-event">
+	<xsl:template match="Page" mode="google-ga4-event-extra">
+		<!-- for overloading on specific actions -->
+	</xsl:template>
+
+	<xsl:template match="Page[//Content[descendant-or-self::alert/node()='Message Sent']]" mode="google-ga4-event-extra">
 		gtag('event', 'ptn_form_submission', {
 		'form_id':'<xsl:value-of select="//Content[descendant-or-self::alert/node()='Message Sent']/descendant-or-self::submission/@id"/>',
 		<xsl:for-each select="//Content[descendant-or-self::alert/node()='Message Sent']/descendant-or-self::*[name()='Items']/*">
@@ -776,7 +818,7 @@
         <xsl:apply-templates select="." mode="commonJsFiles" />
       </xsl:with-param>
       <xsl:with-param name="bundle-path">
-        <xsl:text>~/Bundles/Jquery</xsl:text>
+        <xsl:text>~/Bundles/common</xsl:text>
       </xsl:with-param>
 	<xsl:with-param name="async" select="$async"/>  
     </xsl:call-template>
@@ -1169,7 +1211,7 @@
       </xsl:otherwise>
     </xsl:choose>
 
-    <xsl:apply-templates select="/Page/Cart" mode="cartJS"/>
+    <xsl:apply-templates select="/Page/Cart" mode="cartJS"/> 
 
     <!-- GOOGLE MAPS -->
     <xsl:apply-templates select="." mode="googleMapJS" />
@@ -1324,7 +1366,6 @@
         <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaGoogleAnalyticsID']" mode="googleAnalyticsCode"/>
       </xsl:otherwise>
     </xsl:choose>
-
 	  <xsl:if test="$GoogleGA4MeasurementID!=''">
 		  <!-- GA4 Tag Manager -->
 		  <script async="async" src="https://www.googletagmanager.com/gtag/js?id={$GoogleGA4MeasurementID}" cookie-consent="tracking">&#160;</script>
@@ -1332,10 +1373,16 @@
 			  window.dataLayer = window.dataLayer || [];
 			  function gtag(){dataLayer.push(arguments);}
 			  gtag('js', new Date());
-			  gtag('config', '<xsl:value-of select="$GoogleGA4MeasurementID"/>'<xsl:apply-templates select="." mode="google-ga4-params"/>);
+			  gtag('config', '<xsl:value-of select="$GoogleGA4MeasurementID"/>'<xsl:apply-templates select="." mode="google-ga4-config-params"/>);
 			  <xsl:apply-templates select="." mode="google-ga4-event"/>
+			  <xsl:apply-templates select="." mode="google-ga4-event-extra"/>
 		  </script>
 		  <!-- End GA4 Tag Manager -->
+	  </xsl:if>
+	  <xsl:if test="$GoogleAdConversionID!=''">
+		  <script id="GadCode" cookie-consent="tracking">
+			  gtag('config', '<xsl:value-of select="$GoogleAdConversionID"/>')
+		  </script>
 	  </xsl:if>
 	  
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaA1WebStatsID']" mode="A1WebStatsCode"/>
@@ -10714,9 +10761,11 @@
               <xsl:text>wrapper-sm </xsl:text>
               <xsl:value-of select="@background"/>
               <xsl:apply-templates select="." mode="hideScreens" />
+			 
               <xsl:if test="@marginBelow='false'">
                 <xsl:text> margin-bottom-0 </xsl:text>
               </xsl:if>
+
               <xsl:if test="@data-stellar-background-ratio!='10'">
                 <xsl:text> parallax-wrapper </xsl:text>
               </xsl:if>
@@ -10837,7 +10886,9 @@
       <xsl:if test="@mdCol='6'">col-md-2 </xsl:if>
     </xsl:variable>
     <xsl:choose>
-      <xsl:when test="@xsCol='2'">mobile-2-col </xsl:when>
+		<xsl:when test="@xsCol='4'">col-xs-3 </xsl:when>
+		<xsl:when test="@xsCol='3'">col-xs-4 </xsl:when>
+      <xsl:when test="@xsCol='2'">col-xs-6 </xsl:when>
       <xsl:otherwise>mobile-1-col </xsl:otherwise>
     </xsl:choose>
     <xsl:if test="@smCol and @smCol!=''">
@@ -10880,7 +10931,7 @@
       <xsl:if test="@mdCol='2equal'">col-md-6 </xsl:if>
     </xsl:variable>
     <xsl:choose>
-      <xsl:when test="@xsCol='2'">mobile-2-col </xsl:when>
+      <xsl:when test="@xsCol='2'">col-xs-4 </xsl:when>
       <xsl:otherwise>mobile-1-col </xsl:otherwise>
     </xsl:choose>
     <xsl:if test="@smCol and @smCol!=''">
@@ -10923,7 +10974,7 @@
       <xsl:if test="@mdCol='2equal'">col-md-equal-2 </xsl:if>
     </xsl:variable>
     <xsl:choose>
-      <xsl:when test="@xsCol='2'">mobile-2-col </xsl:when>
+      <xsl:when test="@xsCol='2'">col-xs-4 </xsl:when>
       <xsl:otherwise>mobile-1-col </xsl:otherwise>
     </xsl:choose>
     <xsl:if test="@smCol and @smCol!=''">

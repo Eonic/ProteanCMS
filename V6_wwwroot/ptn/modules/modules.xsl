@@ -35,10 +35,12 @@
   <xsl:import href="carouselbackground/BackgroundCarousel.xsl"/>
   <xsl:import href="carouselslide/SlideCarousel.xsl"/>
   <xsl:import href="swipercarousel/swipercarousel.xsl"/>
-  <xsl:import href="reviews/Reviews.xsl"/>
+  <!--<xsl:import href="reviews/Reviews.xsl"/>-->
   <xsl:import href="galleryimagelist/GalleryImageList.xsl"/>
   <xsl:import href="galleryimagelist/LibraryImage.xsl"/>
   <xsl:import href="sociallinks/SocialLinks.xsl"/>
   <xsl:import href="xform/xForm.xsl"/>
   <xsl:import href="documentrequest/DocumentRequest.xsl"/>
+  <xsl:import href="cookiefirst/cookiefirst.xsl"/>
+	<xsl:import href="donate/donatebutton.xsl"/>
 </xsl:stylesheet>

@@ -45,7 +45,7 @@
           <xsl:with-param name="containerClass" select="$containerClass"/>
         </xsl:apply-templates>
 
-        <xsl:apply-templates select="." mode="socialBookmarks" />-->
+        <xsl:apply-templates select="." mode="socialBookmarks" />
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -14667,10 +14667,26 @@
         </xsl:choose>
         <xsl:text> </xsl:text>
       </iframe>
-		<script src="https://player.vimeo.com/api/player.js">&#160;</script>
+	  <script src="https://player.vimeo.com/api/player.js">&#160;</script>
     </div>
   </xsl:template>
-
+	
+  <xsl:template match="Content[@moduleType='Video' and @videoType='Vimeo']" mode="json-ld">
+  	  	<script type="application/ld+json" id="vimeo-{@id}">
+			{
+              "@context": "https://schema.org",
+              "@type": "VideoObject",
+              "name": "<xsl:value-of select="@title"/>",
+              "description": "<xsl:value-of select="Description"/>",
+              "thumbnailUrl": "<xsl:value-of select="Vimeo/@thumbnail"/>",
+              "uploadDate": "<xsl:value-of select="@publish"/>",
+              "duration": "<xsl:value-of select="Vimeo/@duration"/>",
+              "contentUrl": "https://player.vimeo.com/video/<xsl:value-of select="Vimeo/@code"/>",
+              "embedUrl": "https://player.vimeo.com/video/<xsl:value-of select="Vimeo/@code"/>"
+            }
+		</script>
+  </xsl:template>
+	
   <!--HTML5-->
   <xsl:template match="Content[@moduleType='Video' and @videoType='HTML5']" mode="displayBrief">
     <xsl:if test="HTML5/@videoMp4!='' or HTML5/@videoGG!='' or  HTML5/@videoWebm!=''">
