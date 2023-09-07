@@ -17,7 +17,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyCopyright("Copyright | Eonic Digital LLP.  2023")>
 <Assembly: AssemblyTrademark("ProteanCMS")>
 
-<Assembly: System.Runtime.InteropServices.ComVisible(False)> 
+<Assembly: System.Runtime.InteropServices.ComVisible(False)>
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
 <Assembly: Guid("111C3222-3102-4693-9CEC-A72880ECC921")>

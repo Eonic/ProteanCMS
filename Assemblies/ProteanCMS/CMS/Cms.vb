@@ -3849,6 +3849,9 @@ Public Class Cms
             If (gbMembership = True And bIgnorePermissionsCheck = False) Then
 
 
+                ' Check the page is not denied
+
+
 
                 If mnUserId = 0 And gnNonAuthUsers <> 0 Then
 
@@ -3870,18 +3873,25 @@ Public Class Cms
 
                     ' If no gnNonAuthUsers user group exists, then remove the auth group
                     nAuthUserId = mnUserId
-                    nAuthGroup = -1
+                    If oContentsNode IsNot Nothing Then
+                        ' Quick call to get the total number of records
+                        Dim cSQL As String = "SET ARITHABORT ON "
+                        cSQL &= "Select COUNT(distinct c.nContentKey) FROM tblContent AS c INNER JOIN "
+                        cSQL &= "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN "
+                        cSQL &= "tblContentLocation AS CL ON c.nContentKey = CL.nContentId "
+                        '' Add the extra joins if specified.
+                        If Not (String.IsNullOrEmpty(cAdditionalJoins)) Then cSQL &= " " & cAdditionalJoins & " "
+                        cSQL = cSQL & " where (" & combinedWhereSQL & ")"
+                        If (oContentsNode.Attributes("contentType") IsNot Nothing) Then
+                            Dim nTotal As Long = moDbHelper.GetDataValue(cSQL, , , 0)
+                            oContentsNode.SetAttribute("resultCount", nTotal)
+                        End If
+                        If (oContentsNode.Attributes("filterTarget") IsNot Nothing) Then
+                            cFilterTarget = oContentsNode.Attributes("filterTarget").Value
+                        End If
 
-
-
-                Else
-                    nAuthUserId = mnUserId
-                    nAuthGroup = gnAuthUsers
-                End If
-
-
-                ' Check the page is not denied
-                sMembershipSql = " NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
+                        ' Check the page is not denied
+                        sMembershipSql = " NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
 
 
                 ' Commenting out the folowing as it wouldn't return items that were Inherited view etc.
@@ -3912,19 +3922,18 @@ Public Class Cms
 
 
             sSql = sSql & " where (" & combinedWhereSQL & ")"
-            If oContentsNode IsNot Nothing Then
-                ' Quick call to get the total number of records
-                Dim cSQL As String = "SET ARITHABORT ON "
-                cSQL &= "Select COUNT(distinct c.nContentKey) FROM tblContent AS c INNER JOIN "
-                cSQL &= "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN "
-                cSQL &= "tblContentLocation AS CL ON c.nContentKey = CL.nContentId "
-                '' Add the extra joins if specified.
-                If Not (String.IsNullOrEmpty(cAdditionalJoins)) Then cSQL &= " " & cAdditionalJoins & " "
-                cSQL = cSQL & " where (" & combinedWhereSQL & ")"
 
-                Dim nTotal As Long = moDbHelper.GetDataValue(cSQL, , , 0)
-                oContentsNode.SetAttribute("resultCount", nTotal)
-            End If
+            ' Quick call to get the total number of records
+            Dim cSQL As String = "SET ARITHABORT ON "
+            cSQL &= "Select COUNT(distinct c.nContentKey) FROM tblContent AS c INNER JOIN "
+            cSQL &= "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN "
+            cSQL &= "tblContentLocation AS CL ON c.nContentKey = CL.nContentId "
+            '' Add the extra joins if specified.
+            If Not (String.IsNullOrEmpty(cAdditionalJoins)) Then cSQL &= " " & cAdditionalJoins & " "
+            cSQL = cSQL & " where (" & combinedWhereSQL & ")"
+
+            Dim nTotal As Long = moDbHelper.GetDataValue(cSQL, , , 0)
+            oContentsNode.SetAttribute("resultCount", nTotal)
 
             If cOrderBy <> "" Then
                 sSql &= " ORDER BY " & cOrderBy
