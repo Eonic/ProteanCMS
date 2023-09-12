@@ -21,6 +21,7 @@
   <xsl:import href="googleadvertbank/GoogleAdvertBank.xsl"/>
   <xsl:import href="googlemapv3/GoogleMapV3.xsl"/>
   <xsl:import href="emailform/EmailForm.xsl"/>
+	<xsl:import href="emailformsimple/EmailFormSimple.xsl"/>
   <xsl:import href="sitemaplist/SiteMapList.xsl"/>
   <!--<xsl:import href="sitemaplarge/SiteMapLarge.xsl"/>-->
   <!--<xsl:import href="poll/Poll.xsl"/>-->
