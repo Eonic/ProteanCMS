@@ -1,0 +1,19 @@
+{
+  "Version": 1,
+  "Hash": "x+7m+L8w12+vaxtX+GVQPIl5roPOIYs6jlfvYXIurvU=",
+  "Source": "wwwroot_Net7",
+  "BasePath": "_content/wwwroot_Net7",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "wwwroot_Net7\\wwwroot",
+      "Source": "wwwroot_Net7",
+      "ContentRoot": "D:\\HostingSpaces\\ProteanCMS\\wwwroot_Net7\\wwwroot\\",
+      "BasePath": "_content/wwwroot_Net7",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": []
+}

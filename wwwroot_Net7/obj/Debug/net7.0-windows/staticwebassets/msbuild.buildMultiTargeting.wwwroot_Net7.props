@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\wwwroot_Net7.props" />
+</Project>

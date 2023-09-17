@@ -1,6 +1,7 @@
 Option Strict Off
 Option Explicit On
 
+Imports Protean.Tools
 Imports System
 Imports System.Xml
 Imports System.Web
@@ -11,6 +12,7 @@ Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Reflection
 Imports System.Net
+Imports System.Text
 Imports System.Linq
 Imports System.Text.RegularExpressions
 Imports System.Collections.Generic
@@ -20,7 +22,7 @@ Imports System.ComponentModel
 
 
 Public Class Cms
-    Inherits Base
+    Inherits Protean.Base
     Implements IDisposable
 
 #Region "ErrorHandling"
@@ -55,11 +57,11 @@ Public Class Cms
     Public mbPopupMode As Boolean = False
 
     Public moPageXml As New XmlDocument
-    Private moXmlAddedContent As Xml.XmlDocument
+    Private moXmlAddedContent As XmlDocument
     Public mdPageExpireDate As Date = DateAdd(DateInterval.Year, 1, Now)
     Public mdPageUpdateDate As Date = DateAdd(DateInterval.Year, -1, Now)
     Private mnPageCacheMode As Integer
-    Public moContentDetail As Xml.XmlElement
+    Public moContentDetail As XmlElement
     Public mcContentType As String = Mime.MediaTypeNames.Text.Html
     Public mcContentDisposition As String = ""
     Public mnProteanCMSError As Long = 0
@@ -960,7 +962,7 @@ Public Class Cms
 
         Try
             cProcessInfo = "set session variables"
-
+            moConfig = ConfigurationManager.GetSection("protean:web")
             ' Set the rewrite URL
             ' Check both IIS7 URLRewrite ad ISAPI Rewrite variants
             If Not (String.IsNullOrEmpty(CStr("" & moRequest.ServerVariables("HTTP_X_ORIGINAL_URL")))) Then
@@ -4599,7 +4601,7 @@ Public Class Cms
                         If Not (String.IsNullOrEmpty(cName)) Then
 
                             ' Replace any non-alphanumeric with hyphens
-                            Dim oRe As New Text.RegularExpressions.Regex("[^A-Z0-9]", Text.RegularExpressions.RegexOptions.IgnoreCase)
+                            Dim oRe As New RegularExpressions.Regex("[^A-Z0-9]", Text.RegularExpressions.RegexOptions.IgnoreCase)
                             cName = oRe.Replace(cName, "-").Trim("-")
 
 
@@ -5645,7 +5647,7 @@ Public Class Cms
             Dim sUrl As String
             Dim cPageName As String
             Dim cCloneParent As String
-            Dim oRe As New Text.RegularExpressions.Regex("[^A-Z0-9]", Text.RegularExpressions.RegexOptions.IgnoreCase)
+            Dim oRe As New RegularExpressions.Regex("[^A-Z0-9]", Text.RegularExpressions.RegexOptions.IgnoreCase)
             Dim oPageVerElmts As XmlElement
             Dim DomainURL As String = mcRequestDomain
             Dim ExcludeFoldersFromPaths As String = LCase("" & moConfig("ExcludeFoldersFromPaths"))
@@ -6228,7 +6230,7 @@ Public Class Cms
 
             Using oDR As SqlDataReader = moDbHelper.getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
 
-                Dim oRe As New Text.RegularExpressions.Regex("[^A-Z0-9]", Text.RegularExpressions.RegexOptions.IgnoreCase)
+                Dim oRe As New RegularExpressions.Regex("[^A-Z0-9]", Text.RegularExpressions.RegexOptions.IgnoreCase)
 
                 Do While oDR.Read
                     Dim cURL As String = ""
