@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+  <ContentTypes>
+    <ContentTypeGroup name="Information">
+      <ContentType type="Job" formPath="job" name="Job">A Job vacancy</ContentType>
+    </ContentTypeGroup>
+  </ContentTypes>
+  <ModuleTypes>
+    <ModuleGroup name="Content Lists" icon="fa-th-list">
+      <Module type="JobList" formPath="job-list" icon="fas fa-hands-helping" name="Job List"></Module>
+    </ModuleGroup>
+  </ModuleTypes>
+</PageLayouts>

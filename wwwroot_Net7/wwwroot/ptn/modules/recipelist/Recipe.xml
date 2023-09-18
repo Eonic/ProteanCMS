@@ -1,0 +1,256 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!-- RECIPE SCHEMA
+      - largly driven by microformats as to what fields are necessary.
+      - nutrition not currently used in templates but in the schema incase it wants to be used
+      - http://www.google.com/support/webmasters/bin/answer.py?hl=en&answer=173379
+ -->
+
+<Content type="xform" name="EditContent">
+  <model>
+    <instance>
+      <tblContent>
+        <nContentKey/>
+        <nContentPrimaryId/>
+        <nVersion/>
+        <cContentForiegnRef/>
+        <cContentName/>
+        <cContentSchemaName>Recipe</cContentSchemaName>
+        <cContentXmlBrief>
+          <Content showRelated="Review,Category">
+            <Name/>
+            <PublishDate/>
+            <Strapline/>
+            <Body/>
+            <PrepTime/>
+            <CookTime/>
+            <TotalTime/>
+            <Instructions/>
+            <Equipment/>
+            <Ingredients/>
+            <Yield/>
+            <Nutrition>
+              <servingSize />
+              <calories />
+              <fat />
+              <saturatedFat />
+              <unsaturatedFat />
+              <carbohydrates />
+              <sugar />
+              <fiber />
+              <protein />
+              <cholesterol />
+            </Nutrition>
+            <Images>
+              <img class="thumbnail"/>
+              <img class="display"/>
+              <img class="detail"/>
+            </Images>
+          </Content>
+        </cContentXmlBrief>
+        <cContentXmlDetail>
+          <Content>
+            <Name/>
+            <PublishDate/>
+            <Strapline/>
+            <Body/>
+            <PrepTime/>
+            <CookTime/>
+            <TotalTime/>
+            <Instructions/>
+            <Equipment/>
+            <Ingredients/>
+            <Yield/>
+            <Nutrition>
+              <servingSize />
+              <calories />
+              <fat />
+              <saturatedFat />
+              <unsaturatedFat />
+              <carbohydrates />
+              <sugar />
+              <fiber />
+              <protein />
+              <cholesterol />
+            </Nutrition>
+            <Images>
+              <img class="thumbnail"/>
+              <img class="display"/>
+              <img class="detail"/>
+            </Images>
+          </Content>
+        </cContentXmlDetail>
+        <nAuditId/>
+        <nAuditKey/>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nStatus>1</nStatus>
+        <cDescription/>
+      </tblContent>
+    </instance>
+    <submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+    <bind nodeset="tblContent">
+      <bind id="cContentName" nodeset="cContentName" required="true()" type="string"/>
+      <bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+      <bind id="dExpireDate" nodeset="dExpireDate" required="false()" type="string"/>
+      <bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
+      <bind id="cDescription" nodeset="cDescription" required="false()" type="string"/>
+      <bind nodeset="cContentXmlBrief/Content">
+        <bind id="cContentName" nodeset="Name" required="false()" type="string"/>
+        <bind id="dPublishDate" nodeset="PublishDate" required="false()" type="string"/>
+        <bind id="cContentStrapline" nodeset="Strapline" required="false()" type="string"/>
+        <bind id="cContentThumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
+        <bind id="cContentDisplay" nodeset="Images/img[@class='display']" required="false()" type="xml-replace"/>
+        <bind id="cContentFullSizePicture" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
+        <bind id="cPrepTime" nodeset="PrepTime" required="false()" type="number"/>
+        <bind id="cCookTime" nodeset="CookTime" required="false()" type="number"/>
+        <bind id="cTotalTime" nodeset="TotalTime" required="false()" type="number"/>
+        <bind id="cInstructions" nodeset="Instructions" required="false()" type="string"/>
+        <bind id="cEquipment" nodeset="Equipment" required="false()" type="string"/>
+        <bind id="cIngredients" nodeset="Ingredients" required="true()" type="string"/>
+        <bind id="cYield" nodeset="Yield" required="false()" type="string"/>
+      </bind>
+      <bind nodeset="cContentXmlDetail/Content">
+        <bind id="cContentName" nodeset="Name" required="false()" type="string"/>
+        <bind id="dPublishDate" nodeset="PublishDate" required="false()" type="string"/>
+        <bind id="cContentStrapline" nodeset="Strapline" required="false()" type="string"/>
+        <bind id="cContentThumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
+        <bind id="cContentDisplay" nodeset="Images/img[@class='display']" required="false()" type="xml-replace"/>
+        <bind id="cContentFullSizePicture" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
+        <bind id="cContentBody" nodeset="Body" required="false()" type="string"/>
+        <bind id="cPrepTime" nodeset="PrepTime" required="false()" type="number"/>
+        <bind id="cCookTime" nodeset="CookTime" required="false()" type="number"/>
+        <bind id="cTotalTime" nodeset="TotalTime" required="false()" type="number"/>
+        <bind id="cInstructions" nodeset="Instructions" required="false()" type="string"/>
+        <bind id="cEquipment" nodeset="Equipment" required="false()" type="string"/>
+        <bind id="cIngredients" nodeset="Ingredients" required="true()" type="string"/>
+        <bind id="cYield" nodeset="Yield" required="false()" type="string"/>
+      </bind>
+      <bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+    </bind>
+  </model>
+  <group ref="EditContent" class="2col">
+    <label>Recipe</label>
+    <group class="ContentColumn1">
+      <group ref="Settings" class="leftSettings">
+        <input bind="nContentKey" class="hidden">
+          <label>ContentId</label>
+        </input>
+        <label>Settings</label>
+        <input bind="dPublishDate" class="calendar short">
+          <label>Publish date</label>
+        </input>
+        <input bind="dExpireDate" class="calendar short">
+          <label>Expire date</label>
+        </input>
+        <select1 bind="nStatus" appearance="full" class="required vshort">
+          <label>Status</label>
+          <item>
+            <label>Live</label>
+            <value>1</value>
+          </item>
+          <item>
+            <label>Hidden</label>
+            <value>0</value>
+          </item>
+        </select1>
+        <input bind="cDescription" class="short">
+          <label>Change notes</label>
+        </input>
+      </group>
+      <group class="Content">
+        <label>Images</label>
+        <input bind="cContentFullSizePicture" class="short pickImage">
+          <label>Main recipe image</label>
+          <help class="inline">
+            <p>
+              This image should generally be no larger than <b>800x600 pixels, at 72dpi.</b>
+            </p>
+            <p>The main image is automatically resized for other smaller images such as thumbnails.</p>
+            <p>However if you would like a different image for the thumbnail or main product page, they can be specified below.</p>
+          </help>
+        </input>
+        <hint>Smaller images will be automatically resized from the full size. If you want to use alternative images you can add them here.</hint>
+        <input bind="cContentThumbnail" class="short pickImage">
+          <label>Alternative thumbnail</label>
+        </input>
+        <input bind="cContentDisplay" class="short pickImage">
+          <label>Alternative picture</label>
+        </input>
+      </group>
+
+    </group>
+    <group class="ContentColumn2">
+      <group ref="Content" class="Content">
+        <label>Recipe name</label>
+
+        <input bind="cContentName" class="required long">
+          <label>Name</label>
+        </input>
+      </group>
+      <group class="inline">
+        <label>Recipe Details</label>
+        <input bind="cPrepTime" class="short">
+          <label>Preperation time</label>
+          <help class="inline">Time in minutes e.g. 30</help>
+        </input>
+        <input bind="cCookTime" class="short">
+          <label>Cooking time</label>
+          <help class="inline">Time in minutes e.g. 60</help>
+        </input>
+        <input bind="cYield" class="short">
+          <label>Yield (No. servings)</label>
+        </input>
+      </group>
+      <group>
+        <label>Ingredients</label>
+        <textarea bind="cIngredients" class="TextArea xhtml" rows="10" cols="70">
+        </textarea>
+      </group>
+      <group>
+        <label>Equipment</label>
+        <textarea bind="cEquipment" class="TextArea xhtml" rows="10" cols="70">
+        </textarea>
+      </group>
+      <group>
+        <label>Instructions</label>
+        <textarea bind="cInstructions" class="TextArea xhtml" rows="15" cols="70">
+        </textarea>
+      </group>
+      <group>
+        <label>Recipe supporting content</label>
+        <label>Brief description</label>
+        <textarea bind="cContentStrapline" class="TextArea xhtml" rows="5" cols="70">
+        </textarea>
+        <label>Detail description</label>
+        <textarea bind="cContentBody" class="TextArea xhtml" rows="10" cols="70">
+        </textarea>
+      </group>
+      <group>
+        <label>Author</label>
+        <relatedContent type="Contact" direction="2Way" search="add find" relationType="" maxRelationNo="1"/>
+      </group>
+      <group>
+        <label>Related recipes</label>
+        <relatedContent type="Recipe" direction="2Way" search="find" relationType="related"/>
+      </group>
+      <group>
+        <label>Tag/Category/Recipe Type</label>
+        <relatedContent search="add find" type="Tag" relationType="" direction="2way"/>
+      </group>
+      <group>
+        <label>Reviews</label>
+        <relatedContent search="add" type="Review" relationType="" direction="2way"/>
+      </group>
+    </group>
+  </group>
+  <group ref="submit" class="contentSubmit">
+    <submit submission="" ref="ewSubmit" class="principle">
+      <label>Save Recipe</label>
+    </submit>
+  </group>
+</Content>

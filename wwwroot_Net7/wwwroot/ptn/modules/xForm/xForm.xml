@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+	<model>
+		<instance>
+			<tblContent>
+				<nContentKey/>
+				<nContentPrimaryId/>
+				<nVersion/>
+				<cContentForiegnRef/>
+				<cContentName/>
+				<cContentSchemaName>Module</cContentSchemaName>
+				<cContentXmlBrief>
+					<Content position="" moduleType="xForm" box="" title="" process="xform" contentFile="">
+					</Content>
+				</cContentXmlBrief>
+				<cContentXmlDetail/>
+				<nAuditId/>
+				<nAuditKey/>
+				<dPublishDate/>
+				<dExpireDate/>
+				<dInsertDate/>
+				<nInsertDirId/>
+				<dUpdateDate/>
+				<nUpdateDirId/>
+				<nStatus>1</nStatus>
+				<cDescription/>
+				<bCascade/>
+			</tblContent>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+		<bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
+		<bind nodeset="tblContent/cContentXmlBrief/Content">
+			<bind id="cPosition" nodeset="@position" required="true()" type="string"/>
+			<bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
+			<bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
+			<bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
+			<bind id="cModuleTitleDisplay" nodeset="@displayTitle" required="false()" type="string"/>
+			<bind id="cFileLocation" nodeset="@contentFile" required="true()" type="string"/>
+			<bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
+			<bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
+			<bind id="hideLabel" nodeset="@hideLabel" required="false()" type="string"/>
+			<bind id="formLayout" nodeset="@formLayout" required="false()" type="string"/>
+		</bind>
+		<bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
+		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
+		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+	</model>
+	<group ref="EditContent">
+		<label>xForm Module</label>
+		<group class="tabs">
+			<group>
+				<label>
+					<i class="fas fa-pen"> </i>
+					<span class="space"> </span>
+					<span>Content</span>
+				</label>
+				<group>
+					<alert>WARNING! Updating forms is an advanced task. Please contact your web-support rep for assistance.</alert>
+					<input bind="cModuleTitle" class="long">
+						<label>Title</label>
+					</input>
+					<input bind="cFileLocation" class="long">
+						<label>File Location</label>
+					</input>
+				</group>
+				<group>
+					<label>Sent Message</label>
+					<relatedContent search="find add" type="FormattedText" relationType="" maxRelationNo="1" direction="1way">
+						<label>Formatted Text</label>
+					</relatedContent>
+				</group>
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-brush"> </i>
+					<span class="space"> </span>
+					<span>Presentation</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
+				<group>
+					<select bind="hideLabel" appearance="full" class="inline-items">
+						<item>
+							<label>Hide Labels</label>
+							<value>true</value>
+						</item>
+						<help class="inline">Labels must stay in a form so they are available to screen readers, but this will make them hidden.</help>
+					</select>
+					<select1 bind="formLayout" appearance="full" class="inline-items">
+						<label>Form Layout</label>
+						<item>
+							<label>Horizontal</label>
+							<value>horizontal</value>
+						</item>
+						<item>
+							<label>Vertical</label>
+							<value>vertical</value>
+						</item>
+						<help class="inline">
+							<p>Horizontal forms will have labels to the left of the input, vertical forms will have the labels above.</p>
+						</help>
+					</select1>
+				</group>
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-cog"> </i>
+					<span class="space"> </span>
+					<span>Advanced Settings</span>
+				</label>
+				<group>
+					<!-- These hidden fields and bindings are required for the component-->
+					<input bind="nContentKey" class="hidden">
+						<label>ContentId</label>
+					</input>
+					<input bind="cModuleType" class="hidden">
+						<label>ModuleType</label>
+					</input>
+					<!-- end of hidden fields -->
+					<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+				</group>
+			</group>
+		</group>
+	</group>
+	<group ref="submit" class="contentSubmit">
+		<submit submission="" ref="ewSubmit" class="principle">
+			<label>Save xForm</label>
+		</submit>
+	</group>
+</Content>

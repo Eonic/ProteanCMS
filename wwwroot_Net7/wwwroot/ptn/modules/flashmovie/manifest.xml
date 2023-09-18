@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+  <ContentTypes>
+    <ContentTypeGroup name="Media">
+      <ContentType type="FlashMovie" name="Flash Movie">Displays a flash movie</ContentType>
+    </ContentTypeGroup>   
+  </ContentTypes>
+</PageLayouts>

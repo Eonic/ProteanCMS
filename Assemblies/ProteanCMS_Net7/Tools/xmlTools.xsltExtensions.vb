@@ -23,6 +23,7 @@ Imports System.Collections.Generic
 Imports Imazen.WebP
 Imports System.Drawing
 Imports System.Data.SqlClient
+Imports Microsoft.Extensions.Caching.Memory
 
 Partial Public Module xmlTools
 
@@ -1722,7 +1723,7 @@ Partial Public Module xmlTools
                             Dim path As String = fsHelper.GetFileLibraryPath(library)
                             If Not String.IsNullOrEmpty(path) Then
 
-                                Dim rootfolder As New DirectoryInfo(myWeb.goServer.MapPath("/") & path.Trim("/\".ToCharArray))
+                                Dim rootfolder As New DirectoryInfo(myWeb.MapPath("/") & path.Trim("/\".ToCharArray))
                                 Dim prefixFolderPath As String = rootfolder.FullName.Substring(0, rootfolder.FullName.LastIndexOf("\"))
 
 
@@ -1741,7 +1742,7 @@ Partial Public Module xmlTools
                         End If
                     Case "FileList"
 
-                        Dim path As String = myWeb.goServer.MapPath("/") & Query2.Trim("/\".ToCharArray)
+                        Dim path As String = myWeb.MapPath("/") & Query2.Trim("/\".ToCharArray)
                         If Not String.IsNullOrEmpty(path) Then
 
                             Dim rootfolder As New DirectoryInfo(path)
@@ -1905,7 +1906,7 @@ Partial Public Module xmlTools
             Try
                 Dim existingPageId As Long = myWeb.mnPageId
 
-                Dim newWeb As New Protean.Cms(myWeb.moCtx)
+                Dim newWeb As New Protean.Cms(myWeb.moCtx, myWeb.moHost, myWeb.goAppCache)
                 newWeb.InitializeVariables()
                 newWeb.Open()
                 'newWeb.ibIndexMode = True
@@ -2220,7 +2221,7 @@ Partial Public Module xmlTools
 
                     Dim bAppVarExists As Boolean = False
                     ' New logic to stop rebuilding css when application is killed or restarted.
-                    If Not myWeb.moCtx.Application.Get(TargetPath) Is Nothing Then
+                    If Not myWeb.goAppCache.Get(Of String)(TargetPath) = Nothing Then
                         bAppVarExists = True
                     End If
 
@@ -2234,7 +2235,7 @@ Partial Public Module xmlTools
                             For Each myFile In IO.Directory.GetFiles(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "css" & TargetPath.Replace("~", "")), "*.css")
                                 sReturnStringNew = sReturnStringNew & "/" & myWeb.moConfig("ProjectPath") & "css" & TargetPath.Replace("~", "") & "/" & Path.GetFileName(myFile) & ","
                             Next
-                            myWeb.moCtx.Application.Set(TargetPath, sReturnStringNew.Trim(","))
+                            myWeb.goAppCache.Set(Of String)(TargetPath, sReturnStringNew.Trim(","))
                             bAppVarExists = True
                         End If
                     End If
@@ -2243,7 +2244,7 @@ Partial Public Module xmlTools
                     If bAppVarExists And bReset = False Then
                         'check to see if the filename is saved in the application variable.
 
-                        sReturnString = myWeb.moCtx.Application.Get(TargetPath)
+                        sReturnString = myWeb.goAppCache.Get(Of String)(TargetPath)
 
                         If Not sReturnString.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css" & TargetPath.TrimStart("~")) Then
                             myWeb.bPageCache = False
@@ -2337,7 +2338,7 @@ Partial Public Module xmlTools
                         If sReturnString.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css") Then
                             'check the file exists before we set the application variable...
                             If VirtualFileExists("/" & myWeb.moConfig("ProjectPath") & "css" & TargetPath.Replace("~", "") & "/style.css") Then
-                                myWeb.moCtx.Application.Set(TargetPath, sReturnString)
+                                myWeb.goAppCache.Set(Of String)(TargetPath, sReturnString)
                             End If
                         Else
                             sReturnString = sReturnString & sReturnError

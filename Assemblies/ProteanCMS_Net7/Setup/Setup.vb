@@ -6,6 +6,8 @@ Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Text.RegularExpressions
 Imports System.IO
+Imports Microsoft.AspNetCore.Hosting
+Imports Microsoft.Extensions.Caching.Memory
 
 
 Public Class Setup
@@ -88,11 +90,11 @@ Public Class Setup
 
     Public Sub New()
 
-        Me.New(System.Web.HttpContext.Current)
+        '  Me.New(System.Web.HttpContext.Current)
 
     End Sub
 
-    Public Sub New(ByVal Context As System.Web.HttpContext)
+    Public Sub New(ByVal Context As Microsoft.AspNetCore.Http.HttpContext, _host As IWebHostEnvironment, ByRef MemCache As IMemoryCache)
 
         Dim sProcessInfo As String = ""
         Try
@@ -108,7 +110,7 @@ Public Class Setup
             goSession = moCtx.Session
             goServer = moCtx.Server
 
-            myWeb = New Cms(moCtx)
+            myWeb = New Cms(Context, _host, MemCache)
             ' myWeb.InitializeVariables()
 
             sProcessInfo = "set session variables"
@@ -371,7 +373,7 @@ Public Class Setup
         Else
             AddResponse("<p><i class=""fa fa-check text-success"">&#160;</i>" & testResponse & "</p>")
         End If
-        TestCount = TestCount + 1
+        testCount = testCount + 1
 
 
         testResponse = oTests.TestEmailSend()
@@ -380,7 +382,7 @@ Public Class Setup
         Else
             AddResponse("<p><i class=""fa fa-check text-success"">&#160;</i>Email Sent</p>")
         End If
-        TestCount = TestCount + 1
+        testCount = testCount + 1
 
         testResponse = oTests.TestCreateFolder()
         If Not testResponse.StartsWith("Folder Created") Then
@@ -388,7 +390,7 @@ Public Class Setup
         Else
             AddResponse("<p><i class=""fa fa-check text-success"">&#160;</i>" & testResponse & "</p>")
         End If
-        TestCount = TestCount + 1
+        testCount = testCount + 1
 
 
         testResponse = oTests.TestWriteFile()
@@ -397,7 +399,7 @@ Public Class Setup
         Else
             AddResponse("<p><i class=""fa fa-check text-success"">&#160;</i>" & testResponse & "</p>")
         End If
-        TestCount = TestCount + 1
+        testCount = testCount + 1
 
         testResponse = oTests.TestWriteFileAlphaFS()
         If Not testResponse.StartsWith("File Written") Then
@@ -405,7 +407,7 @@ Public Class Setup
         Else
             AddResponse("<p><i class=""fa fa-check text-success"">&#160;</i>" & testResponse & "</p>")
         End If
-        TestCount = TestCount + 1
+        testCount = testCount + 1
 
         testResponse = oTests.TestDeleteFile()
         If Not testResponse.StartsWith("File Deleted") Then
@@ -413,7 +415,7 @@ Public Class Setup
         Else
             AddResponse("<p><i class=""fa fa-check text-success"">&#160;</i>" & testResponse & "</p>")
         End If
-        TestCount = TestCount + 1
+        testCount = testCount + 1
 
 
         testResponse = oTests.TestDeleteFolder()
@@ -422,7 +424,7 @@ Public Class Setup
         Else
             AddResponse("<p><i class=""fa fa-check text-success"">&#160;</i>" & testResponse & "</p>")
         End If
-        TestCount = TestCount + 1
+        testCount = testCount + 1
 
         testResponse = oTests.TestHtmlTidy()
         If Not testResponse.StartsWith("HTML Tidy is working") Then
@@ -647,7 +649,7 @@ Recheck:
                     Case "OptimiseImages"
                         If goRequest("ewCmd2") = "Do" Then
                             Dim oFsh As New fsHelper(myWeb.moCtx)
-                            oFsh.mcRoot = myWeb.goServer.MapPath("/")
+                            oFsh.mcRoot = myWeb.MapPath("/")
 
                             Dim folderPrefix As String = ""
                             If goRequest("resizedonly") <> "" Then
@@ -844,7 +846,7 @@ Recheck:
         Dim bRes As Boolean = True
         Try
             Dim cCurrentVersion As String = String.Empty
-
+            Dim Sub1 As XmlElement
 
             Dim oUpgrdXML As New XmlDocument
             Dim errormsg As String
@@ -894,103 +896,111 @@ Recheck:
 
                 'Remove all foreign keys
                 myWeb.moDbHelper.ExeProcessSqlfromFile(rootPath & "/toV4/DropAllForeignKeys.sql")
-                    myWeb.msException = ""
+                myWeb.msException = ""
 
                 AddResponse("Running updates to version: " & cLatestVersion)
-                    AddResponse("Running File: " & filePath)
+                AddResponse("Running File: " & filePath)
 
-                    'will loop through until we get to version above ours
-                    Dim oVer As XmlElement
-                    For Each oVer In oUpgrdXML.DocumentElement.SelectNodes("Version")
-                        If oVer.GetAttribute("Number") >= oCurrentVersion(0) Then
-                            'in current main version or above
-                            Dim Sub1 As XmlElement
-                            For Each Sub1 In oVer.SelectNodes("Sub1")
-                                If CLng(Sub1.GetAttribute("Number")) >= CLng(oCurrentVersion(1)) Then
-                                    'in current sub version 1 or above
-                                    Dim Sub2 As XmlElement
-                                    For Each Sub2 In Sub1.SelectNodes("Sub2")
-                                        If CLng(Sub2.GetAttribute("Number")) >= CLng(oCurrentVersion(2)) Then
-                                            Dim Sub3 As XmlElement
-                                            Dim bRunAll As Boolean
+                'will loop through until we get to version above ours
+                Dim oVer As XmlElement
+                For Each oVer In oUpgrdXML.DocumentElement.SelectNodes("Version")
+                    If oVer.GetAttribute("Number") >= oCurrentVersion(0) Then
+                        'in current main version or above
+                        Dim Sub1 As XmlElement
+                        For Each Sub1 In oVer.SelectNodes("Sub1")
+                            If CLng(Sub1.GetAttribute("Number")) >= CLng(oCurrentVersion(1)) Then
+                                'in current sub version 1 or above
+                                Dim Sub2 As XmlElement
+                                For Each Sub2 In Sub1.SelectNodes("Sub2")
+                                    If CLng(Sub2.GetAttribute("Number")) >= CLng(oCurrentVersion(2)) Then
+                                        Dim Sub3 As XmlElement
+                                        Dim bRunAll As Boolean
 
-                                            For Each Sub3 In Sub2.SelectNodes("Sub3")
-                                                If CLng(Sub3.GetAttribute("Number")) >= CLng(oCurrentVersion(3)) Or bRunAll Then
-                                                    'now to get actions
-                                                    AddResponse("Updating to:" & oVer.GetAttribute("Number") & "." & Sub1.GetAttribute("Number") & "." & Sub2.GetAttribute("Number") & "." & Sub3.GetAttribute("Number"))
-                                                    Dim oActionElmt As XmlElement
-                                                    Dim cConn As String = String.Empty
-                                                    For Each oActionElmt In Sub3.SelectNodes("Action")
-                                                              Try
-                                                            Select Case oActionElmt.GetAttribute("Type")
-                                                                Case "Drop"
+                                        For Each Sub3 In Sub2.SelectNodes("Sub3")
+                                            If CLng(Sub3.GetAttribute("Number")) >= CLng(oCurrentVersion(3)) Or bRunAll Then
+                                                'now to get actions
+                                                AddResponse("Updating to:" & oVer.GetAttribute("Number") & "." & Sub1.GetAttribute("Number") & "." & Sub2.GetAttribute("Number") & "." & Sub3.GetAttribute("Number"))
+                                                Dim oActionElmt As XmlElement
+                                                Dim cConn As String = String.Empty
+                                                For Each oActionElmt In Sub3.SelectNodes("Action")
+                                                    Try
+                                                        Select Case oActionElmt.GetAttribute("Type")
+                                                            Case "Drop"
                                                                 ifSqlObjectExistsDropIt(oActionElmt.GetAttribute("ObjectName"), oActionElmt.GetAttribute("ObjectType"))
                                                                 AddResponse("dropped '" & oActionElmt.GetAttribute("ObjectName") & "'")
-                                                                Case "File"
-                                                                    Dim nCount As Long
-                                                                    AddResponse("Run File '" & oActionElmt.GetAttribute("ObjectName") & "'")
-                                                                    errormsg = ""
+                                                            Case "File"
+                                                                Dim nCount As Long
+                                                                AddResponse("Run File '" & oActionElmt.GetAttribute("ObjectName") & "'")
+                                                                errormsg = ""
                                                                 nCount = myWeb.moDbHelper.ExeProcessSqlfromFile(rootPath & oActionElmt.GetAttribute("ObjectName"), errormsg)
 
                                                                 If errormsg <> "" Then
-                                                                        AddResponse("<strong style=""color:#ff0000"">WARNING: File execution generated an error</strong>")
-                                                                        AddResponse("<p style=""color:#ff0000"">" & errormsg & "</p>")
+                                                                    AddResponse("<strong style=""color:#ff0000"">WARNING: File execution generated an error</strong>")
+                                                                    AddResponse("<p style=""color:#ff0000"">" & errormsg & "</p>")
+                                                                Else
+                                                                    If nCount = -1 Then
+                                                                        AddResponse("File execution Completed...")
                                                                     Else
-                                                                        If nCount = -1 Then
-                                                                            AddResponse("File execution Completed...")
-                                                                        Else
-                                                                            AddResponse("(" & nCount & ") Updates..")
-                                                                        End If
+                                                                        AddResponse("(" & nCount & ") Updates..")
                                                                     End If
-                                                                Case Else
-                                                                    'dont do anything
-                                                            End Select
-                                                        Catch ex As Exception
-                                                            bRes = False
-                                                            AddResponse("Error:" & ex.ToString)
-                                                            AddResponseError(ex) 'returnException(myWeb.msException, mcModuleName, "updateDatabase", ex, "", cProcessInfo, gbDebug)
-                                                        End Try
-                                                        'If Not msException = "" Then
-                                                        '    AddResponse(msException)
-                                                        '    msException = ""
-                                                        'End If
-                                                    Next
-                                                    oCurrentVersion(3) = Sub3.GetAttribute("Number")
-                                                Else
-                                                    ' AddResponse("Error: Not yet at this version number")
-                                                End If
-                                            Next
-                                            If CLng(Sub2.GetAttribute("Number")) = CLng(oCurrentVersion(2)) Then
-                                                oCurrentVersion(3) = 0
-                                                oCurrentVersion(2) = oCurrentVersion(2) + 1
+                                                                End If
+                                                            Case Else
+                                                                'dont do anything
+                                                        End Select
+                                                    Catch ex As Exception
+                                                        bRes = False
+                                                        AddResponse("Error:" & ex.ToString)
+                                                        AddResponseError(ex) 'returnException(myWeb.msException, mcModuleName, "updateDatabase", ex, "", cProcessInfo, gbDebug)
+                                                    End Try
+                                                    'If Not msException = "" Then
+                                                    '    AddResponse(msException)
+                                                    '    msException = ""
+                                                    'End If
+                                                Next
+                                                oCurrentVersion(3) = Sub3.GetAttribute("Number")
+                                            Else
+                                                ' AddResponse("Error: Not yet at this version number")
                                             End If
+                                        Next
+                                        If CLng(Sub2.GetAttribute("Number")) = CLng(oCurrentVersion(2)) Then
+                                            oCurrentVersion(3) = 0
+                                            oCurrentVersion(2) = oCurrentVersion(2) + 1
                                         End If
-                                    Next
-                                    If CLng(Sub1.GetAttribute("Number")) = CLng(oCurrentVersion(1)) Then
-                                        oCurrentVersion(2) = 0
-                                        oCurrentVersion(1) = oCurrentVersion(1) + 1
-                                    End If
+                                        Next
+                                If CLng(Sub2.GetAttribute("Number")) = CLng(oCurrentVersion(2)) Then
+                                    oCurrentVersion(3) = 0
+                                    oCurrentVersion(2) = oCurrentVersion(2) + 1
                                 End If
-                            Next
-                            oCurrentVersion(3) = -1
+                                    Next
+                        If CLng(Sub1.GetAttribute("Number")) = CLng(oCurrentVersion(1)) Then
                             oCurrentVersion(2) = 0
-                            oCurrentVersion(1) = 0
+                            oCurrentVersion(1) = oCurrentVersion(1) + 1
                         End If
-                    Next
-                    If oUpgrdXML.DocumentElement.GetAttribute("update") <> "false" Then
-                    saveVersionNumber(cLatestVersion)
-                    mnCurrentVersion = cLatestVersion
-                        cLatestVersion = cLatestVersion & " - Updated DB version"
-                    Else
-                        cLatestVersion = cLatestVersion & " - Not Updated DB version"
-                    End If
+                                Next
+                If CLng(Sub1.GetAttribute("Number")) = CLng(oCurrentVersion(1)) Then
+                    oCurrentVersion(2) = 0
+                    oCurrentVersion(1) = oCurrentVersion(1) + 1
+                End If
+                Next
+                oCurrentVersion(3) = -1
+                oCurrentVersion(2) = 0
+                oCurrentVersion(1) = 0
+            End If
+            Next
+            If oUpgrdXML.DocumentElement.GetAttribute("update") <> "false" Then
+                saveVersionNumber(cLatestVersion)
+                mnCurrentVersion = cLatestVersion
+                cLatestVersion = cLatestVersion & " - Updated DB version"
+            Else
+                cLatestVersion = cLatestVersion & " - Not Updated DB version"
+            End If
 
-                    AddResponse("Update Completed to Version " & cLatestVersion)
+            AddResponse("Update Completed to Version " & cLatestVersion)
 
-                    Return bRes
-                Else
-                    AddResponse("File Not Found: " & filePath)
-                Return False
+            Return bRes
+            Else
+            AddResponse("File Not Found: " & filePath)
+            Return False
             End If
 
         Catch ex As Exception
@@ -1003,7 +1013,6 @@ Recheck:
 
     Public Function buildDatabase(Optional ByVal NewBuild As Boolean = False) As Boolean
         Dim cProcessInfo As String = "migrateData"
-
         Dim bResult As Boolean = False
         Try
 
@@ -1017,10 +1026,8 @@ Recheck:
 
             Dim dbUpdatePath = "/ewcommon/sqlupdate"
             If goConfig("cssFramework") = "bs5" Then
-                dbupdatePath = "/ptn/update/sql"
+                dbUpdatePath = "/ptn/update/sql"
             End If
-
-
             myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(dbUpdatePath & "/toV4/Structure.sql"))
             AddResponse("Run File " & dbUpdatePath & "/toV4/Structure.SQL'")
             myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(dbUpdatePath & "/toV4/fxn_SearchXML.sql"))
@@ -2339,22 +2346,23 @@ DoOptions:
 
                 MyBase.Instance.InnerXml = "<backup name=""" & DatabaseName & """ filename=""" & DatabaseFilename & """ filepath=""" & DatabaseFilepath & """/>"
 
-                    If MyBase.isSubmitted Then
-                        MyBase.updateInstanceFromRequest()
-                        MyBase.validate()
-                        If MyBase.valid Then
+                If MyBase.isSubmitted Then
+                    MyBase.updateInstanceFromRequest()
+                    MyBase.validate()
+                    If MyBase.valid Then
 
-                            Dim oDB As New Protean.Tools.Database
+                        Dim oDB As New Protean.Tools.Database
 
-                            oDB.DatabaseServer = goConfig("DatabaseServer")
-                            oDB.DatabaseUser = Protean.Tools.Text.SimpleRegexFind(goConfig("DatabaseAuth"), "user id=([^;]*)", 1, Text.RegularExpressions.RegexOptions.IgnoreCase)
-                            oDB.DatabasePassword = Protean.Tools.Text.SimpleRegexFind(goConfig("DatabaseAuth"), "password=([^;]*)", 1, Text.RegularExpressions.RegexOptions.IgnoreCase)
-                            oDB.ConnectTimeout = 60
-                            'oDB.ConnectionPooling = True
-                            oDB.BackupDatabase(DatabaseName, DatabaseFilepath)
+                        oDB.DatabaseServer = goConfig("DatabaseServer")
+                        oDB.DatabaseUser = Protean.Tools.Text.SimpleRegexFind(goConfig("DatabaseAuth"), "user id=([^;]*)", 1, Text.RegularExpressions.RegexOptions.IgnoreCase)
+                        oDB.DatabasePassword = Protean.Tools.Text.SimpleRegexFind(goConfig("DatabaseAuth"), "password=([^;]*)", 1, Text.RegularExpressions.RegexOptions.IgnoreCase)
+                        oDB.ConnectTimeout = 60
+                        'oDB.ConnectionPooling = True
+                        oDB.BackupDatabase(DatabaseName, DatabaseFilepath)
 
-                        End If
                     End If
+                End If
+                End If
 
 
                 If goConfig("AdminAcct") <> "" Then
@@ -2379,22 +2387,17 @@ DoOptions:
             Dim DatabaseName As String = goConfig("DatabaseName")
             Dim DatabaseFilename As String = String.Empty
             Dim DatabaseFilepath As String = goServer.MapPath("/") & "..\data"
-
             Try
                 oFsh = New fsHelper
                 oFsh.open(moPageXML)
-
                 MyBase.NewFrm("RestoreDatabase")
 
                 MyBase.submission("RestoreDatabase", "", "post", "form_check(this)")
 
                 oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "RestoreDatabase", "", "Restore Database")
-
                 MyBase.addNote(oFrmElmt, noteTypes.Hint, "Please select the database to restore.")
-
                 MyBase.addInput(oFrmElmt, "ewDatabaseName", True, "Database Name to be Overwritten")
                 MyBase.addBind("ewDatabaseName", "restore/@name", "true()")
-
                 Dim sel1 As XmlElement = MyBase.addSelect1(oFrmElmt, "ewDatabaseFilename", True, "Select a backup allready on the server")
                 MyBase.addOptionsFilesFromDirectory(sel1, DatabaseFilepath)
                 MyBase.addBind("ewDatabaseFilename", "restore/@filename", "false()")

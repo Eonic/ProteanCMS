@@ -6,11 +6,10 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Xml;
 using Microsoft.VisualBasic;
+using Microsoft.Extensions.Configuration;
 
 namespace Protean
 {
-
-
 
     public class Base
     {
@@ -145,11 +144,8 @@ namespace Protean
 
                 PerfMon = new Protean.PerfLog("");
                 PerfMon.Log("Base", "New");
+                moConfig = GetConfigSection("Web");
 
-                var @as = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);/* TODO ERROR: Skipped SkippedTokensTrivia
-;*/
-
-                moConfig = (NameValueCollection)ConfigurationManager.GetSection("protean:web");
                 EnumberateFeatures();
             }
 
@@ -160,6 +156,18 @@ namespace Protean
             }
         }
 
+        public static NameValueCollection GetConfigSection(string sectionName)
+        {
+            System.Collections.Specialized.NameValueCollection thisConfig = new();
+            //ConfigurationRoot ConfigRoot = builder.ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+            //Dictionary<string, string> dicConfig = new Dictionary<string, string>;
+            //dicConfig = ConfigRoot.GetSection("Protean:" & sectionName).[Get](Of Dictionary(Of String, String))();
+            //foreach (kvp In dicConfig)
+            //{
+            //    thisConfig.Add(dicConfig.Key.ToString(), dicConfig.Value.ToString());
+            //}
+            return thisConfig;
+        }
         #endregion
 
         public void EnumberateFeatures()
@@ -243,4 +251,5 @@ namespace Protean
         {
         }
     }
+
 }

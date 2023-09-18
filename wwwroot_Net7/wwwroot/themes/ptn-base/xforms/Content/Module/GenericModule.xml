@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+  <model>
+
+    <bind nodeset="tblContent/cContentXmlBrief/Content">
+      <bind id="cModAnim" nodeset="@modAnim" required="false()" type="string"/>
+      <bind id="cModAnimDelay" nodeset="@modAnimDelay" required="false()" type="string"/>
+    </bind>
+    
+  </model>
+  <group ref="EditContent" class="2col">
+    <label>Edit Formatted Text Module</label>
+    <group>
+      <group>
+        <!-- These hidden fields and bindings are required for the component-->
+        <input bind="nContentKey" class="hidden">
+          <label>ContentId</label>
+        </input>
+        <input bind="cModuleType" class="hidden">
+          <label>ModuleType</label>
+        </input>
+
+        <!-- end of hidden fields -->
+        <group id="animate">
+          <label>Animate</label>
+          <select1 bind="cModAnim" appearance="minimal">
+            <label>Animate</label>
+            <item>
+              <label>Fade In</label>
+              <value>fadeIn</value>
+            </item>
+            <item>
+              <label>Fade In Up</label>
+              <value>fadeInUp</value>
+            </item>
+            <item>
+              <label>Fade In Down</label>
+              <value>fadeInDown</value>
+            </item>
+            <item>
+              <label>Fade In Left</label>
+              <value>fadeInLeft</value>
+            </item>
+            <item>
+              <label>Fade In Right</label>
+              <value>fadeInRight</value>
+            </item>
+            <item>
+              <label>fade In Up Big</label>
+              <value>fadeInUpBig</value>
+            </item>
+            <item>
+              <label>Fade In Down Big</label>
+              <value>fadeInDownBig</value>
+            </item>
+            <item>
+              <label>Fade In Left Big</label>
+              <value>fadeInLeftBig</value>
+            </item>
+            <item>
+              <label>Fade In Right Big</label>
+              <value>fadeInRightBig</value>
+            </item>
+            <item>
+              <label>Slide In Down</label>
+              <value>slideInDown</value>
+            </item>
+            <item>
+              <label>Slide In Left</label>
+              <value>slideInLeft</value>
+            </item>
+            <item>
+              <label>Slide In Right</label>
+              <value>slideInRight</value>
+            </item>
+            <item>
+              <label>Bounce In</label>
+              <value>bounceIn</value>
+            </item>
+            <item>
+              <label>Bounce In Up</label>
+              <value>bounceInUp</value>
+            </item>
+            <item>
+              <label>Bounce In Down</label>
+              <value>bounceInDown</value>
+            </item>
+            <item>
+              <label>Bounce In Left</label>
+              <value>bounceInLeft</value>
+            </item>
+            <item>
+              <label>Bounce In Right</label>
+              <value>bounceInRight</value>
+            </item>
+          </select1>
+
+          <range bind="cModAnimDelay" start="0" end="500" step="10">
+            <label>Delay</label>
+          </range>
+          
+        </group>
+      </group>
+    </group>
+  </group>
+
+</Content>

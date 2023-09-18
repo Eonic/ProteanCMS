@@ -2,6 +2,7 @@ Option Strict Off
 Option Explicit On
 
 Imports Protean.Tools
+Imports Protean
 Imports System
 Imports System.Xml
 Imports System.Web
@@ -19,10 +20,12 @@ Imports System.Collections.Generic
 Imports Microsoft
 Imports Microsoft.ClearScript.Util
 Imports System.ComponentModel
-
+Imports Microsoft.AspNetCore.Http
+Imports Microsoft.Extensions.Caching.Memory
+Imports Microsoft.AspNetCore.Hosting
 
 Public Class Cms
-    Inherits Protean.Base
+    Inherits Base
     Implements IDisposable
 
 #Region "ErrorHandling"
@@ -209,12 +212,12 @@ Public Class Cms
 #Region "Constructors"
     Public Sub New()
 
-        Me.New(System.Web.HttpContext.Current)
+        ' Me.New(System.Web.HttpContext.Current)
 
     End Sub
 
-    Public Sub New(ByVal Context As System.Web.HttpContext)
-        MyBase.New(Context)
+    Public Sub New(ByVal Context As Microsoft.AspNetCore.Http.HttpContext, _host As IWebHostEnvironment, ByRef MemCache As IMemoryCache)
+        MyBase.New(Context, MemCache)
         Dim sProcessInfo As String = ""
         Try
 
@@ -559,23 +562,23 @@ Public Class Cms
                 End If
 
                 'Get system page ID's for application level
-                If moCtx.Application("PageNotFoundId") Is Nothing Then
-                    moCtx.Application("PageNotFoundId") = moDbHelper.getPageIdFromPath(NotFoundPagePath, False, False)
+                If goAppCache.Get(Of Integer)("PageNotFoundId") = Nothing Then
+                    goAppCache.Set(Of Integer)("PageNotFoundId", moDbHelper.getPageIdFromPath(NotFoundPagePath, False, False))
                 End If
-                If moCtx.Application("PageAccessDeniedId") Is Nothing Then
-                    moCtx.Application("PageAccessDeniedId") = moDbHelper.getPageIdFromPath(AccessDeniedPagePath, False, False)
+                If goAppCache.Get(Of Integer)("PageAccessDeniedId") = Nothing Then
+                    goAppCache.Set(Of Integer)("PageAccessDeniedId", moDbHelper.getPageIdFromPath(AccessDeniedPagePath, False, False))
                 End If
-                If moCtx.Application("PageLoginRequiredId") Is Nothing Then
-                    moCtx.Application("PageLoginRequiredId") = moDbHelper.getPageIdFromPath(LoginRequiredPagePath, False, False)
+                If goAppCache.Get(Of Integer)("PageLoginRequiredId") = Nothing Then
+                    goAppCache.Set(Of Integer)("PageLoginRequiredId", moDbHelper.getPageIdFromPath(LoginRequiredPagePath, False, False))
                 End If
-                If moCtx.Application("PageErrorId") Is Nothing Then
-                    moCtx.Application("PageErrorId") = moDbHelper.getPageIdFromPath(ProteanErrorPagePath, False, False)
+                If goAppCache.Get(Of Integer)("PageErrorId") = Nothing Then
+                    goAppCache.Set(Of Integer)("PageErrorId", moDbHelper.getPageIdFromPath(ProteanErrorPagePath, False, False))
                 End If
 
-                gnPageNotFoundId = moCtx.Application("PageNotFoundId")
-                gnPageAccessDeniedId = moCtx.Application("PageAccessDeniedId")
-                gnPageLoginRequiredId = moCtx.Application("PageLoginRequiredId")
-                gnPageErrorId = moCtx.Application("PageErrorId")
+                gnPageNotFoundId = goAppCache.Get(Of Integer)("PageNotFoundId")
+                gnPageAccessDeniedId = goAppCache.Get(Of Integer)("PageAccessDeniedId")
+                gnPageLoginRequiredId = goAppCache.Get(Of Integer)("PageLoginRequiredId")
+                gnPageErrorId = goAppCache.Get(Of Integer)("PageErrorId")
 
                 mcPagePath = CStr(moRequest("path") & "")
                 mcPagePath = mcPagePath.Replace("//", "/")
@@ -920,21 +923,21 @@ Public Class Cms
 
             ' Get referenced assembly info
             ' Given that assemblies are loaded at an application level, we can store the info we find in an application object
-            If String.IsNullOrEmpty(CStr(goCache("GENERATOR"))) Then
-                Dim CodeGenerator As Assembly = Me.Generator()
-                gcGenerator = CodeGenerator.FullName()
-                gcCodebase = CodeGenerator.CodeBase()
-                For Each ReferencedAssembly As AssemblyName In Me.ReferencedAssemblies()
-                    gcReferencedAssemblies &= ReferencedAssembly.Name & " (" & ReferencedAssembly.Version.ToString & "); "
-                Next
-                goCache("GENERATOR") = gcGenerator
-                goCache("CODEBASE") = gcCodebase
-                goCache("REFERENCED_ASSEMBLIES") = gcReferencedAssemblies
-            Else
-                gcGenerator = goCache("GENERATOR")
-                gcCodebase = goCache("CODEBASE")
-                gcReferencedAssemblies = goCache("REFERENCED_ASSEMBLIES")
-            End If
+            'If goCache Is Nothing Then
+            '    Dim CodeGenerator As Assembly = Me.Generator()
+            '    gcGenerator = CodeGenerator.FullName()
+            '    gcCodebase = CodeGenerator.CodeBase()
+            '    For Each ReferencedAssembly As AssemblyName In Me.ReferencedAssemblies()
+            '        gcReferencedAssemblies &= ReferencedAssembly.Name & " (" & ReferencedAssembly.Version.ToString & "); "
+            '    Next
+            '    goCache("GENERATOR") = gcGenerator
+            '    goCache("CODEBASE") = gcCodebase
+            '    goCache("REFERENCED_ASSEMBLIES") = gcReferencedAssemblies
+            'Else
+            '    gcGenerator = goCache("GENERATOR")
+            '    gcCodebase = goCache("CODEBASE")
+            '    gcReferencedAssemblies = goCache("REFERENCED_ASSEMBLIES")
+            'End If
             If moConfig("ShowRelatedBriefDepth") <> "" Then
                 gnShowRelatedBriefDepth = moConfig("ShowRelatedBriefDepth")
             End If
@@ -962,14 +965,14 @@ Public Class Cms
 
         Try
             cProcessInfo = "set session variables"
-            moConfig = ConfigurationManager.GetSection("protean:web")
+            moConfig = GetConfigSection("web")
             ' Set the rewrite URL
             ' Check both IIS7 URLRewrite ad ISAPI Rewrite variants
-            If Not (String.IsNullOrEmpty(CStr("" & moRequest.ServerVariables("HTTP_X_ORIGINAL_URL")))) Then
-                mcOriginalURL = moRequest.ServerVariables("HTTP_X_ORIGINAL_URL")
-            ElseIf Not (String.IsNullOrEmpty(CStr("" & moRequest.ServerVariables("HTTP_X_REWRITE_URL")))) Then
-                mcOriginalURL = moRequest.ServerVariables("HTTP_X_REWRITE_URL")
-            End If
+            'If Not (String.IsNullOrEmpty(CStr("" & moRequest.ServerVariables("HTTP_X_ORIGINAL_URL")))) Then
+            '    mcOriginalURL = moRequest.ServerVariables("HTTP_X_ORIGINAL_URL")
+            'ElseIf Not (String.IsNullOrEmpty(CStr("" & moRequest.ServerVariables("HTTP_X_REWRITE_URL")))) Then
+            '    mcOriginalURL = moRequest.ServerVariables("HTTP_X_REWRITE_URL")
+            'End If
 
             Dim moCartConfig As System.Collections.Specialized.NameValueCollection = ConfigurationManager.GetSection("protean/cart")
 
@@ -1038,7 +1041,7 @@ Public Class Cms
                     gcEwSiteXsl = moConfig("SiteXsl")
                     moResponseType = pageResponseType.Page
                     'can we get a cached page
-                    If Not moRequest.ServerVariables("HTTP_X_ORIGINAL_URL") Is Nothing Then
+                    If Not moCtx.GetServerVariable("HTTP_X_ORIGINAL_URL") Is Nothing Then
                         If gnResponseCode = 200 And moRequest.Form.Count = 0 And mnUserId = 0 And Not (moRequest.ServerVariables("HTTP_X_ORIGINAL_URL").Contains("?")) Then
                             bPageCache = IIf(LCase(moConfig("PageCache")) = "on", True, False)
                         End If
@@ -1575,21 +1578,20 @@ Public Class Cms
                                             'goServer.ScriptTimeout = 10000
 
                                             Dim strFileSize As String = ofileStream.Length
-                                            Dim Buffer() As Byte = ofileStream.ToArray
 
                                             moCtx.Response.Clear()
                                             'Const adTypeBinary = 1
-                                            moCtx.Response.AddHeader("Connection", "keep-alive")
-                                            If moCtx.Request.QueryString("mode") = "open" Then
-                                                moCtx.Response.AddHeader("Content-Disposition", "filename=" & Replace(strFileName, ",", ""))
+                                            moCtx.Response.Headers.Add("Connection", "keep-alive")
+                                            If moRequest.QueryString("mode") = "open" Then
+                                                moCtx.Response.Headers.Add("Content-Disposition", "filename=" & Replace(strFileName, ",", ""))
                                             Else
-                                                moCtx.Response.AddHeader("Content-Disposition", "attachment; filename=" & Replace(strFileName, ",", ""))
+                                                moCtx.Response.Headers.Add("Content-Disposition", "attachment; filename=" & Replace(strFileName, ",", ""))
                                             End If
-                                            moCtx.Response.AddHeader("Content-Length", strFileSize)
+                                            moCtx.Response.Headers.Add("Content-Length", strFileSize)
                                             'ctx.Response.Charset = "UTF-8"
                                             moCtx.Response.ContentType = Protean.Tools.FileHelper.GetMIMEType("PDF")
-                                            moCtx.Response.BinaryWrite(Buffer)
-                                            moCtx.Response.Flush()
+                                            moCtx.Response.SendFileAsync(ofileStream)
+                                            'moCtx.Response.Flush()
 
                                             ' objStream = Nothing
                                             oFoNet = Nothing
@@ -2541,7 +2543,7 @@ Public Class Cms
                 Dim styleFile As String = CStr(goServer.MapPath(mcEwSiteXsl))
 
                 If moRequest("recompile") <> "" Then
-                    moCtx.Application.Item(styleFile) = Nothing
+                    goAppCache.Set(Of String)(styleFile, Nothing)
                 End If
 
                 Dim oTransform As New Protean.XmlHelper.Transform(Me, styleFile, gbCompiledTransform)
@@ -4426,7 +4428,7 @@ Public Class Cms
 
                         ' Redirect the user.
                         moResponse.Redirect(cUrl & "?token=" & cToken, False)
-                        moCtx.ApplicationInstance.CompleteRequest()
+                        'moCtx.ApplicationInstance.CompleteRequest()
                     End If
 
                 End If
@@ -4873,9 +4875,9 @@ Public Class Cms
         Dim sProcessInfo As String = ""
         Try
             If Not moRequest("reBundle") Is Nothing Then
-                moCtx.Application("ewSettings") = Nothing
+                goAppCache.Set(Of String)("ewSettings", Nothing)
             End If
-            If moCtx.Application("ewSettings") Is Nothing Then
+            If goAppCache.Get(Of String)("ewSettings") = Nothing Then
                 root = moPageXml.CreateElement("Settings")
 
                 'Please never add any setting here you do not want to be publicly accessible.
@@ -4892,24 +4894,24 @@ Public Class Cms
                 If Not oThemeConfig Is Nothing Then
                     sCurrentTheme = oThemeConfig("CurrentTheme")
                     Dim themesetting = moPageXml.CreateElement("add")
-                    themesetting.setAttribute("key", "theme.CurrentTheme")
-                    themesetting.setAttribute("value", sCurrentTheme)
+                    themesetting.SetAttribute("key", "theme.CurrentTheme")
+                    themesetting.SetAttribute("value", sCurrentTheme)
                     root.AppendChild(themesetting)
                 End If
                 While (match.Success)
 
                     Dim setting = moPageXml.CreateElement("add")
-                    setting.setAttribute("key", match.Groups("Name").Value + "." + match.Groups("Value").Value)
+                    setting.SetAttribute("key", match.Groups("Name").Value + "." + match.Groups("Value").Value)
                     Select Case match.Groups("Name").Value
                         Case "web"
-                            setting.setAttribute("value", moConfig(match.Groups("Value").Value))
+                            setting.SetAttribute("value", moConfig(match.Groups("Value").Value))
                         Case "cart"
                             If Not moCartConfig Is Nothing Then
-                                setting.setAttribute("value", moCartConfig(match.Groups("Value").Value))
+                                setting.SetAttribute("value", moCartConfig(match.Groups("Value").Value))
                             End If
                         Case "theme"
                             If Not sCurrentTheme Is Nothing And match.Groups("Value").Value <> "CurrentTheme" Then
-                                setting.setAttribute("value", oThemeConfig(sCurrentTheme & "." & match.Groups("Value").Value))
+                                setting.SetAttribute("value", oThemeConfig(sCurrentTheme & "." & match.Groups("Value").Value))
                             End If
                     End Select
                     root.AppendChild(setting)
@@ -4918,15 +4920,15 @@ Public Class Cms
 
                 'create a random bundle version number
                 Dim rnsetting = moPageXml.CreateElement("add")
-                rnsetting.setAttribute("key", "bundleVersion")
+                rnsetting.SetAttribute("key", "bundleVersion")
                 Dim rn As New Random
-                rnsetting.setAttribute("value", rn.Next(10000, 99999))
+                rnsetting.SetAttribute("value", rn.Next(10000, 99999))
                 root.AppendChild(rnsetting)
 
-                moCtx.Application("ewSettings") = root.InnerXml
+                goAppCache.Set(Of String)("ewSettings", root.InnerXml)
             Else
                 root = moPageXml.CreateElement("Settings")
-                root.InnerXml = moCtx.Application("ewSettings")
+                root.InnerXml = goAppCache.Get(Of String)("ewSettings")
             End If
             oPageElmt.AppendChild(root)
 
@@ -5279,7 +5281,7 @@ Public Class Cms
                     Dim oCache As XmlElement = moPageXml.CreateElement(cRootNodeName)
 
                     If mbAdminMode And cCacheType = "Menu/MenuItem" Then
-                        oCache.InnerXml = moCtx.Application("AdminStructureCache")
+                        oCache.InnerXml = goAppCache.Get(Of String)("AdminStructureCache")
                     Else
 
 
@@ -5616,7 +5618,7 @@ Public Class Cms
                     'only cache if MenuItem / Menu
                     If cMenuItemNodeName = "MenuItem" And cRootNodeName = "Menu" Then
                         If mbAdminMode Then
-                            moCtx.Application("AdminStructureCache") = oElmt.InnerXml
+                            goAppCache.Set(Of String)("AdminStructureCache", oElmt.InnerXml)
                         Else
                             moDbHelper.addStructureCache(bAuth, nUserId, cCacheType, oElmt.FirstChild)
                         End If
@@ -8036,8 +8038,8 @@ Public Class Cms
                                         moDbHelper.CommitLogToDB(dbHelper.ActivityType.DocumentDownloaded, mnUserId, moSession.SessionID, Now, mnPageId, 0, "ERROR NOT FOUND:" & strFileName)
                                     End If
 
-                                    If moCtx.Application("PageNotFoundId") <> RootPageId Then
-                                        moCtx.ApplicationInstance.CompleteRequest()
+                                    If goAppCache.Get(Of String)("PageNotFoundId") <> RootPageId Then
+                                        ' moCtx.ApplicationInstance.CompleteRequest()
                                         Redirect404(NotFoundPagePath)
                                     Else
                                         ' Kept for follow up window, however does this send original mail out?
@@ -8062,7 +8064,7 @@ Public Class Cms
                             Me.msRedirectOnEnd = AccessDeniedPagePath
 
                             moResponse.Redirect(msRedirectOnEnd, False)
-                            moCtx.ApplicationInstance.CompleteRequest()
+                            'moCtx.ApplicationInstance.CompleteRequest()
                             Exit Sub
 
                         End If
@@ -9120,7 +9122,7 @@ Public Class Cms
                     Dim AppVarName As String = dir.FullName
                     AppVarName = AppVarName.Substring(goServer.MapPath("/" & moConfig("ProjectPath") & bundlePath).Length())
                     AppVarName = AppVarName.Replace("\", "/")
-                    moCtx.Application.Remove("~/" & AppVarName)
+                    goAppCache.Remove("~/" & AppVarName)
                 Next
             End If
 

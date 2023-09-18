@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+	<model>
+		<instance>
+			<tblContent>
+				<nContentKey/>
+				<nContentPrimaryId/>
+				<nVersion/>
+				<cContentForiegnRef/>
+				<cContentName/>
+				<cContentSchemaName>Module</cContentSchemaName>
+				<cContentXmlBrief>
+					<Content moduleType="SwiperCarousel" contentType="SwiperSlide" interval="5000" height="400" speed="400" box="" title="" link="" linkType="internal" sortBy="publish" order="descending" cols="1" stepBy="" stepCount="0" display="related" rss="false" position="" commentPlatform="none" fbCommentsWidth="500"/>
+				</cContentXmlBrief>
+				<cContentXmlDetail/>
+				<nAuditId/>
+				<nAuditKey/>
+				<dPublishDate/>
+				<dExpireDate/>
+				<dInsertDate/>
+				<nInsertDirId/>
+				<dUpdateDate/>
+				<nUpdateDirId/>
+				<nStatus>1</nStatus>
+				<cDescription/>
+				<bCascade/>
+			</tblContent>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+		<bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
+		<bind nodeset="tblContent/cContentXmlBrief/Content">
+			<bind id="cPosition" nodeset="@position" required="true()" type="string"/>
+			<bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
+			<bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
+			<bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
+			<bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
+			<bind id="cInterval" nodeset="@interval" required="false()" type="string"/>
+			<bind id="nSpeed" nodeset="@speed" required="false()" type="number"/>
+			<bind id="direction" nodeset="@direction" required="false()" type="number"/>s
+				<bind id="effect" nodeset="@effect" required="false()" type="number"/>
+			<bind id="cHeightOptions" nodeset="@cHeightOptions" required="false()" type="string"/>
+			<bind id="cHeightxs" nodeset="@heightxs" required="false()" type="string"/>
+			<bind id="cHeight" nodeset="@height" required="false()" type="string"/>
+			<bind id="cBullets" nodeset="@bullets" required="false()" type="string"/>
+			<bind id="cArrows" nodeset="@arrows" required="false()" type="string"/>
+			<bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+			<bind id="nColumns" nodeset="@cols" required="false()" type="string"/>
+			<bind id="nStepCount" nodeset="@stepCount" required="false()" type="string"/>
+			<bind id="cDisplay" nodeset="@display" required="false()" type="string"/>
+			<bind id="cSortBy" nodeset="@sortBy" required="false()" type="string"/>
+			<bind id="cStepBy" nodeset="@stepBy" required="false()" type="string"/>
+			<bind id="cPageOrder" nodeset="@order" required="false()" type="string"/>
+			<bind id="cContentRSSFeed" nodeset="@rss" required="false()" type="string"/>
+			<bind id="cCommentPlatform" nodeset="@commentPlatform" required="false()" type="string"/>
+			<bind id="cDisqusShortname" nodeset="@disqusShortname" required="false()" type="string"/>
+			<bind id="livefyreID" nodeset="@livefyreID" required="false()" type="string"/>
+			<bind id="intensedebateID" nodeset="@intenseDebateID" required="false()" type="string"/>
+			<bind id="nWidthInPixels" nodeset="@fbCommentWidth" required="false()" type="string"/>
+			<bind id="nMaxDisplay" nodeset="@maxDisplay" required="false()" type="string"/>
+			<bind id="grabberRoot" nodeset="@grabberRoot" required="false()" type="string"/>
+			<bind id="grabberItems" nodeset="@grabberItems" required="false()" type="string"/>
+			<bind id="grabberItterate" nodeset="@grabberItterate" required="false()" type="string"/>
+			<bind id="autoplay" nodeset="@autoplay" required="false()" type="string"/>
+		</bind>
+		<bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
+		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+	</model>
+	<group ref="EditContent">
+		<label>Carousel Module</label>
+		<group class="tabs">
+			<group>
+				<label>
+					<i class="fas fa-pen"> </i>
+					<span class="space"> </span>
+					<span>Content</span>
+				</label>
+				<group>
+					<input bind="cModuleTitle" class="long">
+						<label>Title or name</label>
+					</input>
+					<group class="row">
+
+						<group class="col-lg-4">
+							<select1 appearance="full" bind="autoplay" class="short inline-items">
+								<label>Auto Play</label>
+								<item>
+									<label>Yes</label>
+									<value>true</value>
+								</item>
+								<item>
+									<label>No</label>
+									<value>false</value>
+								</item>
+							</select1>
+							<select1 appearance="full" bind="effect" class="short inline-items">
+								<label>Effect</label>
+								<item>
+									<label>Slide</label>
+									<value></value>
+								</item>
+								<item>
+									<label>Fade</label>
+									<value>fade</value>
+								</item>
+							</select1>
+						</group>
+						<group class="col-lg-4">
+							<input bind="cInterval" class="short">
+								<label>Interval</label>
+								<help class="inline">The amount of time in milliseconds to delay between automatically cycling an item</help>
+							</input>
+							<input bind="nSpeed" class="short">
+								<label>Transition Speed</label>
+								<help class="inline">The amount of time in milliseconds to it takes to transition an item</help>
+							</input>
+						</group>
+						<group class="col-lg-4">
+							<select bind="cBullets" appearance="full" class="multiline">
+								<item>
+									<label>Hide bullets</label>
+									<value>true</value>
+								</item>
+							</select>
+							<select bind="cArrows" appearance="full" class="multiline">
+								<item>
+									<label>Hide arrows</label>
+									<value>true</value>
+								</item>
+							</select>
+							<select1 appearance="full" bind="direction" class="short inline-items">
+								<label>Direction</label>
+								<item>
+									<label>Horizontal</label>
+									<value>horizontal</value>
+								</item>
+								<item>
+									<label>Vertical</label>
+									<value>vertical</value>
+								</item>
+							</select1>
+						</group>
+					</group>
+					<group class="form-section-wrapper">
+						<select1 bind="cHeightOptions" appearance="full">
+							<label>Height</label>
+							<item>
+								<label>Set height</label>
+								<value>bg</value>
+								<toggle case="cHeightOptions_1" event="DOMActivate"/>
+							</item>
+							<item>
+								<label>Adapt to content</label>
+								<value>adapt</value>
+								<toggle case="cHeightOptions_2" event="DOMActivate"/>
+							</item>
+						</select1>
+						<switch class="disable">
+							<case id="cHeightOptions_1">
+								<group class="row">
+									<group class="col-lg-4">
+										<input bind="cHeightxs" class="short">
+											<label>height (mobile)</label>
+											<help class="inline">The height of the carousel in pixels</help>
+										</input>
+									</group>
+									<group class="col-lg-4">
+										<input bind="cHeight" class="short">
+											<label>height (desktop)</label>
+											<help class="inline">The height of the carousel in pixels</help>
+										</input>
+									</group>
+								</group>
+							</case>
+						</switch>
+					</group>
+				</group>
+				<group>
+					<label>Images</label>
+					<relatedContent search="find add" type="SwiperSlide" relationType="" direction="1way">
+						<label>Slides</label>
+					</relatedContent>
+				</group>
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-brush"> </i>
+					<span class="space"> </span>
+					<span>Presentation</span>
+				</label>
+				<group>
+					<!-- These hidden fields and bindings are required for the component-->
+					<input bind="nContentKey" class="hidden">
+						<label>ContentId</label>
+					</input>
+					<input bind="cModuleType" class="hidden">
+						<label>ModuleType</label>
+					</input>
+					<!-- end of hidden fields -->
+					<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+				</group>
+			</group>
+		</group>
+	</group>
+	<group ref="submit" class="contentSubmit">
+		<submit submission="" ref="ewSubmit" class="principle">
+			<label>Save Carousel</label>
+		</submit>
+	</group>
+</Content>

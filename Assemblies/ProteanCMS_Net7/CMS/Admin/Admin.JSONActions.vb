@@ -457,7 +457,7 @@ Partial Public Class Cms
                         If myApi.moRequest.QueryString("Filename") IsNot Nothing Then
                             Dim oImgTool As New Protean.Tools.Image("")
                             oImgTool.TinifyKey = TinyAPIKey
-                            Dim oFile As IO.FileInfo = New IO.FileInfo(myApi.goServer.MapPath(myApi.moRequest.QueryString("Filename")))
+                            Dim oFile As IO.FileInfo = New IO.FileInfo(myApi.MapPath(myApi.moRequest.QueryString("Filename")))
                             JsonResult = "reduction:'" & (oImgTool.CompressImage(oFile, True) / 1000) & "'"
                             oFile.Refresh()
                             JsonResult = JsonResult & ",new_size:'" & (oFile.Length / 1000) & "'"

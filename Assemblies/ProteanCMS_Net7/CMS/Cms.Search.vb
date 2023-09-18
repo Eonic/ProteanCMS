@@ -134,13 +134,13 @@ Partial Public Class Cms
                     ' Search path with default
                     If Not String.IsNullOrEmpty(moConfig("SiteSearchPath") & "") Then _indexPath = moConfig("SiteSearchPath")
                     _indexPath = _indexPath.TrimEnd("/\".ToCharArray) & "/"
-                    _indexReadFolder = myWeb.goServer.MapPath("/") & _indexPath
+                    _indexReadFolder = myWeb.MapPath("/") & _indexPath
 
                     ' Search read path
                     If moConfig("SiteSearchReadPath") = "" Then
                         _indexReadFolder &= "Read/"
                     Else
-                        _indexReadFolder = myWeb.goServer.MapPath("/") & moConfig("SiteSearchReadPath")
+                        _indexReadFolder = myWeb.MapPath("/") & moConfig("SiteSearchReadPath")
                         _indexReadFolder = _indexReadFolder.TrimEnd("/\".ToCharArray) & "/"
                     End If
 
@@ -177,13 +177,13 @@ Partial Public Class Cms
                     ' Search path with default
                     If Not String.IsNullOrEmpty(moConfig("SiteSearchPath") & "") Then _indexPath = moConfig("SiteSearchPath")
                     _indexPath = _indexPath.TrimEnd("/\".ToCharArray) & "/"
-                    _indexReadFolder = myAPi.goServer.MapPath("/") & _indexPath
+                    _indexReadFolder = myAPi.MapPath("/") & _indexPath
 
                     ' Search read path
                     If moConfig("SiteSearchReadPath") = "" Then
                         _indexReadFolder &= "Read/"
                     Else
-                        _indexReadFolder = myWeb.goServer.MapPath("/") & moConfig("SiteSearchReadPath")
+                        _indexReadFolder = myWeb.MapPath("/") & moConfig("SiteSearchReadPath")
                         _indexReadFolder = _indexReadFolder.TrimEnd("/\".ToCharArray) & "/"
                     End If
 
@@ -2213,7 +2213,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                 ' This means we can leverage a true search result set from Lucene and paging becomes a helluvalot easier
 
                 Dim livePagesQuery As New BooleanQuery()
-                Dim myWeb As New Protean.Cms(myApi.moCtx)
+                Dim myWeb As New Protean.Cms(myApi.moCtx, myApi.moHost, myApi.goAppCache)
                 myWeb.Open()
 
                 Dim siteStructure As XmlElement = myWeb.GetStructureXML(myWeb.mnUserId)

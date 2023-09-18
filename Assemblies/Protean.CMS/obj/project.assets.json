@@ -6824,24 +6824,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\trevors\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\trevo\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\Protean.CMS.csproj",
-      "projectName": "Protean.CMS",
-      "projectPath": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\Protean.CMS.csproj",
-      "packagesPath": "C:\\Users\\trevors\\.nuget\\packages\\",
-      "outputPath": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\obj\\",
+      "projectUniqueName": "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\Protean.CMS_Net7.csproj",
+      "projectName": "Protean.CMS_Net7",
+      "projectPath": "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\Protean.CMS_Net7.csproj",
+      "packagesPath": "C:\\Users\\trevo\\.nuget\\packages\\",
+      "outputPath": "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\trevors\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\trevo\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -6855,8 +6850,8 @@
         "net7.0-windows7.0": {
           "targetAlias": "net7.0-windows",
           "projectReferences": {
-            "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools_Net7\\Protean.Tools_Net7.csproj": {
-              "projectPath": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools_Net7\\Protean.Tools_Net7.csproj"
+            "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools_Net7\\Protean.Tools_Net7.csproj": {
+              "projectPath": "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools_Net7\\Protean.Tools_Net7.csproj"
             }
           }
         }

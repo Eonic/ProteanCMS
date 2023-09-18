@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- A VERY GENERIC content type, designed to relate between other Content types for the purpose of 
+      grouping, by word or key pharses.
+-->
+
+<Content type="xform" name="EditContent">
+  <model>
+    <instance>
+      <tblContent>
+        <nContentKey/>
+        <nContentPrimaryId/>
+        <nVersion/>
+        <cContentForiegnRef/>
+        <cContentName/>
+        <cContentSchemaName>Tag</cContentSchemaName>
+        <cContentXmlBrief>
+          <Content showRelated="NewsArticle">
+            <Name/>
+          </Content>
+        </cContentXmlBrief>
+        <cContentXmlDetail>
+          <Content>
+            <Name/>
+          </Content>
+        </cContentXmlDetail>
+        <nAuditId/>
+        <nAuditKey/>
+        <dPublishDate/>
+        <StartDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nStatus>1</nStatus>
+        <cDescription/>
+      </tblContent>
+    </instance>
+    <submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+    <bind id="cContentLinkTitle" nodeset="tblContent/cContentName" required="true()" type="string"/>
+    <bind id="dPublishDate" nodeset="tblContent/dPublishDate" required="false()" type="string"/>
+    <bind id="dExpireDate" nodeset="tblContent/dExpireDate" required="false()" type="string"/>
+    <bind nodeset="tblContent/cContentXmlBrief/Content">
+      <bind id="cContentLinkTitle" nodeset="Name" required="true()" type="string"/>
+    </bind>
+    <bind nodeset="tblContent/cContentXmlDetail/Content">
+      <bind id="cContentLinkTitle" nodeset="Name" required="true()" type="string"/>
+    </bind>
+    <bind id="nStatus" nodeset="tblContent/nStatus" required="true()" type="string"/>
+    <bind id="cDescription" nodeset="tblContent/cDescription" required="false()" type="string"/>
+  </model>
+  <group ref="EditContent" class="2col">
+    <label>Tag</label>
+    <group>
+      <group class="Content">
+        <input bind="nContentKey" class="hidden">
+          <label>ContentId</label>
+        </input>
+        <label>Settings</label>
+        <input bind="dPublishDate" class="calendar short">
+          <label>Publish Date</label>
+        </input>
+        <input bind="dExpireDate" class="calendar short">
+          <label>Expire Date</label>
+        </input>
+        <select1 bind="nStatus" appearance="full" class="required vshort">
+          <label>Status</label>
+          <item>
+            <label>Live</label>
+            <value>1</value>
+          </item>
+          <item>
+            <label>Hidden</label>
+            <value>0</value>
+          </item>
+        </select1>
+      </group>
+    </group>
+    <group class="ContentColumn2">
+      <group>
+        <label>Tag Details</label>
+        <input bind="cContentLinkTitle" class="required long">
+          <label>Tag name</label>
+        </input>
+      </group>
+      <group>
+        <label>Relationships</label>
+        <relatedContent search="find" type="NewsArticle" relationType="Tag" direction="2way">
+          <label>News Articles</label>
+        </relatedContent>
+        <relatedContent search="find" type="Event" relationType="Tag" direction="2way">
+          <label>Events</label>
+        </relatedContent>
+        <relatedContent search="find" type="Product" relationType="Tag" direction="2way">
+          <label>Products</label>
+        </relatedContent>
+        <relatedContent search="find" type="Subscription" relationType="Tag" direction="2way">
+          <label>Subscription</label>
+        </relatedContent>
+        <relatedContent search="find" type="Video" relationType="Tag" direction="2way">
+          <label>Video</label>
+        </relatedContent>
+        <relatedContent search="find" type="Document" relationType="Tag" direction="2way">
+          <label>Documents</label>
+        </relatedContent>
+        <relatedContent search="find" type="Job" relationType="Tag" direction="2way">
+          <label>Job</label>
+        </relatedContent>
+        <relatedContent search="find" type="Recipe" relationType="Tag" direction="2way">
+          <label>Recipies</label>
+        </relatedContent>
+      </group>
+    </group>
+  </group>
+  <group ref="submit" class="contentSubmit">
+    <submit submission="" ref="ewSubmit" class="principle">
+      <label>Save Tag</label>
+    </submit>
+  </group>
+</Content>

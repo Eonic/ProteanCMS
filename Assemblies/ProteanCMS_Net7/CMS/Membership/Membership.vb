@@ -383,7 +383,7 @@ Partial Public Class Cms
                         Dim assemblyInstance As [Assembly]
 
                         If ourProvider.parameters("path") <> "" Then
-                            assemblyInstance = [Assembly].LoadFrom(myWeb.goServer.MapPath(ourProvider.parameters("path")))
+                            assemblyInstance = [Assembly].LoadFrom(myWeb.MapPath(ourProvider.parameters("path")))
                         Else
                             assemblyInstance = [Assembly].Load(ourProvider.Type)
                         End If
@@ -515,7 +515,7 @@ Partial Public Class Cms
                     Dim moConfig As System.Collections.Specialized.NameValueCollection = myWeb.moConfig
                     Dim moRequest As System.Web.HttpRequest = myWeb.moRequest
 
-                    Dim goServer As System.Web.HttpServerUtility = myWeb.goServer
+
 
                     Dim cLogonCmd As String = ""
                     Dim bRedirectStarted As Boolean = False

@@ -496,10 +496,10 @@ ProcessFlow:
                                 sAdminLayout = "Advanced"
 
                                 Dim oCommonContentTypes As New XmlDocument
-                                If IO.File.Exists(myWeb.goServer.MapPath("/ewcommon/xsl/mailer/layoutmanifest.xml")) Then oCommonContentTypes.Load(myWeb.goServer.MapPath("/ewcommon/xsl/pagelayouts/layoutmanifest.xml"))
-                                If IO.File.Exists(myWeb.goServer.MapPath(moConfig("ProjectPath") & "/xsl/mailer/layoutmanifest.xml")) Then
+                                If IO.File.Exists(myWeb.MapPath("/ewcommon/xsl/mailer/layoutmanifest.xml")) Then oCommonContentTypes.Load(myWeb.MapPath("/ewcommon/xsl/pagelayouts/layoutmanifest.xml"))
+                                If IO.File.Exists(myWeb.MapPath(moConfig("ProjectPath") & "/xsl/mailer/layoutmanifest.xml")) Then
                                     Dim oLocalContentTypes As New XmlDocument
-                                    oLocalContentTypes.Load(myWeb.goServer.MapPath(moConfig("ProjectPath") & "/xsl/mailer/layoutmanifest.xml"))
+                                    oLocalContentTypes.Load(myWeb.MapPath(moConfig("ProjectPath") & "/xsl/mailer/layoutmanifest.xml"))
                                     Dim oLocals As XmlElement = oLocalContentTypes.SelectSingleNode("/PageLayouts/ContentTypes")
                                     If Not oLocals Is Nothing Then
                                         Dim oGrp As XmlElement
@@ -534,7 +534,7 @@ ProcessFlow:
                             Case "MailHistory"
                                 myWeb.moDbHelper.ViewMailHistory(oPageDetail)
                             Case "EditMailLayout"
-                                moAdXfm.goServer = myWeb.goServer
+
                                 oPageDetail.AppendChild(oAdXfm.xFrmEditMailLayout(myWeb.moRequest("pgid")))
                                 If oAdXfm.valid Then
                                     cCmd = "NormalMail"

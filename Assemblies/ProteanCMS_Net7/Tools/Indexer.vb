@@ -62,13 +62,13 @@ Public Class Indexer
         Try
             If siteSearchPath = "" Then siteSearchPath = "..\Index"
             If Not siteSearchPath.EndsWith("\") Then siteSearchPath = siteSearchPath & "\"
-            Dim IndexFolder As String = myWeb.goServer.MapPath("\") & siteSearchPath
+            Dim IndexFolder As String = myWeb.MapPath("\") & siteSearchPath
             Dim dir As New DirectoryInfo(IndexFolder)
 
             If moConfig("SiteSearchReadPath") = "" Then
                 mcIndexReadFolder = IndexFolder & "Read\"
             Else
-                mcIndexReadFolder = myWeb.goServer.MapPath("\") & moConfig("SiteSearchReadPath") 'get the location to store the index
+                mcIndexReadFolder = myWeb.MapPath("\") & moConfig("SiteSearchReadPath") 'get the location to store the index
             End If
             Dim dirRead As New DirectoryInfo(mcIndexReadFolder)
             If Not dirRead.Exists Then
@@ -78,7 +78,7 @@ Public Class Indexer
             If moConfig("SiteSearchWritePath") = "" Then
                 mcIndexWriteFolder = IndexFolder & "Write\"
             Else
-                mcIndexWriteFolder = myWeb.goServer.MapPath("\") & moConfig("SiteSearchWritePath") 'get the location to store the index
+                mcIndexWriteFolder = myWeb.MapPath("\") & moConfig("SiteSearchWritePath") 'get the location to store the index
             End If
             Dim dirWrite As New DirectoryInfo(mcIndexReadFolder)
             If Not dirWrite.Exists Then
@@ -173,7 +173,7 @@ Public Class Indexer
             'checking index file size start
             Dim TotalSize As String
 
-            Dim infoReader As New System.IO.FileInfo(Path.GetDirectoryName(Path.GetDirectoryName(myWeb.goServer.MapPath("\"))) & "\Index\Write\indexInfo.xml")
+            Dim infoReader As New System.IO.FileInfo(Path.GetDirectoryName(Path.GetDirectoryName(myWeb.MapPath("\"))) & "\Index\Write\indexInfo.xml")
             If (infoReader.Exists) Then
                 TotalSize = infoReader.Length
 
@@ -237,7 +237,7 @@ Public Class Indexer
                     'checking index file size start
 
                     'infoReader = My.Computer.FileSystem.GetFileInfo(mcIndexWriteFolder & "indexInfo.xml")
-                    infoReader = New System.IO.FileInfo(Path.GetDirectoryName(Path.GetDirectoryName(myWeb.goServer.MapPath("\"))) & "\Index\Write\indexInfo.xml")
+                    infoReader = New System.IO.FileInfo(Path.GetDirectoryName(Path.GetDirectoryName(myWeb.MapPath("\"))) & "\Index\Write\indexInfo.xml")
                     If (infoReader.Exists) Then
                         TotalSize = infoReader.Length
                         If (myWeb.moConfig("indexFileSize") IsNot Nothing) Then
@@ -406,7 +406,7 @@ Public Class Indexer
                                                             'don't index
                                                             nDocumentsSkipped += 1
                                                         Else
-                                                            Dim xFilePath As New System.IO.FileInfo(myWeb.goServer.MapPath(oDocElmt.InnerText))
+                                                            Dim xFilePath As New System.IO.FileInfo(myWeb.MapPath(oDocElmt.InnerText))
                                                             If xFilePath.Exists Then
                                                                 cProcessInfo = "Indexing - " & oDocElmt.InnerText
                                                                 Dim DocName As String = oElmt.GetAttribute("name")
@@ -419,7 +419,7 @@ Public Class Indexer
                                                                 If DocName = "" Then
                                                                     DocName = "Document for Download"
                                                                 End If
-                                                                Dim fileAsText As String = GetFileText(myWeb.goServer.MapPath(oDocElmt.InnerText))
+                                                                Dim fileAsText As String = GetFileText(myWeb.MapPath(oDocElmt.InnerText))
 
                                                                 Dim oPageElmt As XmlElement = oInfoElmt.OwnerDocument.CreateElement("page")
                                                                 oPageElmt.SetAttribute("name", DocName)

@@ -3,9 +3,9 @@ Option Explicit On
 Imports System.Xml
 Imports System.Web
 Imports System.Web.HttpUtility
-Imports System.Configuration
 Imports System.Web.Mail
 Imports System.Reflection
+Imports System.Collections.Specialized
 Imports VB = Microsoft.VisualBasic
 Imports System.Security.Cryptography
 Imports System.Text
@@ -14,9 +14,8 @@ Imports System.Net.Mail
 Imports System
 Imports System.Data
 
-
+Imports Microsoft.Extensions.Configuration
 Public Module stdTools
-
     Public mbException As Boolean
     '  Public oConfig As System.Collections.Specialized.NameValueCollection = ConfigurationManager.GetSection("protean/web")
 
@@ -55,6 +54,22 @@ Public Module stdTools
 
     Public SortDirectionVal() As String = {"descending", "ascending"}
 
+    Public Function GetConfigSection(ByVal sectionName As String) As NameValueCollection
+        Try
+            Dim returnNVC As New NameValueCollection
+            Dim MyConfig As ConfigurationRoot = New ConfigurationBuilder().AddJsonFile("appsettings.json").Build()
+            Dim dicConfig As Dictionary(Of String, String)
+            dicConfig = MyConfig.GetSection("Protean:" & sectionName).[Get](Of Dictionary(Of String, String))()
+            For Each kvp In dicConfig
+                returnNVC.Add(kvp.Key.ToString(), kvp.Value.ToString())
+            Next
+
+            Return returnNVC
+
+        Catch ex As Exception
+            'OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
+        End Try
+    End Function
 
     Public Sub returnException(ByRef sException As String, ByVal vstrModuleName As String, ByVal vstrRoutineName As String, ByVal oException As Exception, Optional ByVal xsltTemplatePath As String = "/ewcommon/xsl/standard.xsl", Optional ByVal vstrFurtherInfo As String = "", Optional ByVal bDebug As Boolean = False, Optional ByVal cSubjectLinePrefix As String = "")
         'Author:        Trevor Spink
@@ -72,7 +87,7 @@ Public Module stdTools
         Dim sWriter As IO.StringWriter = New IO.StringWriter
         Dim sReturnHtml As String = ""
         Dim cHost As String = ""
-        Dim oConfig As System.Collections.Specialized.NameValueCollection = ConfigurationManager.GetSection("protean/web")
+        Dim oConfig As System.Collections.Specialized.NameValueCollection = GetConfigSection("web")
         Dim moRequest As System.Web.HttpRequest = Nothing
 
         If Not System.Web.HttpContext.Current Is Nothing Then
@@ -285,7 +300,7 @@ Public Module stdTools
                     Dim errWeb As Protean.Cms
                     If Not System.Web.HttpContext.Current Is Nothing Then
                         'so we compile errors out of debug mode too.
-                        errWeb = New Protean.Cms(System.Web.HttpContext.Current)
+                        ' errWeb = New Protean.Cms(System.Web.HttpContext.Current)
                         errWeb.InitializeVariables()
                         Dim ewXsltExt As New xsltExtensions(errWeb)
                         xsltArgs.AddExtensionObject("urn:ew", ewXsltExt)
@@ -334,7 +349,7 @@ Public Module stdTools
         Dim sWriter As IO.StringWriter = New IO.StringWriter
         Dim sReturnHtml As String = ""
         Dim cHost As String = ""
-        Dim oConfig As System.Collections.Specialized.NameValueCollection = ConfigurationManager.GetSection("protean/web")
+        Dim oConfig As System.Collections.Specialized.NameValueCollection = GetConfigSection("web")
 
         'Dim moRequest As System.Web.HttpRequest = System.Web.HttpContext.Current.Request
         sProcessInfo = "Getting Host"
@@ -840,7 +855,7 @@ Public Module stdTools
     End Function
 
     Public Function EncryptString(ByVal SourceText As String, Optional ByVal bUseAsymmetric As Boolean = True, Optional ByVal cSalt As String = "") As String
-
+        Dim moEncryptCfg As NameValueCollection = GetConfigSection("encrypt")
         Dim encryptedData As Tools.Encryption.EncData
         Try
 
@@ -851,7 +866,7 @@ Public Module stdTools
                 Dim pubkey As New Tools.Encryption.Asymmetric.PublicKey
                 Dim privkey As New Tools.Encryption.Asymmetric.PrivateKey
 
-                If ConfigurationManager.AppSettings("PublicKey.Modulus") = "" Then
+                If moEncryptCfg("PublicKey.Modulus") = "" Then
                     'at the moment this writes a new file that needs to be included in web.config
                     asym.GenerateNewKeySet(pubkey, privkey)
                     '   pubkey.ExportToConfigFile(goServer.MapPath("encrypt.config"))
@@ -874,8 +889,8 @@ Public Module stdTools
                 ' for now - rely on salt.
                 ' UPDATE Get the right key size for Rijndael - try using the PrivateKey.D
                 Dim sym As New Tools.Encryption.Symmetric(Tools.Encryption.Symmetric.Provider.Rijndael)
-                sym.InitializationVector = New Tools.Encryption.EncData(ConfigurationManager.AppSettings("SymmetricIV"))
-                sym.Key = New Tools.Encryption.EncData(ConfigurationManager.AppSettings("PrivateKey.D"))
+                sym.InitializationVector = New Tools.Encryption.EncData(moEncryptCfg("SymmetricIV"))
+                sym.Key = New Tools.Encryption.EncData(moEncryptCfg("PrivateKey.D"))
                 encryptedData = sym.Encrypt(New Tools.Encryption.EncData(SourceText))
 
             End If
@@ -891,7 +906,7 @@ Public Module stdTools
 
     Public Function DecryptString(ByVal encryptedText As String, Optional ByVal bUseAsymmetric As Boolean = True, Optional ByVal cSalt As String = "") As String
         Try
-
+            Dim moEncryptCfg As NameValueCollection = GetConfigSection("encrypt")
             Dim decryptedData As Tools.Encryption.EncData = New Tools.Encryption.EncData
 
             Dim encryptedData As Tools.Encryption.EncData = New Tools.Encryption.EncData
@@ -911,8 +926,8 @@ Public Module stdTools
                 ' UPDATE For some reason the assym encryption wouldn't consistently betwenn ENC and DEC so I've commented it out
                 ' for now - rely on salt.
                 Dim sym As New Tools.Encryption.Symmetric(Tools.Encryption.Symmetric.Provider.Rijndael)
-                sym.InitializationVector = New Tools.Encryption.EncData(ConfigurationManager.AppSettings("SymmetricIV"))
-                sym.Key = New Tools.Encryption.EncData(ConfigurationManager.AppSettings("PrivateKey.D"))
+                sym.InitializationVector = New Tools.Encryption.EncData(moEncryptCfg("SymmetricIV"))
+                sym.Key = New Tools.Encryption.EncData(moEncryptCfg("PrivateKey.D"))
                 decryptedData = sym.Decrypt(encryptedData)
             End If
 
@@ -924,53 +939,7 @@ Public Module stdTools
 
     End Function
 
-    Public Function EncryptStringOLD(ByVal SourceText As String) As String
-        'PerfMon.Log("stdTools", "EncryptString")
-        Dim asym As New Tools.Encryption.Asymmetric
-        Dim pubkey As New Tools.Encryption.Asymmetric.PublicKey
-        Dim privkey As New Tools.Encryption.Asymmetric.PrivateKey
 
-        If ConfigurationManager.AppSettings("PublicKey.Modulus") = "" Then
-            'at the moment this writes a new file that needs to be included in web.config
-            asym.GenerateNewKeySet(pubkey, privkey)
-            '  pubkey.ExportToConfigFile(goServer.MapPath("encrypt.config"))
-            '  privkey.ExportToConfigFile(goServer.MapPath("encrypt.config"))
-        Else
-            pubkey.LoadFromConfig()
-            privkey.LoadFromConfig()
-        End If
-
-        'End Try
-
-        Dim encryptedData As Tools.Encryption.EncData
-        encryptedData = asym.Encrypt(New Tools.Encryption.EncData(SourceText), pubkey)
-
-        Return encryptedData.ToHex
-
-    End Function
-
-    Public Function DecryptStringOLD(ByVal encryptedText As String) As String
-        'PerfMon.Log("stdTools", "DecryptString")
-        Try
-            Dim asym As New Tools.Encryption.Asymmetric
-            Dim pubkey As New Tools.Encryption.Asymmetric.PublicKey
-            Dim privkey As New Tools.Encryption.Asymmetric.PrivateKey
-            pubkey.LoadFromConfig()
-            privkey.LoadFromConfig()
-
-            Dim encryptedData As Tools.Encryption.EncData = New Tools.Encryption.EncData
-            encryptedData.Hex = encryptedText
-
-            Dim decryptedData As Tools.Encryption.EncData = New Tools.Encryption.EncData
-            Dim asym2 As New Tools.Encryption.Asymmetric
-            decryptedData = asym2.Decrypt(encryptedData, privkey)
-
-            Return decryptedData.ToString
-        Catch
-            Return ""
-        End Try
-
-    End Function
 
     Public Enum DiscountCategory
 
@@ -1139,17 +1108,18 @@ Public Module stdTools
     Public Function strongPassword(ByVal password As String) As Boolean
         Dim pwdRegEx As String = ""
 
-        Dim moPolicy As XmlElement
+        Dim moPolicy As NameValueCollection
 
-        moPolicy = ConfigurationManager.GetSection("protean/PasswordPolicy")
 
-        pwdRegEx = "(?=^.{" & moPolicy.FirstChild.SelectSingleNode("minLength").InnerText &
-            "," & moPolicy.FirstChild.SelectSingleNode("maxLength").InnerText & "}$)" &
-            "(?=(?:.*?\d){" & moPolicy.FirstChild.SelectSingleNode("numsLength").InnerText & "})" &
+        moPolicy = GetConfigSection("password")
+
+        pwdRegEx = "(?=^.{" & moPolicy("minLength") &
+            "," & moPolicy("maxLength") & "}$)" &
+            "(?=(?:.*?\d){" & ("numsLength") & "})" &
             "(?=.*[a-z])" &
-            "(?=(?:.*?[A-Z]){" & moPolicy.FirstChild.SelectSingleNode("upperLength").InnerText & "})" &
-            "(?=(?:.*?[" & moPolicy.FirstChild.SelectSingleNode("specialChars").InnerText & "]){" & moPolicy.FirstChild.SelectSingleNode("specialLength").InnerText & "})" &
-            "(?!.*\s)[0-9a-zA-Z" & moPolicy.FirstChild.SelectSingleNode("specialChars").InnerText & "]*$"
+            "(?=(?:.*?[A-Z]){" & moPolicy("upperLength") & "})" &
+            "(?=(?:.*?[" & moPolicy("specialChars") & "]){" & moPolicy("specialLength") & "})" &
+            "(?!.*\s)[0-9a-zA-Z" & moPolicy("specialChars") & "]*$"
 
         ' Validate the e-mail address
         Return New Regex(pwdRegEx, RegexOptions.IgnoreCase).IsMatch(password & "")

@@ -278,7 +278,8 @@ Public Class Messaging
                 End If
 
                 If sMessagingProvider <> "" Then
-                    Dim myWeb As New Protean.Cms(moCtx)
+                    Dim myWeb As New Protean.Cms(myWeb.moCtx, myWeb.moHost, myWeb.goAppCache)
+
                     Dim oMessaging As New Protean.Providers.Messaging.BaseProvider(myWeb, sMessagingProvider)
 
                     If valDict Is Nothing Then valDict = New System.Collections.Generic.Dictionary(Of String, String)

@@ -61,24 +61,24 @@ Public Class Tests
         Try
             Dim htmltotest As String = "<h1>Test Write</h1>"
 
-            Dim oEw As Protean.Cms = New Protean.Cms
-            oEw.InitializeVariables()
+            Dim myWeb As Protean.Cms = New Protean.Cms
+            myWeb.InitializeVariables()
             Dim filepath As String = "/ewCache/"
             Dim filename As String = "FS-TEST.html"
             Dim oImp As Protean.Tools.Security.Impersonate = Nothing
-            If oEw.moConfig("AdminAcct") <> "" Then
+            If myWeb.moConfig("AdminAcct") <> "" Then
                 oImp = New Protean.Tools.Security.Impersonate
-                If oImp.ImpersonateValidUser(oEw.moConfig("AdminAcct"), oEw.moConfig("AdminDomain"), oEw.moConfig("AdminPassword"), , oEw.moConfig("AdminGroup")) Then
+                If oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), , myWeb.moConfig("AdminGroup")) Then
                 Else
                     Return "Impersonation Failed"
                 End If
             End If
 
-            oEw.moFSHelper.SaveFile(filename, oEw.goServer.MapPath("/" & oEw.gcProjectPath) & filepath, System.Text.Encoding.Unicode.GetBytes(htmltotest))
+            myWeb.moFSHelper.SaveFile(filename, myWeb.MapPath("/" & myWeb.gcProjectPath) & filepath, System.Text.Encoding.Unicode.GetBytes(htmltotest))
 
             Return "File Written Using SaveFile :" & filepath & filename
 
-            If oEw.moConfig("AdminAcct") <> "" Then
+            If myWeb.moConfig("AdminAcct") <> "" Then
                 oImp.UndoImpersonation()
                 oImp = Nothing
             End If
@@ -105,9 +105,9 @@ Public Class Tests
             End If
             Dim response As String
 
-            response = oEw.moFSHelper.DeleteFile(oEw.goServer.MapPath("/" & oEw.gcProjectPath) & filepath, filename)
+            response = oEw.moFSHelper.DeleteFile(oEw.MapPath("/" & oEw.gcProjectPath) & filepath, filename)
 
-            oEw.moFSHelper.DeleteFile(oEw.goServer.MapPath("/" & oEw.gcProjectPath) & filepath, "FS-Alpha-TEST.html")
+            oEw.moFSHelper.DeleteFile(oEw.MapPath("/" & oEw.gcProjectPath) & filepath, "FS-Alpha-TEST.html")
 
             If oEw.moConfig("AdminAcct") <> "" Then
                 oImp.UndoImpersonation()
@@ -169,7 +169,7 @@ Public Class Tests
                 End If
             End If
 
-            System.IO.File.WriteAllText("\\?\" & oEw.goServer.MapPath("/" & oEw.gcProjectPath) & filepath, htmltotest, System.Text.Encoding.UTF8)
+            System.IO.File.WriteAllText("\\?\" & oEw.MapPath("/" & oEw.gcProjectPath) & filepath, htmltotest, System.Text.Encoding.UTF8)
 
             Return "File Written Using AlphaFS :" & filepath
 
@@ -211,7 +211,7 @@ Public Class Tests
             oEw.InitializeVariables()
             Dim filepath As String = "/ewCache/Testfolder/test2"
 
-            Dim response As String = oEw.moFSHelper.DeleteFolder("Testfolder", oEw.goServer.MapPath("/ewCache/"))
+            Dim response As String = oEw.moFSHelper.DeleteFolder("Testfolder", oEw.MapPath("/ewCache/"))
             If response = "1" Then
                 Return "Folder Deleted:" & filepath
             Else

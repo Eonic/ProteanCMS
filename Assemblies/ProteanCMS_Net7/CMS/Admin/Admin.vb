@@ -26,7 +26,7 @@ Imports System.Reflection
 Imports Lucene.Net.Support
 Imports System.ServiceModel.Channels
 Imports ICSharpCode.SharpZipLib.Zip.ExtendedUnixData
-
+Imports Microsoft.Extensions.Caching.Memory
 
 Partial Public Class Cms
     Public Class Admin
@@ -291,7 +291,7 @@ Partial Public Class Cms
 
                                 If Not moPrvConfig.Providers(providerName & "Local") Is Nothing Then
                                     If moPrvConfig.Providers(providerName & "Local").Parameters("path") <> "" Then
-                                        assemblyInstance = [Assembly].LoadFrom(myWeb.goServer.MapPath(moPrvConfig.Providers(providerName & "Local").Parameters("path")))
+                                        assemblyInstance = [Assembly].LoadFrom(myWeb.moHost.WebRootPath & moPrvConfig.Providers(providerName & "Local").Parameters("path"))
                                         calledType = assemblyInstance.GetType(classPath, True)
                                     Else
                                         assemblyInstance = [Assembly].Load(moPrvConfig.Providers(providerName & "Local").Type)
@@ -308,7 +308,7 @@ Partial Public Class Cms
                                             prepProviderName = moPrvConfig.Providers(providerName).Type
                                             calledType = System.Type.GetType(prepProviderName & "+" & classPath, True)
                                         Case Else
-                                            assemblyInstance = [Assembly].LoadFrom(myWeb.goServer.MapPath(moPrvConfig.Providers(providerName).Parameters("path")))
+                                            assemblyInstance = [Assembly].LoadFrom(myWeb.moHost.WebRootPath & moPrvConfig.Providers(providerName).Parameters("path"))
                                             classPath = moPrvConfig.Providers(providerName).Parameters("classPrefix") & classPath
                                             calledType = assemblyInstance.GetType(classPath, True)
                                     End Select
@@ -516,7 +516,7 @@ ProcessFlow:
                         End If
                         If moAdXfm.valid Then
                             mcEwCmd = "Normal"
-                            myWeb.moCtx.Application("ewSettings") = Nothing
+                            myWeb.goAppCache.Set(Of String)("ewSettings", Nothing)
                             myWeb.msRedirectOnEnd = "/?ewCmd=SettingsDash"
                             myWeb.ClearPageCache()
 
@@ -543,9 +543,9 @@ ProcessFlow:
                         'all of the required config settings
 
                         Dim rewriteXml As New XmlDocument
-                        rewriteXml.Load(myWeb.goServer.MapPath("/RewriteRules.config"))
+                        rewriteXml.Load(myWeb.moHost.WebRootPath & "/RewriteRules.config")
                         Dim defaultXml As New XmlDocument
-                        defaultXml.Load(myWeb.goServer.MapPath("/ewcommon/setup/rootfiles/RewriteRules_config.xml"))
+                        defaultXml.Load(myWeb.moHost.WebRootPath & "/ewcommon/setup/rootfiles/RewriteRules_config.xml")
 
                         Dim oRule As XmlElement
                         For Each oRule In rewriteXml.DocumentElement.SelectNodes("rule")
@@ -606,17 +606,17 @@ ProcessFlow:
                             If Not fileBytes Is Nothing Then
 
                                 Dim strdocPath As String
-                                strdocPath = myWeb.goServer.MapPath(gcProjectPath & "/ewThemes/" & themeName & ".zip")
+                                strdocPath = myWeb.moHost.WebRootPath & gcProjectPath & "/ewThemes/" & themeName & ".zip"
                                 Dim objfilestream As New FileStream(strdocPath, FileMode.Create, FileAccess.ReadWrite)
                                 objfilestream.Write(fileBytes, 0, fileBytes.Length)
                                 objfilestream.Close()
 
                                 'unzip the transfered file
                                 Dim fz As New ICSharpCode.SharpZipLib.Zip.FastZip
-                                fz.ExtractZip(myWeb.goServer.MapPath(gcProjectPath & "/ewThemes/" & themeName & ".zip"), myWeb.goServer.MapPath(moConfig("ProjectPath") & "/ewThemes/"), "")
+                                fz.ExtractZip(myWeb.MapPath(gcProjectPath & "/ewThemes/" & themeName & ".zip"), myWeb.MapPath(moConfig("ProjectPath") & "/ewThemes/"), "")
 
                                 'delete the transfered file
-                                Dim oFile As New System.IO.FileInfo(myWeb.goServer.MapPath(gcProjectPath & "/ewThemes/" & themeName & ".zip"))
+                                Dim oFile As New System.IO.FileInfo(myWeb.MapPath(gcProjectPath & "/ewThemes/" & themeName & ".zip"))
                                 oFile.Delete()
                                 mcEwCmd = "SelectTheme"
                                 GoTo ProcessFlow
@@ -645,7 +645,7 @@ ProcessFlow:
                                 Protean.Config.UpdateConfigValue(myWeb, "protean/web", "SiteXsl", myWeb.moRequest("SiteXsl"))
                             End If
 
-                            myWeb.moCtx.Application("ewSettings") = Nothing
+                            myWeb.goAppCache.Remove("ewSettings")
                             mcEwCmd = "Normal"
                             myWeb.msRedirectOnEnd = "/?rebundle=true"
                             '' When we call the rebundle when we add or edit a page (not content) we also want to clear the sitecache table.
@@ -689,12 +689,12 @@ ProcessFlow:
                         If myWeb.moConfig("cssFramework") = "bs5" Then
                             oSiteManifest = moAdXfm.GetSiteManifest()
                         Else
-                            If IO.File.Exists(myWeb.goServer.MapPath("/ewcommon/xsl/pagelayouts/layoutmanifest.xml")) Then
-                                oSiteManifest.Load(myWeb.goServer.MapPath("/ewcommon/xsl/pagelayouts/layoutmanifest.xml"))
+                            If IO.File.Exists(myWeb.MapPath("/ewcommon/xsl/pagelayouts/layoutmanifest.xml")) Then
+                                oSiteManifest.Load(myWeb.MapPath("/ewcommon/xsl/pagelayouts/layoutmanifest.xml"))
                             End If
-                            If IO.File.Exists(myWeb.goServer.MapPath(gcProjectPath & "/xsl/layoutmanifest.xml")) Then
+                            If IO.File.Exists(myWeb.MapPath(gcProjectPath & "/xsl/layoutmanifest.xml")) Then
                                 Dim oLocalContentTypes As New XmlDocument
-                                oLocalContentTypes.Load(myWeb.goServer.MapPath(gcProjectPath & "/xsl/layoutmanifest.xml"))
+                                oLocalContentTypes.Load(myWeb.MapPath(gcProjectPath & "/xsl/layoutmanifest.xml"))
                                 Dim oLocals As XmlElement = oLocalContentTypes.SelectSingleNode("/PageLayouts/ContentTypes")
                                 If Not oLocals Is Nothing Then
                                     Dim oGrp As XmlElement
@@ -1228,7 +1228,7 @@ ProcessFlow:
 
                     Case "DeleteContent"
                         Dim ids = myWeb.moRequest("id")
-                        Dim bulkIds() As String = ids.split(",")
+                        Dim bulkIds() As String = ids.Split(",")
                         Dim status As Integer
                         Dim id As String
                         Dim count As Integer = ids.Split(",").Length
@@ -2748,7 +2748,7 @@ AfterProcessFlow:
 
                         oImportXml.LoadXml(oConvert.Output.OuterXml)
                     ElseIf cFilePath.EndsWith(".xml") Then
-                        '  cFilePath = myWeb.goServer.MapPath(cFilePath)
+                        '  cFilePath = myWeb.MapPath(cFilePath)
                         oImportXml.Load(cFilePath)
 
                         Dim oImportRootElmt As XmlElement = oImportXml.DocumentElement
@@ -2820,12 +2820,12 @@ AfterProcessFlow:
                             'oTransform.XslTExtensionObject = moXSLTFunctions
                             'oTransform.XslTExtensionURN = "ew"
 
-                            'oTransform.XslTFile = myWeb.goServer.MapPath("/xsl/import/" & cXsltPath)
+                            'oTransform.XslTFile = myWeb.MapPath("/xsl/import/" & cXsltPath)
                             'Dim cInstancesXml As String = oTransform.Process()
                             'NB: ----------------
 
                             'NB: New (Web) Transform
-                            Dim styleFile As String = CStr(myWeb.goServer.MapPath("/xsl/import/" & cXsltPath))
+                            Dim styleFile As String = CStr(myWeb.MapPath("/xsl/import/" & cXsltPath))
                             Dim oTransform As New Protean.XmlHelper.Transform(myWeb, styleFile, False)
                             myWeb.PerfMon.Log("Admin", "FileImportProcess-startxsl")
                             oTransform.mbDebug = gbDebug
@@ -2979,11 +2979,11 @@ AfterProcessFlow:
                 For Each folder As String In New ReverseIterator(aFolders)
                     filePath = folder.TrimEnd("/\".ToCharArray) & "/Admin/AdminMenu.xml"
                     If oMenuRoot Is Nothing Then
-                        oMenuRoot = Tools.Xml.loadElement(myWeb.goServer.MapPath(filePath), moPageXML)
+                        oMenuRoot = Tools.Xml.loadElement(myWeb.MapPath(filePath), moPageXML)
                     Else
                         Dim oTempMenuRoot As XmlElement
                         Dim oElmt As XmlElement
-                        oTempMenuRoot = Tools.Xml.loadElement(myWeb.goServer.MapPath(filePath), moPageXML)
+                        oTempMenuRoot = Tools.Xml.loadElement(myWeb.MapPath(filePath), moPageXML)
                         Dim currentCmd As String
                         Dim parentCmd As String
                         'add any new nodes
@@ -4375,10 +4375,10 @@ from tblContentIndexDef"
                         Dim content As String
 
                         'check not read only
-                        Dim oFileInfo As IO.FileInfo = New IO.FileInfo(myWeb.goServer.MapPath(ThemeLessFile))
+                        Dim oFileInfo As IO.FileInfo = New IO.FileInfo(myWeb.MapPath(ThemeLessFile))
                         oFileInfo.IsReadOnly = False
 
-                        Using reader As New StreamReader(myWeb.goServer.MapPath(ThemeLessFile))
+                        Using reader As New StreamReader(myWeb.MapPath(ThemeLessFile))
                             content = reader.ReadToEnd()
                             reader.Close()
                         End Using
@@ -4399,7 +4399,7 @@ from tblContentIndexDef"
                             content = Regex.Replace(content, searchText, replaceText)
                         Next
 
-                        Using writer As New StreamWriter(myWeb.goServer.MapPath(ThemeLessFile))
+                        Using writer As New StreamWriter(myWeb.MapPath(ThemeLessFile))
                             writer.Write(content)
                             writer.Close()
                         End Using
@@ -4442,10 +4442,10 @@ from tblContentIndexDef"
                     Dim content As String
 
                     'check not read only
-                    Dim oFileInfo As IO.FileInfo = New IO.FileInfo(myWeb.goServer.MapPath(ThemeXslFile))
+                    Dim oFileInfo As IO.FileInfo = New IO.FileInfo(myWeb.MapPath(ThemeXslFile))
                     oFileInfo.IsReadOnly = False
 
-                    Using reader As New StreamReader(myWeb.goServer.MapPath(ThemeXslFile))
+                    Using reader As New StreamReader(myWeb.MapPath(ThemeXslFile))
                         content = reader.ReadToEnd()
                         reader.Close()
                     End Using
@@ -4461,7 +4461,7 @@ from tblContentIndexDef"
                         content = Regex.Replace(content, searchText, replaceText)
                     Next
 
-                    Using writer As New StreamWriter(myWeb.goServer.MapPath(ThemeXslFile))
+                    Using writer As New StreamWriter(myWeb.moHost.WebRootPath & ThemeXslFile)
                         writer.Write(content)
                         writer.Close()
                     End Using

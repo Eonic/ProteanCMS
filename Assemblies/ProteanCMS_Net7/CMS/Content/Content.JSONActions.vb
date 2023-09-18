@@ -294,7 +294,7 @@ Partial Public Class Cms
                             'If cReviewImagePath.EndsWith(".svg") Then
                             '    Return "<img src=""" & cReviewImagePath & """ alt=""""/> "
                             'Else
-                            '    Dim oImg As System.Drawing.Bitmap = New System.Drawing.Bitmap(myWeb.goServer.MapPath("/" & oFsh.mcRoot & nFileName))
+                            '    Dim oImg As System.Drawing.Bitmap = New System.Drawing.Bitmap(myWeb.MapPath("/" & oFsh.mcRoot & nFileName))
                             '    Return "<img src=""" & cReviewImagePath & """ height=""" & oImg.Height & """ width=""" & oImg.Width & """ alt=""""/> "
                             'End If
                             Return cReviewImagePath

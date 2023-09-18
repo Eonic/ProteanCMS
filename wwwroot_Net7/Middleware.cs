@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Caching.Memory;
 using System.Threading.Tasks;
 
 namespace Protean
@@ -14,12 +16,11 @@ namespace Protean
             _next = next;
         }
 
-        public Task Invoke(HttpContext httpContext)
+        public Task Invoke(HttpContext httpContext, IWebHostEnvironment _host, IMemoryCache _memoryCache)
         {
 
-   
 
-            Cms oPcms = new Protean.Cms(httpContext);
+            Cms oPcms = new Protean.Cms(httpContext,  _host, ref _memoryCache);
             oPcms.InitializeVariables();
             oPcms.GetPageHTML();
 

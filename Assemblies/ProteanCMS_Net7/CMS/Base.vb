@@ -16,6 +16,9 @@ Imports System.Collections.Specialized
 Imports VB = Microsoft.VisualBasic
 Imports System
 Imports Microsoft.Extensions.Configuration
+Imports Microsoft.Extensions.Caching.Memory
+Imports Microsoft.AspNetCore.Hosting
+
 Public Class Base
 
 
@@ -53,12 +56,13 @@ Public Class Base
 #Region "Declarations"
     Private moLicenceMode As licenceMode = licenceMode.Live
 
-    Public moCtx As System.Web.HttpContext
+    Public moCtx As Microsoft.AspNetCore.Http.HttpContext
 
     'Session / Request Level Properties
     Public moRequest As System.Web.HttpRequest
     Public moResponse As System.Web.HttpResponse
     Public moSession As System.Web.SessionState.HttpSessionState
+    Public moHost As IWebHostEnvironment
 
     Public mcPagePath As String
     Public mcPageLayout As String
@@ -79,8 +83,8 @@ Public Class Base
     ' Public moConfigNew As ConfigurationSection
     Public moConfig As NameValueCollection
     '  Public goApp As System.Web.HttpApplicationState
+    Public goAppCache As IMemoryCache
     Public goCache As System.Web.Caching.Cache
-    Public goServer As System.Web.HttpServerUtility
     Public goLangConfig As XmlElement ' = ConfigurationManager.GetSection("protean/languages")
 
     Public mcModuleName As String = "Protean.Base"
@@ -97,12 +101,13 @@ Public Class Base
 #Region "Constructors"
     Public Sub New()
 
-        Me.New(System.Web.HttpContext.Current)
+        'Me.New(Microsoft.AspNetCore.Http.HttpContext)
 
     End Sub
 
 
-    Public Sub New(ByVal Context As Microsoft.AspNetCore.Http.HttpContext)
+    Public Sub New(ByVal Context As Microsoft.AspNetCore.Http.HttpContext, _host As IWebHostEnvironment, ByRef MemCache As IMemoryCache)
+
 
         Dim sProcessInfo As String = ""
         Try
@@ -114,22 +119,25 @@ Public Class Base
             End If
 
             ' goApp = moCtx.Application
+            goAppCache = MemCache
             moRequest = moCtx.Request
             moResponse = moCtx.Response
             moSession = moCtx.Session
-            goServer = moCtx.Server
+            moHost = _host
+            'goServer = moCtx.Server
             ' goCache = moCtx.Cache
             ' stdTools.goApp = moCtx.Application
-            stdTools.goServer = moCtx.Server
+            'stdTools.goServer = moCtx.Server
 
             PerfMon = New PerfLog("")
             PerfMon.Log("Base", "New")
 
-            Dim PtnCfg As IConfiguration = New ConfigurationBuilder().AddJsonFile("appsettings.json").Build()
+            ' Dim PtnCfg As IConfiguration = New ConfigurationBuilder().AddJsonFile("appsettings.json").Build()
 
             '  Dim MyConfig As Configuration = New ConfigurationBuilder().AddJsonFile("appsettings.json").Build()
-            Dim moConfig As IConfigurationSection = PtnCfg.GetSection("protean:web")
-            '  moConfigNew = Config.GetSection("protean:web")
+            ' Dim moConfig As IConfigurationSection = PtnCfg.GetSection("protean:web")
+            moConfig = GetConfigSection("web")
+
             EnumberateFeatures()
 
         Catch ex As Exception
@@ -153,17 +161,16 @@ Public Class Base
             moRequest = moCtx.Request
             moResponse = moCtx.Response
             moSession = moCtx.Session
-            goServer = moCtx.Server
+            'goServer = moCtx.Server
             ' goCache = moCtx.Cache
             ' stdTools.goApp = moCtx.Application
-            stdTools.goServer = moCtx.Server
+            'stdTools.goServer = moCtx.Server
 
             PerfMon = New PerfLog("")
             PerfMon.Log("Base", "New")
 
-            Dim MyConfig As Configuration = New ConfigurationBuilder().AddJsonFile("appsettings.json").Build()
+            moConfig = GetConfigSection("web")
 
-            moConfig.Add()
 
 
             '  moConfigNew = Config.GetSection("protean:web")
@@ -175,6 +182,22 @@ Public Class Base
         End Try
     End Sub
 
+    Public Function GetConfigSection(ByVal sectionName As String) As NameValueCollection
+        Try
+            Dim returnNVC As New NameValueCollection
+            Dim MyConfig As ConfigurationRoot = New ConfigurationBuilder().AddJsonFile("appsettings.json").Build()
+            Dim dicConfig As Dictionary(Of String, String)
+            dicConfig = MyConfig.GetSection("Protean:" & sectionName).[Get](Of Dictionary(Of String, String))()
+            For Each kvp In dicConfig
+                returnNVC.Add(kvp.Key.ToString(), kvp.Value.ToString())
+            Next
+
+            Return returnNVC
+
+        Catch ex As Exception
+            OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
+        End Try
+    End Function
 #End Region
 
     Public Sub EnumberateFeatures()
@@ -223,11 +246,15 @@ Public Class Base
         If Not goLangConfig Is Nothing Then
             Features.Add("MultiLanguage", "MultiLanguage")
         End If
-        If File.Exists(CStr(goServer.MapPath("/")) & "eonic.theme.config") Then
-            Features.Add("Themes", "Themes")
-        End If
+        'If File.Exists(CStr(goServer.MapPath("/")) & "eonic.theme.config") Then
+        'Features.Add("Themes", "Themes")
+        'End If
 
     End Sub
+
+    Public Function MapPath(path As String) As String
+        Return moHost.WebRootPath & path
+    End Function
 
     Private disposedValue As Boolean = False        ' To detect redundant calls
 

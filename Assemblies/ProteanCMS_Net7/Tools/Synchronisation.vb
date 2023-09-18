@@ -182,7 +182,7 @@ Partial Public Class Cms
 
                     If Not String.IsNullOrEmpty(xslPath) Then
 
-                        Dim transformer As New Protean.XmlHelper.Transform(_myWeb, _myWeb.goServer.MapPath(xslPath), False)
+                        Dim transformer As New Protean.XmlHelper.Transform(_myWeb, _myWeb.MapPath(xslPath), False)
                         _myWeb.PerfMon.Log("Admin", "FileSyncTransform-startxsl")
                         transformer.mbDebug = gbDebug
                         transformer.ProcessDocument(importXmlDocument)
@@ -226,7 +226,7 @@ Partial Public Class Cms
 
         Public Function convertVirtualPathToWebFile(ByVal myWeb As Protean.Cms, ByVal virtualPath As String) As fsHelper.WebFile
 
-            Return New fsHelper.WebFile(myWeb.goServer.MapPath(virtualPath), virtualPath, True)
+            Return New fsHelper.WebFile(myWeb.MapPath(virtualPath), virtualPath, True)
 
         End Function
 

@@ -1,0 +1,24 @@
+
+.iti
+{
+    width: 100%
+}
+
+.iti__flag 
+{
+    background-image: url(get-resource-path("resources/intltelinput/img/flags.png"));
+}
+
+.iti__country-list
+{
+    position: fixed !important;
+    z-index: 37000 !important;
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) 
+{
+    .iti__flag 
+    {
+        background-image: url(get-resource-path('resources/intltelinput/img/flags@2x.png'));
+    }
+}

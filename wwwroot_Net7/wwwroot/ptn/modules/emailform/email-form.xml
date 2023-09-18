@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+	<model>
+		<instance>
+			<tblContent>
+				<nContentKey/>
+				<nContentPrimaryId/>
+				<nVersion/>
+				<cContentForiegnRef/>
+				<cContentName/>
+				<cContentSchemaName>Module</cContentSchemaName>
+				<cContentXmlBrief>
+					<Content moduleType="EmailForm" box="" title="Contact Form" process="xform" position="">
+						<model class="ewXform">
+							<instance>
+								<emailer xmlns="http://www.eonic.co.uk/ewcommon/Services">
+									<oBodyXML>
+										<Items subjectLine="Website Enquiry">
+											<FirstName />
+											<Surname />
+											<Email />
+											<Phone />
+											<Company />
+											<JobTitle />
+											<Message />
+										</Items>
+									</oBodyXML>
+									<xsltPath>/ptn/email/mailform.xsl</xsltPath>
+									<fromName></fromName>
+									<fromEmail></fromEmail>
+									<recipientEmail/>
+									<ccRecipient/>
+									<bccRecipient/>
+									<SubjectLine>Website Enquiry</SubjectLine>
+									<imgVerification />
+								</emailer>
+							</instance>
+							<submission method="post" action="/ptn/tools/Services.asmx" SOAPAction="http://www.eonic.co.uk/ewcommon/Services/emailer" id="mailForm" event="return form_check(this);" />
+							<bind id="emailer" nodeset="emailer">
+								<bind id="oBodyXML" nodeset="oBodyXML/Items">
+									<bind id="FirstName" nodeset="FirstName" required="true()" type="string" />
+									<bind id="Surname" nodeset="Surname" required="true()" type="string" />
+									<bind id="Email" nodeset="Email" required="true()" type="email" />
+									<bind id="Phone" nodeset="Phone" required="false()" type="string" />
+									<bind id="Company" nodeset="Company" required="false()" type="string" />
+									<bind id="JobTitle" nodeset="JobTitle" required="false()" type="string" />
+									<bind id="Message" nodeset="Message" required="false()" type="string" />
+									<bind nodeset="Email">
+										<bind id="UserEmail" nodeset="@honeypot" constraint="ews:emailer/ews:oBodyXML/ews:Items/ews:Email/@honeypot=''" />
+									</bind>
+								</bind>
+								<bind id="Name" nodeset="fromName" required="false()" type="string" />
+								<bind id="Email" nodeset="fromEmail" required="true()" type="email" />
+							</bind>
+						</model>
+						<group>
+							<input bind="UserEmail" class="jsHide" />
+							<group class="row">
+								<group class="col-lg-6">
+									<input bind="FirstName" class="required">
+										<label>First Name</label>
+									</input>
+								</group>
+								<group class="col-lg-6">
+									<input bind="Surname" class="required">
+										<label>Surname</label>
+									</input>
+								</group>
+							</group>
+							<group class="row">
+								<group class="col-lg-6">
+									<input bind="Email" class="required">
+										<label>Email</label>
+									</input>
+								</group>
+								<group class="col-lg-6">
+									<input bind="Phone">
+										<label>Phone</label>
+									</input>
+								</group>
+							</group>
+							<group class="row">
+								<group class="col-lg-6">
+									<input bind="Company">
+										<label>Company</label>
+									</input>
+								</group>
+								<group class="col-lg-6">
+									<input bind="JobTitle">
+										<label>JobTitle</label>
+									</input>
+								</group>
+							</group>
+							<group>
+								<textarea bind="Message" class="textarea" rows="4">
+									<label>How can we help?</label>
+								</textarea>
+							</group>
+							<!--<input class="recaptcha" />-->
+							<submit submission="mailForm" bind="ewCmd" class="principle">
+								<label>Send</label>
+							</submit>
+						</group>
+					</Content>
+				</cContentXmlBrief>
+				<cContentXmlDetail/>
+				<nAuditId/>
+				<nAuditKey/>
+				<dPublishDate/>
+				<dExpireDate/>
+				<dInsertDate/>
+				<nInsertDirId/>
+				<dUpdateDate/>
+				<nUpdateDirId/>
+				<nStatus>1</nStatus>
+				<cDescription/>
+				<bCascade/>
+			</tblContent>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+		<bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
+		<bind nodeset="tblContent/cContentXmlBrief/Content">
+			<bind id="cPosition" nodeset="@position" required="true()" type="string"/>
+			<bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
+			<bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
+			<bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
+			<bind id="cModuleTitleDisplay" nodeset="@displayTitle" required="false()" type="string"/>
+			<bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
+			<bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
+			<bind id="hideLabel" nodeset="@hideLabel" required="false()" type="string"/>
+			<bind id="formLayout" nodeset="@formLayout" required="false()" type="string"/>
+		</bind>
+		<bind nodeset="tblContent/cContentXmlBrief/Content/model/instance/ews2:emailer">
+			<bind id="cRecipientEmail" nodeset="ews2:recipientEmail" required="false()" type="emails"/>
+			<bind id="cCcRecipientEmail" nodeset="ews2:ccRecipient" required="false()" type="emails"/>
+			<bind id="cBccRecipientEmail" nodeset="ews2:bccRecipient" required="false()" type="emails"/>
+			<bind id="cSenderEmail" nodeset="ews2:fromEmail" required="false()" type="string"/>
+			<bind id="cSenderName" nodeset="ews2:fromName" required="false()" type="string"/>
+			<bind id="cSubject" nodeset="ews2:SubjectLine" required="false()" type="string"/>
+
+			<bind id="cXSLTPath" nodeset="ews2:xsltPath" required="false()" type="string"/>
+			<!--bind id="cSubject" nodeset="ews2:SubjectLine" required="false()" type="string"/-->
+			<bind id="cInstanceItems" nodeset="ews2:oBodyXML" required="false()" type="string"/>
+		</bind>
+		<bind id="cSubmissionId"  nodeset="tblContent/cContentXmlBrief/Content/model/submission/@id" required="true()" type="string"/>
+		<bind id="cBinds" nodeset="tblContent/cContentXmlBrief/Content/model/bind/bind[@id='oBodyXML']" required="false()" type="string"/>
+		<bind id="cControls" nodeset="tblContent/cContentXmlBrief/Content/group" required="false()" type="string"/>
+		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
+		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+	</model>
+	<group ref="EditContent">
+		<label>Email Form</label>
+		<group class="tabs">
+			<group>
+				<label>
+					<i class="fas fa-pen"> </i>
+					<span class="space"> </span>
+					<span>Content</span>
+				</label>
+				<group>
+
+					<alert>WARNING! Updating forms is an advanced task. Please contact your web-support rep for assistance.</alert>
+					<input bind="cModuleTitle" class="long">
+						<label>Title</label>
+					</input>
+					<group class="row">
+						<group class="col-lg-6">
+							<input bind="cRecipientEmail" class="required">
+								<label>Recipient Email</label>
+							</input>
+							<input bind="cCcRecipientEmail">
+								<label>CC Recipient Email</label>
+							</input>
+							<input bind="cBccRecipientEmail">
+								<label>BCC Recipient Email</label>
+							</input>
+							<input bind="cSubject" class="long">
+								<label>Email Subject</label>
+							</input>
+						</group>
+						<group class="col-lg-6">
+							<input bind="cSenderEmail">
+								<label>Default Sender Email</label>
+							</input>
+							<input bind="cSenderName">
+								<label>Default Sender Name</label>
+							</input>
+							<input bind="cXSLTPath">
+								<label>XSLT Path</label>
+							</input>
+							<input bind="cSubmissionId" class="long">
+								<label>Submission ID</label>
+								<hint>Ensure this matches the submission attribute on the submit button</hint>
+							</input>
+						</group>
+
+					</group>
+					<group>
+						<div>Please note that the default form displays the following fields: FirstName, Surname, Email, Phone, Company, JobTitle, Message.</div>
+					</group>
+					<group>
+
+						<label>Instance Items</label>
+						<textarea bind="cInstanceItems" rows="5" cols="150" class="xml long"/>
+						<label>Binds</label>
+						<textarea bind="cBinds" rows="10" cols="150" class="xml long"/>
+						<label>Controls</label>
+						<textarea bind="cControls" rows="15" cols="150" class="xml long"/>
+					</group>
+					<group>
+						<label>Sent Message</label>
+						<relatedContent search="find add" type="FormattedText" relationType="" maxRelationNo="1" direction="1way">
+							<label>Formatted Text</label>
+						</relatedContent>
+					</group>
+				</group>
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-brush"> </i>
+					<span class="space"> </span>
+					<span>Presentation</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
+				<group>
+					<select bind="hideLabel" appearance="full" class="inline-items">
+						<item>
+							<label>Hide Labels</label>
+							<value>true</value>
+						</item>
+						<help class="inline">Labels must stay in a form so they are available to screen readers, but this will make them hidden.</help>
+					</select>
+					<select1 bind="formLayout" appearance="full" class="inline-items">
+						<label>Form Layout</label>
+						<item>
+							<label>Horizontal</label>
+							<value>horizontal</value>
+						</item>
+						<item>
+							<label>Vertical</label>
+							<value>vertical</value>
+						</item>
+						<help class="inline">
+							<p>Horizontal forms will have labels to the left of the input, vertical forms will have the labels above.</p>
+						</help>
+					</select1>
+				</group>
+			</group>
+			<!--<group>
+				<label>
+					<i class="fas fa-info"> </i>
+					<span class="space"> </span>
+					<span>Info</span>
+				</label>
+				<group>
+					<label>Columns</label>
+					<div>
+						<p>group class="row"</p>
+						<p>group class="col-lg-6"</p>
+						<p>/group</p>
+						<p>group class="col-lg-6"</p>
+						<p>/group</p>
+						<p>/group</p>
+					</div>
+					<label>RECAPTCHA</label>
+					<div>
+						<p>
+							input class="recaptcha" /
+						</p>
+					</div>
+					<label>Drop Down</label>
+					<div>
+						<p>
+							select1 bind="cIconSet" appearance="minimal" class="required vshort"
+						</p>
+						
+					</div>
+				</group>
+
+			</group>-->
+			<group>
+				<label>
+					<i class="fas fa-cog"> </i>
+					<span class="space"> </span>
+					<span>Advanced Settings</span>
+				</label>
+				<group>
+					<!-- These hidden fields and bindings are required for the component-->
+					<input bind="nContentKey" class="hidden">
+						<label>ContentId</label>
+					</input>
+					<input bind="cModuleType" class="hidden">
+						<label>ModuleType</label>
+					</input>
+					<!-- end of hidden fields -->
+
+
+
+					<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+				</group>
+
+			</group>
+		</group>
+	</group>
+
+
+	<group ref="submit" class="contentSubmit">
+		<submit submission="" ref="ewSubmit" class="principle">
+			<label>Save Enquiry Form</label>
+		</submit>
+	</group>
+</Content>
