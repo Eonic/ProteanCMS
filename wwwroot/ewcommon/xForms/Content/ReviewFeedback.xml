@@ -1,0 +1,227 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Content type="xform" name="Edit Review">
+	<model>
+		<instance>
+			<tblContent>
+				<nContentKey/>
+				<nContentPrimaryId/>
+				<nVersion/>
+				<cContentForiegnRef/>
+				<cContentName/>
+				<cContentSchemaName>Review</cContentSchemaName>
+				<cContentXmlBrief>
+					<Content showRelated="Tag" recommendToAFriend="">
+						<Reviewer/>
+						<ReviewerEmail/>
+						<ReviewDate/>
+						<Url/>
+						<Summary/>
+						<Rating/>
+						<Images>
+							<img class="thumbnail"/>
+							<img class="display" src=""/>
+							<img class="detail"/>
+						</Images>
+						<Path/>
+						<EmailSent/>
+						<ShowImage/>
+						<ProductID/>
+					</Content>
+					<average_rating/>
+					<total/>
+					<recommend_to_friend/>
+				</cContentXmlBrief>
+				<cContentXmlDetail>
+					<Content showRelated="Tag" recommendToAFriend="">
+						<Reviewer/>
+						<ReviewerEmail/>
+						<ReviewDate/>
+						<Url/>
+						<Summary/>
+						<Rating/>
+						<Images>
+							<img class="thumbnail"/>
+							<img class="display" src=""/>
+							<img class="detail"/>
+						</Images>
+						<Path/>
+						<EmailSent/>
+						<ShowImage/>
+						<ProductID/>
+					</Content>
+					<average_rating/>
+					<total/>
+					<recommend_to_friend/>
+				</cContentXmlDetail>
+				<nAuditId/>
+				<nAuditKey/>
+				<dPublishDate/>
+				<dExpireDate/>
+				<dInsertDate/>
+				<nInsertDirId/>
+				<dUpdateDate/>
+				<nUpdateDirId/>
+				<nStatus>4</nStatus>
+				<cDescription/>
+				<ReviewPhysicalPath></ReviewPhysicalPath>
+			</tblContent>
+			<RelatedLibraryImages skipFirst="true" type="LibraryImage">
+			</RelatedLibraryImages>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+		<bind nodeset="tblContent">
+			<bind id="cContentForiegnRef" nodeset="cContentForiegnRef" required="false()" type="string"/>
+			<bind id="cContentReviewer" nodeset="cContentName" required="true()" type="string"/>
+			<bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+			<bind id="dExpireDate" nodeset="dExpireDate" required="false()" type="string"/>
+			<bind id="dInsertDate" nodeset="dInsertDate" required="false()" type="string"/>
+			<bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
+			<bind id="cDescription" nodeset="cDescription" required="false()" type="string"/>
+			<bind nodeset="cContentXmlBrief/Content">
+				<bind id="cContentReviewer" nodeset="Reviewer" required="true()" type="string"/>
+				<bind id="cContentReviewerEmail" nodeset="ReviewerEmail" required="false()" type="string"/>
+				<bind id="dReviewDate" nodeset="ReviewDate" required="false()" type="string"/>
+				<bind id="dPublishDate" nodeset="PublishDate" required="false()" type="string"/>
+				<bind id="cUrl" nodeset="Url" required="false()" type="string"/>
+				<bind id="cContentSummary" nodeset="Summary" required="true()" type="string"/>
+				<bind id="cContentRating" nodeset="Rating" required="true()" type="string"/>
+				<bind id="cContentDescription" nodeset="Description" required="false()" type="string"/>
+				<bind id="cReviewImagesPaths" nodeset="Images/img[@class='display']/@src" required="false()" type="string-before-comma"/>
+				<!--<bind nodeset="Images/img[@class='display']">
+					<bind id="cReviewImagesPaths" nodeset="@src" required="false()" type="string-before-comma" />
+				</bind>-->
+				<bind id="cContentDocPath" nodeset="Path" required="false()" type="string"/>
+				<bind id="nRecommentToFriend" nodeset="@recommendToAFriend" required="false()" type="string"/>
+				<bind id="nProductID" nodeset="ProductID" required="false()" type="string"/>
+			</bind>
+			<bind nodeset="cContentXmlDetail/Content">
+				<bind id="cContentReviewer" nodeset="Reviewer" required="true()" type="string"/>
+				<bind id="cContentReviewerEmail" nodeset="ReviewerEmail" required="false()" type="string"/>
+				<bind id="dReviewDate" nodeset="ReviewDate" required="false()" type="string"/>
+				<bind id="dPublishDate" nodeset="PublishDate" required="false()" type="string"/>
+				<bind id="cUrl" nodeset="Url" required="false()" type="string"/>
+				<bind id="cContentSummary" nodeset="Summary" required="false()" type="string"/>
+				<bind id="cContentRating" nodeset="Rating" required="false()" type="string"/>
+				<bind id="cContentDescription" nodeset="Description" required="false()" type="string"/>
+				<bind id="cReviewImagesPaths" nodeset="Images/img[@class='display']/@src" required="false()" type="string-before-comma"/>
+				<!--<bind nodeset="Images/img[@class='display']">
+					<bind id="cReviewImagesPaths" nodeset="@src" required="false()" type="string-before-comma" />
+				</bind>-->
+				<bind id="cContentDocPath" nodeset="Path" required="false()" type="string"/>
+				<bind id="nRecommentToFriend" nodeset="@recommendToAFriend" required="false()" type="string"/>
+				<bind id="nProductID" nodeset="ProductID" required="false()" type="string"/>
+			</bind>
+			<bind id="dPublishDate" nodeset="ReviewDate" required="false()" type="string"/>
+			<bind id="cReviewPhysicalPath" nodeset="ReviewPhysicalPath" required="false()" type="string"/>
+		</bind>
+		<bind id="cReviewImagesPaths" nodeset="RelatedLibraryImages" required="false()" type="string"/>
+	</model>
+
+	<group ref="EditReview" class="1col">
+		<label> Review Feedback</label>
+		<group class="ContentColumn1">
+			<group ref="Settings" class="leftSettings">
+				<input bind="nContentKey" class="hidden">
+					<label>ContentId</label>
+				</input>
+				<input bind="dInsertDate" class="readonly short hidden">
+					<label>Created date</label>
+				</input>
+				<input bind="dPublishDate" class="calendar short hidden">
+					<label>Publish Date</label>
+				</input>
+				<input bind="dExpireDate" class="calendar short hidden">
+					<label>Expire Date</label>
+				</input>
+			</group>
+			<group ref="Content" class="Content">
+				<label></label>
+				<label>
+					Product Name:
+					<label>
+						<span id="cProductName"></span>
+					</label>
+				</label>
+
+				<input bind="cContentReviewer" id="cContentReviewer" class="long">
+					<label>Reviewer Name</label>
+				</input>
+				<input bind="dReviewDate" id="dReviewDate" class="readonly short hidden">
+					<label>Created date</label>
+				</input>
+				<input bind="cContentReviewerEmail" id="cContentReviewerEmail" class="readonly short hidden">
+					<label>Email Address</label>
+				</input>
+				<input bind="nProductID" id="nProductID" class="readonly short hidden">
+					<label>ProductID</label>
+				</input>
+				<input bind="cReviewPhysicalPath" id="cReviewPhysicalPath" class="readonly short hidden">
+					<label>Path</label>
+				</input>
+				<input id="cProductNameforPath" bind="cProductNameforPath" class="readonly short hidden">
+				</input>
+				<div class="stars">
+
+					<span bind="cContentRating" class="required">
+						<label class="myrating">Rating*</label>
+						<a class="star-1" onClick="starclick(1)">
+							<i class="rating__star far fa-star"></i>
+						</a>
+						<a class="star-2" onClick="starclick(2)">
+							<i class="rating__star far fa-star"></i>
+						</a>
+						<a class="star-3" onClick="starclick(3)">
+							<i class="rating__star far fa-star"></i>
+						</a>
+						<a class="star-4" onClick="starclick(4)">
+							<i class="rating__star far fa-star"></i>
+						</a>
+						<a class="star-5" onClick="starclick(5)">
+							<i class="rating__star far fa-star"></i>
+						</a>
+					</span>
+				</div>
+				<input id="cContentRating" bind="cContentRating" class="cContentRating textbox hidden">
+					<value />
+				</input>
+
+
+				<textarea bind="cContentSummary" appearance="full" class="TextArea required" rows="5" cols="70">
+					<label>Review Feedback</label>
+				</textarea>
+				<select1 bind="nRecommentToFriend" appearance="full" class="vshort">
+					<label>Would you recommend this to a friend?</label>
+					<item>
+						<label>Yes</label>
+						<value>1</value>
+					</item>
+					<item>
+						<label>No</label>
+						<value>0</value>
+					</item>
+				</select1>
+
+
+			</group>
+			<group class="Content">
+				<input id="cReviewImages" class="short userUploadImage">
+					<label>Upload Image</label>
+				</input>
+				<input bind="cReviewImagesPaths" id="cReviewImagesPaths" class="short uploadImagesDisplay">
+					<value />
+				</input>
+			</group>
+			<group>
+				<label>*Fields are mandatory.</label>
+			</group>
+		</group>
+	</group>
+	<group ref="submit" class="contentSubmit">
+		<submit submission="ewSubmit" ref="reviewFeedback" class="principle">
+			<label>Save Review</label>
+		</submit>
+		<!--<input type="button" submission="ewSubmit" id="saveReview" class="SaveReview" >
+			<label>Save Review</label>
+		</input>-->
+	</group>
+</Content>

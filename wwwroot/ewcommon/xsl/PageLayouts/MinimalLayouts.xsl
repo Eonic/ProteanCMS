@@ -8059,9 +8059,14 @@
 
 	<!-- GA4 Ecommerce Events -->
 	<xsl:template match="Page[ContentDetail/Content[@type='Product']]" mode="google-ga4-event">
+		<xsl:variable name="price">
+			<xsl:apply-templates  select="ContentDetail/Content[@type='Product']" mode="PriceNumberic"/>
+		</xsl:variable>
 		gtag("event", "view_item",{
 		currency: "<xsl:value-of select="Cart/@currency"/>",
-		value: <xsl:apply-templates  select="ContentDetail/Content[@type='Product']" mode="PriceNumberic"/>,
+		<xsl:if test="number(price)">
+		value: <xsl:value-of select="$price"/>,
+		</xsl:if>
 		items:[
 		<xsl:apply-templates select="ContentDetail/Content[@type='Product']" mode="google-ga4-view-item"/>
 		]
@@ -8070,6 +8075,9 @@
 
 
 	<xsl:template match="Content[@type='Product']" mode="google-ga4-view-item">
+		<xsl:variable name="price">
+			<xsl:apply-templates  select="." mode="PriceNumberic"/>
+		</xsl:variable>
 		{
 		    item_id: "<xsl:value-of select="StockCode/node()"/>",
 		    item_name: "<xsl:value-of select="Name/node()"/>",
@@ -8090,7 +8098,9 @@
 		<xsl:if test="$subSubSubSubSectionPage">
 			item_category5: "<xsl:value-of select="$subSubSubSubSectionPage/@name"/>",
 		</xsl:if>
-		    price: <xsl:apply-templates  select="." mode="PriceNumberic"/>,
+		<xsl:if test="number(price)">
+			value: <xsl:value-of select="$price"/>,
+		</xsl:if>
 		    item_list_id: "<xsl:value-of select="$page/@id"/>",
 		    item_list_name: "<xsl:value-of select="$currentPage/@name"/>",
       	    quantity: 1

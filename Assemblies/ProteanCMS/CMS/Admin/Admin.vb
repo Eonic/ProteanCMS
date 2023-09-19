@@ -26,7 +26,7 @@ Imports System.Reflection
 Imports Lucene.Net.Support
 Imports System.ServiceModel.Channels
 Imports ICSharpCode.SharpZipLib.Zip.ExtendedUnixData
-
+Imports Protean.proteancms.com
 
 Partial Public Class Cms
     Public Class Admin
@@ -1365,6 +1365,22 @@ ProcessFlow:
                     Case "ContentVersions"
                         sAdminLayout = "ContentVersions"
                         oPageDetail.AppendChild(myWeb.moDbHelper.getContentVersions(myWeb.moRequest("id")))
+
+                    Case "AlertEmail"
+                        sAdminLayout = "AdminXForm"
+                        Dim RecordType As String = myWeb.moRequest("recordType") 'Content
+                        Dim ObjectId As Long = myWeb.moRequest("id") 'ContentId
+                        Dim AlertEmailXform As String = myWeb.moRequest("xFormName")
+                        'AlertEmailXform = myWeb.moServer.mapPath("/xforms/alertEmail/" & AlertEmailXform & ".xml")
+
+                        'oPageDetail.AppendChild(moAdXfm.xFrmAlertEmail(RecordType, ObjectId, AlertEmailXform))
+
+                        'xFrmAlertEmail we have an xform file where the contentXml becomes the instance
+                        'xform specifies the xslt for the email template
+                        'when submitted sends the email
+
+                        'We want to log this activity to the activity log.
+                        'We should also show the history of emails from the activity log as part of the form so we do not accidently send twice.
 
 
                         'Menu Stuff
@@ -3481,7 +3497,9 @@ AfterProcessFlow:
                 End Select
 
                 If bShowTree = True Then
+                    myWeb.PerfMon.Log("fsHelper", "getDirectoryTreeXml-Start")
                     oPageDetail.AppendChild(oFsh.getDirectoryTreeXml(LibType, sFolder))
+                    myWeb.PerfMon.Log("fsHelper", "getDirectoryTreeXml-End")
                 End If
 
                 oFsh = Nothing

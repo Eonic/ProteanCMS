@@ -25,7 +25,9 @@ Imports Protean.Tools.Dictionary
 Imports Protean.Tools.Xml
 Imports System
 Imports System.Threading
-Imports WebGrease.Css.Ast.Selectors
+Imports System.Linq
+
+
 
 Partial Public Class Cms
 
@@ -275,6 +277,7 @@ Partial Public Class Cms
             indexkey = 200
             'indexdefkey = 201
             nShipProdCatRelKey = 202
+            nEmailActivityKey = 203
         End Enum
 
         Enum TableNames
@@ -324,6 +327,7 @@ Partial Public Class Cms
             'tblContentIndex = 200
             tblContentIndexDef = 200
             tblCartShippingProductCategoryRelations = 202
+            tblEmailActivityLog = 203
         End Enum
 
         Enum PermissionLevel
@@ -3124,6 +3128,8 @@ restart:
                         .Columns("currentLiveVersion").ColumnMapping = Data.MappingType.Attribute
                         .Columns("pageid").ColumnMapping = Data.MappingType.Attribute
                         .Columns("page").ColumnMapping = Data.MappingType.Attribute
+                        .Columns("ContentId").ColumnMapping = Data.MappingType.Attribute
+                        .Columns("Type").ColumnMapping = Data.MappingType.Attribute
                     End With
 
                     '   With oDS.Tables("Location")
@@ -7717,6 +7723,17 @@ restart:
                             For Each oRelation In oInstance.SelectNodes("ProductGroups")
                                 insertProductGroupRelation(savedId, oRelation.GetAttribute("ids"))
                             Next
+                            Dim oRelatedLibraryImages As XmlElement
+                            For Each oRelatedLibraryImages In oInstance.SelectNodes("RelatedLibraryImages")
+                                ' createGalleryImages(savedId, oRelatedGalleryImages.InnerText,oRelatedGalleryImages.attribute("skipFirst"))
+                                ' function to step through each image in the array, check it exists, get width and height, open LibraryImage Xform,
+                                ' Get the instance, set /images/img[@class=display] with src and width and height
+                                ' then use setObjectInstance, get the new id and related to the savedId setcontentrelation(newid,savedid).
+                                If oRelatedLibraryImages.GetAttribute("skipFirst") <> "" And oRelatedLibraryImages.GetAttribute("type") <> "" Then
+                                    CreateLibraryImages(savedId, oRelatedLibraryImages.InnerText, oRelatedLibraryImages.GetAttribute("skipFirst"), oRelatedLibraryImages.GetAttribute("type"))
+                                End If
+
+                            Next
                         Case objectTypes.Directory
 
                             Dim oRelation As XmlElement
@@ -7776,6 +7793,67 @@ restart:
                 Return 0
             End Try
         End Function
+
+        Public Function CreateLibraryImages(ByVal savedId As Integer, ByVal cRelatedLibraryImage As String, ByVal cSkipAttribute As String, Optional ByVal cRelatedImageType As String = "") As String
+            Try
+                'myWeb.moCtx.Request.
+                Dim oLibraryImageInstance As XmlElement
+
+                If cRelatedLibraryImage <> "" Then
+                    Dim oImagePath() As String = cRelatedLibraryImage.Split(",")
+                    'If skipfirst attribute
+                    If cSkipAttribute = True Then
+                        oImagePath = oImagePath.Skip(1).ToArray()
+                    End If
+
+                    For Each cImage As String In oImagePath
+                        Dim moAdXfm As Protean.Cms.xForm
+                        moAdXfm = New Protean.Cms.xForm(myWeb)
+                        Dim cContentSchemaName As String = cRelatedImageType
+                        Dim cXformPath As String = cContentSchemaName
+                        Dim cContentName As String = "New " + cRelatedImageType
+
+                        cXformPath = "/xforms/content/" & cXformPath
+                        moAdXfm = myWeb.getXform()
+                        moAdXfm.load(cXformPath & ".xml", myWeb.maCommonFolders)
+
+                        If cContentName <> "" And Not moAdXfm.Instance.FirstChild Is Nothing Then
+                            moAdXfm.Instance.SelectSingleNode("tblContent/cContentName").InnerText() = cContentName
+                            moAdXfm.Instance.SelectSingleNode("tblContent/dPublishDate").InnerText() = Protean.Tools.Xml.XmlDate(Now())
+                        End If
+
+                        'oLibraryImageXForm = moAdXfm.xFrmEditContent(0, cRelatedImageType, , "New LibraryImage", , nAdditionId)
+                        oLibraryImageInstance = moAdXfm.Instance
+                        Dim imgElement As XmlElement = oLibraryImageInstance.SelectSingleNode("tblContent/cContentXmlBrief/Content/Images/img[@class='display']")
+                        Dim imgElementDetail As XmlElement = oLibraryImageInstance.SelectSingleNode("tblContent/cContentXmlDetail/Content/Images/img[@class='display']")
+                        'Dim oImg As System.Drawing.Bitmap = New System.Drawing.Bitmap(goServer.MapPath("/") & cImage.Trim.Replace("/", "\"))
+                        Dim oImg As System.Drawing.Bitmap
+                        If myWeb.moCtx.Request.Form("cReviewPhysicalPath") <> Nothing AndAlso myWeb.moCtx.Request.Form("cReviewPhysicalPath") <> String.Empty Then
+                            oImg = New System.Drawing.Bitmap(myWeb.moCtx.Request.Form("cReviewPhysicalPath") & cImage.Trim.Replace("/", "\"))
+                        ElseIf goConfig("ReviewImageRootPath") <> Nothing AndAlso goConfig("ReviewImageRootPath") <> String.Empty Then
+                            oImg = New System.Drawing.Bitmap(goConfig("ReviewImageRootPath") & cImage.Trim.Replace("/", "\"))
+                        Else
+                            oImg = New System.Drawing.Bitmap(goServer.MapPath("/") & cImage.Trim.Replace("/", "\"))
+                        End If
+                        imgElement.SetAttribute("src", cImage.Trim)
+                        imgElement.SetAttribute("height", oImg.Height)
+                        imgElement.SetAttribute("width", oImg.Width)
+                        imgElementDetail.SetAttribute("src", cImage.Trim)
+                        imgElementDetail.SetAttribute("height", oImg.Height)
+                        imgElementDetail.SetAttribute("width", oImg.Width)
+                        Dim nContentId As Long
+                        nContentId = setObjectInstance(Cms.dbHelper.objectTypes.Content, oLibraryImageInstance)
+                        'If we have an action here we need to relate the item
+                        insertContentRelation(savedId, nContentId, False)
+                    Next
+                End If
+            Catch ex As Exception
+                Return " Relation Error " & ex.Message
+            End Try
+
+
+        End Function
+
 
         ''' <summary>
         '''   <para>This deletes all content locations for an item of content.</para>
@@ -10376,9 +10454,8 @@ ReturnMe:
 
 
                 If oConnection.State = ConnectionState.Closed Then oConnection.Open()
-
-                    Dim oSqlCmd As SqlCommand = New SqlCommand(sSql, oConnection)
-                    moDataAdpt.SelectCommand = oSqlCmd
+                Dim oSqlCmd As SqlCommand = New SqlCommand(sSql, oConnection)
+                moDataAdpt.SelectCommand = oSqlCmd
                 Dim cb As SqlCommandBuilder = New SqlCommandBuilder(moDataAdpt)
                 moDataAdpt.TableMappings.Add(tableName, tableName)
 
@@ -11069,7 +11146,7 @@ ReturnMe:
             Dim reportElement As XmlElement
             Dim reportName As String = ""
             Dim dir As DirectoryInfo
-            Dim files As FileInfo()
+            Dim files As IO.FileInfo()
             Dim foldersToCheck As New List(Of String)
             Try
 
@@ -11087,7 +11164,7 @@ ReturnMe:
                     If dir.Exists Then
                         files = dir.GetFiles("*.xml")
 
-                        For Each reportFile As FileInfo In files
+                        For Each reportFile As IO.FileInfo In files
 
                             reportName = reportFile.Name.Substring(0, reportFile.Name.LastIndexOf("."))
 

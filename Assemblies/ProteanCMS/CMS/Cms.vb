@@ -8,12 +8,8 @@ Imports System.IO
 Imports System.Data.SqlClient
 Imports System.Reflection
 Imports System.Net
-Imports System.Linq
 Imports System.Text.RegularExpressions
 Imports System.Collections.Generic
-Imports Microsoft
-Imports Microsoft.ClearScript.Util
-
 
 Public Class Cms
     Inherits Base
@@ -1071,9 +1067,9 @@ Public Class Cms
                 AndAlso mbIsUsingHTTPS _
                 AndAlso moConfig("OverrideBaseUrlWithSecureSiteForHTTPS") = "on" _
                 AndAlso moCartConfig("SecureURL") <> "" Then
-                gcEwBaseUrl = moCartConfig("SecureURL").Trim("/")
+                gcEwBaseUrl = moCartConfig("SecureURL")
             Else
-                gcEwBaseUrl = moConfig("BaseUrl").Trim("/")
+                gcEwBaseUrl = moConfig("BaseUrl")
             End If
 
             mcRequestDomain = IIf(mbIsUsingHTTPS, "https://", "http://") & moRequest.ServerVariables("SERVER_NAME")
@@ -1155,38 +1151,6 @@ Public Class Cms
     End Sub
 
 
-    Public Function RestoreRedirectSession(ByVal sSessionId As String, ByVal nStandardDuration As Integer, Optional ByVal isAdmin As Boolean = False) As Boolean
-        ' we check the activity log for recompile with same session id, check the datetime is within 5 seconds.
-        Try
-            Dim nDuration As Integer = 0
-            Dim nUserId As Integer = 0
-            Dim sSql = "select top 1 nUserDirId, datediff(SS,getdate(),dDateTime) as Duration from tblActivityLog where cSessionId='" & sSessionId & "' order by dDateTime desc"
-            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)
-                If (oDr IsNot Nothing) Then
-                    While (oDr.Read())
-                        nDuration = Convert.ToInt32(oDr("Duration"))
-                        nUserId = oDr("nUserDirId")
-                    End While
-
-                End If
-            End Using
-            If (nDuration <= nStandardDuration And nUserId <> 0) Then
-
-                mnUserId = nUserId
-                If (isAdmin) Then
-                    moSession("adminMode") = "true"
-                    mbAdminMode = True
-                End If
-                Return True
-            Else
-                Return False
-            End If
-        Catch ex As Exception
-            Return False
-        End Try
-    End Function
-
-
 
     Public Overridable Sub GetPageHTML()
         PerfMon.Log("Web", "GetPageHTML - start")
@@ -1238,22 +1202,11 @@ Public Class Cms
                         End If
                     End If
 
-                    If Not moRequest("reBundle") Is Nothing Then
+                    If bPageCache And Not ibIndexMode And Not gnResponseCode = 404 Then
 
-                        If (moRequest("SessionId") IsNot Nothing) Then
-                            RestoreRedirectSession(moRequest("SessionId"), 5, True)
-                        End If
-
-                        If mbAdminMode Then
+                        If Not moRequest("reBundle") Is Nothing Then
                             ClearPageCache()
-                            ClearBundleCache("js")
-                            ClearBundleCache("css")
                         End If
-
-                    End If
-
-                        If bPageCache And Not ibIndexMode And Not gnResponseCode = 404 Then
-
                         sCachePath = goServer.UrlDecode(mcOriginalURL)
                         If sCachePath.Contains("?") Then
                             sCachePath = sCachePath.Substring(0, sCachePath.IndexOf("?"))
@@ -1262,6 +1215,7 @@ Public Class Cms
                         If gcProjectPath <> "" Then
                             sCachePath = sCachePath.Replace(gcProjectPath, "")
                         End If
+
 
                         If sCachePath = "/.html" Or sCachePath = ".html" Then
                             sCachePath = "/home.html"
@@ -1412,45 +1366,17 @@ Public Class Cms
                                     Dim brecompile As Boolean = False
 
                                     If moRequest("recompile") <> "" Then
-
+                                        'add delete xsltc flag to web.config
                                         If moRequest("recompile") = "del" Then
-
-
-                                            If RestoreRedirectSession(moRequest("SessionId"), 5, True) = True Then
-                                                Dim oFS As New Protean.fsHelper(moCtx)
-                                                oFS.mcRoot = gcProjectPath
-                                                oFS.mcStartFolder = goServer.MapPath("\" & gcProjectPath) + "xsltc"
-                                                oFS.DeleteFolderContents("", "")
-                                                Protean.Config.UpdateConfigValue(Me, "protean/web", "CompiledTransform", "on")
-                                                Protean.Config.UpdateConfigValue(Me, "", "recompile", "false")
-                                                msRedirectOnEnd = "/?rebundle=true&SessionId=" & SessionID
-                                            End If
-
+                                            brecompile = True
+                                            msRedirectOnEnd = Nothing
                                         Else
-                                            If mbAdminMode Then
-                                                Protean.Config.UpdateConfigValue(Me, "protean/web", "CompliedTransform", "off")
-                                                'just sent value as it might be true when user did ResetConfig
-                                                'to avoid skipping update functionality, we are just set it differently
-                                                Protean.Config.UpdateConfigValue(Me, "", "recompile", "recompiling")
-                                                moDbHelper.logActivity(dbHelper.ActivityType.Recompile, mnUserId, 0)
-                                                'we log to the activity log this action
-                                                msRedirectOnEnd = "/?recompile=del&SessionId=" & SessionID
-                                            End If
+                                            msRedirectOnEnd = "/?recompile=del"
+                                            bRestartApp = True
+                                            Protean.Config.UpdateConfigValue(Me, "protean/web", "CompliedTransform", "rebuild")
                                         End If
+
                                     End If
-
-                                    'If moRequest("recompile") <> "" Then
-                                    '    'add delete xsltc flag to web.config
-                                    '    If moRequest("recompile") = "del" Then
-                                    '        brecompile = True
-                                    '        msRedirectOnEnd = Nothing
-                                    '    Else
-                                    '        msRedirectOnEnd = "/?recompile=del"
-                                    '        bRestartApp = True
-                                    '        Protean.Config.UpdateConfigValue(Me, "protean/web", "CompliedTransform", "rebuild")
-                                    '    End If
-
-                                    'End If
 
                                     Dim oTransform As New Protean.XmlHelper.Transform(Me, styleFile, gbCompiledTransform, , brecompile)
                                     If moConfig("XslTimeout") <> "" Then
@@ -2609,20 +2535,6 @@ Public Class Cms
             End If
 
             Select Case AjaxCmd
-                Case "ReviewFileUpload"
-                    Try
-
-                        Dim oFsh As fsHelper = New fsHelper
-                        oFsh.initialiseVariables(fsHelper.LibraryType.Image)
-                        oFsh.moPageXML = moPageXml
-                        Dim ProductName As String = moRequest("cProductName")
-                        If ProductName IsNot Nothing Then
-                            oFsh.UploadRequest(moCtx, ProductName)
-                        End If
-                        oFsh = Nothing
-                    Catch ex As Exception
-                        returnException(msException, mcModuleName, "LibProcess", ex, "", sProcessInfo, gbDebug)
-                    End Try
                 Case "BespokeProvider"
                     'Dim assemblyInstance As [Assembly]
                     Dim calledType As Type
@@ -2691,19 +2603,12 @@ Public Class Cms
                     ' Check if the permissions are valid
                     bUserValid = dbHelper.CanAddUpdate(nContentPermLevel) And mnUserId > 0
 
-                    If moRequest("type") IsNot Nothing Then
-                        If moRequest("type").ToLower() = "review" Then
-                            bUserValid = True ' set true for submitting review functionality
-                        End If
-                    End If
-
                     ' We need to set this for version control
                     moDbHelper.CurrentPermissionLevel = nContentPermLevel
 
                     If bUserValid Then
 
                         Select Case AjaxCmd
-
                             Case "Edit"
                                 Dim xFrmContent As XmlElement
                                 xFrmContent = moAdXfm.xFrmEditContent(nContentId, moRequest("type"), nPageId, moRequest("name"), , nContentId, , moRequest("formName"), "0" & moRequest("verId"))
@@ -3310,14 +3215,6 @@ Public Class Cms
         End Try
     End Sub
 
-    Private Sub CollectReview()
-        ' Create an object of protean xform 
-        ' Load ReviewFeedback.xml xform in the created object
-        ' Submit and validate the xform 
-        ' Append the xform to the template of product detail
-
-
-    End Sub
     Public Overridable Sub AddSearch(ByRef aWeb As Protean.Cms)
         oSrch = New Protean.Cms.Search(Me)
         oSrch.apply()
@@ -3479,10 +3376,7 @@ Public Class Cms
             End If
 
 
-            ' placeholder for a review request
-            If moRequest("review") <> "" Then
-                CollectReview()
-            End If
+
 
             ' Count Relations
             Dim cContentIdsForRelatedCount As String = ""
@@ -3783,6 +3677,8 @@ Public Class Cms
         Dim nAuthUserId As Long
         Dim nAuthGroup As Long
         Dim cContentField As String = ""
+        Dim cFilterTarget As String = String.Empty
+
 
         Try
 
@@ -3884,10 +3780,18 @@ Public Class Cms
                     nAuthUserId = mnUserId
                     nAuthGroup = gnAuthUsers
                 End If
-
+                If Not oContentsNode Is Nothing Then
+                    If (oContentsNode.Attributes("contentType") IsNot Nothing) Then
+                        cFilterTarget = oContentsNode.Attributes("contentType").Value
+                    End If
+                    If (oContentsNode.Attributes("filterTarget") IsNot Nothing) Then
+                        cFilterTarget = oContentsNode.Attributes("filterTarget").Value
+                    End If
+                End If
 
                 ' Check the page is not denied
-                sMembershipSql = " NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
+                sMembershipSql = " c.cContentSchemaName ='" & cFilterTarget & "' and NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
+
 
 
                 ' Commenting out the folowing as it wouldn't return items that were Inherited view etc.
@@ -3918,7 +3822,7 @@ Public Class Cms
 
 
             sSql = sSql & " where (" & combinedWhereSQL & ")"
-            If oContentsNode IsNot Nothing Then
+            If Not oContentsNode Is Nothing Then
                 ' Quick call to get the total number of records
                 Dim cSQL As String = "SET ARITHABORT ON "
                 cSQL &= "Select COUNT(distinct c.nContentKey) FROM tblContent AS c INNER JOIN "
@@ -3929,8 +3833,10 @@ Public Class Cms
                 cSQL = cSQL & " where (" & combinedWhereSQL & ")"
 
                 Dim nTotal As Long = moDbHelper.GetDataValue(cSQL, , , 0)
+
                 oContentsNode.SetAttribute("resultCount", nTotal)
             End If
+
 
             If cOrderBy <> "" Then
                 sSql &= " ORDER BY " & cOrderBy
@@ -3953,12 +3859,11 @@ Public Class Cms
             Else
                 oDs = moDbHelper.GetDataSet(sSql, "Content", "Contents")
             End If
+            nCount = oDs.Tables("Content").Rows.Count
+            PerfMon.Log("Web", "GetPageContentFromSelect", "GetPageContentFromSelect: " & nCount & " returned")
 
-            If oDs IsNot Nothing Then
-                nCount = oDs.Tables("Content").Rows.Count
-                PerfMon.Log("Web", "GetPageContentFromSelect", "GetPageContentFromSelect: " & nCount & " returned")
-                moDbHelper.AddDataSetToContent(oDs, oRoot, mnPageId, False, "", mdPageExpireDate, mdPageUpdateDate, True, gnShowRelatedBriefDepth, cShowSpecificContentTypes)
-            End If
+            moDbHelper.AddDataSetToContent(oDs, oRoot, mnPageId, False, "", mdPageExpireDate, mdPageUpdateDate, True, gnShowRelatedBriefDepth, cShowSpecificContentTypes)
+
 
             'If gbCart Or gbQuote Then
             '    moDiscount.getAvailableDiscounts(oRoot)
@@ -4047,7 +3952,7 @@ Public Class Cms
                 End If
 
                 ' Check the page is not denied
-                sMembershipSql = " NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
+                sMembershipSql = " c.cContentSchemaName ='" & cShowSpecificContentTypes & "' and  NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
 
                 ' Commenting out the folowing as it wouldn't return items that were Inherited view etc.
                 ' sMembershipSql = " (dbo.fxn_checkPermission(CL.nStructId," & mnUserId & "," & gnAuthUsers & ") = 'OPEN' or dbo.fxn_checkPermission(CL.nStructId," & mnUserId & "," & gnAuthUsers & ") = 'VIEW')"
@@ -5637,9 +5542,8 @@ Public Class Cms
             Dim cCloneParent As String
             Dim oRe As New Text.RegularExpressions.Regex("[^A-Z0-9]", Text.RegularExpressions.RegexOptions.IgnoreCase)
             Dim oPageVerElmts As XmlElement
+
             Dim DomainURL As String = mcRequestDomain
-            Dim ExcludeFoldersFromPaths As String = LCase("" & moConfig("ExcludeFoldersFromPaths"))
-            Dim foldersExcludedFromPaths As String() = ExcludeFoldersFromPaths.Split(",")
 
             For Each oMenuItem In oElmt.SelectNodes("descendant-or-self::" & cMenuItemNodeName)
                 Dim urlPrefix As String = ""
@@ -5798,78 +5702,67 @@ Public Class Cms
 
 
                 ' Only generate URLs for MneuItems that do not already have a url explicitly defined
+                If oMenuItem.GetAttribute("url") = "" Then
 
+                    ' Start with the base path
+                    sUrl = moConfig("BasePath") & urlPrefix & cFilePathModifier
 
-                ' Start with the base path
-                sUrl = moConfig("BasePath") & urlPrefix & cFilePathModifier
-
-                If moConfig("UsePageIdsForURLs") = "on" Then
-                    ' Use the page ID instead of a Pretty URL
-                    sUrl = sUrl & "/?pgid=" & oMenuItem.GetAttribute("id")
-                Else
-                    ' Get all the descendant menuitems and append the names onto the Url string
-                    For Each oDescendant As XmlElement In oMenuItem.SelectNodes("ancestor-or-self::" & cMenuItemNodeName & "[ancestor::MenuItem[@id=" & nRootId & "]]")
-                        If Not oDescendant.ParentNode.Name = "Menu" Then
-                            If moConfig("PageURLFormat") = "hyphens" Then
-                                cPageName = oRe.Replace(oDescendant.GetAttribute("name"), "-")
-                            Else
-                                cPageName = goServer.UrlEncode(oDescendant.GetAttribute("name"))
-                            End If
-                            If Not foldersExcludedFromPaths.Contains(LCase(cPageName)) Then
+                    If moConfig("UsePageIdsForURLs") = "on" Then
+                        ' Use the page ID instead of a Pretty URL
+                        sUrl = sUrl & "/?pgid=" & oMenuItem.GetAttribute("id")
+                    Else
+                        ' Get all the descendant menuitems and append the names onto the Url string
+                        For Each oDescendant As XmlElement In oMenuItem.SelectNodes("ancestor-or-self::" & cMenuItemNodeName & "[ancestor::MenuItem[@id=" & nRootId & "]]")
+                            If Not oDescendant.ParentNode.Name = "Menu" Then
+                                If moConfig("PageURLFormat") = "hyphens" Then
+                                    cPageName = oRe.Replace(oDescendant.GetAttribute("name"), "-")
+                                Else
+                                    cPageName = goServer.UrlEncode(oDescendant.GetAttribute("name"))
+                                End If
                                 sUrl = sUrl & "/" & cPageName
                             End If
-
-                        End If
-                    Next
-                End If
-
-                If moConfig("TrailingSlash") = "on" Then
-                    sUrl = "/" & sUrl.Trim("/") & "/"
-                End If
-
-                ' Account for a root url
-                If sUrl = "" Then
-                    sUrl = "/"
-                End If
-
-                If sUrl = "//" Then
-                    sUrl = "/"
-                End If
-
-                If sUrl = "/" Then
-                    sUrl = DomainURL
-                    If moRequest.ServerVariables("SERVER_PORT") <> "80" And moRequest.ServerVariables("SERVER_PORT") <> "443" Then
-                        sUrl = sUrl & ":" & moRequest.ServerVariables("SERVER_PORT")
+                        Next
                     End If
-                End If
-                If moConfig("LowerCaseUrl") = "on" Then
-                    sUrl = sUrl.ToLower()
-                End If
-                'for admin mode we tag the pgid on the end to be safe for duplicate pagenames with different permissions.
-                If mbAdminMode _
-                    And moConfig("pageExt") = "" _
-                    And moConfig("UsePageIdsForURLs") <> "on" _
-                    Then sUrl = sUrl & "?pgid=" & oMenuItem.GetAttribute("id")
+
+                    If moConfig("TrailingSlash") = "on" Then
+                        sUrl = "/" & sUrl.Trim("/") & "/"
+                    End If
+
+                    ' Account for a root url
+                    If sUrl = "" Then
+                        sUrl = "/"
+                    End If
+
+                    If sUrl = "//" Then
+                        sUrl = "/"
+                    End If
+
+                    If sUrl = "/" Then
+                        sUrl = DomainURL
+                        If moRequest.ServerVariables("SERVER_PORT") <> "80" And moRequest.ServerVariables("SERVER_PORT") <> "443" Then
+                            sUrl = sUrl & ":" & moRequest.ServerVariables("SERVER_PORT")
+                        End If
+                    End If
+                    If moConfig("LowerCaseUrl") = "on" Then
+                        sUrl = sUrl.ToLower()
+                    End If
+                    'for admin mode we tag the pgid on the end to be safe for duplicate pagenames with different permissions.
+                    If mbAdminMode _
+                        And moConfig("pageExt") = "" _
+                        And moConfig("UsePageIdsForURLs") <> "on" _
+                        Then sUrl = sUrl & "?pgid=" & oMenuItem.GetAttribute("id")
 
 
 
-                If moConfig("LowerCaseUrl") = "on" Then
-                    sUrl = sUrl.ToLower()
-                End If
+                    If moConfig("LowerCaseUrl") = "on" Then
+                        sUrl = sUrl.ToLower()
+                    End If
 
-                If oMenuItem.GetAttribute("url") = "" Then
                     oMenuItem.SetAttribute("url", sUrl)
-                Else
-                    oMenuItem.SetAttribute("adminUrl", sUrl)
-                End If
 
-
-                ' If oMenuItem.GetAttribute("id") = "609" Then
-                ' mbIgnorePath = mbIgnorePath
-                ' If
-
-                'Stuff that just doesn't happen if we are redirecting.
-                If oMenuItem.GetAttribute("url") = "" Then
+                    ' If oMenuItem.GetAttribute("id") = "609" Then
+                    ' mbIgnorePath = mbIgnorePath
+                    ' If
 
                     If Not mbIgnorePath Then
                         If moRequest.QueryString.Count > 0 Then
@@ -5942,9 +5835,7 @@ Public Class Cms
                                             cPageName = goServer.UrlEncode(oDescendant.GetAttribute("name"))
                                         End If
                                     End If
-                                    If Not foldersExcludedFromPaths.Contains(LCase(cPageName)) Then
-                                        sUrl = sUrl & "/" & cPageName
-                                    End If
+                                    sUrl = sUrl & "/" & cPageName
                                     If moConfig("LowerCaseUrl") = "on" Then
                                         sUrl = sUrl.ToLower()
                                     End If
@@ -9082,40 +8973,11 @@ Public Class Cms
         Try
 
             moFSHelper.DeleteFolder(mcPageCacheFolder, goServer.MapPath("/" & gcProjectPath))
-            'clear out the bundles now.
 
         Catch ex As Exception
             returnException(msException, mcModuleName, "ClearPageCache", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
-
-    Public Sub ClearBundleCache(bundlePath As String)
-        Dim cProcessInfo As String = ""
-        Try
-
-
-            Dim rootfolder As New DirectoryInfo(goServer.MapPath("/" & moConfig("ProjectPath") & bundlePath & "/bundles"))
-            If rootfolder.Exists Then
-
-                'Delete all child Directories
-                For Each dir As DirectoryInfo In rootfolder.GetDirectories()
-                    For Each filepath As FileInfo In dir.GetFiles()
-                        filepath.Delete()
-                    Next
-                    ' "~/js/bundles/X"
-                    Dim AppVarName As String = dir.FullName
-                    AppVarName = AppVarName.Substring(goServer.MapPath("/" & moConfig("ProjectPath") & bundlePath).Length())
-                    AppVarName = AppVarName.Replace("\", "/")
-                    moCtx.Application.Remove("~/" & AppVarName)
-                Next
-            End If
-
-
-        Catch ex As Exception
-            returnException(msException, mcModuleName, "ClearPageCache", ex, "", cProcessInfo, gbDebug)
-        End Try
-    End Sub
-
     ''' <summary>
     ''' get active productslist
     ''' </summary>

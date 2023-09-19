@@ -12,6 +12,8 @@ Imports Microsoft.ClearScript.Util
 Imports Protean.Cms
 Imports Protean.xForm
 
+
+
 Namespace Providers
 
     Namespace Filters
@@ -34,19 +36,25 @@ Namespace Providers
                     Dim oSliderMaxPrice As XmlAttribute = oXform.moPageXML.CreateAttribute("SliderMaxPrice")
                     Dim oStep As XmlAttribute = oXform.moPageXML.CreateAttribute("PriceStep")
                     Dim oProductCountList As XmlAttribute = oXform.moPageXML.CreateAttribute("PriceCountList")
+                    Dim oProductTotalCount As XmlAttribute = oXform.moPageXML.CreateAttribute("PriceTotalCount")
                     Dim sProductCount As String = String.Empty
                     Dim cnt As Integer = 0
                     Dim cProductCountList As String = String.Empty
                     Dim nPageId As Integer = aWeb.mnPageId
                     Dim nMaxPRiceProduct As Integer = 0
+                    Dim nMinPriceProduct As Integer = 0
                     Dim oFilterElmt As XmlElement = Nothing
                     Dim className As String = String.Empty
+                    Dim cWhereQuery As String = String.Empty
 
                     If aWeb.moRequest.Form("MaxPrice") IsNot Nothing Then
 
                         oMinPrice.Value = Convert.ToString(aWeb.moRequest.Form("MinPrice"))
                         oMaxPrice.Value = Convert.ToString(aWeb.moRequest.Form("MaxPrice"))
 
+                        'Else
+                        '    oMinPrice.Value = Convert.ToString(FilterConfig.GetAttribute("fromPrice"))
+                        '    oMaxPrice.Value = Convert.ToString(FilterConfig.GetAttribute("toPrice"))
                     End If
                     If (oContentNode.Attributes("filterTarget") IsNot Nothing) Then
                         cFilterTarget = oContentNode.Attributes("filterTarget").Value
@@ -56,6 +64,7 @@ Namespace Providers
                     If (FilterConfig.Attributes("name") IsNot Nothing) Then
                         sCotrolDisplayName = Convert.ToString(FilterConfig.Attributes("name").Value)
                     End If
+
                     arrParams.Add("MinPrice", FilterConfig.GetAttribute("fromPrice"))
                     arrParams.Add("MaxPrice", FilterConfig.GetAttribute("toPrice"))
                     arrParams.Add("Step", FilterConfig.GetAttribute("step"))
@@ -63,9 +72,12 @@ Namespace Providers
                     arrParams.Add("whereSql", cWhereSql)
                     arrParams.Add("FilterTarget", cFilterTarget)
                     Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure, arrParams)
-                        If (oDr.HasRows) Then
+                        If (oDr IsNot Nothing) Then
                             While oDr.Read
                                 cnt = cnt + 1
+                                If cnt = 1 Then
+                                    nMinPriceProduct = oDr.GetValue(5)
+                                End If
                                 nMaxPRiceProduct = oDr("MaxProductPrice")
                                 sProductCount = Convert.ToString(oDr("ContentCount"))
                                 cProductCountList = cProductCountList + cnt.ToString() + ":" + sProductCount + ","
@@ -73,8 +85,12 @@ Namespace Providers
 
                         End If
                         oSliderMinPrice.Value = FilterConfig.GetAttribute("fromPrice")
-                        oSliderMaxPrice.Value = nMaxPRiceProduct
+                        'oSliderMaxPrice.Value = FilterConfig.GetAttribute("toPrice")
+                        'oProductTotalCount.Value = nMaxPRiceProduct
+                        oSliderMinPrice.Value = nMinPriceProduct
 
+                        oSliderMaxPrice.Value = nMaxPRiceProduct
+                        'oMaxPrice.Value = FilterConfig.GetAttribute("toPrice")
 
 
                         oStep.Value = FilterConfig.GetAttribute("step")
@@ -83,6 +99,7 @@ Namespace Providers
                         oXml.Attributes.Append(oSliderMinPrice)
                         oXml.Attributes.Append(oSliderMaxPrice)
                         oXml.Attributes.Append(oStep)
+                        oXml.Attributes.Append(oProductTotalCount)
 
 
                         '    'Adding controls to the form like dropdown, radiobuttons
@@ -114,6 +131,7 @@ Namespace Providers
                     oXform.addBind("PriceStep", "PriceFilter/@PriceStep", "false()", "string", oXform.model)
                     oXform.addBind("PriceListCount", "PriceFilter/@PriceCountList", "false()", "string", oXform.model)
                     oXform.addBind("PriceFilter", "PriceFilter/@MaxPrice", "false()", "string", oXform.model)
+                    ' oXform.addBind("PriceTotalCount", "PriceFilter/@PriceTotalCount", "false()", "string", oXform.model)
 
                     oXform.addInput(oFromGroup, "MinPrice", True, "", "hidden")
                     oXform.addInput(oFromGroup, "MaxPrice", True, "", "hidden")
@@ -122,6 +140,7 @@ Namespace Providers
                     oXform.addInput(oFromGroup, "PriceStep", True, "", "hidden")
                     oXform.addInput(oFromGroup, "PriceListCount", True, "", "hidden")
                     oXform.addInput(oFromGroup, "PriceFilter", True, "", "hidden")
+                    ' oXform.addInput(oFromGroup, "PriceTotalCount", True, "", "hidden")
 
                     'If (oFromGroup.SelectSingleNode("select[@ref='PriceFilter']") IsNot Nothing) Then
                     '    If (oXml.InnerText.Trim() <> String.Empty) Then

@@ -126,6 +126,10 @@
             <label>2</label>
             <value>2</value>
           </item>
+			<item>
+				<label>3</label>
+				<value>3</value>
+			</item>
           <help class="inline">
             <p>Extra small devices (≥576px), typically small tablets. Due to the size of these devices, typically they will not have enough room for more than 2 columns</p>
           </help>

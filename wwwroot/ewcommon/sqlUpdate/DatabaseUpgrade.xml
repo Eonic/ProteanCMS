@@ -522,6 +522,10 @@
 			<Sub3 Number="0">
 				<Action Order="0" Type="File" ObjectType="" ObjectName="/v5/6.0.63.0/CartItemNCIndexForDiscount.sql"/>
 				<Action Order="1" Type="File" ObjectType="" ObjectName="/v5/6.0.63.0/vw_VersionControl_GetPendingContent.sql"/>
+				<Action Order="2" Type="Drop" ObjectType="Procedure" ObjectName="spSendEmailAfterSubmitReview"/>
+				<Action Order="3" Type="File" ObjectType="" ObjectName="/v5/6.0.63.0/spSendEmailAfterSubmitReview.sql"/>
+				<Action Order="4" Type="Drop" ObjectType="Procedure" ObjectName="spGetPriceRange"/>
+				<Action Order="5" Type="File" ObjectType="" ObjectName="/v5/6.0.63.0/spGetPriceRange.sql"/>
 			</Sub3>
 		</Sub2>
     </Sub1>
