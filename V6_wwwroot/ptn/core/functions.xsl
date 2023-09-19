@@ -233,6 +233,24 @@
 			</xsl:call-template>
 		</xsl:if>
 	</xsl:variable>
+	
+  <xsl:variable name="GoogleGA4MeasurementID">
+    <xsl:if test="not(/Page/@adminMode)">
+      <xsl:call-template name="getXmlSettings">
+        <xsl:with-param name="sectionName" select="'web'"/>
+        <xsl:with-param name="valueName" select="'GoogleGA4MeasurementID'"/>
+      </xsl:call-template>
+    </xsl:if>
+  </xsl:variable>
+
+	<xsl:variable name="GoogleAdConversionID">
+		<xsl:if test="not(/Page/@adminMode)">
+			<xsl:call-template name="getXmlSettings">
+				<xsl:with-param name="sectionName" select="'web'"/>
+				<xsl:with-param name="valueName" select="'GoogleAdConversionID'"/>
+			</xsl:call-template>
+		</xsl:if>
+	</xsl:variable>
 
 	<xsl:variable name="GoogleOptimizeID">
 		<xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
@@ -485,6 +503,57 @@
 		</html>
 	</xsl:template>
 
+	<xsl:template match="Page" mode="google-ga4-config-params">
+		<!-- for overloading on specific actions -->
+		<!--
+		<xsl:if test="$page/Request/GoogleCampaign">
+		'{		
+		        <xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">
+					'campaign_source': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_source']"/>'
+				</xsl:if>
+				<xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_medium']!=''">
+					<xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">,</xsl:if>
+					'campaign_medium': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_medium']"/>'
+				</xsl:if>
+		}
+		</xsl:if>
+		-->
+	</xsl:template>
+
+
+	<xsl:template match="Page[User]" mode="google-ga4-config-params">
+	
+		, {
+		<xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">
+			'campaign_source': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_source']"/>'
+		</xsl:if>
+		<xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_medium']!=''">
+			<xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">,</xsl:if>
+			'campaign_medium': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_medium']"/>',
+		</xsl:if>
+		'user_id': '<xsl:value-of select="User/@id"/>'
+		}
+	</xsl:template>
+
+
+  <xsl:template match="Page" mode="google-ga4-event">
+      <!-- for overloading on specific actions -->
+  </xsl:template>
+
+	<xsl:template match="Page" mode="google-ga4-event-extra">
+		<!-- for overloading on specific actions -->
+	</xsl:template>
+
+	<xsl:template match="Page[//Content[descendant-or-self::alert/node()='Message Sent']]" mode="google-ga4-event-extra">
+		gtag('event', 'ptn_form_submission', {
+		'form_id':'<xsl:value-of select="//Content[descendant-or-self::alert/node()='Message Sent']/descendant-or-self::submission/@id"/>',
+		<xsl:for-each select="//Content[descendant-or-self::alert/node()='Message Sent']/descendant-or-self::*[name()='Items']/*">
+			'<xsl:value-of select="name()"/>':'<xsl:value-of select="node()"/>
+			<xsl:text>'</xsl:text>
+			<xsl:if test="position()!=last()">,</xsl:if>
+		</xsl:for-each>
+        });
+	</xsl:template>
 	<xsl:template match="Page" mode="criticalPathCSS">
 		<style>
 			<xsl:copy-of select="/Page/Contents/Content[@name='criticalPathCSS']/node()"/>
@@ -979,6 +1048,24 @@
 				<xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaGoogleAnalyticsID']" mode="googleAnalyticsCode"/>
 			</xsl:otherwise>
 		</xsl:choose>
+	  <xsl:if test="$GoogleGA4MeasurementID!=''">
+		  <!-- GA4 Tag Manager -->
+		  <script async="async" src="https://www.googletagmanager.com/gtag/js?id={$GoogleGA4MeasurementID}" cookie-consent="tracking">&#160;</script>
+		  <script id="GA4Code" cookie-consent="tracking">
+			  window.dataLayer = window.dataLayer || [];
+			  function gtag(){dataLayer.push(arguments);}
+			  gtag('js', new Date());
+			  gtag('config', '<xsl:value-of select="$GoogleGA4MeasurementID"/>'<xsl:apply-templates select="." mode="google-ga4-config-params"/>);
+			  <xsl:apply-templates select="." mode="google-ga4-event"/>
+			  <xsl:apply-templates select="." mode="google-ga4-event-extra"/>
+		  </script>
+		  <!-- End GA4 Tag Manager -->
+	  </xsl:if>
+	  <xsl:if test="$GoogleAdConversionID!=''">
+		  <script id="GadCode" cookie-consent="tracking">
+			  gtag('config', '<xsl:value-of select="$GoogleAdConversionID"/>')
+		  </script>
+	  </xsl:if>
 		<xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaA1WebStatsID']" mode="A1WebStatsCode"/>
 		<xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaWhoIsVisitingID']" mode="MetaWhoIsVisitingCode"/>
 
