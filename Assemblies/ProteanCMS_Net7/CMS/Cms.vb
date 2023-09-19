@@ -212,16 +212,37 @@ Public Class Cms
 #Region "Constructors"
     Public Sub New()
 
-        ' Me.New(System.Web.HttpContext.Current)
+        Me.New(System.Web.HttpContext.Current)
 
     End Sub
 
-    Public Sub New(ByVal Context As Microsoft.AspNetCore.Http.HttpContext, _host As IWebHostEnvironment, ByRef MemCache As IMemoryCache)
-        MyBase.New(Context, MemCache)
+    Public Sub New(ByVal Context As System.Web.HttpContext)
+
         Dim sProcessInfo As String = ""
         Try
 
 
+            moFSHelper = New fsHelper(moCtx)
+            InitialiseGlobal()
+            If Not moCtx Is Nothing Then
+                PerfMon.Log("Web", "New")
+            End If
+
+            If moDbHelper Is Nothing Then
+                moDbHelper = GetDbHelper()
+            End If
+            ' Open()
+            '
+        Catch ex As Exception
+            'returnException(msException, mcModuleName, "New", ex, "", sProcessInfo, gbDebug)
+            OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, sProcessInfo))
+        End Try
+    End Sub
+
+    Public Sub New(ByVal Context As Microsoft.AspNetCore.Http.HttpContext, _host As IWebHostEnvironment, ByRef MemCache As IMemoryCache)
+        MyBase.New(Context, _host, MemCache)
+        Dim sProcessInfo As String = ""
+        Try
             moFSHelper = New fsHelper(moCtx)
             InitialiseGlobal()
             If Not moCtx Is Nothing Then
@@ -295,8 +316,8 @@ Public Class Cms
             '    Hostname = "127.0.0.1"
             '    ServerIP = "127.0.0.1"
             'Else
-            '    Hostname = moRequest.ServerVariables("SERVER_NAME")
-            '    ServerIP = moRequest.ServerVariables("LOCAL_ADDR")
+            '    Hostname = moRequest.Headers("SERVER_NAME")
+            '    ServerIP = moRequest.Headers("LOCAL_ADDR")
             'End If
 
             'Dim Hash As String = Enc.GenerateMD5Hash(EncyrptionKey & Hostname)
@@ -449,7 +470,7 @@ Public Class Cms
 
             oElmt = oRXML.CreateElement("DLLVersion")
 
-            'Dim sCodeBase As String = myWeb.moRequest.ServerVariables("GENERATOR")
+            'Dim sCodeBase As String = myWeb.moRequest.Headers("GENERATOR")
             'oElmt.InnerText = sCodeBase
 
             'oElmt.InnerText = myWeb.Generator().FullName()
@@ -968,10 +989,10 @@ Public Class Cms
             moConfig = GetConfigSection("web")
             ' Set the rewrite URL
             ' Check both IIS7 URLRewrite ad ISAPI Rewrite variants
-            'If Not (String.IsNullOrEmpty(CStr("" & moRequest.ServerVariables("HTTP_X_ORIGINAL_URL")))) Then
-            '    mcOriginalURL = moRequest.ServerVariables("HTTP_X_ORIGINAL_URL")
-            'ElseIf Not (String.IsNullOrEmpty(CStr("" & moRequest.ServerVariables("HTTP_X_REWRITE_URL")))) Then
-            '    mcOriginalURL = moRequest.ServerVariables("HTTP_X_REWRITE_URL")
+            'If Not (String.IsNullOrEmpty(CStr("" & moRequest.Headers("HTTP_X_ORIGINAL_URL")))) Then
+            '    mcOriginalURL = moRequest.Headers("HTTP_X_ORIGINAL_URL")
+            'ElseIf Not (String.IsNullOrEmpty(CStr("" & moRequest.Headers("HTTP_X_REWRITE_URL")))) Then
+            '    mcOriginalURL = moRequest.Headers("HTTP_X_REWRITE_URL")
             'End If
 
             Dim moCartConfig As System.Collections.Specialized.NameValueCollection = ConfigurationManager.GetSection("protean/cart")
@@ -999,7 +1020,7 @@ Public Class Cms
                     moResponseType = pageResponseType.xml
 
                     If moConfig("XmlAllowedIPList") <> "" Then
-                        If Not (Tools.Text.IsIPAddressInList(moRequest.ServerVariables("REMOTE_ADDR"), moConfig("XmlAllowedIPList"))) Then
+                        If Not (Tools.Text.IsIPAddressInList(moRequest.Headers("REMOTE_ADDR"), moConfig("XmlAllowedIPList"))) Then
                             mcContentType = "text/html"
                             gcEwSiteXsl = moConfig("SiteXsl")
                             mbOutputXml = False
@@ -1042,7 +1063,7 @@ Public Class Cms
                     moResponseType = pageResponseType.Page
                     'can we get a cached page
                     If Not moCtx.GetServerVariable("HTTP_X_ORIGINAL_URL") Is Nothing Then
-                        If gnResponseCode = 200 And moRequest.Form.Count = 0 And mnUserId = 0 And Not (moRequest.ServerVariables("HTTP_X_ORIGINAL_URL").Contains("?")) Then
+                        If gnResponseCode = 200 And moRequest.Form.Count = 0 And mnUserId = 0 And Not (moRequest.Headers("HTTP_X_ORIGINAL_URL").Contains("?")) Then
                             bPageCache = IIf(LCase(moConfig("PageCache")) = "on", True, False)
                         End If
 
@@ -1072,7 +1093,7 @@ Public Class Cms
             mnPageId = mnPageId
             mnUserId = mnUserId
 
-            mbIsUsingHTTPS = (moRequest.ServerVariables("HTTPS") = "on")
+            mbIsUsingHTTPS = (moRequest.Headers("HTTPS") = "on")
 
             ' If the site refers to itself for HTTPS and the domain is different then 
             ' BaseURL needs to be the secure site
@@ -1085,7 +1106,7 @@ Public Class Cms
                 gcEwBaseUrl = moConfig("BaseUrl").Trim("/")
             End If
 
-            mcRequestDomain = IIf(mbIsUsingHTTPS, "https://", "http://") & moRequest.ServerVariables("SERVER_NAME")
+            mcRequestDomain = IIf(mbIsUsingHTTPS, "https://", "http://") & moRequest.Headers("SERVER_NAME")
 
             ' Language sites.
             ' If LanguageStyleSheets is on, then we look for the xsl with the language as a suffix
@@ -1131,7 +1152,7 @@ Public Class Cms
 
 
     Public Sub CheckPagePath()
-        Dim pageUrl As String = moRequest.RawUrl.ToString()
+        Dim pageUrl As String = moRequest.RawUrl
         Dim bLowerCaseUrl As Boolean = False
         Dim bTrailingSlash As Boolean = False
         If Not moSession Is Nothing Then
@@ -1226,10 +1247,10 @@ Public Class Cms
 
                     QRPath = QRPath.Replace("/QRcode", "")
                     Dim isSecure = "https://"
-                    If moRequest.ServerVariables("SERVER_PORT_SECURE") = "0" Then
+                    If moRequest.Headers("SERVER_PORT_SECURE") = "0" Then
                         isSecure = "http://"
                     End If
-                    QRPath = isSecure & moRequest.ServerVariables("SERVER_NAME") & QRPath
+                    QRPath = isSecure & moRequest.Headers("SERVER_NAME") & QRPath
                     Dim qrGenerator As QRCoder.QRCodeGenerator = New QRCoder.QRCodeGenerator()
                     Dim qrCodeData As QRCoder.QRCodeData = qrGenerator.CreateQrCode(QRPath, QRCoder.QRCodeGenerator.ECCLevel.Q)
                     Dim qrCode As QRCoder.QRCode = New QRCoder.QRCode(qrCodeData)
@@ -1365,7 +1386,7 @@ Public Class Cms
                                 ' Check if the XML Output has an optional IP restriction placed against it.
                                 If mbOutputXml Then
                                     If moConfig("XmlAllowedIPList") <> "" Then
-                                        If Not (Tools.Text.IsIPAddressInList(moRequest.ServerVariables("REMOTE_ADDR"), moConfig("XmlAllowedIPList"))) Then mbOutputXml = False
+                                        If Not (Tools.Text.IsIPAddressInList(moRequest.Headers("REMOTE_ADDR"), moConfig("XmlAllowedIPList"))) Then mbOutputXml = False
                                     End If
                                 End If
                                 If mbOutputXml = True Then
@@ -1770,7 +1791,7 @@ Public Class Cms
                     If (mnUserId <> "0" Or LCase(moConfig("LogAll")) = "On") And mbAdminMode = False And Features.ContainsKey("ActivityReporting") Then
                         If moRequest("noFrames") <> "True" Then ' Fix for frameset double counting                   
                             'moDbHelper.logActivity(dbHelper.ActivityType.PageAccess, mnUserId, mnPageId, mnArtId)
-                            moDbHelper.CommitLogToDB(dbHelper.ActivityType.PageViewed, mnUserId, moSession.SessionID, Now, mnPageId, mnArtId, moRequest.ServerVariables("REMOTE_ADDR") & " " & moRequest.ServerVariables("HTTP_USER_AGENT"))
+                            moDbHelper.CommitLogToDB(dbHelper.ActivityType.PageViewed, mnUserId, moSession.SessionID, Now, mnPageId, mnArtId, moRequest.Headers("REMOTE_ADDR") & " " & moRequest.Headers("HTTP_USER_AGENT"))
                         End If
                     End If
                 End If
@@ -3184,7 +3205,7 @@ Public Class Cms
 
                                 If bUseIPAddress Then
                                     moDbHelper.checkForIpAddressCol()
-                                    sSql &= " AND cIPAddress=" & Protean.Tools.Database.SqlString(Left(moRequest.ServerVariables("REMOTE_ADDR"), 15))
+                                    sSql &= " AND cIPAddress=" & Protean.Tools.Database.SqlString(Left(moRequest.Headers("REMOTE_ADDR"), 15))
                                 End If
 
                                 If Not moRequest("poll-email") Is Nothing Then
@@ -4741,12 +4762,12 @@ Public Class Cms
 
             'Bring in the ServerVariables
             newElem = moPageXml.CreateElement("ServerVariables")
-            For Each item In moRequest.ServerVariables
+            For Each item In moRequest.Headers
                 Try
-                    If Not (CStr(item) = "ALL_HTTP" Or CStr(item) = "ALL_RAW" Or moRequest.ServerVariables(CStr(item)) = "") Then
+                    If Not (CStr(item) = "ALL_HTTP" Or CStr(item) = "ALL_RAW" Or moRequest.Headers(CStr(item)) = "") Then
                         newElem2 = moPageXml.CreateElement("Item")
                         newElem2.SetAttribute("name", CStr(item))
-                        newElem2.InnerText = moRequest.ServerVariables(CStr(item))
+                        newElem2.InnerText = moRequest.Headers(CStr(item))
                         newElem.AppendChild(newElem2)
                     End If
                 Catch
@@ -5852,8 +5873,8 @@ Public Class Cms
 
                 If sUrl = "/" Then
                     sUrl = DomainURL
-                    If moRequest.ServerVariables("SERVER_PORT") <> "80" And moRequest.ServerVariables("SERVER_PORT") <> "443" Then
-                        sUrl = sUrl & ":" & moRequest.ServerVariables("SERVER_PORT")
+                    If moRequest.Headers("SERVER_PORT") <> "80" And moRequest.Headers("SERVER_PORT") <> "443" Then
+                        sUrl = sUrl & ":" & moRequest.Headers("SERVER_PORT")
                     End If
                 End If
                 If moConfig("LowerCaseUrl") = "on" Then
@@ -5970,7 +5991,7 @@ Public Class Cms
                                 'Check Language by Domain
                                 Dim oLangElmt As XmlElement
                                 Dim httpStart As String
-                                If moRequest.ServerVariables("SERVER_PORT_SECURE") = "1" Then
+                                If moRequest.Headers("SERVER_PORT_SECURE") = "1" Then
                                     httpStart = "https://"
                                 Else
                                     httpStart = "http://"
@@ -8060,7 +8081,7 @@ Public Class Cms
 
 
                         Else
-                            moSession("LogonRedirect") = moRequest.ServerVariables("PATH_INFO") & "?" & moRequest.ServerVariables("QUERY_STRING")
+                            moSession("LogonRedirect") = moRequest.Headers("PATH_INFO") & "?" & moRequest.Headers("QUERY_STRING")
                             Me.msRedirectOnEnd = AccessDeniedPagePath
 
                             moResponse.Redirect(msRedirectOnEnd, False)
@@ -8464,7 +8485,7 @@ Public Class Cms
 
                 If mcSessionReferrer Is Nothing Then
                     If Not moRequest.UrlReferrer Is Nothing Then
-                        If moRequest.UrlReferrer.Host <> moRequest.ServerVariables("HTTP_HOST") Then
+                        If moRequest.UrlReferrer.Host <> moRequest.Headers("HTTP_HOST") Then
                             moSession.Add("Referrer", moRequest.UrlReferrer.AbsoluteUri)
                             mcSessionReferrer = moSession("Referrer")
                         End If
@@ -8549,23 +8570,23 @@ Public Class Cms
 
             If Not goLangConfig Is Nothing Then
 
-                If moRequest.ServerVariables("SERVER_PORT_SECURE") = "1" Then
+                If moRequest.Headers("SERVER_PORT_SECURE") = "1" Then
                     httpPrefix = "https://"
                 End If
 
                 For Each oElmt In goLangConfig.SelectNodes("Language")
                     Select Case LCase(oElmt.GetAttribute("identMethod"))
                         Case "domain"
-                            If oElmt.GetAttribute("identifier") = moRequest.ServerVariables("HTTP_HOST") Then
+                            If oElmt.GetAttribute("identifier") = moRequest.Headers("HTTP_HOST") Then
                                 mcPageLanguage = oElmt.GetAttribute("code")
                                 mcPageLanguageUrlPrefix = httpPrefix & oElmt.GetAttribute("identifier")
                                 sCurrency = oElmt.GetAttribute("currency")
                             End If
                         Case "path"
-                            If Not moRequest.ServerVariables("HTTP_X_ORIGINAL_URL") Is Nothing Then
-                                If moRequest.ServerVariables("HTTP_X_ORIGINAL_URL").StartsWith("/" & oElmt.GetAttribute("identifier") & "/") _
-                                Or moRequest.ServerVariables("HTTP_X_ORIGINAL_URL") = "/" & oElmt.GetAttribute("identifier") _
-                                Or moRequest.ServerVariables("HTTP_X_ORIGINAL_URL").StartsWith("/" & oElmt.GetAttribute("identifier") & "?") Then
+                            If Not moRequest.Headers("HTTP_X_ORIGINAL_URL") Is Nothing Then
+                                If moRequest.Headers("HTTP_X_ORIGINAL_URL").StartsWith("/" & oElmt.GetAttribute("identifier") & "/") _
+                                Or moRequest.Headers("HTTP_X_ORIGINAL_URL") = "/" & oElmt.GetAttribute("identifier") _
+                                Or moRequest.Headers("HTTP_X_ORIGINAL_URL").StartsWith("/" & oElmt.GetAttribute("identifier") & "?") Then
                                     mcPageLanguage = oElmt.GetAttribute("code")
                                     mcPageLanguageUrlPrefix = httpPrefix & goLangConfig.GetAttribute("defaultDomain") & "/" & oElmt.GetAttribute("identifier")
                                     sCurrency = oElmt.GetAttribute("currency")
@@ -8783,7 +8804,7 @@ Public Class Cms
     ''' <remarks>Uses the incoming request to determine the IP address to check.  Use Protean.Tools.Text.IsIPAddressInList to check a specific IP address</remarks>
     Public Function IsCurrentIPAddressInList(ByVal ipList As String) As Boolean
         Try
-            Return Tools.Text.IsIPAddressInList(moRequest.ServerVariables("REMOTE_ADDR"), ipList)
+            Return Tools.Text.IsIPAddressInList(moRequest.Headers("REMOTE_ADDR"), ipList)
 
         Catch ex As Exception
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "IsCurrentIPAddressInList", ex, ""))

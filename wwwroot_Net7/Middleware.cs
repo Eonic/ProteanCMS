@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Caching.Memory;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace Protean
 {
@@ -19,12 +20,13 @@ namespace Protean
         public Task Invoke(HttpContext httpContext, IWebHostEnvironment _host, IMemoryCache _memoryCache)
         {
 
-
+            httpContext.Features.Get<IServerVariablesFeature>();
+            httpContext.Features.Get<IHttpRequestFeature>();
             Cms oPcms = new Protean.Cms(httpContext,  _host, ref _memoryCache);
             oPcms.InitializeVariables();
             oPcms.GetPageHTML();
 
-            return _next(httpContext);
+           return _next(httpContext);
         }
     }
 

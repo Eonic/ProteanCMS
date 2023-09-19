@@ -122,7 +122,7 @@ Public Class Base
             goAppCache = MemCache
             moRequest = moCtx.Request
             moResponse = moCtx.Response
-            moSession = moCtx.Session
+            'moSession = moCtx.Session
             moHost = _host
             'goServer = moCtx.Server
             ' goCache = moCtx.Cache

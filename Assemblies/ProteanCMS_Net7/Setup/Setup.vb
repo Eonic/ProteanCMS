@@ -846,8 +846,6 @@ Recheck:
         Dim bRes As Boolean = True
         Try
             Dim cCurrentVersion As String = String.Empty
-            Dim Sub1 As XmlElement
-
             Dim oUpgrdXML As New XmlDocument
             Dim errormsg As String
             Dim mConfig As System.Collections.Specialized.NameValueCollection = Nothing
@@ -966,43 +964,37 @@ Recheck:
                                             oCurrentVersion(3) = 0
                                             oCurrentVersion(2) = oCurrentVersion(2) + 1
                                         End If
-                                        Next
-                                If CLng(Sub2.GetAttribute("Number")) = CLng(oCurrentVersion(2)) Then
-                                    oCurrentVersion(3) = 0
-                                    oCurrentVersion(2) = oCurrentVersion(2) + 1
-                                End If
-                                    Next
-                        If CLng(Sub1.GetAttribute("Number")) = CLng(oCurrentVersion(1)) Then
-                            oCurrentVersion(2) = 0
-                            oCurrentVersion(1) = oCurrentVersion(1) + 1
-                        End If
+                                    End If
+
                                 Next
-                If CLng(Sub1.GetAttribute("Number")) = CLng(oCurrentVersion(1)) Then
-                    oCurrentVersion(2) = 0
-                    oCurrentVersion(1) = oCurrentVersion(1) + 1
-                End If
+                                If CLng(Sub1.GetAttribute("Number")) = CLng(oCurrentVersion(1)) Then
+                                    oCurrentVersion(2) = 0
+                                    oCurrentVersion(1) = oCurrentVersion(1) + 1
+                                End If
+                            End If
+
+                        Next
+
+                        oCurrentVersion(3) = -1
+                        oCurrentVersion(2) = 0
+                        oCurrentVersion(1) = 0
+                    End If
                 Next
-                oCurrentVersion(3) = -1
-                oCurrentVersion(2) = 0
-                oCurrentVersion(1) = 0
-            End If
-            Next
-            If oUpgrdXML.DocumentElement.GetAttribute("update") <> "false" Then
-                saveVersionNumber(cLatestVersion)
-                mnCurrentVersion = cLatestVersion
-                cLatestVersion = cLatestVersion & " - Updated DB version"
+                If oUpgrdXML.DocumentElement.GetAttribute("update") <> "false" Then
+                    saveVersionNumber(cLatestVersion)
+                    mnCurrentVersion = cLatestVersion
+                    cLatestVersion = cLatestVersion & " - Updated DB version"
+                Else
+                    cLatestVersion = cLatestVersion & " - Not Updated DB version"
+                End If
+
+                AddResponse("Update Completed to Version " & cLatestVersion)
+
+                Return bRes
             Else
-                cLatestVersion = cLatestVersion & " - Not Updated DB version"
+                AddResponse("File Not Found: " & filePath)
+                Return False
             End If
-
-            AddResponse("Update Completed to Version " & cLatestVersion)
-
-            Return bRes
-            Else
-            AddResponse("File Not Found: " & filePath)
-            Return False
-            End If
-
         Catch ex As Exception
             AddResponseError(ex) 'returnException(myWeb.msException, mcModuleName, "updateDatabase", ex, "", cProcessInfo, gbDebug)
             AddResponse(ex.Message & " - " & ex.InnerException.ToString)
@@ -2361,7 +2353,6 @@ DoOptions:
                         oDB.BackupDatabase(DatabaseName, DatabaseFilepath)
 
                     End If
-                End If
                 End If
 
 
