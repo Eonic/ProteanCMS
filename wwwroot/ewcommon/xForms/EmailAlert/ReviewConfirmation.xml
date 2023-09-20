@@ -101,6 +101,7 @@
 				</input>
 				<input bind="Email" class="required">
 					<label>Email</label>
+					<label id="lblerrormessage" class="hidden">Please Enter Email First</label>
 				</input>
 				<input bind="Subject" class="required">
 					<label>Subject</label>
