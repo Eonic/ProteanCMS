@@ -47,6 +47,13 @@ h1, h2, h3 {
         color: $visited;
     }
 }
+#mainLayout {
+    p, ul, ol {
+        a {
+            word-wrap: break-word;
+        }
+    }
+}
 //images
 img {
     max-width: 100%;
