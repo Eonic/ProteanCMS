@@ -1368,12 +1368,14 @@ ProcessFlow:
 
                     Case "AlertEmail"
                         sAdminLayout = "AdminXForm"
-                        Dim RecordType As String = myWeb.moRequest("recordType") 'Content
+                        Dim RecordType As String = myWeb.moRequest("RecordType") 'Content
                         Dim ObjectId As Long = myWeb.moRequest("id") 'ContentId
                         Dim AlertEmailXform As String = myWeb.moRequest("xFormName")
-                        'AlertEmailXform = myWeb.moServer.mapPath("/xforms/alertEmail/" & AlertEmailXform & ".xml")
+                        AlertEmailXform = "/xforms/EmailAlert/" & AlertEmailXform & ".xml"
 
                         'oPageDetail.AppendChild(moAdXfm.xFrmAlertEmail(RecordType, ObjectId, AlertEmailXform))
+                        oPageDetail.AppendChild(moAdXfm.xFrmAlertEmail(RecordType, ObjectId, AlertEmailXform, myWeb.moRequest("existingGroupId")))
+
 
                         'xFrmAlertEmail we have an xform file where the contentXml becomes the instance
                         'xform specifies the xslt for the email template
@@ -3487,6 +3489,15 @@ AfterProcessFlow:
 
                     Case "FileUpload"
                         Dim oFS As New fsHelper(myWeb.moCtx)
+                        For i As Integer = 0 To myWeb.moCtx.Request.Files.Count - 1
+                            Dim file As Object = myWeb.moCtx.Request.Files(i)
+                            Dim FileContainsnonAlphaChar As Boolean = oFS.ContainsSpecialChars(file.FileName)
+                            If FileContainsnonAlphaChar Then
+                                'return error message
+                            Else
+                                'Goto uploadrequest method
+                            End If
+                        Next
                         oFS.UploadRequest(myWeb.moCtx)
                         oFS = Nothing
                         'we want to not render anything else
