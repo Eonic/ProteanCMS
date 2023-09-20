@@ -472,6 +472,9 @@ namespace Protean.Tools
                             string _fName = "";
                             _fName = fields[ii];
                             _fName = _fName.Replace("\"", "");
+                            _fName = _fName.Replace("/", "");
+                            _fName = _fName.Replace(" ", "_");
+                            _fName = _fName.Replace("&", "_");
                             _fName = _fName.Replace("?", "");
                             _fName = string.Concat(_fName.Where(c => !char.IsWhiteSpace(c)));
                             rowTemplate.AppendChild(ResponseXml.CreateElement(_fName));
