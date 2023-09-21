@@ -837,7 +837,9 @@ ProcessFlow:
                                         myWeb.GetContentXMLByTypeAndOffset(moPageXML.DocumentElement, ContentType & cSort, nStart, nRows, FilterSQL, "", oPageDetail)
 
                                         ' myWeb.GetContentXMLByTypeAndOffset(moPageXML.DocumentElement, ContentType & cSort, FilterSQL, "", oPageDetail)
-                                        Dim contentsNode = moPageXML.SelectSingleNode("/Page/Contents")
+                                        Dim contentsNode As XmlElement = moPageXML.SelectSingleNode("/Page/Contents")
+                                        Dim itemCount As Integer = contentsNode.SelectNodes("Content").Count
+                                        contentsNode.SetAttribute("count", itemCount)
                                         If Not IsNothing(contentsNode) Then
                                             myWeb.moDbHelper.addBulkRelatedContent(contentsNode)
                                         End If
