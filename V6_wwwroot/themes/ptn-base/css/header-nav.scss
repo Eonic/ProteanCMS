@@ -66,7 +66,17 @@ header {
         margin: -0.1rem -0.2rem;
     }
 }
-
+.nav-close-btn {
+    background: none;
+    border: 0;
+    box-shadow: none;
+    float: right;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 10px 15px;
+    color: $navbar-light-color;
+}
 //Navigation
 .main-nav {
     padding: 0;
