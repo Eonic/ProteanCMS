@@ -27,6 +27,7 @@ Imports System
 Imports System.Threading
 Imports WebGrease.Css.Ast.Selectors
 Imports System.Net
+Imports Microsoft.Extensions.Caching.Memory
 
 Partial Public Class Cms
 
@@ -57,7 +58,7 @@ Partial Public Class Cms
         Public goServer As System.Web.HttpServerUtility
         Public moPageXml As XmlDocument
 
-        Public goConfig As System.Collections.Specialized.NameValueCollection = ConfigurationManager.GetSection("protean/web")
+        Public goConfig As System.Collections.Specialized.NameValueCollection
 
         Public mnUserId As Long
 
@@ -91,6 +92,7 @@ Partial Public Class Cms
                 goSession = moCtx.Session
                 goServer = moCtx.Server
                 'End If
+                goConfig = myWeb.GetConfigSection("web")
 
                 ResetConnection("Data Source=" & goConfig("DatabaseServer") & "; " &
                     "Initial Catalog=" & goConfig("DatabaseName") & "; " &
@@ -6086,7 +6088,7 @@ restart:
                     sSql = "DELETE FROM dbo.tblXmlCache "
                     'clear from app level too
                     If Not myWeb Is Nothing Then
-                        myWeb.moCtx.Application("AdminStructureCache") = Nothing
+                        myWeb.goAppCache.Set(Of String)("AdminStructureCache", Nothing)
                     End If
                     MyBase.ExeProcessSql(sSql)
                 End If
@@ -11084,7 +11086,7 @@ ReturnMe:
 
                     Dim reportsFolder As String = "/xforms/Reports"
                     If bs5 Then reportsFolder = "/admin/xforms/reports"
-                    dir = New DirectoryInfo(myWeb.moCtx.Server.MapPath(folder) & reportsFolder)
+                    dir = New DirectoryInfo(myWeb.MapPath(folder) & reportsFolder)
                     If dir.Exists Then
                         files = dir.GetFiles("*.xml")
 
@@ -11276,8 +11278,8 @@ ReturnMe:
                         'case is web is not instatiated and we have not context, such as when running from a webservice.
                         columnExists = MyBase.checkTableColumnExists(tableName, columnName)
                     Else
-                        Dim oApp As System.Web.HttpApplicationState = myWeb.moCtx.Application
-                        colState = oApp(tableName & "-" & columnName)
+                        Dim oApp As IMemoryCache = myWeb.goAppCache
+                        colState = oApp.Get(Of String)(tableName & "-" & columnName)
                         Select Case colState
                             Case "0"
                                 columnExists = False
@@ -11285,10 +11287,10 @@ ReturnMe:
                                 columnExists = True
                             Case ""
                                 If MyBase.checkTableColumnExists(tableName, columnName) Then
-                                    oApp(tableName & "-" & columnName) = 1
+                                    oApp.Set(Of Boolean)(tableName & "-" & columnName, "1")
                                     columnExists = True
                                 Else
-                                    oApp(tableName & "-" & columnName) = 0
+                                    oApp.Set(Of Boolean)(tableName & "-" & columnName, "0")
                                     columnExists = False
                                 End If
                         End Select
@@ -11315,7 +11317,7 @@ ReturnMe:
                 If tableName = "tblContent" Then
                     sSQL = "Select count(nContentKey) from tblContent where cContentSchemaName='" & SqlFmt(schemaName) & "' "
 
-                    Dim columnFilter As String = ""
+                                    Dim columnFilter As String = ""
                     Select Case columnName
                         Case "cContentName"
                             'cContentName is compared for uniqueness by trimming/removing all spaces (including internal). 

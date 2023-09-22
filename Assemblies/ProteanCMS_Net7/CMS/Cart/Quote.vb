@@ -9,6 +9,7 @@ Imports System.Web.HttpUtility
 Imports VB = Microsoft.VisualBasic
 Imports System
 Imports Protean.Providers.Membership.EonicProvider
+Imports Microsoft.Extensions.Caching.Memory
 
 Partial Public Class Cms
 
@@ -104,7 +105,7 @@ Partial Public Class Cms
                 End If
                 If myWeb.mnUserId > 0 And mnEwUserId = 0 Then mnEwUserId = myWeb.mnUserId
                 'MEMB - eEDIT
-                If myWeb.moCtx.Application("bFullCartOption") = True Then
+                If myWeb.goAppCache.Get(Of Boolean)("bFullCartOption") = True Then
                     bFullCartOption = True
                 Else
                     bFullCartOption = False

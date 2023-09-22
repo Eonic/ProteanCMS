@@ -512,6 +512,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Protean.Tools_Net7\Protean.Tools_Net7.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Import Include="Protean" />
+  </ItemGroup>
   <PropertyGroup>
     <AssemblyTitle>ProteanCMS</AssemblyTitle>
     <Description>ProteanCMS</Description>
@@ -521,6 +524,7 @@
     <FileVersion>7.0.0.0</FileVersion>
     <NeutralLanguage>en</NeutralLanguage>
     <InformationalVersion>0.0.0.708</InformationalVersion>
+    <ImportedNamespaces>Protean=False,Microsoft.VisualBasic=True,System=True,System.Collections=True,System.Collections.Generic=True,System.Diagnostics=True,System.Linq=True,System.Xml.Linq=True,System.Threading.Tasks=True,ProteanCMS_Net7=True</ImportedNamespaces>
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>

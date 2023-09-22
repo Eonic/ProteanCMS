@@ -1,7 +1,7 @@
 ﻿Option Strict Off
 Option Explicit On
 
-
+Imports Protean
 Imports System.Configuration
 Imports System.IO
 Imports System.Reflection
@@ -177,7 +177,7 @@ Public Class API
                 Else
                     'HttpContext httpContext = HttpContext.Current;
                     If myWeb.moCtx.Request.Headers IsNot Nothing Then
-                        If myWeb.moCtx.Request.Headers("Authorization") IsNot Nothing Then
+                        If myWeb.moCtx.Request.Headers("Authorization") <> "" Then
                             authHeader = myWeb.moCtx.Request.Headers("Authorization")
                             If authHeader.Substring("Basic ".Length).Trim().Length <> 0 Then
                                 encodedUsernamePassword = authHeader.Substring("Basic ".Length).Trim()

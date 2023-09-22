@@ -38,7 +38,7 @@ Partial Public Class fsHelper
     ' as some calling methods may not be able to provide the System.Web.HttpContext.Current object for goServer
 
     Shared mcModuleName As String = "Protean.fsHelper"
-    Private goConfig As System.Collections.Specialized.NameValueCollection = ConfigurationManager.GetSection("protean/web")
+    Private goConfig As System.Collections.Specialized.NameValueCollection = GetConfigSection("web")
     Private goServer As System.Web.HttpServerUtility
 
     Public moPageXML As XmlDocument

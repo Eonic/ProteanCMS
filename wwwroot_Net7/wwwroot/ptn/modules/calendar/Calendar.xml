@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+	<model>
+		<instance>
+			<tblContent>
+				<nContentKey/>
+				<nContentPrimaryId/>
+				<nVersion/>
+				<cContentForiegnRef/>
+				<cContentName/>
+				<cContentSchemaName>Calendar</cContentSchemaName>
+				<cContentXmlBrief>
+					<Content>
+						<ContentTypes/>
+						<ExternalContentQuery/>
+						<DisplaySettings>
+							<Months>1</Months>
+							<StartDateAsToday>true</StartDateAsToday>
+							<StartDateInMonths/>
+						</DisplaySettings>
+					</Content>
+				</cContentXmlBrief>
+				<cContentXmlDetail>
+					<Content>
+						<ContentTypes/>
+						<ExternalContentQuery/>
+						<DisplaySettings>
+							<Months>1</Months>
+							<StartDateAsToday>true</StartDateAsToday>
+							<StartDateInMonths/>
+						</DisplaySettings>
+					</Content>
+				</cContentXmlDetail>
+				<nAuditId/>
+				<nAuditKey/>
+				<dPublishDate/>
+				<dExpireDate/>
+				<dInsertDate/>
+				<nInsertDirId/>
+				<dUpdateDate/>
+				<nUpdateDirId/>
+				<nStatus>1</nStatus>
+				<cDescription/>
+			</tblContent>
+		</instance>
+		
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+
+		<bind nodeset="tblContent">
+
+			<!-- Common settings of the Main page -->
+			<bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+			<bind id="dExpireDate" nodeset="dExpireDate" required="false()" type="string"/>
+			<bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
+			<bind id="cDescription" nodeset="cDescription" required="false()" type="string"/>
+			<bind id="bCascade" nodeset="bCascade" required="false()" type="string"/>
+
+			<!-- Calendar specific settings -->
+			
+			<bind id="cContentName" nodeset="cContentName" required="true()" type="string"/>
+
+			<bind nodeset="cContentXmlBrief/Content">
+				<bind id="cContentTypes" nodeset="ContentTypes" required="true()" type="string"/>
+				<bind id="cExternalContent" nodeset="ExternalContentQuery" required="false()" type="string"/>
+				<bind nodeset="DisplaySettings">
+					<bind id="nDisplayMonths" nodeset="Months" required="true()" type="number"/>
+					<bind id="bShowFromToday" nodeset="StartDateAsToday" required="false()" type="string"/>
+					<bind id="nShowInMonths" nodeset="StartDateInMonths" required="false()" type="number"/>
+				</bind>
+			</bind>
+
+			<bind nodeset="cContentXmlDetail/Content">
+				<bind id="cContentTypes" nodeset="ContentTypes" required="true()" type="string"/>
+				<bind id="cExternalContent" nodeset="ExternalContentQuery" required="false()" type="string"/>
+				<bind nodeset="DisplaySettings">
+					<bind id="nDisplayMonths" nodeset="Months" required="true()" type="number"/>
+					<bind id="bShowFromToday" nodeset="StartDateAsToday" required="false()" type="string"/>
+					<bind id="nShowInMonths" nodeset="StartDateInMonths" required="false()" type="number"/>
+				</bind>
+			</bind>
+		</bind>
+	</model>
+	
+	<group ref="EditContent" class="2col">
+		<label>Edit Calendar</label>
+		<group>
+			<group>
+				<input bind="nContentKey" class="hidden">
+					<label>ContentId</label>
+				</input>
+				<label>Settings</label>
+				<input bind="dPublishDate" class="calendar short">
+					<label>Publish Date</label>
+				</input>
+				<input bind="dExpireDate" class="calendar short">
+					<label>Expire Date</label>
+				</input>
+				<select1 bind="nStatus" appearance="full" class="required vshort">
+					<label>Status</label>
+					<item>
+						<label>Live</label>
+						<value>1</value>
+					</item>
+					<item>
+						<label>Hidden</label>
+						<value>0</value>
+					</item>
+				</select1>
+				<select bind="bCascade" appearance="full">
+					<label>Cascade to Child Pages</label>
+					<item>
+						<label></label>
+						<value>true</value>
+					</item>
+				</select>
+				<input bind="cDescription" class="short">
+					<label>Change Notes</label>
+				</input>
+			</group>
+		</group>
+		<group>
+			<group>
+				<label>Calendar Detail</label>
+
+				<input bind="cContentName" class="required short">
+					<label>Calendar title</label>
+				</input>
+
+				<input bind="nDisplayMonths" class="short">
+					<label>Number of months to display</label>
+				</input>
+
+				<select bind="cContentTypes" appearance="full">
+					<label>Show Content Type</label>
+					<item>
+						<label>Event</label>
+						<value>Event</value>
+					</item>
+				</select>
+
+				<input bind="cExternalContent" class="hidden">
+					<label>External Content Query</label>
+				</input>
+
+				<group>
+					<label>Display Calendar From...</label>
+					<hint>You can choose to display a calendar starting from the current month, or a future calendar by specifying the number of months in the future to start the calendar display.  (e.g. if you want to show Next Month by default, enter 1 in the Future Months box)</hint>
+					<select bind="bShowFromToday" appearance="full">
+						<label>Display Current Month</label>
+						<item>
+							<label></label>
+							<value>true</value>
+						</item>
+					</select>
+
+					<input bind="nShowInMonths" class="short">
+						<label>Or: Display Future Month (in months)</label>
+					</input>
+				</group>
+
+			</group>
+
+			<submit submission="" ref="ewSubmit" class="principle">
+				<label>Save Calendar</label>
+			</submit>
+		</group>
+
+	</group>
+</Content>

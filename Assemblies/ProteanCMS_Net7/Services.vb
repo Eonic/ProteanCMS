@@ -129,7 +129,7 @@ Public Class Services
         Dim cProcessInfo As String = "emailer"
         Try
             If CheckUserIP() Then
-                Dim myWeb As New Protean.Cms(moCtx)
+                Dim myWeb As New Protean.Cms()
                 Dim oMsg As Protean.Messaging = New Protean.Messaging(myWeb.msException)
                 sMessage = oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, , , , ccRecipient, bccRecipient, cSeperator)
             Else
@@ -152,7 +152,7 @@ Public Class Services
         Dim cProcessInfo As String = "emailerXMLAttach"
         Try
 
-            Dim myWeb As New Protean.Cms(moCtx)
+            Dim myWeb As New Protean.Cms()
             Dim oMsg As Protean.Messaging = New Protean.Messaging(myWeb.msException)
 
             sMessage = oMsg.emailerWithXmlAttachment(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, attachmentFromXSLPath, attachmentFromXSLType, attachmentName, , , , ccRecipient, bccRecipient, cSeperator)
@@ -174,7 +174,7 @@ Public Class Services
         Dim cProcessInfo As String = "multiEmailer"
         Try
 
-            Dim myWeb As New Protean.Cms(moCtx)
+            Dim myWeb As New Protean.Cms()
             Dim oMsg As Protean.Messaging = New Protean.Messaging(myWeb.msException)
 
             sMessage = oMsg.emailerMultiUsers(oBodyXML, xsltPath, fromName, fromEmail, recipientIds, SubjectLine)
@@ -193,7 +193,7 @@ Public Class Services
 
         Dim cProcessInfo As String = "emailerWithAttachmentStreams"
         Try
-            Dim myWeb As New Protean.Cms(moCtx)
+            Dim myWeb As New Protean.Cms()
             Dim oMsg As Protean.Messaging = New Protean.Messaging(myWeb.msException)
 
             If Not IsNothing(attachmentsBase64List) Then
@@ -224,7 +224,7 @@ Public Class Services
 
         Dim cProcessInfo As String = "emailerWithAttachment"
         Try
-            Dim myWeb As New Protean.Cms(moCtx)
+            Dim myWeb As New Protean.Cms()
             Dim oMsg As Protean.Messaging = New Protean.Messaging(myWeb.msException)
 
             oMsg.addAttachment(cAttachmentFilePath, bDeleteAfterSend)
@@ -245,7 +245,7 @@ Public Class Services
 
         Dim cProcessInfo As String = "emailerWithAttachment"
         Try
-            Dim myWeb As New Protean.Cms(moCtx)
+            Dim myWeb As New Protean.Cms()
             Dim oMsg As Protean.Messaging = New Protean.Messaging(myWeb.msException)
             Dim arrayItem As String
             Dim strFilePath As String() = cAttachmentFilePath.Split(",")
@@ -364,7 +364,7 @@ Public Class Services
     Public Shared Function LuceneIndexAsync(ByVal oCtx As HttpContext) As String
         Dim bResult As Boolean
         Dim sResult As String = ""
-        Dim myWeb As New Protean.Cms(oCtx)
+        Dim myWeb As New Protean.Cms()
         myWeb.Open()
         Try
 
@@ -446,7 +446,7 @@ Public Class Services
 
 
     Public Function SubscriptionProcess() As XmlDocument
-        Dim myWeb As New Protean.Cms(HttpContext.Current)
+        Dim myWeb As New Protean.Cms()
         myWeb.gbCart = False
         myWeb.Open()
         Try

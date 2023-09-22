@@ -310,7 +310,7 @@ logicstart:
                                     EmailContent.AppendChild(contentNode.CloneNode(True))
                                     EmailContent.AppendChild(oUserElmt)
 
-                                    If IO.File.Exists(myWeb.goServer.MapPath(xsltPath)) Then
+                                    If IO.File.Exists(myWeb.MapPath(xsltPath)) Then
 
 
                                         Dim SubjectLine As String = "Your Trial Subscription"
@@ -325,7 +325,7 @@ logicstart:
                                     recipientEmail = myWeb.moConfig("SiteAdminEmail")
                                     Dim xsltPath2 As String = ofs.checkCommonFilePath(myWeb.moConfig("ProjectPath") & "/xsl/email/subscribeTrialAlert.xsl")
 
-                                    If IO.File.Exists(myWeb.goServer.MapPath(xsltPath2)) Then
+                                    If IO.File.Exists(myWeb.MapPath(xsltPath2)) Then
                                         Dim SubjectLine As String = "New Trial Subscription"
                                         sProcessInfo = oMsg.emailer(EmailContent, xsltPath2, "New User", recipientEmail, fromEmail, SubjectLine, "Message Sent", "Message Failed")
                                     End If

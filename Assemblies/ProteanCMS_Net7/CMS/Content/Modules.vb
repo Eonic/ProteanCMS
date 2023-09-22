@@ -398,7 +398,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                                 Dim assemblyInstance As [Assembly]
 
                                 If ourProvider.parameters("path") <> "" Then
-                                    assemblyInstance = [Assembly].LoadFrom(myWeb.goServer.MapPath(ourProvider.parameters("path")))
+                                    assemblyInstance = [Assembly].LoadFrom(myWeb.MapPath(ourProvider.parameters("path")))
                                 Else
                                     assemblyInstance = [Assembly].Load(ourProvider.Type)
                                 End If
@@ -461,7 +461,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                                         Dim assemblyInstance As [Assembly]
 
                                         If ourProvider.parameters("path") <> "" Then
-                                            assemblyInstance = [Assembly].LoadFrom(myWeb.goServer.MapPath(ourProvider.parameters("path")))
+                                            assemblyInstance = [Assembly].LoadFrom(myWeb.MapPath(ourProvider.parameters("path")))
                                         Else
                                             assemblyInstance = [Assembly].Load(ourProvider.Type)
                                         End If
@@ -548,7 +548,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                                     Dim assemblyInstance As [Assembly]
 
                                     If ourProvider.parameters("path") <> "" Then
-                                        assemblyInstance = [Assembly].LoadFrom(myWeb.goServer.MapPath(ourProvider.parameters("path")))
+                                        assemblyInstance = [Assembly].LoadFrom(myWeb.MapPath(ourProvider.parameters("path")))
                                     Else
                                         assemblyInstance = [Assembly].Load(ourProvider.Type)
                                     End If

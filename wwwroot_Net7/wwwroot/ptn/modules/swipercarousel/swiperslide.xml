@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+	<model>
+		<instance>
+			<tblContent>
+				<nContentKey/>
+				<nContentPrimaryId/>
+				<nVersion/>
+				<cContentForiegnRef/>
+				<cContentName/>
+				<cContentSchemaName>SwiperSlide</cContentSchemaName>
+				<cContentXmlBrief>
+					<Content internalLink="" externalLink="" linkType="internal">
+						<Title/>
+						<Author/>
+						<Copyright/>
+						<Url type="external"/>
+						<Images>
+							<img class="thumbnail"/>
+							<img class="display"/>
+							<img class="detail"/>
+						</Images>
+						<FileSize/>
+						<Body/>
+					</Content>
+				</cContentXmlBrief>
+				<cContentXmlDetail>
+					<Content internalLink="" externalLink="" linkType="internal">
+						<Title/>
+						<Author/>
+						<Copyright/>
+						<Url type="external"/>
+						<Images>
+							<img class="thumbnail"/>
+							<img class="display"/>
+							<img class="detail"/>
+						</Images>
+						<FileSize/>
+						<Body/>
+					</Content>
+				</cContentXmlDetail>
+				<nAuditId/>
+				<nAuditKey/>
+				<dPublishDate/>
+				<dExpireDate/>
+				<dInsertDate/>
+				<nInsertDirId/>
+				<dUpdateDate/>
+				<nUpdateDirId/>
+				<nStatus>1</nStatus>
+				<cDescription/>
+			</tblContent>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+		<bind nodeset="tblContent">
+			<bind id="cContentImageTitle" nodeset="cContentName" required="false()" type="string"/>
+			<bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+			<bind id="dExpireDate" nodeset="dExpireDate" required="false()" type="string"/>
+			<bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
+			<bind id="cDescription" nodeset="cDescription" required="false()" type="string"/>
+			<bind nodeset="cContentXmlBrief/Content">
+				<bind id="cContentImageTitle" nodeset="Title" required="false()" type="string"/>
+				<bind id="cContentImageAuthor" nodeset="Author" required="false()" type="string"/>
+				<bind id="cContentImageCopyright" nodeset="Copyright" required="false()" type="string"/>
+				<bind id="cContentThumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
+				<bind id="cContentPicture" nodeset="Images/img[@class='display']" required="false()" type="xml-replace"/>
+				<bind id="cContentDetail" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
+				<bind id="cContentBody" nodeset="Body" required="false()" type="string"/>
+				<bind id="showHeading" nodeset="@showHeading" required="false()" type="string"/>
+				<bind id="showButton" nodeset="@showButton" required="false()" type="string"/>
+				<bind id="linkSlide" nodeset="@linkSlide" required="false()" type="string"/>
+				<bind id="alignButton" nodeset="@alignButton" required="false()" type="string"/>
+				<bind id="buttonClass" nodeset="@buttonClass" required="false()" type="string"/>
+				<bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
+				<bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
+				<bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+				<bind id="position-vertical" nodeset="@position-vertical" required="false()" type="string"/>
+				<bind id="position-horizontal" nodeset="@position-horizontal" required="false()" type="string"/>
+				<bind id="title-horizontal" nodeset="@title-horizontal" required="false()" type="string"/>
+				<bind id="bg-color" nodeset="@bg-color" required="false()" type="string"/>
+				<bind id="bg-cover" nodeset="@bg-cover" required="false()" type="string"/>
+			</bind>
+			<bind nodeset="cContentXmlDetail/Content">
+				<bind id="cContentImageTitle" nodeset="Title" required="false()" type="string"/>
+				<bind id="cContentImageAuthor" nodeset="Author" required="false()" type="string"/>
+				<bind id="cContentImageCopyright" nodeset="Copyright" required="false()" type="string"/>
+				<bind id="cContentThumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
+				<bind id="cContentPicture" nodeset="Images/img[@class='display']" required="false()" type="xml-replace"/>
+				<bind id="cContentDetail" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
+				<bind id="cContentBody" nodeset="Body" required="false()" type="string"/>
+				<bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
+				<bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
+				<bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+			</bind>
+		</bind>
+	</model>
+	<group ref="EditContent">
+		<label>Carousel Slide</label>
+		<group class="tabs">
+			<group>
+				<label>
+					<i class="fas fa-pen"> </i>
+					<span class="space"> </span>
+					<span>Content</span>
+				</label>
+				<group>
+					<input bind="cContentImageTitle" class="long">
+						<label>Title</label>
+					</input>
+					<group class="row">
+						<group class="col-lg-6">
+							<select1 bind="showHeading" appearance="full" class="vshort inline-items">
+								<label>Show title on slide?</label>
+								<item>
+									<label>Yes</label>
+									<value>true</value>
+								</item>
+								<item>
+									<label>No</label>
+									<value>false</value>
+								</item>
+							</select1>
+						</group>
+						<group class="col-lg-6">
+							<select1 appearance="minimal" bind="title-horizontal">
+								<label>Align title</label>
+								<item>
+									<label>left</label>
+									<value>start</value>
+								</item>
+								<item>
+									<label>centre</label>
+									<value>center</value>
+								</item>
+								<item>
+									<label>right</label>
+									<value>end</value>
+								</item>
+							</select1>
+						</group>
+					</group>
+					<input bind="cContentDetail" class="short pickImage">
+						<label>Main image</label>
+					</input>
+					<group ref="mainContent" class="mainContent">
+						<label>Image Caption</label>
+						<textarea bind="cContentBody" class="TextArea xhtml" rows="20" cols="70"/>
+					</group>
+					<group class="row">
+						<group class="col-lg-6">
+							<select1 appearance="minimal" bind="position-vertical">
+								<label>Vertical Caption Position</label>
+								<item>
+									<label>top</label>
+									<value>start</value>
+								</item>
+								<item>
+									<label>centre</label>
+									<value>center</value>
+								</item>
+								<item>
+									<label>bottom</label>
+									<value>end</value>
+								</item>
+							</select1>
+						</group>
+						<group class="col-lg-6">
+							<select1 appearance="minimal" bind="position-horizontal">
+								<label>Horizontal Caption Position</label>
+								<item>
+									<label>left</label>
+									<value>start</value>
+								</item>
+								<item>
+									<label>centre</label>
+									<value>center</value>
+								</item>
+								<item>
+									<label>right</label>
+									<value>end</value>
+								</item>
+							</select1>
+						</group>
+
+					</group>
+					<group class="row">
+						<group class="col-lg-6">
+							<select1 appearance="minimal" bind="bg-color">
+								<label>Background Colour</label>
+								<item>
+									<label>Dark Background</label>
+									<value>dark</value>
+								</item>
+								<item>
+									<label>Light Background</label>
+									<value>light</value>
+								</item>
+								<item>
+									<label>Primary Background</label>
+									<value>primary</value>
+								</item>
+								<item>
+									<label>Secondary Background</label>
+									<value>secondary</value>
+								</item>
+								<item>
+									<label>Info Background</label>
+									<value>info</value>
+								</item>
+							</select1>
+						</group>
+						<!--<group class="col-lg-6">
+							<select1 appearance="minimal" bind="bg-cover">
+								<label>Background Cover</label>
+								<item>
+									<label>Contained</label>
+									<value></value>
+								</item>
+								<item>
+									<label>Cover Full Slide</label>
+									<value>full-slide</value>
+								</item>
+							</select1>
+						</group>-->
+
+					</group>
+					<!--<input bind="cContentImageAuthor" class="short">
+					<label>Image Author</label>
+				</input>
+				<input bind="cContentImageCopyright" class="short">
+					<label>Image Copyright</label>
+				</input>-->
+				</group>
+			</group>
+
+			<group class="Content">
+				<label>
+					<i class="fas fa-link"> </i>
+					<span class="space"> </span>
+					<span>Link</span>
+				</label>
+				<group>
+					<group class="form-section-wrapper">
+						<select1 bind="cLinkType" appearance="full">
+							<label>Type of link</label>
+							<item>
+								<label>Internal (Going to a page on this site)</label>
+								<value>internal</value>
+								<toggle case="cLinkType_1" event="DOMActivate"/>
+							</item>
+							<item>
+								<label>External (Going to another site)</label>
+								<value>external</value>
+								<toggle case="cLinkType_2" event="DOMActivate"/>
+							</item>
+						</select1>
+						<switch class="disable">
+							<case id="cLinkType_1">
+								<select1 bind="cModuleLink" class="siteTree">
+									<label>Link to page</label>
+								</select1>
+							</case>
+							<case id="cLinkType_2">
+								<input bind="cModuleLink" class="short">
+									<label>Link to URL</label>
+								</input>
+							</case>
+						</switch>
+					</group>
+					<group class="row">
+						<group class="col-lg-6">
+							<input bind="cModuleLinkText" class="long">
+								<label>Module footer link text</label>
+							</input>
+						</group>
+						<group class="col-lg-6">
+							<select1 bind="buttonClass" appearance="minimal" class="vshort inline-items">
+								<label>Button colour</label>
+								<item>
+									<label>Primary</label>
+									<value>btn-primary</value>
+								</item>
+								<item>
+									<label>Secondary</label>
+									<value>btn-secondary</value>
+								</item>
+								<item>
+									<label>Info</label>
+									<value>btn-info</value>
+								</item>
+								<item>
+									<label>Light</label>
+									<value>btn-light</value>
+								</item>
+								<item>
+									<label>Dark</label>
+									<value>btn-dark</value>
+								</item>
+							</select1>
+						</group>
+					</group>
+					<group class="row">
+						<group class="col-lg-4">
+							<select1 bind="linkSlide" appearance="full" class="vshort inline-items">
+								<label>Link whole slide?</label>
+								<item>
+									<label>Yes</label>
+									<value>true</value>
+								</item>
+								<item>
+									<label>No</label>
+									<value>false</value>
+								</item>
+							</select1>
+						</group>
+						<group class="col-lg-4">
+							<select1 bind="showButton" appearance="full" class="vshort inline-items">
+								<label>Show button on slide?</label>
+								<item>
+									<label>Yes</label>
+									<value>true</value>
+								</item>
+								<item>
+									<label>No</label>
+									<value>false</value>
+								</item>
+							</select1>
+						</group>
+						<group class="col-lg-4">
+							<select1 bind="alignButton" appearance="full" class="vshort inline-items">
+								<label>Align button</label>
+								<item>
+									<label>Left</label>
+									<value>swiper-btn-left</value>
+								</item>
+								<item>
+									<label>Centre</label>
+									<value>swiper-btn-centre</value>
+								</item>
+								<item>
+									<label>Right</label>
+									<value>swiper-btn-right</value>
+								</item>
+							</select1>
+						</group>
+					</group>
+				</group>
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-cog"> </i>
+					<span class="space"> </span>
+					<span>Advanced Settings</span>
+				</label>
+				<group class="form-2-col">
+					<input bind="nContentKey" class="hidden">
+						<label>ContentId</label>
+					</input>
+					<label>Settings</label>
+					<input bind="dPublishDate" class="calendar short">
+						<label>Publish Date</label>
+					</input>
+					<input bind="dExpireDate" class="calendar short">
+						<label>Expire Date</label>
+					</input>
+					<select1 bind="nStatus" appearance="full" class="required vshort inline-items">
+						<label>Status</label>
+						<item>
+							<label>Live</label>
+							<value>1</value>
+						</item>
+						<item>
+							<label>Hidden</label>
+							<value>0</value>
+						</item>
+					</select1>
+					<input bind="cDescription" class="short">
+						<label>Change Notes</label>
+					</input>
+				</group>
+			</group>
+		</group>
+	</group>
+	<group ref="submit" class="contentSubmit">
+		<submit submission="" ref="ewSubmit" class="principle">
+			<label>Save Carousel Slide</label>
+		</submit>
+	</group>
+</Content>

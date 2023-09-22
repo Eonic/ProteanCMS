@@ -942,7 +942,7 @@ Partial Public Class Cms
                                 If ConfigType = "301Redirect" Then
                                     'step through and create rules to deal with paths
                                     Dim rulesXml As New XmlDocument
-                                    rulesXml.Load(myWeb.goServer.MapPath("/RewriteRules.config"))
+                                    rulesXml.Load(myWeb.MapPath("/RewriteRules.config"))
                                     Dim insertAfterElment As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='EW: 301 Redirects']")
                                     Dim oRule As XmlElement
                                     For Each oRule In replacerNode.SelectNodes("add")
@@ -994,7 +994,7 @@ Partial Public Class Cms
                                         For Each existingNode As XmlNode In existingRedirects
                                             existingNode.ParentNode.RemoveChild(existingNode)
                                             'existingNode.RemoveAll()
-                                            rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
+                                            rewriteXml.Save(myWeb.MapPath("/rewriteMaps.config"))
                                         Next
                                     End If
                                 Next
@@ -1010,7 +1010,7 @@ Partial Public Class Cms
                                         ' rewriteXml.SelectSingleNode(oCgfSectPath).FirstChild.AppendChild(replacingElement.FirstChild)
                                         rewriteXml.SelectSingleNode(oCgfSectPathobj).AppendChild(replacingElement.FirstChild)
 
-                                        rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
+                                        rewriteXml.Save(myWeb.MapPath("/rewriteMaps.config"))
                                     Next
                                 End If
 
@@ -2394,7 +2394,7 @@ Partial Public Class Cms
                             Dim PathPrefix = "ptn\"
 
                             EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "core\modules", "manifest.xml")
-                            Dim rootFolder As New DirectoryInfo(myWeb.goServer.MapPath("/" & gcProjectPath & PathPrefix & "modules"))
+                            Dim rootFolder As New DirectoryInfo(myWeb.MapPath("/" & gcProjectPath & PathPrefix & "modules"))
                             Dim fld As DirectoryInfo
                             For Each fld In rootFolder.GetDirectories
                                 EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "modules\" & fld.Name, "manifest.xml")
@@ -2405,7 +2405,7 @@ Partial Public Class Cms
                             End If
 
                             'new local modules
-                            rootFolder = New DirectoryInfo(myWeb.goServer.MapPath("/" & gcProjectPath & "/modules"))
+                            rootFolder = New DirectoryInfo(myWeb.MapPath("/" & gcProjectPath & "/modules"))
                             If rootFolder.Exists Then
                                 For Each fld In rootFolder.GetDirectories
                                     EnumberateManifest(ManifestDoc, "/" & gcProjectPath & "\modules\" & fld.Name, "manifest.xml")
@@ -2471,12 +2471,12 @@ Partial Public Class Cms
                     filepath = filepath.Replace("\", "/")
 
 
-                    If IO.File.Exists(myWeb.goServer.MapPath(filepath) & "/" & manifestFilename) Then
+                    If IO.File.Exists(myWeb.MapPath(filepath) & "/" & manifestFilename) Then
                         'if this file exists then add the bespoke templates
 
                         If ManifestDoc Is Nothing Then
                             ManifestDoc = New XmlDocument
-                            ManifestDoc.Load(myWeb.goServer.MapPath(filepath) & "/" & manifestFilename)
+                            ManifestDoc.Load(myWeb.MapPath(filepath) & "/" & manifestFilename)
                             For Each oContentType In ManifestDoc.SelectNodes("/PageLayouts/ContentTypes/ContentTypeGroup/ContentType")
                                 Dim formPath = oContentType.GetAttribute("formPath")
                                 ' If formPath.contains("/") Then
@@ -2494,7 +2494,7 @@ Partial Public Class Cms
 
                         Else
                             Dim ManifestTemp As New XmlDocument
-                            ManifestTemp.Load(myWeb.goServer.MapPath(filepath) & "/" & manifestFilename)
+                            ManifestTemp.Load(myWeb.MapPath(filepath) & "/" & manifestFilename)
 
                             'step through contentTypes to add to ManifestDoc
 

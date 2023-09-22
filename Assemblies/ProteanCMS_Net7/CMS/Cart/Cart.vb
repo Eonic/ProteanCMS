@@ -17,7 +17,7 @@ Imports System.Collections.Generic
 Imports System.Windows
 Imports Microsoft.Ajax.Utilities
 Imports Protean.Cms
-
+Imports Microsoft.Extensions.Caching.Memory
 
 Partial Public Class Cms
 
@@ -453,7 +453,7 @@ Partial Public Class Cms
                 moPageXml = myWeb.moPageXml
                 moDBHelper = myWeb.moDbHelper
                 InitializeVariables()
-                moServer = aWeb.moCtx.Server
+                'moServer = aWeb.moCtx.Server
 
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "Close", ex, "", cProcessInfo, gbDebug)
@@ -594,7 +594,7 @@ Partial Public Class Cms
 
                     If myWeb.mnUserId > 0 And mnEwUserId = 0 Then mnEwUserId = myWeb.mnUserId
                     'MEMB - eEDIT
-                    If myWeb.moCtx.Application("bFullCartOption") = True Then
+                    If myWeb.goAppCache.Get(Of Boolean)("bFullCartOption") = True Then
                         bFullCartOption = True
                     Else
                         bFullCartOption = False
@@ -1641,7 +1641,7 @@ processFlow:
                     Case "BackToSite"
                         bRedirect = True
                         myWeb.moResponse.Redirect(mcSiteURL & mcReturnPage, False)
-                        myWeb.moCtx.ApplicationInstance.CompleteRequest()
+                       ' myWeb.moCtx.ApplicationInstance.CompleteRequest()
 
                     Case "List"
                         Dim nI As Integer = 0
@@ -1673,7 +1673,7 @@ processFlow:
                             cPage = "?pgid=" & cPage
                         End If
                         myWeb.moResponse.Redirect(mcSiteURL & cPage, False)
-                        myWeb.moCtx.ApplicationInstance.CompleteRequest()
+                        'myWeb.moCtx.ApplicationInstance.CompleteRequest()
 
                     Case "NoteToAddress"
                         'do nothing this is a placeholder for openquote
@@ -4302,7 +4302,7 @@ processFlow:
                 End Select
 
                 ' Test that a bespoke form exists and is a valid filename
-                bIsBespokeXform = System.IO.File.Exists(myWeb.goServer.MapPath(cXformLocation)) And LCase(Right(cXformLocation, 4)) = ".xml"
+                bIsBespokeXform = System.IO.File.Exists(myWeb.MapPath(cXformLocation)) And LCase(Right(cXformLocation, 4)) = ".xml"
 
                 ' :::::::::::::::::::::::::::::::::::::::::::::::
                 ' :::: CONTACT XFORM :: GROUP and BIND BUILD ::::
@@ -8412,7 +8412,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 'now we need to redirect somewhere?
                 'bRedirect = True
                 myWeb.moResponse.Redirect("?cartCmd=Cart", False)
-                myWeb.moCtx.ApplicationInstance.CompleteRequest()
+                ' myWeb.moCtx.ApplicationInstance.CompleteRequest()
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "MakeCurrent", ex, "", "", gbDebug)
             End Try

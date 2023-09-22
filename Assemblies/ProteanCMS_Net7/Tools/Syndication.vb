@@ -897,9 +897,9 @@ Public Class Syndication
                     Dim xslPath As String = "/xsl/Syndication/" & Me.Name & ".xsl"
 
                     ' Does a local xsl exist?
-                    If Not (File.Exists(_myWeb.goServer.MapPath(xslPath))) Then
+                    If Not (File.Exists(_myWeb.MapPath(xslPath))) Then
                         xslPath = "/ewcommon" & xslPath
-                        If Not (File.Exists(_myWeb.goServer.MapPath(xslPath))) Then
+                        If Not (File.Exists(_myWeb.MapPath(xslPath))) Then
                             testTransformExists = False
                         End If
                     End If
@@ -912,7 +912,7 @@ Public Class Syndication
                         Dim xslTransform As New Protean.XmlHelper.Transform()
                         Dim output As IO.TextWriter = New IO.StringWriter
 
-                        xslTransform.XSLFile = _myWeb.goServer.MapPath(xslPath)
+                        xslTransform.XSLFile = _myWeb.MapPath(xslPath)
                         xslTransform.Compiled = False
                         xslTransform.Process(ContentsNode.OwnerDocument, output)
                         If xslTransform.HasError Then Throw New Exception("There was an error transforming the distributor")
