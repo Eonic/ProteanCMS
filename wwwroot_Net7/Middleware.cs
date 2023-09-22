@@ -24,6 +24,7 @@ namespace Protean
             oPcms.GetPageHTML();
 
             return _next(httpContext);
+
         }
     }
 
