@@ -4298,14 +4298,16 @@
 					<xsl:if test="$stretchLink='true'">
 						<xsl:attribute name="class">btn btn-custom stretched-link</xsl:attribute>
 					</xsl:if>
-					<xsl:choose>
-						<xsl:when test="$linkText!=''">
-							<xsl:value-of select="$linkText"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:call-template name="term2042" />
-						</xsl:otherwise>
-					</xsl:choose>
+					<span>
+						<xsl:choose>
+							<xsl:when test="$linkText!=''">
+								<xsl:value-of select="$linkText"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:call-template name="term2042" />
+							</xsl:otherwise>
+						</xsl:choose>
+					</span>
 					<span class="visually-hidden">
 						<xsl:text>about </xsl:text>
 						<xsl:value-of select="$altText"/>
