@@ -2638,30 +2638,45 @@ function ValidateAndOpenReviewEmail(event) {
     }
 }
 
-
+function IsEmail(email) {
+    var regex =
+        /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    if (!regex.test(email)) {
+        return false;
+    }
+    else {
+        return true;
+    }
+}
 function SendEmail(event) {
-   
+    debugger;
     if ($("#Email").val() != "")
     {
-        var formData = new FormData($("#AlertEmail")[0]);
-        var ajaxurl = '?ewCmd=AlertEmail';
-        $("#nEmailSent_True").prop("checked", "checked");
-        //var loadingAlert = '<div><h3 class="modal-title"><i class="fa fa-spinner fa-spin">&#160;</i>&#160;&#160;Saving..</h3></div>';
+        if (IsEmail($("#Email").val()) == false) {
+            $("#lblinvalidemail").removeClass("hidden");
+            $("#lblinvalidemail").css("color", "red");
+            return false;
+        } else {
+            var formData = new FormData($("#AlertEmail")[0]);
+            var ajaxurl = '?ewCmd=AlertEmail';
+            $("#nEmailSent_True").prop("checked", "checked");
+            //var loadingAlert = '<div><h3 class="modal-title"><i class="fa fa-spinner fa-spin">&#160;</i>&#160;&#160;Saving..</h3></div>';
 
-        $.ajax({
-            url: ajaxurl,
-            data: formData,
-            processData: false,
-            contentType: false,
-            type: 'POST',
-            success: function (result) {
+            $.ajax({
+                url: ajaxurl,
+                data: formData,
+                processData: false,
+                contentType: false,
+                type: 'POST',
+                success: function (result) {
 
-                $("#SendAlertEmailModal").modal('hide');
-                // $('#SendAlertEmailModal .modal-body').append(loadingAlert);
-                $("#EditContent").removeAttr("onSubmit");
-                $("#EditContent").submit();
-            }
-        });
+                    $("#SendAlertEmailModal").modal('hide');
+                    // $('#SendAlertEmailModal .modal-body').append(loadingAlert);
+                    $("#EditContent").removeAttr("onSubmit");
+                    $("#EditContent").submit();
+                }
+            });
+        }
     } else
     {       
         $("#SendAlertEmailModal").modal('show');
