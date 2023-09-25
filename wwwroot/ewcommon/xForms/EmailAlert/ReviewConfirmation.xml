@@ -102,6 +102,7 @@
 				<input bind="Email" class="required">
 					<label>Email</label>
 					<label id="lblerrormessage" class="hidden">Please Enter Email First</label>
+					<label id="lblinvalidemail" class="hidden">Email-id is invalid</label>
 				</input>
 				<input bind="Subject" class="required">
 					<label>Subject</label>
