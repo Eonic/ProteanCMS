@@ -1152,7 +1152,13 @@ Public Class Cms
 
 
     Public Sub CheckPagePath()
-        Dim pageUrl As String = moRequest.RawUrl
+        Dim pageUrl As String
+        Try
+            pageUrl = moRequest.Path
+        Catch ex As Exception
+            'do nothing
+        End Try
+
         Dim bLowerCaseUrl As Boolean = False
         Dim bTrailingSlash As Boolean = False
         If Not moSession Is Nothing Then

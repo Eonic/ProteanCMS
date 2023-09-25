@@ -5,12 +5,13 @@
     <RestoreTool Condition=" '$(RestoreTool)' == '' ">NuGet</RestoreTool>
     <ProjectAssetsFile Condition=" '$(ProjectAssetsFile)' == '' ">$(MSBuildThisFileDirectory)project.assets.json</ProjectAssetsFile>
     <NuGetPackageRoot Condition=" '$(NuGetPackageRoot)' == '' ">$(UserProfile)\.nuget\packages\</NuGetPackageRoot>
-    <NuGetPackageFolders Condition=" '$(NuGetPackageFolders)' == '' ">C:\Users\trevo\.nuget\packages\</NuGetPackageFolders>
+    <NuGetPackageFolders Condition=" '$(NuGetPackageFolders)' == '' ">C:\Users\trevors\.nuget\packages\;C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages</NuGetPackageFolders>
     <NuGetProjectStyle Condition=" '$(NuGetProjectStyle)' == '' ">PackageReference</NuGetProjectStyle>
     <NuGetToolVersion Condition=" '$(NuGetToolVersion)' == '' ">6.7.0</NuGetToolVersion>
   </PropertyGroup>
   <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
-    <SourceRoot Include="C:\Users\trevo\.nuget\packages\" />
+    <SourceRoot Include="C:\Users\trevors\.nuget\packages\" />
+    <SourceRoot Include="C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages\" />
   </ItemGroup>
   <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
     <Import Project="$(NuGetPackageRoot)microsoft.clearscript.v8.native.win-x64\7.2.4\build\Microsoft.ClearScript.V8.Native.win-x64.props" Condition="Exists('$(NuGetPackageRoot)microsoft.clearscript.v8.native.win-x64\7.2.4\build\Microsoft.ClearScript.V8.Native.win-x64.props')" />
@@ -18,10 +19,10 @@
     <Import Project="$(NuGetPackageRoot)antlr4.codegenerator\4.6.6\build\Antlr4.CodeGenerator.props" Condition="Exists('$(NuGetPackageRoot)antlr4.codegenerator\4.6.6\build\Antlr4.CodeGenerator.props')" />
   </ImportGroup>
   <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
-    <PkgMicrosoft_ClearScript_V8_Native_win-x64 Condition=" '$(PkgMicrosoft_ClearScript_V8_Native_win-x64)' == '' ">C:\Users\trevo\.nuget\packages\microsoft.clearscript.v8.native.win-x64\7.2.4</PkgMicrosoft_ClearScript_V8_Native_win-x64>
-    <PkgLucene_Net Condition=" '$(PkgLucene_Net)' == '' ">C:\Users\trevo\.nuget\packages\lucene.net\4.8.0-beta00016</PkgLucene_Net>
-    <PkgLibSassHost_Native_win-x64 Condition=" '$(PkgLibSassHost_Native_win-x64)' == '' ">C:\Users\trevo\.nuget\packages\libsasshost.native.win-x64\1.3.3</PkgLibSassHost_Native_win-x64>
-    <PkgAntlr4_CodeGenerator Condition=" '$(PkgAntlr4_CodeGenerator)' == '' ">C:\Users\trevo\.nuget\packages\antlr4.codegenerator\4.6.6</PkgAntlr4_CodeGenerator>
-    <PkgAntlr4 Condition=" '$(PkgAntlr4)' == '' ">C:\Users\trevo\.nuget\packages\antlr4\4.6.6</PkgAntlr4>
+    <PkgMicrosoft_ClearScript_V8_Native_win-x64 Condition=" '$(PkgMicrosoft_ClearScript_V8_Native_win-x64)' == '' ">C:\Users\trevors\.nuget\packages\microsoft.clearscript.v8.native.win-x64\7.2.4</PkgMicrosoft_ClearScript_V8_Native_win-x64>
+    <PkgLucene_Net Condition=" '$(PkgLucene_Net)' == '' ">C:\Users\trevors\.nuget\packages\lucene.net\4.8.0-beta00016</PkgLucene_Net>
+    <PkgLibSassHost_Native_win-x64 Condition=" '$(PkgLibSassHost_Native_win-x64)' == '' ">C:\Users\trevors\.nuget\packages\libsasshost.native.win-x64\1.3.3</PkgLibSassHost_Native_win-x64>
+    <PkgAntlr4_CodeGenerator Condition=" '$(PkgAntlr4_CodeGenerator)' == '' ">C:\Users\trevors\.nuget\packages\antlr4.codegenerator\4.6.6</PkgAntlr4_CodeGenerator>
+    <PkgAntlr4 Condition=" '$(PkgAntlr4)' == '' ">C:\Users\trevors\.nuget\packages\antlr4\4.6.6</PkgAntlr4>
   </PropertyGroup>
 </Project>

@@ -22,6 +22,8 @@ namespace Protean
 
             httpContext.Features.Get<IServerVariablesFeature>();
             httpContext.Features.Get<IHttpRequestFeature>();
+            httpContext.Features.Get<IHttpResponseFeature>();
+
             Cms oPcms = new Protean.Cms(httpContext,  _host, ref _memoryCache);
             oPcms.InitializeVariables();
             oPcms.GetPageHTML();
