@@ -218,18 +218,18 @@
 								<xsl:text>.bg-video-wrapper-</xsl:text>
 								<xsl:value-of select="@id"/>{
 								<xsl:if test="@minHeightxs!=''">
-									<xsl:text>height:</xsl:text>
+									<xsl:text>min-height:</xsl:text>
 									<xsl:value-of select="@minHeightxs"/>
-									<xsl:text>px;</xsl:text>
+									<xsl:text>px!important;</xsl:text>
 								</xsl:if>}
 								@media(min-width:768px){
 								<xsl:text>.bg-video-wrapper-</xsl:text>
 
 								<xsl:value-of select="@id"/>{
 								<xsl:if test="@minHeight!=''">
-									<xsl:text>height:</xsl:text>
+									<xsl:text>min-height:</xsl:text>
 									<xsl:value-of select="@minHeight"/>
-									<xsl:text>px;</xsl:text>
+									<xsl:text>px!important;</xsl:text>
 								</xsl:if>}}
 							</style>
 							<!--<xsl:attribute name="style">
