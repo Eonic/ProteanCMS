@@ -7922,29 +7922,30 @@
               </a>
             </dd>
           </xsl:if>
+			  <xsl:if test="@paymentMade!=''">
             <dt>Payment Made</dt>
             <dd>
               <xsl:value-of select="$currency"/>
               <xsl:value-of select="format-number(@paymentMade,'0.00')" />
-            </dd>
+            </dd></xsl:if>
 			<xsl:choose>
 				<xsl:when test="@outstandingAmount&gt;0">
 					<dt>Total Outstanding</dt>
 					<dd>
 						<xsl:value-of select="$currency"/><xsl:value-of select="format-number(@outstandingAmount, '0.00')"/>
 					</dd>
+					<dt>Total Payment Due</dt>
+					<dd>
+						<xsl:value-of select="$currency"/><xsl:value-of select="format-number(@total, '0.00')"/>
+					</dd>
 				</xsl:when>
 				<xsl:otherwise>
-					<dt>Total Payment Received</dt>
-					<dd>
-						<xsl:value-of select="$currency"/><xsl:value-of select="format-number(@total, '0.00')"/> (paid in full)
-					</dd>
 				</xsl:otherwise>
 			</xsl:choose>
 			  
 
           </dl>
-          <xsl:if test="not(Payment)">
+          <xsl:if test="Payment">
           <h4>Payment Details</h4>
           <dl class="dl-horizontal">
             <dt>Payment Method</dt>

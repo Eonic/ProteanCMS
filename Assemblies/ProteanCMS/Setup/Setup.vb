@@ -187,15 +187,23 @@ Public Class Setup
     End Sub
 
     Sub AddResponse(ByVal cResponse As String)
-        If cPostFlushActions = "" Then
-            If Not oResponse Is Nothing Then
-                Dim oElmt As XmlElement = oResponse.OwnerDocument.CreateElement("ProgressResponse")
-                oElmt.InnerText = cResponse
-                oResponse.AppendChild(oElmt)
+        Try
+
+
+            If cPostFlushActions = "" Then
+                If Not oResponse Is Nothing Then
+                    Dim oElmt As XmlElement = oResponse.OwnerDocument.CreateElement("ProgressResponse")
+                    oElmt.InnerText = cResponse
+                    oResponse.AppendChild(oElmt)
+                End If
+            Else
+                goResponse.Write("<script language=""javascript"" type=""text/javascript"">$('#result').append('" & Replace(cResponse, "'", "\'") & "<br/>');$('#result').stop().animate({scrollTop: $('#result')[0].scrollHeight}, 800);</script>" & vbCrLf)
             End If
-        Else
-            goResponse.Write("<script language=""javascript"" type=""text/javascript"">$('#result').append('" & Replace(cResponse, "'", "\'") & "<br/>');$('#result').stop().animate({scrollTop: $('#result')[0].scrollHeight}, 800);</script>" & vbCrLf)
-        End If
+
+        Catch ex As Exception
+            goResponse.Write("<script language=""javascript"" type=""text/javascript"">$('#result').append('" & Replace("<p><i class=""fa fa-check text-danger"">&#160;</i>Error in script</p>", "'", "\'") & "<br/>');$('#result').stop().animate({scrollTop: $('#result')[0].scrollHeight}, 800);</script>" & vbCrLf)
+
+        End Try
     End Sub
 
     Sub AddResponseComplete(ByVal cResponse As String, ByVal LinkPath As String)
@@ -373,8 +381,9 @@ Public Class Setup
 
 
         testResponse = oTests.TestEmailSend()
-        If testResponse <> "Message Sent" Then
-            AddResponse("<p><i class=""fa fa-times text-danger"">&#160;</i>" & testResponse & "</p>")
+        If testResponse <> "Message\rSent" Then
+            AddResponse("<p><i class=""fa fa-times text-danger"">&#160;</i>Email SEND FAILED</p>")
+            AddResponse(testResponse)
         Else
             AddResponse("<p><i class=""fa fa-check text-success"">&#160;</i>Email Sent</p>")
         End If
