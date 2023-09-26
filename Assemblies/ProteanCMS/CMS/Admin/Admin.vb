@@ -3489,15 +3489,6 @@ AfterProcessFlow:
 
                     Case "FileUpload"
                         Dim oFS As New fsHelper(myWeb.moCtx)
-                        For i As Integer = 0 To myWeb.moCtx.Request.Files.Count - 1
-                            Dim file As Object = myWeb.moCtx.Request.Files(i)
-                            Dim FileContainsnonAlphaChar As Boolean = oFS.ContainsSpecialChars(file.FileName)
-                            If FileContainsnonAlphaChar Then
-                                'return error message
-                            Else
-                                'Goto uploadrequest method
-                            End If
-                        Next
                         oFS.UploadRequest(myWeb.moCtx)
                         oFS = Nothing
                         'we want to not render anything else
