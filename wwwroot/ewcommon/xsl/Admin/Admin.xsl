@@ -12208,13 +12208,7 @@
 	</xsl:variable>	
     <td class="btn-group">		
 	 <xsl:choose>
-			<xsl:when test="@type='Review'">
-				<!--<a href="{$appPath}?ewCmd=EditContent&amp;id={$ContentId}&amp;ewRedirCmd=AwaitingApproval" class="btn btn-xs btn-default" title="Click here to edit this content">
-					<i class="fa fa-eye">
-						<xsl:text> </xsl:text>
-					</i>
-					<xsl:text> </xsl:text>Related Product
-				</a>-->
+			<xsl:when test="@type='Review'">				
 			</xsl:when>
 			<xsl:otherwise>
 				<a href="{$appPath}?ewCmd=PreviewOn&amp;pgid={@pageid}&amp;artid={@id}{$versionId}" class="btn btn-xs btn-default" title="Click here to edit this content">
