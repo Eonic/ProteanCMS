@@ -85,7 +85,7 @@
 				<nav class="navbar main-nav" aria-label="Main Navigation">
 					<div class="{$containerClass}">
 						<div class="offcanvas offcanvas-end" id="navbarSupportedContent">
-							<button type="button" class="btn-close text-reset float-end xs-only" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+							<button type="button" class="nav-close-btn text-reset float-end xs-only" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 							<!--SEARCH (MOBILE)-->
 							<xsl:if test="$search='on' and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
 								<div class="xs-only search-wrapper">
@@ -241,7 +241,7 @@
 								</button>
 							</xsl:if>
 							<div class="offcanvas offcanvas-end" id="navbarSupportedContent">
-								<button type="button" class="btn-close text-reset float-end xs-only" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+								<button type="button" class="nav-close-btn text-reset float-end xs-only" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 								<!--SEARCH (MOBILE)-->
 								<xsl:if test="$search='on' and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
 									<div class="xs-only search-wrapper">

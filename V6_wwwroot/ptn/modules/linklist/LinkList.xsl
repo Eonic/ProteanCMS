@@ -105,6 +105,7 @@
 							<xsl:with-param name="button" select="@button"/>
 							<xsl:with-param name="imagePosition" select="@imagePosition"/>
 							<xsl:with-param name="alignment" select="@alignment"/>
+							<xsl:with-param name="linked" select="@linkArticle"/>
 						</xsl:apply-templates>
 					</div>
 				</div>
@@ -157,6 +158,7 @@
 		<xsl:param name="crop"/>
 		<xsl:param name="imagePosition"/>
 		<xsl:param name="alignment"/>
+		<xsl:param name="linked"/>
 		<xsl:variable name="preURL" select="substring(Url,1,3)" />
 		<xsl:variable name="url" select="Url/node()" />
 		<xsl:variable name="linkURL">
@@ -175,6 +177,17 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
+		<xsl:variable name="classValues">
+			<xsl:text>listItem link </xsl:text>
+			<xsl:if test="$linked='true'">
+				<xsl:text> linked-listItem </xsl:text>
+			</xsl:if>
+			<!--<xsl:value-of select="$class"/>-->
+			<xsl:text> </xsl:text>
+			<!--<xsl:apply-templates select="." mode="themeModuleClassExtrasListItem">
+				<xsl:with-param name="parentId" select="$parentId"/>
+			</xsl:apply-templates>-->
+		</xsl:variable>
 		<xsl:variable name="cropSetting">
 			<xsl:choose>
 				<xsl:when test="$crop='true'">
@@ -186,12 +199,12 @@
 			</xsl:choose>
 		</xsl:variable>
 
-		<div class="listItem link">
+		<div class="{$classValues}">
 			<xsl:apply-templates select="." mode="inlinePopupOptions">
 				<xsl:with-param name="class" select="'listItem link'"/>
 				<xsl:with-param name="sortBy" select="$sortBy"/>
 			</xsl:apply-templates>
-			<div class="list-item lIinner">
+			<div class="lIinner">
 				<xsl:if test="$imagePosition='below'">
 					<h3 class="title">
 						<xsl:attribute name="class">
@@ -240,6 +253,11 @@
 						</xsl:attribute>
 						<xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
 					</div>
+				</xsl:if>
+				<xsl:if test="$linked='true' and $button='false'">
+					<a href="$linkURL" class="stretched-link">
+						<xsl:text> </xsl:text>
+					</a>
 				</xsl:if>
 				<xsl:if test="not($button='false')">
 					<div>

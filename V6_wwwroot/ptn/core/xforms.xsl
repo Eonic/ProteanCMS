@@ -824,7 +824,7 @@
     <xsl:variable name="class">
       <xsl:text>btn</xsl:text>
       <xsl:if test="not(contains(@class,'btn-'))">
-        <xsl:text> btn-primary</xsl:text>
+        <xsl:text> btn-custom</xsl:text>
       </xsl:if>
       <xsl:if test="@class!=''">
         <xsl:text> </xsl:text>
@@ -911,7 +911,7 @@
     <xsl:variable name="class">
       <xsl:text>btn</xsl:text>
       <xsl:if test="not(contains(@class,'btn-'))">
-        <xsl:text> btn-primary</xsl:text>
+        <xsl:text> btn-custom</xsl:text>
       </xsl:if>
       <xsl:if test="@class!=''">
         <xsl:text> </xsl:text>
@@ -972,7 +972,7 @@
 
   <xsl:template match="submit[@class='principle' and @ref!='']" mode="xform">
     <xsl:variable name="class">
-      <xsl:text>btn btn-primary</xsl:text>
+      <xsl:text>btn btn-custom</xsl:text>
       <xsl:if test="@class!=''">
         <xsl:text> </xsl:text>
         <xsl:value-of select="@class"/>
@@ -1080,7 +1080,7 @@
         </xsl:choose>
       </xsl:variable>
       <div class="rptInsert">
-        <button type="submit" name="insert:{@bind}" value="{./parent::trigger/label/node()}" class="btn btn-primary {$class}">
+        <button type="submit" name="insert:{@bind}" value="{./parent::trigger/label/node()}" class="btn btn-custom {$class}">
           <i class="fa {$icon} fa-white">
             <xsl:text> </xsl:text>
           </i>
