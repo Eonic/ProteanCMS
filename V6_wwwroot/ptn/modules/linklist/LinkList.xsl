@@ -256,7 +256,9 @@
 				</xsl:if>
 				<xsl:if test="$linked='true' and $button='false'">
 					<a href="$linkURL" class="stretched-link">
-						<xsl:text> </xsl:text>
+						<span class="visually-hidden"><xsl:value-of select="Name/node()"/>
+							<xsl:text> </xsl:text>
+						</span>
 					</a>
 				</xsl:if>
 				<xsl:if test="not($button='false')">

@@ -65,15 +65,17 @@
 				<cDescription/>
 			</tblContent>
 		</instance>
-		<submission id="EditContent" action="" method="post" event="return ValidateAndSendReviewEmail(this)"/>
+		<submission id="EditContent" action="" method="post" event="return ValidateAndOpenReviewEmail(this)"/>
 		<bind nodeset="tblContent">
 			<bind id="cContentReviewer" nodeset="cContentName" required="true()" type="string"/>
+			<bind id="cContentSchemaName" nodeset="cContentSchemaName" required="false()" type="string"/>
 			<bind id="dPublishDate" nodeset="dPublishDate" required="true()" type="string"/>
 			<bind id="dExpireDate" nodeset="dExpireDate" required="false()" type="string"/>
 			<bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
 			<bind id="cDescription" nodeset="cDescription" required="false()" type="string"/>
 			<bind nodeset="cContentXmlBrief/Content">
 				<bind id="cContentReviewer" nodeset="Reviewer" required="true()" type="string"/>
+				<bind id="cContentReviewerEmail" nodeset="ReviewerEmail" required="false()" type="string"/>
 				<bind id="dPublishDate" nodeset="ReviewDate" required="false()" type="string"/>
 				<bind id="dPublishDate" nodeset="PublishDate" required="false()" type="string"/>
 				<bind id="cContentSummary" nodeset="Summary" required="false()" type="string"/>
@@ -88,7 +90,8 @@
 				<bind id="nProductID" nodeset="ProductID" required="false()" type="string"/>
 			</bind>
 			<bind nodeset="cContentXmlDetail/Content">
-				<bind id="cContentReviewer" nodeset="Reviewer" required="true()" type="string"/>s
+				<bind id="cContentReviewer" nodeset="Reviewer" required="true()" type="string"/>
+				<bind id="cContentReviewerEmail" nodeset="ReviewerEmail" required="false()" type="string"/>
 				<bind id="dPublishDate" nodeset="ReviewDate" required="false()" type="string"/>
 				<bind id="dPublishDate" nodeset="PublishDate" required="false()" type="string"/>
 				<bind id="cUrl" nodeset="Url" required="false()" type="string"/>
@@ -188,6 +191,12 @@
 				<label>Reviewers Name</label>
 				<input bind="cContentReviewer" class="required long">
 				</input>
+				<input bind="cContentSchemaName" class="readonly short hidden">
+					<label>Schema Name</label>
+				</input>
+				<input bind="cContentReviewerEmail" class="readonly short hidden">
+					<label>Email Address</label>
+				</input>
 				<select1 bind="cContentRating" appearance="full" class="vshort">
 					<label>Rating</label>
 					<item>
@@ -220,13 +229,15 @@
 					<hint>example http://www.eonic.co.uk</hint>
 				</input>
 				<label>Summary</label>
-				<textarea bind="cContentSummary" class="TextArea xhtml" rows="6" cols="70">
+				<textarea bind="cContentSummary" class="TextArea " rows="6" cols="70">
 				</textarea>
 				<label>Full Description</label>
-				<textarea bind="cContentDescription" class="TextArea xhtml" rows="15" cols="70">
+				<textarea bind="cContentDescription" class="TextArea " rows="15" cols="70">
 				</textarea>
 
 			</group>
+		</group>
+		<group class="AlertEmail-modal has-script">
 		</group>
 	</group>
 	<group ref="submit" class="contentSubmit">

@@ -10062,7 +10062,86 @@ Partial Public Class Cms
                 End Try
             End Function
 
+            Public Function xFrmAlertEmail(ByVal recordType As String, ByVal nUserId As Integer, ByVal xFormPath As String, ByVal existingGroupId As Long) As XmlElement
+                Dim cProcessInfo As String = ""
+                Dim FormTitle = "AlertEmail User"
+                Dim InstanceSessionName = "tempInstance_alert" & nUserId.ToString()
+                Try
+                    myWeb.moSession(InstanceSessionName) = Nothing
+                    MyBase.NewFrm(FormTitle)
+                    MyBase.bProcessRepeats = False
 
+                    'We load the xform from a file, it may be in local or in common folders.
+                    MyBase.load(xFormPath, myWeb.maCommonFolders)
+
+                    'We get the instance
+                    If nUserId > 0 Then
+                        Dim sNewGroupNames As String = ""
+
+                        MyBase.bProcessRepeats = True
+                        If myWeb.moSession(InstanceSessionName) Is Nothing Then
+                            Dim existingInstance As XmlElement = MyBase.moXformElmt.OwnerDocument.CreateElement("instance")
+                            Dim AlertEmail As XmlElement = existingInstance.AppendChild(MyBase.moXformElmt.OwnerDocument.CreateElement("AlertEmail"))
+                            AlertEmail.SetAttribute("existingGroupId", "")
+                            AlertEmail.SetAttribute("existingGroupName", myWeb.moDbHelper.getNameByKey(dbHelper.objectTypes.Directory, existingGroupId))
+
+                            AlertEmail.SetAttribute("sendEmail", "1")
+
+                            MyBase.Instance.SelectSingleNode("AlertEmail/Email").InnerText = myWeb.moRequest("Email")
+                            MyBase.Instance.SelectSingleNode("AlertEmail/RecordType").InnerText = myWeb.moRequest("RecordType")
+                            MyBase.Instance.SelectSingleNode("AlertEmail/id").InnerText = myWeb.moRequest("id")
+                            MyBase.Instance.SelectSingleNode("AlertEmail/xFormName").InnerText = myWeb.moRequest("xFormName")
+                            MyBase.Instance.SelectSingleNode("AlertEmail/RecipientName").InnerText = myWeb.moRequest("RecipientName")
+                            AlertEmail.AppendChild(MyBase.Instance.SelectSingleNode("AlertEmail/Email"))
+                            AlertEmail.AppendChild(MyBase.Instance.SelectSingleNode("AlertEmail/RecordType"))
+                            AlertEmail.AppendChild(MyBase.Instance.SelectSingleNode("AlertEmail/id"))
+                            AlertEmail.AppendChild(MyBase.Instance.SelectSingleNode("AlertEmail/xFormName"))
+                            AlertEmail.AppendChild(MyBase.Instance.SelectSingleNode("AlertEmail/RecipientName"))
+
+                            AlertEmail.AppendChild(MyBase.Instance.SelectSingleNode("AlertEmail/emailer"))
+                            MyBase.LoadInstance(existingInstance)
+                            myWeb.moSession(InstanceSessionName) = MyBase.Instance
+                        Else
+                            MyBase.LoadInstance(myWeb.moSession("tempInstance"))
+                        End If
+                    End If
+
+                    moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = MyBase.Instance.InnerXml
+
+                    If MyBase.isSubmitted Then
+                        'MyBase.updateInstanceFromRequest()
+                        MyBase.validate()
+                        If MyBase.valid Then
+                            Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
+
+                            'Send Email
+                            Dim oMsg As New Protean.Messaging()
+                            oMsg.emailer(MyBase.Instance.SelectSingleNode("AlertEmail"), MyBase.Instance.SelectSingleNode("AlertEmail/emailer/xsltPath").InnerText, MyBase.Instance.SelectSingleNode("AlertEmail/emailer/fromName").InnerText, moMailConfig("FromEmail"), MyBase.Instance.SelectSingleNode("AlertEmail/Email").InnerText, MyBase.Instance.SelectSingleNode("AlertEmail/emailer/SubjectLine").InnerText)
+                            myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
+
+                            myWeb.moSession(InstanceSessionName) = Nothing
+
+                        End If
+                    ElseIf MyBase.isTriggered Then
+                        'we have clicked a trigger so we must update the instance
+                        MyBase.updateInstanceFromRequest()
+                        'lets save the instance
+                        goSession(InstanceSessionName) = MyBase.Instance
+                    Else
+                        goSession(InstanceSessionName) = MyBase.Instance
+                    End If
+
+                    'we populate the values onto the form.
+                    MyBase.addValues()
+
+                    Return MyBase.moXformElmt
+
+                Catch ex As Exception
+                    myWeb.moSession(InstanceSessionName) = Nothing
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
             Public Function xFrmRequestSettlement(ByVal nOrderId As Integer, Optional bForceSend As Boolean = False) As XmlElement
                 Dim cProcessInfo As String = ""
                 Dim InstanceSessionName = "tempInstance_requestSettlement" & nOrderId.ToString()
