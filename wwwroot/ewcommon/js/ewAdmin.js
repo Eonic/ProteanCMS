@@ -1514,7 +1514,7 @@ function initialiseGeocoderButton() {
     $('.getGeocodeButton').click(function (e) {
         // Prevent form submission
         e.preventDefault();
-        debugger;
+
         // Store initial label
         var $this = $(this);
         var label = $this.val();
@@ -2687,16 +2687,16 @@ function SendEmail(event) {
 }
 
     $('.getPlaceIDButton').click(function (e) {
-      
+        debugger;
         // Prevent form submission
         e.preventDefault();
         var latitude;
         var longitude;
         var address = [
-            $('#cStructName').val()
+            $('#cLocation').val()
            
         ];
-
+        var location;
         var addressString = ",,," + address.join(',');
         var geocoder = new google.maps.Geocoder();
 
