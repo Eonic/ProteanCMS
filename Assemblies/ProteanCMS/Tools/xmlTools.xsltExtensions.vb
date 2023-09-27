@@ -180,22 +180,7 @@ Partial Public Module xmlTools
 
         Public Function escapeJs(ByVal text As String) As String
             Try
-
-                Dim orig As String = text
-                If Not (text = "") Then
-                    text = text.Replace("\", "\\")
-                    text = text.Replace("&#13;", "\r")
-                    text = text.Replace("&#10;", "\n")
-                    text = text.Replace("#9;", "\t")
-                    text = text.Replace("""", "\""")
-                    text = text.Replace("'", "\'")
-                    text = text.Replace("’", "\'")
-                End If
-                If orig <> text Then
-                    Return text
-                Else
-                    Return orig
-                End If
+                Protean.Tools.Text.EscapeJS(text)
             Catch ex As Exception
                 Return text
             End Try

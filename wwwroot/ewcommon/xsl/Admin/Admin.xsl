@@ -7922,29 +7922,30 @@
               </a>
             </dd>
           </xsl:if>
+			  <xsl:if test="@paymentMade!=''">
             <dt>Payment Made</dt>
             <dd>
               <xsl:value-of select="$currency"/>
               <xsl:value-of select="format-number(@paymentMade,'0.00')" />
-            </dd>
+            </dd></xsl:if>
 			<xsl:choose>
 				<xsl:when test="@outstandingAmount&gt;0">
 					<dt>Total Outstanding</dt>
 					<dd>
 						<xsl:value-of select="$currency"/><xsl:value-of select="format-number(@outstandingAmount, '0.00')"/>
 					</dd>
+					<dt>Total Payment Due</dt>
+					<dd>
+						<xsl:value-of select="$currency"/><xsl:value-of select="format-number(@total, '0.00')"/>
+					</dd>
 				</xsl:when>
 				<xsl:otherwise>
-					<dt>Total Payment Received</dt>
-					<dd>
-						<xsl:value-of select="$currency"/><xsl:value-of select="format-number(@total, '0.00')"/> (paid in full)
-					</dd>
 				</xsl:otherwise>
 			</xsl:choose>
 			  
 
           </dl>
-          <xsl:if test="not(Payment)">
+          <xsl:if test="Payment">
           <h4>Payment Details</h4>
           <dl class="dl-horizontal">
             <dt>Payment Method</dt>
@@ -12201,20 +12202,14 @@
         <xsl:value-of select="@versionid"/>
       </xsl:if>
     </xsl:variable>
-	<xsl:variable name="reviewproductid">
-		<xsl:if test="@reviewProductID!=''">			 
-			<xsl:value-of select="@reviewProductID"/>
+	<xsl:variable name="ContentId">
+		<xsl:if test="@ContentId!=''">			 
+			<xsl:value-of select="@ContentId"/>
 		</xsl:if>
 	</xsl:variable>	
     <td class="btn-group">		
 	 <xsl:choose>
-			<xsl:when test="@Type='Review'">
-				<a href="{$appPath}?ewCmd=EditContent&amp;id={$reviewproductid}&amp;ewRedirCmd=AwaitingApproval" class="btn btn-xs btn-default" title="Click here to edit this content">
-					<i class="fa fa-eye">
-						<xsl:text> </xsl:text>
-					</i>
-					<xsl:text> </xsl:text>Releated Product
-				</a>
+			<xsl:when test="@type='Review'">				
 			</xsl:when>
 			<xsl:otherwise>
 				<a href="{$appPath}?ewCmd=PreviewOn&amp;pgid={@pageid}&amp;artid={@id}{$versionId}" class="btn btn-xs btn-default" title="Click here to edit this content">
@@ -13683,11 +13678,18 @@
 
   <xsl:template match="UserXml" mode="reportCell">
     <td>
-      <xsl:if test="User/LastName/node()!='' or User/FirstName/node()=''">
-        <a href="mailto:{User/Email/node()}">
-          <xsl:value-of select="User/LastName/node()"/>,&#160;<xsl:value-of select="User/FirstName/node()"/>
-        </a>
-      </xsl:if>
+		<xsl:choose>
+			<xsl:when test="User/type/node()='review'">
+				<xsl:value-of select="User/FirstName/node()"/>
+			</xsl:when>	
+		    <xsl:otherwise>
+			    <xsl:if test="User/LastName/node()!='' or User/FirstName/node()=''">
+                <a href="mailto:{User/Email/node()}">
+                  <xsl:value-of select="User/LastName/node()"/>,&#160;<xsl:value-of select="User/FirstName/node()"/>
+                </a>
+              </xsl:if>		
+		    </xsl:otherwise>
+		</xsl:choose>	      
     </td>
   </xsl:template>
 

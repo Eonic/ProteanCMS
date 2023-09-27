@@ -29,7 +29,9 @@ textarea {
 .btn-spacing {
     @include btn-spacing();
 }
-
+.btn-custom{
+    @extend .btn-primary;
+}
 .fileinput-button {
     position: relative;
     overflow: hidden;

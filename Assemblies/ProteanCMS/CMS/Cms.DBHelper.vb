@@ -3129,7 +3129,7 @@ restart:
                         .Columns("pageid").ColumnMapping = Data.MappingType.Attribute
                         .Columns("page").ColumnMapping = Data.MappingType.Attribute
                         .Columns("ContentId").ColumnMapping = Data.MappingType.Attribute
-                        .Columns("Type").ColumnMapping = Data.MappingType.Attribute
+                        .Columns("type").ColumnMapping = Data.MappingType.Attribute
                     End With
 
                     '   With oDS.Tables("Location")

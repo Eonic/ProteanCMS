@@ -1370,20 +1370,19 @@ ProcessFlow:
 
                     Case "AlertEmail"
                         sAdminLayout = "AdminXForm"
-                        Dim RecordType As String = myWeb.moRequest("recordType") 'Content
+                        Dim RecordType As String = myWeb.moRequest("RecordType") 'Content
                         Dim ObjectId As Long = myWeb.moRequest("id") 'ContentId
                         Dim AlertEmailXform As String = myWeb.moRequest("xFormName")
-                        'AlertEmailXform = myWeb.moServer.mapPath("/xforms/alertEmail/" & AlertEmailXform & ".xml")
+                        AlertEmailXform = "/xforms/EmailAlert/" & AlertEmailXform & ".xml"
 
                         'oPageDetail.AppendChild(moAdXfm.xFrmAlertEmail(RecordType, ObjectId, AlertEmailXform))
+                        oPageDetail.AppendChild(moAdXfm.xFrmAlertEmail(RecordType, ObjectId, AlertEmailXform))
 
                         'xFrmAlertEmail we have an xform file where the contentXml becomes the instance
                         'xform specifies the xslt for the email template
                         'when submitted sends the email
-
                         'We want to log this activity to the activity log.
                         'We should also show the history of emails from the activity log as part of the form so we do not accidently send twice.
-
 
                         'Menu Stuff
                     Case "MoveHere"
