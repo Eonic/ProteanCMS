@@ -1150,6 +1150,37 @@ Public Class Cms
         End If
     End Sub
 
+    Public Function RestoreRedirectSession(ByVal sSessionId As String, ByVal nStandardDuration As Integer, Optional ByVal isAdmin As Boolean = False) As Boolean
+        ' we check the activity log for recompile with same session id, check the datetime is within 5 seconds.
+        Try
+            Dim nDuration As Integer = 0
+            Dim nUserId As Integer = 0
+            Dim sSql = "select top 1 nUserDirId, datediff(SS,getdate(),dDateTime) as Duration from tblActivityLog where cSessionId='" & sSessionId & "' order by dDateTime desc"
+            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)
+                If (oDr IsNot Nothing) Then
+                    While (oDr.Read())
+                        nDuration = Convert.ToInt32(oDr("Duration"))
+                        nUserId = oDr("nUserDirId")
+                    End While
+
+                End If
+            End Using
+            If (nDuration <= nStandardDuration And nUserId <> 0) Then
+
+                mnUserId = nUserId
+                If (isAdmin) Then
+                    moSession("adminMode") = "true"
+                    mbAdminMode = True
+                End If
+                Return True
+            Else
+                Return False
+            End If
+        Catch ex As Exception
+            Return False
+        End Try
+    End Function
+
 
 
     Public Overridable Sub GetPageHTML()
@@ -1202,11 +1233,22 @@ Public Class Cms
                         End If
                     End If
 
+
+                    If Not moRequest("reBundle") Is Nothing Then
+
+                        If (moRequest("SessionId") IsNot Nothing) Then
+                            RestoreRedirectSession(moRequest("SessionId"), 5, True)
+                        End If
+
+                        If mbAdminMode Then
+                            ClearPageCache()
+                            ClearBundleCache("js")
+                            ClearBundleCache("css")
+                        End If
+
+                    End If
                     If bPageCache And Not ibIndexMode And Not gnResponseCode = 404 Then
 
-                        If Not moRequest("reBundle") Is Nothing Then
-                            ClearPageCache()
-                        End If
                         sCachePath = goServer.UrlDecode(mcOriginalURL)
                         If sCachePath.Contains("?") Then
                             sCachePath = sCachePath.Substring(0, sCachePath.IndexOf("?"))
@@ -1366,16 +1408,31 @@ Public Class Cms
                                     Dim brecompile As Boolean = False
 
                                     If moRequest("recompile") <> "" Then
-                                        'add delete xsltc flag to web.config
-                                        If moRequest("recompile") = "del" Then
-                                            brecompile = True
-                                            msRedirectOnEnd = Nothing
-                                        Else
-                                            msRedirectOnEnd = "/?recompile=del"
-                                            bRestartApp = True
-                                            Protean.Config.UpdateConfigValue(Me, "protean/web", "CompliedTransform", "rebuild")
-                                        End If
 
+                                        If moRequest("recompile") = "del" Then
+
+
+                                            If RestoreRedirectSession(moRequest("SessionId"), 5, True) = True Then
+                                                Dim oFS As New Protean.fsHelper(moCtx)
+                                                oFS.mcRoot = gcProjectPath
+                                                oFS.mcStartFolder = goServer.MapPath("\" & gcProjectPath) + "xsltc"
+                                                oFS.DeleteFolderContents("", "")
+                                                Protean.Config.UpdateConfigValue(Me, "protean/web", "CompiledTransform", "on")
+                                                Protean.Config.UpdateConfigValue(Me, "", "recompile", "false")
+                                                msRedirectOnEnd = "/?rebundle=true&SessionId=" & SessionID
+                                            End If
+
+                                        Else
+                                            If mbAdminMode Then
+                                                Protean.Config.UpdateConfigValue(Me, "protean/web", "CompliedTransform", "off")
+                                                'just sent value as it might be true when user did ResetConfig
+                                                'to avoid skipping update functionality, we are just set it differently
+                                                Protean.Config.UpdateConfigValue(Me, "", "recompile", "recompiling")
+                                                moDbHelper.logActivity(dbHelper.ActivityType.Recompile, mnUserId, 0)
+                                                'we log to the activity log this action
+                                                msRedirectOnEnd = "/?recompile=del&SessionId=" & SessionID
+                                            End If
+                                        End If
                                     End If
 
                                     Dim oTransform As New Protean.XmlHelper.Transform(Me, styleFile, gbCompiledTransform, , brecompile)
@@ -3374,7 +3431,6 @@ Public Class Cms
             If moPageXml.SelectNodes("/Page/Contents/Content[@type='Poll']").Count > 0 Then
                 ProcessPolls()
             End If
-
 
 
 
@@ -9013,7 +9069,32 @@ Public Class Cms
 
     End Function
 
+    Public Sub ClearBundleCache(bundlePath As String)
+        Dim cProcessInfo As String = ""
+        Try
 
+
+            Dim rootfolder As New DirectoryInfo(goServer.MapPath("/" & moConfig("ProjectPath") & bundlePath & "/bundles"))
+            If rootfolder.Exists Then
+
+                'Delete all child Directories
+                For Each dir As DirectoryInfo In rootfolder.GetDirectories()
+                    For Each filepath As FileInfo In dir.GetFiles()
+                        filepath.Delete()
+                    Next
+                    ' "~/js/bundles/X"
+                    Dim AppVarName As String = dir.FullName
+                    AppVarName = AppVarName.Substring(goServer.MapPath("/" & moConfig("ProjectPath") & bundlePath).Length())
+                    AppVarName = AppVarName.Replace("\", "/")
+                    moCtx.Application.Remove("~/" & AppVarName)
+                Next
+            End If
+
+
+        Catch ex As Exception
+            returnException(msException, mcModuleName, "ClearPageCache", ex, "", cProcessInfo, gbDebug)
+        End Try
+    End Sub
 
 #Region " IDisposable Support "
     ' This code added by Visual Basic to correctly implement the disposable pattern.
