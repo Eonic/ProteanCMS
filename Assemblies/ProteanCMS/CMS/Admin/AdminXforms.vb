@@ -10062,7 +10062,7 @@ Partial Public Class Cms
                 End Try
             End Function
 
-            Public Function xFrmAlertEmail(ByVal recordType As String, ByVal nUserId As Integer, ByVal xFormPath As String, ByVal existingGroupId As Long) As XmlElement
+            Public Function xFrmAlertEmail(ByVal recordType As String, ByVal nUserId As Integer, ByVal xFormPath As String) As XmlElement
                 Dim cProcessInfo As String = ""
                 Dim FormTitle = "AlertEmail User"
                 Dim InstanceSessionName = "tempInstance_alert" & nUserId.ToString()
@@ -10082,9 +10082,8 @@ Partial Public Class Cms
                         If myWeb.moSession(InstanceSessionName) Is Nothing Then
                             Dim existingInstance As XmlElement = MyBase.moXformElmt.OwnerDocument.CreateElement("instance")
                             Dim AlertEmail As XmlElement = existingInstance.AppendChild(MyBase.moXformElmt.OwnerDocument.CreateElement("AlertEmail"))
-                            AlertEmail.SetAttribute("existingGroupId", "")
-                            AlertEmail.SetAttribute("existingGroupName", myWeb.moDbHelper.getNameByKey(dbHelper.objectTypes.Directory, existingGroupId))
-
+                            'AlertEmail.SetAttribute("existingGroupId", "")
+                            'AlertEmail.SetAttribute("existingGroupName", myWeb.moDbHelper.getNameByKey(dbHelper.objectTypes.Directory, existingGroupId))
                             AlertEmail.SetAttribute("sendEmail", "1")
 
                             MyBase.Instance.SelectSingleNode("AlertEmail/Email").InnerText = myWeb.moRequest("Email")
@@ -10117,7 +10116,7 @@ Partial Public Class Cms
                             'Send Email
                             Dim oMsg As New Protean.Messaging()
                             oMsg.emailer(MyBase.Instance.SelectSingleNode("AlertEmail"), MyBase.Instance.SelectSingleNode("AlertEmail/emailer/xsltPath").InnerText, MyBase.Instance.SelectSingleNode("AlertEmail/emailer/fromName").InnerText, moMailConfig("FromEmail"), MyBase.Instance.SelectSingleNode("AlertEmail/Email").InnerText, MyBase.Instance.SelectSingleNode("AlertEmail/emailer/SubjectLine").InnerText)
-                            myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
+                            'myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
 
                             myWeb.moSession(InstanceSessionName) = Nothing
 
