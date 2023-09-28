@@ -2651,7 +2651,7 @@ function IsEmail(email) {
     }
 }
 function SendEmail(event) {
-    debugger;
+    
     if ($("#Email").val() != "")
     {
         if (IsEmail($("#Email").val()) == false) {
