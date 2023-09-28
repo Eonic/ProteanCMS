@@ -2497,6 +2497,8 @@ if (editPageElement) {
 
 
 $(document).ready(function () {
+    var cLocation = $(".admin-breadcrumb-inner ul li").last().text();
+    $("#cLocation").val(cLocation);
     function scrollToAnchor(aid) {
         var aTag = $("li[id='" + aid + "']");
         $('#MenuTree').animate({ scrollTop: aTag.position().top }, 'slow');
@@ -2686,4 +2688,49 @@ function SendEmail(event) {
     }
 }
 
-   
+    $('.getPlaceIDButton').click(function (e) {
+        debugger;
+        // Prevent form submission
+        e.preventDefault();
+        var latitude;
+        var longitude;
+        var address = [
+            $('#cLocation').val()
+           
+        ];
+        var location;
+        var addressString = ",,," + address.join(',');
+        var geocoder = new google.maps.Geocoder();
+
+        geocoder.geocode({ address: addressString }, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+
+                // Set lat and long values in relevant inputs
+                var location = results[0].geometry.location;
+                $('#cLatLong').val(location.lat()+"," + location.lng());
+                
+
+            } 
+
+        });
+        var valueOfLatLong = $('#cLatLong').val();
+        var array = valueOfLatLong.split(",");
+        latitude = array[0];
+        longitude = array[1];
+        var latlng = { lat: parseFloat(latitude), lng: parseFloat(longitude) };
+
+        geocoder.geocode({ 'location': latlng }, function (results, status) {
+            if (status === google.maps.GeocoderStatus.OK) {
+                if (results[1]) {
+                    $('#cPalceID').val(results[1].place_id);
+                    /*$('#cPalceID').attr("disabled", "disabled")*/
+                    console.log(results[1].place_id);
+                } 
+            } 
+        });
+        
+        
+   });
+
+
+    
