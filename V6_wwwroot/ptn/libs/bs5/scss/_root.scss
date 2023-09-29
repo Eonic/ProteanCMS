@@ -77,7 +77,9 @@
   --#{$prefix}tertiary-bg-rgb: #{to-rgb($body-tertiary-bg)};
   // scss-docs-end root-body-variables
 
-  --#{$prefix}heading-color: #{$headings-color};
+  @if $headings-color != null {
+    --#{$prefix}heading-color: #{$headings-color};
+  }
 
   --#{$prefix}link-color: #{$link-color};
   --#{$prefix}link-color-rgb: #{to-rgb($link-color)};
@@ -91,7 +93,6 @@
   }
 
   --#{$prefix}code-color: #{$code-color};
-  --#{$prefix}highlight-color: #{$mark-color};
   --#{$prefix}highlight-bg: #{$mark-bg};
 
   // scss-docs-start root-border-var
@@ -164,7 +165,9 @@
       --#{$prefix}#{$color}-border-subtle: #{$value};
     }
 
-    --#{$prefix}heading-color: #{$headings-color-dark};
+    @if $headings-color-dark != null {
+      --#{$prefix}heading-color: #{$headings-color-dark};
+    }
 
     --#{$prefix}link-color: #{$link-color-dark};
     --#{$prefix}link-hover-color: #{$link-hover-color-dark};
@@ -172,8 +175,6 @@
     --#{$prefix}link-hover-color-rgb: #{to-rgb($link-hover-color-dark)};
 
     --#{$prefix}code-color: #{$code-color-dark};
-    --#{$prefix}highlight-color: #{$mark-color-dark};
-    --#{$prefix}highlight-bg: #{$mark-bg-dark};
 
     --#{$prefix}border-color: #{$border-color-dark};
     --#{$prefix}border-color-translucent: #{$border-color-translucent-dark};

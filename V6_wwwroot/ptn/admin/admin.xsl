@@ -104,10 +104,9 @@
         <xsl:text>~/ptn/core/vue/protean-vue.js,</xsl:text>
         <xsl:text>~/ptn/libs/tinymce/jquery.tinymce.min.js,</xsl:text>
         <xsl:text>~/ptn/admin/treeview/jquery.treeview.js,</xsl:text>
-		<xsl:text>~/ptn/admin/treeview/ajaxtreeview.js,</xsl:text>
         <xsl:text>~/ptn/libs/jqueryui/jquery-ui.js,</xsl:text>
 		<xsl:text>~/ptn/libs/fancyapps/ui/dist/fancybox.umd.min.js,</xsl:text>
-		<xsl:text>~/ptn/libs/jquery.lazy/jquery.lazy.min.js,</xsl:text>
+		 <xsl:text>~/ptn/libs/jquery.lazy/jquery.lazy.min.js,</xsl:text>
 		<xsl:text>~/ptn/admin/admin.js</xsl:text>
       </xsl:with-param>
       <xsl:with-param name="bundle-path">

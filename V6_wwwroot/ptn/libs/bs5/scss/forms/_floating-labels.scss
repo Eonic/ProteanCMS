@@ -5,7 +5,6 @@
   > .form-control-plaintext,
   > .form-select {
     height: $form-floating-height;
-    min-height: $form-floating-height;
     line-height: $form-floating-line-height;
   }
 
@@ -84,8 +83,7 @@
     }
   }
 
-  > :disabled ~ label,
-  > .form-control:disabled ~ label { // Required for `.form-control`s because of specificity
+  > :disabled ~ label {
     color: $form-floating-label-disabled-color;
 
     &::after {
