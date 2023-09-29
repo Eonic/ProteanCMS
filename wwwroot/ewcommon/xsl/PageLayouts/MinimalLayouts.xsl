@@ -14649,11 +14649,23 @@
           </xsl:choose>
         </xsl:attribute>
       </xsl:if>
-      <iframe frameborder="0" class="embed-responsive-item" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen="allowfullscreen" >
-        <xsl:attribute name="src">
+      <iframe frameborder="0" class="embed-responsive-item" allowfullscreen="allowfullscreen" >
+		  <xsl:attribute name="allow">
+			  <xsl:if test="@autoplay='true'">
+				  <xsl:text>autoplay; </xsl:text>
+			  </xsl:if>
+			  <xsl:text>fullscreen; picture-in-picture</xsl:text>			  
+		  </xsl:attribute>
+			  <xsl:attribute name="src">
           <xsl:text>//player.vimeo.com/video/</xsl:text>
           <xsl:value-of select="$code"/>
           <!-- Turn all options off by default -->
+			<xsl:if test="@autoplay='true'">
+				<xsl:text>&amp;autoplay=1</xsl:text>
+			</xsl:if>
+			<xsl:if test="@loop='true'">
+				<xsl:text>&amp;loop=1</xsl:text>
+			</xsl:if>
           <xsl:text>&amp;badge=0&amp;portrait=0&amp;autopause=0&amp;player id=0&amp;app_id=58479</xsl:text>
         </xsl:attribute>
         <xsl:choose>

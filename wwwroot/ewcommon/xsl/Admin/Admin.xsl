@@ -2748,7 +2748,7 @@
     <xsl:variable name="contentType" select="@ewCmd2"/>
     <div id="tpltAdvancedMode">
       <div class="row header-panels">
-        <div class="col-md-6">
+        <div class="col-md-5">
           <form action="{$appPath}?ewCmd=ByType.{@ewCmd2}.Search&amp;pgid={$page/@id}" method="post" class="ewXform panel panel-default">
             <div class="panel-body form-group">
               <div class="input-group">
@@ -2763,7 +2763,7 @@
             </div>
           </form>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-5">
           <form method="post" action="/?ewCmd=ByType.{@ewCmd2}.Location" class="ewXform panel panel-default" id="LocationFilter" name="LocationFilter">
             <div class="panel-body  form-group">
               <div class="input-group">

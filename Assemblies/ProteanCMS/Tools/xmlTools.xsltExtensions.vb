@@ -180,7 +180,8 @@ Partial Public Module xmlTools
 
         Public Function escapeJs(ByVal text As String) As String
             Try
-                Protean.Tools.Text.EscapeJS(text)
+                Return Protean.Tools.Text.EscapeJS(text)
+
             Catch ex As Exception
                 Return text
             End Try
