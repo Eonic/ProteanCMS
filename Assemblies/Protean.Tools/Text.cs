@@ -510,6 +510,7 @@ namespace Protean.Tools
                     text = text.Replace("'", @"\'");
                     text = text.Replace("’", @"\'");
 
+
                 }
 
                 if ((orig != text))
