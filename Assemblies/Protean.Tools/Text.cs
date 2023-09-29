@@ -501,13 +501,16 @@ namespace Protean.Tools
                 string orig = text;
                 if (!(text == ""))
                 {
-                    text = text.Replace("\\", "\\\\");
-                    text = text.Replace(" ", "\\r");
-                    text = text.Replace(" ", "\\n");
-                    text = text.Replace("#9;", "\\t");
-                    text = text.Replace("\"", "\\\"");
-                    text = text.Replace("\'", "\\\'");
-                    text = text.Replace("", "\\\'");
+       
+                    text = text.Replace(@"\", @"\\");
+                    text = text.Replace("&#13;", @"\r");
+                    text = text.Replace("&#10;", @"\n");
+                    text = text.Replace("#9;", @"\t");
+                    text = text.Replace("\"", @"\""");
+                    text = text.Replace("'", @"\'");
+                    text = text.Replace("’", @"\'");
+
+
                 }
 
                 if ((orig != text))
