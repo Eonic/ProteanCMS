@@ -48,7 +48,7 @@ Public Class Tests
             emailerMsg = CType(oMsg.emailer(bodyXml, emailXSL, "ProteanCMS Test", goConfig("SiteAdminEmail"), goConfig("SiteAdminEmail"), "This is a TEST").ToString, String)
 
             If emailerMsg <> "" Then
-                Return emailerMsg
+                Return Protean.Tools.Text.EscapeJS(emailerMsg)
             Else
                 Return "1"
             End If

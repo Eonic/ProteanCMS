@@ -494,6 +494,42 @@ namespace Protean.Tools
             throw new NotImplementedException();
         }
 
+        public static string EscapeJS(string text)
+        {
+            try
+            {
+                string orig = text;
+                if (!(text == ""))
+                {
+       
+                    text = text.Replace(@"\", @"\\");
+                    text = text.Replace("&#13;", @"\r");
+                    text = text.Replace("&#10;", @"\n");
+                    text = text.Replace("#9;", @"\t");
+                    text = text.Replace("\"", @"\""");
+                    text = text.Replace("'", @"\'");
+                    text = text.Replace("’", @"\'");
+
+
+                }
+
+                if ((orig != text))
+                {
+                    return text;
+                }
+                else
+                {
+                    return orig;
+                }
+
+            }
+            catch (Exception)
+            {
+                return text;
+            }
+
+        }
+
         public static string CleanName(string cName, bool bLeaveAmp = false, bool bURLSafe = false)
         {
             // Valid Chars

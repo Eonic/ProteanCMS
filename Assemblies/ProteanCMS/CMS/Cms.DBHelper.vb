@@ -8307,8 +8307,9 @@ restart:
                 Dim oXml As XmlDocument = ContentDataSetToXml(oDs, dUpdateDate)
                 Dim oXml2 As XmlNode = oContent.OwnerDocument.ImportNode(oXml.DocumentElement, True)
 
+                Dim contentCount As Integer = 0
                 Dim n As Long
-
+                Dim itemsSkipped As Long = 0
                 For Each oNode In oXml2.SelectNodes("Content")
                     n = n + 1
                     oElmt2 = SimpleTidyContentNode(oNode, cAddSourceAttribute, dExpireDate, dUpdateDate)
@@ -8397,15 +8398,19 @@ restart:
                                     oContent.ReplaceChild(oElmt2, oElmt3)
                                 Else
                                     oContent.AppendChild(oElmt2)
+                                    contentCount = contentCount + 1
                                 End If
                             Else
                                 oContent.AppendChild(oElmt2)
+                                contentCount = contentCount + 1
                             End If
                             'End If
                         Else
                             oContent.AppendChild(oElmt2)
+                            contentCount = contentCount + 1
                         End If
-
+                    Else
+                        itemsSkipped = itemsSkipped + 1
                     End If
 
                 Next
