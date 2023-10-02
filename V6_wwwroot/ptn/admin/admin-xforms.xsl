@@ -732,13 +732,25 @@
 		</div>
 	</xsl:template>
 
-	<xsl:template match="textarea[contains(@class,'xhtml')]" mode="xform_modal">
+  <xsl:template match="textarea[contains(@class,'xhtml')]" mode="xform_modal">
     <xsl:variable name="ref">
       <xsl:apply-templates select="." mode="getRefOrBindForScript"/>
     </xsl:variable>
-    <div id="modal-{$ref}" class="modal fade pickImageModal" aria-hidden="true">
-      <xsl:text> </xsl:text>
-    </div>
+	  <div id="modal-{$ref}" class="modal fade pickImageModal">
+		  <div class="modal-dialog" id="test">
+			  <div class="modal-content">
+				  <div class="modal-body">
+					  <p class="text-center">
+						  <h4>
+							  <i class="fa fa-cog fa-spin fa-2x fa-fw">
+								  <xsl:text> </xsl:text>
+							  </i> Loading ...
+						  </h4>
+					  </p>
+				  </div>
+			  </div>
+		  </div>
+	  </div>
   </xsl:template>
 
   <xsl:template match="img" mode="jsNiceImageForm">
