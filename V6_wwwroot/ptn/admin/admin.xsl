@@ -4611,7 +4611,7 @@
       <thead>
         <tr>
           <th>Filename</th>
-          <th>Tiletype</th>
+          <th>Filetype</th>
           <th>Options</th>
         </tr>
       </thead>
