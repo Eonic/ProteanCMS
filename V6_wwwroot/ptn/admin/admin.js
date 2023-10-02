@@ -1074,11 +1074,6 @@ function markAsRead(userId, artId) {
 
 }
 
-/*  When moving pages we need to pass through original page being moved 
-to avoid looping MenuItems - WH 2010-07-30 
-*/
-
-
 // This function returns the value of a queryString
 function getParameterByName(qStringName) {
     qStringName = qStringName.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");

@@ -597,20 +597,6 @@
 			  <xsl:text> </xsl:text>
 		  </textarea>
 
-        <!--<script language="javascript" type="text/javascript">
-      document.forms['<xsl:value-of select="ancestor::Content/model/submission/@id"/>'].elements['<xsl:value-of select="$ref"/>'].value = '<xsl:apply-templates select="value/img" mode="jsNiceImage"/>';
-      -->
-        <!--<xsl:comment>
-        function OpenWindow_edit_<xsl:value-of select="$ref"/>(){
-        imgHtml = document.forms['<xsl:value-of select="ancestor::Content/model/submission/@id"/>'].elements['<xsl:value-of select="$ref"/>'].value
-        OpenWindow('/ewcommon/admin/popup.ashx?ewCmd=ImageLib<![CDATA[&]]>targetForm=<xsl:value-of select="ancestor::Content/model/submission/@id"/><![CDATA[&ewCmd2=editImage&imgHtml=' + imgHtml + '&]]>targetField=<xsl:value-of select="$ref"/><![CDATA[&]]>targetClass=<xsl:value-of select="value/*/@class"/>','Gallery','toolbar=yes,scrollbars=1,resize=yes,location=yes,menubar=yes,width=800,height=650' );
-        };
-        function OpenWindow_pick_<xsl:value-of select="$ref"/>(){
-        OpenWindow('/ewcommon/admin/popup.ashx?ewCmd=ImageLib<![CDATA[&]]>targetForm=<xsl:value-of select="ancestor::Content/model/submission/@id"/><![CDATA[&]]>targetField=<xsl:value-of select="$ref"/><![CDATA[&]]>targetClass=<xsl:value-of select="value/*/@class"/>','Gallery','toolbar=yes,scrollbars=1,resize=yes,location=yes,menubar=yes,width=800,height=650' );
-        };
-      </xsl:comment>-->
-        <!--
-    </script>-->
         <div class="btn-group-spaced">
 
           <a href="#" onclick="xfrmClearImage('{ancestor::Content/model/submission/@id}','{$ref}','{value/*/@class}');return false" title="edit an image from the image library" class="btn btn-sm btn-danger clearImage">
@@ -650,7 +636,7 @@
     <!--do nothing-->
   </xsl:template>
 
-  <xsl:template match="input[contains(@class,'pickImage') or contains(@class,'pickMedia')]" mode="xform_modal">
+  <xsl:template match="input[contains(@class,'pickImage') or contains(@class,'pickMedia') or contains(@class,'pickDocument')]" mode="xform_modal">
     <xsl:variable name="ref">
       <xsl:apply-templates select="." mode="getRefOrBindForScript"/>
     </xsl:variable>
@@ -671,7 +657,82 @@
     </div>
   </xsl:template>
 
-  <xsl:template match="textarea[contains(@class,'xhtml')]" mode="xform_modal">
+	<!-- -->
+	<!-- ========================== CONTROL : PickDocument ========================== -->
+	<!-- -->
+	<xsl:template match="input[contains(@class,'pickDocument')]" mode="xform_control">
+		<xsl:variable name="ref">
+			<xsl:apply-templates select="." mode="getRefOrBind"/>
+		</xsl:variable>
+		<xsl:variable name="scriptRef">
+			<xsl:apply-templates select="." mode="getRefOrBindForScript"/>
+		</xsl:variable>
+		<div class="input-group" id="editDoc_{$ref}">
+			<input name="{$ref}" id="{$ref}" value="{value/node()}">
+				<xsl:attribute name="class">
+					<xsl:text>form-control </xsl:text>
+					<xsl:value-of select="@class"/>
+				</xsl:attribute>
+			</input>
+			<xsl:choose>
+				<xsl:when test="value!=''">
+					<a href="#" onclick="xfrmClearDocument('{ancestor::Content/model/submission/@id}','{$scriptRef}');return false" title="Clear the document path" class="btn btn-danger">
+						<i class="fa fa-times fa-white">
+							<xsl:text> </xsl:text>
+						</i><xsl:text> </xsl:text>Clear
+					</a>
+
+				</xsl:when>
+				<xsl:otherwise>
+					<a data-bs-toggle="modal" href="?contentType=popup&amp;ewCmd=DocsLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$scriptRef}&amp;targetClass={value/*/@class}" data-bs-target="#modal-{$scriptRef}" class="btn btn-primary">
+						<i class="fas fa-file">
+							<xsl:text> </xsl:text>
+						</i><xsl:text> </xsl:text>Pick
+					</a>
+				</xsl:otherwise>
+			</xsl:choose>
+		</div>
+
+	</xsl:template>
+
+	<!-- -->
+	<!-- ========================== CONTROL : PickMedia ========================== -->
+	<!-- -->
+	<xsl:template match="input[contains(@class,'pickMedia')]" mode="xform_control">
+		<xsl:variable name="ref">
+			<xsl:apply-templates select="." mode="getRefOrBind"/>
+		</xsl:variable>
+		<xsl:variable name="scriptRef">
+			<xsl:apply-templates select="." mode="getRefOrBindForScript"/>
+		</xsl:variable>
+		<div class="input-group" id="editDoc_{$ref}">
+			<input name="{$ref}" id="{$ref}" value="{value/node()}">
+				<xsl:attribute name="class">
+					<xsl:text>form-control </xsl:text>
+					<xsl:value-of select="@class"/>
+				</xsl:attribute>
+			</input>
+			<xsl:choose>
+				<xsl:when test="value!=''">
+					<a href="#" onclick="xfrmClearMedia('{ancestor::Content/model/submission/@id}','{$scriptRef}');return false" title="Clear the document path" class="btn btn-danger">
+						<i class="fa fa-times fa-white">
+							<xsl:text> </xsl:text>
+						</i><xsl:text> </xsl:text>Clear
+					</a>
+
+				</xsl:when>
+				<xsl:otherwise>
+					<a data-bs-toggle="modal" href="?contentType=popup&amp;ewCmd=MediaLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$scriptRef}&amp;targetClass={value/*/@class}" data-bs-target="#modal-{$scriptRef}" class="btn btn-primary">
+						<i class="fa fa-music fa-white">
+							<xsl:text> </xsl:text>
+						</i><xsl:text> </xsl:text>Pick
+					</a>
+				</xsl:otherwise>
+			</xsl:choose>
+		</div>
+	</xsl:template>
+
+	<xsl:template match="textarea[contains(@class,'xhtml')]" mode="xform_modal">
     <xsl:variable name="ref">
       <xsl:apply-templates select="." mode="getRefOrBindForScript"/>
     </xsl:variable>
@@ -753,144 +814,9 @@
 
   </xsl:template>
   <!-- -->
-  <!-- -->
-  <!-- ========================== CONTROL : PickDocument ========================== -->
-  <!-- -->
-  <xsl:template match="input[contains(@class,'pickDocument')]" mode="xform_control">
-    <xsl:variable name="ref">
-      <xsl:apply-templates select="." mode="getRefOrBind"/>
-    </xsl:variable>
-    <xsl:variable name="scriptRef">
-      <xsl:apply-templates select="." mode="getRefOrBindForScript"/>
-    </xsl:variable>
-    <div class="input-group" id="editDoc_{$ref}">
-      <input name="{$ref}" id="{$ref}" value="{value/node()}">
-        <xsl:attribute name="class">
-          <xsl:text>form-control </xsl:text>
-          <xsl:value-of select="@class"/>
-        </xsl:attribute>
-      </input>
-      <xsl:choose>
-        <xsl:when test="value!=''">
-          <a href="#" onclick="xfrmClearDocument('{ancestor::Content/model/submission/@id}','{$scriptRef}');return false" title="Clear the document path" class="btn btn-danger">
-            <i class="fa fa-times fa-white">
-              <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>Clear
-          </a>
-
-        </xsl:when>
-        <xsl:otherwise>
-          <a data-bs-toggle="modal" href="?contentType=popup&amp;ewCmd=DocsLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$scriptRef}&amp;targetClass={value/*/@class}" data-bs-target="#modal-{$scriptRef}" class="btn btn-primary">
-            <i class="fas fa-file">
-              <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>Pick
-          </a>
-        </xsl:otherwise>
-      </xsl:choose>
-    </div>
-    <!--<script language="javascript" type="text/javascript">
-
-      document.forms['<xsl:value-of select="ancestor::Content/model/submission/@id"/>'].elements['<xsl:value-of select="$ref"/>'].value = '<xsl:call-template name="escape-js">
-        <xsl:with-param name="string">
-          <xsl:copy-of select="value/node()"/>
-        </xsl:with-param>
-      </xsl:call-template>';
-      <xsl:comment>
-        function OpenWindow_pick_<xsl:value-of select="$ref"/>(){
-        imgHtml = document.forms['<xsl:value-of select="ancestor::Content/model/submission/@id"/>'].elements['<xsl:value-of select="$ref"/>'].value
-        OpenWindow('/ewcommon/admin/popup.ashx?ewCmd=DocsLib<![CDATA[&]]>targetForm=<xsl:value-of select="ancestor::Content/model/submission/@id"/><![CDATA[&]]>targetField=<xsl:value-of select="$ref"/>','Documents','toolbar=yes,scrollbars=1,resize=yes,location=yes,menubar=yes,width=800,height=550' );
-        };
-      </xsl:comment>
-    </script>-->
-    <!--<xsl:choose>
-      <xsl:when test="value!=''">
-        <div class="previewImage" id="previewImage_{$ref}">
-          <a href="#" onclick="xfrmClearDocument('{ancestor::Content/model/submission/@id}','{$ref}');return false" title="edit an image from the image library" class="adminButton delete">Clear Document</a>
-        </div>
-      </xsl:when>
-      <xsl:otherwise>
-        <div class="previewImage" id="previewImage_{$ref}">
-          <a href="#" onclick="OpenWindow_pick_{$ref}();return false" title="Pick Document from Library" class="adminButton add pickImage">Pick Document</a>
-        </div>
-      </xsl:otherwise>
-    </xsl:choose>-->
-  </xsl:template>
-
-  <xsl:template match="input[contains(@class,'pickDocument')]" mode="xform_modal">
-    <xsl:variable name="ref">
-      <xsl:apply-templates select="." mode="getRefOrBind"/>
-    </xsl:variable>
-    <div id="modal-{$ref}" class="modal fade pickImageModal">
-      <xsl:text> </xsl:text>
-    </div>
-  </xsl:template>
+ 
 
 
-
-  <!-- -->
-  <!-- ========================== CONTROL : PickMedia ========================== -->
-  <!-- -->
-  <xsl:template match="input[contains(@class,'pickMedia')]" mode="xform_control">
-    <xsl:variable name="ref">
-      <xsl:apply-templates select="." mode="getRefOrBind"/>
-    </xsl:variable>
-    <input name="{$ref}" id="{$ref}" value=""/>
-    <script language="javascript" type="text/javascript">
-      document.forms['<xsl:value-of select="ancestor::Content/model/submission/@id"/>'].elements['<xsl:value-of select="$ref"/>'].value = '<xsl:copy-of select="value/node()"/>';
-      <xsl:comment>
-        function OpenWindow_pick_<xsl:value-of select="$ref"/>(){
-        OpenWindow('?contentType=popup&amp;ewCmd=MediaLib<![CDATA[&]]>targetForm=<xsl:value-of select="ancestor::Content/model/submission/@id"/><![CDATA[&]]>targetField=<xsl:value-of select="$ref"/><![CDATA[&]]>targetClass=<xsl:value-of select="value/*/@class"/>','MediaLibrary','toolbar=yes,scrollbars=1,resize=yes,location=yes,menubar=yes,width=676,height=550' );
-        };
-      </xsl:comment>
-    </script>
-    <xsl:choose>
-      <xsl:when test="value!=''">
-        <div class="previewImage" id="previewImage_{$ref}">
-          <a href="#" onclick="xfrmClearMedia('{ancestor::Content/model/submission/@id}','{$ref}');return false;" title="edit an image from the image library" class="adminButton delete">Clear Media</a>
-        </div>
-      </xsl:when>
-      <xsl:otherwise>
-        <div class="previewImage" id="previewImage_{$ref}">
-          <a href="#" onclick="OpenWindow_pick_{$ref}();return false" title="Pick Media from Library" class="adminButton add pickImage">Pick Media</a>
-        </div>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-
-  <xsl:template match="input[contains(@class,'pickMedia')]" mode="xform_control">
-    <xsl:variable name="ref">
-      <xsl:apply-templates select="." mode="getRefOrBind"/>
-    </xsl:variable>
-    <xsl:variable name="scriptRef">
-      <xsl:apply-templates select="." mode="getRefOrBindForScript"/>
-    </xsl:variable>
-    <div class="input-group" id="editDoc_{$ref}">
-      <input name="{$ref}" id="{$ref}" value="{value/node()}">
-        <xsl:attribute name="class">
-          <xsl:text>form-control </xsl:text>
-          <xsl:value-of select="@class"/>
-        </xsl:attribute>
-      </input>
-      <xsl:choose>
-        <xsl:when test="value!=''">
-          <a href="#" onclick="xfrmClearMedia('{ancestor::Content/model/submission/@id}','{$scriptRef}');return false" title="Clear the document path" class="btn btn-danger">
-            <i class="fa fa-times fa-white">
-              <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>Clear
-          </a>
-
-        </xsl:when>
-        <xsl:otherwise>
-          <a data-bs-toggle="modal" href="?contentType=popup&amp;ewCmd=MediaLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$scriptRef}&amp;targetClass={value/*/@class}" data-bs-target="#modal-{$scriptRef}" class="btn btn-primary">
-            <i class="fa fa-music fa-white">
-              <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>Pick
-          </a>
-        </xsl:otherwise>
-      </xsl:choose>
-    </div>
-  </xsl:template>
 
   <!-- -->
   <!-- ========================== CONTROL : Edit X Form ========================== -->
@@ -1354,8 +1280,6 @@
   </xsl:template>
 
   <!--Uploader-->
-
-
 
   <xsl:template match="Content[descendant::upload[@class='MultiPowUpload']] | div[@class='xform' and descendant::upload[@class='MultiPowUpload']]" mode="xform">
     <div id="fileupload">

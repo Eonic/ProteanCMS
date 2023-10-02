@@ -8,7 +8,7 @@ EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "V6_wwwroot", "V6_wwwroot\", "{F029CDA1-F973-463A-BA08-6FCBA7C77919}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.8"
-		ProjectReferences = "{76e7c871-9cec-4795-b6f2-66439dcd9367}|Protean.Tools.dll;{12AF6171-9AAB-4C4D-A83B-85FE18A334C1}|Protean.Tools.Csharp.dll;{7d93fd23-f739-4f09-a1b0-f5a8d0451533}|ProteanCMS.dll;"
+		ProjectReferences = "{7d93fd23-f739-4f09-a1b0-f5a8d0451533}|ProteanCMS.dll;{12af6171-9aab-4c4d-a83b-85fe18a334c1}|Protean.Tools.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_52108"
 		Debug.AspNetCompiler.PhysicalPath = "V6_wwwroot\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_52108\"
@@ -25,27 +25,6 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "V6_wwwroot", "V6_wwwroot\",
 		Release.AspNetCompiler.Debug = "False"
 		VWDPort = "52108"
 		SlnRelativePath = "V6_wwwroot\"
-	EndProjectSection
-EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "ewcommon", "wwwroot\ewcommon\", "{F0617DFC-F066-4E7B-88A2-1EB8B779F906}"
-	ProjectSection(WebsiteProperties) = preProject
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.7.2"
-		Debug.AspNetCompiler.VirtualPath = "/localhost_50942"
-		Debug.AspNetCompiler.PhysicalPath = "wwwroot\ewcommon\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_50942\"
-		Debug.AspNetCompiler.Updateable = "true"
-		Debug.AspNetCompiler.ForceOverwrite = "true"
-		Debug.AspNetCompiler.FixedNames = "false"
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/localhost_50942"
-		Release.AspNetCompiler.PhysicalPath = "wwwroot\ewcommon\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_50942\"
-		Release.AspNetCompiler.Updateable = "true"
-		Release.AspNetCompiler.ForceOverwrite = "true"
-		Release.AspNetCompiler.FixedNames = "false"
-		Release.AspNetCompiler.Debug = "False"
-		VWDPort = "50942"
-		SlnRelativePath = "wwwroot\ewcommon\"
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Protean.Tools", "Assemblies\Protean.Tools\Protean.Tools.csproj", "{12AF6171-9AAB-4C4D-A83B-85FE18A334C1}"
@@ -74,14 +53,6 @@ Global
 		{F029CDA1-F973-463A-BA08-6FCBA7C77919}.Release|Any CPU.Build.0 = Debug|Any CPU
 		{F029CDA1-F973-463A-BA08-6FCBA7C77919}.Release|ARM64.ActiveCfg = Debug|Any CPU
 		{F029CDA1-F973-463A-BA08-6FCBA7C77919}.Release|ARM64.Build.0 = Debug|Any CPU
-		{F0617DFC-F066-4E7B-88A2-1EB8B779F906}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F0617DFC-F066-4E7B-88A2-1EB8B779F906}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F0617DFC-F066-4E7B-88A2-1EB8B779F906}.Debug|ARM64.ActiveCfg = Debug|Any CPU
-		{F0617DFC-F066-4E7B-88A2-1EB8B779F906}.Debug|ARM64.Build.0 = Debug|Any CPU
-		{F0617DFC-F066-4E7B-88A2-1EB8B779F906}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{F0617DFC-F066-4E7B-88A2-1EB8B779F906}.Release|Any CPU.Build.0 = Debug|Any CPU
-		{F0617DFC-F066-4E7B-88A2-1EB8B779F906}.Release|ARM64.ActiveCfg = Debug|Any CPU
-		{F0617DFC-F066-4E7B-88A2-1EB8B779F906}.Release|ARM64.Build.0 = Debug|Any CPU
 		{12AF6171-9AAB-4C4D-A83B-85FE18A334C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{12AF6171-9AAB-4C4D-A83B-85FE18A334C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12AF6171-9AAB-4C4D-A83B-85FE18A334C1}.Debug|ARM64.ActiveCfg = Debug|ARM64
