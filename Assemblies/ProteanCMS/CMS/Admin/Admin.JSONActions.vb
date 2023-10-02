@@ -527,6 +527,36 @@ Partial Public Class Cms
                 End Try
             End Function
 
+            Public Function saveMultiLibraryImageForProduct(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+                Dim JsonResult As String = ""
+                Dim ncontentId As String = ""
+                Dim cRelatedLibraryImages As String = ""
+                Dim cSkipAttribute As String = ""
+
+                If inputJson("contentId") IsNot Nothing Then
+                    ncontentId = inputJson("contentId").ToObject(Of String)()
+                End If
+
+                If inputJson("RelatedLibraryImages") IsNot Nothing Then
+                    cRelatedLibraryImages = inputJson("RelatedLibraryImages").ToObject(Of String)()
+                End If
+
+                If inputJson("cSkipAttribute") IsNot Nothing Then
+                    cSkipAttribute = inputJson("cSkipAttribute").ToObject(Of String)()
+                End If
+
+                Try
+                    If myApi.mbAdminMode Then
+                        JsonResult = myWeb.moDbHelper.CreateLibraryImages(ncontentId, cRelatedLibraryImages, cSkipAttribute, "LibraryImage")
+                    End If
+
+                    Return JsonResult
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "RedirectPage", ex, ""))
+                    Return ex.Message
+                End Try
+            End Function
+
         End Class
 #End Region
 

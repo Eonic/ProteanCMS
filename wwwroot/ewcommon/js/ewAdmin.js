@@ -1,6 +1,7 @@
 var redirectAPIUrl = '/ewapi/Cms.Admin/RedirectPage';
 var IsParentPageAPI = '/ewapi/Cms.Admin/IsParentPage';
 var checkiFrameLoaded;
+var saveMultiLibraryImageForProduct = '/ewapi/Cms.Admin/saveMultiLibraryImageForProduct';
 
 $(document).ready(function () {
     $(".all-breadcrumb").click(function () {
@@ -2686,4 +2687,36 @@ function SendEmail(event) {
     }
 }
 
+function OpenAddMultipleImageModal() {
+    debugger
+    var targetForm = "MultipleLibraryImage";
+    var id = this.getQueryStringParam('id');
+    var targetField = "modaltoAddMultipleImages";
+    $(".hiddenContentId").val(id);
+    $(".hiddenProductName").val($("#cContentProductName").val());
+    //var linkUrl = '?contentType=popup&ewCmd=UploadMutipleImages&id=' + id + '&xFormName=' + targetForm;
+    //$('#' + targetField).load(linkUrl, function (e) { $('#' + targetField).modal('show'); });
+
+    $("#AddMultipleLibraryImage").modal("show");
+}
+
+function SaveMultipleLibraryImage(event) {
+
+    var contentId = this.getQueryStringParam('id');
+    var RelatedLibraryImages = $("#cReviewImagesPaths").val();
+    var cSkipAttribute = false; 
+    debugger;
+    inputJson = { contentId: contentId, RelatedLibraryImages: RelatedLibraryImages, cSkipAttribute: cSkipAttribute };
+   
+    $.ajax({
+        url: saveMultiLibraryImageForProduct,
+        data: JSON.stringify(inputJson),
+        contentType: 'application/json',
+        type: 'POST',
+        success: function (response) {
+            debugger
+            $("#AddMultipleLibraryImage").modal("hide");
+        }
+    });
+}
    

@@ -1902,13 +1902,15 @@
 							</i> Add New
 						</button>
 					</xsl:if>
-					<!--<xsl:if test="contains(@search,'add')">
-						<button ref="repeat" type="button" name="RelateAdd_MultipleLibraryImage_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs pull-right" onclick="disableButton(this);$('#{$formName}').submit();">
-							<i class="fa fa-plus fa-white">
-								<xsl:text> </xsl:text>
-							</i> Add Multiple
-						</button>
-					</xsl:if>-->
+					<xsl:if test="$contentType='LibraryImage'">
+						<xsl:if test="contains(@search,'add')">
+							<button ref="repeat" type="button" name="RelateAdd_MultipleLibraryImage_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs pull-right" onclick="OpenAddMultipleImageModal();">
+								<i class="fa fa-plus fa-white">
+									<xsl:text> </xsl:text>
+								</i> Add Multiple
+							</button>
+						</xsl:if>					
+					</xsl:if>					
 				</xsl:if>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -2046,6 +2048,7 @@
 							</i> Add New
 						</button>
 					</xsl:if>
+				   
 				</xsl:if>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -3212,8 +3215,91 @@
 			initialiseGetVimeoDataButton();
 		</script>
 	</xsl:template>
+    <xsl:template match="group[@class='AddMultiple-modal has-script']" mode="xform_control_script">		
+		<div class="modal fade" id="modaltoAddMultipleImages" role="dialog" aria-labelledby="gridSystemModalLabel">
+			<div class="modal-dialog modal-lg" role="document">
+				<xsl:text> </xsl:text>
+			</div>
+		</div>
+	</xsl:template>
+	
+	<xsl:template match="group[@class='AddMultiple-modal has-script']" mode="xform">
+		<xsl:param name="class"/>
+		<input name="nContentId" id="nContentId" type="hidden" class="hiddenContentId" />
+		<input name="nProductName" type="hidden"  class="hiddenProductName" />
+		<div id="AddMultipleLibraryImage" class="AddMultiple modal fade" tabindex="-1">
 
-	<xsl:template match="input[contains(@class,'userProductUploadImage')]" mode="xform_control_script">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<label>Add Multiple Library Images</label>
+						<button type="button" class="close" data-dismiss="modal" >
+							<span aria-hidden="true">&#215;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<xsl:variable name="ref">
+									<xsl:apply-templates select="." mode="getRefOrBind"/>
+								</xsl:variable>
+								<div id="uploadFiles">
+									<xsl:choose>
+										<xsl:when test="contains($browserVersion,'Firefox') or contains($browserVersion,'Chrome')">
+											<div class="drophere">
+												<i class="fas fa-mouse-pointer">&#160;</i> and drop files here to upload them
+											</div>
+											<label class="label">Alternatively, pick files</label>
+										</xsl:when>
+										<xsl:when test="contains($browserVersion,'MSIE') or contains($browserVersion,'')">
+											<div class="hint">Note: You can upload multiple files without needing to refresh the page</div>
+											<label class="label">Pick file</label>
+										</xsl:when>
+									</xsl:choose>
+									<span class="fileupload-loading">
+										<xsl:text> </xsl:text>
+									</span>
+									<!--input type="hidden" name="path" /-->
+									<!-- The fileinput-button span is used to style the file input field as button -->
+									<span class="btn btn-success fileinput-button" style="width:100%;">
+										<i class="fa fa-plus fa-white">
+											<xsl:text> </xsl:text>
+										</i>
+										<span>Select files...</span>
+										<!-- The file input field used as target for the file upload widget -->
+										<input id="fileupload" type="file" name="files[]" multiple=""/>
+									</span>
+								</div>
+								<br/>
+								<div id="progress" class="progress progress-success progress-striped" style="marging-top:40px;">
+									<div class="bar">
+										<xsl:text> </xsl:text>
+									</div>
+								</div>
+
+								<!-- The table listing the files available for upload/download -->
+								<div id="files" class="hidden">
+									<xsl:text> </xsl:text>
+								</div>
+						        <input  class="uploadProductImagesDisplay" id="cReviewImagesPaths"/>
+						<div>
+							<button type="submit" name="saveMultiLibraryImage"  value="MultiLibraryImage" class="btn btn-primary pull-right" onclick="return SaveMultipleLibraryImage(this.value);">Save Library Image</button>							
+						</div>
+								<table role="presentation" class="table table-striped">
+									<tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery">
+										<xsl:text> </xsl:text>
+									</tbody>
+								</table>
+					
+						
+					</div>
+				</div>
+			</div>
+		</div>
+
+		
+
+	</xsl:template>
+		
+	<xsl:template match="group[@class='AddMultiple-modal has-script']" mode="xform_control_script">
 
 		<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
 		<script src="/ewcommon/js/jQuery/fileUploader/loadimage/load-image.all.min.js">/* */</script>
@@ -3230,11 +3316,9 @@
 		<!-- The Image Lazy load plugin -->
 		<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">/* */</script>
 		
-
-		<script>
-			var ContentId = $('#productIdofPage').val();
-			var cContentName = $('#productName').val();
-			var uploadURL = '/ewapi/Cms.Content/ImageUpload';
+<script>
+			var ContentId = $('#nContentId').val();		
+			var uploadURL = '/ewapi/Cms.Content/ImageUploadProductLevel?storageRoot=/Images/\u0026IsmultiImage=yes\u0026contentId=' + ContentId;
 			$('#fileupload').fileupload({
 			url:uploadURL,
 			dataType: 'json',
@@ -3242,33 +3326,31 @@
 			dropZone:$('#uploadFiles'),
 			always: function (e, data) {
 			$.each(data.files, function (index, file) {
-			$.ajax({
-			url: '/ewapi/Cms.Content/GetLastUploadedFilePath',
-			data: '',
-			type: 'GET',
-			success: function (response) {
-			newfilename = response;
-			$('<p/>').text(newfilename).appendTo('#files');
-			cImagePath = '<img src="'+response+'" width="'+'50'+'" height="'+'50'+'" alt='' class="'+'display'+'" />';
-
-			if(newfilename != '')
-			{
-			if($('.uploadProductImagesDisplay')[1].value == '')
-			{
-			$('.uploadProductImagesDisplay')[1].value = newfilename;
-			}else
-			{
-			$('.uploadProductImagesDisplay')[1].value = $('.uploadProductImagesDisplay')[1].value +', ' + newfilename;
-			}
-			}
-
-			$('<div class="previewImage" id="previewImage_cReviewImagesPaths">
-				<span>' + cImagePath + '</span>
-			</div><br/>').insertAfter($('#files'));
-
-			}
-			});
-			});
+				$.ajax({
+					url: '/ewapi/Cms.Content/GetLastUploadedFilePath',
+					data: '',
+					type: 'GET',
+					success: function (response) {
+						newfilename = response;
+							$('<p/>').text(newfilename).appendTo('#files');
+							cImagePath = '<img src="'+response+'" width="'+'50'+'" height="'+'50'+'" alt='' class="'+'display'+'" />';
+							
+							if(newfilename != '')
+							{
+								if($('.uploadProductImagesDisplay')[0].value == '')
+								{
+									$('.uploadProductImagesDisplay')[0].value = newfilename;
+								}else
+								{
+									$('.uploadProductImagesDisplay')[0].value = $('.uploadProductImagesDisplay')[0].value +', ' + newfilename;
+								}
+							}
+							
+							$('<div class="previewImage" id="previewImage_cReviewImagesPaths"><span>' + cImagePath + '</span></div><br/>').insertAfter($('#files'));
+									
+						}
+					});
+				});
 			},
 			progressall: function (e, data) {
 			var progress = parseInt(data.loaded / data.total * 100, 10);
@@ -3279,57 +3361,10 @@
 			}
 			});
 		</script>
+		
 	</xsl:template>
 
-	<xsl:template match="input[contains(@class,'userProductUploadImage')]" mode="xform_control">
-		<xsl:variable name="ref">
-			<xsl:apply-templates select="." mode="getRefOrBind"/>
-		</xsl:variable>
-		<div id="uploadFiles">
-			<xsl:choose>
-				<xsl:when test="contains($browserVersion,'Firefox') or contains($browserVersion,'Chrome')">
-					<div class="drophere">
-						<i class="fas fa-mouse-pointer">&#160;</i> and drop files here to upload them
-					</div>
-					<label class="label">Alternatively, pick files</label>
-				</xsl:when>
-				<xsl:when test="contains($browserVersion,'MSIE') or contains($browserVersion,'')">
-					<div class="hint">Note: You can upload multiple files without needing to refresh the page</div>
-					<label class="label">Pick file</label>
-				</xsl:when>
-			</xsl:choose>
-			<span class="fileupload-loading">
-				<xsl:text> </xsl:text>
-			</span>
-			<!--input type="hidden" name="path" /-->
-			<!-- The fileinput-button span is used to style the file input field as button -->
-			<span class="btn btn-success fileinput-button" style="width:100%;">
-				<i class="fa fa-plus fa-white">
-					<xsl:text> </xsl:text>
-				</i>
-				<span>Select files...</span>
-				<!-- The file input field used as target for the file upload widget -->
-				<input id="fileupload" type="file" name="files[]" multiple=""/>
-			</span>
-		</div>
-		<br/>
-		<div id="progress" class="progress progress-success progress-striped" style="marging-top:40px;">
-			<div class="bar">
-				<xsl:text> </xsl:text>
-			</div>
-		</div>
+	
 
-		<!-- The table listing the files available for upload/download -->
-		<div id="files" class="hidden">
-			<xsl:text> </xsl:text>
-		</div>
-		<table role="presentation" class="table table-striped">
-			<tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery">
-				<xsl:text> </xsl:text>
-			</tbody>
-		</table>
-
-	</xsl:template>
-
-    
+  
 </xsl:stylesheet>

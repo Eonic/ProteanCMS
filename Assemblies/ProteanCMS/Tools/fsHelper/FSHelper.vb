@@ -997,7 +997,12 @@ Partial Public Class fsHelper
                 mcStartFolder = context.Server.MapPath(context.Request("storageRoot").Replace("\", "/").Replace("""", ""))
                 mcRoot = context.Server.MapPath("/")
                 HandleUploads(context)
-                Return String.Empty
+                If context.Request("IsmultiImage") = "yes" Then
+                    Return cleanUploadedPaths
+                Else
+                    Return String.Empty
+                End If
+
             End If
 
 
