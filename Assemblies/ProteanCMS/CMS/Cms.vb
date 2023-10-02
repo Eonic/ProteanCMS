@@ -7179,7 +7179,7 @@ Public Class Cms
 
 
             If nStartPos < 0 Then nStartPos = 0
-            If nItemCount < 1 Then nItemCount = 500
+            If nItemCount < 1 Then nItemCount = 1000
 
 
             ' Quick call to get the total number of records
