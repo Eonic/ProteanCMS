@@ -268,7 +268,7 @@ $(document).ready(function () {
         hide: true
     });
 
-    $('#template_FileSystem #MenuTree').ajaxtreeview({
+    $('#template_FileSystem').find('#MenuTree').ajaxtreeview({
         loadPath: treeviewPath,
         ajaxCmd: '',
         openLevel: 2,
