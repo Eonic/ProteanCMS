@@ -38,7 +38,6 @@ Original preload function has been kept but is unused.
             myTreeRoot = $(this);
         
             if ($(this).length > 0) {
-                alert('start');
                 $(this).addClass("treeview");
                 // Check if levels have been defined, if so, pre-open			
                 if (settings.level > 0) {
@@ -226,10 +225,9 @@ Original preload function has been kept but is unused.
 
             //var myTreeRoot = $('#MenuTree');
             myTreeRoot = $(this);
-            alert(myTreeRoot.html())
             // Add Hit area's (the clickable part)
             myTreeRoot.find('li.collapsable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
-            myTreeRoot.find('li.expandable_loaded:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
+            myTreeRoot.find('li.expandable_loaded:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea expandable-hitarea fa fa-chevron-down"> </i>');
 
             myTreeRoot.find('li.expandable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
 
@@ -242,7 +240,7 @@ Original preload function has been kept but is unused.
            
             myTreeRoot.find('.collapsable-hitarea').unbind("click");
             myTreeRoot.find('.collapsable-hitarea').click(function () {
-                alert('hide');
+                myTreeRoot = $(this).closest("#MenuTree");
                 $(this).parent().hideChildren();
 
                 // Reset Class Status
@@ -251,13 +249,15 @@ Original preload function has been kept but is unused.
                 ///////////////////////////// !!! what happens here? assume that they aren't open?
                 //$(this).children().find('li:has(".activeParent,.inactiveParent")').addClass('expandable');
                 // Calling a rebuild assings the correct functionality
-                alert(myTreeRoot.html())
-              myTreeRoot.buildTree_noreload(settings)
+                myTreeRoot.buildTree_noreload(settings)
             });
-
 
             //Mouse binding for closed nodes (First Time)
             myTreeRoot.find('li.expandable').find('.hitarea').unbind("click").click(function () {
+
+                //myTreeRoot needs to be reset within click
+                myTreeRoot = $(this).closest("#MenuTree");
+
                 // Unbind after first click to prevent stupid users multiclicking
                 myTreeRoot.find('li i.hitarea').unbind("click");
                 // Remove current classes from the hit-area
@@ -300,19 +300,21 @@ Original preload function has been kept but is unused.
                     var loadNode = $(this).parent().next()
                     loadNode.load(settings.loadPath, { ajaxCmd: settings.ajaxCmd, pgid: ewPageId, context: ewCloneContextId }, function (data) {
 
+                        myTreeRoot = loadNode.closest("#MenuTree");
+
                         var $results = $(loadNode).find('ul .list-group-item');
                         if ($results.length == 0) {
                             alert($(loadNode).html());
                         }
                         else {
-                            $(loadNode).find("ul .list-group-item").insertAfter(parentNode)
+                            $(loadNode).find("ul .list-group-item").insertAfter(parentNode);
                         }
-                        loadNode.remove()
+                        loadNode.remove();
 
                         // Find out which of the kids have kids
                         loadNode.children().find('li').has('.activeParent,.inactiveParent').addClass('expandable');
-                        // Rebuild the tree
-                       myTreeRoot.buildTree_noreload(settings)
+                       
+                        myTreeRoot.buildTree_noreload(settings);
                     });
 
 
@@ -322,6 +324,8 @@ Original preload function has been kept but is unused.
 
             //Mouse binding for closed nodes (No Reload)
             myTreeRoot.find('li.expandable_loaded').find('.hitarea').unbind("click").click(function () {
+
+                myTreeRoot = $(this).closest("#MenuTree");
                 myTreeRoot.find('li i.hitarea').unbind("click");
                 $(this).removeClass('expandable-hitarea').addClass('collapsable-hitarea');
                 $(this).removeClass('fa-chevron-right').addClass('fa-chevron-down');
@@ -336,15 +340,17 @@ Original preload function has been kept but is unused.
             });
 
             myTreeRoot.find('.btn-hide').unbind("click").click(function () {
+                myTreeRoot = $(this).closest("#MenuTree");
                 var pageId = this.parentNode.parentNode.getAttribute('id').replace("node", "");
                 $(this).hideButton(pageId);
-                $(this).buildTree_noreload(settings)
+                myTreeRoot.buildTree_noreload(settings)
             });
 
             myTreeRoot.find('.btn-show').unbind("click").click(function () {
+                myTreeRoot = $(this).closest("#MenuTree");
                 var pageId = this.parentNode.parentNode.getAttribute('id').replace("node", "");
                 $(this).showButton(pageId);
-                $(this).buildTree_noreload(settings)
+                myTreeRoot.buildTree_noreload(settings)
             });
 
         },
