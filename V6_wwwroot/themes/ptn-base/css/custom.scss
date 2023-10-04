@@ -12,6 +12,7 @@ body {
 }
 #mainTable {
     flex-shrink: 0;
+    flex-grow: 2;
 }
 
 a {
@@ -45,6 +46,13 @@ h1, h2, h3 {
 
     a:visited {
         color: $visited;
+    }
+}
+#mainLayout {
+    p, ul, ol {
+        a {
+            word-wrap: break-word;
+        }
     }
 }
 //images
@@ -363,6 +371,7 @@ div[class$="List"].module {
     &:hover {
         .lIinner {
             transform: scale(1.04);
+            cursor: pointer;
             //z-index: 2;
         }
     }

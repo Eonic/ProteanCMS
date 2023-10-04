@@ -8059,9 +8059,14 @@
 
 	<!-- GA4 Ecommerce Events -->
 	<xsl:template match="Page[ContentDetail/Content[@type='Product']]" mode="google-ga4-event">
+		<xsl:variable name="price">
+			<xsl:apply-templates  select="ContentDetail/Content[@type='Product']" mode="PriceNumberic"/>
+		</xsl:variable>
 		gtag("event", "view_item",{
 		currency: "<xsl:value-of select="Cart/@currency"/>",
-		value: <xsl:apply-templates  select="ContentDetail/Content[@type='Product']" mode="PriceNumberic"/>,
+		<xsl:if test="number(price)">
+		value: <xsl:value-of select="$price"/>,
+		</xsl:if>
 		items:[
 		<xsl:apply-templates select="ContentDetail/Content[@type='Product']" mode="google-ga4-view-item"/>
 		]
@@ -8070,6 +8075,9 @@
 
 
 	<xsl:template match="Content[@type='Product']" mode="google-ga4-view-item">
+		<xsl:variable name="price">
+			<xsl:apply-templates  select="." mode="PriceNumberic"/>
+		</xsl:variable>
 		{
 		    item_id: "<xsl:value-of select="StockCode/node()"/>",
 		    item_name: "<xsl:value-of select="Name/node()"/>",
@@ -8090,7 +8098,9 @@
 		<xsl:if test="$subSubSubSubSectionPage">
 			item_category5: "<xsl:value-of select="$subSubSubSubSectionPage/@name"/>",
 		</xsl:if>
-		    price: <xsl:apply-templates  select="." mode="PriceNumberic"/>,
+		<xsl:if test="number(price)">
+			value: <xsl:value-of select="$price"/>,
+		</xsl:if>
 		    item_list_id: "<xsl:value-of select="$page/@id"/>",
 		    item_list_name: "<xsl:value-of select="$currentPage/@name"/>",
       	    quantity: 1
@@ -14639,11 +14649,23 @@
           </xsl:choose>
         </xsl:attribute>
       </xsl:if>
-      <iframe frameborder="0" class="embed-responsive-item" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen="allowfullscreen" >
-        <xsl:attribute name="src">
+      <iframe frameborder="0" class="embed-responsive-item" allowfullscreen="allowfullscreen" >
+		  <xsl:attribute name="allow">
+			  <xsl:if test="@autoplay='true'">
+				  <xsl:text>autoplay; </xsl:text>
+			  </xsl:if>
+			  <xsl:text>fullscreen; picture-in-picture</xsl:text>			  
+		  </xsl:attribute>
+			  <xsl:attribute name="src">
           <xsl:text>//player.vimeo.com/video/</xsl:text>
           <xsl:value-of select="$code"/>
           <!-- Turn all options off by default -->
+			<xsl:if test="@autoplay='true'">
+				<xsl:text>&amp;autoplay=1</xsl:text>
+			</xsl:if>
+			<xsl:if test="@loop='true'">
+				<xsl:text>&amp;loop=1</xsl:text>
+			</xsl:if>
           <xsl:text>&amp;badge=0&amp;portrait=0&amp;autopause=0&amp;player id=0&amp;app_id=58479</xsl:text>
         </xsl:attribute>
         <xsl:choose>
