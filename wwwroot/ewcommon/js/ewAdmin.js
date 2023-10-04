@@ -2617,23 +2617,33 @@ function showAdminAlert(message) {
 
 function ValidateAndOpenReviewEmail(event) {
 
-    if (form_check(event)) {
-        if ($("#nStatus_1").prop("checked") && $("#nEmailSent_True").prop("checked") == false) {
-            
-            var targetForm = "ReviewConfirmation";
-            var id = this.getQueryStringParam('id');
-            var Email = $("#cContentReviewerEmail").val();
-            var RecordType = $("#cContentSchemaName").val();
-            var RName = $("#cContentReviewer").val();
-            if (RName.indexOf(' ') != -1) {
-                RName = RName.split(' ')[0]
-            } 
-            var targetField = "SendAlertEmailModal";
-            var linkUrl = '?contentType=popup&ewCmd=AlertEmail&id=' + id + '&xFormName=' + targetForm + '&RecordType=' + RecordType + '&RecipientName=' + RName + '&Email=' + Email;
+    if (form_check(event)) {      
+        var id = this.getQueryStringParam('id');
+        if (id== null || id=="") {
+            return true;
+        } else {
+            if ($("#nStatus_1").prop("checked") && $("#nEmailSent_True").prop("checked") == false) {
+                if ($("#dPublishDate").val() == "") {
+                    $("#SendAlertEmailModal").modal('hide');
+                    $("#lblPublishDateError").removeClass("hidden");
+                    $("#lblPublishDateError").css("color", "red");
+                } else {
+                    var targetForm = "ReviewConfirmation";
+                    var id = this.getQueryStringParam('id');
+                    var Email = $("#cContentReviewerEmail").val();
+                    var RecordType = $("#cContentSchemaName").val();
+                    var RName = $("#cContentReviewer").val();
+                    if (RName.indexOf(' ') != -1) {
+                        RName = RName.split(' ')[0]
+                    }
+                    var targetField = "SendAlertEmailModal";
+                    var linkUrl = '?contentType=popup&ewCmd=AlertEmail&id=' + id + '&xFormName=' + targetForm + '&RecordType=' + RecordType + '&RecipientName=' + RName + '&Email=' + Email;
 
-            $('#' + targetField).load(linkUrl, function (e) { $('#' + targetField).modal('show'); });           
-            return false;
-        }
+                    $('#' + targetField).load(linkUrl, function (e) { $('#' + targetField).modal('show'); });
+                    return false;
+                }               
+            }
+        }      
 
     } else {
         return false;
@@ -2735,20 +2745,21 @@ function SendEmail(event) {
 
 
 function OpenAddMultipleImageModal() {
-    debugger
-    var targetForm = "MultipleLibraryImage";
+    debugger    
     var id = this.getQueryStringParam('id');
-    var targetField = "modaltoAddMultipleImages";
-    $(".hiddenContentId").val(id);
-    $(".hiddenProductName").val($("#cContentProductName").val());
-    //var linkUrl = '?contentType=popup&ewCmd=UploadMutipleImages&id=' + id + '&xFormName=' + targetForm;
-    //$('#' + targetField).load(linkUrl, function (e) { $('#' + targetField).modal('show'); });
+    var targetForm = "EditContent";
+    var targetField ="cProductImagesPaths"
+    //$(".hiddenContentId").val(id);
+    //$(".hiddenProductName").val($("#cContentProductName").val());
+    var linkUrl = '?contentType=popup&ewCmd=ImageLib&targetForm=' + targetForm + '&targetField=' + targetField
+    //var linkUrl ='?contentType=popup&ewCmd=ImageLib&targetForm=EditContent&targetField=cContentThumbnail&targetClass=&fld='
+    $('#' + targetField).load(linkUrl, function (e) { $('#' + targetField).modal('show'); });
 
-    $("#AddMultipleLibraryImage").modal("show");
+    //$("#AddMultipleLibraryImage").modal("show");
 }
 
 function SaveMultipleLibraryImage(event) {
-
+    var saveMultiLibraryImageForProduct = "/ewapi/Cms.Admin/saveMultiLibraryImageForProduct";
     var contentId = this.getQueryStringParam('id');
     var RelatedLibraryImages = $("#cReviewImagesPaths").val();
     var cSkipAttribute = false;
