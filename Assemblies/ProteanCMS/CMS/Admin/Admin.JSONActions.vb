@@ -28,7 +28,7 @@ Partial Public Class Cms
             Public moAdminXfm As Protean.Cms.Admin.AdminXforms
             Public moAdminRedirect As Protean.Cms.Admin.Redirects
             Public goConfig As System.Collections.Specialized.NameValueCollection
-
+            Public moCtx As System.Web.HttpContext
 
 
 
@@ -43,6 +43,8 @@ Partial Public Class Cms
                 moAdminRedirect = New Protean.Cms.Admin.Redirects()
                 moAdminXfm = myWeb.getAdminXform()
                 goConfig = myWeb.moConfig
+                moCtx = myWeb.moCtx
+
             End Sub
 
             Public Shadows Sub Open(ByVal oPageXml As XmlDocument)
@@ -531,18 +533,15 @@ Partial Public Class Cms
                 Dim JsonResult As String = ""
                 Dim ncontentId As String = ""
                 Dim cRelatedLibraryImages As String = ""
-                Dim cSkipAttribute As String = ""
+                Dim cSkipAttribute As String = "false"
+                Dim count As Integer = moCtx.Request.Files.Count
 
-                If inputJson("contentId") IsNot Nothing Then
-                    ncontentId = inputJson("contentId").ToObject(Of String)()
+                If moCtx.Request("nProductID") IsNot Nothing Then
+                    ncontentId = moCtx.Request("nProductID")
                 End If
 
-                If inputJson("RelatedLibraryImages") IsNot Nothing Then
-                    cRelatedLibraryImages = inputJson("RelatedLibraryImages").ToObject(Of String)()
-                End If
-
-                If inputJson("cSkipAttribute") IsNot Nothing Then
-                    cSkipAttribute = inputJson("cSkipAttribute").ToObject(Of String)()
+                If moCtx.Request("cRelatedLibraryImages") IsNot Nothing Then
+                    cRelatedLibraryImages = moCtx.Request("cRelatedLibraryImages")
                 End If
 
                 Try

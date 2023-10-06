@@ -5177,6 +5177,15 @@
                 </li>
               </xsl:if>
               <xsl:if test="not(starts-with(/Page/Request/QueryString/Item[@name='fld']/node(),'\FreeStock'))">
+				  <xsl:if test="contains(/Page/Request/QueryString/Item[@name='multiple'],'true')">
+					  <li>
+						  <a href="javascript:;" onclick="getImagePaths();" class="btn btn-success">
+							  <i class="fa fa-picture-o fa-white">
+								  <xsl:text> </xsl:text>
+							  </i><xsl:text> </xsl:text>Add Selected
+						  </a>
+					  </li>
+				  </xsl:if>
                 <li>
                   <a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;ewCmd2=addFolder&amp;fld={@path}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-success">
                     <xsl:if test="$submitPath!='/?'">
