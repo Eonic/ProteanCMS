@@ -1902,15 +1902,20 @@
 							</i> Add New
 						</button>
 					</xsl:if>
-					<xsl:if test="$contentType='LibraryImage'">
-						<xsl:if test="contains(@search,'add')">
-							<button ref="repeat" type="button" name="RelateAdd_MultipleLibraryImage_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs pull-right" onclick="OpenAddMultipleImageModal();">
+									
+						<xsl:if test="contains(@multiple,'true')">
+							<!--<button ref="repeat" type="button" name="RelateAdd_MultipleLibraryImage_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs pull-right Addmultiple" onclick="OpenAddMultipleImageModal();">
 								<i class="fa fa-plus fa-white">
 									<xsl:text> </xsl:text>
 								</i> Add Multiple
-							</button>
+							</button>-->
+							<a data-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={@type}-{@relationType}&amp;targetClass={value/*/@class}&amp;fld={@targetFolder}&amp;multiple=true" data-target="#modal-{@type}-{@relationType}" class="btn btn-primary btn-xs pull-right">
+								<i class="fa fa-picture-o fa-white">
+									<xsl:text> </xsl:text>
+								</i><xsl:text> </xsl:text>Add Multiple
+							</a>
 						</xsl:if>					
-					</xsl:if>					
+								
 				</xsl:if>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -3215,15 +3220,13 @@
 			initialiseGetVimeoDataButton();
 		</script>
 	</xsl:template>
-    <xsl:template match="group[@class='AddMultiple-modal has-script']" mode="xform_control_script">		
-		<div class="modal fade" id="modaltoAddMultipleImages" role="dialog" aria-labelledby="gridSystemModalLabel">
-			<div class="modal-dialog modal-lg" role="document">
-				<xsl:text> </xsl:text>
-			</div>
-		</div>
+
+	<xsl:template match="relatedContent[@multiple='true']" mode="xform_control_script">		
+		<div id="modal-{@type}-{@relationType}" class="modal fade pickImageModal">
+			<xsl:text> </xsl:text>
+		</div>	
 	</xsl:template>
-	
-	<xsl:template match="group[@class='AddMultiple-modal has-script']" mode="xform">
+	<!--<xsl:template match="relatedContent" mode="xform_control_script">
 		<xsl:param name="class"/>
 		<input name="nContentId" id="nContentId" type="hidden" class="hiddenContentId" />
 		<input name="nProductName" type="hidden"  class="hiddenProductName" />
@@ -3257,14 +3260,14 @@
 									<span class="fileupload-loading">
 										<xsl:text> </xsl:text>
 									</span>
-									<!--input type="hidden" name="path" /-->
-									<!-- The fileinput-button span is used to style the file input field as button -->
+									--><!--input type="hidden" name="path" /--><!--
+									--><!-- The fileinput-button span is used to style the file input field as button --><!--
 									<span class="btn btn-success fileinput-button" style="width:100%;">
 										<i class="fa fa-plus fa-white">
 											<xsl:text> </xsl:text>
 										</i>
 										<span>Select files...</span>
-										<!-- The file input field used as target for the file upload widget -->
+										--><!-- The file input field used as target for the file upload widget --><!--
 										<input id="fileupload" type="file" name="files[]" multiple=""/>
 									</span>
 								</div>
@@ -3275,7 +3278,7 @@
 									</div>
 								</div>
 
-								<!-- The table listing the files available for upload/download -->
+								--><!-- The table listing the files available for upload/download --><!--
 								<div id="files" class="hidden">
 									<xsl:text> </xsl:text>
 								</div>
@@ -3295,25 +3298,19 @@
 			</div>
 		</div>
 
-		
-
-	</xsl:template>
-		
-	<xsl:template match="group[@class='AddMultiple-modal has-script']" mode="xform_control_script">
-
-		<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+		--><!-- The Load Image plugin is included for the preview images and image resizing functionality --><!--
 		<script src="/ewcommon/js/jQuery/fileUploader/loadimage/load-image.all.min.js">/* */</script>
-		<!-- The Canvas to Blob plugin is included for image resizing functionality -->
+		--><!-- The Canvas to Blob plugin is included for image resizing functionality --><!--
 		<script src="/ewcommon/js/jQuery/fileUploader/loadimage/vendor/canvas-to-blob.js">/* */</script>
-		<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+		--><!-- The Iframe Transport is required for browsers without support for XHR file uploads --><!--
 		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.iframe-transport.js">/* */</script>
-		<!-- The basic File Upload plugin -->
+		--><!-- The basic File Upload plugin --><!--
 		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload.js">/* */</script>
-		<!-- The File Upload processing plugin -->
+		--><!-- The File Upload processing plugin --><!--
 		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js">/* */</script>
-		<!-- The File Upload image preview & resize plugin -->
+		--><!-- The File Upload image preview & resize plugin --><!--
 		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">/* */</script>
-		<!-- The Image Lazy load plugin -->
+		--><!-- The Image Lazy load plugin --><!--
 		<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">/* */</script>
 		
 <script>
@@ -3361,10 +3358,8 @@
 			}
 			});
 		</script>
+
+	</xsl:template>-->
 		
-	</xsl:template>
-
 	
-
-  
 </xsl:stylesheet>

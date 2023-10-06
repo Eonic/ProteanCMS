@@ -1510,7 +1510,7 @@ function getParameterByName(qStringName) {
 * Adds an event to the "get geocode" button on Location edit page
 */
 function initialiseGeocoderButton() {
-    
+
     $('.getGeocodeButton').click(function (e) {
         // Prevent form submission
         e.preventDefault();
@@ -1549,7 +1549,7 @@ function initialiseGeocoderButton() {
                 alert(status + ' Couldn\'t find the latitude and longitude for the address provided. Try including more details.(' + addressString + ')');
 
             }
-           
+
             // Change to initial button label
             $this.val(label);
         });
@@ -2617,9 +2617,9 @@ function showAdminAlert(message) {
 
 function ValidateAndOpenReviewEmail(event) {
 
-    if (form_check(event)) {      
+    if (form_check(event)) {
         var id = this.getQueryStringParam('id');
-        if (id== null || id=="") {
+        if (id == null || id == "") {
             return true;
         } else {
             if ($("#nStatus_1").prop("checked") && $("#nEmailSent_True").prop("checked") == false) {
@@ -2641,9 +2641,9 @@ function ValidateAndOpenReviewEmail(event) {
 
                     $('#' + targetField).load(linkUrl, function (e) { $('#' + targetField).modal('show'); });
                     return false;
-                }               
+                }
             }
-        }      
+        }
 
     } else {
         return false;
@@ -2661,14 +2661,14 @@ function IsEmail(email) {
     }
 }
 function SendEmail(event) {
-    
-    if ($("#Email").val() != "")
-    {
+
+    if ($("#Email").val() != "") {
         if (IsEmail($("#Email").val()) == false) {
             $("#lblinvalidemail").removeClass("hidden");
             $("#lblinvalidemail").css("color", "red");
             return false;
         } else {
+
             var formData = new FormData($("#AlertEmail")[0]);
             var ajaxurl = '?ewCmd=AlertEmail';
             $("#nEmailSent_True").prop("checked", "checked");
@@ -2689,8 +2689,7 @@ function SendEmail(event) {
                 }
             });
         }
-    } else
-    {       
+    } else {
         $("#SendAlertEmailModal").modal('show');
         $("#lblerrormessage").removeClass("hidden");
         $("#lblerrormessage").css("color", "red");
@@ -2698,85 +2697,86 @@ function SendEmail(event) {
     }
 }
 
-    $('.getPlaceIDButton').click(function (e) {
-        debugger;
-        // Prevent form submission
-        e.preventDefault();
-        var latitude;
-        var longitude;
-        var address = [
-            $('#cLocation').val()
-           
-        ];
-        var location;
-        var addressString = ",,," + address.join(',');
-        var geocoder = new google.maps.Geocoder();
-
-        geocoder.geocode({ address: addressString }, function (results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-
-                // Set lat and long values in relevant inputs
-                var location = results[0].geometry.location;
-                $('#cLatLong').val(location.lat()+"," + location.lng());
-                
-
-            } 
-
-        });
-        var valueOfLatLong = $('#cLatLong').val();
-        var array = valueOfLatLong.split(",");
-        latitude = array[0];
-        longitude = array[1];
-        var latlng = { lat: parseFloat(latitude), lng: parseFloat(longitude) };
-
-        geocoder.geocode({ 'location': latlng }, function (results, status) {
-            if (status === google.maps.GeocoderStatus.OK) {
-                if (results[1]) {
-                    $('#cPalceID').val(results[1].place_id);
-                    /*$('#cPalceID').attr("disabled", "disabled")*/
-                    console.log(results[1].place_id);
-                } 
-            } 
-        });
-        
-        
-    });
-
-
-
-function OpenAddMultipleImageModal() {
-    debugger    
-    var id = this.getQueryStringParam('id');
-    var targetForm = "EditContent";
-    var targetField ="cProductImagesPaths"
-    //$(".hiddenContentId").val(id);
-    //$(".hiddenProductName").val($("#cContentProductName").val());
-    var linkUrl = '?contentType=popup&ewCmd=ImageLib&targetForm=' + targetForm + '&targetField=' + targetField
-    //var linkUrl ='?contentType=popup&ewCmd=ImageLib&targetForm=EditContent&targetField=cContentThumbnail&targetClass=&fld='
-    $('#' + targetField).load(linkUrl, function (e) { $('#' + targetField).modal('show'); });
-
-    //$("#AddMultipleLibraryImage").modal("show");
-}
-
-function SaveMultipleLibraryImage(event) {
-    var saveMultiLibraryImageForProduct = "/ewapi/Cms.Admin/saveMultiLibraryImageForProduct";
-    var contentId = this.getQueryStringParam('id');
-    var RelatedLibraryImages = $("#cReviewImagesPaths").val();
-    var cSkipAttribute = false;
+$('.getPlaceIDButton').click(function (e) {
     debugger;
-    inputJson = { contentId: contentId, RelatedLibraryImages: RelatedLibraryImages, cSkipAttribute: cSkipAttribute };
+    // Prevent form submission
+    e.preventDefault();
+    var latitude;
+    var longitude;
+    var address = [
+        $('#cLocation').val()
 
-    $.ajax({
-        url: saveMultiLibraryImageForProduct,
-        data: JSON.stringify(inputJson),
-        contentType: 'application/json',
-        type: 'POST',
-        success: function (response) {
-            debugger
-            $("#AddMultipleLibraryImage").modal("hide");
+    ];
+    var location;
+    var addressString = ",,," + address.join(',');
+    var geocoder = new google.maps.Geocoder();
+
+    geocoder.geocode({ address: addressString }, function (results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+
+            // Set lat and long values in relevant inputs
+            var location = results[0].geometry.location;
+            $('#cLatLong').val(location.lat() + "," + location.lng());
+
+
+        }
+
+    });
+    var valueOfLatLong = $('#cLatLong').val();
+    var array = valueOfLatLong.split(",");
+    latitude = array[0];
+    longitude = array[1];
+    var latlng = { lat: parseFloat(latitude), lng: parseFloat(longitude) };
+
+    geocoder.geocode({ 'location': latlng }, function (results, status) {
+        if (status === google.maps.GeocoderStatus.OK) {
+            if (results[1]) {
+                $('#cPalceID').val(results[1].place_id);
+                /*$('#cPalceID').attr("disabled", "disabled")*/
+                console.log(results[1].place_id);
+            }
         }
     });
+
+
+});
+
+function getImagePaths() {   
+    var imagepaths = "";  
+    for (var i = 0; i < $(".multicheckbox").length; i++) {
+        if ($(".multicheckbox")[i].checked === true) {           
+            if (imagepaths == "") {
+                imagepaths = $(".multicheckbox")[i].value;
+            } else {
+                imagepaths= $(".multicheckbox")[i].value + ',' + imagepaths;
+            }
+            if (imagepaths.includes("%20"))
+            {               
+                imagepaths = imagepaths.replace("%20", " ");
+            }
+        }
+    }   
+    var saveMultiLibraryImageForProduct = "/ewapi/Cms.Admin/saveMultiLibraryImageForProduct";
+    var contentId = this.getQueryStringParam('id');
+    //var RelatedLibraryImages = imagepaths;
+    //var cSkipAttribute = false;  
+    $("#cRelatedLibraryImages").val(imagepaths); 
+    $("#nProductID").val(contentId);
+    var formData = new FormData($("#EditContent")[0]);
+    //var formData = JSON.stringify($("#EditContent").serializeArray());
+    //inputJson = { contentId: contentId, RelatedLibraryImages: RelatedLibraryImages, cSkipAttribute: cSkipAttribute, formData: formData };
+   
+    $.ajax({
+        url: saveMultiLibraryImageForProduct,
+        data: formData,
+        contentType: false,
+        processData: false,       
+        type: 'POST',
+        success: function (response) {           
+            $("#modal-cProductImagesPaths").modal("hide");
+            location.reload();
+        }
+    });
+
+
 }
-
-
-    
