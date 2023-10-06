@@ -7828,10 +7828,8 @@ restart:
                         'Dim oImg As System.Drawing.Bitmap = New System.Drawing.Bitmap(goServer.MapPath("/") & cImage.Trim.Replace("/", "\"))
                         Dim oImg As System.Drawing.Bitmap
 
-                        If myWeb.moCtx.Request.Form("cReviewPhysicalPath") <> Nothing AndAlso myWeb.moCtx.Request.Form("cReviewPhysicalPath") <> String.Empty Then
-                            oImg = New System.Drawing.Bitmap(myWeb.moCtx.Request.Form("cReviewPhysicalPath") & cImage.Trim.Replace("/", "\"))
-                            'ElseIf goConfig("ReviewImageRootPath") <> Nothing AndAlso goConfig("ReviewImageRootPath") <> String.Empty Then
-                            '    oImg = New System.Drawing.Bitmap(goConfig("ReviewImageRootPath") & cImage.Trim.Replace("/", "\"))
+                        If myWeb.moCtx.Request.Form("cImageBasePath") <> Nothing AndAlso myWeb.moCtx.Request.Form("cImageBasePath") <> String.Empty Then
+                            oImg = New System.Drawing.Bitmap(myWeb.moCtx.Request.Form("cImageBasePath") & cImage.Trim.Replace("/", "\"))
                         Else
                             oImg = New System.Drawing.Bitmap(goServer.MapPath("/") & cImage.Trim.Replace("/", "\"))
                         End If
