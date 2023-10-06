@@ -30,7 +30,17 @@ namespace Protean.Tools
                 oTransform.Xml = xPageXml;
                 oTransform.Compiled = false;
 
-                string foNetXml = oTransform.Process();                           
+                string foNetXml = oTransform.Process();
+
+                    if (foNetXml.StartsWith("<html")) {
+
+                        // using selectpdf....
+
+                        return null;
+                    }
+                    else { 
+
+
 
                 // now we use FO.Net to generate our PDF
 
@@ -68,11 +78,12 @@ namespace Protean.Tools
                 oFoNet.Options = rendererOpts;
                 oFoNet.Render(oTxtReader, ofileStream);
 
+                 
 
-                byte[] Buffer = ofileStream.ToArray();
+                    byte[] Buffer = ofileStream.ToArray();
 
                 return new MemoryStream(Buffer);
-      
+         }
                 }
                 catch (Exception ex)
                 {

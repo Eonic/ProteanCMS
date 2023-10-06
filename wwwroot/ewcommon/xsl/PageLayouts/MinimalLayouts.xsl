@@ -14663,10 +14663,15 @@
 			<xsl:if test="@autoplay='true'">
 				<xsl:text>&amp;autoplay=1</xsl:text>
 			</xsl:if>
-			<xsl:if test="@loop='true'">
-				<xsl:text>&amp;loop=1</xsl:text>
-			</xsl:if>
-          <xsl:text>&amp;badge=0&amp;portrait=0&amp;autopause=0&amp;player id=0&amp;app_id=58479</xsl:text>
+				  <xsl:choose>
+			            <xsl:when test="@loop='true'">
+				            <xsl:text>&amp;loop=1</xsl:text>
+			            </xsl:when>
+					  <xsl:otherwise>
+				            <xsl:text>&amp;loop=0</xsl:text>
+				    </xsl:otherwise>
+				  </xsl:choose>
+          <xsl:text>&amp;background=0&amp;badge=0&amp;portrait=0&amp;autopause=0&amp;player id=0&amp;app_id=58479</xsl:text>
         </xsl:attribute>
         <xsl:choose>
           <xsl:when test="@size='Manual'">
