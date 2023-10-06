@@ -815,7 +815,7 @@
       </xsl:choose>
       <xsl:if test="alert">
         <div class="invalid-feedback text-warning">
-          <xsl:value-of select="alert/node()"/>
+          <xsl:value-of select="alert/node()"/> 
         </div>
       </xsl:if>
     </div>

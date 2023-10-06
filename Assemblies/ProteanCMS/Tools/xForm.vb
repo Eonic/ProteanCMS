@@ -783,10 +783,21 @@ Public Class xForm
                         ' Constraint not met
                         bIsValid = False
                         bIsThisBindValid = False
-                        If addNoteFromBind(oBindElmt, noteTypes.Alert, BindAttributes.Constraint, "<span class=""msg-1008"">This information must be valid</span>") Then
+                        Dim thisValidationError As String = "<span class=""msg-1008"">This information must be valid</span>"
+
+                        If Not oBindElmt.SelectSingleNode("alert") Is Nothing Then
+                            thisValidationError = "<span>" & oBindElmt.SelectSingleNode("alert").InnerText & "</span>"
+                        End If
+
+                        If oBindElmt.GetAttribute("alert") <> "" Then
+                            thisValidationError = "<span>" & oBindElmt.GetAttribute("alert") & "</span>"
+                        End If
+
+                        If addNoteFromBind(oBindElmt, noteTypes.Alert, BindAttributes.Constraint, thisValidationError) Then
                             missedError = True
                         End If
-                        cValidationError += "<span class=""msg-1035""><span class=""labelName"">" & labelText & "</span> - This information must be valid</span>"
+                        cValidationError += "<span class=""msg-1035""><span class=""labelName"">" & labelText & "</span> - " & thisValidationError & "</span>"
+
                     End If
                 End If
 
