@@ -265,13 +265,13 @@
   <xsl:template match="Page[@layout='DocsLib']" mode="newItemScript">
     var newItem = '<tr>';
 		newItem = newItem + '<td>';
-			newItem = newItem + '<i class="icon-file-' + /[^.]+$/.exec(file.name) + '"> </i> ' + file.name.replace(/\ /g,'-') + ';
+			newItem = newItem + '<i class="icon-file-' + /[^.]+$/.exec(file.name) + '"> </i> ' + file.name.replace(/\ /g,'-');
 		newItem = newItem + '</td>';
 		newItem = newItem + '<td>.' + /[^.]+$/.exec(file.name) + '</td>';
 		newItem = newItem + '<td>';
         <!--newItem = newItem + '<a onclick="passDocToForm(\'EditContent\',\'cContentDocPath\',\' + targetPath + \'/\' + file.name + \');" class="btn btn-xs btn-default" href="#">';-->
-        newItem = newItem + '<a onclick="passDocToForm(\'EditContent\',\'cContentDocPath\',\'' + targetPath + '/' + file.name.replace(/\ /g,'-') + '\');" class="btn btn-xs btn-default" href="#">';
-          newItem = newItem + '<i class="fa fa-file-o fa-white"> </i> Pick';
+        newItem = newItem + '<a onclick="passDocToForm(\'EditContent\',\'cContentDocPath\',\'' + targetPath + '/' + file.name.replace(/\ /g,'-') + '\');" class="btn btn-xs text-link" href="#">';
+          newItem = newItem + '<i class="fa-solid fa-file-circle-plus"> </i> Pick Document';
 			newItem = newItem + '</a>';
 			newItem = newItem + '</td>';
 		newItem = newItem + '</tr>';
@@ -451,12 +451,12 @@
                   <xsl:choose>
                     <!--Pick Document-->
                     <xsl:when test="/Page/@ewCmd='DocsLib'">
-                      <a onclick="passDocToForm('{/Page/Request/QueryString/Item[@name='targetForm']/node()}','{/Page/Request/QueryString/Item[@name='targetField']/node()}','/{translate(@root,'\','/')}{translate(parent::folder/@path,'\','/')}/{@name}');" class="btn btn-xs btn-default" href="#">
-                        <i class="fa fa-file-o fa-white">
-                          <xsl:text> </xsl:text>
-                        </i>
-                        <xsl:text> </xsl:text>Pick
-                      </a>
+                      <a onclick="passDocToForm('{/Page/Request/QueryString/Item[@name='targetForm']/node()}','{/Page/Request/QueryString/Item[@name='targetField']/node()}','/{translate(@root,'\','/')}{translate(parent::folder/@path,'\','/')}/{@name}');" class="btn btn-xs text-link" href="#">
+						  <i class="fa-solid fa-file-circle-plus">
+							  <xsl:text> </xsl:text>
+						  </i>
+						  <xsl:text> </xsl:text>Pick Document
+					  </a>
                     </xsl:when>
                     <!--Pick Media-->
                     <xsl:when test="/Page/@ewCmd='MediaLib'">
@@ -796,11 +796,8 @@
 
 		<xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup'))">
 
-
 			<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
 			<script src="/ptn/libs/blueimp-file-upload/js/vendor/jquery.ui.widget.js">/* */</script>
-			<!-- The Templates plugin is included to render the upload/download listings
-		<script src="https://blueimp.github.io/JavaScript-Templates/js/tmpl.min.js">/* */</script> -->
 			<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
 			<script src="https://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js">/* */</script>
 			<!-- The Canvas to Blob plugin is included for image resizing functionality -->
@@ -811,35 +808,6 @@
 			<script src="/ptn/libs/blueimp-file-upload/js/jquery.iframe-transport.js">/* */</script>
 			<!-- The basic File Upload plugin -->
 			<script src="/ptn/libs/blueimp-file-upload/js/jquery.fileupload.js">/* */</script>
-			<!-- The File Upload processing plugin -->
-			<!--
-		<script src="/ptn/admin/fileupload/js/jquery.fileupload-process.js">/* */</script>
-		-->
-			<!-- The File Upload image preview & resize plugin -->
-			<!--
-		<script src="/ptn/admin/fileupload/js/jquery.fileupload-image.js">/* */</script>
-		-->
-			<!-- The File Upload audio preview plugin -->
-			<!--
-		<script src="/ptn/admin/fileupload/js/jquery.fileupload-audio.js">/* */</script>
-		-->
-			<!-- The File Upload video preview plugin -->
-			<!--
-		<script src="/ptn/admin/fileupload/js/jquery.fileupload-video.js">/* */</script>
-		-->
-			<!-- The File Upload validation plugin -->
-			<!--
-		<script src="/ptn/admin/fileupload/js/jquery.fileupload-validate.js">/* */</script>
-		-->
-			<!-- The File Upload user interface plugin -->
-			<!--
-		<script src="/ptn/admin/fileupload/js/jquery.fileupload-ui.js">/* */</script>-->
-
-			<!-- The Load Image plugin is included for the preview images and image resizing functionality 
-      <script src="/ptn/admin/fileupload/js/load-image.all.min.js">/* */</script>-->
-			<!-- The Canvas to Blob plugin is included for image resizing functionality
-      <script src="/ptn/admin/fileupload/js/loadimage/vendor/canvas-to-blob.js">/* */</script> -->
-			<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
 			<script src="/ptn/libs/jquery.lazy/jquery.lazy.min.js">/* */</script>
 		</xsl:if>
 
@@ -908,6 +876,7 @@ function primeFileUpload(){
 		</script>
 
 		<script>
+
 			preparePickImageModal($('#modal-<xsl:value-of select="$page/Request/QueryString/Item[@name='targetField']/node()"/>'));
 		</script>
 	</xsl:template>
