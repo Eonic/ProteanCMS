@@ -1411,14 +1411,16 @@ Public Class Cms
 
                                         If moRequest("recompile") = "del" Then
 
-
                                             If RestoreRedirectSession(moRequest("SessionId"), 5, True) = True Then
+                                                Protean.Config.UpdateConfigValue(Me, "", "recompile", "false")
+
                                                 Dim oFS As New Protean.fsHelper(moCtx)
                                                 oFS.mcRoot = gcProjectPath
                                                 oFS.mcStartFolder = goServer.MapPath("\" & gcProjectPath) + "xsltc"
+
                                                 oFS.DeleteFolderContents("", "")
                                                 Protean.Config.UpdateConfigValue(Me, "protean/web", "CompiledTransform", "on")
-                                                Protean.Config.UpdateConfigValue(Me, "", "recompile", "false")
+
                                                 msRedirectOnEnd = "/?rebundle=true&SessionId=" & SessionID
                                             End If
 
