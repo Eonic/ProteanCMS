@@ -1462,7 +1462,6 @@ D:\_Sonali_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\
 D:\_Sonali_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\JsonWebTokens.dll
 D:\_Sonali_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Text.Encoding.CodePages.dll
 D:\_Sonali_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Tools.pdb
-D:\_Sonali_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Tools.xml
 D:\_Sonali_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Tools.dll.config
 D:\_Sonali_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\AdvancedStringBuilder.xml
 D:\_Sonali_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\AlphaFS.pdb
