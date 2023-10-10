@@ -536,8 +536,8 @@ Partial Public Class Cms
                 Dim cSkipAttribute As String = "false"
                 Dim count As Integer = moCtx.Request.Files.Count
 
-                If moCtx.Request("nProductID") IsNot Nothing Then
-                    ncontentId = moCtx.Request("nProductID")
+                If moCtx.Request("contentId") IsNot Nothing Then
+                    ncontentId = moCtx.Request("contentId")
                 End If
 
                 If moCtx.Request("cRelatedLibraryImages") IsNot Nothing Then

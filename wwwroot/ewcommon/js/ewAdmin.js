@@ -2761,10 +2761,8 @@ function getImagePaths() {
     //var RelatedLibraryImages = imagepaths;
     //var cSkipAttribute = false;  
     $("#cRelatedLibraryImages").val(imagepaths); 
-    $("#nProductID").val(contentId);
+    $("#contentId").val(contentId);
     var formData = new FormData($("#EditContent")[0]);
-    //var formData = JSON.stringify($("#EditContent").serializeArray());
-    //inputJson = { contentId: contentId, RelatedLibraryImages: RelatedLibraryImages, cSkipAttribute: cSkipAttribute, formData: formData };
    
     $.ajax({
         url: saveMultiLibraryImageForProduct,
