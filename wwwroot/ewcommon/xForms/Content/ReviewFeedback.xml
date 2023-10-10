@@ -63,7 +63,7 @@
 				<nUpdateDirId/>
 				<nStatus>4</nStatus>
 				<cDescription/>
-				<ReviewPhysicalPath></ReviewPhysicalPath>
+				<ImageBasePath>D:\nita_workspace\Clients\HostingSpaces\Intotheblue\</ImageBasePath>
 			</tblContent>
 			<RelatedLibraryImages skipFirst="true" type="LibraryImage">
 			</RelatedLibraryImages>
@@ -112,7 +112,7 @@
 				<bind id="nProductID" nodeset="ProductID" required="false()" type="string"/>
 			</bind>
 			<bind id="dPublishDate" nodeset="ReviewDate" required="false()" type="string"/>
-			<bind id="cReviewPhysicalPath" nodeset="ReviewPhysicalPath" required="false()" type="string"/>
+			<bind id="cImageBasePath" nodeset="ImageBasePath" required="false()" type="string"/>
 		</bind>
 		<bind id="cReviewImagesPaths" nodeset="RelatedLibraryImages" required="false()" type="string"/>
 	</model>
@@ -155,7 +155,7 @@
 				<input bind="nProductID" id="nProductID" class="readonly short hidden">
 					<label>ProductID</label>
 				</input>
-				<input bind="cReviewPhysicalPath" id="cReviewPhysicalPath" class="readonly short hidden">
+				<input bind="cImageBasePath" id="cImageBasePath" class="readonly short hidden">
 					<label>Path</label>
 				</input>
 				<input id="cProductNameforPath" bind="cProductNameforPath" class="readonly short hidden">

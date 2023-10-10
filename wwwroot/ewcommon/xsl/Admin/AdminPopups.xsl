@@ -216,23 +216,48 @@
               <xsl:text> active </xsl:text>
             </xsl:if>
          </xsl:attribute>
-        <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" data-toggle="modal" data-target="#modal-{/Page/Request/QueryString/Item[@name='targetField']/node()}">
-           <i>
-            <xsl:attribute name="class">
-              <xsl:text>fa fa-lg</xsl:text>
-                <xsl:choose>
-                  <xsl:when test="@active='true'">
-                    <xsl:text> fa-folder-open-o</xsl:text>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:text> fa-folder-o</xsl:text>
-              </xsl:otherwise>
-              </xsl:choose>
-              <xsl:if test="folder"> activeParent</xsl:if>
-            </xsl:attribute>
-          &#160;</i>
-          <xsl:value-of select="@name"/>
-        </a>
+		<xsl:choose>
+			<!--Add new multiple=true condition for multiple library images-->
+			
+			<xsl:when test="contains(/Page/Request/QueryString/Item[@name='multiple'],'true')">
+			    <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}&amp;multiple=true" data-toggle="modal" data-target="#modal-{/Page/Request/QueryString/Item[@name='targetField']/node()}">
+                   <i>
+                    <xsl:attribute name="class">
+                      <xsl:text>fa fa-lg</xsl:text>
+                        <xsl:choose>
+                          <xsl:when test="@active='true'">
+                            <xsl:text> fa-folder-open-o</xsl:text>
+                        </xsl:when>
+                        <xsl:otherwise>
+                          <xsl:text> fa-folder-o</xsl:text>
+                      </xsl:otherwise>
+                      </xsl:choose>
+                      <xsl:if test="folder"> activeParent</xsl:if>
+                    </xsl:attribute>
+                  &#160;</i>
+                  <xsl:value-of select="@name"/>
+                </a>
+			</xsl:when>
+			<xsl:otherwise>
+				  <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" data-toggle="modal" data-target="#modal-{/Page/Request/QueryString/Item[@name='targetField']/node()}">
+                   <i>
+                    <xsl:attribute name="class">
+                      <xsl:text>fa fa-lg</xsl:text>
+                        <xsl:choose>
+                          <xsl:when test="@active='true'">
+                            <xsl:text> fa-folder-open-o</xsl:text>
+                        </xsl:when>
+                        <xsl:otherwise>
+                          <xsl:text> fa-folder-o</xsl:text>
+                      </xsl:otherwise>
+                      </xsl:choose>
+                      <xsl:if test="folder"> activeParent</xsl:if>
+                    </xsl:attribute>
+                  &#160;</i>
+                  <xsl:value-of select="@name"/>
+                </a>			
+		    </xsl:otherwise>		
+		</xsl:choose>		
       </li>
   
     <xsl:if test="folder">
@@ -517,20 +542,36 @@
                                   </xsl:if>
                                 </xsl:when>
                                 <xsl:otherwise>
-                                  <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.svg' or @Extension='.tiff' or @Extension='.tif'">
-                                    <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}&amp;ewCmd2=pickImage&amp;fld={$fld}&amp;file={$filename}{@extension}" data-toggle="modal" data-target="#modal-{/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-xs btn-info pickImage">
-                                      <i class="fa fa-picture-o fa-white">
-                                        <xsl:text> </xsl:text>
-                                      </i>
-                                      Pick Image
-                                    </a>
-                                  </xsl:if>
+									<xsl:choose>
+										<!--Add new multiple=true condition for multiple library images-->
+										<xsl:when test="contains(/Page/Request/QueryString/Item[@name='multiple'],'true')">
+										
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.svg' or @Extension='.tiff' or @Extension='.tif'">
+                                                <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}&amp;ewCmd2=pickImage&amp;fld={$fld}&amp;file={$filename}{@extension}" data-toggle="modal" data-target="#modal-{/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-xs btn-info pickImage">
+                                                  <i class="fa fa-picture-o fa-white">
+                                                    <xsl:text> </xsl:text>
+                                                  </i>
+                                                  Pick Image
+                                                </a>
+                                            </xsl:if>
+										</xsl:otherwise>
+									</xsl:choose>
                                 </xsl:otherwise>
                               </xsl:choose>
                             </div>
                          <div class="img-description">
+							
                       <span class="image-description-name">
-                        <xsl:value-of select="@name"/>
+                       
+						  
+					    <xsl:if test="contains(/Page/Request/QueryString/Item[@name='multiple'],'true')">
+								<span class="radiocheckbox pull-right">
+									<input type="checkbox" value="/{@root}{translate($fld,'\', '/')}/{@name}" id="chkMultipleImage" class="multicheckbox" name="Select Multiple Images"></input>
+								</span>
+							</xsl:if> 
+					   <xsl:value-of select="@name"/>
                       </span>
                       <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.tiff' or @Extension='.tif'">
                         <xsl:value-of select="@width"/>

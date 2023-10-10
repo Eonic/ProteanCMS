@@ -1902,13 +1902,20 @@
 							</i> Add New
 						</button>
 					</xsl:if>
-					<!--<xsl:if test="contains(@search,'add')">
-						<button ref="repeat" type="button" name="RelateAdd_MultipleLibraryImage_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs pull-right" onclick="disableButton(this);$('#{$formName}').submit();">
-							<i class="fa fa-plus fa-white">
-								<xsl:text> </xsl:text>
-							</i> Add Multiple
-						</button>
-					</xsl:if>-->
+									
+						<xsl:if test="contains(@multiple,'true')">
+							<!--<button ref="repeat" type="button" name="RelateAdd_MultipleLibraryImage_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs pull-right Addmultiple" onclick="OpenAddMultipleImageModal();">
+								<i class="fa fa-plus fa-white">
+									<xsl:text> </xsl:text>
+								</i> Add Multiple
+							</button>-->
+							<a data-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={@type}-{@relationType}&amp;targetClass={value/*/@class}&amp;fld={@targetFolder}&amp;multiple=true" data-target="#modal-{@type}-{@relationType}" class="btn btn-primary btn-xs pull-right">
+								<i class="fa fa-picture-o fa-white">
+									<xsl:text> </xsl:text>
+								</i><xsl:text> </xsl:text>Add Multiple
+							</a>
+						</xsl:if>					
+								
 				</xsl:if>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -2046,6 +2053,7 @@
 							</i> Add New
 						</button>
 					</xsl:if>
+				   
 				</xsl:if>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -3213,123 +3221,9 @@
 		</script>
 	</xsl:template>
 
-	<xsl:template match="input[contains(@class,'userProductUploadImage')]" mode="xform_control_script">
-
-		<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-		<script src="/ewcommon/js/jQuery/fileUploader/loadimage/load-image.all.min.js">/* */</script>
-		<!-- The Canvas to Blob plugin is included for image resizing functionality -->
-		<script src="/ewcommon/js/jQuery/fileUploader/loadimage/vendor/canvas-to-blob.js">/* */</script>
-		<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.iframe-transport.js">/* */</script>
-		<!-- The basic File Upload plugin -->
-		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload.js">/* */</script>
-		<!-- The File Upload processing plugin -->
-		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js">/* */</script>
-		<!-- The File Upload image preview & resize plugin -->
-		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">/* */</script>
-		<!-- The Image Lazy load plugin -->
-		<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">/* */</script>
-		
-
-		<script>
-			var ContentId = $('#productIdofPage').val();
-			var cContentName = $('#productName').val();
-			var uploadURL = '/ewapi/Cms.Content/ImageUpload';
-			$('#fileupload').fileupload({
-			url:uploadURL,
-			dataType: 'json',
-			sequentialUploads: true,
-			dropZone:$('#uploadFiles'),
-			always: function (e, data) {
-			$.each(data.files, function (index, file) {
-			$.ajax({
-			url: '/ewapi/Cms.Content/GetLastUploadedFilePath',
-			data: '',
-			type: 'GET',
-			success: function (response) {
-			newfilename = response;
-			$('<p/>').text(newfilename).appendTo('#files');
-			cImagePath = '<img src="'+response+'" width="'+'50'+'" height="'+'50'+'" alt='' class="'+'display'+'" />';
-
-			if(newfilename != '')
-			{
-			if($('.uploadProductImagesDisplay')[1].value == '')
-			{
-			$('.uploadProductImagesDisplay')[1].value = newfilename;
-			}else
-			{
-			$('.uploadProductImagesDisplay')[1].value = $('.uploadProductImagesDisplay')[1].value +', ' + newfilename;
-			}
-			}
-
-			$('<div class="previewImage" id="previewImage_cReviewImagesPaths">
-				<span>' + cImagePath + '</span>
-			</div><br/>').insertAfter($('#files'));
-
-			}
-			});
-			});
-			},
-			progressall: function (e, data) {
-			var progress = parseInt(data.loaded / data.total * 100, 10);
-			$('#progress .bar').css(
-			'width',
-			progress + '%'
-			);
-			}
-			});
-		</script>
-	</xsl:template>
-
-	<xsl:template match="input[contains(@class,'userProductUploadImage')]" mode="xform_control">
-		<xsl:variable name="ref">
-			<xsl:apply-templates select="." mode="getRefOrBind"/>
-		</xsl:variable>
-		<div id="uploadFiles">
-			<xsl:choose>
-				<xsl:when test="contains($browserVersion,'Firefox') or contains($browserVersion,'Chrome')">
-					<div class="drophere">
-						<i class="fas fa-mouse-pointer">&#160;</i> and drop files here to upload them
-					</div>
-					<label class="label">Alternatively, pick files</label>
-				</xsl:when>
-				<xsl:when test="contains($browserVersion,'MSIE') or contains($browserVersion,'')">
-					<div class="hint">Note: You can upload multiple files without needing to refresh the page</div>
-					<label class="label">Pick file</label>
-				</xsl:when>
-			</xsl:choose>
-			<span class="fileupload-loading">
-				<xsl:text> </xsl:text>
-			</span>
-			<!--input type="hidden" name="path" /-->
-			<!-- The fileinput-button span is used to style the file input field as button -->
-			<span class="btn btn-success fileinput-button" style="width:100%;">
-				<i class="fa fa-plus fa-white">
-					<xsl:text> </xsl:text>
-				</i>
-				<span>Select files...</span>
-				<!-- The file input field used as target for the file upload widget -->
-				<input id="fileupload" type="file" name="files[]" multiple=""/>
-			</span>
-		</div>
-		<br/>
-		<div id="progress" class="progress progress-success progress-striped" style="marging-top:40px;">
-			<div class="bar">
-				<xsl:text> </xsl:text>
-			</div>
-		</div>
-
-		<!-- The table listing the files available for upload/download -->
-		<div id="files" class="hidden">
+	<xsl:template match="relatedContent[@multiple='true']" mode="xform_control_script">		
+		<div id="modal-{@type}-{@relationType}" class="modal fade pickImageModal">
 			<xsl:text> </xsl:text>
-		</div>
-		<table role="presentation" class="table table-striped">
-			<tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery">
-				<xsl:text> </xsl:text>
-			</tbody>
-		</table>
-
+		</div>	
 	</xsl:template>
-
-    
 </xsl:stylesheet>

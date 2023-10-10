@@ -64,22 +64,24 @@ Namespace Providers
 
                     Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure, arrParams)  'Done by nita on 6/7/22
                         'Adding controls to the form like dropdown, radiobuttons
+                        If (oDr IsNot Nothing AndAlso oDr.HasRows) Then
 
-                        If (oXml.InnerText <> String.Empty) Then
+                            If (oXml.InnerText <> String.Empty) Then
 
-                            pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, sCotrolDisplayName, "checkbox SubmitPageFilter filter-selected", ApperanceTypes.Full)
-                        Else
-                            pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, sCotrolDisplayName, "checkbox SubmitPageFilter", ApperanceTypes.Full)
+                                pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, sCotrolDisplayName, "checkbox SubmitPageFilter filter-selected", ApperanceTypes.Full)
+                            Else
+                                pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, sCotrolDisplayName, "checkbox SubmitPageFilter", ApperanceTypes.Full)
+                            End If
+
+                            'oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "name", "nStructKey")
+                            While oDr.Read
+                                Dim name As String = Convert.ToString(oDr("cStructName")) + " <span class='ProductCount'>" + Convert.ToString(oDr("ContentCount")) + "</span>"
+                                Dim value As String = Convert.ToString(oDr("nStructKey"))
+
+                                oXform.addOption(pageFilterSelect, name, value, True)
+
+                            End While
                         End If
-
-                        'oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "name", "nStructKey")
-                        While oDr.Read
-                            Dim name As String = Convert.ToString(oDr("cStructName")) + " <span class='ProductCount'>" + Convert.ToString(oDr("ContentCount")) + "</span>"
-                            Dim value As String = Convert.ToString(oDr("nStructKey"))
-
-                            oXform.addOption(pageFilterSelect, name, value, True)
-
-                        End While
 
                     End Using
                     If (oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item") IsNot Nothing) Then
