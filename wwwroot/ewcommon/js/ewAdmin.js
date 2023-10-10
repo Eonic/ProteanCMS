@@ -2756,7 +2756,7 @@ function getImagePaths() {
             }
         }
     }   
-    var saveMultiLibraryImageForProduct = "/ewapi/Cms.Admin/saveMultiLibraryImageForProduct";
+    var SaveMultipleLibraryImages = "/ewapi/Cms.Admin/SaveMultipleLibraryImages";
     var contentId = this.getQueryStringParam('id');
     //var RelatedLibraryImages = imagepaths;
     //var cSkipAttribute = false;  
@@ -2765,7 +2765,7 @@ function getImagePaths() {
     var formData = new FormData($("#EditContent")[0]);
    
     $.ajax({
-        url: saveMultiLibraryImageForProduct,
+        url: SaveMultipleLibraryImages,
         data: formData,
         contentType: false,
         processData: false,       

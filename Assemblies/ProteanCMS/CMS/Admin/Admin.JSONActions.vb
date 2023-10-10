@@ -529,7 +529,7 @@ Partial Public Class Cms
                 End Try
             End Function
 
-            Public Function saveMultiLibraryImageForProduct(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+            Public Function SaveMultipleLibraryImages(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
                 Dim JsonResult As String = ""
                 Dim nContentId As String = ""
                 Dim cRelatedLibraryImages As String = ""
