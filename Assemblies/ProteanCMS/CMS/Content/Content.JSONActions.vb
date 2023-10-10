@@ -326,29 +326,7 @@ Partial Public Class Cms
 
             End Function
 
-            Public Function ImageUploadProductLevel(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
-                Try
 
-                    Dim moFSHelper As New Protean.fsHelper(moCtx)
-                    Dim cPageContentId As String = String.Empty
-                    Dim cContentName As String = String.Empty
-                    Dim JsonResult As String = String.Empty
-
-                    cPageContentId = moCtx.Request("contentId")
-                    'Dim UploadDirPath As String = String.Empty
-                    'UploadDirPath = moCtx.Request("storageRoot")
-                    If moCtx.Request.Files.Count > 0 Then
-                        moFSHelper.initialiseVariables(fsHelper.LibraryType.Image)
-                        Dim cleanPathName As String = moFSHelper.UploadRequest(moCtx)
-                        moCtx.Session("lastUploadedFilePath") = cleanPathName
-                        moFSHelper = Nothing
-                    End If
-                    Return JsonResult
-                Catch ex As Exception
-                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ReviewImagePath", ex, ""))
-                    Return ex.Message
-                End Try
-            End Function
 
         End Class
 
