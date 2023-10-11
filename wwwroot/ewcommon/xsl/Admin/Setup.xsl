@@ -129,7 +129,7 @@
     <html>
       <head>
         <title>
-          <xsl:call-template name="eonicwebProductName"/> Setup and Maintenance Tool</title>
+          <xsl:call-template name="eonicwebProductNameText"/> Setup and Maintenance Tool</title>
 	      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <link rel="stylesheet" type="text/css" href="/ewcommon/css/base-bs.less" />
         <link type="text/css" rel="stylesheet" href="/ewcommon/css/admin/admin.less" />

@@ -1510,7 +1510,7 @@ function getParameterByName(qStringName) {
 * Adds an event to the "get geocode" button on Location edit page
 */
 function initialiseGeocoderButton() {
-    
+
     $('.getGeocodeButton').click(function (e) {
         // Prevent form submission
         e.preventDefault();
@@ -1549,7 +1549,7 @@ function initialiseGeocoderButton() {
                 alert(status + ' Couldn\'t find the latitude and longitude for the address provided. Try including more details.(' + addressString + ')');
 
             }
-           
+
             // Change to initial button label
             $this.val(label);
         });
@@ -1610,7 +1610,7 @@ function initialiseGetVimeoDataButton() {
         jsonURL = "https://vimeo.com/api/v2/video/" + id + ".json";
         $.getJSON(jsonURL, function (result) {
             $("#cVimeoDuration").val(result[0].duration);
-            $("#cVimeoDescrtipion").val(result[0].description);
+            $("#cVimeoByline").val(result[0].description);
             $("#cVimeoThumbnail").val(result[0].thumbnail_medium);
             $("#cModuleTitle").val(result[0].title);
         });
@@ -2497,6 +2497,8 @@ if (editPageElement) {
 
 
 $(document).ready(function () {
+    var cLocation = $(".admin-breadcrumb-inner ul li").last().text();
+    $("#cLocation").val(cLocation);
     function scrollToAnchor(aid) {
         var aTag = $("li[id='" + aid + "']");
         $('#MenuTree').animate({ scrollTop: aTag.position().top }, 'slow');
@@ -2616,21 +2618,31 @@ function showAdminAlert(message) {
 function ValidateAndOpenReviewEmail(event) {
 
     if (form_check(event)) {
-        if ($("#nStatus_1").prop("checked") && $("#nEmailSent_True").prop("checked") == false) {
-            
-            var targetForm = "ReviewConfirmation";
-            var id = this.getQueryStringParam('id');
-            var Email = $("#cContentReviewerEmail").val();
-            var RecordType = $("#cContentSchemaName").val();
-            var RName = $("#cContentReviewer").val();
-            if (RName.indexOf(' ') != -1) {
-                RName = RName.split(' ')[0]
-            } 
-            var targetField = "SendAlertEmailModal";
-            var linkUrl = '?contentType=popup&ewCmd=AlertEmail&id=' + id + '&xFormName=' + targetForm + '&RecordType=' + RecordType + '&RecipientName=' + RName + '&Email=' + Email;
+        var id = this.getQueryStringParam('id');
+        if (id == null || id == "") {
+            return true;
+        } else {
+            if ($("#nStatus_1").prop("checked") && $("#nEmailSent_True").prop("checked") == false) {
+                if ($("#dPublishDate").val() == "") {
+                    $("#SendAlertEmailModal").modal('hide');
+                    $("#lblPublishDateError").removeClass("hidden");
+                    $("#lblPublishDateError").css("color", "red");
+                } else {
+                    var targetForm = "ReviewConfirmation";
+                    var id = this.getQueryStringParam('id');
+                    var Email = $("#cContentReviewerEmail").val();
+                    var RecordType = $("#cContentSchemaName").val();
+                    var RName = $("#cContentReviewer").val();
+                    if (RName.indexOf(' ') != -1) {
+                        RName = RName.split(' ')[0]
+                    }
+                    var targetField = "SendAlertEmailModal";
+                    var linkUrl = '?contentType=popup&ewCmd=AlertEmail&id=' + id + '&xFormName=' + targetForm + '&RecordType=' + RecordType + '&RecipientName=' + RName + '&Email=' + Email;
 
-            $('#' + targetField).load(linkUrl, function (e) { $('#' + targetField).modal('show'); });           
-            return false;
+                    $('#' + targetField).load(linkUrl, function (e) { $('#' + targetField).modal('show'); });
+                    return false;
+                }
+            }
         }
 
     } else {
@@ -2649,14 +2661,14 @@ function IsEmail(email) {
     }
 }
 function SendEmail(event) {
-    
-    if ($("#Email").val() != "")
-    {
+
+    if ($("#Email").val() != "") {
         if (IsEmail($("#Email").val()) == false) {
             $("#lblinvalidemail").removeClass("hidden");
             $("#lblinvalidemail").css("color", "red");
             return false;
         } else {
+
             var formData = new FormData($("#AlertEmail")[0]);
             var ajaxurl = '?ewCmd=AlertEmail';
             $("#nEmailSent_True").prop("checked", "checked");
@@ -2677,8 +2689,7 @@ function SendEmail(event) {
                 }
             });
         }
-    } else
-    {       
+    } else {
         $("#SendAlertEmailModal").modal('show');
         $("#lblerrormessage").removeClass("hidden");
         $("#lblerrormessage").css("color", "red");
@@ -2686,4 +2697,84 @@ function SendEmail(event) {
     }
 }
 
+$('.getPlaceIDButton').click(function (e) {
+    debugger;
+    // Prevent form submission
+    e.preventDefault();
+    var latitude;
+    var longitude;
+    var address = [
+        $('#cLocation').val()
+
+    ];
+    var location;
+    var addressString = ",,," + address.join(',');
+    var geocoder = new google.maps.Geocoder();
+
+    geocoder.geocode({ address: addressString }, function (results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+
+            // Set lat and long values in relevant inputs
+            var location = results[0].geometry.location;
+            $('#cLatLong').val(location.lat() + "," + location.lng());
+
+
+        }
+
+    });
+    var valueOfLatLong = $('#cLatLong').val();
+    var array = valueOfLatLong.split(",");
+    latitude = array[0];
+    longitude = array[1];
+    var latlng = { lat: parseFloat(latitude), lng: parseFloat(longitude) };
+
+    geocoder.geocode({ 'location': latlng }, function (results, status) {
+        if (status === google.maps.GeocoderStatus.OK) {
+            if (results[1]) {
+                $('#cPalceID').val(results[1].place_id);
+                /*$('#cPalceID').attr("disabled", "disabled")*/
+                console.log(results[1].place_id);
+            }
+        }
+    });
+
+
+});
+
+function getImagePaths() {   
+    var imagepaths = "";  
+    for (var i = 0; i < $(".multicheckbox").length; i++) {
+        if ($(".multicheckbox")[i].checked === true) {           
+            if (imagepaths == "") {
+                imagepaths = $(".multicheckbox")[i].value;
+            } else {
+                imagepaths= $(".multicheckbox")[i].value + ',' + imagepaths;
+            }
+            if (imagepaths.includes("%20"))
+            {               
+                imagepaths = imagepaths.replace("%20", " ");
+            }
+        }
+    }   
+    var SaveMultipleLibraryImages = "/ewapi/Cms.Admin/SaveMultipleLibraryImages";
+    var contentId = this.getQueryStringParam('id');
+    //var RelatedLibraryImages = imagepaths;
+    //var cSkipAttribute = false;  
+    $("#cRelatedLibraryImages").val(imagepaths); 
+    $("#contentId").val(contentId);
+    var formData = new FormData($("#EditContent")[0]);
    
+    $.ajax({
+        url: SaveMultipleLibraryImages,
+        data: formData,
+        contentType: false,
+        processData: false,       
+        type: 'POST',
+        success: function (response) {           
+            $("#modal-cProductImagesPaths").modal("hide");
+            location.reload();
+        }
+    });
+
+
+}
