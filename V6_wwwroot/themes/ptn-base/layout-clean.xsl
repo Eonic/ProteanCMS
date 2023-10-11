@@ -53,6 +53,13 @@
 						<xsl:with-param name="containerClass" select="$container"/>
 					</xsl:apply-templates>
 				</xsl:when>
+				<xsl:when test="$header-layout='header-info-above'">
+					<xsl:apply-templates select="." mode="header-info-above">
+						<xsl:with-param name="nav-collapse">false</xsl:with-param>
+						<xsl:with-param name="social-links">false</xsl:with-param>
+						<xsl:with-param name="containerClass" select="$container"/>
+					</xsl:apply-templates>
+				</xsl:when>
 				<xsl:otherwise>
 					<xsl:apply-templates select="." mode="header-menu-below">
 						<xsl:with-param name="nav-collapse">false</xsl:with-param>

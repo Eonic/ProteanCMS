@@ -1,6 +1,11 @@
 ﻿.ptn-edit .open,
 #mainTable .ptn-edit,
 #pagefooter .ptn-edit {
+    a.btn-primary {
+        box-shadow: none !important;
+        transition:none;
+    }
+
     .dropdown {
         width: auto;
 
@@ -135,7 +140,7 @@
     .ptn-edit.over-content {
         margin-bottom: -28px;
         //margin-top:4px;
-        z-index:10;
+        z-index: 10;
     }
 
     .not-over-content {
@@ -300,6 +305,7 @@
         opacity: 1 !important;
     }
 }
+
 .ptn-edit .open .dropdown-menu {
     background-color: $admin-header-bg-light;
     font-size: 1em !important;
@@ -337,8 +343,6 @@
             background-color: transparent;
         }
     }
-
-   
 }
 // - In site edit button styling
 .Site, .Email {
