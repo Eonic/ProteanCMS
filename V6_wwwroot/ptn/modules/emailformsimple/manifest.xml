@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+
+  <ModuleTypes>
+    <ModuleGroup name="Basic Content" icon="fa-pencil">
+      <Module type="EmailFormSimple" formPath="email-form-simple" icon="far fa-envelope" name="Simple Email Form"></Module>
+    </ModuleGroup>
+  </ModuleTypes>
+</PageLayouts>

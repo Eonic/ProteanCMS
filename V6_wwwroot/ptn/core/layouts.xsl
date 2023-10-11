@@ -348,7 +348,7 @@
 
 	<xsl:template match="Page" mode="layoutHeader">
 		<xsl:param name="containerClass"/>
-		<xsl:if test="/Page/Contents/Content[@name='header' or @position='header'] or /Page/@adminMode">
+		<xsl:if test="/Page/Contents/Content[@name='header' or @position='header']">
 			<xsl:apply-templates select="/Page" mode="addModule">
 				<xsl:with-param name="text">Add Module</xsl:with-param>
 				<xsl:with-param name="position">header</xsl:with-param>
@@ -359,7 +359,7 @@
 
 	<xsl:template match="Page" mode="layoutFooter">
 		<xsl:param name="containerClass"/>
-		<xsl:if test="/Page/Contents/Content[@name='footer' or @position='footer'] or /Page/@adminMode">
+		<xsl:if test="/Page/Contents/Content[@name='footer' or @position='footer']">
 			<xsl:apply-templates select="/Page" mode="addModule">
 				<xsl:with-param name="text">Add Module</xsl:with-param>
 				<xsl:with-param name="position">footer</xsl:with-param>

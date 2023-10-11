@@ -4330,7 +4330,7 @@
 
 		<div class="morelink">
 			<span>
-				<a href="{$link}" title="Click here to go to {link}" class="extLink btn btn-primary">
+				<a href="{$link}" title="Click here to go to {link}" class="extLink btn btn-custom">
 					<xsl:if test="contains($link,'www.') or contains($link,'WWW.') or contains($link,'http://') or contains($link,'HTTP://')">
 						<xsl:attribute name="rel">external</xsl:attribute>
 					</xsl:if>
@@ -4649,7 +4649,7 @@
 		<td>
 			<a href="/{$appPath}?ewCmd=Profile&amp;DirType=User&amp;id={ancestor::user/@id}">
 				<span class="btn btn-primary btn-xs">
-					<i class="fa fa-user fa-white">
+					<i class="fa fa-user">
 						<xsl:text> </xsl:text>
 					</i>
 				</span>
@@ -5681,7 +5681,7 @@
   -->
 	<xsl:template match="Content | MenuItem | Discount | productDetail" mode="displayThumbnail">
 		<xsl:param name="crop" select="true()" />
-		<xsl:param name="no-stretch" select="false()" />
+		<xsl:param name="no-stretch" select="true()" />
 		<xsl:param name="width"/>
 		<xsl:param name="height"/>
 		<xsl:param name="forceResize"/>
@@ -5786,6 +5786,7 @@
 		<xsl:if test="Images/img[@src and @src!='']">
 			<xsl:call-template  name="displayResponsiveImage">
 				<xsl:with-param name="crop" select="$crop"/>
+				<xsl:with-param name="no-stretch" select="$no-stretch"/>
 				<xsl:with-param name="width" select="$max-width"/>
 				<xsl:with-param name="height" select="$max-height"/>
 				<xsl:with-param name="max-width-xxs" select="$max-width-xxs"/>
@@ -5809,7 +5810,7 @@
 
 	<xsl:template name="displayResponsiveImage">
 		<xsl:param name="crop"/>
-		<xsl:param name="no-stretch" select="false()" />
+		<xsl:param name="no-stretch" select="true()" />
 		<xsl:param name="width"/>
 		<xsl:param name="height"/>
 		<xsl:param name="max-width-xxs"/>

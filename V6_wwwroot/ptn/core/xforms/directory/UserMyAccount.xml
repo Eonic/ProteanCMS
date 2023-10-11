@@ -39,7 +39,7 @@
 			<bind id="cMiddleName" nodeset="MiddleName" required="false()" type="string"/>
 			<bind id="cLastName" nodeset="LastName" required="true()" type="string"/>
 			<bind id="cPosition" nodeset="Position" required="false()" type="string"/>
-			<bind id="cEmail" nodeset="Email" required="true()" type="email"/>
+			<bind id="cDirName" nodeset="Email" required="true()" type="email"/>
 			<bind id="cNotes" nodeset="Notes" required="false()" type="string"/>
 		</bind>
 	</model>
@@ -47,7 +47,7 @@
 		<label>Edit User</label>
     <input bind="nDirKey" class="hidden"/>
 		<input bind="cDirName" class="required">
-			<label>Username</label>
+			<label>Email</label>
 		</input>
 		<secret bind="cDirPassword" class="required">
 			<label>Password</label>
@@ -66,10 +66,10 @@
 		</input>
 		<!--<input bind="cPosition">
 			<label>Position</label>
-		</input>-->
+		</input>
 		<input bind="cEmail" class="required">
 			<label>Email Address</label>
-		</input>
+		</input>-->
 		<!--textarea bind="cNotes" class="TextAreaBrief xhtml" rows="10" cols="70">
 			<label>Notes</label>
 		</textarea-->

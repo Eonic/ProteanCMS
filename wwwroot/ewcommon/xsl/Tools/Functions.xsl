@@ -564,7 +564,11 @@
       <!-- for overloading on specific actions -->
   </xsl:template>
 
-	<xsl:template match="Page[//Content[descendant-or-self::alert/node()='Message Sent']]" mode="google-ga4-event">
+	<xsl:template match="Page" mode="google-ga4-event-extra">
+		<!-- for overloading on specific actions -->
+	</xsl:template>
+
+	<xsl:template match="Page[//Content[descendant-or-self::alert/node()='Message Sent']]" mode="google-ga4-event-extra">
 		gtag('event', 'ptn_form_submission', {
 		'form_id':'<xsl:value-of select="//Content[descendant-or-self::alert/node()='Message Sent']/descendant-or-self::submission/@id"/>',
 		<xsl:for-each select="//Content[descendant-or-self::alert/node()='Message Sent']/descendant-or-self::*[name()='Items']/*">
@@ -1371,6 +1375,7 @@
 			  gtag('js', new Date());
 			  gtag('config', '<xsl:value-of select="$GoogleGA4MeasurementID"/>'<xsl:apply-templates select="." mode="google-ga4-config-params"/>);
 			  <xsl:apply-templates select="." mode="google-ga4-event"/>
+			  <xsl:apply-templates select="." mode="google-ga4-event-extra"/>
 		  </script>
 		  <!-- End GA4 Tag Manager -->
 	  </xsl:if>
@@ -10881,7 +10886,9 @@
       <xsl:if test="@mdCol='6'">col-md-2 </xsl:if>
     </xsl:variable>
     <xsl:choose>
-      <xsl:when test="@xsCol='2'">mobile-2-col </xsl:when>
+		<xsl:when test="@xsCol='4'">col-xs-3 </xsl:when>
+		<xsl:when test="@xsCol='3'">col-xs-4 </xsl:when>
+      <xsl:when test="@xsCol='2'">col-xs-6 </xsl:when>
       <xsl:otherwise>mobile-1-col </xsl:otherwise>
     </xsl:choose>
     <xsl:if test="@smCol and @smCol!=''">
@@ -10924,7 +10931,7 @@
       <xsl:if test="@mdCol='2equal'">col-md-6 </xsl:if>
     </xsl:variable>
     <xsl:choose>
-      <xsl:when test="@xsCol='2'">mobile-2-col </xsl:when>
+      <xsl:when test="@xsCol='2'">col-xs-4 </xsl:when>
       <xsl:otherwise>mobile-1-col </xsl:otherwise>
     </xsl:choose>
     <xsl:if test="@smCol and @smCol!=''">
@@ -10967,7 +10974,7 @@
       <xsl:if test="@mdCol='2equal'">col-md-equal-2 </xsl:if>
     </xsl:variable>
     <xsl:choose>
-      <xsl:when test="@xsCol='2'">mobile-2-col </xsl:when>
+      <xsl:when test="@xsCol='2'">col-xs-4 </xsl:when>
       <xsl:otherwise>mobile-1-col </xsl:otherwise>
     </xsl:choose>
     <xsl:if test="@smCol and @smCol!=''">

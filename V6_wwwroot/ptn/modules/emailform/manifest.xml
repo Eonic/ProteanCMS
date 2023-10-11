@@ -2,7 +2,7 @@
 <PageLayouts imgPath="/ewcommon/images/pagelayouts">
 
   <ModuleTypes>
-    <ModuleGroup name="Basic Content" icon="fa-pencil">
+    <ModuleGroup name="Advance Content" icon="fa-pencil">
       <Module type="EmailForm" formPath="email-form" icon="far fa-envelope" name="Email Form"></Module>
     </ModuleGroup>
   </ModuleTypes>

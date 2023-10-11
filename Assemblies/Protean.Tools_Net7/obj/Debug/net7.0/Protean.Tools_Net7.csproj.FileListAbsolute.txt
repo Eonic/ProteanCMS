@@ -1,0 +1,3 @@
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools_Net7\obj\Debug\net7.0\Protean.Tools_Net7.csproj.AssemblyReference.cache
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools_Net7\obj\Debug\net7.0\Protean.Tools_Net7.GeneratedMSBuildEditorConfig.editorconfig
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools_Net7\obj\Debug\net7.0\Protean.Tools_Net7.csproj.CoreCompileInputs.cache

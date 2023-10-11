@@ -154,8 +154,9 @@
 							<xsl:with-param name="sortBy" select="@sortBy"/>
 						</xsl:apply-templates>
 					</div>-->
+
 						<div class="faqList panel-group accordion-module" id="accordion-{@id}" role="tablist" aria-multiselectable="true">
-							<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayFAQAccordianBrief">
+							<xsl:apply-templates select="Content[@type='FAQ']" mode="displayFAQAccordianBrief">
 								<xsl:with-param name="parId" select="@id"/>
 							</xsl:apply-templates>
 						</div>

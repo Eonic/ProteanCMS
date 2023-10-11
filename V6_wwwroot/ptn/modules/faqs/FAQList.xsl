@@ -185,7 +185,7 @@
 						<xsl:with-param name="class" select="'panel-heading'"/>
 						<xsl:with-param name="sortBy" select="$sortBy"/>
 					</xsl:apply-templates>
-					<a role="button" data-toggle="collapse" data-parent="#accordion{@id}" href="#accordian-item-{$parId}-{@id}" aria-expanded="false" aria-controls="accordian-item-{$parId}-{@id}" class="accordion-load">
+					<a role="button" data-bs-toggle="collapse" data-parent="#accordion{@id}" href="#accordian-item-{$parId}-{@id}" aria-expanded="false" aria-controls="accordian-item-{$parId}-{@id}" class="accordion-load">
 						<h4 class="panel-title">
 							<i class="fa fa-caret-down">&#160;</i>&#160;<xsl:apply-templates select="DisplayName" mode="cleanXhtml"/>
 						</h4>

@@ -32,6 +32,8 @@
 	<xsl:variable name="MatchHeightType" select="''"/>
 	<xsl:variable name="thWidth">500</xsl:variable>
 	<xsl:variable name="thHeight">350</xsl:variable>
+	<xsl:variable name="container">container</xsl:variable>
+	<xsl:variable name="siteAlert">false</xsl:variable>
 
 	<!-- forced on, needs fixing-->
 	<xsl:variable name="membership">
@@ -288,7 +290,7 @@
 					<i class="fa fa-search">
 						<xsl:text> </xsl:text>
 					</i>
-					<span class="sr-only">Search</span>
+					<span class="visually-hidden">Search</span>
 				</button>
 			</form>
 		</div>
@@ -299,13 +301,13 @@
 			<i class="fa fa-search fa-2x">
 				<xsl:text> </xsl:text>
 			</i>
-			<span class="sr-only">Expand search section</span>
+			<span class="visually-hidden">Expand search section</span>
 		</a>
 	</xsl:template>
 
 	<xsl:template match="/" mode="searchSimple">
 		<form method="post" action="/information/search" id="searchInput" class="input-group">
-      <label for="searchString" class="visually-hidden">Search</label>
+			<label for="searchString" class="visually-hidden">Search</label>
 			<input type="text" class="form-control CTAsearch" name="searchString" id="searchString" value="" placeholder="Search" />
 			<input type="hidden" name="searchMode" value="REGEX" class="d-none" />
 			<input type="hidden" name="contentType" value="Product" class="d-none"/>
@@ -314,26 +316,26 @@
 				<i class="fa fa-search">
 					<xsl:text> </xsl:text>
 				</i>
-				<span class="sr-only">Search</span>
+				<span class="visually-hidden">Search</span>
 			</button>
 		</form>
 	</xsl:template>
 
-  <xsl:template match="/" mode="searchSimpleXS">
-    <form method="post" action="/information/search" id="searchInputxs" class="input-group">
-      <label for="searchStringxs" class="visually-hidden">Search</label>
-      <input type="text" class="form-control CTAsearch" name="searchString" id="searchStringxs" value="" placeholder="Search" />
-      <input type="hidden" name="searchMode" value="REGEX" class="d-none" />
-      <input type="hidden" name="contentType" value="Product" class="d-none"/>
-      <input type="hidden" name="searchFormId" value="8923" class="d-none"/>
-      <button type="submit" class="btn btn-outline-primary" name="Search" value="Submit">
-        <i class="fa fa-search">
-          <xsl:text> </xsl:text>
-        </i>
-        <span class="sr-only">Search</span>
-      </button>
-    </form>
-  </xsl:template>
+	<xsl:template match="/" mode="searchSimpleXS">
+		<form method="post" action="/information/search" id="searchInputxs" class="input-group">
+			<label for="searchStringxs" class="visually-hidden">Search</label>
+			<input type="text" class="form-control CTAsearch" name="searchString" id="searchStringxs" value="" placeholder="Search" />
+			<input type="hidden" name="searchMode" value="REGEX" class="d-none" />
+			<input type="hidden" name="contentType" value="Product" class="d-none"/>
+			<input type="hidden" name="searchFormId" value="8923" class="d-none"/>
+			<button type="submit" class="btn btn-outline-primary" name="Search" value="Submit">
+				<i class="fa fa-search">
+					<xsl:text> </xsl:text>
+				</i>
+				<span class="visually-hidden">Search</span>
+			</button>
+		</form>
+	</xsl:template>
 
 	<!-- ############################################ LOGIN ############################################### -->
 
@@ -418,10 +420,11 @@
 
 	<!-- ############################################# FOOTER ############################################### -->
 	<xsl:template match="Page" mode="footer1">
+		<xsl:param name="containerClass" />
 		<footer id="pagefooter" class="Site clearfix">
 			<div class="footer-inner">
 				<div class="clearfix footer-main">
-					<div class="container">
+					<div class="{$containerClass}">
 						<xsl:if test="Menu/MenuItem/MenuItem[@name='Footer']/MenuItem and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
 							<div class="footer-nav-wrapper" role="navigation">
 								<ul class="nav footer-nav">
@@ -435,24 +438,33 @@
 								</ul>
 							</div>
 						</xsl:if>
-						<div id="sitefooter">
+						<div id="main-footer">
 							<xsl:apply-templates select="/Page" mode="addModule">
-								<xsl:with-param name="text">Add Module</xsl:with-param>
-								<xsl:with-param name="position">sitefooter</xsl:with-param>
+								<xsl:with-param name="position">main-footer</xsl:with-param>
 								<xsl:with-param name="class">footer-main</xsl:with-param>
 							</xsl:apply-templates>
 						</div>
+						<!--<div id="sitefooter">
+							<xsl:apply-templates select="/Page" mode="addModule">
+								<xsl:with-param name="position">sitefooter</xsl:with-param>
+								<xsl:with-param name="class">footer-main</xsl:with-param>
+							</xsl:apply-templates>
+						</div>-->
 					</div>
 				</div>
 				<div class="clearfix footer-utility">
-					<div class="container">
+					<div class="{$containerClass}">
 						<div class="clearfix footer-utility-inner">
-							<div id="copyright">
+							<div id="footer-utility">
 								<xsl:apply-templates select="/Page" mode="addModule">
-									<xsl:with-param name="text">Copyright</xsl:with-param>
-									<xsl:with-param name="position">copyright</xsl:with-param>
+									<xsl:with-param name="position">footer-utility</xsl:with-param>
 								</xsl:apply-templates>
 							</div>
+							<!--<div id="copyright">
+								<xsl:apply-templates select="/Page" mode="addModule">
+									<xsl:with-param name="position">copyright</xsl:with-param>
+								</xsl:apply-templates>
+							</div>-->
 							<div class="credit">
 								<xsl:apply-templates select="/" mode="developerLink"/>
 							</div>
