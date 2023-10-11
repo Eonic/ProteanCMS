@@ -103,7 +103,9 @@
         <xsl:text>~/ptn/core/vue/polyfill.js,</xsl:text>
         <xsl:text>~/ptn/core/vue/protean-vue.js,</xsl:text>
         <xsl:text>~/ptn/libs/tinymce/jquery.tinymce.min.js,</xsl:text>
-        <xsl:text>~/ptn/admin/treeview/jquery.treeview.js,</xsl:text>
+		  <!-- Not sure where we are using this please add note if needing to re-add -->
+       <!-- <xsl:text>~/ptn/admin/treeview/jquery.treeview.js,</xsl:text> -->
+		  <xsl:text>~/ptn/admin/treeview/ajaxtreeview.js,</xsl:text>
         <xsl:text>~/ptn/libs/jqueryui/jquery-ui.js,</xsl:text>
 		<xsl:text>~/ptn/libs/fancyapps/ui/dist/fancybox.umd.min.js,</xsl:text>
 		 <xsl:text>~/ptn/libs/jquery.lazy/jquery.lazy.min.js,</xsl:text>
@@ -296,6 +298,8 @@
 
     <button type="submit" name="{@submission}" value="{label/node()}" class="btn btn-primary float-end"  onclick="disableButton(this);">
       Login<xsl:text> </xsl:text>
+		&#160;<i class="fa-solid fa-right-to-bracket">&#160;</i>
+
     </button>
 
     <!--a href="/?ewCmd=PasswordReminder" class="text-muted">
@@ -4607,7 +4611,7 @@
       <thead>
         <tr>
           <th>Filename</th>
-          <th>Type</th>
+          <th>Filetype</th>
           <th>Options</th>
         </tr>
       </thead>
@@ -4626,11 +4630,11 @@
             <td>
               <xsl:value-of select="@Extension"/>
             </td>
-            <td>
+            <td class="optionButtons">
               <xsl:choose>
                 <xsl:when test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup'))">
-                  <a href="{$appPath}?ewCmd={/Page/@ewCmd}&amp;ewCmd2=deleteFile&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}" class="btn btn-xs btn-danger">
-                    <i class="fa fa-trash-o fa-white">
+                  <a href="{$appPath}?ewCmd={/Page/@ewCmd}&amp;ewCmd2=deleteFile&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}" class="btn btn-xs plain-link text-danger">
+                    <i class="fas fa-trash-alt">
                       <xsl:text> </xsl:text>
                     </i>
                     <xsl:text> </xsl:text>Delete
@@ -4640,11 +4644,11 @@
                   <xsl:choose>
                     <!--Pick Document-->
                     <xsl:when test="/Page/@ewCmd='DocsLib'">
-                      <a onclick="passDocToForm('{/Page/Request/QueryString/Item[@name='targetForm']/node()}','{/Page/Request/QueryString/Item[@name='targetField']/node()}','/{@root}{translate(parent::folder/@path,'\','/')}/{@name}');" class="btn btn-xs btn-primary" href="#">
-                        <i class="fa fa-file-o fa-white">
+                      <a onclick="passDocToForm('{/Page/Request/QueryString/Item[@name='targetForm']/node()}','{/Page/Request/QueryString/Item[@name='targetField']/node()}','/{@root}{translate(parent::folder/@path,'\','/')}/{@name}');" class="btn btn-xs text-link" href="#">
+                        <i class="fa-solid fa-file-circle-plus">
                           <xsl:text> </xsl:text>
                         </i>
-                        <xsl:text> </xsl:text>Pick
+                        <xsl:text> </xsl:text>Pick Document
                       </a>
                     </xsl:when>
                     <!--Pick Media-->
@@ -4687,8 +4691,8 @@
 			newItem = newItem + '<i class="icon-file-' + /[^.]+$/.exec(file.name) + '"> </i>' + file.name.replace(/\ /g,'-') + '</td>';
 		newItem = newItem + '<td>.' + /[^.]+$/.exec(file.name) + '</td>';
     newItem = newItem + '<td>';
-		newItem = newItem + '<a href="{$appPath}?ewCmd=DocsLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger">';
-			newItem = newItem + '<i class="fa fa-trash-o fa-white"> </i> Delete';
+		newItem = newItem + '<a href="{$appPath}?ewCmd=DocsLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs plain-link text-danger">';
+			newItem = newItem + '<i class="fas fa-trash-alt"> </i> Delete';
 			newItem = newItem + '</a>';
 		newItem = newItem + '</td>';
 		newItem = newItem + '</tr>';
@@ -4707,8 +4711,8 @@
 					newItem = newItem + '<img src="' + targetPath + '/' + file.name + '" width="85" height="48 " class="" />';
 					newItem = newItem + '</div>';
           newItem = newItem + '<div class="description">' + file.name + '<br /></div>'
-          newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger">';
-			  newItem = newItem + '<i class="fa fa-trash-o fa-white">';
+          newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs plain-text text-danger">';
+			  newItem = newItem + '<i class="fas fa-trash-alt">';
 				newItem = newItem + '<xsl:text> </xsl:text>';
 				  newItem = newItem + '  </i>Delete';
 			  newItem = newItem + ' </a>';

@@ -180,14 +180,14 @@ BuildForm:
 
                         oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "UserDetails", "", "Login to ProteanCMS")
 
-                        Dim userIpt As XmlElement = MyBase.addInput(oFrmElmt, "cUserName", True, "Username")
-                        MyBase.addClientSideValidation(userIpt, True, "Please enter Username")
+                        Dim userIpt As XmlElement = MyBase.addInput(oFrmElmt, "cUserName", True, "Email")
+                        MyBase.addClientSideValidation(userIpt, True, "Please enter Email")
                         MyBase.addBind("cUserName", "user/username", "true()")
                         Dim pwdIpt As XmlElement = MyBase.addSecret(oFrmElmt, "cPassword", True, "Password")
                         MyBase.addClientSideValidation(pwdIpt, True, "Please enter Password")
                         MyBase.addBind("cPassword", "user/password", "true()")
 
-                        MyBase.addSubmit(oFrmElmt, "ewSubmit", "Login")
+                        MyBase.addSubmit(oFrmElmt, "ewSubmit", "Login",,, "fa-solid fa-right-to-bracket")
 
                         MyBase.Instance.InnerXml = "<user rememberMe=""""><username/><password/></user>"
 Check:

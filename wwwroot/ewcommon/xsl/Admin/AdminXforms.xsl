@@ -1894,6 +1894,7 @@
 							</i> Find Existing <xsl:value-of select="$contentType"/>
 						</button>
 					</xsl:if>
+					
 					<xsl:if test="contains(@search,'add')">
 						<button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs pull-right" onclick="disableButton(this);$('#{$formName}').submit();">
 							<i class="fa fa-plus fa-white">
@@ -1901,6 +1902,20 @@
 							</i> Add New
 						</button>
 					</xsl:if>
+									
+						<xsl:if test="contains(@multiple,'true')">
+							<!--<button ref="repeat" type="button" name="RelateAdd_MultipleLibraryImage_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs pull-right Addmultiple" onclick="OpenAddMultipleImageModal();">
+								<i class="fa fa-plus fa-white">
+									<xsl:text> </xsl:text>
+								</i> Add Multiple
+							</button>-->
+							<a data-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={@type}-{@relationType}&amp;targetClass={value/*/@class}&amp;fld={@targetFolder}&amp;multiple=true" data-target="#modal-{@type}-{@relationType}" class="btn btn-primary btn-xs pull-right">
+								<i class="fa fa-picture-o fa-white">
+									<xsl:text> </xsl:text>
+								</i><xsl:text> </xsl:text>Add Multiple
+							</a>
+						</xsl:if>					
+								
 				</xsl:if>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -2038,6 +2053,7 @@
 							</i> Add New
 						</button>
 					</xsl:if>
+				   
 				</xsl:if>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -3081,7 +3097,13 @@
 		</div>
 
 	</xsl:template>
-
+	<xsl:template match="group[@class='AlertEmail-modal has-script']" mode="xform_control_script">		
+		<div class="modal fade" id="SendAlertEmailModal" role="dialog" aria-labelledby="gridSystemModalLabel">
+			<div class="modal-dialog modal-lg" role="document">
+				<xsl:text> </xsl:text>
+			</div>
+		</div>
+	</xsl:template>
 
 	<xsl:template match="submit[contains(@class,'getGeocodeButton')]" mode="xform">
 		<xsl:variable name="class">
@@ -3199,5 +3221,9 @@
 		</script>
 	</xsl:template>
 
-
+	<xsl:template match="relatedContent[@multiple='true']" mode="xform_control_script">		
+		<div id="modal-{@type}-{@relationType}" class="modal fade pickImageModal">
+			<xsl:text> </xsl:text>
+		</div>	
+	</xsl:template>
 </xsl:stylesheet>

@@ -3129,7 +3129,7 @@ restart:
                         .Columns("pageid").ColumnMapping = Data.MappingType.Attribute
                         .Columns("page").ColumnMapping = Data.MappingType.Attribute
                         .Columns("ContentId").ColumnMapping = Data.MappingType.Attribute
-                        .Columns("Type").ColumnMapping = Data.MappingType.Attribute
+                        .Columns("type").ColumnMapping = Data.MappingType.Attribute
                     End With
 
                     '   With oDS.Tables("Location")
@@ -7822,19 +7822,18 @@ restart:
                             moAdXfm.Instance.SelectSingleNode("tblContent/dPublishDate").InnerText() = Protean.Tools.Xml.XmlDate(Now())
                         End If
 
-                        'oLibraryImageXForm = moAdXfm.xFrmEditContent(0, cRelatedImageType, , "New LibraryImage", , nAdditionId)
                         oLibraryImageInstance = moAdXfm.Instance
                         Dim imgElement As XmlElement = oLibraryImageInstance.SelectSingleNode("tblContent/cContentXmlBrief/Content/Images/img[@class='display']")
                         Dim imgElementDetail As XmlElement = oLibraryImageInstance.SelectSingleNode("tblContent/cContentXmlDetail/Content/Images/img[@class='display']")
                         'Dim oImg As System.Drawing.Bitmap = New System.Drawing.Bitmap(goServer.MapPath("/") & cImage.Trim.Replace("/", "\"))
                         Dim oImg As System.Drawing.Bitmap
-                        If myWeb.moCtx.Request.Form("cReviewPhysicalPath") <> Nothing AndAlso myWeb.moCtx.Request.Form("cReviewPhysicalPath") <> String.Empty Then
-                            oImg = New System.Drawing.Bitmap(myWeb.moCtx.Request.Form("cReviewPhysicalPath") & cImage.Trim.Replace("/", "\"))
-                        ElseIf goConfig("ReviewImageRootPath") <> Nothing AndAlso goConfig("ReviewImageRootPath") <> String.Empty Then
-                            oImg = New System.Drawing.Bitmap(goConfig("ReviewImageRootPath") & cImage.Trim.Replace("/", "\"))
+
+                        If myWeb.moCtx.Request.Form("cImageBasePath") <> Nothing AndAlso myWeb.moCtx.Request.Form("cImageBasePath") <> String.Empty Then
+                            oImg = New System.Drawing.Bitmap(myWeb.moCtx.Request.Form("cImageBasePath") & cImage.Trim.Replace("/", "\"))
                         Else
                             oImg = New System.Drawing.Bitmap(goServer.MapPath("/") & cImage.Trim.Replace("/", "\"))
                         End If
+
                         imgElement.SetAttribute("src", cImage.Trim)
                         imgElement.SetAttribute("height", oImg.Height)
                         imgElement.SetAttribute("width", oImg.Width)
@@ -8307,8 +8306,9 @@ restart:
                 Dim oXml As XmlDocument = ContentDataSetToXml(oDs, dUpdateDate)
                 Dim oXml2 As XmlNode = oContent.OwnerDocument.ImportNode(oXml.DocumentElement, True)
 
+                Dim contentCount As Integer = 0
                 Dim n As Long
-
+                Dim itemsSkipped As Long = 0
                 For Each oNode In oXml2.SelectNodes("Content")
                     n = n + 1
                     oElmt2 = SimpleTidyContentNode(oNode, cAddSourceAttribute, dExpireDate, dUpdateDate)
@@ -8397,15 +8397,19 @@ restart:
                                     oContent.ReplaceChild(oElmt2, oElmt3)
                                 Else
                                     oContent.AppendChild(oElmt2)
+                                    contentCount = contentCount + 1
                                 End If
                             Else
                                 oContent.AppendChild(oElmt2)
+                                contentCount = contentCount + 1
                             End If
                             'End If
                         Else
                             oContent.AppendChild(oElmt2)
+                            contentCount = contentCount + 1
                         End If
-
+                    Else
+                        itemsSkipped = itemsSkipped + 1
                     End If
 
                 Next
