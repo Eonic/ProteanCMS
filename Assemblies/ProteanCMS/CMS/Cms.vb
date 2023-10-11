@@ -1412,6 +1412,7 @@ Public Class Cms
                                         If moRequest("recompile") = "del" Then
 
                                             If RestoreRedirectSession(moRequest("SessionId"), 5, True) = True Then
+
                                                 Protean.Config.UpdateConfigValue(Me, "", "recompile", "false")
 
                                                 Dim oFS As New Protean.fsHelper(moCtx)
