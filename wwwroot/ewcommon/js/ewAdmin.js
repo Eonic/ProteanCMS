@@ -2775,6 +2775,14 @@ function getImagePaths() {
             location.reload();
         }
     });
+   
+}
 
-
+//for pure360 listname.
+if ($("#cListId") != undefined) {
+    $("#cListId").change(function () {
+        if ($("#cListName") != undefined) {
+            $("#cListName").val($("#cListId option:selected").text());
+        }
+    });
 }
