@@ -44,9 +44,17 @@ h1, h2, h3 {
         margin-bottom: 1rem;
     }
 
-    a:visited {
+    a:not(.btn):visited {
         color: $visited;
     }
+
+    *:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.nobox.module-FormattedText .entryFooter {
+    padding-top: 1rem;
 }
 #mainLayout {
     p, ul, ol {
