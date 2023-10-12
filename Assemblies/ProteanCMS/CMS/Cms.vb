@@ -1411,8 +1411,9 @@ Public Class Cms
 
                                         If moRequest("recompile") = "del" Then
 
-                                            If RestoreRedirectSession(moRequest("SessionId"), 5, True) = True Then
-                                                Protean.Config.UpdateConfigValue(Me, "", "recompile", "false")
+                                            If RestoreRedirectSession(moRequest("SessionId"), 10, True) = True Then
+
+                                                ' Protean.Config.UpdateConfigValue(Me, "", "recompile", "false")
 
                                                 Dim oFS As New Protean.fsHelper(moCtx)
                                                 oFS.mcRoot = gcProjectPath
@@ -1420,13 +1421,13 @@ Public Class Cms
 
                                                 oFS.DeleteFolderContents("", "")
                                                 Protean.Config.UpdateConfigValue(Me, "protean/web", "CompiledTransform", "on")
-
+                                                Protean.Config.UpdateConfigValue(Me, "", "recompile", "false")
                                                 msRedirectOnEnd = "/?rebundle=true&SessionId=" & SessionID
                                             End If
 
                                         Else
                                             If mbAdminMode Then
-                                                Protean.Config.UpdateConfigValue(Me, "protean/web", "CompliedTransform", "off")
+                                                Protean.Config.UpdateConfigValue(Me, "protean/web", "CompiledTransform", "off")
                                                 'just sent value as it might be true when user did ResetConfig
                                                 'to avoid skipping update functionality, we are just set it differently
                                                 Protean.Config.UpdateConfigValue(Me, "", "recompile", "recompiling")

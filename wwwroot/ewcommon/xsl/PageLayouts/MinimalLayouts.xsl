@@ -14704,7 +14704,7 @@
               "@context": "https://schema.org",
               "@type": "VideoObject",
               "name": "<xsl:value-of select="@title"/>",
-              "description": "<xsl:value-of select="Description"/>",
+              "description": "<xsl:value-of select="Vimeo/@byline"/>",
               "thumbnailUrl": "<xsl:value-of select="Vimeo/@thumbnail"/>",
               "uploadDate": "<xsl:value-of select="@publish"/>",
               "duration": "<xsl:value-of select="Vimeo/@duration"/>",

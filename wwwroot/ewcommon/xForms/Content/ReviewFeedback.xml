@@ -63,7 +63,7 @@
 				<nUpdateDirId/>
 				<nStatus>4</nStatus>
 				<cDescription/>
-				<ImageBasePath>D:\nita_workspace\Clients\HostingSpaces\Intotheblue\</ImageBasePath>
+				<ImageBasePath>/images/reviewimages</ImageBasePath>
 			</tblContent>
 			<RelatedLibraryImages skipFirst="true" type="LibraryImage">
 			</RelatedLibraryImages>
