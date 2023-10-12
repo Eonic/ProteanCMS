@@ -7,9 +7,11 @@ body {
     flex-direction: column;
     height: 100%;
 }
-.container{
+
+.container {
     @extend .container-fluid;
 }
+
 #mainTable {
     flex-shrink: 0;
     flex-grow: 2;
@@ -56,6 +58,7 @@ h1, h2, h3 {
 .nobox.module-FormattedText .entryFooter {
     padding-top: 1rem;
 }
+
 #mainLayout {
     p, ul, ol {
         a {
@@ -194,6 +197,10 @@ section.bg-primary {
     }
 }
 
+section.whiteBG {
+    @extend .section-spacing;
+}
+
 section.bg-video-wrapper {
     padding-top: 0;
     padding-bottom: 0;
@@ -297,9 +304,11 @@ section.bg-video-wrapper {
         }
     }
 }
+
 div[class$="List"].module {
     @include listItem-spacing;
 }
+
 @mixin testimonial1 {
     @include unboxed-listItem;
     position: relative;
