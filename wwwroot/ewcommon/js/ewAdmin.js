@@ -1610,7 +1610,7 @@ function initialiseGetVimeoDataButton() {
         jsonURL = "https://vimeo.com/api/v2/video/" + id + ".json";
         $.getJSON(jsonURL, function (result) {
             $("#cVimeoDuration").val(result[0].duration);
-            $("#cVimeoDescrtipion").val(result[0].description);
+            $("#cVimeoByline").val(result[0].description);
             $("#cVimeoThumbnail").val(result[0].thumbnail_medium);
             $("#cModuleTitle").val(result[0].title);
         });
@@ -2756,18 +2756,16 @@ function getImagePaths() {
             }
         }
     }   
-    var saveMultiLibraryImageForProduct = "/ewapi/Cms.Admin/saveMultiLibraryImageForProduct";
+    var SaveMultipleLibraryImages = "/ewapi/Cms.Admin/SaveMultipleLibraryImages";
     var contentId = this.getQueryStringParam('id');
     //var RelatedLibraryImages = imagepaths;
     //var cSkipAttribute = false;  
     $("#cRelatedLibraryImages").val(imagepaths); 
-    $("#nProductID").val(contentId);
+    $("#contentId").val(contentId);
     var formData = new FormData($("#EditContent")[0]);
-    //var formData = JSON.stringify($("#EditContent").serializeArray());
-    //inputJson = { contentId: contentId, RelatedLibraryImages: RelatedLibraryImages, cSkipAttribute: cSkipAttribute, formData: formData };
    
     $.ajax({
-        url: saveMultiLibraryImageForProduct,
+        url: SaveMultipleLibraryImages,
         data: formData,
         contentType: false,
         processData: false,       

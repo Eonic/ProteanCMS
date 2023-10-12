@@ -529,15 +529,15 @@ Partial Public Class Cms
                 End Try
             End Function
 
-            Public Function saveMultiLibraryImageForProduct(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+            Public Function SaveMultipleLibraryImages(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
                 Dim JsonResult As String = ""
-                Dim ncontentId As String = ""
+                Dim nContentId As String = ""
                 Dim cRelatedLibraryImages As String = ""
                 Dim cSkipAttribute As String = "false"
                 Dim count As Integer = moCtx.Request.Files.Count
 
-                If moCtx.Request("nProductID") IsNot Nothing Then
-                    ncontentId = moCtx.Request("nProductID")
+                If moCtx.Request("contentId") IsNot Nothing Then
+                    nContentId = moCtx.Request("contentId")
                 End If
 
                 If moCtx.Request("cRelatedLibraryImages") IsNot Nothing Then
@@ -546,7 +546,7 @@ Partial Public Class Cms
 
                 Try
                     If myApi.mbAdminMode Then
-                        JsonResult = myWeb.moDbHelper.CreateLibraryImages(ncontentId, cRelatedLibraryImages, cSkipAttribute, "LibraryImage")
+                        JsonResult = myWeb.moDbHelper.CreateLibraryImages(nContentId, cRelatedLibraryImages, cSkipAttribute, "LibraryImage")
                     End If
 
                     Return JsonResult
