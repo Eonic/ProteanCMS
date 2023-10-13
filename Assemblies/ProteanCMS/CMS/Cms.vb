@@ -3845,6 +3845,7 @@ Public Class Cms
                     nAuthUserId = mnUserId
                     nAuthGroup = gnAuthUsers
                 End If
+
                 If Not oContentsNode Is Nothing Then
                     If (oContentsNode.Attributes("contentType") IsNot Nothing) Then
                         cFilterTarget = oContentsNode.Attributes("contentType").Value
@@ -3853,9 +3854,13 @@ Public Class Cms
                         cFilterTarget = oContentsNode.Attributes("filterTarget").Value
                     End If
                 End If
+                Dim sFilterTargetSql = ""
+                If cFilterTarget <> "" Then
+                    cFilterTarget = " c.cContentSchemaName ='" & cFilterTarget & "' and "
+                End If
 
                 ' Check the page is not denied
-                sMembershipSql = " c.cContentSchemaName ='" & cFilterTarget & "' and NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
+                sMembershipSql = cFilterTarget & "NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
 
 
 
