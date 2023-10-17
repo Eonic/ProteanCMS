@@ -178,6 +178,7 @@
         <xsl:text>~/ewcommon/js/vuejs/axios.min.js,</xsl:text>
         <xsl:text>~/ewcommon/js/vuejs/polyfill.js,</xsl:text>
         <xsl:text>~/ewcommon/js/vuejs/protean-vue.js,</xsl:text>
+		<xsl:text>~/ewcommon/js/ajaxtreeview/ajaxtreeview.js,</xsl:text>
 		<xsl:text>~/ewcommon/js/ewAdmin.js</xsl:text>
       </xsl:with-param>
       <xsl:with-param name="bundle-path">
@@ -5829,6 +5830,7 @@
         <xsl:value-of select="@name"/>
       </a>
     </li>
+	  <!-- STOP LOADING NODES NOT SHOWN INITIALLY TO ALLWO THEM TO BE LOADED VIA AJAX-->
     <xsl:if test="folder">
       <xsl:apply-templates select="folder" mode="FolderTree">
         <xsl:with-param name="level">

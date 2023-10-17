@@ -72,6 +72,16 @@
 		</ul>
 	</xsl:template>
 
+	<xsl:template match="Page[Request/*/Item[@name='ajaxCmd']/node()='GetFolderNode']">
+		<xsl:variable name="level" select="Menu/@level"/>
+		<xsl:variable name="folderPath" select="Request/*/Item[@name='path']/node()"/>
+		<ul class="tree-folder-content">
+			<xsl:apply-templates select="Menu/descendant-or-self::MenuItem[@id=$pgid]/MenuItem" mode="FolderTree">
+				<xsl:with-param name="level" select="$level + 1"/>
+			</xsl:apply-templates>
+		</ul>
+	</xsl:template>
+
 	<xsl:template match="Page[Request/*/Item[@name='ajaxCmd']/node()='editStructurePermissions']">
 		<xsl:variable name="pgid" select="Request/*/Item[@name='pgid']/node()"/>
     <ul class="tree-folder-content">
