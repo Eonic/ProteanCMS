@@ -3845,6 +3845,7 @@ Public Class Cms
                     nAuthUserId = mnUserId
                     nAuthGroup = gnAuthUsers
                 End If
+
                 If Not oContentsNode Is Nothing Then
                     If (oContentsNode.Attributes("contentType") IsNot Nothing) Then
                         cFilterTarget = oContentsNode.Attributes("contentType").Value
@@ -3853,9 +3854,13 @@ Public Class Cms
                         cFilterTarget = oContentsNode.Attributes("filterTarget").Value
                     End If
                 End If
+                Dim sFilterTargetSql = ""
+                If cFilterTarget <> "" Then
+                    cFilterTarget = " c.cContentSchemaName ='" & cFilterTarget & "' and "
+                End If
 
                 ' Check the page is not denied
-                sMembershipSql = " c.cContentSchemaName ='" & cFilterTarget & "' and NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
+                sMembershipSql = cFilterTarget & "NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
 
 
 
@@ -7499,7 +7504,9 @@ Public Class Cms
                                 End If
                                 ' Dim nWeight As Double = CDbl("0" & contentElmt.SelectSingleNode("ShippingWeight").InnerText)
                                 Dim dsShippingOption As DataSet = moCart.getValidShippingOptionsDS(cDestinationCountry, nPrice, 1, nWeight, mnArtId)
-                                oShippingElmt.InnerXml = Replace(dsShippingOption.GetXml, "xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""", "")
+                                If Not dsShippingOption Is Nothing Then
+                                    oShippingElmt.InnerXml = Replace(dsShippingOption.GetXml, "xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""", "")
+                                End If
                                 contentElmt.AppendChild(oShippingElmt)
                             Catch ex As Exception
 

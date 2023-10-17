@@ -434,7 +434,7 @@ Public Class Setup
 
         testResponse = oTests.TestHtmlTidy()
         If Not testResponse.StartsWith("HTML Tidy is working") Then
-            AddResponse("<p><i class=""fa fa-times text-danger"">&#160;</i>" & testResponse & "</p>")
+            AddResponse("<p><i class=""fa fa-times text-danger"">&#160;</i>Tidy has failed.</p>")
         Else
             AddResponse("<p><i class=""fa fa-check text-success"">&#160;</i>" & testResponse & "</p>")
         End If

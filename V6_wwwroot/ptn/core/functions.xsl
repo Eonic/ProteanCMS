@@ -2767,7 +2767,7 @@
 		<xsl:if test="not(DisplayName/@exclude='true')">
 
 			<!-- Link anchor to page -->
-			<li>
+      <li>
 				<xsl:apply-templates select="." mode="menuLink"/>
 			</li>
 
@@ -2811,8 +2811,8 @@
 			<xsl:if test="not(DisplayName/@exclude='true')">
 				<xsl:value-of select="concat(' ', $separator, ' ')"/>
 			</xsl:if>
-			<li class="active">
-				<xsl:apply-templates select="//ContentDetail/Content" mode="contentLink"/>
+			<li class="breadcrumb-item active">
+				<xsl:apply-templates select="//ContentDetail/Content" mode="getDisplayName"/>
 			</li>
 		</xsl:if>
 
@@ -2820,10 +2820,10 @@
 
 	<xsl:template match="MenuItem" mode="breadcrumbLink">
 		<xsl:param name="span" select="false()"/>
-		<li itemprop="itemListElement" itemscope="" itemtype="http://schema.org/ListItem">
+		<li itemprop="itemListElement" itemscope="" itemtype="http://schema.org/ListItem" class="breadcrumb-item">
 			<xsl:choose>
 				<xsl:when test="self::MenuItem[@id=/Page/@id] and not(//ContentDetail)">
-					<xsl:attribute name="class">active</xsl:attribute>
+					<xsl:attribute name="class">breadcrumb-item active</xsl:attribute>
 
 					<!-- title attribute -->
 					<xsl:attribute name="title">
@@ -2846,16 +2846,11 @@
 							<xsl:attribute name="rel">nofollow</xsl:attribute>
 						</xsl:when>
 					</xsl:choose>
-					<a itemprop="item">
-						<xsl:attribute name="href">
-							<xsl:apply-templates select="self::MenuItem" mode="getHref"/>
-						</xsl:attribute>
 						<!-- output page name -->
 						<span itemprop="name">
 							<xsl:apply-templates select="." mode="getDisplayName"/>
 						</span>
 						<meta itemprop="position" content="{count(parent::MenuItem)+1}" />
-					</a>
 				</xsl:when>
 				<xsl:otherwise>
 					<a itemprop="item">
@@ -2908,6 +2903,8 @@
 
 		</li>
 	</xsl:template>
+
+
 
 	<xsl:template match="img" mode="jsNiceImage">
 		<xsl:element name="img">
