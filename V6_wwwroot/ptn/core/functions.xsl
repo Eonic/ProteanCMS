@@ -2811,8 +2811,8 @@
 			<xsl:if test="not(DisplayName/@exclude='true')">
 				<xsl:value-of select="concat(' ', $separator, ' ')"/>
 			</xsl:if>
-			<li class="active">
-				<xsl:apply-templates select="//ContentDetail/Content" mode="contentLink"/>
+			<li class="breadcrumb-item active">
+				<xsl:apply-templates select="//ContentDetail/Content" mode="getDisplayName"/>
 			</li>
 		</xsl:if>
 
@@ -2903,6 +2903,8 @@
 
 		</li>
 	</xsl:template>
+
+
 
 	<xsl:template match="img" mode="jsNiceImage">
 		<xsl:element name="img">
