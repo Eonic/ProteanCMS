@@ -2256,7 +2256,9 @@ Check:
 
                             Dim fs As fsHelper = New fsHelper()
                             Dim path As String = fs.FindFilePathInCommonFolders("/xsl/Email/passwordReset.xsl", myWeb.maCommonFolders)
-
+                            If myWeb.moConfig("cssFramework") = "bs5" Then
+                                path = "/email/passwordReset.xsl"
+                            End If
                             sReturnValue = oMessage.emailer(oEmailDoc.DocumentElement, path, myWeb.moConfig("SiteAdminName"), myWeb.moConfig("SiteAdminEmail"), userEmail, "Account Reset ")
                             sReturnValue = IIf(sReturnValue = "Message Sent", "<span class=""msg-1035"">" & sReturnValue & " to </span>" & userEmail, "")
 
