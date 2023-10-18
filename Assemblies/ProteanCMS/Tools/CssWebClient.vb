@@ -14,6 +14,7 @@ Imports System.Text.RegularExpressions
 Imports System.Collections.Generic
 Imports System.Web.Configuration
 Imports System.Web.Caching
+Imports System.Net.Security
 
 Public Class CssWebClient
 
@@ -77,6 +78,13 @@ Public Class CssWebClient
                     If LCase(goRequest.ServerVariables("HTTPS")) = "on" Then
                         Serviceurl = "https://" & goRequest.ServerVariables("SERVER_NAME") & Serviceurl
                         ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
+
+                        ServicePointManager.ServerCertificateValidationCallback =
+  Function(se As Object,
+  cert As System.Security.Cryptography.X509Certificates.X509Certificate,
+  chain As System.Security.Cryptography.X509Certificates.X509Chain,
+  sslerror As System.Net.Security.SslPolicyErrors) True
+
                     Else
                         Serviceurl = "http://" & goRequest.ServerVariables("SERVER_NAME") & Serviceurl
                     End If
@@ -85,7 +93,9 @@ Public Class CssWebClient
                 cProcessInfo = Serviceurl
 
                 httpHandlerRequest = WebRequest.Create(Serviceurl)
+
                 Dim serviceRequest As HttpWebRequest = httpHandlerRequest
+
                 Dim response As HttpWebResponse = CType(serviceRequest.GetResponse(), HttpWebResponse)
                 ' PerfMon.Log("CssWebClient", "SendCssHttpHandlerRequest", "end-" & Serviceurl)
                 Dim strResponse As String
@@ -98,7 +108,7 @@ Public Class CssWebClient
                 fullCss = strResponse
 
                 ClearApplicationCache(origServiceUrl)
-
+                ServicePointManager.ServerCertificateValidationCallback = Nothing
             Next
             Dim cssSplit As Integer = IIf(moConfig("cssSplit") = "", 2000, moConfig("cssSplit"))
             ComputeCSS(fullCss, cssSplit)

@@ -75,3 +75,24 @@
 .alert {
     margin-bottom: $grid-gutter-height;
 }
+.inline-content {
+    @include media-breakpoint-up(md) {
+        display: flex;
+        margin-left: -1rem;
+        margin-right: -1rem;
+        align-items: center;
+
+        *:first-child {
+            margin-bottom: 0;
+        }
+
+        .btn {
+            white-space: nowrap;
+        }
+
+        > * {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+    }
+}

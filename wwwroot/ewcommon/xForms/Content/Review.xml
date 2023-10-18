@@ -119,6 +119,7 @@
 				<label>Settings</label>
 				<input bind="dPublishDate" class="calendar short required">
 					<label>Publish Date</label>
+					<label id="lblPublishDateError" class="hidden">Please Select Date</label>
 				</input>
 				<input bind="dExpireDate" class="calendar short">
 					<label>Expire Date</label>

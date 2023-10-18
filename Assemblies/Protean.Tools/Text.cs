@@ -623,14 +623,14 @@ namespace Protean.Tools
                 {
                     oTdyManaged.OutputNumericEntities = true;
                 }
-                int tidyResult = oTdyManaged.CleanAndRepair();
+               oTdyManaged.CleanAndRepair();
                 try
                 {
                     sTidyXhtml = oTdyManaged.Save();
                 }
                 catch (Exception)
                 {
-                    sTidyXhtml = "<div>html import conversion error result=" + tidyResult + " <br/></div>";
+                    sTidyXhtml = "<div>html import conversion error result="  + " <br/></div>";
                 }
 
                 oTdyManaged.Dispose();
