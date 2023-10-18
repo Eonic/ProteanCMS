@@ -2775,6 +2775,5 @@ function getImagePaths() {
             location.reload();
         }
     });
-
-
+   
 }
