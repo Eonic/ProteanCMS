@@ -225,7 +225,7 @@
     <xsl:if test="@cssFramework!='bs3'">
       <script type="text/javascript" src="/ewcommon/js/jQuery/jquery.magnific-popup.min.js">&#160;</script>
     </xsl:if>
-
+	<script type="text/javascript" src="/ewcommon/js/ajaxtreeview/ajaxtreeview.js">&#160;</script>
     <script type="text/javascript" src="/ewcommon/js/ewAdmin.js">&#160;</script>
     <!--level: <xsl:value-of select="$menuLevelDepth"/>-->
 
@@ -5277,8 +5277,8 @@
     <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js">/* */</script>
     <!-- The File Upload image preview & resize plugin -->
     <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">/* */</script>
-    <!-- The Image Lazy load plugin -->
-    <script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">/* */</script>
+    <!-- The Image Lazy load plugin-->
+    <script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">/* */</script> 
   </xsl:template>
 
   <xsl:template match="Page[@layout='ImageLib' or @layout='DocsLib' or @layout='MediaLib']" mode="LayoutAdminJs">
@@ -5832,11 +5832,13 @@
     </li>
 	  <!-- STOP LOADING NODES NOT SHOWN INITIALLY TO ALLWO THEM TO BE LOADED VIA AJAX-->
     <xsl:if test="folder">
+		<xsl:if test="descendant-or-self::folder[@active='true']">
       <xsl:apply-templates select="folder" mode="FolderTree">
         <xsl:with-param name="level">
           <xsl:value-of select="$level + 1"/>
         </xsl:with-param>
       </xsl:apply-templates>
+		</xsl:if>
     </xsl:if>
   </xsl:template>
 
