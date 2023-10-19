@@ -73,12 +73,13 @@
 	</xsl:template>
 
 	<xsl:template match="Page[Request/*/Item[@name='ajaxCmd']/node()='GetFolderNode']">
-		<xsl:variable name="level" select="Menu/@level"/>
-		<xsl:variable name="folderPath" select="Request/*/Item[@name='path']/node()"/>
+		<xsl:variable name="folderPath" select="translate(Request/*/Item[@name='pgid']/node(),'-','\')"/>
+		<xsl:variable name="level" select="count(ContentDetail/descendant-or-self::folder[@path=$folderPath]/ancestor::folder)"/>
 		<ul class="tree-folder-content">
-			<xsl:apply-templates select="Menu/descendant-or-self::MenuItem[@id=$pgid]/MenuItem" mode="FolderTree">
-				<xsl:with-param name="level" select="$level + 1"/>
+			<xsl:apply-templates select="ContentDetail/descendant-or-self::folder[@path=$folderPath]/folder" mode="FolderTree">
+				<xsl:with-param name="level" select="$level + 2"/>
 			</xsl:apply-templates>
+		
 		</ul>
 	</xsl:template>
 

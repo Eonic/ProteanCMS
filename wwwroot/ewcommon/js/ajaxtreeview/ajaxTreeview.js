@@ -363,7 +363,7 @@ Original preload function has been kept but is unused.
 
                         // Find out which of the kids have kids
                         loadNode.children().find('li').has('.activeParent,.inactiveParent').addClass('expandable');
-                       
+                        alert('rebuild');
                         myTreeRoot.buildTree_noreload(settings);
                     });
 
@@ -698,8 +698,9 @@ function getAdminAjaxTreeViewPath() {
         var movingContentId = getParameterByName('id');
         var currentPageId = getParameterByName('parId');
         var startingPageId = getParameterByName('pgid');
-        treeviewPath = treeviewPath + '&oldPgId=' + startingPageId + '&id=' + movingContentId;
-        //alert(treeviewPath);
+        treeviewPath = treeviewPath + '&oldPgId=' + startingPageId + '&id=' + movingContentId;        
     }
+  //  alert(treeviewPath);
     return treeviewPath;
 }
+
