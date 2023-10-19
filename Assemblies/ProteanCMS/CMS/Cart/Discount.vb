@@ -294,15 +294,16 @@ Partial Public Class Cms
                                     If bDiscountIsPercent <> Nothing Then
                                         oCartXML.SetAttribute("bDiscountIsPercent", bDiscountIsPercent & "")
                                     End If
-
+                                    Dim nItemCost As Double = 0
                                     If oDsCart.Tables("Item").Rows.Count > 0 Then
                                         For Each drItem As DataRow In oDsCart.Tables("Item").Rows
 
                                             If (drItem(15) = 0) Then
-                                                totalAmount = totalAmount + drItem(6)
+                                                nItemCost = drItem(6) * drItem("quantity")
+                                                totalAmount = totalAmount + nItemCost
 
                                                 If (dMaxPrice <> 0) Then
-                                                    If (drItem(6) >= dMinPrice And drItem(6) <= dMaxPrice) Then
+                                                    If (nItemCost >= dMinPrice And nItemCost <= dMaxPrice) Then
                                                         nValidProductCount = nValidProductCount + 1
                                                     Else
                                                         For iCount = 0 To iDiscount - 1 'looping inside discount row for valid items else remove it from the list
