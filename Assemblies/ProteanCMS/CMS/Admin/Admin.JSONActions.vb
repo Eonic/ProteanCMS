@@ -450,7 +450,15 @@ Partial Public Class Cms
                     Return ex.Message
                 End Try
             End Function
+            Public Function GetExistsFileName(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+                    Return moCtx.Session("ExistsFileName")
+                Catch
+                Finally
+                    moCtx.Session("ExistsFileName") = Nothing
+                End Try
 
+            End Function
             Public Function CompressImage(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
                 Dim JsonResult As String = "0"
                 Dim Filename As String = String.Empty

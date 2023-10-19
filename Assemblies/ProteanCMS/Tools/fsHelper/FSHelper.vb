@@ -30,6 +30,8 @@ Imports DelegateWrappers
 Imports System.Drawing.Imaging
 Imports System.Net
 Imports System.Threading
+Imports Lucene.Net.Support
+Imports PayPal
 
 Partial Public Class fsHelper
 
@@ -1000,7 +1002,8 @@ Partial Public Class fsHelper
                 If context.Request("IsmultiImage") = "yes" Then
                     Return cleanUploadedPaths
                 Else
-                    Return String.Empty
+                    'Return String.Empty
+                    Return cleanUploadedPaths
                 End If
 
             End If
@@ -1042,14 +1045,24 @@ Partial Public Class fsHelper
     Private Sub UploadFile(ByVal context As System.Web.HttpContext)
         Dim statuses = New List(Of FilesStatus)()
         Dim headers = context.Request.Headers
+        For i As Integer = 0 To context.Request.Files.Count - 1
+            Dim file As Object = context.Request.Files(i)
+            Dim cfileName As String = CleanfileName(file.FileName)
+            Dim isExists As String = String.Empty
+            isExists = CleanFileExists(file.FileName, cfileName, context)
+            If isExists Then
+                context.Session("ExistsFileName") = cfileName
+            Else
+                If String.IsNullOrEmpty(headers("X-File-Name")) Then
+                    UploadWholeFile(context, statuses)
+                Else
+                    UploadPartialFile(headers("X-File-Name"), context, statuses)
+                End If
 
-        If String.IsNullOrEmpty(headers("X-File-Name")) Then
-            UploadWholeFile(context, statuses)
-        Else
-            UploadPartialFile(headers("X-File-Name"), context, statuses)
-        End If
+                WriteJsonIframeSafe(context, statuses)
+            End If
+        Next
 
-        WriteJsonIframeSafe(context, statuses)
     End Sub
 
     ' Upload partial file
@@ -1077,15 +1090,41 @@ Partial Public Class fsHelper
     Public Function CleanfileName(ByVal cFilename As String) As String
 
         Try
-
+            Dim combineFile As String
             Dim cCleanfileName As String = Regex.Replace(cFilename, "\s+", "-")
             cCleanfileName = Regex.Replace(cCleanfileName, "(\s+|\$|\,|\'|\£|\:|\*|&|\?|\/)", "")
             cCleanfileName = Regex.Replace(cCleanfileName, "-{2,}", "-", RegexOptions.None)
-            Return cCleanfileName
-
+            Dim FileContainsnonAlphaChar As Boolean = ContainsSpecialChars(cCleanfileName)
+            If FileContainsnonAlphaChar Then
+                cCleanfileName = Regex.Replace(cCleanfileName, "[~`!@#$%^&*()-+=|{}':;,<>/?]", "")
+                'combineFile = cFilename + "," + cCleanfileName
+                Return cCleanfileName
+            Else
+                Return cCleanfileName
+            End If
 
         Catch ex As Exception
             'RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ReplaceRegularExpression", ex, ""))
+            Return ex.Message
+        End Try
+    End Function
+
+    Public Function CleanFileExists(ByVal cOldFilename As String, ByVal cFilename As String, ByVal context As System.Web.HttpContext) As String
+
+        Dim JsonResult As String = ""
+        Dim fileExists As Boolean = False
+        Dim cFilePath As String = context.Request("storageRoot").Replace("\", "/").Replace("""", "")
+        Try
+            If cFilePath IsNot Nothing Then
+                fileExists = IO.File.Exists(goServer.MapPath(cFilePath & cFilename))
+            End If
+            If fileExists Then
+                Return True
+            Else
+                Return False
+            End If
+            Return JsonResult
+        Catch ex As Exception
             Return ex.Message
         End Try
     End Function
@@ -1095,10 +1134,8 @@ Partial Public Class fsHelper
         For i As Integer = 0 To context.Request.Files.Count - 1
             Dim file As Object = context.Request.Files(i)
 
-
             Try
                 If Not mcStartFolder.EndsWith("\") Then mcStartFolder = mcStartFolder & "\"
-
                 Dim cfileName As String = CleanfileName(file.FileName)
 
                 file.SaveAs(mcStartFolder & cfileName)
@@ -1119,12 +1156,9 @@ Partial Public Class fsHelper
                     cleanUploadedPaths = "/" & mcStartFolder.Replace(context.Server.MapPath("/"), "").Replace("\", "/") & cfileName
                 End If
 
-
             Catch ex As Exception
                 statuses.Add(New FilesStatus("failed", 0))
             End Try
-
-
 
         Next
     End Sub

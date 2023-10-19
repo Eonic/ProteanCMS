@@ -2777,3 +2777,33 @@ function getImagePaths() {
     });
    
 }
+
+function SaveFileName() {
+    debugger
+    var newfilename = $("#txtfilename").val();
+    var ajaxurl = '?ewCmd=ImageLib&ewCmd2=FileUpload&storageRoot=/images/';
+   
+    var formData = new FormData($("#frmfileData")[0]);
+
+    //$('#fileupload').fileupload({
+    //    url: ajaxurl,
+    //    dataType: 'json',
+    //    sequentialUploads: true,
+    //    dropZone: $('#files'),
+    //    done: function (e, data) {
+    //        alert("success");
+    //    }
+    //});
+
+    $.ajax({
+        url: ajaxurl,
+        data: formData,
+        processData: false,
+        contentType: false,
+        type: 'POST',
+        success: function (result) {
+
+            alert("done");
+        }
+    });
+}
