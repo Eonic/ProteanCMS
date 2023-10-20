@@ -354,7 +354,7 @@ Original preload function has been kept but is unused.
 
                         var $results = $(loadNode).find('ul .list-group-item');
                         if ($results.length == 0) {
-                           // alert($(loadNode).html());
+                            alert($(loadNode).html());
                         }
                         else {
                             $(loadNode).find("ul .list-group-item").insertAfter(parentNode);
@@ -363,7 +363,7 @@ Original preload function has been kept but is unused.
 
                         // Find out which of the kids have kids
                         loadNode.children().find('li').has('.activeParent,.inactiveParent').addClass('expandable');
-                        alert('rebuild');
+                       // alert('rebuild');
                         myTreeRoot.buildTree_noreload(settings);
                     });
 

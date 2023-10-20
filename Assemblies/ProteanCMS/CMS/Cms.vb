@@ -2803,9 +2803,10 @@ Public Class Cms
                     Dim oPageDetail As XmlElement = moPageXml.CreateElement("ContentDetail")
                     oPageElmt.AppendChild(oPageDetail)
                     Dim oFsh As New fsHelper(moCtx)
+                    oFsh.initialiseVariables(LibraryType.Image)
                     oFsh.moPageXML = moPageXml
-
-                    oPageDetail.AppendChild(oFsh.getDirectoryTreeXml(LibraryType.Image, "/"))
+                    oFsh.mcStartFolder = oFsh.mcStartFolder + moRequest("pgid").Replace("~", "\")
+                    oPageDetail.AppendChild(oFsh.getDirectoryTreeXml(LibraryType.Image, "+++", moRequest("pgid").Replace("~", "\")))
 
                 Case "Search.MostPopular"
 
