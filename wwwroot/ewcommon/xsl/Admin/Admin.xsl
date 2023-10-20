@@ -5457,15 +5457,19 @@
 					if(newfilename!="")
 					{
 						$("#changeFilename").modal("show");
-						$("#txtfilename").val(newfilename);
-						<!--$("#postedFile").val(newfilename);-->
+						$("#txtfilename").val(newfilename);						
 						$("#lbl1").text(newfilename.substring(0, newfilename.length - 4)+"_1" + '.'+extension);
 						$("#lbl2").text(newfilename.substring(0, newfilename.length - 4)+"_2" + '.'+extension);
 						$("#lbl3").text(newfilename.substring(0, newfilename.length - 4)+"_3" + '.'+extension);
-					}
-
+					}	
+				}
+			});
 			
-				<!--filename = "/" + filename + "/g";
+			if(newfilename == "")
+			{
+				newfilename = filename
+			}
+				filename = "/" + filename + "/g";
 				newItem = newItem.replace(eval(filename), newfilename)
 				$('#files').prepend(newItem);
 				$('#files .item-image .panel').prepareLibImages();
@@ -5492,10 +5496,8 @@
 							currentModal.modal("show");
 						});
 					});
-				};-->
+				};
 
-			}
-			});
 
 			});
 			},
@@ -5527,16 +5529,17 @@
 						</div>
 						<div class="modal-body">
 							<div class="form-group">
-								<input type="text" id="txtfilename" value=""/><br/>
+								<input type="text" id="txtfilename" value="" class="textbox form-control"/><br/>
 								<input type="file" name="postedFile" id="postedFile" class="hidden"/>
 								Ex-<div id="lbl1"></div>,
 								<div id="lbl2"></div>,
 								<div id="lbl3"></div>
 							</div>
 						</div>
+						<input type="hidden" id="targetPath" value="{$targetPath}"></input>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-primary" id="btnSave" onClick="SaveFileName();" >Save</button>
-							<button type="button" id="btnOverWrite" onClick="SaveFileName();" class="btn btn-primary">Overwrite</button>
+							<button type="button" id="btnOverWrite" onClick="SaveFileName(true);" class="btn btn-primary">Overwrite</button>
 						</div>
 					</div>
 				</form>

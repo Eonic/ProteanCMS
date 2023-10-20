@@ -1045,12 +1045,13 @@ Partial Public Class fsHelper
     Private Sub UploadFile(ByVal context As System.Web.HttpContext)
         Dim statuses = New List(Of FilesStatus)()
         Dim headers = context.Request.Headers
+        Dim isOverwrite As String = context.Request("isOverwrite")
         For i As Integer = 0 To context.Request.Files.Count - 1
             Dim file As Object = context.Request.Files(i)
             Dim cfileName As String = CleanfileName(file.FileName)
             Dim isExists As String = String.Empty
             isExists = CleanFileExists(file.FileName, cfileName, context)
-            If isExists Then
+            If isExists AndAlso isOverwrite = "" Then
                 context.Session("ExistsFileName") = cfileName
             Else
                 If String.IsNullOrEmpty(headers("X-File-Name")) Then
@@ -1137,7 +1138,7 @@ Partial Public Class fsHelper
             Try
                 If Not mcStartFolder.EndsWith("\") Then mcStartFolder = mcStartFolder & "\"
                 Dim cfileName As String = CleanfileName(file.FileName)
-
+                context.Session("ExistsFileName") = cfileName
                 file.SaveAs(mcStartFolder & cfileName)
 
                 If LCase(mcStartFolder & cfileName).EndsWith(".jpg") Or LCase(mcStartFolder & cfileName).EndsWith(".jpeg") Or LCase(mcStartFolder & cfileName).EndsWith(".png") Then

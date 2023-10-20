@@ -2778,32 +2778,25 @@ function getImagePaths() {
    
 }
 
-function SaveFileName() {
+function SaveFileName(isOverwrite) {
     debugger
     var newfilename = $("#txtfilename").val();
-    var ajaxurl = '?ewCmd=ImageLib&ewCmd2=FileUpload&storageRoot=/images/';
-   
-    var formData = new FormData($("#frmfileData")[0]);
-
-    //$('#fileupload').fileupload({
-    //    url: ajaxurl,
-    //    dataType: 'json',
-    //    sequentialUploads: true,
-    //    dropZone: $('#files'),
-    //    done: function (e, data) {
-    //        alert("success");
-    //    }
-    //});
-
+    var targetPath = $("#targetPath").val();
+    var ajaxurl = '?ewCmd=ImageLib&ewCmd2=FileUpload&isOverwrite=' + isOverwrite +'&storageRoot="'+targetPath+'"';
+    let list = new DataTransfer();
+    let file = new File(["content"], newfilename);
+    list.items.add(file);
+    let myFileList = list.files;
+    postedFile.files = myFileList;
+    var formData = new FormData($("#frmfileData")[0]);   
     $.ajax({
         url: ajaxurl,
         data: formData,
         processData: false,
         contentType: false,
         type: 'POST',
-        success: function (result) {
-
-            alert("done");
+        success: function (result) {            
+            $("#changeFilename").modal("hide");          
         }
     });
 }
