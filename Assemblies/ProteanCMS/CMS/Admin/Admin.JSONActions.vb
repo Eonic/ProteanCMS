@@ -457,7 +457,6 @@ Partial Public Class Cms
                 Finally
                     moCtx.Session("ExistsFileName") = Nothing
                 End Try
-
             End Function
             Public Function CompressImage(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
                 Dim JsonResult As String = "0"

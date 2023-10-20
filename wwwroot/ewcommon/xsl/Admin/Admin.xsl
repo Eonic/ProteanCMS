@@ -5522,7 +5522,7 @@
 				<form id="frmfileData">
 					<div class="modal-content">
 						<div class="modal-header">
-							This filename is already exists, do you want to rename or overwrite?
+							<p>This filename is already exists, do you want to rename or overwrite?</p>
 							<button type="button" class="close" data-dismiss="modal" >
 								<span aria-hidden="true">&#215;</span>
 							</button>

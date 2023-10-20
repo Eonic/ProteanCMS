@@ -1002,12 +1002,9 @@ Partial Public Class fsHelper
                 If context.Request("IsmultiImage") = "yes" Then
                     Return cleanUploadedPaths
                 Else
-                    'Return String.Empty
-                    Return cleanUploadedPaths
+                    Return String.Empty
                 End If
-
             End If
-
 
         Catch ex As Exception
             'catch errorr
@@ -1063,7 +1060,6 @@ Partial Public Class fsHelper
                 WriteJsonIframeSafe(context, statuses)
             End If
         Next
-
     End Sub
 
     ' Upload partial file

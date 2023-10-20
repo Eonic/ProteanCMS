@@ -2778,8 +2778,7 @@ function getImagePaths() {
    
 }
 
-function SaveFileName(isOverwrite) {
-    debugger
+function SaveFileName(isOverwrite) {   
     var newfilename = $("#txtfilename").val();
     var targetPath = $("#targetPath").val();
     var ajaxurl = '?ewCmd=ImageLib&ewCmd2=FileUpload&isOverwrite=' + isOverwrite +'&storageRoot="'+targetPath+'"';
