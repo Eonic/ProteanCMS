@@ -5803,7 +5803,7 @@
 
   <xsl:template match="folder" mode="FolderTree">
     <xsl:param name="level"/>
-    <li id="node{translate(@path,'\','-')}" data-tree-level="{$level}" data-tree-parent="{translate(parent::folder/@path,'\','-')}">
+    <li id="{translate(@path,'\','-')}" data-tree-level="{$level}" data-tree-parent="{translate(parent::folder/@path,'\','-')}">
       <xsl:attribute name="class">
         <xsl:text>list-group-item level-</xsl:text>
         <xsl:value-of select="$level"/>
