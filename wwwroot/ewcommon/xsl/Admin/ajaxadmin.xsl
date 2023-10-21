@@ -76,6 +76,9 @@
 		<xsl:variable name="folderPath" select="translate(Request/*/Item[@name='pgid']/node(),'-','\')"/>
 		<xsl:variable name="level" select="count(ContentDetail/descendant-or-self::folder[@path=$folderPath]/ancestor::folder)"/>
 		<ul class="tree-folder-content">
+			<li class="list-group-item">
+				<xsl:value-of select="translate(Request/*/Item[@name='pgid']/node(),'-','\')"/>
+			</li>
 			<xsl:apply-templates select="ContentDetail/descendant-or-self::folder[@path=$folderPath]/folder" mode="FolderTree">
 				<xsl:with-param name="level" select="$level + 2"/>
 			</xsl:apply-templates>
