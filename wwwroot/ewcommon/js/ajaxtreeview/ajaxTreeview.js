@@ -707,6 +707,15 @@ function getAdminAjaxTreeViewPath() {
         var startingPageId = getParameterByName('pgid');
         treeviewPath = treeviewPath + '&oldPgId=' + startingPageId + '&id=' + movingContentId;        
     }
+    if ($(".layout-MediaLib").exists()) {
+        treeviewPath = treeviewPath + '&LibType=Media';
+    }
+    if ($(".layout-ImageLib").exists()) {
+        treeviewPath = treeviewPath + '&LibType=Image';
+    }
+    if ($(".layout-DocsLib").exists()) {
+        treeviewPath = treeviewPath + '&LibType=Docs';
+    }
   //  alert(treeviewPath);
     return treeviewPath;
 }

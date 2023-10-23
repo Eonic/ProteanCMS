@@ -2803,11 +2803,23 @@ Public Class Cms
                     Dim oPageDetail As XmlElement = moPageXml.CreateElement("ContentDetail")
                     oPageElmt.AppendChild(oPageDetail)
                     Dim oFsh As New fsHelper(moCtx)
-                    oFsh.initialiseVariables(LibraryType.Image)
+                    Dim libType As LibraryType = LibraryType.Image
+                    Dim thisEwCmd = "ImageLib"
+                    Select Case moRequest("LibType")
+                        Case "Media"
+                            thisEwCmd = "MediaLib"
+                            libType = LibraryType.Media
+                        Case "Docs"
+                            thisEwCmd = "DocsLib"
+                            libType = LibraryType.Documents
+                    End Select
+
+                    oFsh.initialiseVariables(libType)
                     oFsh.moPageXML = moPageXml
                     oFsh.mcStartFolder = oFsh.mcStartFolder + moRequest("pgid").Replace("~", "\")
-                    oPageDetail.AppendChild(oFsh.getDirectoryTreeXml(LibraryType.Image, "+++", moRequest("pgid").Replace("~", "\")))
-                    moPageXml.DocumentElement.SetAttribute("ewCmd", "ImageLib")
+                    oPageDetail.AppendChild(oFsh.getDirectoryTreeXml(libType, "+++", moRequest("pgid").Replace("~", "\")))
+                    moPageXml.DocumentElement.SetAttribute("ewCmd", thisEwCmd)
+
                 Case "Search.MostPopular"
 
                     Dim popularSearches As XmlElement = moDbHelper.GetMostPopularSearches(5, moRequest("filter") & "")
@@ -2819,6 +2831,7 @@ Public Class Cms
                     End If
 
             End Select
+
 
             ' Process common actions
             CommonActions()
