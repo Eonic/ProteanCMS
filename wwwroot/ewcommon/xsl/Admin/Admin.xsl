@@ -5810,6 +5810,7 @@
         <xsl:if test="@active='true'">
           <xsl:text> active collapsable</xsl:text>
         </xsl:if>
+		<xsl:if test="folder and not(descendant-or-self::folder[@active='true'])"> expandable</xsl:if>
       </xsl:attribute>
       <a href="{$appPath}?ewCmd={/Page/@ewCmd}&amp;fld={@path}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}">
         <i>
@@ -5830,7 +5831,7 @@
         <xsl:value-of select="@name"/>
       </a>
     </li>
-	  <!-- STOP LOADING NODES NOT SHOWN INITIALLY TO ALLWO THEM TO BE LOADED VIA AJAX-->
+	  <!-- STOP LOADING NODES NOT SHOWN INITIALLY TO ALLOW THEM TO BE LOADED VIA AJAX-->
     <xsl:if test="folder">
 		<xsl:if test="descendant-or-self::folder[@active='true']">
       <xsl:apply-templates select="folder" mode="FolderTree">

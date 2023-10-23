@@ -295,6 +295,8 @@ Partial Public Class fsHelper
             Dim rootPath = "\"
             If pathPrefix <> "" Then rootPath = pathPrefix
             nodeElem.SetAttribute("path", rootPath)
+
+            nodeElem.SetAttribute("startLevel", pathPrefix.Split("\").Length - 1)
             'PerfMon.Log("fsHelper", "getDirectoryTreeXml-AddElementsStart")
             TreeXml = AddElements(nodeElem, mcStartFolder, pathPrefix)
             'PerfMon.Log("fsHelper", "getDirectoryTreeXml-AddElementsEnd")

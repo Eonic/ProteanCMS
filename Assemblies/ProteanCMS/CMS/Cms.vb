@@ -2807,7 +2807,7 @@ Public Class Cms
                     oFsh.moPageXML = moPageXml
                     oFsh.mcStartFolder = oFsh.mcStartFolder + moRequest("pgid").Replace("~", "\")
                     oPageDetail.AppendChild(oFsh.getDirectoryTreeXml(LibraryType.Image, "+++", moRequest("pgid").Replace("~", "\")))
-
+                    moPageXml.DocumentElement.SetAttribute("ewCmd", "ImageLib")
                 Case "Search.MostPopular"
 
                     Dim popularSearches As XmlElement = moDbHelper.GetMostPopularSearches(5, moRequest("filter") & "")
