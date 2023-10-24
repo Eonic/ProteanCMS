@@ -5805,7 +5805,7 @@
     <xsl:param name="level"/>
 	  <xsl:variable name="contentType">
 		  <xsl:if test="/Page/Request/QueryString/Item[@name='popup']/node()='true'">
-			  <xsl:text>ContentType=popup&amp;</xsl:text>
+			  <xsl:text>contentType=popup&amp;</xsl:text>
 		  </xsl:if>
 	  </xsl:variable>
     <li id="node{translate(@path,'\','~')}" data-tree-level="{$level}" data-tree-parent="{translate(parent::folder/@path,'\','~')}">
