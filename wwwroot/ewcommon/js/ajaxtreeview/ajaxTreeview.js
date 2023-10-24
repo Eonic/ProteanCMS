@@ -716,7 +716,7 @@ function getAdminAjaxTreeViewPath() {
     if ($(".layout-DocsLib").exists()) {
         treeviewPath = treeviewPath + '&LibType=Docs';
     }
-  //  alert(treeviewPath);
+    alert(treeviewPath);
     return treeviewPath;
 }
 
