@@ -287,7 +287,7 @@ $(document).ready(function () {
         //activateTreeview
         $('#template_FileSystem #MenuTree').ajaxtreeview({
             loadPath: treeviewPath,
-            ajaxCmd: '',
+            ajaxCmd: 'GetFolderNode',
             openLevel: 2,
             hide: true
         });
