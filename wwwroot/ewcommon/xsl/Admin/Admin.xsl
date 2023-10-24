@@ -5151,7 +5151,7 @@
 
       <div class="panel-body row">
 
-        <div id="MenuTree" class="list-group col-md-3 col-sm-4" data-target-form="{$page/Request/*/Item[@name='targetForm']/node()}" data-target-field="{$page/Request/*/Item[@name='targetField']/node()}" data-target-class="{$page/Request/*/Item[@name='targetClass']/node()}">
+        <div id="MenuTree" class="list-group col-md-3 col-sm-4" data-lib-type="{@layout}" data-target-form="{$page/Request/*/Item[@name='targetForm']/node()}" data-target-field="{$page/Request/*/Item[@name='targetField']/node()}" data-target-class="{$page/Request/*/Item[@name='targetClass']/node()}">
 		  <xsl:apply-templates select="ContentDetail/folder" mode="FolderTree">
             <xsl:with-param name="level">1</xsl:with-param>
           </xsl:apply-templates>
