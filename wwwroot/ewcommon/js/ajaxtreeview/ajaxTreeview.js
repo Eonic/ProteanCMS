@@ -35,10 +35,12 @@ Original preload function has been kept but is unused.
 
         // Constructor
         ajaxtreeview: function (settings) {
-
             myTreeRoot = $(this);
         
             if ($(this).length > 0) {
+
+                //alert(JSON.stringify(settings));
+
                 $(this).addClass("treeview");
                 // Check if levels have been defined, if so, pre-open			
                 if (settings.level > 0) {
@@ -364,13 +366,27 @@ Original preload function has been kept but is unused.
                         else {
                             $(loadNode).find("ul .list-group-item").insertAfter(parentNode);
                         }
-                        loadNode.remove();
-
+                      
                         // Find out which of the kids have kids
-                        loadNode.children().find('li').has('.activeParent,.inactiveParent').addClass('expandable');
-                       
-
+                        loadNode.children().find('li').has('.activeParent,.inactiveParent').addClass('expandable');                     
                         myTreeRoot.buildTree_noreload(settings);
+
+                        var currentModal = loadNode.closest(".modal.pickImageModal");
+                        myTreeRoot.find('a[data-toggle="modal"]').click(function (ev) {
+                            $(this).unbind('click');
+                            ev.preventDefault();
+                            $('.modal-dialog').addClass('loading')
+                            $('.modal-body').html('<div class="panel panel-default"><p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p></div>');
+                            var target = $(this).attr("href");
+                            // load the url and show modal on success
+                            currentModal.load(target, function () {
+                                $('.modal-dialog').removeClass('loading')
+                                currentModal.modal("show");
+
+                            });
+                        });
+
+                        loadNode.remove();
                     });
 
 
@@ -716,7 +732,6 @@ function getAdminAjaxTreeViewPath() {
     if ($(".layout-DocsLib").exists()) {
         treeviewPath = treeviewPath + '&LibType=Docs';
     }
-    alert(treeviewPath);
     return treeviewPath;
 }
 

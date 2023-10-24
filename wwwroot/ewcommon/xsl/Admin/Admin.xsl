@@ -5151,8 +5151,8 @@
 
       <div class="panel-body row">
 
-        <div id="MenuTree" class="list-group col-md-3 col-sm-4">
-          <xsl:apply-templates select="ContentDetail/folder" mode="FolderTree">
+        <div id="MenuTree" class="list-group col-md-3 col-sm-4" data-target-form="{$page/Request/*/Item[@name='targetForm']/node()}" data-target-field="{$page/Request/*/Item[@name='targetField']/node()}" data-target-class="{$page/Request/*/Item[@name='targetClass']/node()}">
+		  <xsl:apply-templates select="ContentDetail/folder" mode="FolderTree">
             <xsl:with-param name="level">1</xsl:with-param>
           </xsl:apply-templates>
         </div>
@@ -5803,6 +5803,11 @@
 
   <xsl:template match="folder" mode="FolderTree">
     <xsl:param name="level"/>
+	  <xsl:variable name="contentType">
+		  <xsl:if test="/Page/Request/QueryString/Item[@name='popup']/node()='true'">
+			  <xsl:text>ContentType=popup&amp;</xsl:text>
+		  </xsl:if>
+	  </xsl:variable>
     <li id="node{translate(@path,'\','~')}" data-tree-level="{$level}" data-tree-parent="{translate(parent::folder/@path,'\','~')}">
       <xsl:attribute name="class">
         <xsl:text>list-group-item level-</xsl:text>
@@ -5812,7 +5817,12 @@
         </xsl:if>
 		<xsl:if test="folder and not(descendant-or-self::folder[@active='true'])"> expandable</xsl:if>
       </xsl:attribute>
-      <a href="{$appPath}?ewCmd={/Page/@ewCmd}&amp;fld={@path}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}">
+      <a href="{$appPath}?{$contentType}ewCmd={/Page/@ewCmd}&amp;fld={@path}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}">
+		  <xsl:if test="/Page/Request/QueryString/Item[@name='popup']/node()='true'">
+			  <xsl:attribute name="data-toggle">modal</xsl:attribute>
+			  <xsl:attribute name="data-target">#modal-<xsl:value-of select="/Page/Request/QueryString/Item[@name='targetField']/node()"/>
+		  </xsl:attribute>
+		  </xsl:if>
         <i>
           <xsl:attribute name="class">
             <xsl:text>fa fa-lg</xsl:text>

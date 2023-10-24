@@ -285,9 +285,8 @@ $(document).ready(function () {
     $('.pickImageModal').on('loaded', function () {
         var currentModal = $(this)
         //activateTreeview
-      
         $('#template_FileSystem #MenuTree').ajaxtreeview({
-            loadPath: treeviewPath & "&popup=true",
+            loadPath: treeviewPath + "&popup=true&targetForm=" + $('#template_FileSystem #MenuTree').data("target-form") + "&targetField=" + $('#template_FileSystem #MenuTree').data("target-field") + "&targetClass=" + $('#template_FileSystem #MenuTree').data("target-class"),
             ajaxCmd: 'GetFolderNode',
             openLevel: 2,
             hide: true
