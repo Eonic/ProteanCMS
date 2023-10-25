@@ -1043,13 +1043,19 @@ Partial Public Class fsHelper
         Dim statuses = New List(Of FilesStatus)()
         Dim headers = context.Request.Headers
         Dim isOverwrite As String = context.Request("isOverwrite")
+
         For i As Integer = 0 To context.Request.Files.Count - 1
             Dim file As Object = context.Request.Files(i)
             Dim cfileName As String = CleanfileName(file.FileName)
-            Dim isExists As String = String.Empty
-            isExists = CleanFileExists(file.FileName, cfileName, context)
+            Dim isExists As String = "true"
+            Dim NewFileName As String = CleanFileExists(cfileName, context)
+            If NewFileName = cfileName Then
+                isExists = "false"
+            Else
+                cfileName = NewFileName
+            End If
             If isExists AndAlso isOverwrite = "" Then
-                context.Session("ExistsFileName") = cfileName
+                context.Session("ExistsFileName") = cfileName + "," + isExists
             Else
                 If String.IsNullOrEmpty(headers("X-File-Name")) Then
                     UploadWholeFile(context, statuses)
@@ -1106,9 +1112,8 @@ Partial Public Class fsHelper
         End Try
     End Function
 
-    Public Function CleanFileExists(ByVal cOldFilename As String, ByVal cFilename As String, ByVal context As System.Web.HttpContext) As String
+    Public Function CleanFileExists(ByVal cFilename As String, ByVal context As System.Web.HttpContext) As String
 
-        Dim JsonResult As String = ""
         Dim fileExists As Boolean = False
         Dim cFilePath As String = context.Request("storageRoot").Replace("\", "/").Replace("""", "")
         If Not cFilePath.EndsWith("\") Then cFilePath = cFilePath & "\"
@@ -1117,11 +1122,18 @@ Partial Public Class fsHelper
                 fileExists = IO.File.Exists(goServer.MapPath(cFilePath & cFilename))
             End If
             If fileExists Then
-                Return True
+                For i As Integer = 0 To 1000
+                    'save Regex to replace filename-{digit}.jpg with filename-{newdigit}.jpg 
+                    cFilename = cFilename.Replace(".", "-" & i & ".")
+                    If Not IO.File.Exists(goServer.MapPath(cFilePath & cFilename)) Then
+                        Exit For
+                    End If
+                Next
+                Return cFilename
             Else
-                Return False
+                Return cFilename
             End If
-            Return JsonResult
+
         Catch ex As Exception
             Return ex.Message
         End Try

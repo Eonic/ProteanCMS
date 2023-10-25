@@ -5366,50 +5366,7 @@
 			<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">/* */</script>
 		</xsl:if>
 
-		<script>
-
-			<!--var targetPath = '<xsl:value-of select="$targetPath"/>';
-		 var siteurl= '<xsl:value-of select="$siteURL"/>';
-		 $("#fileupload").change(function() {
-		  var files = $('#fileupload')[0].files;
-		  $.each(files, function(i, val) {
-		      strFileName = files[i].name;	
-			  var extension = strFileName.substring(strFileName.length - 3);
-			  var dataMsg = 'Filename=' + strFileName;
-			  alert(dataMsg);
-			    $.ajax({
-                    url: '/ewapi/Cms.Admin/CleanfileName',
-                    data: dataMsg,
-                    type: 'GET',                   
-                    success: function(response) {
-					         var newfilename = response; 							 
-							 var filePath= targetPath+newfilename;
-							 
-		                      var NewinputJson = 'filePath='+filePath;
-							  alert(filePath);
-		                      $.ajax({
-                                    url: '/ewapi/Cms.Admin/CleanFileExists',
-                                    data: NewinputJson,
-                                    type: 'GET',    
-                                    success: function(response) {					                
-									     if(response=="Already Exists")
-										 {
-										       $("#changeFilename").modal("show");
-							                   $("#txtfilename").val(newfilename);
-							                   $("#lbl1").text(newfilename+"_1" + '.'+extension);
-							                   $("#lbl2").text(newfilename+"_2" + '.'+extension);
-							                   $("#lbl3").text(newfilename+"_3" + '.'+extension);
-										 }									 
-							            
-					                }
-                              });
-							 
-							 
-					    }
-               });
-		   });
-		 });-->
-
+		<script>			
 
 			<xsl:text>
        
@@ -5451,52 +5408,57 @@
 				data: '',
 				type: 'GET',
 				success: function (response) {
-					newfilename = response;
-					alert(file.name);
-					var extension = newfilename.substring(newfilename.length - 3);
-					if(newfilename!=file.name)
+					newfilename = response;					
+					if(newfilename!="")
 					{
-						$("#changeFilename").modal("show");
-						$("#txtfilename").val(newfilename);						
-						$("#lbl1").text(newfilename.substring(0, newfilename.length - 4)+"_1" + '.'+extension);
-						$("#lbl2").text(newfilename.substring(0, newfilename.length - 4)+"_2" + '.'+extension);
-						$("#lbl3").text(newfilename.substring(0, newfilename.length - 4)+"_3" + '.'+extension);
-					}	
+						$("#oldfilename").html(file.name);
+						<!--alert(newfilename);-->	
+						if(newfilename.indexOf('True') != -1)
+						{
+							var arr = newfilename.split(',');
+							var extension = arr[0].substring(arr[0].length - 3);							
+							$("#changeFilename").modal("show");
+							$("#txtfilename").val(arr[0]);						
+							<!--$("#lbl1").text(arr[0].substring(0, arr[0].length - 4)+"_1" + '.'+extension);
+							$("#lbl2").text(arr[0].substring(0, arr[0].length - 4)+"_2" + '.'+extension);
+							$("#lbl3").text(arr[0].substring(0, arr[0].length - 4)+"_3" + '.'+extension);-->
+						}	
+					}
 				}
 			});
 			
-				if(newfilename == "")
-				{
-					newfilename = filename
-				}
-				filename = "/" + filename + "/g";
-				newItem = newItem.replace(eval(filename), newfilename)
-				$('#files').prepend(newItem);
-				$('#files .item-image .panel').prepareLibImages();
+			if(newfilename == "")
+			{
+				newfilename = filename
+			}
+			filename = "/" + filename + "/g";
+			newItem = newItem.replace(eval(filename), newfilename)
+			$('#files').prepend(newItem);
+			$('#files .item-image .panel').prepareLibImages();
 
-				$("[data-toggle=popover]").popover({
-					html: true,
-					container: '#files',
-					trigger: 'hover',
-					viewport: '#files',
-					content: function() {
-						return $(this).prev('.popoverContent').html();
-					}
-				});
-				if ($('.pickImageModal').exists()) {
-					$('.pickImageModal').find('a[data-toggle!="popover"]').click(function(ev) {
-						ev.preventDefault();
-						$('.modal-dialog').addClass('loading')
-						$('.modal-body').html('<xsl:text disable-output-escaping="yes">&lt;</xsl:text>p class="text-center"<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>h4<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>i class="fa fa-cog fa-spin fa-2x fa-fw"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>;<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/i<xsl:text disable-output-escaping="yes">&gt;</xsl:text>Loading ...<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/h4<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/p<xsl:text disable-output-escaping="yes">&gt;</xsl:text>');
-						var target = $(this).attr("href");
-						// load the url and show modal on success
-						var currentModal = $('.pickImageModal')
-						currentModal.load(target, function() {
-							$('.modal-dialog').removeClass('loading')
-							currentModal.modal("show");
-						});
+			$("[data-toggle=popover]").popover({
+				html: true,
+				container: '#files',
+				trigger: 'hover',
+				viewport: '#files',
+				content: function() {
+					return $(this).prev('.popoverContent').html();
+				}
+			});
+			if ($('.pickImageModal').exists()) {
+				$('.pickImageModal').find('a[data-toggle!="popover"]').click(function(ev) {
+					ev.preventDefault();
+					$('.modal-dialog').addClass('loading')
+					$('.modal-body').html('<xsl:text disable-output-escaping="yes">&lt;</xsl:text>p class="text-center"<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>h4<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>i class="fa fa-cog fa-spin fa-2x fa-fw"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>;<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/i<xsl:text disable-output-escaping="yes">&gt;</xsl:text>Loading ...<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/h4<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/p<xsl:text disable-output-escaping="yes">&gt;</xsl:text>');
+					var target = $(this).attr("href");
+					// load the url and show modal on success
+					var currentModal = $('.pickImageModal')
+					currentModal.load(target, function() {
+						$('.modal-dialog').removeClass('loading')
+						currentModal.modal("show");
 					});
-				};
+				});
+			};
 
 
 			});
@@ -5522,23 +5484,28 @@
 				<form id="frmfileData">
 					<div class="modal-content">
 						<div class="modal-header">
-							<p>This filename is already exists, do you want to rename or overwrite?</p>
-							<button type="button" class="close" data-dismiss="modal" >
-								<span aria-hidden="true">&#215;</span>
+							<button type="button" class="close" data-dismiss="modal">
+								<i class="fa fa-times">&#160;</i>
 							</button>
+							<h4 class="modal-title">File Exists</h4>
 						</div>
 						<div class="modal-body">
+							<p>
+								<b>
+									<span id="oldfilename">&#160;</span>
+								</b> already exists, rename or overwrite?
+							</p>
 							<div class="form-group">
+								
+								<label for="txtfilename">Rename file to </label>
 								<input type="text" id="txtfilename" value="" class="textbox form-control"/><br/>
 								<input type="file" name="postedFile" id="postedFile" class="hidden"/>
-								Ex-<div id="lbl1"></div>,
-								<div id="lbl2"></div>,
-								<div id="lbl3"></div>
+								
 							</div>
 						</div>
 						<input type="hidden" id="targetPath" value="{$targetPath}"></input>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-primary" id="btnSave" onClick="SaveFileName();" >Save</button>
+							<button type="button" class="btn btn-primary" id="btnSave" onClick="SaveFileName();" >Rename</button>
 							<button type="button" id="btnOverWrite" onClick="SaveFileName(true);" class="btn btn-primary">Overwrite</button>
 						</div>
 					</div>
