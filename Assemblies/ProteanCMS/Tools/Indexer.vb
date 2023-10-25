@@ -646,7 +646,7 @@ Public Class Indexer
         Try
             If moConfig("AdminAcct") <> "" And moConfig("AdminGroup") <> "AzureWebApp" Then
                 moImp = New Protean.Tools.Security.Impersonate 'for access
-                If moImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
+                If Not moImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
                     Err.Raise(108, , "Indexer did not authenticate with system credentials")
                 End If
 
@@ -687,33 +687,36 @@ Public Class Indexer
         Dim cProcessInfo As String = ""
         Try
             If bNewIndex Then
-                'delete directories and thier children
-                Do Until UBound(IO.Directory.GetDirectories(cDirectory)) <= 0
-                    IO.Directory.Delete(IO.Directory.GetDirectories(cDirectory)(0), True)
-                Loop
-                'delete files
-                Do Until UBound(IO.Directory.GetFiles(cDirectory)) <= 0
-                    Try
-                        IO.File.SetAttributes(IO.Directory.GetFiles(cDirectory)(0), FileAttributes.Normal)
-                        IO.File.Delete(IO.Directory.GetFiles(cDirectory)(0))
-                    Catch ex As Exception
-                        cExError &= ex.StackTrace.ToString & vbCrLf
-                        returnException(myWeb.msException, mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug)
-                        Exit Sub
+                If IO.Directory.Exists(cDirectory) Then
+                    'delete directories and thier children
+                    Do Until UBound(IO.Directory.GetDirectories(cDirectory)) <= 0
+                        IO.Directory.Delete(IO.Directory.GetDirectories(cDirectory)(0), True)
+                    Loop
+                    'delete files
+                    Do Until UBound(IO.Directory.GetFiles(cDirectory)) <= 0
+                        Try
+                            IO.File.SetAttributes(IO.Directory.GetFiles(cDirectory)(0), FileAttributes.Normal)
+                            IO.File.Delete(IO.Directory.GetFiles(cDirectory)(0))
+                        Catch ex As Exception
+                            cExError &= ex.StackTrace.ToString & vbCrLf
+                            returnException(myWeb.msException, mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug)
+                            Exit Sub
 
-                    End Try
-                Loop
+                        End Try
+                    Loop
+                End If
+
                 'try deleting a hidden folder
                 If IO.Directory.Exists(cDirectory & IIf(Right(cDirectory, 1) = "\", "", "\") & "_vti_cnf") Then
-                    Try
-                        IO.Directory.Delete(cDirectory & IIf(Right(cDirectory, 1) = "\", "", "\") & "_vti_cnf", True)
-                    Catch ex As Exception
-                        cExError &= ex.ToString & vbCrLf
-                        returnException(myWeb.msException, mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug)
-                        Exit Sub
-                    End Try
+                        Try
+                            IO.Directory.Delete(cDirectory & IIf(Right(cDirectory, 1) = "\", "", "\") & "_vti_cnf", True)
+                        Catch ex As Exception
+                            cExError &= ex.ToString & vbCrLf
+                            returnException(myWeb.msException, mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug)
+                            Exit Sub
+                        End Try
+                    End If
                 End If
-            End If
         Catch ex As Exception
             Try
                 oIndexWriter.Dispose()
