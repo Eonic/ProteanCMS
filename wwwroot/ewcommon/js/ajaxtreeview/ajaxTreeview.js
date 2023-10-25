@@ -28,16 +28,19 @@ Original preload function has been kept but is unused.
 *
 */
 
+
 ; (function ($) {
 
     $.extend($.fn, {
 
         // Constructor
         ajaxtreeview: function (settings) {
-
             myTreeRoot = $(this);
         
             if ($(this).length > 0) {
+
+                //alert(JSON.stringify(settings));
+
                 $(this).addClass("treeview");
                 // Check if levels have been defined, if so, pre-open			
                 if (settings.level > 0) {
@@ -79,7 +82,7 @@ Original preload function has been kept but is unused.
             $(this).find("li[data-tree-level='" + settings.openLevel + "']").each(function () {
                 //unless you have an active descendant
                 if ($(this).activeChild() == false) {
-                    $(this).hideChildren();
+                  //  $(this).hideChildren();
                 }
             });
         },
@@ -249,10 +252,13 @@ Original preload function has been kept but is unused.
         // Same as above, prototype buildTree for no reloads      
         buildTree_noreload: function (settings) {
 
+           // alert('settings:' + JSON.stringify(settings));
+
             //var myTreeRoot = $('#MenuTree');
             myTreeRoot = $(this);
             // Add Hit area's (the clickable part)
             myTreeRoot.find('li.collapsable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
+           // myTreeRoot.find('li.expandable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea expandable-hitarea fa fa-chevron-down"> </i>');
             myTreeRoot.find('li.expandable_loaded:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea expandable-hitarea fa fa-chevron-down"> </i>');
 
             $('#MenuTree li').each(function () {
@@ -348,23 +354,39 @@ Original preload function has been kept but is unused.
                 else {
 
                     var loadNode = $(this).parent().next()
+                   // alert(settings.loadPath + "?ajaxCmd=" + settings.ajaxCmd + "&pgid=" + ewPageId + "&context=" + ewCloneContextId);
                     loadNode.load(settings.loadPath, { ajaxCmd: settings.ajaxCmd, pgid: ewPageId, context: ewCloneContextId }, function (data) {
 
                         myTreeRoot = loadNode.closest("#MenuTree");
 
                         var $results = $(loadNode).find('ul .list-group-item');
                         if ($results.length == 0) {
-                           // alert($(loadNode).html());
+                            alert($(loadNode).html());
                         }
                         else {
                             $(loadNode).find("ul .list-group-item").insertAfter(parentNode);
                         }
-                        loadNode.remove();
-
+                      
                         // Find out which of the kids have kids
-                        loadNode.children().find('li').has('.activeParent,.inactiveParent').addClass('expandable');
-                        alert('rebuild');
+                        loadNode.children().find('li').has('.activeParent,.inactiveParent').addClass('expandable');                     
                         myTreeRoot.buildTree_noreload(settings);
+
+                        var currentModal = loadNode.closest(".modal.pickImageModal");
+                        myTreeRoot.find('a[data-toggle="modal"]').click(function (ev) {
+                            $(this).unbind('click');
+                            ev.preventDefault();
+                            $('.modal-dialog').addClass('loading')
+                            $('.modal-body').html('<div class="panel panel-default"><p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p></div>');
+                            var target = $(this).attr("href");
+                            // load the url and show modal on success
+                            currentModal.load(target, function () {
+                                $('.modal-dialog').removeClass('loading')
+                                currentModal.modal("show");
+
+                            });
+                        });
+
+                        loadNode.remove();
                     });
 
 
@@ -408,7 +430,7 @@ Original preload function has been kept but is unused.
         hideChildren: function () {
             $(this).find('.hitarea').removeClass('collapsable-hitarea').addClass('expandable-hitarea');
             $(this).find('.hitarea').removeClass('fa-chevron-down').addClass('fa-chevron-right');
-            // alert($(this).html)
+            //alert($(this).html)
             var ewPageId = ($(this).attr('id').replace(/node/, ""));
             // alert(ewPageId);
             $(this).parent().find('li[data-tree-parent="' + ewPageId + '"]').each(function (index) {
@@ -419,7 +441,8 @@ Original preload function has been kept but is unused.
                 $(this).hide();
             });
 
-            $(this).removeClass('collapsable').removeClass('expandable').addClass('expandable_loaded');
+            $(this).removeClass('collapsable').addClass('expandable_loaded');
+            //$(this).removeClass('expandable').addClass('expandable_loaded');
 
         },
 
@@ -700,7 +723,15 @@ function getAdminAjaxTreeViewPath() {
         var startingPageId = getParameterByName('pgid');
         treeviewPath = treeviewPath + '&oldPgId=' + startingPageId + '&id=' + movingContentId;        
     }
-  //  alert(treeviewPath);
+    if ($(".layout-MediaLib").exists()) {
+        treeviewPath = treeviewPath + '&LibType=Media';
+    }
+    if ($(".layout-ImageLib").exists()) {
+        treeviewPath = treeviewPath + '&LibType=Image';
+    }
+    if ($(".layout-DocsLib").exists()) {
+        treeviewPath = treeviewPath + '&LibType=Docs';
+    }
     return treeviewPath;
 }
 

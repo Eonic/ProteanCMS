@@ -37,6 +37,8 @@
 			<bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
 			<bind id="redirectPathId" nodeset="@redirectPathId" required="false()" type="string"/>
 			<bind id="formLayout" nodeset="@formLayout" required="false()" type="string"/>
+			<bind id="cAccountCreateFormName" nodeset="@accountCreateFormName" required="false()" type="string"/>
+			<bind id="cAccountUpdateFormName" nodeset="@accountUpdateFormName" required="false()" type="string"/>
 		</bind>
 		<bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
 		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
@@ -105,6 +107,12 @@
 					</input>
 					<input bind="cModuleType" class="hidden">
 						<label>ModuleType</label>
+					</input>
+					<input bind="cAccountCreateFormName">
+						<label>Account Create Form Name</label>
+					</input>
+					<input bind="cAccountUpdateFormName">
+						<label>Account Update Form Name</label>
 					</input>
 					<!-- end of hidden fields -->
 					<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
