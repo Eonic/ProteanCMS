@@ -1840,6 +1840,11 @@ Partial Public Module xmlTools
             Dim SelectElmt As XmlElement = myWeb.moPageXml.CreateElement("select1")
 
             Try
+                Dim aMethodName As String()
+                If methodName.Contains(".") Then
+                    aMethodName = methodName.Split(".")
+                    methodName = aMethodName(0)
+                End If
 
                 Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders")
                 'Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(ProviderName).Type)
@@ -1872,6 +1877,14 @@ Partial Public Module xmlTools
 
                 Dim args2(0) As Object
                 args2(0) = SelectElmt
+                If Not aMethodName Is Nothing Then
+                    Dim i As Int16
+                    ReDim args2(aMethodName.Length - 1)
+                    For i = 1 To aMethodName.Length - 1
+                        args2(i) = aMethodName(i)
+                    Next
+                End If
+
                 calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, Nothing, o, args2)
 
                 Return SelectElmt
