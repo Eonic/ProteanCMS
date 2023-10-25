@@ -270,7 +270,7 @@ Partial Public Class fsHelper
 
     End Function
 
-    Public Function getDirectoryTreeXml(ByVal nLib As LibraryType, Optional ByVal populateFilesNode As String = "") As XmlElement
+    Public Function getDirectoryTreeXml(ByVal nLib As LibraryType, Optional ByVal populateFilesNode As String = "", Optional ByVal pathPrefix As String = "") As XmlElement
         'PerfMon.Log("fsHelper", "getDirectoryTreeXml")
         Dim tempStartFolder As String
         Dim TreeXml As XmlElement
@@ -292,9 +292,13 @@ Partial Public Class fsHelper
             mcStartFolder = tempStartFolder
 
             Dim nodeElem As XmlElement = XmlElement("folder", New DirectoryInfo(mcStartFolder).Name)
-            nodeElem.SetAttribute("path", "\")
+            Dim rootPath = "\"
+            If pathPrefix <> "" Then rootPath = pathPrefix
+            nodeElem.SetAttribute("path", rootPath)
+
+            nodeElem.SetAttribute("startLevel", pathPrefix.Split("\").Length - 1)
             'PerfMon.Log("fsHelper", "getDirectoryTreeXml-AddElementsStart")
-            TreeXml = AddElements(nodeElem, mcStartFolder)
+            TreeXml = AddElements(nodeElem, mcStartFolder, pathPrefix)
             'PerfMon.Log("fsHelper", "getDirectoryTreeXml-AddElementsEnd")
             If nLib = LibraryType.Image Then
 
@@ -1153,7 +1157,7 @@ Partial Public Class fsHelper
     End Function
 #End Region
 #Region "Private Methods"
-    Private Function AddElements(ByVal startNode As XmlElement, ByVal Folder As String) As XmlElement
+    Private Function AddElements(ByVal startNode As XmlElement, ByVal Folder As String, Optional pathPrefix As String = "") As XmlElement
         '  'PerfMon.Log("fsHelper", "AddElements", Folder)
         Try
             Dim dir As New DirectoryInfo(Folder)
@@ -1178,7 +1182,7 @@ Partial Public Class fsHelper
 
             mcPopulateFilesNode = mcPopulateFilesNode.Replace("/", "\")
 
-            If mcPopulateFilesNode = sVirtualPath Or (mcPopulateFilesNode = "\" And sVirtualPath = "") Then
+            If (mcPopulateFilesNode = sVirtualPath) Or (mcPopulateFilesNode = "\" And sVirtualPath = "") Then
                 startNode.SetAttribute("active", "true")
                 Dim fileCount As Int16 = 1
                 For Each fi In files
@@ -1273,11 +1277,11 @@ Partial Public Class fsHelper
                         sPath = Replace(sd.FullName, mcStartFolder, "")
                     End If
 
-                    folderElem.Attributes.Append(XmlAttribute("path", sPath))
+                    folderElem.Attributes.Append(XmlAttribute("path", pathPrefix & sPath))
                     'folderElem.Attributes.Append(XmlAttribute("Hidden",(If(sd.Attributes And FileAttributes.Hidden) <> 0 Then "Y" Else "N"))) 'TODO: Unsupported feature: conditional (?) operator.
                     'folderElem.Attributes.Append(XmlAttribute("System",(If(sd.Attributes And FileAttributes.System) <> 0 Then "Y" Else "N"))) 'TODO: Unsupported feature: conditional (?) operator.
                     'folderElem.Attributes.Append(XmlAttribute("ReadOnly",(If(sd.Attributes And FileAttributes.ReadOnly) <> 0 Then "Y" Else "N"))) 'TODO: Unsupported feature: conditional (?) operator.
-                    startNode.AppendChild(AddElements(folderElem, sd.FullName))
+                    startNode.AppendChild(AddElements(folderElem, sd.FullName, pathPrefix))
                 End If
             Next sd
             Return startNode

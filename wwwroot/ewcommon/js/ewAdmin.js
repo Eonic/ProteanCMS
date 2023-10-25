@@ -286,8 +286,8 @@ $(document).ready(function () {
         var currentModal = $(this)
         //activateTreeview
         $('#template_FileSystem #MenuTree').ajaxtreeview({
-            loadPath: treeviewPath,
-            ajaxCmd: '',
+            loadPath: treeviewPath + "&popup=true&libType=" + $('#template_FileSystem #MenuTree').data("lib-type").replace("Lib","") + "&targetForm=" + $('#template_FileSystem #MenuTree').data("target-form") + "&targetField=" + $('#template_FileSystem #MenuTree').data("target-field") + "&targetClass=" + $('#template_FileSystem #MenuTree').data("target-class"),
+            ajaxCmd: 'GetFolderNode',
             openLevel: 2,
             hide: true
         });
@@ -307,7 +307,7 @@ $(document).ready(function () {
         $(this).find('a[data-toggle!="popover"]').click(function (ev) {
             ev.preventDefault();
             $('.modal-dialog').addClass('loading')
-            $('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p>');
+            $('.modal-body').html('<div class="panel panel-default"><p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p></div>');
             var target = $(this).attr("href");
             // load the url and show modal on success
             currentModal.load(target, function () {

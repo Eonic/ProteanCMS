@@ -3499,6 +3499,7 @@ AfterProcessFlow:
 
                 If bShowTree = True Then
                     myWeb.PerfMon.Log("fsHelper", "getDirectoryTreeXml-Start")
+
                     oPageDetail.AppendChild(oFsh.getDirectoryTreeXml(LibType, sFolder))
                     myWeb.PerfMon.Log("fsHelper", "getDirectoryTreeXml-End")
                 End If
