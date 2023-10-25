@@ -5413,7 +5413,7 @@
 					{
 						$("#oldfilename").html(file.name);
 						<!--alert(newfilename);-->	
-						if(newfilename.indexOf('True') != -1)
+						if(newfilename.indexOf('true') != -1)
 						{
 							var arr = newfilename.split(',');
 							var extension = arr[0].substring(arr[0].length - 3);							

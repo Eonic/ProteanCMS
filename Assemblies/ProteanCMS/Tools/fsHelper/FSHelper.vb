@@ -1124,7 +1124,12 @@ Partial Public Class fsHelper
             If fileExists Then
                 For i As Integer = 0 To 1000
                     'save Regex to replace filename-{digit}.jpg with filename-{newdigit}.jpg 
-                    cFilename = cFilename.Replace(".", "-" & i & ".")
+                    If cFilename.IndexOfAny("(-[0-9]+)".ToCharArray) <> -1 Then
+                        cFilename = Regex.Replace(cFilename, "(-[0-9]+)", "-" & i)
+                    Else
+                        cFilename = cFilename.Replace(".", "-" & i & ".")
+                    End If
+
                     If Not IO.File.Exists(goServer.MapPath(cFilePath & cFilename)) Then
                         Exit For
                     End If
