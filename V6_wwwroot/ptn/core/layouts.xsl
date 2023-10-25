@@ -11,7 +11,7 @@
 		<xsl:param name="auto-col"/>
 		<xsl:param name="module-type"/>
 		<xsl:choose>
-			<xsl:when test="$position='header' or $position='footer' or ($position='column1' and @layout='Modules_1_column')">
+			<xsl:when test="$position='header' or $position='footer' or $position='custom' or ($position='column1' and @layout='Modules_1_column')">
 				<xsl:apply-templates select="." mode="addModuleControlsSection">
 					<xsl:with-param name="text" select="$text"/>
 					<xsl:with-param name="class" select="$class"/>
