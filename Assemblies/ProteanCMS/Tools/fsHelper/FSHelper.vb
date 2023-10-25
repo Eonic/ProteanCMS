@@ -1111,6 +1111,7 @@ Partial Public Class fsHelper
         Dim JsonResult As String = ""
         Dim fileExists As Boolean = False
         Dim cFilePath As String = context.Request("storageRoot").Replace("\", "/").Replace("""", "")
+        If Not cFilePath.EndsWith("\") Then cFilePath = cFilePath & "\"
         Try
             If cFilePath IsNot Nothing Then
                 fileExists = IO.File.Exists(goServer.MapPath(cFilePath & cFilename))

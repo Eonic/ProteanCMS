@@ -5452,9 +5452,9 @@
 				type: 'GET',
 				success: function (response) {
 					newfilename = response;
-					alert(newfilename);
+					alert(file.name);
 					var extension = newfilename.substring(newfilename.length - 3);
-					if(newfilename!="")
+					if(newfilename!=file.name)
 					{
 						$("#changeFilename").modal("show");
 						$("#txtfilename").val(newfilename);						
@@ -5465,10 +5465,10 @@
 				}
 			});
 			
-			if(newfilename == "")
-			{
-				newfilename = filename
-			}
+				if(newfilename == "")
+				{
+					newfilename = filename
+				}
 				filename = "/" + filename + "/g";
 				newItem = newItem.replace(eval(filename), newfilename)
 				$('#files').prepend(newItem);
