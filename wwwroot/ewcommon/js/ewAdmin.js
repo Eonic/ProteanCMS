@@ -2105,6 +2105,5 @@ function getImagePaths() {
             location.reload();
         }
     });
-
-
+   
 }

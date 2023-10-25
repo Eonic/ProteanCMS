@@ -756,7 +756,14 @@ Check:
                     End Try
                 End Function
 
+                Public Overrides Function xFrmEditDirectoryItem(Optional ByVal id As Long = 0, Optional ByVal cDirectorySchemaName As String = "User", Optional ByVal parId As Long = 0, Optional ByVal cXformName As String = "") As XmlElement
+                    Return xFrmEditDirectoryItem(id, cDirectorySchemaName, parId, cXformName, "", Nothing)
+                End Function
                 Public Overrides Function xFrmEditDirectoryItem(Optional ByVal id As Long = 0, Optional ByVal cDirectorySchemaName As String = "User", Optional ByVal parId As Long = 0, Optional ByVal cXformName As String = "", Optional ByVal FormXML As String = "") As XmlElement
+                    Return xFrmEditDirectoryItem(id, cDirectorySchemaName, parId, cXformName, FormXML, Nothing)
+                End Function
+
+                Public Overrides Function xFrmEditDirectoryItem(Optional ByVal id As Long = 0, Optional ByVal cDirectorySchemaName As String = "User", Optional ByVal parId As Long = 0, Optional ByVal cXformName As String = "", Optional ByVal FormXML As String = "", Optional ByRef IntanceAppend As XmlElement = Nothing) As XmlElement
 
                     Dim oGrpElmt As XmlElement
                     Dim cProcessInfo As String = ""
@@ -789,6 +796,13 @@ Check:
                         If id > 0 Then
                             MyBase.Instance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.Directory, id)
                             cCurrentPassword = Instance.SelectSingleNode("*/cDirPassword").InnerText
+                        End If
+
+                        If Not IntanceAppend Is Nothing Then
+                            'this enables an overload to add additional Xml for updating.
+                            Dim importedNode As XmlNode = Instance.OwnerDocument.ImportNode(IntanceAppend, True)
+                            Instance.AppendChild(importedNode)
+
                         End If
 
                         cDirectorySchemaName = MyBase.Instance.SelectSingleNode("tblDirectory/cDirSchema").InnerText
@@ -2242,7 +2256,9 @@ Check:
 
                             Dim fs As fsHelper = New fsHelper()
                             Dim path As String = fs.FindFilePathInCommonFolders("/xsl/Email/passwordReset.xsl", myWeb.maCommonFolders)
-
+                            If myWeb.moConfig("cssFramework") = "bs5" Then
+                                path = "/email/passwordReset.xsl"
+                            End If
                             sReturnValue = oMessage.emailer(oEmailDoc.DocumentElement, path, myWeb.moConfig("SiteAdminName"), myWeb.moConfig("SiteAdminEmail"), userEmail, "Account Reset ")
                             sReturnValue = IIf(sReturnValue = "Message Sent", "<span class=""msg-1035"">" & sReturnValue & " to </span>" & userEmail, "")
 

@@ -4341,8 +4341,16 @@ Partial Public Class Cms
             ''' <returns></returns>
             ''' <remarks></remarks>
 
-            <Obsolete("Don't use this routine any more. Use the new one in Membership Provider ", False)>
+            Public Overridable Function xFrmEditDirectoryItem(Optional ByVal id As Long = 0, Optional ByVal cDirectorySchemaName As String = "User", Optional ByVal parId As Long = 0, Optional ByVal cXformName As String = "") As XmlElement
+                Return xFrmEditDirectoryItem(id, cDirectorySchemaName, parId, cXformName, "", Nothing)
+            End Function
+
             Public Overridable Function xFrmEditDirectoryItem(Optional ByVal id As Long = 0, Optional ByVal cDirectorySchemaName As String = "User", Optional ByVal parId As Long = 0, Optional ByVal cXformName As String = "", Optional ByVal FormXML As String = "") As XmlElement
+                Return xFrmEditDirectoryItem(id, cDirectorySchemaName, parId, cXformName, FormXML, Nothing)
+            End Function
+
+            <Obsolete("Don't use this routine any more. Use the new one in Membership Provider ", False)>
+            Public Overridable Function xFrmEditDirectoryItem(Optional ByVal id As Long = 0, Optional ByVal cDirectorySchemaName As String = "User", Optional ByVal parId As Long = 0, Optional ByVal cXformName As String = "", Optional ByVal FormXML As String = "", Optional ByRef IntanceAppend As XmlElement = Nothing) As XmlElement
                 Dim cProcessInfo As String = ""
 
                 Try
