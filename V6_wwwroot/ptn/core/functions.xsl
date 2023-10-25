@@ -233,15 +233,15 @@
 			</xsl:call-template>
 		</xsl:if>
 	</xsl:variable>
-	
-  <xsl:variable name="GoogleGA4MeasurementID">
-    <xsl:if test="not(/Page/@adminMode)">
-      <xsl:call-template name="getXmlSettings">
-        <xsl:with-param name="sectionName" select="'web'"/>
-        <xsl:with-param name="valueName" select="'GoogleGA4MeasurementID'"/>
-      </xsl:call-template>
-    </xsl:if>
-  </xsl:variable>
+
+	<xsl:variable name="GoogleGA4MeasurementID">
+		<xsl:if test="not(/Page/@adminMode)">
+			<xsl:call-template name="getXmlSettings">
+				<xsl:with-param name="sectionName" select="'web'"/>
+				<xsl:with-param name="valueName" select="'GoogleGA4MeasurementID'"/>
+			</xsl:call-template>
+		</xsl:if>
+	</xsl:variable>
 
 	<xsl:variable name="GoogleAdConversionID">
 		<xsl:if test="not(/Page/@adminMode)">
@@ -498,7 +498,7 @@
 
 			</head>
 			<!-- Go build the Body of the HTML doc -->
-			
+
 			<xsl:apply-templates select="." mode="bodyBuilder"/>
 		</html>
 	</xsl:template>
@@ -522,7 +522,7 @@
 
 
 	<xsl:template match="Page[User]" mode="google-ga4-config-params">
-	
+
 		, {
 		<xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">
 			'campaign_source': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_source']"/>'
@@ -536,9 +536,9 @@
 	</xsl:template>
 
 
-  <xsl:template match="Page" mode="google-ga4-event">
-      <!-- for overloading on specific actions -->
-  </xsl:template>
+	<xsl:template match="Page" mode="google-ga4-event">
+		<!-- for overloading on specific actions -->
+	</xsl:template>
 
 	<xsl:template match="Page" mode="google-ga4-event-extra">
 		<!-- for overloading on specific actions -->
@@ -552,7 +552,7 @@
 			<xsl:text>'</xsl:text>
 			<xsl:if test="position()!=last()">,</xsl:if>
 		</xsl:for-each>
-        });
+		});
 	</xsl:template>
 	<xsl:template match="Page" mode="criticalPathCSS">
 		<style>
@@ -591,7 +591,7 @@
 	<xsl:template match="Page" mode="headerOnlyJS">
 		<xsl:apply-templates select="/Page/Contents/Content" mode="headerOnlyContentJS"/>
 	</xsl:template>
-	
+
 	<xsl:template match="Content" mode="headerOnlyContentJS"></xsl:template>
 
 	<xsl:template match="Content" mode="opengraph-namespace">
@@ -1048,24 +1048,24 @@
 				<xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaGoogleAnalyticsID']" mode="googleAnalyticsCode"/>
 			</xsl:otherwise>
 		</xsl:choose>
-	  <xsl:if test="$GoogleGA4MeasurementID!=''">
-		  <!-- GA4 Tag Manager -->
-		  <script async="async" src="https://www.googletagmanager.com/gtag/js?id={$GoogleGA4MeasurementID}" cookie-consent="tracking">&#160;</script>
-		  <script id="GA4Code" cookie-consent="tracking">
-			  window.dataLayer = window.dataLayer || [];
-			  function gtag(){dataLayer.push(arguments);}
-			  gtag('js', new Date());
-			  gtag('config', '<xsl:value-of select="$GoogleGA4MeasurementID"/>'<xsl:apply-templates select="." mode="google-ga4-config-params"/>);
-			  <xsl:apply-templates select="." mode="google-ga4-event"/>
-			  <xsl:apply-templates select="." mode="google-ga4-event-extra"/>
-		  </script>
-		  <!-- End GA4 Tag Manager -->
-	  </xsl:if>
-	  <xsl:if test="$GoogleAdConversionID!=''">
-		  <script id="GadCode" cookie-consent="tracking">
-			  gtag('config', '<xsl:value-of select="$GoogleAdConversionID"/>')
-		  </script>
-	  </xsl:if>
+		<xsl:if test="$GoogleGA4MeasurementID!=''">
+			<!-- GA4 Tag Manager -->
+			<script async="async" src="https://www.googletagmanager.com/gtag/js?id={$GoogleGA4MeasurementID}" cookie-consent="tracking">&#160;</script>
+			<script id="GA4Code" cookie-consent="tracking">
+				window.dataLayer = window.dataLayer || [];
+				function gtag(){dataLayer.push(arguments);}
+				gtag('js', new Date());
+				gtag('config', '<xsl:value-of select="$GoogleGA4MeasurementID"/>'<xsl:apply-templates select="." mode="google-ga4-config-params"/>);
+				<xsl:apply-templates select="." mode="google-ga4-event"/>
+				<xsl:apply-templates select="." mode="google-ga4-event-extra"/>
+			</script>
+			<!-- End GA4 Tag Manager -->
+		</xsl:if>
+		<xsl:if test="$GoogleAdConversionID!=''">
+			<script id="GadCode" cookie-consent="tracking">
+				gtag('config', '<xsl:value-of select="$GoogleAdConversionID"/>')
+			</script>
+		</xsl:if>
 		<xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaA1WebStatsID']" mode="A1WebStatsCode"/>
 		<xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaWhoIsVisitingID']" mode="MetaWhoIsVisitingCode"/>
 
@@ -1152,7 +1152,7 @@
 
 	<xsl:template match="Page" mode="metadata">
 		<!--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />-->
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
 		<xsl:if test="Contents/Content[@name='MetaDescription' or @name='metaDescription'] or ContentDetail">
 			<xsl:apply-templates select="." mode="getMetaDescription"/>
@@ -2767,7 +2767,7 @@
 		<xsl:if test="not(DisplayName/@exclude='true')">
 
 			<!-- Link anchor to page -->
-      <li>
+			<li>
 				<xsl:apply-templates select="." mode="menuLink"/>
 			</li>
 
@@ -2846,11 +2846,11 @@
 							<xsl:attribute name="rel">nofollow</xsl:attribute>
 						</xsl:when>
 					</xsl:choose>
-						<!-- output page name -->
-						<span itemprop="name">
-							<xsl:apply-templates select="." mode="getDisplayName"/>
-						</span>
-						<meta itemprop="position" content="{count(parent::MenuItem)+1}" />
+					<!-- output page name -->
+					<span itemprop="name">
+						<xsl:apply-templates select="." mode="getDisplayName"/>
+					</span>
+					<meta itemprop="position" content="{count(parent::MenuItem)+1}" />
 				</xsl:when>
 				<xsl:otherwise>
 					<a itemprop="item">
@@ -4075,6 +4075,24 @@
 						</a>
 					</li>
 				</xsl:if>
+				<xsl:if test="$overviewLink='self'">
+					<li>
+						<a href="{@url}">
+							<xsl:attribute name="class">
+								<xsl:text>dropdown-item</xsl:text>
+								<xsl:choose>
+									<xsl:when test="self::MenuItem[@id=/Page/@id]">
+										<xsl:text> active</xsl:text>
+									</xsl:when>
+									<xsl:when test="descendant::MenuItem[@id=/Page/@id] and ancestor::MenuItem">
+										<xsl:text> on</xsl:text>
+									</xsl:when>
+								</xsl:choose>
+							</xsl:attribute>
+							<xsl:apply-templates select="." mode="getDisplayName"/>
+						</a>
+					</li>
+				</xsl:if>
 				<xsl:apply-templates select="MenuItem[@name!='Information' and @name!='Footer' and not(DisplayName/@exclude='true')]" mode="submenuitem">
 					<xsl:with-param name="class" select="'dropdown-item'"/>
 				</xsl:apply-templates>
@@ -4170,6 +4188,8 @@
 				second and all subsequent levels of navigation nested  -->
 	<xsl:template match="MenuItem" mode="submenu">
 		<xsl:param name="sectionHeading"/>
+		<xsl:param name="class"/>
+		<xsl:param name="li-class"/>
 		<xsl:if test="$sectionHeading='true'">
 			<h4>
 				<xsl:apply-templates select="self::MenuItem" mode="menuLink" />
@@ -4179,7 +4199,10 @@
 			<xsl:attribute name="class">
 				<xsl:text>nav nav-pills nav-stacked</xsl:text>
 			</xsl:attribute>
-			<xsl:apply-templates select="MenuItem[not(DisplayName/@exclude='true')]" mode="submenuitem"/>
+			<xsl:apply-templates select="MenuItem[not(DisplayName/@exclude='true')]" mode="submenuitem">
+				<xsl:with-param name="class" select="$class"/>
+				<xsl:with-param name="link-class" select="$li-class"/>
+			</xsl:apply-templates>
 		</ul>
 	</xsl:template>
 	<!-- -->
@@ -4187,19 +4210,21 @@
 
 	<xsl:template match="MenuItem" mode="submenuitem">
 		<xsl:param name="class"/>
+		<xsl:param name="li-class"/>
 		<li>
 			<xsl:attribute name="class">
+				<xsl:value-of select="$li-class"/>
 				<xsl:if test="position()=1">
-					<xsl:text>first </xsl:text>
+					<xsl:text> first </xsl:text>
 				</xsl:if>
 				<xsl:if test="position()=last()">
-					<xsl:text>last </xsl:text>
+					<xsl:text> last </xsl:text>
 				</xsl:if>
 				<xsl:if test="self::MenuItem[@id=/Page/@id]">
-					<xsl:text>active </xsl:text>
+					<xsl:text> active </xsl:text>
 				</xsl:if>
 				<xsl:if test="descendant::MenuItem[@id=/Page/@id] and @url!='/'">
-					<xsl:text>active </xsl:text>
+					<xsl:text> active </xsl:text>
 				</xsl:if>
 			</xsl:attribute>
 			<xsl:apply-templates select="self::MenuItem" mode="menuLink">
@@ -4214,7 +4239,10 @@
                   <xsl:text> nav-stacked</xsl:text>
                 </xsl:if-->
 					</xsl:attribute>
-					<xsl:apply-templates select="MenuItem[not(DisplayName/@exclude='true')]" mode="submenuitem"/>
+					<xsl:apply-templates select="MenuItem[not(DisplayName/@exclude='true')]" mode="submenuitem">
+						<xsl:with-param name="class" select="$class"/>
+						<xsl:with-param name="link-class" select="$li-class"/>
+					</xsl:apply-templates>
 				</ul>
 			</xsl:if>
 		</li>
@@ -4621,7 +4649,7 @@
 			</a>
 		</div>
 	</xsl:template>
-	
+
 	<xsl:template match="Voted_For" mode="reportCell">
 		<td>
 			<xsl:value-of select="Content/Title"/>
@@ -9254,7 +9282,7 @@
 			<script type="text/javascript" src="{$first}{$bundleVersion}">
 				<xsl:if test="$async=true()">
 					<xsl:attribute name="async">async</xsl:attribute>
-				</xsl:if>				
+				</xsl:if>
 				<xsl:if test="$defer=true()">
 					<xsl:attribute name="defer">defer</xsl:attribute>
 				</xsl:if>
