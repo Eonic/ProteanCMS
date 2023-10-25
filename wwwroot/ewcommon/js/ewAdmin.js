@@ -2107,3 +2107,25 @@ function getImagePaths() {
     });
    
 }
+
+function SaveFileName(isOverwrite) {   
+    var newfilename = $("#txtfilename").val();
+    var targetPath = $("#targetPath").val();
+    var ajaxurl = '?ewCmd=ImageLib&ewCmd2=FileUpload&isOverwrite=' + isOverwrite +'&storageRoot="'+targetPath+'"';
+    let list = new DataTransfer();
+    let file = new File(["content"], newfilename);
+    list.items.add(file);
+    let myFileList = list.files;
+    postedFile.files = myFileList;
+    var formData = new FormData($("#frmfileData")[0]);   
+    $.ajax({
+        url: ajaxurl,
+        data: formData,
+        processData: false,
+        contentType: false,
+        type: 'POST',
+        success: function (result) {            
+            $("#changeFilename").modal("hide");          
+        }
+    });
+}
