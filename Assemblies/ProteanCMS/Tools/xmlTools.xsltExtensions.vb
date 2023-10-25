@@ -1880,9 +1880,11 @@ Partial Public Module xmlTools
                 If Not aMethodName Is Nothing Then
                     Dim i As Int16
                     ReDim args2(aMethodName.Length - 1)
+                    args2(0) = SelectElmt
                     For i = 1 To aMethodName.Length - 1
                         args2(i) = aMethodName(i)
                     Next
+
                 End If
 
                 calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, Nothing, o, args2)
