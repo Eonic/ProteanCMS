@@ -4075,6 +4075,24 @@
 						</a>
 					</li>
 				</xsl:if>
+				<xsl:if test="$overviewLink='self'">
+					<li>
+						<a href="{@url}">
+							<xsl:attribute name="class">
+								<xsl:text>dropdown-item</xsl:text>
+								<xsl:choose>
+									<xsl:when test="self::MenuItem[@id=/Page/@id]">
+										<xsl:text> active</xsl:text>
+									</xsl:when>
+									<xsl:when test="descendant::MenuItem[@id=/Page/@id] and ancestor::MenuItem">
+										<xsl:text> on</xsl:text>
+									</xsl:when>
+								</xsl:choose>
+							</xsl:attribute>
+							<xsl:apply-templates select="." mode="getDisplayName"/>
+						</a>
+					</li>
+				</xsl:if>
 				<xsl:apply-templates select="MenuItem[@name!='Information' and @name!='Footer' and not(DisplayName/@exclude='true')]" mode="submenuitem">
 					<xsl:with-param name="class" select="'dropdown-item'"/>
 				</xsl:apply-templates>
