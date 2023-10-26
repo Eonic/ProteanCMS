@@ -5419,10 +5419,8 @@
 							var arr = newfilename.split(',');
 							var extension = arr[0].substring(arr[0].length - 3);							
 							$("#changeFilename").modal("show");
-							$("#txtfilename").val(arr[0]);						
-							<!--$("#lbl1").text(arr[0].substring(0, arr[0].length - 4)+"_1" + '.'+extension);
-							$("#lbl2").text(arr[0].substring(0, arr[0].length - 4)+"_2" + '.'+extension);
-							$("#lbl3").text(arr[0].substring(0, arr[0].length - 4)+"_3" + '.'+extension);-->
+							$("#txtfilename").val(arr[0]);	
+							$("#cleanFilename").val(arr[1]);							
 						}	
 					}
 				}
@@ -5480,7 +5478,7 @@
 			});
 		</script>
 
-		<div id="changeFilename" class="modal fade" tabindex="-1" role="dialog">
+		<div id="changeFilename" class="modal fade" tabindex="-1" role="dialog" data-backdrop="false">
 			<div class="modal-dialog" role="document">
 				<form id="frmfileData">
 					<div class="modal-content">
@@ -5496,15 +5494,14 @@
 									<span id="oldfilename">&#160;</span>
 								</b> already exists, rename or overwrite?
 							</p>
-							<div class="form-group">
-								
+							<div class="form-group">								
 								<label for="txtfilename">Rename file to </label>
 								<input type="text" id="txtfilename" value="" class="textbox form-control"/><br/>
-								<input type="file" name="postedFile" id="postedFile" class="hidden"/>
-								
+								<input type="file" name="postedFile" id="postedFile" class="hidden"/>								
 							</div>
 						</div>
 						<input type="hidden" id="targetPath" value="{$targetPath}"></input>
+						<input type="hidden" id="cleanFilename"></input>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-primary" id="btnSave" onClick="SaveFileName();" >Rename</button>
 							<button type="button" id="btnOverWrite" onClick="SaveFileName(true);" class="btn btn-primary">Overwrite</button>

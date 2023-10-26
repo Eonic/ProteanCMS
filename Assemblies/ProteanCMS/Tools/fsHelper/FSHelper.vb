@@ -1051,6 +1051,7 @@ Partial Public Class fsHelper
         For i As Integer = 0 To context.Request.Files.Count - 1
             Dim file As Object = context.Request.Files(i)
             Dim cfileName As String = CleanfileName(file.FileName)
+            Dim scleanFileName As String = cfileName
             Dim isExists As String = "true"
             Dim NewFileName As String = CleanFileExists(cfileName, context)
             If NewFileName = cfileName Then
@@ -1059,7 +1060,7 @@ Partial Public Class fsHelper
                 cfileName = NewFileName
             End If
             If isExists AndAlso isOverwrite = "" Then
-                context.Session("ExistsFileName") = cfileName + "," + isExists
+                context.Session("ExistsFileName") = cfileName + "," + scleanFileName + "," + isExists
             Else
                 If String.IsNullOrEmpty(headers("X-File-Name")) Then
                     UploadWholeFile(context, statuses)
