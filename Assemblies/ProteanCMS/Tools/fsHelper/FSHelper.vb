@@ -1129,8 +1129,9 @@ Partial Public Class fsHelper
             If fileExists Then
                 For i As Integer = 0 To 1000
                     'save Regex to replace filename-{digit}.jpg with filename-{newdigit}.jpg 
-                    If cFilename.IndexOfAny("(-[0-9]+)".ToCharArray) <> -1 Then
-                        cFilename = Regex.Replace(cFilename, "(-[0-9]+)", "-" & i)
+                    Dim cExtension As String = System.IO.Path.GetExtension(cFilename)
+                    If Regex.IsMatch(cFilename, "(-\d+).([a-z]{3,4})$") Then    'this regex checks only hyphen and number present only before dot.
+                        cFilename = Regex.Replace(cFilename, "(-\d+).([a-z]{3,4})$", "-" & i) & cExtension
                     Else
                         cFilename = cFilename.Replace(".", "-" & i & ".")
                     End If
