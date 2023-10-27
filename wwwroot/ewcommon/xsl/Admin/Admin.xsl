@@ -5156,7 +5156,7 @@
 
 		<div id="template_FileSystem" class="panel panel-default">
 
-			<div class="panel-body row">
+			<div id="adminLayout" class="panel-body row">
 
         <div id="MenuTree" class="list-group col-md-3 col-sm-4" data-lib-type="{@layout}" data-target-form="{$page/Request/*/Item[@name='targetForm']/node()}" data-target-field="{$page/Request/*/Item[@name='targetField']/node()}" data-target-class="{$page/Request/*/Item[@name='targetClass']/node()}">
 		 	<xsl:if test="$page/Request/*/Item[@name='multiple']/node()='true'">
@@ -5168,7 +5168,7 @@
 		
         </div>
 
-				<div class="col-md-9 col-sm-8">
+				<div class="col-md-9 col-sm-8 ewXform">
 					<xsl:for-each select="descendant-or-self::folder[@active='true']">
 						<ul class="pageControlButtons">
 							<xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup')) and not(@path='')">
@@ -5873,6 +5873,9 @@
 	  <xsl:variable name="contentType">
 		  <xsl:if test="/Page/Request/QueryString/Item[@name='popup']/node()='true'">
 			  <xsl:text>contentType=popup&amp;</xsl:text>
+		  </xsl:if>
+	   <xsl:if test="/Page/Request/QueryString/Item[@name='multiple']/node()='true'">
+			  <xsl:text>multiple=true&amp;</xsl:text>
 		  </xsl:if>
 	  </xsl:variable>
     <li id="node{translate(@path,'\','~')}" data-tree-level="{$level}" data-tree-parent="{translate(parent::folder/@path,'\','~')}">

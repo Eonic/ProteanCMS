@@ -566,20 +566,31 @@
                          <div class="img-description">
 							
                       <span class="image-description-name">
-                       
-						  
-					    <xsl:if test="contains(/Page/Request/QueryString/Item[@name='multiple'],'true')">
-								<span class="radiocheckbox pull-right">
-									<input type="checkbox" value="/{@root}{translate($fld,'\', '/')}/{@name}" id="chkMultipleImage" class="multicheckbox" name="Select Multiple Images"></input>
-								</span>
-							</xsl:if> 
-					   <xsl:value-of select="@name"/>
+
+						  <xsl:choose>
+					    <xsl:when test="contains(/Page/Request/QueryString/Item[@name='multiple'],'true')">
+								<div class="checkbox checkbox-primary">
+									<input type="checkbox" value="/{@root}{translate($fld,'\', '/')}/{@name}" id="chkMultipleImage" class="multicheckbox styled" name="Select Multiple Images"></input>
+									<label>
+										<xsl:value-of select="@name"/>
+										<xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.tiff' or @Extension='.tif'">
+											<xsl:value-of select="@width"/>
+											<xsl:text> x </xsl:text>
+											<xsl:value-of select="@height"/>
+										</xsl:if>
+									</label>
+								</div>
+							</xsl:when>
+							  <xsl:otherwise> <xsl:value-of select="@name"/>
+								  <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.tiff' or @Extension='.tif'">
+									  <xsl:value-of select="@width"/>
+									  <xsl:text> x </xsl:text>
+									  <xsl:value-of select="@height"/>
+								  </xsl:if>
+							  </xsl:otherwise>
+					  </xsl:choose>
                       </span>
-                      <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.tiff' or @Extension='.tif'">
-                        <xsl:value-of select="@width"/>
-                        <xsl:text> x </xsl:text>
-                        <xsl:value-of select="@height"/>
-                      </xsl:if>
+                    
                     </div>
                         </div>
                     </div>

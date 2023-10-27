@@ -285,8 +285,8 @@ $(document).ready(function () {
     $('.pickImageModal').on('loaded', function () {
         var currentModal = $(this)
         var multiple = ""
-        if ($('#template_FileSystem #MenuTree').data('multiple') == 'true') {
-            multiple = "&multiple=true"
+        if ($('#template_FileSystem #MenuTree').data('multiple') == 1) {
+            multiple = "&multiple=true"        
         }
         //activateTreeview
         $('#template_FileSystem #MenuTree').ajaxtreeview({
