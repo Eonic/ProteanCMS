@@ -285,7 +285,7 @@ $(document).ready(function () {
     $('.pickImageModal').on('loaded', function () {
         var currentModal = $(this)
         var multiple = ""
-        if ($('#template_FileSystem #MenuTree').data('mutltiple') == 'true') {
+        if ($('#template_FileSystem #MenuTree').data('multiple') == 'true') {
             multiple = "&multiple=true"
         }
         //activateTreeview
