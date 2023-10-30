@@ -217,11 +217,7 @@
 
 		<script type="text/javascript" src="/ewcommon/js/jQuery/jsScrollPane/jquery.jscrollpane.min.js">&#160;</script>
 		<script type="text/javascript" src="/ewcommon/js/jQuery/jsScrollPane/jquery.mousewheel.js">&#160;</script>
-		<!--
-	  TS commented out as was breaking bootstrap modal - not sure this is needed ???
-	  
-    <script type="text/javascript" src="/ewcommon/js/jQuery/simplemodal/jquery.simplemodal-1.4.4.min.js">&#160;</script>
-	-->
+
     <xsl:if test="@cssFramework!='bs3'">
       <script type="text/javascript" src="/ewcommon/js/jQuery/jquery.magnific-popup.min.js">&#160;</script>
     </xsl:if>
