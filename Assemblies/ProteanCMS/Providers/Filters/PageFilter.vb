@@ -139,7 +139,8 @@ Namespace Providers
                         If (bParentPageId) Then
                             cWhereSql = " nStructId IN (" + cPageIds + ")"
                         Else
-                            cWhereSql = " nStructId IN (select nStructKey from tblContentStructure where nStructParId in (" & cPageIds & "))"
+                            cWhereSql = " nStructId IN (select nStructKey from tblContentStructure where (nStructKey = " & cPageIds & " OR nStructParId = " & cPageIds & ")	)"
+                            'nStructParId in (" & cPageIds & "))"
                         End If
                     End If
                     Return cWhereSql
@@ -157,7 +158,9 @@ Namespace Providers
                 Dim cPageIds As String = String.Empty
                 Try
                     If (aWeb.moRequest.Form("PageFilter") IsNot Nothing) Then
-                        cWhereSql = cWhereSql & "  nStructId IN(" + aWeb.moRequest.Form("PageFilter") & ")"
+                        '  cWhereSql = cWhereSql & "  nStructId IN(" + aWeb.moRequest.Form("PageFilter") & ")"
+                        cWhereSql = " nStructId IN (select nStructKey from tblContentStructure where (nStructKey = " & aWeb.moRequest.Form("PageFilter") & " OR nStructParId = " & aWeb.moRequest.Form("PageFilter") & ")	)"
+
                     End If
 
                 Catch ex As Exception
