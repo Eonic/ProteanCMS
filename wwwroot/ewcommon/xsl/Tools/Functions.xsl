@@ -2798,29 +2798,92 @@
   </xsl:template>
 
   <xsl:template match="Page" mode="FacebookTrackingCode">
-    <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
-      <xsl:if test="$FacebookTrackingID!=''">
-        <xsl:variable name="total"
-            select="sum(Cart/Order/Item/@itemTotal)">
-        </xsl:variable>
-
-        <script cookie-consent="tracking">
-          (function ()
-          var _fbq = window._fbq || (window._fbq = []);
-          if (!_fbq.loaded) {
-          var fbds = document.createElement('script');
-          fbds.async = true;
-          fbds.src = '//connect.facebook.net/en_US/fbds.js';
-          var s = document.getElementsByTagName('script')[0];
-          s.parentNode.insertBefore(fbds, s);
-          _fbq.loaded = true;
-          }})();
-          window._fbq = window._fbq || [];
-          window._fbq.push(['track', '<xsl:value-of select="$FacebookTrackingID"/>', { 'value': '<xsl:value-of select="$total"/>', 'currency': 'GBP' }]);
-        </script>
-      </xsl:if>
-    </xsl:if>
+	  <xsl:if test="$FacebookTrackingID!=''">
+	  <script cookie-consent="tracking">
+		  !function(f,b,e,v,n,t,s)
+		  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+		  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+		  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+		  n.queue=[];t=b.createElement(e);t.async=!0;
+		  t.src=v;s=b.getElementsByTagName(e)[0];
+		  s.parentNode.insertBefore(t,s)}(window, document,'script',
+		  'https://connect.facebook.net/en_US/fbevents.js');
+		  fbq('init', '<xsl:value-of select="$FacebookTrackingID"/>');
+		  fbq('track', 'PageView');
+		  <xsl:apply-templates select="." mode="FacebookTrackingAction"/>
+	  </script>
+	  <noscript>
+		  <img height="1" width="1" style="display:none"
+			   src="https://www.facebook.com/tr?id={your-pixel-id-goes-here}&amp;ev=PageView&amp;noscript=1"/>
+	  </noscript>
+	</xsl:if>	
   </xsl:template>
+	
+	<xsl:template match="Page" mode="FacebookTrackingAction">
+
+	</xsl:template>
+	
+	<xsl:template match="Page[descendant-or-self::instance[@valid='true']/emailer]" mode="FacebookTrackingAction">
+          <xsl:text>fbq('track', 'Lead');</xsl:text>
+	</xsl:template>
+	
+	<xsl:template match="Page[Cart/Order/@cmd='Logon']" mode="FacebookTrackingAction">
+		<xsl:text>fbq('track', 'AddToCart', {currency: "</xsl:text>
+		<xsl:value-of select="Cart/Order/@currency"/>
+		<xsl:text>", value:</xsl:text>
+		<xsl:value-of select="Cart/Order/@total"/>
+		<xsl:text>,content_type: 'product', contents: [</xsl:text>
+		<xsl:for-each select="Cart/Order/Item">
+			<xsl:text>{id: '</xsl:text>
+			<xsl:value-of select="@id"/>
+			<xsl:text>', quantity:</xsl:text>
+			<xsl:value-of select="@quantity"/>
+			<xsl:text>}</xsl:text>
+			<xsl:if test="position()!=last()">
+				<xsl:text>,</xsl:text>
+			</xsl:if>
+		</xsl:for-each>
+		<xsl:text>]});</xsl:text>
+	</xsl:template>
+
+	<xsl:template match="Page[Cart/Order/@cmd='EnterPaymentDetails']" mode="FacebookTrackingAction">
+        <xsl:text>fbq('track', 'AddPaymentInfo', {currency: "</xsl:text>
+		<xsl:value-of select="Cart/Order/@currency"/>
+		<xsl:text>", value:</xsl:text>
+		<xsl:value-of select="Cart/Order/@total"/>
+		<xsl:text>,content_type: 'product', contents: [</xsl:text>
+		<xsl:for-each select="Cart/Order/Item">
+			<xsl:text>{id: '</xsl:text>
+			<xsl:value-of select="@id"/>
+			<xsl:text>', quantity:</xsl:text>
+			<xsl:value-of select="@quantity"/>
+			<xsl:text>}</xsl:text>
+			<xsl:if test="position()!=last()">
+				<xsl:text>,</xsl:text>
+			</xsl:if>
+		</xsl:for-each>
+		<xsl:text>]});</xsl:text>
+	</xsl:template>
+
+	<xsl:template match="Page[Cart/Order/@cmd='ShowInvoice']" mode="FacebookTrackingAction">
+		<xsl:text>fbq('track', 'Purchase', {currency: "</xsl:text>
+		<xsl:value-of select="Cart/Order/@currency"/>
+		<xsl:text>", value:</xsl:text>
+		<xsl:value-of select="Cart/Order/@total"/>
+		<xsl:text>,content_type: 'product', contents: [</xsl:text>
+		<xsl:for-each select="Cart/Order/Item">
+			<xsl:text>{id: '</xsl:text>
+			<xsl:value-of select="@id"/>
+			<xsl:text>', quantity:</xsl:text>
+			<xsl:value-of select="@quantity"/>
+			<xsl:text>}</xsl:text>
+			<xsl:if test="position()!=last()">
+				<xsl:text>,</xsl:text>
+			</xsl:if>
+		</xsl:for-each>
+		<xsl:text>]});</xsl:text>
+	</xsl:template>
+	
 
   <xsl:template match="Page" mode="FeedOptimiseCode">
     <xsl:if test="$FeedOptimiseID!=''">
