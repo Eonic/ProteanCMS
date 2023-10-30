@@ -270,7 +270,7 @@ $(document).ready(function () {
 
     $('#template_FileSystem').find('#MenuTree').ajaxtreeview({
         loadPath: treeviewPath,
-        ajaxCmd: '',
+        ajaxCmd: 'GetFolderNode',
         openLevel: 2,
         hide: true
     });
@@ -381,12 +381,20 @@ function preparePickImageModal(currentModal) {
 
     var treeviewPath = getAdminAjaxTreeViewPath();
 
-    currentModal.find('#MenuTree').ajaxtreeview({
-            loadPath: treeviewPath,
-            ajaxCmd: '',
+        var currentModal = $(this)
+        var multiple = ""
+        if ($('#template_FileSystem #MenuTree').data('multiple') == 1) {
+            multiple = "&multiple=true"        
+        }
+        //activateTreeview
+        $('#template_FileSystem #MenuTree').ajaxtreeview({
+            loadPath: treeviewPath + "&popup=true&libType=" + $('#template_FileSystem #MenuTree').data("lib-type").replace("Lib", "") + "&targetForm=" + $('#template_FileSystem #MenuTree').data("target-form") + "&targetField=" + $('#template_FileSystem #MenuTree').data("target-field") + "&targetClass=" + $('#template_FileSystem #MenuTree').data("target-class") + multiple,
+            ajaxCmd: 'GetFolderNode',
             openLevel: 2,
             hide: true
         });
+
+
 
         $('#files .item-image .panel').prepareLibImages();
 
