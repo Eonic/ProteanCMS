@@ -1,6 +1,5 @@
-
 /*
-* AjaxTreeview 1.0.8
+* AjaxTreeview 1.0.9
 * ------------------
 * A treeview that uses Ajax to load branches in.
 *
@@ -11,6 +10,7 @@
 *
 * Updates
 * -------
+* 1.0.9 - Changes to make it relative to where called and remove #MenuTree
 * 1.0.8 - Added functionality to not need reloads, also pre-open layers is now handled in the XSL.
 Original preload function has been kept but is unused.
 * 1.0.7 - Added Show and Hide functions, recursively gained previous additions
@@ -206,13 +206,13 @@ Original preload function has been kept but is unused.
 
             $(this).find('.btn-hide').unbind("click").click(function () {
                 var pageId = (this.parentNode.getAttribute('id').replace(/node/, ""));
-                alert(pageId);
+               // alert(pageId);
                 $(this).hideButton(pageId);
             });
 
             $(this).find('.btn-show').unbind("click").click(function () {
                 var pageId = (this.parentNode.getAttribute('id').replace(/node/, ""));
-                alert(pageId);
+             //   alert(pageId);
                 $(this).showButton(pageId);
             });
 
@@ -304,7 +304,7 @@ Original preload function has been kept but is unused.
 
                         var $results = $(loadNode).find('ul .list-group-item');
                         if ($results.length == 0) {
-                            alert($(loadNode).html());
+                           // alert($(loadNode).html());
                         }
                         else {
                             $(loadNode).find("ul .list-group-item").insertAfter(parentNode);

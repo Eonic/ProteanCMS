@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Content type="xform" name="EditContent">
+	<model>
+		<instance>
+			<tblContent>
+				<nContentKey/>
+				<nContentPrimaryId/>
+				<nVersion/>
+				<cContentForiegnRef/>
+				<cContentName/>
+				<cContentSchemaName>LibraryImages</cContentSchemaName>
+				<cContentXmlBrief>
+					<Content>
+						<Title/>
+						<Author/>
+						<Copyright/>
+						<Images>
+							<img class="thumbnail"/>
+							<img class="display"/>
+							<img class="detail"/>
+						</Images>
+						<FileSize/>
+						<Body/>
+					</Content>
+				</cContentXmlBrief>
+				<cContentXmlDetail>
+					<Content>
+						<Title/>
+						<Author/>
+						<Copyright/>
+						<Images>
+							<img class="thumbnail"/>
+							<img class="display"/>
+							<img class="detail"/>
+						</Images>
+						<FileSize/>
+						<Body/>
+					</Content>
+				</cContentXmlDetail>
+				<nAuditId/>
+				<nAuditKey/>
+				<dPublishDate/>
+				<dExpireDate/>
+				<dInsertDate/>
+				<nInsertDirId/>
+				<dUpdateDate/>
+				<nUpdateDirId/>
+				<nStatus>1</nStatus>
+				<cDescription/>
+			</tblContent>
+			<RelatedLibraryImages skipFirst="true" type="LibraryImage">
+			</RelatedLibraryImages>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+		<bind nodeset="tblContent">
+			<bind id="cContentImageTitle" nodeset="cContentName" required="false()" type="string"/>
+			<bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+			<bind id="dExpireDate" nodeset="dExpireDate" required="false()" type="string"/>
+			<bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
+			<bind id="cDescription" nodeset="cDescription" required="false()" type="string"/>
+			<bind nodeset="cContentXmlBrief/Content">
+				<bind id="cContentImageTitle" nodeset="Title" required="false()" type="string"/>
+				<bind id="cContentImageAuthor" nodeset="Author" required="false()" type="string"/>
+				<bind id="cContentImageCopyright" nodeset="Copyright" required="false()" type="string"/>
+				<bind id="cReviewImagesPaths" nodeset="Images/img[@class='display']" required="false()" type="xml-replace"/>		
+				<bind id="cContentBody" nodeset="Body" required="false()" type="string"/>
+			</bind>
+			<bind nodeset="cContentXmlDetail/Content">
+				<bind id="cContentImageTitle" nodeset="Title" required="false()" type="string"/>
+				<bind id="cContentImageAuthor" nodeset="Author" required="false()" type="string"/>
+				<bind id="cContentImageCopyright" nodeset="Copyright" required="false()" type="string"/>
+				<bind id="cReviewImagesPaths" nodeset="Images/img[@class='display']" required="false()" type="xml-replace"/>				
+				<bind id="cContentBody" nodeset="Body" required="false()" type="string"/>
+			</bind>
+		</bind>
+		<bind id="cReviewImagesPaths" nodeset="RelatedLibraryImages" required="false()" type="string"/>
+	</model>
+	<group ref="EditContent" class="1col">		
+		<group class="ContentColumn1">
+			<group>
+				<label>Add Multiple Library Images</label>
+				<input bind="cContentImageTitle" class="long">
+					<label>Image Title</label>
+				</input>
+				<input bind="cContentImageAuthor" class="short">
+					<label>Image Author</label>
+				</input>
+				<!--<input bind="cContentImageCopyright" class="short">
+					<label>Image Copyright</label>
+				</input>-->
+			</group>
+		
+			<group class="Content">
+				<input id="cReviewImages" class="short userProductUploadImage">
+					<label>Upload Image</label>
+				</input>
+				<input bind="cReviewImagesPaths" id="cReviewImagesPaths" class="short uploadProductImagesDisplay hidden">
+					<value />
+				</input>
+			</group>
+			<group>
+				<input bind="nContentKey" class="hidden">
+					<label>ContentId</label>
+				</input>				
+				<input bind="dPublishDate" class="calendar short hidden">
+					<label>Publish Date</label>
+				</input>
+				<input bind="dExpireDate" class="calendar short hidden">
+					<label>Expire Date</label>
+				</input>
+				<select1 bind="nStatus" appearance="full" class="vshort hidden">
+					<label class="bold-label">Status</label>
+					<item>
+						<label>Live</label>
+						<value>1</value>
+					</item>
+					<item>
+						<label>Hidden</label>
+						<value>0</value>
+					</item>
+				</select1>
+				<input bind="cDescription" class="short hidden">
+					<label>Change Notes</label>
+				</input>
+			</group>			
+		</group>		
+	</group>
+	<group ref="submit" class="contentSubmit">
+		<submit submission="" ref="ewSubmit" class="principle">
+			<label>Save Library Image</label>
+		</submit>
+	</group>
+</Content>
