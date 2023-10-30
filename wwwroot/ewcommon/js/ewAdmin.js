@@ -218,7 +218,7 @@ $(document).ready(function () {
 
     $('#template_FileSystem #MenuTree').ajaxtreeview({
         loadPath: treeviewPath,
-        ajaxCmd: '',
+        ajaxCmd: 'GetFolderNode',
         openLevel: 2,
         hide: true
     });
@@ -284,10 +284,14 @@ $(document).ready(function () {
     //   $('.pickImageModal').on('shown.bs.modal', function () {
     $('.pickImageModal').on('loaded', function () {
         var currentModal = $(this)
+        var multiple = ""
+        if ($('#template_FileSystem #MenuTree').data('multiple') == 1) {
+            multiple = "&multiple=true"        
+        }
         //activateTreeview
         $('#template_FileSystem #MenuTree').ajaxtreeview({
-            loadPath: treeviewPath,
-            ajaxCmd: '',
+            loadPath: treeviewPath + "&popup=true&libType=" + $('#template_FileSystem #MenuTree').data("lib-type").replace("Lib", "") + "&targetForm=" + $('#template_FileSystem #MenuTree').data("target-form") + "&targetField=" + $('#template_FileSystem #MenuTree').data("target-field") + "&targetClass=" + $('#template_FileSystem #MenuTree').data("target-class") + multiple,
+            ajaxCmd: 'GetFolderNode',
             openLevel: 2,
             hide: true
         });
@@ -307,7 +311,7 @@ $(document).ready(function () {
         $(this).find('a[data-toggle!="popover"]').click(function (ev) {
             ev.preventDefault();
             $('.modal-dialog').addClass('loading')
-            $('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p>');
+            $('.modal-body').html('<div class="panel panel-default"><p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p></div>');
             var target = $(this).attr("href");
             // load the url and show modal on success
             currentModal.load(target, function () {
@@ -336,6 +340,15 @@ $(document).ready(function () {
                     currentModal.trigger('loaded');
                 }
             });
+        });
+
+       
+        $("#SelectAll").click(function (ev) {           
+            ev.preventDefault();
+            $(".multicheckbox").each(function () {
+                $(".multicheckbox").attr("checked", "checked");
+            });           
+            return false;
         });
     });
 
@@ -612,7 +625,7 @@ function modalOpen(dialog) {
 }(jQuery));
 
 $.fn.prepareAdminXform = function () {
-
+    
     if ($("#_selectAll").exists()) {
         $("#_selectAll").click(function () {
             var checked = this.checked;
@@ -823,676 +836,6 @@ function markAsRead(userId, artId) {
 
 }
 
-/*
-* AjaxTreeview 1.0.8
-* ------------------
-* A treeview that uses Ajax to load branches in.
-*
-* Web.config nodes that can be used
-* ---------------------------------
-* <add key="menuTreeDepth" value="3"/> - Numerical value to open tree to (both for XSL and JS versions)
-* <add key="menuNoReload" value="true"/> - True (no Reload), False (Reload)
-*
-* Updates
-* -------
-* 1.0.8 - Added functionality to not need reloads, also pre-open layers is now handled in the XSL.
-Original preload function has been kept but is unused.
-* 1.0.7 - Added Show and Hide functions, recursively gained previous additions
-* 1.0.6 - Added button locking for the Move Buttons to stop stupid spam
-* 1.0.5 - Added random a= extension to Move Commands to bypass IE's caching, anims on success also added
-* 1.0.4 - Level Paramater Added, to handle preloading to a certain level
-* 1.0.3 - Added code from Jquery home page to support Url parameters,
-*          and coded support for "move" paramater
-* 1.0.2 - Settings param now supported
-* 1.0.1 - Reworked .js to be standalone, initTree renamed buildTree
-*
-* Author 2008 Nathan Brown
-*
-* Latest Update : 02-Dec-2008
-*
-*/
-; (function ($) {
-
-    $.extend($.fn, {
-
-        // Constructor
-        ajaxtreeview: function (settings) {
-            if ($(this).length > 0) {
-                $(this).addClass("treeview");
-                // Check if levels have been defined, if so, pre-open			
-                if (settings.level > 0) {
-                    $(this).expandToLevel(settings);
-                }
-
-                // Add the control classes to the tree
-                $(this).find('li').each(function () {
-                    // alert($(this).attr('id') + '==' + 'node' + $(this).next().data("tree-parent"))
-                    if ($(this).attr('id') == 'node' + $(this).next().data("tree-parent")) {
-                        $(this).removeClass('expandable').addClass('collapsable');
-                    }
-                    else {
-                        $(this).removeClass('collapsable').addClass('expandable');
-                    }
-                });
-
-                // $(this).find('li:has(ul):has(".activeParent,.inactiveParent")').addClass('collapsable');
-                // $(this).find('li:not(:has(ul)):has(".activeParent,.inactiveParent")').addClass('expandable');
-
-                // Call buildtree
-                // New (Hide) Version (v1.0.8)
-                if (settings.hide) {
-                    $(this).buildTree_noreload(settings);
-                }
-                // Old (Empty) Version (v1.0.0 -> v1.0.7)
-                else {
-                    $(this).buildTree(settings);
-
-                }
-
-                if (settings.openLevel > 0) {
-                    $(this).startLevel(settings);
-                    $(this).buildTree_noreload(settings);
-                }
-            }
-        },
-
-        startLevel: function (settings) {
-
-            $("#MenuTree li[data-tree-level='" + settings.openLevel + "']").each(function () {
-                //unless you have an active descendant
-                if ($(this).activeChild() == false) {
-                    $(this).hideChildren();
-                }
-            });
-        },
-
-        activeChild: function () {
-            var isActive = false;
-            var nodeId = $(this).attr('id').replace(/node/, "");
-            $("#MenuTree li[data-tree-parent='" + nodeId + "']").each(function () {
-                if ($(this).hasClass('active') || $(this).activeChild()) {
-                    isActive = true;
-                }
-            });
-            return isActive;
-        },
-
-        // Method for if the level param is in play
-        expandToLevel: function (settings) {
-
-            $('#MenuTree li.levelExpandable').has(".activeParent,.inactiveParent").each(function () {
-                $(this).removeClass('levelExpandable');
-                $(this).removeClass('expandable');
-                var ewPageId = $(this).attr('id').replace(/node/, "");
-                $(this).insertAfter('<div class="loadnode">Loading <i class="fa fa-cog fa-spin fa-fw"> </i></div>')
-                    .load(settings.loadPath, { ajaxCmd: settings.ajaxCmd, pgid: ewPageId }, function () {
-
-                        $(this).children().find('li').find(".activeParent,.inactiveParent").addClass('expandable');
-                        $("#MenuTree").buildTree(settings);
-                        settings.level = settings.level - 1;
-                        if (settings.level > 0) {
-                            $(this).children().find('li').find(".activeParent,.inactiveParent").addClass('levelExpandable');
-                            $("#MenuTree").expandToLevel(settings);
-                        }
-                    });
-            });
-        },
-
-
-        // This function handles the tree's classes and mouse bindings for the "hit area"'s
-        buildTree: function (settings) {
-            // Add Hit area's (the clickable part)
-            // $('#MenuTree li.collapsable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
-            //$('#MenuTree li.expandable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
-
-            $('#MenuTree li').each(function () {
-
-                if ($(this).hasClass('collapsable')) {
-
-                    if ($(this).find('.collapsable-hitarea').length == 0) {
-                        if ($(this).find('.activeParent').length == 1 || $(this).find('.inactiveParent').length == 1) {
-                            $(this).prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
-                        }
-                    }
-                }
-
-
-
-                if ($(this).hasClass('expandable')) {
-
-
-                    if ($(this).find('.expandable-hitarea').length == 0) {
-                        if ($(this).find('.activeParent').length == 1 || $(this).find('.inactiveParent').length == 1) {
-                            $(this).prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
-                        }
-                    }
-                }
-
-
-            });
-
-            // Sort out assignments of the last tag
-            $('#MenuTree').applyLast();
-            // Remove any mouse bindings currently on the hitarea's
-            $('#MenuTree li div.hitarea').unbind("click");
-
-            //Mouse binding for open nodes
-            $('#MenuTree li.collapsable').find('i.hitarea').unbind("click").click(function () {
-                // Remove old class assingments
-
-                $(this).removeClass('collapsable-hitarea').addClass('expandable-hitarea');
-                $(this).removeClass('fa-chevron-down').addClass('fa-chevron-right');
-
-
-
-                // Remove the child tree
-
-                $(this).parent().find('ul').empty();
-
-                // Reset Class Status
-                $(this).parent().removeClass('collapsable').addClass('expandable');
-                // Set kids to be closed again
-                $(this).children().find('li').find(".activeParent,.inactiveParent").addClass('expandable');
-                // Calling a rebuild assings the correct functionality
-                $("#MenuTree").buildTree(settings)
-                //settings doesn't work in the next line? so used above
-                //setTimeout('$("#MenuTree").buildTree()',1);
-            });
-
-
-            //Mouse binding for closed nodes
-            $('#MenuTree li.expandable').find('.hitarea').unbind("click").click(function () {
-                // Unbind after first click to prevent stupid users multiclicking
-                $('#MenuTree li i.hitarea').unbind("click");
-                // Remove current classes from the hit-area
-
-                $(this).removeClass('expandable-hitarea').addClass('collapsable-hitarea');
-                $(this).removeClass('fa-chevron-right').addClass('fa-chevron-down');
-                // Get the node's ID (used in load)
-                var ewPageId = (this.parentNode.getAttribute('id').replace(/node/, ""));
-                // Sort the parent node's class
-                $(this).parent().removeClass('expandable').addClass('collapsable');
-                // Append the loading line
-                //  $(this).parent().find('ul').append('<div class="loadnode">Loading <i class="fa fa-cog fa-spin fa-2x fa-fw"> </i></div>')
-                var ewCloneContextId = 0;
-
-                // Test for context (cloned pages)
-                if ($(this).parent().hasClass('clone')) {
-                    var re = /.*context(\d+).*/g;
-
-                    if ((matches = re.exec(this.parentNode.className)) != null) {
-                        ewCloneContextId = matches[1];
-                    }
-
-                }
-
-                // If move has been flagged then use a different load
-                if (settings.move) {
-                    var originalPageId = $("#MenuTree").urlParam('pgid');
-                    $(this).parent().find('ul').load(settings.loadPath, { ajaxCmd: settings.ajaxCmd, pgid: originalPageId, expId: ewPageId, context: ewCloneContextId }, function () {
-                        // Find out which of the kids have kids
-                        $(this).children().find('li').find('i.activeParent').addClass('expandable');
-                        // Rebuild the tree
-                        $("#MenuTree").buildTree(settings)
-
-                    });
-                }
-                // Else for everything use, use the regular loading sequence
-                else {
-
-
-                    $(this).parent().find('ul').load(settings.loadPath, { ajaxCmd: settings.ajaxCmd, pgid: ewPageId, context: ewCloneContextId }, function () {
-                        // Find out which of the kids have kids
-
-                        $(this).children().find('li').find('i.activeParent,i.inactiveParent').addClass('expandable');
-                        // Rebuild the tree
-                        $("#MenuTree").buildTree(settings)
-
-                    });
-                }
-
-            });
-
-        },
-
-
-
-        // Same as above, prototype buildTree for no reloads      
-        buildTree_noreload: function (settings) {
-            // Add Hit area's (the clickable part)
-            //$('#MenuTree li.collapsable:not(:has(.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
-            //$('#MenuTree li.expandable:not(:has(.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
-
-            $('#MenuTree li').each(function () {
-
-                if ($(this).hasClass('collapsable')) {
-
-                    if ($(this).find('.collapsable-hitarea').length == 0) {
-                        if ($(this).find('.activeParent').length == 1 || $(this).find('.inactiveParent').length == 1) {
-                            $(this).prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
-                        }
-                    }
-                }
-
-
-
-                if ($(this).hasClass('expandable')) {
-
-                    if ($(this).find('.expandable-hitarea').length == 0) {
-                        if ($(this).find('.activeParent').length == 1 || $(this).find('.inactiveParent').length == 1) {
-                            $(this).prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
-                        }
-                    }
-                }
-
-
-            });
-
-
-            // Sort out assignments of the last tag
-            $('#MenuTree').applyLast();
-            // Remove any mouse bindings currently on the hitarea's
-            $('#MenuTree li div.hitarea').unbind("click");
-
-            // alert('treeload');
-
-            //Mouse binding for open nodes
-            $('#MenuTree').find('.collapsable-hitarea').unbind("click").click(function () {
-
-
-                $(this).parent().hideChildren();
-
-                // Reset Class Status
-
-                // Set kids to be closed again
-                ///////////////////////////// !!! what happens here? assume that they aren't open?
-                //$(this).children().find('li:has(".activeParent,.inactiveParent")').addClass('expandable');			
-                // Calling a rebuild assings the correct functionality
-                $("#MenuTree").buildTree_noreload(settings)
-            });
-
-
-            //Mouse binding for closed nodes (First Time)
-            $('#MenuTree li.expandable').find('.hitarea').unbind("click").click(function () {
-                // Unbind after first click to prevent stupid users multiclicking
-                $('#MenuTree li i.hitarea').unbind("click");
-                // Remove current classes from the hit-area
-
-                $(this).removeClass('expandable-hitarea').addClass('collapsable-hitarea');
-                $(this).removeClass('fa-chevron-right').addClass('fa-chevron-down');
-                // Sort the parent node's class
-                $(this).parent().removeClass('expandable').addClass('collapsable');
-
-                // Get the node's ID (used in load)
-                var ewPageId = (this.parentNode.getAttribute('id').replace(/node/, ""));
-
-                // Append the loading line
-                var parentNode = $(this).parent()
-                $('<li id="loading-node" class="list-group-item"><div class="loadnode">Loading <i class="fa fa-cog fa-spin fa-fw"></i></div></li>').insertAfter(parentNode);
-
-                // If move has been flagged then use a different load
-                var ewCloneContextId = 0;
-
-                // Test for context (cloned pages)
-                if ($(this).parent().hasClass('clone')) {
-                    var re = /.*context(\d+).*/g;
-
-                    if ((matches = re.exec(this.parentNode.className)) != null) {
-                        ewCloneContextId = matches[1];
-                    }
-
-                }
-
-                if (settings.move) {
-                    var originalPageId = $("#MenuTree").urlParam('pgid');
-                    $(this).parent().next().load(settings.loadPath, { ajaxCmd: settings.ajaxCmd, pgid: originalPageId, expId: ewPageId, context: ewCloneContextId }, function () {
-                        // Find out which of the kids have kids
-                        if ($(this).children().find('li').length != 0) {
-                            $(this).children().find('li').find(".activeParent,.inactiveParent").addClass('expandable');
-                        }
-                        // Rebuild the tree
-                        $("#MenuTree").buildTree_noreload(settings)
-                    });
-                }
-                else {
-
-                    var loadNode = $(this).parent().next()
-                    loadNode.load(settings.loadPath, { ajaxCmd: settings.ajaxCmd, pgid: ewPageId, context: ewCloneContextId }, function (data) {
-
-                        var $results = $(loadNode).find('ul .list-group-item');
-                        if ($results.length == 0) {
-                            // alert($(loadNode).html());
-                        }
-                        else {
-                            $(loadNode).find("ul .list-group-item").insertAfter(parentNode)
-                        }
-                        loadNode.remove()
-
-                        // Find out which of the kids have kids
-                        if (loadNode.children().find('li').length != 0) {
-                            loadNode.children().find('li').find('.activeParent,.inactiveParent').addClass('expandable');
-                        }
-                        // Rebuild the tree
-                        $("#MenuTree").buildTree_noreload(settings)
-                    });
-
-
-                }
-
-            });
-
-            //Mouse binding for closed nodes (No Reload)
-            $('#MenuTree li.expandable_loaded').find('.hitarea').unbind("click").click(function () {
-                $('#MenuTree li i.hitarea').unbind("click");
-                $(this).removeClass('expandable-hitarea').addClass('collapsable-hitarea');
-                $(this).removeClass('fa-chevron-right').addClass('fa-chevron-down');
-                // Get the node's ID (used in load) - ??? Needed anymore?
-                //var ewPageId = (this.parentNode.getAttribute('id').replace(/node/,""));
-                $(this).parent().removeClass('expandable_loaded').addClass('collapsable');
-
-                var ewPageId = (this.parentNode.getAttribute('id').replace(/node/, ""));
-                $(this).parent().parent().find('li[data-tree-parent="' + ewPageId + '"]').show();
-
-                $("#MenuTree").buildTree_noreload(settings)
-            });
-        },
-
-        hideChildren: function () {
-            $(this).find('.hitarea').removeClass('collapsable-hitarea').addClass('expandable-hitarea');
-            $(this).find('.hitarea').removeClass('fa-chevron-down').addClass('fa-chevron-right');
-            // alert($(this).html)
-            var ewPageId = ($(this).attr('id').replace(/node/, ""));
-            // alert(ewPageId);
-            $(this).parent().find('li[data-tree-parent="' + ewPageId + '"]').each(function (index) {
-                $(this).find('.hitarea').removeClass('collapsable-hitarea').addClass('expandable-hitarea');
-                $(this).find('.hitarea').removeClass('fa-chevron-down').addClass('fa-chevron-right');
-                $(this).removeClass('collapsable').addClass('expandable');
-                $(this).hideChildren();
-                $(this).hide();
-            });
-
-            $(this).removeClass('collapsable').removeClass('expandable').addClass('expandable_loaded');
-
-        },
-
-        checkChildren: function () {
-            $('#MenuTree li').each(function () {
-                var thisParentId = $(this).data('tree-parent')
-
-                if ($(this).prevAll('li[data-tree-parent="' + thisParentId + '"]').length == 0) {
-                    //if first amoung siblings
-                    if ($(this).prev('li[id="node' + thisParentId + '"]').length == 0) {
-                        //if incorrect parent
-                        if ($('#MenuTree li[id="node' + thisParentId + '"] li[data-tree-parent="' + thisParentId + '"]').length == 0) {
-                            //no siblings moved allready
-                            // $('#MenuTree li[id="node' + thisParentId + '"]').after($(this))
-                            $(this).nextAll('li[data-tree-parent="' + thisParentId + '"]').reverse().each(function () {
-                                $('#MenuTree li[id="node' + thisParentId + '"]').after($(this))
-                            });
-                            $('#MenuTree li[id="node' + thisParentId + '"]').after($(this))
-                        }
-                    }
-                }
-            })
-        },
-
-
-        //This function sorts the flagging of "last" nodes (used for the gfx)
-        applyLast: function () {
-            //Hide and show Up Down Buttons
-            $('#MenuTree li').each(function () {
-
-                var thisParentId = $(this).data('tree-parent')
-                //if this not has a previous sibling with the same data-tree-parent then hide the up arrows
-                if ($(this).prevAll('li[data-tree-parent="' + thisParentId + '"]').length == 0) {
-                    $(this).find('a.move-up').addClass("disabled")
-                    $(this).find('a.move-top').addClass("disabled")
-                }
-                else {
-                    $(this).find('a.move-up').removeClass("disabled")
-                    $(this).find('a.move-top').removeClass("disabled")
-                }
-                if ($(this).nextAll('li[data-tree-parent="' + thisParentId + '"]').length == 0) {
-                    $(this).find('a.move-down').addClass("disabled")
-                    $(this).find('a.move-bottom').addClass("disabled")
-                }
-                else {
-                    $(this).find('a.move-down').removeClass("disabled")
-                    $(this).find('a.move-bottom').removeClass("disabled")
-                }
-                //if this not has a following sibling with the same data-tree-parent then hide the down arrows
-            })
-        },
-
-        // The next set of functions handle the movement buttons (mainly animation)
-        // Take in the node's id as input			
-        moveUp: function (moveId) {
-            var moveIdNode = "node" + moveId;
-
-            if (!($('#MenuTree li#' + moveIdNode).hasClass("locked"))) {
-                $('#MenuTree li#' + moveIdNode).addClass("locked");
-                var thisParentId = $('#MenuTree li#' + moveIdNode).data('tree-parent')
-                //Construct the node name
-                $('#MenuTree li#' + moveIdNode).fadeTo("fast", 0.25);
-                //IE is stupid, so append random numbers to the end
-                var i = Math.round(10000 * Math.random());
-                // Pass out the command to move the node
-                $.ajax({
-                    url: '?ewCmd=MoveUp' + decodeURIComponent("%26") + 'pgid=' + moveId + '&a=' + i,
-                    success: function () {
-                        //Animate
-                        $('#MenuTree li#' + moveIdNode).prevAll('li[data-tree-parent="' + thisParentId + '"]').first().hide().fadeIn("fast");
-                        $('#MenuTree li#' + moveIdNode).prevAll('li[data-tree-parent="' + thisParentId + '"]').first().before($('#MenuTree li#' + moveIdNode));
-                        $('#MenuTree').applyLast();
-                        $('#MenuTree').checkChildren();
-                        $('#MenuTree li#' + moveIdNode).fadeTo("fast", 1.0);
-                        $('#MenuTree li#' + moveIdNode).removeClass("locked");
-                        // alert('move up');
-
-                    }
-                });
-
-
-            }
-
-        },
-
-        moveDown: function (moveId) {
-            var moveIdNode = "node" + moveId;
-
-            if (!($('#MenuTree li#' + moveIdNode).hasClass("locked"))) {
-                $('#MenuTree li#' + moveIdNode).addClass("locked");
-
-                var thisParentId = $('#MenuTree li#' + moveIdNode).data('tree-parent')
-
-                $('#MenuTree li#' + moveIdNode).fadeTo("fast", 0.25);
-                var i = Math.round(10000 * Math.random());
-                $.ajax({
-                    url: '?ewCmd=MoveDown' + decodeURIComponent("%26") + 'pgid=' + moveId + '&a=' + i,
-                    success: function () {
-                        $('#MenuTree li#' + moveIdNode).prevAll('li[data-tree-parent="' + thisParentId + '"]').first().hide().fadeIn("fast");
-                        $('#MenuTree li#' + moveIdNode).nextAll('li[data-tree-parent="' + thisParentId + '"]').first().after($('#MenuTree li#' + moveIdNode));
-                        $('#MenuTree').applyLast();
-                        $('#MenuTree').checkChildren();
-                        $('#MenuTree li#' + moveIdNode).fadeTo("fast", 1.0);
-                        $('#MenuTree li#' + moveIdNode).removeClass("locked");
-                        // alert('move down');
-
-                    }
-                });
-            }
-
-        },
-
-        moveTop: function (moveId) {
-            var moveIdNode = "node" + moveId;
-
-            if (!($('#MenuTree li#' + moveIdNode).hasClass("locked"))) {
-                $('#MenuTree li#' + moveIdNode).addClass("locked");
-                $('#MenuTree li#' + moveIdNode).fadeTo("fast", 0.25);
-                var thisParentId = $('#MenuTree li#' + moveIdNode).data('tree-parent')
-                var i = Math.round(10000 * Math.random());
-                $.ajax({
-                    url: '?ewCmd=MoveTop' + decodeURIComponent("%26") + 'pgid=' + moveId + '&a=' + i,
-                    success: function () {
-                        $('#MenuTree li#' + moveIdNode).prev('li[data-tree-parent="' + thisParentId + '"]').hide().fadeIn("fast");
-                        $('#MenuTree li#' + moveIdNode).prevAll('li[data-tree-parent="' + thisParentId + '"]:last').before($('#MenuTree li#' + moveIdNode));
-                        $('#MenuTree').applyLast();
-                        $('#MenuTree').checkChildren();
-                        $('#MenuTree li#' + moveIdNode).fadeTo("fast", 1.0);
-                        $('#MenuTree li#' + moveIdNode).removeClass("locked");
-                    }
-                });
-            }
-        },
-
-        moveBottom: function (moveId) {
-            var moveIdNode = "node" + moveId;
-
-            if (!($('#MenuTree li#' + moveIdNode).hasClass("locked"))) {
-                $('#MenuTree li#' + moveIdNode).addClass("locked");
-                $('#MenuTree li#' + moveIdNode).fadeTo("fast", 0.25);
-                var thisParentId = $('#MenuTree li#' + moveIdNode).data('tree-parent')
-                var i = Math.round(10000 * Math.random());
-                $.ajax({
-                    url: '?ewCmd=MoveBottom' + decodeURIComponent("%26") + 'pgid=' + moveId + '&a=' + i,
-                    success: function () {
-                        $('#MenuTree li#' + moveIdNode).next().hide('li[data-tree-parent="' + thisParentId + '"]').fadeIn("fast");
-                        $('#MenuTree li#' + moveIdNode).nextAll('li[data-tree-parent="' + thisParentId + '"]:last').after($('#MenuTree li#' + moveIdNode));
-                        $('#MenuTree').applyLast();
-                        $('#MenuTree').checkChildren();
-                        $('#MenuTree li#' + moveIdNode).fadeTo("fast", 1.0);
-                        $('#MenuTree li#' + moveIdNode).removeClass("locked");
-                    }
-                });
-            }
-        },
-
-        hideButton: function (hideId) {
-
-            var hideIdNode = "node" + hideId;
-            if (!($('#MenuTree li#' + hideIdNode).hasClass("locked"))) {
-                $('#MenuTree li#' + hideIdNode).addClass("locked");
-
-                $('#MenuTree li#' + hideIdNode).fadeTo("fast", 0.25);
-                var i = Math.round(10000 * Math.random());
-                $.ajax({
-                    url: '?ewCmd=HidePage' + decodeURIComponent("%26") + 'pgid=' + hideId + '&a=' + i,
-                    success: function () {
-
-                        $('#MenuTree li#' + hideIdNode + ' a.btn-hide').remove();
-                        $('#MenuTree li#' + hideIdNode + ' a.btn-show').remove();
-                        $('#MenuTree li#' + hideIdNode + ' div.optionButtons:first').append(' <a onclick="$(\'#MenuTree\').showButton(' + hideId + ');" class="btn btn-xs btn-success btn-show" title="Click here to show this page"><i class="fa fa-check-circle fa-white"> </i> Show</a>');
-                        $('#MenuTree li#' + hideIdNode + ' div.optionButtons:first').append(' <a href="?ewCmd=DeletePage&amp;pgid=' + hideId + '" class="btn btn-xs btn-danger btn-del" title="Click here to delete this page"><i class="fa fa-trash-o fa-white"> </i> Delete</a>');
-
-                        if ($('#MenuTree li#' + hideIdNode + ' i.status').hasClass('active')) {
-                            $('#MenuTree li#' + hideIdNode + ' i.status').removeClass('active')
-                            $('#MenuTree li#' + hideIdNode + ' i.status').addClass('inactive')
-                            $('#MenuTree li#' + hideIdNode + ' i.status').addClass('text-muted')
-
-                        }
-                        else if ($('#MenuTree li#' + hideIdNode + ' i.status').hasClass('activeParent')) {
-                            $('#MenuTree li#' + hideIdNode + ' i.status').removeClass('activeParent')
-                            $('#MenuTree li#' + hideIdNode + ' i.status').addClass('inactiveParent')
-                            $('#MenuTree li#' + hideIdNode + ' i.status').addClass('text-muted')
-                        }
-
-                        $('#MenuTree li#' + hideIdNode).fadeTo("fast", 1.0);
-                        $('#MenuTree li#' + hideIdNode).removeClass("locked");
-                        $('#MenuTree').applyLast();
-                    }
-                });
-            }
-        },
-
-        showButton: function (showId) {
-            var showIdNode = "node" + showId;
-            if (!($('#MenuTree li#' + showIdNode).hasClass("locked"))) {
-                $('#MenuTree li#' + showIdNode).addClass("locked");
-
-                $('#MenuTree li#' + showIdNode).fadeTo("fast", 0.25);
-                var i = Math.round(10000 * Math.random());
-                $.ajax({
-                    url: '?ewCmd=ShowPage' + decodeURIComponent("%26") + 'pgid=' + showId + '&a=' + i,
-                    success: function () {
-                        //Sort out removal of button and then addition of others
-                        $('#MenuTree li#' + showIdNode + ' a.btn-del:first').remove();
-                        $('#MenuTree li#' + showIdNode + ' a.btn-show').remove();
-                        $('#MenuTree li#' + showIdNode + ' div.optionButtons:first').append('<a onclick="$(\'#MenuTree\').hideButton(' + showId + ');" class="btn btn-xs btn-danger btn-hide" title="Click here to hide this page"><i class="fa fa-times-circle fa-white"> </i> Hide</a>');
-
-                        if ($('#MenuTree li#' + showIdNode + ' i.status').hasClass('inactive')) {
-                            $('#MenuTree li#' + showIdNode + ' i.status').removeClass('inactive')
-                            $('#MenuTree li#' + showIdNode + ' i.status').addClass('active')
-                            $('#MenuTree li#' + showIdNode + ' i.status').removeClass('text-muted')
-                        }
-                        else if ($('#MenuTree li#' + showIdNode + ' i.status').hasClass('inactiveParent')) {
-                            $('#MenuTree li#' + showIdNode + ' i.status').removeClass('inactiveParent')
-                            $('#MenuTree li#' + showIdNode + ' i.status').addClass('activeParent')
-                            $('#MenuTree li#' + showIdNode + ' i.status').removeClass('text-muted')
-                        }
-
-                        $('#MenuTree li#' + showIdNode).fadeTo("fast", 1.0);
-                        $('#MenuTree li#' + showIdNode).removeClass("locked");
-                        $('#MenuTree').applyLast();
-                    }
-                });
-            }
-        },
-
-
-        // Function taken from Jquery home page (aka not written by me!)
-        // Used for taking a param out of the url
-        urlParam: function (param) {
-            var regex = '[?&]' + param + '=([^&#]*)';
-            var results = (new RegExp(regex)).exec(window.location.href);
-            if (results) return results[1];
-            return '';
-        },
-
-        // Function for admin popup menus -  Trevor Spink
-        adminPopup: function (settings) {
-            $(this).parent().mouseover(function () {
-                //var divPos = $(this).children('div.ewPopMenu').offset();
-                $(this).parents('td.optionsButton').css('zIndex', 10000)
-                $(this).children('a.popup').addClass('popupOpen')
-                $(this).children('a.popup').removeClass('popup')
-                $(this).children('div.ewPopMenu').show();
-                // $(this).children('div.ewPopMenu').dialog({ modal: true });
-            }
-            );
-            $(this).parent().mouseout(function () {
-                $(this).parents('td.optionsButton').css('zIndex', '')
-                $(this).children('a.popupOpen').addClass('popup')
-                $(this).children('a.popupOpen').removeClass('popupOpen')
-                $(this).children('div.ewPopMenu').hide();
-            }
-            );
-        }
-
-    });
-
-})(jQuery);
-
-
-
-/*  When moving pages we need to pass through original page being moved 
-to avoid looping MenuItems - WH 2010-07-30 
-*/
-function getAdminAjaxTreeViewPath() {
-    var treeviewPath = '?contentType=ajaxadmin'
-    if ($("#tpltMovePage").exists()) {
-        var movingPageId = getParameterByName('pgid');
-        treeviewPath = treeviewPath + '&movingPageId=' + movingPageId;
-    }
-    if ($("#tpltMoveContent").exists()) {
-        var movingContentId = getParameterByName('id');
-        var currentPageId = getParameterByName('parId');
-        var startingPageId = getParameterByName('pgid');
-        treeviewPath = treeviewPath + '&oldPgId=' + startingPageId + '&id=' + movingContentId;
-        //alert(treeviewPath);
-    }
-    return treeviewPath;
-}
 
 // This function returns the value of a queryString
 function getParameterByName(qStringName) {
@@ -1510,7 +853,7 @@ function getParameterByName(qStringName) {
 * Adds an event to the "get geocode" button on Location edit page
 */
 function initialiseGeocoderButton() {
-    
+
     $('.getGeocodeButton').click(function (e) {
         // Prevent form submission
         e.preventDefault();
@@ -1549,7 +892,7 @@ function initialiseGeocoderButton() {
                 alert(status + ' Couldn\'t find the latitude and longitude for the address provided. Try including more details.(' + addressString + ')');
 
             }
-           
+
             // Change to initial button label
             $this.val(label);
         });
@@ -1610,7 +953,7 @@ function initialiseGetVimeoDataButton() {
         jsonURL = "https://vimeo.com/api/v2/video/" + id + ".json";
         $.getJSON(jsonURL, function (result) {
             $("#cVimeoDuration").val(result[0].duration);
-            $("#cVimeoDescrtipion").val(result[0].description);
+            $("#cVimeoByline").val(result[0].description);
             $("#cVimeoThumbnail").val(result[0].thumbnail_medium);
             $("#cModuleTitle").val(result[0].title);
         });
@@ -2497,6 +1840,8 @@ if (editPageElement) {
 
 
 $(document).ready(function () {
+    var cLocation = $(".admin-breadcrumb-inner ul li").last().text();
+    $("#cLocation").val(cLocation);
     function scrollToAnchor(aid) {
         var aTag = $("li[id='" + aid + "']");
         $('#MenuTree').animate({ scrollTop: aTag.position().top }, 'slow');
@@ -2616,21 +1961,31 @@ function showAdminAlert(message) {
 function ValidateAndOpenReviewEmail(event) {
 
     if (form_check(event)) {
-        if ($("#nStatus_1").prop("checked") && $("#nEmailSent_True").prop("checked") == false) {
-            
-            var targetForm = "ReviewConfirmation";
-            var id = this.getQueryStringParam('id');
-            var Email = $("#cContentReviewerEmail").val();
-            var RecordType = $("#cContentSchemaName").val();
-            var RName = $("#cContentReviewer").val();
-            if (RName.indexOf(' ') != -1) {
-                RName = RName.split(' ')[0]
-            } 
-            var targetField = "SendAlertEmailModal";
-            var linkUrl = '?contentType=popup&ewCmd=AlertEmail&id=' + id + '&xFormName=' + targetForm + '&RecordType=' + RecordType + '&RecipientName=' + RName + '&Email=' + Email;
+        var id = this.getQueryStringParam('id');
+        if (id == null || id == "") {
+            return true;
+        } else {
+            if ($("#nStatus_1").prop("checked") && $("#nEmailSent_True").prop("checked") == false) {
+                if ($("#dPublishDate").val() == "") {
+                    $("#SendAlertEmailModal").modal('hide');
+                    $("#lblPublishDateError").removeClass("hidden");
+                    $("#lblPublishDateError").css("color", "red");
+                } else {
+                    var targetForm = "ReviewConfirmation";
+                    var id = this.getQueryStringParam('id');
+                    var Email = $("#cContentReviewerEmail").val();
+                    var RecordType = $("#cContentSchemaName").val();
+                    var RName = $("#cContentReviewer").val();
+                    if (RName.indexOf(' ') != -1) {
+                        RName = RName.split(' ')[0]
+                    }
+                    var targetField = "SendAlertEmailModal";
+                    var linkUrl = '?contentType=popup&ewCmd=AlertEmail&id=' + id + '&xFormName=' + targetForm + '&RecordType=' + RecordType + '&RecipientName=' + RName + '&Email=' + Email;
 
-            $('#' + targetField).load(linkUrl, function (e) { $('#' + targetField).modal('show'); });           
-            return false;
+                    $('#' + targetField).load(linkUrl, function (e) { $('#' + targetField).modal('show'); });
+                    return false;
+                }
+            }
         }
 
     } else {
@@ -2649,14 +2004,14 @@ function IsEmail(email) {
     }
 }
 function SendEmail(event) {
-    
-    if ($("#Email").val() != "")
-    {
+
+    if ($("#Email").val() != "") {
         if (IsEmail($("#Email").val()) == false) {
             $("#lblinvalidemail").removeClass("hidden");
             $("#lblinvalidemail").css("color", "red");
             return false;
         } else {
+
             var formData = new FormData($("#AlertEmail")[0]);
             var ajaxurl = '?ewCmd=AlertEmail';
             $("#nEmailSent_True").prop("checked", "checked");
@@ -2677,8 +2032,7 @@ function SendEmail(event) {
                 }
             });
         }
-    } else
-    {       
+    } else {
         $("#SendAlertEmailModal").modal('show');
         $("#lblerrormessage").removeClass("hidden");
         $("#lblerrormessage").css("color", "red");
@@ -2686,4 +2040,111 @@ function SendEmail(event) {
     }
 }
 
+$('.getPlaceIDButton').click(function (e) {
    
+    // Prevent form submission
+    e.preventDefault();
+    var latitude;
+    var longitude;
+    var address = [
+        $('#cLocation').val()
+
+    ];
+    var location;
+    var addressString = ",,," + address.join(',');
+    var geocoder = new google.maps.Geocoder();
+
+    geocoder.geocode({ address: addressString }, function (results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+
+            // Set lat and long values in relevant inputs
+            var location = results[0].geometry.location;
+            $('#cLatLong').val(location.lat() + "," + location.lng());
+
+
+        }
+
+    });
+    var valueOfLatLong = $('#cLatLong').val();
+    var array = valueOfLatLong.split(",");
+    latitude = array[0];
+    longitude = array[1];
+    var latlng = { lat: parseFloat(latitude), lng: parseFloat(longitude) };
+
+    geocoder.geocode({ 'location': latlng }, function (results, status) {
+        if (status === google.maps.GeocoderStatus.OK) {
+            if (results[1]) {
+                $('#cPalceID').val(results[1].place_id);
+                /*$('#cPalceID').attr("disabled", "disabled")*/
+                console.log(results[1].place_id);
+            }
+        }
+    });
+
+
+});
+
+function getImagePaths() {   
+    var imagepaths = "";  
+    for (var i = 0; i < $(".multicheckbox").length; i++) {
+        if ($(".multicheckbox")[i].checked === true) {           
+            if (imagepaths == "") {
+                imagepaths = $(".multicheckbox")[i].value;
+            } else {
+                imagepaths= $(".multicheckbox")[i].value + ',' + imagepaths;
+            }
+            if (imagepaths.includes("%20"))
+            {               
+                imagepaths = imagepaths.replace("%20", " ");
+            }
+        }
+    }   
+    var SaveMultipleLibraryImages = "/ewapi/Cms.Admin/SaveMultipleLibraryImages";
+    var contentId = this.getQueryStringParam('id');
+    //var RelatedLibraryImages = imagepaths;
+    //var cSkipAttribute = false;  
+    $("#cRelatedLibraryImages").val(imagepaths); 
+    $("#contentId").val(contentId);
+    var formData = new FormData($("#EditContent")[0]);
+   
+    $.ajax({
+        url: SaveMultipleLibraryImages,
+        data: formData,
+        contentType: false,
+        processData: false,       
+        type: 'POST',
+        success: function (response) {           
+            $("#modal-cProductImagesPaths").modal("hide");
+            location.reload();
+        }
+    });
+   
+}
+
+function SaveFileName(isOverwrite) {
+    
+    var newfilename;
+    if (isOverwrite) {
+        newfilename = $("#cleanFilename").val();
+    } else {
+        newfilename = $("#txtfilename").val();
+    }    
+    var targetPath = $("#targetPath").val();
+    var ajaxurl = '?ewCmd=ImageLib&ewCmd2=FileUpload&isOverwrite=' + isOverwrite +'&storageRoot="'+targetPath+'"';
+    let list = new DataTransfer();
+    let file = new File(["content"], newfilename);
+    list.items.add(file);
+    let myFileList = list.files;
+    postedFile.files = myFileList;
+    var formData = new FormData($("#frmfileData")[0]);   
+    $.ajax({
+        url: ajaxurl,
+        data: formData,
+        processData: false,
+        contentType: false,
+        type: 'POST',
+        success: function (result) {            
+            $("#changeFilename").modal("hide");          
+        }
+    });
+}

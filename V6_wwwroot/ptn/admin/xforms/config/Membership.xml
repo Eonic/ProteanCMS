@@ -36,11 +36,14 @@
       <bind id="SecureMembershipDomain" nodeset="web/add[@key='SecureMembershipDomain']/@value" required="false()" type="string" />
      <bind id="SecureDownloads" nodeset="web/add[@key='SecureDownloads']/@value" required="false()" type="string" />
    </model>
-   <group ref="WebSettings">
+   <group ref="WebSettings" class="admin-form-style">
     <label>Membership Settings</label>
 
     <alert>Changes you make to this form risk making this site non-functional.</alert>
-     <group>
+	   <group class="tabs">
+		   <group ref="Membership Settings">
+			   <label>Membership Settings</label>
+			   <group  class="row row-cols-md-2">
      <select1 bind="ewMembership" appearance="full">
       <label>Membership</label>
        <item>
@@ -54,7 +57,7 @@
       <value>on</value>
     </select1>
      
-	   <select1 bind="MembershipEncryption" appearance="full">
+	   <select1 bind="MembershipEncryption" appearance="minimal">
 		   <label>Membership Encryption</label>
        <alert>DO NOT change this once the site is live as all historic user accounts will have invalid passwords. Please contact Eonic to encode passwords on bulk.</alert>
 		   <item>
@@ -93,7 +96,7 @@
 		<hint>Permissions Group for anyone logged on</hint>
 		<value />
 	 </select1>
-     <select1 bind="RegisterBehaviour" appearance="full">
+     <select1 bind="RegisterBehaviour" appearance="minimal">
        <label>Register Behaviour</label>
        <item>
          <label>Auto Login</label>
@@ -185,19 +188,21 @@
 		   <hint>If the above feature is turned on you can specify (in seconds) how much inactivity to account for before allowing the username to be logged into elsewhere</hint>
 	   </input>
      </group>
-     <group>
-       <label>Secure Membership Settings</label>
-     <input bind="SecureMembershipAddress">
-       <label>Secure Membership URL</label>
-       <value />
-       <hint>This should be the site URL in the format of "https://www.mysite.com" this will ensure that all users when logged on access the site over https</hint>
-     </input>
-     <input bind="SecureMembershipDomain">
-       <label>Secure Membership Domain</label>
-       <value />
-       <hint>This should be the site domain in the format of "mysite.com" this is the domain cookies get stored against, leave this blank by default only use in special curcumstances (un-tested in latest release).</hint>
-     </input>
-   </group>
+		   <group>
+			   <label>Secure Membership Settings</label>
+			   <input bind="SecureMembershipAddress">
+				   <label>Secure Membership URL</label>
+				   <value />
+				   <hint>This should be the site URL in the format of "https://www.mysite.com" this will ensure that all users when logged on access the site over https</hint>
+			   </input>
+			   <input bind="SecureMembershipDomain">
+				   <label>Secure Membership Domain</label>
+				   <value />
+				   <hint>This should be the site domain in the format of "mysite.com" this is the domain cookies get stored against, leave this blank by default only use in special curcumstances (un-tested in latest release).</hint>
+			   </input>
+		   </group>
+		   </group>
+ </group>
     <submit submission="" ref="submit" class="principle">
       <label>Save Membership Settings</label>
     </submit>

@@ -10,6 +10,8 @@ Imports System.Reflection
 Imports System.Net
 Imports System.Text.RegularExpressions
 Imports System.Collections.Generic
+Imports Org.BouncyCastle.Asn1.X509
+Imports Protean.fsHelper
 
 Public Class Cms
     Inherits Base
@@ -1411,11 +1413,14 @@ Public Class Cms
 
                                         If moRequest("recompile") = "del" Then
 
+                                            If RestoreRedirectSession(moRequest("SessionId"), 10, True) = True Then
 
-                                            If RestoreRedirectSession(moRequest("SessionId"), 5, True) = True Then
+                                                ' Protean.Config.UpdateConfigValue(Me, "", "recompile", "false")
+
                                                 Dim oFS As New Protean.fsHelper(moCtx)
                                                 oFS.mcRoot = gcProjectPath
                                                 oFS.mcStartFolder = goServer.MapPath("\" & gcProjectPath) + "xsltc"
+
                                                 oFS.DeleteFolderContents("", "")
                                                 Protean.Config.UpdateConfigValue(Me, "protean/web", "CompiledTransform", "on")
                                                 Protean.Config.UpdateConfigValue(Me, "", "recompile", "false")
@@ -1424,7 +1429,7 @@ Public Class Cms
 
                                         Else
                                             If mbAdminMode Then
-                                                Protean.Config.UpdateConfigValue(Me, "protean/web", "CompliedTransform", "off")
+                                                Protean.Config.UpdateConfigValue(Me, "protean/web", "CompiledTransform", "off")
                                                 'just sent value as it might be true when user did ResetConfig
                                                 'to avoid skipping update functionality, we are just set it differently
                                                 Protean.Config.UpdateConfigValue(Me, "", "recompile", "recompiling")
@@ -2471,7 +2476,7 @@ Public Class Cms
         PerfMon.Log("Web", "GetAjaxHTML")
         Dim sProcessInfo As String = ""
         Try
-            If sAjaxCmd = "" Then
+            If moRequest("AjaxCmd") <> "" Then
                 sAjaxCmd = moRequest("AjaxCmd")
             End If
 
@@ -2573,7 +2578,12 @@ Public Class Cms
             If mnArtId > 0 Then
                 oPageElmt.SetAttribute("artid", mnArtId)
             End If
-            Dim nPageId As Long = CLng("0" & moRequest("pgid"))
+            Dim nPageId As Long = 0 '  CLng("0" & moRequest("pgid"))
+            Dim NodeId As String = moRequest("pgid")
+            If IsNumeric(NodeId) Then
+                nPageId = CLng("0" & moRequest("pgid"))
+            End If
+
             Dim nContentParId As Long = CLng("0" & moRequest("contentParId"))
             If nPageId > 0 Then
                 mnPageId = nPageId
@@ -2659,6 +2669,12 @@ Public Class Cms
 
                     ' Check if the permissions are valid
                     bUserValid = dbHelper.CanAddUpdate(nContentPermLevel) And mnUserId > 0
+
+                    If moRequest("type") IsNot Nothing Then
+                        If moRequest("type").ToLower() = "review" Then
+                            bUserValid = True ' set true for submitting review functionality
+                        End If
+                    End If
 
                     ' We need to set this for version control
                     moDbHelper.CurrentPermissionLevel = nContentPermLevel
@@ -2746,7 +2762,7 @@ Public Class Cms
                     oPageElmt.AppendChild(GetStructureXML(mnUserId))
 
 
-                Case "MenuNode"
+                Case "MenuNode", "GetStructureNode", "GetMoveNode", "GetMoveContent", "GetLocateNode", "GetAdvNode", "editStructurePermissions"
 
                     'Make sure admin mode is true and we don't need to check for permissions
 
@@ -2783,6 +2799,26 @@ Public Class Cms
                     End If
 
                     oPageElmt.AppendChild(FullMenuXml)
+                Case "GetFolderNode"
+                    Dim oPageDetail As XmlElement = moPageXml.CreateElement("ContentDetail")
+                    oPageElmt.AppendChild(oPageDetail)
+                    Dim oFsh As New fsHelper(moCtx)
+                    Dim libType As LibraryType = LibraryType.Image
+                    Dim thisEwCmd = "ImageLib"
+                    Select Case moRequest("LibType")
+                        Case "Media"
+                            thisEwCmd = "MediaLib"
+                            libType = LibraryType.Media
+                        Case "Docs"
+                            thisEwCmd = "DocsLib"
+                            libType = LibraryType.Documents
+                    End Select
+
+                    oFsh.initialiseVariables(libType)
+                    oFsh.moPageXML = moPageXml
+                    oFsh.mcStartFolder = oFsh.mcStartFolder + moRequest("pgid").Replace("~", "\")
+                    oPageDetail.AppendChild(oFsh.getDirectoryTreeXml(libType, "+++", moRequest("pgid").Replace("~", "\")))
+                    moPageXml.DocumentElement.SetAttribute("ewCmd", thisEwCmd)
 
                 Case "Search.MostPopular"
 
@@ -2795,6 +2831,7 @@ Public Class Cms
                     End If
 
             End Select
+
 
             ' Process common actions
             CommonActions()
@@ -3836,6 +3873,7 @@ Public Class Cms
                     nAuthUserId = mnUserId
                     nAuthGroup = gnAuthUsers
                 End If
+
                 If Not oContentsNode Is Nothing Then
                     If (oContentsNode.Attributes("contentType") IsNot Nothing) Then
                         cFilterTarget = oContentsNode.Attributes("contentType").Value
@@ -3844,9 +3882,13 @@ Public Class Cms
                         cFilterTarget = oContentsNode.Attributes("filterTarget").Value
                     End If
                 End If
+                Dim sFilterTargetSql = ""
+                If cFilterTarget <> "" Then
+                    cFilterTarget = " c.cContentSchemaName ='" & cFilterTarget & "' and "
+                End If
 
                 ' Check the page is not denied
-                sMembershipSql = " c.cContentSchemaName ='" & cFilterTarget & "' and NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
+                sMembershipSql = cFilterTarget & "NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
 
 
 
@@ -3915,11 +3957,12 @@ Public Class Cms
             Else
                 oDs = moDbHelper.GetDataSet(sSql, "Content", "Contents")
             End If
-            nCount = oDs.Tables("Content").Rows.Count
-            PerfMon.Log("Web", "GetPageContentFromSelect", "GetPageContentFromSelect: " & nCount & " returned")
+            If oDs IsNot Nothing Then
+                nCount = oDs.Tables("Content").Rows.Count
+                PerfMon.Log("Web", "GetPageContentFromSelect", "GetPageContentFromSelect: " & nCount & " returned")
 
-            moDbHelper.AddDataSetToContent(oDs, oRoot, mnPageId, False, "", mdPageExpireDate, mdPageUpdateDate, True, gnShowRelatedBriefDepth, cShowSpecificContentTypes)
-
+                moDbHelper.AddDataSetToContent(oDs, oRoot, mnPageId, False, "", mdPageExpireDate, mdPageUpdateDate, True, gnShowRelatedBriefDepth, cShowSpecificContentTypes)
+            End If
 
             'If gbCart Or gbQuote Then
             '    moDiscount.getAvailableDiscounts(oRoot)
@@ -4008,7 +4051,12 @@ Public Class Cms
                 End If
 
                 ' Check the page is not denied
-                sMembershipSql = " c.cContentSchemaName ='" & cShowSpecificContentTypes & "' and  NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
+                If cShowSpecificContentTypes <> "" Then
+                    sMembershipSql = " c.cContentSchemaName ='" & cShowSpecificContentTypes & "' and  NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
+                Else
+                    sMembershipSql = "NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
+                End If
+
 
                 ' Commenting out the folowing as it wouldn't return items that were Inherited view etc.
                 ' sMembershipSql = " (dbo.fxn_checkPermission(CL.nStructId," & mnUserId & "," & gnAuthUsers & ") = 'OPEN' or dbo.fxn_checkPermission(CL.nStructId," & mnUserId & "," & gnAuthUsers & ") = 'VIEW')"
@@ -4829,7 +4877,7 @@ Public Class Cms
 
                 'Please never add any setting here you do not want to be publicly accessible.
                 Dim s = "web.DescriptiveContentURLs;web.BaseUrl;web.SiteName;web.SiteLogo;web.GoogleAnalyticsUniversalID;web.GoogleGA4MeasurementID;web.GoogleTagManagerID;web.GoogleAPIKey;web.PayPalTagManagerID;web.ScriptAtBottom;web.debug;cart.SiteURL;web.ImageRootPath;web.DocRootPath;web.MediaRootPath;web.menuNoReload;web.RootPageId;web.MenuTreeDepth;"
-                s = s + "web.eonicwebProductName;web.eonicwebCMSName;web.eonicwebAdminSystemName;web.eonicwebCopyright;web.eonicwebSupportTelephone;web.eonicwebWebsite;web.eonicwebSupportEmail;web.eonicwebLogo;web.websitecreditURL;web.websitecreditText;web.websitecreditLogo;web.GoogleTagManagerID;web.GoogleOptimizeID;web.FeedOptimiseID;web.FacebookTrackingCode;web.BingTrackingID;web.ReCaptchaKey;web.EnableWebP;web.EnableRetina;"
+                s = s + "web.eonicwebProductName;web.eonicwebCMSName;web.eonicwebAdminSystemName;web.eonicwebCopyright;web.eonicwebSupportTelephone;web.eonicwebWebsite;web.eonicwebSupportEmail;web.eonicwebLogo;web.websitecreditURL;web.websitecreditText;web.websitecreditLogo;web.GoogleTagManagerID;web.GoogleOptimizeID;web.FeedOptimiseID;web.FacebookPixelId;web.BingTrackingID;web.ReCaptchaKey;web.EnableWebP;web.EnableRetina;"
                 s = s + "theme.BespokeBoxStyles;theme.BespokeBackgrounds;theme.BespokeTextClasses;"
                 s = s + moConfig("XmlSettings") & ";"
 
@@ -5600,6 +5648,8 @@ Public Class Cms
             Dim oPageVerElmts As XmlElement
 
             Dim DomainURL As String = mcRequestDomain
+            Dim ExcludeFoldersFromPaths As String = LCase("" & moConfig("ExcludeFoldersFromPaths"))
+            Dim foldersExcludedFromPaths As String() = ExcludeFoldersFromPaths.Split(",")
 
             For Each oMenuItem In oElmt.SelectNodes("descendant-or-self::" & cMenuItemNodeName)
                 Dim urlPrefix As String = ""
@@ -5775,7 +5825,9 @@ Public Class Cms
                                 Else
                                     cPageName = goServer.UrlEncode(oDescendant.GetAttribute("name"))
                                 End If
+
                                 sUrl = sUrl & "/" & cPageName
+
                             End If
                         Next
                     End If
@@ -5819,124 +5871,125 @@ Public Class Cms
                     ' If oMenuItem.GetAttribute("id") = "609" Then
                     ' mbIgnorePath = mbIgnorePath
                     ' If
-
-                    If Not mbIgnorePath Then
-                        If moRequest.QueryString.Count > 0 Then
-                            If Not moRequest("path") Is Nothing Then
-                                'If this matches the path requested then change the pageId
-                                If (sUrl <> String.Empty) Then
-                                    Dim PathToMatch As String = Replace(sUrl, DomainURL, "").ToLower()
-                                    Dim PathToMatch2 As String = "/" & Me.gcLang & PathToMatch
-                                    Dim PathToTest As String = moRequest("path").ToLower().TrimEnd("/")
-                                    If PathToMatch = PathToTest Or PathToMatch2 = PathToTest Then
-                                        If Not oMenuItem.SelectSingleNode("ancestor-or-self::MenuItem[@id=" & nRootId & "]") Is Nothing Then
-                                            'case for if newsletter has same page name as menu item
-                                            If Features.ContainsKey("PageVersions") Then
-                                                'catch for page version
-                                                If oMenuItem.SelectSingleNode("PageVersion[@id='" & mnPageId & "']") Is Nothing Then
+                    'Stuff that just doesn't happen if we are redirecting.
+                    If oMenuItem.GetAttribute("url") = "" Then
+                        If Not mbIgnorePath Then
+                            If moRequest.QueryString.Count > 0 Then
+                                If Not moRequest("path") Is Nothing Then
+                                    'If this matches the path requested then change the pageId
+                                    If (sUrl <> String.Empty) Then
+                                        Dim PathToMatch As String = Replace(sUrl, DomainURL, "").ToLower()
+                                        Dim PathToMatch2 As String = "/" & Me.gcLang & PathToMatch
+                                        Dim PathToTest As String = moRequest("path").ToLower().TrimEnd("/")
+                                        If PathToMatch = PathToTest Or PathToMatch2 = PathToTest Then
+                                            If Not oMenuItem.SelectSingleNode("ancestor-or-self::MenuItem[@id=" & nRootId & "]") Is Nothing Then
+                                                'case for if newsletter has same page name as menu item
+                                                If Features.ContainsKey("PageVersions") Then
+                                                    'catch for page version
+                                                    If oMenuItem.SelectSingleNode("PageVersion[@id='" & mnPageId & "']") Is Nothing Then
+                                                        mnPageId = oMenuItem.GetAttribute("id")
+                                                    End If
+                                                Else
                                                     mnPageId = oMenuItem.GetAttribute("id")
                                                 End If
+
+                                                If mnUserId <> 0 Or mbAdminMode <> True Then
+                                                    'case for personalisation and admin TS 14/02/2021
+                                                    mnPageId = oMenuItem.GetAttribute("id")
+                                                End If
+                                                ' If oMenuItem.GetAttribute("verType") = "3" Then
+                                                mnClonePageVersionId = mnPageId
+                                                'this is used in clone mode to determine the page content in GetPageContent.
+                                                '  End If
+                                                oMenuItem.SetAttribute("requestedPage", "1")
+                                            End If
+
+                                        End If
+                                    End If
+                                End If
+                            End If
+                        End If
+                        'set the URL for each language pageversion so we can link between
+
+                        ' Address the context of the page
+                        If gbClone Then
+                            cCloneParent = oMenuItem.GetAttribute("cloneparent")
+                            If IsNumeric(cCloneParent) AndAlso CInt(cCloneParent) > 0 Then
+                                sUrl += IIf(sUrl.Contains("?"), "&", "?")
+                                sUrl += "context=" + cCloneParent
+                            End If
+                        End If
+
+                        Dim parPvElmt As XmlElement
+
+                        For Each pvElmt In oMenuItem.SelectNodes("PageVersion")
+                            Dim pageLang As String = pvElmt.GetAttribute("lang")
+                            If pageLang <> "" Then
+                                sUrl = ""
+                                For Each oDescendant As XmlElement In oMenuItem.SelectNodes("ancestor-or-self::" & cMenuItemNodeName)
+                                    If Not oDescendant.ParentNode.Name = "Menu" Then
+                                        cPageName = Nothing
+                                        For Each parPvElmt In oDescendant.SelectNodes("PageVersion[@lang='" & pageLang & "']")
+                                            If moConfig("PageURLFormat") = "hyphens" Then
+                                                cPageName = oRe.Replace(parPvElmt.GetAttribute("name"), "-")
                                             Else
-                                                mnPageId = oMenuItem.GetAttribute("id")
+                                                cPageName = goServer.UrlEncode(parPvElmt.GetAttribute("name"))
                                             End If
-
-                                            If mnUserId <> 0 Or mbAdminMode <> True Then
-                                                'case for personalisation and admin TS 14/02/2021
-                                                mnPageId = oMenuItem.GetAttribute("id")
+                                            ' I know this means we get the last one but we should only have one anyway.
+                                        Next
+                                        If cPageName Is Nothing Then
+                                            If moConfig("PageURLFormat") = "hyphens" Then
+                                                cPageName = oRe.Replace(oDescendant.GetAttribute("name"), "-")
+                                            Else
+                                                cPageName = goServer.UrlEncode(oDescendant.GetAttribute("name"))
                                             End If
-                                            ' If oMenuItem.GetAttribute("verType") = "3" Then
-                                            mnClonePageVersionId = mnPageId
-                                            'this is used in clone mode to determine the page content in GetPageContent.
-                                            '  End If
-                                            oMenuItem.SetAttribute("requestedPage", "1")
                                         End If
-
-                                    End If
-                                End If
-                            End If
-                        End If
-                    End If
-                    'set the URL for each language pageversion so we can link between
-
-                    ' Address the context of the page
-                    If gbClone Then
-                        cCloneParent = oMenuItem.GetAttribute("cloneparent")
-                        If IsNumeric(cCloneParent) AndAlso CInt(cCloneParent) > 0 Then
-                            sUrl += IIf(sUrl.Contains("?"), "&", "?")
-                            sUrl += "context=" + cCloneParent
-                        End If
-                    End If
-
-                    Dim parPvElmt As XmlElement
-
-                    For Each pvElmt In oMenuItem.SelectNodes("PageVersion")
-                        Dim pageLang As String = pvElmt.GetAttribute("lang")
-                        If pageLang <> "" Then
-                            sUrl = ""
-                            For Each oDescendant As XmlElement In oMenuItem.SelectNodes("ancestor-or-self::" & cMenuItemNodeName)
-                                If Not oDescendant.ParentNode.Name = "Menu" Then
-                                    cPageName = Nothing
-                                    For Each parPvElmt In oDescendant.SelectNodes("PageVersion[@lang='" & pageLang & "']")
-                                        If moConfig("PageURLFormat") = "hyphens" Then
-                                            cPageName = oRe.Replace(parPvElmt.GetAttribute("name"), "-")
-                                        Else
-                                            cPageName = goServer.UrlEncode(parPvElmt.GetAttribute("name"))
-                                        End If
-                                        ' I know this means we get the last one but we should only have one anyway.
-                                    Next
-                                    If cPageName Is Nothing Then
-                                        If moConfig("PageURLFormat") = "hyphens" Then
-                                            cPageName = oRe.Replace(oDescendant.GetAttribute("name"), "-")
-                                        Else
-                                            cPageName = goServer.UrlEncode(oDescendant.GetAttribute("name"))
+                                        sUrl = sUrl & "/" & cPageName
+                                        If moConfig("LowerCaseUrl") = "on" Then
+                                            sUrl = sUrl.ToLower()
                                         End If
                                     End If
-                                    sUrl = sUrl & "/" & cPageName
-                                    If moConfig("LowerCaseUrl") = "on" Then
-                                        sUrl = sUrl.ToLower()
+                                Next
+
+                                Dim pvUrlPrefix As String = ""
+                                If Not goLangConfig Is Nothing Then
+                                    'Check Language by Domain
+                                    Dim oLangElmt As XmlElement
+                                    Dim httpStart As String
+                                    If moRequest.ServerVariables("SERVER_PORT_SECURE") = "1" Then
+                                        httpStart = "https://"
+                                    Else
+                                        httpStart = "http://"
                                     End If
-                                End If
-                            Next
 
-                            Dim pvUrlPrefix As String = ""
-                            If Not goLangConfig Is Nothing Then
-                                'Check Language by Domain
-                                Dim oLangElmt As XmlElement
-                                Dim httpStart As String
-                                If moRequest.ServerVariables("SERVER_PORT_SECURE") = "1" Then
-                                    httpStart = "https://"
-                                Else
-                                    httpStart = "http://"
-                                End If
+                                    If Not goLangConfig.SelectSingleNode("Language[@code='" & pageLang & "']") Is Nothing Then
+                                        For Each oLangElmt In goLangConfig.SelectNodes("Language[@code='" & pageLang & "']")
+                                            Select Case LCase(oLangElmt.GetAttribute("identMethod"))
+                                                Case "domain"
+                                                    pvUrlPrefix = httpStart & oLangElmt.GetAttribute("identifier")
+                                                Case "path"
+                                                    pvUrlPrefix = httpStart & goLangConfig.GetAttribute("defaultDomain") & "/" & oLangElmt.GetAttribute("identifier")
+                                            End Select
+                                        Next
+                                    End If
 
-                                If Not goLangConfig.SelectSingleNode("Language[@code='" & pageLang & "']") Is Nothing Then
-                                    For Each oLangElmt In goLangConfig.SelectNodes("Language[@code='" & pageLang & "']")
-                                        Select Case LCase(oLangElmt.GetAttribute("identMethod"))
-                                            Case "domain"
-                                                pvUrlPrefix = httpStart & oLangElmt.GetAttribute("identifier")
-                                            Case "path"
-                                                pvUrlPrefix = httpStart & goLangConfig.GetAttribute("defaultDomain") & "/" & oLangElmt.GetAttribute("identifier")
-                                        End Select
-                                    Next
+                                    If pvUrlPrefix = "" Then pvUrlPrefix = httpStart & goLangConfig.GetAttribute("defaultDomain")
+                                    pvElmt.SetAttribute("url", pvUrlPrefix & sUrl)
+
                                 End If
 
-                                If pvUrlPrefix = "" Then pvUrlPrefix = httpStart & goLangConfig.GetAttribute("defaultDomain")
-                                pvElmt.SetAttribute("url", pvUrlPrefix & sUrl)
 
                             End If
 
 
+                        Next
+
+                        If mnPageId = oMenuItem.GetAttribute("id") Then
+                            mcPageURL = sUrl
                         End If
 
-
-                    Next
-
-                    If mnPageId = oMenuItem.GetAttribute("id") Then
-                        mcPageURL = sUrl
                     End If
-
                 End If
-
             Next
 
 
@@ -6319,6 +6372,21 @@ Public Class Cms
                     ' Set the paging variables, if provided.
                     If Not (moRequest("startPos") Is Nothing) AndAlso IsNumeric(moRequest("startPos")) Then nStart = CInt(moRequest("startPos"))
                     If Not (moRequest("rows") Is Nothing) AndAlso IsNumeric(moRequest("rows")) Then nRows = CInt(moRequest("rows"))
+                    ' In admin mode want active and hidden products separatly
+                    If Me.mbAdminMode Then
+                        If Not (moRequest("status") Is Nothing) AndAlso IsNumeric(moRequest("status")) Then
+                            Dim nstatus As Integer = CInt(moRequest("status"))
+                            If nstatus = 0 Then
+                                sFilterSql = sFilterSql & " and nstructid=" & mnPageId & " and a.nStatus!=1"
+                                nStart = 0
+                                nRows = CInt(moRequest("TotalCount"))  ' getting all hidden products in list
+                            Else
+                                sFilterSql = sFilterSql & " and nstructid=" & mnPageId & " and a.nStatus=" & nstatus
+                            End If
+                        End If
+                    Else
+                        sFilterSql = sFilterSql & " and nstructid=" & mnPageId
+                    End If
                     If moSession("FilterWhereCondition") IsNot Nothing AndAlso moSession("FilterWhereCondition") <> String.Empty Then
                         Dim whereSQL As String = moSession("FilterWhereCondition")
                         GetPageContentFromSelectFilterPagination(whereSQL,,,,,, oPageElmt,,,,, moRequest("singleContentType"), False, nStart, nRows)
@@ -7464,7 +7532,9 @@ Public Class Cms
                                 End If
                                 ' Dim nWeight As Double = CDbl("0" & contentElmt.SelectSingleNode("ShippingWeight").InnerText)
                                 Dim dsShippingOption As DataSet = moCart.getValidShippingOptionsDS(cDestinationCountry, nPrice, 1, nWeight, mnArtId)
-                                oShippingElmt.InnerXml = Replace(dsShippingOption.GetXml, "xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""", "")
+                                If Not dsShippingOption Is Nothing Then
+                                    oShippingElmt.InnerXml = Replace(dsShippingOption.GetXml, "xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""", "")
+                                End If
                                 contentElmt.AppendChild(oShippingElmt)
                             Catch ex As Exception
 

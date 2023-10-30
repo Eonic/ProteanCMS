@@ -32,6 +32,7 @@
     <xsl:apply-templates select="descendant-or-self::group[contains(@class,'hidden-modal')]" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::*[alert]" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::select1[@class='siteTree']" mode="xform_control_script"/>
+	<xsl:apply-templates select="descendant-or-self::select1[item[toggle]]" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::submit" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::button" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::input" mode="xform_control_script"/>
@@ -815,7 +816,7 @@
       </xsl:choose>
       <xsl:if test="alert">
         <div class="invalid-feedback text-warning">
-          <xsl:value-of select="alert/node()"/>
+          <xsl:value-of select="alert/node()"/> 
         </div>
       </xsl:if>
     </div>
@@ -2355,7 +2356,11 @@
       <xsl:if test="contains(@class,'readonly')">
         <xsl:attribute name="readonly">readonly</xsl:attribute>
       </xsl:if>
-
+		<xsl:if test="item[toggle]">
+			<xsl:attribute name="onChange">
+				toggle_<xsl:value-of select="$ref"/>('<xsl:value-of select="$ref"/>')
+			</xsl:attribute>
+		</xsl:if>
       <xsl:if test="@onChange!=''">
         <xsl:attribute name="onChange">
           <xsl:value-of select="@onChange"/>
@@ -2400,6 +2405,59 @@
       </xsl:choose>
 
     </select>
+	  <xsl:variable name="selectedCase">
+		  <xsl:choose>
+
+			  <!-- If @bindTo check this isn't selected -->
+			  <xsl:when test="item[@bindTo]">
+				  <xsl:variable name="bindToItem" select="item[@bindTo]"/>
+				  <xsl:choose>
+					  <xsl:when test="item[@bindTo]/input[@bind=$bindToItem/@bindTo]/value = $bindToItem/value">
+						  <xsl:value-of select="$bindToItem/toggle/@case"/>
+					  </xsl:when>
+					  <xsl:otherwise>
+						  <xsl:value-of select="item[value/node()=$value]/toggle/@case"/>
+					  </xsl:otherwise>
+				  </xsl:choose>
+			  </xsl:when>
+			  <xsl:otherwise>
+				  <!-- Default get selected case -->
+				  <xsl:value-of select="item[value/node()=$value]/toggle/@case"/>
+			  </xsl:otherwise>
+		  </xsl:choose>
+
+	  </xsl:variable>
+	  <xsl:variable name="dependantClass">
+		  <xsl:value-of select="translate($ref,'[]#=/','')"/>
+		  <xsl:text>-dependant form-group</xsl:text>
+	  </xsl:variable>
+	  <xsl:apply-templates select="following-sibling::switch[1]/case[node()]" mode="xform" >
+		  <xsl:with-param name="selectedCase" select="$selectedCase" />
+		  <xsl:with-param name="dependantClass" select="$dependantClass" />
+	  </xsl:apply-templates>
+  </xsl:template>
+   <xsl:template match="select1[@appearance='minimal'] | select1" mode="xform_control_script">
+	   <xsl:variable name="ref">
+		   <xsl:apply-templates select="." mode="getRefOrBind"/>
+	   </xsl:variable>
+	   <xsl:variable name="value">
+		   <xsl:apply-templates select="." mode="xform_value"/>
+	   </xsl:variable>
+	  <script>
+		  function toggle_<xsl:value-of select="$ref"/>(ourRef) {
+		  var selectedValue = document.getElementById(ourRef).value;
+		  //get the selected value for ref
+		  //create array of values / toggle ids
+		  var dict = {
+		  <xsl:for-each select="item[toggle]">
+		    '<xsl:value-of select="value"/>':'<xsl:value-of select="toggle/@case"/>'
+			<xsl:if test="position()!=last()">,</xsl:if>
+		  </xsl:for-each>
+		  };
+		  showDependant(dict[selectedValue].toString() + '-dependant', ourRef + '-dependant',', false');
+		  }
+		  // 
+	      </script>
   </xsl:template>
   <!-- -->
   <!-- ## Standard Select1 for Radio Buttons ########################################################### -->

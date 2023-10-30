@@ -28,7 +28,7 @@ Partial Public Class Cms
             Public moAdminXfm As Protean.Cms.Admin.AdminXforms
             Public moAdminRedirect As Protean.Cms.Admin.Redirects
             Public goConfig As System.Collections.Specialized.NameValueCollection
-
+            Public moCtx As System.Web.HttpContext
 
 
 
@@ -43,6 +43,8 @@ Partial Public Class Cms
                 moAdminRedirect = New Protean.Cms.Admin.Redirects()
                 moAdminXfm = myWeb.getAdminXform()
                 goConfig = myWeb.moConfig
+                moCtx = myWeb.moCtx
+
             End Sub
 
             Public Shadows Sub Open(ByVal oPageXml As XmlDocument)
@@ -448,7 +450,14 @@ Partial Public Class Cms
                     Return ex.Message
                 End Try
             End Function
-
+            Public Function GetExistsFileName(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+                    Return moCtx.Session("ExistsFileName")
+                Catch
+                Finally
+                    moCtx.Session("ExistsFileName") = Nothing
+                End Try
+            End Function
             Public Function CompressImage(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
                 Dim JsonResult As String = "0"
                 Dim Filename As String = String.Empty
@@ -523,6 +532,33 @@ Partial Public Class Cms
                     Return JsonResult
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ReplaceRegularExpression", ex, ""))
+                    Return ex.Message
+                End Try
+            End Function
+
+            Public Function SaveMultipleLibraryImages(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+                Dim JsonResult As String = ""
+                Dim nContentId As String = ""
+                Dim cRelatedLibraryImages As String = ""
+                Dim cSkipAttribute As String = "false"
+                Dim count As Integer = moCtx.Request.Files.Count
+
+                If moCtx.Request("contentId") IsNot Nothing Then
+                    nContentId = moCtx.Request("contentId")
+                End If
+
+                If moCtx.Request("cRelatedLibraryImages") IsNot Nothing Then
+                    cRelatedLibraryImages = moCtx.Request("cRelatedLibraryImages")
+                End If
+
+                Try
+                    If myApi.mbAdminMode Then
+                        JsonResult = myWeb.moDbHelper.CreateLibraryImages(nContentId, cRelatedLibraryImages, cSkipAttribute, "LibraryImage")
+                    End If
+
+                    Return JsonResult
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "RedirectPage", ex, ""))
                     Return ex.Message
                 End Try
             End Function

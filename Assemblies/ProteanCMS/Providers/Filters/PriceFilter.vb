@@ -52,9 +52,6 @@ Namespace Providers
                         oMinPrice.Value = Convert.ToString(aWeb.moRequest.Form("MinPrice"))
                         oMaxPrice.Value = Convert.ToString(aWeb.moRequest.Form("MaxPrice"))
 
-                        'Else
-                        '    oMinPrice.Value = Convert.ToString(FilterConfig.GetAttribute("fromPrice"))
-                        '    oMaxPrice.Value = Convert.ToString(FilterConfig.GetAttribute("toPrice"))
                     End If
                     If (oContentNode.Attributes("filterTarget") IsNot Nothing) Then
                         cFilterTarget = oContentNode.Attributes("filterTarget").Value
@@ -76,7 +73,7 @@ Namespace Providers
                             While oDr.Read
                                 cnt = cnt + 1
                                 If cnt = 1 Then
-                                    nMinPriceProduct = oDr.GetValue(5)
+                                    nMinPriceProduct = oDr("MinProductPrice")
                                 End If
                                 nMaxPRiceProduct = oDr("MaxProductPrice")
                                 sProductCount = Convert.ToString(oDr("ContentCount"))
@@ -87,7 +84,7 @@ Namespace Providers
                         oSliderMinPrice.Value = FilterConfig.GetAttribute("fromPrice")
                         'oSliderMaxPrice.Value = FilterConfig.GetAttribute("toPrice")
                         'oProductTotalCount.Value = nMaxPRiceProduct
-                        oSliderMinPrice.Value = nMinPriceProduct
+                        'oSliderMinPrice.Value = nMinPriceProduct
 
                         oSliderMaxPrice.Value = nMaxPRiceProduct
                         'oMaxPrice.Value = FilterConfig.GetAttribute("toPrice")
@@ -140,6 +137,7 @@ Namespace Providers
                     oXform.addInput(oFromGroup, "PriceStep", True, "", "hidden")
                     oXform.addInput(oFromGroup, "PriceListCount", True, "", "hidden")
                     oXform.addInput(oFromGroup, "PriceFilter", True, "", "hidden")
+                    oXform.addSubmit(oFromGroup, "", "Apply", "PriceFilter", "  btnPriceSubmit hidden", "")
                     ' oXform.addInput(oFromGroup, "PriceTotalCount", True, "", "hidden")
 
                     'If (oFromGroup.SelectSingleNode("select[@ref='PriceFilter']") IsNot Nothing) Then

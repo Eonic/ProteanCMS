@@ -53,6 +53,7 @@ Public Class Setup
     Dim mbSchemaExists As Boolean = False
     Dim ConnValid As Boolean = False
     Dim mbDBExists As Boolean = False
+    Dim isAlt As Boolean = False
 
 #Region "ErrorHandling"
 
@@ -434,7 +435,7 @@ Public Class Setup
 
         testResponse = oTests.TestHtmlTidy()
         If Not testResponse.StartsWith("HTML Tidy is working") Then
-            AddResponse("<p><i class=""fa fa-times text-danger"">&#160;</i>" & testResponse & "</p>")
+            AddResponse("<p><i class=""fa fa-times text-danger"">&#160;</i>Tidy has failed.</p>")
         Else
             AddResponse("<p><i class=""fa fa-check text-success"">&#160;</i>" & testResponse & "</p>")
         End If
@@ -855,10 +856,11 @@ Recheck:
             'main protean db
             Dim oDBName As String = goConfig("DatabaseName")
             Dim oDBServerName As String = goConfig("DatabaseServer")
-            Dim oDBUserName As String = goConfig("DatabaseUser")
+            Dim oDBUserName As String = goConfig("DatabaseUsername")
             Dim oDBPassword As String = goConfig("DatabasePassword")
             Dim oUpgrdXML As New XmlDocument
             Dim errormsg As String
+
             Dim mConfig As System.Collections.Specialized.NameValueCollection = Nothing
             If IO.File.Exists(goServer.MapPath(filePath)) Then
 
@@ -877,26 +879,41 @@ Recheck:
                         End If
                     End If
                     If mConfig IsNot Nothing Then
-                        oDBServerName = Convert.ToString(mConfig("DatabaseServer"))
-                        oDBName = Convert.ToString(mConfig("DatabaseName"))
-                        oDBUserName = Convert.ToString(mConfig("DatabaseUser"))
-                        oDBPassword = Convert.ToString(mConfig("DatabasePassword"))
+                        isAlt = True
+                        Dim altoDBServerName As String = Convert.ToString(mConfig("DatabaseServer"))
+                        Dim altoDBName As String = Convert.ToString(mConfig("DatabaseName"))
+                        Dim altoDBUserName As String = Convert.ToString(mConfig("DatabaseUser"))
+                        Dim altoDBPassword As String = Convert.ToString(mConfig("DatabasePassword"))
 
-
-                        myWeb.moDbHelper.DatabaseName = oDBName
-                        myWeb.moDbHelper.DatabaseServer = oDBServerName
-                        myWeb.moDbHelper.DatabaseUser = oDBUserName
-                        myWeb.moDbHelper.DatabasePassword = oDBPassword
+                        myWeb.moDbHelper.DatabaseServer = altoDBServerName
+                        myWeb.moDbHelper.DatabaseName = altoDBName
+                        myWeb.moDbHelper.DatabaseUser = altoDBUserName
+                        myWeb.moDbHelper.DatabasePassword = altoDBPassword
 
                         cCurrentVersion = getVersionNumber()
                     Else
+                        If isAlt Then
+                            myWeb.moDbHelper.DatabaseName = oDBName
+                            myWeb.moDbHelper.DatabaseServer = oDBServerName
+                            myWeb.moDbHelper.DatabaseUser = oDBUserName
+                            myWeb.moDbHelper.DatabasePassword = oDBPassword
+                        End If
+                        isAlt = False
                         cCurrentVersion = getVersionNumber()
                     End If
 
                 Else
-
+                    If isAlt Then
+                        myWeb.moDbHelper.DatabaseName = oDBName
+                        myWeb.moDbHelper.DatabaseServer = oDBServerName
+                        myWeb.moDbHelper.DatabaseUser = oDBUserName
+                        myWeb.moDbHelper.DatabasePassword = oDBPassword
+                    End If
+                    isAlt = False
                     cCurrentVersion = getVersionNumber()
                 End If
+                AddResponse("--------------------------------------")
+                AddResponse("Updating Database: " & oDBName & " on " & oDBServerName)
                 AddResponse("Current Version: " & cCurrentVersion)
                 Dim oCurrentVersion() As String = Split(cCurrentVersion, ".")
                 Dim cLatestVersion As String = oUpgrdXML.DocumentElement.GetAttribute("LatestVersion")

@@ -30,6 +30,8 @@ Imports DelegateWrappers
 Imports System.Drawing.Imaging
 Imports System.Net
 Imports System.Threading
+Imports Lucene.Net.Support
+Imports PayPal
 
 Partial Public Class fsHelper
 
@@ -270,7 +272,7 @@ Partial Public Class fsHelper
 
     End Function
 
-    Public Function getDirectoryTreeXml(ByVal nLib As LibraryType, Optional ByVal populateFilesNode As String = "") As XmlElement
+    Public Function getDirectoryTreeXml(ByVal nLib As LibraryType, Optional ByVal populateFilesNode As String = "", Optional ByVal pathPrefix As String = "") As XmlElement
         'PerfMon.Log("fsHelper", "getDirectoryTreeXml")
         Dim tempStartFolder As String
         Dim TreeXml As XmlElement
@@ -292,9 +294,13 @@ Partial Public Class fsHelper
             mcStartFolder = tempStartFolder
 
             Dim nodeElem As XmlElement = XmlElement("folder", New DirectoryInfo(mcStartFolder).Name)
-            nodeElem.SetAttribute("path", "\")
+            Dim rootPath = "\"
+            If pathPrefix <> "" Then rootPath = pathPrefix
+            nodeElem.SetAttribute("path", rootPath)
+
+            nodeElem.SetAttribute("startLevel", pathPrefix.Split("\").Length - 1)
             'PerfMon.Log("fsHelper", "getDirectoryTreeXml-AddElementsStart")
-            TreeXml = AddElements(nodeElem, mcStartFolder)
+            TreeXml = AddElements(nodeElem, mcStartFolder, pathPrefix)
             'PerfMon.Log("fsHelper", "getDirectoryTreeXml-AddElementsEnd")
             If nLib = LibraryType.Image Then
 
@@ -997,9 +1003,12 @@ Partial Public Class fsHelper
                 mcStartFolder = context.Server.MapPath(context.Request("storageRoot").Replace("\", "/").Replace("""", ""))
                 mcRoot = context.Server.MapPath("/")
                 HandleUploads(context)
-                Return String.Empty
+                If context.Request("IsmultiImage") = "yes" Then
+                    Return cleanUploadedPaths
+                Else
+                    Return String.Empty
+                End If
             End If
-
 
         Catch ex As Exception
             'catch errorr
@@ -1037,14 +1046,31 @@ Partial Public Class fsHelper
     Private Sub UploadFile(ByVal context As System.Web.HttpContext)
         Dim statuses = New List(Of FilesStatus)()
         Dim headers = context.Request.Headers
+        Dim isOverwrite As String = context.Request("isOverwrite")
 
-        If String.IsNullOrEmpty(headers("X-File-Name")) Then
-            UploadWholeFile(context, statuses)
-        Else
-            UploadPartialFile(headers("X-File-Name"), context, statuses)
-        End If
+        For i As Integer = 0 To context.Request.Files.Count - 1
+            Dim file As Object = context.Request.Files(i)
+            Dim cfileName As String = CleanfileName(file.FileName)
+            Dim scleanFileName As String = cfileName
+            Dim isExists As String = "true"
+            Dim NewFileName As String = CleanFileExists(cfileName, context)
+            If NewFileName = cfileName Then
+                isExists = "false"
+            Else
+                cfileName = NewFileName
+            End If
+            If isExists AndAlso isOverwrite = "" Then
+                context.Session("ExistsFileName") = cfileName + "," + scleanFileName + "," + isExists
+            Else
+                If String.IsNullOrEmpty(headers("X-File-Name")) Then
+                    UploadWholeFile(context, statuses)
+                Else
+                    UploadPartialFile(headers("X-File-Name"), context, statuses)
+                End If
 
-        WriteJsonIframeSafe(context, statuses)
+                WriteJsonIframeSafe(context, statuses)
+            End If
+        Next
     End Sub
 
     ' Upload partial file
@@ -1072,15 +1098,54 @@ Partial Public Class fsHelper
     Public Function CleanfileName(ByVal cFilename As String) As String
 
         Try
-
+            Dim combineFile As String
             Dim cCleanfileName As String = Regex.Replace(cFilename, "\s+", "-")
             cCleanfileName = Regex.Replace(cCleanfileName, "(\s+|\$|\,|\'|\£|\:|\*|&|\?|\/)", "")
             cCleanfileName = Regex.Replace(cCleanfileName, "-{2,}", "-", RegexOptions.None)
-            Return cCleanfileName
-
+            Dim FileContainsnonAlphaChar As Boolean = ContainsSpecialChars(cCleanfileName)
+            If FileContainsnonAlphaChar Then
+                cCleanfileName = Regex.Replace(cCleanfileName, "[~`!@#$%^&*()-+=|{}':;,<>/?]", "")
+                'combineFile = cFilename + "," + cCleanfileName
+                Return cCleanfileName
+            Else
+                Return cCleanfileName
+            End If
 
         Catch ex As Exception
             'RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ReplaceRegularExpression", ex, ""))
+            Return ex.Message
+        End Try
+    End Function
+
+    Public Function CleanFileExists(ByVal cFilename As String, ByVal context As System.Web.HttpContext) As String
+
+        Dim fileExists As Boolean = False
+        Dim cFilePath As String = context.Request("storageRoot").Replace("\", "/").Replace("""", "")
+        If Not cFilePath.EndsWith("\") Then cFilePath = cFilePath & "\"
+        Try
+            If cFilePath IsNot Nothing Then
+                fileExists = IO.File.Exists(goServer.MapPath(cFilePath & cFilename))
+            End If
+            If fileExists Then
+                For i As Integer = 0 To 1000
+                    'save Regex to replace filename-{digit}.jpg with filename-{newdigit}.jpg 
+                    Dim cExtension As String = System.IO.Path.GetExtension(cFilename)
+                    If Regex.IsMatch(cFilename, "(-\d+).([a-z]{3,4})$") Then    'this regex checks hyphen and number present only before dot.
+                        cFilename = Regex.Replace(cFilename, "(-\d+).([a-z]{3,4})$", "-" & i) & cExtension
+                    Else
+                        cFilename = cFilename.Replace(".", "-" & i & ".")
+                    End If
+
+                    If Not IO.File.Exists(goServer.MapPath(cFilePath & cFilename)) Then
+                        Exit For
+                    End If
+                Next
+                Return cFilename
+            Else
+                Return cFilename
+            End If
+
+        Catch ex As Exception
             Return ex.Message
         End Try
     End Function
@@ -1090,12 +1155,10 @@ Partial Public Class fsHelper
         For i As Integer = 0 To context.Request.Files.Count - 1
             Dim file As Object = context.Request.Files(i)
 
-
             Try
                 If Not mcStartFolder.EndsWith("\") Then mcStartFolder = mcStartFolder & "\"
-
                 Dim cfileName As String = CleanfileName(file.FileName)
-
+                context.Session("ExistsFileName") = cfileName
                 file.SaveAs(mcStartFolder & cfileName)
 
                 If LCase(mcStartFolder & cfileName).EndsWith(".jpg") Or LCase(mcStartFolder & cfileName).EndsWith(".jpeg") Or LCase(mcStartFolder & cfileName).EndsWith(".png") Then
@@ -1108,20 +1171,15 @@ Partial Public Class fsHelper
                 statuses.Add(New FilesStatus(fullName.Replace(" ", "-"), file.ContentLength))
                 context.Server.MapPath("/")
                 'We will add one node in ReviewFeedback.xml form and use it instead of config key = context.Request.Form("reviewimagepath")
-                If context.Request.Form("cReviewPhysicalPath") <> Nothing AndAlso context.Request.Form("cReviewPhysicalPath") <> String.Empty Then
-                    cleanUploadedPaths = "/" & mcStartFolder.Replace(context.Request.Form("cReviewPhysicalPath"), "").Replace("\", "/") & cfileName
-                ElseIf goConfig("ReviewImageRootPath") <> Nothing AndAlso goConfig("ReviewImageRootPath") <> String.Empty Then
-                    cleanUploadedPaths = "/" & mcStartFolder.Replace(goConfig("ReviewImageRootPath"), "").Replace("\", "/") & cfileName
+                If context.Request.Form("cImageBasePath") <> Nothing AndAlso context.Request.Form("cImageBasePath") <> String.Empty Then
+                    cleanUploadedPaths = "/" & mcStartFolder.Replace(context.Request.Form("cImageBasePath"), "").Replace("\", "/") & cfileName
                 Else
                     cleanUploadedPaths = "/" & mcStartFolder.Replace(context.Server.MapPath("/"), "").Replace("\", "/") & cfileName
                 End If
 
-
             Catch ex As Exception
                 statuses.Add(New FilesStatus("failed", 0))
             End Try
-
-
 
         Next
     End Sub
@@ -1150,7 +1208,7 @@ Partial Public Class fsHelper
     End Function
 #End Region
 #Region "Private Methods"
-    Private Function AddElements(ByVal startNode As XmlElement, ByVal Folder As String) As XmlElement
+    Private Function AddElements(ByVal startNode As XmlElement, ByVal Folder As String, Optional pathPrefix As String = "") As XmlElement
         '  'PerfMon.Log("fsHelper", "AddElements", Folder)
         Try
             Dim dir As New DirectoryInfo(Folder)
@@ -1175,7 +1233,7 @@ Partial Public Class fsHelper
 
             mcPopulateFilesNode = mcPopulateFilesNode.Replace("/", "\")
 
-            If mcPopulateFilesNode = sVirtualPath Or (mcPopulateFilesNode = "\" And sVirtualPath = "") Then
+            If (mcPopulateFilesNode = sVirtualPath) Or (mcPopulateFilesNode = "\" And sVirtualPath = "") Then
                 startNode.SetAttribute("active", "true")
                 Dim fileCount As Int16 = 1
                 For Each fi In files
@@ -1270,11 +1328,11 @@ Partial Public Class fsHelper
                         sPath = Replace(sd.FullName, mcStartFolder, "")
                     End If
 
-                    folderElem.Attributes.Append(XmlAttribute("path", sPath))
+                    folderElem.Attributes.Append(XmlAttribute("path", pathPrefix & sPath))
                     'folderElem.Attributes.Append(XmlAttribute("Hidden",(If(sd.Attributes And FileAttributes.Hidden) <> 0 Then "Y" Else "N"))) 'TODO: Unsupported feature: conditional (?) operator.
                     'folderElem.Attributes.Append(XmlAttribute("System",(If(sd.Attributes And FileAttributes.System) <> 0 Then "Y" Else "N"))) 'TODO: Unsupported feature: conditional (?) operator.
                     'folderElem.Attributes.Append(XmlAttribute("ReadOnly",(If(sd.Attributes And FileAttributes.ReadOnly) <> 0 Then "Y" Else "N"))) 'TODO: Unsupported feature: conditional (?) operator.
-                    startNode.AppendChild(AddElements(folderElem, sd.FullName))
+                    startNode.AppendChild(AddElements(folderElem, sd.FullName, pathPrefix))
                 End If
             Next sd
             Return startNode

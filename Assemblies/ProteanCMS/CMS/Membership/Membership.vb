@@ -663,6 +663,9 @@ Partial Public Class Cms
 
                             'send registration confirmation
                             Dim xsltPath As String = "/xsl/email/registration.xsl"
+                            If myWeb.moConfig("cssFramework") = "bs5" Then
+                                xsltPath = "/xsl/registration.xsl"
+                            End If
 
                             If IO.File.Exists(goServer.MapPath(xsltPath)) Then
                                 Dim oUserElmt As XmlElement = moDbHelper.GetUserXML(mnUserId)
@@ -690,10 +693,15 @@ Partial Public Class Cms
                                     recipientEmail = moConfig("RegistrationAlertEmail")
                                 End If
 
-                                If IO.File.Exists(goServer.MapPath(moConfig("ProjectPath") & "/xsl/email/registrationAlert.xsl")) Then
-                                        sProcessInfo = oMsg.emailer(oUserElmt, moConfig("ProjectPath") & "/xsl/email/registrationAlert.xsl", "New User", recipientEmail, fromEmail, SubjectLine, "Message Sent", "Message Failed")
-                                    End If
-                                    oMsg = Nothing
+                                Dim xsltPathAlert As String = "/xsl/email/registrationAlert.xsl"
+                                If myWeb.moConfig("cssFramework") = "bs5" Then
+                                    xsltPath = "/email/registrationAlert.xsl"
+                                End If
+
+                                If IO.File.Exists(goServer.MapPath(moConfig("ProjectPath") & xsltPathAlert)) Then
+                                    sProcessInfo = oMsg.emailer(oUserElmt, moConfig("ProjectPath") & xsltPathAlert, "New User", recipientEmail, fromEmail, SubjectLine, "Message Sent", "Message Failed")
+                                End If
+                                oMsg = Nothing
                                 End If
 
                                 'redirect to this page or alternative page.

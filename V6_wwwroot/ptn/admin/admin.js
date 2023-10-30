@@ -706,6 +706,12 @@ $.fn.prepareAdminXform = function () {
             });
         });
     };
+    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+        return new bootstrap.Popover(popoverTriggerEl)
+    })
+
+
 };
 
 function passImgToForm(targetForm, targetField) {
@@ -828,138 +834,7 @@ function updatePreviewImage(formRef, fieldRef) {
     previewDiv.innerHTML = '<a href="#" onclick="OpenWindow_edit_' + fieldRef + '();return false" title="edit an image from the image library" class="btn btn-sm btn-primary input-group-btn"><i class="fa-picture-o fa-white"> </i> Edit</a>' + imgtag;
 }
 
-/*  USED IN ALL EW:xFORMS - For when an Radio Button Toggles a switch /case */
-function showDependant(dependant, allDependants) {
 
-    // Hide unwanted Dependants
-    $("." + allDependants).addClass('hidden');
-
-    // Make required inactive to avoid JS validation
-    $("." + allDependants).find('.required').each(function () {
-        $(this).removeClass('required');
-        $(this).addClass('reqinactive');
-    })
-
-    // Make all now hidden fields inactive so values are lost when submitted.
-    $("." + allDependants).find(":input").not(':button').not(':submit').each(function () {
-        var fieldName = $(this).attr('name');
-        var tempFieldName = fieldName + '~inactive';
-        //    alert("hide as " + tempFieldName);
-        $(this).attr('name', tempFieldName);
-        //   $(this).attr('id', $(this).attr('id') + '~inactive');
-    });
-
-    // Show wanted Dependants
-    $("#" + dependant).removeClass('hidden');
-
-    // Find all inactive required fields and make required again for JS Validation
-    $("#" + dependant).find('.reqinactive').each(function () {
-        $(this).removeClass('reqinactive');
-        $(this).addClass('required');
-    });
-
-    // Find all inactive inputs, and re-activate,
-    $("#" + dependant).find(":input").not(':button').not(':submit').each(function () {
-        var fieldName = $(this).attr('name');
-        var tempFieldName = fieldName.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
-        $(this).attr('name', tempFieldName);
-        var fieldId = $(this).attr('id');
-        var tempFieldId = fieldId.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
-        $(this).attr('id', tempFieldId);
-    });
-
-    $("#" + dependant).prepareXform();
-    $("#" + dependant).trigger('bespokeXform');
-
-
-
-}
-
-function showHideDependant(bindVar) {
-
-    //get this list of service chkbxs under bindVar
-    var servicesObjs = $("[name='" + bindVar + "']");
-    var serviceIds = [];
-    $.each(servicesObjs, function (key, value) { //get Ids of the services
-        serviceIds.push(value.id);
-    });
-
-    //get Ids of the services checked
-    var servcsSelected = [];
-    $.each(serviceIds, function (key, value) {
-        if ($('#' + value).is(":checked")) {
-            servcsSelected.push(value);
-        }
-    });
-
-    //get cases/Qs for all services checked
-    var QsForServcChckd = [];
-    var QsForServcChckdDpdnt = [];
-    $.each(servcsSelected, function (key, value) {
-        QsForServcChckd = ($('#' + value).data('showhide').split(','));
-        for (var i = 0; i < QsForServcChckd.length; i++) {
-            if (jQuery.inArray(QsForServcChckd[i] + '-dependant', QsForServcChckdDpdnt) == -1) { //check for duplicate
-                QsForServcChckdDpdnt.push(QsForServcChckd[i] + '-dependant');
-            }
-        }
-    });
-
-    //hide all cases/Qs
-    var QArray = [];
-    $('.' + bindVar + '-dependant').each(function () {
-        QArray.push(this.id);
-    });
-    $.each(QArray, function (key, value) {
-        hideCase(value);
-    });
-
-    //show all cases/Qs for services selected
-    $.each(QsForServcChckdDpdnt, function (key, value) {
-        showCase(value);
-    });
-}
-
-
-/*  USED IN ALL EW:xFORMS - To re-enable radio button functionality when renaming a radio button */
-function psuedoRadioButtonControl(sBindName, sBindToName, sBindToValue) {
-
-    $("input[id^='" + sBindName + "']").click(function () {
-
-        // Remove all checked
-        $("input[id^='" + sBindName + "']").attr('checked', '');
-
-        // Make selected checked
-        $(this).attr('checked', 'checked');
-
-        // If Pseudo radio clicked
-        if ($(this).val() == sBindToValue) {
-
-            // Assign value to hidden field
-            $("input[name='" + sBindToName + "'][type='hidden']").val(sBindToValue);
-
-            // Make pseudo input inactive, to avoid CSL with hidden input 
-            var fieldName = $(this).attr('name');
-            var tempFieldName = fieldName + '~inactive';
-            $(this).attr('name', tempFieldName);
-
-        }
-
-        // Else not Pseudo radio
-        else {
-
-            // Empty Hidden field
-            $("input[name='" + sBindToName + "'][type='hidden']").val('');
-
-            // re-activate pseudo radio
-            var fieldName = $("input[name^='" + sBindToName + "']").attr('name');
-            var tempFieldName = fieldName.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
-            $("input[name^='" + sBindToName + "']").attr('name', tempFieldName);
-
-        }
-
-    });
-
-};
 
 
 /*  ==  Contrain proportions control on forms ================================================ */

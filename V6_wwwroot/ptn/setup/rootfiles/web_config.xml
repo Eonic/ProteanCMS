@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <configuration>
-  <eonic>
-    <web configSource="eonic.web.config"/>
-    <cart configSource="eonic.cart.config"/>
-    <payment configSource="eonic.payment.config"/>
-    <mailinglist configSource="eonic.mailinglist.config"/>
-    <theme configSource="eonic.theme.config"/>
+<protean>
+    <web configSource="protean.web.config"/>
+    <cart configSource="protean.cart.config"/>
+    <payment configSource="protean.payment.config"/>
+    <mailinglist configSource="protean.mailinglist.config"/>
+    <theme configSource="protean.theme.config"/>
     <messagingProviders>
       <providers>
         <add name="CampaignMonitorLocal" className="CampaignMonitor" type="Eonic.Providers.Messaging.CampaignMonitor, Version=5.0.56.0, Culture=neutral, PublicKeyToken=0e5e11efc3341916" />
       </providers>
     </messagingProviders>
-  </eonic>
+  </protean>
   <system.web>
     <compilation defaultLanguage="vb" debug="true" targetFramework="4.0">
       <assemblies>

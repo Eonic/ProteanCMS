@@ -2191,6 +2191,7 @@
         </div>
       </xsl:when>
       <xsl:otherwise>
+
         <div>
           <xsl:attribute name="class">
             <xsl:choose>
@@ -3123,7 +3124,7 @@
     </xsl:variable>
 	  <xsl:choose>
 		  <xsl:when test="help">
-			  <button type="button" class="btn form-tip" data-container="body" data-toggle="popover" data-placement="bottom" data-content="{help/node()}">
+			  <button type="button" class="btn form-tip" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="{help/node()}">
 				  <i class="fas fa-question-circle">
 					  <xsl:text> </xsl:text>
 				  </i>
@@ -3131,7 +3132,7 @@
 			  <xsl:text> </xsl:text>
 		  </xsl:when>
 		  <xsl:when test="hint">
-			  <button type="button" class="btn form-tip" data-container="body" data-toggle="popover" data-placement="bottom" data-content="{hint/node()}">
+			  <button type="button" class="btn form-tip" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="{hint/node()}">
 				  <i class="fas fa-info-circle">
 					  <xsl:text> </xsl:text>
 				  </i>
@@ -3181,7 +3182,7 @@
     <xsl:variable name="ref2">
       <xsl:value-of select="translate($ref,'/','-')"/>
     </xsl:variable>
-    <button type="button" class="btn btn-danger" id="popover-{$ref2}-btn" data-content="{alert/node()}" data-contentwrapper="#popover-{$ref2}" data-toggle="popover" data-container="body" data-placement="bottom" rel="frmPopover"  title="{label/node()}">
+    <button type="button" class="btn btn-danger" id="popover-{$ref2}-btn" data-content="{alert/node()}" data-bs-contentwrapper="#popover-{$ref2}" data-bs-toggle="popover" data-bs-container="body" data-bs-placement="bottom" rel="frmPopover"  title="{label/node()}">
       <i class="fa fa-exclamation-triangle">
         <xsl:text> </xsl:text>
       </i>
