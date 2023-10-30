@@ -2191,6 +2191,7 @@
         </div>
       </xsl:when>
       <xsl:otherwise>
+
         <div>
           <xsl:attribute name="class">
             <xsl:choose>
