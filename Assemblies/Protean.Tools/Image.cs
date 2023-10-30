@@ -230,8 +230,8 @@ namespace Protean.Tools
             {
                 string thumbnailVirtualPath = "";
                 var fi = new FileInfo(cLocation);
-                string thumbnailPath = cLocation.Remove(cLocation.Length - fi.Name.Length) + VirtualThumbnailPath + @"\";
-                var thfi = new FileInfo(thumbnailPath + fi.Name);
+                string thumbnailPath = cLocation.Remove(cLocation.Length - fi.Name.Length) + VirtualThumbnailPath.Replace("/","") + @"\";
+                var thfi = new FileInfo(thumbnailPath + fi.Name.Replace(".gif",".png"));
 
                 if (thfi.Exists == false)
                 {
@@ -245,7 +245,7 @@ namespace Protean.Tools
                 }
                 thfi = null;
 
-                return VirtualThumbnailPath + "/" + fi.Name;
+                return VirtualThumbnailPath + "/" + fi.Name.Replace(".gif", ".png");
             }
 
 
