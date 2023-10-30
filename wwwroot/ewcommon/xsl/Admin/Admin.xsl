@@ -5665,7 +5665,7 @@
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:if test="not(starts-with(/Page/Request/QueryString/Item[@name='fld']/node(),'\FreeStock'))">
-										<a class="btn btn-xs btn-primary" href="javascript:CompressImage('/images/{parent::folder/@path}/{@name}{@extension}')">
+										<a class="btn btn-xs btn-primary" href="javascript:CompressImage('/{ancestor::ContentDetail/folder/@name}/{parent::folder/@path}/{@name}{@extension}')">
 											<i class="fa fa-compress fa-white">
 												<xsl:text> </xsl:text>
 											</i>
