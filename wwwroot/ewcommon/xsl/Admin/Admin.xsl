@@ -7482,7 +7482,10 @@
 					  </xsl:if>
                     <th>&#160;</th>
                     <th>
-                      <a href="" class="btn btn-default">All</a>
+						<div class="checkbox checkbox-primary">
+							<input type="checkbox" class="styled select-all"/>
+							<label>All</label>
+						</div>
                     </th>
                   </tr>
                   <xsl:apply-templates select="ContentDetail/Content[@type='order']" mode="ListOrders">
@@ -7690,7 +7693,12 @@
       </td>
       <td>
         <xsl:if test="@statusId=6">
-          <input type="checkbox" name="id" value="{@id}" class="input-control"/>
+			<div class="checkbox checkbox-primary">				
+                <input type="checkbox" name="id" value="{@id}" class="styled"/>
+				<label>
+					<xsl:text> </xsl:text>
+				</label>
+				</div>
         </xsl:if>
       </td>
     </tr>
