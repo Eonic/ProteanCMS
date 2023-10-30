@@ -40,7 +40,7 @@ ProteanCMS
  </summary>
  <remarks>This can be overridden, but should be called by the overriding method.</remarks>
 </member>
-<member name="M:Protean.Cms.Admin.AdminXforms.xFrmEditDirectoryItem(System.Int64,System.String,System.Int64,System.String,System.String)">
+<member name="M:Protean.Cms.Admin.AdminXforms.xFrmEditDirectoryItem(System.Int64,System.String,System.Int64,System.String)">
  <summary>
  this routine now calls the Membership provider for this function as it has moved. It should only be being used by legacy overides.
  </summary>

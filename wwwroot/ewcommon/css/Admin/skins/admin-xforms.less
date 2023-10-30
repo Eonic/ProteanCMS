@@ -993,6 +993,16 @@
             }
         }
 
+        input[type=checkbox] {
+            /* Double-sized Checkboxes */
+            -ms-transform: scale(2); /* IE */
+            -moz-transform: scale(2); /* FF */
+            -webkit-transform: scale(2); /* Safari and Chrome */
+            -o-transform: scale(2); /* Opera */
+            transform: scale(2);
+            padding: 10px;
+        }
+
         .field-char-count {
             position: relative;
             top: 10px;
@@ -1008,11 +1018,12 @@
 
 #gccolor-color,
 #gccolor-color div{margin:14px;}
-.modal-backdrop{
-	background-image: url(/ewcommon/images/icons/loading.gif);
-	background-repeat: no-repeat;
-	background-position-x: 50%;
-	background-position-y: 50%;
+.modal-backdrop {
+    background-image: url(/ewcommon/images/icons/loading.gif);
+    background-repeat: no-repeat;
+    background-position-x: 50%;
+    background-position-y: 50%;
+   z-index:1031;
 }
 // FROM ADMIN CSS
 
