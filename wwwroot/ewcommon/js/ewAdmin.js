@@ -341,6 +341,15 @@ $(document).ready(function () {
                 }
             });
         });
+
+       
+        $("#SelectAll").click(function (ev) {           
+            ev.preventDefault();
+            $(".multicheckbox").each(function () {
+                $(".multicheckbox").attr("checked", "checked");
+            });           
+            return false;
+        });
     });
 
     //    $('.pickImageModal').on('hidden.bs.modal', function () {
@@ -616,7 +625,7 @@ function modalOpen(dialog) {
 }(jQuery));
 
 $.fn.prepareAdminXform = function () {
-
+    
     if ($("#_selectAll").exists()) {
         $("#_selectAll").click(function () {
             var checked = this.checked;
@@ -2032,7 +2041,7 @@ function SendEmail(event) {
 }
 
 $('.getPlaceIDButton').click(function (e) {
-    debugger;
+   
     // Prevent form submission
     e.preventDefault();
     var latitude;
@@ -2113,7 +2122,7 @@ function getImagePaths() {
 }
 
 function SaveFileName(isOverwrite) {
-    debugger
+    
     var newfilename;
     if (isOverwrite) {
         newfilename = $("#cleanFilename").val();

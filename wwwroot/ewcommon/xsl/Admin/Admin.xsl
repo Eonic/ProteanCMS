@@ -5191,6 +5191,13 @@
 							<xsl:if test="not(starts-with(/Page/Request/QueryString/Item[@name='fld']/node(),'\FreeStock'))">
 								<xsl:if test="contains(/Page/Request/QueryString/Item[@name='multiple'],'true')">
 									<li>
+										<a id="SelectAll" class="btn btn-success" data-toggle="popover">
+											<i class="fa fa-picture-o fa-white">
+												<xsl:text> </xsl:text>
+											</i><xsl:text> </xsl:text>SelectAll
+										</a>
+									</li>
+									<li>
 										<a href="javascript:;" onclick="getImagePaths();" class="btn btn-success">
 											<i class="fa fa-picture-o fa-white">
 												<xsl:text> </xsl:text>
@@ -5395,9 +5402,7 @@
 			<xsl:apply-templates select="." mode="fileTypeScript"/>
 			<xsl:text>
         done: function (e, data) {
-
-        console.log(data);
-
+        
         $.each(data.files, function (index, file) {
 
         var targetPath = '</xsl:text><xsl:value-of select="$targetPath"/>';
