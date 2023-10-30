@@ -208,12 +208,12 @@
         <xsl:text>&amp;pathonly=true</xsl:text>
       </xsl:if>
     </xsl:variable>
-    <li id="node{translate(@path,'\','-')}" data-tree-level="{$level}" data-tree-parent="{translate(parent::folder/@path,'\','-')}">
+    <li id="node{translate(@path,'\','~')}" data-tree-level="{$level}" data-tree-parent="{translate(parent::folder/@path,'\','~')}">
         <xsl:attribute name="class">
             <xsl:text>list-group-item level-</xsl:text>
             <xsl:value-of select="$level"/>
             <xsl:if test="@active='true'">
-              <xsl:text> active </xsl:text>
+              <xsl:text> active collapsable</xsl:text>
             </xsl:if>
          </xsl:attribute>
 		<xsl:choose>
@@ -261,11 +261,13 @@
       </li>
   
     <xsl:if test="folder">
+		<xsl:if test="descendant-or-self::folder[@active='true']">
         <xsl:apply-templates select="folder" mode="FolderTree">
           <xsl:with-param name="level">
             <xsl:value-of select="$level + 1"/>
           </xsl:with-param>
         </xsl:apply-templates>
+		</xsl:if>
     </xsl:if>
   </xsl:template>
 
@@ -564,20 +566,31 @@
                          <div class="img-description">
 							
                       <span class="image-description-name">
-                       
-						  
-					    <xsl:if test="contains(/Page/Request/QueryString/Item[@name='multiple'],'true')">
-								<span class="radiocheckbox pull-right">
-									<input type="checkbox" value="/{@root}{translate($fld,'\', '/')}/{@name}" id="chkMultipleImage" class="multicheckbox" name="Select Multiple Images"></input>
-								</span>
-							</xsl:if> 
-					   <xsl:value-of select="@name"/>
+
+						  <xsl:choose>
+					    <xsl:when test="contains(/Page/Request/QueryString/Item[@name='multiple'],'true')">
+								<div class="checkbox checkbox-primary">
+									<input type="checkbox" value="/{@root}{translate($fld,'\', '/')}/{@name}" id="chkMultipleImage" class="multicheckbox styled" name="Select Multiple Images"></input>
+									<label>
+										<xsl:value-of select="@name"/>
+										<xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.tiff' or @Extension='.tif'">
+											<xsl:value-of select="@width"/>
+											<xsl:text> x </xsl:text>
+											<xsl:value-of select="@height"/>
+										</xsl:if>
+									</label>
+								</div>
+							</xsl:when>
+							  <xsl:otherwise> <xsl:value-of select="@name"/>
+								  <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.tiff' or @Extension='.tif'">
+									  <xsl:value-of select="@width"/>
+									  <xsl:text> x </xsl:text>
+									  <xsl:value-of select="@height"/>
+								  </xsl:if>
+							  </xsl:otherwise>
+					  </xsl:choose>
                       </span>
-                      <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.tiff' or @Extension='.tif'">
-                        <xsl:value-of select="@width"/>
-                        <xsl:text> x </xsl:text>
-                        <xsl:value-of select="@height"/>
-                      </xsl:if>
+                    
                     </div>
                         </div>
                     </div>

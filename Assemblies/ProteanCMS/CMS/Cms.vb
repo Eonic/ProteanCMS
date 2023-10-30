@@ -10,6 +10,8 @@ Imports System.Reflection
 Imports System.Net
 Imports System.Text.RegularExpressions
 Imports System.Collections.Generic
+Imports Org.BouncyCastle.Asn1.X509
+Imports Protean.fsHelper
 
 Public Class Cms
     Inherits Base
@@ -2474,7 +2476,7 @@ Public Class Cms
         PerfMon.Log("Web", "GetAjaxHTML")
         Dim sProcessInfo As String = ""
         Try
-            If sAjaxCmd = "" Then
+            If moRequest("AjaxCmd") <> "" Then
                 sAjaxCmd = moRequest("AjaxCmd")
             End If
 
@@ -2576,7 +2578,12 @@ Public Class Cms
             If mnArtId > 0 Then
                 oPageElmt.SetAttribute("artid", mnArtId)
             End If
-            Dim nPageId As Long = CLng("0" & moRequest("pgid"))
+            Dim nPageId As Long = 0 '  CLng("0" & moRequest("pgid"))
+            Dim NodeId As String = moRequest("pgid")
+            If IsNumeric(NodeId) Then
+                nPageId = CLng("0" & moRequest("pgid"))
+            End If
+
             Dim nContentParId As Long = CLng("0" & moRequest("contentParId"))
             If nPageId > 0 Then
                 mnPageId = nPageId
@@ -2755,7 +2762,7 @@ Public Class Cms
                     oPageElmt.AppendChild(GetStructureXML(mnUserId))
 
 
-                Case "MenuNode"
+                Case "MenuNode", "GetStructureNode", "GetMoveNode", "GetMoveContent", "GetLocateNode", "GetAdvNode", "editStructurePermissions"
 
                     'Make sure admin mode is true and we don't need to check for permissions
 
@@ -2792,6 +2799,26 @@ Public Class Cms
                     End If
 
                     oPageElmt.AppendChild(FullMenuXml)
+                Case "GetFolderNode"
+                    Dim oPageDetail As XmlElement = moPageXml.CreateElement("ContentDetail")
+                    oPageElmt.AppendChild(oPageDetail)
+                    Dim oFsh As New fsHelper(moCtx)
+                    Dim libType As LibraryType = LibraryType.Image
+                    Dim thisEwCmd = "ImageLib"
+                    Select Case moRequest("LibType")
+                        Case "Media"
+                            thisEwCmd = "MediaLib"
+                            libType = LibraryType.Media
+                        Case "Docs"
+                            thisEwCmd = "DocsLib"
+                            libType = LibraryType.Documents
+                    End Select
+
+                    oFsh.initialiseVariables(libType)
+                    oFsh.moPageXML = moPageXml
+                    oFsh.mcStartFolder = oFsh.mcStartFolder + moRequest("pgid").Replace("~", "\")
+                    oPageDetail.AppendChild(oFsh.getDirectoryTreeXml(libType, "+++", moRequest("pgid").Replace("~", "\")))
+                    moPageXml.DocumentElement.SetAttribute("ewCmd", thisEwCmd)
 
                 Case "Search.MostPopular"
 
@@ -2804,6 +2831,7 @@ Public Class Cms
                     End If
 
             End Select
+
 
             ' Process common actions
             CommonActions()
@@ -4034,9 +4062,9 @@ Public Class Cms
                 ' sMembershipSql = " (dbo.fxn_checkPermission(CL.nStructId," & mnUserId & "," & gnAuthUsers & ") = 'OPEN' or dbo.fxn_checkPermission(CL.nStructId," & mnUserId & "," & gnAuthUsers & ") = 'VIEW')"
                 ' add "and" if clause before
                 If sPrimarySql <> "" Then sMembershipSql = " and " & sMembershipSql
-                End If
+            End If
 
-                If ignoreActiveAndDate = False Then
+            If ignoreActiveAndDate = False Then
                 'show only live content that is within date, unless we are in admin mode.
                 sFilterSql = GetStandardFilterSQLForContent((sPrimarySql <> "" Or sMembershipSql <> ""))
             End If
