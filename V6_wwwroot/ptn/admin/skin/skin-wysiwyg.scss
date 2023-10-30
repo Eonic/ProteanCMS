@@ -137,6 +137,11 @@
         margin-bottom: 6px;
     }
 
+    .module > .editable > .ptn-edit {
+        z-index: 20;
+        position:relative;
+    }
+
     .ptn-edit.over-content {
         margin-bottom: -28px;
         //margin-top:4px;
