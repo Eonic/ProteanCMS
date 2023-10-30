@@ -18,10 +18,10 @@
 
 		<div class="searchListing">
 			<!-- Display Form -->
-			<!--<xsl:apply-templates select="." mode="searchForm">
+			<xsl:apply-templates select="." mode="searchForm">
         <xsl:with-param name="searchFormId" select="$searchFormId" />
         <xsl:with-param name="searchString" select="$searchString" />
-      </xsl:apply-templates>-->
+      </xsl:apply-templates>
 
 			<h1>
 				Search Results for "<xsl:value-of select="$searchString"/>"
