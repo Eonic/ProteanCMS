@@ -5417,10 +5417,14 @@
 					newfilename = response;					
 					if(newfilename!="")
 					{
+						alert(file);
 						$("#oldfilename").html(file.name);
 						<!--alert(newfilename);-->	
 						if(newfilename.indexOf('true') != -1)
 						{
+							const dataTransfer = new DataTransfer();
+							dataTransfer.items.add(file);
+							existsFile.files = dataTransfer.files
 							var arr = newfilename.split(',');
 							var extension = arr[0].substring(arr[0].length - 3);							
 							$("#changeFilename").modal("show");
@@ -5502,7 +5506,8 @@
 							<div class="form-group">								
 								<label for="txtfilename">Rename file to </label>
 								<input type="text" id="txtfilename" value="" class="textbox form-control"/><br/>
-								<input type="file" name="postedFile" id="postedFile" class="hidden"/>								
+								<!--<input type="file" name="postedFile" id="postedFile" class="hidden"/>-->	
+							     <input type="file" name="existsFile" id="existsFile" class="hidden"/>	
 							</div>
 						</div>
 						<input type="hidden" id="targetPath" value="{$targetPath}"></input>
