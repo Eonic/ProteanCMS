@@ -4096,10 +4096,13 @@
 
       <div class="row">
 
-        <div id="MenuTree" class="list-group col-md-3 col-sm-4 mb-3">
+        <div id="MenuTree" class="list-group col-md-3 col-sm-4 mb-3" data-lib-type="{@layout}" data-target-form="{$page/Request/*/Item[@name='targetForm']/node()}" data-target-field="{$page/Request/*/Item[@name='targetField']/node()}" data-target-class="{$page/Request/*/Item[@name='targetClass']/node()}">
           <xsl:if test="contains(/Page/Request/QueryString/Item[@name='contentType'],'popup')">
             <xsl:attribute name="class">list-group col-md-4 col-lg-3 col-xxl-2 mb-3</xsl:attribute>
           </xsl:if>
+			<xsl:if test="$page/Request/*/Item[@name='multiple']/node()='true'">
+				<xsl:attribute name="data-multiple">true</xsl:attribute>
+			</xsl:if>
           <xsl:apply-templates select="ContentDetail/folder" mode="FolderTree">
             <xsl:with-param name="level">1</xsl:with-param>
           </xsl:apply-templates>
@@ -4803,12 +4806,14 @@
         <xsl:value-of select="@name"/>
       </a>
     </li>
-    <xsl:if test="folder">
+	  <xsl:if test="folder">
+		  <xsl:if test="descendant-or-self::folder[@active='true']">
       <xsl:apply-templates select="folder" mode="FolderTree">
         <xsl:with-param name="level">
           <xsl:value-of select="$level + 1"/>
         </xsl:with-param>
       </xsl:apply-templates>
+		  </xsl:if>
     </xsl:if>
   </xsl:template>
 
