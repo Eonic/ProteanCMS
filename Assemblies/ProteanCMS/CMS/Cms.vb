@@ -4877,7 +4877,7 @@ Public Class Cms
 
                 'Please never add any setting here you do not want to be publicly accessible.
                 Dim s = "web.DescriptiveContentURLs;web.BaseUrl;web.SiteName;web.SiteLogo;web.GoogleAnalyticsUniversalID;web.GoogleGA4MeasurementID;web.GoogleTagManagerID;web.GoogleAPIKey;web.PayPalTagManagerID;web.ScriptAtBottom;web.debug;cart.SiteURL;web.ImageRootPath;web.DocRootPath;web.MediaRootPath;web.menuNoReload;web.RootPageId;web.MenuTreeDepth;"
-                s = s + "web.eonicwebProductName;web.eonicwebCMSName;web.eonicwebAdminSystemName;web.eonicwebCopyright;web.eonicwebSupportTelephone;web.eonicwebWebsite;web.eonicwebSupportEmail;web.eonicwebLogo;web.websitecreditURL;web.websitecreditText;web.websitecreditLogo;web.GoogleTagManagerID;web.GoogleOptimizeID;web.FeedOptimiseID;web.FacebookTrackingCode;web.BingTrackingID;web.ReCaptchaKey;web.EnableWebP;web.EnableRetina;"
+                s = s + "web.eonicwebProductName;web.eonicwebCMSName;web.eonicwebAdminSystemName;web.eonicwebCopyright;web.eonicwebSupportTelephone;web.eonicwebWebsite;web.eonicwebSupportEmail;web.eonicwebLogo;web.websitecreditURL;web.websitecreditText;web.websitecreditLogo;web.GoogleTagManagerID;web.GoogleOptimizeID;web.FeedOptimiseID;web.FacebookPixelId;web.BingTrackingID;web.ReCaptchaKey;web.EnableWebP;web.EnableRetina;"
                 s = s + "theme.BespokeBoxStyles;theme.BespokeBackgrounds;theme.BespokeTextClasses;"
                 s = s + moConfig("XmlSettings") & ";"
 

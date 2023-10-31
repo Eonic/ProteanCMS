@@ -285,6 +285,7 @@
 
     .ewXform {
 
+
         .row {
             margin-left: -@admin-gutter-width;
             margin-right: -@admin-gutter-width;
@@ -300,6 +301,16 @@
                     padding-right: @admin-gutter-width;
                 }
             }
+        }
+
+        .item-image {
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        #files {
+            margin-left: -5px;
+            margin-right: -5px;
         }
 
         .PermissionButton {
@@ -991,6 +1002,16 @@
                     color: #fff;
                 }
             }
+        }
+
+        input[type=checkbox] {
+            /* Double-sized Checkboxes */
+            -ms-transform: scale(2); /* IE */
+            -moz-transform: scale(2); /* FF */
+            -webkit-transform: scale(2); /* Safari and Chrome */
+            -o-transform: scale(2); /* Opera */
+            transform: scale(2);
+            padding: 10px;
         }
 
         .field-char-count {

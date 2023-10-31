@@ -217,11 +217,7 @@
 
 		<script type="text/javascript" src="/ewcommon/js/jQuery/jsScrollPane/jquery.jscrollpane.min.js">&#160;</script>
 		<script type="text/javascript" src="/ewcommon/js/jQuery/jsScrollPane/jquery.mousewheel.js">&#160;</script>
-		<!--
-	  TS commented out as was breaking bootstrap modal - not sure this is needed ???
-	  
-    <script type="text/javascript" src="/ewcommon/js/jQuery/simplemodal/jquery.simplemodal-1.4.4.min.js">&#160;</script>
-	-->
+
     <xsl:if test="@cssFramework!='bs3'">
       <script type="text/javascript" src="/ewcommon/js/jQuery/jquery.magnific-popup.min.js">&#160;</script>
     </xsl:if>
@@ -5665,7 +5661,7 @@
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:if test="not(starts-with(/Page/Request/QueryString/Item[@name='fld']/node(),'\FreeStock'))">
-										<a class="btn btn-xs btn-primary" href="javascript:CompressImage('/images/{parent::folder/@path}/{@name}{@extension}')">
+										<a class="btn btn-xs btn-primary" href="javascript:CompressImage('/{ancestor::ContentDetail/folder/@name}/{parent::folder/@path}/{@name}{@extension}')">
 											<i class="fa fa-compress fa-white">
 												<xsl:text> </xsl:text>
 											</i>
@@ -7568,44 +7564,47 @@
 
 												<th>Paid</th>
 												<th>Outstanding</th>
-												<th>Due by</th>
-											</xsl:if>
-											<th>&#160;</th>
-											<th>
-												<a href="" class="btn btn-default">All</a>
-											</th>
-										</tr>
-										<xsl:apply-templates select="ContentDetail/Content[@type='order']" mode="ListOrders">
-											<xsl:with-param name="startPos"  select="$startPos"/>
-											<xsl:with-param name="itemCount" select="'100'"/>
-										</xsl:apply-templates>
-									</tbody>
-								</table>
-
-							</form>
-							<div class="panel-footer">
-								<div class="pull-right">
-									<xsl:apply-templates select="/" mode="adminStepper">
-										<xsl:with-param name="itemCount" select="'100'"/>
-										<xsl:with-param name="itemTotal" select="$total"/>
-										<xsl:with-param name="startPos" select="$startPos"/>
-										<xsl:with-param name="path" select="$queryString"/>
-										<xsl:with-param name="itemName" select="$title"/>
-									</xsl:apply-templates>
-								</div>
-								<div class="terminus">
-									<xsl:text> </xsl:text>
-								</div>
-							</div>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:choose>
-								<xsl:when test="/Page/Request/QueryString/Item[@name='ewCmd2']">
-									<a href="{$appPath}?ewCmd={$ewCmd}&amp;startPos={$startPos}" class="btn btn-primary pull-right">
-										<i class="fa fa-chevron-left">
-											<xsl:text> </xsl:text>
-										</i>&#160;Back to <xsl:value-of select="$title"/>
-									</a>
+						  <th>Due by</th>
+					  </xsl:if>
+                    <th>&#160;</th>
+                    <th>
+						<div class="checkbox checkbox-primary">
+							<input type="checkbox" class="styled select-all"/>
+							<label>All</label>
+						</div>
+                    </th>
+                  </tr>
+                  <xsl:apply-templates select="ContentDetail/Content[@type='order']" mode="ListOrders">
+                    <xsl:with-param name="startPos"  select="$startPos"/>
+                    <xsl:with-param name="itemCount" select="'100'"/>
+                  </xsl:apply-templates>
+                </tbody>
+              </table>
+                
+                  </form>
+              <div class="panel-footer">
+                <div class="pull-right">
+                  <xsl:apply-templates select="/" mode="adminStepper">
+                    <xsl:with-param name="itemCount" select="'100'"/>
+                    <xsl:with-param name="itemTotal" select="$total"/>
+                    <xsl:with-param name="startPos" select="$startPos"/>
+                    <xsl:with-param name="path" select="$queryString"/>
+                    <xsl:with-param name="itemName" select="$title"/>
+                  </xsl:apply-templates>
+                </div>
+                <div class="terminus">
+					<xsl:text> </xsl:text>
+				</div>
+              </div>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:choose>
+                <xsl:when test="/Page/Request/QueryString/Item[@name='ewCmd2']">
+                  <a href="{$appPath}?ewCmd={$ewCmd}&amp;startPos={$startPos}" class="btn btn-primary pull-right">
+                    <i class="fa fa-chevron-left">
+						<xsl:text> </xsl:text>
+					</i>&#160;Back to <xsl:value-of select="$title"/>
+                  </a>
 
 									<xsl:apply-templates select="ContentDetail/ActivityLog" mode="activityReport"/>
 
@@ -7775,16 +7774,21 @@
 						<xsl:text> Send Settlement Request</xsl:text>
 					</a>
 
-				</xsl:if>
-
-			</td>
-			<td>
-				<xsl:if test="@statusId=6">
-					<input type="checkbox" name="id" value="{@id}" class="input-control"/>
-				</xsl:if>
-			</td>
-		</tr>
-	</xsl:template>
+		  </xsl:if>
+                
+      </td>
+      <td>
+        <xsl:if test="@statusId=6">
+			<div class="checkbox checkbox-primary">				
+                <input type="checkbox" name="id" value="{@id}" class="styled"/>
+				<label>
+					<xsl:text> </xsl:text>
+				</label>
+				</div>
+        </xsl:if>
+      </td>
+    </tr>
+  </xsl:template>
 
 	<!--################################################################-->
 	<xsl:template match="Page[@layout='RefundOrder']" mode="Admin">
