@@ -2123,15 +2123,14 @@ function getImagePaths() {
 
 function SaveFileName(isOverwrite) {
     debugger
-    var newfilename;
+    var newfilename; var oldfilename;
     if (isOverwrite) {
-        newfilename = $("#cleanFilename").val();
-    } else {
-        newfilename = $("#txtfilename").val();
-    }   
+        oldfilename = $("#cleanFilename").val();
+    } 
+    newfilename = $("#txtfilename").val();       
     var existsfilename = document.getElementById("existsFile").files[0];
     var targetPath = $("#targetPath").val();
-    var ajaxurl = '?ewCmd=ImageLib&ewCmd2=FileUpload&isOverwrite=' + isOverwrite +'&storageRoot="'+targetPath+'"';
+    var ajaxurl = '?ewCmd=ImageLib&ewCmd2=FileUpload&isOverwrite=' + isOverwrite + '&oldfile="' + oldfilename +'"&storageRoot="'+targetPath+'"';
     let list = new DataTransfer();
     let file = new File([existsfilename], newfilename);
     list.items.add(file);

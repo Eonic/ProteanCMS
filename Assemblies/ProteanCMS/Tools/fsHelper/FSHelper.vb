@@ -1047,6 +1047,7 @@ Partial Public Class fsHelper
         Dim statuses = New List(Of FilesStatus)()
         Dim headers = context.Request.Headers
         Dim isOverwrite As String = context.Request("isOverwrite")
+        Dim cOldFile As String = context.Request("oldfile")
 
         For i As Integer = 0 To context.Request.Files.Count - 1
             Dim file As Object = context.Request.Files(i)
@@ -1062,6 +1063,15 @@ Partial Public Class fsHelper
             If isExists AndAlso isOverwrite = "" Then
                 context.Session("ExistsFileName") = cfileName + "," + scleanFileName + "," + isExists
             Else
+                'check if overwrite true then delete old one and upload new one
+                If isOverwrite = "true" AndAlso cOldFile <> Nothing Then
+                    Dim cOldFullFileName As String = goServer.MapPath(context.Request("storageRoot").Replace("\", "/").Replace("""", "") & "/" & cOldFile.Replace("""", ""))
+                    If IO.File.Exists(cOldFullFileName) Then
+                        Dim oFileInfo As IO.FileInfo = New IO.FileInfo(cOldFullFileName)
+                        oFileInfo.IsReadOnly = False
+                        IO.File.Delete(cOldFullFileName)
+                    End If
+                End If
                 If String.IsNullOrEmpty(headers("X-File-Name")) Then
                     UploadWholeFile(context, statuses)
                 Else
