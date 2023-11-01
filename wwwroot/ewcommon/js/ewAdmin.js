@@ -2121,8 +2121,7 @@ function getImagePaths() {
    
 }
 
-function SaveFileName(isOverwrite) {
-    debugger
+function SaveFileName(isOverwrite) {    
     var newfilename; var oldfilename;
     if (isOverwrite) {
         oldfilename = $("#cleanFilename").val();
@@ -2144,7 +2143,8 @@ function SaveFileName(isOverwrite) {
         contentType: false,
         type: 'POST',
         success: function (result) {            
-            $("#changeFilename").modal("hide");          
+            $("#changeFilename").modal("hide");
+            $('#MenuTree').find('li.active a')[0].click();           
         }
     });
 }

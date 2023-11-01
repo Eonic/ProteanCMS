@@ -5374,8 +5374,11 @@
 			<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">/* */</script>
 		</xsl:if>
 
-		<script>			
-
+		<script>		
+		    <!--Remove extra backdrop div from body-->
+			if($('.modal-backdrop').length!==0){
+				$(".modal-backdrop").remove();
+			}
 			<xsl:text>
        
         var uploadUrl = '/?ewCmd=</xsl:text><xsl:value-of select="$page/@ewCmd"/>\u0026<xsl:text>ewCmd2=FileUpload</xsl:text>\u0026<xsl:text>storageRoot=</xsl:text><xsl:value-of select="$targetPath"/><xsl:text>'
@@ -5406,7 +5409,7 @@
 			<xsl:apply-templates select="." mode="newItemScript"/>
 			<!--$('#files').prepend(newItem);-->
 			var newfilename = "";
-			var dataMsg = 'Filename=' + filename;
+			var dataMsg = 'Filename=' + filename;			
 
 			var DataUrl = '/ewapi/Cms.Admin/GetExistsFileName';
 			$.ajax({
