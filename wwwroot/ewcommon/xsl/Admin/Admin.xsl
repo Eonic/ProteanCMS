@@ -5374,8 +5374,11 @@
 			<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">/* */</script>
 		</xsl:if>
 
-		<script>			
-
+		<script>		
+		    <!--Remove extra backdrop div from body-->
+			<!--if($('.modal-backdrop').length!==0){
+				$(".modal-backdrop").remove();
+			}-->
 			<xsl:text>
        
         var uploadUrl = '/?ewCmd=</xsl:text><xsl:value-of select="$page/@ewCmd"/>\u0026<xsl:text>ewCmd2=FileUpload</xsl:text>\u0026<xsl:text>storageRoot=</xsl:text><xsl:value-of select="$targetPath"/><xsl:text>'
@@ -5406,7 +5409,7 @@
 			<xsl:apply-templates select="." mode="newItemScript"/>
 			<!--$('#files').prepend(newItem);-->
 			var newfilename = "";
-			var dataMsg = 'Filename=' + filename;
+			var dataMsg = 'Filename=' + filename;			
 
 			var DataUrl = '/ewapi/Cms.Admin/GetExistsFileName';
 			$.ajax({
@@ -5454,15 +5457,16 @@
 			});
 			if ($('.pickImageModal').exists()) {
 				$('.pickImageModal').find('a[data-toggle!="popover"]').click(function(ev) {
-					ev.preventDefault();
+					ev.preventDefault();					
 					$('.modal-dialog').addClass('loading')
-					$('.modal-body').html('<xsl:text disable-output-escaping="yes">&lt;</xsl:text>p class="text-center"<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>h4<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>i class="fa fa-cog fa-spin fa-2x fa-fw"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>;<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/i<xsl:text disable-output-escaping="yes">&gt;</xsl:text>Loading ...<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/h4<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/p<xsl:text disable-output-escaping="yes">&gt;</xsl:text>');
+					$('.modal-body').html('<xsl:text disable-output-escaping="yes">&lt;</xsl:text>p class="text-center"<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>h4<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>i class="fa fa-cog fa-spin fa-2x fa-fw"<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/i<xsl:text disable-output-escaping="yes">&gt;</xsl:text>Loading ...<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/h4<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/p<xsl:text disable-output-escaping="yes">&gt;</xsl:text>');
 					var target = $(this).attr("href");
 					// load the url and show modal on success
 					var currentModal = $('.pickImageModal')
 					currentModal.load(target, function() {
 						$('.modal-dialog').removeClass('loading')
-						currentModal.modal("show");
+						currentModal.modal("show");	
+						$(".modal-backdrop").remove()
 					});
 				});
 			};
@@ -5486,7 +5490,7 @@
 			});
 		</script>
 
-		<div id="changeFilename" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+		<div id="changeFilename" class="modal" tabindex="-1" role="dialog" data-backdrop="false">
 			<div class="modal-dialog" role="document">
 				<form id="frmfileData">
 					<div class="modal-content">
