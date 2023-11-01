@@ -131,11 +131,11 @@
 					</input>
 					<select1 appearance="full" bind="imgPosition">
 						<item>
-							<label>image below heading</label>
+							<label>Image below heading</label>
 							<value>main</value>
 						</item>
 						<item>
-							<label>image to right</label>
+							<label>Image to right</label>
 							<value>right</value>
 						</item>
 					</select1>
