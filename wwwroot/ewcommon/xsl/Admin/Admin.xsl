@@ -174,11 +174,11 @@
         <xsl:text>~/ewcommon/js/codemirror/codemirror.js,</xsl:text>
         <xsl:text>~/ewcommon/js/jQuery/jquery.magnific-popup.min.js,</xsl:text>
         <xsl:text>~/ewcommon/js/codemirror/mirrorframe.js,</xsl:text>
+		<xsl:text>~/ewcommon/js/ajaxtreeview/ajaxtreeview.js,</xsl:text>
         <xsl:text>~/ewcommon/js/vuejs/vue.min.js,</xsl:text>
         <xsl:text>~/ewcommon/js/vuejs/axios.min.js,</xsl:text>
         <xsl:text>~/ewcommon/js/vuejs/polyfill.js,</xsl:text>
         <xsl:text>~/ewcommon/js/vuejs/protean-vue.js,</xsl:text>
-		<xsl:text>~/ewcommon/js/ajaxtreeview/ajaxtreeview.js,</xsl:text>
 		<xsl:text>~/ewcommon/js/ewAdmin.js</xsl:text>
       </xsl:with-param>
       <xsl:with-param name="bundle-path">
@@ -5421,6 +5421,9 @@
 						<!--alert(newfilename);-->	
 						if(newfilename.indexOf('true') != -1)
 						{
+							const dataTransfer = new DataTransfer();
+							dataTransfer.items.add(file);
+							existsFile.files = dataTransfer.files
 							var arr = newfilename.split(',');
 							var extension = arr[0].substring(arr[0].length - 3);							
 							$("#changeFilename").modal("show");
@@ -5483,7 +5486,7 @@
 			});
 		</script>
 
-		<div id="changeFilename" class="modal fade" tabindex="-1" role="dialog" data-backdrop="false">
+		<div id="changeFilename" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog" role="document">
 				<form id="frmfileData">
 					<div class="modal-content">
@@ -5502,7 +5505,8 @@
 							<div class="form-group">								
 								<label for="txtfilename">Rename file to </label>
 								<input type="text" id="txtfilename" value="" class="textbox form-control"/><br/>
-								<input type="file" name="postedFile" id="postedFile" class="hidden"/>								
+								<!--<input type="file" name="postedFile" id="postedFile" class="hidden"/>-->	
+							     <input type="file" name="existsFile" id="existsFile" class="hidden"/>	
 							</div>
 						</div>
 						<input type="hidden" id="targetPath" value="{$targetPath}"></input>

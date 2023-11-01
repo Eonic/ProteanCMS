@@ -2122,20 +2122,20 @@ function getImagePaths() {
 }
 
 function SaveFileName(isOverwrite) {
-    
-    var newfilename;
+    debugger
+    var newfilename; var oldfilename;
     if (isOverwrite) {
-        newfilename = $("#cleanFilename").val();
-    } else {
-        newfilename = $("#txtfilename").val();
-    }    
+        oldfilename = $("#cleanFilename").val();
+    } 
+    newfilename = $("#txtfilename").val();       
+    var existsfilename = document.getElementById("existsFile").files[0];
     var targetPath = $("#targetPath").val();
-    var ajaxurl = '?ewCmd=ImageLib&ewCmd2=FileUpload&isOverwrite=' + isOverwrite +'&storageRoot="'+targetPath+'"';
+    var ajaxurl = '?ewCmd=ImageLib&ewCmd2=FileUpload&isOverwrite=' + isOverwrite + '&oldfile="' + oldfilename +'"&storageRoot="'+targetPath+'"';
     let list = new DataTransfer();
-    let file = new File(["content"], newfilename);
+    let file = new File([existsfilename], newfilename);
     list.items.add(file);
     let myFileList = list.files;
-    postedFile.files = myFileList;
+    existsFile.files = myFileList;
     var formData = new FormData($("#frmfileData")[0]);   
     $.ajax({
         url: ajaxurl,
