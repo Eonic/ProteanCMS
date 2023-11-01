@@ -5466,7 +5466,7 @@
 					currentModal.load(target, function() {
 						$('.modal-dialog').removeClass('loading')
 						currentModal.modal("show");	
-						$(".modal-backdrop").remove();
+						$(".modal-backdrop").remove()
 					});
 				});
 			};
