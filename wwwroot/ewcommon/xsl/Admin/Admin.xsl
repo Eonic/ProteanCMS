@@ -5457,9 +5457,9 @@
 			});
 			if ($('.pickImageModal').exists()) {
 				$('.pickImageModal').find('a[data-toggle!="popover"]').click(function(ev) {
-					ev.preventDefault();
+					ev.preventDefault();					
 					$('.modal-dialog').addClass('loading')
-					$('.modal-body').html('<xsl:text disable-output-escaping="yes">&lt;</xsl:text>p class="text-center"<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>h4<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>i class="fa fa-cog fa-spin fa-2x fa-fw"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>;<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/i<xsl:text disable-output-escaping="yes">&gt;</xsl:text>Loading ...<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/h4<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/p<xsl:text disable-output-escaping="yes">&gt;</xsl:text>');
+					$('.modal-body').html('<xsl:text disable-output-escaping="yes">&lt;</xsl:text>p class="text-center"<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>h4<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>i class="fa fa-cog fa-spin fa-2x fa-fw"<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/i<xsl:text disable-output-escaping="yes">&gt;</xsl:text>Loading ...<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/h4<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/p<xsl:text disable-output-escaping="yes">&gt;</xsl:text>');
 					var target = $(this).attr("href");
 					// load the url and show modal on success
 					var currentModal = $('.pickImageModal')
