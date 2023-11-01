@@ -380,7 +380,7 @@ $(document).ready(function () {
 function preparePickImageModal(currentModal) {
 
     var treeviewPath = getAdminAjaxTreeViewPath();
-
+  
         var currentModal = $(this)
         var multiple = ""
         if ($('#template_FileSystem #MenuTree').data('multiple') == 1) {
