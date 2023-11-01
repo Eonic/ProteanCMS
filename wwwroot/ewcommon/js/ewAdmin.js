@@ -2144,7 +2144,7 @@ function SaveFileName(isOverwrite) {
         type: 'POST',
         success: function (result) {            
             $("#changeFilename").modal("hide");
-            $('#MenuTree').find('li.active a')[0].click();           
+           /* $('#MenuTree').find('li.active a')[0].click();      */     
         }
     });
 }
