@@ -26,8 +26,8 @@
 						<Local url="">
 							<img/>
 						</Local>
-						<YouTube code="" showSuggested="false" useHttps="false"/>
-						<Vimeo code="" portrait="false" title="true" byline="false" autoplay="false" loop="false"  />
+						<YouTube code="" showSuggested="false" useHttps="true"/>
+						<Vimeo code="" portrait="false" vtitle="true" byline="false" autoplay="false" loop="false"  />
 						<HTML5 videoMp4="" videoGG="" videoWebm="" autoplay="" controls="controls" loop="" muted="" poster="" preload="">
 							<img class="display" />
 						</HTML5>
@@ -59,7 +59,7 @@
 							<img/>
 						</Local>
 						<YouTube code="" showSuggested="false" useHttps="true"/>
-						<Vimeo code="" portrait="false" title="true" byline="false" autoplay="false" loop="false"/>
+						<Vimeo code="" portrait="false" vtitle="true" byline="false" autoplay="false" loop="false"/>
 						<HTML5 videoMp4="" videoGG="" videoWebm="" autoplay="autoplay" controls="controls" loop="" muted="" poster="" preload="">
 							<img class="display" />
 						</HTML5>
@@ -116,7 +116,7 @@
 				</bind>
 				<bind nodeset="Vimeo">
 					<bind id="cVimeoCode" nodeset="@code" required="false()" type="string"/>
-					<bind id="cVimeoTitle" nodeset="@title" required="false()" type="string"/>
+					<bind id="cVimeoTitle" nodeset="@vtitle" required="false()" type="string"/>
 					<bind id="cVimeoByline" nodeset="@byline" required="false()" type="string"/>
 					<bind id="cVimeoPortrait" nodeset="@portrait" required="false()" type="string"/>
 					<bind id="cVimeoAutoplay" nodeset="@autoplay" required="false()" type="string"/>
@@ -161,7 +161,7 @@
 				</bind>
 				<bind nodeset="Vimeo">
 					<bind id="cVimeoCode" nodeset="@code" required="false()" type="string"/>
-					<bind id="cVimeoTitle" nodeset="@title" required="false()" type="string"/>
+					<bind id="cVimeoTitle" nodeset="@vtitle" required="false()" type="string"/>
 					<bind id="cVimeoByline" nodeset="@byline" required="false()" type="string"/>
 					<bind id="cVimeoPortrait" nodeset="@portrait" required="false()" type="string"/>
 					<bind id="cVimeoAutoplay" nodeset="@autoplay" required="false()" type="string"/>
@@ -185,13 +185,13 @@
 		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
 	</model>
 	<group ref="EditContent">
-		<label>Formatted Text</label>
+		<label>Video</label>
 		<group  class="tabs">
 			<group>
 				<label>
 					<i class="fas fa-pen"> </i>
 					<span class="space"> </span>
-					<span>Content</span>
+					<span>Contents</span>
 				</label>
 				<group>
 					<input bind="cContentName" class="required long">

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PageLayouts imgPath="/ewcommon/images/pagelayouts">
-  <ContentTypes>
-    <ContentTypeGroup name="Media">
-      <ContentType type="FLVMovie" name="FLV Movie">Display an FLV movie</ContentType>
-      <ContentType type="FlashMovie" name="Flash Movie">Displays a flash movie</ContentType>
-    </ContentTypeGroup>   
-  </ContentTypes>
-  <ModuleTypes>
+	
+	<ContentTypes>
+		<ContentTypeGroup name="Media">
+			<ContentType type="Video" formPath="video" name="Video"></ContentType>
+		</ContentTypeGroup>
+	</ContentTypes>
+	<ModuleTypes>
 	  <ModuleGroup name="Basic Content" icon="fas fa-pencil-alt">
-		  <Module type="Video" formPath="video" icon="fab fa-youtube" name="Video"></Module>
+		  <Module type="Video" formPath="video-module" icon="fab fa-youtube" name="Video"></Module>
 	  </ModuleGroup>
     <ModuleGroup name="Content Lists" icon="fas fa-th-list">
       <Module type="VideoList" formPath="video-list" icon="far fa-file-video" name="Video List"></Module>
