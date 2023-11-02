@@ -3983,6 +3983,7 @@
 		<xsl:param name="span"/>
 		<xsl:param name="hover"/>
 		<xsl:param name="mobileDD"/>
+		<xsl:param name="class"/>
 		<xsl:param name="overviewLink"/>
 		<xsl:variable name="liClass">
 			<xsl:text>nav-item </xsl:text>
@@ -4009,6 +4010,9 @@
 			</xsl:if>
 			<xsl:if test="contains(DisplayName/@screens,'xs')">
 				<xsl:text> d-xs-none</xsl:text>
+			</xsl:if>
+			<xsl:if test="$class!=''">
+				<xsl:value-of select="$class"/>
 			</xsl:if>
 
 		</xsl:variable>

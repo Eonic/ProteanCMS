@@ -9223,7 +9223,7 @@ Partial Public Class Cms
 
                     'load the xform to be edited
                     moDbHelper.moPageXml = moPageXML
-                    Dim idx As Protean.Indexer = New Protean.Indexer(myWeb)
+                    Dim idx As Protean.IndexerAsync = New Protean.IndexerAsync(myWeb)
                     MyBase.NewFrm("StartIndex")
 
                     MyBase.submission("DeleteFile", "", "post")
@@ -9233,8 +9233,6 @@ Partial Public Class Cms
                     MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "Starting off the indexing process can take up to an hour for larger sites")
 
                     MyBase.addSubmit(oFrmElmt, "", "Start Index", , "principle pleaseWait")
-
-
 
                     If MyBase.isSubmitted Then
                         MyBase.updateInstanceFromRequest()

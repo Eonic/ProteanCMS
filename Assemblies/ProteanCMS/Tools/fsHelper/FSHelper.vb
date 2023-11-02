@@ -1217,10 +1217,7 @@ Partial Public Class fsHelper
             Dim fi As FileInfo
             Dim sVirtualPath As String
             Dim tnfiles As FileInfo() = Nothing
-            Dim tndir As New DirectoryInfo(Folder & _thumbnailPath)
-            If tndir.Exists Then
-                tnfiles = tndir.GetFiles()
-            End If
+
 
             If mcStartFolder.Contains("..") Then
                 'we have a virtual path and we need to be a bit more cleverer
@@ -1234,6 +1231,10 @@ Partial Public Class fsHelper
             mcPopulateFilesNode = mcPopulateFilesNode.Replace("/", "\")
 
             If (mcPopulateFilesNode = sVirtualPath) Or (mcPopulateFilesNode = "\" And sVirtualPath = "") Then
+                Dim tndir As New DirectoryInfo(Folder & _thumbnailPath)
+                If tndir.Exists Then
+                    tnfiles = tndir.GetFiles()
+                End If
                 startNode.SetAttribute("active", "true")
                 Dim fileCount As Int16 = 1
                 For Each fi In files

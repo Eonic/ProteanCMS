@@ -370,7 +370,7 @@ Original preload function has been kept but is unused.
                         myTreeRoot.buildTree_noreload(settings);
 
                         var currentModal = loadNode.closest(".modal.pickImageModal");
-                        myTreeRoot.find('a[data-toggle="modal"]').click(function (ev) {
+                        myTreeRoot.find('a[data-bs-toggle="modal"]').click(function (ev) {
                             $(this).unbind('click');
                             ev.preventDefault();
                             $('.modal-dialog').addClass('loading');
