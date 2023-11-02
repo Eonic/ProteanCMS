@@ -104,16 +104,16 @@
 					<label>Source</label>
 					<select1 bind="cVideoType" appearance="full">
 						<item>
-							<label>HTML5</label>
-							<value>HTML5</value>
-							<toggle case="cTypeHTML5" event="DOMActivate"/>
-						</item>
-						<item>
 							<label>YouTube</label>
 							<value>YouTube</value>
 							<toggle case="cTypeYouTube" event="DOMActivate"/>
 						</item>
 						<item>
+							<label>Resource Library or Link</label>
+							<value>HTML5</value>
+							<toggle case="cTypeHTML5" event="DOMActivate"/>
+						</item>
+						<!--<item>
 							<label>Vimeo</label>
 							<value>Vimeo</value>
 							<toggle case="cTypeVimeo" event="DOMActivate"/>
@@ -122,7 +122,7 @@
 							<label>Legacy FLV player</label>
 							<value>Local</value>
 							<toggle case="cTypeLocal" event="DOMActivate"/>
-						</item>
+						</item>-->
 					</select1>
 					<switch class="disable">
 						<!-- YouTube -->
@@ -155,7 +155,77 @@
 								</item>
 							</select>
 						</case>
+						
+							<!--HTML5-->
+						<case id="cTypeHTML5">
+							<group>
+								<hint>
+									You can put the full "https://weburl" in or pick file from Resource Library
+								</hint>
+								<input bind="cVideoMp4" class="pickMedia">
+									<label>
+										The MP4 Source for the HTML5 Video
+									</label>
+								</input>
+								<input bind="cVideoGG" class="pickMedia">
+									<label>
+										The OGG Source for the HTML5 Video
+									</label>
+								</input>
+								<input bind="cVideoWebm" class="pickMedia">
+									<label>
+										The WEBM Source for the HTML5 Video
+									</label>
+								</input>
+								<select bind="cControls" appearance="full">
+									<item>
+										<label>Display controls for Video</label>
+										<value>controls</value>
+									</item>
+								</select>
+								<select bind="cAutoplay" appearance="full">
+									<item>
+										<label>Enable Autoplay</label>
+										<value>autoplay</value>
+									</item>
+								</select>
+								<select bind="cLoop" appearance="full">
+									<item>
+										<label>Enable loop</label>
+										<value>loop</value>
+									</item>
+								</select>
+								<select bind="cmuted" appearance="full">
+									<item>
+										<label>Enable mute</label>
+										<value>muted</value>
+									</item>
+								</select>
+								<select1 bind="cpreload" appearance="">
+									<label>Preload</label>
+									<item>
+										<label>Auto - load the entire video when the page loads</label>
+										<value>auto</value>
+									</item>
+									<item>
+										<label>None - NOT load the video when the page loads</label>
+										<value>none</value>
+									</item>
+									<item>
+										<label>MetaData - load only metadata when the page loads</label>
+										<value>metadata</value>
+									</item>
+								</select1>
+								<!--<input bind="cposter" class="pickImage">
+									<label>Poster image</label>
+									<help class="inline">
+										<p>This image will be displayed before the video is played.</p>
+									</help>
+								</input>-->
+							</group>
+						</case>
 						<!-- Local -->
+						<!--
 						<case id="cTypeLocal">
 							<input bind="cLocalUrl" class="pickMedia">
 								<label>URL</label>
@@ -170,9 +240,8 @@
 							</input>
 						</case>
 
-
-
-						<!-- Vimeo-->
+						-->
+						<!-- Vimeo--><!--
 						<case id="cTypeVimeo">
 							<input bind="cVimeoCode">
 								<label>Video code</label>
@@ -219,76 +288,9 @@
 									<value>true</value>
 								</item>
 							</select>
-						</case>
+						</case>-->
 
-						<!--HTML5-->
-						<case id="cTypeHTML5">
-							<group>
-								<hint>
-									You can put the full "https://weburl" in or pick file from Resource Library
-								</hint>
-								<input bind="cVideoMp4" class="pickMedia">
-									<label>
-										The MP4 Source for the HTML5 Video
-									</label>
-								</input>
-								<input bind="cVideoGG" class="pickMedia">
-									<label>
-										The OGG Source for the HTML5 Video
-									</label>
-								</input>
-								<input bind="cVideoWebm" class="pickMedia">
-									<label>
-										The WEBM Source for the HTML5 Video
-									</label>
-								</input>
-								<select bind="cControls" appearance="full">
-									<item>
-										<label>Display controls for Video</label>
-										<value>controls</value>
-									</item>
-								</select>
-								<select bind="cAutoplay" appearance="full">
-									<item>
-										<label>Enable Autoplay</label>
-										<value>autoplay</value>
-									</item>
-								</select>
-								<select bind="cLoop" appearance="full">
-									<item>
-										<label>Enable loop</label>
-										<value>loop</value>
-									</item>
-								</select>
-								<select bind="cmuted" appearance="full">
-									<item>
-										<label>Enable mute</label>
-										<value>muted</value>
-									</item>
-								</select>
-								<select1 bind="cpreload" appearance="">
-									<label>preload</label>
-									<item>
-										<label>Auto - load the entire video when the page loads</label>
-										<value>auto</value>
-									</item>
-									<item>
-										<label>None - NOT load the video when the page loads</label>
-										<value>none</value>
-									</item>
-									<item>
-										<label>MetaData - load only metadata when the page loads</label>
-										<value>metadata</value>
-									</item>
-								</select1>
-								<input bind="cposter" class="pickImage">
-									<label>Poster image</label>
-									<help class="inline">
-										<p>This image will be displayed before the video is played.</p>
-									</help>
-								</input>
-							</group>
-						</case>
+					
 					</switch>
 				</group>
 				<group>

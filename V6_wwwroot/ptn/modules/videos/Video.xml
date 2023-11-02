@@ -131,7 +131,7 @@
 					<bind id="cloop" nodeset="@loop" required="false()" type="string"/>
 					<bind id="cmuted" nodeset="@muted" required="false()" type="string"/>
 					<bind id="cpreload" nodeset="@preload" required="false()" type="string"/>
-					<bind id="cposter" nodeset="img[@class='display']" required="false()" type="xml-replace"/>
+					<!--<bind id="cposter" nodeset="img[@class='display']" required="false()" type="xml-replace"/>-->
 				</bind>
 			</bind>
 			<bind nodeset="cContentXmlDetail/Content">
@@ -176,7 +176,7 @@
 					<bind id="cloop" nodeset="@loop" required="false()" type="string"/>
 					<bind id="cmuted" nodeset="@muted" required="false()" type="string"/>
 					<bind id="cpreload" nodeset="@preload" required="false()" type="string"/>
-					<bind id="cposter" nodeset="img[@class='display']" required="false()" type="xml-replace"/>
+					<!--<bind id="cposter" nodeset="img[@class='display']" required="false()" type="xml-replace"/>-->
 				</bind>
 			</bind>
 		</bind>
@@ -213,7 +213,7 @@
 								<toggle case="cTypeYouTube" event="DOMActivate"/>
 							</item>
 							<item>
-								<label>From Link or Resource Library</label>
+								<label>Resource Library or Link</label>
 								<value>HTML5</value>
 								<toggle case="cTypeHTML5" event="DOMActivate"/>
 							</item>
@@ -459,12 +459,12 @@
 				</label>
 				<group>
 					<label>Image Files</label>
-					<input bind="cposter" class="pickImage">
+					<!--<input bind="cposter" class="pickImage">
 						<label>Poster image</label>
 						<help class="inline">
 							<p>This image will be displayed before the video is played.</p>
 						</help>
-					</input>
+					</input>-->
 					<input bind="cContentPicture" class="short pickImage">
 						<label>Main Image</label>
 					</input>
