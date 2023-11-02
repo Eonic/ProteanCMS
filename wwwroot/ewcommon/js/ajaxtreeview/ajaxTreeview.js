@@ -91,7 +91,7 @@ Original preload function has been kept but is unused.
             $(this).find("li[data-tree-level='" + settings.openLevel + "']").each(function () {
                 //unless you have an active descendant
                 if ($(this).activeChild() === false) {
-                    //  $(this).hideChildren();
+                    $(this).hideChildren();
                 }
             });
         },
@@ -100,11 +100,12 @@ Original preload function has been kept but is unused.
 
         // Method for if the level param is in play
         expandToLevel: function (settings) {
-
+            var myTreeRoot = $(this);
+            var ewPageId = 0
             $(this).find('li.levelExpandable:has(".activeParent,.inactiveParent")').each(function () {
+                var ewPageId = $(this).attr('id').replace(/node/, "");
                 $(this).removeClass('levelExpandable');
                 $(this).removeClass('expandable');
-                var ewPageId = $(this).attr('id').replace(/node/, "");
                 $(this).insertAfter('<div class="loadnode">Loading <i class="fa fa-cog fa-spin fa-fw"> </i></div>')
                     .load(settings.loadPath, { ajaxCmd: settings.ajaxCmd, pgid: ewPageId }, function () {
                         $(this).children().find('li:has(".activeParent,.inactiveParent")').addClass('expandable');
@@ -122,8 +123,8 @@ Original preload function has been kept but is unused.
         // This function handles the tree's classes and mouse bindings for the "hit area"'s
         buildTree: function (settings) {
             // Add Hit area's (the clickable part)
-            alert('OLD BUILD TREE DO NOT USE');
-
+            //alert('OLD BUILD TREE DO NOT USE');
+            var myTreeRoot = $(this);
             $(this).find('li.collapsable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
             $(this).find('li.expandable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
 
@@ -131,8 +132,8 @@ Original preload function has been kept but is unused.
 
                 if ($(this).hasClass('collapsable')) {
 
-                    if ($(this).find('.collapsable-hitarea').length == 0) {
-                        if ($(this).find('.activeParent').length == 1 || $(this).find('.inactiveParent').length == 1) {
+                    if ($(this).find('.collapsable-hitarea').length === 0) {
+                        if ($(this).find('.activeParent').length === 1 || $(this).find('.inactiveParent').length === 1) {
                             $(this).prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
                         }
                     }
@@ -143,8 +144,8 @@ Original preload function has been kept but is unused.
                 if ($(this).hasClass('expandable')) {
 
 
-                    if ($(this).find('.expandable-hitarea').length == 0) {
-                        if ($(this).find('.activeParent').length == 1 || $(this).find('.inactiveParent').length == 1) {
+                    if ($(this).find('.expandable-hitarea').length === 0) {
+                        if ($(this).find('.activeParent').length === 1 || $(this).find('.inactiveParent').length === 1) {
                             $(this).prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
                         }
                     }
@@ -174,7 +175,7 @@ Original preload function has been kept but is unused.
                 // Set kids to be closed again
                 $(this).children().find('li:has(".activeParent,.inactiveParent")').addClass('expandable');
                 // Calling a rebuild assings the correct functionality
-                myTreeRoot.buildTree(settings)
+                myTreeRoot.buildTree(settings);
                 //settings doesn't work in the next line? so used above
                 //setTimeout('$("#MenuTree").buildTree()',1);
             });
@@ -182,24 +183,25 @@ Original preload function has been kept but is unused.
 
             //Mouse binding for closed nodes
             $(this).find('li.expandable').find('.hitarea').unbind("click").click(function () {
+                var ewPageId = (this.parentNode.getAttribute('id').replace(/node/, ""));
+                var ewCloneContextId = 0;
+                var re = /.*context(\d+).*/g;
+                var matches;
+                var originalPageId = $("#MenuTree").urlParam('pgid');
+
                 // Unbind after first click to prevent stupid users multiclicking
                 $('#MenuTree li i.hitarea').unbind("click");
                 // Remove current classes from the hit-area
                 $(this).removeClass('expandable-hitarea').addClass('collapsable-hitarea');
                 $(this).removeClass('fa-chevron-right').addClass('fa-chevron-down');
                 // Get the node's ID (used in load)
-                var ewPageId = (this.parentNode.getAttribute('id').replace(/node/, ""));
                 // Sort the parent node's class
                 $(this).parent().removeClass('expandable').addClass('collapsable');
                 // Append the loading line
                 //  $(this).parent().find('ul').append('<div class="loadnode">Loading <i class="fa fa-cog fa-spin fa-2x fa-fw"> </i></div>')
-                var ewCloneContextId = 0;
-
                 // Test for context (cloned pages)
                 if ($(this).parent().hasClass('clone')) {
-                    var re = /.*context(\d+).*/g;
-
-                    if ((matches = re.exec(this.parentNode.className)) != null) {
+                    if ((matches === re.exec(this.parentNode.className)) !== null) {
                         ewCloneContextId = matches[1];
                     }
 
@@ -207,12 +209,11 @@ Original preload function has been kept but is unused.
 
                 // If move has been flagged then use a different load
                 if (settings.move) {
-                    var originalPageId = $("#MenuTree").urlParam('pgid');
                     $(this).parent().find('ul').load(settings.loadPath, { ajaxCmd: settings.ajaxCmd, pgid: originalPageId, expId: ewPageId, context: ewCloneContextId }, function () {
                         // Find out which of the kids have kids
                         $(this).children().find('li').has('i.activeParent').addClass('expandable');
                         // Rebuild the tree
-                        myTreeRoot.buildTree(settings)
+                        myTreeRoot.buildTree(settings);
 
                     });
                 }
@@ -225,7 +226,7 @@ Original preload function has been kept but is unused.
                         //alert('test');
                         $(this).children().find('li').has('i.activeParent,i.inactiveParent').addClass('expandable');
                         // Rebuild the tree
-                        myTreeRoot.buildTree(settings)
+                        myTreeRoot.buildTree(settings);
 
                     });
                 }
@@ -255,7 +256,9 @@ Original preload function has been kept but is unused.
             // alert('settings:' + JSON.stringify(settings));
 
             //var myTreeRoot = $('#MenuTree');
-            myTreeRoot = $(this);
+            var myTreeRoot = $(this);
+
+      
             // Add Hit area's (the clickable part)
             myTreeRoot.find('li.collapsable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
             // myTreeRoot.find('li.expandable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea expandable-hitarea fa fa-chevron-down"> </i>');
@@ -265,8 +268,8 @@ Original preload function has been kept but is unused.
 
                 if ($(this).hasClass('collapsable')) {
 
-                    if ($(this).find('.collapsable-hitarea').length == 0) {
-                        if ($(this).find('.activeParent').length == 1 || $(this).find('.inactiveParent').length == 1) {
+                    if ($(this).find('.collapsable-hitarea').length === 0) {
+                        if ($(this).find('.activeParent').length === 1 || $(this).find('.inactiveParent').length === 1) {
                             $(this).prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
                         }
                     }
@@ -276,8 +279,8 @@ Original preload function has been kept but is unused.
 
                 if ($(this).hasClass('expandable')) {
 
-                    if ($(this).find('.expandable-hitarea').length == 0) {
-                        if ($(this).find('.activeParent').length == 1 || $(this).find('.inactiveParent').length == 1) {
+                    if ($(this).find('.expandable-hitarea').length === 0) {
+                        if ($(this).find('.activeParent').length === 1 || $(this).find('.inactiveParent').length === 1) {
                             $(this).prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
                         }
                     }
@@ -304,11 +307,15 @@ Original preload function has been kept but is unused.
                 ///////////////////////////// !!! what happens here? assume that they aren't open?
                 //$(this).children().find('li:has(".activeParent,.inactiveParent")').addClass('expandable');
                 // Calling a rebuild assings the correct functionality
-                myTreeRoot.buildTree_noreload(settings)
+                myTreeRoot.buildTree_noreload(settings);
             });
 
             //Mouse binding for closed nodes (First Time)
             myTreeRoot.find('li.expandable').find('.hitarea').unbind("click").click(function () {
+                        // Append the loading line
+            var parentNode = $(this).parent();
+            // Get the node's ID (used in load)
+            var ewPageId = 0; 
 
                 //myTreeRoot needs to be reset within click
                 myTreeRoot = $(this).closest("#MenuTree");
@@ -321,11 +328,7 @@ Original preload function has been kept but is unused.
                 // Sort the parent node's class
                 $(this).parent().removeClass('expandable').addClass('collapsable');
 
-                // Get the node's ID (used in load)
-                var ewPageId = (this.parentNode.getAttribute('id').replace(/node/, ""));
 
-                // Append the loading line
-                var parentNode = $(this).parent()
                 $('<li id="loading-node" class="list-group-item"><div class="loadnode">Loading <i class="fa fa-cog fa-spin fa-fw"></i></div></li>').insertAfter(parentNode);
 
                 // If move has been flagged then use a different load
@@ -353,14 +356,16 @@ Original preload function has been kept but is unused.
                 else {
 
                     var loadNode = $(this).parent().next();
+                    ewPageId = (this.parentNode.getAttribute('id').replace(/node/, ""));
+
                     // alert(settings.loadPath + "?ajaxCmd=" + settings.ajaxCmd + "&pgid=" + ewPageId + "&context=" + ewCloneContextId);
                     loadNode.load(settings.loadPath, { ajaxCmd: settings.ajaxCmd, pgid: ewPageId, context: ewCloneContextId }, function (data) {
-
-                        myTreeRoot = loadNode.closest("#MenuTree");
-
                         var $results = $(loadNode).find('ul .list-group-item');
-                        if ($results.length == 0) {
-                            alert($(loadNode).html());
+                        var myTreeRoot = loadNode.closest("#MenuTree");
+
+
+                        if ($results.length === 0) {
+                            // alert($(loadNode).html());
                         }
                         else {
                             $(loadNode).find("ul .list-group-item").insertAfter(parentNode);
@@ -449,11 +454,11 @@ Original preload function has been kept but is unused.
             $(this).find('li').each(function () {
                 var thisParentId = $(this).data('tree-parent');
 
-                if ($(this).prevAll('li[data-tree-parent="' + thisParentId + '"]').length == 0) {
+                if ($(this).prevAll('li[data-tree-parent="' + thisParentId + '"]').length === 0) {
                     //if first amoung siblings
-                    if ($(this).prev('li[id="node' + thisParentId + '"]').length == 0) {
+                    if ($(this).prev('li[id="node' + thisParentId + '"]').length === 0) {
                         //if incorrect parent
-                        if (myTreeRoot.find('li[id="node' + thisParentId + '"] li[data-tree-parent="' + thisParentId + '"]').length == 0) {
+                        if (myTreeRoot.find('li[id="node' + thisParentId + '"] li[data-tree-parent="' + thisParentId + '"]').length === 0) {
                             //no siblings moved allready
                             // $('#MenuTree li[id="node' + thisParentId + '"]').after($(this))
                             $(this).nextAll('li[data-tree-parent="' + thisParentId + '"]').reverse().each(function () {
@@ -463,7 +468,7 @@ Original preload function has been kept but is unused.
                         }
                     }
                 }
-            })
+            });
         },
 
 
@@ -491,7 +496,7 @@ Original preload function has been kept but is unused.
                     $(this).find('a.move-bottom').removeClass("disabled");
                 }
                 //if this not has a following sibling with the same data-tree-parent then hide the down arrows
-            })
+            });
         },
 
         // The next set of functions handle the movement buttons (mainly animation)
@@ -499,13 +504,15 @@ Original preload function has been kept but is unused.
         moveUp: function (moveId) {
             var moveIdNode = "node" + moveId;
             var myTreeRoot = $('#MenuTree');
+            var i = Math.round(10000 * Math.random());
+
             if (!(myTreeRoot.find('li#' + moveIdNode).hasClass("locked"))) {
                 myTreeRoot.find('li#' + moveIdNode).addClass("locked");
                 var thisParentId = myTreeRoot.find('li#' + moveIdNode).data('tree-parent');
                 //Construct the node name
                 myTreeRoot.find('li#' + moveIdNode).fadeTo("fast", 0.25);
                 //IE is stupid, so append random numbers to the end
-                var i = Math.round(10000 * Math.random());
+
                 // Pass out the command to move the node
                 $.ajax({
                     url: '?ewCmd=MoveUp' + decodeURIComponent("%26") + 'pgid=' + moveId + '&a=' + i,
@@ -688,17 +695,17 @@ Original preload function has been kept but is unused.
         adminPopup: function (settings) {
             $(this).parent().mouseover(function () {
                 //var divPos = $(this).children('div.ewPopMenu').offset();
-                $(this).parents('td.optionsButton').css('zIndex', 10000)
-                $(this).children('a.popup').addClass('popupOpen')
-                $(this).children('a.popup').removeClass('popup')
+                $(this).parents('td.optionsButton').css('zIndex', 10000);
+                $(this).children('a.popup').addClass('popupOpen');
+                $(this).children('a.popup').removeClass('popup');
                 $(this).children('div.ewPopMenu').show();
                 // $(this).children('div.ewPopMenu').dialog({ modal: true });
             }
             );
             $(this).parent().mouseout(function () {
-                $(this).parents('td.optionsButton').css('zIndex', '')
-                $(this).children('a.popupOpen').addClass('popup')
-                $(this).children('a.popupOpen').removeClass('popupOpen')
+                $(this).parents('td.optionsButton').css('zIndex', '');
+                $(this).children('a.popupOpen').addClass('popup');
+                $(this).children('a.popupOpen').removeClass('popupOpen');
                 $(this).children('div.ewPopMenu').hide();
             }
             );
@@ -729,4 +736,3 @@ function getAdminAjaxTreeViewPath() {
     }
     return treeviewPath;
 }
-
