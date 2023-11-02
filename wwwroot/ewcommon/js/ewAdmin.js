@@ -322,7 +322,7 @@ $(document).ready(function () {
         });
 
         $(this).find('form').on('submit', function (event) {
-
+          
             event.preventDefault()
             var formData = $(this).serialize();
             var targetUrl = $(this).attr("action") + '&contentType=popup';
@@ -2143,8 +2143,10 @@ function SaveFileName(isOverwrite) {
         contentType: false,
         type: 'POST',
         success: function (result) {            
-            $("#changeFilename").modal("hide");
-           /* $('#MenuTree').find('li.active a')[0].click();      */     
+            $("#changeFilename").modal("hide");           
+            var newItem = $("#divnewfileupdate").html();  
+            $('#files').prepend(newItem);
+            $('#files .item-image .panel').prepareLibImages();	    
         }
     });
 }
