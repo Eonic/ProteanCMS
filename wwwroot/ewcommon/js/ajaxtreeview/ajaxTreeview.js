@@ -126,32 +126,23 @@ Original preload function has been kept but is unused.
             //alert('OLD BUILD TREE DO NOT USE');
             var myTreeRoot = $(this);
             $(this).find('li.collapsable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
-            $(this).find('li.expandable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
+            $(this).find('li.expandable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right class1"> </i>');
 
             $('#MenuTree li').each(function () {
-
                 if ($(this).hasClass('collapsable')) {
-
                     if ($(this).find('.collapsable-hitarea').length === 0) {
                         if ($(this).find('.activeParent').length === 1 || $(this).find('.inactiveParent').length === 1) {
                             $(this).prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
                         }
                     }
                 }
-
-
-
                 if ($(this).hasClass('expandable')) {
-
-
                     if ($(this).find('.expandable-hitarea').length === 0) {
                         if ($(this).find('.activeParent').length === 1 || $(this).find('.inactiveParent').length === 1) {
-                            $(this).prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
+                            $(this).prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right classxxx"> </i>');
                         }
                     }
                 }
-
-
             });
 
             // Sort out assignments of the last tag
@@ -265,30 +256,23 @@ Original preload function has been kept but is unused.
             myTreeRoot.find('li.expandable_loaded:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea expandable-hitarea fa fa-chevron-down"> </i>');
 
             $('#MenuTree li').each(function () {
-
                 if ($(this).hasClass('collapsable')) {
-
                     if ($(this).find('.collapsable-hitarea').length === 0) {
                         if ($(this).find('.activeParent').length === 1 || $(this).find('.inactiveParent').length === 1) {
+                            $(this).find('.hitarea').remove();
                             $(this).prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
                         }
                     }
                 }
-
-
-
                 if ($(this).hasClass('expandable')) {
-
                     if ($(this).find('.expandable-hitarea').length === 0) {
                         if ($(this).find('.activeParent').length === 1 || $(this).find('.inactiveParent').length === 1) {
+                            $(this).find('.hitarea').remove();
                             $(this).prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
                         }
                     }
                 }
-
-
             });
-
 
             // Sort out assignments of the last tag
             myTreeRoot.applyLast();
