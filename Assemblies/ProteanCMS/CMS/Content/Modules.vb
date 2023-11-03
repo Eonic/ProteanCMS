@@ -333,7 +333,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                             myWeb.mbAdminMode = False
                             ' myWeb.moDbHelper.getRelationsByContentId(contentId, oContentNode, 2)
                         Else
-                            myWeb.GetPageContentFromSelect("CL.nStructId = " & PageId & " And a.dExpireDate < GETDATE() And c.cContentSchemaName = '" & oContentNode.GetAttribute("contentType") & "' ",
+                            myWeb.GetPageContentFromSelect("CL.nStructId = " & PageId & " And a.dExpireDate < GETDATE() And a.nStatus = 1 And c.cContentSchemaName = '" & oContentNode.GetAttribute("contentType") & "' ",
                     ,,, nItemsPerPage,,,,, nCurrentPage,,, True)
                         End If
 

@@ -20,14 +20,13 @@
 			<ContentType type="PlainText" formPath="generic/plaintext" name="Plain Text">Plain unformatted text</ContentType>
 			<ContentType type="Image" formPath="generic/image" name="Image">Add an image</ContentType>
 			<ContentType type="Link" formPath="generic/link" name="Link">Add an link</ContentType>
-			<ContentType type="MetaData" formPath="generic/metadata" name="Module">&#160;</ContentType>
+			<ContentType type="MetaData" formPath="generic/metadata" name="Module">&#160;</ContentType>			
 		</ContentTypeGroup>
 	</ContentTypes>
 	<ModuleTypes>
 		<ModuleGroup name="Basic Content" icon="fas fa-pencil-alt">
 			<Module type="FormattedText" formPath="formattedtext/formattedtext" icon="fas fa-align-right" name="Formatted Text"></Module>
 			<Module type="Image" formPath="image/image" icon="fas fa-image" name="Image"></Module>
-			<!--<Module type="Video" formPath="video/video" icon="fab fa-youtube" name="Video"></Module>-->
 			<!--<Module type="EmailForm" formPath="emailform/email-form" icon="fab fa-wpforms"  name="Email Form"></Module>-->
 			<!-- Module type="SocialBookmarks" formPath="socialbookmarks/socialbookmarks" icon="fab fa-facebook-square"  name="Social Bookmarks">Social Bookmarks</Module -->
 		</ModuleGroup>
@@ -56,7 +55,7 @@
 			<Module type="Tabbed" formPath="columns/Tabbed" name="Tabbed Layout" icon="icon-tab">Tabbed navigation at the top of this module allows you to navigate through the content</Module>
 
 		</ModuleGroup>
-		<ModuleGroup name="Advance Content" icon="fas fa-code">
+		<ModuleGroup name="Advanced Content" icon="fas fa-code">
 			<Module type="EmbeddedHtml" formPath="embeddedhtml/embeddedhtml" icon="fa-solid fa-code"  name="Embedded HTML"></Module>
 		</ModuleGroup>
 	</ModuleTypes>

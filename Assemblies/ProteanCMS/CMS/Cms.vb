@@ -6398,10 +6398,13 @@ Public Class Cms
                 Else
 
                     'Set nothing to Filter Pagination session
-                    If moSession("FilterWhereCondition") IsNot Nothing Then
-                        moSession("FilterWhereCondition") = Nothing
-                        'moSession.Remove("FilterWhereCondition")
+                    If Not moSession Is Nothing Then
+                        If moSession("FilterWhereCondition") IsNot Nothing Then
+                            moSession("FilterWhereCondition") = Nothing
+                            'moSession.Remove("FilterWhereCondition")
+                        End If
                     End If
+
 
                     'step through the tree from home to our current page
                     For Each oElmt In oPageElmt.SelectNodes(parentXpath)

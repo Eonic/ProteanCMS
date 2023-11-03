@@ -242,6 +242,7 @@ Public Class IndexerAsync
                 oInfoElmt.SetAttribute("startTime", Tools.Xml.XmlDate(Now(), True))
                 oInfoElmt.SetAttribute("cPageXsl", cPageXsl)
                 oInfoElmt.SetAttribute("cExtractXsl", cExtractXsl)
+                oInfoElmt.SetAttribute("IndexDetailTypes", cIndexDetailTypes)
 
                 oIndexInfo.Save(mcIndexWriteFolder & "/indexInfo.xml")
 
@@ -252,7 +253,7 @@ Public Class IndexerAsync
                 'PerfMon.Log("Web", "ReturnPageHTML - loaded Style")
                 Dim oTransform As New Protean.XmlHelper.Transform()
                 oTransform.XslFilePath = styleFile
-                oTransform.Compiled = False
+                oTransform.Compiled = False 'IIf(LCase(moConfig("CompiledTransform")) = "on", True, False)
                 oTransform.xsltArgs = New Xsl.XsltArgumentList
                 Dim ewXsltExt As New xsltExtensions(myWeb)
                 oTransform.xsltArgs.AddExtensionObject("urn:ew", ewXsltExt)

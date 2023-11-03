@@ -297,7 +297,7 @@
         <xsl:text>&amp;pathonly=true</xsl:text>
       </xsl:if>
     </xsl:variable>
-    <li id="node{translate(@path,'\','-')}" data-tree-level="{$level}" data-tree-parent="{translate(parent::folder/@path,'\','-')}">
+    <li id="node{translate(@path,'\','~')}" data-tree-level="{$level}" data-tree-parent="{translate(parent::folder/@path,'\','~')}">
       <xsl:attribute name="class">
         <xsl:text>list-group-item level-</xsl:text>
         <xsl:value-of select="$level"/>
@@ -308,7 +308,7 @@
 			  <xsl:text> expandable</xsl:text>
 		  </xsl:if>
       </xsl:attribute>
-      <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}">
+      <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" data-bs-toggle="modal">
         <i>
           <xsl:attribute name="class">
             <xsl:text>fa fa-lg</xsl:text>
@@ -619,7 +619,7 @@
             </xsl:when>
             <xsl:otherwise>
               <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.svg' or @Extension='.tiff' or @Extension='.tif'">
-                <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}&amp;ewCmd2=pickImage&amp;fld={$fld}&amp;file={$filename}{@extension}" data-toggle="modal" data-target="#modal-{/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-sm btn-primary pickImage">
+                <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}&amp;ewCmd2=pickImage&amp;fld={$fld}&amp;file={$filename}{@extension}" data-bs-toggle="modal" data-bs-target="#modal-{/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-sm btn-primary pickImage">
                   
                   Pick Image
                 </a>
