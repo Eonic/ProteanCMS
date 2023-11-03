@@ -5418,8 +5418,7 @@
 				data: '',
 				type: 'GET',
 				success: function (response) {
-					newfilename = response;		
-					console.log(response);
+					newfilename = response;					
 					if(newfilename!="")
 					{
 						$("#oldfilename").html(file.name);
