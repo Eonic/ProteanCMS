@@ -465,15 +465,78 @@
 									<xsl:with-param name="position">copyright</xsl:with-param>
 								</xsl:apply-templates>
 							</div>-->
-							<div class="credit">
+							<!--<div class="credit">
 								<xsl:apply-templates select="/" mode="developerLink"/>
-							</div>
+							</div>-->
 						</div>
 					</div>
 				</div>
 			</div>
+			<xsl:if test="$currentPage/@id='1'">
+				<div class="dev-credit">
+					<div class="container">
+						<xsl:apply-templates select="/" mode="developerLink"/>
+					</div>
+				</div>
+			</xsl:if>
 		</footer>
 	</xsl:template>
 	<!-- ############################################# BESPOKE ############################################### -->
+	<xsl:template name="developerLink">
+		<xsl:variable name="websitecreditURL">
+			<xsl:choose>
+				<xsl:when test="$page/Settings/add[@key='web.websitecreditURL']/@value!=''">
+					<xsl:choose>
+						<xsl:when test="starts-with($page/Settings/add[@key='web.websitecreditURL']/@value, 'http')">
+							<xsl:value-of select="$page/Settings/add[@key='web.websitecreditURL']/@value"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:text>http://</xsl:text>
+							<xsl:value-of select="$page/Settings/add[@key='web.websitecreditURL']/@value"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>https://eonic.com</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="websitecreditText">
+			<xsl:choose>
+				<xsl:when test="$page/Settings/add[@key='web.websitecreditText']/@value!=''">
+					<xsl:value-of select="$page/Settings/add[@key='web.websitecreditText']/@value"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>Built on Protean CMS</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="websitecreditLogo">
+			<xsl:if test="$page/Settings/add[@key='web.websitecreditLogo']/@value!=''">
+				<xsl:value-of select="$page/Settings/add[@key='web.websitecreditLogo']/@value"/>
+			</xsl:if>
+		</xsl:variable>
+		<div id="developerLink">
+			<xsl:if test="$page/Settings/add[@key='web.websitecreditURL']/@value!='' or $page/@id = $page/Menu/MenuItem/@id">
+				<a href="{$websitecreditURL}" title="{$websitecreditText}" rel="nofollow external">
+					<xsl:if test="$page/Settings/add[@key='web.websitecreditLogo']/@value=''">
+						<xsl:attribute name="class">devText</xsl:attribute>
+					</xsl:if>
+					<!--<xsl:value-of select="$websitecreditText"/>-->
+					<span>site by </span>
+					<img src="/ptn/core/images/eonic-digital-white.svg" alt="eonic digital" width="82" height="17"/>
 
+				</a>
+				<xsl:if test="$websitecreditLogo!=''">
+					<a href="{$websitecreditURL}" title="{$websitecreditText}" rel="nofollow external">
+						<xsl:if test="$page/Settings/add[@key='web.websitecreditLogo']/@value=''">
+							<xsl:attribute name="class">devLogo</xsl:attribute>
+						</xsl:if>
+						<img src="{$websitecreditLogo}" alt="{$websitecreditText}"/>
+
+					</a>
+				</xsl:if>
+			</xsl:if>
+		</div>
+	</xsl:template>
 </xsl:stylesheet>
