@@ -296,7 +296,6 @@ Original preload function has been kept but is unused.
 
             //Mouse binding for closed nodes (First Time)
             myTreeRoot.find('li.expandable').find('.hitarea').unbind("click").click(function () {
-debugger
                         // Append the loading line
             var parentNode = $(this).parent();
             // Get the node's ID (used in load)
@@ -362,8 +361,6 @@ debugger
 
                         var currentModal = loadNode.closest(".modal.pickImageModal");
                         myTreeRoot.find('a[data-toggle="modal"]').click(function (ev) {
-
-debugger
                             $(this).unbind('click');
                             ev.preventDefault();
                             $('.modal-dialog').addClass('loading');
@@ -387,7 +384,7 @@ debugger
 
             //Mouse binding for closed nodes (No Reload)
             myTreeRoot.find('li.expandable_loaded').find('.hitarea').unbind("click").click(function () {
-debugger
+
                 myTreeRoot = $(this).closest("#MenuTree");
                 myTreeRoot.find('li i.hitarea').unbind("click");
                 $(this).removeClass('expandable-hitarea').addClass('collapsable-hitarea');
