@@ -91,7 +91,7 @@ Original preload function has been kept but is unused.
             $(this).find("li[data-tree-level='" + settings.openLevel + "']").each(function () {
                 //unless you have an active descendant
                 if ($(this).activeChild() === false) {
-                    $(this).hideChildren();
+                   // $(this).hideChildren();
                 }
             });
         },
