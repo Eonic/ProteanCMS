@@ -380,10 +380,8 @@ Original preload function has been kept but is unused.
                             currentModal.load(target, function () {
                                 $('.modal-dialog').removeClass('loading');
                                 currentModal.modal("show");
-
                             });
                         });
-
                         loadNode.remove();
                     });
 
