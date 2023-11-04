@@ -174,11 +174,11 @@
         <xsl:text>~/ewcommon/js/codemirror/codemirror.js,</xsl:text>
         <xsl:text>~/ewcommon/js/jQuery/jquery.magnific-popup.min.js,</xsl:text>
         <xsl:text>~/ewcommon/js/codemirror/mirrorframe.js,</xsl:text>
+		<xsl:text>~/ewcommon/js/ajaxtreeview/ajaxtreeview.js,</xsl:text>
         <xsl:text>~/ewcommon/js/vuejs/vue.min.js,</xsl:text>
         <xsl:text>~/ewcommon/js/vuejs/axios.min.js,</xsl:text>
         <xsl:text>~/ewcommon/js/vuejs/polyfill.js,</xsl:text>
         <xsl:text>~/ewcommon/js/vuejs/protean-vue.js,</xsl:text>
-		<xsl:text>~/ewcommon/js/ajaxtreeview/ajaxtreeview.js,</xsl:text>
 		<xsl:text>~/ewcommon/js/ewAdmin.js</xsl:text>
       </xsl:with-param>
       <xsl:with-param name="bundle-path">
@@ -5374,8 +5374,11 @@
 			<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">/* */</script>
 		</xsl:if>
 
-		<script>			
-
+		<script>		
+		    <!--Remove extra backdrop div from body-->
+			<!--if($('.modal-backdrop').length!==0){
+				$(".modal-backdrop").remove();
+			}-->
 			<xsl:text>
        
         var uploadUrl = '/?ewCmd=</xsl:text><xsl:value-of select="$page/@ewCmd"/>\u0026<xsl:text>ewCmd2=FileUpload</xsl:text>\u0026<xsl:text>storageRoot=</xsl:text><xsl:value-of select="$targetPath"/><xsl:text>'
@@ -5403,10 +5406,11 @@
 
         var targetPath = '</xsl:text><xsl:value-of select="$targetPath"/>';
 			var deletePath = '<xsl:value-of select="translate(descendant::folder[@active='true']/@path,'\','/')"/>';
-			<xsl:apply-templates select="." mode="newItemScript"/>
+			<!--<xsl:apply-templates select="." mode="newItemScript"/>-->
 			<!--$('#files').prepend(newItem);-->
 			var newfilename = "";
-			var dataMsg = 'Filename=' + filename;
+			var changedfilename ="";
+			<!--var dataMsg = 'Filename=' + filename;-->			
 
 			var DataUrl = '/ewapi/Cms.Admin/GetExistsFileName';
 			$.ajax({
@@ -5420,51 +5424,60 @@
 						$("#oldfilename").html(file.name);
 						<!--alert(newfilename);-->	
 						if(newfilename.indexOf('true') != -1)
-						{
+						{ 
+							const dataTransfer = new DataTransfer();							
+							dataTransfer.items.add(file);
+							existsFile.files = dataTransfer.files
 							var arr = newfilename.split(',');
 							var extension = arr[0].substring(arr[0].length - 3);							
 							$("#changeFilename").modal("show");
 							$("#txtfilename").val(arr[0]);	
-							$("#cleanFilename").val(arr[1]);							
-						}	
+							$("#cleanFilename").val(arr[1]);	
+							changedfilename = arr[0];
+							file = new File([file.name], changedfilename);
+						}					
+						
+						<xsl:apply-templates select="." mode="newItemScript"/>
+						filename = "/" + filename + "/g";
+						<!--newItem = newItem.replace(eval(filename), changedfilename)-->
+						if(changedfilename == "")
+						{
+							$('#files').prepend(newItem);
+							$('#files .item-image .panel').prepareLibImages();	
+						}						
+						$("#divnewfileupdate").html(newItem);
+						
+						$("[data-toggle=popover]").popover({
+								html: true,
+								container: '#files',
+								trigger: 'hover',
+								viewport: '#files',
+								content: function() {
+									return $(this).prev('.popoverContent').html();
+								}
+						});
+						
+						if ($('.pickImageModal').exists()) {
+							$('.pickImageModal').find('a[data-toggle!="popover"]').click(function(ev) {
+								ev.preventDefault();					
+								$('.modal-dialog').addClass('loading')
+								$('.modal-body').html('<xsl:text disable-output-escaping="yes">&lt;</xsl:text>p class="text-center"<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>h4<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>i class="fa fa-cog fa-spin fa-2x fa-fw"<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/i<xsl:text disable-output-escaping="yes">&gt;</xsl:text>Loading ...<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/h4<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/p<xsl:text disable-output-escaping="yes">&gt;</xsl:text>');
+								var target = $(this).attr("href");
+								// load the url and show modal on success
+								var currentModal = $('.pickImageModal')
+								console.log(currentModal);
+								currentModal.load(target, function() {
+									$('.modal-dialog').removeClass('loading')
+									currentModal.modal("show");	
+									$(".modal-backdrop").remove()
+						
+								});
+							});
+						};
 					}
 				}
 			});
 			
-			if(newfilename == "")
-			{
-				newfilename = filename
-			}
-			filename = "/" + filename + "/g";
-			newItem = newItem.replace(eval(filename), newfilename)
-			$('#files').prepend(newItem);
-			$('#files .item-image .panel').prepareLibImages();
-
-			$("[data-toggle=popover]").popover({
-				html: true,
-				container: '#files',
-				trigger: 'hover',
-				viewport: '#files',
-				content: function() {
-					return $(this).prev('.popoverContent').html();
-				}
-			});
-			if ($('.pickImageModal').exists()) {
-				$('.pickImageModal').find('a[data-toggle!="popover"]').click(function(ev) {
-					ev.preventDefault();
-					$('.modal-dialog').addClass('loading')
-					$('.modal-body').html('<xsl:text disable-output-escaping="yes">&lt;</xsl:text>p class="text-center"<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>h4<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>i class="fa fa-cog fa-spin fa-2x fa-fw"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>;<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/i<xsl:text disable-output-escaping="yes">&gt;</xsl:text>Loading ...<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/h4<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/p<xsl:text disable-output-escaping="yes">&gt;</xsl:text>');
-					var target = $(this).attr("href");
-					// load the url and show modal on success
-					var currentModal = $('.pickImageModal')
-					currentModal.load(target, function() {
-						$('.modal-dialog').removeClass('loading')
-						currentModal.modal("show");
-					});
-				});
-			};
-
-
 			});
 			},
 			progressall: function (e, data) {
@@ -5483,7 +5496,7 @@
 			});
 		</script>
 
-		<div id="changeFilename" class="modal fade" tabindex="-1" role="dialog" data-backdrop="false">
+		<div id="changeFilename" class="modal" tabindex="-1" role="dialog" data-backdrop="false">
 			<div class="modal-dialog" role="document">
 				<form id="frmfileData">
 					<div class="modal-content">
@@ -5502,9 +5515,11 @@
 							<div class="form-group">								
 								<label for="txtfilename">Rename file to </label>
 								<input type="text" id="txtfilename" value="" class="textbox form-control"/><br/>
-								<input type="file" name="postedFile" id="postedFile" class="hidden"/>								
+								<!--<input type="file" name="postedFile" id="postedFile" class="hidden"/>-->	
+							     <input type="file" name="existsFile" id="existsFile" class="hidden"/>	
 							</div>
 						</div>
+						<div id="divnewfileupdate" class="hidden"></div>
 						<input type="hidden" id="targetPath" value="{$targetPath}"></input>
 						<input type="hidden" id="cleanFilename"></input>
 						<div class="modal-footer">
@@ -5529,9 +5544,9 @@
 
 
 	<xsl:template match="Page[@layout='ImageLib']" mode="newItemScript">
-
+      
 		var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&amp;0x3|0x8;return v.toString(16);});
-
+		
 		<xsl:text disable-output-escaping="yes">var newItem=</xsl:text>'<xsl:text disable-output-escaping="yes">&lt;</xsl:text>div class="item item-image col-md-2 col-sm-4"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
 		<xsl:text disable-output-escaping="yes">&lt;</xsl:text>div class="panel"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
 		<xsl:text disable-output-escaping="yes">&lt;</xsl:text>div class="image-thumbnail"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
@@ -5691,7 +5706,7 @@
 						</div>
 						<div class="img-description">
 							<span class="image-description-name">
-								<xsl:value-of select="@name"/>
+								<xsl:value-of select="@name"/>								
 							</span>
 							<xsl:choose>
 								<xsl:when test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.tif'  or  @Extension='.tiff'">
