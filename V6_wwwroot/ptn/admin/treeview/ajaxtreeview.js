@@ -346,9 +346,8 @@ Original preload function has been kept but is unused.
                     loadNode.load(settings.loadPath, { ajaxCmd: settings.ajaxCmd, pgid: ewPageId, context: ewCloneContextId }, function (data) {
                         var $results = $(loadNode).find('ul .list-group-item');
                         var myTreeRoot = loadNode.closest("#MenuTree");
-
-
-                        if ($results.length === 0) {
+                        var modalId = myTreeRoot.parents('.modal').attr("id");
+                         if ($results.length === 0) {
                             // alert($(loadNode).html());
                         }
                         else {
@@ -371,7 +370,9 @@ Original preload function has been kept but is unused.
                                 $('.modal-dialog').removeClass('loading');
                                 currentModal.modal("show");
                             });
-                        });
+                       
+                        });             
+                        preparePickImageModal("#" + modalId)
                         loadNode.remove();
                     });
 
@@ -395,6 +396,7 @@ Original preload function has been kept but is unused.
                 $(this).parent().parent().find('li[data-tree-parent="' + ewPageId + '"]').show();
 
                 myTreeRoot.buildTree_noreload(settings);
+
             });
 
             myTreeRoot.find('.btn-hide').unbind("click").click(function () {
