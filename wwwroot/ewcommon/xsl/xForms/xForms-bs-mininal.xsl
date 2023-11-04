@@ -926,6 +926,8 @@
           <xsl:value-of select="@data-pleasewaitdetail"/>
         </xsl:attribute>
       </xsl:if>
+
+		
       <xsl:if test="not(contains($class,'icon-right'))">
         <i class="fa {$icon} fa-white">
           <xsl:text> </xsl:text>

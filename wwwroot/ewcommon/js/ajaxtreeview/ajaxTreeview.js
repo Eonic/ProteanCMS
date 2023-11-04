@@ -139,7 +139,7 @@ Original preload function has been kept but is unused.
                 if ($(this).hasClass('expandable')) {
                     if ($(this).find('.expandable-hitarea').length === 0) {
                         if ($(this).find('.activeParent').length === 1 || $(this).find('.inactiveParent').length === 1) {
-                            $(this).prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right classxxx"> </i>');
+                            $(this).prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
                         }
                     }
                 }

@@ -31,6 +31,7 @@ Imports System.Linq
 Imports System.Collections.Generic
 Imports System.Reflection
 Imports Protean.proteancms.com
+Imports System.Windows.Controls.Primitives
 
 Partial Public Class Cms
     Partial Public Class Admin
@@ -3964,12 +3965,14 @@ Partial Public Class Cms
                 Dim oFrmElmt As XmlElement
                 Dim sValidResponse As String = ""
                 Dim cProcessInfo As String = ""
+                Dim SubmitPath As String = "?ewcmd="
                 Try
+
+                    SubmitPath = SubmitPath & myWeb.moRequest("ewcmd") & "&ewCmd2=" & myWeb.moRequest("ewCmd2") & "&pathonly=" & myWeb.moRequest("pathonly") & "&targetForm=" & myWeb.moRequest("targetForm") & "&targetField=" & myWeb.moRequest("targetField")
+
                     MyBase.NewFrm("AddFolder")
 
-
-
-                    MyBase.submission("AddFolder", "/?ewcmd=" & myWeb.moRequest("ewcmd") & "&ewCmd2=" & myWeb.moRequest("ewCmd2") & "&pathonly=" & myWeb.moRequest("pathonly") & "&targetForm=" & myWeb.moRequest("targetForm") & "&targetField=" & myWeb.moRequest("targetField"), "post", "")
+                    MyBase.submission("AddFolder", SubmitPath, "post", "")
 
                     oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "New Folder", "ptn-admin-form", "Please enter the folder name")
                     MyBase.addInput(oFrmElmt, "fld", True, "Path", "readonly")
