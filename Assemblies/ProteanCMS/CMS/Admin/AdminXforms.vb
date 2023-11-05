@@ -4265,6 +4265,7 @@ Partial Public Class Cms
 
             Public Function xFrmEditImage(ByVal cImgHtml As String, ByVal cTargetForm As String, ByVal cTargetFeild As String, Optional ByVal cClassName As String = "") As XmlElement
                 Dim oFrmElmt As XmlElement
+                Dim oFrmElmt1 As XmlElement
                 Dim oElmt As XmlElement
                 Dim sValidResponse As String = ""
                 Dim cProcessInfo As String = ""
@@ -4285,22 +4286,23 @@ Partial Public Class Cms
                     MyBase.submission("imageDetailsForm", "", "post", "form_check(this);passImgToForm('" & cTargetForm & "','" & cTargetFeild & "');return(false);")
 
                     oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "Image Details", "", "Please enter image description")
-
-                    MyBase.addInput(oFrmElmt, "cName", True, "Class", "readonly")
+                    oFrmElmt1 = MyBase.addGroup(oFrmElmt, "", "", "")
+                    MyBase.addInput(oFrmElmt1, "cName", True, "Class", "readonly")
                     MyBase.addBind("cName", "img/@class", "true()")
 
-                    MyBase.addInput(oFrmElmt, "cPathName", True, "Path Name")
+                    MyBase.addInput(oFrmElmt1, "cPathName", True, "Path Name")
                     MyBase.addBind("cPathName", "img/@src", "true()")
 
-                    MyBase.addInput(oFrmElmt, "nWidth", True, "Width")
+                    MyBase.addInput(oFrmElmt1, "nWidth", True, "Width")
                     MyBase.addBind("nWidth", "img/@width", "true()")
 
-                    MyBase.addInput(oFrmElmt, "nHeight", True, "Height")
+                    MyBase.addInput(oFrmElmt1, "nHeight", True, "Height")
                     MyBase.addBind("nHeight", "img/@height", "true()")
 
-                    MyBase.addInput(oFrmElmt, "cDesc", True, "Alt Description")
+                    MyBase.addInput(oFrmElmt1, "cDesc", True, "Alt Description")
                     MyBase.addBind("cDesc", "img/@alt", "false()")
-                    MyBase.addDiv(oFrmElmt, "<a href=""?contentType=popup&amp;ewCmd=ImageLib&amp;targetField=" & cTargetFeild & "&amp;targetClass=" & cClassName & """ class=""btn btn-primary pull-right""><i class=""fa fa-picture-o""> </i> Pick New Image</a>", "")
+
+                    MyBase.addDiv(oFrmElmt, "<div class=""form-group pick-new-image""><a href=""?contentType=popup&amp;ewCmd=ImageLib&amp;targetField=" & cTargetFeild & "&amp;targetClass=" & cClassName & """ class=""btn btn-primary pull-right"" data-toggle=""modal""><i class=""fa fa-picture-o""> </i> Pick New Image</a></div>", "")
                     MyBase.addSubmit(oFrmElmt, "", "Update Image", "ewSubmit", "ewSubmit")
 
                     If cClassName <> "" Then
