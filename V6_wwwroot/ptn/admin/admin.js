@@ -414,6 +414,7 @@ function preparePickImageModal(CurrentModalPath) {
         var target = $(this).attr("href");
         // load the url and call this again on success
         if (target != '#') {
+        
             currentModal.find(".modal-content div").load(target, function () {
                 $('.modal-dialog').removeClass('loading')
                 preparePickImageModal(CurrentModalPath)
@@ -436,8 +437,8 @@ function preparePickImageModal(CurrentModalPath) {
             event.preventDefault()
             var formData = $(this).serialize();
             var targetUrl = $(this).attr("action") + '&contentType=popup';
-        $(this).find('.modal-content').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p>');
-        alert(targetUrl);
+            $(this).find('.modal-content').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p>');
+
             $.ajax({
                 type: 'post',
                 url: targetUrl,
@@ -445,8 +446,8 @@ function preparePickImageModal(CurrentModalPath) {
                 dataType: 'html',
                 success: function (msg) {
                     //$(this).find('.modal-dialog').removeClass('loading')
-                    $(this).find(".modal-content").html(msg);
-                    $(this).trigger('loaded');
+                    currentModal.find(".modal-content div").html(msg);
+                    currentModal.trigger('loaded');
                 }
             });
     });

@@ -4174,7 +4174,9 @@ Partial Public Class Cms
 
                     If cClassName <> "" Then
                         oElmt = MyBase.Instance.FirstChild()
-                        oElmt.SetAttribute("class", cClassName)
+                        If Not oElmt Is Nothing Then
+                            oElmt.SetAttribute("class", cClassName)
+                        End If
                     End If
 
                     If MyBase.isSubmitted Then
