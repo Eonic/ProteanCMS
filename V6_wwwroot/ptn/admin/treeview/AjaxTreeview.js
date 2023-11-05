@@ -358,21 +358,24 @@ Original preload function has been kept but is unused.
                         loadNode.children().find('li').has('.activeParent,.inactiveParent').addClass('expandable');
                         myTreeRoot.buildTree_noreload(settings);
 
-                        var currentModal = loadNode.closest(".modal.pickImageModal");
-                        myTreeRoot.find('a[data-bs-toggle="modal"]').click(function (ev) {
-                            $(this).unbind('click');
-                            ev.preventDefault();
-                            $('.modal-dialog').addClass('loading');
-                            $('.modal-body').html('<div class="panel panel-default"><p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p></div>');
-                            var target = $(this).attr("href");
-                            // load the url and show modal on success
-                            currentModal.load(target, function () {
-                                $('.modal-dialog').removeClass('loading');
-                                currentModal.modal("show");
-                            });
+                        var currentModal = loadNode.parents(".modal.pickImageModal");
                        
-                        });             
-                        preparePickImageModal("#" + modalId)
+                        if (modalId != undefined) {
+                            myTreeRoot.find('a[data-bs-toggle="modal"]').click(function (ev) {
+                                $(this).unbind('click');
+                                ev.preventDefault();
+                                $('.modal-dialog').addClass('loading');
+                                $('.modal-body').html('<div class="panel panel-default"><p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p></div>');
+                                var target = $(this).attr("href");
+                                // load the url and show modal on success
+                                currentModal.load(target, function () {
+                                    $('.modal-dialog').removeClass('loading');
+                                    currentModal.modal("show");
+                                });
+                       
+                            });          
+                            preparePickImageModal("#" + modalId)
+                        }
                         loadNode.remove();
                     });
 
