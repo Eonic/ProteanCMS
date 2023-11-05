@@ -49,10 +49,6 @@
       "destination": "ptn/libs/spmeesseman/extjs-pkg-intltelinput/"
     },
     {
-      "library": "@fortawesome/fontawesome-free@6.1.1",
-      "destination": "ptn/core/icons/fa6"
-    },
-    {
       "library": "codemirror@5.65.4",
       "destination": "ptn/libs/codemirror/"
     },
@@ -80,6 +76,10 @@
     {
       "library": "jquery.appear@1.0.1",
       "destination": "ptn/libs/jquery.appear/"
+    },
+    {
+      "library": "@fortawesome/fontawesome-free@6.4.2",
+      "destination": "ptn/core/icons/fa6"
     }
   ]
 }
