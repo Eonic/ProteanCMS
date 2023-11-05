@@ -377,38 +377,37 @@ $(document).ready(function () {
 
 });
 
-function preparePickImageModal(currentModal) {
-
+function preparePickImageModal(CurrentModalPath) {
     var treeviewPath = getAdminAjaxTreeViewPath();
-  
-        var currentModal = $(this)
-        var multiple = ""
-        if ($('#template_FileSystem #MenuTree').data('multiple') == 1) {
-            multiple = "&multiple=true"        
-        }
+    var currentModal = $(CurrentModalPath);
+    var multiple = "";
+
+    if ($('#template_FileSystem #MenuTree').data('multiple') == 1) {
+       multiple = "&multiple=true"        
+    };
         //activateTreeview
+    if ($('#template_FileSystem #MenuTree').exists()) {
         $('#template_FileSystem #MenuTree').ajaxtreeview({
             loadPath: treeviewPath + "&popup=true&libType=" + $('#template_FileSystem #MenuTree').data("lib-type").replace("Lib", "") + "&targetForm=" + $('#template_FileSystem #MenuTree').data("target-form") + "&targetField=" + $('#template_FileSystem #MenuTree').data("target-field") + "&targetClass=" + $('#template_FileSystem #MenuTree').data("target-class") + multiple,
             ajaxCmd: 'GetFolderNode',
             openLevel: 2,
             hide: true
         });
+    };
 
+    $('#files .item-image .panel').prepareLibImages();
 
-
-        $('#files .item-image .panel').prepareLibImages();
-
-        currentModal.find("[data-bs-toggle=popover]").popover({
+    currentModal.find("[data-bs-toggle=popover]").popover({
             html: true,
             container: '#files',
             trigger: 'hover',
             viewport: '#files',
             content: function () {
                 return currentModal.prev('.popoverContent').html();
-            }
-        });
-
-    currentModal.find('a[data-bs-toggle!="popover"]').click(function (ev) {
+        }
+    });
+    currentModal.find("a[data-bs-toggle!='popover']").click(function (ev) {
+        
         ev.preventDefault();
             currentModal.find('.modal-dialog').addClass('loading')
             currentModal.find('.modal-content div').html('<div><p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p></div>');
@@ -417,20 +416,28 @@ function preparePickImageModal(currentModal) {
         if (target != '#') {
             currentModal.find(".modal-content div").load(target, function () {
                 $('.modal-dialog').removeClass('loading')
-                preparePickImageModal(currentModal)
+                preparePickImageModal(CurrentModalPath)
                 $('.lazy').lazy();
                 primeFileUpload();
             });
         };
+    });
+
+    $("#SelectAll").click(function (ev) {
+        ev.preventDefault();
+        $(".multicheckbox").each(function () {
+            $(".multicheckbox").attr("checked", "checked");
         });
+        return false;
+    });
 
     currentModal.find('form:not([id="imageDetailsForm"])').on('submit', function (event) {
 
             event.preventDefault()
             var formData = $(this).serialize();
             var targetUrl = $(this).attr("action") + '&contentType=popup';
-        $(this).find('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p>');
-
+        $(this).find('.modal-content').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p>');
+        alert(targetUrl);
             $.ajax({
                 type: 'post',
                 url: targetUrl,
@@ -438,7 +445,7 @@ function preparePickImageModal(currentModal) {
                 dataType: 'html',
                 success: function (msg) {
                     //$(this).find('.modal-dialog').removeClass('loading')
-                    $(this).find(".modal-body").html(msg);
+                    $(this).find(".modal-content").html(msg);
                     $(this).trigger('loaded');
                 }
             });

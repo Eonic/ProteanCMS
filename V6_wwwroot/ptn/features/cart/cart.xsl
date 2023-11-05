@@ -722,7 +722,7 @@
 								Create a new account
 							</a>
 							<a data-bs-toggle="modal" data-bs-target="#cartLogonBox" role="button" class="btn btn-outline-primary btn-block">
-								Log in with your account
+								Log in
 							</a>
 							<a href="?pgid={/Page/@id}&amp;cartCmd=Notes" class="without-account-btn">
 								Continue without account

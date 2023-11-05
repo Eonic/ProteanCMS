@@ -294,21 +294,22 @@ Partial Public Class Cms
                                     If bDiscountIsPercent <> Nothing Then
                                         oCartXML.SetAttribute("bDiscountIsPercent", bDiscountIsPercent & "")
                                     End If
-
+                                    Dim nItemCost As Double = 0
                                     If oDsCart.Tables("Item").Rows.Count > 0 Then
                                         For Each drItem As DataRow In oDsCart.Tables("Item").Rows
 
-                                            If (drItem(15) = 0) Then
-                                                totalAmount = totalAmount + drItem(6)
+                                            If (drItem("nParentId") = 0) Then
+                                                nItemCost = drItem("price") * drItem("quantity")
+                                                totalAmount = totalAmount + nItemCost
 
                                                 If (dMaxPrice <> 0) Then
-                                                    If (drItem(6) >= dMinPrice And drItem(6) <= dMaxPrice) Then
+                                                    If (nItemCost >= dMinPrice And nItemCost <= dMaxPrice) Then
                                                         nValidProductCount = nValidProductCount + 1
                                                     Else
                                                         For iCount = 0 To iDiscount - 1 'looping inside discount row for valid items else remove it from the list
                                                             If (iCount < iDiscount) Then
                                                                 drDiscount = oDsDiscounts.Tables("Discount").Rows(iCount)
-                                                                If (drDiscount(15) = drItem(0)) Then
+                                                                If (drDiscount("nCartItemKey") = drItem("id")) Then
                                                                     oDsDiscounts.Tables("Discount").Rows.RemoveAt(iCount)
                                                                     iDiscount = iDiscount - 1
                                                                 End If

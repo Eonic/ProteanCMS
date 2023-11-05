@@ -147,6 +147,7 @@
 	    <xsl:text>~/ewcommon/js/vuejs/axios.min.js,</xsl:text>
 	    <xsl:text>~/ewcommon/js/vuejs/polyfill.js,</xsl:text>
 	    <xsl:text>~/ewcommon/js/vuejs/protean-vue.js,</xsl:text>
+		<xsl:text>~/ewcommon/js/ajaxtreeview/ajaxtreeview.js,</xsl:text>
 		<xsl:text>~/ewcommon/js/ewAdmin.js</xsl:text>
       </xsl:with-param>
       <xsl:with-param name="bundle-path">

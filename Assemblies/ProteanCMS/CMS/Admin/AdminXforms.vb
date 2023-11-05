@@ -31,6 +31,7 @@ Imports System.Linq
 Imports System.Collections.Generic
 Imports System.Reflection
 Imports Protean.proteancms.com
+Imports System.Windows.Controls.Primitives
 
 Partial Public Class Cms
     Partial Public Class Admin
@@ -3964,12 +3965,14 @@ Partial Public Class Cms
                 Dim oFrmElmt As XmlElement
                 Dim sValidResponse As String = ""
                 Dim cProcessInfo As String = ""
+                Dim SubmitPath As String = "?ewcmd="
                 Try
+
+                    SubmitPath = SubmitPath & myWeb.moRequest("ewcmd") & "&ewCmd2=" & myWeb.moRequest("ewCmd2") & "&pathonly=" & myWeb.moRequest("pathonly") & "&targetForm=" & myWeb.moRequest("targetForm") & "&targetField=" & myWeb.moRequest("targetField")
+
                     MyBase.NewFrm("AddFolder")
 
-
-
-                    MyBase.submission("AddFolder", "/?ewcmd=" & myWeb.moRequest("ewcmd") & "&ewCmd2=" & myWeb.moRequest("ewCmd2") & "&pathonly=" & myWeb.moRequest("pathonly") & "&targetForm=" & myWeb.moRequest("targetForm") & "&targetField=" & myWeb.moRequest("targetField"), "post", "")
+                    MyBase.submission("AddFolder", SubmitPath, "post", "")
 
                     oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "New Folder", "ptn-admin-form", "Please enter the folder name")
                     MyBase.addInput(oFrmElmt, "fld", True, "Path", "readonly")
@@ -9223,7 +9226,7 @@ Partial Public Class Cms
 
                     'load the xform to be edited
                     moDbHelper.moPageXml = moPageXML
-                    Dim idx As Protean.Indexer = New Protean.Indexer(myWeb)
+                    Dim idx As Protean.IndexerAsync = New Protean.IndexerAsync(myWeb)
                     MyBase.NewFrm("StartIndex")
 
                     MyBase.submission("DeleteFile", "", "post")
@@ -9233,8 +9236,6 @@ Partial Public Class Cms
                     MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "Starting off the indexing process can take up to an hour for larger sites")
 
                     MyBase.addSubmit(oFrmElmt, "", "Start Index", , "principle pleaseWait")
-
-
 
                     If MyBase.isSubmitted Then
                         MyBase.updateInstanceFromRequest()

@@ -1047,6 +1047,7 @@ Partial Public Class fsHelper
         Dim statuses = New List(Of FilesStatus)()
         Dim headers = context.Request.Headers
         Dim isOverwrite As String = context.Request("isOverwrite")
+        Dim cOldFile As String = context.Request("oldfile")
 
         For i As Integer = 0 To context.Request.Files.Count - 1
             Dim file As Object = context.Request.Files(i)
@@ -1062,6 +1063,15 @@ Partial Public Class fsHelper
             If isExists AndAlso isOverwrite = "" Then
                 context.Session("ExistsFileName") = cfileName + "," + scleanFileName + "," + isExists
             Else
+                'check if overwrite true then delete old one and upload new one
+                If isOverwrite = "true" AndAlso cOldFile <> Nothing Then
+                    Dim cOldFullFileName As String = goServer.MapPath(context.Request("storageRoot").Replace("\", "/").Replace("""", "") & "/" & cOldFile.Replace("""", ""))
+                    If IO.File.Exists(cOldFullFileName) Then
+                        Dim oFileInfo As IO.FileInfo = New IO.FileInfo(cOldFullFileName)
+                        oFileInfo.IsReadOnly = False
+                        IO.File.Delete(cOldFullFileName)
+                    End If
+                End If
                 If String.IsNullOrEmpty(headers("X-File-Name")) Then
                     UploadWholeFile(context, statuses)
                 Else
@@ -1217,10 +1227,7 @@ Partial Public Class fsHelper
             Dim fi As FileInfo
             Dim sVirtualPath As String
             Dim tnfiles As FileInfo() = Nothing
-            Dim tndir As New DirectoryInfo(Folder & _thumbnailPath)
-            If tndir.Exists Then
-                tnfiles = tndir.GetFiles()
-            End If
+
 
             If mcStartFolder.Contains("..") Then
                 'we have a virtual path and we need to be a bit more cleverer
@@ -1234,6 +1241,10 @@ Partial Public Class fsHelper
             mcPopulateFilesNode = mcPopulateFilesNode.Replace("/", "\")
 
             If (mcPopulateFilesNode = sVirtualPath) Or (mcPopulateFilesNode = "\" And sVirtualPath = "") Then
+                Dim tndir As New DirectoryInfo(Folder & _thumbnailPath)
+                If tndir.Exists Then
+                    tnfiles = tndir.GetFiles()
+                End If
                 startNode.SetAttribute("active", "true")
                 Dim fileCount As Int16 = 1
                 For Each fi In files

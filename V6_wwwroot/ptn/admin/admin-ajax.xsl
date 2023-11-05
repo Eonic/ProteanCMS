@@ -89,6 +89,48 @@
 		</ul>
 	</xsl:template>
 
+
+	<xsl:template match="folder" mode="FolderTree">
+		<xsl:param name="level"/>
+		<li id="node{translate(@path,'\','~')}" data-tree-level="{$level}" data-tree-parent="{translate(parent::folder/@path,'\','~')}">
+			<xsl:attribute name="class">
+				<xsl:text>list-group-item level-</xsl:text>
+				<xsl:value-of select="$level"/>
+				<xsl:if test="@active='true'">
+					<xsl:text> active collapsable</xsl:text>
+				</xsl:if>
+			</xsl:attribute>
+			<a href="{$appPath}?contentType=popup&amp;ewCmd={/Page/@ewCmd}&amp;fld={@path}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" data-bs-toogle="modal">
+				<i>
+					<xsl:attribute name="class">
+						<xsl:text>fas fa-lg</xsl:text>
+						<xsl:choose>
+							<xsl:when test="@active='true'">
+								<xsl:text> fa-folder-open</xsl:text>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:text> fa-folder</xsl:text>
+							</xsl:otherwise>
+						</xsl:choose>
+						<xsl:if test="folder"> activeParent</xsl:if>
+					</xsl:attribute>
+					&#160;
+				</i>
+				<xsl:value-of select="@name"/>
+			</a>
+		</li>
+		<xsl:if test="folder">
+			<xsl:if test="descendant-or-self::folder[@active='true']">
+				<xsl:apply-templates select="folder" mode="FolderTree">
+					<xsl:with-param name="level">
+						<xsl:value-of select="$level + 1"/>
+					</xsl:with-param>
+				</xsl:apply-templates>
+			</xsl:if>
+		</xsl:if>
+	</xsl:template>
+
+
 	<xsl:template match="Page[Request/*/Item[@name='ajaxCmd']/node()='editStructurePermissions']">
 		<xsl:variable name="pgid" select="Request/*/Item[@name='pgid']/node()"/>
     <ul class="tree-folder-content">
