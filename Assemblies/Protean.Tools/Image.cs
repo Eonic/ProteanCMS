@@ -686,7 +686,7 @@ namespace Protean.Tools
                         }
                     }
 
-                    catch (Exception ex)
+                    catch (Exception)
                     {
 
                         File.Delete(szFileName);

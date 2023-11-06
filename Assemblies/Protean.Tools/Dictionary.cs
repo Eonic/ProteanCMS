@@ -40,9 +40,9 @@ namespace Protean.Tools
                 return hTable;
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
-                ex = null;
+               // ex = null;
                 return new Hashtable();
             }
 
