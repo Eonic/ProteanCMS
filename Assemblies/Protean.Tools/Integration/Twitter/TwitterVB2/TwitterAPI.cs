@@ -2689,7 +2689,7 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
                 return reader.ReadToEnd();
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
                 return string.Empty;
 

@@ -78,7 +78,7 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
 
 
 
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }
