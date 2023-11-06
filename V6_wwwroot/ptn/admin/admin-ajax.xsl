@@ -91,7 +91,13 @@
 
 
 	<xsl:template match="folder" mode="FolderTree">
+		<xsl:param name="fld"/>	
 		<xsl:param name="level"/>
+		<xsl:variable name="filename">
+			<xsl:call-template name="url-encode">
+				<xsl:with-param name="str" select="@name"/>
+			</xsl:call-template>
+		</xsl:variable>
 		<li id="node{translate(@path,'\','~')}" data-tree-level="{$level}" data-tree-parent="{translate(parent::folder/@path,'\','~')}">
 			<xsl:attribute name="class">
 				<xsl:text>list-group-item level-</xsl:text>
@@ -100,7 +106,7 @@
 					<xsl:text> active collapsable</xsl:text>
 				</xsl:if>
 			</xsl:attribute>
-			<a href="{$appPath}?ewCmd={/Page/@ewCmd}&amp;fld={@path}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}">
+			<a href="{$appPath}?ewCmd={/Page/@ewCmd}&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}">
 				<i>
 					<xsl:attribute name="class">
 						<xsl:text>fas fa-lg</xsl:text>

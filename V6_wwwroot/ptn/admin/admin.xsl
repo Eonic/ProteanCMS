@@ -4056,6 +4056,7 @@
         </xsl:when>
       </xsl:choose>
     </xsl:variable>
+	  
 
     <xsl:variable name="partPath"  select="translate(descendant::folder[@active='true']/@path,'\','/')"/>
 
