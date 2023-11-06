@@ -349,7 +349,7 @@ Original preload function has been kept but is unused.
 
 
                         if ($results.length === 0) {
-                            // alert($(loadNode).html());
+                             alert($(loadNode).html());
                         }
                         else {
                             $(loadNode).find("ul .list-group-item").insertAfter(parentNode);
