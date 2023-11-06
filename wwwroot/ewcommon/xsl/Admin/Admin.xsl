@@ -5114,7 +5114,20 @@
 				</xsl:when>
 			</xsl:choose>
 		</xsl:variable>
-
+		<xsl:variable name="fld">
+			<xsl:call-template name="url-encode">
+				<xsl:with-param name="str">
+					<xsl:value-of select="@path"/>
+				</xsl:with-param>
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:variable name="fld-parent">
+			<xsl:call-template name="url-encode">
+				<xsl:with-param name="str">
+					<xsl:value-of select="parent::folder/@path"/>
+				</xsl:with-param>
+			</xsl:call-template>
+		</xsl:variable>
 		<xsl:variable name="partPath"  select="translate(descendant::folder[@active='true']/@path,'\','/')"/>
 
 		<xsl:variable name="targetPath">
@@ -5169,7 +5182,7 @@
 						<ul class="pageControlButtons">
 							<xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup')) and not(@path='')">
 								<li>
-									<a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={parent::folder/@path}" class="btn btn-primary">
+									<a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={$fld-parent}" class="btn btn-primary">
 										<xsl:if test="$submitPath!='/?'">
 											<xsl:attribute name="data-toggle">modal</xsl:attribute>
 											<xsl:attribute name="data-target">
@@ -5203,7 +5216,7 @@
 								</xsl:if>
 								<li>
 									<!--<input id="stop" onclick="stop()" type="button" value="stop"/>-->
-									<a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;ewCmd2=addFolder&amp;fld={@path}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-success">
+									<a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;ewCmd2=addFolder&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-success">
 										<xsl:if test="$submitPath!='/?'">
 											<xsl:attribute name="data-toggle">modal</xsl:attribute>
 											<xsl:attribute name="data-target">
@@ -5894,6 +5907,13 @@
 			  <xsl:text>multiple=true&amp;</xsl:text>
 		  </xsl:if>
 	  </xsl:variable>
+	  <xsl:variable name="fld">
+		  <xsl:call-template name="url-encode">
+			  <xsl:with-param name="str">
+				  <xsl:value-of select="@path"/>
+			  </xsl:with-param>
+		  </xsl:call-template>
+	  </xsl:variable>
     <li id="node{translate(@path,'\','~')}" data-tree-level="{$level}" data-tree-parent="{translate(parent::folder/@path,'\','~')}">
       <xsl:attribute name="class">
         <xsl:text>list-group-item level-</xsl:text>
@@ -5903,7 +5923,7 @@
         </xsl:if>
 		<xsl:if test="folder and not(descendant-or-self::folder[@active='true'])"> expandable</xsl:if>
       </xsl:attribute>
-      <a href="{$appPath}?{$contentType}ewCmd={/Page/@ewCmd}&amp;fld={@path}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}">
+      <a href="{$appPath}?{$contentType}ewCmd={/Page/@ewCmd}&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}">
 		  <xsl:if test="/Page/Request/QueryString/Item[@name='popup']/node()='true'">
 			  <xsl:attribute name="data-toggle">modal</xsl:attribute>
 			  <xsl:attribute name="data-target">#modal-<xsl:value-of select="/Page/Request/QueryString/Item[@name='targetField']/node()"/>

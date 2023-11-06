@@ -133,13 +133,6 @@
 							<xsl:if test="not(starts-with(/Page/Request/QueryString/Item[@name='fld']/node(),'\FreeStock'))">
 
 								<a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;ewCmd2=addFolder&amp;fld={@path}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-sm btn-outline-primary">
-									<xsl:if test="$submitPath!='/?'">
-										<xsl:attribute name="data-bs-toggle">modal</xsl:attribute>
-										<xsl:attribute name="data-target">
-											<xsl:text>#modal-</xsl:text>
-											<xsl:value-of select="/Page/Request/QueryString/Item[@name='targetField']/node()"/>
-										</xsl:attribute>
-									</xsl:if>
 									<i class="fas fa-folder-open fa-white">
 										<xsl:text> </xsl:text>
 									</i>&#160;New Folder
@@ -308,7 +301,7 @@
 			  <xsl:text> expandable</xsl:text>
 		  </xsl:if>
       </xsl:attribute>
-      <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" data-bs-toggle="modal">
+      <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" >
         <i>
           <xsl:attribute name="class">
             <xsl:text>fa fa-lg</xsl:text>
@@ -619,7 +612,7 @@
             </xsl:when>
             <xsl:otherwise>
               <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.svg' or @Extension='.tiff' or @Extension='.tif'">
-                <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}&amp;ewCmd2=pickImage&amp;fld={$fld}&amp;file={$filename}{@extension}" data-bs-toggle="modal" data-bs-target="#modal-{/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-sm btn-primary pickImage">
+                <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}&amp;ewCmd2=pickImage&amp;fld={$fld}&amp;file={$filename}{@extension}" class="btn btn-sm btn-primary pickImage">
                   
                   Pick Image
                 </a>
@@ -708,7 +701,7 @@
 		</form>
 		<xsl:apply-templates select="descendant-or-self::*" mode="xform_modal"/>
 		<script>
-			preparePickImageModal($('#modal-<xsl:value-of select="$page/Request/QueryString/Item[@name='targetField']/node()"/>'));
+			preparePickImageModal('#modal-<xsl:value-of select="$page/Request/QueryString/Item[@name='targetField']/node()"/>');
 		</script>
 	</xsl:template>
 
@@ -857,7 +850,7 @@ function primeFileUpload(){
 			});
 
 			});
-			preparePickImageModal($('#modal-<xsl:value-of select="$page/Request/QueryString/Item[@name='targetField']/node()"/>'));
+			preparePickImageModal('#modal-<xsl:value-of select="$page/Request/QueryString/Item[@name='targetField']/node()"/>');
 
 			},
 
@@ -882,7 +875,7 @@ function primeFileUpload(){
 
 		<script>
 
-			preparePickImageModal($('#modal-<xsl:value-of select="$page/Request/QueryString/Item[@name='targetField']/node()"/>'));
+			preparePickImageModal('#modal-<xsl:value-of select="$page/Request/QueryString/Item[@name='targetField']/node()"/>');
 		</script>
 	</xsl:template>
 	

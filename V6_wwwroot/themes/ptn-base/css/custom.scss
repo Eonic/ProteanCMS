@@ -230,6 +230,19 @@ section.bg-video-wrapper {
         }
     }
 }
+.intro-banner {
+    margin-bottom: $spacer;
+
+    .intro-banner-inner {
+        background: $mid-gray !important;
+        padding: $card-spacer-y $card-spacer-x;
+        text-align: center;
+    }
+
+    .breadcrumb {
+        justify-content: center;
+    }
+}
 // CONTENT LISTS
 
 
@@ -846,6 +859,26 @@ dd {
     .footer-nav {
         margin-left: -1rem;
         margin-right: -1rem;
+    }
+
+    .dev-credit {
+        background: #4e4d4d;
+        padding: 0.5rem;
+        font-size: 0.85rem;
+        margin-top: 2rem;
+        text-align: center;
+        margin-bottom: -2rem;
+
+        a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 300;
+
+            span {
+                vertical-align: middle;
+                line-height: 1;
+            }
+        }
     }
 }
 

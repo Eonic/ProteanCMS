@@ -1330,20 +1330,24 @@ Public Class Cms
                                 bPageCache = False
                             Else
                                 ' Set the Content Type
-                                moResponse.ContentType = mcContentType
+                                If mcContentType = "application/x-www-form-urlencoded" Then
+                                    moResponse.ContentType = "text/html"
+                                Else
+                                    moResponse.ContentType = mcContentType
+                                End If
                                 ' Set the Content Disposition
                                 If Not String.IsNullOrEmpty(mcContentDisposition) Then
-                                    moResponse.AddHeader("Content-Disposition", mcContentDisposition)
+                                        moResponse.AddHeader("Content-Disposition", mcContentDisposition)
+                                    End If
+
+                                    'ONLY CACHE html PAGES
+                                    If mcContentType <> "text/html" And Not String.IsNullOrEmpty(mcContentDisposition) Then
+                                        bPageCache = False
+                                    End If
+
                                 End If
 
-                                'ONLY CACHE html PAGES
-                                If mcContentType <> "text/html" And Not String.IsNullOrEmpty(mcContentDisposition) Then
-                                    bPageCache = False
-                                End If
-
-                            End If
-
-                            If bPageCache = False Then
+                                If bPageCache = False Then
                                 sServeFile = ""
                             End If
 

@@ -380,7 +380,7 @@
 			</xsl:if>
 			<xsl:if test="@twitterURL!=''">
 				<a href="{@twitterURL}" target="_blank" title="{$myName} on Twitter" class="social-id-tw">
-					<i class="fab fa-twitter">
+					<i class="fab fa-x-twitter">
 						<span class="visually-hidden">
 							<xsl:value-of select="$myName"/> on Twitter
 						</span>
