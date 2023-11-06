@@ -63,12 +63,12 @@
 	</xsl:template>
 
 	<xsl:template match="Page[Request/*/Item[@name='ajaxCmd']/node()='GetAdvNode']">
-    <xsl:variable name="level" select="Menu/@level"/>
+		<xsl:variable name="level" select="Menu/@level"/>
 		<xsl:variable name="pgid" select="Request/*/Item[@name='pgid']/node()"/>
-    <ul class="tree-folder-content">
-      <xsl:apply-templates select="Menu/descendant-or-self::MenuItem[@id=$pgid]/MenuItem" mode="menuitem_am">
-        <xsl:with-param name="level" select="$level + 1"/>
-      </xsl:apply-templates>
+		<ul class="tree-folder-content">
+		  <xsl:apply-templates select="Menu/descendant-or-self::MenuItem[@id=$pgid]/MenuItem" mode="menuitem_am">
+			<xsl:with-param name="level" select="$level + 1"/>
+		  </xsl:apply-templates>
 		</ul>
 	</xsl:template>
 
@@ -76,26 +76,24 @@
 		<xsl:variable name="folderPath" select="translate(Request/*/Item[@name='pgid']/node(),'~','\')"/>
 		<xsl:variable name="level" select="count(ContentDetail/descendant-or-self::folder[@path=$folderPath]/ancestor::folder)"/>
 		<ul class="tree-folder-content">
-			<!--
-			<li class="list-group-item">
-				<xsl:value-of select="$folderPath"/>
-				<xsl:value-of select="ContentDetail/folder/@startLevel"/>
-			</li>
-			-->
 			<xsl:apply-templates select="ContentDetail/folder/folder" mode="FolderTree">
 				<xsl:with-param name="level" select="$level + 2 + number(ContentDetail/folder/@startLevel)"/>
 			</xsl:apply-templates>
-
 		</ul>
 	</xsl:template>
 
-
 	<xsl:template match="folder" mode="FolderTree">
-		<xsl:param name="fld"/>	
 		<xsl:param name="level"/>
 		<xsl:variable name="filename">
 			<xsl:call-template name="url-encode">
 				<xsl:with-param name="str" select="@name"/>
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:variable name="fld">
+			<xsl:call-template name="url-encode">
+				<xsl:with-param name="str">
+					<xsl:value-of select="@path"/>
+				</xsl:with-param>
 			</xsl:call-template>
 		</xsl:variable>
 		<li id="node{translate(@path,'\','~')}" data-tree-level="{$level}" data-tree-parent="{translate(parent::folder/@path,'\','~')}">
@@ -136,10 +134,9 @@
 		</xsl:if>
 	</xsl:template>
 
-
 	<xsl:template match="Page[Request/*/Item[@name='ajaxCmd']/node()='editStructurePermissions']">
 		<xsl:variable name="pgid" select="Request/*/Item[@name='pgid']/node()"/>
-    <ul class="tree-folder-content">
+		<ul class="tree-folder-content">
 			<xsl:apply-templates select="Menu/descendant-or-self::MenuItem[@id=$pgid]/MenuItem" mode="editStructurePermissions"/>
 		</ul>
 	</xsl:template>
