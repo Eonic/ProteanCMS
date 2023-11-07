@@ -882,7 +882,7 @@ Recheck:
                         isAlt = True
                         Dim altoDBServerName As String = Convert.ToString(mConfig("DatabaseServer"))
                         Dim altoDBName As String = Convert.ToString(mConfig("DatabaseName"))
-                        Dim altoDBUserName As String = Convert.ToString(mConfig("DatabaseUser"))
+                        Dim altoDBUserName As String = Convert.ToString(mConfig("DatabaseUsername"))
                         Dim altoDBPassword As String = Convert.ToString(mConfig("DatabasePassword"))
 
                         myWeb.moDbHelper.DatabaseServer = altoDBServerName
