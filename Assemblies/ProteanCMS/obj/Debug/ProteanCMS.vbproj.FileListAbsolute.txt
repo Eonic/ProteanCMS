@@ -1861,3 +1861,7 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.Co
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.pdb
+C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Select.Pdf.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Select.Pdf.xml
+C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Select.Html.dep
+C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Select.Tools.dep
