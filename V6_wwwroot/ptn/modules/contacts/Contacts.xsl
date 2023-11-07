@@ -463,6 +463,7 @@
 						</xsl:if>
 						<xsl:apply-templates select="Description/node()" mode="cleanXhtml"/>
 					</div>
+					<xsl:if test="Content[@type='NewsArticle']">
 					<div class="relatedcontent NewsList">
 						<h2>
 							Articles by <xsl:value-of select="GivenName"/><xsl:text> </xsl:text><xsl:value-of select="Surname"/>
@@ -473,6 +474,7 @@
 							</xsl:apply-templates>
 						</div>
 					</div>
+					</xsl:if>
 					<div class="entryFooter">
 						<xsl:if test="Content[@type='Tag']">
 							<div class="tags">
