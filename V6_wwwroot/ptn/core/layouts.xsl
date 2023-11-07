@@ -1744,27 +1744,6 @@
 		</div>
 	</xsl:template>
 
-
-	
-
-	<!-- Tags Display -->
-	<xsl:template match="Content" mode="displayTagsNoLink">
-		<xsl:param name="sortBy"/>
-		<xsl:variable name="articleList">
-			<xsl:for-each select="Content[@type='Tag']">
-				<xsl:copy-of select="."/>
-			</xsl:for-each>
-		</xsl:variable>
-		<xsl:if test="count(Content[@type='Tag'])&gt;0">
-			<div class="tags">
-				<!--Tags-->
-				<xsl:apply-templates select="ms:node-set($articleList)" mode="displayBriefNoLink">
-					<xsl:with-param name="sortBy" select="@sortBy"/>
-				</xsl:apply-templates>
-			</div>
-		</xsl:if>
-	</xsl:template>
-
 	<xsl:template match="Content" mode="contentColumnsX">
 		<xsl:param name="class"/>
 		<xsl:variable name="xsColsToShow">
