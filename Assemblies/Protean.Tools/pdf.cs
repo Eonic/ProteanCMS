@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
-
+using SelectPdf;
 
 namespace Protean.Tools
 {
@@ -16,83 +16,88 @@ namespace Protean.Tools
         public delegate void ErrorEventHandler(object sender, Protean.Tools.Errors.ErrorEventArgs e);
         private const string mcModuleName = "Protean.Tools.PDF";
 
-        public MemoryStream GetPDFstream(XmlElement xPageXml ,string XsltPath, string FontPath) {
+        public MemoryStream GetPDFstream(XmlElement xPageXml, string XsltPath, string FontPath)
+        {
             {
                 try
                 {
-                    // Next we transform using into FO.Net Xml
-
+                    System.IO.MemoryStream ofileStream = new System.IO.MemoryStream();
                     string styleFile = System.Convert.ToString(XsltPath);
+                    Protean.Tools.Xslt.Transform oTransform = new Protean.Tools.Xslt.Transform();
+                    oTransform.XslTFile = XsltPath;
+                    oTransform.Xml = xPageXml;
+                    oTransform.Compiled = false;
 
-                    
-                Protean.Tools.Xslt.Transform oTransform = new Protean.Tools.Xslt.Transform();
-                oTransform.XslTFile = XsltPath;
-                oTransform.Xml = xPageXml;
-                oTransform.Compiled = false;
+                    string pdfDocumentXml = oTransform.Process();
+                    //check if 'html' node exists in string
+                    if (pdfDocumentXml.ToLower().Contains("<html"))
+                    {  //PDF code
+                        HtmlToPdf converter = new HtmlToPdf();
+                        PdfDocument pdfDoc = converter.ConvertHtmlString(pdfDocumentXml, "");
+                        PdfCustomPageSize pageSize = PdfCustomPageSize.A4;
+                        pdfDoc.Save(ofileStream);
+                        byte[] oStreamByteArray = ofileStream.ToArray();
 
-                string foNetXml = oTransform.Process();
+                        converter = null;
+                        pdfDoc.Close();
+                        pdfDoc = null;
 
-                    if (foNetXml.StartsWith("<html")) {
+                        return new MemoryStream(oStreamByteArray);
 
-                        // using selectpdf....
-
-                        return null;
                     }
-                    else { 
-
-
-
-                // now we use FO.Net to generate our PDF
-
-                Fonet.FonetDriver oFoNet = new Fonet.FonetDriver();
-                System.IO.MemoryStream ofileStream = new System.IO.MemoryStream();
-                System.IO.StringReader oTxtReader = new System.IO.StringReader(foNetXml);
-                oFoNet.CloseOnExit = false;
-
-                Fonet.Render.Pdf.PdfRendererOptions rendererOpts = new Fonet.Render.Pdf.PdfRendererOptions();
-
-                rendererOpts.Author = "ProteanCMS";
-                rendererOpts.EnablePrinting = true;
-                rendererOpts.FontType = Fonet.Render.Pdf.FontType.Embed;
-                // rendererOpts.Kerning = True
-                // rendererOpts.EnableCopy = True
-
-                DirectoryInfo dir = new DirectoryInfo(FontPath);
-                DirectoryInfo[] subDirs = dir.GetDirectories();
-                FileInfo[] files = dir.GetFiles();
-               // FileInfo fi = default(FileInfo);
-
-                foreach (FileInfo fi in files)
-                {
-                    string cExt = fi.Extension.ToLower();
-                    switch (cExt)
+                    else
                     {
-                        case ".otf":
+
+
+                        Fonet.FonetDriver oFoNet = new Fonet.FonetDriver();
+                        System.IO.StringReader oTxtReader = new System.IO.StringReader(pdfDocumentXml);
+                        oFoNet.CloseOnExit = false;
+
+                        Fonet.Render.Pdf.PdfRendererOptions rendererOpts = new Fonet.Render.Pdf.PdfRendererOptions();
+
+                        rendererOpts.Author = "ProteanCMS";
+                        rendererOpts.EnablePrinting = true;
+                        rendererOpts.FontType = Fonet.Render.Pdf.FontType.Embed;
+                        // rendererOpts.Kerning = True
+                        // rendererOpts.EnableCopy = True
+
+                        DirectoryInfo dir = new DirectoryInfo(FontPath);
+                        DirectoryInfo[] subDirs = dir.GetDirectories();
+                        FileInfo[] files = dir.GetFiles();
+                        // FileInfo fi = default(FileInfo);
+
+                        foreach (FileInfo fi in files)
+                        {
+                            string cExt = fi.Extension.ToLower();
+                            switch (cExt)
                             {
-                                rendererOpts.AddPrivateFont(fi);
-                                break;
+                                case ".otf":
+                                    {
+                                        rendererOpts.AddPrivateFont(fi);
+                                        break;
+                                    }
                             }
+                        }
+
+                        oFoNet.Options = rendererOpts;
+                        oFoNet.Render(oTxtReader, ofileStream);
+                        byte[] Buffer = ofileStream.ToArray();
+
+                        return new MemoryStream(Buffer);
                     }
+
                 }
 
-                oFoNet.Options = rendererOpts;
-                oFoNet.Render(oTxtReader, ofileStream);
 
-                 
-
-                    byte[] Buffer = ofileStream.ToArray();
-
-                return new MemoryStream(Buffer);
-         }
-                }
                 catch (Exception ex)
                 {
                     OnError?.Invoke(null/* TODO Change to default(_) if this is not a reference type */, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetPDFstream", ex, ""));
                     return null;
                 }
-            }
-        }
 
+            }
+
+        }
         public MemoryStream GetPDFstream(string XmlFO, string FontPath)
         {
             {
