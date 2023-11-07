@@ -806,24 +806,6 @@ Public Class XmlHelper
             Try
                 If mbCompiled Then
 
-                    'Dim xsltDomain As AppDomain
-                    'If goApp("xsltDomain") Is Nothing Then
-                    '    Dim ads As New AppDomainSetup
-                    '    ads.ApplicationBase = AppDomain.CurrentDomain.BaseDirectory & "\bin"
-                    '    ads.DisallowBindingRedirects = False
-                    '    ads.DisallowCodeDownload = True
-                    '    ' ads.LoaderOptimization = LoaderOptimization.SingleDomain
-                    '    ads.ConfigurationFile = "C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Config\web.config"
-                    '    'ads.ConfigurationFile = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile
-                    '    ads.ApplicationTrust = AppDomain.CurrentDomain.ApplicationTrust
-                    '    Dim adevidence As System.Security.Policy.Evidence = AppDomain.CurrentDomain.Evidence
-                    '    xsltDomain = AppDomain.CreateDomain("xslt", adevidence, ads)
-                    '    goApp("xsltDomain") = xsltDomain
-                    'Else
-                    '    xsltDomain = goApp("xsltDomain")
-                    'End If
-
-
                     Dim resolver As New XmlUrlResolver()
                     resolver.Credentials = System.Net.CredentialCache.DefaultCredentials
 

@@ -15,7 +15,7 @@ namespace Protean.Tools
                 output = Enum.Parse(enumType, value, ignoreCase);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }

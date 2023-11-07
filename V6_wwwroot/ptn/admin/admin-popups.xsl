@@ -90,6 +90,20 @@
 				<xsl:text>&amp;pathonly=true</xsl:text>
 			</xsl:if>
 		</xsl:variable>
+		<xsl:variable name="fld">
+			<xsl:call-template name="url-encode">
+				<xsl:with-param name="str">
+					<xsl:value-of select="@path"/>
+				</xsl:with-param>
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:variable name="fld-parent">
+			<xsl:call-template name="url-encode">
+				<xsl:with-param name="str">
+					<xsl:value-of select="parent::folder/@path"/>
+				</xsl:with-param>
+			</xsl:call-template>
+		</xsl:variable>
 
 		<div id="template_FileSystem" class="modal-body">
 
@@ -115,7 +129,7 @@
 						<div class="btn-group-spaced mb-1">
 							<xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup')) and not(@path='')">
 
-								<a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={parent::folder/@path}" class="btn btn-sm btn-outline-primary">
+								<a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={$fld-parent}" class="btn btn-sm btn-outline-primary">
 									<xsl:if test="$submitPath!='/?'">
 										<xsl:attribute name="data-bs-toggle">modal</xsl:attribute>
 										<xsl:attribute name="data-target">
@@ -132,7 +146,7 @@
 							</xsl:if>
 							<xsl:if test="not(starts-with(/Page/Request/QueryString/Item[@name='fld']/node(),'\FreeStock'))">
 
-								<a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;ewCmd2=addFolder&amp;fld={@path}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-sm btn-outline-primary">
+								<a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;ewCmd2=addFolder&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-sm btn-outline-primary">
 									<i class="fas fa-folder-open fa-white">
 										<xsl:text> </xsl:text>
 									</i>&#160;New Folder
@@ -153,7 +167,7 @@
 								<xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup')) and not(@path='')">
 									<xsl:if test="parent::folder">
 
-										<a href="{$submitPath}ewcmd={/Page/@ewCmd}&amp;ewCmd2=deleteFolder&amp;fld={@path}" class="btn btn-sm btn-outline-danger">
+										<a href="{$submitPath}ewcmd={/Page/@ewCmd}&amp;ewCmd2=deleteFolder&amp;fld={$fld}" class="btn btn-sm btn-outline-danger">
 											<i class="fas fa-trash fa-white">
 												<xsl:text> </xsl:text>
 											</i>

@@ -174,16 +174,17 @@
         <xsl:text>~/ewcommon/js/codemirror/codemirror.js,</xsl:text>
         <xsl:text>~/ewcommon/js/jQuery/jquery.magnific-popup.min.js,</xsl:text>
         <xsl:text>~/ewcommon/js/codemirror/mirrorframe.js,</xsl:text>
-		<xsl:text>~/ewcommon/js/ajaxtreeview/ajaxtreeview.js,</xsl:text>
-        <xsl:text>~/ewcommon/js/vuejs/vue.min.js,</xsl:text>
-        <xsl:text>~/ewcommon/js/vuejs/axios.min.js,</xsl:text>
-        <xsl:text>~/ewcommon/js/vuejs/polyfill.js,</xsl:text>
-        <xsl:text>~/ewcommon/js/vuejs/protean-vue.js,</xsl:text>
-		<xsl:text>~/ewcommon/js/ewAdmin.js</xsl:text>
+	<xsl:text>~/ewcommon/js/vuejs/vue.min.js,</xsl:text>
+	<xsl:text>~/ewcommon/js/vuejs/axios.min.js,</xsl:text>
+	<xsl:text>~/ewcommon/js/vuejs/polyfill.js,</xsl:text>
+	<xsl:text>~/ewcommon/js/vuejs/protean-vue.js,</xsl:text>
+	<xsl:text>~/ewcommon/js/ajaxtreeview/ajaxtreeview.js,</xsl:text>
+	<xsl:text>~/ewcommon/js/ewAdmin.js</xsl:text>
       </xsl:with-param>
       <xsl:with-param name="bundle-path">
         <xsl:text>~/Bundles/Admin</xsl:text>
       </xsl:with-param>
+      <xsl:with-param name="async" select="true()"/>
     </xsl:call-template>
     <xsl:apply-templates select="." mode="siteAdminJs"/>
     <xsl:apply-templates select="." mode="LayoutAdminJs"/>
@@ -5476,8 +5477,8 @@
 								$('.modal-dialog').addClass('loading')
 								$('.modal-body').html('<xsl:text disable-output-escaping="yes">&lt;</xsl:text>p class="text-center"<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>h4<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>i class="fa fa-cog fa-spin fa-2x fa-fw"<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/i<xsl:text disable-output-escaping="yes">&gt;</xsl:text>Loading ...<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/h4<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/p<xsl:text disable-output-escaping="yes">&gt;</xsl:text>');
 								var target = $(this).attr("href");
-								// load the url and show modal on success
-								var currentModal = $('.pickImageModal')
+								// load the url and show modal on success								
+								var currentModal = $(".pickImageModal:visible");
 								console.log(currentModal);
 								currentModal.load(target, function() {
 									$('.modal-dialog').removeClass('loading')

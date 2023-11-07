@@ -1607,7 +1607,7 @@
 	</xsl:template>
 
 
-	
+
 
 	<!-- ## Generic displayBrief   #####################################################################   -->
 	<xsl:template match="Content" mode="displayBrief">
@@ -1618,7 +1618,7 @@
 	<xsl:template match="Content[@type='Module']" mode="displayBrief">
 		<span class="alert">* Module type unknown *</span>
 	</xsl:template>
-	
+
 	<!-- ## Generic Module   #####################################################################   -->
 	<!-- Module No Carousel -->
 	<xsl:template match="Content[@type='Module']" mode="displayBrief">
@@ -1745,4 +1745,196 @@
 	</xsl:template>
 
 
+	
+
+	<!-- Tags Display -->
+	<xsl:template match="Content" mode="displayTagsNoLink">
+		<xsl:param name="sortBy"/>
+		<xsl:variable name="articleList">
+			<xsl:for-each select="Content[@type='Tag']">
+				<xsl:copy-of select="."/>
+			</xsl:for-each>
+		</xsl:variable>
+		<xsl:if test="count(Content[@type='Tag'])&gt;0">
+			<div class="tags">
+				<!--Tags-->
+				<xsl:apply-templates select="ms:node-set($articleList)" mode="displayBriefNoLink">
+					<xsl:with-param name="sortBy" select="@sortBy"/>
+				</xsl:apply-templates>
+			</div>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="Content" mode="contentColumnsX">
+		<xsl:param name="class"/>
+		<xsl:variable name="xsColsToShow">
+			<xsl:choose>
+				<xsl:when test="@xsCol='2'">2</xsl:when>
+				<xsl:otherwise>1</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="smColsToShow">
+			<xsl:choose>
+				<xsl:when test="@smCol and @smCol!=''">
+					<xsl:value-of select="@smCol"/>
+				</xsl:when>
+				<xsl:otherwise>1</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="mdColsToShow">
+			<xsl:choose>
+				<xsl:when test="@mdCol and @mdCol!=''">
+					<xsl:value-of select="@mdCol"/>
+				</xsl:when>
+				<xsl:otherwise>1</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="lgColsToShow">
+			<xsl:choose>
+				<xsl:when test="@lgCol and @lgCol!=''">
+					<xsl:value-of select="@lgCol"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="@cols"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="xlColsToShow">
+			<xsl:choose>
+				<xsl:when test="@xlCol and @xlCol!=''">
+					<xsl:value-of select="@xlCol"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="@cols"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:attribute name="data-xscols">
+			<xsl:value-of select="$xsColsToShow"/>
+		</xsl:attribute>
+		<xsl:attribute name="data-smcols">
+			<xsl:value-of select="$smColsToShow"/>
+		</xsl:attribute>
+		<xsl:attribute name="data-mdcols">
+			<xsl:value-of select="$mdColsToShow"/>
+		</xsl:attribute>
+		<xsl:attribute name="data-lgcols">
+			<xsl:value-of select="$lgColsToShow"/>
+		</xsl:attribute>
+		<xsl:attribute name="data-xlcols">
+			<xsl:value-of select="$xlColsToShow"/>
+		</xsl:attribute>
+		<xsl:attribute name="class">
+			<xsl:text>row cols row-cols-1</xsl:text>
+			<xsl:if test="@xsCol='2'"> row-cols-2</xsl:if>
+			<xsl:if test="@smCol and @smCol!=''">
+				<xsl:text> row-cols-sm-</xsl:text>
+				<xsl:value-of select="@smCol"/>
+			</xsl:if>
+			<xsl:if test="@mdCol and @mdCol!=''">
+				<xsl:text> row-cols-md-</xsl:text>
+				<xsl:value-of select="@mdCol"/>
+			</xsl:if>
+			<xsl:if test="@lgCol and @lgCol!=''">
+				<xsl:text> row-cols-lg-</xsl:text>
+				<xsl:value-of select="@lgCol"/>
+			</xsl:if>
+			<xsl:if test="@xlCol and @xlCol!=''">
+				<xsl:text> row-cols-xl-</xsl:text>
+				<xsl:value-of select="@xlCol"/>
+			</xsl:if>
+			<xsl:if test="@cols and @cols!=''">
+				<xsl:text> row-cols-xxl-</xsl:text>
+				<xsl:value-of select="@cols"/>
+			</xsl:if>
+			<xsl:value-of select="$class"/>
+		</xsl:attribute>
+	</xsl:template>
+
+
+	<xsl:template match="Content" mode="contentColumns">
+		<xsl:param name="class"/>
+		<xsl:param name="carousel"/>
+		<xsl:variable name="xsColsToShow">
+			<xsl:if test="@xsCol and @xsCol!=''">
+				<xsl:value-of select="@xsCol"/>
+			</xsl:if>
+		</xsl:variable>
+		<xsl:variable name="smColsToShow">
+			<xsl:if test="@smCol and @smCol!=''">
+				<xsl:value-of select="@smCol"/>
+			</xsl:if>
+		</xsl:variable>
+		<xsl:variable name="mdColsToShow">
+			<xsl:if test="@mdCol and @mdCol!=''">
+				<xsl:value-of select="@mdCol"/>
+			</xsl:if>
+		</xsl:variable>
+		<xsl:variable name="lgColsToShow">
+			<xsl:if test="@lgCol and @lgCol!=''">
+				<xsl:value-of select="@lgCol"/>
+			</xsl:if>
+		</xsl:variable>
+		<xsl:variable name="xlColsToShow">
+			<xsl:if test="@xlCol and @xlCol!=''">
+				<xsl:value-of select="@xlCol"/>
+			</xsl:if>
+		</xsl:variable>
+		<xsl:attribute name="data-xscols">
+			<xsl:value-of select="$xsColsToShow"/>
+		</xsl:attribute>
+		<xsl:attribute name="data-smcols">
+			<xsl:value-of select="$smColsToShow"/>
+		</xsl:attribute>
+		<xsl:attribute name="data-mdcols">
+			<xsl:value-of select="$mdColsToShow"/>
+		</xsl:attribute>
+		<xsl:attribute name="data-lgcols">
+			<xsl:value-of select="$lgColsToShow"/>
+		</xsl:attribute>
+		<xsl:attribute name="data-xlcols">
+			<xsl:value-of select="$xlColsToShow"/>
+		</xsl:attribute>
+		<xsl:attribute name="class">
+			<xsl:choose>
+				<xsl:when test="$carousel='true'">
+					<xsl:text> cols row-cols-1 swiper-wrapper</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text> row cols row-cols-1</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+			<xsl:choose>
+				<xsl:when test="@xsCol and @xsCol!=''">
+					<xsl:text> row-cols-</xsl:text>
+					<xsl:value-of select="@xsCol"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text> row-cols-1</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+			<xsl:if test="@smCol and @smCol!=''">
+				<xsl:text> row-cols-sm-</xsl:text>
+				<xsl:value-of select="@smCol"/>
+			</xsl:if>
+			<xsl:if test="@mdCol and @mdCol!=''">
+				<xsl:text> row-cols-md-</xsl:text>
+				<xsl:value-of select="@mdCol"/>
+			</xsl:if>
+			<xsl:if test="@lgCol and @lgCol!=''">
+				<xsl:text> row-cols-lg-</xsl:text>
+				<xsl:value-of select="@lgCol"/>
+			</xsl:if>
+			<xsl:if test="@xlCol and @xlCol!=''">
+				<xsl:text> row-cols-xl-</xsl:text>
+				<xsl:value-of select="@xlCol"/>
+			</xsl:if>
+			<xsl:if test="@cols and @cols!=''">
+				<xsl:text> row-cols-xxl-</xsl:text>
+				<xsl:value-of select="@cols"/>
+			</xsl:if>
+			<xsl:value-of select="$class"/>
+		</xsl:attribute>
+	</xsl:template>
 </xsl:stylesheet>
+
