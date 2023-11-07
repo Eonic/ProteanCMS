@@ -5476,8 +5476,8 @@
 								$('.modal-dialog').addClass('loading')
 								$('.modal-body').html('<xsl:text disable-output-escaping="yes">&lt;</xsl:text>p class="text-center"<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>h4<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>i class="fa fa-cog fa-spin fa-2x fa-fw"<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/i<xsl:text disable-output-escaping="yes">&gt;</xsl:text>Loading ...<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/h4<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/p<xsl:text disable-output-escaping="yes">&gt;</xsl:text>');
 								var target = $(this).attr("href");
-								// load the url and show modal on success
-								var currentModal = $('.pickImageModal')
+								// load the url and show modal on success								
+								var currentModal = $(".pickImageModal:visible");
 								console.log(currentModal);
 								currentModal.load(target, function() {
 									$('.modal-dialog').removeClass('loading')
