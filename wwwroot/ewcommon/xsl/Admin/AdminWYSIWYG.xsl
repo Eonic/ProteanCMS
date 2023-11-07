@@ -101,6 +101,10 @@
       <xsl:otherwise>Don't search for this</xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
+  
+  	<xsl:variable name="GoogleAPIKey">
+		<xsl:value-of select="$page/Settings/add[@key='web.GoogleAPIKey']/@value"/>
+	</xsl:variable>
 
   <!--xsl:template name="getSiteURL">
     <xsl:choose>
@@ -134,7 +138,7 @@
 
   <xsl:template match="Page" mode="adminJs">
     <xsl:if test="ContentDetail/Content[@type='xform']/descendant::submit[contains(@class,'getGeocodeButton')]">
-      <script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false&amp;key=AIzaSyDgWT-s0qLPmpc4aakBNkfWsSapEQLUEbo">&#160;</script>
+      <script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false&amp;key={$GoogleAPIKey}">&#160;</script>
     </xsl:if>
     <xsl:call-template name="bundle-js">
       <xsl:with-param name="comma-separated-files">
@@ -143,26 +147,21 @@
         <xsl:text>~/ewcommon/js/codemirror/codemirror.js,</xsl:text>
         <xsl:text>~/ewcommon/js/jQuery/jquery.magnific-popup.min.js,</xsl:text>
         <xsl:text>~/ewcommon/js/codemirror/mirrorframe.js,</xsl:text>
-	    <xsl:text>~/ewcommon/js/vuejs/vue.min.js,</xsl:text>
-	    <xsl:text>~/ewcommon/js/vuejs/axios.min.js,</xsl:text>
-	    <xsl:text>~/ewcommon/js/vuejs/polyfill.js,</xsl:text>
-	    <xsl:text>~/ewcommon/js/vuejs/protean-vue.js,</xsl:text>
-		<xsl:text>~/ewcommon/js/ajaxtreeview/ajaxtreeview.js,</xsl:text>
-		<xsl:text>~/ewcommon/js/ewAdmin.js</xsl:text>
+	<xsl:text>~/ewcommon/js/vuejs/vue.min.js,</xsl:text>
+	<xsl:text>~/ewcommon/js/vuejs/axios.min.js,</xsl:text>
+	<xsl:text>~/ewcommon/js/vuejs/polyfill.js,</xsl:text>
+	<xsl:text>~/ewcommon/js/vuejs/protean-vue.js,</xsl:text>
+	<xsl:text>~/ewcommon/js/ajaxtreeview/ajaxtreeview.js,</xsl:text>
+	<xsl:text>~/ewcommon/js/ewAdmin.js</xsl:text>
       </xsl:with-param>
       <xsl:with-param name="bundle-path">
         <xsl:text>~/Bundles/Admin</xsl:text>
       </xsl:with-param>
 		<xsl:with-param name="async" select="true()"/>
     </xsl:call-template>
- 
-    <xsl:apply-templates select="." mode="siteAdminJs"/>
-
-    <xsl:apply-templates select="." mode="LayoutAdminJs"/>
-
-    <!--xsl:apply-templates select="." mode="xform_control_scripts"/-->
-
-  </xsl:template>
+     <xsl:apply-templates select="." mode="siteAdminJs"/>
+   <xsl:apply-templates select="." mode="LayoutAdminJs"/>
+ </xsl:template>
 
   <!-- -->
   <xsl:template match="Page" mode="siteAdminJs"></xsl:template>

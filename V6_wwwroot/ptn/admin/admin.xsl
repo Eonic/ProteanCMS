@@ -4056,6 +4056,7 @@
         </xsl:when>
       </xsl:choose>
     </xsl:variable>
+	  
 
     <xsl:variable name="partPath"  select="translate(descendant::folder[@active='true']/@path,'\','/')"/>
 
@@ -4787,7 +4788,7 @@
           <xsl:text> active collapsable</xsl:text>
         </xsl:if>
       </xsl:attribute>
-      <a href="{$appPath}?ewCmd={/Page/@ewCmd}&amp;fld={@path}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" data-bs-toogle="modal">
+      <a href="{$appPath}?ewCmd={/Page/@ewCmd}&amp;fld={@path}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}">
         <i>
           <xsl:attribute name="class">
             <xsl:text>fas fa-lg</xsl:text>

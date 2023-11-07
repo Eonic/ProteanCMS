@@ -288,13 +288,15 @@ $(document).ready(function () {
         if ($('#template_FileSystem #MenuTree').data('multiple') == 1) {
             multiple = "&multiple=true"        
         }
-        //activateTreeview
-        $('#template_FileSystem #MenuTree').ajaxtreeview({
-            loadPath: treeviewPath + "&popup=true&libType=" + $('#template_FileSystem #MenuTree').data("lib-type").replace("Lib", "") + "&targetForm=" + $('#template_FileSystem #MenuTree').data("target-form") + "&targetField=" + $('#template_FileSystem #MenuTree').data("target-field") + "&targetClass=" + $('#template_FileSystem #MenuTree').data("target-class") + multiple,
-            ajaxCmd: 'GetFolderNode',
-            openLevel: 2,
-            hide: true
-        });
+
+        if (currentModal.find('#template_FileSystem #MenuTree').exists()) {
+            currentModal.find('#template_FileSystem #MenuTree').ajaxtreeview({
+                loadPath: treeviewPath + "&popup=true&libType=" + $('#template_FileSystem #MenuTree').data("lib-type").replace("Lib", "") + "&targetForm=" + $('#template_FileSystem #MenuTree').data("target-form") + "&targetField=" + $('#template_FileSystem #MenuTree').data("target-field") + "&targetClass=" + $('#template_FileSystem #MenuTree').data("target-class") + multiple,
+                ajaxCmd: 'GetFolderNode',
+                openLevel: 2,
+                hide: true
+            });
+        };
 
         $('#files .item-image .panel').prepareLibImages();
 
@@ -322,7 +324,7 @@ $(document).ready(function () {
         });
 
         $(this).find('form').on('submit', function (event) {
-
+          
             event.preventDefault()
             var formData = $(this).serialize();
             var targetUrl = $(this).attr("action") + '&contentType=popup';
@@ -2121,21 +2123,20 @@ function getImagePaths() {
    
 }
 
-function SaveFileName(isOverwrite) {
-    
-    var newfilename;
+function SaveFileName(isOverwrite) {    
+    var newfilename; var oldfilename;
     if (isOverwrite) {
-        newfilename = $("#cleanFilename").val();
-    } else {
-        newfilename = $("#txtfilename").val();
-    }    
+        oldfilename = $("#cleanFilename").val();
+    } 
+    newfilename = $("#txtfilename").val();       
+    var existsfilename = document.getElementById("existsFile").files[0];
     var targetPath = $("#targetPath").val();
-    var ajaxurl = '?ewCmd=ImageLib&ewCmd2=FileUpload&isOverwrite=' + isOverwrite +'&storageRoot="'+targetPath+'"';
+    var ajaxurl = '?ewCmd=ImageLib&ewCmd2=FileUpload&isOverwrite=' + isOverwrite + '&oldfile="' + oldfilename +'"&storageRoot="'+targetPath+'"';
     let list = new DataTransfer();
-    let file = new File(["content"], newfilename);
+    let file = new File([existsfilename], newfilename);
     list.items.add(file);
     let myFileList = list.files;
-    postedFile.files = myFileList;
+    existsFile.files = myFileList;
     var formData = new FormData($("#frmfileData")[0]);   
     $.ajax({
         url: ajaxurl,
@@ -2144,7 +2145,10 @@ function SaveFileName(isOverwrite) {
         contentType: false,
         type: 'POST',
         success: function (result) {            
-            $("#changeFilename").modal("hide");          
+            $("#changeFilename").modal("hide");           
+            var newItem = $("#divnewfileupdate").html();  
+            $('#files').prepend(newItem);
+            $('#files .item-image .panel').prepareLibImages();	    
         }
     });
 }
