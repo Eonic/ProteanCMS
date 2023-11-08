@@ -9163,7 +9163,12 @@ Public Class Cms
                     Dim AppVarName As String = dir.FullName
                     AppVarName = AppVarName.Substring(goServer.MapPath("/" & moConfig("ProjectPath") & bundlePath).Length())
                     AppVarName = AppVarName.Replace("\", "/")
-                    moCtx.Application.Remove("~/" & AppVarName)
+                    AppVarName = LCase(bundlePath & "/" & AppVarName.Trim("/"))
+
+                    'check exists before we remove
+                    If Not moCtx.Application.Get(AppVarName) Is Nothing Then
+                        moCtx.Application.Remove(AppVarName)
+                    End If
                 Next
             End If
 

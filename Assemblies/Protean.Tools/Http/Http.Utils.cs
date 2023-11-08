@@ -128,7 +128,7 @@ namespace Protean.Tools.Http
                 }
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
