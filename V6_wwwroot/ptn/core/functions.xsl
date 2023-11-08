@@ -3983,6 +3983,7 @@
 		<xsl:param name="span"/>
 		<xsl:param name="hover"/>
 		<xsl:param name="mobileDD"/>
+		<xsl:param name="class"/>
 		<xsl:param name="overviewLink"/>
 		<xsl:variable name="liClass">
 			<xsl:text>nav-item </xsl:text>
@@ -4009,6 +4010,9 @@
 			</xsl:if>
 			<xsl:if test="contains(DisplayName/@screens,'xs')">
 				<xsl:text> d-xs-none</xsl:text>
+			</xsl:if>
+			<xsl:if test="$class!=''">
+				<xsl:value-of select="$class"/>
 			</xsl:if>
 
 		</xsl:variable>
@@ -4254,24 +4258,16 @@
 	<!-- -->
 
 	<xsl:template match="MenuItem" mode="submenu_topnav">
-		<ul>
+		<ul class="nav">
 			<xsl:apply-templates select="MenuItem[not(DisplayName/@exclude='true')]" mode="submenuitem_topnav"/>
 		</ul>
 	</xsl:template>
 	<!-- -->
 	<xsl:template match="MenuItem" mode="submenuitem_topnav">
-		<li>
-			<xsl:if test="position()=1">
-				<xsl:attribute name="class">
-					<xsl:text>first</xsl:text>
-				</xsl:attribute>
-			</xsl:if>
-			<xsl:if test="position()=last()">
-				<xsl:attribute name="class">
-					<xsl:text>last</xsl:text>
-				</xsl:attribute>
-			</xsl:if>
-			<xsl:apply-templates select="self::MenuItem" mode="menuLink"/>
+		<li class="nav-item">
+			<xsl:apply-templates select="self::MenuItem" mode="menuLink">
+				<xsl:with-param name="class">nav-link</xsl:with-param>
+			</xsl:apply-templates>
 		</li>
 	</xsl:template>
 

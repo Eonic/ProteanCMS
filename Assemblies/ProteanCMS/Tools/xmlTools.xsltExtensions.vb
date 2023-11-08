@@ -2026,7 +2026,7 @@ Partial Public Module xmlTools
             Dim sReturnString As String
 
             Try
-
+                Dim AppVariableName = LCase("js" & TargetPath.Replace("~", ""))
 
                 Dim bReset As Boolean = False
                 If myWeb Is Nothing Or gbDebug Then
@@ -2043,7 +2043,7 @@ Partial Public Module xmlTools
                         End If
                     End If
                         Dim bAppVarExists As Boolean = False
-                    If Not myWeb.moCtx.Application.Get(TargetPath) Is Nothing Then
+                    If Not myWeb.moCtx.Application.Get(AppVariableName) Is Nothing Then
                         bAppVarExists = True
                     End If
 
@@ -2052,14 +2052,14 @@ Partial Public Module xmlTools
                         If VirtualFileExists("/" & myWeb.moConfig("ProjectPath") & "js" & TargetPath.Replace("~", "") & "/script.js") Then
                             'regenerate the application variable from the files in the folder
                             'we do not want to recreate all js everytime the application pool is reset anymore.
-                            myWeb.moCtx.Application.Set(TargetPath, "/" & myWeb.moConfig("ProjectPath") & "js" & TargetPath.Replace("~", "") & "/script.js")
+                            myWeb.moCtx.Application.Set(AppVariableName, "/" & myWeb.moConfig("ProjectPath") & "js" & TargetPath.Replace("~", "") & "/script.js")
                             bAppVarExists = True
                         End If
                     End If
 
-                    If Not myWeb.moCtx.Application.Get(TargetPath) Is Nothing And bReset = False Then
+                    If Not myWeb.moCtx.Application.Get(AppVariableName) Is Nothing And bReset = False Then
 
-                        sReturnString = myWeb.moCtx.Application.Get(TargetPath)
+                        sReturnString = myWeb.moCtx.Application.Get(AppVariableName)
 
                     Else
 
@@ -2138,11 +2138,7 @@ Partial Public Module xmlTools
                         Dim br As Optimization.BundleResponse = Bundles.GetBundleFor(TargetPath).GenerateBundleResponse(BundlesCtx)
                         Dim info As Byte() = New System.Text.UTF8Encoding(True).GetBytes(br.Content)
 
-
-
-
                         scriptFile = fsh.SaveFile("script.js", TargetPath, info)
-
 
                         If scriptFile.StartsWith("ERROR: ") Then
                             myWeb.bPageCache = False
@@ -2152,7 +2148,7 @@ Partial Public Module xmlTools
                             'file has been saved successfully.
                             scriptFile = "/" & myWeb.moConfig("ProjectPath") & "js" & scriptFile
                             If VirtualFileExists(scriptFile) Then
-                                myWeb.moCtx.Application.Set(TargetPath, scriptFile)
+                                myWeb.moCtx.Application.Set(AppVariableName, scriptFile)
                             End If
                         Else
                             'we have a file save error we should try again next request.
@@ -2199,7 +2195,7 @@ Partial Public Module xmlTools
             Dim sReturnString As String = ""
             Dim sReturnError As String = ""
             Dim bReset As Boolean = False
-
+            Dim AppVariableName = LCase("css" & TargetPath.Replace("~", ""))
             Try
                 ' Throw New System.Exception("An exception has occurred.")
 
@@ -2221,7 +2217,7 @@ Partial Public Module xmlTools
 
                     Dim bAppVarExists As Boolean = False
                     ' New logic to stop rebuilding css when application is killed or restarted.
-                    If Not myWeb.moCtx.Application.Get(TargetPath) Is Nothing Then
+                    If Not myWeb.moCtx.Application.Get(AppVariableName) Is Nothing Then
                         bAppVarExists = True
                     End If
 
@@ -2235,7 +2231,7 @@ Partial Public Module xmlTools
                             For Each myFile In IO.Directory.GetFiles(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "css" & TargetPath.Replace("~", "")), "*.css")
                                 sReturnStringNew = sReturnStringNew & "/" & myWeb.moConfig("ProjectPath") & "css" & TargetPath.Replace("~", "") & "/" & Path.GetFileName(myFile) & ","
                             Next
-                            myWeb.moCtx.Application.Set(TargetPath, sReturnStringNew.Trim(","))
+                            myWeb.moCtx.Application.Set(AppVariableName, sReturnStringNew.Trim(","))
                             bAppVarExists = True
                         End If
                     End If
@@ -2244,7 +2240,7 @@ Partial Public Module xmlTools
                     If bAppVarExists And bReset = False Then
                         'check to see if the filename is saved in the application variable.
 
-                        sReturnString = myWeb.moCtx.Application.Get(TargetPath)
+                        sReturnString = myWeb.moCtx.Application.Get(AppVariableName)
 
                         If Not sReturnString.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css" & TargetPath.TrimStart("~")) Then
                             myWeb.bPageCache = False
@@ -2338,7 +2334,7 @@ Partial Public Module xmlTools
                         If sReturnString.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css") Then
                             'check the file exists before we set the application variable...
                             If VirtualFileExists("/" & myWeb.moConfig("ProjectPath") & "css" & TargetPath.Replace("~", "") & "/style.css") Then
-                                myWeb.moCtx.Application.Set(TargetPath, sReturnString)
+                                myWeb.moCtx.Application.Set(AppVariableName, sReturnString)
                             End If
                         Else
                             sReturnString = sReturnString & sReturnError

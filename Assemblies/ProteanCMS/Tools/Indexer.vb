@@ -137,9 +137,11 @@ Public Class Indexer
         Dim cProcessInfo As String = ""
         Dim cPageHtml As String = ""
         Dim cPageExtract As String = ""
+        Dim CommonPath As String = "/ewcommon"
         Dim cPageXsl As String = "/xsl/search/cleanPage.xsl"
         Dim cExtractXsl As String = "/xsl/search/extract.xsl"
         If myWeb.bs5 Then
+            CommonPath = "/ptn"
             cPageXsl = "/features/search/cleanPage.xsl"
             cExtractXsl = "/features/search/extract.xsl"
         End If
@@ -189,10 +191,7 @@ Public Class Indexer
             Me.StartIndex()
 
             If bIsError Then Exit Sub
-            Dim CommonPath As String = "/ewcommon"
-            If myWeb.bs5 Then
-                CommonPath = "/ptn"
-            End If
+
 
             'Check for local xsl or go to common
             If Not IO.File.Exists(goServer.MapPath(cPageXsl)) Then
@@ -206,6 +205,7 @@ Public Class Indexer
             oInfoElmt.SetAttribute("startTime", Tools.Xml.XmlDate(Now(), True))
             oInfoElmt.SetAttribute("cPageXsl", cPageXsl)
             oInfoElmt.SetAttribute("cExtractXsl", cExtractXsl)
+            oInfoElmt.SetAttribute("IndexDetailTypes", cIndexDetailTypes)
 
             oIndexInfo.Save(mcIndexWriteFolder & "/indexInfo.xml")
 

@@ -756,12 +756,12 @@ Check:
                     End Try
                 End Function
 
-                Public Overrides Function xFrmEditDirectoryItem(Optional ByVal id As Long = 0, Optional ByVal cDirectorySchemaName As String = "User", Optional ByVal parId As Long = 0, Optional ByVal cXformName As String = "") As XmlElement
-                    Return xFrmEditDirectoryItem(id, cDirectorySchemaName, parId, cXformName, "", Nothing)
-                End Function
-                Public Overrides Function xFrmEditDirectoryItem(Optional ByVal id As Long = 0, Optional ByVal cDirectorySchemaName As String = "User", Optional ByVal parId As Long = 0, Optional ByVal cXformName As String = "", Optional ByVal FormXML As String = "") As XmlElement
-                    Return xFrmEditDirectoryItem(id, cDirectorySchemaName, parId, cXformName, FormXML, Nothing)
-                End Function
+                'Public Overrides Function xFrmEditDirectoryItem(Optional ByVal id As Long = 0, Optional ByVal cDirectorySchemaName As String = "User", Optional ByVal parId As Long = 0, Optional ByVal cXformName As String = "") As XmlElement
+                '    Return xFrmEditDirectoryItem(id, cDirectorySchemaName, parId, cXformName, "", Nothing)
+                'End Function
+                'Public Overrides Function xFrmEditDirectoryItem(Optional ByVal id As Long = 0, Optional ByVal cDirectorySchemaName As String = "User", Optional ByVal parId As Long = 0, Optional ByVal cXformName As String = "", Optional ByVal FormXML As String = "") As XmlElement
+                '    Return xFrmEditDirectoryItem(id, cDirectorySchemaName, parId, cXformName, FormXML, Nothing)
+                'End Function
 
                 Public Overrides Function xFrmEditDirectoryItem(Optional ByVal id As Long = 0, Optional ByVal cDirectorySchemaName As String = "User", Optional ByVal parId As Long = 0, Optional ByVal cXformName As String = "", Optional ByVal FormXML As String = "", Optional ByRef IntanceAppend As XmlElement = Nothing) As XmlElement
 

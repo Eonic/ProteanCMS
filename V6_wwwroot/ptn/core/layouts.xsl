@@ -1607,147 +1607,7 @@
 	</xsl:template>
 
 
-	<xsl:template match="Content[starts-with(@box,'well')]" mode="moduleBox">
-		<xsl:param name="id"/>
-		<xsl:variable name="class">
-			<xsl:text>well </xsl:text>
-			<xsl:if test="@panelImage!=''">
-				<xsl:text>panelImage </xsl:text>
-			</xsl:if>
-			<xsl:value-of select="translate(@box,' ','-')"/>
-			<xsl:text> module</xsl:text>
-			<!-- if no title, we may still want TL/TR for rounded boxs with no title bar,
-              stled differently to a title bar. -->
-			<xsl:if test="@title=''">
-				<xsl:text> boxnotitle</xsl:text>
-			</xsl:if>
-			<xsl:text> pos-</xsl:text>
-			<xsl:value-of select="@position"/>
-			<xsl:if test="@modAnim and @modAnim!=''">
-				<xsl:text> moduleAnimate-invisible</xsl:text>
-			</xsl:if>
-			<xsl:apply-templates select="." mode="hideScreens" />
-			<xsl:apply-templates select="." mode="marginBelow" />
-		</xsl:variable>
-		<div id="mod_{@id}{$id}" class="{$class}">
-			<xsl:apply-templates select="." mode="themeModuleExtras"/>
-			<xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and @imagePosition='above'">
-				<div class="panel-image alert-image">
-					<img src="{@panelImage}" alt="{@title}" class="img-responsive" />
-				</div>
-			</xsl:if>
-			<xsl:if test="@title!='' or @icon!='' or @uploadIcon!=''">
-				<div class="well-heading">
-					<xsl:apply-templates select="." mode="inlinePopupOptions">
-						<xsl:with-param name="class" select="'well-heading'"/>
-					</xsl:apply-templates>
-					<xsl:if test="@rss and @rss!='false'">
-						<xsl:apply-templates select="." mode="rssLink" />
-					</xsl:if>
-					<h3 class="well-title">
-						<xsl:apply-templates select="." mode="moduleLink"/>
-					</h3>
-				</div>
-			</xsl:if>
-			<xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and not(@imagePosition='above')">
-				<div class="panel-image well-image">
-					<img src="{@panelImage}" alt="{@title}" class="img-responsive" />
-				</div>
-			</xsl:if>
-			<div class="well-body">
-				<xsl:if test="not(@title!='')">
-					<xsl:apply-templates select="." mode="inlinePopupOptions">
-						<xsl:with-param name="class" select="'well-body'"/>
-					</xsl:apply-templates>
-				</xsl:if>
-				<xsl:apply-templates select="." mode="displayBrief"/>
-			</div>
-			<xsl:if test="@linkText!='' and @link!=''">
-				<div class="well-footer">
-					<xsl:apply-templates select="." mode="moreLink">
-						<xsl:with-param name="link">
-							<xsl:choose>
-								<xsl:when test="format-number(@link,'0')!='NaN'">
-									<xsl:variable name="pageId" select="@link"/>
-									<xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId or PageVersion[@vParId=$pageId]]" mode="getHref"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="@link"/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:with-param>
-						<xsl:with-param name="linkText" select="@linkText"/>
-						<xsl:with-param name="altText" select="@title"/>
-					</xsl:apply-templates>
-					<xsl:text> </xsl:text>
-				</div>
-			</xsl:if>
-		</div>
-	</xsl:template>
 
-	<xsl:template match="Content[starts-with(@box,'jumbotron')]" mode="moduleBox">
-		<xsl:param name="id"/>
-		<xsl:variable name="class">
-			<xsl:text>jumbotron </xsl:text>
-			<xsl:text> module</xsl:text>
-			<!-- if no title, we may still want TL/TR for rounded boxs with no title bar,
-              stled differently to a title bar. -->
-			<xsl:if test="@title=''">
-				<xsl:text> boxnotitle</xsl:text>
-			</xsl:if>
-			<xsl:text> pos-</xsl:text>
-			<xsl:value-of select="@position"/>
-			<xsl:if test="@modAnim and @modAnim!=''">
-				<xsl:text> moduleAnimate-invisible</xsl:text>
-			</xsl:if>
-			<xsl:apply-templates select="." mode="hideScreens" />
-			<xsl:apply-templates select="." mode="marginBelow" />
-		</xsl:variable>
-		<div id="mod_{@id}{$id}" class="{$class}">
-			<xsl:apply-templates select="." mode="themeModuleExtras"/>
-			<xsl:if test="@title!='' or @icon!='' or @uploadIcon!=''">
-				<div class="jumbotron-heading">
-					<xsl:apply-templates select="." mode="inlinePopupOptions">
-						<xsl:with-param name="class" select="'well-heading'"/>
-					</xsl:apply-templates>
-					<xsl:if test="@rss and @rss!='false'">
-						<xsl:apply-templates select="." mode="rssLink" />
-					</xsl:if>
-					<h1 class="well-title">
-						<xsl:apply-templates select="." mode="moduleTitle"/>
-					</h1>
-				</div>
-			</xsl:if>
-			<div class="jumbotron-body">
-				<xsl:if test="not(@title!='')">
-					<xsl:apply-templates select="." mode="inlinePopupOptions">
-						<xsl:with-param name="class" select="'panel-body'"/>
-					</xsl:apply-templates>
-				</xsl:if>
-				<xsl:apply-templates select="." mode="displayBrief"/>
-			</div>
-			<xsl:if test="@linkText!='' and @link!=''">
-				<div class="jumbotron-footer">
-					<xsl:apply-templates select="." mode="moreLink">
-						<xsl:with-param name="link">
-							<xsl:choose>
-								<xsl:when test="format-number(@link,'0')!='NaN'">
-									<xsl:variable name="pageId" select="@link"/>
-									<xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId or PageVersion[@vParId=$pageId]]" mode="getHref"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="@link"/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:with-param>
-						<xsl:with-param name="linkText" select="@linkText"/>
-						<xsl:with-param name="altText" select="@title"/>
-					</xsl:apply-templates>
-					<xsl:text> </xsl:text>
-				</div>
-			</xsl:if>
-		</div>
-	</xsl:template>
 
 	<!-- ## Generic displayBrief   #####################################################################   -->
 	<xsl:template match="Content" mode="displayBrief">
@@ -1758,7 +1618,7 @@
 	<xsl:template match="Content[@type='Module']" mode="displayBrief">
 		<span class="alert">* Module type unknown *</span>
 	</xsl:template>
-	
+
 	<!-- ## Generic Module   #####################################################################   -->
 	<!-- Module No Carousel -->
 	<xsl:template match="Content[@type='Module']" mode="displayBrief">
@@ -1884,5 +1744,176 @@
 		</div>
 	</xsl:template>
 
+	<xsl:template match="Content" mode="contentColumnsX">
+		<xsl:param name="class"/>
+		<xsl:variable name="xsColsToShow">
+			<xsl:choose>
+				<xsl:when test="@xsCol='2'">2</xsl:when>
+				<xsl:otherwise>1</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="smColsToShow">
+			<xsl:choose>
+				<xsl:when test="@smCol and @smCol!=''">
+					<xsl:value-of select="@smCol"/>
+				</xsl:when>
+				<xsl:otherwise>1</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="mdColsToShow">
+			<xsl:choose>
+				<xsl:when test="@mdCol and @mdCol!=''">
+					<xsl:value-of select="@mdCol"/>
+				</xsl:when>
+				<xsl:otherwise>1</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="lgColsToShow">
+			<xsl:choose>
+				<xsl:when test="@lgCol and @lgCol!=''">
+					<xsl:value-of select="@lgCol"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="@cols"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="xlColsToShow">
+			<xsl:choose>
+				<xsl:when test="@xlCol and @xlCol!=''">
+					<xsl:value-of select="@xlCol"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="@cols"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:attribute name="data-xscols">
+			<xsl:value-of select="$xsColsToShow"/>
+		</xsl:attribute>
+		<xsl:attribute name="data-smcols">
+			<xsl:value-of select="$smColsToShow"/>
+		</xsl:attribute>
+		<xsl:attribute name="data-mdcols">
+			<xsl:value-of select="$mdColsToShow"/>
+		</xsl:attribute>
+		<xsl:attribute name="data-lgcols">
+			<xsl:value-of select="$lgColsToShow"/>
+		</xsl:attribute>
+		<xsl:attribute name="data-xlcols">
+			<xsl:value-of select="$xlColsToShow"/>
+		</xsl:attribute>
+		<xsl:attribute name="class">
+			<xsl:text>row cols row-cols-1</xsl:text>
+			<xsl:if test="@xsCol='2'"> row-cols-2</xsl:if>
+			<xsl:if test="@smCol and @smCol!=''">
+				<xsl:text> row-cols-sm-</xsl:text>
+				<xsl:value-of select="@smCol"/>
+			</xsl:if>
+			<xsl:if test="@mdCol and @mdCol!=''">
+				<xsl:text> row-cols-md-</xsl:text>
+				<xsl:value-of select="@mdCol"/>
+			</xsl:if>
+			<xsl:if test="@lgCol and @lgCol!=''">
+				<xsl:text> row-cols-lg-</xsl:text>
+				<xsl:value-of select="@lgCol"/>
+			</xsl:if>
+			<xsl:if test="@xlCol and @xlCol!=''">
+				<xsl:text> row-cols-xl-</xsl:text>
+				<xsl:value-of select="@xlCol"/>
+			</xsl:if>
+			<xsl:if test="@cols and @cols!=''">
+				<xsl:text> row-cols-xxl-</xsl:text>
+				<xsl:value-of select="@cols"/>
+			</xsl:if>
+			<xsl:value-of select="$class"/>
+		</xsl:attribute>
+	</xsl:template>
 
+
+	<xsl:template match="Content" mode="contentColumns">
+		<xsl:param name="class"/>
+		<xsl:param name="carousel"/>
+		<xsl:variable name="xsColsToShow">
+			<xsl:if test="@xsCol and @xsCol!=''">
+				<xsl:value-of select="@xsCol"/>
+			</xsl:if>
+		</xsl:variable>
+		<xsl:variable name="smColsToShow">
+			<xsl:if test="@smCol and @smCol!=''">
+				<xsl:value-of select="@smCol"/>
+			</xsl:if>
+		</xsl:variable>
+		<xsl:variable name="mdColsToShow">
+			<xsl:if test="@mdCol and @mdCol!=''">
+				<xsl:value-of select="@mdCol"/>
+			</xsl:if>
+		</xsl:variable>
+		<xsl:variable name="lgColsToShow">
+			<xsl:if test="@lgCol and @lgCol!=''">
+				<xsl:value-of select="@lgCol"/>
+			</xsl:if>
+		</xsl:variable>
+		<xsl:variable name="xlColsToShow">
+			<xsl:if test="@xlCol and @xlCol!=''">
+				<xsl:value-of select="@xlCol"/>
+			</xsl:if>
+		</xsl:variable>
+		<xsl:attribute name="data-xscols">
+			<xsl:value-of select="$xsColsToShow"/>
+		</xsl:attribute>
+		<xsl:attribute name="data-smcols">
+			<xsl:value-of select="$smColsToShow"/>
+		</xsl:attribute>
+		<xsl:attribute name="data-mdcols">
+			<xsl:value-of select="$mdColsToShow"/>
+		</xsl:attribute>
+		<xsl:attribute name="data-lgcols">
+			<xsl:value-of select="$lgColsToShow"/>
+		</xsl:attribute>
+		<xsl:attribute name="data-xlcols">
+			<xsl:value-of select="$xlColsToShow"/>
+		</xsl:attribute>
+		<xsl:attribute name="class">
+			<xsl:choose>
+				<xsl:when test="$carousel='true'">
+					<xsl:text> cols row-cols-1 swiper-wrapper</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text> row cols row-cols-1</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+			<xsl:choose>
+				<xsl:when test="@xsCol and @xsCol!=''">
+					<xsl:text> row-cols-</xsl:text>
+					<xsl:value-of select="@xsCol"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text> row-cols-1</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+			<xsl:if test="@smCol and @smCol!=''">
+				<xsl:text> row-cols-sm-</xsl:text>
+				<xsl:value-of select="@smCol"/>
+			</xsl:if>
+			<xsl:if test="@mdCol and @mdCol!=''">
+				<xsl:text> row-cols-md-</xsl:text>
+				<xsl:value-of select="@mdCol"/>
+			</xsl:if>
+			<xsl:if test="@lgCol and @lgCol!=''">
+				<xsl:text> row-cols-lg-</xsl:text>
+				<xsl:value-of select="@lgCol"/>
+			</xsl:if>
+			<xsl:if test="@xlCol and @xlCol!=''">
+				<xsl:text> row-cols-xl-</xsl:text>
+				<xsl:value-of select="@xlCol"/>
+			</xsl:if>
+			<xsl:if test="@cols and @cols!=''">
+				<xsl:text> row-cols-xxl-</xsl:text>
+				<xsl:value-of select="@cols"/>
+			</xsl:if>
+			<xsl:value-of select="$class"/>
+		</xsl:attribute>
+	</xsl:template>
 </xsl:stylesheet>
+

@@ -90,14 +90,31 @@
 				<xsl:text>&amp;pathonly=true</xsl:text>
 			</xsl:if>
 		</xsl:variable>
+		<xsl:variable name="fld">
+			<xsl:call-template name="url-encode">
+				<xsl:with-param name="str">
+					<xsl:value-of select="@path"/>
+				</xsl:with-param>
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:variable name="fld-parent">
+			<xsl:call-template name="url-encode">
+				<xsl:with-param name="str">
+					<xsl:value-of select="parent::folder/@path"/>
+				</xsl:with-param>
+			</xsl:call-template>
+		</xsl:variable>
 
 		<div id="template_FileSystem" class="modal-body">
 
 			<div class="row">
 
-				<div id="MenuTree" class="list-group col-md-3 col-sm-4 mb-3">
+				<div id="MenuTree" class="list-group col-md-3 col-sm-4 mb-3" data-lib-type="{@layout}" data-target-form="{$page/Request/*/Item[@name='targetForm']/node()}" data-target-field="{$page/Request/*/Item[@name='targetField']/node()}" data-target-class="{$page/Request/*/Item[@name='targetClass']/node()}">
 					<xsl:if test="contains(/Page/Request/QueryString/Item[@name='contentType'],'popup')">
 						<xsl:attribute name="class">list-group col-md-4 col-lg-3 col-xxl-2 mb-3</xsl:attribute>
+					</xsl:if>
+					<xsl:if test="$page/Request/*/Item[@name='multiple']/node()='true'">
+						<xsl:attribute name="data-multiple">true</xsl:attribute>
 					</xsl:if>
 					<xsl:apply-templates select="ContentDetail/folder" mode="FolderTree">
 						<xsl:with-param name="level">1</xsl:with-param>
@@ -112,7 +129,7 @@
 						<div class="btn-group-spaced mb-1">
 							<xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup')) and not(@path='')">
 
-								<a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={parent::folder/@path}" class="btn btn-sm btn-outline-primary">
+								<a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={$fld-parent}" class="btn btn-sm btn-outline-primary">
 									<xsl:if test="$submitPath!='/?'">
 										<xsl:attribute name="data-bs-toggle">modal</xsl:attribute>
 										<xsl:attribute name="data-target">
@@ -129,14 +146,7 @@
 							</xsl:if>
 							<xsl:if test="not(starts-with(/Page/Request/QueryString/Item[@name='fld']/node(),'\FreeStock'))">
 
-								<a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;ewCmd2=addFolder&amp;fld={@path}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-sm btn-outline-primary">
-									<xsl:if test="$submitPath!='/?'">
-										<xsl:attribute name="data-bs-toggle">modal</xsl:attribute>
-										<xsl:attribute name="data-target">
-											<xsl:text>#modal-</xsl:text>
-											<xsl:value-of select="/Page/Request/QueryString/Item[@name='targetField']/node()"/>
-										</xsl:attribute>
-									</xsl:if>
+								<a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;ewCmd2=addFolder&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-sm btn-outline-primary">
 									<i class="fas fa-folder-open fa-white">
 										<xsl:text> </xsl:text>
 									</i>&#160;New Folder
@@ -157,7 +167,7 @@
 								<xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup')) and not(@path='')">
 									<xsl:if test="parent::folder">
 
-										<a href="{$submitPath}ewcmd={/Page/@ewCmd}&amp;ewCmd2=deleteFolder&amp;fld={@path}" class="btn btn-sm btn-outline-danger">
+										<a href="{$submitPath}ewcmd={/Page/@ewCmd}&amp;ewCmd2=deleteFolder&amp;fld={$fld}" class="btn btn-sm btn-outline-danger">
 											<i class="fas fa-trash fa-white">
 												<xsl:text> </xsl:text>
 											</i>
@@ -294,7 +304,7 @@
         <xsl:text>&amp;pathonly=true</xsl:text>
       </xsl:if>
     </xsl:variable>
-    <li id="node{translate(@path,'\','-')}" data-tree-level="{$level}" data-tree-parent="{translate(parent::folder/@path,'\','-')}">
+    <li id="node{translate(@path,'\','~')}" data-tree-level="{$level}" data-tree-parent="{translate(parent::folder/@path,'\','~')}">
       <xsl:attribute name="class">
         <xsl:text>list-group-item level-</xsl:text>
         <xsl:value-of select="$level"/>
@@ -305,7 +315,7 @@
 			  <xsl:text> expandable</xsl:text>
 		  </xsl:if>
       </xsl:attribute>
-      <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}">
+      <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" >
         <i>
           <xsl:attribute name="class">
             <xsl:text>fa fa-lg</xsl:text>
@@ -325,13 +335,15 @@
       </a>
     </li>
 
-    <xsl:if test="folder">
+	  <xsl:if test="folder">
+		  <xsl:if test="descendant-or-self::folder[@active='true']">
       <xsl:apply-templates select="folder" mode="FolderTree">
         <xsl:with-param name="level">
           <xsl:value-of select="$level + 1"/>
         </xsl:with-param>
       </xsl:apply-templates>
     </xsl:if>
+	  </xsl:if>
   </xsl:template>
 
   <xsl:template match="folder" mode="ImageFolder">
@@ -614,7 +626,7 @@
             </xsl:when>
             <xsl:otherwise>
               <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.svg' or @Extension='.tiff' or @Extension='.tif'">
-                <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}&amp;ewCmd2=pickImage&amp;fld={$fld}&amp;file={$filename}{@extension}" data-toggle="modal" data-target="#modal-{/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-sm btn-primary pickImage">
+                <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}&amp;ewCmd2=pickImage&amp;fld={$fld}&amp;file={$filename}{@extension}" class="btn btn-sm btn-primary pickImage">
                   
                   Pick Image
                 </a>
@@ -703,7 +715,7 @@
 		</form>
 		<xsl:apply-templates select="descendant-or-self::*" mode="xform_modal"/>
 		<script>
-			preparePickImageModal($('#modal-<xsl:value-of select="$page/Request/QueryString/Item[@name='targetField']/node()"/>'));
+			preparePickImageModal('#modal-<xsl:value-of select="$page/Request/QueryString/Item[@name='targetField']/node()"/>');
 		</script>
 	</xsl:template>
 
@@ -852,7 +864,7 @@ function primeFileUpload(){
 			});
 
 			});
-			preparePickImageModal($('#modal-<xsl:value-of select="$page/Request/QueryString/Item[@name='targetField']/node()"/>'));
+			preparePickImageModal('#modal-<xsl:value-of select="$page/Request/QueryString/Item[@name='targetField']/node()"/>');
 
 			},
 
@@ -877,7 +889,7 @@ function primeFileUpload(){
 
 		<script>
 
-			preparePickImageModal($('#modal-<xsl:value-of select="$page/Request/QueryString/Item[@name='targetField']/node()"/>'));
+			preparePickImageModal('#modal-<xsl:value-of select="$page/Request/QueryString/Item[@name='targetField']/node()"/>');
 		</script>
 	</xsl:template>
 	

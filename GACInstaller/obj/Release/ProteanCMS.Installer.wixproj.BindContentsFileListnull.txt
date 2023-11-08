@@ -35,8 +35,8 @@ Installer_Logo.jpg
 ..\packages\LibSassHost.1.3.3\lib\net471\LibSassHost.dll
 ..\packages\LibSassHost.Native.win-x64.1.3.3\runtimes\win-x64\native\libsass.dll
 ..\Assemblies\NonNuget\libwebp.dll
-..\packages\Magick.NET.Core.13.1.3\lib\netstandard20\Magick.NET.Core.dll
-..\packages\Magick.NET-Q8-AnyCPU.13.1.3\lib\netstandard20\Magick.NET-Q8-AnyCPU.dll
+..\packages\Magick.NET.Core.13.4.0\lib\netstandard20\Magick.NET.Core.dll
+..\packages\Magick.NET-Q8-AnyCPU.13.4.0\lib\netstandard20\Magick.NET-Q8-AnyCPU.dll
 ..\packages\Microsoft.ClearScript.Core.7.2.4\lib\net471\ClearScript.Core.dll
 ..\packages\Microsoft.ClearScript.V8.7.2.4\lib\net471\ClearScript.V8.dll
 ..\packages\Microsoft.ClearScript.V8.Native.win-x64.7.2.4\runtimes\win-x64\native\ClearScriptV8.win-x64.dll

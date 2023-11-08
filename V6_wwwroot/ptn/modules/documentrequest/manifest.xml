@@ -2,7 +2,7 @@
 <PageLayouts imgPath="/ewcommon/images/pagelayouts">
 
 	<ModuleTypes>
-		<ModuleGroup name="Advance Content" icon="fas fa-code">
+		<ModuleGroup name="Advanced Content" icon="fas fa-code">
 			<Module type="documentdownloadxform" formPath="document-request" icon="far fa-file-code" name="Document Request"></Module>
 		</ModuleGroup>
 	</ModuleTypes>

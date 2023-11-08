@@ -333,7 +333,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                             myWeb.mbAdminMode = False
                             ' myWeb.moDbHelper.getRelationsByContentId(contentId, oContentNode, 2)
                         Else
-                            myWeb.GetPageContentFromSelect("CL.nStructId = " & PageId & " And a.dExpireDate < GETDATE() And c.cContentSchemaName = '" & oContentNode.GetAttribute("contentType") & "' ",
+                            myWeb.GetPageContentFromSelect("CL.nStructId = " & PageId & " And a.dExpireDate < GETDATE() And a.nStatus = 1 And c.cContentSchemaName = '" & oContentNode.GetAttribute("contentType") & "' ",
                     ,,, nItemsPerPage,,,,, nCurrentPage,,, True)
                         End If
 
@@ -487,16 +487,25 @@ where cl.nStructId = " & myWeb.mnPageId)
                                     whereSQL = Convert.ToString(calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, Nothing, o, args))
                                     If (oFilterElmt.Attributes("parId") IsNot Nothing) Then
                                         parentPageId = oFilterElmt.Attributes("parId").Value
+
                                     End If
 
                                 End If
 
                             Next
 
-                            If (parentPageId <> String.Empty And whereSQL <> String.Empty) Then
-                                whereSQL = " c.cContentSchemaName='" & cFilterTarget & "' and nStructId IN (select nStructKey from tblContentStructure where nStructParId in (" & parentPageId & ")) AND " & whereSQL
+
+
+                            If parentPageId <> "" And whereSQL <> "" And whereSQL.ToLower().Contains("nstructid") = False Then
+                                If (whereSQL.ToLower().StartsWith(" and ") = False) Then
+                                    whereSQL = " AND " & whereSQL
+                                End If
+
+                                whereSQL = " c.cContentSchemaName='" & cFilterTarget & "' And nStructId IN (select nStructKey from tblContentStructure where nStructParId in (" & parentPageId & "))" & whereSQL
+                                    'Else
+                                    '    whereSQL = " c.cContentSchemaName='" & cFilterTarget & whereSQL
+                                End If
                             End If
-                        End If
                     End If
 
 

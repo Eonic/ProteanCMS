@@ -288,13 +288,15 @@ $(document).ready(function () {
         if ($('#template_FileSystem #MenuTree').data('multiple') == 1) {
             multiple = "&multiple=true"        
         }
-        //activateTreeview
-        $('#template_FileSystem #MenuTree').ajaxtreeview({
-            loadPath: treeviewPath + "&popup=true&libType=" + $('#template_FileSystem #MenuTree').data("lib-type").replace("Lib", "") + "&targetForm=" + $('#template_FileSystem #MenuTree').data("target-form") + "&targetField=" + $('#template_FileSystem #MenuTree').data("target-field") + "&targetClass=" + $('#template_FileSystem #MenuTree').data("target-class") + multiple,
-            ajaxCmd: 'GetFolderNode',
-            openLevel: 2,
-            hide: true
-        });
+
+        if (currentModal.find('#template_FileSystem #MenuTree').exists()) {
+            currentModal.find('#template_FileSystem #MenuTree').ajaxtreeview({
+                loadPath: treeviewPath + "&popup=true&libType=" + $('#template_FileSystem #MenuTree').data("lib-type").replace("Lib", "") + "&targetForm=" + $('#template_FileSystem #MenuTree').data("target-form") + "&targetField=" + $('#template_FileSystem #MenuTree').data("target-field") + "&targetClass=" + $('#template_FileSystem #MenuTree').data("target-class") + multiple,
+                ajaxCmd: 'GetFolderNode',
+                openLevel: 2,
+                hide: true
+            });
+        };
 
         $('#files .item-image .panel').prepareLibImages();
 
@@ -322,7 +324,7 @@ $(document).ready(function () {
         });
 
         $(this).find('form').on('submit', function (event) {
-
+          
             event.preventDefault()
             var formData = $(this).serialize();
             var targetUrl = $(this).attr("action") + '&contentType=popup';
@@ -951,7 +953,11 @@ function initialiseGetVimeoDataButton() {
         var id = $("input#cVimeoCode").val();
         id = id.split('?')[0];
         jsonURL = "https://vimeo.com/api/v2/video/" + id + ".json";
+        
         $.getJSON(jsonURL, function (result) {
+
+            alert(JSON.stringify(result));
+
             $("#cVimeoDuration").val(result[0].duration);
             $("#cVimeoByline").val(result[0].description);
             $("#cVimeoThumbnail").val(result[0].thumbnail_medium);
@@ -960,6 +966,20 @@ function initialiseGetVimeoDataButton() {
     });
 };
 
+function fetchDuration(videoId, apiKey) {
+    const baseURL = 'https://www.googleapis.com/youtube/v3/videos?';
+    const url = `${baseURL}id=${videoId}&key=${apiKey}&part=snippet,contentDetails`;
+    $.ajax({
+        async: false,
+        type: 'GET',
+        url: url,
+        success: function (data) {
+            const item = data.items[0];
+            const result = item ? item.contentDetails.duration : null;
+            return result;
+        }
+    });
+}
 
 
 
@@ -2121,21 +2141,20 @@ function getImagePaths() {
    
 }
 
-function SaveFileName(isOverwrite) {
-    
-    var newfilename;
+function SaveFileName(isOverwrite) {    
+    var newfilename; var oldfilename;
     if (isOverwrite) {
-        newfilename = $("#cleanFilename").val();
-    } else {
-        newfilename = $("#txtfilename").val();
-    }    
+        oldfilename = $("#cleanFilename").val();
+    } 
+    newfilename = $("#txtfilename").val();       
+    var existsfilename = document.getElementById("existsFile").files[0];
     var targetPath = $("#targetPath").val();
-    var ajaxurl = '?ewCmd=ImageLib&ewCmd2=FileUpload&isOverwrite=' + isOverwrite +'&storageRoot="'+targetPath+'"';
+    var ajaxurl = '?ewCmd=ImageLib&ewCmd2=FileUpload&isOverwrite=' + isOverwrite + '&oldfile="' + oldfilename +'"&storageRoot="'+targetPath+'"';
     let list = new DataTransfer();
-    let file = new File(["content"], newfilename);
+    let file = new File([existsfilename], newfilename);
     list.items.add(file);
     let myFileList = list.files;
-    postedFile.files = myFileList;
+    existsFile.files = myFileList;
     var formData = new FormData($("#frmfileData")[0]);   
     $.ajax({
         url: ajaxurl,
@@ -2144,7 +2163,10 @@ function SaveFileName(isOverwrite) {
         contentType: false,
         type: 'POST',
         success: function (result) {            
-            $("#changeFilename").modal("hide");          
+            $("#changeFilename").modal("hide");           
+            var newItem = $("#divnewfileupdate").html();  
+            $('#files').prepend(newItem);
+            $('#files .item-image .panel').prepareLibImages();	    
         }
     });
 }

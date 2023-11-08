@@ -1330,20 +1330,24 @@ Public Class Cms
                                 bPageCache = False
                             Else
                                 ' Set the Content Type
-                                moResponse.ContentType = mcContentType
+                                If mcContentType = "application/x-www-form-urlencoded" Then
+                                    moResponse.ContentType = "text/html"
+                                Else
+                                    moResponse.ContentType = mcContentType
+                                End If
                                 ' Set the Content Disposition
                                 If Not String.IsNullOrEmpty(mcContentDisposition) Then
-                                    moResponse.AddHeader("Content-Disposition", mcContentDisposition)
+                                        moResponse.AddHeader("Content-Disposition", mcContentDisposition)
+                                    End If
+
+                                    'ONLY CACHE html PAGES
+                                    If mcContentType <> "text/html" And Not String.IsNullOrEmpty(mcContentDisposition) Then
+                                        bPageCache = False
+                                    End If
+
                                 End If
 
-                                'ONLY CACHE html PAGES
-                                If mcContentType <> "text/html" And Not String.IsNullOrEmpty(mcContentDisposition) Then
-                                    bPageCache = False
-                                End If
-
-                            End If
-
-                            If bPageCache = False Then
+                                If bPageCache = False Then
                                 sServeFile = ""
                             End If
 
@@ -6398,10 +6402,13 @@ Public Class Cms
                 Else
 
                     'Set nothing to Filter Pagination session
-                    If moSession("FilterWhereCondition") IsNot Nothing Then
-                        moSession("FilterWhereCondition") = Nothing
-                        'moSession.Remove("FilterWhereCondition")
+                    If Not moSession Is Nothing Then
+                        If moSession("FilterWhereCondition") IsNot Nothing Then
+                            moSession("FilterWhereCondition") = Nothing
+                            'moSession.Remove("FilterWhereCondition")
+                        End If
                     End If
+
 
                     'step through the tree from home to our current page
                     For Each oElmt In oPageElmt.SelectNodes(parentXpath)
@@ -9156,7 +9163,12 @@ Public Class Cms
                     Dim AppVarName As String = dir.FullName
                     AppVarName = AppVarName.Substring(goServer.MapPath("/" & moConfig("ProjectPath") & bundlePath).Length())
                     AppVarName = AppVarName.Replace("\", "/")
-                    moCtx.Application.Remove("~/" & AppVarName)
+                    AppVarName = LCase(bundlePath & "/" & AppVarName.Trim("/"))
+
+                    'check exists before we remove
+                    If Not moCtx.Application.Get(AppVarName) Is Nothing Then
+                        moCtx.Application.Remove(AppVarName)
+                    End If
                 Next
             End If
 

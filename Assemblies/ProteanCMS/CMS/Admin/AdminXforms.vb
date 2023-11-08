@@ -31,6 +31,7 @@ Imports System.Linq
 Imports System.Collections.Generic
 Imports System.Reflection
 Imports Protean.proteancms.com
+Imports System.Windows.Controls.Primitives
 
 Partial Public Class Cms
     Partial Public Class Admin
@@ -3964,12 +3965,14 @@ Partial Public Class Cms
                 Dim oFrmElmt As XmlElement
                 Dim sValidResponse As String = ""
                 Dim cProcessInfo As String = ""
+                Dim SubmitPath As String = "?ewcmd="
                 Try
+
+                    SubmitPath = SubmitPath & myWeb.moRequest("ewcmd") & "&ewCmd2=" & myWeb.moRequest("ewCmd2") & "&pathonly=" & myWeb.moRequest("pathonly") & "&targetForm=" & myWeb.moRequest("targetForm") & "&targetField=" & myWeb.moRequest("targetField")
+
                     MyBase.NewFrm("AddFolder")
 
-
-
-                    MyBase.submission("AddFolder", "/?ewcmd=" & myWeb.moRequest("ewcmd") & "&ewCmd2=" & myWeb.moRequest("ewCmd2") & "&pathonly=" & myWeb.moRequest("pathonly") & "&targetForm=" & myWeb.moRequest("targetForm") & "&targetField=" & myWeb.moRequest("targetField"), "post", "")
+                    MyBase.submission("AddFolder", SubmitPath, "post", "")
 
                     oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "New Folder", "ptn-admin-form", "Please enter the folder name")
                     MyBase.addInput(oFrmElmt, "fld", True, "Path", "readonly")
@@ -4171,7 +4174,9 @@ Partial Public Class Cms
 
                     If cClassName <> "" Then
                         oElmt = MyBase.Instance.FirstChild()
-                        oElmt.SetAttribute("class", cClassName)
+                        If Not oElmt Is Nothing Then
+                            oElmt.SetAttribute("class", cClassName)
+                        End If
                     End If
 
                     If MyBase.isSubmitted Then
@@ -4260,6 +4265,7 @@ Partial Public Class Cms
 
             Public Function xFrmEditImage(ByVal cImgHtml As String, ByVal cTargetForm As String, ByVal cTargetFeild As String, Optional ByVal cClassName As String = "") As XmlElement
                 Dim oFrmElmt As XmlElement
+                Dim oFrmElmt1 As XmlElement
                 Dim oElmt As XmlElement
                 Dim sValidResponse As String = ""
                 Dim cProcessInfo As String = ""
@@ -4280,22 +4286,23 @@ Partial Public Class Cms
                     MyBase.submission("imageDetailsForm", "", "post", "form_check(this);passImgToForm('" & cTargetForm & "','" & cTargetFeild & "');return(false);")
 
                     oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "Image Details", "", "Please enter image description")
-
-                    MyBase.addInput(oFrmElmt, "cName", True, "Class", "readonly")
+                    oFrmElmt1 = MyBase.addGroup(oFrmElmt, "", "", "")
+                    MyBase.addInput(oFrmElmt1, "cName", True, "Class", "readonly")
                     MyBase.addBind("cName", "img/@class", "true()")
 
-                    MyBase.addInput(oFrmElmt, "cPathName", True, "Path Name")
+                    MyBase.addInput(oFrmElmt1, "cPathName", True, "Path Name")
                     MyBase.addBind("cPathName", "img/@src", "true()")
 
-                    MyBase.addInput(oFrmElmt, "nWidth", True, "Width")
+                    MyBase.addInput(oFrmElmt1, "nWidth", True, "Width")
                     MyBase.addBind("nWidth", "img/@width", "true()")
 
-                    MyBase.addInput(oFrmElmt, "nHeight", True, "Height")
+                    MyBase.addInput(oFrmElmt1, "nHeight", True, "Height")
                     MyBase.addBind("nHeight", "img/@height", "true()")
 
-                    MyBase.addInput(oFrmElmt, "cDesc", True, "Alt Description")
+                    MyBase.addInput(oFrmElmt1, "cDesc", True, "Alt Description")
                     MyBase.addBind("cDesc", "img/@alt", "false()")
-                    MyBase.addDiv(oFrmElmt, "<a href=""?contentType=popup&amp;ewCmd=ImageLib&amp;targetField=" & cTargetFeild & "&amp;targetClass=" & cClassName & """ class=""btn btn-primary pull-right""><i class=""fa fa-picture-o""> </i> Pick New Image</a>", "")
+
+                    MyBase.addDiv(oFrmElmt, "<div class=""form-group pick-new-image""><a href=""?contentType=popup&amp;ewCmd=ImageLib&amp;targetField=" & cTargetFeild & "&amp;targetClass=" & cClassName & """ class=""btn btn-primary pull-right"" data-toggle=""modal""><i class=""fa fa-picture-o""> </i> Pick New Image</a></div>", "")
                     MyBase.addSubmit(oFrmElmt, "", "Update Image", "ewSubmit", "ewSubmit")
 
                     If cClassName <> "" Then
@@ -9223,7 +9230,7 @@ Partial Public Class Cms
 
                     'load the xform to be edited
                     moDbHelper.moPageXml = moPageXML
-                    Dim idx As Protean.Indexer = New Protean.Indexer(myWeb)
+                    Dim idx As Protean.IndexerAsync = New Protean.IndexerAsync(myWeb)
                     MyBase.NewFrm("StartIndex")
 
                     MyBase.submission("DeleteFile", "", "post")
@@ -9233,8 +9240,6 @@ Partial Public Class Cms
                     MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "Starting off the indexing process can take up to an hour for larger sites")
 
                     MyBase.addSubmit(oFrmElmt, "", "Start Index", , "principle pleaseWait")
-
-
 
                     If MyBase.isSubmitted Then
                         MyBase.updateInstanceFromRequest()

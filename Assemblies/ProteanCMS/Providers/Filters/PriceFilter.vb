@@ -32,6 +32,7 @@ Namespace Providers
                     Dim oXml As XmlElement = oXform.moPageXML.CreateElement("PriceFilter")
                     Dim oMinPrice As XmlAttribute = oXform.moPageXML.CreateAttribute("MinPrice")
                     Dim oMaxPrice As XmlAttribute = oXform.moPageXML.CreateAttribute("MaxPrice")
+                    Dim oMaxPriceLimit As XmlAttribute = oXform.moPageXML.CreateAttribute("MaxPriceLimit")
                     Dim oSliderMinPrice As XmlAttribute = oXform.moPageXML.CreateAttribute("SliderMinPrice")
                     Dim oSliderMaxPrice As XmlAttribute = oXform.moPageXML.CreateAttribute("SliderMaxPrice")
                     Dim oStep As XmlAttribute = oXform.moPageXML.CreateAttribute("PriceStep")
@@ -82,9 +83,7 @@ Namespace Providers
 
                         End If
                         oSliderMinPrice.Value = FilterConfig.GetAttribute("fromPrice")
-                        'oSliderMaxPrice.Value = FilterConfig.GetAttribute("toPrice")
-                        'oProductTotalCount.Value = nMaxPRiceProduct
-                        'oSliderMinPrice.Value = nMinPriceProduct
+                        oMaxPriceLimit.Value = FilterConfig.GetAttribute("toPrice")
 
                         oSliderMaxPrice.Value = nMaxPRiceProduct
                         'oMaxPrice.Value = FilterConfig.GetAttribute("toPrice")
@@ -93,6 +92,7 @@ Namespace Providers
                         oStep.Value = FilterConfig.GetAttribute("step")
                         oXml.Attributes.Append(oMinPrice)
                         oXml.Attributes.Append(oMaxPrice)
+                        oXml.Attributes.Append(oMaxPriceLimit)
                         oXml.Attributes.Append(oSliderMinPrice)
                         oXml.Attributes.Append(oSliderMaxPrice)
                         oXml.Attributes.Append(oStep)
@@ -123,6 +123,7 @@ Namespace Providers
 
                     oXform.addBind("MinPrice", "PriceFilter/@MinPrice", "false()", "string", oXform.model)
                     oXform.addBind("MaxPrice", "PriceFilter/@MaxPrice", "false()", "string", oXform.model)
+                    oXform.addBind("MaxPriceLimit", "PriceFilter/@MaxPriceLimit", "false()", "string", oXform.model)
                     oXform.addBind("SliderMinPrice", "PriceFilter/@SliderMinPrice", "false()", "string", oXform.model)
                     oXform.addBind("SliderMaxPrice", "PriceFilter/@SliderMaxPrice", "false()", "string", oXform.model)
                     oXform.addBind("PriceStep", "PriceFilter/@PriceStep", "false()", "string", oXform.model)
@@ -132,32 +133,14 @@ Namespace Providers
 
                     oXform.addInput(oFromGroup, "MinPrice", True, "", "hidden")
                     oXform.addInput(oFromGroup, "MaxPrice", True, "", "hidden")
+                    oXform.addInput(oFromGroup, "MaxPriceLimit", True, "", "hidden")
                     oXform.addInput(oFromGroup, "SliderMinPrice", True, "", "hidden")
                     oXform.addInput(oFromGroup, "SliderMaxPrice", True, "", "hidden")
                     oXform.addInput(oFromGroup, "PriceStep", True, "", "hidden")
                     oXform.addInput(oFromGroup, "PriceListCount", True, "", "hidden")
                     oXform.addInput(oFromGroup, "PriceFilter", True, "", "hidden")
                     oXform.addSubmit(oFromGroup, "", "Apply", "PriceFilter", "  btnPriceSubmit hidden", "")
-                    ' oXform.addInput(oFromGroup, "PriceTotalCount", True, "", "hidden")
 
-                    'If (oFromGroup.SelectSingleNode("select[@ref='PriceFilter']") IsNot Nothing) Then
-                    '    If (oXml.InnerText.Trim() <> String.Empty) Then
-                    '        Dim sText As String
-
-                    '        Dim aPrice() As String = oXml.InnerText.Split(",")
-                    '        If (aPrice.Length <> 0) Then
-                    '            For cnt = 0 To aPrice.Length - 1
-                    '                sText = oFromGroup.SelectSingleNode("select[@ref='PriceFilter']/item[value='" + aPrice(cnt) + "']").FirstChild().FirstChild().InnerText
-                    '                oXform.addSubmit(oFromGroup, sText, sText, "PriceFilter_" & aPrice(cnt), " filter-applied", "fa-times")
-                    '            Next
-
-                    '        Else
-
-                    '            sText = oFromGroup.SelectSingleNode("select[@ref='PriceFilter']/item[value='" + oXml.InnerText + "']").FirstChild().FirstChild().InnerText
-                    '            oXform.addSubmit(oFromGroup, sText, sText, "PriceFilter_" & aPrice(cnt), "filter-applied", "fa-times")
-                    '        End If
-                    '    End If
-                    'End If
 
                     If (aWeb.moRequest.Form("MinPrice") IsNot Nothing And aWeb.moRequest.Form("MinPrice") <> "") Then
 
@@ -239,12 +222,18 @@ Namespace Providers
                     cSelectedMinPrice = Convert.ToString(aWeb.moRequest.Form("MinPrice")).Replace(aWeb.moCart.mcCurrency, "")
                     cSelectedMaxPrice = Convert.ToString(aWeb.moRequest.Form("MaxPrice")).Replace(aWeb.moCart.mcCurrency, "")
                     If cSelectedMaxPrice <> String.Empty Then
+                        cWhereSql = cWhereSql & " nContentKey in ( Select distinct ci.nContentId from tblContentIndex ci inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey "
+                        cWhereSql = cWhereSql & " inner join tblAudit ca on ca.nAuditKey=cid.nAuditId and nStatus=1 where cid.cDefinitionName='" + cIndexDefinationName + "' AND ("
+
                         If (cSelectedMinPrice = String.Empty) Then
                             cSelectedMinPrice = "0"
                         End If
-                        cWhereSql = cWhereSql & " nContentKey in ( Select distinct ci.nContentId from tblContentIndex ci inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey "
-                        cWhereSql = cWhereSql & " inner join tblAudit ca on ca.nAuditKey=cid.nAuditId and nStatus=1 where cid.cDefinitionName='" + cIndexDefinationName + "' AND ("
-                        cWhereSql = cWhereSql & "ci.nNumberValue between " & cSelectedMinPrice & " and " & cSelectedMaxPrice & "))"
+                        If (cSelectedMaxPrice.Contains("+")) Then
+                            cWhereSql = cWhereSql & "ci.nNumberValue > " & cSelectedMinPrice & "))"
+                        Else
+                            cWhereSql = cWhereSql & "ci.nNumberValue between " & cSelectedMinPrice & " and " & cSelectedMaxPrice & "))"
+                        End If
+
                     End If
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PriceFilter", ex, ""))
