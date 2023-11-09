@@ -225,3 +225,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Release\ProteanCMS.vbproj.
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Release\ProteanCMS.vbproj.CopyComplete
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Release\ProteanCMS.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Release\ProteanCMS.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Select.HtmlToPdf.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Select.HtmlToPdf.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Select.Html.dep

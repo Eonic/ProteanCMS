@@ -953,7 +953,11 @@ function initialiseGetVimeoDataButton() {
         var id = $("input#cVimeoCode").val();
         id = id.split('?')[0];
         jsonURL = "https://vimeo.com/api/v2/video/" + id + ".json";
+        
         $.getJSON(jsonURL, function (result) {
+
+            alert(JSON.stringify(result));
+
             $("#cVimeoDuration").val(result[0].duration);
             $("#cVimeoByline").val(result[0].description);
             $("#cVimeoThumbnail").val(result[0].thumbnail_medium);
@@ -962,6 +966,20 @@ function initialiseGetVimeoDataButton() {
     });
 };
 
+function fetchDuration(videoId, apiKey) {
+    const baseURL = 'https://www.googleapis.com/youtube/v3/videos?';
+    const url = `${baseURL}id=${videoId}&key=${apiKey}&part=snippet,contentDetails`;
+    $.ajax({
+        async: false,
+        type: 'GET',
+        url: url,
+        success: function (data) {
+            const item = data.items[0];
+            const result = item ? item.contentDetails.duration : null;
+            return result;
+        }
+    });
+}
 
 
 

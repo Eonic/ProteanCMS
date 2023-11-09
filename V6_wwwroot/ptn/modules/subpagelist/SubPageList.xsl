@@ -71,6 +71,7 @@
 							<xsl:with-param name="imagePosition" select="@imagePosition"/>
 							<xsl:with-param name="alignment" select="@alignment"/>
 							<xsl:with-param name="parentId" select="@id"/>
+							<xsl:with-param name="linked" select="@linkArticle"/>
 						</xsl:apply-templates>
 					</div>
 				</div>
@@ -119,6 +120,7 @@
 		<xsl:param name="imagePosition"/>
 		<xsl:param name="alignment"/>
 		<xsl:param name="parentId"/>
+		<xsl:param name="linked"/>
 		<xsl:variable name="url">
 			<xsl:apply-templates select="." mode="getHref"/>
 		</xsl:variable>
@@ -138,6 +140,9 @@
 		<xsl:if test="(@name!='Information' and (not(DisplayName/@exclude='true'))) or (@name!='Information' and $showHidden='true')">
 			<xsl:variable name="classValues">
 				<xsl:text>listItem subpageItem</xsl:text>
+				<xsl:if test="$linked='true'">
+					<xsl:text> linked-listItem </xsl:text>
+				</xsl:if>
 				<xsl:apply-templates select="." mode="themeModuleClassExtrasListItem">
 					<xsl:with-param name="parentId" select="$parentId"/>
 				</xsl:apply-templates>
@@ -192,7 +197,6 @@
 							<xsl:text> </xsl:text>
 						</span>
 					</xsl:if>
-					<xsl:if test="not($button='false')">
 						<div>
 							<xsl:attribute name="class">
 								<xsl:text>entryFooter light-flex justify-content-</xsl:text>
@@ -205,13 +209,13 @@
 									<xsl:apply-templates select="." mode="getDisplayName" />
 								</xsl:with-param>-->
 								<xsl:with-param name="link" select="$url"/>
+						<xsl:with-param name="stretchLink" select="$linked"/>
 								<xsl:with-param name="altText">
 									<xsl:apply-templates select="." mode="getTitleAttr" />
 								</xsl:with-param>
 							</xsl:apply-templates>
 							<xsl:text> </xsl:text>
 						</div>
-					</xsl:if>
 				</div>
 			</div>
 		</xsl:if>
