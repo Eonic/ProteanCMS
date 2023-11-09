@@ -102,24 +102,38 @@
 	<!-- Video Brief -->
 	<xsl:template match="Content[@type='Video']" mode="displayBrief">
 		<xsl:param name="sortBy"/>
+		<xsl:param name="linked"/>
+		<xsl:param name="class"/>
+		<xsl:param name="parentId"/>
 		<xsl:variable name="thisURL" select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url"></xsl:variable>
 		<xsl:variable name="parentURL">
 			<xsl:apply-templates select="." mode="getHref"/>
 		</xsl:variable>
-		<div class="listItem video">
+		<xsl:variable name="classValues">
+			<xsl:text>listItem video </xsl:text>
+			<xsl:if test="$linked='true'">
+				<xsl:text> linked-listItem </xsl:text>
+			</xsl:if>
+			<xsl:value-of select="$class"/>
+			<xsl:text> </xsl:text>
+			<xsl:apply-templates select="." mode="themeModuleClassExtrasListItem">
+				<xsl:with-param name="parentId" select="$parentId"/>
+			</xsl:apply-templates>
+		</xsl:variable>
+		<div class="{$classValues}">
 			<xsl:apply-templates select="." mode="inlinePopupOptions">
-				<xsl:with-param name="class" select="'listItem video'"/>
+				<xsl:with-param name="class" select="concat($classValues,' ',$class)"/>
 				<xsl:with-param name="sortBy" select="$sortBy"/>
 			</xsl:apply-templates>
 			<div class="lIinner">
 				<a href="{$parentURL}">
 					<xsl:apply-templates select="." mode="displayThumbnail"/>
 				</a>
-				<a href="{$parentURL}">
-					<h3 class="title">
+				<h3 class="title">
+					<a href="{$parentURL}">
 						<xsl:value-of select="Title/node()"/>
-					</h3>
-				</a>
+					</a>
+				</h3>
 				<xsl:if test="Author/node()!=''">
 					<p class="author">
 						<span class="label">
@@ -149,6 +163,7 @@
 					<xsl:apply-templates select="." mode="displayTags"/>
 					<xsl:apply-templates select="." mode="moreLink">
 						<xsl:with-param name="link" select="$parentURL"/>
+						<xsl:with-param name="stretchLink" select="$linked"/>
 						<xsl:with-param name="altText">
 							<xsl:value-of select="Title/node()"/>
 						</xsl:with-param>
