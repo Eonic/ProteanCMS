@@ -1860,8 +1860,8 @@ if (editPageElement) {
 
 
 $(document).ready(function () {
-    var cLocation = $(".admin-breadcrumb-inner ul li").last().text();
-    $("#cLocation").val(cLocation);
+   // var cLocation = $(".admin-breadcrumb-inner ul li").last().text();
+    //$("#cLocation").val(cLocation);
     function scrollToAnchor(aid) {
         var aTag = $("li[id='" + aid + "']");
         $('#MenuTree').animate({ scrollTop: aTag.position().top }, 'slow');
