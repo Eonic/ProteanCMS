@@ -1023,7 +1023,7 @@ Recheck:
                     If mConfig IsNot Nothing Then
                         oDBServerName = Convert.ToString(mConfig("DatabaseServer"))
                         oDBName = Convert.ToString(mConfig("DatabaseName"))
-                        oDBUserName = Convert.ToString(mConfig("DatabaseUser"))
+                        oDBUserName = Convert.ToString(mConfig("DatabaseUsername"))
                         oDBPassword = Convert.ToString(mConfig("DatabasePassword"))
 
                         myWeb.moDbHelper.DatabaseName = oDBName

@@ -20,7 +20,7 @@
         </MenuItem>
         <MenuItem name="Page Settings" cmd="EditPage" display="true" icon="fa-cog"/>
         <MenuItem name="SEO Settings" cmd="EditPageSEO" display="true" icon="fa-globe"/>
-        <MenuItem name="Page Layout" cmd="EditPageLayout" display="true" icon="fa-columns"/>
+        <!--<MenuItem name="Page Layout" cmd="EditPageLayout" display="true" icon="fa-columns"/>-->
         <MenuItem name="Advanced" cmd="Advanced" display="true" icon="fa-pen-square"/>
         <MenuItem name="Page Versions" cmd="PageVersions" display="true" feature="PageVersions" icon="fa-copy"/>
         <MenuItem name="New Page Version" cmd="NewPageVersion" display="false" feature="PageVersions" icon="fa-copy"/>

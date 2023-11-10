@@ -2909,17 +2909,22 @@ Partial Public Class Cms
 
                     If AlternateFormName <> "" Then cXformPath = AlternateFormName
 
-                    If cModuleType <> "" Then
-                        If goConfig("cssFramework") = "bs5" Then
-                            cXformPath = GetModuleFormPath(cModuleType)
-                        Else
-                            If Not cXformPath.EndsWith("/" & cModuleType) Then
-                                cXformPath = cXformPath & "/" & cModuleType
-                            End If
+                    'Quick fix for V4 sites
+                    If cModuleType = "BasicContentTypes" Then
+                        cModuleType = ""
+                    End If
 
-                        End If
-                    Else
-                        If goConfig("cssFramework") = "bs5" Then
+                    If cModuleType <> "" Then
+                            If goConfig("cssFramework") = "bs5" Then
+                                cXformPath = GetModuleFormPath(cModuleType)
+                            Else
+                                If Not cXformPath.EndsWith("/" & cModuleType) Then
+                                    cXformPath = cXformPath & "/" & cModuleType
+                                End If
+
+                            End If
+                        Else
+                            If goConfig("cssFramework") = "bs5" Then
                             cXformPath = GetContentFormPath(cContentSchemaName)
                         End If
                     End If
