@@ -453,12 +453,12 @@ Public Class Messaging
 
                 Dim mailSender As New MailAddress(serverSenderEmail, serverSenderEmailName)
 
-
                 If LCase(goConfig("overrideFromEmail")) = "on" Then
                     oMailn.From = mailSender
                 Else
                     ' Don't add the sender if it's the same address as the from
                     If Not MailAddress.Equals(mailSender, adFrom) Then
+                        'oMailn.ReplyTo = adFrom
                         oMailn.Sender = mailSender
                     End If
                 End If
