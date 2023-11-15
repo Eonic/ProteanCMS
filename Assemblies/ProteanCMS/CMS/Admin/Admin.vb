@@ -478,6 +478,14 @@ ProcessFlow:
                         statusElmt.InnerXml = myWeb.GetStatus().OuterXml
                         oPageDetail.AppendChild(statusElmt)
 
+                        Dim compileElmt As XmlElement = moPageXML.CreateElement("CompiledTranform")
+                        compileElmt.InnerText = moConfig("CompiledTransform")
+                        oPageDetail.AppendChild(compileElmt)
+
+                        Dim pageCacheElmt As XmlElement = moPageXML.CreateElement("PageCache")
+                        pageCacheElmt.InnerText = moConfig("PageCache")
+                        oPageDetail.AppendChild(pageCacheElmt)
+
                     Case ("MemberActivity")
                         MemberActivityProcess(oPageDetail, sAdminLayout)
 
