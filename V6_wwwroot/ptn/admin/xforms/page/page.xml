@@ -78,7 +78,7 @@
 			<label>Basic Page Settings</label>
 			<group class="form-2-col">
 				<input bind="cStructName" class="required">
-					<label>Page name</label>
+					<label>Page Name</label>
 					<help class="inline">
 						<p>
 							<strong>Required. </strong>
@@ -94,7 +94,7 @@
 					</help>
 				</input>
 				<input bind="cDisplayName">
-					<label>Display name</label>
+					<label>Display Name</label>
 					<help class="inline">
 						<p>
 							<strong>Optional. </strong>Only needs to be used if;
@@ -115,7 +115,7 @@
 			<group>
 				<label>Page Navigation and Links</label>
 				<select1 bind="cLinkType" appearance="full">
-					<label>Type of link</label>
+					<label>Type of Link</label>
 					<item>
 						<label>Internal</label>
 						<value>internal</value>
@@ -130,7 +130,7 @@
 						</help>
 					</item>
 					<item>
-						<label>External (Link to another website)</label>
+						<label>External (link to another website)</label>
 						<value>external</value>
 						<toggle case="cLinkType_2" event="DOMActivate"/>
 						<help class="inline">
@@ -154,7 +154,7 @@
 					</case>
 				</switch>
 				<input bind="cLinkTitle" class="long keep_empty">
-					<label>Link title text</label>
+					<label>Link Title Text</label>
 					<help class="inline">
 						<p>The title text for a link is the little hint that appears when the user mouses over a hyperlink.</p>
 						<p>Configuring what appears here can aid user direction, and sometimes offer SEO advantages.</p>
