@@ -68,9 +68,8 @@
                   </xsl:if>-->
 									<xsl:apply-templates select="submit" mode="xform"/>
 									<div class="footer-status">
-										<xsl:value-of select="$page/ContentDetail/Content/instance/tblContent/nStatus"/>!!!
 										<span>
-											<xsl:if test="not($page/ContentDetail/Content/instance/*/nStatus='1')">
+											<xsl:if test="not($page/ContentDetail/Content/model/instance/*/nStatus='1')">
 												<xsl:attribute name="class">text-muted hidden</xsl:attribute>
 											</xsl:if>
 											<i class="fas fa-eye">

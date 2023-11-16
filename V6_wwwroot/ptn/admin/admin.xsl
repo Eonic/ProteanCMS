@@ -718,7 +718,7 @@
 				  <div class="dashboard-first-column">
 					  <div class="card card-default">
 						  <div class="card-header">
-							  <h4>Welcome, <xsl:value-of select="User/FirstName"/>!</h4>
+							  <h4>Welcome, <xsl:value-of select="User/FirstName"/></h4>
 							 
 						  </div>
 						  <!--<div class="card-body">
@@ -884,7 +884,7 @@
                     </a>
                   </li>
                   <li class="btn-group-vertical">
-                    <a href="" class="btn btn-primary disabled">
+                    <a href="" class="btn btn-outline-primary disabled">
                       <i class="fa fa-plus">
                         <xsl:text> </xsl:text>
                       </i>
@@ -892,7 +892,7 @@
                     </a>
                   </li>
                   <li class="btn-group-vertical">
-                    <a href="" class="btn btn-primary disabled">
+                    <a href="" class="btn btn-outline-primary disabled">
                       <i class="fa fa-plus">
                         <xsl:text> </xsl:text>
                       </i>
@@ -912,7 +912,7 @@
                         </a>
                       </xsl:when>
                       <xsl:otherwise>
-                        <a href="" class="btn btn-primary disabled">
+                        <a href="" class="btn btn-outline-primary disabled">
                           <i class="fa fa-plus">
                             <xsl:text> </xsl:text>
                           </i>
@@ -933,7 +933,7 @@
                         </a>
                       </xsl:when>
                       <xsl:otherwise>
-                        <a href="" class="btn btn-primary disabled">
+                        <a href="" class="btn btn-outline-primary disabled">
                           <i class="fa fa-plus">
                             <xsl:text> </xsl:text>
                           </i>
@@ -964,7 +964,7 @@
                     </xsl:choose>
                   </li>
                   <li class="active btn-group-vertical">
-                    <a href="" class="btn btn-primary disabled">
+                    <a href="" class="btn btn-outline-primary disabled">
                       <i class="fa fa-plus">
                         <xsl:text> </xsl:text>
                       </i>
@@ -975,15 +975,17 @@
                     <!--Not working-->
                     <xsl:choose>
                       <xsl:when test="/Page/ContentDetail/Status/Status/PageCache/node() = 'on'">
-                        <a href="" class="btn btn-primary">
-                          <span class="hidden">
+                        <a href="" class="btn btn-outline-success">
+							<i class="fa-regular fa-circle-check">
+								<xsl:text> </xsl:text>
+							</i>
                             <xsl:text> </xsl:text>
-                          </span>Page Cache
+                            Page Cache Enabled
                         </a>
                       </xsl:when>
                       <xsl:otherwise>
-                        <a href="{$appPath}?ewCmd=WebSettings" class="btn btn-warning">
-                          <i class="fa fa-plus">
+                        <a href="{$appPath}?ewCmd=WebSettings" class="btn btn-danger">
+                          <i class="fa-regular fa-file">
                             <xsl:text> </xsl:text>
                           </i>
                           <xsl:text> </xsl:text>Page Cache Off
@@ -994,7 +996,7 @@
 					<xsl:choose>
 						<xsl:when test="/Page/ContentDetail/Status/Status/CompiledTransform/node() = 'on'">
 							<li class="btn-group-vertical">
-								<a href="{$appPath}?recompile=true" class="btn btn-warning bs-please-wait" data-pleasewaitmessage="Recompiling - Please wait a moment.">
+								<a href="{$appPath}?recompile=true" class="btn btn-outline-success bs-please-wait" data-pleasewaitmessage="Recompiling - Please wait a moment.">
 									<i class="fas fa-recycle">
 										<xsl:text> </xsl:text>
 									</i>
@@ -1004,7 +1006,7 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<li  class="btn-group-vertical">
-								<a href="{$appPath}?ewCmd=WebSettings" class="btn btn-warning">
+								<a href="{$appPath}?ewCmd=WebSettings" class="btn btn-danger">
 									<i class="fa-solid fa-rocket">
 										<xsl:text> </xsl:text>
 									</i>
@@ -1031,11 +1033,12 @@
                     </xsl:when>
                     <xsl:otherwise>
                       <li class="btn-group-vertical">
-                        <a href="{$appPath}?rebundle=true" class="btn btn-warning">
-                          <i class="fa fa-recycle">
+                        <a href="{$appPath}?rebundle=true" class="btn btn-outline-success">
+                          
+                          <xsl:text> </xsl:text>Clear Cache
+						 <i class="fa fa-recycle">
                             <xsl:text> </xsl:text>
                           </i>
-                          <xsl:text> </xsl:text>Rebundle JS / CSS files
                         </a>
                       </li>
                     </xsl:otherwise>

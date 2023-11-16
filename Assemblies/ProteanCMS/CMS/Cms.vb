@@ -346,11 +346,11 @@ Public Class Cms
             oResponseElmt.AppendChild(oElmt)
 
 
-            Dim compileElmt As XmlElement = moPageXml.CreateElement("CompiledTranform")
+            Dim compileElmt As XmlElement = oRXML.CreateElement("CompiledTransform")
             compileElmt.InnerText = moConfig("CompiledTransform")
             oResponseElmt.AppendChild(compileElmt)
 
-            Dim pageCacheElmt As XmlElement = moPageXml.CreateElement("PageCache")
+            Dim pageCacheElmt As XmlElement = oRXML.CreateElement("PageCache")
             pageCacheElmt.InnerText = moConfig("PageCache")
             oResponseElmt.AppendChild(pageCacheElmt)
 
