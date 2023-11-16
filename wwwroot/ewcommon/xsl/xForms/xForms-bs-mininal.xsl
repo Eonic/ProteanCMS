@@ -2431,11 +2431,14 @@
 		  <xsl:value-of select="translate($ref,'[]#=/','')"/>
 		  <xsl:text>-dependant form-group</xsl:text>
 	  </xsl:variable>
-	  <xsl:apply-templates select="following-sibling::switch[1]/case[node()]" mode="xform" >
-		  <xsl:with-param name="selectedCase" select="$selectedCase" />
-		  <xsl:with-param name="dependantClass" select="$dependantClass" />
-	  </xsl:apply-templates>
+	  <xsl:if test="following-sibling::*[1][local-name()='switch']">
+	      <xsl:apply-templates select="following-sibling::switch[1]/case[node()]" mode="xform" >
+		      <xsl:with-param name="selectedCase" select="$selectedCase" />
+		      <xsl:with-param name="dependantClass" select="$dependantClass" />
+	      </xsl:apply-templates>
+	  </xsl:if>
   </xsl:template>
+	
    <xsl:template match="select1[@appearance='minimal'] | select1" mode="xform_control_script">
 	   <xsl:variable name="ref">
 		   <xsl:apply-templates select="." mode="getRefOrBind"/>
