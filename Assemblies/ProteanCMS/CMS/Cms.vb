@@ -345,6 +345,15 @@ Public Class Cms
             oElmt.InnerText = moConfig("debug")
             oResponseElmt.AppendChild(oElmt)
 
+
+            Dim compileElmt As XmlElement = moPageXml.CreateElement("CompiledTranform")
+            compileElmt.InnerText = moConfig("CompiledTransform")
+            oResponseElmt.AppendChild(compileElmt)
+
+            Dim pageCacheElmt As XmlElement = moPageXml.CreateElement("PageCache")
+            pageCacheElmt.InnerText = moConfig("PageCache")
+            oResponseElmt.AppendChild(pageCacheElmt)
+
             ''Start URI
             'oElmt = oRXML.CreateElement("AbsoluteURI")
             'oElmt.InnerText = System.Web.HttpContext.Current.Request.Url.AbsoluteUri
