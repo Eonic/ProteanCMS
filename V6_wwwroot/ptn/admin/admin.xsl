@@ -718,7 +718,7 @@
 				  <div class="dashboard-first-column">
 					  <div class="card card-default">
 						  <div class="card-header">
-							  <h4>Welcome, <xsl:value-of select="User/FirstName"/>!</h4>
+							  <h4>Welcome, <xsl:value-of select="User/FirstName"/></h4>
 							 
 						  </div>
 						  <!--<div class="card-body">
@@ -884,7 +884,7 @@
                     </a>
                   </li>
                   <li class="btn-group-vertical">
-                    <a href="" class="btn btn-primary">
+                    <a href="" class="btn btn-outline-primary disabled">
                       <i class="fa fa-plus">
                         <xsl:text> </xsl:text>
                       </i>
@@ -892,7 +892,7 @@
                     </a>
                   </li>
                   <li class="btn-group-vertical">
-                    <a href="" class="btn btn-primary">
+                    <a href="" class="btn btn-outline-primary disabled">
                       <i class="fa fa-plus">
                         <xsl:text> </xsl:text>
                       </i>
@@ -902,14 +902,17 @@
                   <li class="btn-group-vertical">
                     <xsl:choose>
                       <xsl:when test="/Page/ContentDetail/Status/Status/Cart/node() = 'on'">
-                        <a href="" class="btn btn-primary">
-                          <span class="hidden">
+                        <a href="{$appPath}?ewCmd=Orders" class="btn btn-primary">
+						<i class="fa-regular fa-circle-check">
                             <xsl:text> </xsl:text>
-                          </span>eCommerce
+                          </i>
+                         
+                            <xsl:text> </xsl:text>
+                         eCommerce
                         </a>
                       </xsl:when>
                       <xsl:otherwise>
-                        <a href="" class="btn btn-primary">
+                        <a href="" class="btn btn-outline-primary disabled">
                           <i class="fa fa-plus">
                             <xsl:text> </xsl:text>
                           </i>
@@ -921,14 +924,16 @@
                   <li class="btn-group-vertical">
                     <xsl:choose>
                       <xsl:when test="/Page/ContentDetail/Status/Status/Membership/node() = 'on'">
-                        <a href="" class="btn btn-primary">
-                          <span class="hidden">
+                        <a href="{$appPath}?ewCmd=ListUsers" class="btn btn-primary">	<i class="fa-regular fa-circle-check">
                             <xsl:text> </xsl:text>
-                          </span>Membership
+                          </i>
+                          
+                            <xsl:text> </xsl:text>
+                          Membership
                         </a>
                       </xsl:when>
                       <xsl:otherwise>
-                        <a href="" class="btn btn-primary">
+                        <a href="" class="btn btn-outline-primary disabled">
                           <i class="fa fa-plus">
                             <xsl:text> </xsl:text>
                           </i>
@@ -940,14 +945,16 @@
                   <li class="btn-group-vertical">
                     <xsl:choose>
                       <xsl:when test="/Page/ContentDetail/Status/Status/MailingList/node() = 'on'">
-                        <a href="" class="btn btn-primary">
-                          <span class="hidden">
+                        <a href="{$appPath}?ewCmd=MailingList" class="btn btn-primary">	<i class="fa-regular fa-circle-check">
                             <xsl:text> </xsl:text>
-                          </span>Email Marketing
+                          </i>
+                          
+                            <xsl:text> </xsl:text>
+                          Email Marketing
                         </a>
                       </xsl:when>
                       <xsl:otherwise>
-                        <a href="" class="btn btn-primary">
+                        <a href="" class="btn btn-primary disabled">
                           <i class="fa fa-plus">
                             <xsl:text> </xsl:text>
                           </i>
@@ -957,7 +964,7 @@
                     </xsl:choose>
                   </li>
                   <li class="active btn-group-vertical">
-                    <a href="" class="btn btn-primary">
+                    <a href="" class="btn btn-outline-primary disabled">
                       <i class="fa fa-plus">
                         <xsl:text> </xsl:text>
                       </i>
@@ -968,26 +975,51 @@
                     <!--Not working-->
                     <xsl:choose>
                       <xsl:when test="/Page/ContentDetail/Status/Status/PageCache/node() = 'on'">
-                        <a href="" class="btn btn-primary">
-                          <span class="hidden">
+                        <a href="" class="btn btn-outline-success">
+							<i class="fa-regular fa-circle-check">
+								<xsl:text> </xsl:text>
+							</i>
                             <xsl:text> </xsl:text>
-                          </span>Page Cache
+                            Page Cache Enabled
                         </a>
                       </xsl:when>
                       <xsl:otherwise>
-                        <a href="" class="btn btn-primary">
-                          <i class="fa fa-plus">
+                        <a href="{$appPath}?ewCmd=WebSettings" class="btn btn-danger">
+                          <i class="fa-regular fa-file">
                             <xsl:text> </xsl:text>
                           </i>
-                          <xsl:text> </xsl:text>Page Cache
+                          <xsl:text> </xsl:text>Page Cache Off
                         </a>
                       </xsl:otherwise>
                     </xsl:choose>
                   </li>
+					<xsl:choose>
+						<xsl:when test="/Page/ContentDetail/Status/Status/CompiledTransform/node() = 'on'">
+							<li class="btn-group-vertical">
+								<a href="{$appPath}?recompile=true" class="btn btn-outline-success bs-please-wait" data-pleasewaitmessage="Recompiling - Please wait a moment.">
+									<i class="fas fa-recycle">
+										<xsl:text> </xsl:text>
+									</i>
+									<xsl:text> </xsl:text>Recompile XSLT and Rebundle
+								</a>
+							</li>
+						</xsl:when>
+						<xsl:otherwise>
+							<li  class="btn-group-vertical">
+								<a href="{$appPath}?ewCmd=WebSettings" class="btn btn-danger">
+									<i class="fa-solid fa-rocket">
+										<xsl:text> </xsl:text>
+									</i>
+									<xsl:text> </xsl:text>Compiled Transform Off
+								</a>
+							</li>
+
+						</xsl:otherwise>
+					</xsl:choose>
                   <xsl:choose>
 
                     <xsl:when test="/Page/ContentDetail/Status/Status/Debug/node() = 'on'">
-                      <li  class="btn-group-vertical mt-2">
+                      <li  class="btn-group-vertical">
                         <a href="{$appPath}?ewCmd=WebSettings" class="btn btn-danger">
                           <i class="fa fa-bug">
                             <xsl:text> </xsl:text>
@@ -995,28 +1027,31 @@
                           <xsl:text> </xsl:text>Debug Mode Enabled
                         </a>
                       </li>
-                      <div class="alert alert-warning mt-2">
+                      <div class="alert alert-warning">
                         Debug mode turns off some compression and performance features. It also reports any errors directly to screen rather than showing a friendly error page.<br/><br/> Debug Mode should be turned <strong>off</strong> on live websites.
                       </div>
                     </xsl:when>
                     <xsl:otherwise>
                       <li class="btn-group-vertical">
-                        <a href="{$appPath}?rebundle=true" class="btn btn-warning">
-                          <i class="fa fa-recycle">
+                        <a href="{$appPath}?rebundle=true" class="btn btn-outline-success">
+                          
+                          <xsl:text> </xsl:text>Clear Cache
+						 <i class="fa fa-recycle">
                             <xsl:text> </xsl:text>
                           </i>
-                          <xsl:text> </xsl:text>Rebundle JS / CSS files
                         </a>
                       </li>
                     </xsl:otherwise>
                   </xsl:choose>
+
+				
                   <xsl:if test="ContentDetail/Status/Status/DBVersion/node()!=ContentDetail/Status/Status/LatestDBVersion/node() and User/@name='Admin'">
                     <li class="btn-group-vertical">
                       <a href="/ptn/setup/?ewCmd=UpgradeDB" class="btn btn-primary">
                         <i class="fa fa-refresh">
                           <xsl:text> </xsl:text>
                         </i>
-                        <xsl:text> </xsl:text>Update Schema from <br/><xsl:value-of select="ContentDetail/Status/Status/DBVersion/node()"/> to <xsl:value-of select="ContentDetail/Status/Status/LatestDBVersion/node()"/>
+                        <xsl:text> </xsl:text>Update Database from <br/><xsl:value-of select="ContentDetail/Status/Status/DBVersion/node()"/> to <xsl:value-of select="ContentDetail/Status/Status/LatestDBVersion/node()"/>
                       </a>
                     </li>
                   </xsl:if>

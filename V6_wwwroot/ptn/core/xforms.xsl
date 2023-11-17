@@ -436,19 +436,20 @@
   </xsl:template>
 
   <xsl:template match="group[contains(@class,'tabs')]" mode="xform">
-    <div class="row form-tab-wrapper">
-      <div class="col-1 col-lg-3 col-xl-2 form-tab-nav-wrapper">
-        <div class=" nav flex-column nav-pills tab-nav" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+    <div class="form-tab-wrapper">
+      <div class="form-tab-nav-wrapper">
+        <div class=" nav flex-row tab-nav" id="v-pills-tab" role="tablist" aria-orientation="vertical">
           <xsl:apply-templates select="*" mode="xform-tab-list"/>
         </div>
       </div>
-      <div class="col-11 col-lg-9 col-xl-10 form-tab-content-wrapper">
+      <div class="form-tab-content-wrapper">
         <div class="tab-content" id="tabs-{@ref}">
           <xsl:apply-templates select="*" mode="xform"/>
         </div>
       </div>
     </div>
   </xsl:template>
+	
   <xsl:template match="group[parent::group[contains(@class,'tabs')]]" mode="xform-tab-list">
     <xsl:variable name="isopen">
       <xsl:if test="position()=1">

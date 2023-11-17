@@ -448,20 +448,27 @@ Public Class Messaging
                 Dim serverSenderEmailName As String = goConfig("ServerSenderEmailName") & ""
                 If Not (Tools.Text.IsEmail(serverSenderEmail)) Then
                     serverSenderEmail = "emailsender@protean.site"
+                End If
+                If serverSenderEmailName = "" Then
                     serverSenderEmailName = "ProteanCMS Email Sender"
                 End If
 
                 Dim mailSender As New MailAddress(serverSenderEmail, serverSenderEmailName)
-
 
                 If LCase(goConfig("overrideFromEmail")) = "on" Then
                     oMailn.From = mailSender
                 Else
                     ' Don't add the sender if it's the same address as the from
                     If Not MailAddress.Equals(mailSender, adFrom) Then
-                        oMailn.Sender = mailSender
+                        If LCase(goConfig("EnableReplyTo")) = "on" Then
+                            oMailn.ReplyToList.Add(adFrom)
+                            oMailn.From = mailSender
+                        Else
+                            oMailn.Sender = mailSender
+                        End If
+
                     End If
-                End If
+                    End If
             End If
 
             ' All throught the process check if the e-mail address is actually valid.

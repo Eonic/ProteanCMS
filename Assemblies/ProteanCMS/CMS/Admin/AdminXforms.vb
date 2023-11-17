@@ -2401,6 +2401,7 @@ Partial Public Class Cms
                             Dim fld As DirectoryInfo
                             For Each fld In rootFolder.GetDirectories
                                 EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "modules\" & fld.Name, "manifest.xml")
+                                ' EnumberateManifest(ManifestDoc, "/" & gcProjectPath & "modules\" & fld.Name, "manifest.xml")
 
                             Next
                             If myWeb.moConfig("ClientCommonFolder") <> "" Then
@@ -2485,7 +2486,7 @@ Partial Public Class Cms
                                 ' If formPath.contains("/") Then
                                 '  formPath = formPath.Split("/")(1)
                                 'End If
-                                oContentType.SetAttribute("formPath", filepath & "/" & formPath)
+                                oContentType.SetAttribute("formPath", filepath.Replace("/ptn", "") & "/" & formPath)
                             Next
                             For Each oModuleType In ManifestDoc.SelectNodes("/PageLayouts/ModuleTypes/ModuleGroup/Module")
                                 Dim formPath = oModuleType.GetAttribute("formPath")
@@ -2507,7 +2508,7 @@ Partial Public Class Cms
                                 '  If formPath.contains("/") Then
                                 '  formPath = formPath.Split("/")(1)
                                 'End If
-                                oContentType.SetAttribute("formPath", filepath & "/" & formPath)
+                                oContentType.SetAttribute("formPath", filepath.Replace("/ptn", "") & "/" & formPath)
 
                                 Dim contentTypeGroupName As String = oContentType.SelectSingleNode("parent::ContentTypeGroup/@name").InnerText()
                                 Dim contentTypeGroup As XmlElement = ManifestDoc.SelectSingleNode("/PageLayouts/ContentTypes/ContentTypeGroup[@name='" & contentTypeGroupName & "']")

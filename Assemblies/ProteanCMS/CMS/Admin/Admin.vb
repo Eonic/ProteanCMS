@@ -478,6 +478,7 @@ ProcessFlow:
                         statusElmt.InnerXml = myWeb.GetStatus().OuterXml
                         oPageDetail.AppendChild(statusElmt)
 
+
                     Case ("MemberActivity")
                         MemberActivityProcess(oPageDetail, sAdminLayout)
 
@@ -838,15 +839,18 @@ ProcessFlow:
 
                                         ' myWeb.GetContentXMLByTypeAndOffset(moPageXML.DocumentElement, ContentType & cSort, FilterSQL, "", oPageDetail)
                                         Dim contentsNode As XmlElement = moPageXML.SelectSingleNode("/Page/Contents")
-                                        Dim itemCount As Integer = contentsNode.SelectNodes("Content").Count
-                                        contentsNode.SetAttribute("count", itemCount)
-                                        If Not IsNothing(contentsNode) Then
-                                            myWeb.moDbHelper.addBulkRelatedContent(contentsNode)
+                                        If Not contentsNode Is Nothing Then
+                                            Dim itemCount As Integer = contentsNode.SelectNodes("Content").Count
+                                            contentsNode.SetAttribute("count", itemCount)
+                                            If Not IsNothing(contentsNode) Then
+                                                myWeb.moDbHelper.addBulkRelatedContent(contentsNode)
+                                            End If
                                         End If
                                         myWeb.moSession("FilterValue") = FilterValue
+
                                     End If
 
-                                Case "User"
+                                        Case "User"
                                     If myWeb.moDbHelper.checkUserRole("Administrator") Then
                                         myWeb.GetContentXMLByType(moPageXML.DocumentElement, ContentType)
                                     Else
