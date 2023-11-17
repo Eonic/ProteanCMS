@@ -716,6 +716,7 @@
 
 	<xsl:template match="Page" mode="commonJsFiles">
 		<xsl:text>~/ptn/libs/jquery/dist/jquery.min.js,</xsl:text>
+		<xsl:text>~/ptn/libs/jqueryui/jquery-ui.js,</xsl:text>
 		<xsl:text>~/ptn/libs/bs5/js/bootstrap.bundle.min.js,</xsl:text>
 		<xsl:text>~/ptn/libs/swiper/swiper-bundle.min.js,</xsl:text>
 		<xsl:text>~/ptn/libs/fancyapps/ui/dist/fancybox.umd.min.js,</xsl:text>
