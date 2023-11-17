@@ -57,7 +57,7 @@
 					<a href="{$parentURL}" title="Read more about {Headline/node()}" class="list-image-link">
 						<xsl:apply-templates select="." mode="displayThumbnail">
 							<xsl:with-param name="crop" select="$cropSetting" />
-							<xsl:with-param name="class">list-image img-fluid thumbnail</xsl:with-param>
+							<xsl:with-param name="class">list-image img-fluid</xsl:with-param>
 						</xsl:apply-templates>
 					</a>
 				</xsl:if>
