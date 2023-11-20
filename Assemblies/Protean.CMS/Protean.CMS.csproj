@@ -51,14 +51,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
-    <Compile Include="CMS\API.cs" />
-    <Compile Include="CMS\Base.cs" />
+    <Compile Include="api\Rest.cs" />
+    <Compile Include="core\Base.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="eonic.snk" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="admin\" />
+    <Folder Include="content\" />
+    <Folder Include="features\cart\" />
+    <Folder Include="features\membership\" />
+    <Folder Include="features\search\" />
+    <Folder Include="features\subscriptions\" />
+    <Folder Include="handlers\" />
+    <Folder Include="providers\" />
+    <Folder Include="setup\" />
+    <Folder Include="tools\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

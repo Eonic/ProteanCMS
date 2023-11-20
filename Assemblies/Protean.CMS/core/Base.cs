@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Xml;
 using System.Web;
 
-namespace Protean.CMS.CMS
+namespace Protean.CMS
 {
     public partial class Base
     {

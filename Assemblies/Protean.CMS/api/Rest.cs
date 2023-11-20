@@ -8,13 +8,13 @@ using Newtonsoft.Json;
 
 namespace Protean.CMS.CMS
 {
-    public partial class API : Base
+    public partial class Rest : Base
     {
 
         public bool gbDebug = false;
 
 
-        public API() : base(System.Web.HttpContext.Current)
+        public Rest() : base(System.Web.HttpContext.Current)
         {
             InitialiseVariables();
 
