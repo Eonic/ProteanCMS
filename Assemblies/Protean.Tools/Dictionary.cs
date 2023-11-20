@@ -90,7 +90,7 @@ namespace Protean.Tools
                 return csvList;
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
                 return "";
             }

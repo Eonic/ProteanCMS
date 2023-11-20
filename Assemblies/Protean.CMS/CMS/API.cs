@@ -1,0 +1,280 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using Newtonsoft.Json;
+
+namespace Protean.CMS.CMS
+{
+    public partial class API : Base
+    {
+
+        public bool gbDebug = false;
+
+
+        public API() : base(System.Web.HttpContext.Current)
+        {
+            InitialiseVariables();
+
+        }
+
+        public void InitialiseVariables()
+        {
+            PerfMon.Log("API", "Open");
+            string sProcessInfo = "";
+            string cCloneContext = "";
+            string rootPageIdFromConfig = "";
+            try
+            {
+
+                // if we access base via soap the session is not available
+                if (moSession is not null)
+                {
+
+                    // below code has beem moved to membership base provider
+
+                    var oMembershipProv = new Providers.Membership.BaseProvider(this, moConfig("MembershipProvider"));
+                    mnUserId = oMembershipProv.Activities.GetUserId(this);
+
+                    if (moSession("adminMode") == "true")
+                    {
+                        mbAdminMode = true;
+                        // moDbHelper.gbAdminMode = mbAdminMode
+                    }
+                }
+
+                // We need the userId placed into dbhelper.
+                // moDbHelper.mnUserId = mnUserId
+
+                if (moConfig("Debug") is not null)
+                {
+                    switch (LCase(moConfig("Debug")))
+                    {
+                        case "on":
+                            {
+                                gbDebug = true;
+                                break;
+                            }
+                        case "off":
+                            {
+                                gbDebug = false;
+                                break;
+                            }
+
+                        default:
+                            {
+                                gbDebug = false;
+                                break;
+                            }
+                    }
+                }
+            }
+
+
+            catch (Exception ex)
+            {
+
+                OnComponentError(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Open", ex, sProcessInfo));
+
+            }
+
+        }
+
+        public virtual void JSONRequest()
+        {
+
+            PerfMon.Log("API", "Request");
+            string sProcessInfo = "";
+            try
+            {
+
+                string path = moRequest.ServerVariables("HTTP_X_ORIGINAL_URL");
+
+                if (path.Contains("?"))
+                {
+                    path = path.Substring(0, path.IndexOf("?"));
+                }
+
+                string[] pathsplit = Strings.Split(path, "/");
+                // URL = /API/ProviderName/methodName
+
+                string ProviderName = pathsplit[2];
+                string methodName = pathsplit[3];
+                string classPath = ProviderName + ".JSONActions";
+                string assemblytype = "";
+
+                Stream s = moRequest.InputStream;
+                var sr = new StreamReader(s);
+                string jsonString = sr.ReadLine();
+                if (string.IsNullOrEmpty(jsonString))
+                {
+                    jsonString = moRequest("data");
+                }
+
+                Newtonsoft.Json.Linq.JObject jObj = default;
+                Dictionary<string, string> paramDictionary = null;
+                if (jsonString is not null)
+                {
+                    try
+                    {
+                        jObj = Newtonsoft.Json.Linq.JObject.Parse(jsonString);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Not a valid json string we want to make the request anyway
+                        string query = System.Web.HttpUtility.UrlDecode(jsonString);
+                        var formData = System.Web.HttpUtility.ParseQueryString(query);
+                        try
+                        {
+                            paramDictionary = formData.AllKeys.ToDictionary(k => k, k => formData[k]);
+                        }
+                        catch
+                        {
+                        }
+                    }
+                }
+
+                Type calledType;
+
+
+                if (Strings.LCase(ProviderName) == "cms.cart" | Strings.LCase(ProviderName) == "cms.content" | Strings.LCase(ProviderName) == "cms.admin")
+                    ProviderName = "";
+
+                if (!string.IsNullOrEmpty(ProviderName))
+                {
+                    // case for external Providers
+                    Protean.ProviderSectionHandler moPrvConfig = WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders");
+                    var assemblyInstance = Assembly.LoadFrom(goServer.MapPath(moPrvConfig.Providers(ProviderName).Parameters("path")));
+                    // Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(ProviderName).Type)
+                    classPath = moPrvConfig.Providers(ProviderName).Parameters("className") + ".JSONActions";
+                    calledType = assemblyInstance.GetType(classPath, true);
+                }
+                else
+                {
+                    // case for methods within ProteanCMS Core DLL
+                    calledType = Type.GetType("Protean." + Strings.Replace(classPath, ".", "+"), true);
+                }
+
+                var o = Activator.CreateInstance(calledType);
+
+                var args = new object[2];
+                args[0] = this;
+                if (jObj is not null)
+                {
+                    args[1] = jObj;
+                }
+                else if (paramDictionary is not null)
+                {
+                    args[1] = paramDictionary;
+                }
+                else
+                {
+                    args[1] = null;
+                }
+
+                // check the response whatever is coming like with code 400, 200, based on the output- return in Json
+
+                string myResponse = Conversions.ToString(calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, null, o, args));
+
+                moResponse.Write(myResponse);
+            }
+
+            catch (Exception ex)
+            {
+                OnComponentError(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "JSONRequest", ex, sProcessInfo));
+                // returnException(mcModuleName, "getPageHtml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+                if (gbDebug)
+                {
+                    moResponse.Write(JsonConvert.SerializeObject(ex));
+                }
+                else
+                {
+                    moResponse.Write(ex.Message);
+                }
+
+                this.Finalize();
+            }
+            finally
+            {
+
+            }
+            PerfMon.Write();
+        }
+
+
+        public partial class JsonActions
+        {
+
+            public bool ValidateAPICall(ref Cms myWeb, string sGroupName, string cSchemaName = "Role")
+            {
+                // Create -InsertOrder Group and pass as a input
+                // check user present in the group
+                bool bIsAuthorized = false;
+                string authHeader = string.Empty;
+                string encodedUsernamePassword = string.Empty;
+                string usernamePassword = string.Empty;
+                var encoding = Encoding.GetEncoding("iso-8859-1");
+                int seperatorIndex;
+                string username = string.Empty;
+                string password = string.Empty;
+                int nUserId = 0;
+                string sValidResponse = string.Empty;
+
+                try
+                {
+
+                    if (myWeb.mnUserId != 0)
+                    {
+                        nUserId = myWeb.mnUserId;
+                    }
+                    // HttpContext httpContext = HttpContext.Current;
+                    else if (myWeb.moCtx.Request.Headers is not null)
+                    {
+                        if (myWeb.moCtx.Request.Headers("Authorization") is not null)
+                        {
+                            authHeader = myWeb.moCtx.Request.Headers("Authorization");
+                            if (authHeader.Substring("Basic ".Length).Trim().Length != 0)
+                            {
+                                encodedUsernamePassword = authHeader.Substring("Basic ".Length).Trim();
+                                usernamePassword = encoding.GetString(Convert.FromBase64String(encodedUsernamePassword));
+                                seperatorIndex = usernamePassword.IndexOf(":");
+                                username = usernamePassword.Substring(0, seperatorIndex);
+                                password = usernamePassword.Substring(seperatorIndex + 1);
+                                sValidResponse = myWeb.moDbHelper.validateUser(username, password);
+                                if (Information.IsNumeric(sValidResponse))
+                                {
+                                    nUserId = (int)Conversions.ToLong(sValidResponse);
+                                }
+                            }
+                        }
+                    }
+                    if (nUserId != 0)
+                    {
+                        bIsAuthorized = myWeb.moDbHelper.checkUserRole(sGroupName, cSchemaName, nUserId);
+                        if (bIsAuthorized)
+                        {
+                            myWeb.mnUserId = nUserId;
+                        }
+                    }
+                    else
+                    {
+                        bIsAuthorized = false;
+                    }
+                }
+
+
+                catch (Exception ex)
+                {
+                    // OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs("API", "ValidateAPICall", ex, ""))
+
+                    return false;
+                }
+                return bIsAuthorized;
+            }
+
+
+        }
+    }
+}
