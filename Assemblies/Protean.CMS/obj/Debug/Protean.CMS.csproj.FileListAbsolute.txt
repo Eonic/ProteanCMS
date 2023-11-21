@@ -1,0 +1,2 @@
+D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Debug\Protean.CMS.csproj.AssemblyReference.cache
+D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Debug\Protean.CMS.csproj.CoreCompileInputs.cache

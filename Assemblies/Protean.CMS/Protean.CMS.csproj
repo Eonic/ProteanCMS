@@ -65,10 +65,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="api\Rest.cs" />
-    <Compile Include="core\Base.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="setup\Setup.cs" />
+    <Compile Include="tools\stdTools.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="eonic.snk" />
@@ -76,14 +74,16 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="admin\" />
+    <Folder Include="api\" />
     <Folder Include="content\" />
+    <Folder Include="core\" />
     <Folder Include="features\cart\" />
     <Folder Include="features\membership\" />
     <Folder Include="features\search\" />
     <Folder Include="features\subscriptions\" />
     <Folder Include="handlers\" />
     <Folder Include="providers\" />
-    <Folder Include="tools\" />
+    <Folder Include="setup\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Protean.Tools\Protean.Tools.csproj">

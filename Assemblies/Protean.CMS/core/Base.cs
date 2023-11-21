@@ -58,8 +58,8 @@ namespace Protean.CMS
 
         // Session / Request Level Properties
         public System.Web.HttpRequest moRequest;
-        public Global.System.Web.HttpResponse moResponse;
-        public Global.System.Web.SessionState.HttpSessionState moSession;
+        public System.Web.HttpResponse moResponse;
+        public System.Web.SessionState.HttpSessionState moSession;
 
         public string mcPagePath;
         public string mcPageLayout;

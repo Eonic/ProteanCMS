@@ -9,8 +9,9 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using Fonet.Pdf;
 using System.Web.Configuration;
+using Protean.CMS;
 
-public partial class Setup
+public class Setup
 {
 
     // This is the version of the new build before the update......
@@ -34,9 +35,9 @@ public partial class Setup
     public System.Collections.Specialized.NameValueCollection goConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
 
     public Cms myWeb;
-    private Protean.Cms.dbHelper _moDbHelper;
+    private Cms.dbHelper _moDbHelper;
 
-    public virtual Protean.Cms.dbHelper moDbHelper
+    public virtual Cms.dbHelper moDbHelper
     {
         [MethodImpl(MethodImplOptions.Synchronized)]
         get
@@ -76,7 +77,7 @@ public partial class Setup
     private XmlElement oContentElmt;
     public string cPostFlushActions = "";
 
-    private Protean.XmlHelper.Transform oTransform = new Protean.XmlHelper.Transform();
+    private XmlHelper.Transform oTransform = new XmlHelper.Transform();
     private string msRedirectOnEnd = "";
     private bool mbSchemaExists = false;
     private bool ConnValid = false;
@@ -100,15 +101,15 @@ public partial class Setup
     protected virtual void OnComponentError(object sender, Protean.Tools.Errors.ErrorEventArgs e)
     {
         // deals with the error
-        returnException(myWeb.msException, e.ModuleName, e.ProcedureName, e.Exception, "/ewcommon/xsl/admin/setup.xsl", e.AddtionalInformation, gbDebug);
+       stdTools.returnException(ref myWeb.msException, e.ModuleName, e.ProcedureName, e.Exception, "/ewcommon/xsl/admin/setup.xsl", e.AddtionalInformation, gbDebug);
         // close connection pooling
-        if (myWeb.moDbHelper is not null)
+        if (myWeb.moDbHelper != null)
         {
             try
             {
                 myWeb.moDbHelper.CloseConnection();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }
@@ -134,7 +135,7 @@ public partial class Setup
     public Setup(System.Web.HttpContext Context)
     {
 
-        string sProcessInfo = "";
+        string sProcessInfo = "Setup";
         try
         {
             moCtx = Context;
@@ -158,9 +159,9 @@ public partial class Setup
             // msException = ""
 
             // Set the debug mode
-            if (goConfig["Debug"] is not null)
+            if (goConfig["Debug"] != null)
             {
-                switch (Strings.LCase(goConfig["Debug"]) ?? "")
+                switch ((goConfig["Debug"]).ToLower() ?? "")
                 {
                     case "on":
                         {
@@ -181,16 +182,16 @@ public partial class Setup
                 }
             }
 
-            if (goSession is not null)
+            if (goSession != null)
             {
-                if (this.goSession("nUserId") == default | this.goSession("nUserId") == 0)
+                if (this.goSession["nUserId"] == default | Convert.ToInt32(this.goSession["nUserId"]) == 0)
                 {
                 }
                 // this will get set on close
                 else
                 {
                     // lets finally set the user Id from the session
-                    mnUserId = this.goSession("nUserId");
+                    mnUserId = Convert.ToInt32(goSession["nUserId"]);
                 }
             }
 
@@ -203,17 +204,17 @@ public partial class Setup
                 myWeb.moDbHelper.DatabaseUser = goConfig["DatabaseUsername"];
                 myWeb.moDbHelper.DatabasePassword = goConfig["DatabasePassword"];
 
-                ConnValid = myWeb.moDbHelper.CredentialsValid();
+                ConnValid = myWeb.moDbHelper.CredentialsValid;
                 if (ConnValid)
                 {
-                    if (myWeb.moDbHelper.checkDBObjectExists("tblContent", Tools.Database.objectTypes.Table))
+                    if (myWeb.moDbHelper.checkDBObjectExists("tblContent", Protean.Tools.Database.objectTypes.Table))
                     {
                         mbSchemaExists = true;
                         mbDBExists = true;
                     }
                     else
                     {
-                        if (myWeb.moDbHelper.checkDBObjectExists(goConfig["DatabaseName"], Tools.Database.objectTypes.Database))
+                        if (myWeb.moDbHelper.checkDBObjectExists(goConfig["DatabaseName"], Protean.Tools.Database.objectTypes.Database))
                         {
                             mbDBExists = true;
                         }
@@ -245,9 +246,9 @@ public partial class Setup
             // if we access base via soap the session is not available
             if (mbSchemaExists)
             {
-                if (goSession is not null)
+                if (goSession != null)
                 {
-                    this.goSession("nUserId") = mnUserId;
+                    this.goSession["nUserId"] = mnUserId;
                 }
             }
 
@@ -269,7 +270,7 @@ public partial class Setup
 
             if (string.IsNullOrEmpty(cPostFlushActions))
             {
-                if (oResponse is not null)
+                if (oResponse != null)
                 {
                     var oElmt = oResponse.OwnerDocument.CreateElement("ProgressResponse");
                     oElmt.InnerText = cResponse;
@@ -278,13 +279,13 @@ public partial class Setup
             }
             else
             {
-                goResponse.Write("<script language=\"javascript\" type=\"text/javascript\">$('#result').append('" + Strings.Replace(cResponse, "'", @"\'") + "<br/>');$('#result').stop().animate({scrollTop: $('#result')[0].scrollHeight}, 800);</script>" + Constants.vbCrLf);
+                goResponse.Write("<script language=\"javascript\" type=\"text/javascript\">$('#result').append('" + cResponse.Replace("'", @"\'") + "<br/>');$('#result').stop().animate({scrollTop: $('#result')[0].scrollHeight}, 800);</script>" + "\r\n");
             }
         }
 
-        catch (Exception ex)
+        catch (Exception)
         {
-            goResponse.Write("<script language=\"javascript\" type=\"text/javascript\">$('#result').append('" + Strings.Replace("<p><i class=\"fa fa-check text-danger\">&#160;</i>Error in script</p>", "'", @"\'") + "<br/>');$('#result').stop().animate({scrollTop: $('#result')[0].scrollHeight}, 800);</script>" + Constants.vbCrLf);
+            goResponse.Write("<script language=\"javascript\" type=\"text/javascript\">$('#result').append('" + "<p><i class=\"fa fa-check text-danger\">&#160;</i>Error in script</p>".Replace("'", @"\'") + "<br/>');$('#result').stop().animate({scrollTop: $('#result')[0].scrollHeight}, 800);</script>" + "\r\n");
 
         }
     }
@@ -293,7 +294,7 @@ public partial class Setup
     {
         if (string.IsNullOrEmpty(cPostFlushActions))
         {
-            if (oResponse is not null)
+            if (oResponse != null)
             {
                 var oElmt = oResponse.OwnerDocument.CreateElement("ProgressResponse");
                 oElmt.InnerText = cResponse;
@@ -302,22 +303,21 @@ public partial class Setup
         }
         else
         {
-            goResponse.Write("<script language=\"javascript\" type=\"text/javascript\">$('#completeButton').attr('href','" + LinkPath + "');</script>" + Constants.vbCrLf);
-            goResponse.Write("<script language=\"javascript\" type=\"text/javascript\">$('#completeButton').html('" + cResponse + "');</script>" + Constants.vbCrLf);
-            goResponse.Write("<script language=\"javascript\" type=\"text/javascript\">$('#completeModal').modal('show');</script>" + Constants.vbCrLf);
+            goResponse.Write("<script language=\"javascript\" type=\"text/javascript\">$('#completeButton').attr('href','" + LinkPath + "');</script>" + "\r\n");
+            goResponse.Write("<script language=\"javascript\" type=\"text/javascript\">$('#completeButton').html('" + cResponse + "');</script>" + "\r\n");
+            goResponse.Write("<script language=\"javascript\" type=\"text/javascript\">$('#completeModal').modal('show');</script>" + "\r\n");
         }
     }
 
     public void AddResponseError(Exception oEx, string cProcessInfo = "")
     {
-        if (string.IsNullOrEmpty(cPostFlushActions))
-        {
-            AddResponse(Strings.Replace(Strings.Replace(Strings.Replace(oEx.ToString(), Conversions.ToString('\r'), "<br/>"), "&gt;", ">"), "&lt;", "<"));
-        }
+        if (cPostFlushActions == "")
+            AddResponse(oEx.ToString().Replace(Convert.ToString((char)13), "<br/>").Replace("&gt;", ">").Replace("&lt;", "<"));
+
+        // AddResponse(Strings.Replace(Strings.Replace(Strings.Replace(oEx.ToString(), Strings.Chr(13), "<br/>"), "&gt;", ">"), "&lt;", "<"));
         else
-        {
-            AddResponse("ERROR:" + oEx.Message + " - " + oEx.Source + "<br/>" + Strings.Replace(Strings.Replace(oEx.StackTrace, Constants.vbCr, "<br/>"), Constants.vbLf, "<br/>" + cProcessInfo));
-        }
+            // AddResponse("ERROR:" + oEx.Message + " - " + oEx.Source + "<br/>" + Strings.Replace(Strings.Replace(oEx.StackTrace, Constants.vbCr, "<br/>"), Constants.vbLf, "<br/>" + cProcessInfo));
+            AddResponse("ERROR:" + oEx.Message + " - " + oEx.Source + "<br/>" + oEx.StackTrace.Replace("\r", "<br/>").Replace("\n", "<br/>") + cProcessInfo);
     }
 
     #endregion
@@ -331,7 +331,7 @@ public partial class Setup
         try
         {
 
-            if (this.goApp("JSEngineEnabled") is null)
+            if (this.goApp["JSEngineEnabled"] is null)
             {
                 // Dim msieCfg As New JavaScriptEngineSwitcher.Msie.MsieSettings()
                 // msieCfg.EngineMode = JavaScriptEngineSwitcher.Msie.JsEngineMode.ChakraIeJsRt
@@ -345,7 +345,7 @@ public partial class Setup
                     sJsEngine = goConfig["JSEngine"];
                 }
                 engineSwitcher.DefaultEngineName = sJsEngine;
-                this.goApp("JSEngineEnabled") = sJsEngine;
+                this.goApp["JSEngineEnabled"] = sJsEngine;
             }
 
             myWeb.msException = "";
@@ -383,8 +383,8 @@ public partial class Setup
                 }
 
                 oTransform.Compiled = false;
-                oTransform.ProcessTimed(moPageXml, goResponse);
-                oTransform = (object)null;
+                oTransform.ProcessTimed(moPageXml,ref goResponse);
+                oTransform = null;
 
                 if (!string.IsNullOrEmpty(cPostFlushActions))
                 {
@@ -399,7 +399,7 @@ public partial class Setup
         catch (Exception ex)
         {
 
-            returnException(myWeb.msException, mcModuleName, "getPageHtml", ex, "", sProcessInfo, gbDebug);
+          stdTools.returnException(ref myWeb.msException, mcModuleName, "getPageHtml", ex, "", sProcessInfo, gbDebug);
 
         }
 
@@ -422,13 +422,13 @@ public partial class Setup
             string styleFile = (string)goServer.MapPath("/ewcommon/xsl/admin/setup.xsl");
             myWeb.msException = "";
 
-            var oTransform = new Protean.XmlHelper.Transform(myWeb, styleFile, false);
+            var oTransform = new XmlHelper.Transform(ref myWeb, styleFile, false);
             oTransform.mbDebug = gbDebug;
             oTransform.ProcessTimed(moPageXml, icPageWriter);
             oTransform = default;
 
-            cPageHTML = Strings.Replace(icPageWriter.ToString(), "<?xml version=\"1.0\" encoding=\"utf-16\"?>", "");
-            cPageHTML = Strings.Replace(cPageHTML, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "");
+            cPageHTML = icPageWriter.ToString().Replace("<?xml version=\"1.0\" encoding=\"utf-16\"?>", "");
+            cPageHTML = cPageHTML.Replace("<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "");
 
             if (bReturnBlankError & !(myWeb.msException == ""))
             {
@@ -443,7 +443,7 @@ public partial class Setup
         catch (Exception ex)
         {
 
-            returnException(myWeb.msException, mcModuleName, "returnPageHtml", ex, "/ewcommon/xsl/admin/setup.xsl", sProcessInfo, gbDebug);
+            stdTools.returnException(ref myWeb.msException, mcModuleName, "returnPageHtml", ex, "/ewcommon/xsl/admin/setup.xsl", sProcessInfo, gbDebug);
             if (bReturnBlankError)
             {
                 return "";
@@ -490,7 +490,7 @@ public partial class Setup
                     oDB.DatabasePassword = Protean.Tools.Text.SimpleRegexFind(goConfig["DatabaseAuth"], "password=([^;]*)", 1, RegexOptions.IgnoreCase);
                     oDB.FTPUser = goConfig["DatabaseFtpUsername"];
                     oDB.FtpPassword = goConfig["DatabaseFtpPassword"];
-                    oDB.RestoreDatabase(goConfig["DatabaseName"], goRequest.Form("ewDatabaseFilename"));
+                    oDB.RestoreDatabase(goConfig["DatabaseName"], goRequest.Form["ewDatabaseFilename"]);
                     break;
                 }
             case "RunTests":
@@ -503,7 +503,7 @@ public partial class Setup
     }
     public void RunTests()
     {
-        var oTests = new Protean.Tests();
+        var oTests = new Tests();
         var testCount = default(int);
         string testResponse = "";
 
@@ -614,7 +614,7 @@ public partial class Setup
         XmlElement oPageElmt;
         string sProcessInfo = "";
 
-        string sLayout = "default";
+        //string sLayout = "default";
 
         try
         {
@@ -633,11 +633,11 @@ public partial class Setup
             // introduce the layout
 
             oPageElmt.SetAttribute("layout", "default");
-            oPageElmt.SetAttribute("ewCmd", this.goRequest("ewCmd"));
-            oPageElmt.SetAttribute("ewCmd2", this.goRequest("ewCmd2"));
+            oPageElmt.SetAttribute("ewCmd", this.goRequest["ewCmd"]);
+            oPageElmt.SetAttribute("ewCmd2", this.goRequest["ewCmd2"]);
             oPageElmt.SetAttribute("cssFramework", "bs3");
             oPageElmt.SetAttribute("adminMode", "true");
-            mcEwCmd = this.goRequest("ewCmd");
+            mcEwCmd = this.goRequest["ewCmd"];
             setupProcessXml();
             if (mnUserId > 1)
             {
@@ -672,7 +672,7 @@ public partial class Setup
 
         catch (Exception ex)
         {
-            returnException(myWeb.msException, mcModuleName, "GetSetupXML", ex, "", sProcessInfo, gbDebug);
+            stdTools.returnException(ref myWeb.msException, mcModuleName, "GetSetupXML", ex, "", sProcessInfo, gbDebug);
         }
 
     }
@@ -696,7 +696,7 @@ public partial class Setup
             moPageXml.DocumentElement.AppendChild(oPageDetail);
             if (mbSchemaExists)
             {
-                mnUserId = this.goSession("nUserId");
+                mnUserId =Convert.ToInt32(goSession["nUserId"]);
             }
 
         Recheck:
@@ -2884,11 +2884,11 @@ public partial class Setup
     public partial class SetupXforms : xForm
     {
         private const string mcModuleName = "Setup.SetupXForms";
-        private Protean.Setup mySetup;
+        private Setup mySetup;
 
         public System.Collections.Specialized.NameValueCollection goConfig = WebConfigurationManager.GetWebApplicationSection("protean/web");
 
-        public SetupXforms(ref Protean.Setup asetup) : base(asetup.myWeb.msException)
+        public SetupXforms(ref Setup asetup) : base(asetup.myWeb.msException)
         {
             // PerfMon.Log("Discount", "New")
             try
@@ -4083,7 +4083,7 @@ public partial class ContentImport : ContentMigration
         }
     }
 
-    public new bool DoChange(int nContentID, string cContentType, string cContent)
+    public bool DoChange(int nContentID, string cContentType, string cContent)
     {
         try
         {
