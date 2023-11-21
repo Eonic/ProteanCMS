@@ -1150,7 +1150,7 @@ public static class stdTools
             {
                 double adjustment = Math.Pow(10d, nDecimalPlaces);
                 // RetVal = Math.Floor(nNumber, adjustment)/adjustment;
-                RetVal = Math.Round((dec)nNumber, nDecimalPlaces, MidpointRounding.ToEven);
+                RetVal = Math.Round((decimal)nNumber, nDecimalPlaces, MidpointRounding.ToEven);
             }
             // RetVal = Math.Round(nNumber, nDecimalPlaces, MidpointRounding.ToEven)
             else
