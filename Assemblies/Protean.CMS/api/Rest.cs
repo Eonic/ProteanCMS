@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace Protean.CMS.CMS
+namespace Protean.CMS
 {
     public partial class Rest : Base
     {
