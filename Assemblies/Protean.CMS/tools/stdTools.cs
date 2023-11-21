@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections;
 using System.Data;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Net.Mail;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -12,9 +11,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
 using System.Xml;
-using Protean.Tools.Integration.Twitter;
-
-public class stdTools
+using Protean.Tools;
+public static class stdTools
 {
 
     public static bool mbException;
@@ -73,13 +71,13 @@ public class stdTools
 
         string styleFile;
         var oStyle = new System.Xml.Xsl.XslTransform();
-        var sWriter = new StringWriter();
+        var sWriter = new System.IO.StringWriter();
         string sReturnHtml = "";
         string cHost = "";
-        System.Collections.Specialized.NameValueCollection oConfig = WebConfigurationManager.GetWebApplicationSection("protean/web");
-        System.Web.HttpRequest moRequest = default;
+        System.Collections.Specialized.NameValueCollection oConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+        System.Web.HttpRequest moRequest = null;
 
-        if (System.Web.HttpContext.Current is not null)
+        if (System.Web.HttpContext.Current != null)
         {
             moRequest = System.Web.HttpContext.Current.Request;
         }
@@ -90,9 +88,9 @@ public class stdTools
 
 
 
-        if (System.Web.HttpContext.Current is not null)
+        if (System.Web.HttpContext.Current != null)
         {
-            cHost = System.Web.HttpContext.Current.Request.ServerVariables("HTTP_HOST");
+            cHost = System.Web.HttpContext.Current.Request.ServerVariables["HTTP_HOST"];
         }
         if (string.IsNullOrEmpty(sException))
         {
@@ -119,11 +117,11 @@ public class stdTools
                 oExceptionXml.LoadXml("<Page layout=\"Error\"><Contents/></Page>");
                 // oExceptionXml.DocumentElement.SetAttribute("baseUrl", "http://" & moRequest.ServerVariables("HTTP_HOST"))
                 bool mbIsUsingHTTPS = false;
-                if (moRequest is not null)
+                if (moRequest != null)
                 {
-                    mbIsUsingHTTPS = moRequest.ServerVariables("HTTPS") == "on";
+                    mbIsUsingHTTPS = moRequest.ServerVariables["HTTPS"] == "on";
                 }
-                oExceptionXml.DocumentElement.SetAttribute("baseUrl", Conversions.ToString(Operators.ConcatenateObject(Interaction.IIf(mbIsUsingHTTPS, "https://", "http://"), cHost)));
+                oExceptionXml.DocumentElement.SetAttribute("baseUrl", Convert.ToString((mbIsUsingHTTPS) ? "https://" : "https://"), cHost);
                 oElmt = oExceptionXml.CreateElement("Content");
                 oElmt.SetAttribute("type", "Formatted Text");
                 oElmt.SetAttribute("name", "column1");
@@ -181,7 +179,7 @@ public class stdTools
                                 oSmtp.Host = oConfig["MailServer"];
                                 if (!string.IsNullOrEmpty(oConfig["MailServerPort"]))
                                 {
-                                    oSmtp.Port = oConfig["MailServerPort"];
+                                    oSmtp.Port = Convert.ToInt32(oConfig["MailServerPort"]);
                                 }
                                 if (!string.IsNullOrEmpty(oConfig["MailServerUsername"]))
                                 {
@@ -237,20 +235,20 @@ public class stdTools
                                 sProcessInfo = "Loading Error Page Settings - Conn Open";
                                 string cSQL = "SELECT nStructKey, cStructLayout FROM tblContentStructure WHERE cStructName = 'Eonic Error'";
                                 var oCN = new System.Data.SqlClient.SqlConnection(cEwConnStr);
-                                var oCMD = new SqlClient.SqlCommand(cSQL, oCN);
+                                var oCMD = new System.Data.SqlClient.SqlCommand(cSQL, oCN);
                                 oCMD.Connection.Open();
 
                                 sProcessInfo = "Loading Error Page Settings - Exec Reader";
-                                SqlClient.SqlDataReader oDR = oCMD.ExecuteReader;
+                                var oDR = oCMD.ExecuteReader();
 
                                 int nErrorPageId = 0;
                                 string cLayout = "";
 
                                 sProcessInfo = "Data Reader";
-                                while (oDR.Read)
+                                while (oDR.Read())
                                 {
-                                    nErrorPageId = oDR[0];
-                                    cLayout = oDR[1];
+                                    nErrorPageId = Convert.ToInt32(oDR[0]);
+                                    cLayout = Convert.ToString(oDR[1]);
                                     break;
                                 }
                                 oDR.Close();
@@ -262,29 +260,29 @@ public class stdTools
                                     oExceptionXml.DocumentElement.SetAttribute("layout", cLayout);
                                     cSQL = "select c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId ,cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire from tblContent c inner join tblContentLocation CL on c.nContentKey = CL.nContentId inner join tblAudit a on c.nAuditId = a.nAuditKey where( CL.nStructId = " + nErrorPageId;
                                     cSQL += ") order by type, cl.nDisplayOrder";
-                                    var oDataAdpt = new SqlClient.SqlDataAdapter(cSQL, oCN);
+                                    var oDataAdpt = new System.Data.SqlClient.SqlDataAdapter(cSQL, oCN);
                                     oCN.Open();
                                     var oDs = new DataSet();
                                     oDs.DataSetName = "Contents";
                                     oDataAdpt.Fill(oDs, "Content");
                                     oCN.Close();
-                                    oDs.Tables(0).Columns("id").ColumnMapping = System.Data.MappingType.Attribute;
-                                    if (oDs.Tables(0).Columns.Contains("parID"))
+                                    oDs.Tables[0].Columns["id"].ColumnMapping = MappingType.Attribute;
+                                    if (oDs.Tables[0].Columns.Contains("parID"))
                                     {
-                                        oDs.Tables(0).Columns("parId").ColumnMapping = System.Data.MappingType.Attribute;
+                                        oDs.Tables[0].Columns["parId"].ColumnMapping = MappingType.Attribute;
                                     }
-                                    oDs.Tables(0).Columns("ref").ColumnMapping = System.Data.MappingType.Attribute;
-                                    oDs.Tables(0).Columns("name").ColumnMapping = System.Data.MappingType.Attribute;
-                                    oDs.Tables(0).Columns("type").ColumnMapping = System.Data.MappingType.Attribute;
-                                    oDs.Tables(0).Columns("status").ColumnMapping = System.Data.MappingType.Attribute;
-                                    oDs.Tables(0).Columns("publish").ColumnMapping = System.Data.MappingType.Attribute;
-                                    oDs.Tables(0).Columns("expire").ColumnMapping = System.Data.MappingType.Attribute;
-                                    oDs.Tables(0).Columns("content").ColumnMapping = System.Data.MappingType.SimpleContent;
+                                    oDs.Tables[0].Columns["ref"].ColumnMapping = MappingType.Attribute;
+                                    oDs.Tables[0].Columns["name"].ColumnMapping = MappingType.Attribute;
+                                    oDs.Tables[0].Columns["type"].ColumnMapping = MappingType.Attribute;
+                                    oDs.Tables[0].Columns["status"].ColumnMapping = MappingType.Attribute;
+                                    oDs.Tables[0].Columns["publish"].ColumnMapping = MappingType.Attribute;
+                                    oDs.Tables[0].Columns["expire"].ColumnMapping = MappingType.Attribute;
+                                    oDs.Tables[0].Columns["content"].ColumnMapping = MappingType.SimpleContent;
                                     oDs.EnforceConstraints = false;
                                     // convert to Xml Dom
                                     var oXml = new XmlDataDocument(oDs);
                                     oXml.PreserveWhitespace = false;
-                                    if (oXml.DocumentElement is not null)
+                                    if (oXml.DocumentElement != null)
                                     {
                                         oExceptionXml.SelectSingleNode("/Page/Contents").InnerXml = Strings.Replace(Strings.Replace(oXml.DocumentElement.InnerXml, "&gt;", ">"), "&lt;", "<");
                                     }
@@ -312,7 +310,7 @@ public class stdTools
                     }
                     else
                     {
-                        styleFile = (string)goServer.MapPath(xsltTemplatePath);
+                        styleFile = goServer.MapPath(xsltTemplatePath);
                     }
 
                     oStyle.Load(styleFile);
@@ -320,17 +318,17 @@ public class stdTools
                     // add Eonic Bespoke Functions
                     var xsltArgs = new System.Xml.Xsl.XsltArgumentList();
                     Protean.Cms errWeb;
-                    if (System.Web.HttpContext.Current is not null)
+                    if (System.Web.HttpContext.Current != null)
                     {
                         // so we compile errors out of debug mode too.
                         errWeb = new Protean.Cms(System.Web.HttpContext.Current);
                         errWeb.InitializeVariables();
-                        var ewXsltExt = new xsltExtensions(errWeb);
+                        var ewXsltExt = new Protean.xmlTools.xsltExtensions(ref errWeb);
                         xsltArgs.AddExtensionObject("urn:ew", ewXsltExt);
                     }
                     else
                     {
-                        var ewXsltExt = new xsltExtensions();
+                        var ewXsltExt = new Protean.xmlTools.xsltExtensions();
                         xsltArgs.AddExtensionObject("urn:ew", ewXsltExt);
                     }
 
@@ -342,7 +340,7 @@ public class stdTools
                     oStyle.Transform(oExceptionXml, xsltArgs, sWriter, null);
                     sProcessInfo = "Setting Return";
                     sReturnHtml = sWriter.ToString();
-                    errWeb = default;
+                    errWeb = (Protean.Cms)null;
                 }
 
                 catch (Exception ex)
@@ -376,16 +374,16 @@ public class stdTools
         XmlElement oElmt;
 
         var oStyle = new System.Xml.Xsl.XslTransform();
-        var sWriter = new StringWriter();
+        var sWriter = new System.IO.StringWriter();
         string sReturnHtml = "";
         string cHost = "";
-        System.Collections.Specialized.NameValueCollection oConfig = WebConfigurationManager.GetWebApplicationSection("protean/web");
+        System.Collections.Specialized.NameValueCollection oConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
 
         // Dim moRequest As System.Web.HttpRequest = System.Web.HttpContext.Current.Request
         sProcessInfo = "Getting Host";
-        if (System.Web.HttpContext.Current is not null)
+        if (System.Web.HttpContext.Current != null)
         {
-            cHost = System.Web.HttpContext.Current.Request.ServerVariables("HTTP_HOST");
+            cHost = System.Web.HttpContext.Current.Request.ServerVariables["HTTP_HOST"];
         }
         if (string.IsNullOrEmpty(sException))
         {
@@ -455,7 +453,7 @@ public class stdTools
                             oSmtp.Host = oConfig["MailServer"];
                             if (!string.IsNullOrEmpty(oConfig["MailServerPort"]))
                             {
-                                oSmtp.Port = oConfig["MailServerPort"];
+                                oSmtp.Port = Convert.ToInt32(oConfig["MailServerPort"]);
                             }
                             if (!string.IsNullOrEmpty(oConfig["MailServerUsername"]))
                             {
@@ -510,23 +508,23 @@ public class stdTools
         string cMessage = "Site: unknown" + Constants.vbNewLine + Constants.vbNewLine;
         try
         {
-            Global.System.Diagnostics.EventLog oEventLog = default;
-            Global.System.Diagnostics.EventLog[] oELs = System.Diagnostics.EventLog.GetEventLogs;
+            EventLog oEventLog = null;
+            EventLog[] oELs = EventLog.GetEventLogs();
             int i = 0;
             var loopTo = oELs.Length - 1;
             for (i = 0; i <= loopTo; i++)
             {
-                if (oELs[i].Log == LogName)
+                if ((oELs[i].Log ?? "") == (LogName ?? ""))
                 {
                     oEventLog = oELs[i];
                     break;
                 }
             }
 
-            if (System.Web.HttpContext.Current is not null)
+            if (System.Web.HttpContext.Current != null)
             {
-                cSource = System.Web.HttpContext.Current.Request.ServerVariables("HTTP_HOST");
-                cMessage = "Site: " + System.Web.HttpContext.Current.Request.ServerVariables("HTTP_HOST") + Constants.vbNewLine + Constants.vbNewLine;
+                cSource = System.Web.HttpContext.Current.Request.ServerVariables["HTTP_HOST"];
+                cMessage = "Site: " + System.Web.HttpContext.Current.Request.ServerVariables["HTTP_HOST"] + Constants.vbNewLine + Constants.vbNewLine;
             }
 
             if (oEventLog is null)
@@ -535,7 +533,7 @@ public class stdTools
             }
 
             // The Current Error
-            if (oCurrentException is not null)
+            if (oCurrentException != null)
             {
                 cMessage += Constants.vbNewLine + "Current Error: " + Constants.vbNewLine;
                 cMessage += "Info:" + cCurrentInfo + Constants.vbNewLine;
@@ -546,7 +544,7 @@ public class stdTools
                 cMessage += "Full Exception:" + oCurrentException.ToString() + Constants.vbNewLine;
             }
             // We might be coming from an error handling procedure so lets get the orignal error that sent us there too
-            if (oOriginalError is not null)
+            if (oOriginalError != null)
             {
                 cMessage += Constants.vbNewLine + "Original Error: " + Constants.vbNewLine;
                 cMessage += "Info:" + cOriginalInfo + Constants.vbNewLine;
@@ -563,7 +561,7 @@ public class stdTools
             }
             oEventLog.Source = cSource;
             oEventLog.WriteEntry(cMessage, EventLogEntryType.Error);
-            oEventLog = default;
+            oEventLog = null;
         }
 
         catch (Exception ex)
@@ -571,7 +569,7 @@ public class stdTools
             // cant do diddly but cry 
             try
             {
-                File.WriteAllText(@"D:\HostingSpaces\ProteanError.txt", cMessage);
+                System.IO.File.WriteAllText(@"D:\HostingSpaces\ProteanError.txt", cMessage);
             }
             catch (Exception ex2)
             {
@@ -589,10 +587,10 @@ public class stdTools
         string cReport;
         string cSV;
         string cAssembly = "";
-        Global.System.Web.HttpRequest moRequest = default;
-        Global.System.Web.SessionState.HttpSessionState moSession = default;
+        System.Web.HttpRequest moRequest = null;
+        System.Web.SessionState.HttpSessionState moSession = null;
 
-        if (System.Web.HttpContext.Current is not null)
+        if (System.Web.HttpContext.Current != null)
         {
             moRequest = System.Web.HttpContext.Current.Request;
             moSession = System.Web.HttpContext.Current.Session;
@@ -628,7 +626,7 @@ public class stdTools
         addExceptionLine(ref cReport, "Full Exception:", oException.ToString());
 
         // Session Variables
-        if (moSession is not null)
+        if (moSession != null)
         {
             if (moSession.Count > 0)
             {
@@ -638,7 +636,7 @@ public class stdTools
                     cSV = currentCSV;
                     try
                     {
-                        addExceptionLine(ref cReport, cSV, moSession(cSV));
+                        addExceptionLine(ref cReport, cSV, Convert.ToString(moSession[cSV]));
                     }
                     catch
                     {
@@ -653,7 +651,7 @@ public class stdTools
         }
 
         // Querystring Variables
-        if (moRequest is not null)
+        if (moRequest != null)
         {
             addExceptionHeader(ref cReport, "Server Variables");
             addExceptionLine(ref cReport, "AppPath", moRequest.ApplicationPath);
@@ -685,12 +683,12 @@ public class stdTools
             {
                 cSV = currentCSV1;
                 // If Left(cSV, 5) = "HTTP_" Then addExceptionLine(cReport, cSV, moRequest.ServerVariables(cSV))
-                addExceptionLine(ref cReport, cSV, moRequest.ServerVariables(cSV));
+                addExceptionLine(ref cReport, cSV, moRequest.ServerVariables[cSV]);
             }
         }
 
         cReport = cReport + "</table></div>";
-        exceptionReportRet = Protean.Tools.Xml.convertEntitiesToCodes(cReport);
+        exceptionReportRet = Xml.convertEntitiesToCodes(cReport);
 
         switch (oException.GetType().ToString() ?? "")
         {
@@ -714,7 +712,7 @@ public class stdTools
 
         cValue = Strings.Replace(cValue, "<", "&lt;");
         cValue = Strings.Replace(cValue, ">", "&gt;");
-        cValue = Strings.Replace(cValue, Conversions.ToString('\n'), "<br/>");
+        cValue = Strings.Replace(cValue, Convert.ToString('\n'), "<br/>");
         cReport = cReport + "<tr><th valign=\"top\" align=\"left\">" + cHeader + "</th><td valign=\"top\">" + cValue + "</td></tr>";
 
     }
@@ -752,10 +750,10 @@ public class stdTools
 
         if (Information.IsDate(dDate))
         {
-            sdate = Conversions.ToString(Conversions.ToDate(dDate));
-            niceDateRet = System.Threading.Thread.CurrentThread.CurrentCulture.Calendar.GetDayOfMonth(Conversions.ToDate(sdate)) + " " + DateAndTime.MonthName(System.Threading.Thread.CurrentThread.CurrentCulture.Calendar.GetMonth(Conversions.ToDate(sdate)), true) + " " + System.Threading.Thread.CurrentThread.CurrentCulture.Calendar.GetYear(Conversions.ToDate(sdate));
+            sdate = Convert.ToString(Convert.ToDateTime(dDate));
+            niceDateRet = System.Threading.Thread.CurrentThread.CurrentCulture.Calendar.GetDayOfMonth(Convert.ToDateTime(sdate)) + " " + DateAndTime.MonthName(System.Threading.Thread.CurrentThread.CurrentCulture.Calendar.GetMonth(Convert.ToDateTime(sdate)), true) + " " + System.Threading.Thread.CurrentThread.CurrentCulture.Calendar.GetYear(Convert.ToDateTime(sdate));
         }
-        else if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(dDate, "00:00:00", false)))
+        else if (dDate.ToString() != "00:00:00")
         {
             niceDateRet = "";
         }
@@ -811,17 +809,17 @@ public class stdTools
     // Left here for external applications to use
     public static string sqlDate(object dDate)
     {
-        return Protean.Tools.Database.SqlDate(dDate, false);
+        return Database.SqlDate(dDate, false);
     }
 
     public static string sqlDateTime(object dDateTime)
     {
-        return Protean.Tools.Database.SqlDate(dDateTime, true);
+        return Database.SqlDate(dDateTime, true);
     }
 
     public static string sqlDateTime(object dDate, object stime)
     {
-        return Protean.Tools.Database.SqlDate(Operators.ConcatenateObject(Strings.Format(dDate, "dd MMMM yyyy") + " ", stime), true);
+        return Database.SqlDate((Strings.Format(dDate, "dd MMMM yyyy") + " ", stime), true);
     }
 
 
@@ -871,19 +869,19 @@ public class stdTools
 
     public static string xmlDate(object dDate)
     {
-        return Protean.Tools.Xml.XmlDate(dDate);
+        return Xml.XmlDate(dDate);
     }
 
     public static string xmlDateTime(object dDate)
     {
-        return Protean.Tools.Xml.XmlDate(dDate, true);
+        return Xml.XmlDate(dDate, true);
     }
     #endregion
 
 
 
 
-    public static bool ButtonSubmitted(ref Global.System.Web.HttpRequest mroRequest, string cButtonName)
+    public static bool ButtonSubmitted(ref System.Web.HttpRequest mroRequest, string cButtonName)
     {
         bool ButtonSubmittedRet = default;
         // 'PerfMon.Log("stdTools", "ButtonSubmitted")
@@ -892,7 +890,7 @@ public class stdTools
         string cNameX = cButtonName + ".x";
         string cNameY = cButtonName + ".y";
 
-        if (mroRequest(cButtonName) is not null | mroRequest(cNameX) is not null | mroRequest(cNameY) is not null)
+        if (mroRequest[cButtonName] != null | mroRequest[cNameX] != null | mroRequest[cNameY] != null)
             bSubmitted = true;
         ButtonSubmittedRet = bSubmitted;
         return ButtonSubmittedRet;
@@ -944,7 +942,7 @@ public class stdTools
 
             return oResponseDict;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // returnException("stdTools", "UrlResponseToHashTable", ex, "", "", gbDebug)
             return null;
@@ -972,7 +970,7 @@ public class stdTools
     public static string EncryptString(string SourceText, bool bUseAsymmetric = true, string cSalt = "")
     {
 
-        Tools.Encryption.EncData encryptedData;
+        Encryption.EncData encryptedData;
         try
         {
 
@@ -980,14 +978,14 @@ public class stdTools
             if (bUseAsymmetric)
             {
 
-                var asym = new Tools.Encryption.Asymmetric();
-                var pubkey = new Tools.Encryption.Asymmetric.PublicKey();
-                var privkey = new Tools.Encryption.Asymmetric.PrivateKey();
+                var asym = new Encryption.Asymmetric();
+                var pubkey = new Encryption.Asymmetric.PublicKey();
+                var privkey = new Encryption.Asymmetric.PrivateKey();
 
-                if (WebConfigurationManager.AppSettings("PublicKey.Modulus") == "")
+                if (string.IsNullOrEmpty(WebConfigurationManager.AppSettings["PublicKey.Modulus"]))
                 {
                     // at the moment this writes a new file that needs to be included in web.config
-                    asym.GenerateNewKeySet(pubkey, privkey);
+                    asym.GenerateNewKeySet(ref pubkey, ref privkey);
                     pubkey.ExportToConfigFile(goServer.MapPath("encrypt.config"));
                     privkey.ExportToConfigFile(goServer.MapPath("encrypt.config"));
                 }
@@ -1000,7 +998,7 @@ public class stdTools
                 // End Try
 
 
-                encryptedData = asym.Encrypt(new Tools.Encryption.EncData(SourceText), pubkey);
+                encryptedData = asym.Encrypt(new Encryption.EncData(SourceText), pubkey);
             }
 
             else
@@ -1011,17 +1009,17 @@ public class stdTools
                 // UPDATE For some reason the assym encryption wouldn't consistently betwenn ENC and DEC so I've commented it out
                 // for now - rely on salt.
                 // UPDATE Get the right key size for Rijndael - try using the PrivateKey.D
-                var sym = new Tools.Encryption.Symmetric(Tools.Encryption.Symmetric.Provider.Rijndael);
-                sym.InitializationVector = new Tools.Encryption.EncData(WebConfigurationManager.AppSettings("SymmetricIV"));
-                sym.Key = new Tools.Encryption.EncData(WebConfigurationManager.AppSettings("PrivateKey.D"));
-                encryptedData = sym.Encrypt(new Tools.Encryption.EncData(SourceText));
+                var sym = new Encryption.Symmetric(Encryption.Symmetric.Provider.Rijndael);
+                sym.InitializationVector = new Encryption.EncData(WebConfigurationManager.AppSettings["SymmetricIV"]);
+                sym.Key = new Encryption.EncData(WebConfigurationManager.AppSettings["PrivateKey.D"]);
+                encryptedData = sym.Encrypt(new Encryption.EncData(SourceText));
 
             }
 
-            return encryptedData.ToHex;
+            return encryptedData.ToHex();
         }
 
-        catch (Exception ex)
+        catch (Exception)
         {
             return "";
         }
@@ -1034,20 +1032,20 @@ public class stdTools
         try
         {
 
-            var decryptedData = new Tools.Encryption.EncData();
+            var decryptedData = new Encryption.EncData();
 
-            var encryptedData = new Tools.Encryption.EncData();
+            var encryptedData = new Encryption.EncData();
             encryptedData.Hex = encryptedText;
 
             if (bUseAsymmetric)
             {
-                var asym = new Tools.Encryption.Asymmetric();
-                var pubkey = new Tools.Encryption.Asymmetric.PublicKey();
-                var privkey = new Tools.Encryption.Asymmetric.PrivateKey();
+                var asym = new Encryption.Asymmetric();
+                var pubkey = new Encryption.Asymmetric.PublicKey();
+                var privkey = new Encryption.Asymmetric.PrivateKey();
                 pubkey.LoadFromConfig();
                 privkey.LoadFromConfig();
 
-                var asym2 = new Tools.Encryption.Asymmetric();
+                var asym2 = new Encryption.Asymmetric();
                 decryptedData = asym2.Decrypt(encryptedData, privkey);
             }
 
@@ -1055,16 +1053,16 @@ public class stdTools
             {
                 // UPDATE For some reason the assym encryption wouldn't consistently betwenn ENC and DEC so I've commented it out
                 // for now - rely on salt.
-                var sym = new Tools.Encryption.Symmetric(Tools.Encryption.Symmetric.Provider.Rijndael);
-                sym.InitializationVector = new Tools.Encryption.EncData(WebConfigurationManager.AppSettings("SymmetricIV"));
-                sym.Key = new Tools.Encryption.EncData(WebConfigurationManager.AppSettings("PrivateKey.D"));
+                var sym = new Encryption.Symmetric(Encryption.Symmetric.Provider.Rijndael);
+                sym.InitializationVector = new Encryption.EncData(WebConfigurationManager.AppSettings["SymmetricIV"]);
+                sym.Key = new Encryption.EncData(WebConfigurationManager.AppSettings["PrivateKey.D"]);
                 decryptedData = sym.Decrypt(encryptedData);
             }
 
-            return decryptedData.ToString;
+            return decryptedData.ToString();
         }
 
-        catch (Exception ex)
+        catch (Exception)
         {
             return "";
         }
@@ -1074,14 +1072,14 @@ public class stdTools
     public static string EncryptStringOLD(string SourceText)
     {
         // PerfMon.Log("stdTools", "EncryptString")
-        var asym = new Tools.Encryption.Asymmetric();
-        var pubkey = new Tools.Encryption.Asymmetric.PublicKey();
-        var privkey = new Tools.Encryption.Asymmetric.PrivateKey();
+        var asym = new Encryption.Asymmetric();
+        var pubkey = new Encryption.Asymmetric.PublicKey();
+        var privkey = new Encryption.Asymmetric.PrivateKey();
 
-        if (WebConfigurationManager.AppSettings("PublicKey.Modulus") == "")
+        if (string.IsNullOrEmpty(WebConfigurationManager.AppSettings["PublicKey.Modulus"]))
         {
             // at the moment this writes a new file that needs to be included in web.config
-            asym.GenerateNewKeySet(pubkey, privkey);
+            asym.GenerateNewKeySet(ref pubkey, ref privkey);
             pubkey.ExportToConfigFile(goServer.MapPath("encrypt.config"));
             privkey.ExportToConfigFile(goServer.MapPath("encrypt.config"));
         }
@@ -1093,10 +1091,10 @@ public class stdTools
 
         // End Try
 
-        Tools.Encryption.EncData encryptedData;
-        encryptedData = asym.Encrypt(new Tools.Encryption.EncData(SourceText), pubkey);
+        Encryption.EncData encryptedData;
+        encryptedData = asym.Encrypt(new Encryption.EncData(SourceText), pubkey);
 
-        return encryptedData.ToHex;
+        return encryptedData.ToHex();
 
     }
 
@@ -1105,20 +1103,20 @@ public class stdTools
         // PerfMon.Log("stdTools", "DecryptString")
         try
         {
-            var asym = new Tools.Encryption.Asymmetric();
-            var pubkey = new Tools.Encryption.Asymmetric.PublicKey();
-            var privkey = new Tools.Encryption.Asymmetric.PrivateKey();
+            var asym = new Encryption.Asymmetric();
+            var pubkey = new Encryption.Asymmetric.PublicKey();
+            var privkey = new Encryption.Asymmetric.PrivateKey();
             pubkey.LoadFromConfig();
             privkey.LoadFromConfig();
 
-            var encryptedData = new Tools.Encryption.EncData();
+            var encryptedData = new Encryption.EncData();
             encryptedData.Hex = encryptedText;
 
-            var decryptedData = new Tools.Encryption.EncData();
-            var asym2 = new Tools.Encryption.Asymmetric();
+            var decryptedData = new Encryption.EncData();
+            var asym2 = new Encryption.Asymmetric();
             decryptedData = asym2.Decrypt(encryptedData, privkey);
 
-            return decryptedData.ToString;
+            return decryptedData.ToString();
         }
         catch
         {
@@ -1151,12 +1149,13 @@ public class stdTools
             else if (bForceRoundDown)
             {
                 double adjustment = Math.Pow(10d, nDecimalPlaces);
-                RetVal = Conversions.ToDecimal(Operators.DivideObject(Math.Floor(Operators.MultiplyObject(nNumber, adjustment)), adjustment));
+                // RetVal = Math.Floor(nNumber, adjustment)/adjustment;
+                RetVal = Math.Round((dec)nNumber, nDecimalPlaces, MidpointRounding.ToEven);
             }
             // RetVal = Math.Round(nNumber, nDecimalPlaces, MidpointRounding.ToEven)
             else
             {
-                RetVal = Conversions.ToDecimal(Strings.FormatNumber(nNumber, nDecimalPlaces));
+                RetVal = Convert.ToDecimal(Strings.FormatNumber(nNumber, nDecimalPlaces));
             }
             return RetVal;
         }
@@ -1176,13 +1175,13 @@ public class stdTools
                 return 0m;
             // no decimal places to deal with
             if (!nNumber.ToString().Contains("."))
-                return Conversions.ToDecimal(nNumber);
+                return Convert.ToDecimal(nNumber);
             // has correct number of decimal places
             if (Strings.Split(nNumber.ToString(), ".")[1].Length <= nDecimalPlaces)
-                return Conversions.ToDecimal(nNumber);
+                return Convert.ToDecimal(nNumber);
 
             // now the fun
-            int nWholeNo = Conversions.ToInteger(Strings.Split(nNumber.ToString(), ".")[0]); // the whole number before decimal point
+            int nWholeNo =  Convert.ToInt32(Strings.Split(nNumber.ToString(), ".")[0]); // the whole number before decimal point
             int nTotalLength = Strings.Split(nNumber.ToString(), ".")[1].Length; // the total number of decimal places
 
             int nI; // a counter
@@ -1194,26 +1193,26 @@ public class stdTools
             for (nI = 0; nI <= loopTo; nI++)
             {
                 int nCurrent; // the number we are working on
-                nCurrent = Conversions.ToInteger(Strings.Right(Strings.Left(Strings.Split(nNumber.ToString(), ".")[1], nTotalLength - nI), 1));
+                nCurrent = Convert.ToInt32(Strings.Right(Strings.Left(Strings.Split(nNumber.ToString(), ".")[1], nTotalLength - nI), 1));
                 nCurrent += nCarry; // add the carry
                 if (nCurrent >= nSplitNo)
                     nCarry = 1;
                 else
                     nCarry = 0; // make a new carry dependant on whaere we are
             }
-            int nDecimal = Conversions.ToInteger(Strings.Left(Strings.Split(nNumber.ToString(), ".")[1], nDecimalPlaces)); // the decimal value
+            int nDecimal = Convert.ToInt32(Strings.Left(Strings.Split(nNumber.ToString(), ".")[1], nDecimalPlaces)); // the decimal value
             nDecimal += nCarry; // add last carry
             if (nDecimal.ToString().Length > nDecimalPlaces) // if we have now gone over the number of decimal places then need to sort it
             {
                 nCarry = 1;
-                nDecimal = Conversions.ToInteger(Strings.Right(nDecimal.ToString(), nDecimalPlaces));
+                nDecimal = Convert.ToInt32(Strings.Right(nDecimal.ToString(), nDecimalPlaces));
             }
             else
             {
                 nCarry = 0;
             }
             nWholeNo += nCarry;
-            return Conversions.ToDecimal(nWholeNo + "." + nDecimal);
+            return Convert.ToDecimal(nWholeNo + "." + nDecimal);
         }
         catch (Exception ex)
         {
@@ -1256,20 +1255,20 @@ public class stdTools
 
 
 
-    public static long objectToNumeric(object oRequestItem, long bDefaultValue = 0L, long bAllowNegatives = false)
+    public static long objectToNumeric(object oRequestItem, long bDefaultValue = 0L, bool bAllowNegatives = false)
     {
 
         long nRequest;
 
         if (Information.IsNumeric(oRequestItem))
         {
-            if (Conversions.ToBoolean(bAllowNegatives))
+            if (Convert.ToBoolean(bAllowNegatives))
             {
-                nRequest = Conversions.ToLong(oRequestItem);
+                nRequest = Convert.ToInt32(oRequestItem);
             }
-            else if (Conversions.ToBoolean(Operators.ConditionalCompareObjectGreater(oRequestItem, 0, false)))
+            else if (Convert.ToInt32(oRequestItem) > 0)
             {
-                nRequest = Conversions.ToLong(oRequestItem);
+                nRequest = Convert.ToInt32(oRequestItem);
             }
             else
             {
@@ -1280,11 +1279,12 @@ public class stdTools
         {
             nRequest = bDefaultValue;
         }
+
         return nRequest;
 
     }
 
-    public static void HTTPRedirect(ref Global.System.Web.HttpContext oCtx, string cURL, [Optional, DefaultParameterValue(302)] ref int nStatusCode)
+    public static void HTTPRedirect(ref System.Web.HttpContext oCtx, string cURL, [Optional, DefaultParameterValue(302)] ref int nStatusCode)
     {
 
         // Response.Redirect always results in 302 (unless you use the .NET 3.0 Web.Extensions)
@@ -1356,7 +1356,7 @@ public class stdTools
             oCtx.Response.End();
         }
 
-        catch (Exception ex)
+        catch (Exception)
         {
 
         }
@@ -1370,7 +1370,7 @@ public class stdTools
 
         XmlElement moPolicy;
 
-        moPolicy = WebConfigurationManager.GetWebApplicationSection("protean/PasswordPolicy");
+        moPolicy = (XmlElement)WebConfigurationManager.GetWebApplicationSection("protean/PasswordPolicy");
 
         pwdRegEx = "(?=^.{" + moPolicy.FirstChild.SelectSingleNode("minLength").InnerText + "," + moPolicy.FirstChild.SelectSingleNode("maxLength").InnerText + "}$)" + @"(?=(?:.*?\d){" + moPolicy.FirstChild.SelectSingleNode("numsLength").InnerText + "})" + "(?=.*[a-z])" + "(?=(?:.*?[A-Z]){" + moPolicy.FirstChild.SelectSingleNode("upperLength").InnerText + "})" + "(?=(?:.*?[" + moPolicy.FirstChild.SelectSingleNode("specialChars").InnerText + "]){" + moPolicy.FirstChild.SelectSingleNode("specialLength").InnerText + "})" + @"(?!.*\s)[0-9a-zA-Z" + moPolicy.FirstChild.SelectSingleNode("specialChars").InnerText + "]*$";
 
@@ -1396,7 +1396,7 @@ public class stdTools
     // End Try
     // End Sub
 
-    public partial class StringWriterWithEncoding : StringWriter
+    public class StringWriterWithEncoding : System.IO.StringWriter
     {
 
         private Encoding _encoding;
@@ -1436,19 +1436,19 @@ public class stdTools
     [Obsolete("This method is deprecated, please use Protean.Tools.Text.IsEmail instead")]
     public static bool is_valid_email(ref string str_Renamed)
     {
-        return Tools.Text.IsEmail(str_Renamed);
+        return Text.IsEmail(str_Renamed);
     }
 
     // <Obsolete("This method is deprecated, use Protean.Tools.Text.SimpleRegexFind instead")> _
     public static string SimpleRegexFind(string cSearchString, string cRegexPattern, int nReturnGroup = 0, RegexOptions oRegexOptions = RegexOptions.None)
     {
-        return Protean.Tools.Text.SimpleRegexFind(cSearchString, cRegexPattern, nReturnGroup, oRegexOptions);
+        return Text.SimpleRegexFind(cSearchString, cRegexPattern, nReturnGroup, oRegexOptions);
     }
 
     [Obsolete("This method is deprecated, use Protean.Tools.FileHelper.GetMIMEType instead")]
     public static string GetMIMEType(string Extension)
     {
-        return Protean.Tools.FileHelper.GetMIMEType(Extension);
+        return FileHelper.GetMIMEType(Extension);
     }
 
 
@@ -1457,4 +1457,3 @@ public class stdTools
 
 
 }
-
