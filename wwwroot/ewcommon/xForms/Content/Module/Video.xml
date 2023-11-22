@@ -269,7 +269,7 @@
               </select>
               <select bind="cAutoplay" appearance="full">
                 <item>
-                  <label>Enable Autoplay</label>
+                  <label>Enable Autoplay (Modern browsers also require "Enable Mute" to autoplay)</label>
                   <value>autoplay</value>
                 </item>
               </select>

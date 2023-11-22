@@ -784,6 +784,9 @@ Check:
                             If myWeb.moConfig("cssFramework") = "bs5" Then
                                 formPath = "/admin" & formPath
                             End If
+                            If Not IntanceAppend Is Nothing Then
+                                MyBase.bProcessRepeats = False
+                            End If
                             If Not MyBase.load(formPath, myWeb.maCommonFolders) Then
                                 ' load a default content xform if no alternative.
                             End If
@@ -802,7 +805,7 @@ Check:
                             'this enables an overload to add additional Xml for updating.
                             Dim importedNode As XmlNode = Instance.OwnerDocument.ImportNode(IntanceAppend, True)
                             Instance.AppendChild(importedNode)
-
+                            MyBase.LoadInstance(Instance)
                         End If
 
                         cDirectorySchemaName = MyBase.Instance.SelectSingleNode("tblDirectory/cDirSchema").InnerText
