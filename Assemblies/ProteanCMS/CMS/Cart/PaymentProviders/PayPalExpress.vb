@@ -4,6 +4,8 @@ Imports System.Collections.Generic
 Imports System.Data.SqlClient
 Imports Protean.Cms.Cart
 Imports PayPal.Api
+Imports Protean.Tools.Xml
+Imports Protean.stdTools
 
 Namespace Providers
     Namespace Payment
@@ -141,7 +143,7 @@ Namespace Providers
 
                         ' Get the payment options
                         'oPayPalCfg= moPaymentCfg.SelectSingleNode("provider[@name='SecPay']")
-                        oDictOpt = xmlTools.xmlToHashTable(oPayPalCfg, "value")
+                        oDictOpt = xmlToHashTable(oPayPalCfg, "value")
 
                         Select Case oDictOpt("opperationMode").ToString()
                             Case "true"

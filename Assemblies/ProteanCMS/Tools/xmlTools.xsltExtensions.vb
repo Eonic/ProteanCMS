@@ -24,6 +24,7 @@ Imports Imazen.WebP
 Imports System.Drawing
 Imports System.Data.SqlClient
 Imports System.Configuration
+Imports Protean.Tools.Xml
 Imports Protean.stdTools
 Partial Public Module xmlTools
 
@@ -535,7 +536,7 @@ Partial Public Module xmlTools
             Try
                 Dim cTheString As String = Replace(Replace(cHTMLString, "&gt;", ">"), "&lt;", "<")
                 cTheString = Protean.Tools.Xml.convertEntitiesToCodes(cTheString)
-                cTheString = tidyXhtmlFrag(cTheString, True)
+                cTheString = Tools.Text.tidyXhtmlFrag(cTheString, True)
                 Return cTheString
             Catch ex As Exception
                 Return cHTMLString
@@ -566,7 +567,7 @@ Partial Public Module xmlTools
                         cHtml = cHtml
                     End If
 
-                    cHtmlOut = tidyXhtmlFrag(cHtml, True, True, RemoveTags)
+                    cHtmlOut = Tools.Text.tidyXhtmlFrag(cHtml, True, True, RemoveTags)
 
                     cHtmlOut = Replace(cHtmlOut, "&#x0;", "")
                     cHtmlOut = Replace(cHtmlOut, " &#0;", "")
@@ -617,7 +618,7 @@ Partial Public Module xmlTools
                 cHtml = Replace(Replace(cHtml, "&gt;", ">"), "&lt;", "<")
                 cHtml = "<div>" & cHtml & "</div>"
 
-                cHtmlOut = tidyXhtmlFrag(cHtml, True, True, RemoveTags)
+                cHtmlOut = Tools.Text.tidyXhtmlFrag(cHtml, True, True, RemoveTags)
 
                 cHtmlOut = Replace(cHtmlOut, "&#x0;", "")
                 cHtmlOut = Replace(cHtmlOut, " &#0;", "")

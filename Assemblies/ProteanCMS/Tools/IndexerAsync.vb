@@ -1,30 +1,17 @@
 Imports System.Xml
-Imports System.Web.HttpUtility
-Imports System.Web.Configuration
-Imports System.Configuration
-Imports System.Data
-Imports System.Data.SqlClient
-Imports VB = Microsoft.VisualBasic
 Imports System.Threading
 Imports System.Threading.Tasks
 Imports System.Collections.Generic
-Imports System.Text
-Imports SR = System.Reflection
-Imports System.Web.UI.WebControls
-Imports System.Security.Principal
 Imports System.IO
 'This is the Indexer/Search items
 Imports Lucene.Net.Index
 Imports Lucene.Net.Documents
-Imports Lucene.Net.Analysis
 Imports Lucene.Net.Analysis.Standard
-Imports Lucene.Net.Search
-Imports Lucene.Net.QueryParsers
 'regular expressions
-Imports System.Text.RegularExpressions
 Imports Protean.Tools.FileHelper
-Imports System
 Imports System.Linq
+Imports Protean.Tools.Xml
+Imports Protean.stdTools
 
 Public Class IndexerAsync
 

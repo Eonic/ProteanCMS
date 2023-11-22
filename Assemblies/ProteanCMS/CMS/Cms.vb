@@ -5142,7 +5142,7 @@ Public Class Cms
                         Try
                             oElmt2.InnerXml = sContent
                         Catch
-                            oElmt2.InnerXml = Protean.tidyXhtmlFrag(sContent)
+                            oElmt2.InnerXml = Tools.Text.tidyXhtmlFrag(sContent)
                         End Try
                     End If
                 Next

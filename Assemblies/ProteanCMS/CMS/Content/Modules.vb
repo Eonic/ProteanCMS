@@ -10,6 +10,7 @@ Imports System.Reflection
 Imports System.Collections.Generic
 Imports Microsoft.Ajax.Utilities
 Imports System.Management
+Imports Protean.stdTools
 
 Partial Public Class Cms
     Public Class Content

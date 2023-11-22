@@ -30,6 +30,7 @@ Imports System.Net.Mail
 Imports System.Reflection
 Imports System.Net
 Imports VB = Microsoft.VisualBasic
+Imports Protean.stdTools
 
 Namespace Providers
     Namespace Payment
@@ -368,7 +369,7 @@ Namespace Providers
 
                         'create the instance
                         oXform.NewFrm("Secure3DReturn")
-                        oXform.submission("Secure3DReturn", goServer.UrlDecode(RedirectURL), "POST", "return form_check(this);")
+                        oXform.submission("Secure3DReturn", Protean.stdTools.goServer.UrlDecode(RedirectURL), "POST", "return form_check(this);")
                         oFrmInstance = oXform.moPageXML.CreateElement("Secure3DReturn")
                         oXform.Instance.AppendChild(oFrmInstance)
                         oFrmGroup = oXform.addGroup(oXform.moXformElmt, "Secure3DReturn1", "Secure3DReturn1", "Redirecting... Please do not refresh")

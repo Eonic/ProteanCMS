@@ -10,6 +10,7 @@ Imports System.Web.Configuration
 Imports System.Configuration
 Imports System
 Imports System.Web.UI
+Imports Protean.Tools.Xml
 Imports Protean.stdTools
 
 
@@ -1119,7 +1120,7 @@ Public Class xForm
                                                         Try
                                                             oElmtTemp.InnerXml = (Protean.Tools.Xml.convertEntitiesToCodes(submittedValue) & "").Trim
                                                         Catch
-                                                            oElmtTemp.InnerXml = tidyXhtmlFrag((Protean.Tools.Xml.convertEntitiesToCodes(submittedValue) & "").Trim)
+                                                            oElmtTemp.InnerXml = Tools.Text.tidyXhtmlFrag((Protean.Tools.Xml.convertEntitiesToCodes(submittedValue) & "").Trim)
                                                         End Try
                                                         oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.ReplaceChild(oElmtTemp.FirstChild.Clone, oInstance.SelectSingleNode(sXpath, nsMgr))
                                                     End If
@@ -1256,7 +1257,7 @@ Public Class xForm
 
                                                     End If
                                                 Case "datetime"
-                                                    oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = xmlDateTime(oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml)
+                                                    oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = XmlDate(oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml, True)
                                                 Case "date"
                                                     oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = xmlDate(oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml)
                                                 Case "string-before-comma"

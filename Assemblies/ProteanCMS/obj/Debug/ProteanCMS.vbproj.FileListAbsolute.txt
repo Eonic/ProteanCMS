@@ -1651,7 +1651,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\AjaxMin.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\AlphaFS.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\AngleSharp.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Antlr3.Runtime.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\BouncyCastle.Crypto.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\BundleTransformer.Core.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\BundleTransformer.Less.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\BundleTransformer.MicrosoftAjax.dll
@@ -1757,3 +1756,5 @@ D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Deb
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\Protean.Resources.resources
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.GenerateResource.cache
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.CoreCompileInputs.cache
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.CMS.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.CMS.pdb

@@ -15,7 +15,7 @@ using Protean.Tools;
 
 namespace Protean
 {
-    public class stdTools
+    public static partial class stdTools
     {
 
         public static bool mbException;
@@ -870,15 +870,15 @@ namespace Protean
 
         // End Function
 
-        public static string xmlDate(object dDate)
-        {
-            return Xml.XmlDate(dDate);
-        }
+        //public static string xmlDate(object dDate)
+        //{
+        //    return Xml.XmlDate(dDate);
+        //}
 
-        public static string xmlDateTime(object dDate)
-        {
-            return Xml.XmlDate(dDate, true);
-        }
+        //public static string xmlDateTime(object dDate)
+        //{
+        //    return Xml.XmlDate(dDate, true);
+        //}
         #endregion
 
 

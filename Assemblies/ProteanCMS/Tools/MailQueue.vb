@@ -1,10 +1,6 @@
 Imports System.Xml
-Imports System.Web.HttpUtility
 Imports System.Web.Configuration
-Imports System.IO
-Imports System.Data
-Imports System.Data.SqlClient
-Imports System
+Imports Protean.stdTools
 
 Public Class MailQueue
 

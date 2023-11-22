@@ -10,20 +10,13 @@
 
 Option Strict Off
 Option Explicit On
-Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Xml
 Imports System.IO
 Imports System.Web.Configuration
-Imports System.Collections
 Imports System.Collections.Generic
-Imports VB = Microsoft.VisualBasic
-Imports System.Web.Mail
 Imports System.Text.RegularExpressions
-Imports System.Net.Mail
-Imports Protean.Tools.Dictionary
 Imports Protean.Tools.Xml
-Imports System
 Imports System.Threading
 Imports System.Linq
 Imports Protean.stdTools
@@ -2415,7 +2408,7 @@ Partial Public Class Cms
                             oElmt.InnerXml = sContent
                         Catch
                             'run tidy...
-                            oElmt.InnerXml = tidyXhtmlFrag(sContent, True, False)
+                            oElmt.InnerXml = Tools.Text.tidyXhtmlFrag(sContent, True, False)
                         End Try
                         'empty empty dates
                         If oElmt.InnerXml.StartsWith("0001-01-01T00:00:00") Then oElmt.InnerXml = ""
@@ -2835,8 +2828,8 @@ restart:
 
                 'first we look at the status of the content being sumitted.
 
-                nStatus = getNodeValueByType(oInstance, "//nStatus", dataType.TypeNumber, 1)
-                nCurrentVersionNumber = getNodeValueByType(oInstance, "//nVersion", dataType.TypeNumber, 0)
+                nStatus = getNodeValueByType(oInstance, "//nStatus", XmlDataType.TypeNumber, 1)
+                nCurrentVersionNumber = getNodeValueByType(oInstance, "//nVersion", XmlDataType.TypeNumber, 0)
 
                 ' Get the maximum version number
                 If nKey > 0 Then
@@ -2923,7 +2916,7 @@ restart:
 
 
                                 ' Assess the status
-                                Dim nLiveStatus As Status = getNodeValueByType(oOrigInstance, "//nStatus", dataType.TypeNumber)
+                                Dim nLiveStatus As Status = getNodeValueByType(oOrigInstance, "//nStatus", XmlDataType.TypeNumber)
                                 Select Case nLiveStatus
                                     Case Status.Live, Status.Hidden
                                         ' Leave the live content alone, set the pending content as a version
@@ -3157,7 +3150,7 @@ restart:
                     pendingList = moPageXml.CreateElement("Content")
                     pendingList.SetAttribute("name", "Content Awaiting Approval")
                     pendingList.SetAttribute("type", "Report")
-                    If Not (String.IsNullOrEmpty(dLastRun)) AndAlso IsDate(dLastRun) Then pendingList.SetAttribute("since", xmlDateTime(dLastRun))
+                    If Not (String.IsNullOrEmpty(dLastRun)) AndAlso IsDate(dLastRun) Then pendingList.SetAttribute("since", XmlDate(dLastRun, True))
                     pendingList.InnerXml = oXml.InnerXml
 
                     ' Tidy Up - Get rid of all that orphan content from the relations
@@ -4875,8 +4868,8 @@ restart:
 
                 ' Get the parameters SortDirection
                 Dim cSchema As String = getNodeValueByType(oGrabber, "Type")
-                Dim nPageId As Long = getNodeValueByType(oGrabber, "Page", dataType.TypeNumber)
-                Dim nTop As Long = getNodeValueByType(oGrabber, "NumberOfItems", dataType.TypeNumber)
+                Dim nPageId As Long = getNodeValueByType(oGrabber, "Page", XmlDataType.TypeNumber)
+                Dim nTop As Long = getNodeValueByType(oGrabber, "NumberOfItems", XmlDataType.TypeNumber)
                 Dim cSort As String = getNodeValueByType(oGrabber, "Sort")
                 Dim cSortDirection As String = getNodeValueByType(oGrabber, "SortDirection")
                 Dim cIncludeChildPages As String = getNodeValueByType(oGrabber, "IncludeChildPages")

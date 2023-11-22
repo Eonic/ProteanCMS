@@ -17,6 +17,7 @@ Imports System.Windows
 Imports Microsoft.Ajax.Utilities
 Imports Protean.Cms
 Imports System.Configuration
+Imports Protean.stdTools
 
 
 Partial Public Class Cms
@@ -3749,7 +3750,7 @@ processFlow:
                 If IsNumeric(cItemQuantity) Then
 
                     'Check minimum value
-                    If CLng(cItemQuantity) < CLng(getNodeValueByType(oProd, "//Quantities/Minimum", dataType.TypeNumber, 0)) Then
+                    If CLng(cItemQuantity) < CLng(getNodeValueByType(oProd, "//Quantities/Minimum", XmlDataType.TypeNumber, 0)) Then
                         ' Minimum has not been matched
 
                         ' Check for existence of error node
@@ -3765,13 +3766,13 @@ processFlow:
                         End If
 
                         ' Add product specific msg
-                        oMsg = addElement(oError, "msg", "<strong>" & getNodeValueByType(oProd, "/Content/Name", dataType.TypeString, "A product below ") & "</strong> requires a quantity equal to or above <em>" & getNodeValueByType(oProd, "//Quantities/Minimum", dataType.TypeNumber, "an undetermined value (please call for assistance).") & "</em>", True)
+                        oMsg = addElement(oError, "msg", "<strong>" & getNodeValueByType(oProd, "/Content/Name", XmlDataType.TypeString, "A product below ") & "</strong> requires a quantity equal to or above <em>" & getNodeValueByType(oProd, "//Quantities/Minimum", XmlDataType.TypeNumber, "an undetermined value (please call for assistance).") & "</em>", True)
                         oMsg.SetAttribute("type", "quantity_min_detail")
 
                     End If
 
                     'Check maximum value
-                    If CLng(cItemQuantity) > CLng(getNodeValueByType(oProd, "//Quantities/Maximum", dataType.TypeNumber, Integer.MaxValue)) Then
+                    If CLng(cItemQuantity) > CLng(getNodeValueByType(oProd, "//Quantities/Maximum", XmlDataType.TypeNumber, Integer.MaxValue)) Then
                         ' Maximum has not been matched
 
                         ' Check for existence of error node
@@ -3787,14 +3788,14 @@ processFlow:
                         End If
 
                         ' Add product specific msg
-                        oMsg = addElement(oError, "msg", "<strong>" & getNodeValueByType(oProd, "/Content/Name", dataType.TypeString, "A product below ") & "</strong> requires a quantity equal to or below <em>" & getNodeValueByType(oProd, "//Quantities/Maximum", dataType.TypeNumber, "an undetermined value (please call for assistance).") & "</em>", True)
+                        oMsg = addElement(oError, "msg", "<strong>" & getNodeValueByType(oProd, "/Content/Name", XmlDataType.TypeString, "A product below ") & "</strong> requires a quantity equal to or below <em>" & getNodeValueByType(oProd, "//Quantities/Maximum", XmlDataType.TypeNumber, "an undetermined value (please call for assistance).") & "</em>", True)
                         oMsg.SetAttribute("type", "quantity_max_detail")
 
                     End If
 
                     'Check bulkunit value
-                    Dim cBulkUnit As Integer = getNodeValueByType(oProd, "//Quantities/BulkUnit", dataType.TypeNumber, 0)
-                    If (CLng(cItemQuantity) Mod CLng(getNodeValueByType(oProd, "//Quantities/BulkUnit", dataType.TypeNumber, 1))) <> 0 Then
+                    Dim cBulkUnit As Integer = getNodeValueByType(oProd, "//Quantities/BulkUnit", XmlDataType.TypeNumber, 0)
+                    If (CLng(cItemQuantity) Mod CLng(getNodeValueByType(oProd, "//Quantities/BulkUnit", XmlDataType.TypeNumber, 1))) <> 0 Then
                         ' Bulk Unit has not been matched
                         ' Check for existence of error node
                         If oError Is Nothing Then
@@ -3809,7 +3810,7 @@ processFlow:
                         End If
 
                         ' Add product specific msg
-                        oMsg = addElement(oError, "msg", "<strong>" & getNodeValueByType(oProd, "/Content/Name", dataType.TypeString, "A product below ") & "</strong> can only be bought in lots of <em>" & getNodeValueByType(oProd, "//Quantities/BulkUnit", dataType.TypeNumber, "an undetermined value (please call for assistance).") & "</em>", True)
+                        oMsg = addElement(oError, "msg", "<strong>" & getNodeValueByType(oProd, "/Content/Name", XmlDataType.TypeString, "A product below ") & "</strong> can only be bought in lots of <em>" & getNodeValueByType(oProd, "//Quantities/BulkUnit", XmlDataType.TypeNumber, "an undetermined value (please call for assistance).") & "</em>", True)
                         oMsg.SetAttribute("type", "quantity_mod_detail")
                     End If
                 End If

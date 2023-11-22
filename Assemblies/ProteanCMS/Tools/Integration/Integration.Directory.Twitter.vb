@@ -4,6 +4,7 @@ Option Explicit On
 Imports System.Collections.Specialized
 Imports Protean.Tools.Http.Utils
 Imports System
+Imports Protean.stdTools
 
 
 Namespace Integration.Directory

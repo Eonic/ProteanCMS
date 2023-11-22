@@ -8,7 +8,7 @@ Imports System.Web.HttpUtility
 Imports VB = Microsoft.VisualBasic
 Imports System
 Imports Protean.stdTools
-
+Imports Protean.Tools.Xml
 
 Partial Public Class Cms
 

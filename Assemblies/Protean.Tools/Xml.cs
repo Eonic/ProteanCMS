@@ -6,6 +6,7 @@ using System.Xml.XPath;
 using System.Xml.Serialization;
 using System.Text.RegularExpressions;
 using Microsoft.VisualBasic;
+using System.Collections;
 
 namespace Protean.Tools
 {
@@ -33,7 +34,7 @@ namespace Protean.Tools
             IsEmptyOrHasContents = 3
         }
 
-        private static void CombineInstance_Sub1(XmlElement oMasterElmt, XmlElement oExistingInstance, string cXPath)
+       private static void CombineInstance_Sub1(XmlElement oMasterElmt, XmlElement oExistingInstance, string cXPath)
         {
             // Looks for stuff with the same xpath
             try
@@ -1496,7 +1497,41 @@ namespace Protean.Tools
             nodeToAddTo.AppendChild(nodeToAddTo.OwnerDocument.ImportNode(nodeToBeAdded, true));
         }
 
+        public static Hashtable xmlToHashTable(XmlNodeList oNodeList, string cNamedAttribute = "")
+        {
 
+            // This converts a nodelist to a HashTable
+            // The key will be the node name, the value will either be the Inner Text or a named attribute
+
+            var oHT = new Hashtable();
+            string cKey;
+            string cValue;
+
+            foreach (XmlElement oElmt in oNodeList)
+            {
+                cKey = oElmt.LocalName;
+                if (!string.IsNullOrEmpty(cNamedAttribute))
+                {
+                    cValue = oElmt.GetAttribute(cNamedAttribute);
+                }
+                else
+                {
+                    cValue = oElmt.InnerText;
+                }
+                oHT.Add(cKey, cValue);
+            }
+
+            return oHT;
+
+        }
+
+        public static Hashtable xmlToHashTable(XmlNode oNode, string cNamedAttribute = "")
+        {
+
+            // This converts a node's child nodes to a HashTable
+            return xmlToHashTable(oNode.ChildNodes, cNamedAttribute);
+
+        }
 
         public class XmlNoNamespaceWriter : System.Xml.XmlTextWriter
         {

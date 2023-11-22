@@ -72,7 +72,7 @@
     </NuGetPackageImportStamp>
     <ShouldCreateLogs>False</ShouldCreateLogs>
     <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
-    <AssemblyVersion>6.0.69.90</AssemblyVersion>
+    <AssemblyVersion>6.0.69.111</AssemblyVersion>
     <UpdatePackageVersion>False</UpdatePackageVersion>
     <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
     <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
@@ -452,6 +452,7 @@
     <Compile Include="CMS\Content\Contact.vb" />
     <Compile Include="Setup\Setup.vb" />
     <Compile Include="Setup\Tests.vb" />
+    <Compile Include="Tools\Configuration.vb" />
     <Compile Include="Tools\ExternalSynchronisation.vb" />
     <Compile Include="Providers\Filter.BaseProvider.vb" />
     <Compile Include="Providers\Filters\PageFilter.vb" />
@@ -476,8 +477,6 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Tools\Startup.vb" />
-    <Compile Include="Tools\Configuration.vb" />
-    <Compile Include="Tools\CSVHelper.vb" />
     <Compile Include="Tools\Encryption.vb" />
     <Compile Include="Tools\FeedHandler.vb" />
     <Compile Include="Tools\FLVHandler.vb" />
@@ -504,7 +503,6 @@
     <Compile Include="Tools\Synchronisation.vb" />
     <Compile Include="Tools\Syndication.vb" />
     <Compile Include="Tools\xForm.vb" />
-    <Compile Include="Tools\xmlTools.vb" />
     <Compile Include="Tools\xmlTools.xsltExtensions.vb" />
     <Compile Include="Tools\xmlTools.ewXmlElement.vb" />
     <Compile Include="Web References\com.pclpls.www\Reference.vb">
@@ -777,6 +775,8 @@
     <None Include="Service References\PayPalAPI\PayPalSvc.wsdl" />
     <None Include="Service References\Paypoint\SECCardService.wsdl" />
     <None Include="Service References\proteancms.com\ewAdminProxy.wsdl" />
+    <Compile Include="Tools\xmlHelper.vb" />
+    <Compile Include="Tools\xmlTools.vb" />
     <None Include="Web References\com.pclpls.www\Quotation.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
