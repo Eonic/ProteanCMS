@@ -7,6 +7,8 @@ Imports System.Data.SqlClient
 Imports System.Web.HttpUtility
 Imports VB = Microsoft.VisualBasic
 Imports System
+Imports Protean.stdTools
+
 
 Partial Public Class Cms
 

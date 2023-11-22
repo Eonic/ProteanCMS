@@ -6,7 +6,7 @@ Imports System.Xml.XPath
 Imports System.Text.RegularExpressions
 Imports System.Reflection
 Imports System.Runtime.InteropServices
-
+Imports Protean.stdTools
 
 Public Class Proxy
     Inherits MarshalByRefObject

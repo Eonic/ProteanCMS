@@ -24,7 +24,7 @@ Imports Imazen.WebP
 Imports System.Drawing
 Imports System.Data.SqlClient
 Imports System.Configuration
-
+Imports Protean.stdTools
 Partial Public Module xmlTools
 
     Public Class xsltExtensions
@@ -2365,7 +2365,7 @@ Partial Public Module xmlTools
                 'OnComponentError(myWeb, New Protean.Tools.Errors.ErrorEventArgs("xslt.BundleCSS", "LayoutActions", ex, CommaSeparatedFilenames))
                 '  My.Application.Log.WriteException(ex)
 
-                AddExceptionToEventLog(ex, sReturnString)
+                stdTools.AddExceptionToEventLog(ex, sReturnString)
 
                 'regardless we should return the filename.
                 sReturnString = "/" & myWeb.moConfig("ProjectPath") & "css" & String.Format("{0}/style.css", TargetPath)

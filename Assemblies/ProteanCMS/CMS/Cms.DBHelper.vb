@@ -26,6 +26,7 @@ Imports Protean.Tools.Xml
 Imports System
 Imports System.Threading
 Imports System.Linq
+Imports Protean.stdTools
 
 
 
@@ -6072,7 +6073,7 @@ restart:
                     If myWeb.mnUserId > 0 Then
                         ' user id exists
                         sSql = "DELETE FROM dbo.tblXmlCache " _
-                            & " WHERE nCacheDirId = " & Protean.SqlFmt(myWeb.mnUserId)
+                            & " WHERE nCacheDirId = " & SqlFmt(myWeb.mnUserId)
                     Else
                         ' No user id - delete the cache based on session id.
                         sSql = "DELETE FROM dbo.tblXmlCache " _
@@ -6129,7 +6130,7 @@ restart:
 
                     ' Automatically clear up historical caches
                     If bAuth Then
-                        ExeProcessSqlScalar("DELETE FROM dbo.tblXmlCache WHERE cCacheSessionId = '" & IIf(bAuth, Protean.SqlFmt(goSession.SessionID), "") & "' AND DATEDIFF(hh,dCacheDate,GETDATE()) > 12")
+                        ExeProcessSqlScalar("DELETE FROM dbo.tblXmlCache WHERE cCacheSessionId = '" & IIf(bAuth, SqlFmt(goSession.SessionID), "") & "' AND DATEDIFF(hh,dCacheDate,GETDATE()) > 12")
                     Else
                         ExeProcessSqlScalar("DELETE FROM dbo.tblXmlCache WHERE DATEDIFF(hh,dCacheDate,GETDATE()) > 12")
                     End If
@@ -6138,8 +6139,8 @@ restart:
                     Dim nUpdateCount As String
                     sSql = "INSERT INTO dbo.tblXmlCache (cCacheSessionID,nCacheDirId,cCacheStructure,cCacheType) " _
                                                & "VALUES (" _
-                                               & "'" & IIf(bAuth, Protean.SqlFmt(goSession.SessionID), "") & "'," _
-                                               & Protean.SqlFmt(nUserId) & "," _
+                                               & "'" & IIf(bAuth, SqlFmt(goSession.SessionID), "") & "'," _
+                                               & SqlFmt(nUserId) & "," _
                                                & " @XmlValue," _
                                                & "'" & cCacheType & "'" _
                                                & ")"
