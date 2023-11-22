@@ -733,6 +733,7 @@
 
   <xsl:template match="input | secret | select | select1 | range | textarea | upload" mode="xform">
     <xsl:param name="nolabel"/>
+	<xsl:param name="dependantClass"/>
 
     <!-- NB : the count(item)!=1 basically stops you from making a one checkbox field (ie a boolean) from being required -->
     <xsl:if test="not($nolabel!='')">
@@ -768,8 +769,9 @@
               <xsl:value-of select="@prefix"/>
             </div>
           </xsl:if>
-
-          <xsl:apply-templates select="." mode="xform_control"/>
+			<xsl:apply-templates select="." mode="xform_control">
+				<xsl:with-param select="$dependantClass" name="dependantClass"/>
+			</xsl:apply-templates>
           <xsl:if test="@suffix!=''">
             <div class="input-group-text">
               <xsl:value-of select="@suffix"/>
@@ -787,10 +789,11 @@
         </div>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:apply-templates select="." mode="xform_control"/>
+		  <xsl:apply-templates select="." mode="xform_control">
+			  <xsl:with-param select="$dependantClass" name="dependantClass"/>
+		  </xsl:apply-templates>
       </xsl:otherwise>
     </xsl:choose>
-
 
     <xsl:if test="not(contains(@class,'pickImage'))">
       <xsl:apply-templates select="self::node()[not(item[toggle]) and not(hint)]" mode="xform_legend"/>
@@ -2115,6 +2118,7 @@
   <!-- -->
   <!-- ## Standard Select1 for Radio Buttons ########################################################### -->
   <xsl:template match="select1[@appearance='full']" mode="xform_control">
+	  <xsl:param name="dependantClass"/>
     <xsl:variable name="ref">
       <xsl:apply-templates select="." mode="getRefOrBind"/>
     </xsl:variable>
@@ -2132,12 +2136,14 @@
             <xsl:with-param name="selectedValue" select="$value"/>
             <xsl:with-param name="type">radio</xsl:with-param>
             <xsl:with-param name="ref" select="$ref"/>
+			  <xsl:with-param name="dependantClass" select="$dependantClass"/>
           </xsl:apply-templates>
         </xsl:when>
         <xsl:otherwise>
           <xsl:apply-templates select="item | choices" mode="xform_radiocheck">
             <xsl:with-param name="type">radio</xsl:with-param>
             <xsl:with-param name="ref" select="$ref"/>
+			  <xsl:with-param name="dependantClass" select="$dependantClass"/>
           </xsl:apply-templates>
         </xsl:otherwise>
       </xsl:choose>
@@ -2146,19 +2152,15 @@
 
   <!-- ## Select1 for Radio Buttons with Dependant options ############################################# -->
 
-  <xsl:template match="select1[@appearance='full' and item[toggle]][ancestor::Page[@cssFramework='bs5' or @adminMode='true']]" mode="control-outer">
-
+  <xsl:template match="select1[@appearance='full' and item[toggle]]" mode="control-outer">
     <xsl:variable name="ref">
       <xsl:apply-templates select="." mode="getRefOrBind"/>
     </xsl:variable>
-
     <xsl:variable name="value">
       <xsl:value-of select="value/node()"/>
     </xsl:variable>
-
     <xsl:variable name="selectedCase">
       <xsl:choose>
-
         <!-- If @bindTo check this isn't selected -->
         <xsl:when test="item[@bindTo]">
           <xsl:variable name="bindToItem" select="item[@bindTo]"/>
@@ -2184,11 +2186,15 @@
     </xsl:variable>
     <xsl:choose>
       <xsl:when test="name()='group'">
-        <xsl:apply-templates select="." mode="xform"/>
+		  <xsl:apply-templates select="." mode="xform">
+			  <xsl:with-param name="dependantClass" />
+		  </xsl:apply-templates>
       </xsl:when>
       <xsl:when test="contains(@class,'hidden')">
         <div class="form-group invisible">
-          <xsl:apply-templates select="." mode="xform"/>
+			<xsl:apply-templates select="." mode="xform">
+				<xsl:with-param name="dependantClass" />
+			</xsl:apply-templates>
         </div>
       </xsl:when>
       <xsl:otherwise>
@@ -2208,7 +2214,9 @@
               <xsl:value-of select="./@class"/>
             </xsl:if>
           </xsl:attribute>
-          <xsl:apply-templates select="." mode="xform"/>
+			<xsl:apply-templates select="." mode="xform">
+				<xsl:with-param name="dependantClass" select="$dependantClass" />
+			</xsl:apply-templates>
         </div>
         <!-- Output Cases - that not empty -->
         <xsl:apply-templates select="following-sibling::switch[1]/case[node()]" mode="xform" >
@@ -2219,61 +2227,7 @@
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template match="select1[@appearance='full' and item[toggle]][ancestor::Page[@cssFramework='bs3' or @adminMode='true']]" mode="xform_control">
-
-    <xsl:variable name="ref">
-      <xsl:apply-templates select="." mode="getRefOrBind"/>
-    </xsl:variable>
-
-    <xsl:variable name="value">
-      <xsl:value-of select="value/node()"/>
-    </xsl:variable>
-
-    <xsl:variable name="selectedCase">
-      <xsl:choose>
-
-        <!-- If @bindTo check this isn't selected -->
-        <xsl:when test="item[@bindTo]">
-          <xsl:variable name="bindToItem" select="item[@bindTo]"/>
-          <xsl:choose>
-            <xsl:when test="item[@bindTo]/input[@bind=$bindToItem/@bindTo]/value = $bindToItem/value">
-              <xsl:value-of select="$bindToItem/toggle/@case"/>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:value-of select="item[value/node()=$value]/toggle/@case"/>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:when>
-        <xsl:otherwise>
-          <!-- Default get selected case -->
-          <xsl:value-of select="item[value/node()=$value]/toggle/@case"/>
-        </xsl:otherwise>
-      </xsl:choose>
-
-    </xsl:variable>
-
-    <xsl:variable name="dependantClass">
-      <xsl:value-of select="translate($ref,'[]#=/','')"/>
-      <xsl:text>-dependant</xsl:text>
-    </xsl:variable>
-    <div class="form-inline">
-      <xsl:apply-templates select="item | choices" mode="xform_radiocheck">
-        <xsl:with-param name="type">radio</xsl:with-param>
-        <xsl:with-param name="ref" select="$ref"/>
-        <xsl:with-param name="dependantClass">
-          <xsl:value-of select="translate($ref,'[]#=/','')"/>
-          <xsl:text>-dependant</xsl:text>
-        </xsl:with-param>
-      </xsl:apply-templates>
-    </div>
-  
-    <xsl:if test="item[@bindTo]">
-      <script>
-        psuedoRadioButtonControl('<xsl:value-of select="$ref"/>','<xsl:value-of select="item[@bindTo]/@bindTo"/>','<xsl:value-of select="item[@bindTo]/value"/>');
-      </script>
-    </xsl:if>
-
-  </xsl:template>
+ 
 
 
   <!-- Case -->
@@ -2336,6 +2290,8 @@
 
   <!-- -->
   <xsl:template match="select[@appearance='minimal'] | select" mode="xform_control">
+
+	  <xsl:param name="dependantClass"/>
     <xsl:variable name="ref">
       <xsl:apply-templates select="." mode="getRefOrBind"/>
     </xsl:variable>
@@ -2403,6 +2359,7 @@
           <xsl:text>testing</xsl:text>
       </xsl:attribute>-->
 
+	  <xsl:param name="dependantClass"/>
     <xsl:variable name="ref">
       <xsl:apply-templates select="." mode="getRefOrBind"/>
     </xsl:variable>
@@ -2438,6 +2395,7 @@
             <xsl:with-param name="class" select="@class"/>
             <xsl:with-param name="ref" select="$ref"/>
             <xsl:with-param name="type">checkbox</xsl:with-param>
+			<xsl:with-param name="dependantClass" select="$dependantClass"/>
           </xsl:apply-templates>
         </xsl:when>
 
@@ -2446,6 +2404,7 @@
             <xsl:with-param name="type">checkbox</xsl:with-param>
             <xsl:with-param name="ref" select="$ref"/>
             <xsl:with-param name="class" select="'list-item-group'"/>
+			<xsl:with-param name="dependantClass" select="$dependantClass"/>
           </xsl:apply-templates>
         </xsl:otherwise>
 
