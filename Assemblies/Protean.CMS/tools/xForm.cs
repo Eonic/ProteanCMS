@@ -8,8 +8,10 @@ using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 
-namespace Protean.CMS
+namespace Protean
 {
+
+
     public class xForm
     {
 
@@ -181,7 +183,7 @@ namespace Protean.CMS
         public xForm(System.Web.HttpContext Context, ref string sException)
         {
 
-            //string sProcessInfo = "";
+            string sProcessInfo = "";
             try
             {
                 msException = sException;
@@ -772,7 +774,7 @@ namespace Protean.CMS
                         }
 
                         sXpathNoAtt = getBindXpath(ref oBindElmt);
-                        sXpathNoAtt = Protean.Tools.Xml.addNsToXpath(sXpathNoAtt, ref nsMgr);
+                        sXpathNoAtt = Tools.Xml.addNsToXpath(sXpathNoAtt, ref nsMgr);
                         if (!string.IsNullOrEmpty(sAttribute))
                         {
                             sXpath = sXpathNoAtt + "/@" + sAttribute;
@@ -912,7 +914,7 @@ namespace Protean.CMS
                     {
 
                         cProcessInfo = cProcessInfo + " - Constraint Compile Error: " + oBindElmt.GetAttribute("constraint");
-                        string constraintXpath = Protean.Tools.Xml.addNsToXpath(oBindElmt.GetAttribute("constraint"), ref nsMgr);
+                        string constraintXpath = Tools.Xml.addNsToXpath(oBindElmt.GetAttribute("constraint"), ref nsMgr);
                         // Dim constraintXpath As String = oBindElmt.GetAttribute("constraint")
                         expr = xPathNav2.Compile(constraintXpath);
 
@@ -1107,7 +1109,7 @@ namespace Protean.CMS
 
                         case "imgverification":
                             {
-                                if (Conversions.ToBoolean(!Operators.ConditionalCompareObjectEqual(Strings.LCase(sValue), (goSession["imgVerification"]), false)))
+                                if (Conversions.ToBoolean(!Operators.ConditionalCompareObjectEqual(Strings.LCase(sValue),(goSession["imgVerification"]), false)))
                                     cReturn = "<span class=\"msg-1003\">Please enter the correct letters and numbers as shown.</span>";
                                 break;
                             }
@@ -1322,7 +1324,7 @@ namespace Protean.CMS
 
                                         }
                                         sXpath = getBindXpath(ref oBindElmt);
-                                        sXpath = Protean.Tools.Xml.addNsToXpath(sXpath, ref nsMgr);
+                                        sXpath = Tools.Xml.addNsToXpath(sXpath, ref nsMgr);
 
                                         // Allow the submitted value to substitue in the Xpath
 
@@ -1522,7 +1524,7 @@ namespace Protean.CMS
                                                                 string cFullPath = goServer.MapPath("/").TrimEnd(@"/\".ToCharArray());
 
                                                                 // ensure the folder exists
-                                                                var oFs = new fsHelper();
+                                                                var oFs = new Protean.fsHelper();
                                                                 oFs.mcStartFolder = cFullPath;
                                                                 cValidationError += oFs.CreatePath(cSavePath);
                                                                 if (cValidationError == "1")
@@ -1709,7 +1711,7 @@ namespace Protean.CMS
 
                 // add the soap namespace to the nametable of the xmlDocument to allow xpath to query the namespace
                 var argoNode = oInstance.FirstChild;
-                var nsMgr = Protean.xmlTools.getNsMgr(ref argoNode, ref moPageXML);
+                var nsMgr = Protean.Tools.Xml.getNsMgr(ref argoNode, ref moPageXML);
 
                 // scan each form item
                 foreach (var item in goRequest.Form)
@@ -1725,7 +1727,7 @@ namespace Protean.CMS
                             sAttribute = Strings.Right(oBindElmt.GetAttribute("nodeset"), Strings.Len(oBindElmt.GetAttribute("nodeset")) - 1);
                         }
                         sXpath = getBindXpath(ref oBindElmt);
-                        sXpath = Protean.xmlTools.addNsToXpath(sXpath, ref nsMgr);
+                        sXpath = Tools.Xml.addNsToXpath(sXpath, ref nsMgr);
 
                         // update for each bind element match
                         if (oInstance.SelectSingleNode(sXpath, nsMgr) is null)
@@ -2042,7 +2044,7 @@ namespace Protean.CMS
                                     sXpath = ".";
                                 cleanXpath = sXpath;
 
-                                sXpath = Protean.xmlTools.addNsToXpath(sXpath, ref nsMgr);
+                                sXpath = Tools.Xml.addNsToXpath(sXpath, ref nsMgr);
 
                                 // if bind has selected value then we need some clever stuff
                                 // first we step through the possible values
@@ -2129,7 +2131,7 @@ namespace Protean.CMS
                                             }
                                             else
                                             {
-                                                sValue = Protean.xmlTools.xmlToForm(Instance.SelectSingleNode(sXpath, nsMgr).InnerXml);
+                                                sValue = Tools.Xml.xmlToForm(Instance.SelectSingleNode(sXpath, nsMgr).InnerXml);
                                             }
                                         }
                                         else if (!string.IsNullOrEmpty(sAttribute))
@@ -2139,7 +2141,7 @@ namespace Protean.CMS
                                         }
                                         else if (bIsXml)
                                         {
-                                            sValue = Protean.xmlTools.xmlToForm(Instance.SelectSingleNode(sXpath, nsMgr).InnerXml);
+                                            sValue = Tools.Xml.xmlToForm(Instance.SelectSingleNode(sXpath, nsMgr).InnerXml);
                                         }
                                         else
                                         {
@@ -2971,11 +2973,11 @@ namespace Protean.CMS
                 oLabelElmt = moPageXML.CreateElement("label");
                 if (bXmlLabel)
                 {
-                    oLabelElmt.InnerXml = Protean.xmlTools.convertEntitiesToCodes(sLabel) + " ";
+                    oLabelElmt.InnerXml = Protean.Tools.Xml.convertEntitiesToCodes(sLabel) + " ";
                 }
                 else
                 {
-                    oLabelElmt.InnerText = Protean.xmlTools.convertEntitiesToCodes(sLabel) + " ";
+                    oLabelElmt.InnerText = Protean.Tools.Xml.convertEntitiesToCodes(sLabel) + " ";
                 }
                 oOptElmt.AppendChild(oLabelElmt);
                 // End If
@@ -3721,7 +3723,7 @@ namespace Protean.CMS
                             cXpathOptions = getBindXpath(ref bindNode);
                             var argoNode = oInstance.SelectSingleNode("*[1]");
                             var nsMgr = Tools.Xml.getNsMgrRecursive(ref argoNode, ref moPageXML);
-                            cXpathOptions = Protean.xmlTools.addNsToXpath(cXpathOptions, ref nsMgr);
+                            cXpathOptions = Protean.Tools.Xml.addNsToXpath(cXpathOptions, ref nsMgr);
 
                             XmlElement nodeToDelete = (XmlElement)oInstance.SelectSingleNode(cXpathOptions + "[position()=" + (nNodeIndex + 1) + "]", nsMgr);
                             if (nodeToDelete != null)
@@ -3767,7 +3769,7 @@ namespace Protean.CMS
                     }
 
                     var argoNode = oInstance.SelectSingleNode("*[1]");
-                    var nsMgr = Protean.xmlTools.getNsMgr(ref argoNode, ref moPageXML);
+                    var nsMgr = Protean.Tools.Xml.getNsMgr(ref argoNode, ref moPageXML);
 
                     foreach (XmlElement oRptElmt in xFormElmt.SelectNodes("descendant-or-self::repeat[not(contains(@class,'relatedContent') or contains(@class,'repeated'))]"))
                     {
@@ -3780,7 +3782,7 @@ namespace Protean.CMS
                             {
                                 // build the bind xpath
                                 sBindXpath = getBindXpath(ref oBindNode);
-                                sBindXpath = Protean.xmlTools.addNsToXpath(sBindXpath, ref nsMgr);
+                                sBindXpath = Protean.Tools.Xml.addNsToXpath(sBindXpath, ref nsMgr);
                                 // get the nodeset of repeating elements
 
                                 bool updateSubsquentRequested = false;

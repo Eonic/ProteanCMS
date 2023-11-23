@@ -1817,6 +1817,7 @@ D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Sel
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\TidyHTML5Managed.dll
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\JsonWebTokens.dll
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Text.Encoding.CodePages.dll
+D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ClearScript.V8.ICUData.dll
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.CMS.pdb
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Tools.pdb
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Tools.dll.config
@@ -1859,6 +1860,7 @@ D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Sys
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Web.Optimization.xml
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\DocumentFormat.OpenXml.xml
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Select.HtmlToPdf.xml
+D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ClearScript.V8.ICUData.xml
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ru-ru\BundleTransformer.Core.resources.dll
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ru-ru\BundleTransformer.Less.resources.dll
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ru-ru\JavaScriptEngineSwitcher.Core.resources.dll

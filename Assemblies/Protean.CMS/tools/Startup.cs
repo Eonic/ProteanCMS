@@ -63,14 +63,14 @@ namespace Protean
         {
             string sProcessInfo = "V8JsEngine";
             System.Web.HttpApplicationState moApp = null;
-            if (System.Web.HttpContext.Current is not null)
+            if (System.Web.HttpContext.Current != null)
             {
                 moApp = System.Web.HttpContext.Current.Application;
             }
 
             try
             {
-                if (moApp is not null)
+                if (moApp != null)
                 {
                     // ensures we have configured JSEngine for Bundle Transformer
                     if (moApp["JSEngineEnabled"] is null)

@@ -8,8 +8,6 @@ using Microsoft.VisualBasic;
 
 namespace Protean
 {
-
-
     public class SoapClient
     {
 

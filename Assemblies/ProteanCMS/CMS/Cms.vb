@@ -582,7 +582,7 @@ Public Class Cms
                 mcPagePath = CStr(moRequest("path") & "")
                 mcPagePath = mcPagePath.Replace("//", "/")
 
-                InitialiseJSEngine()
+                JSStart.InitialiseJSEngine()
 
                 'Get the User ID
                 'if we access base via soap the session is not available

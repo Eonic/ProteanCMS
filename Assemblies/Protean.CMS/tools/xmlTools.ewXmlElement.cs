@@ -3,8 +3,8 @@ using System.Xml;
 
 namespace Protean
 {
-    public static partial class xmlTools
-    {
+    //public static partial class xmlTools
+    //{
         public class ewXmlElement
         {
 
@@ -17,7 +17,7 @@ namespace Protean
                 {
                     BaseXmlElement = xmlElement;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     // returnException(mcModuleName, "AddElement", ex, "", "", gbDebug)
                 }
@@ -40,14 +40,14 @@ namespace Protean
                 try
                 {
                     var newElmt = new ewXmlElement(BaseXmlElement.OwnerDocument.CreateElement(localName));
-                    if (innerText is not null)
+                    if (innerText != null)
                     {
                         newElmt.XmlElement.InnerText = innerText;
                     }
                     BaseXmlElement.AppendChild(newElmt.XmlElement);
                     return newElmt;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     // returnException(mcModuleName, "AddElement", ex, "", "", gbDebug)
                     return null;
@@ -70,7 +70,7 @@ namespace Protean
                     newElmt.AddElement("Description", description);
                     return newElmt;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     // returnException(mcModuleName, "AddElement", ex, "", "", gbDebug)
                     return null;
@@ -79,5 +79,5 @@ namespace Protean
 
         }
 
-    }
+   // }
 }

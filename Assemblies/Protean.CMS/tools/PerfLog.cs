@@ -63,17 +63,17 @@ namespace Protean
             {
                 cSiteName = SiteName;
 
-                if (moCtx is not null)
+                if (moCtx != null)
                 {
                     moRequest = moCtx.Request;
                     moResponse = moCtx.Response;
-                    if (moCtx.Session is not null)
+                    if (moCtx.Session != null)
                         moSession = moCtx.Session;
                     moServer = moCtx.Server;
                 }
 
 
-                if (moSession is not null)
+                if (moSession != null)
                 {
                     if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(moSession["Logging"], "On", false)))
                     {
@@ -177,7 +177,7 @@ namespace Protean
                     long nMemDif = memoryPrivate - nMemLast;
                     long nProcDif = Process.GetCurrentProcess().PrivilegedProcessorTime.Milliseconds - nProcLast;
                     long nMemoryCounterNextVal = default;
-                    if (_workingSetMemoryCounter is not null)
+                    if (_workingSetMemoryCounter != null)
                     {
                         nMemoryCounterNextVal = (long)Math.Round(_workingSetMemoryCounter.NextValue());
                     }
@@ -188,7 +188,7 @@ namespace Protean
                     cEntryFull += "'";
                     cEntryFull += moServer.MachineName + "','";
                     cEntryFull += cSiteName + "','";
-                    if (moSession.SessionID is not null)
+                    if (moSession.SessionID != null)
                     {
                         try
                         {
@@ -212,9 +212,9 @@ namespace Protean
                     // cEntryFull &= CStr(moSession("SessionRequest") & "") & "','"
                     // End If
                     string cPath = "";
-                    if (System.Web.HttpContext.Current is not null)
+                    if (System.Web.HttpContext.Current != null)
                     {
-                        if (System.Web.HttpContext.Current.Request is not null)
+                        if (System.Web.HttpContext.Current.Request != null)
                         {
                             cPath = System.Web.HttpContext.Current.Request["path"];
                         }
