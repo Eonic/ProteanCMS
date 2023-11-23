@@ -536,6 +536,7 @@ if (rediectElement) {
                 }
             },
             SaveNewUrl: function () {
+                
                 $(".modalLable").addClass("hidden");
                 var that = this;
                 var oldUrl = $("#OldUrlmodal").val();
@@ -546,7 +547,7 @@ if (rediectElement) {
                 var flag = "saveURL";
                 type = RedirectPage.redirectType();
                 if (oldUrl != "") {
-                    var inputJson = { redirectType: type, oldUrl: oldUrl };
+                    var inputJson = { redirectType: type, oldUrl: oldUrl, NewUrl: NewUrl };
                     axios.post(IsUrlPResentAPI, inputJson)
                         .then(function (response) {
 

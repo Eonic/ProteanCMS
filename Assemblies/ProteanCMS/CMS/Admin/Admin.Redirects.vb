@@ -37,20 +37,35 @@ Partial Public Class Cms
                     rewriteXml.Load(myWeb.goServer.MapPath("/rewriteMaps.config"))
 
                     ''Check we do not have a redirect for the OLD URL allready. Remove if exists
-                    Dim existingRedirects As XmlNodeList
+                    Dim existingRedirectsAsKey As XmlNodeList
+                    Dim existingRedirectsAsValue As XmlNodeList
                     If (hiddenOldUrl = "") Then
-                        existingRedirects = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" & redirectType & "']/add[@key='" & OldUrl & "']")
+                        existingRedirectsAsKey = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" & redirectType & "']/add[@key='" & OldUrl & "']")
+                        existingRedirectsAsValue = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" & redirectType & "']/add[@value='" & OldUrl & "']")
+
                     Else
-                        existingRedirects = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" & redirectType & "']/add[@key='" & hiddenOldUrl & "']")
+                        existingRedirectsAsKey = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" & redirectType & "']/add[@key='" & hiddenOldUrl & "']")
+                        existingRedirectsAsValue = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" & redirectType & "']/add[@value='" & hiddenOldUrl & "']")
+
                     End If
 
-                    If existingRedirects.Count > 0 Then
-                        For Each existingNode As XmlNode In existingRedirects
-                            Dim newNode As XmlNode = existingNode
-                            newNode.Attributes.Item(0).InnerXml = OldUrl
-                            newNode.Attributes.Item(1).InnerXml = NewUrl
-                            rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
-                        Next
+                    If existingRedirectsAsKey.Count > 0 Or existingRedirectsAsValue.Count > 0 Then
+                        If existingRedirectsAsKey.Count > 0 Then
+                            For Each existingNode As XmlNode In existingRedirectsAsKey
+                                Dim newNode As XmlNode = existingNode
+                                newNode.Attributes.Item(0).InnerXml = OldUrl
+                                newNode.Attributes.Item(1).InnerXml = NewUrl
+                                rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
+                            Next
+                        Else
+                            For Each existingNode As XmlNode In existingRedirectsAsValue
+                                Dim newNode As XmlNode = existingNode
+                                'newNode.Attributes.Item(0).InnerXml = OldUrl
+                                newNode.Attributes.Item(1).InnerXml = NewUrl
+                                rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
+                            Next
+                        End If
+
                     Else
                         'Add redirect
                         If isParentPage.ToLower() = "false" Then
@@ -310,8 +325,10 @@ Partial Public Class Cms
                 rewriteXml.Load(myWeb.goServer.MapPath("/rewriteMaps.config"))
 
                 ''Check we do not have a redirect for the OLD URL allready. Remove if exists
-                Dim existingRedirects As XmlNodeList = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" & redirectType & "']/add[@key='" & oldUrl & "']")
-                If (existingRedirects.Count > 0) Then
+                Dim existingRedirectsForOldUrl As XmlNodeList = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" & redirectType & "']/add[@key='" & oldUrl & "']")
+                Dim existingRedirectsForNewUrl As XmlNodeList = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" & redirectType & "']/add[@value='" & oldUrl & "']")
+
+                If (existingRedirectsForOldUrl.Count > 0 Or existingRedirectsForNewUrl.Count > 0) Then
                     Result = "True"
                 Else
                     Result = "false"
