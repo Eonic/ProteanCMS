@@ -42,8 +42,17 @@
       <HintPath>..\..\packages\Fonet.1.0\lib\net20\Fonet.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SoundInTheory.DynamicImage, Version=3.1.1.0, Culture=neutral, PublicKeyToken=fa44558110383067, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\DynamicImage.3.1.1\lib\net40\SoundInTheory.DynamicImage.dll</HintPath>
+    </Reference>
+    <Reference Include="SoundInTheory.DynamicImage.Extensions.Pdf, Version=3.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\DynamicImage.Extensions.Pdf.3.1.1\lib\net40\SoundInTheory.DynamicImage.Extensions.Pdf.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition.Registration" />
@@ -54,6 +63,11 @@
     </Reference>
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.FtpClient, Version=1.0.5824.34026, Culture=neutral, PublicKeyToken=fa4be07daa57c2b7, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Net.FtpClient.1.0.5824.34026\lib\net40\System.Net.FtpClient.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.RegularExpressions" />
@@ -64,9 +78,16 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\WebActivatorEx.2.0.2\lib\net40\WebActivatorEx.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\DynamicImage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="tools\FTPHelper.cs" />
+    <Compile Include="tools\ImageHelper.cs" />
+    <Compile Include="tools\Invoke.cs" />
     <Compile Include="tools\stdTools.cs" />
     <Compile Include="tools\xmlTools.cs" />
   </ItemGroup>
@@ -86,6 +107,7 @@
     <Folder Include="handlers\" />
     <Folder Include="providers\" />
     <Folder Include="setup\" />
+    <Folder Include="tools\fsHelper\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Protean.Tools\Protean.Tools.csproj">
@@ -95,6 +117,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="tools\CSVHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="tools\Encryption.cs" />
+    <Content Include="tools\FLVHandler.cs" />
+    <Content Include="tools\Object.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -30,7 +30,7 @@ namespace Protean
 
         private void Convert(string cFileString, string cDelimiter, string cQualifier, bool bColumnNames)
         {
-            if (oError is not null)
+            if (oError != null)
                 return;
             try
             {
@@ -58,7 +58,7 @@ namespace Protean
 
         private string[] GetRows(string cFileString)
         {
-            if (oError is not null)
+            if (oError != null)
                 return null;
             try
             {
@@ -74,7 +74,7 @@ namespace Protean
 
         private string[] GetColumns(string cRow, string cDelimiter, string cQualifier)
         {
-            if (oError is not null)
+            if (oError != null)
                 return null;
             try
             {
@@ -118,7 +118,7 @@ namespace Protean
 
         private void SetColNames(string[] cCols)
         {
-            if (oError is not null)
+            if (oError != null)
                 return;
             try
             {
@@ -136,7 +136,7 @@ namespace Protean
 
         private void AddRow(string[] cCols)
         {
-            if (oError is not null)
+            if (oError != null)
                 return;
             try
             {

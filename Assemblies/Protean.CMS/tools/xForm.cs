@@ -772,7 +772,7 @@ namespace Protean.CMS
                         }
 
                         sXpathNoAtt = getBindXpath(ref oBindElmt);
-                        sXpathNoAtt = Protean.xmlTools.addNsToXpath(sXpathNoAtt, ref nsMgr);
+                        sXpathNoAtt = Protean.Tools.Xml.addNsToXpath(sXpathNoAtt, ref nsMgr);
                         if (!string.IsNullOrEmpty(sAttribute))
                         {
                             sXpath = sXpathNoAtt + "/@" + sAttribute;
@@ -840,7 +840,7 @@ namespace Protean.CMS
                     {
                         bIsValid = false;
                         bIsThisBindValid = false;
-                        if (addNoteFromBind(ref oBindElmt, noteTypes.Alert, BindAttributes.Type, sMessage) == false)
+                        if (addNoteFromBind(oBindElmt, noteTypes.Alert, BindAttributes.Type, sMessage) == false)
                         {
                             missedError = true;
                         }
@@ -894,7 +894,7 @@ namespace Protean.CMS
                                 {
                                     label += " " + moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/label").InnerText;
                                 }
-                                if (addNoteFromBind(ref oBindElmt, noteTypes.Alert, BindAttributes.Required, "<span class=\"msg-1007\">" + label + " </span>") == false)
+                                if (addNoteFromBind(oBindElmt, noteTypes.Alert, BindAttributes.Required, "<span class=\"msg-1007\">" + label + " </span>") == false)
                                 {
                                     missedError = true;
                                 }
@@ -912,7 +912,7 @@ namespace Protean.CMS
                     {
 
                         cProcessInfo = cProcessInfo + " - Constraint Compile Error: " + oBindElmt.GetAttribute("constraint");
-                        string constraintXpath = Protean.xmlTools.addNsToXpath(oBindElmt.GetAttribute("constraint"), ref nsMgr);
+                        string constraintXpath = Protean.Tools.Xml.addNsToXpath(oBindElmt.GetAttribute("constraint"), ref nsMgr);
                         // Dim constraintXpath As String = oBindElmt.GetAttribute("constraint")
                         expr = xPathNav2.Compile(constraintXpath);
 
@@ -938,7 +938,7 @@ namespace Protean.CMS
                                 thisValidationError = "<span>" + oBindElmt.GetAttribute("alert") + "</span>";
                             }
 
-                            if (addNoteFromBind(ref oBindElmt, noteTypes.Alert, BindAttributes.Constraint, thisValidationError))
+                            if (addNoteFromBind(oBindElmt, noteTypes.Alert, BindAttributes.Constraint, thisValidationError))
                             {
                                 missedError = true;
                             }
@@ -960,7 +960,7 @@ namespace Protean.CMS
                             {
                                 bIsValid = false;
                                 bIsThisBindValid = false;
-                                if (addNoteFromBind(ref oBindElmt, noteTypes.Alert, BindAttributes.Constraint, "<span class=\"msg-1008\">This must be unique</span>"))
+                                if (addNoteFromBind(oBindElmt, noteTypes.Alert, BindAttributes.Constraint, "<span class=\"msg-1008\">This must be unique</span>"))
                                 {
                                     missedError = true;
                                 }
@@ -1005,7 +1005,7 @@ namespace Protean.CMS
                             }
                             else
                             {
-                                addNoteFromBind(ref oFileCheck, noteTypes.Alert, BindAttributes.Constraint, "<span class=\"msg-1009\">The file you are uploading is too large</span>");
+                                addNoteFromBind(oFileCheck, noteTypes.Alert, BindAttributes.Constraint, "<span class=\"msg-1009\">The file you are uploading is too large</span>");
                             }
                             bIsValid = false;
                             bIsThisBindValid = false;
@@ -1186,7 +1186,7 @@ namespace Protean.CMS
             }
         }
 
-        public bool addNoteFromBind(ref XmlElement oBindElmt, noteTypes oNoteType, BindAttributes oBindType, string sDefaultMessage)
+        public bool addNoteFromBind(XmlElement oBindElmt, noteTypes oNoteType, BindAttributes oBindType, string sDefaultMessage)
         {
             string sRef = oBindElmt.GetAttribute("id");
             string cProcessInfo = "error with field - " + sRef;
@@ -1322,7 +1322,7 @@ namespace Protean.CMS
 
                                         }
                                         sXpath = getBindXpath(ref oBindElmt);
-                                        sXpath = Protean.xmlTools.addNsToXpath(sXpath, ref nsMgr);
+                                        sXpath = Protean.Tools.Xml.addNsToXpath(sXpath, ref nsMgr);
 
                                         // Allow the submitted value to substitue in the Xpath
 
@@ -1387,7 +1387,7 @@ namespace Protean.CMS
                                                             }
                                                             catch
                                                             {
-                                                                oElmtTemp.InnerXml = Protean.xmlTools.tidyXhtmlFrag((Tools.Xml.convertEntitiesToCodes(submittedValue) + "").Trim());
+                                                                oElmtTemp.InnerXml = Tools.Text.tidyXhtmlFrag((Tools.Xml.convertEntitiesToCodes(submittedValue) + "").Trim());
                                                             }
                                                             oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.ReplaceChild(oElmtTemp.FirstChild.Clone(), oInstance.SelectSingleNode(sXpath, nsMgr));
                                                         }
@@ -1522,7 +1522,7 @@ namespace Protean.CMS
                                                                 string cFullPath = goServer.MapPath("/").TrimEnd(@"/\".ToCharArray());
 
                                                                 // ensure the folder exists
-                                                                var oFs = new Protean.fsHelper();
+                                                                var oFs = new fsHelper();
                                                                 oFs.mcStartFolder = cFullPath;
                                                                 cValidationError += oFs.CreatePath(cSavePath);
                                                                 if (cValidationError == "1")
