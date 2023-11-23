@@ -72,7 +72,7 @@
     </NuGetPackageImportStamp>
     <ShouldCreateLogs>False</ShouldCreateLogs>
     <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
-    <AssemblyVersion>6.0.69.111</AssemblyVersion>
+    <AssemblyVersion>6.0.69.159</AssemblyVersion>
     <UpdatePackageVersion>False</UpdatePackageVersion>
     <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
     <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
@@ -476,35 +476,25 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="Tools\Startup.vb" />
-    <Compile Include="Tools\Encryption.vb" />
     <Compile Include="Tools\FeedHandler.vb" />
-    <Compile Include="Tools\FLVHandler.vb" />
-    <Compile Include="Tools\fsHelper\FileDoc.vb" />
     <Compile Include="Tools\fsHelper\FSHelper.vb" />
     <Compile Include="Tools\fsHelper\FSHelper.WebFile.vb" />
     <Compile Include="Tools\fsHelper\FSHelper.WebFileExtendedProperties.vb" />
-    <Compile Include="Tools\FTPHelper.vb" />
-    <Compile Include="Tools\ImageHelper.vb" />
     <Compile Include="Tools\IndexerAsync.vb" />
     <Compile Include="Tools\Indexer.vb" />
     <Compile Include="Tools\Integration\Integration.Directory.Facebook.vb" />
     <Compile Include="Tools\Integration\Integration.Directory.Twitter.vb" />
     <Compile Include="Tools\Integration\Integration.Directory.vb" />
-    <Compile Include="Tools\Integration\Integration.UserCredentials.vb" />
-    <Compile Include="Tools\Invoke.vb" />
     <Compile Include="Tools\MailQueue.vb" />
     <Compile Include="Tools\Messaging.vb" />
     <Compile Include="Tools\Monitor.vb" />
-    <Compile Include="Tools\Object.vb" />
-    <Compile Include="Tools\PerfLog.vb" />
     <Compile Include="Tools\CssWebClient.vb" />
-    <Compile Include="Tools\soap.vb" />
     <Compile Include="Tools\Synchronisation.vb" />
     <Compile Include="Tools\Syndication.vb" />
     <Compile Include="Tools\xForm.vb" />
-    <Compile Include="Tools\xmlTools.xsltExtensions.vb" />
     <Compile Include="Tools\xmlTools.ewXmlElement.vb" />
+    <Compile Include="Tools\xmlTools.vb" />
+    <Compile Include="Tools\xmlTools.xsltExtensions.vb" />
     <Compile Include="Web References\com.pclpls.www\Reference.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -776,7 +766,6 @@
     <None Include="Service References\Paypoint\SECCardService.wsdl" />
     <None Include="Service References\proteancms.com\ewAdminProxy.wsdl" />
     <Compile Include="Tools\xmlHelper.vb" />
-    <Compile Include="Tools\xmlTools.vb" />
     <None Include="Web References\com.pclpls.www\Quotation.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
@@ -912,6 +901,7 @@
       <Name>Protean.Tools</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
     <PreBuildEvent>
