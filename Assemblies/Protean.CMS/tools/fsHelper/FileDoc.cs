@@ -1,23 +1,11 @@
-﻿using Microsoft.VisualBasic;
-using System;
-using System.Collections;
-using System.Data;
-using System.Diagnostics;
-using System.Net.Mail;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Web.Configuration;
-using System.Xml;
-using Protean.Tools;
+﻿using System;
+using Microsoft.VisualBasic;
 
 namespace Protean
 {
 
 
-    public static class FileDoc
+    public class FileDoc
     {
         private string cPath = "";
         private string mcModuleName = "FileDoc";

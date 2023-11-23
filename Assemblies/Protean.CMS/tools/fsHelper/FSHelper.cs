@@ -21,11 +21,12 @@ using System.Xml;
 using DelegateWrappers;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using static Protean.stdTools;
 
 namespace Protean
 {
 
-    public class fsHelper
+    public partial class fsHelper
     {
 
         #region Declarations
@@ -403,12 +404,12 @@ namespace Protean
         }
 
         /// <summary>
-    /// This Creates the path supplied without overwriting existing folders,
-    /// It allow us to check a folder exists and create it if not.
-    /// </summary>
-    /// <param name="cFolderPath"></param>
-    /// <returns></returns>
-    /// <remarks></remarks>
+        /// This Creates the path supplied without overwriting existing folders,
+        /// It allow us to check a folder exists and create it if not.
+        /// </summary>
+        /// <param name="cFolderPath"></param>
+        /// <returns></returns>
+        /// <remarks></remarks>
         public string CreatePath(string cFolderPath)
         {
             // PerfMon.Log("fsHelper", "CreatePath", cFolderPath)
@@ -1150,13 +1151,13 @@ namespace Protean
         }
 
         /// <summary>
-    /// Given a file path and a list of other folders to check, this returns the first available file that actually exists
-    /// Precedence is inferred in the order of the list (path to check first, then folders in list + path to check)
-    /// </summary>
-    /// <param name="pathToCheck"></param>
-    /// <param name="foldersToCheck"></param>
-    /// <returns>Returns the first existing path found, or an empty string if not found.</returns>
-    /// <remarks></remarks>
+        /// Given a file path and a list of other folders to check, this returns the first available file that actually exists
+        /// Precedence is inferred in the order of the list (path to check first, then folders in list + path to check)
+        /// </summary>
+        /// <param name="pathToCheck"></param>
+        /// <param name="foldersToCheck"></param>
+        /// <returns>Returns the first existing path found, or an empty string if not found.</returns>
+        /// <remarks></remarks>
         public string FindFilePathInCommonFolders(string pathToCheck, List<string> foldersToCheck)
         {
 
@@ -1906,13 +1907,13 @@ namespace Protean
         }
 
         /// <summary>
-    /// Gets a filtered list of files in a given folder.
-    /// </summary>
-    /// <param name="physicalFolderPath">The physical location of the folder to inspect (not a relative path)</param>
-    /// <param name="libraryType">The library type to filter by</param>
-    /// <param name="includeSubfolders">Determine whether to just look at the immediate folder or inspect sub folders</param>
-    /// <returns>The List(Of String) of physical path of the files available with the filters above applied</returns>
-    /// <remarks>If includeSubfolders is on it may include thumbnail folders' contents</remarks>
+        /// Gets a filtered list of files in a given folder.
+        /// </summary>
+        /// <param name="physicalFolderPath">The physical location of the folder to inspect (not a relative path)</param>
+        /// <param name="libraryType">The library type to filter by</param>
+        /// <param name="includeSubfolders">Determine whether to just look at the immediate folder or inspect sub folders</param>
+        /// <returns>The List(Of String) of physical path of the files available with the filters above applied</returns>
+        /// <remarks>If includeSubfolders is on it may include thumbnail folders' contents</remarks>
         public static List<string> GetFileListByTypeFromPhysicalPath(string physicalFolderPath, LibraryType libraryType, bool includeSubfolders = false)
         {
 
@@ -1931,13 +1932,13 @@ namespace Protean
         }
 
         /// <summary>
-    /// Gets a list of files for a library type from a path relative to Server.MapPath
-    /// </summary>
-    /// <param name="relativeFolderPath"></param>
-    /// <param name="libraryType"></param>
-    /// <param name="includeSubfolders"></param>
-    /// <returns></returns>
-    /// <remarks>Note that this may not work if you have nested virtual directories</remarks>
+        /// Gets a list of files for a library type from a path relative to Server.MapPath
+        /// </summary>
+        /// <param name="relativeFolderPath"></param>
+        /// <param name="libraryType"></param>
+        /// <param name="includeSubfolders"></param>
+        /// <returns></returns>
+        /// <remarks>Note that this may not work if you have nested virtual directories</remarks>
         public List<string> GetFileListByTypeFromRelativePath(string relativeFolderPath, LibraryType libraryType, bool includeSubfolders = false)
         {
             // PerfMon.Log("fsHelper", "GetFileListByTypeFromRelativePath")
@@ -1979,13 +1980,13 @@ namespace Protean
 
 
         /// <summary>
-    /// Converts a physical path to a virtual path.  Virtual path information is provided in the parameters.
-    /// </summary>
-    /// <param name="physicalFilePath">The physical path to inspect (e.g. c:\temp\myimages\myfolder\mypath)</param>
-    /// <param name="rootFolderPhysicalPath">The physical path of the virtual root folder (e.g. c:\temp\myimages)</param>
-    /// <param name="rootFolderVirtualPath">The virtual path of the virtual root folder (not / but /images for example)</param>
-    /// <returns></returns>
-    /// <remarks></remarks>
+        /// Converts a physical path to a virtual path.  Virtual path information is provided in the parameters.
+        /// </summary>
+        /// <param name="physicalFilePath">The physical path to inspect (e.g. c:\temp\myimages\myfolder\mypath)</param>
+        /// <param name="rootFolderPhysicalPath">The physical path of the virtual root folder (e.g. c:\temp\myimages)</param>
+        /// <param name="rootFolderVirtualPath">The virtual path of the virtual root folder (not / but /images for example)</param>
+        /// <returns></returns>
+        /// <remarks></remarks>
         public static string ConvertPhysicalFilePathToVirtualPath(string physicalFilePath, string rootFolderPhysicalPath, string rootFolderVirtualPath)
         {
 
@@ -1995,14 +1996,14 @@ namespace Protean
 
 
         /// <summary>
-    /// Determines whether a given file (FileInfo) is a valid file for the Protean.fsHelper.LibraryType.
-    /// The filter includes inspecting the file extension, the file attributes (system and hidden are ignored)
-    /// and whether the filename begins ~, which is an EonicWeb generated image so can be ignored.
-    /// </summary>
-    /// <param name="fileToInspect">The file to apply the filter against</param>
-    /// <param name="libraryTypeFilter">The Protean.fsHelper.LibraryType to filter against.</param>
-    /// <returns>True if the file is a valid file for the given library type, False otherwise.</returns>
-    /// <remarks></remarks>
+        /// Determines whether a given file (FileInfo) is a valid file for the Protean.fsHelper.LibraryType.
+        /// The filter includes inspecting the file extension, the file attributes (system and hidden are ignored)
+        /// and whether the filename begins ~, which is an EonicWeb generated image so can be ignored.
+        /// </summary>
+        /// <param name="fileToInspect">The file to apply the filter against</param>
+        /// <param name="libraryTypeFilter">The Protean.fsHelper.LibraryType to filter against.</param>
+        /// <returns>True if the file is a valid file for the given library type, False otherwise.</returns>
+        /// <remarks></remarks>
         public static bool FileInfoTypeFilter(FileInfo fileToInspect, LibraryType libraryTypeFilter)
         {
 
@@ -2015,11 +2016,11 @@ namespace Protean
         }
 
         /// <summary>
-    /// Gets the full file path for a given file.
-    /// </summary>
-    /// <param name="fileToInspect"></param>
-    /// <returns></returns>
-    /// <remarks></remarks>
+        /// Gets the full file path for a given file.
+        /// </summary>
+        /// <param name="fileToInspect"></param>
+        /// <returns></returns>
+        /// <remarks></remarks>
         public static string FullNameFromFileInfo(FileInfo fileToInspect)
         {
             return fileToInspect.FullName;

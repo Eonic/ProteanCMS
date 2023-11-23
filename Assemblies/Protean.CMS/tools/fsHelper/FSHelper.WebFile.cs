@@ -11,6 +11,7 @@
 using System;
 using System.IO;
 using Microsoft.VisualBasic;
+using Protean.Tools.Integration.Twitter;
 
 namespace Protean
 {
@@ -19,13 +20,13 @@ namespace Protean
     {
 
         /// <summary>
-    /// WebFile is a lightweight representation of a file that is web accessible.
-    /// Its main purpose is to produce an object that can be easily XML serialized and passed to XSL for transformation
-    /// As it is written with XmlSerializer in mind the properties have to not be readonly, although they
-    /// naturally would be.  At the moment soem of the Set methods for such properties will do nothing - thi
-    /// class is not intended for deserialization.
-    /// </summary>
-    /// <remarks>To initialise the virtual paths use the WebFileHelper class</remarks>
+        /// WebFile is a lightweight representation of a file that is web accessible.
+        /// Its main purpose is to produce an object that can be easily XML serialized and passed to XSL for transformation
+        /// As it is written with XmlSerializer in mind the properties have to not be readonly, although they
+        /// naturally would be.  At the moment soem of the Set methods for such properties will do nothing - thi
+        /// class is not intended for deserialization.
+        /// </summary>
+        /// <remarks>To initialise the virtual paths use the WebFileHelper class</remarks>
         public class WebFile
         {
 

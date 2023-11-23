@@ -15,7 +15,7 @@
             </summary>
             <param name="source">Instance of <see cref="T:System.String"/></param>
             <param name="value">The string without quotes to seek</param>
-            <returns>true if the quoted value occurs within this string; otherwise, false</returns>
+            <returns><c>true</c> if the quoted value occurs within this string; otherwise, <c>false</c></returns>
         </member>
         <member name="M:JavaScriptEngineSwitcher.Core.Extensions.StringExtensions.TrimStart(System.String,System.String)">
             <summary>
@@ -43,7 +43,7 @@
             <param name="result">When this method returns, contains the character from the string,
             if the receiving succeeded, or null character if the receiving failed.
             The receiving fails if the index out of bounds.</param>
-            <returns>true if the character was received successfully; otherwise, false</returns>
+            <returns><c>true</c> if the character was received successfully; otherwise, <c>false</c></returns>
         </member>
         <member name="T:JavaScriptEngineSwitcher.Core.Extensions.TypeExtensions">
             <summary>
@@ -125,11 +125,6 @@
         <member name="F:JavaScriptEngineSwitcher.Core.Helpers.JsErrorHelpers._errorLocationLineRegex">
             <summary>
             Regular expression for working with line of the script error location
-            </summary>
-        </member>
-        <member name="F:JavaScriptEngineSwitcher.Core.Helpers.JsErrorHelpers._lineBreakRegex">
-            <summary>
-            Regular expression for working with a line break
             </summary>
         </member>
         <member name="M:JavaScriptEngineSwitcher.Core.Helpers.JsErrorHelpers.ParseErrorLocation(System.String)">
@@ -348,28 +343,28 @@
             Checks whether supports a .NET type
             </summary>
             <param name="type">.NET type</param>
-            <returns>Result of check (true - is supported; false - is not supported)</returns>
+            <returns>Result of check (<c>true</c> - is supported; <c>false</c> - is not supported)</returns>
         </member>
         <member name="M:JavaScriptEngineSwitcher.Core.Helpers.ValidationHelpers.IsPrimitiveType(System.Type)">
             <summary>
             Checks whether .NET type is primitive
             </summary>
             <param name="type">.NET type</param>
-            <returns>Result of check (true - is primitive; false - is not primitive)</returns>
+            <returns>Result of check (<c>true</c> - is primitive; <c>false</c> - is not primitive)</returns>
         </member>
         <member name="M:JavaScriptEngineSwitcher.Core.Helpers.ValidationHelpers.CheckNameFormat(System.String)">
             <summary>
             Checks a format of the name
             </summary>
             <param name="name">The name</param>
-            <returns>Result of check (true - correct format; false - wrong format)</returns>
+            <returns>Result of check (<c>true</c> - correct format; <c>false</c> - wrong format)</returns>
         </member>
         <member name="M:JavaScriptEngineSwitcher.Core.Helpers.ValidationHelpers.CheckDocumentNameFormat(System.String)">
             <summary>
             Checks a format of the document name
             </summary>
             <param name="name">The document name</param>
-            <returns>Result of check (true - correct format; false - wrong format)</returns>
+            <returns>Result of check (<c>true</c> - correct format; <c>false</c> - wrong format)</returns>
         </member>
         <member name="T:JavaScriptEngineSwitcher.Core.IJsEngine">
             <summary>
@@ -665,10 +660,10 @@
         </member>
         <member name="M:JavaScriptEngineSwitcher.Core.IJsEngine.HasVariable(System.String)">
             <summary>
-            Сhecks for the existence of a variable
+            Checks for the existence of a variable
             </summary>
             <param name="variableName">Variable name</param>
-            <returns>Result of check (true - exists; false - not exists</returns>
+            <returns>Result of check (<c>true</c> - exists; <c>false</c> - not exists</returns>
             <exception cref="T:System.ObjectDisposedException"/>
             <exception cref="T:System.ArgumentNullException"/>
             <exception cref="T:System.ArgumentException"/>
@@ -727,9 +722,11 @@
             <summary>
             Embeds a host object to script code
             </summary>
+            <remarks>
+            Allows to embed instances of simple classes (or structures) and delegates.
+            </remarks>
             <param name="itemName">The name for the new global variable or function that will represent the object</param>
             <param name="value">The object to expose</param>
-            <remarks>Allows to embed instances of simple classes (or structures) and delegates.</remarks>
             <exception cref="T:System.ObjectDisposedException"/>
             <exception cref="T:System.ArgumentNullException"/>
             <exception cref="T:System.ArgumentException"/>
@@ -739,12 +736,12 @@
             <summary>
             Embeds a host type to script code
             </summary>
-            <param name="itemName">The name for the new global variable that will represent the type</param>
-            <param name="type">The type to expose</param>
             <remarks>
             Host types are exposed to script code in the form of objects whose properties and
             methods are bound to the type's static members.
             </remarks>
+            <param name="itemName">The name for the new global variable that will represent the type</param>
+            <param name="type">The type to expose</param>
             <exception cref="T:System.ObjectDisposedException"/>
             <exception cref="T:System.ArgumentNullException"/>
             <exception cref="T:System.ArgumentException"/>
@@ -875,6 +872,99 @@
             Flag that object is destroyed
             </summary>
         </member>
+        <member name="P:JavaScriptEngineSwitcher.Core.JsEngineBase.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:JavaScriptEngineSwitcher.Core.JsEngineBase.Version">
+            <inheritdoc/>
+        </member>
+        <member name="P:JavaScriptEngineSwitcher.Core.JsEngineBase.SupportsScriptPrecompilation">
+            <inheritdoc/>
+        </member>
+        <member name="P:JavaScriptEngineSwitcher.Core.JsEngineBase.SupportsScriptInterruption">
+            <inheritdoc/>
+        </member>
+        <member name="P:JavaScriptEngineSwitcher.Core.JsEngineBase.SupportsGarbageCollection">
+            <inheritdoc/>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.Core.JsEngineBase.Precompile(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.Core.JsEngineBase.Precompile(System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.Core.JsEngineBase.PrecompileFile(System.String,System.Text.Encoding)">
+            <inheritdoc/>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.Core.JsEngineBase.PrecompileResource(System.String,System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.Core.JsEngineBase.PrecompileResource(System.String,System.Reflection.Assembly)">
+            <inheritdoc/>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.Core.JsEngineBase.Evaluate(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.Core.JsEngineBase.Evaluate(System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.Core.JsEngineBase.Evaluate``1(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.Core.JsEngineBase.Evaluate``1(System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.Core.JsEngineBase.Execute(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.Core.JsEngineBase.Execute(System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.Core.JsEngineBase.Execute(JavaScriptEngineSwitcher.Core.IPrecompiledScript)">
+            <inheritdoc/>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.Core.JsEngineBase.ExecuteFile(System.String,System.Text.Encoding)">
+            <inheritdoc/>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.Core.JsEngineBase.ExecuteResource(System.String,System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.Core.JsEngineBase.ExecuteResource(System.String,System.Reflection.Assembly)">
+            <inheritdoc/>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.Core.JsEngineBase.CallFunction(System.String,System.Object[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.Core.JsEngineBase.CallFunction``1(System.String,System.Object[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.Core.JsEngineBase.HasVariable(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.Core.JsEngineBase.GetVariableValue(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.Core.JsEngineBase.GetVariableValue``1(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.Core.JsEngineBase.SetVariableValue(System.String,System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.Core.JsEngineBase.RemoveVariable(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.Core.JsEngineBase.EmbedHostObject(System.String,System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.Core.JsEngineBase.EmbedHostType(System.String,System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.Core.JsEngineBase.Interrupt">
+            <inheritdoc/>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.Core.JsEngineBase.CollectGarbage">
+            <inheritdoc/>
+        </member>
         <member name="T:JavaScriptEngineSwitcher.Core.JsEngineException">
             <summary>
             The exception that occurred in the workings of the JS engine itself
@@ -946,7 +1036,7 @@
             Gets a factory by JS engine name
             </summary>
             <param name="engineName">Name of JS engine</param>
-            <returns>Instance of corresponding JS engine factory or null if factory is not found</returns>
+            <returns>Instance of corresponding JS engine factory or <c>null</c> if factory is not found</returns>
         </member>
         <member name="M:JavaScriptEngineSwitcher.Core.JsEngineFactoryCollection.Add(JavaScriptEngineSwitcher.Core.IJsEngineFactory)">
             <summary>
@@ -1087,27 +1177,16 @@
             </summary>
         </member>
         <member name="P:JavaScriptEngineSwitcher.Core.JsEngineSwitcher.DefaultEngineName">
-            <summary>
-            Gets or sets a name of default JS engine
-            </summary>
+            <inheritdoc/>
         </member>
         <member name="P:JavaScriptEngineSwitcher.Core.JsEngineSwitcher.EngineFactories">
-            <summary>
-            Gets a collection of JS engine factories
-            </summary>
+            <inheritdoc/>
         </member>
         <member name="M:JavaScriptEngineSwitcher.Core.JsEngineSwitcher.CreateEngine(System.String)">
-            <summary>
-            Creates a instance of JS engine
-            </summary>
-            <param name="name">JS engine name</param>
-            <returns>JS engine</returns>
+            <inheritdoc/>
         </member>
         <member name="M:JavaScriptEngineSwitcher.Core.JsEngineSwitcher.CreateDefaultEngine">
-            <summary>
-            Creates a instance of default JS engine
-            </summary>
-            <returns>JS engine</returns>
+            <inheritdoc/>
         </member>
         <member name="T:JavaScriptEngineSwitcher.Core.JsException">
             <summary>
@@ -1744,27 +1823,27 @@
         </member>
         <member name="P:JavaScriptEngineSwitcher.Core.Resources.Strings.Usage_CannotExecuteEmptyFile">
             <summary>
-            Looks up a localized string similar to "Сannot execute a '{0}' file, because it is empty."
+            Looks up a localized string similar to "Cannot execute a '{0}' file, because it is empty."
             </summary>
         </member>
         <member name="P:JavaScriptEngineSwitcher.Core.Resources.Strings.Usage_CannotExecuteEmptyResource">
             <summary>
-            Looks up a localized string similar to "Сannot execute a '{0}' resource, because it is empty."
+            Looks up a localized string similar to "Cannot execute a '{0}' resource, because it is empty."
             </summary>
         </member>
         <member name="P:JavaScriptEngineSwitcher.Core.Resources.Strings.Usage_CannotExecutePrecompiledScriptForAnotherJsEngine">
             <summary>
-            Looks up a localized string similar to "Сannot execute a pre-compiled script, because it was created for another JS engine with name `{0}`."
+            Looks up a localized string similar to "Cannot execute a pre-compiled script, because it was created for another JS engine with name `{0}`."
             </summary>
         </member>
         <member name="P:JavaScriptEngineSwitcher.Core.Resources.Strings.Usage_CannotPrecompileEmptyFile">
             <summary>
-            Looks up a localized string similar to "Сannot pre-compile a '{0}' file, because it is empty."
+            Looks up a localized string similar to "Cannot pre-compile a '{0}' file, because it is empty."
             </summary>
         </member>
         <member name="P:JavaScriptEngineSwitcher.Core.Resources.Strings.Usage_CannotPrecompileEmptyResource">
             <summary>
-            Looks up a localized string similar to "Сannot pre-compile a '{0}' resource, because it is empty."
+            Looks up a localized string similar to "Cannot pre-compile a '{0}' resource, because it is empty."
             </summary>
         </member>
         <member name="P:JavaScriptEngineSwitcher.Core.Resources.Strings.Usage_EmbeddedHostObjectTypeNotSupported">
@@ -1824,12 +1903,12 @@
         </member>
         <member name="T:JavaScriptEngineSwitcher.Core.Undefined">
             <summary>
-            Represents an JS <code>undefined</code> type
+            Represents an JS <c>undefined</c> type
             </summary>
         </member>
         <member name="F:JavaScriptEngineSwitcher.Core.Undefined.Value">
             <summary>
-            Gets a one and only <code>undefined</code> instance
+            Gets a one and only <c>undefined</c> instance
             </summary>
         </member>
         <member name="M:JavaScriptEngineSwitcher.Core.Undefined.ToString">
@@ -1867,7 +1946,7 @@
             <typeparam name="T">The type to convert the value to</typeparam>
             <param name="value">The value to convert</param>
             <param name="convertedValue">The value that has been converted to the target type</param>
-            <returns>Result of conversion (true - success; false - failure)</returns>
+            <returns>Result of conversion (<c>true</c> - success; <c>false</c> - failure)</returns>
         </member>
         <member name="M:JavaScriptEngineSwitcher.Core.Utilities.TypeConverter.TryConvertToType(System.Object,System.Type,System.Object@)">
             <summary>
@@ -1877,7 +1956,7 @@
             <param name="value">The value to convert</param>
             <param name="targetType">The type to convert the value to</param>
             <param name="convertedValue">The value that has been converted to the target type</param>
-            <returns>Result of conversion (true - success; false - failure)</returns>
+            <returns>Result of conversion (<c>true</c> - success; <c>false</c> - failure)</returns>
         </member>
         <member name="T:JavaScriptEngineSwitcher.Core.Utilities.UniqueDocumentNameManager">
             <summary>
@@ -1926,13 +2005,13 @@
             <summary>
             Determines whether the current runtime is Mono
             </summary>
-            <returns>true if the runtime is Mono; otherwise, false</returns>
+            <returns><c>true</c> if the runtime is Mono; otherwise, <c>false</c></returns>
         </member>
         <member name="M:JavaScriptEngineSwitcher.Core.Utilities.Utils.Is64BitProcess">
             <summary>
             Determines whether the current process is a 64-bit process
             </summary>
-            <returns>true if the process is 64-bit; otherwise, false</returns>
+            <returns><c>true</c> if the process is 64-bit; otherwise, <c>false</c></returns>
         </member>
         <member name="M:JavaScriptEngineSwitcher.Core.Utilities.Utils.GetResourceAsString(System.String,System.Type)">
             <summary>
@@ -1941,7 +2020,7 @@
             <param name="resourceName">The case-sensitive resource name without the namespace of the specified type</param>
             <param name="type">The type, that determines the assembly and whose namespace is used to scope
             the resource name</param>
-            <returns>Сontent of the embedded resource as string</returns>
+            <returns>Content of the embedded resource as string</returns>
         </member>
         <member name="M:JavaScriptEngineSwitcher.Core.Utilities.Utils.GetResourceAsString(System.String,System.Reflection.Assembly)">
             <summary>
@@ -1949,7 +2028,7 @@
             </summary>
             <param name="resourceName">The case-sensitive resource name</param>
             <param name="assembly">The assembly, which contains the embedded resource</param>
-            <returns>Сontent of the embedded resource as string</returns>
+            <returns>Content of the embedded resource as string</returns>
         </member>
         <member name="M:JavaScriptEngineSwitcher.Core.Utilities.Utils.GetFileTextContent(System.String,System.Text.Encoding)">
             <summary>
