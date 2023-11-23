@@ -143,6 +143,7 @@
     <Compile Include="tools\fsHelper\FileDoc.cs" />
     <Compile Include="tools\FTPHelper.cs" />
     <Compile Include="tools\ImageHelper.cs" />
+    <Compile Include="tools\Integration.UserCredentials.cs" />
     <Compile Include="tools\Invoke.cs" />
     <Compile Include="tools\PerfLog.cs" />
     <Compile Include="tools\Startup.cs" />

@@ -72,7 +72,7 @@
     </NuGetPackageImportStamp>
     <ShouldCreateLogs>False</ShouldCreateLogs>
     <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
-    <AssemblyVersion>6.0.69.156</AssemblyVersion>
+    <AssemblyVersion>6.0.69.159</AssemblyVersion>
     <UpdatePackageVersion>False</UpdatePackageVersion>
     <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
     <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
@@ -485,7 +485,6 @@
     <Compile Include="Tools\Integration\Integration.Directory.Facebook.vb" />
     <Compile Include="Tools\Integration\Integration.Directory.Twitter.vb" />
     <Compile Include="Tools\Integration\Integration.Directory.vb" />
-    <Compile Include="Tools\Integration\Integration.UserCredentials.vb" />
     <Compile Include="Tools\MailQueue.vb" />
     <Compile Include="Tools\Messaging.vb" />
     <Compile Include="Tools\Monitor.vb" />
