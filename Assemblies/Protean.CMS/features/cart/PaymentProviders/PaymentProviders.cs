@@ -1940,7 +1940,7 @@ namespace Protean
                         {
 
                             sSql = "select cPayMthdDetailXml from tblCartPaymentMethod INNER JOIN tblCartOrder ON nPayMthdId = nPayMthdKey where nCartOrderkey=" + mnCartId;
-                            string oInstance = Conversions.ToString(myWeb.moDbHelper.GetDataValue(sSql, 1, null, ""));
+                            string oInstance = Conversions.ToString(myWeb.moDbHelper.GetDataValue(sSql));
                             if (!string.IsNullOrEmpty(oInstance))
                             {
                                 var oElmt2 = moPageXml.CreateElement("elmt");

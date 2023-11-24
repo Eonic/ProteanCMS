@@ -2055,13 +2055,13 @@ namespace Protean
                     if (Cms.gbClone)
                     {
                         // If the page is cloned then we need to look at the page that it's cloned from
-                        long nClonePageId = Conversions.ToLong(this.GetDataValue("select nCloneStructId from tblContentStructure where nStructKey = " + nPageId, 1, null, (object)0));
+                        long nClonePageId = Conversions.ToLong(this.GetDataValue("select nCloneStructId from tblContentStructure where nStructKey = " + nPageId, CommandType.Text, null, 0));
                         if (nClonePageId > 0L)
                             nPageId = nClonePageId;
                     }
 
                     cSql = "select cStructLayout from  tblContentStructure where nStructKey = " + nPageId;
-                    cLayout = Conversions.ToString(this.GetDataValue(cSql, 1, null, "default"));
+                    cLayout = Conversions.ToString(this.GetDataValue(cSql, CommandType.Text, null, "default"));
                 }
 
                 catch (Exception ex)
@@ -2088,13 +2088,13 @@ namespace Protean
                     if (Cms.gbClone)
                     {
                         // If the page is cloned then we need to look at the page that it's cloned from
-                        long nClonePageId = Conversions.ToLong(this.GetDataValue("select nCloneStructId from tblContentStructure where nStructKey = " + nPageId, 1, null, (object)0));
+                        long nClonePageId = Conversions.ToLong(this.GetDataValue("select nCloneStructId from tblContentStructure where nStructKey = " + nPageId));
                         if (nClonePageId > 0L)
                             nPageId = nClonePageId;
                     }
 
                     cSql = "select cVersionLang from  tblContentStructure where nStructKey = " + nPageId;
-                    cLayout = this.GetDataValue(cSql, 1, null, "default").ToString();
+                    cLayout = this.GetDataValue(cSql, CommandType.Text, null, "default").ToString();
                     if (string.IsNullOrEmpty(cLayout))
                         cLayout = "en-gb";
                 }
@@ -3190,7 +3190,7 @@ namespace Protean
                 try
                 {
                     string query = "SELECT " + getKey(objectType) + " FROM " + getTable(objectType) + " o INNER JOIN dbo.tblAudit a ON o.nauditId = a.nauditKey " + "WHERE " + myWeb.GetStandardFilterSQLForContent(false);
-                    return Conversions.ToBoolean(Operators.ConditionalCompareObjectGreater(this.GetDataValue(query, 1, null, (object)0), 0, false));
+                    return Conversions.ToBoolean(Operators.ConditionalCompareObjectGreater(this.GetDataValue(query), 0, false));
                 }
                 catch (Exception ex)
                 {
@@ -3204,7 +3204,7 @@ namespace Protean
                 try
                 {
                     string query = "select * from tblcontentstructure P inner join tblcontentstructure C on p.nStructKey = C.nStructParId where p.nStructKey =" + objectKey;
-                    return Conversions.ToBoolean(Operators.ConditionalCompareObjectGreater(this.GetDataValue(query, 1, null, (object)0), 0, false));
+                    return Conversions.ToBoolean(Operators.ConditionalCompareObjectGreater(this.GetDataValue(query), 0, false));
                 }
                 catch (Exception ex)
                 {
@@ -3664,7 +3664,7 @@ namespace Protean
                     // If not set then try getting the value from the DB
                     if (!(nAuditId > 0L))
                     {
-                        nAuditId = Conversions.ToLong(this.GetDataValue("SELECT nAuditId FROM " + getTable(objectType) + " WHERE " + getKey(objectType) + "=" + nKey, 1, null, (object)0));
+                        nAuditId = Conversions.ToLong(this.GetDataValue("SELECT nAuditId FROM " + getTable(objectType) + " WHERE " + getKey(objectType) + "=" + nKey));
                     }
                     XmlElement oTableNode = (XmlElement)oInstance.FirstChild;
 
@@ -3744,7 +3744,7 @@ namespace Protean
 
 
 
-                        nNewVersionNumber = Conversions.ToLong(Operators.AddObject(this.GetDataValue(cSql, 1, null, (object)0), 1));
+                        nNewVersionNumber = Conversions.ToLong(Operators.AddObject(this.GetDataValue(cSql), 1));
                     }
 
                     oInstance.SelectSingleNode("//nVersion").InnerText = nNewVersionNumber.ToString();
@@ -4060,7 +4060,7 @@ namespace Protean
                     // Add the filter
                     if (bGetContentSinceLastLogged)
                     {
-                        dLastRun = Conversions.ToString(this.GetDataValue("SELECT TOP 1 dDateTime FROM dbo.tblActivityLog WHERE nActivityType=" + ((int)ActivityType.PendingNotificationSent).ToString() + " ORDER BY 1 DESC", 1, null, ""));
+                        dLastRun = Conversions.ToString(this.GetDataValue("SELECT TOP 1 dDateTime FROM dbo.tblActivityLog WHERE nActivityType=" + ((int)ActivityType.PendingNotificationSent).ToString() + " ORDER BY 1 DESC"));
                         if (!string.IsNullOrEmpty(dLastRun) && Information.IsDate(dLastRun))
                             cFilterSql = " WHERE Last_Updated > " + SqlDate(dLastRun, true);
                     }
@@ -5097,7 +5097,7 @@ namespace Protean
                 {
 
                     // Don't move if destination doesn't exist.
-                    int destination = Conversions.ToInteger(this.GetDataValue("SELECT TOP 1 nStructKey FROM tblContentStructure WHERE nStructKey=" + nNewStructParId, 1, null, (object)0));
+                    int destination = Conversions.ToInteger(this.GetDataValue("SELECT TOP 1 nStructKey FROM tblContentStructure WHERE nStructKey=" + nNewStructParId));
 
                     if (destination > 0)
                     {
@@ -5128,10 +5128,10 @@ namespace Protean
                         }
 
                         // Work out if the destination is primary
-                        int destinationPrimary = Conversions.ToInteger(this.GetDataValue("SELECT TOP 1 bPrimary from tblContentLocation where nStructId = " + nNewStructParId + " and nContentId = " + nContentKey + " AND bPrimary=1", 1, null, (object)0));
+                        int destinationPrimary = Conversions.ToInteger(this.GetDataValue("SELECT TOP 1 bPrimary from tblContentLocation where nStructId = " + nNewStructParId + " and nContentId = " + nContentKey + " AND bPrimary=1"));
 
                         // Work out if the destination is the only primary
-                        int areThereOtherPrimaries = Conversions.ToInteger(this.GetDataValue("SELECT TOP 1 bPrimary from tblContentLocation where nStructId <> " + nNewStructParId + " and nContentId = " + nContentKey + " AND bPrimary=1", 1, null, (object)0));
+                        int areThereOtherPrimaries = Conversions.ToInteger(this.GetDataValue("SELECT TOP 1 bPrimary from tblContentLocation where nStructId <> " + nNewStructParId + " and nContentId = " + nContentKey + " AND bPrimary=1"));
 
                         // If destination is the only primary then we are about to delete it so make the current location (being moved) primary
                         if (destinationPrimary > 0 & areThereOtherPrimaries == 0)
@@ -8126,7 +8126,7 @@ namespace Protean
 
 
 
-                            int lastSeenActivity = Conversions.ToInteger(this.GetDataValue(lastSeenActivityQuery, 1, null, ActivityType.Logoff));
+                            int lastSeenActivity = Conversions.ToInteger(this.GetDataValue(lastSeenActivityQuery, CommandType.Text, null, ActivityType.Logoff));
                             if (lastSeenActivity != (int)ActivityType.Logoff)
                             {
                                 sReturn = "<span class=\"msg-9017\">This username is currently logged on.  Please wait for them to log off or try another username.</span>";
@@ -8220,7 +8220,7 @@ namespace Protean
 
 
 
-                        nReturnId = Conversions.ToInteger(this.GetDataValue(cSql, 1, Tools.Dictionary.getSimpleHashTable("email:" + SqlFmt(cEmail)), (object)-1));
+                        nReturnId = Conversions.ToInteger(this.GetDataValue(cSql, CommandType.Text, Tools.Dictionary.getSimpleHashTable("email:" + SqlFmt(cEmail)), -1));
                     }
 
                     return nReturnId;
@@ -8252,7 +8252,7 @@ namespace Protean
 
 
 
-                    cIsValidUser = Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(this.GetDataValue(cSql, 1, null, (object)-1), -1, false));
+                    cIsValidUser = (Convert.ToInt32(GetDataValue(cSql,CommandType.Text ,null , -1)) != -1);
                     return cIsValidUser;
                 }
 
@@ -10016,7 +10016,7 @@ namespace Protean
                 try
                 {
 
-                    int nRefId = Conversions.ToInteger(this.GetDataValue("SELECT nContentKey, cContentForiegnRef FROM tblContent WHERE (cContentForiegnRef = '" + SqlFmt(cContentFRef) + "')", 1, null, (object)0));
+                    int nRefId = Conversions.ToInteger(this.GetDataValue("SELECT nContentKey, cContentForiegnRef FROM tblContent WHERE (cContentForiegnRef = '" + SqlFmt(cContentFRef) + "')"));
 
                     if (!(nRefId == 0))
                     {
@@ -12703,7 +12703,7 @@ namespace Protean
                     {
                         cSql += " AND nCodeParentId IN (" + cCodeSet + ")";
                     }
-                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectGreater(base.GetDataValue(cSql, 1, null, (object)0), 0, false)))
+                    if (Convert.ToInt32(GetDataValue(cSql)) > 0)
                     {
                         return true;
                     }
@@ -12731,7 +12731,7 @@ namespace Protean
                     cSql = " SELECT top 1 tblCodes.cCode" + " FROM tblCodes INNER JOIN tblAudit ON tblCodes.nAuditId = tblAudit.nAuditKey" + " INNER JOIN tblCodes partlb ON tblCodes.nCodeParentId = partlb.nCodeKey" + " WHERE (tblCodes.nUseId IS NULL OR tblCodes.nUseId = 0)" + " AND (tblAudit.dPublishDate <= " + cCurDate + " OR tblAudit.dPublishDate IS NULL)" + " AND (tblAudit.dExpireDate >= " + cCurDate + " OR tblAudit.dExpireDate IS NULL)" + " AND (tblAudit.nStatus = 1 OR tblAudit.nStatus = - 1 OR tblAudit.nStatus IS NULL)";
                     cSql += " AND partlb.cCodeName like '" + cCodeSet + "'";
 
-                    returnCode = Conversions.ToString(base.GetDataValue(cSql, 1, null, (object)0));
+                    returnCode = Conversions.ToString(base.GetDataValue(cSql));
 
                     if (!string.IsNullOrEmpty(returnCode))
                     {
@@ -12762,11 +12762,11 @@ namespace Protean
                     cSql = " SELECT top 1 tblCodes.cCode" + " FROM tblCodes INNER JOIN tblAudit ON tblCodes.nAuditId = tblAudit.nAuditKey" + " INNER JOIN tblCodes partlb ON tblCodes.nCodeParentId = partlb.nCodeKey" + " WHERE (tblCodes.nUseId IS NULL AND tblCodes.nIssuedDirId is NULL)" + " AND (tblAudit.dPublishDate <= " + cCurDate + " OR tblAudit.dPublishDate IS NULL)" + " AND (tblAudit.dExpireDate >= " + cCurDate + " OR tblAudit.dExpireDate IS NULL)" + " AND (tblAudit.nStatus = 1 OR tblAudit.nStatus = - 1 OR tblAudit.nStatus IS NULL)";
                     cSql += " AND partlb.nCodeKey = '" + nCodeSet + "'";
 
-                    returnCode = Conversions.ToString(base.GetDataValue(cSql, 1, null, (object)0));
+                    returnCode = Conversions.ToString(base.GetDataValue(cSql));
                     if (UseNow == false)
                     {
                         // If myWeb.mnUserId > 0 Then
-                        int nKey = Conversions.ToInteger(base.GetDataValue(" SELECT tblCodes.nCodeKey" + " FROM tblCodes INNER JOIN tblAudit ON tblCodes.nAuditId = tblAudit.nAuditKey" + " WHERE (tblCodes.cCode = '" + returnCode + "')" + " AND (tblCodes.nUseId IS NULL OR tblCodes.nUseId = 0)" + " AND (tblAudit.dPublishDate <= " + cCurDate + " OR tblAudit.dPublishDate IS NULL)" + " AND (tblAudit.dExpireDate >= " + cCurDate + " OR tblAudit.dExpireDate IS NULL)" + " AND (tblAudit.nStatus = 1 OR tblAudit.nStatus = - 1 OR tblAudit.nStatus IS NULL)", 1, null, (object)0));
+                        int nKey = Conversions.ToInteger(base.GetDataValue(" SELECT tblCodes.nCodeKey" + " FROM tblCodes INNER JOIN tblAudit ON tblCodes.nAuditId = tblAudit.nAuditKey" + " WHERE (tblCodes.cCode = '" + returnCode + "')" + " AND (tblCodes.nUseId IS NULL OR tblCodes.nUseId = 0)" + " AND (tblAudit.dPublishDate <= " + cCurDate + " OR tblAudit.dPublishDate IS NULL)" + " AND (tblAudit.dExpireDate >= " + cCurDate + " OR tblAudit.dExpireDate IS NULL)" + " AND (tblAudit.nStatus = 1 OR tblAudit.nStatus = - 1 OR tblAudit.nStatus IS NULL)", CommandType.Text, null, 0));
 
                         // fix so that the cartitemkey is linked with tblCodes.nUseId
                         base.ExeProcessSql("UPDATE tblCodes SET nUseID = " + nUseId + ", nIssuedDirId = " + myWeb.mnUserId + ", dIssuedDate = " + cCurDate + " WHERE nCodeKey = " + nKey);
@@ -12808,7 +12808,7 @@ namespace Protean
                 {
                     // recheck the code
                     string cCurDate = SqlDate(DateTime.Now, true);
-                    int nKey = Conversions.ToInteger(base.GetDataValue(" SELECT tblCodes.nCodeKey" + " FROM tblCodes INNER JOIN tblAudit ON tblCodes.nAuditId = tblAudit.nAuditKey" + " WHERE (tblCodes.cCode = '" + cCode + "')" + " AND (tblCodes.nUseId IS NULL OR tblCodes.nUseId = 0)" + " AND (tblAudit.dPublishDate <= " + cCurDate + " OR tblAudit.dPublishDate IS NULL)" + " AND (tblAudit.dExpireDate >= " + cCurDate + " OR tblAudit.dExpireDate IS NULL)" + " AND (tblAudit.nStatus = 1 OR tblAudit.nStatus = - 1 OR tblAudit.nStatus IS NULL)", 1, null, (object)0));
+                    int nKey = Conversions.ToInteger(base.GetDataValue(" SELECT tblCodes.nCodeKey" + " FROM tblCodes INNER JOIN tblAudit ON tblCodes.nAuditId = tblAudit.nAuditKey" + " WHERE (tblCodes.cCode = '" + cCode + "')" + " AND (tblCodes.nUseId IS NULL OR tblCodes.nUseId = 0)" + " AND (tblAudit.dPublishDate <= " + cCurDate + " OR tblAudit.dPublishDate IS NULL)" + " AND (tblAudit.dExpireDate >= " + cCurDate + " OR tblAudit.dExpireDate IS NULL)" + " AND (tblAudit.nStatus = 1 OR tblAudit.nStatus = - 1 OR tblAudit.nStatus IS NULL)", CommandType.Text, null, (object)0));
                     if (nKey > 0)
                     {
 
@@ -12833,7 +12833,7 @@ namespace Protean
                 {
                     // recheck the code
                     string cCurDate = SqlDate(DateTime.Now, true);
-                    int nKey = Conversions.ToInteger(base.GetDataValue(" SELECT tblCodes.nCodeKey" + " FROM tblCodes INNER JOIN tblAudit ON tblCodes.nAuditId = tblAudit.nAuditKey" + " WHERE (tblCodes.nCodeKey = " + nCodeId + ")" + " AND (tblCodes.nUseId IS NULL OR tblCodes.nUseId = 0)" + " AND (tblAudit.dPublishDate <= " + cCurDate + " OR tblAudit.dPublishDate IS NULL)" + " AND (tblAudit.dExpireDate >= " + cCurDate + " OR tblAudit.dExpireDate IS NULL)" + " AND (tblAudit.nStatus = 1 OR tblAudit.nStatus = - 1 OR tblAudit.nStatus IS NULL)", 1, null, (object)0));
+                    int nKey = Conversions.ToInteger(base.GetDataValue(" SELECT tblCodes.nCodeKey" + " FROM tblCodes INNER JOIN tblAudit ON tblCodes.nAuditId = tblAudit.nAuditKey" + " WHERE (tblCodes.nCodeKey = " + nCodeId + ")" + " AND (tblCodes.nUseId IS NULL OR tblCodes.nUseId = 0)" + " AND (tblAudit.dPublishDate <= " + cCurDate + " OR tblAudit.dPublishDate IS NULL)" + " AND (tblAudit.dExpireDate >= " + cCurDate + " OR tblAudit.dExpireDate IS NULL)" + " AND (tblAudit.nStatus = 1 OR tblAudit.nStatus = - 1 OR tblAudit.nStatus IS NULL)", CommandType.Text, null, (object)0));
                     if (nKey > 0)
                     {
                         // MyBase.ExeProcessSql("UPDATE tblCodes SET nUseID = " & nUseID & ", nOrderId = " & nOrderId & ", dUseDate = " & cCurDate & " WHERE nCodeKey = " & nKey)
@@ -13473,7 +13473,7 @@ namespace Protean
                 {
                     cProcessInfo = "Page ID: " + nPageId;
 
-                    return Conversions.ToInteger(this.GetDataValue("SELECT nCloneStructId FROM tblContentStructure WHERE nStructKey = " + nPageId, 1, null, (object)0));
+                    return Conversions.ToInteger(this.GetDataValue("SELECT nCloneStructId FROM tblContentStructure WHERE nStructKey = " + nPageId, CommandType.Text, null, (object)0));
                 }
 
                 catch (Exception ex)
@@ -13504,7 +13504,7 @@ namespace Protean
                         // Assumes that there will only be one parent id.
                         cSql = "SELECT	TOP 1 nStructId " + "FROM tblContentLocation " + "WHERE	(nContentId = " + SqlFmt(nParentContentId.ToString()) + ") AND (bPrimary = 1) ";
 
-                        nPageId = Conversions.ToLong(this.GetDataValue(cSql, 1, null, (object)0));
+                        nPageId = Conversions.ToLong(this.GetDataValue(cSql));
 
                         // If the page retrieved is null (0) then this is orphan content
                         // Let's see if there's any other parents to this content
@@ -13514,7 +13514,7 @@ namespace Protean
 
                             cSql = "SELECT TOP 1 nContentParentId " + "FROM dbo.tblContentRelation " + "WHERE nContentChildId = " + SqlFmt(nParentContentId.ToString());
 
-                            nParentContentId = Conversions.ToInteger(this.GetDataValue(cSql, 1, null, (object)0));
+                            nParentContentId = Conversions.ToInteger(this.GetDataValue(cSql));
 
                             // If there is a parent related to the content then try to see if that's got a location
                             if (nParentContentId > 0)
@@ -14078,7 +14078,7 @@ namespace Protean
                             case "log":
                                 {
                                     // This is a sequential number based on the download activity log for this report.
-                                    int logCount = Conversions.ToInteger(this.GetDataValue("SELECT COUNT(*) FROM dbo.tblActivityLog WHERE cActivityDetail=" + SqlString(logDetail) + " AND nActivityType = " + ((int)ActivityType.ReportDownloaded).ToString(), 1, null, (object)0));
+                                    int logCount = Conversions.ToInteger(this.GetDataValue("SELECT COUNT(*) FROM dbo.tblActivityLog WHERE cActivityDetail=" + SqlString(logDetail) + " AND nActivityType = " + ((int)ActivityType.ReportDownloaded).ToString()));
                                     logCount += 1;
                                     filename.Add(logCount.ToString("00000"));
                                     break;

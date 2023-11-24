@@ -6613,7 +6613,8 @@ namespace Protean
 
                         // Rights Alert - to give a user an idea that Rights exists on this page, we'll highlight
                         // this on the Rights page in an alert
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectGreater(moDbHelper.GetDataValue("SELECT COUNT(*) As pCount FROM tblDirectoryPermission WHERE nAccessLevel > 2 AND nStructId=" + id, 1, null, (object)0), 0, false)))
+                        //If moDbHelper.GetDataValue("SELECT COUNT(*) As pCount FROM tblDirectoryPermission WHERE nAccessLevel > 2 AND nStructId=" & id, , , 0) > 0 Then
+                        if (Convert.Toin(moDbHelper.GetDataValue("SELECT COUNT(*) As pCount FROM tblDirectoryPermission WHERE nAccessLevel > 2 AND nStructId=" +id)) > 0)
                         {
 
                             XmlNode argoNode3 = oFrmElmt;
@@ -6779,7 +6780,7 @@ namespace Protean
 
                         // Permissions Alert - to give a user an idea that permissions exists on this page, we'll highlight
                         // this on the rights page in an alert
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectGreater(moDbHelper.GetDataValue("SELECT COUNT(*) As pCount FROM tblDirectoryPermission WHERE nAccessLevel IN (0,2) AND nStructId=" + id, 1, null, (object)0), 0, false)))
+                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectGreater(moDbHelper.GetDataValue("SELECT COUNT(*) As pCount FROM tblDirectoryPermission WHERE nAccessLevel IN (0,2) AND nStructId=" + id, CommandType.Text, null, (object)0), 0, false)))
                         {
 
                             XmlNode argoNode2 = oFrmElmt;
@@ -11161,7 +11162,7 @@ namespace Protean
                                 {
                                     if (!string.IsNullOrEmpty(oCodes[i]))
                                     {
-                                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectGreater(this.myWeb.moDbHelper.GetDataValue("SELECT nCodeKey FROM tblCodes WHERE cCode ='" + oCodes[i] + "'", 1, null, (object)0), 0, false)))
+                                        if (Convert.ToInt32(myWeb.moDbHelper.GetDataValue("SELECT nCodeKey FROM tblCodes WHERE cCode ='" +oCodes[i] + "'")) > 0)
                                         {
                                             nSkipped += 1;
                                         }
