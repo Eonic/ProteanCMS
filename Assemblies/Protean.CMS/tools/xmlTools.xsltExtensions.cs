@@ -954,7 +954,7 @@ namespace Protean
                 {
                     if (myWeb != null)
                     {
-                        return myWeb.moRequest.ServerVariables(ValueName);
+                        return myWeb.moRequest.ServerVariables[ValueName];
                     }
                     else
                     {
@@ -2278,7 +2278,7 @@ namespace Protean
                                 string methodName = string.Empty;
 
                                 Protean.ProviderSectionHandler moPrvConfig = WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders");
-                                var assemblyInstance = Assembly.Load(moPrvConfig.Providers(ProviderName).Type);
+                                var assemblyInstance = Assembly.Load(moPrvConfig.Providers[ProviderName].Type);
                                 calledType = assemblyInstance.GetType(classPath, true);
 
                                 var o = Activator.CreateInstance(calledType);
@@ -2502,13 +2502,13 @@ namespace Protean
                     // Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(ProviderName).Type)
                     // 
                     object ourProvider;
-                    if (moPrvConfig.Providers(ProviderName + "Local") != null)
+                    if (moPrvConfig.Providers[ProviderName + "Local"] != null)
                     {
-                        ourProvider = moPrvConfig.Providers(ProviderName + "Local");
+                        ourProvider = moPrvConfig.Providers[ProviderName + "Local"];
                     }
                     else
                     {
-                        ourProvider = moPrvConfig.Providers(ProviderName);
+                        ourProvider = moPrvConfig.Providers[ProviderName];
                     }
 
                     Assembly assemblyInstance;
@@ -2918,7 +2918,7 @@ namespace Protean
                         }
                         else if (myWeb.moRequest != null)
                         {
-                            if (myWeb.moRequest("reBundle") != null)
+                            if (myWeb.moRequest["reBundle"] != null)
                             {
                                 bReset = true;
                             }

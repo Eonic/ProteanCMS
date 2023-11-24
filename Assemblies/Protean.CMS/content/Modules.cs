@@ -304,7 +304,7 @@ namespace Protean
                         }
 
                         // remove content detail
-                        if (myWeb.moContentDetail is not null)
+                        if (myWeb.moContentDetail != null)
                         {
                             myWeb.moPageXml.DocumentElement.RemoveChild(myWeb.moPageXml.DocumentElement.SelectSingleNode("ContentDetail"));
                             myWeb.moContentDetail = (XmlElement)null;
@@ -349,7 +349,7 @@ namespace Protean
                         string cOrigUrl = myWeb.mcOriginalURL;
                         string cOrigQS = "";
                         string cPageURL = "";
-                        if (myWeb.mcPagePath is not null)
+                        if (myWeb.mcPagePath != null)
                         {
                             cPageURL = myWeb.mcPagePath.TrimEnd('/');
                         }
@@ -373,7 +373,7 @@ where cl.nStructId = " + myWeb.mnPageId));
                         XmlElement argoPageDetail = null;
                         myWeb.GetPageContentFromSelect("CL.nStructId = " + myWeb.mnPageId + " And c.cContentSchemaName = '" + oContentNode.GetAttribute("contentType") + "' ", nReturnRows: (int)nItemsPerPage, pageNumber: nCurrentPage, oPageDetail: ref argoPageDetail);
                         // remove content detail
-                        if (myWeb.moContentDetail is not null)
+                        if (myWeb.moContentDetail != null)
                         {
                             myWeb.moPageXml.DocumentElement.RemoveChild(myWeb.moPageXml.DocumentElement.SelectSingleNode("ContentDetail"));
                             myWeb.moContentDetail = (XmlElement)null;
@@ -450,11 +450,11 @@ where cl.nStructId = " + myWeb.mnPageId));
                         var oAdditionalFilterInput = new Hashtable();
                         filterForm.NewFrm(formName);
                         filterForm.submission(formName, "", "POST", "");
-                        if (oContentNode.Attributes["filterTarget"] is not null)
+                        if (oContentNode.Attributes["filterTarget"] != null)
                         {
                             cFilterTarget = oContentNode.Attributes["filterTarget"].Value;
                         }
-                        if (myWeb.moRequest.Form["clearfilters"] is not null)
+                        if (myWeb.moRequest.Form["clearfilters"] != null)
                         {
                             if (Convert.ToString(myWeb.moRequest.Form["clearfilters"]) == "clearfilters")
                             {
@@ -600,7 +600,7 @@ where cl.nStructId = " + myWeb.mnPageId));
                                         args[4] = oFilterElmt;
                                         args[5] = cFilterTarget;
                                         whereSQL = Convert.ToString(calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, null, o, args));
-                                        if (oFilterElmt.Attributes["parId"] is not null)
+                                        if (oFilterElmt.Attributes["parId"] != null)
                                         {
                                             parentPageId = oFilterElmt.Attributes["parId"].Value;
 
@@ -658,7 +658,7 @@ where cl.nStructId = " + myWeb.mnPageId));
                     string cFilterTarget;
 
                     Type calledType;
-                    if (oContentNode.Attributes["filterTarget"] is not null)
+                    if (oContentNode.Attributes["filterTarget"] != null)
                     {
                         cFilterTarget = oContentNode.Attributes["filterTarget"].Value;
                     }
@@ -670,7 +670,7 @@ where cl.nStructId = " + myWeb.mnPageId));
                         {
                             string providerName = oFilterElmt.GetAttribute("providerName");
                             className = oFilterElmt.Attributes["className"].Value.ToString();
-                            if (myWeb.moRequest.Form[className] is not null)
+                            if (myWeb.moRequest.Form[className] != null)
                             {
                                 if ((excludeClassName ?? "") != (className ?? ""))
                                 {

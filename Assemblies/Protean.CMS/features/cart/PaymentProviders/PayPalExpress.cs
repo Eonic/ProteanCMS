@@ -118,19 +118,19 @@ namespace Protean.Providers
                     try
                     {
 
-                        Global.Protean.Cms.Cart.PaymentProviders oEwProv = new PaymentProviders(myWeb);
+                        Protean.Cms.Cart.PaymentProviders oEwProv = new PaymentProviders(ref myWeb);
 
                         // Get values form cart
-                        oEwProv.mcCurrency = Interaction.IIf(string.IsNullOrEmpty(oCart.mcCurrencyCode), oCart.mcCurrency, oCart.mcCurrencyCode);
+                        oEwProv.mcCurrency =Convert.ToString(Interaction.IIf(string.IsNullOrEmpty(oCart.mcCurrencyCode), oCart.mcCurrency, oCart.mcCurrencyCode));
                         oEwProv.mcCurrencySymbol = oCart.mcCurrencySymbol;
                         if (string.IsNullOrEmpty(oOrder.GetAttribute("payableType")))
                         {
-                            oEwProv.mnPaymentAmount = oOrder.GetAttribute("total");
+                            oEwProv.mnPaymentAmount =Convert.ToDouble(oOrder.GetAttribute("total"));
                         }
                         else
                         {
-                            oEwProv.mnPaymentAmount = oOrder.GetAttribute("payableAmount");
-                            oEwProv.mnPaymentMaxAmount = oOrder.GetAttribute("total");
+                            oEwProv.mnPaymentAmount = Convert.ToDouble(oOrder.GetAttribute("payableAmount"));
+                            oEwProv.mnPaymentMaxAmount = Convert.ToDouble(oOrder.GetAttribute("total"));
                             oEwProv.mcPaymentType = oOrder.GetAttribute("payableType");
                         }
                         oEwProv.mnCartId = oCart.mnCartId;
@@ -299,7 +299,7 @@ namespace Protean.Providers
                             default:
                                 {
 
-                                    string cCurrentURL = oEwProv.moCartConfig("SecureURL") + "?" + returnCmd;
+                                    string cCurrentURL = oEwProv.moCartConfig["SecureURL"] + "?" + returnCmd;
 
                                     var reDirURLs = new RedirectUrls()
                                     {
@@ -376,7 +376,7 @@ namespace Protean.Providers
                                     decimal nShippingCost = Conversions.ToDecimal(oOrder.GetAttribute("shippingCost"));
                                     decimal nTaxCost = Round(oOrder.GetAttribute("vatAmt"), bForceRoundup: true);
 
-                                    if (Conversions.ToBoolean(Operators.AndObject(Conversions.ToDouble(oOrder.GetAttribute("vatRate")) > 0d, Operators.ConditionalCompareObjectEqual(LCase(oDictOpt["VATonShipping"]), "on", false))))
+                                    if (Conversions.ToBoolean(Operators.AndObject(Conversions.ToDouble(oOrder.GetAttribute("vatRate")) > 0d, Operators.ConditionalCompareObjectEqual((oDictOpt["VATonShipping"]), "on", false))))
                                     {
                                         decimal nShippingVat = Round((double)nShippingCost * (Conversions.ToDouble(oOrder.GetAttribute("vatRate")) / 100d), bForceRoundup: true);
                                         nTaxCost = nTaxCost - nShippingVat;
@@ -387,14 +387,14 @@ namespace Protean.Providers
                                     {
                                         tax = nTaxCost.ToString(),
                                         shipping = nShippingCost.ToString(),
-                                        subtotal = oEwProv.mnPaymentAmount - nTaxCost - nShippingCost
+                                        subtotal =Convert.ToString(Convert.ToDecimal(oEwProv.mnPaymentAmount) - nTaxCost - nShippingCost)
                                     };
 
                                     var oAmount = new Amount()
                                     {
                                         currency = Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(oCart.mcCurrencyCode), oCart.mcCurrency, oCart.mcCurrencyCode)),
                                         details = oDetails,
-                                        total = oEwProv.mnPaymentAmount
+                                        total =Convert.ToString(oEwProv.mnPaymentAmount)
                                     };
 
                                     var oPayee = new Payee()
@@ -560,7 +560,7 @@ namespace Protean.Providers
                         }
 
                         string iconclass = "";
-                        if (configXml.SelectSingleNode("icon/@value") is not null)
+                        if (configXml.SelectSingleNode("icon/@value") != null)
                         {
                             iconclass = configXml.SelectSingleNode("icon/@value").InnerText;
                         }

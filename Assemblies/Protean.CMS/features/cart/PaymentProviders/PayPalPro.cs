@@ -150,19 +150,19 @@ namespace Protean.Providers
                     try
                     {
                         myWeb = oWeb;
-                        Global.Protean.Cms.Cart.PaymentProviders oEwProv = new PaymentProviders(myWeb);
+                        Protean.Cms.Cart.PaymentProviders oEwProv = new PaymentProviders(ref myWeb);
 
                         // Get values form cart
-                        oEwProv.mcCurrency = Interaction.IIf(string.IsNullOrEmpty(oCart.mcCurrencyCode), oCart.mcCurrency, oCart.mcCurrencyCode);
+                        oEwProv.mcCurrency =Convert.ToString(Interaction.IIf(string.IsNullOrEmpty(oCart.mcCurrencyCode), oCart.mcCurrency, oCart.mcCurrencyCode));
                         oEwProv.mcCurrencySymbol = oCart.mcCurrencySymbol;
                         if (string.IsNullOrEmpty(oOrder.GetAttribute("payableType")))
                         {
-                            oEwProv.mnPaymentAmount = oOrder.GetAttribute("total");
+                            oEwProv.mnPaymentAmount = Convert.ToDouble(oOrder.GetAttribute("total"));
                         }
                         else
                         {
-                            oEwProv.mnPaymentAmount = oOrder.GetAttribute("payableAmount");
-                            oEwProv.mnPaymentMaxAmount = oOrder.GetAttribute("total");
+                            oEwProv.mnPaymentAmount = Convert.ToDouble(oOrder.GetAttribute("payableAmount"));
+                            oEwProv.mnPaymentMaxAmount = Convert.ToDouble(oOrder.GetAttribute("total"));
                             oEwProv.mcPaymentType = oOrder.GetAttribute("payableType");
                         }
                         oEwProv.mnCartId = oCart.mnCartId;
@@ -222,7 +222,7 @@ namespace Protean.Providers
                         // We want to use the currency specified in the payment method.
                         if (!Operators.ConditionalCompareObjectEqual(oDictOpt["currency"], oEwProv.mcCurrency, false))
                         {
-                            oEwProv.mcCurrency = oDictOpt["currency"];
+                            oEwProv.mcCurrency = Convert.ToString(oDictOpt["currency"]);
                         }
 
 
@@ -248,7 +248,7 @@ namespace Protean.Providers
                             PaymentDescription = "Make Initial Payment of " + Strings.FormatNumber(oEwProv.mnPaymentAmount, 2) + " " + oEwProv.mcCurrency + " and then " + repeatAmt + " " + oEwProv.mcCurrency + " per " + repeatInterval + " by Credit/Debit Card";
                         }
 
-                        ccXform = oEwProv.creditCardXform(oOrder, "PayForm", sSubmitPath, oDictOpt["cardsAccepted"], bCv2, PaymentDescription, b3DSecure, default, default, bAllowSavePayment);
+                        ccXform = oEwProv.creditCardXform(ref oOrder, "PayForm", sSubmitPath, oDictOpt["cardsAccepted"].ToString(), bCv2, PaymentDescription, b3DSecure, default, default, bAllowSavePayment);
 
                         string sType = "Billing Address";
                         XmlElement oCartAdd = (XmlElement)oOrder.SelectSingleNode("Contact[@type='" + sType + "']");
@@ -389,15 +389,15 @@ namespace Protean.Providers
                                     if (Enrolled == "Y" & !(ACSUrl == "U" | ACSUrl == "N"))
                                     {
                                         // Card is enrolled and interface is active.
-                                        if (oEwProv.moCartConfig("SecureURL").EndsWith("/"))
+                                        if (oEwProv.moCartConfig["SecureURL"].EndsWith("/"))
                                         {
-                                            sRedirectURL = oEwProv.moCartConfig("SecureURL") + "?cartCmd=Redirect3ds&PaymentMethod=PayPalPro";
+                                            sRedirectURL = oEwProv.moCartConfig["SecureURL"] + "?cartCmd=Redirect3ds&PaymentMethod=PayPalPro";
                                         }
                                         else
                                         {
-                                            sRedirectURL = oEwProv.moCartConfig("SecureURL") + "/?cartCmd=Redirect3ds&PaymentMethod=PayPalPro";
+                                            sRedirectURL = oEwProv.moCartConfig["SecureURL"] + "/?cartCmd=Redirect3ds&PaymentMethod=PayPalPro";
                                         }
-                                        Xform3dSec = oEwProv.xfrmSecure3D(ACSUrl, oEwProv.mnCartId, Payload, sRedirectURL);
+                                        Xform3dSec = oEwProv.xfrmSecure3D(ACSUrl, oEwProv.mnCartId.ToString(), Payload, sRedirectURL);
                                     }
                                     else
                                     {
@@ -552,7 +552,7 @@ namespace Protean.Providers
                             // ' ###Amount
                             // ' Let's you specify a payment amount.
                             var ppAmount = new Protean.PayPalAPI.BasicAmountType();
-                            switch (UCase(oEwProv.mcCurrency))
+                            switch ((oEwProv.mcCurrency).ToUpper())
                             {
                                 case "EUR":
                                     {
@@ -596,7 +596,7 @@ namespace Protean.Providers
                                 var ppScheduleDetails = new Protean.PayPalAPI.ScheduleDetailsType();
                                 var ppPaymentPeriod = new Protean.PayPalAPI.BillingPeriodDetailsType();
                                 var ppRepeatAmount = new Protean.PayPalAPI.BasicAmountType();
-                                switch (UCase(oEwProv.mcCurrency))
+                                switch ((oEwProv.mcCurrency).ToUpper())
                                 {
                                     case "EUR":
                                         {
@@ -1064,7 +1064,7 @@ namespace Protean.Providers
                             oPayPalElmt.SetAttribute("AuthCode", cAuthCode);
                             ccXform.Instance.FirstChild.AppendChild(oPayPalElmt);
 
-                            if (oSaveElmt is not null)
+                            if (oSaveElmt != null)
                             {
                                 if (oSaveElmt.InnerText == "true" & bIsValid)
                                 {
@@ -1121,7 +1121,7 @@ namespace Protean.Providers
 
                         myWeb.moDbHelper.updateDataset(ref oDs, "Order");
 
-                        if (Xform3dSec is not null)
+                        if (Xform3dSec != null)
                         {
 
                             // Save the payment object into the session
@@ -1595,7 +1595,7 @@ namespace Protean.Providers
                     }
 
                     string iconclass = "";
-                    if (configXml.SelectSingleNode("icon/@value") is not null)
+                    if (configXml.SelectSingleNode("icon/@value") != null)
                     {
                         iconclass = configXml.SelectSingleNode("icon/@value").InnerText;
                     }
