@@ -1570,12 +1570,12 @@ namespace Protean
                                                     }
                                                 case "datetime":
                                                     {
-                                                        oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = xmlDateTime(oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml);
+                                                        oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = Tools.Xml.XmlDate(oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml, true);
                                                         break;
                                                     }
                                                 case "date":
                                                     {
-                                                        oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = xmlDate(oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml);
+                                                        oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml =Protean.Tools.Xml.XmlDate(oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml);
                                                         break;
                                                     }
                                                 case "string-before-comma":
@@ -2131,7 +2131,7 @@ namespace Protean
                                             }
                                             else
                                             {
-                                                sValue = Tools.Xml.xmlToForm(Instance.SelectSingleNode(sXpath, nsMgr).InnerXml);
+                                                sValue = Tools.Xml.XmlToForm(Instance.SelectSingleNode(sXpath, nsMgr).InnerXml);
                                             }
                                         }
                                         else if (!string.IsNullOrEmpty(sAttribute))
@@ -2141,7 +2141,7 @@ namespace Protean
                                         }
                                         else if (bIsXml)
                                         {
-                                            sValue = Tools.Xml.xmlToForm(Instance.SelectSingleNode(sXpath, nsMgr).InnerXml);
+                                            sValue = Tools.Xml.XmlToForm(Instance.SelectSingleNode(sXpath, nsMgr).InnerXml);
                                         }
                                         else
                                         {
