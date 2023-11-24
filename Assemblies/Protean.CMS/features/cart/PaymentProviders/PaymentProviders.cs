@@ -573,7 +573,7 @@ namespace Protean
                             sOpts = sOpts + ",dups=false,card_type=" + this.goRequest["creditCard/type"];
 
                             // Account for scheduled payments from the payment config.
-                            string scheduleInterval = Conversions.ToString(Operators.ConcatenateObject(oDictOpt["scheduleInterval"], "").ToLower);
+                            string scheduleInterval = Conversions.ToString(Operators.ConcatenateObject(oDictOpt["scheduleInterval"], ""));
                             string scheduleMaxRepeats = Conversions.ToString(Operators.ConcatenateObject(oDictOpt["scheduleMaxRepeats"], ""));
                             if (!string.IsNullOrEmpty(scheduleInterval) && Array.IndexOf(paypointScheduleIntervals, scheduleInterval) >= 0)
                             {
@@ -2670,11 +2670,11 @@ namespace Protean
                             {
                                 if (bIsValid)
                                 {
-                                    oRow["cSellerNotes"].Value = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"].Value, Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Received) "), Constants.vbLf), "comment: "), err_msg);
+                                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Received) "), Constants.vbLf), "comment: "), err_msg);
                                 }
                                 else
                                 {
-                                    oRow["cSellerNotes"].Value = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"].Value, Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Failed) "), Constants.vbLf), "comment: "), err_msg_log);
+                                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Failed) "), Constants.vbLf), "comment: "), err_msg_log);
                                 }
                             }
                             modbHelper.updateDataset(ref oDs, "Order");
@@ -3481,12 +3481,12 @@ namespace Protean
                             {
                                 if (this.goRequest["transStatus"] == "Y")
                                 {
-                                    oRow["cSellerNotes"].Value = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"].Value, Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Received) "), Constants.vbLf);
+                                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Received) "), Constants.vbLf);
                                     wpXform.valid = true;
                                 }
                                 else
                                 {
-                                    oRow["cSellerNotes"].Value = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"].Value, Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Failed) "), Constants.vbLf);
+                                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Failed) "), Constants.vbLf);
                                     wpXform.addNote("creditCard", Protean.xForm.noteTypes.Alert, "The payment was not processed.  Either there was an issue processing the payment or you cancelled the payment stage.  Click \"Proceed with Payment\" if you wish to try again.");
                                 }
                             }
