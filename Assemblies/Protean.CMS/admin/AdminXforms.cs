@@ -4260,7 +4260,8 @@ namespace Protean
                                 // if it has no id then its a new piece of content
                                 // we need to check and save
                                 // If nParId = 0 Then
-                                if (Conversions.ToBoolean(Operators.OrObject(Operators.OrObject(myItem.startswith("Relate"), myItem.startswith("ewSubmitClone_Relate")), myItem.startswith("Filter"))))
+
+                                if (Conversions.ToBoolean(Operators.OrObject(Operators.OrObject(myItem.ToString().StartsWith("Relate"), myItem.ToString().StartsWith("ewSubmitClone_Relate")), myItem.ToString().StartsWith("Filter"))))
                                 {
                                     base.updateInstanceFromRequest();
                                     base.validate();
@@ -4304,32 +4305,32 @@ namespace Protean
 
                                     string pgidQueryString = Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(this.goRequest.QueryString["pgid"]), "", "&pgid=" + this.goRequest.QueryString["pgid"]));
 
-                                    if (Conversions.ToBoolean(myItem.contains("RelateUp")))
+                                    if (Conversions.ToBoolean(myItem.ToString().Contains("RelateUp")))
                                     {
                                         nRelId = Conversions.ToInteger(relateCmdArr[1]);
                                         this.myWeb.moDbHelper.ReorderContent((long)nParId, (long)nRelId, "MoveUp", true);
                                         bResult = true;
                                     }
-                                    else if (Conversions.ToBoolean(myItem.contains("RelateDown")))
+                                    else if (Conversions.ToBoolean(myItem.ToString().Contains("RelateDown")))
                                     {
                                         nRelId = Conversions.ToInteger(relateCmdArr[1]);
                                         this.myWeb.moDbHelper.ReorderContent((long)nParId, (long)nRelId, "MoveDown", true);
                                         bResult = true;
                                     }
-                                    else if (Conversions.ToBoolean(myItem.contains("RelateTop")))
+                                    else if (Conversions.ToBoolean(myItem.ToString().Contains("RelateTop")))
                                     {
                                         nRelId = Conversions.ToInteger(relateCmdArr[1]);
                                         this.myWeb.moDbHelper.ReorderContent((long)nParId, (long)nRelId, "MoveTop", true);
                                         bResult = true;
                                     }
-                                    else if (Conversions.ToBoolean(myItem.contains("RelateBottom")))
+                                    else if (Conversions.ToBoolean(myItem.ToString().Contains("RelateBottom")))
                                     {
                                         nRelId = Conversions.ToInteger(relateCmdArr[1]);
                                         this.myWeb.moDbHelper.ReorderContent((long)nParId, (long)nRelId, "MoveBottom", true);
                                         bResult = true;
                                     }
                                     // ###############################-ACTIONS-########################
-                                    else if (Conversions.ToBoolean(myItem.contains("RelateEdit")))
+                                    else if (Conversions.ToBoolean(myItem.ToString().Contains("RelateEdit")))
                                     {
                                         nRelId = Conversions.ToInteger(relateCmdArr[1]);
                                         this.goSession["mnContentRelationParent"] = Operators.ConcatenateObject("/" + this.myWeb.moConfig["ProjectPath"] + this.goRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + nParId, Interaction.IIf(string.IsNullOrEmpty(this.goRequest.QueryString["pgid"]), "", "&pgid=" + this.goRequest.QueryString["pgid"]));
@@ -4337,7 +4338,7 @@ namespace Protean
                                         bResult = true;
                                         break;
                                     }
-                                    else if (Conversions.ToBoolean(myItem.contains("RelateRemove")))
+                                    else if (Conversions.ToBoolean(myItem.ToString().Contains("RelateRemove")))
                                     {
                                         nRelId = Conversions.ToInteger(relateCmdArr[1]);
                                         this.myWeb.moDbHelper.RemoveContentRelation((long)nParId, (long)nRelId);
@@ -4345,7 +4346,7 @@ namespace Protean
 
                                         break;
                                     }
-                                    else if (Conversions.ToBoolean(myItem.contains("RelateAdd")))
+                                    else if (Conversions.ToBoolean(myItem.ToString().Contains("RelateAdd")))
                                     {
 
                                         this.goSession["mnContentRelationParent"] = "/" + this.myWeb.moConfig["ProjectPath"] + this.goRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + nParId + pgidQueryString;
@@ -4364,7 +4365,7 @@ namespace Protean
                                         bResult = true;
                                         break;
                                     }
-                                    else if (Conversions.ToBoolean(myItem.contains("FilterEdit")))
+                                    else if (Conversions.ToBoolean(myItem.ToString().Contains("FilterEdit")))
                                     {
                                         string cContentType = relateCmdArr[1];
                                         nRelId = Conversions.ToInteger(relateCmdArr[2]);
@@ -4373,7 +4374,7 @@ namespace Protean
                                         bResult = true;
                                         break;
                                     }
-                                    else if (Conversions.ToBoolean(myItem.contains("FilterAdd")))
+                                    else if (Conversions.ToBoolean(myItem.ToString().Contains("FilterAdd")))
                                     {
 
                                         this.goSession["mnContentRelationParent"] = "/" + this.myWeb.moConfig["ProjectPath"] + this.goRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + nParId + pgidQueryString + "&filter=true";
@@ -4392,14 +4393,14 @@ namespace Protean
                                         bResult = true;
                                         break;
                                     }
-                                    else if (Conversions.ToBoolean(myItem.contains("FilterRemove")))
+                                    else if (Conversions.ToBoolean(myItem.ToString().Contains("FilterRemove")))
                                     {
                                         nRelId = Conversions.ToInteger(relateCmdArr[2]);
                                         this.myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.Content, (long)nRelId);
                                         bResult = true;
                                         break;
                                     }
-                                    else if (Conversions.ToBoolean(myItem.contains("RelateFind")))
+                                    else if (Conversions.ToBoolean(myItem.ToString().Contains("RelateFind")))
                                     {
                                         this.goSession["mnContentRelationParent"] = "/" + this.myWeb.moConfig["ProjectPath"] + this.goRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + nParId + pgidQueryString;
                                         string cContentType = relateCmdArr[1];
@@ -4417,7 +4418,7 @@ namespace Protean
                                         break;
                                     }
                                     // New condition for sku parent change functionality
-                                    else if (Conversions.ToBoolean(myItem.contains("RelateParentChange")))
+                                    else if (Conversions.ToBoolean(myItem.ToString().Contains("RelateParentChange")))
                                     {
                                         this.goSession["mnContentRelationParent"] = "/" + this.myWeb.moConfig["ProjectPath"] + this.goRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + nParId + pgidQueryString;
                                         string cContentType = relateCmdArr[1];
@@ -6614,7 +6615,7 @@ namespace Protean
                         // Rights Alert - to give a user an idea that Rights exists on this page, we'll highlight
                         // this on the Rights page in an alert
                         //If moDbHelper.GetDataValue("SELECT COUNT(*) As pCount FROM tblDirectoryPermission WHERE nAccessLevel > 2 AND nStructId=" & id, , , 0) > 0 Then
-                        if (Convert.Toin(moDbHelper.GetDataValue("SELECT COUNT(*) As pCount FROM tblDirectoryPermission WHERE nAccessLevel > 2 AND nStructId=" +id)) > 0)
+                        if (Convert.ToInt32(moDbHelper.GetDataValue("SELECT COUNT(*) As pCount FROM tblDirectoryPermission WHERE nAccessLevel > 2 AND nStructId=" +id)) > 0)
                         {
 
                             XmlNode argoNode3 = oFrmElmt;
@@ -9710,7 +9711,7 @@ namespace Protean
                             }
                             else
                             {
-                                base.LoadInstance(this.myWeb.moSession["tempInstance"]);
+                                base.LoadInstance(this.myWeb.moSession["tempInstance"].ToString());
                             }
                         }
 
@@ -9827,7 +9828,7 @@ namespace Protean
                         var argoParentElmt = base.Instance;
                         oSub.GetSubscriptionDetail(ref argoParentElmt, Conversions.ToInteger(nSubscriptionId));
                         base.Instance = argoParentElmt;
-                        object SubXml = base.Instance.FirstChild;
+                        XmlElement SubXml = (XmlElement)base.Instance.FirstChild;
                         // calculate new expiry date
 
                         var renewInterval = DateInterval.Day;
@@ -9849,8 +9850,8 @@ namespace Protean
                         var dNewStart = DateAndTime.DateAdd(DateInterval.Day, 1d, Conversions.ToDate(SubXml.GetAttribute("expireDate")));
                         var dNewEnd = DateAndTime.DateAdd(renewInterval, Conversions.ToInteger(SubXml.GetAttribute("period")), Conversions.ToDate(SubXml.GetAttribute("expireDate")));
                         double RenewalCost = Conversions.ToDouble(SubXml.GetAttribute("value"));
-                        SubXml.setAttribute("newStart", XmlDate(dNewStart));
-                        SubXml.setAttribute("newExpire", XmlDate(dNewEnd));
+                        SubXml.SetAttribute("newStart", XmlDate(dNewStart));
+                        SubXml.SetAttribute("newExpire", XmlDate(dNewEnd));
 
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "RenewSubscription");
 
@@ -12393,7 +12394,7 @@ namespace Protean
                             }
                             else
                             {
-                                base.LoadInstance(myWeb.moSession["tempInstance"]);
+                                base.LoadInstance(myWeb.moSession["tempInstance"].ToString());
                             }
                         }
 
@@ -12498,7 +12499,7 @@ namespace Protean
                             }
                             else
                             {
-                                base.LoadInstance(this.myWeb.moSession["tempInstance"]);
+                                base.LoadInstance(this.myWeb.moSession["tempInstance"].ToString());
                             }
                         }
 
@@ -12608,7 +12609,7 @@ namespace Protean
 
                             else
                             {
-                                base.LoadInstance(this.myWeb.moSession["tempInstance"]);
+                                base.LoadInstance(this.myWeb.moSession["tempInstance"].ToString());
                             }
                         }
 

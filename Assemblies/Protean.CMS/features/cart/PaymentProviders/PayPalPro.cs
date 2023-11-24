@@ -318,7 +318,7 @@ namespace Protean.Providers
                                 var jwtHelper = new Tools.IdentityModel.Tokens.JwtHelper();
                                 string sJwt = jwtHelper.GenerateJwt(Conversions.ToString(oDictOpt["centinalAppKey"]), Conversions.ToString(oDictOpt["centinalAppId"]), Conversions.ToString(oDictOpt["OrgUnitId"]), jwtPayload);
 
-                                Xform3dSec = oEwProv.xfrmSecure3Dv2(ACSUrl, sJwt, oDictOpt["SongbirdUrl"], sRedirectURL);
+                                Xform3dSec = oEwProv.xfrmSecure3Dv2(ACSUrl, sJwt, oDictOpt["SongbirdUrl"].ToString(), sRedirectURL);
 
                             }
 

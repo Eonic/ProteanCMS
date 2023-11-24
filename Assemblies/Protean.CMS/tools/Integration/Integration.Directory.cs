@@ -642,7 +642,7 @@ namespace Protean.Integration.Directory
                             addElement(ref @override, "value", "true");
 
 
-                            XmlElement submission = form.moXformElmt.SelectSingleNode("//submit[not(following::submit)]");
+                            XmlElement submission = (XmlElement)form.moXformElmt.SelectSingleNode("//submit[not(following::submit)]");
                             submission.ParentNode.InsertBefore(group, submission);
 
 

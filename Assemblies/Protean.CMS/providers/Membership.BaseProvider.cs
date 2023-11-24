@@ -236,7 +236,7 @@ namespace Protean.Providers
                         // Is the membership email address secure.
                         if (myWeb.moConfig["SecureMembershipAddress"] != "")
                         {
-                            XmlElement oSubElmt = base.moXformElmt.SelectSingleNode("descendant::submission");
+                            XmlElement oSubElmt = (XmlElement)base.moXformElmt.SelectSingleNode("descendant::submission");
                             oSubElmt.SetAttribute("action", myWeb.moConfig["SecureMembershipAddress"] + myWeb.moConfig["ProjectPath"] + "/" + myWeb.mcPagePath);
                         }
 
@@ -406,7 +406,7 @@ namespace Protean.Providers
                         }
                         else
                         {
-                            oFrmElmt = base.moXformElmt.SelectSingleNode("descendant-or-self::group[1]");
+                            oFrmElmt = (XmlElement)base.moXformElmt.SelectSingleNode("descendant-or-self::group[1]");
                         }
 
                         if (base.isSubmitted)
@@ -540,7 +540,7 @@ namespace Protean.Providers
                         }
                         else
                         {
-                            oFrmElmt = base.moXformElmt.SelectSingleNode("descendant-or-self::group[position()=1]");
+                            oFrmElmt = (XmlElement)base.moXformElmt.SelectSingleNode("descendant-or-self::group[position()=1]");
                             goto Check;
                         }
 
@@ -690,10 +690,10 @@ namespace Protean.Providers
                         }
                         else
                         {
-                            oGrp = base.moXformElmt.SelectSingleNode("descendant-or-self::group[position()=1]");
-                            oPI1 = base.moXformElmt.SelectSingleNode("descendant-or-self::secret[@bind='cDirPassword']");
-                            oPI2 = base.moXformElmt.SelectSingleNode("descendant-or-self::secret[@bind='cDirPassword2']");
-                            oSB = base.moXformElmt.SelectSingleNode("descendant-or-self::submit[@submission='SetPassword']");
+                            oGrp = (XmlElement)base.moXformElmt.SelectSingleNode("descendant-or-self::group[position()=1]");
+                            oPI1 = (XmlElement)base.moXformElmt.SelectSingleNode("descendant-or-self::secret[@bind='cDirPassword']");
+                            oPI2 = (XmlElement)base.moXformElmt.SelectSingleNode("descendant-or-self::secret[@bind='cDirPassword2']");
+                            oSB = (XmlElement)base.moXformElmt.SelectSingleNode("descendant-or-self::submit[@submission='SetPassword']");
                             goto Check;
                         }
 
@@ -823,10 +823,10 @@ namespace Protean.Providers
                         }
                         else
                         {
-                            oGrp = base.moXformElmt.SelectSingleNode("descendant-or-self::group[position()=1]");
-                            oPI1 = base.moXformElmt.SelectSingleNode("descendant-or-self::secret[@bind='cDirPassword']");
-                            oPI2 = base.moXformElmt.SelectSingleNode("descendant-or-self::secret[@bind='cDirPassword2']");
-                            oSB = base.moXformElmt.SelectSingleNode("descendant-or-self::submit[@submission='SetPassword']");
+                            oGrp = (XmlElement)base.moXformElmt.SelectSingleNode("descendant-or-self::group[position()=1]");
+                            oPI1 = (XmlElement)base.moXformElmt.SelectSingleNode("descendant-or-self::secret[@bind='cDirPassword']");
+                            oPI2 = (XmlElement)base.moXformElmt.SelectSingleNode("descendant-or-self::secret[@bind='cDirPassword2']");
+                            oSB = (XmlElement)base.moXformElmt.SelectSingleNode("descendant-or-self::submit[@submission='SetPassword']");
                             goto Check;
                         }
 
@@ -1020,7 +1020,7 @@ namespace Protean.Providers
                             // Is the membership email address secure.
                             if (myWeb.moConfig["SecureMembershipAddress"] != "" & myWeb.mbAdminMode == false)
                             {
-                                XmlElement oSubElmt = base.moXformElmt.SelectSingleNode("descendant::submission");
+                                XmlElement oSubElmt = (XmlElement)base.moXformElmt.SelectSingleNode("descendant::submission");
                                 if (myWeb.mcPagePath is null)
                                 {
                                     oSubElmt.SetAttribute("action", myWeb.moConfig["SecureMembershipAddress"] + myWeb.mcOriginalURL);
@@ -1139,7 +1139,7 @@ namespace Protean.Providers
                                     }
                                     else
                                     {
-                                        XmlElement oSubElmt = moXformElmt.SelectSingleNode("descendant-or-self::group[parent::Content][1]");
+                                        XmlElement oSubElmt = (XmlElement)moXformElmt.SelectSingleNode("descendant-or-self::group[parent::Content][1]");
                                         if (oSubElmt != null)
                                         {
                                             base.addNote(oSubElmt.ToString(), Protean.xForm.noteTypes.Alert, "<span class=\"msg-1010\">Your details have been updated.</span>", true);
@@ -1187,7 +1187,7 @@ namespace Protean.Providers
                                     maintainMembershipsFromXForm((int)id);
 
                                     // we want to ad the user to a specified group from a pick list of groups.
-                                    XmlElement GroupsElmt = base.Instance.SelectSingleNode("groups");
+                                    XmlElement GroupsElmt = (XmlElement)base.Instance.SelectSingleNode("groups");
                                     if (GroupsElmt != null)
                                     {
                                         if (!string.IsNullOrEmpty(GroupsElmt.GetAttribute("addIds")))
@@ -1462,7 +1462,7 @@ namespace Protean.Providers
                             myWeb.moDbHelper.UseCode(cCode, Convert.ToInt32(nUserId));
 
                             // Get the CSV list of directory items for membership
-                            string cCodeCSVList =Convert.ToString(myWeb.moDbHelper.GetDataValue("SELECT tblCodes.cCodeGroups FROM tblCodes INNER JOIN tblCodes Child ON tblCodes.nCodeKey = Child.nCodeParentId WHERE (Child.cCode = '" + cCode + "')", default, default, ""));
+                            string cCodeCSVList =Convert.ToString(myWeb.moDbHelper.GetDataValue("SELECT tblCodes.cCodeGroups FROM tblCodes INNER JOIN tblCodes Child ON tblCodes.nCodeKey = Child.nCodeParentId WHERE (Child.cCode = '" + cCode + "')", default, default, "");
 
                             // Process the List
                             foreach (string cDirId in cCodeCSVList.Split(','))
@@ -2240,7 +2240,7 @@ namespace Protean.Providers
                                     // If in Admin Mode, then present it as WYSIWYG
                                     if (!myWeb.mbAdminMode & mnUserId > 0 | myWeb.mbAdminMode & myWeb.moPageXml.SelectSingleNode("/Page/@layout").Value == "My_Account")
                                     {
-                                        XmlElement oContentForm = myWeb.moPageXml.SelectSingleNode("descendant-or-self::Content[@type='xform' and @name='UserMyAccount']");
+                                        XmlElement oContentForm = (XmlElement)myWeb.moPageXml.SelectSingleNode("descendant-or-self::Content[@type='xform' and @name='UserMyAccount']");
                                         if (oContentForm is null)
                                         {
                                             oXfmElmt = (XmlElement)adXfm.xFrmEditDirectoryItem(mnUserId, "User", default, "UserMyAccount");
@@ -2263,7 +2263,7 @@ namespace Protean.Providers
                                     else
                                     {
 
-                                        XmlElement oContentForm = myWeb.moPageXml.SelectSingleNode("descendant-or-self::Content[@type='xform' and @name='UserRegister']");
+                                        XmlElement oContentForm = (XmlElement)myWeb.moPageXml.SelectSingleNode("descendant-or-self::Content[@type='xform' and @name='UserRegister']");
                                         if (oContentForm is null)
                                         {
                                             oXfmElmt = (XmlElement)adXfm.xFrmEditDirectoryItem(mnUserId, "User", default, "UserRegister");

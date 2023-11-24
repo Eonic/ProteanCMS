@@ -245,7 +245,7 @@ namespace Protean.Providers
                         cBillingAddress = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(localgetNodeValueByType(), Constants.vbLf), localgetNodeValueByType1()), Constants.vbLf), localgetNodeValueByType2()), Constants.vbLf), localgetNodeValueByType3()), Constants.vbLf));
 
                         oEwProv.mcCardHolderAddress = cBillingAddress;
-                        oEwProv.moBillingContact = oOrder.SelectSingleNode("Contact[@type='Billing Address']");
+                        oEwProv.moBillingContact = (XmlElement)oOrder.SelectSingleNode("Contact[@type='Billing Address']");
 
                         XmlNode argoParent = oOrder;
                         oEwProv.mcCardHolderPostcode =Convert.ToString(getNodeValueByType(ref argoParent, "Contact[@type='Billing Address']/PostalCode"));

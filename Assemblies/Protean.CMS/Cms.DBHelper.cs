@@ -10380,7 +10380,7 @@ namespace Protean
                 }
             }
 
-            public void AddDataSetToContent(ref DataSet oDs, ref XmlElement oContent, long nCurrentPageId = 0L, bool bIgnoreDuplicates = false, string cAddSourceAttribute = "", [Optional, DefaultParameterValue(default(DateTime))] ref DateTime dExpireDate, [Optional, DefaultParameterValue(default(DateTime))] ref DateTime dUpdateDate, bool bAllowRecursion = true)
+            public void AddDataSetToContent(ref DataSet oDs, ref XmlElement oContent, long nCurrentPageId = 0L, bool bIgnoreDuplicates = false, string cAddSourceAttribute = "", ref DateTime dExpireDate, ref DateTime dUpdateDate, bool bAllowRecursion = true)
             {
                 try
                 {
@@ -10571,7 +10571,7 @@ namespace Protean
                 }
             }
 
-            public XmlDocument ContentDataSetToXml(ref DataSet oDs, [Optional, DefaultParameterValue(default(DateTime))] ref DateTime dUpdateDate)
+            public XmlDocument ContentDataSetToXml(ref DataSet oDs, ref DateTime dUpdateDate)
             {
                 PerfMonLog("DBHelper", "ContentDataSetToXml - Start");
                 string sProcessInfo = "";
@@ -10650,7 +10650,7 @@ namespace Protean
                 }
             }
 
-            protected internal XmlElement SimpleTidyContentNode(ref XmlElement oContent, string cAddSourceAttribute = "", [Optional, DefaultParameterValue(default(DateTime))] ref DateTime dExpireDate, [Optional, DefaultParameterValue(default(DateTime))] ref DateTime dUpdateDate)
+            protected internal XmlElement SimpleTidyContentNode(ref XmlElement oContent, string cAddSourceAttribute = "",ref DateTime dExpireDate,  ref DateTime dUpdateDate)
             {
                 string sProcessInfo = "";
                 XmlElement oElmt;

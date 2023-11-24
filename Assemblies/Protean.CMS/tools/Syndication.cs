@@ -150,7 +150,7 @@ namespace Protean
             {
                 try
                 {
-                    return _myWeb.moPageXml.DocumentElement.SelectSingleNode("Contents");
+                    return (XmlElement)_myWeb.moPageXml.DocumentElement.SelectSingleNode("Contents");
                 }
                 catch (Exception ex)
                 {

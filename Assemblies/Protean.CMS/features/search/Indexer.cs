@@ -330,7 +330,7 @@ namespace Protean
                             {
                                 oPageXml.LoadXml(cPageHtml);
                                 oElmtRules = (XmlElement)oPageXml.SelectSingleNode("/html/head/meta[@name='ROBOTS']");
-                                oElmtURL = xWeb.moPageXml.SelectSingleNode("/Page/Menu/descendant-or-self::MenuItem[@id='" + xWeb.mnPageId + "']");
+                                oElmtURL = (XmlElement)xWeb.moPageXml.SelectSingleNode("/Page/Menu/descendant-or-self::MenuItem[@id='" + xWeb.mnPageId + "']");
                                 cRules = "";
 
                                 // If xWeb.mnPageId = 156 Then
