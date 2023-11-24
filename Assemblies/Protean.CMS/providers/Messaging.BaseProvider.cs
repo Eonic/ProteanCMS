@@ -201,7 +201,7 @@ namespace Protean.Providers
 
                         base.Instance.InnerXml = "<cEmail/><cUsers/>";
 
-                        if (base.isSubmitted)
+                        if (base.isSubmitted())
                         {
                             base.updateInstanceFromRequest();
                             base.validate();
@@ -225,7 +225,7 @@ namespace Protean.Providers
                                 string cMailingXsl = moMailConfig["MailingXsl"];
                                 if (string.IsNullOrEmpty(cMailingXsl))
                                     cMailingXsl = "/xsl/mailer/mailerStandard.xsl";
-                                if (myWeb.moConfig("cssFramework") == "bs5")
+                                if (myWeb.moConfig["cssFramework"] == "bs5")
                                     cMailingXsl = "/features/mailer/mailer-core.xsl";
                                 var ofs = new Protean.fsHelper(myWeb.moCtx);
                                 cMailingXsl = ofs.checkCommonFilePath(cMailingXsl);
@@ -314,7 +314,7 @@ namespace Protean.Providers
 
                         base.Instance.InnerXml = "<cGroups/><cDefaultEmail>" + cDefaultEmail + "</cDefaultEmail><cDefaultEmailName>" + cDefaultEmailName + "</cDefaultEmailName><cSubject>" + cPageName + "</cSubject>";
 
-                        if (base.isSubmitted)
+                        if (base.isSubmitted())
                         {
                             base.updateInstanceFromRequest();
                             base.validate();
@@ -338,7 +338,7 @@ namespace Protean.Providers
                                 string cMailingXsl = moMailConfig["MailingXsl"];
                                 if (string.IsNullOrEmpty(cMailingXsl))
                                     cMailingXsl = "/xsl/mailer/mailerStandard.xsl";
-                                if (myWeb.moConfig("cssFramework") == "bs5")
+                                if (myWeb.moConfig["cssFramework"] == "bs5")
                                     cMailingXsl = "/features/mailer/mailer-core.xsl";
                                 var ofs = new Protean.fsHelper(myWeb.moCtx);
                                 cMailingXsl = ofs.checkCommonFilePath(cMailingXsl);
@@ -467,7 +467,7 @@ namespace Protean.Providers
                         // if we hit this we want to default to the mail root Id
                         if (myWeb.mnPageId == gnTopLevel & cCmd != "NewMail" & cCmd != "NormalMail" & cCmd != "AdvancedMail")
                         {
-                            myWeb.mnPageId = nMailMenuRoot;
+                            myWeb.mnPageId = Convert.ToInt32(nMailMenuRoot);
                             if (!string.IsNullOrEmpty(cCmd))
                             {
                                 // skip image for submissions
@@ -478,7 +478,7 @@ namespace Protean.Providers
                         string cMailingXsl = moMailConfig["MailingXsl"];
                         if (string.IsNullOrEmpty(cMailingXsl))
                             cMailingXsl = "/xsl/mailer/mailerStandard.xsl";
-                        if (myWeb.moConfig("cssFramework") == "bs5")
+                        if (myWeb.moConfig["cssFramework"] == "bs5")
                             cMailingXsl = "/features/mailer/mailer-core.xsl";
                         var ofs = new Protean.fsHelper(myWeb.moCtx);
                         cMailingXsl = ofs.checkCommonFilePath(cMailingXsl);
@@ -528,7 +528,7 @@ namespace Protean.Providers
                                     }
 
                                     // we want to return here after editing
-                                    myWeb.moSession("lastPage") = myWeb.mcOriginalURL;
+                                    myWeb.moSession["lastPage"] = myWeb.mcOriginalURL;
                                     break;
                                 }
 
@@ -542,7 +542,7 @@ namespace Protean.Providers
                                     if (!myWeb.mbPopupMode)
                                     {
                                         if (!myWeb.mbSuppressLastPageOverrides)
-                                            myWeb.moSession("lastPage") = "?ewCmd=NormalMail&pgid=" + myWeb.mnPageId; // myWeb.mcOriginalURL 'not this if being redirected after editing layout for instance.
+                                            myWeb.moSession["lastPage"] = "?ewCmd=NormalMail&pgid=" + myWeb.mnPageId; // myWeb.mcOriginalURL 'not this if being redirected after editing layout for instance.
                                     }
 
                                     break;
@@ -554,8 +554,8 @@ namespace Protean.Providers
                                     myWeb.mcEwSiteXsl = cMailingXsl;
                                     sAdminLayout = "Preview";
 
-                                    myWeb.moSession("PreviewDate") = DateTime.Now.Date;
-                                    myWeb.moSession("PreviewUser") = oWeb.mnUserId;
+                                    myWeb.moSession["PreviewDate"] = DateTime.Now.Date;
+                                    myWeb.moSession["PreviewUser"] = oWeb.mnUserId;
                                     break;
                                 }
 
@@ -564,15 +564,15 @@ namespace Protean.Providers
                                 {
                                     sAdminLayout = "NewMail";
                                     int nPage;
-                                    if (myWeb.moRequest("pgid") == "")
+                                    if (myWeb.moRequest["pgid"] == "")
                                     {
                                         nPage = 0;
                                     }
                                     else
                                     {
-                                        nPage = myWeb.moRequest("pgid");
+                                        nPage =Convert.ToInt32(myWeb.moRequest["pgid"]);
                                     }
-                                    oPageDetail.AppendChild(oAdXfm.xFrmEditPage(nPage, myWeb.moRequest("name"), "Mail"));
+                                    oPageDetail.AppendChild(oAdXfm.xFrmEditPage(nPage, myWeb.moRequest["name"], "Mail"));
                                     if (Conversions.ToBoolean(oAdXfm.valid))
                                     {
                                         if (cCmd == "NewMail")
@@ -602,16 +602,16 @@ namespace Protean.Providers
                                         var oLocalContentTypes = new XmlDocument();
                                         oLocalContentTypes.Load(myWeb.goServer.MapPath(moConfig("ProjectPath") + "/xsl/mailer/layoutmanifest.xml"));
                                         XmlElement oLocals = (XmlElement)oLocalContentTypes.SelectSingleNode("/PageLayouts/ContentTypes");
-                                        if (oLocals is not null)
+                                        if (oLocals != null)
                                         {
                                             foreach (XmlElement oGrp in oLocals.SelectNodes("ContentTypeGroup"))
                                             {
                                                 XmlElement oComGrp = (XmlElement)oCommonContentTypes.SelectSingleNode("/PageLayouts/ContentTypes/ContentTypeGroup[@name='" + oGrp.GetAttribute("name") + "']");
-                                                if (oComGrp is not null)
+                                                if (oComGrp != null)
                                                 {
                                                     foreach (XmlElement oTypeElmt in oGrp.SelectNodes("ContentType"))
                                                     {
-                                                        if (oComGrp.SelectSingleNode("ContentType[@type='" + oTypeElmt.GetAttribute("type") + "']") is not null)
+                                                        if (oComGrp.SelectSingleNode("ContentType[@type='" + oTypeElmt.GetAttribute("type") + "']") != null)
                                                         {
                                                             oComGrp.SelectSingleNode("ContentType[@type='" + oTypeElmt.GetAttribute("type") + "']").InnerText = oTypeElmt.InnerText;
                                                         }
@@ -632,13 +632,13 @@ namespace Protean.Providers
                                     oPageDetail.AppendChild(moPageXML.ImportNode(oCommonContentTypes.SelectSingleNode("/PageLayouts/ContentTypes"), true));
 
 
-                                    if (myWeb.moRequest("pgid") != "")
+                                    if (myWeb.moRequest["pgid"] != "")
                                     {
                                         // lets save the page we are editing to the session
-                                        myWeb.moSession("pgid") = myWeb.moRequest("pgid");
+                                        myWeb.moSession["pgid"] = myWeb.moRequest["pgid"];
                                     }
                                     // we want to return here after editing
-                                    myWeb.moSession("lastPage") = myWeb.mcOriginalURL;
+                                    myWeb.moSession["lastPage"] = myWeb.mcOriginalURL;
                                     break;
                                 }
 
@@ -650,7 +650,7 @@ namespace Protean.Providers
                             case "EditMailLayout":
                                 {
                                     moAdXfm.goServer = myWeb.goServer;
-                                    oPageDetail.AppendChild(oAdXfm.xFrmEditMailLayout(myWeb.moRequest("pgid")));
+                                    oPageDetail.AppendChild(oAdXfm.xFrmEditMailLayout(myWeb.moRequest["pgid"]));
                                     if (Conversions.ToBoolean(oAdXfm.valid))
                                     {
                                         cCmd = "NormalMail";
@@ -669,16 +669,16 @@ namespace Protean.Providers
                                 {
                                     bLoadStructure = true;
                                     nAdditionId = 0;
-                                    oPageDetail.AppendChild(oAdXfm.xFrmAddModule(myWeb.moRequest("pgid"), myWeb.moRequest("position")));
+                                    oPageDetail.AppendChild(oAdXfm.xFrmAddModule(myWeb.moRequest["pgid"], myWeb.moRequest["position"]));
                                     if (Conversions.ToBoolean(oAdXfm.valid))
                                     {
-                                        if (myWeb.moRequest("nStatus") != "")
+                                        if (myWeb.moRequest["nStatus"] != "")
                                         {
                                             oPageDetail.RemoveAll();
-                                            if (myWeb.moSession("lastPage") != "")
+                                            if (myWeb.moSession["lastPage"] != "")
                                             {
-                                                myWeb.msRedirectOnEnd = myWeb.moSession("lastPage");
-                                                myWeb.moSession("lastPage") = "";
+                                                myWeb.msRedirectOnEnd = myWeb.moSession["lastPage"].ToString();
+                                                myWeb.moSession["lastPage"] = "";
                                             }
                                             else
                                             {
@@ -706,32 +706,32 @@ namespace Protean.Providers
                                 {
 
                                     // Get a version Id if it's passed through.
-                                    string cVersionKey = myWeb.moRequest("verId") + "";
+                                    string cVersionKey = myWeb.moRequest["verId"]+ "";
                                     bClearEditContext = false;
                                     bLoadStructure = true;
                                     if (!Information.IsNumeric(cVersionKey))
                                         cVersionKey = "0";
                                     long nContentId;
                                     nContentId = 0L;
-                                    oPageDetail.AppendChild(moAdXfm.xFrmEditContent(myWeb.moRequest("id"), "", myWeb.moRequest("pgid"), default, default, nContentId, default, default, Conversions.ToLong(cVersionKey)));
+                                    oPageDetail.AppendChild(moAdXfm.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), "", Convert.ToInt64(myWeb.moRequest["pgid"]), default, default, ref Convert.ToInt32(nContentId), default, default, Conversions.ToLong(cVersionKey)));
 
                                     if (moAdXfm.valid)
                                     {
                                         // bAdminMode = False
                                         sAdminLayout = "";
-                                        mcEwCmd = myWeb.moSession("ewCmd");
+                                        mcEwCmd = myWeb.moSession["ewCmd"].ToString();
 
                                         // if we have a parent releationship lets add it
-                                        if (myWeb.moRequest("contentParId") != "" && Information.IsNumeric(myWeb.moRequest("contentParId")))
+                                        if (myWeb.moRequest["contentParId"] != "" && Information.IsNumeric(myWeb.moRequest["contentParId"]))
                                         {
-                                            myWeb.moDbHelper.insertContentRelation(myWeb.moRequest("contentParId"), nContentId);
+                                            myWeb.moDbHelper.insertContentRelation(Convert.ToInt32(myWeb.moRequest["contentParId"]), nContentId.ToString());
                                         }
-                                        if (myWeb.moRequest("EditXForm") != "")
+                                        if (myWeb.moRequest["EditXForm"] != "")
                                         {
                                             // bAdminMode = True
                                             sAdminLayout = "AdminXForm";
                                             mcEwCmd = "EditXForm";
-                                            oPageDetail = oWeb.GetContentDetailXml(default, myWeb.moRequest("id"));
+                                            oPageDetail = oWeb.GetContentDetailXml(default, Convert.ToInt64(myWeb.moRequest["id"]));
                                         }
                                         else
                                         {
@@ -739,16 +739,16 @@ namespace Protean.Providers
                                             oPageDetail.RemoveAll();
 
                                             // Check for an optional command to redireect to
-                                            if (!string.IsNullOrEmpty("" + myWeb.moRequest("ewRedirCmd")))
+                                            if (!string.IsNullOrEmpty("" + myWeb.moRequest["ewRedirCmd"]))
                                             {
 
-                                                myWeb.msRedirectOnEnd = moConfig("ProjectPath") + "/?ewCmd=" + myWeb.moRequest("ewRedirCmd");
+                                                myWeb.msRedirectOnEnd = moConfig["ProjectPath"] + "/?ewCmd=" + myWeb.moRequest["ewRedirCmd"];
                                             }
 
-                                            else if (myWeb.moSession("lastPage") != "")
+                                            else if (myWeb.moSession["lastPage"] != "")
                                             {
-                                                myWeb.msRedirectOnEnd = myWeb.moSession("lastPage");
-                                                myWeb.moSession("lastPage") = "";
+                                                myWeb.msRedirectOnEnd = myWeb.moSession["lastPage"].ToString();
+                                                myWeb.moSession["lastPage"] = "";
                                             }
                                             else
                                             {
@@ -770,7 +770,7 @@ namespace Protean.Providers
 
                                     string cSubject = "";
                                     XmlElement oLocElmt = oWeb.GetPageXML.SelectSingleNode("descendant-or-self::MenuItem[@id=" + myWeb.mnPageId + "]");
-                                    if (oLocElmt is not null)
+                                    if (oLocElmt != null)
                                         cSubject = oLocElmt.GetAttribute("name");
 
                                     oPageDetail.AppendChild(oAdXfm.xFrmPreviewNewsLetter(myWeb.mnPageId, oPageDetail, cSubject));
@@ -802,9 +802,9 @@ namespace Protean.Providers
                                     sAdminLayout = "PreviewMail";
                                     // get subject
                                     string cSubject = "";
-                                    oWeb.mnMailMenuId = moMailConfig["RootPageId"];
+                                    oWeb.mnMailMenuId = Convert.ToInt64(moMailConfig["RootPageId"]);
                                     XmlElement oLocElmt = oWeb.GetPageXML.SelectSingleNode("descendant-or-self::MenuItem[@id=" + myWeb.mnPageId + "]");
-                                    if (oLocElmt is not null)
+                                    if (oLocElmt != null)
                                         cSubject = oLocElmt.GetAttribute("name");
 
                                     oPageDetail.AppendChild(oAdXfm.xFrmSendNewsLetter(myWeb.mnPageId, cSubject, moMailConfig["SenderEmail"], moMailConfig["SenderName"], oPageDetail));
@@ -848,7 +848,7 @@ namespace Protean.Providers
                             case "DeletePageMail":
                                 {
                                     bLoadStructure = true;
-                                    oPageDetail.AppendChild(oAdXfm.xFrmDeletePage(myWeb.moRequest("pgid")));
+                                    oPageDetail.AppendChild(oAdXfm.xFrmDeletePage(myWeb.moRequest["pgid"]));
                                     if (Conversions.ToBoolean(oAdXfm.valid))
                                     {
                                         myWeb.msRedirectOnEnd = "/?ewCmd=MailingList";
@@ -872,7 +872,7 @@ namespace Protean.Providers
 
                         sEditContext = EditContext;
                         bClearEditContext = clearEditContext;
-                        myWeb.moSession("ewCmd") = cCmd;
+                        myWeb.moSession["ewCmd"] = cCmd;
                         mcEwCmd = cCmd;
                         // Return cRetVal
                         return "";

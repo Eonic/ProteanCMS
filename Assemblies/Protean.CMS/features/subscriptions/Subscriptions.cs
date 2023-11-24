@@ -30,7 +30,7 @@ namespace Protean
                 {
                     myWeb = aWeb;
                     myCart = myWeb.moCart;
-                    if (oSubConfig is not null)
+                    if (oSubConfig != null)
                     {
                         if (oSubConfig["OveridePrices"] == "on")
                         {
@@ -43,7 +43,7 @@ namespace Protean
                 {
                     myCart = aCart;
                     myWeb = myCart.myWeb;
-                    if (oSubConfig is not null)
+                    if (oSubConfig != null)
                     {
                         if (oSubConfig["OveridePrices"] == "on")
                         {
@@ -186,7 +186,7 @@ namespace Protean
                         {
                             XmlElement NextElmt = (XmlElement)oParentElmt.NextSibling;
                             string sNextElementAction = "";
-                            if (NextElmt is not null)
+                            if (NextElmt != null)
                             {
                                 sNextElementAction = NextElmt.GetAttribute("action");
                             }
@@ -285,7 +285,7 @@ namespace Protean
                         {
                             XmlElement NextElmt = (XmlElement)oParentElmt.NextSibling;
                             string sNextElementAction = "";
-                            if (NextElmt is not null)
+                            if (NextElmt != null)
                             {
                                 sNextElementAction = NextElmt.GetAttribute("action");
                             }
@@ -574,7 +574,7 @@ namespace Protean
                             sSQL = "select a.dPublishDate as startDate, a.dExpireDate as endDate, sub.nPaymentMethodId as payMthdId,  pay.cPayMthdProviderName as providerName, sub.xNotesXml, sub.nOrderId as orderId" + " from tblSubscriptionRenewal sub INNER JOIN tblAudit a ON sub.nAuditId = a.nAuditKey " + " LEFT OUTER JOIN tblCartPaymentMethod pay on pay.nPayMthdKey = sub.nPaymentMethodId " + " where sub.nSubId = " + nSubId;
 
                             oDs = myWeb.moDbHelper.GetDataSet(sSQL, "Renewal", "Renewals");
-                            if (oDs is not null)
+                            if (oDs != null)
                             {
                                 oDs.Tables[0].Columns["startDate"].ColumnMapping = MappingType.Attribute;
                                 oDs.Tables[0].Columns["endDate"].ColumnMapping = MappingType.Attribute;
@@ -634,7 +634,7 @@ namespace Protean
                                                 force = true;
                                             }
 
-                                            if (oReminder.GetAttribute("invalidPaymentOnly") is not null)
+                                            if (oReminder.GetAttribute("invalidPaymentOnly") != null)
                                             {
 
                                                 if (oReminder.GetAttribute("invalidPaymentOnly") == "true")
@@ -643,7 +643,7 @@ namespace Protean
                                                 }
                                             }
                                             DateTime ActionDate = default;
-                                            if (subxml.SelectSingleNode("dActionDate") is not null)
+                                            if (subxml.SelectSingleNode("dActionDate") != null)
                                             {
                                                 ActionDate = Conversions.ToDate(subxml.SelectSingleNode("dActionDate").InnerText);
                                             }
@@ -671,7 +671,7 @@ namespace Protean
                                                 force = true;
                                             }
 
-                                            if (oReminder.GetAttribute("invalidPaymentOnly") is not null)
+                                            if (oReminder.GetAttribute("invalidPaymentOnly") != null)
                                             {
 
                                                 if (oReminder.GetAttribute("invalidPaymentOnly") == "true")
@@ -680,7 +680,7 @@ namespace Protean
                                                 }
                                             }
                                             DateTime ActionDate = default;
-                                            if (subxml.SelectSingleNode("dActionDate") is not null)
+                                            if (subxml.SelectSingleNode("dActionDate") != null)
                                             {
                                                 ActionDate = Conversions.ToDate(subxml.SelectSingleNode("dActionDate").InnerText);
                                             }
@@ -722,7 +722,7 @@ namespace Protean
                                             {
                                                 force = true;
                                             }
-                                            if (oReminder.GetAttribute("invalidPaymentOnly") is not null)
+                                            if (oReminder.GetAttribute("invalidPaymentOnly") != null)
                                             {
                                                 if (oReminder.GetAttribute("invalidPaymentOnly") == "true")
                                                 {
@@ -730,7 +730,7 @@ namespace Protean
                                                 }
                                             }
                                             DateTime ActionDate = default;
-                                            if (subxml.SelectSingleNode("dActionDate") is not null)
+                                            if (subxml.SelectSingleNode("dActionDate") != null)
                                             {
                                                 ActionDate = Conversions.ToDate(subxml.SelectSingleNode("dActionDate").InnerText);
                                             }
@@ -928,7 +928,7 @@ namespace Protean
 
                         foreach (XmlElement oelmt in oCartXml.SelectNodes("descendant-or-self::Item[productDetail/SubscriptionPrices]"))
                         {
-                            if (oelmt.SelectSingleNode("productDetail/StartDate") is not null)
+                            if (oelmt.SelectSingleNode("productDetail/StartDate") != null)
                             {
                                 if (Information.IsDate(oelmt.SelectSingleNode("productDetail/StartDate").InnerText))
                                 {
@@ -946,7 +946,7 @@ namespace Protean
                             repeatPrice = repeatPrice + Conversions.ToDouble("0" + oelmt.SelectSingleNode("productDetail/SubscriptionPrices/Price[@type='sale']").InnerText);
                             repeatInterval = oelmt.SelectSingleNode("productDetail/PaymentUnit").InnerText;
                             repeatFrequency = 1;
-                            if (oelmt.SelectSingleNode("productDetail/PaymentFrequency") is not null)
+                            if (oelmt.SelectSingleNode("productDetail/PaymentFrequency") != null)
                             {
                                 if (Information.IsNumeric(oelmt.SelectSingleNode("productDetail/PaymentFrequency").InnerText))
                                 {
@@ -1095,7 +1095,7 @@ namespace Protean
                         oXML.InnerXml = Strings.Replace(Strings.Replace(oDS.GetXml(), "&gt;", ">"), "&lt;", "<");
                         XmlElement oCurSubElmt = (XmlElement)oXML.DocumentElement.FirstChild;
                         string cGroup = "";
-                        if (oCurSubElmt is not null)
+                        if (oCurSubElmt != null)
                         {
                             cGroup = oCurSubElmt.GetAttribute("nCatId");
                         }
@@ -1119,7 +1119,7 @@ namespace Protean
                             double nPrice = myCart.getProductPricesByXml(oCurSubElmt.InnerXml, "", 1);
                             double nRptPrice = myCart.getProductPricesByXml(oCurSubElmt.InnerXml, "", 1, "SubscriptionPrices");
                             int nPaymentFrequency = 1;
-                            if (oCurSubElmt.SelectSingleNode("Content/PaymentFrequency") is not null)
+                            if (oCurSubElmt.SelectSingleNode("Content/PaymentFrequency") != null)
                             {
                                 if (Information.IsNumeric(oCurSubElmt.SelectSingleNode("Content/PaymentFrequency").InnerText))
                                 {
@@ -1198,7 +1198,7 @@ namespace Protean
                         oXML.InnerXml = Strings.Replace(Strings.Replace(oDS.GetXml(), "&gt;", ">"), "&lt;", "<");
                         XmlElement oCurSubElmt = (XmlElement)oXML.DocumentElement.FirstChild;
                         string cGroup = "";
-                        if (oCurSubElmt is not null)
+                        if (oCurSubElmt != null)
                         {
                             cGroup = oCurSubElmt.GetAttribute("nCatId");
                         }
@@ -1530,7 +1530,7 @@ namespace Protean
                     try
                     {
                         // check for subscriptions being turned on with no subscription config section set.
-                        if (oSubConfig is not null)
+                        if (oSubConfig != null)
                         {
 
                             if (!string.IsNullOrEmpty(oSubConfig["SubscrptionSchemaTypes"]))
@@ -1570,13 +1570,13 @@ namespace Protean
                                     AddUserSubscription(Conversions.ToInteger(oDR["nContentKey"]), nSubUserId, nPaymentMethodId, xItemDoc.DocumentElement, nCartId);
 
                                     // Hustle in the renewal end so we can show on receipt.
-                                    if (oCartXml is not null)
+                                    if (oCartXml != null)
                                     {
                                         if (!string.IsNullOrEmpty(xItemDoc.DocumentElement.GetAttribute("id")))
                                         {
                                             long contentId = Conversions.ToLong(xItemDoc.DocumentElement.GetAttribute("id"));
                                             XmlElement ItemXml = (XmlElement)oCartXml.SelectSingleNode("Order/Item[@contentId='" + contentId + "']");
-                                            if (ItemXml is not null)
+                                            if (ItemXml != null)
                                             {
                                                 XmlElement ProductDetailXml = (XmlElement)ItemXml.SelectSingleNode("productDetail");
                                                 ProductDetailXml.SetAttribute("renewalEnd", xItemDoc.DocumentElement.GetAttribute("renewalEnd"));
@@ -1585,7 +1585,7 @@ namespace Protean
                                         else
                                         {
                                             XmlElement ItemXml = (XmlElement)oCartXml.SelectSingleNode("Order/Item[0]");
-                                            if (ItemXml is not null)
+                                            if (ItemXml != null)
                                             {
                                                 XmlElement ProductDetailXml = (XmlElement)ItemXml.SelectSingleNode("productDetail");
                                                 ProductDetailXml.SetAttribute("renewalEnd", xItemDoc.DocumentElement.GetAttribute("renewalEnd"));
@@ -1698,7 +1698,7 @@ namespace Protean
                         string cSQL;
                         DataSet oDS;
                         DataColumn oDC;
-                        if (cartItemXml is not null)
+                        if (cartItemXml != null)
                         {
                             oCurSubElmt = cartItemXml;
                         }
@@ -1721,7 +1721,7 @@ namespace Protean
                         }
 
                         string cGroup = "";
-                        if (oCurSubElmt is not null)
+                        if (oCurSubElmt != null)
                         {
                             cGroup = oCurSubElmt.GetAttribute("nCatId");
                         }
@@ -1749,7 +1749,7 @@ namespace Protean
                         }
 
                         var SubEndDate = SubscriptionEndDate(SubStartDate, oCurSubElmt);
-                        if (cartItemXml is not null)
+                        if (cartItemXml != null)
                         {
                             cartItemXml.SetAttribute("renewalEnd", XmlDate(SubEndDate));
                         }
@@ -2248,10 +2248,10 @@ namespace Protean
                         // Add quote to cart
                         myWeb.InitialiseCart();
                         myWeb.moCart.CreateCartElement(myWeb.moPageXml);
-                        myWeb.moCart.mnEwUserId = UserId;
-                        myWeb.moCart.CreateNewCart(myWeb.moCart.moCartXml);
+                        myWeb.moCart.mnEwUserId = Convert.ToInt32(UserId);
+                        myWeb.moCart.CreateNewCart(ref myWeb.moCart.moCartXml);
                         myWeb.moCart.SetPaymentMethod(nPaymentMethodId);
-                        if (SubXml.SelectSingleNode("Content/Notes") is not null)
+                        if (SubXml.SelectSingleNode("Content/Notes") != null)
                         {
                             myWeb.moCart.SetClientNotes(SubXml.SelectSingleNode("Content/Notes").InnerXml);
                         }
@@ -2306,7 +2306,7 @@ namespace Protean
                                 string RenewalEmailCC = "";
                                 if (!string.IsNullOrEmpty(oSubConfig["RenewalEmailCCXpath"]))
                                 {
-                                    if (myWeb.moCart.moCartXml.SelectSingleNode(oSubConfig["RenewalEmailCCXpath"]) is not null)
+                                    if (myWeb.moCart.moCartXml.SelectSingleNode(oSubConfig["RenewalEmailCCXpath"]) != null)
                                     {
                                         RenewalEmailCC = myWeb.moCart.moCartXml.SelectSingleNode(oSubConfig["RenewalEmailCCXpath"]).Value;
                                     }
@@ -2425,12 +2425,13 @@ namespace Protean
                         // Create the invoice
                         // Add quote to cart
                         myWeb.InitialiseCart();
-                        myWeb.moCart.mnCartId = nCartId;
-                        myWeb.moCart.mnEwUserId = UserId;
+                        myWeb.moCart.mnCartId = Convert.ToInt32(nCartId);
+                        myWeb.moCart.mnEwUserId = Convert.ToInt32(UserId);
                         myWeb.moCart.CreateCartElement(myWeb.moPageXml);
-                        myWeb.moCart.GetCart(myWeb.moCart.moCartXml.FirstChild);
+                        XmlElement xmlCartFirstchild = (XmlElement)myWeb.moCart.moCartXml.FirstChild;
+                        myWeb.moCart.GetCart(ref xmlCartFirstchild);
 
-                        if (SubXml.SelectSingleNode("Content/Notes") is not null)
+                        if (SubXml.SelectSingleNode("Content/Notes") != null)
                         {
                             myWeb.moCart.SetClientNotes(SubXml.SelectSingleNode("Content/Notes").InnerXml);
                         }
@@ -2812,7 +2813,7 @@ namespace Protean
                                     {
                                         // remove submit button
                                         XmlElement xSubmit = (XmlElement)this.moXformElmt.SelectSingleNode("descendant-or-self::submit");
-                                        if (xSubmit is not null)
+                                        if (xSubmit != null)
                                             xSubmit.ParentNode.RemoveChild(xSubmit);
 
                                         // add new submit button
@@ -2826,7 +2827,8 @@ namespace Protean
 
                                     else
                                     {
-                                        oPay.getPaymentMethods(this, PaymentOptionsSelect, PaymentAmount, "");
+                                        string emptyvalue = string.Empty;
+                                        oPay.getPaymentMethods(this,ref PaymentOptionsSelect, PaymentAmount, ref emptyvalue);
                                     }
 
                                 }

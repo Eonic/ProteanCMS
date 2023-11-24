@@ -5577,19 +5577,19 @@ namespace Protean
                             string value = string.Empty;
                             XmlElement contact = (XmlElement)oXform.Instance.SelectSingleNode("tblCartContact");
                             cWhere = "";
-                            if (Tools.Xml.NodeState(ref contact, "cContactName", "", "", 1, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
+                            if (Tools.Xml.NodeState(ref contact, "cContactName", "", "", XmlNodeState.IsEmpty, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
                                 cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactName='", SqlFmt(value)), "' "));
-                            if (Tools.Xml.NodeState(ref contact, "cContactCompany", "", "", 1, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
+                            if (Tools.Xml.NodeState(ref contact, "cContactCompany", "", "", XmlNodeState.IsEmpty, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
                                 cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactCompany='", SqlFmt(value)), "' "));
-                            if (Tools.Xml.NodeState(ref contact, "cContactAddress", "", "", 1, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
+                            if (Tools.Xml.NodeState(ref contact, "cContactAddress", "", "", XmlNodeState.IsEmpty, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
                                 cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactAddress='", SqlFmt(value)), "' "));
-                            if (Tools.Xml.NodeState(ref contact, "cContactCity", "", "", 1, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
+                            if (Tools.Xml.NodeState(ref contact, "cContactCity", "", "", XmlNodeState.IsEmpty, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
                                 cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactCity='", SqlFmt(value)), "' "));
-                            if (Tools.Xml.NodeState(ref contact, "cContactState", "", "", 1, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
+                            if (Tools.Xml.NodeState(ref contact, "cContactState", "", "", XmlNodeState.IsEmpty, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
                                 cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactState='", SqlFmt(value)), "' "));
-                            if (Tools.Xml.NodeState(ref contact, "cContactZip", "", "", 1, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
+                            if (Tools.Xml.NodeState(ref contact, "cContactZip", "", "", XmlNodeState.IsEmpty, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
                                 cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactZip='", SqlFmt(value)), "' "));
-                            if (Tools.Xml.NodeState(ref contact, "cContactCountry", "", "", 1, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
+                            if (Tools.Xml.NodeState(ref contact, "cContactCountry", "", "", XmlNodeState.IsEmpty, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
                                 cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactCountry='", SqlFmt(value)), "' "));
 
                             // cWhere = " and cContactName='" & SqlFmt(oXform.Instance.SelectSingleNode("tblCartContact/cContactName").InnerText) & "' " & _
