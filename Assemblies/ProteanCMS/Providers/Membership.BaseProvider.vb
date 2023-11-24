@@ -805,6 +805,7 @@ Check:
                             'this enables an overload to add additional Xml for updating.
                             Dim importedNode As XmlNode = Instance.OwnerDocument.ImportNode(IntanceAppend, True)
                             Instance.AppendChild(importedNode)
+                            MyBase.bProcessRepeats = True
                             MyBase.LoadInstance(Instance)
                         End If
 
