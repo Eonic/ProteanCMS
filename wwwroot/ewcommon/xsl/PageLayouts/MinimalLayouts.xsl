@@ -14751,6 +14751,9 @@
             <xsl:attribute name="autoplay">
               <xsl:text>autoplay</xsl:text>
             </xsl:attribute>
+			  <xsl:attribute name="playsinline">
+				  <xsl:text>playsinline</xsl:text>
+			  </xsl:attribute>
           </xsl:if>
           <xsl:if test="HTML5/@controls='controls'">
             <xsl:attribute name="controls">
