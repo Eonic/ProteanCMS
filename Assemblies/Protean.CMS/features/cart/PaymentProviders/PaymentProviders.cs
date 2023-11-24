@@ -197,12 +197,12 @@ namespace Protean
                             {
                                 switch (oElmt.GetAttribute("name") ?? "")
                                 {
-                                    case "PremiumCredit":
-                                        {
-                                            // Get the Premium Credit Payment Options
-                                            nOptCount = nOptCount + getPremiumCreditPaymentMethods(ref oOptXform, ref oSelectElmt, nPaymentAmount, ref cPaymentMethod);
-                                            break;
-                                        }
+                                    //case "PremiumCredit":
+                                    //    {
+                                    //        // Get the Premium Credit Payment Options
+                                    //        nOptCount = nOptCount + getPremiumCreditPaymentMethods(ref oOptXform, ref oSelectElmt, nPaymentAmount, ref cPaymentMethod);
+                                    //        break;
+                                    //    }
 
                                     default:
                                         {
@@ -466,2236 +466,2236 @@ namespace Protean
                 }
 
 
-                public Cms.xForm paySecPay(ref XmlElement oRoot, string sSubmitPath, string sProfile = "")
-                {
-                    Cms.xForm paySecPayRet = default;
-                    myWeb.PerfMon.Log("PaymentProviders", "paySecPay");
-                    string sSql;
-
-                    Cms.xForm ccXform;
-
-                    Cms.xForm Xform3dSec = (Cms.xForm)null;
-
-                    var bIsValid = default(bool);
-                    string err_msg = "";
-                    string err_msg_log = "";
-                    string sProcessInfo = "";
-                    string[] aResponse;
-                    Hashtable oDictResp;
-                    string cResponse = string.Empty;
-
-                    var oDictOpt = new Hashtable();
-
-                    int i;
-                    int nPos;
-                    string sOpts;
-                    string cOrderType;
-                    bool bCv2 = false;
-                    bool b3DSecure = false;
-                    bool b3DAuthorised = false;
-                    string sRedirectURL = "";
-                    string sPaymentRef = "";
-
-                    string cProcessInfo = "paySecPay";
-
-                    // Get the payment options into a hashtable
-                    XmlNode oSecpayCfg;
-                    bool bSavePayment = false;
-                    bool bAllowSavePayment = false;
-
-                    try
-                    {
-                        if (!string.IsNullOrEmpty(sProfile))
-                        {
-                            oSecpayCfg = moPaymentCfg.SelectSingleNode("provider[@name='SecPay' and @profile='" + sProfile + "']");
-                        }
-                        else
-                        {
-                            oSecpayCfg = moPaymentCfg.SelectSingleNode("provider[@name='SecPay']");
-                        }
-
-                        // Get the payment options
-                        // oSecpayCfg = moPaymentCfg.SelectSingleNode("provider[@name='SecPay']")
-                        oDictOpt = xmlToHashTable(oSecpayCfg, "value");
-
-                        switch (oDictOpt["opperationMode"])
-                        {
-                            case "true":
-                                {
-                                    nTransactionMode = TransactionMode.Test;
-                                    break;
-                                }
-                            case "false":
-                                {
-                                    nTransactionMode = TransactionMode.Fail;
-                                    break;
-                                }
-                            case "live":
-                                {
-                                    nTransactionMode = TransactionMode.Live;
-                                    break;
-                                }
-                        }
-
-                        // override the currency
-                        if (oDictOpt.ContainsKey("currency"))
-                            oDictOpt.Remove("currency");
-                        oDictOpt.Add("currency", mcCurrency);
-
-                        // Set common variables
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["validateCV2"], "on", false)))
-                            bCv2 = true;
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["secure3d"], "on", false)))
-                            b3DSecure = true;
-
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["allowSavePayment"], "on", false)))
-                            bAllowSavePayment = true;
-
-                        // Load the Xform
-
-                        ccXform = creditCardXform(ref oRoot, "PayForm", sSubmitPath, Conversions.ToString(oDictOpt["cardsAccepted"]), bCv2, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Make Payment of " + Strings.FormatNumber(mnPaymentAmount, 2) + " ", oDictOpt["currency"]), " by Credit/Debit Card")), b3DSecure, bSavePayment: bAllowSavePayment);
-
-                        if (b3DSecure)
-                        {
-                            // check for return from aquiring bank
-                            if (!string.IsNullOrEmpty(this.goRequest["MD"]))
-                            {
-                                b3DAuthorised = true;
-                            }
-                        }
-
-                        if (ccXform.valid | b3DAuthorised)
-                        {
-
+                //public Cms.xForm paySecPay(ref XmlElement oRoot, string sSubmitPath, string sProfile = "")
+                //{
+                //    Cms.xForm paySecPayRet = default;
+                //    myWeb.PerfMon.Log("PaymentProviders", "paySecPay");
+                //    string sSql;
+
+                //    Cms.xForm ccXform;
+
+                //    Cms.xForm Xform3dSec = (Cms.xForm)null;
+
+                //    var bIsValid = default(bool);
+                //    string err_msg = "";
+                //    string err_msg_log = "";
+                //    string sProcessInfo = "";
+                //    string[] aResponse;
+                //    Hashtable oDictResp;
+                //    string cResponse = string.Empty;
+
+                //    var oDictOpt = new Hashtable();
+
+                //    int i;
+                //    int nPos;
+                //    string sOpts;
+                //    string cOrderType;
+                //    bool bCv2 = false;
+                //    bool b3DSecure = false;
+                //    bool b3DAuthorised = false;
+                //    string sRedirectURL = "";
+                //    string sPaymentRef = "";
+
+                //    string cProcessInfo = "paySecPay";
+
+                //    // Get the payment options into a hashtable
+                //    XmlNode oSecpayCfg;
+                //    bool bSavePayment = false;
+                //    bool bAllowSavePayment = false;
+
+                //    try
+                //    {
+                //        if (!string.IsNullOrEmpty(sProfile))
+                //        {
+                //            oSecpayCfg = moPaymentCfg.SelectSingleNode("provider[@name='SecPay' and @profile='" + sProfile + "']");
+                //        }
+                //        else
+                //        {
+                //            oSecpayCfg = moPaymentCfg.SelectSingleNode("provider[@name='SecPay']");
+                //        }
+
+                //        // Get the payment options
+                //        // oSecpayCfg = moPaymentCfg.SelectSingleNode("provider[@name='SecPay']")
+                //        oDictOpt = xmlToHashTable(oSecpayCfg, "value");
+
+                //        switch (oDictOpt["opperationMode"])
+                //        {
+                //            case "true":
+                //                {
+                //                    nTransactionMode = TransactionMode.Test;
+                //                    break;
+                //                }
+                //            case "false":
+                //                {
+                //                    nTransactionMode = TransactionMode.Fail;
+                //                    break;
+                //                }
+                //            case "live":
+                //                {
+                //                    nTransactionMode = TransactionMode.Live;
+                //                    break;
+                //                }
+                //        }
+
+                //        // override the currency
+                //        if (oDictOpt.ContainsKey("currency"))
+                //            oDictOpt.Remove("currency");
+                //        oDictOpt.Add("currency", mcCurrency);
+
+                //        // Set common variables
+                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["validateCV2"], "on", false)))
+                //            bCv2 = true;
+                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["secure3d"], "on", false)))
+                //            b3DSecure = true;
+
+                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["allowSavePayment"], "on", false)))
+                //            bAllowSavePayment = true;
+
+                //        // Load the Xform
+
+                //        ccXform = creditCardXform(ref oRoot, "PayForm", sSubmitPath, Conversions.ToString(oDictOpt["cardsAccepted"]), bCv2, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Make Payment of " + Strings.FormatNumber(mnPaymentAmount, 2) + " ", oDictOpt["currency"]), " by Credit/Debit Card")), b3DSecure, bSavePayment: bAllowSavePayment);
+
+                //        if (b3DSecure)
+                //        {
+                //            // check for return from aquiring bank
+                //            if (!string.IsNullOrEmpty(this.goRequest["MD"]))
+                //            {
+                //                b3DAuthorised = true;
+                //            }
+                //        }
+
+                //        if (ccXform.valid | b3DAuthorised)
+                //        {
+
 
-                            // Set up card options
-                            sOpts = Conversions.ToString(Operators.ConcatenateObject("test_status=", oDictOpt["opperationMode"]));
-                            sOpts = sOpts + ",dups=false,card_type=" + this.goRequest["creditCard/type"];
-
-                            // Account for scheduled payments from the payment config.
-                            string scheduleInterval = Conversions.ToString(Operators.ConcatenateObject(oDictOpt["scheduleInterval"], ""));
-                            string scheduleMaxRepeats = Conversions.ToString(Operators.ConcatenateObject(oDictOpt["scheduleMaxRepeats"], ""));
-                            if (!string.IsNullOrEmpty(scheduleInterval) && Array.IndexOf(paypointScheduleIntervals, scheduleInterval) >= 0)
-                            {
-
-
-                                int maxRepeats;
-                                if (!string.IsNullOrEmpty(scheduleMaxRepeats) && Information.IsNumeric(scheduleMaxRepeats) && Convert.ToInt16(scheduleMaxRepeats) > 0)
-
-                                {
-                                    maxRepeats = Conversions.ToInteger(scheduleMaxRepeats);
-                                }
-                                else
-                                {
-                                    maxRepeats = -1;
-                                }
-
-                                // We need to send through an immediate payment - ie, the actual payment
-                                // and then schedule the same payment based on the interval
-                                var scheduleDate = default(DateTime);
-                                switch (scheduleInterval ?? "")
-                                {
-
-                                    case "yearly":
-                                        {
-                                            scheduleDate = DateTime.Today.AddYears(1);
-                                            break;
-                                        }
-                                    case "half-yearly":
-                                        {
-                                            scheduleDate = DateTime.Today.AddMonths(6);
-                                            break;
-                                        }
-                                    case "quarterly":
-                                        {
-                                            scheduleDate = DateTime.Today.AddMonths(3);
-                                            break;
-                                        }
-                                    case "monthly":
-                                        {
-                                            scheduleDate = DateTime.Today.AddMonths(1);
-                                            break;
-                                        }
-                                    case "weekly":
-                                        {
-                                            scheduleDate = DateTime.Today.AddDays(7d);
-                                            break;
-                                        }
-                                    case "daily":
-                                        {
-                                            scheduleDate = DateTime.Today.AddDays(1d);
-                                            break;
-                                        }
-                                }
-
-                                sOpts += ",repeat=" + Strings.Format(scheduleDate, "yyyyMMdd");
-                                sOpts += "/" + scheduleInterval;
-                                sOpts += "/" + maxRepeats.ToString();
-                                sOpts += ":" + mnPaymentAmount.ToString();
-
-                            }
-
-
-                            // Currency - if no currency then use GBP
-                            if (!string.IsNullOrEmpty(mcCurrency))
-                            {
-                                sOpts = sOpts + ",currency=" + Strings.UCase(mcCurrency);
-                            }
-                            else
-                            {
-                                sOpts = sOpts + ",currency=GBP";
-                            }
-
-                            // Optional - CV2
-                            if (bCv2)
-                            {
-                                sOpts = sOpts + ",cv2=" + this.goRequest["creditCard/CV2"];
-                            }
-                            // Optional - 3DSecure
-                            if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(oDictOpt["opperationMode"], "true", false), b3DSecure)))
-                            {
-                                sOpts = sOpts + ",test_mpi_status=true";
-                            }
-
-                            // If test mode, then we must turn on cv2-avs checks - mandatory Visa mandate May 2009
-                            if (Conversions.ToBoolean(Operators.OrObject(Operators.ConditionalCompareObjectEqual((oDictOpt["opperationMode"]), "true", false), Operators.ConditionalCompareObjectEqual((oDictOpt["opperationMode"]), "false", false))))
-                            {
-                                sOpts = sOpts + ",default_cv2avs=ALL MATCH";
-                            }
-
-                            if (Conversions.ToBoolean(Operators.OrObject(Operators.ConditionalCompareObjectEqual((oDictOpt["transactionType"]), "defer", false), Operators.ConditionalCompareObjectEqual((oDictOpt["transactionType"]), "deferred", false))))
-                            {
-                                if (Information.IsNumeric(oDictOpt["ccDeferDays"]) & Information.IsNumeric(oDictOpt["dcDeferDays"]))
-                                {
-                                    sOpts = Conversions.ToString(sOpts + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(",deferred=reuse:", oDictOpt["ccDeferDays"]), ":"), oDictOpt["dcDeferDays"]));
-                                }
-                                else
-                                {
-                                    sOpts += ",deferred=true";
-                                }
-
-                            }
-                            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["digest"], "on", false)))
-                            {
-                                string cDigest = "";
-                                if (Conversions.ToBoolean(!Operators.ConditionalCompareObjectEqual(oDictOpt["accountId"], "secpay", false)))
-                                {
-                                    cDigest = mnCartId.ToString() + mnPaymentAmount.ToString() + Conversions.ToString(oDictOpt["accountPassword"]);
-                                }
-                                else
-                                {
-                                    cDigest = "secpay";
-                                }
-                                var encode = new UnicodeEncoding();
-                                byte[] inputDigest = encode.GetBytes(cDigest);
-
-                                byte[] hash;
-                                // get hash
-                                var md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
-                                hash = md5.ComputeHash(inputDigest);
-
-                                // convert hash value to hex string
-                                var sb = new StringBuilder();
-                                foreach (var outputByte in hash)
-                                    // convert each byte to a Hexadecimal upper case string
-                                    sb.Append(outputByte.ToString("x2"));
-
-                                sOpts += ",digest=" + sb.ToString();
-
-                            }
-
-                            var oSecVpn = new Protean.Paypoint.SECVPNClient();
-
-                            cOrderType = oRoot.GetAttribute("orderType");
-                            if (!(!string.IsNullOrEmpty(cOrderType) & Conversions.ToString(oDictOpt["UseOrderType"]) == "true"))
-                                cOrderType = Conversions.ToString(oDictOpt["accountId"]);
-                            if (!b3DSecure)
-                            {
-                                string argsType = "Delivery Address";
-                                string argsType1 = "Billing Address";
-                                cResponse = oSecVpn.validateCardFull(cOrderType, Conversions.ToString(oDictOpt["accountPassword"]), mnCartId.ToString(), this.goRequest.ServerVariables["REMOTE_ADDR"], mcCardHolderName, this.goRequest["creditCard/number"], mnPaymentAmount.ToString(), this.fmtSecPayDate(this.goRequest["creditCard/expireDate"]), this.goRequest["creditCard/issueNumber"], this.fmtSecPayDate(this.goRequest["creditCard/issueDate"]), getSecPayOrder(ref oRoot), getSecPayAddress(ref oRoot, ref argsType), getSecPayAddress(ref oRoot, ref argsType1), sOpts);
-
-                                bSavePayment = true;
-                            }
-
-                            else if (!b3DAuthorised)
-                            {
-                                string argsType2 = "Delivery Address";
-                                string argsType3 = "Billing Address";
-                                cResponse = oSecVpn.threeDSecureEnrolmentRequest(cOrderType, Conversions.ToString(oDictOpt["accountPassword"]), mnCartId.ToString(), this.goRequest.ServerVariables["REMOTE_ADDR"], mcCardHolderName, this.goRequest["creditCard/number"], mnPaymentAmount.ToString(), this.fmtSecPayDate(this.goRequest["creditCard/expireDate"]), this.goRequest["creditCard/issueNumber"], this.fmtSecPayDate(this.goRequest["creditCard/issueDate"]), getSecPayOrder(ref oRoot), getSecPayAddress(ref oRoot, ref argsType2), getSecPayAddress(ref oRoot, ref argsType3), sOpts, "0", this.goRequest.ServerVariables["HTTP_ACCEPT"], this.goRequest.ServerVariables["HTTP_USER_AGENT"], "", "", "", "", "", "");
-
-                                bSavePayment = true;
-                            }
-
-                            else
-                            {
-                                // Pass the process back to Secpay
-                                cResponse = oSecVpn.threeDSecureAuthorisationRequest(cOrderType, Conversions.ToString(oDictOpt["accountPassword"]), mnCartId.ToString(), this.goRequest["MD"], this.goRequest["PaRes"], sOpts);
-                                // Save in the session the MD and the instance to save
-
-                            }
-
-                            // Parse the response
-                            oDictResp = new Hashtable();
-
-                            // cResponse = Replace(oXMLHttp.responseXML.selectSingleNode("//node()[local-name()='validateCardFullReturn']").Text, "+", " ")
-                            string cAuthCode = "";
-                            if (!string.IsNullOrEmpty(cResponse))
-                            {
-
-                                aResponse = Strings.Split(Strings.Right(cResponse, Strings.Len(cResponse) - 1), "&");
-
-                                var loopTo = Information.UBound(aResponse);
-                                for (i = 0; i <= loopTo; i++)
-                                {
-
-                                    string cPos = Strings.InStr(aResponse[i], "=").ToString();
-                                    if (Information.IsNumeric(cPos))
-                                    {
-                                        nPos = Conversions.ToInteger(cPos);
-                                        oDictResp.Add(Strings.Left(aResponse[i], nPos - 1), Strings.Right(aResponse[i], Strings.Len(aResponse[i]) - nPos));
-                                    }
-                                    else
-                                    {
-                                        oDictResp.Add(Strings.Trim(aResponse[i]), "");
-                                    }
-                                }
-
-
-                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictResp["valid"], "true", false)))
-                                {
-                                    if (!b3DSecure)
-                                    {
-                                        bIsValid = true;
-                                        err_msg = "Payment Authorised Ref: " + mnCartId.ToString();
-                                        ccXform.valid = true;
-                                    }
-
-                                    else
-                                    {
-                                        switch (oDictResp["mpi_status_code"])
-                                        {
-                                            case "200":
-                                                {
-                                                    // we have to get the browser to redirect
-                                                    // v4 change - don't explicitly redirect to /deafault.ashx - this breaks everything.
-                                                    // AJG Remove defualt.ashx from RedirectUrl Compare this line to 4.1
-                                                    if (moCartConfig["SecureURL"].EndsWith("/"))
-                                                    {
-                                                        sRedirectURL = moCartConfig["SecureURL"] + "?cartCmd=Redirect3ds";
-                                                    }
-                                                    else
-                                                    {
-                                                        sRedirectURL = moCartConfig["SecureURL"] + "/?cartCmd=Redirect3ds";
-                                                    }
-
-                                                    string cleanACSURL = myWeb.goServer.UrlDecode(Conversions.ToString(oDictResp["acs_url"]));
-                                                    cleanACSURL = Strings.Replace(cleanACSURL, "&amp;", "&");
-
-                                                    bIsValid = false;
-                                                    ccXform.valid = false;
-                                                    err_msg = "customer redirected to:" + cleanACSURL;
-
-                                                    // Save MD as paymentRef
-                                                    sPaymentRef = Conversions.ToString(oDictResp["MD"]);
-                                                    // Save the payment instance in the session
-
-                                                    Xform3dSec = xfrmSecure3D(Conversions.ToString(oDictResp["acs_url"]), Conversions.ToString(oDictResp["MD"]), Conversions.ToString(oDictResp["PaReq"]), sRedirectURL);
-                                                    break;
-                                                }
-
-                                            case "212":
-                                                {
-                                                    // not subscribes to 3D Secure
-                                                    bIsValid = true;
-                                                    err_msg = "Payment Authorised Ref: " + mnCartId.ToString();
-                                                    err_msg = Conversions.ToString(Operators.ConcatenateObject(err_msg + " 3D Secure:", oDictResp["mpi_message"]));
-                                                    ccXform.valid = true;
-                                                    break;
-                                                }
-
-                                            case "237":
-                                                {
-                                                    // Payer Authenticated
-                                                    bIsValid = true;
-                                                    err_msg = "Payment Authorised Ref: " + mnCartId.ToString();
-                                                    err_msg = Conversions.ToString(Operators.ConcatenateObject(err_msg + " 3D Secure:", oDictResp["mpi_message"]));
-                                                    ccXform.valid = true;
-                                                    break;
-                                                }
-
-                                            case "236":
-                                                {
-                                                    // Payer Declined 3D Secure but Proceeded to confirm 
-                                                    // the(authentication)
-                                                    bIsValid = true;
-                                                    err_msg = "Payment Authorised Ref: " + mnCartId.ToString();
-                                                    err_msg = Conversions.ToString(Operators.ConcatenateObject(err_msg + " 3D Secure:", oDictResp["mpi_message"]));
-                                                    ccXform.valid = true;
-                                                    break;
-                                                }
-
-
-                                            case "234":
-                                                {
-                                                    // unable to verify erolement but secpay passes
-                                                    bIsValid = true;
-                                                    err_msg = "Payment Authorised Ref: " + mnCartId.ToString();
-                                                    err_msg = Conversions.ToString(Operators.ConcatenateObject(err_msg + " 3D Secure:", oDictResp["mpi_message"]));
-                                                    ccXform.valid = true;
-                                                    break;
-                                                }
-
-
-                                            case "229":
-                                                {
-                                                    // Payer Not Authenticated
-                                                    bIsValid = false;
-                                                    ccXform.valid = false;
-                                                    err_msg = Conversions.ToString(Operators.ConcatenateObject(err_msg + " 3D Secure:", oDictResp["mpi_message"]));
-                                                    break;
-                                                }
-
-                                            default:
-                                                {
-                                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictResp["code"], "A", false)))
-                                                    {
-                                                        bIsValid = true;
-                                                        err_msg = "Payment Authorised Ref: " + mnCartId.ToString();
-                                                        err_msg = Conversions.ToString(Operators.ConcatenateObject(err_msg + " 3D Secure:", oDictResp["mpi_message"]));
-                                                        ccXform.valid = true;
-                                                    }
-                                                    else
-                                                    {
-                                                        // Payer Not Authenticated
-                                                        bIsValid = false;
-                                                        ccXform.valid = false;
-                                                        err_msg = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(err_msg + " 3D Secure:", oDictResp["mpi_status_code"]), " - "), oDictResp["mpi_message"]));
-                                                    }
-
-                                                    break;
-                                                }
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    ccXform.valid = false;
-                                    bIsValid = false;
-                                    err_msg_log = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Payment Failed : ", oDictResp["message"]), " (Code::"), oDictResp["code"]), ")"));
-
-                                    // Produce nice format error messages.
-                                    switch (oDictResp["code"])
-                                    {
-                                        case "N":
-                                            {
-                                                err_msg = "The transaction was not authorised by your payment provider.";
-                                                break;
-                                            }
-                                        case "C":
-                                            {
-                                                err_msg = "There was a comunication problem. Please try resubmitting your order later.";
-                                                break;
-                                            }
-                                        case "P:A":
-                                            {
-                                                err_msg = "There was a system error - the amount was not supplied or invalid.  Please call for assistance.";
-                                                break;
-                                            }
-                                        case "P:X":
-                                            {
-                                                err_msg = "There was a system error - not all the mandatory parameters were supplied.  Please call for assistance.";
-                                                break;
-                                            }
-                                        case "P:P":
-                                            {
-                                                err_msg = "The payment has already been processed.  This is a duplicate payment, and will not be processed.";
-                                                break;
-                                            }
-                                        case "P:S":
-                                            {
-                                                err_msg = "The start date is invalid.  Please check that you have entered your card details correctly.";
-                                                break;
-                                            }
-                                        case "P:E":
-                                            {
-                                                err_msg = "The expiry date is invalid.  Please check that you have entered your card details correctly.";
-                                                break;
-                                            }
-                                        case "P:I":
-                                            {
-                                                err_msg = "The issue number is invalid.  Please check that you have entered your card details correctly.";
-                                                break;
-                                            }
-                                        case "P:C":
-                                            {
-                                                err_msg = "The card number supplied is invalid.  Please check that you have entered your card details correctly.";
-                                                break;
-                                            }
-                                        case "P:T":
-                                            {
-                                                err_msg = "The card type does not match the card number entered.  Please check that you have entered your card details correctly.";
-                                                break;
-                                            }
-                                        case "P:N":
-                                            {
-                                                err_msg = "There was a system error - the customer name was not supplied.  Please call for assistance.";
-                                                break;
-                                            }
-                                        case "P:M":
-                                            {
-                                                err_msg = "There was a system error - the merchant account deos not exist or has not been registered.  Please call for assistance.";
-                                                break;
-                                            }
-                                        case "P:B":
-                                            {
-                                                err_msg = "There was a system error - the merchant account for this card type does not exist.  Please call for assistance.";
-                                                break;
-                                            }
-                                        case "P:D":
-                                            {
-                                                err_msg = "There was a system error - the merchant account for this currency does not exist.  Please call for assistance.";
-                                                break;
-                                            }
-                                        case "P:V":
-                                            {
-                                                err_msg = "The security code is invalid. Please check that you have entered your card details correctly. The security code can be found on the back of your card and is the last 3 digits of the series of digits on the back.";
-                                                break;
-                                            }
-                                        case "P:R":
-                                            {
-                                                err_msg = "There was a communication problem and the transaction has timed out.  Please try resubmitting your order later.";
-                                                break;
-                                            }
-                                        case "P:#":
-                                            {
-                                                err_msg = "There was a system error - no encryption key has been set up against this account.  Please call for assistance.";
-                                                break;
-                                            }
-
-                                        default:
-                                            {
-                                                err_msg = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("There was an unspecified error. Please call for assistance.(code::", oDictResp["code"]), " | "), oDictResp["message"]));
-                                                break;
-                                            }
-                                    }
-
-                                    err_msg = "Payment Failed : " + err_msg;
-
-                                }
-                            }
-                            else
-                            {
-                                bIsValid = false;
-                                ccXform.valid = false;
-                                err_msg = "Payment Failed : no response from secpay check settings and password";
-                            }
-
-
-                            if (bSavePayment)
-                            {
-                                // We Save the payment method prior to ultimate validation because we only have access to the request object at the point it is submitted
-
-                                // only do this for a valid payment method
-                                XmlElement oSaveElmt = (XmlElement)ccXform.Instance.SelectSingleNode("creditCard/bSavePayment");
-                                Debug.WriteLine(this.goRequest["creditCard/expireDate"]);
-                                var oDate = new DateTime(Conversions.ToInteger("20" + Strings.Right(this.goRequest["creditCard/expireDate"], 2)), Conversions.ToInteger(Strings.Left(this.goRequest["creditCard/expireDate"], 2)), 1);
-                                oDate = oDate.AddMonths(1);
-                                oDate = oDate.AddDays(-1);
-                                string cMethodName = this.goRequest["creditCard/type"] + ": " + stdTools.MaskString(this.goRequest["creditCard/number"], "*", false, 4) + " Expires: " + oDate.ToShortDateString();
-                                cAuthCode = Conversions.ToString(oDictResp["auth_code"]);
-
-                                var oSecPayElmt = ccXform.Instance.OwnerDocument.CreateElement("SecPay");
-                                oSecPayElmt.SetAttribute("AuthCode", cAuthCode);
-                                ccXform.Instance.FirstChild.AppendChild(oSecPayElmt);
-
-                                if (oSaveElmt != null)
-                                {
-                                    if (oSaveElmt.InnerText == "true" & bIsValid)
-                                    {
-                                        savePayment((long)myWeb.mnUserId, "SecPay", mnCartId.ToString(), cMethodName, (XmlElement)ccXform.Instance.FirstChild, oDate, true, mnPaymentAmount);
-                                    }
-                                    else
-                                    {
-                                        savePayment((long)myWeb.mnUserId, "SecPay", mnCartId.ToString(), cMethodName, (XmlElement)ccXform.Instance.FirstChild, DateTime.Now, false, mnPaymentAmount);
-                                    }
-                                }
-                                else
-                                {
-                                    savePayment((long)myWeb.mnUserId, "SecPay", mnCartId.ToString(), cMethodName, (XmlElement)ccXform.Instance.FirstChild, DateTime.Now, false, mnPaymentAmount);
-                                }
-
-                            }
-
-                            XmlNode argoNode = (XmlNode)ccXform.moXformElmt;
-                            ccXform.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, err_msg);
-                            ccXform.moXformElmt = (XmlElement)argoNode;
-                        }
-
-
-
-                        else
-                        {
-                            if (ccXform.isSubmitted() & string.IsNullOrEmpty(ccXform.validationError))
-                            {
-                                err_msg = "Unknown Error: Please call";
-                                XmlNode argoNode1 = (XmlNode)ccXform.moXformElmt;
-                                ccXform.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, err_msg);
-                                ccXform.moXformElmt = (XmlElement)argoNode1;
-                            }
-                            else
-                            {
-                                err_msg = ccXform.validationError;
-                            }
-                            ccXform.valid = false;
-                        }
-
-                        if (ccXform.isSubmitted() | b3DAuthorised)
-                        {
-                            // Update Seller Notes:
-                            sSql = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
-                            DataSet oDs;
-                            oDs = modbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
-                            foreach (DataRow oRow in oDs.Tables["Order"].Rows)
-                            {
-                                if (bIsValid | b3DAuthorised)
-                                {
-                                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Received) "), Constants.vbLf), "comment: "), err_msg), Constants.vbLf), "Full Response:' "), cResponse), "'");
-                                }
-                                else
-                                {
-                                    if (string.IsNullOrEmpty(err_msg_log))
-                                        err_msg_log = err_msg;
-                                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Failed) "), Constants.vbLf), "comment: "), err_msg_log), Constants.vbLf), "Full Response:' "), cResponse), "'");
-                                }
-                                if (b3DSecure & bIsValid == false)
-                                {
-                                    oRow["cPaymentRef"] = sPaymentRef;
-                                }
-                            }
-                            modbHelper.updateDataset(ref oDs, "Order");
-                        }
-
-                        if (Xform3dSec != null)
-                        {
-                            paySecPayRet = Xform3dSec;
-                        }
-                        else
-                        {
-                            paySecPayRet = ccXform;
-                        }
-                    }
-
-                    catch (Exception ex)
-                    {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "paySecPay", ex, "", cProcessInfo, gbDebug);
-                        return (Cms.xForm)null;
-                    }
-
-                    return paySecPayRet;
-                }
-
-                public Cms.xForm paySecPayUkash(ref XmlElement oRoot, string sSubmitPath)
-                {
-                    myWeb.PerfMon.Log("PaymentProviders", "paySecPayUkash");
-
-                    string sSql;
-                    Cms.xForm ccXform;
-
-                    bool bIsValid;
-                    string err_msg;
-                    string err_msg_log = "";
-                    string sProcessInfo = "";
-                    string[] aResponse;
-                    Hashtable oDictResp;
-                    string cResponse;
-
-                    var oDictOpt = new Hashtable();
-
-                    int i;
-                    int nPos;
-                    string sOpts;
-                    string cOrderType;
-                    bool bCv2 = false;
-
-                    // Test Vouchers
-                    // £25.00        '6337180099169015249:
-                    // £25.00        '6337180091114582647:
-                    // £25.00        '6337180099224977516:
-                    // £25.00        '6337180091385666418:
-                    // £25.00        '6337180095179084217:
-                    // £25.00        '6337180094605120927:
-                    // £25.00        '6337180096516745502:
-                    // £25.00        '6337180090359094102:
-                    // £25.00        '6337180090560691415:
-                    // £25.00        '6337180098258075411:
-                    // £25.00        '6337180097643841024:
-
-                    XmlNode oSecPayUkashCfg;
-
-                    string cProcessInfo = "paySecPay";
-                    try
-                    {
-
-                        // Get the payment options into a hashtable
-                        oSecPayUkashCfg = moPaymentCfg.SelectSingleNode("provider[@name='SecPayUkash']");
-                        foreach (XmlElement oElmt in oSecPayUkashCfg.SelectNodes("*"))
-                        {
-                            if (oElmt.GetAttribute("value") != null)
-                            {
-                                oDictOpt.Add(oElmt.Name, oElmt.GetAttribute("value"));
-                            }
-                        }
-
-                        // Load the Xform
-                        ccXform = UkashXform(ref oRoot, "PayForm", sSubmitPath, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Make Payment of " + Strings.FormatNumber(mnPaymentAmount, 2) + " ", oDictOpt["currency"]), " by Ukash")));
-
-                        if (ccXform.valid == true)
-                        {
-
-                            // Validate Card
-                            sOpts = Conversions.ToString(Operators.ConcatenateObject("test_status=", oDictOpt["opperationMode"]));
-                            if (mnPaymentAmount < Conversions.ToDouble(this.goRequest["Ukash/VoucherValue"]))
-                            {
-                                sOpts = sOpts + ",sv_txn_type=PS";
-                                sOpts = sOpts + ",sv_ps_number=" + this.goRequest["Ukash/VoucherNumber"];
-                                sOpts = sOpts + ",sv_ps_value=" + this.goRequest["Ukash/VoucherValue"];
-                                sOpts = sOpts + ",sv_ps_newvalue=" + Strings.FormatNumber((object)(Conversions.ToDouble(this.goRequest["Ukash/VoucherValue"]) - mnPaymentAmount), 2);
-                            }
-                            else if (mnPaymentAmount == Conversions.ToDouble(this.goRequest["Ukash/VoucherValue"]))
-                            {
-                                sOpts = sOpts + ",sv_txn_type=RD";
-                                sOpts = sOpts + ",sv_rd_number=" + this.goRequest["Ukash/VoucherNumber"];
-                                sOpts = sOpts + ",sv_rd_value=" + this.goRequest["Ukash/VoucherValue"];
-                            }
-
-                            var oSecVpn = new Protean.Paypoint.SECVPNClient();
-
-                            cOrderType = oRoot.GetAttribute("orderType");
-                            if (!(!string.IsNullOrEmpty(cOrderType) & Conversions.ToString(oDictOpt["orderType"]) == "true"))
-                                cOrderType = Conversions.ToString(oDictOpt["accountId"]);
-
-                            string argsType = "Delivery Address";
-                            string argsType1 = "Billing Address";
-                            cResponse = oSecVpn.validateCardFull(cOrderType, Conversions.ToString(oDictOpt["accountPassword"]), mnCartId.ToString(), this.goRequest.ServerVariables["REMOTE_ADDR"], mcCardHolderName, "", mnPaymentAmount.ToString(), "", "", "", getSecPayOrder(ref oRoot), getSecPayAddress(ref oRoot, ref argsType), getSecPayAddress(ref oRoot, ref argsType1), sOpts);
-
-
-                            // Parse the response
-                            oDictResp = new Hashtable();
-
-                            if (!string.IsNullOrEmpty(cResponse))
-                            {
-
-                                aResponse = Strings.Split(Strings.Right(cResponse, Strings.Len(cResponse) - 1), "&");
-
-                                var loopTo = Information.UBound(aResponse);
-                                for (i = 0; i <= loopTo; i++)
-                                {
-                                    nPos = Strings.InStr(aResponse[i], "=");
-                                    oDictResp.Add(Strings.Left(aResponse[i], nPos - 1), Strings.Right(aResponse[i], Strings.Len(aResponse[i]) - nPos));
-                                }
-
-                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictResp["valid"], "true", false)))
-                                {
-                                    bIsValid = true;
-                                    ccXform.valid = true;
-
-                                    err_msg = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Payment Authorised Ref: " + mnCartId.ToString() + " - ", oDictResp["sv_rd_newnumber"]), oDictResp["sv_ps_newnumber"]));
-
-                                    // add the response to the instance so we can save it against the transaction
-
-                                    var argoNode = ccXform.Instance.FirstChild;
-                                    Tools.Xml.addNewTextNode("NewVoucherNumber", ref argoNode, Conversions.ToString(oDictResp["sv_ps_newnumber"]));
-                                    var argoNode1 = ccXform.Instance.FirstChild;
-                                    Tools.Xml.addNewTextNode("NewVoucherValue", ref argoNode1, Conversions.ToString(oDictResp["sv_ps_newvalue"]));
-                                    var argoNode2 = ccXform.Instance.FirstChild;
-                                    Tools.Xml.addNewTextNode("NewVoucherExpires", ref argoNode2, Conversions.ToString(oDictResp["sv_ps_expiry"]));
-
-                                    savePayment((long)myWeb.mnUserId, "SecPayUkash", mnCartId.ToString(), err_msg, (XmlElement)ccXform.Instance.FirstChild, DateTime.Now, false, mnPaymentAmount);
-                                }
-
-                                else
-                                {
-                                    ccXform.valid = false;
-                                    bIsValid = false;
-                                    err_msg_log = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Payment Failed : ", oDictResp["message"]), " (Code::"), oDictResp["code"]), ")"));
-
-                                    // Produce nice format error messages.
-                                    switch (oDictResp["code"])
-                                    {
-                                        case "N":
-                                            {
-                                                err_msg = "The transaction was not authorised by your payment provider.";
-                                                break;
-                                            }
-                                        case "C":
-                                            {
-                                                err_msg = "There was a comunication problem. Please try resubmitting your order later.";
-                                                break;
-                                            }
-                                        case "P:A":
-                                            {
-                                                err_msg = "There was a system error - the amount was not supplied or invalid.  Please call for assistance.";
-                                                break;
-                                            }
-                                        case "P:X":
-                                            {
-                                                err_msg = "There was a system error - not all the mandatory parameters were supplied.  Please call for assistance.";
-                                                break;
-                                            }
-                                        case "P:P":
-                                            {
-                                                err_msg = "The payment has already been processed.  This is a duplicate payment, and will not be processed.";
-                                                break;
-                                            }
-                                        case "P:S":
-                                            {
-                                                err_msg = "The start date is invalid.  Please check that you have entered your card details correctly.";
-                                                break;
-                                            }
-                                        case "P:E":
-                                            {
-                                                err_msg = "The expiry date is invalid.  Please check that you have entered your card details correctly.";
-                                                break;
-                                            }
-                                        case "P:I":
-                                            {
-                                                err_msg = "The issue number is invalid.  Please check that you have entered your card details correctly.";
-                                                break;
-                                            }
-                                        case "P:C":
-                                            {
-                                                err_msg = "The card number supplied is invalid.  Please check that you have entered your card details correctly.";
-                                                break;
-                                            }
-                                        case "P:T":
-                                            {
-                                                err_msg = "The card type does not match the card number entered.  Please check that you have entered your card details correctly.";
-                                                break;
-                                            }
-                                        case "P:N":
-                                            {
-                                                err_msg = "There was a system error - the customer name was not supplied.  Please call for assistance.";
-                                                break;
-                                            }
-                                        case "P:M":
-                                            {
-                                                err_msg = "There was a system error - the merchant account deos not exist or has not been registered.  Please call for assistance.";
-                                                break;
-                                            }
-                                        case "P:B":
-                                            {
-                                                err_msg = "There was a system error - the merchant account for this card type does not exist.  Please call for assistance.";
-                                                break;
-                                            }
-                                        case "P:D":
-                                            {
-                                                err_msg = "There was a system error - the merchant account for this currency does not exist.  Please call for assistance.";
-                                                break;
-                                            }
-                                        case "P:V":
-                                            {
-                                                err_msg = "The security code is invalid. Please check that you have entered your card details correctly. The security code can be found on the back of your card and is the last 3 digits of the series of digits on the back.";
-                                                break;
-                                            }
-                                        case "P:R":
-                                            {
-                                                err_msg = "There was a communication problem and the transaction has timed out.  Please try resubmitting your order later.";
-                                                break;
-                                            }
-                                        case "P:#":
-                                            {
-                                                err_msg = "There was a system error - no encryption key has been set up against this account.  Please call for assistance.";
-                                                break;
-                                            }
-                                        case "P:G":
-                                            {
-                                                err_msg = "The Ukash voucher does not have enough funds for this transaction.";
-                                                break;
-                                            }
-                                        case "P:H":
-                                            {
-                                                err_msg = "The Ukash number or value is missing or invalid.  Please check that you have entered your Ukash number and value correctly.";
-                                                break;
-                                            }
-                                        case "P:Q":
-                                            {
-                                                err_msg = "The Ukash product is missing or invalid.  Please call for assistance.";
-                                                break;
-                                            }
-                                        case "P:U":
-                                            {
-                                                err_msg = "The Ukash value supplied is missing or invalid.  Please check that you have entered your Ukash value correctly.";
-                                                break;
-                                            }
-                                        case "P:W":
-                                            {
-                                                err_msg = "The Ukash Currency is missing invalid. Please call for assistance.";
-                                                break;
-                                            }
-                                        case "P:Y":
-                                            {
-                                                err_msg = "The Ukash number supplied is invalid.  Please check that you have entered your Ukash number correctly.";
-                                                break;
-                                            }
-                                        case "P:Z":
-                                            {
-                                                err_msg = "The Ukash is not enabled for this merchant. Please call for assistance.";
-                                                break;
-                                            }
-
-                                        default:
-                                            {
-                                                err_msg = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("There was an unspecified error. Please call for assistance.(code::", oDictResp["code"]), " | "), oDictResp["message"]), ")"));
-                                                break;
-                                            }
-                                    }
-
-                                    err_msg = "Payment Failed : " + err_msg;
-
-                                }
-                            }
-                            else
-                            {
-                                bIsValid = false;
-                                ccXform.valid = false;
-                                err_msg = "Payment Failed : no response from secpay check settings and password";
-                            }
-
-                            if (gbDebug)
-                            {
-                                ccXform.addNote("Ukash", Protean.xForm.noteTypes.Alert, err_msg_log);
-                            }
-                            else
-                            {
-                                ccXform.addNote("Ukash", Protean.xForm.noteTypes.Alert, err_msg);
-                            }
-
-
-                            // Update Seller Notes:
-
-                            sSql = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
-
-                            DataSet oDs;
-                            oDs = modbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
-                            foreach (DataRow oRow in oDs.Tables["Order"].Rows)
-                            {
-                                if (bIsValid)
-                                {
-                                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Received) "), Constants.vbLf), "comment: "), err_msg);
-                                }
-                                else
-                                {
-                                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Failed) "), Constants.vbLf), "comment: "), err_msg_log);
-                                }
-                            }
-                            modbHelper.updateDataset(ref oDs, "Order");
-
-                            if (bIsValid)
-                            {
-
-                                // let see if we have any ukash specific email settings.
-                                string uKashMerchantEmail = moCartConfig["MerchantEmail"];
-                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDictOpt["altMerchantEmail"], "", false)))
-                                    uKashMerchantEmail = Conversions.ToString(oDictOpt["altMerchantEmail"]);
-
-                                string uKashMerchantName = moCartConfig["MerchantName"];
-                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDictOpt["altMerchantName"], "", false)))
-                                    uKashMerchantName = Conversions.ToString(oDictOpt["altMerchantName"]);
-
-                                string uKashEmailTemplatePath = moCartConfig["MerchantEmailTemplatePath"];
-                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDictOpt["altMerchantSubject"], "", false)))
-                                    uKashEmailTemplatePath = Conversions.ToString(oDictOpt["altMerchantSubject"]);
-
-                            }
-
-                        }
-
-                        return ccXform;
-                    }
-
-                    catch (Exception ex)
-                    {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "paySecPayUkash", ex, "", cProcessInfo, gbDebug);
-                        return (Cms.xForm)null;
-                    }
-                }
-
-                public Cms.xForm paySagePay(ref XmlElement oRoot, string sSubmitPath)
-                {
-
-                    myWeb.PerfMon.Log("PaymentProviders", "payProTx");
-
-                    HttpWebRequest oRequest;
-                    HttpWebResponse oResponse;
-                    Stream oStream;
-                    StreamReader oStreamReader;
-
-                    long nResult;
-
-                    string cResponse;
-                    string cRequest;
-                    var oEncoding = new ASCIIEncoding();
-                    byte[] byRequest;
-
-                    string sSql;
-
-                    string cMessage;
-
-                    Cms.xForm ccXform;
-
-                    bool bIsValid = false;
-                    string err_msg = "";
-                    string err_msg_log = "";
-                    string sProcessInfo = "";
-                    var oDictOpt = new Hashtable();
-
-                    bool bCv2 = false;
-                    bool b3dSecure = false;
-                    Hashtable oResponseDict = null;
-                    XmlNode oCartAdd;
-                    bool b3dAuthorised = false;
-
-                    XmlNode oProTxCfg;
-                    string cIPAddress = this.goRequest.ServerVariables["REMOTE_ADDR"];
-
-                    string cProcessInfo = "payProTx";
-                    string sAPIVer = "";
-                    string sVSPUrl = "";
-                    string sVSP3DSUrl = "";
-                    long nAttemptCount;
-
-                    string cSellerNotes = "";
-
-                    try
-                    {
-
-                        if (this.goSession["attemptCount"] != null)
-                        {
-                            nAttemptCount = Conversions.ToLong(this.goSession["attemptCount"]);
-                            nAttemptCount = nAttemptCount + 1L;
-                        }
-                        else
-                        {
-                            nAttemptCount = 1L;
-                        }
-
-                        // Get the payment options into a hashtable
-                        oProTxCfg = moPaymentCfg.SelectSingleNode("provider[@name='ProTx' or @name='SagePay']");
-                        foreach (XmlElement oElmt in oProTxCfg.SelectNodes("*"))
-                        {
-                            if (oElmt.GetAttribute("value") != null)
-                            {
-                                oDictOpt.Add(oElmt.Name, oElmt.GetAttribute("value"));
-                            }
-                        }
-
-                        oCartAdd = oRoot.SelectSingleNode("Contact[@type='Billing Address']");
-
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["validateCV2"], "on", false)))
-                            bCv2 = true;
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["secure3d"], "on", false)))
-                        {
-                            b3dSecure = true;
-                            // Check the IP Addresses for a block
-                            if (oDictOpt["secure3dIpBlock"] != null)
-                            {
-                                var oRE = new Regex("(,|^)" + Strings.Replace(cIPAddress, ".", @"\.") + "(,|$)");
-                                if (oRE.IsMatch(Conversions.ToString(oDictOpt["secure3dIpBlock"])))
-                                    b3dSecure = false;
-                            }
-                        }
-
-                        sAPIVer = "2.22";
-                        // sAPIVer = "3.00"
-
-                        switch (oDictOpt["opperationMode"])
-                        {
-                            case "simulator":
-                                {
-                                    sVSPUrl = "https://test.sagepay.com/Simulator/VSPDirectGateway.asp";
-                                    sVSP3DSUrl = "https://test.sagepay.com/Simulator/VSPDirectCallback.asp";
-                                    nTransactionMode = TransactionMode.Test;
-                                    break;
-                                }
-                            case "test":
-                                {
-                                    sVSPUrl = "https://test.sagepay.com/gateway/service/vspdirect-register.vsp";
-                                    sVSP3DSUrl = "https://test.sagepay.com/gateway/service/direct3dcallback.vsp";
-                                    nTransactionMode = TransactionMode.Test;
-                                    break;
-                                }
-                            case "live":
-                                {
-                                    sVSPUrl = "https://live.sagepay.com/gateway/service/vspdirect-register.vsp";
-                                    sVSP3DSUrl = "https://live.sagepay.com/gateway/service/direct3dcallback.vsp";
-                                    nTransactionMode = TransactionMode.Live;
-                                    break;
-                                }
-                        }
-
-
-                        // Load the Xform
-                        ccXform = creditCardXform(ref oRoot, "PayForm", sSubmitPath, Conversions.ToString(oDictOpt["cardsAccepted"]), true, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Make Payment of " + Strings.FormatNumber(mnPaymentAmount, 2) + " ", oDictOpt["currency"]), " by Credit/Debit Card")));
-
-                        if (b3dSecure)
-                        {
-                            // check for return from aquiring bank
-                            if (!string.IsNullOrEmpty(this.goRequest["PARes"]))
-                            {
-                                b3dAuthorised = true;
-                            }
-                        }
-
-                        string orderPrefix = "";
-
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["sendPrefix"], "true", false)))
-                        {
-                            orderPrefix = Conversions.ToString(Operators.ConcatenateObject(Interaction.IIf(nTransactionMode == TransactionMode.Test, "D-", ""), moCartConfig["OrderNoPrefix"]));
-                        }
-
-                        if (ccXform.valid == true | b3dAuthorised)
-                        {
-                            if (b3dAuthorised)
-                            {
-                                // 3D Secure Resume
-                                cRequest = "MD=" + this.goRequest["MD"] + "&";
-                                cRequest = cRequest + "PARes=" + this.goServer.UrlEncode(this.goRequest["PARes"]) + "&";
-                            }
-                            else
-                            {
-                                // standard card validation request
-                                cRequest = "VPSProtocol=" + sAPIVer + "&";
-                                cRequest = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "TxType=", oDictOpt["transactionType"]), "&")); // 0=omited 1=full auth 2=pre-auth only
-                                cRequest = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "Vendor=", oDictOpt["accountId"]), "&")); // 0=omited 1=full auth 2=pre-auth only
-                                if (nAttemptCount > 1L)
-                                {
-                                    cRequest = cRequest + "VendorTXCode=" + this.goServer.UrlEncode(orderPrefix + mnCartId.ToString()) + "-" + nAttemptCount + "&";
-                                }
-                                else
-                                {
-                                    cRequest = cRequest + "VendorTXCode=" + this.goServer.UrlEncode(orderPrefix + mnCartId.ToString()) + "&";
-                                }
-                                cRequest = cRequest + "Amount=" + this.goServer.UrlEncode(FullMoneyString(mnPaymentAmount.ToString())) + "&";
-                                cRequest = cRequest + "Currency=" + this.goServer.UrlEncode(Conversions.ToString(oDictOpt["currency"])) + "&";
-                                cRequest = cRequest + "Description=" + this.goServer.UrlEncode(Strings.Left(mcPaymentOrderDescription, 90)) + "&";
-                                cRequest = cRequest + "CardHolder=" + this.goServer.UrlEncode(mcCardHolderName) + "&";
-                                cRequest = cRequest + "CardNumber=" + this.goServer.UrlEncode(this.FormatCreditCardNumber(this.goRequest["creditCard/number"]).ToString()) + "&";
-                                if (!string.IsNullOrEmpty(this.goRequest["creditCard/issueDate"]))
-                                {
-                                    cRequest = cRequest + "StartDate=" + this.fmtSecPayDate(this.goRequest["creditCard/issueDate"]) + "&";
-                                }
-                                cRequest = cRequest + "ExpiryDate=" + this.fmtSecPayDate(this.goRequest["creditCard/expireDate"]) + "&";
-                                cRequest = cRequest + "IssueNo=" + this.goServer.UrlEncode(this.goRequest["creditCard/issueNumber"]) + "&";
-                                cRequest = cRequest + "CV2=" + this.goServer.UrlEncode(this.goRequest["creditCard/CV2"]) + "&";
-                                cRequest = cRequest + "CardType=" + this.goServer.UrlEncode(this.goRequest["creditCard/type"]) + "&";
-                                cRequest = cRequest + "BillingAddress=" + this.goServer.UrlEncode(mcCardHolderAddress) + "&";
-                                cRequest = cRequest + "BillingPostcode=" + this.goServer.UrlEncode(mcCardHolderPostcode) + "&";
-                                cRequest = cRequest + "ContactNumber=" + this.goServer.UrlEncode(oCartAdd.SelectSingleNode("Telephone").InnerText) + "&";
-                                cRequest = cRequest + "ContactFax=" + this.goServer.UrlEncode(oCartAdd.SelectSingleNode("Fax").InnerText) + "&";
-                                if (!string.IsNullOrEmpty(oCartAdd.SelectSingleNode("Email").InnerText))
-                                {
-                                    cRequest = cRequest + "CustomerEmail=" + this.goServer.UrlEncode(oCartAdd.SelectSingleNode("Email").InnerText) + "&";
-                                }
-                                else
-                                {
-                                    cRequest = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "CustomerEmail=", oDictOpt["MerchantEmail"]), "&"));
-                                }
-
-                                string cIP = this.goRequest.ServerVariables["REMOTE_ADDR"];
-                                if (cIP.Length < 4)
-                                    cIP = "127.0.0.1";
-                                cRequest = cRequest + "ClientIPAddress=" + cIP + "&";
-
-                                if (b3dSecure == true)
-                                {
-                                    cRequest = cRequest + "Apply3DSecure=0" + "&";
-                                }
-                                else
-                                {
-                                    // do not make the 3D Secure check
-                                    cRequest = cRequest + "Apply3DSecure=2" + "&";
-                                }
-
-                                // goSession("attemptCount") = nAttemptCount + 1
-                            }
-
-                            // Convert the request to bytes
-                            if (cRequest.EndsWith("&"))
-                                cRequest = cRequest.Trim("&".ToCharArray());
-
-                            byRequest = oEncoding.GetBytes(cRequest);
-
-                            if (b3dAuthorised)
-                            {
-                                oRequest = (HttpWebRequest)WebRequest.Create(sVSP3DSUrl);
-                            }
-                            else
-                            {
-                                oRequest = (HttpWebRequest)WebRequest.Create(sVSPUrl);
-                            }
-
-                            oRequest.ContentType = "application/x-www-form-urlencoded";
-                            oRequest.ContentLength = byRequest.Length;
-                            oRequest.Method = "POST";
-                            oStream = oRequest.GetRequestStream();
-                            oStream.Write(byRequest, 0, byRequest.Length);
-                            oStream.Close();
-
-                            oResponse = (HttpWebResponse)oRequest.GetResponse();
-                            oStream = oResponse.GetResponseStream();
-                            oStreamReader = new StreamReader(oStream, Encoding.UTF8);
-                            cResponse = oStreamReader.ReadToEnd();
-
-                            oStreamReader.Close();
-                            oResponse.Close();
-
-                            this.goSession["attemptCount"] = (object)nAttemptCount;
-
-                            // Validate the response.
-
-                            if (string.IsNullOrEmpty(cResponse) | Strings.InStr(cResponse, "=") == 0)
-                            {
-                                err_msg = "There was a communications error.";
-                            }
-                            else
-                            {
-                                // lets take the response and put it in a hash table
-                                cProcessInfo = "Error translating response:" + cResponse;
-                                oResponseDict = UrlResponseToHashTable(cResponse, Constants.vbCrLf, "=", false);
-
-                                nResult = Conversions.ToLong(oResponseDict["intStatus"]);
-
-                                switch (oResponseDict["Status"])
-                                {
-
-                                    case "OK":
-                                    case "AUTHENTICATED":
-                                    case "REGISTERED":
-                                        {
-                                            // Successful Authorisation
-                                            err_msg = Conversions.ToString(Operators.ConcatenateObject("Payment was successful. Transaction ref: ", oResponseDict["VPSTxId"]));
-                                            bIsValid = true;
-
-                                            this.goSession["attemptCount"] = (object)null;
-                                            break;
-                                        }
-
-                                    case "3DAUTH":
-                                        {
-
-                                            // create an xform that automatically redirects to Aquiring Banks 3DS portal.
-                                            // Save MD as paymentRef
-                                            this.goSession["VPSTxId"] = oResponseDict["VPSTxId"];
-                                            this.goSession["SecurityKey"] = oResponseDict["SecurityKey"];
-
-                                            string sRedirectURL;
-                                            if (moCartConfig["SecureURL"].EndsWith("/"))
-                                            {
-                                                sRedirectURL = moCartConfig["SecureURL"] + "?cartCmd=SubmitPaymentDetails";
-                                            }
-                                            else
-                                            {
-                                                sRedirectURL = moCartConfig["SecureURL"] + "/?cartCmd=SubmitPaymentDetails";
-                                            }
-
-                                            bIsValid = false;
-                                            ccXform.valid = false;
-
-                                            err_msg_log = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("ACS URL:", oResponseDict["ACSURL"]), " ACS URLDecoded:"), this.goServer.UrlDecode(Conversions.ToString(oResponseDict["ACSURL"]))), " MD:"), oResponseDict["MD"]), " PAReq:"), oResponseDict["PAReq"]));
-                                            err_msg = "This card has subscribed to 3D Secure. You will now be re-directed to your banks website for further verification.";
-
-                                            ccXform = this.xfrmSecure3D(this.goServer.UrlDecode(Conversions.ToString(oResponseDict["ACSURL"])), Conversions.ToString(oResponseDict["MD"]), Conversions.ToString(oResponseDict["PAReq"]), sRedirectURL);
-                                            break;
-                                        }
-
-                                    case "MALFORMED":
-                                    case "INVALID":
-                                    case "NOTAUTHED":
-                                    case "REJECTED":
-                                    case "ERROR":
-                                        {
-                                            // Failed / Error Authorisation
-
-                                            cMessage = Conversions.ToString(oResponseDict["StatusDetail"]);
-
-                                            if (Strings.InStr(cMessage, "card number") > 0)
-                                                ccXform.addNote("creditCard/number", Protean.xForm.noteTypes.Alert, "The card number given is not valid.");
-                                            if (Strings.InStr(cMessage, "IssueNumber") > 0)
-                                                ccXform.addNote("creditCard/issueNumber", Protean.xForm.noteTypes.Alert, "The issue number is not valid - it may not be required for non-Switch/Solo cards.");
-                                            if (Strings.InStr(cMessage, "StartDate") > 0 | Strings.InStr(cMessage, "Start Date") > 0)
-                                                ccXform.addNote("creditCard/issueDate", Protean.xForm.noteTypes.Alert, "The issue date is not valid - it may not be required for Switch or Solo cards.");
-                                            if (Strings.InStr(cMessage, "ExpiryDate") > 0 | Strings.InStr(cMessage, "Expiry Date") > 0)
-                                                ccXform.addNote("creditCard/expireDate", Protean.xForm.noteTypes.Alert, "The expiry date is not valid.");
-
-                                            err_msg_log = cMessage;
-
-                                            if (gbDebug)
-                                            {
-                                                err_msg = "<br/>Full Request:" + this.goServer.HtmlEncode(this.goServer.UrlDecode(cRequest)) + "<br/>Full Response:" + this.goServer.HtmlEncode(this.goServer.UrlDecode(cResponse));
-                                            }
-                                            else
-                                            {
-                                                err_msg = "There was an error processing this payment.<br/>  No payment has been made.<br/>  Please check the details you entered and try again, or call for assistance.<br/><br/>  The error returned fron the bank was :<br/><br/> " + this.goServer.HtmlEncode(this.goServer.UrlDecode(cMessage));
-
-                                                // goSession("attemptCount") = Nothing
-                                            }
-
-                                            break;
-                                        }
-
-                                    default:
-                                        {
-                                            // Response not recognised.
-                                            cMessage = Conversions.ToString(oResponseDict["StatusDetail"]);
-
-                                            if (gbDebug)
-                                            {
-                                                err_msg = "<br/>Full Request:" + this.goServer.HtmlEncode(this.goServer.UrlDecode(cRequest)) + "<br/>Full Response:" + this.goServer.HtmlEncode(this.goServer.UrlDecode(cResponse));
-                                            }
-                                            else
-                                            {
-                                                err_msg_log = "<br/>Full Request:" + this.goServer.HtmlEncode(this.goServer.UrlDecode(cRequest)) + "<br/>Full Response:" + this.goServer.HtmlEncode(this.goServer.UrlDecode(cResponse));
-                                                err_msg = "There was an error processing this payment.  No payment has been made.  Please check the details you entered and try again, or call for assistance.  The error detail was : " + this.goServer.HtmlEncode(this.goServer.UrlDecode(cMessage));
-                                            }
-
-                                            this.goSession["attemptCount"] = (object)null;
-                                            break;
-                                        }
-                                }
-
-                            }
-
-                            ccXform.addNote("creditCard", Protean.xForm.noteTypes.Alert, err_msg, true);
-
-                            if (bIsValid)
-                            {
-                                cSellerNotes = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Conversions.ToString(DateTime.Today) + " " + Conversions.ToString(DateAndTime.TimeOfDay) + ": changed to: (Payment Received) " + Constants.vbLf + "Transaction Ref:", oResponseDict["VPSTxId"]), Constants.vbLf), "comment: "), err_msg));
-                            }
-                            else
-                            {
-                                if (string.IsNullOrEmpty(err_msg_log) & !string.IsNullOrEmpty(err_msg))
-                                {
-                                    err_msg_log = err_msg;
-                                }
-                                cSellerNotes = Conversions.ToString(DateTime.Today) + " " + Conversions.ToString(DateAndTime.TimeOfDay) + ": changed to: (Payment Failed) " + Constants.vbLf + "comment: " + err_msg_log;
-                            }
-
-                            ccXform.valid = bIsValid;
-                            // Save Payment
-                            XmlElement oSaveElmt = (XmlElement)ccXform.Instance.SelectSingleNode("creditCard/bSavePayment");
-
-                            // Set up the save payment.
-                            // Note from Ali - not really sure what's involved here and this falls over if 3d Secure is involved,
-                            // so need to have other options if coming back from 3d secure
-
-                            if (!b3dAuthorised)
-                            {
-                                var oDate = new DateTime(Conversions.ToInteger("20" + Strings.Right(this.goRequest["creditCard/expireDate"], 2)), Conversions.ToInteger(Strings.Left(this.goRequest["creditCard/expireDate"], 2)), 1);
-                                oDate = oDate.AddMonths(1);
-                                oDate = oDate.AddDays(-1);
-                                string cMethodName = this.goRequest["creditCard/type"] + ": " + stdTools.MaskString(this.goRequest["creditCard/number"], "*", false, 4) + " Expires: " + oDate.ToShortDateString();
-
-                                var oCustomElmt = ccXform.Instance.OwnerDocument.CreateElement("ProTx");
-
-                                oCustomElmt.SetAttribute("VPSTxId", Conversions.ToString(oResponseDict["VPSTxId"]));
-                                oCustomElmt.SetAttribute("SecurityKey", Conversions.ToString(oResponseDict["SecurityKey"]));
-                                oCustomElmt.SetAttribute("TxAuthNo", Conversions.ToString(oResponseDict["TxAuthNo"]));
-                                ccXform.Instance.FirstChild.AppendChild(oCustomElmt);
-
-                                if (oSaveElmt != null)
-                                {
-                                    if (oSaveElmt.InnerText == "true" & bIsValid)
-                                    {
-                                        savePayment((long)myWeb.mnUserId, "ProTx", mnCartId.ToString(), cMethodName, (XmlElement)ccXform.Instance.FirstChild, oDate, true, mnPaymentAmount);
-                                    }
-                                    else
-                                    {
-                                        savePayment((long)myWeb.mnUserId, "ProTx", mnCartId.ToString(), cMethodName, (XmlElement)ccXform.Instance.FirstChild, DateTime.Now, false, mnPaymentAmount);
-                                    }
-                                }
-                                else
-                                {
-                                    savePayment((long)myWeb.mnUserId, "ProTx", mnCartId.ToString(), cMethodName, (XmlElement)ccXform.Instance.FirstChild, DateTime.Now, false, mnPaymentAmount);
-                                }
-                            }
-                        }
-
-                        else
-                        {
-                            if (ccXform.isSubmitted())
-                            {
-                                cSellerNotes = Conversions.ToString(DateTime.Today) + " " + Conversions.ToString(DateAndTime.TimeOfDay) + ": changed to: (Payment Form EonicWeb Validation Failed) " + Constants.vbLf + "comment: " + ccXform.validationError;
-                            }
-                            else
-                            {
-                                cSellerNotes = Conversions.ToString(DateTime.Today) + " " + Conversions.ToString(DateAndTime.TimeOfDay) + ": changed to: (Payment Form Presented) " + Constants.vbLf + "comment: " + err_msg_log;
-                            }
-                            ccXform.valid = false;
-                        }
-
-                        // Update Seller Notes:
-                        sSql = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
-                        DataSet oDs;
-                        oDs = modbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
-                        foreach (DataRow oRow in oDs.Tables["Order"].Rows)
-                            oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), cSellerNotes);
-                        modbHelper.updateDataset(ref oDs, "Order");
-
-                        return ccXform;
-                    }
-
-                    catch (Exception ex)
-                    {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "paySagePay", ex, "", cProcessInfo, gbDebug);
-                        return (Cms.xForm)null;
-                    }
-                }
-
-                public Cms.xForm paySecureTrading(ref XmlElement oRoot, string sSubmitPath, [Optional, DefaultParameterValue("")] ref string cReturnMethod, [Optional, DefaultParameterValue("")] ref string cReturnTransRef)
-                {
-                    Cms.xForm paySecureTradingRet = default;
-
-                    // cReturnMethod - If the request is ST3DCARDQUERY and there is no enrollment, then we need to go straight on to submitting a AUTH or 3DSTAUTH request, hence the return method.
-
-                    myWeb.PerfMon.Log("PaymentProviders", "paySecureTrading");
-
-                    XmlElement oRequestBlockXml;
-                    XmlElement oRequestXml;
-                    XmlElement oCustXml;
-                    XmlElement oPostXml;
-                    XmlElement oPaymentXml;
-                    XmlElement oParent;
-                    XmlElement oElmt;
-
-                    XmlElement oAddress;
-
-                    HttpWebRequest oXpayRequest;
-                    HttpWebResponse oXpayResponse;
-                    Stream oXpayStream;
-                    StreamReader oXpayStreamReader;
-
-                    XmlElement oXmlResponse;
-                    long nResult;
-
-                    string cXpayResponse;
-                    string cRequest;
-                    var oEncoding = new ASCIIEncoding();
-                    byte[] byRequest;
-
-                    string sSql;
-
-                    string cMessage;
-
-                    Cms.xForm ccXform;
-
-                    bool bIsValid = false;
-                    string err_msg = "";
-                    string err_msg_log = "";
-                    Hashtable oDictOpt;
-
-                    bool b3DAuthorised = false;
-                    bool b3DSecure = false;
-                    bool bCv2 = false;
-                    string cMD = "";
-                    string cRedirectURL = "";
-                    string cInstanceFromCallback = "";
-
-                    bool bIsCallback = false;
-
-                    string cTokenAmp = "&";
-                    string cTokenEqual = "=";
-                    string cSubmitCommand = "cartCmd=SecureTradingReturn" + cTokenAmp;
-
-                    XmlNode oPaymentCfg;
-
-
-                    string cProcessInfo = "paySecureTrading";
-                    try
-                    {
-
-                        // Get the payment options
-                        oPaymentCfg = moPaymentCfg.SelectSingleNode("provider[@name='SecureTrading']");
-
-                        if (oPaymentCfg is null)
-                        {
-                            Information.Err().Raise(1005, "paySecureTrading", "The Secure Trading provider section is yet to be added to the Protean.Config");
-                        }
-
-                        oDictOpt = xmlToHashTable(oPaymentCfg, "value");
-
-                        // override the currency
-                        if (oDictOpt.ContainsKey("currency"))
-                            oDictOpt.Remove("currency");
-                        oDictOpt.Add("currency", mcCurrency);
-
-                        // Set common variables
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["validateCV2"], "on", false)))
-                            bCv2 = true;
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["secure3d"], "on", false)))
-                            b3DSecure = true;
-
-                        // Check if we are getting a callback from Secure Trading - if so get the encrypted instance.
-                        if (Strings.Left(myWeb.moRequest["cartCmd"], 19) == "SecureTradingReturn")
-                        {
-
-                            sSql = "select cPayMthdDetailXml from tblCartPaymentMethod INNER JOIN tblCartOrder ON nPayMthdId = nPayMthdKey where nCartOrderkey=" + mnCartId;
-                            string oInstance = Conversions.ToString(myWeb.moDbHelper.GetDataValue(sSql));
-                            if (!string.IsNullOrEmpty(oInstance))
-                            {
-                                var oElmt2 = moPageXml.CreateElement("elmt");
-                                oElmt2.InnerXml = oInstance;
-                                cInstanceFromCallback = DecryptString(oElmt2.FirstChild.InnerText, false);
-                            }
-                            bIsCallback = true;
-                        }
-
-                        ccXform = creditCardXform(ref oRoot, "PayForm", sSubmitPath, Conversions.ToString(oDictOpt["cardsAccepted"]), true, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Make Payment of " + Strings.FormatNumber(mnPaymentAmount, 2) + " ", oDictOpt["currency"]), " by Credit/Debit Card")), cInstance: cInstanceFromCallback, bOverrideValidity: bIsCallback);
-
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["disableAmpersandsInCallbackURL"], "on", false)))
-                        {
-                            // Change the URL to be tokenised because Secure Trading can't handle 
-                            // ampersands in their callback URLs.  Gits. 
-                            cTokenAmp = "xAMPx";
-                            cTokenEqual = "xEQUx";
-                            cSubmitCommand = "cartCmd=SecureTradingReturn" + cTokenAmp;
-                        }
-
-                        if (b3DSecure)
-                        {
-                            // check for return from aquiring bank
-                            if (!string.IsNullOrEmpty(myWeb.moRequest["MD"]) | !string.IsNullOrEmpty(cReturnMethod))
-                            {
-                                b3DAuthorised = true;
-                                // If cReturnMethod <> "" Then
-                                cMD = myWeb.moRequest["MD"];
-                                // End If
-                            }
-                            cRedirectURL = moCartConfig["SecureURL"] + "default.ashx?" + cSubmitCommand;
-                        }
-
-                        if (ccXform.valid == true | b3DAuthorised)
-                        {
-
-                            // Determine the request type
-                            string cRequestType;
-                            if (!string.IsNullOrEmpty(cReturnMethod))
-                            {
-                                cRequestType = cReturnMethod;
-                            }
-                            else if (!b3DSecure)
-                            {
-                                cRequestType = "AUTH";
-                            }
-                            else if (b3DAuthorised)
-                            {
-                                cRequestType = "ST3DAUTH";
-                            }
-                            else
-                            {
-                                cRequestType = "ST3DCARDQUERY";
-                            }
-
-                            // Build the RequestBlock XML
-                            oRequestBlockXml = moPageXml.CreateElement("RequestBlock");
-                            oRequestBlockXml.SetAttribute("Version", Conversions.ToString(oDictOpt["appVersion"]));
-
-                            // RequestBlock - Add the Request
-                            oRequestXml = addElement(ref oRequestBlockXml, "Request");
-                            oRequestXml.SetAttribute("Type", cRequestType);
-
-                            // Request - Add the Operation
-                            oParent = addElement(ref oRequestXml, "Operation");
-                            oElmt = addElement(ref oParent, "Amount", (mnPaymentAmount * 100d).ToString()); // Note - need to convert to base unit. e.g. pence/cents etc.
-                            oElmt = addElement(ref oParent, "SiteReference", Conversions.ToString(oDictOpt["siteReference"]));
-                            // Add the Currency if available
-                            if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectNotEqual(oDictOpt["currency"], "", false), Strings.Len(Strings.Trim(Conversions.ToString(oDictOpt["currency"]))) == 3)))
-                            {
-                                oElmt = addElement(ref oParent, "Currency", Conversions.ToString(oDictOpt["currency"]));
-                            }
-                            // Request specific elements
-                            switch (cRequestType ?? "")
-                            {
-                                case "ST3DCARDQUERY":
-                                    {
-                                        oElmt = addElement(ref oParent, "MerchantName", Strings.Left(moCartConfig["MerchantName"], 25));
-                                        oElmt = addElement(ref oParent, "TermUrl", cRedirectURL);
-                                        break;
-                                    }
-
-                                default:
-                                    {
-                                        oElmt = addElement(ref oParent, "SettlementDay", Conversions.ToString(oDictOpt["settlementDay"]));
-                                        break;
-                                    }
-                            }
-
-
-                            // Request - Add the CustomerInfo
-                            oCustXml = addElement(ref oRequestXml, "CustomerInfo");
-
-                            switch (cRequestType ?? "")
-                            {
-                                case "ST3DCARDQUERY":
-                                    {
-                                        oElmt = Tools.Xml.addElement(ref oCustXml, "Accept", myWeb.moRequest.ServerVariables["HTTP_ACCEPT"]);
-                                        oElmt = Tools.Xml.addElement(ref oCustXml, "UserAgent", myWeb.moRequest.ServerVariables["HTTP_USER_AGENT"]);
-                                        break;
-                                    }
-
-                                default:
-                                    {
-                                        // CustomerInfo - Add Billing Info
-                                        oAddress = (XmlElement)oRoot.SelectSingleNode("Contact[@type='Billing Address']");
-                                        oPostXml = addElement(ref oCustXml, "Postal");
-                                        oElmt = addElement(ref oPostXml, "Company", oNodeFromXPath: oAddress.SelectSingleNode("Company"));
-                                        oElmt = addElement(ref oPostXml, "Street", oNodeFromXPath: oAddress.SelectSingleNode("Street"));
-                                        oElmt = addElement(ref oPostXml, "City", oNodeFromXPath: oAddress.SelectSingleNode("City"));
-                                        oElmt = addElement(ref oPostXml, "StateProv", oNodeFromXPath: oAddress.SelectSingleNode("State"));
-                                        oElmt = addElement(ref oPostXml, "PostalCode", oNodeFromXPath: oAddress.SelectSingleNode("PostalCode"));
-                                        string localgetCountryISO2Code() { string argsCountry = oAddress.SelectSingleNode("Country").InnerText; var ret = getCountryISO2Code(ref argsCountry); oAddress.SelectSingleNode("Country").InnerText = argsCountry; return ret; }
-
-                                        oElmt = addElement(ref oPostXml, "CountryCode", localgetCountryISO2Code());
-
-                                        // CustomerInfo - Add Name
-                                        oParent = addElement(ref oPostXml, "Name", bPrepend: true);
-                                        oElmt = addElement(ref oParent, "FirstName", oNodeFromXPath: oAddress.SelectSingleNode("GivenName"));
-                                        oElmt = addElement(ref oParent, "LastName");
-                                        oElmt = addElement(ref oParent, "NamePrefix");
-                                        oElmt = addElement(ref oParent, "MiddleName");
-                                        oElmt = addElement(ref oParent, "NameSuffix");
-
-                                        // CustomerInfo - Add Telecoms
-                                        oParent = addElement(ref oCustXml, "Telecom");
-                                        oElmt = addElement(ref oParent, "Phone", oNodeFromXPath: oAddress.SelectSingleNode("Telephone"));
-
-                                        // CustomerInfo - Add Email
-                                        oParent = addElement(ref oCustXml, "Online");
-                                        oElmt = addElement(ref oParent, "Email", oNodeFromXPath: oAddress.SelectSingleNode("Email"));
-                                        break;
-                                    }
-                            }
-
-
-
-                            // Request - Add the Payment Method
-                            oPaymentXml = addElement(ref oRequestXml, "PaymentMethod");
-                            oParent = addElement(ref oPaymentXml, "CreditCard");
-                            oElmt = Tools.Xml.addElement(ref oParent, "Type", ccXform.Instance.SelectSingleNode("creditCard/type").InnerText);
-                            oElmt = addElement(ref oParent, "Number", this.FormatCreditCardNumber(ccXform.Instance.SelectSingleNode("creditCard/number").InnerText).ToString());
-                            oElmt = Tools.Xml.addElement(ref oParent, "Issue", ccXform.Instance.SelectSingleNode("creditCard/issueNumber").InnerText);
-                            oElmt = addElement(ref oParent, "StartDate", this.fmtSecureTradingDate(ccXform.Instance.SelectSingleNode("creditCard/issueDate").InnerText));
-                            oElmt = addElement(ref oParent, "ExpiryDate", this.fmtSecureTradingDate(ccXform.Instance.SelectSingleNode("creditCard/expireDate").InnerText));
-                            oElmt = Tools.Xml.addElement(ref oParent, "SecurityCode", ccXform.Instance.SelectSingleNode("creditCard/CV2").InnerText);
-
-                            // Payment - Process 3D Secure additional params
-                            if (cRequestType == "ST3DAUTH")
-                            {
-                                string cReqEnrolled;
-                                string cReqPTR;
-                                // Add ref to the credit card
-                                if (!string.IsNullOrEmpty(cReturnMethod))
-                                {
-                                    cReqEnrolled = "N";
-                                    cReqPTR = cReturnTransRef;
-                                }
-                                else if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["disableAmpersandsInCallbackURL"], "on", false)))
-                                {
-                                    cReqEnrolled = stdTools.SimpleRegexFind(myWeb.moRequest.QueryString["cartCmd"], cTokenAmp + "Enrolled" + cTokenEqual + "([^(" + cTokenAmp + ")]+)" + cTokenAmp, 1, RegexOptions.IgnoreCase);
-                                    cReqPTR = stdTools.SimpleRegexFind(myWeb.moRequest.QueryString["cartCmd"], cTokenAmp + "PTR" + cTokenEqual + "([^(" + cTokenAmp + ")]+)" + cTokenAmp, 1, RegexOptions.IgnoreCase);
-                                }
-                                else
-                                {
-                                    cReqEnrolled = myWeb.moRequest["Enrolled"];
-                                    cReqPTR = myWeb.moRequest["PTR"];
-                                }
-                                oElmt = addElement(ref oParent, "ParentTransactionReference", cReqPTR);
-
-                                // Add a 3d Secure element
-                                oParent = addElement(ref oPaymentXml, "ThreeDSecure");
-                                oElmt = addElement(ref oParent, "Enrolled", cReqEnrolled);
-                                oElmt = Tools.Xml.addElement(ref oParent, "PaRes", myWeb.moRequest["PaRes"]);
-                                oElmt = addElement(ref oParent, "MD", cMD);
-                            }
-
-
-                            // Request - Add the Order Information
-                            oParent = addElement(ref oRequestXml, "Order");
-                            oElmt = addElement(ref oParent, "OrderInformation", getWorldPayOrder(ref oRoot));
-                            oElmt = addElement(ref oParent, "OrderReference", mnCartId.ToString());
-
-                            // Get Certificate from file.  Not a wholly secure means as not encrypted but good for now.
-                            var oStreamreader = new StreamReader(Conversions.ToString(oDictOpt["certificatePath"]));
-
-                            // RequestBlock - Add the Certificate
-                            oParent = addElement(ref oRequestBlockXml, "Certificate", Constants.vbCrLf + oStreamreader.ReadToEnd());
-                            oStreamreader.Close();
-
-                            // Convert the request to bytes
-                            cRequest = oRequestBlockXml.OuterXml;
-                            byRequest = oEncoding.GetBytes(cRequest);
-
-                            oXpayRequest = (HttpWebRequest)HttpWebRequest.Create(Convert.ToString(Operators.ConcatenateObject("http://127.0.0.1:", oDictOpt["appPort"])));
-                            oXpayRequest.ContentType = "application/x-www-form-urlencoded";
-                            oXpayRequest.ContentLength = cRequest.Length;
-                            oXpayRequest.Method = "POST";
-                            oXpayStream = oXpayRequest.GetRequestStream();
-                            oXpayStream.Write(byRequest, 0, byRequest.Length);
-                            oXpayStream.Close();
-
-                            oXpayResponse = (HttpWebResponse)oXpayRequest.GetResponse();
-                            oXpayStream = oXpayResponse.GetResponseStream();
-                            oXpayStreamReader = new StreamReader(oXpayStream, Encoding.UTF8);
-                            cXpayResponse = oXpayStreamReader.ReadToEnd();
-
-                            oXmlResponse = moPageXml.CreateElement("oXmlResponse");
-                            oXmlResponse.InnerXml = cXpayResponse;
-
-                            oXpayStreamReader.Close();
-                            oXpayResponse.Close();
-
-                            // Validate the response.
-                            XmlElement oOpResponse;
-                            string oResponseType;
-                            oOpResponse = (XmlElement)oXmlResponse.SelectSingleNode("/ResponseBlock/Response/OperationResponse");
-                            if (oOpResponse is null)
-                            {
-                                err_msg = "There was a communications error.";
-                            }
-                            else
-                            {
-                                nResult = Conversions.ToLong(oOpResponse.SelectSingleNode("Result").InnerText);
-                                oResponseType = oOpResponse.ParentNode.Attributes["Type"].InnerText;
-                                // Process the repsonse by Type
-                                switch (oResponseType ?? "")
-                                {
-
-                                    case "ST3DCARDQUERY":
-                                        {
-
-                                            switch (nResult)
-                                            {
-                                                case 0L:
-                                                    {
-                                                        cMessage = "";
-                                                        // ST3DCARDQUERY Should be retried
-                                                        try
-                                                        {
-                                                            cMessage = oOpResponse.SelectSingleNode("Message").InnerText;
-                                                            err_msg_log = cMessage;
-                                                            cMessage = "  The error detail was : " + Strings.Mid(cMessage, Strings.InStr(cMessage, ")") + 1);
-                                                        }
-                                                        catch (Exception ex2)
-                                                        {
-                                                            // Do Nothing
-                                                        }
-
-                                                        err_msg = "There was an error processing this payment.  No payment has been made.  Please check the details you entered and try again, or call for assistance. " + cMessage;
-                                                        break;
-                                                    }
-
-                                                case 1L:
-                                                    {
-                                                        // Successful Authorisation - Process the response into a 3D Secure form
-                                                        string cACS;
-                                                        string cPaReq;
-                                                        string cEnrolled;
-                                                        var oXml = new XmlDocument();
-
-                                                        cMessage = "";
-                                                        // Is the user enrolled
-                                                        cEnrolled = oOpResponse.SelectSingleNode("Enrolled").InnerText;
-
-                                                        switch (cEnrolled ?? "")
-                                                        {
-
-                                                            case "Y":
-                                                                {
-
-                                                                    // Encrypt the cc details form for retrieval by Sec Trading later.
-                                                                    string cCCInstance = stdTools.EncryptString(ccXform.Instance.InnerXml, false);
-                                                                    var oEncryptedPayment = ccXform.moPageXML.CreateElement("encryptedPayment");
-                                                                    oEncryptedPayment.InnerText = cCCInstance;
-                                                                    this.savePayment((long)myWeb.mnUserId, "ProTx", mnCartId.ToString(), "SecureTrading", oEncryptedPayment, DateTime.Now, false, mnPaymentAmount);
-
-                                                                    try
-                                                                    {
-
-
-                                                                        // Get the HTML and load it in
-
-                                                                        // Try to parse the HTML
-                                                                        // The following method looks convoluted, but it is probably the best way to get through this shocking excuse for HTML.
-                                                                        // tidyXhtmlFrag doesn't work because it does something strange to the actual values we are trying to retrieve.
-
-                                                                        string cHtml = oOpResponse.SelectSingleNode("Html").InnerText;
-                                                                        // Dim oRe As Regex, oFind As Match
-
-                                                                        // Get Action
-                                                                        cACS = SimpleRegexFind(cHtml, "ACTION='([^']+)'", 1, RegexOptions.IgnoreCase);
-
-                                                                        // Get PaReq
-                                                                        cPaReq = SimpleRegexFind(cHtml, "name='PaReq' value='([^']+)'", 1, RegexOptions.IgnoreCase);
-
-                                                                        // Get MD
-                                                                        cMD = SimpleRegexFind(cHtml, "name='MD' value='([^']+)'", 1, RegexOptions.IgnoreCase);
-
-                                                                        cRedirectURL = cRedirectURL + "Enrolled" + cTokenEqual + cEnrolled + cTokenAmp;
-                                                                        cRedirectURL = cRedirectURL + "PTR" + cTokenEqual + oOpResponse.SelectSingleNode("TransactionReference").InnerText + cTokenAmp;
-                                                                        cRedirectURL = cRedirectURL + "cartId" + cTokenEqual + mnCartId + cTokenAmp;
-                                                                        ccXform = xfrmSecure3D(cACS, cMD, cPaReq, cRedirectURL);
-                                                                    }
-
-
-
-
-                                                                    catch (Exception ex)
-                                                                    {
-                                                                        if (!string.IsNullOrEmpty(cMessage))
-                                                                            cMessage = "3D Secure : Could not process the response. (Technical Info: CardQuery Html)";
-                                                                        err_msg_log = cMessage;
-                                                                    }
-
-                                                                    break;
-                                                                }
-
-                                                            default:
-                                                                {
-                                                                    // User not enrolled, so we need to proceed to the 3DAUTHRequest
-                                                                    cReturnTransRef = oOpResponse.SelectSingleNode("TransactionReference").InnerText;
-                                                                    cReturnMethod = "ST3DAUTH";
-                                                                    err_msg_log = "ST3DCARDQUERY Returned " + nResult + " + Enrolled of " + cEnrolled;
-                                                                    break;
-                                                                }
-                                                        }
-
-                                                        if (!string.IsNullOrEmpty(cMessage))
-                                                            err_msg = "There was an error processing this payment.  No payment has been made.  Please check the details you entered and try again, or call for assistance. " + cMessage;
-                                                        break;
-                                                    }
-                                                case 2L:
-                                                    {
-                                                        // Note - Must perform nomral AUTH request - how to do this in this form.
-                                                        cReturnMethod = "AUTH";
-                                                        err_msg_log = "ST3DCARDQUERY Returned " + nResult;
-                                                        break;
-                                                    }
-                                            }
-
-                                            break;
-                                        }
-
-
-                                    case "AUTH":
-                                    case "ST3DAUTH":
-                                        {
-                                            switch (nResult)
-                                            {
-                                                case 0L:
-                                                    {
-                                                        cMessage = "";
-                                                        // Failed / Error Authorisation
-                                                        try
-                                                        {
-                                                            cMessage = oOpResponse.SelectSingleNode("Message").InnerText;
-                                                            if (Strings.InStr(cMessage, "CreditCardNumber") > 0)
-                                                                ccXform.addNote("creditCard/number", Protean.xForm.noteTypes.Alert, "The card number is not valid.");
-                                                            if (Strings.InStr(cMessage, "IssueNumber") > 0)
-                                                                ccXform.addNote("creditCard/issueNumber", Protean.xForm.noteTypes.Alert, "The issue number is not valid - it may not be required for non-Switch/Solo cards.");
-                                                            if (Strings.InStr(cMessage, "StartDate") > 0)
-                                                                ccXform.addNote("creditCard/issueDate", Protean.xForm.noteTypes.Alert, "The issue date is not valid - it may not be required for Switch or Solo cards.");
-                                                            if (Strings.InStr(cMessage, "ExpiryDate") > 0)
-                                                                ccXform.addNote("creditCard/expireDate", Protean.xForm.noteTypes.Alert, "The expiry date is not valid.");
-
-                                                            err_msg_log = cMessage;
-                                                            cMessage = "  The error detail was : " + Strings.Mid(cMessage, Strings.InStr(cMessage, ")") + 1);
-                                                        }
-                                                        catch (Exception ex2)
-                                                        {
-                                                            // Do Nothing
-                                                        }
-
-                                                        err_msg = "There was an error processing this payment.  No payment has been made.  Please check the details you entered and try again, or call for assistance. " + cMessage;
-                                                        break;
-                                                    }
-
-                                                case 1L:
-                                                    {
-                                                        // Successful Authorisation
-                                                        err_msg = "Payment was successful. Transaction ref: " + oOpResponse.SelectSingleNode("TransactionReference").InnerText;
-                                                        bIsValid = true;
-                                                        break;
-                                                    }
-                                                case 2L:
-                                                    {
-                                                        cMessage = "";
-                                                        try
-                                                        {
-                                                            // Declined Authorisation
-                                                            if (oOpResponse.SelectSingleNode("Message") is null)
-                                                            {
-                                                                cMessage = "";
-                                                            }
-                                                            else
-                                                            {
-                                                                cMessage = oOpResponse.SelectSingleNode("Message").InnerText;
-                                                                cMessage = "  The error detail was : " + Strings.Mid(cMessage, Strings.InStr(cMessage, ")") + 1);
-                                                            }
-                                                        }
-                                                        catch (Exception ex2)
-                                                        {
-                                                            // Do Nothing
-                                                        }
-
-                                                        err_msg_log = cMessage;
-                                                        err_msg = "The authorisation for your payment was declined.  No payment has been made.  Please check the details you entered and try again, or call for assistance." + cMessage;
-                                                        break;
-                                                    }
-                                            }
-
-                                            break;
-                                        }
-
-                                    default:
-                                        {
-
-                                            switch (nResult)
-                                            {
-                                                case 0L:
-                                                    {
-                                                        cMessage = "";
-                                                        // ST3DCARDQUERY Should be retried
-                                                        try
-                                                        {
-                                                            cMessage = oOpResponse.SelectSingleNode("Message").InnerText;
-                                                            err_msg_log = cMessage;
-                                                            cMessage = "  The error detail was : " + Strings.Mid(cMessage, Strings.InStr(cMessage, ")") + 1);
-                                                        }
-                                                        catch (Exception ex2)
-                                                        {
-                                                            // Do Nothing
-                                                        }
-
-                                                        err_msg = "There was an error processing this payment.  No payment has been made.  Please check the details you entered and try again, or call for assistance. " + cMessage;
-                                                        break;
-                                                    }
-                                            }
-
-                                            break;
-                                        }
-
-                                }
-                            }
-
-                            // Update Seller Notes:
-                            ccXform.addNote("creditCard", Protean.xForm.noteTypes.Alert, err_msg);
-
-
-                            sSql = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
-                            DataSet oDs;
-                            oDs = modbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
-                            foreach (DataRow oRow in oDs.Tables["Order"].Rows)
-                            {
-                                if (bIsValid)
-                                {
-                                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Received) "), Constants.vbLf), "comment: "), err_msg), Constants.vbLf), "Full Response:' "), cXpayResponse), "'");
-                                }
-                                else
-                                {
-                                    if (string.IsNullOrEmpty(err_msg_log))
-                                        err_msg_log = err_msg;
-                                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Failed) "), Constants.vbLf), "comment: "), err_msg_log), Constants.vbLf), "Full Response:' "), cXpayResponse), "'");
-                                }
-
-                            }
-                            modbHelper.updateDataset(ref oDs, "Order");
-
-
-                            ccXform.valid = bIsValid;
-                        }
-                        else
-                        {
-                            ccXform.valid = false;
-                        }
-
-                        paySecureTradingRet = ccXform;
-                    }
-
-                    catch (Exception ex)
-                    {
-
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "paySecureTrading", ex, "", cProcessInfo, gbDebug);
-                        return (Cms.xForm)null;
-                    }
-
-                    return paySecureTradingRet;
-                }
-
-                public Cms.xForm paySecureTradingOld(ref XmlElement oRoot, string sSubmitPath)
-                {
-                    myWeb.PerfMon.Log("PaymentProviders", "paySecureTrading");
-                    XmlElement oRequestBlockXml;
-                    XmlElement oRequestXml;
-                    XmlElement oCustXml;
-                    XmlElement oPostXml;
-                    XmlElement oPaymentXml;
-                    XmlElement oParent;
-                    XmlElement oElmt;
-
-                    XmlElement oAddress;
-
-                    HttpWebRequest oXpayRequest;
-                    HttpWebResponse oXpayResponse;
-                    Stream oXpayStream;
-                    StreamReader oXpayStreamReader;
-
-                    XmlElement oXmlResponse;
-                    long nResult;
-
-                    string cXpayResponse;
-                    string cRequest;
-                    var oEncoding = new ASCIIEncoding();
-                    byte[] byRequest;
-
-                    string sSql;
-
-                    string cMessage;
-
-                    Cms.xForm ccXform;
-
-                    bool bIsValid = false;
-                    string err_msg = "";
-                    string err_msg_log = "";
-                    string sProcessInfo = "";
-                    Hashtable oDictOpt;
-
-                    bool bCv2 = false;
-
-                    string cProcessInfo = "paySecureTrading";
-                    try
-                    {
-
-                        // Get the payment options into a hashtable
-                        sSql = "select * from tbl_ewc_paymentSettings where cPymtStgTypeRef Like 'Secure Trading' or cPymtStgTypeRef Like 'General Settings' or cPymtStgTypeRef Like 'Advanced Settings' ";
-
-                        string argsValueField = "cPymtStgValue";
-                        oDictOpt = modbHelper.getHashTable(sSql, "cPymtStgName", ref argsValueField);
-
-                        // Load the Xform
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["CV2"], "1", false)))
-                            bCv2 = true;
-
-                        ccXform = creditCardXform(ref oRoot, "PayForm", sSubmitPath, Conversions.ToString(oDictOpt["CardsAccepted"]), true, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Make Payment of " + Strings.FormatNumber(mnPaymentAmount, 2) + " ", oDictOpt["Currency"]), " by Credit/Debit Card")));
-
-                        if (ccXform.valid == true)
-                        {
-
-                            // Build the RequestBlock XML
-                            oRequestBlockXml = moPageXml.CreateElement("RequestBlock");
-                            oRequestBlockXml.SetAttribute("Version", Conversions.ToString(oDictOpt["STAppVersion"]));
-
-                            // RequestBlock - Add the Request
-                            oRequestXml = addElement(ref oRequestBlockXml, "Request");
-                            oRequestXml.SetAttribute("Type", "AUTH");
-
-                            // Request - Add the Operation
-                            oParent = addElement(ref oRequestXml, "Operation");
-                            oElmt = addElement(ref oParent, "Amount", (mnPaymentAmount * 100d).ToString()); // Note - need to convert to base unit. e.g. pence/cents etc.
-                            oElmt = addElement(ref oParent, "SiteReference", Conversions.ToString(oDictOpt["SiteReference"]));
-                            oElmt = addElement(ref oParent, "SettlementDay", Conversions.ToString(oDictOpt["SettlementDay"]));
-                            // Add the Currency if available
-                            if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectNotEqual(oDictOpt["Currency"], "", false), Strings.Len(Strings.Trim(Conversions.ToString(oDictOpt["Currency"]))) == 3)))
-                            {
-                                oElmt = addElement(ref oParent, "Currency", Conversions.ToString(oDictOpt["Currency"]));
-                            }
-
-                            // Request - Add the CustomerInfo
-                            oCustXml = addElement(ref oRequestXml, "CustomerInfo");
-
-                            // CustomerInfo - Add Billing Info
-                            oAddress = (XmlElement)oRoot.SelectSingleNode("Contact[@type='Billing Address']");
-                            oPostXml = addElement(ref oCustXml, "Postal");
-                            oElmt = addElement(ref oPostXml, "Company", oNodeFromXPath: oAddress.SelectSingleNode("Company"));
-                            oElmt = addElement(ref oPostXml, "Street", oNodeFromXPath: oAddress.SelectSingleNode("Address/Street"));
-                            oElmt = addElement(ref oPostXml, "City", oNodeFromXPath: oAddress.SelectSingleNode("Address/City"));
-                            oElmt = addElement(ref oPostXml, "StateProv", oNodeFromXPath: oAddress.SelectSingleNode("Address/State"));
-                            oElmt = addElement(ref oPostXml, "PostalCode", oNodeFromXPath: oAddress.SelectSingleNode("Address/PostalCode"));
-                            string localgetCountryISO2Code() { string argsCountry1 = oAddress.SelectSingleNode("Address/Country").InnerText; var ret = getCountryISO2Code(ref argsCountry1); oAddress.SelectSingleNode("Address/Country").InnerText = argsCountry1; return ret; }
-
-                            oElmt = addElement(ref oPostXml, "CountryCode", localgetCountryISO2Code());
-
-                            // CustomerInfo - Add Name
-                            oParent = addElement(ref oPostXml, "Name", bPrepend: true);
-                            oElmt = addElement(ref oParent, "FirstName", oNodeFromXPath: oAddress.SelectSingleNode("GivenName"));
-                            oElmt = addElement(ref oParent, "LastName");
-                            oElmt = addElement(ref oParent, "NamePrefix");
-                            oElmt = addElement(ref oParent, "MiddleName");
-                            oElmt = addElement(ref oParent, "NameSuffix");
-
-                            // CustomerInfo - Add Telecoms
-                            oParent = addElement(ref oCustXml, "Telecom");
-                            oElmt = addElement(ref oParent, "Phone", oNodeFromXPath: oAddress.SelectSingleNode("Telephone"));
-
-                            // CustomerInfo - Add Email
-                            oParent = addElement(ref oCustXml, "Online");
-                            oElmt = addElement(ref oParent, "Email", oNodeFromXPath: oAddress.SelectSingleNode("Email"));
-
-                            // Request - Add the Payment Method
-                            oPaymentXml = addElement(ref oRequestXml, "PaymentMethod");
-                            oParent = addElement(ref oPaymentXml, "CreditCard");
-                            oElmt = Tools.Xml.addElement(ref oParent, "Type", this.goRequest["creditCard/type"]);
-                            oElmt = addElement(ref oParent, "Number", this.FormatCreditCardNumber(this.goRequest["creditCard/number"]).ToString());
-                            oElmt = Tools.Xml.addElement(ref oParent, "Issue", this.goRequest["creditCard/issueNumber"]);
-                            oElmt = addElement(ref oParent, "StartDate", this.fmtSecureTradingDate(this.goRequest["creditCard/issueDate"]));
-                            oElmt = addElement(ref oParent, "ExpiryDate", this.fmtSecureTradingDate(this.goRequest["creditCard/expireDate"]));
-                            oElmt = Tools.Xml.addElement(ref oParent, "SecurityCode", this.goRequest["creditCard/CV2"]);
-
-                            // Request - Add the Order Information
-                            oParent = addElement(ref oRequestXml, "Order");
-                            oElmt = addElement(ref oParent, "OrderInformation", getWorldPayOrder(ref oRoot));
-                            oElmt = addElement(ref oParent, "OrderReference", mnCartId.ToString());
-
-                            // Get Certificate from file.  Not a wholly secure means as not encrypted but good for now.
-                            var oStreamreader = new StreamReader(Conversions.ToString(oDictOpt["CertificatePath"]));
-
-                            // RequestBlock - Add the Certificate
-                            oParent = addElement(ref oRequestBlockXml, "Certificate", Constants.vbCrLf + oStreamreader.ReadToEnd());
-                            oStreamreader.Close();
-
-                            // Convert the request to bytes
-                            cRequest = oRequestBlockXml.OuterXml;
-                            byRequest = oEncoding.GetBytes(cRequest);
-
-                            oXpayRequest = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:5000");
-                            oXpayRequest.ContentType = "application/x-www-form-urlencoded";
-                            oXpayRequest.ContentLength = cRequest.Length;
-                            oXpayRequest.Method = "POST";
-                            oXpayStream = oXpayRequest.GetRequestStream();
-                            oXpayStream.Write(byRequest, 0, byRequest.Length);
-                            oXpayStream.Close();
-
-                            oXpayResponse = (HttpWebResponse)oXpayRequest.GetResponse();
-                            oXpayStream = oXpayResponse.GetResponseStream();
-                            oXpayStreamReader = new StreamReader(oXpayStream, Encoding.UTF8);
-                            cXpayResponse = oXpayStreamReader.ReadToEnd();
-
-                            oXmlResponse = moPageXml.CreateElement("oXmlResponse");
-                            oXmlResponse.InnerXml = cXpayResponse;
-
-                            oXpayStreamReader.Close();
-                            oXpayResponse.Close();
-
-                            // Validate the response.
-                            XmlElement oOpResponse;
-                            oOpResponse = (XmlElement)oXmlResponse.SelectSingleNode("/ResponseBlock/Response/OperationResponse");
-                            if (oOpResponse is null)
-                            {
-                                err_msg = "There was a communications error.";
-                            }
-                            else
-                            {
-                                nResult = Conversions.ToLong(oOpResponse.SelectSingleNode("Result").InnerText);
-                                switch (nResult)
-                                {
-                                    case 0L:
-                                        {
-                                            cMessage = "";
-                                            // Failed / Error Authorisation
-                                            try
-                                            {
-                                                cMessage = oOpResponse.SelectSingleNode("Message").InnerText;
-                                                if (Strings.InStr(cMessage, "CreditCardNumber") > 0)
-                                                    ccXform.addNote("creditCard/number", Protean.xForm.noteTypes.Alert, "The card number is not valid.");
-                                                if (Strings.InStr(cMessage, "IssueNumber") > 0)
-                                                    ccXform.addNote("creditCard/issueNumber", Protean.xForm.noteTypes.Alert, "The issue number is not valid - it may not be required for non-Switch/Solo cards.");
-                                                if (Strings.InStr(cMessage, "StartDate") > 0)
-                                                    ccXform.addNote("creditCard/issueDate", Protean.xForm.noteTypes.Alert, "The issue date is not valid - it may not be required for Switch or Solo cards.");
-                                                if (Strings.InStr(cMessage, "ExpiryDate") > 0)
-                                                    ccXform.addNote("creditCard/expireDate", Protean.xForm.noteTypes.Alert, "The expiry date is not valid.");
-
-                                                err_msg_log = cMessage;
-                                                cMessage = "  The error detail was : " + Strings.Mid(cMessage, Strings.InStr(cMessage, ")") + 1);
-                                            }
-                                            catch (Exception ex2)
-                                            {
-                                                // Do Nothing
-                                            }
-
-                                            err_msg = "There was an error processing this payment.  No payment has been made.  Please check the details you entered and try again, or call for assistance. " + cMessage;
-                                            break;
-                                        }
-
-                                    case 1L:
-                                        {
-                                            // Successful Authorisation
-                                            err_msg = "Payment was successful. Transaction ref: " + oOpResponse.SelectSingleNode("TransactionReference").InnerText;
-                                            bIsValid = true;
-                                            break;
-                                        }
-                                    case 2L:
-                                        {
-                                            cMessage = "";
-                                            try
-                                            {
-                                                // Declined Authorisation
-                                                if (oOpResponse.SelectSingleNode("Message") is null)
-                                                {
-                                                    cMessage = "";
-                                                }
-                                                else
-                                                {
-                                                    cMessage = oOpResponse.SelectSingleNode("Message").InnerText;
-                                                    cMessage = "  The error detail was : " + Strings.Mid(cMessage, Strings.InStr(cMessage, ")") + 1);
-                                                }
-                                            }
-                                            catch (Exception ex2)
-                                            {
-                                                // Do Nothing
-                                            }
-
-                                            err_msg_log = cMessage;
-                                            err_msg = "The authorisation for your payment was declined.  No payment has been made.  Please check the details you entered and try again, or call for assistance." + cMessage;
-                                            break;
-                                        }
-                                }
-                            }
-
-                            // Update Seller Notes:
-                            ccXform.addNote("creditCard", Protean.xForm.noteTypes.Alert, err_msg);
-
-                            sSql = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
-                            DataSet oDs;
-                            oDs = modbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
-                            foreach (DataRow oRow in oDs.Tables["Cart"].Rows)
-                            {
-                                if (bIsValid)
-                                {
-                                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Received) "), Constants.vbLf), "comment: "), err_msg);
-                                }
-                                else
-                                {
-                                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Failed) "), Constants.vbLf), "comment: "), err_msg_log);
-                                }
-                            }
-                            modbHelper.updateDataset(ref oDs, "Order");
-
-                            ccXform.valid = bIsValid;
-                        }
-                        else
-                        {
-                            ccXform.valid = false;
-                        }
-
-                        return ccXform;
-                    }
-
-                    catch (Exception ex)
-                    {
-
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "paySecureTrading", ex, "", cProcessInfo, gbDebug);
-                        return (Cms.xForm)null;
-                    }
-                }
+                //            // Set up card options
+                //            sOpts = Conversions.ToString(Operators.ConcatenateObject("test_status=", oDictOpt["opperationMode"]));
+                //            sOpts = sOpts + ",dups=false,card_type=" + this.goRequest["creditCard/type"];
+
+                //            // Account for scheduled payments from the payment config.
+                //            string scheduleInterval = Conversions.ToString(Operators.ConcatenateObject(oDictOpt["scheduleInterval"], ""));
+                //            string scheduleMaxRepeats = Conversions.ToString(Operators.ConcatenateObject(oDictOpt["scheduleMaxRepeats"], ""));
+                //            if (!string.IsNullOrEmpty(scheduleInterval) && Array.IndexOf(paypointScheduleIntervals, scheduleInterval) >= 0)
+                //            {
+
+
+                //                int maxRepeats;
+                //                if (!string.IsNullOrEmpty(scheduleMaxRepeats) && Information.IsNumeric(scheduleMaxRepeats) && Convert.ToInt16(scheduleMaxRepeats) > 0)
+
+                //                {
+                //                    maxRepeats = Conversions.ToInteger(scheduleMaxRepeats);
+                //                }
+                //                else
+                //                {
+                //                    maxRepeats = -1;
+                //                }
+
+                //                // We need to send through an immediate payment - ie, the actual payment
+                //                // and then schedule the same payment based on the interval
+                //                var scheduleDate = default(DateTime);
+                //                switch (scheduleInterval ?? "")
+                //                {
+
+                //                    case "yearly":
+                //                        {
+                //                            scheduleDate = DateTime.Today.AddYears(1);
+                //                            break;
+                //                        }
+                //                    case "half-yearly":
+                //                        {
+                //                            scheduleDate = DateTime.Today.AddMonths(6);
+                //                            break;
+                //                        }
+                //                    case "quarterly":
+                //                        {
+                //                            scheduleDate = DateTime.Today.AddMonths(3);
+                //                            break;
+                //                        }
+                //                    case "monthly":
+                //                        {
+                //                            scheduleDate = DateTime.Today.AddMonths(1);
+                //                            break;
+                //                        }
+                //                    case "weekly":
+                //                        {
+                //                            scheduleDate = DateTime.Today.AddDays(7d);
+                //                            break;
+                //                        }
+                //                    case "daily":
+                //                        {
+                //                            scheduleDate = DateTime.Today.AddDays(1d);
+                //                            break;
+                //                        }
+                //                }
+
+                //                sOpts += ",repeat=" + Strings.Format(scheduleDate, "yyyyMMdd");
+                //                sOpts += "/" + scheduleInterval;
+                //                sOpts += "/" + maxRepeats.ToString();
+                //                sOpts += ":" + mnPaymentAmount.ToString();
+
+                //            }
+
+
+                //            // Currency - if no currency then use GBP
+                //            if (!string.IsNullOrEmpty(mcCurrency))
+                //            {
+                //                sOpts = sOpts + ",currency=" + Strings.UCase(mcCurrency);
+                //            }
+                //            else
+                //            {
+                //                sOpts = sOpts + ",currency=GBP";
+                //            }
+
+                //            // Optional - CV2
+                //            if (bCv2)
+                //            {
+                //                sOpts = sOpts + ",cv2=" + this.goRequest["creditCard/CV2"];
+                //            }
+                //            // Optional - 3DSecure
+                //            if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(oDictOpt["opperationMode"], "true", false), b3DSecure)))
+                //            {
+                //                sOpts = sOpts + ",test_mpi_status=true";
+                //            }
+
+                //            // If test mode, then we must turn on cv2-avs checks - mandatory Visa mandate May 2009
+                //            if (Conversions.ToBoolean(Operators.OrObject(Operators.ConditionalCompareObjectEqual((oDictOpt["opperationMode"]), "true", false), Operators.ConditionalCompareObjectEqual((oDictOpt["opperationMode"]), "false", false))))
+                //            {
+                //                sOpts = sOpts + ",default_cv2avs=ALL MATCH";
+                //            }
+
+                //            if (Conversions.ToBoolean(Operators.OrObject(Operators.ConditionalCompareObjectEqual((oDictOpt["transactionType"]), "defer", false), Operators.ConditionalCompareObjectEqual((oDictOpt["transactionType"]), "deferred", false))))
+                //            {
+                //                if (Information.IsNumeric(oDictOpt["ccDeferDays"]) & Information.IsNumeric(oDictOpt["dcDeferDays"]))
+                //                {
+                //                    sOpts = Conversions.ToString(sOpts + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(",deferred=reuse:", oDictOpt["ccDeferDays"]), ":"), oDictOpt["dcDeferDays"]));
+                //                }
+                //                else
+                //                {
+                //                    sOpts += ",deferred=true";
+                //                }
+
+                //            }
+                //            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["digest"], "on", false)))
+                //            {
+                //                string cDigest = "";
+                //                if (Conversions.ToBoolean(!Operators.ConditionalCompareObjectEqual(oDictOpt["accountId"], "secpay", false)))
+                //                {
+                //                    cDigest = mnCartId.ToString() + mnPaymentAmount.ToString() + Conversions.ToString(oDictOpt["accountPassword"]);
+                //                }
+                //                else
+                //                {
+                //                    cDigest = "secpay";
+                //                }
+                //                var encode = new UnicodeEncoding();
+                //                byte[] inputDigest = encode.GetBytes(cDigest);
+
+                //                byte[] hash;
+                //                // get hash
+                //                var md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
+                //                hash = md5.ComputeHash(inputDigest);
+
+                //                // convert hash value to hex string
+                //                var sb = new StringBuilder();
+                //                foreach (var outputByte in hash)
+                //                    // convert each byte to a Hexadecimal upper case string
+                //                    sb.Append(outputByte.ToString("x2"));
+
+                //                sOpts += ",digest=" + sb.ToString();
+
+                //            }
+
+                //            var oSecVpn = new Protean.Paypoint.SECVPNClient();
+
+                //            cOrderType = oRoot.GetAttribute("orderType");
+                //            if (!(!string.IsNullOrEmpty(cOrderType) & Conversions.ToString(oDictOpt["UseOrderType"]) == "true"))
+                //                cOrderType = Conversions.ToString(oDictOpt["accountId"]);
+                //            if (!b3DSecure)
+                //            {
+                //                string argsType = "Delivery Address";
+                //                string argsType1 = "Billing Address";
+                //                cResponse = oSecVpn.validateCardFull(cOrderType, Conversions.ToString(oDictOpt["accountPassword"]), mnCartId.ToString(), this.goRequest.ServerVariables["REMOTE_ADDR"], mcCardHolderName, this.goRequest["creditCard/number"], mnPaymentAmount.ToString(), this.fmtSecPayDate(this.goRequest["creditCard/expireDate"]), this.goRequest["creditCard/issueNumber"], this.fmtSecPayDate(this.goRequest["creditCard/issueDate"]), getSecPayOrder(ref oRoot), getSecPayAddress(ref oRoot, ref argsType), getSecPayAddress(ref oRoot, ref argsType1), sOpts);
+
+                //                bSavePayment = true;
+                //            }
+
+                //            else if (!b3DAuthorised)
+                //            {
+                //                string argsType2 = "Delivery Address";
+                //                string argsType3 = "Billing Address";
+                //                cResponse = oSecVpn.threeDSecureEnrolmentRequest(cOrderType, Conversions.ToString(oDictOpt["accountPassword"]), mnCartId.ToString(), this.goRequest.ServerVariables["REMOTE_ADDR"], mcCardHolderName, this.goRequest["creditCard/number"], mnPaymentAmount.ToString(), this.fmtSecPayDate(this.goRequest["creditCard/expireDate"]), this.goRequest["creditCard/issueNumber"], this.fmtSecPayDate(this.goRequest["creditCard/issueDate"]), getSecPayOrder(ref oRoot), getSecPayAddress(ref oRoot, ref argsType2), getSecPayAddress(ref oRoot, ref argsType3), sOpts, "0", this.goRequest.ServerVariables["HTTP_ACCEPT"], this.goRequest.ServerVariables["HTTP_USER_AGENT"], "", "", "", "", "", "");
+
+                //                bSavePayment = true;
+                //            }
+
+                //            else
+                //            {
+                //                // Pass the process back to Secpay
+                //                cResponse = oSecVpn.threeDSecureAuthorisationRequest(cOrderType, Conversions.ToString(oDictOpt["accountPassword"]), mnCartId.ToString(), this.goRequest["MD"], this.goRequest["PaRes"], sOpts);
+                //                // Save in the session the MD and the instance to save
+
+                //            }
+
+                //            // Parse the response
+                //            oDictResp = new Hashtable();
+
+                //            // cResponse = Replace(oXMLHttp.responseXML.selectSingleNode("//node()[local-name()='validateCardFullReturn']").Text, "+", " ")
+                //            string cAuthCode = "";
+                //            if (!string.IsNullOrEmpty(cResponse))
+                //            {
+
+                //                aResponse = Strings.Split(Strings.Right(cResponse, Strings.Len(cResponse) - 1), "&");
+
+                //                var loopTo = Information.UBound(aResponse);
+                //                for (i = 0; i <= loopTo; i++)
+                //                {
+
+                //                    string cPos = Strings.InStr(aResponse[i], "=").ToString();
+                //                    if (Information.IsNumeric(cPos))
+                //                    {
+                //                        nPos = Conversions.ToInteger(cPos);
+                //                        oDictResp.Add(Strings.Left(aResponse[i], nPos - 1), Strings.Right(aResponse[i], Strings.Len(aResponse[i]) - nPos));
+                //                    }
+                //                    else
+                //                    {
+                //                        oDictResp.Add(Strings.Trim(aResponse[i]), "");
+                //                    }
+                //                }
+
+
+                //                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictResp["valid"], "true", false)))
+                //                {
+                //                    if (!b3DSecure)
+                //                    {
+                //                        bIsValid = true;
+                //                        err_msg = "Payment Authorised Ref: " + mnCartId.ToString();
+                //                        ccXform.valid = true;
+                //                    }
+
+                //                    else
+                //                    {
+                //                        switch (oDictResp["mpi_status_code"])
+                //                        {
+                //                            case "200":
+                //                                {
+                //                                    // we have to get the browser to redirect
+                //                                    // v4 change - don't explicitly redirect to /deafault.ashx - this breaks everything.
+                //                                    // AJG Remove defualt.ashx from RedirectUrl Compare this line to 4.1
+                //                                    if (moCartConfig["SecureURL"].EndsWith("/"))
+                //                                    {
+                //                                        sRedirectURL = moCartConfig["SecureURL"] + "?cartCmd=Redirect3ds";
+                //                                    }
+                //                                    else
+                //                                    {
+                //                                        sRedirectURL = moCartConfig["SecureURL"] + "/?cartCmd=Redirect3ds";
+                //                                    }
+
+                //                                    string cleanACSURL = myWeb.goServer.UrlDecode(Conversions.ToString(oDictResp["acs_url"]));
+                //                                    cleanACSURL = Strings.Replace(cleanACSURL, "&amp;", "&");
+
+                //                                    bIsValid = false;
+                //                                    ccXform.valid = false;
+                //                                    err_msg = "customer redirected to:" + cleanACSURL;
+
+                //                                    // Save MD as paymentRef
+                //                                    sPaymentRef = Conversions.ToString(oDictResp["MD"]);
+                //                                    // Save the payment instance in the session
+
+                //                                    Xform3dSec = xfrmSecure3D(Conversions.ToString(oDictResp["acs_url"]), Conversions.ToString(oDictResp["MD"]), Conversions.ToString(oDictResp["PaReq"]), sRedirectURL);
+                //                                    break;
+                //                                }
+
+                //                            case "212":
+                //                                {
+                //                                    // not subscribes to 3D Secure
+                //                                    bIsValid = true;
+                //                                    err_msg = "Payment Authorised Ref: " + mnCartId.ToString();
+                //                                    err_msg = Conversions.ToString(Operators.ConcatenateObject(err_msg + " 3D Secure:", oDictResp["mpi_message"]));
+                //                                    ccXform.valid = true;
+                //                                    break;
+                //                                }
+
+                //                            case "237":
+                //                                {
+                //                                    // Payer Authenticated
+                //                                    bIsValid = true;
+                //                                    err_msg = "Payment Authorised Ref: " + mnCartId.ToString();
+                //                                    err_msg = Conversions.ToString(Operators.ConcatenateObject(err_msg + " 3D Secure:", oDictResp["mpi_message"]));
+                //                                    ccXform.valid = true;
+                //                                    break;
+                //                                }
+
+                //                            case "236":
+                //                                {
+                //                                    // Payer Declined 3D Secure but Proceeded to confirm 
+                //                                    // the(authentication)
+                //                                    bIsValid = true;
+                //                                    err_msg = "Payment Authorised Ref: " + mnCartId.ToString();
+                //                                    err_msg = Conversions.ToString(Operators.ConcatenateObject(err_msg + " 3D Secure:", oDictResp["mpi_message"]));
+                //                                    ccXform.valid = true;
+                //                                    break;
+                //                                }
+
+
+                //                            case "234":
+                //                                {
+                //                                    // unable to verify erolement but secpay passes
+                //                                    bIsValid = true;
+                //                                    err_msg = "Payment Authorised Ref: " + mnCartId.ToString();
+                //                                    err_msg = Conversions.ToString(Operators.ConcatenateObject(err_msg + " 3D Secure:", oDictResp["mpi_message"]));
+                //                                    ccXform.valid = true;
+                //                                    break;
+                //                                }
+
+
+                //                            case "229":
+                //                                {
+                //                                    // Payer Not Authenticated
+                //                                    bIsValid = false;
+                //                                    ccXform.valid = false;
+                //                                    err_msg = Conversions.ToString(Operators.ConcatenateObject(err_msg + " 3D Secure:", oDictResp["mpi_message"]));
+                //                                    break;
+                //                                }
+
+                //                            default:
+                //                                {
+                //                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictResp["code"], "A", false)))
+                //                                    {
+                //                                        bIsValid = true;
+                //                                        err_msg = "Payment Authorised Ref: " + mnCartId.ToString();
+                //                                        err_msg = Conversions.ToString(Operators.ConcatenateObject(err_msg + " 3D Secure:", oDictResp["mpi_message"]));
+                //                                        ccXform.valid = true;
+                //                                    }
+                //                                    else
+                //                                    {
+                //                                        // Payer Not Authenticated
+                //                                        bIsValid = false;
+                //                                        ccXform.valid = false;
+                //                                        err_msg = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(err_msg + " 3D Secure:", oDictResp["mpi_status_code"]), " - "), oDictResp["mpi_message"]));
+                //                                    }
+
+                //                                    break;
+                //                                }
+                //                        }
+                //                    }
+                //                }
+                //                else
+                //                {
+                //                    ccXform.valid = false;
+                //                    bIsValid = false;
+                //                    err_msg_log = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Payment Failed : ", oDictResp["message"]), " (Code::"), oDictResp["code"]), ")"));
+
+                //                    // Produce nice format error messages.
+                //                    switch (oDictResp["code"])
+                //                    {
+                //                        case "N":
+                //                            {
+                //                                err_msg = "The transaction was not authorised by your payment provider.";
+                //                                break;
+                //                            }
+                //                        case "C":
+                //                            {
+                //                                err_msg = "There was a comunication problem. Please try resubmitting your order later.";
+                //                                break;
+                //                            }
+                //                        case "P:A":
+                //                            {
+                //                                err_msg = "There was a system error - the amount was not supplied or invalid.  Please call for assistance.";
+                //                                break;
+                //                            }
+                //                        case "P:X":
+                //                            {
+                //                                err_msg = "There was a system error - not all the mandatory parameters were supplied.  Please call for assistance.";
+                //                                break;
+                //                            }
+                //                        case "P:P":
+                //                            {
+                //                                err_msg = "The payment has already been processed.  This is a duplicate payment, and will not be processed.";
+                //                                break;
+                //                            }
+                //                        case "P:S":
+                //                            {
+                //                                err_msg = "The start date is invalid.  Please check that you have entered your card details correctly.";
+                //                                break;
+                //                            }
+                //                        case "P:E":
+                //                            {
+                //                                err_msg = "The expiry date is invalid.  Please check that you have entered your card details correctly.";
+                //                                break;
+                //                            }
+                //                        case "P:I":
+                //                            {
+                //                                err_msg = "The issue number is invalid.  Please check that you have entered your card details correctly.";
+                //                                break;
+                //                            }
+                //                        case "P:C":
+                //                            {
+                //                                err_msg = "The card number supplied is invalid.  Please check that you have entered your card details correctly.";
+                //                                break;
+                //                            }
+                //                        case "P:T":
+                //                            {
+                //                                err_msg = "The card type does not match the card number entered.  Please check that you have entered your card details correctly.";
+                //                                break;
+                //                            }
+                //                        case "P:N":
+                //                            {
+                //                                err_msg = "There was a system error - the customer name was not supplied.  Please call for assistance.";
+                //                                break;
+                //                            }
+                //                        case "P:M":
+                //                            {
+                //                                err_msg = "There was a system error - the merchant account deos not exist or has not been registered.  Please call for assistance.";
+                //                                break;
+                //                            }
+                //                        case "P:B":
+                //                            {
+                //                                err_msg = "There was a system error - the merchant account for this card type does not exist.  Please call for assistance.";
+                //                                break;
+                //                            }
+                //                        case "P:D":
+                //                            {
+                //                                err_msg = "There was a system error - the merchant account for this currency does not exist.  Please call for assistance.";
+                //                                break;
+                //                            }
+                //                        case "P:V":
+                //                            {
+                //                                err_msg = "The security code is invalid. Please check that you have entered your card details correctly. The security code can be found on the back of your card and is the last 3 digits of the series of digits on the back.";
+                //                                break;
+                //                            }
+                //                        case "P:R":
+                //                            {
+                //                                err_msg = "There was a communication problem and the transaction has timed out.  Please try resubmitting your order later.";
+                //                                break;
+                //                            }
+                //                        case "P:#":
+                //                            {
+                //                                err_msg = "There was a system error - no encryption key has been set up against this account.  Please call for assistance.";
+                //                                break;
+                //                            }
+
+                //                        default:
+                //                            {
+                //                                err_msg = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("There was an unspecified error. Please call for assistance.(code::", oDictResp["code"]), " | "), oDictResp["message"]));
+                //                                break;
+                //                            }
+                //                    }
+
+                //                    err_msg = "Payment Failed : " + err_msg;
+
+                //                }
+                //            }
+                //            else
+                //            {
+                //                bIsValid = false;
+                //                ccXform.valid = false;
+                //                err_msg = "Payment Failed : no response from secpay check settings and password";
+                //            }
+
+
+                //            if (bSavePayment)
+                //            {
+                //                // We Save the payment method prior to ultimate validation because we only have access to the request object at the point it is submitted
+
+                //                // only do this for a valid payment method
+                //                XmlElement oSaveElmt = (XmlElement)ccXform.Instance.SelectSingleNode("creditCard/bSavePayment");
+                //                Debug.WriteLine(this.goRequest["creditCard/expireDate"]);
+                //                var oDate = new DateTime(Conversions.ToInteger("20" + Strings.Right(this.goRequest["creditCard/expireDate"], 2)), Conversions.ToInteger(Strings.Left(this.goRequest["creditCard/expireDate"], 2)), 1);
+                //                oDate = oDate.AddMonths(1);
+                //                oDate = oDate.AddDays(-1);
+                //                string cMethodName = this.goRequest["creditCard/type"] + ": " + stdTools.MaskString(this.goRequest["creditCard/number"], "*", false, 4) + " Expires: " + oDate.ToShortDateString();
+                //                cAuthCode = Conversions.ToString(oDictResp["auth_code"]);
+
+                //                var oSecPayElmt = ccXform.Instance.OwnerDocument.CreateElement("SecPay");
+                //                oSecPayElmt.SetAttribute("AuthCode", cAuthCode);
+                //                ccXform.Instance.FirstChild.AppendChild(oSecPayElmt);
+
+                //                if (oSaveElmt != null)
+                //                {
+                //                    if (oSaveElmt.InnerText == "true" & bIsValid)
+                //                    {
+                //                        savePayment((long)myWeb.mnUserId, "SecPay", mnCartId.ToString(), cMethodName, (XmlElement)ccXform.Instance.FirstChild, oDate, true, mnPaymentAmount);
+                //                    }
+                //                    else
+                //                    {
+                //                        savePayment((long)myWeb.mnUserId, "SecPay", mnCartId.ToString(), cMethodName, (XmlElement)ccXform.Instance.FirstChild, DateTime.Now, false, mnPaymentAmount);
+                //                    }
+                //                }
+                //                else
+                //                {
+                //                    savePayment((long)myWeb.mnUserId, "SecPay", mnCartId.ToString(), cMethodName, (XmlElement)ccXform.Instance.FirstChild, DateTime.Now, false, mnPaymentAmount);
+                //                }
+
+                //            }
+
+                //            XmlNode argoNode = (XmlNode)ccXform.moXformElmt;
+                //            ccXform.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, err_msg);
+                //            ccXform.moXformElmt = (XmlElement)argoNode;
+                //        }
+
+
+
+                //        else
+                //        {
+                //            if (ccXform.isSubmitted() & string.IsNullOrEmpty(ccXform.validationError))
+                //            {
+                //                err_msg = "Unknown Error: Please call";
+                //                XmlNode argoNode1 = (XmlNode)ccXform.moXformElmt;
+                //                ccXform.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, err_msg);
+                //                ccXform.moXformElmt = (XmlElement)argoNode1;
+                //            }
+                //            else
+                //            {
+                //                err_msg = ccXform.validationError;
+                //            }
+                //            ccXform.valid = false;
+                //        }
+
+                //        if (ccXform.isSubmitted() | b3DAuthorised)
+                //        {
+                //            // Update Seller Notes:
+                //            sSql = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
+                //            DataSet oDs;
+                //            oDs = modbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
+                //            foreach (DataRow oRow in oDs.Tables["Order"].Rows)
+                //            {
+                //                if (bIsValid | b3DAuthorised)
+                //                {
+                //                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Received) "), Constants.vbLf), "comment: "), err_msg), Constants.vbLf), "Full Response:' "), cResponse), "'");
+                //                }
+                //                else
+                //                {
+                //                    if (string.IsNullOrEmpty(err_msg_log))
+                //                        err_msg_log = err_msg;
+                //                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Failed) "), Constants.vbLf), "comment: "), err_msg_log), Constants.vbLf), "Full Response:' "), cResponse), "'");
+                //                }
+                //                if (b3DSecure & bIsValid == false)
+                //                {
+                //                    oRow["cPaymentRef"] = sPaymentRef;
+                //                }
+                //            }
+                //            modbHelper.updateDataset(ref oDs, "Order");
+                //        }
+
+                //        if (Xform3dSec != null)
+                //        {
+                //            paySecPayRet = Xform3dSec;
+                //        }
+                //        else
+                //        {
+                //            paySecPayRet = ccXform;
+                //        }
+                //    }
+
+                //    catch (Exception ex)
+                //    {
+                //        stdTools.returnException(ref myWeb.msException, mcModuleName, "paySecPay", ex, "", cProcessInfo, gbDebug);
+                //        return (Cms.xForm)null;
+                //    }
+
+                //    return paySecPayRet;
+                //}
+
+                //public Cms.xForm paySecPayUkash(ref XmlElement oRoot, string sSubmitPath)
+                //{
+                //    myWeb.PerfMon.Log("PaymentProviders", "paySecPayUkash");
+
+                //    string sSql;
+                //    Cms.xForm ccXform;
+
+                //    bool bIsValid;
+                //    string err_msg;
+                //    string err_msg_log = "";
+                //    string sProcessInfo = "";
+                //    string[] aResponse;
+                //    Hashtable oDictResp;
+                //    string cResponse;
+
+                //    var oDictOpt = new Hashtable();
+
+                //    int i;
+                //    int nPos;
+                //    string sOpts;
+                //    string cOrderType;
+                //    bool bCv2 = false;
+
+                //    // Test Vouchers
+                //    // £25.00        '6337180099169015249:
+                //    // £25.00        '6337180091114582647:
+                //    // £25.00        '6337180099224977516:
+                //    // £25.00        '6337180091385666418:
+                //    // £25.00        '6337180095179084217:
+                //    // £25.00        '6337180094605120927:
+                //    // £25.00        '6337180096516745502:
+                //    // £25.00        '6337180090359094102:
+                //    // £25.00        '6337180090560691415:
+                //    // £25.00        '6337180098258075411:
+                //    // £25.00        '6337180097643841024:
+
+                //    XmlNode oSecPayUkashCfg;
+
+                //    string cProcessInfo = "paySecPay";
+                //    try
+                //    {
+
+                //        // Get the payment options into a hashtable
+                //        oSecPayUkashCfg = moPaymentCfg.SelectSingleNode("provider[@name='SecPayUkash']");
+                //        foreach (XmlElement oElmt in oSecPayUkashCfg.SelectNodes("*"))
+                //        {
+                //            if (oElmt.GetAttribute("value") != null)
+                //            {
+                //                oDictOpt.Add(oElmt.Name, oElmt.GetAttribute("value"));
+                //            }
+                //        }
+
+                //        // Load the Xform
+                //        ccXform = UkashXform(ref oRoot, "PayForm", sSubmitPath, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Make Payment of " + Strings.FormatNumber(mnPaymentAmount, 2) + " ", oDictOpt["currency"]), " by Ukash")));
+
+                //        if (ccXform.valid == true)
+                //        {
+
+                //            // Validate Card
+                //            sOpts = Conversions.ToString(Operators.ConcatenateObject("test_status=", oDictOpt["opperationMode"]));
+                //            if (mnPaymentAmount < Conversions.ToDouble(this.goRequest["Ukash/VoucherValue"]))
+                //            {
+                //                sOpts = sOpts + ",sv_txn_type=PS";
+                //                sOpts = sOpts + ",sv_ps_number=" + this.goRequest["Ukash/VoucherNumber"];
+                //                sOpts = sOpts + ",sv_ps_value=" + this.goRequest["Ukash/VoucherValue"];
+                //                sOpts = sOpts + ",sv_ps_newvalue=" + Strings.FormatNumber((object)(Conversions.ToDouble(this.goRequest["Ukash/VoucherValue"]) - mnPaymentAmount), 2);
+                //            }
+                //            else if (mnPaymentAmount == Conversions.ToDouble(this.goRequest["Ukash/VoucherValue"]))
+                //            {
+                //                sOpts = sOpts + ",sv_txn_type=RD";
+                //                sOpts = sOpts + ",sv_rd_number=" + this.goRequest["Ukash/VoucherNumber"];
+                //                sOpts = sOpts + ",sv_rd_value=" + this.goRequest["Ukash/VoucherValue"];
+                //            }
+
+                //            var oSecVpn = new Protean.Paypoint.SECVPNClient();
+
+                //            cOrderType = oRoot.GetAttribute("orderType");
+                //            if (!(!string.IsNullOrEmpty(cOrderType) & Conversions.ToString(oDictOpt["orderType"]) == "true"))
+                //                cOrderType = Conversions.ToString(oDictOpt["accountId"]);
+
+                //            string argsType = "Delivery Address";
+                //            string argsType1 = "Billing Address";
+                //            cResponse = oSecVpn.validateCardFull(cOrderType, Conversions.ToString(oDictOpt["accountPassword"]), mnCartId.ToString(), this.goRequest.ServerVariables["REMOTE_ADDR"], mcCardHolderName, "", mnPaymentAmount.ToString(), "", "", "", getSecPayOrder(ref oRoot), getSecPayAddress(ref oRoot, ref argsType), getSecPayAddress(ref oRoot, ref argsType1), sOpts);
+
+
+                //            // Parse the response
+                //            oDictResp = new Hashtable();
+
+                //            if (!string.IsNullOrEmpty(cResponse))
+                //            {
+
+                //                aResponse = Strings.Split(Strings.Right(cResponse, Strings.Len(cResponse) - 1), "&");
+
+                //                var loopTo = Information.UBound(aResponse);
+                //                for (i = 0; i <= loopTo; i++)
+                //                {
+                //                    nPos = Strings.InStr(aResponse[i], "=");
+                //                    oDictResp.Add(Strings.Left(aResponse[i], nPos - 1), Strings.Right(aResponse[i], Strings.Len(aResponse[i]) - nPos));
+                //                }
+
+                //                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictResp["valid"], "true", false)))
+                //                {
+                //                    bIsValid = true;
+                //                    ccXform.valid = true;
+
+                //                    err_msg = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Payment Authorised Ref: " + mnCartId.ToString() + " - ", oDictResp["sv_rd_newnumber"]), oDictResp["sv_ps_newnumber"]));
+
+                //                    // add the response to the instance so we can save it against the transaction
+
+                //                    var argoNode = ccXform.Instance.FirstChild;
+                //                    Tools.Xml.addNewTextNode("NewVoucherNumber", ref argoNode, Conversions.ToString(oDictResp["sv_ps_newnumber"]));
+                //                    var argoNode1 = ccXform.Instance.FirstChild;
+                //                    Tools.Xml.addNewTextNode("NewVoucherValue", ref argoNode1, Conversions.ToString(oDictResp["sv_ps_newvalue"]));
+                //                    var argoNode2 = ccXform.Instance.FirstChild;
+                //                    Tools.Xml.addNewTextNode("NewVoucherExpires", ref argoNode2, Conversions.ToString(oDictResp["sv_ps_expiry"]));
+
+                //                    savePayment((long)myWeb.mnUserId, "SecPayUkash", mnCartId.ToString(), err_msg, (XmlElement)ccXform.Instance.FirstChild, DateTime.Now, false, mnPaymentAmount);
+                //                }
+
+                //                else
+                //                {
+                //                    ccXform.valid = false;
+                //                    bIsValid = false;
+                //                    err_msg_log = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Payment Failed : ", oDictResp["message"]), " (Code::"), oDictResp["code"]), ")"));
+
+                //                    // Produce nice format error messages.
+                //                    switch (oDictResp["code"])
+                //                    {
+                //                        case "N":
+                //                            {
+                //                                err_msg = "The transaction was not authorised by your payment provider.";
+                //                                break;
+                //                            }
+                //                        case "C":
+                //                            {
+                //                                err_msg = "There was a comunication problem. Please try resubmitting your order later.";
+                //                                break;
+                //                            }
+                //                        case "P:A":
+                //                            {
+                //                                err_msg = "There was a system error - the amount was not supplied or invalid.  Please call for assistance.";
+                //                                break;
+                //                            }
+                //                        case "P:X":
+                //                            {
+                //                                err_msg = "There was a system error - not all the mandatory parameters were supplied.  Please call for assistance.";
+                //                                break;
+                //                            }
+                //                        case "P:P":
+                //                            {
+                //                                err_msg = "The payment has already been processed.  This is a duplicate payment, and will not be processed.";
+                //                                break;
+                //                            }
+                //                        case "P:S":
+                //                            {
+                //                                err_msg = "The start date is invalid.  Please check that you have entered your card details correctly.";
+                //                                break;
+                //                            }
+                //                        case "P:E":
+                //                            {
+                //                                err_msg = "The expiry date is invalid.  Please check that you have entered your card details correctly.";
+                //                                break;
+                //                            }
+                //                        case "P:I":
+                //                            {
+                //                                err_msg = "The issue number is invalid.  Please check that you have entered your card details correctly.";
+                //                                break;
+                //                            }
+                //                        case "P:C":
+                //                            {
+                //                                err_msg = "The card number supplied is invalid.  Please check that you have entered your card details correctly.";
+                //                                break;
+                //                            }
+                //                        case "P:T":
+                //                            {
+                //                                err_msg = "The card type does not match the card number entered.  Please check that you have entered your card details correctly.";
+                //                                break;
+                //                            }
+                //                        case "P:N":
+                //                            {
+                //                                err_msg = "There was a system error - the customer name was not supplied.  Please call for assistance.";
+                //                                break;
+                //                            }
+                //                        case "P:M":
+                //                            {
+                //                                err_msg = "There was a system error - the merchant account deos not exist or has not been registered.  Please call for assistance.";
+                //                                break;
+                //                            }
+                //                        case "P:B":
+                //                            {
+                //                                err_msg = "There was a system error - the merchant account for this card type does not exist.  Please call for assistance.";
+                //                                break;
+                //                            }
+                //                        case "P:D":
+                //                            {
+                //                                err_msg = "There was a system error - the merchant account for this currency does not exist.  Please call for assistance.";
+                //                                break;
+                //                            }
+                //                        case "P:V":
+                //                            {
+                //                                err_msg = "The security code is invalid. Please check that you have entered your card details correctly. The security code can be found on the back of your card and is the last 3 digits of the series of digits on the back.";
+                //                                break;
+                //                            }
+                //                        case "P:R":
+                //                            {
+                //                                err_msg = "There was a communication problem and the transaction has timed out.  Please try resubmitting your order later.";
+                //                                break;
+                //                            }
+                //                        case "P:#":
+                //                            {
+                //                                err_msg = "There was a system error - no encryption key has been set up against this account.  Please call for assistance.";
+                //                                break;
+                //                            }
+                //                        case "P:G":
+                //                            {
+                //                                err_msg = "The Ukash voucher does not have enough funds for this transaction.";
+                //                                break;
+                //                            }
+                //                        case "P:H":
+                //                            {
+                //                                err_msg = "The Ukash number or value is missing or invalid.  Please check that you have entered your Ukash number and value correctly.";
+                //                                break;
+                //                            }
+                //                        case "P:Q":
+                //                            {
+                //                                err_msg = "The Ukash product is missing or invalid.  Please call for assistance.";
+                //                                break;
+                //                            }
+                //                        case "P:U":
+                //                            {
+                //                                err_msg = "The Ukash value supplied is missing or invalid.  Please check that you have entered your Ukash value correctly.";
+                //                                break;
+                //                            }
+                //                        case "P:W":
+                //                            {
+                //                                err_msg = "The Ukash Currency is missing invalid. Please call for assistance.";
+                //                                break;
+                //                            }
+                //                        case "P:Y":
+                //                            {
+                //                                err_msg = "The Ukash number supplied is invalid.  Please check that you have entered your Ukash number correctly.";
+                //                                break;
+                //                            }
+                //                        case "P:Z":
+                //                            {
+                //                                err_msg = "The Ukash is not enabled for this merchant. Please call for assistance.";
+                //                                break;
+                //                            }
+
+                //                        default:
+                //                            {
+                //                                err_msg = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("There was an unspecified error. Please call for assistance.(code::", oDictResp["code"]), " | "), oDictResp["message"]), ")"));
+                //                                break;
+                //                            }
+                //                    }
+
+                //                    err_msg = "Payment Failed : " + err_msg;
+
+                //                }
+                //            }
+                //            else
+                //            {
+                //                bIsValid = false;
+                //                ccXform.valid = false;
+                //                err_msg = "Payment Failed : no response from secpay check settings and password";
+                //            }
+
+                //            if (gbDebug)
+                //            {
+                //                ccXform.addNote("Ukash", Protean.xForm.noteTypes.Alert, err_msg_log);
+                //            }
+                //            else
+                //            {
+                //                ccXform.addNote("Ukash", Protean.xForm.noteTypes.Alert, err_msg);
+                //            }
+
+
+                //            // Update Seller Notes:
+
+                //            sSql = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
+
+                //            DataSet oDs;
+                //            oDs = modbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
+                //            foreach (DataRow oRow in oDs.Tables["Order"].Rows)
+                //            {
+                //                if (bIsValid)
+                //                {
+                //                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Received) "), Constants.vbLf), "comment: "), err_msg);
+                //                }
+                //                else
+                //                {
+                //                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Failed) "), Constants.vbLf), "comment: "), err_msg_log);
+                //                }
+                //            }
+                //            modbHelper.updateDataset(ref oDs, "Order");
+
+                //            if (bIsValid)
+                //            {
+
+                //                // let see if we have any ukash specific email settings.
+                //                string uKashMerchantEmail = moCartConfig["MerchantEmail"];
+                //                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDictOpt["altMerchantEmail"], "", false)))
+                //                    uKashMerchantEmail = Conversions.ToString(oDictOpt["altMerchantEmail"]);
+
+                //                string uKashMerchantName = moCartConfig["MerchantName"];
+                //                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDictOpt["altMerchantName"], "", false)))
+                //                    uKashMerchantName = Conversions.ToString(oDictOpt["altMerchantName"]);
+
+                //                string uKashEmailTemplatePath = moCartConfig["MerchantEmailTemplatePath"];
+                //                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDictOpt["altMerchantSubject"], "", false)))
+                //                    uKashEmailTemplatePath = Conversions.ToString(oDictOpt["altMerchantSubject"]);
+
+                //            }
+
+                //        }
+
+                //        return ccXform;
+                //    }
+
+                //    catch (Exception ex)
+                //    {
+                //        stdTools.returnException(ref myWeb.msException, mcModuleName, "paySecPayUkash", ex, "", cProcessInfo, gbDebug);
+                //        return (Cms.xForm)null;
+                //    }
+                //}
+
+                //public Cms.xForm paySagePay(ref XmlElement oRoot, string sSubmitPath)
+                //{
+
+                //    myWeb.PerfMon.Log("PaymentProviders", "payProTx");
+
+                //    HttpWebRequest oRequest;
+                //    HttpWebResponse oResponse;
+                //    Stream oStream;
+                //    StreamReader oStreamReader;
+
+                //    long nResult;
+
+                //    string cResponse;
+                //    string cRequest;
+                //    var oEncoding = new ASCIIEncoding();
+                //    byte[] byRequest;
+
+                //    string sSql;
+
+                //    string cMessage;
+
+                //    Cms.xForm ccXform;
+
+                //    bool bIsValid = false;
+                //    string err_msg = "";
+                //    string err_msg_log = "";
+                //    string sProcessInfo = "";
+                //    var oDictOpt = new Hashtable();
+
+                //    bool bCv2 = false;
+                //    bool b3dSecure = false;
+                //    Hashtable oResponseDict = null;
+                //    XmlNode oCartAdd;
+                //    bool b3dAuthorised = false;
+
+                //    XmlNode oProTxCfg;
+                //    string cIPAddress = this.goRequest.ServerVariables["REMOTE_ADDR"];
+
+                //    string cProcessInfo = "payProTx";
+                //    string sAPIVer = "";
+                //    string sVSPUrl = "";
+                //    string sVSP3DSUrl = "";
+                //    long nAttemptCount;
+
+                //    string cSellerNotes = "";
+
+                //    try
+                //    {
+
+                //        if (this.goSession["attemptCount"] != null)
+                //        {
+                //            nAttemptCount = Conversions.ToLong(this.goSession["attemptCount"]);
+                //            nAttemptCount = nAttemptCount + 1L;
+                //        }
+                //        else
+                //        {
+                //            nAttemptCount = 1L;
+                //        }
+
+                //        // Get the payment options into a hashtable
+                //        oProTxCfg = moPaymentCfg.SelectSingleNode("provider[@name='ProTx' or @name='SagePay']");
+                //        foreach (XmlElement oElmt in oProTxCfg.SelectNodes("*"))
+                //        {
+                //            if (oElmt.GetAttribute("value") != null)
+                //            {
+                //                oDictOpt.Add(oElmt.Name, oElmt.GetAttribute("value"));
+                //            }
+                //        }
+
+                //        oCartAdd = oRoot.SelectSingleNode("Contact[@type='Billing Address']");
+
+                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["validateCV2"], "on", false)))
+                //            bCv2 = true;
+                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["secure3d"], "on", false)))
+                //        {
+                //            b3dSecure = true;
+                //            // Check the IP Addresses for a block
+                //            if (oDictOpt["secure3dIpBlock"] != null)
+                //            {
+                //                var oRE = new Regex("(,|^)" + Strings.Replace(cIPAddress, ".", @"\.") + "(,|$)");
+                //                if (oRE.IsMatch(Conversions.ToString(oDictOpt["secure3dIpBlock"])))
+                //                    b3dSecure = false;
+                //            }
+                //        }
+
+                //        sAPIVer = "2.22";
+                //        // sAPIVer = "3.00"
+
+                //        switch (oDictOpt["opperationMode"])
+                //        {
+                //            case "simulator":
+                //                {
+                //                    sVSPUrl = "https://test.sagepay.com/Simulator/VSPDirectGateway.asp";
+                //                    sVSP3DSUrl = "https://test.sagepay.com/Simulator/VSPDirectCallback.asp";
+                //                    nTransactionMode = TransactionMode.Test;
+                //                    break;
+                //                }
+                //            case "test":
+                //                {
+                //                    sVSPUrl = "https://test.sagepay.com/gateway/service/vspdirect-register.vsp";
+                //                    sVSP3DSUrl = "https://test.sagepay.com/gateway/service/direct3dcallback.vsp";
+                //                    nTransactionMode = TransactionMode.Test;
+                //                    break;
+                //                }
+                //            case "live":
+                //                {
+                //                    sVSPUrl = "https://live.sagepay.com/gateway/service/vspdirect-register.vsp";
+                //                    sVSP3DSUrl = "https://live.sagepay.com/gateway/service/direct3dcallback.vsp";
+                //                    nTransactionMode = TransactionMode.Live;
+                //                    break;
+                //                }
+                //        }
+
+
+                //        // Load the Xform
+                //        ccXform = creditCardXform(ref oRoot, "PayForm", sSubmitPath, Conversions.ToString(oDictOpt["cardsAccepted"]), true, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Make Payment of " + Strings.FormatNumber(mnPaymentAmount, 2) + " ", oDictOpt["currency"]), " by Credit/Debit Card")));
+
+                //        if (b3dSecure)
+                //        {
+                //            // check for return from aquiring bank
+                //            if (!string.IsNullOrEmpty(this.goRequest["PARes"]))
+                //            {
+                //                b3dAuthorised = true;
+                //            }
+                //        }
+
+                //        string orderPrefix = "";
+
+                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["sendPrefix"], "true", false)))
+                //        {
+                //            orderPrefix = Conversions.ToString(Operators.ConcatenateObject(Interaction.IIf(nTransactionMode == TransactionMode.Test, "D-", ""), moCartConfig["OrderNoPrefix"]));
+                //        }
+
+                //        if (ccXform.valid == true | b3dAuthorised)
+                //        {
+                //            if (b3dAuthorised)
+                //            {
+                //                // 3D Secure Resume
+                //                cRequest = "MD=" + this.goRequest["MD"] + "&";
+                //                cRequest = cRequest + "PARes=" + this.goServer.UrlEncode(this.goRequest["PARes"]) + "&";
+                //            }
+                //            else
+                //            {
+                //                // standard card validation request
+                //                cRequest = "VPSProtocol=" + sAPIVer + "&";
+                //                cRequest = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "TxType=", oDictOpt["transactionType"]), "&")); // 0=omited 1=full auth 2=pre-auth only
+                //                cRequest = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "Vendor=", oDictOpt["accountId"]), "&")); // 0=omited 1=full auth 2=pre-auth only
+                //                if (nAttemptCount > 1L)
+                //                {
+                //                    cRequest = cRequest + "VendorTXCode=" + this.goServer.UrlEncode(orderPrefix + mnCartId.ToString()) + "-" + nAttemptCount + "&";
+                //                }
+                //                else
+                //                {
+                //                    cRequest = cRequest + "VendorTXCode=" + this.goServer.UrlEncode(orderPrefix + mnCartId.ToString()) + "&";
+                //                }
+                //                cRequest = cRequest + "Amount=" + this.goServer.UrlEncode(FullMoneyString(mnPaymentAmount.ToString())) + "&";
+                //                cRequest = cRequest + "Currency=" + this.goServer.UrlEncode(Conversions.ToString(oDictOpt["currency"])) + "&";
+                //                cRequest = cRequest + "Description=" + this.goServer.UrlEncode(Strings.Left(mcPaymentOrderDescription, 90)) + "&";
+                //                cRequest = cRequest + "CardHolder=" + this.goServer.UrlEncode(mcCardHolderName) + "&";
+                //                cRequest = cRequest + "CardNumber=" + this.goServer.UrlEncode(this.FormatCreditCardNumber(this.goRequest["creditCard/number"]).ToString()) + "&";
+                //                if (!string.IsNullOrEmpty(this.goRequest["creditCard/issueDate"]))
+                //                {
+                //                    cRequest = cRequest + "StartDate=" + this.fmtSecPayDate(this.goRequest["creditCard/issueDate"]) + "&";
+                //                }
+                //                cRequest = cRequest + "ExpiryDate=" + this.fmtSecPayDate(this.goRequest["creditCard/expireDate"]) + "&";
+                //                cRequest = cRequest + "IssueNo=" + this.goServer.UrlEncode(this.goRequest["creditCard/issueNumber"]) + "&";
+                //                cRequest = cRequest + "CV2=" + this.goServer.UrlEncode(this.goRequest["creditCard/CV2"]) + "&";
+                //                cRequest = cRequest + "CardType=" + this.goServer.UrlEncode(this.goRequest["creditCard/type"]) + "&";
+                //                cRequest = cRequest + "BillingAddress=" + this.goServer.UrlEncode(mcCardHolderAddress) + "&";
+                //                cRequest = cRequest + "BillingPostcode=" + this.goServer.UrlEncode(mcCardHolderPostcode) + "&";
+                //                cRequest = cRequest + "ContactNumber=" + this.goServer.UrlEncode(oCartAdd.SelectSingleNode("Telephone").InnerText) + "&";
+                //                cRequest = cRequest + "ContactFax=" + this.goServer.UrlEncode(oCartAdd.SelectSingleNode("Fax").InnerText) + "&";
+                //                if (!string.IsNullOrEmpty(oCartAdd.SelectSingleNode("Email").InnerText))
+                //                {
+                //                    cRequest = cRequest + "CustomerEmail=" + this.goServer.UrlEncode(oCartAdd.SelectSingleNode("Email").InnerText) + "&";
+                //                }
+                //                else
+                //                {
+                //                    cRequest = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "CustomerEmail=", oDictOpt["MerchantEmail"]), "&"));
+                //                }
+
+                //                string cIP = this.goRequest.ServerVariables["REMOTE_ADDR"];
+                //                if (cIP.Length < 4)
+                //                    cIP = "127.0.0.1";
+                //                cRequest = cRequest + "ClientIPAddress=" + cIP + "&";
+
+                //                if (b3dSecure == true)
+                //                {
+                //                    cRequest = cRequest + "Apply3DSecure=0" + "&";
+                //                }
+                //                else
+                //                {
+                //                    // do not make the 3D Secure check
+                //                    cRequest = cRequest + "Apply3DSecure=2" + "&";
+                //                }
+
+                //                // goSession("attemptCount") = nAttemptCount + 1
+                //            }
+
+                //            // Convert the request to bytes
+                //            if (cRequest.EndsWith("&"))
+                //                cRequest = cRequest.Trim("&".ToCharArray());
+
+                //            byRequest = oEncoding.GetBytes(cRequest);
+
+                //            if (b3dAuthorised)
+                //            {
+                //                oRequest = (HttpWebRequest)WebRequest.Create(sVSP3DSUrl);
+                //            }
+                //            else
+                //            {
+                //                oRequest = (HttpWebRequest)WebRequest.Create(sVSPUrl);
+                //            }
+
+                //            oRequest.ContentType = "application/x-www-form-urlencoded";
+                //            oRequest.ContentLength = byRequest.Length;
+                //            oRequest.Method = "POST";
+                //            oStream = oRequest.GetRequestStream();
+                //            oStream.Write(byRequest, 0, byRequest.Length);
+                //            oStream.Close();
+
+                //            oResponse = (HttpWebResponse)oRequest.GetResponse();
+                //            oStream = oResponse.GetResponseStream();
+                //            oStreamReader = new StreamReader(oStream, Encoding.UTF8);
+                //            cResponse = oStreamReader.ReadToEnd();
+
+                //            oStreamReader.Close();
+                //            oResponse.Close();
+
+                //            this.goSession["attemptCount"] = (object)nAttemptCount;
+
+                //            // Validate the response.
+
+                //            if (string.IsNullOrEmpty(cResponse) | Strings.InStr(cResponse, "=") == 0)
+                //            {
+                //                err_msg = "There was a communications error.";
+                //            }
+                //            else
+                //            {
+                //                // lets take the response and put it in a hash table
+                //                cProcessInfo = "Error translating response:" + cResponse;
+                //                oResponseDict = UrlResponseToHashTable(cResponse, Constants.vbCrLf, "=", false);
+
+                //                nResult = Conversions.ToLong(oResponseDict["intStatus"]);
+
+                //                switch (oResponseDict["Status"])
+                //                {
+
+                //                    case "OK":
+                //                    case "AUTHENTICATED":
+                //                    case "REGISTERED":
+                //                        {
+                //                            // Successful Authorisation
+                //                            err_msg = Conversions.ToString(Operators.ConcatenateObject("Payment was successful. Transaction ref: ", oResponseDict["VPSTxId"]));
+                //                            bIsValid = true;
+
+                //                            this.goSession["attemptCount"] = (object)null;
+                //                            break;
+                //                        }
+
+                //                    case "3DAUTH":
+                //                        {
+
+                //                            // create an xform that automatically redirects to Aquiring Banks 3DS portal.
+                //                            // Save MD as paymentRef
+                //                            this.goSession["VPSTxId"] = oResponseDict["VPSTxId"];
+                //                            this.goSession["SecurityKey"] = oResponseDict["SecurityKey"];
+
+                //                            string sRedirectURL;
+                //                            if (moCartConfig["SecureURL"].EndsWith("/"))
+                //                            {
+                //                                sRedirectURL = moCartConfig["SecureURL"] + "?cartCmd=SubmitPaymentDetails";
+                //                            }
+                //                            else
+                //                            {
+                //                                sRedirectURL = moCartConfig["SecureURL"] + "/?cartCmd=SubmitPaymentDetails";
+                //                            }
+
+                //                            bIsValid = false;
+                //                            ccXform.valid = false;
+
+                //                            err_msg_log = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("ACS URL:", oResponseDict["ACSURL"]), " ACS URLDecoded:"), this.goServer.UrlDecode(Conversions.ToString(oResponseDict["ACSURL"]))), " MD:"), oResponseDict["MD"]), " PAReq:"), oResponseDict["PAReq"]));
+                //                            err_msg = "This card has subscribed to 3D Secure. You will now be re-directed to your banks website for further verification.";
+
+                //                            ccXform = this.xfrmSecure3D(this.goServer.UrlDecode(Conversions.ToString(oResponseDict["ACSURL"])), Conversions.ToString(oResponseDict["MD"]), Conversions.ToString(oResponseDict["PAReq"]), sRedirectURL);
+                //                            break;
+                //                        }
+
+                //                    case "MALFORMED":
+                //                    case "INVALID":
+                //                    case "NOTAUTHED":
+                //                    case "REJECTED":
+                //                    case "ERROR":
+                //                        {
+                //                            // Failed / Error Authorisation
+
+                //                            cMessage = Conversions.ToString(oResponseDict["StatusDetail"]);
+
+                //                            if (Strings.InStr(cMessage, "card number") > 0)
+                //                                ccXform.addNote("creditCard/number", Protean.xForm.noteTypes.Alert, "The card number given is not valid.");
+                //                            if (Strings.InStr(cMessage, "IssueNumber") > 0)
+                //                                ccXform.addNote("creditCard/issueNumber", Protean.xForm.noteTypes.Alert, "The issue number is not valid - it may not be required for non-Switch/Solo cards.");
+                //                            if (Strings.InStr(cMessage, "StartDate") > 0 | Strings.InStr(cMessage, "Start Date") > 0)
+                //                                ccXform.addNote("creditCard/issueDate", Protean.xForm.noteTypes.Alert, "The issue date is not valid - it may not be required for Switch or Solo cards.");
+                //                            if (Strings.InStr(cMessage, "ExpiryDate") > 0 | Strings.InStr(cMessage, "Expiry Date") > 0)
+                //                                ccXform.addNote("creditCard/expireDate", Protean.xForm.noteTypes.Alert, "The expiry date is not valid.");
+
+                //                            err_msg_log = cMessage;
+
+                //                            if (gbDebug)
+                //                            {
+                //                                err_msg = "<br/>Full Request:" + this.goServer.HtmlEncode(this.goServer.UrlDecode(cRequest)) + "<br/>Full Response:" + this.goServer.HtmlEncode(this.goServer.UrlDecode(cResponse));
+                //                            }
+                //                            else
+                //                            {
+                //                                err_msg = "There was an error processing this payment.<br/>  No payment has been made.<br/>  Please check the details you entered and try again, or call for assistance.<br/><br/>  The error returned fron the bank was :<br/><br/> " + this.goServer.HtmlEncode(this.goServer.UrlDecode(cMessage));
+
+                //                                // goSession("attemptCount") = Nothing
+                //                            }
+
+                //                            break;
+                //                        }
+
+                //                    default:
+                //                        {
+                //                            // Response not recognised.
+                //                            cMessage = Conversions.ToString(oResponseDict["StatusDetail"]);
+
+                //                            if (gbDebug)
+                //                            {
+                //                                err_msg = "<br/>Full Request:" + this.goServer.HtmlEncode(this.goServer.UrlDecode(cRequest)) + "<br/>Full Response:" + this.goServer.HtmlEncode(this.goServer.UrlDecode(cResponse));
+                //                            }
+                //                            else
+                //                            {
+                //                                err_msg_log = "<br/>Full Request:" + this.goServer.HtmlEncode(this.goServer.UrlDecode(cRequest)) + "<br/>Full Response:" + this.goServer.HtmlEncode(this.goServer.UrlDecode(cResponse));
+                //                                err_msg = "There was an error processing this payment.  No payment has been made.  Please check the details you entered and try again, or call for assistance.  The error detail was : " + this.goServer.HtmlEncode(this.goServer.UrlDecode(cMessage));
+                //                            }
+
+                //                            this.goSession["attemptCount"] = (object)null;
+                //                            break;
+                //                        }
+                //                }
+
+                //            }
+
+                //            ccXform.addNote("creditCard", Protean.xForm.noteTypes.Alert, err_msg, true);
+
+                //            if (bIsValid)
+                //            {
+                //                cSellerNotes = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Conversions.ToString(DateTime.Today) + " " + Conversions.ToString(DateAndTime.TimeOfDay) + ": changed to: (Payment Received) " + Constants.vbLf + "Transaction Ref:", oResponseDict["VPSTxId"]), Constants.vbLf), "comment: "), err_msg));
+                //            }
+                //            else
+                //            {
+                //                if (string.IsNullOrEmpty(err_msg_log) & !string.IsNullOrEmpty(err_msg))
+                //                {
+                //                    err_msg_log = err_msg;
+                //                }
+                //                cSellerNotes = Conversions.ToString(DateTime.Today) + " " + Conversions.ToString(DateAndTime.TimeOfDay) + ": changed to: (Payment Failed) " + Constants.vbLf + "comment: " + err_msg_log;
+                //            }
+
+                //            ccXform.valid = bIsValid;
+                //            // Save Payment
+                //            XmlElement oSaveElmt = (XmlElement)ccXform.Instance.SelectSingleNode("creditCard/bSavePayment");
+
+                //            // Set up the save payment.
+                //            // Note from Ali - not really sure what's involved here and this falls over if 3d Secure is involved,
+                //            // so need to have other options if coming back from 3d secure
+
+                //            if (!b3dAuthorised)
+                //            {
+                //                var oDate = new DateTime(Conversions.ToInteger("20" + Strings.Right(this.goRequest["creditCard/expireDate"], 2)), Conversions.ToInteger(Strings.Left(this.goRequest["creditCard/expireDate"], 2)), 1);
+                //                oDate = oDate.AddMonths(1);
+                //                oDate = oDate.AddDays(-1);
+                //                string cMethodName = this.goRequest["creditCard/type"] + ": " + stdTools.MaskString(this.goRequest["creditCard/number"], "*", false, 4) + " Expires: " + oDate.ToShortDateString();
+
+                //                var oCustomElmt = ccXform.Instance.OwnerDocument.CreateElement("ProTx");
+
+                //                oCustomElmt.SetAttribute("VPSTxId", Conversions.ToString(oResponseDict["VPSTxId"]));
+                //                oCustomElmt.SetAttribute("SecurityKey", Conversions.ToString(oResponseDict["SecurityKey"]));
+                //                oCustomElmt.SetAttribute("TxAuthNo", Conversions.ToString(oResponseDict["TxAuthNo"]));
+                //                ccXform.Instance.FirstChild.AppendChild(oCustomElmt);
+
+                //                if (oSaveElmt != null)
+                //                {
+                //                    if (oSaveElmt.InnerText == "true" & bIsValid)
+                //                    {
+                //                        savePayment((long)myWeb.mnUserId, "ProTx", mnCartId.ToString(), cMethodName, (XmlElement)ccXform.Instance.FirstChild, oDate, true, mnPaymentAmount);
+                //                    }
+                //                    else
+                //                    {
+                //                        savePayment((long)myWeb.mnUserId, "ProTx", mnCartId.ToString(), cMethodName, (XmlElement)ccXform.Instance.FirstChild, DateTime.Now, false, mnPaymentAmount);
+                //                    }
+                //                }
+                //                else
+                //                {
+                //                    savePayment((long)myWeb.mnUserId, "ProTx", mnCartId.ToString(), cMethodName, (XmlElement)ccXform.Instance.FirstChild, DateTime.Now, false, mnPaymentAmount);
+                //                }
+                //            }
+                //        }
+
+                //        else
+                //        {
+                //            if (ccXform.isSubmitted())
+                //            {
+                //                cSellerNotes = Conversions.ToString(DateTime.Today) + " " + Conversions.ToString(DateAndTime.TimeOfDay) + ": changed to: (Payment Form EonicWeb Validation Failed) " + Constants.vbLf + "comment: " + ccXform.validationError;
+                //            }
+                //            else
+                //            {
+                //                cSellerNotes = Conversions.ToString(DateTime.Today) + " " + Conversions.ToString(DateAndTime.TimeOfDay) + ": changed to: (Payment Form Presented) " + Constants.vbLf + "comment: " + err_msg_log;
+                //            }
+                //            ccXform.valid = false;
+                //        }
+
+                //        // Update Seller Notes:
+                //        sSql = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
+                //        DataSet oDs;
+                //        oDs = modbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
+                //        foreach (DataRow oRow in oDs.Tables["Order"].Rows)
+                //            oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), cSellerNotes);
+                //        modbHelper.updateDataset(ref oDs, "Order");
+
+                //        return ccXform;
+                //    }
+
+                //    catch (Exception ex)
+                //    {
+                //        stdTools.returnException(ref myWeb.msException, mcModuleName, "paySagePay", ex, "", cProcessInfo, gbDebug);
+                //        return (Cms.xForm)null;
+                //    }
+                //}
+
+                //public Cms.xForm paySecureTrading(ref XmlElement oRoot, string sSubmitPath, [Optional, DefaultParameterValue("")] ref string cReturnMethod, [Optional, DefaultParameterValue("")] ref string cReturnTransRef)
+                //{
+                //    Cms.xForm paySecureTradingRet = default;
+
+                //    // cReturnMethod - If the request is ST3DCARDQUERY and there is no enrollment, then we need to go straight on to submitting a AUTH or 3DSTAUTH request, hence the return method.
+
+                //    myWeb.PerfMon.Log("PaymentProviders", "paySecureTrading");
+
+                //    XmlElement oRequestBlockXml;
+                //    XmlElement oRequestXml;
+                //    XmlElement oCustXml;
+                //    XmlElement oPostXml;
+                //    XmlElement oPaymentXml;
+                //    XmlElement oParent;
+                //    XmlElement oElmt;
+
+                //    XmlElement oAddress;
+
+                //    HttpWebRequest oXpayRequest;
+                //    HttpWebResponse oXpayResponse;
+                //    Stream oXpayStream;
+                //    StreamReader oXpayStreamReader;
+
+                //    XmlElement oXmlResponse;
+                //    long nResult;
+
+                //    string cXpayResponse;
+                //    string cRequest;
+                //    var oEncoding = new ASCIIEncoding();
+                //    byte[] byRequest;
+
+                //    string sSql;
+
+                //    string cMessage;
+
+                //    Cms.xForm ccXform;
+
+                //    bool bIsValid = false;
+                //    string err_msg = "";
+                //    string err_msg_log = "";
+                //    Hashtable oDictOpt;
+
+                //    bool b3DAuthorised = false;
+                //    bool b3DSecure = false;
+                //    bool bCv2 = false;
+                //    string cMD = "";
+                //    string cRedirectURL = "";
+                //    string cInstanceFromCallback = "";
+
+                //    bool bIsCallback = false;
+
+                //    string cTokenAmp = "&";
+                //    string cTokenEqual = "=";
+                //    string cSubmitCommand = "cartCmd=SecureTradingReturn" + cTokenAmp;
+
+                //    XmlNode oPaymentCfg;
+
+
+                //    string cProcessInfo = "paySecureTrading";
+                //    try
+                //    {
+
+                //        // Get the payment options
+                //        oPaymentCfg = moPaymentCfg.SelectSingleNode("provider[@name='SecureTrading']");
+
+                //        if (oPaymentCfg is null)
+                //        {
+                //            Information.Err().Raise(1005, "paySecureTrading", "The Secure Trading provider section is yet to be added to the Protean.Config");
+                //        }
+
+                //        oDictOpt = xmlToHashTable(oPaymentCfg, "value");
+
+                //        // override the currency
+                //        if (oDictOpt.ContainsKey("currency"))
+                //            oDictOpt.Remove("currency");
+                //        oDictOpt.Add("currency", mcCurrency);
+
+                //        // Set common variables
+                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["validateCV2"], "on", false)))
+                //            bCv2 = true;
+                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["secure3d"], "on", false)))
+                //            b3DSecure = true;
+
+                //        // Check if we are getting a callback from Secure Trading - if so get the encrypted instance.
+                //        if (Strings.Left(myWeb.moRequest["cartCmd"], 19) == "SecureTradingReturn")
+                //        {
+
+                //            sSql = "select cPayMthdDetailXml from tblCartPaymentMethod INNER JOIN tblCartOrder ON nPayMthdId = nPayMthdKey where nCartOrderkey=" + mnCartId;
+                //            string oInstance = Conversions.ToString(myWeb.moDbHelper.GetDataValue(sSql));
+                //            if (!string.IsNullOrEmpty(oInstance))
+                //            {
+                //                var oElmt2 = moPageXml.CreateElement("elmt");
+                //                oElmt2.InnerXml = oInstance;
+                //                cInstanceFromCallback = DecryptString(oElmt2.FirstChild.InnerText, false);
+                //            }
+                //            bIsCallback = true;
+                //        }
+
+                //        ccXform = creditCardXform(ref oRoot, "PayForm", sSubmitPath, Conversions.ToString(oDictOpt["cardsAccepted"]), true, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Make Payment of " + Strings.FormatNumber(mnPaymentAmount, 2) + " ", oDictOpt["currency"]), " by Credit/Debit Card")), cInstance: cInstanceFromCallback, bOverrideValidity: bIsCallback);
+
+                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["disableAmpersandsInCallbackURL"], "on", false)))
+                //        {
+                //            // Change the URL to be tokenised because Secure Trading can't handle 
+                //            // ampersands in their callback URLs.  Gits. 
+                //            cTokenAmp = "xAMPx";
+                //            cTokenEqual = "xEQUx";
+                //            cSubmitCommand = "cartCmd=SecureTradingReturn" + cTokenAmp;
+                //        }
+
+                //        if (b3DSecure)
+                //        {
+                //            // check for return from aquiring bank
+                //            if (!string.IsNullOrEmpty(myWeb.moRequest["MD"]) | !string.IsNullOrEmpty(cReturnMethod))
+                //            {
+                //                b3DAuthorised = true;
+                //                // If cReturnMethod <> "" Then
+                //                cMD = myWeb.moRequest["MD"];
+                //                // End If
+                //            }
+                //            cRedirectURL = moCartConfig["SecureURL"] + "default.ashx?" + cSubmitCommand;
+                //        }
+
+                //        if (ccXform.valid == true | b3DAuthorised)
+                //        {
+
+                //            // Determine the request type
+                //            string cRequestType;
+                //            if (!string.IsNullOrEmpty(cReturnMethod))
+                //            {
+                //                cRequestType = cReturnMethod;
+                //            }
+                //            else if (!b3DSecure)
+                //            {
+                //                cRequestType = "AUTH";
+                //            }
+                //            else if (b3DAuthorised)
+                //            {
+                //                cRequestType = "ST3DAUTH";
+                //            }
+                //            else
+                //            {
+                //                cRequestType = "ST3DCARDQUERY";
+                //            }
+
+                //            // Build the RequestBlock XML
+                //            oRequestBlockXml = moPageXml.CreateElement("RequestBlock");
+                //            oRequestBlockXml.SetAttribute("Version", Conversions.ToString(oDictOpt["appVersion"]));
+
+                //            // RequestBlock - Add the Request
+                //            oRequestXml = addElement(ref oRequestBlockXml, "Request");
+                //            oRequestXml.SetAttribute("Type", cRequestType);
+
+                //            // Request - Add the Operation
+                //            oParent = addElement(ref oRequestXml, "Operation");
+                //            oElmt = addElement(ref oParent, "Amount", (mnPaymentAmount * 100d).ToString()); // Note - need to convert to base unit. e.g. pence/cents etc.
+                //            oElmt = addElement(ref oParent, "SiteReference", Conversions.ToString(oDictOpt["siteReference"]));
+                //            // Add the Currency if available
+                //            if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectNotEqual(oDictOpt["currency"], "", false), Strings.Len(Strings.Trim(Conversions.ToString(oDictOpt["currency"]))) == 3)))
+                //            {
+                //                oElmt = addElement(ref oParent, "Currency", Conversions.ToString(oDictOpt["currency"]));
+                //            }
+                //            // Request specific elements
+                //            switch (cRequestType ?? "")
+                //            {
+                //                case "ST3DCARDQUERY":
+                //                    {
+                //                        oElmt = addElement(ref oParent, "MerchantName", Strings.Left(moCartConfig["MerchantName"], 25));
+                //                        oElmt = addElement(ref oParent, "TermUrl", cRedirectURL);
+                //                        break;
+                //                    }
+
+                //                default:
+                //                    {
+                //                        oElmt = addElement(ref oParent, "SettlementDay", Conversions.ToString(oDictOpt["settlementDay"]));
+                //                        break;
+                //                    }
+                //            }
+
+
+                //            // Request - Add the CustomerInfo
+                //            oCustXml = addElement(ref oRequestXml, "CustomerInfo");
+
+                //            switch (cRequestType ?? "")
+                //            {
+                //                case "ST3DCARDQUERY":
+                //                    {
+                //                        oElmt = Tools.Xml.addElement(ref oCustXml, "Accept", myWeb.moRequest.ServerVariables["HTTP_ACCEPT"]);
+                //                        oElmt = Tools.Xml.addElement(ref oCustXml, "UserAgent", myWeb.moRequest.ServerVariables["HTTP_USER_AGENT"]);
+                //                        break;
+                //                    }
+
+                //                default:
+                //                    {
+                //                        // CustomerInfo - Add Billing Info
+                //                        oAddress = (XmlElement)oRoot.SelectSingleNode("Contact[@type='Billing Address']");
+                //                        oPostXml = addElement(ref oCustXml, "Postal");
+                //                        oElmt = addElement(ref oPostXml, "Company", oNodeFromXPath: oAddress.SelectSingleNode("Company"));
+                //                        oElmt = addElement(ref oPostXml, "Street", oNodeFromXPath: oAddress.SelectSingleNode("Street"));
+                //                        oElmt = addElement(ref oPostXml, "City", oNodeFromXPath: oAddress.SelectSingleNode("City"));
+                //                        oElmt = addElement(ref oPostXml, "StateProv", oNodeFromXPath: oAddress.SelectSingleNode("State"));
+                //                        oElmt = addElement(ref oPostXml, "PostalCode", oNodeFromXPath: oAddress.SelectSingleNode("PostalCode"));
+                //                        string localgetCountryISO2Code() { string argsCountry = oAddress.SelectSingleNode("Country").InnerText; var ret = getCountryISO2Code(ref argsCountry); oAddress.SelectSingleNode("Country").InnerText = argsCountry; return ret; }
+
+                //                        oElmt = addElement(ref oPostXml, "CountryCode", localgetCountryISO2Code());
+
+                //                        // CustomerInfo - Add Name
+                //                        oParent = addElement(ref oPostXml, "Name", bPrepend: true);
+                //                        oElmt = addElement(ref oParent, "FirstName", oNodeFromXPath: oAddress.SelectSingleNode("GivenName"));
+                //                        oElmt = addElement(ref oParent, "LastName");
+                //                        oElmt = addElement(ref oParent, "NamePrefix");
+                //                        oElmt = addElement(ref oParent, "MiddleName");
+                //                        oElmt = addElement(ref oParent, "NameSuffix");
+
+                //                        // CustomerInfo - Add Telecoms
+                //                        oParent = addElement(ref oCustXml, "Telecom");
+                //                        oElmt = addElement(ref oParent, "Phone", oNodeFromXPath: oAddress.SelectSingleNode("Telephone"));
+
+                //                        // CustomerInfo - Add Email
+                //                        oParent = addElement(ref oCustXml, "Online");
+                //                        oElmt = addElement(ref oParent, "Email", oNodeFromXPath: oAddress.SelectSingleNode("Email"));
+                //                        break;
+                //                    }
+                //            }
+
+
+
+                //            // Request - Add the Payment Method
+                //            oPaymentXml = addElement(ref oRequestXml, "PaymentMethod");
+                //            oParent = addElement(ref oPaymentXml, "CreditCard");
+                //            oElmt = Tools.Xml.addElement(ref oParent, "Type", ccXform.Instance.SelectSingleNode("creditCard/type").InnerText);
+                //            oElmt = addElement(ref oParent, "Number", this.FormatCreditCardNumber(ccXform.Instance.SelectSingleNode("creditCard/number").InnerText).ToString());
+                //            oElmt = Tools.Xml.addElement(ref oParent, "Issue", ccXform.Instance.SelectSingleNode("creditCard/issueNumber").InnerText);
+                //            oElmt = addElement(ref oParent, "StartDate", this.fmtSecureTradingDate(ccXform.Instance.SelectSingleNode("creditCard/issueDate").InnerText));
+                //            oElmt = addElement(ref oParent, "ExpiryDate", this.fmtSecureTradingDate(ccXform.Instance.SelectSingleNode("creditCard/expireDate").InnerText));
+                //            oElmt = Tools.Xml.addElement(ref oParent, "SecurityCode", ccXform.Instance.SelectSingleNode("creditCard/CV2").InnerText);
+
+                //            // Payment - Process 3D Secure additional params
+                //            if (cRequestType == "ST3DAUTH")
+                //            {
+                //                string cReqEnrolled;
+                //                string cReqPTR;
+                //                // Add ref to the credit card
+                //                if (!string.IsNullOrEmpty(cReturnMethod))
+                //                {
+                //                    cReqEnrolled = "N";
+                //                    cReqPTR = cReturnTransRef;
+                //                }
+                //                else if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["disableAmpersandsInCallbackURL"], "on", false)))
+                //                {
+                //                    cReqEnrolled = stdTools.SimpleRegexFind(myWeb.moRequest.QueryString["cartCmd"], cTokenAmp + "Enrolled" + cTokenEqual + "([^(" + cTokenAmp + ")]+)" + cTokenAmp, 1, RegexOptions.IgnoreCase);
+                //                    cReqPTR = stdTools.SimpleRegexFind(myWeb.moRequest.QueryString["cartCmd"], cTokenAmp + "PTR" + cTokenEqual + "([^(" + cTokenAmp + ")]+)" + cTokenAmp, 1, RegexOptions.IgnoreCase);
+                //                }
+                //                else
+                //                {
+                //                    cReqEnrolled = myWeb.moRequest["Enrolled"];
+                //                    cReqPTR = myWeb.moRequest["PTR"];
+                //                }
+                //                oElmt = addElement(ref oParent, "ParentTransactionReference", cReqPTR);
+
+                //                // Add a 3d Secure element
+                //                oParent = addElement(ref oPaymentXml, "ThreeDSecure");
+                //                oElmt = addElement(ref oParent, "Enrolled", cReqEnrolled);
+                //                oElmt = Tools.Xml.addElement(ref oParent, "PaRes", myWeb.moRequest["PaRes"]);
+                //                oElmt = addElement(ref oParent, "MD", cMD);
+                //            }
+
+
+                //            // Request - Add the Order Information
+                //            oParent = addElement(ref oRequestXml, "Order");
+                //            oElmt = addElement(ref oParent, "OrderInformation", getWorldPayOrder(ref oRoot));
+                //            oElmt = addElement(ref oParent, "OrderReference", mnCartId.ToString());
+
+                //            // Get Certificate from file.  Not a wholly secure means as not encrypted but good for now.
+                //            var oStreamreader = new StreamReader(Conversions.ToString(oDictOpt["certificatePath"]));
+
+                //            // RequestBlock - Add the Certificate
+                //            oParent = addElement(ref oRequestBlockXml, "Certificate", Constants.vbCrLf + oStreamreader.ReadToEnd());
+                //            oStreamreader.Close();
+
+                //            // Convert the request to bytes
+                //            cRequest = oRequestBlockXml.OuterXml;
+                //            byRequest = oEncoding.GetBytes(cRequest);
+
+                //            oXpayRequest = (HttpWebRequest)HttpWebRequest.Create(Convert.ToString(Operators.ConcatenateObject("http://127.0.0.1:", oDictOpt["appPort"])));
+                //            oXpayRequest.ContentType = "application/x-www-form-urlencoded";
+                //            oXpayRequest.ContentLength = cRequest.Length;
+                //            oXpayRequest.Method = "POST";
+                //            oXpayStream = oXpayRequest.GetRequestStream();
+                //            oXpayStream.Write(byRequest, 0, byRequest.Length);
+                //            oXpayStream.Close();
+
+                //            oXpayResponse = (HttpWebResponse)oXpayRequest.GetResponse();
+                //            oXpayStream = oXpayResponse.GetResponseStream();
+                //            oXpayStreamReader = new StreamReader(oXpayStream, Encoding.UTF8);
+                //            cXpayResponse = oXpayStreamReader.ReadToEnd();
+
+                //            oXmlResponse = moPageXml.CreateElement("oXmlResponse");
+                //            oXmlResponse.InnerXml = cXpayResponse;
+
+                //            oXpayStreamReader.Close();
+                //            oXpayResponse.Close();
+
+                //            // Validate the response.
+                //            XmlElement oOpResponse;
+                //            string oResponseType;
+                //            oOpResponse = (XmlElement)oXmlResponse.SelectSingleNode("/ResponseBlock/Response/OperationResponse");
+                //            if (oOpResponse is null)
+                //            {
+                //                err_msg = "There was a communications error.";
+                //            }
+                //            else
+                //            {
+                //                nResult = Conversions.ToLong(oOpResponse.SelectSingleNode("Result").InnerText);
+                //                oResponseType = oOpResponse.ParentNode.Attributes["Type"].InnerText;
+                //                // Process the repsonse by Type
+                //                switch (oResponseType ?? "")
+                //                {
+
+                //                    case "ST3DCARDQUERY":
+                //                        {
+
+                //                            switch (nResult)
+                //                            {
+                //                                case 0L:
+                //                                    {
+                //                                        cMessage = "";
+                //                                        // ST3DCARDQUERY Should be retried
+                //                                        try
+                //                                        {
+                //                                            cMessage = oOpResponse.SelectSingleNode("Message").InnerText;
+                //                                            err_msg_log = cMessage;
+                //                                            cMessage = "  The error detail was : " + Strings.Mid(cMessage, Strings.InStr(cMessage, ")") + 1);
+                //                                        }
+                //                                        catch (Exception ex2)
+                //                                        {
+                //                                            // Do Nothing
+                //                                        }
+
+                //                                        err_msg = "There was an error processing this payment.  No payment has been made.  Please check the details you entered and try again, or call for assistance. " + cMessage;
+                //                                        break;
+                //                                    }
+
+                //                                case 1L:
+                //                                    {
+                //                                        // Successful Authorisation - Process the response into a 3D Secure form
+                //                                        string cACS;
+                //                                        string cPaReq;
+                //                                        string cEnrolled;
+                //                                        var oXml = new XmlDocument();
+
+                //                                        cMessage = "";
+                //                                        // Is the user enrolled
+                //                                        cEnrolled = oOpResponse.SelectSingleNode("Enrolled").InnerText;
+
+                //                                        switch (cEnrolled ?? "")
+                //                                        {
+
+                //                                            case "Y":
+                //                                                {
+
+                //                                                    // Encrypt the cc details form for retrieval by Sec Trading later.
+                //                                                    string cCCInstance = stdTools.EncryptString(ccXform.Instance.InnerXml, false);
+                //                                                    var oEncryptedPayment = ccXform.moPageXML.CreateElement("encryptedPayment");
+                //                                                    oEncryptedPayment.InnerText = cCCInstance;
+                //                                                    this.savePayment((long)myWeb.mnUserId, "ProTx", mnCartId.ToString(), "SecureTrading", oEncryptedPayment, DateTime.Now, false, mnPaymentAmount);
+
+                //                                                    try
+                //                                                    {
+
+
+                //                                                        // Get the HTML and load it in
+
+                //                                                        // Try to parse the HTML
+                //                                                        // The following method looks convoluted, but it is probably the best way to get through this shocking excuse for HTML.
+                //                                                        // tidyXhtmlFrag doesn't work because it does something strange to the actual values we are trying to retrieve.
+
+                //                                                        string cHtml = oOpResponse.SelectSingleNode("Html").InnerText;
+                //                                                        // Dim oRe As Regex, oFind As Match
+
+                //                                                        // Get Action
+                //                                                        cACS = SimpleRegexFind(cHtml, "ACTION='([^']+)'", 1, RegexOptions.IgnoreCase);
+
+                //                                                        // Get PaReq
+                //                                                        cPaReq = SimpleRegexFind(cHtml, "name='PaReq' value='([^']+)'", 1, RegexOptions.IgnoreCase);
+
+                //                                                        // Get MD
+                //                                                        cMD = SimpleRegexFind(cHtml, "name='MD' value='([^']+)'", 1, RegexOptions.IgnoreCase);
+
+                //                                                        cRedirectURL = cRedirectURL + "Enrolled" + cTokenEqual + cEnrolled + cTokenAmp;
+                //                                                        cRedirectURL = cRedirectURL + "PTR" + cTokenEqual + oOpResponse.SelectSingleNode("TransactionReference").InnerText + cTokenAmp;
+                //                                                        cRedirectURL = cRedirectURL + "cartId" + cTokenEqual + mnCartId + cTokenAmp;
+                //                                                        ccXform = xfrmSecure3D(cACS, cMD, cPaReq, cRedirectURL);
+                //                                                    }
+
+
+
+
+                //                                                    catch (Exception ex)
+                //                                                    {
+                //                                                        if (!string.IsNullOrEmpty(cMessage))
+                //                                                            cMessage = "3D Secure : Could not process the response. (Technical Info: CardQuery Html)";
+                //                                                        err_msg_log = cMessage;
+                //                                                    }
+
+                //                                                    break;
+                //                                                }
+
+                //                                            default:
+                //                                                {
+                //                                                    // User not enrolled, so we need to proceed to the 3DAUTHRequest
+                //                                                    cReturnTransRef = oOpResponse.SelectSingleNode("TransactionReference").InnerText;
+                //                                                    cReturnMethod = "ST3DAUTH";
+                //                                                    err_msg_log = "ST3DCARDQUERY Returned " + nResult + " + Enrolled of " + cEnrolled;
+                //                                                    break;
+                //                                                }
+                //                                        }
+
+                //                                        if (!string.IsNullOrEmpty(cMessage))
+                //                                            err_msg = "There was an error processing this payment.  No payment has been made.  Please check the details you entered and try again, or call for assistance. " + cMessage;
+                //                                        break;
+                //                                    }
+                //                                case 2L:
+                //                                    {
+                //                                        // Note - Must perform nomral AUTH request - how to do this in this form.
+                //                                        cReturnMethod = "AUTH";
+                //                                        err_msg_log = "ST3DCARDQUERY Returned " + nResult;
+                //                                        break;
+                //                                    }
+                //                            }
+
+                //                            break;
+                //                        }
+
+
+                //                    case "AUTH":
+                //                    case "ST3DAUTH":
+                //                        {
+                //                            switch (nResult)
+                //                            {
+                //                                case 0L:
+                //                                    {
+                //                                        cMessage = "";
+                //                                        // Failed / Error Authorisation
+                //                                        try
+                //                                        {
+                //                                            cMessage = oOpResponse.SelectSingleNode("Message").InnerText;
+                //                                            if (Strings.InStr(cMessage, "CreditCardNumber") > 0)
+                //                                                ccXform.addNote("creditCard/number", Protean.xForm.noteTypes.Alert, "The card number is not valid.");
+                //                                            if (Strings.InStr(cMessage, "IssueNumber") > 0)
+                //                                                ccXform.addNote("creditCard/issueNumber", Protean.xForm.noteTypes.Alert, "The issue number is not valid - it may not be required for non-Switch/Solo cards.");
+                //                                            if (Strings.InStr(cMessage, "StartDate") > 0)
+                //                                                ccXform.addNote("creditCard/issueDate", Protean.xForm.noteTypes.Alert, "The issue date is not valid - it may not be required for Switch or Solo cards.");
+                //                                            if (Strings.InStr(cMessage, "ExpiryDate") > 0)
+                //                                                ccXform.addNote("creditCard/expireDate", Protean.xForm.noteTypes.Alert, "The expiry date is not valid.");
+
+                //                                            err_msg_log = cMessage;
+                //                                            cMessage = "  The error detail was : " + Strings.Mid(cMessage, Strings.InStr(cMessage, ")") + 1);
+                //                                        }
+                //                                        catch (Exception ex2)
+                //                                        {
+                //                                            // Do Nothing
+                //                                        }
+
+                //                                        err_msg = "There was an error processing this payment.  No payment has been made.  Please check the details you entered and try again, or call for assistance. " + cMessage;
+                //                                        break;
+                //                                    }
+
+                //                                case 1L:
+                //                                    {
+                //                                        // Successful Authorisation
+                //                                        err_msg = "Payment was successful. Transaction ref: " + oOpResponse.SelectSingleNode("TransactionReference").InnerText;
+                //                                        bIsValid = true;
+                //                                        break;
+                //                                    }
+                //                                case 2L:
+                //                                    {
+                //                                        cMessage = "";
+                //                                        try
+                //                                        {
+                //                                            // Declined Authorisation
+                //                                            if (oOpResponse.SelectSingleNode("Message") is null)
+                //                                            {
+                //                                                cMessage = "";
+                //                                            }
+                //                                            else
+                //                                            {
+                //                                                cMessage = oOpResponse.SelectSingleNode("Message").InnerText;
+                //                                                cMessage = "  The error detail was : " + Strings.Mid(cMessage, Strings.InStr(cMessage, ")") + 1);
+                //                                            }
+                //                                        }
+                //                                        catch (Exception ex2)
+                //                                        {
+                //                                            // Do Nothing
+                //                                        }
+
+                //                                        err_msg_log = cMessage;
+                //                                        err_msg = "The authorisation for your payment was declined.  No payment has been made.  Please check the details you entered and try again, or call for assistance." + cMessage;
+                //                                        break;
+                //                                    }
+                //                            }
+
+                //                            break;
+                //                        }
+
+                //                    default:
+                //                        {
+
+                //                            switch (nResult)
+                //                            {
+                //                                case 0L:
+                //                                    {
+                //                                        cMessage = "";
+                //                                        // ST3DCARDQUERY Should be retried
+                //                                        try
+                //                                        {
+                //                                            cMessage = oOpResponse.SelectSingleNode("Message").InnerText;
+                //                                            err_msg_log = cMessage;
+                //                                            cMessage = "  The error detail was : " + Strings.Mid(cMessage, Strings.InStr(cMessage, ")") + 1);
+                //                                        }
+                //                                        catch (Exception ex2)
+                //                                        {
+                //                                            // Do Nothing
+                //                                        }
+
+                //                                        err_msg = "There was an error processing this payment.  No payment has been made.  Please check the details you entered and try again, or call for assistance. " + cMessage;
+                //                                        break;
+                //                                    }
+                //                            }
+
+                //                            break;
+                //                        }
+
+                //                }
+                //            }
+
+                //            // Update Seller Notes:
+                //            ccXform.addNote("creditCard", Protean.xForm.noteTypes.Alert, err_msg);
+
+
+                //            sSql = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
+                //            DataSet oDs;
+                //            oDs = modbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
+                //            foreach (DataRow oRow in oDs.Tables["Order"].Rows)
+                //            {
+                //                if (bIsValid)
+                //                {
+                //                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Received) "), Constants.vbLf), "comment: "), err_msg), Constants.vbLf), "Full Response:' "), cXpayResponse), "'");
+                //                }
+                //                else
+                //                {
+                //                    if (string.IsNullOrEmpty(err_msg_log))
+                //                        err_msg_log = err_msg;
+                //                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Failed) "), Constants.vbLf), "comment: "), err_msg_log), Constants.vbLf), "Full Response:' "), cXpayResponse), "'");
+                //                }
+
+                //            }
+                //            modbHelper.updateDataset(ref oDs, "Order");
+
+
+                //            ccXform.valid = bIsValid;
+                //        }
+                //        else
+                //        {
+                //            ccXform.valid = false;
+                //        }
+
+                //        paySecureTradingRet = ccXform;
+                //    }
+
+                //    catch (Exception ex)
+                //    {
+
+                //        stdTools.returnException(ref myWeb.msException, mcModuleName, "paySecureTrading", ex, "", cProcessInfo, gbDebug);
+                //        return (Cms.xForm)null;
+                //    }
+
+                //    return paySecureTradingRet;
+                //}
+
+                //public Cms.xForm paySecureTradingOld(ref XmlElement oRoot, string sSubmitPath)
+                //{
+                //    myWeb.PerfMon.Log("PaymentProviders", "paySecureTrading");
+                //    XmlElement oRequestBlockXml;
+                //    XmlElement oRequestXml;
+                //    XmlElement oCustXml;
+                //    XmlElement oPostXml;
+                //    XmlElement oPaymentXml;
+                //    XmlElement oParent;
+                //    XmlElement oElmt;
+
+                //    XmlElement oAddress;
+
+                //    HttpWebRequest oXpayRequest;
+                //    HttpWebResponse oXpayResponse;
+                //    Stream oXpayStream;
+                //    StreamReader oXpayStreamReader;
+
+                //    XmlElement oXmlResponse;
+                //    long nResult;
+
+                //    string cXpayResponse;
+                //    string cRequest;
+                //    var oEncoding = new ASCIIEncoding();
+                //    byte[] byRequest;
+
+                //    string sSql;
+
+                //    string cMessage;
+
+                //    Cms.xForm ccXform;
+
+                //    bool bIsValid = false;
+                //    string err_msg = "";
+                //    string err_msg_log = "";
+                //    string sProcessInfo = "";
+                //    Hashtable oDictOpt;
+
+                //    bool bCv2 = false;
+
+                //    string cProcessInfo = "paySecureTrading";
+                //    try
+                //    {
+
+                //        // Get the payment options into a hashtable
+                //        sSql = "select * from tbl_ewc_paymentSettings where cPymtStgTypeRef Like 'Secure Trading' or cPymtStgTypeRef Like 'General Settings' or cPymtStgTypeRef Like 'Advanced Settings' ";
+
+                //        string argsValueField = "cPymtStgValue";
+                //        oDictOpt = modbHelper.getHashTable(sSql, "cPymtStgName", ref argsValueField);
+
+                //        // Load the Xform
+                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["CV2"], "1", false)))
+                //            bCv2 = true;
+
+                //        ccXform = creditCardXform(ref oRoot, "PayForm", sSubmitPath, Conversions.ToString(oDictOpt["CardsAccepted"]), true, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Make Payment of " + Strings.FormatNumber(mnPaymentAmount, 2) + " ", oDictOpt["Currency"]), " by Credit/Debit Card")));
+
+                //        if (ccXform.valid == true)
+                //        {
+
+                //            // Build the RequestBlock XML
+                //            oRequestBlockXml = moPageXml.CreateElement("RequestBlock");
+                //            oRequestBlockXml.SetAttribute("Version", Conversions.ToString(oDictOpt["STAppVersion"]));
+
+                //            // RequestBlock - Add the Request
+                //            oRequestXml = addElement(ref oRequestBlockXml, "Request");
+                //            oRequestXml.SetAttribute("Type", "AUTH");
+
+                //            // Request - Add the Operation
+                //            oParent = addElement(ref oRequestXml, "Operation");
+                //            oElmt = addElement(ref oParent, "Amount", (mnPaymentAmount * 100d).ToString()); // Note - need to convert to base unit. e.g. pence/cents etc.
+                //            oElmt = addElement(ref oParent, "SiteReference", Conversions.ToString(oDictOpt["SiteReference"]));
+                //            oElmt = addElement(ref oParent, "SettlementDay", Conversions.ToString(oDictOpt["SettlementDay"]));
+                //            // Add the Currency if available
+                //            if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectNotEqual(oDictOpt["Currency"], "", false), Strings.Len(Strings.Trim(Conversions.ToString(oDictOpt["Currency"]))) == 3)))
+                //            {
+                //                oElmt = addElement(ref oParent, "Currency", Conversions.ToString(oDictOpt["Currency"]));
+                //            }
+
+                //            // Request - Add the CustomerInfo
+                //            oCustXml = addElement(ref oRequestXml, "CustomerInfo");
+
+                //            // CustomerInfo - Add Billing Info
+                //            oAddress = (XmlElement)oRoot.SelectSingleNode("Contact[@type='Billing Address']");
+                //            oPostXml = addElement(ref oCustXml, "Postal");
+                //            oElmt = addElement(ref oPostXml, "Company", oNodeFromXPath: oAddress.SelectSingleNode("Company"));
+                //            oElmt = addElement(ref oPostXml, "Street", oNodeFromXPath: oAddress.SelectSingleNode("Address/Street"));
+                //            oElmt = addElement(ref oPostXml, "City", oNodeFromXPath: oAddress.SelectSingleNode("Address/City"));
+                //            oElmt = addElement(ref oPostXml, "StateProv", oNodeFromXPath: oAddress.SelectSingleNode("Address/State"));
+                //            oElmt = addElement(ref oPostXml, "PostalCode", oNodeFromXPath: oAddress.SelectSingleNode("Address/PostalCode"));
+                //            string localgetCountryISO2Code() { string argsCountry1 = oAddress.SelectSingleNode("Address/Country").InnerText; var ret = getCountryISO2Code(ref argsCountry1); oAddress.SelectSingleNode("Address/Country").InnerText = argsCountry1; return ret; }
+
+                //            oElmt = addElement(ref oPostXml, "CountryCode", localgetCountryISO2Code());
+
+                //            // CustomerInfo - Add Name
+                //            oParent = addElement(ref oPostXml, "Name", bPrepend: true);
+                //            oElmt = addElement(ref oParent, "FirstName", oNodeFromXPath: oAddress.SelectSingleNode("GivenName"));
+                //            oElmt = addElement(ref oParent, "LastName");
+                //            oElmt = addElement(ref oParent, "NamePrefix");
+                //            oElmt = addElement(ref oParent, "MiddleName");
+                //            oElmt = addElement(ref oParent, "NameSuffix");
+
+                //            // CustomerInfo - Add Telecoms
+                //            oParent = addElement(ref oCustXml, "Telecom");
+                //            oElmt = addElement(ref oParent, "Phone", oNodeFromXPath: oAddress.SelectSingleNode("Telephone"));
+
+                //            // CustomerInfo - Add Email
+                //            oParent = addElement(ref oCustXml, "Online");
+                //            oElmt = addElement(ref oParent, "Email", oNodeFromXPath: oAddress.SelectSingleNode("Email"));
+
+                //            // Request - Add the Payment Method
+                //            oPaymentXml = addElement(ref oRequestXml, "PaymentMethod");
+                //            oParent = addElement(ref oPaymentXml, "CreditCard");
+                //            oElmt = Tools.Xml.addElement(ref oParent, "Type", this.goRequest["creditCard/type"]);
+                //            oElmt = addElement(ref oParent, "Number", this.FormatCreditCardNumber(this.goRequest["creditCard/number"]).ToString());
+                //            oElmt = Tools.Xml.addElement(ref oParent, "Issue", this.goRequest["creditCard/issueNumber"]);
+                //            oElmt = addElement(ref oParent, "StartDate", this.fmtSecureTradingDate(this.goRequest["creditCard/issueDate"]));
+                //            oElmt = addElement(ref oParent, "ExpiryDate", this.fmtSecureTradingDate(this.goRequest["creditCard/expireDate"]));
+                //            oElmt = Tools.Xml.addElement(ref oParent, "SecurityCode", this.goRequest["creditCard/CV2"]);
+
+                //            // Request - Add the Order Information
+                //            oParent = addElement(ref oRequestXml, "Order");
+                //            oElmt = addElement(ref oParent, "OrderInformation", getWorldPayOrder(ref oRoot));
+                //            oElmt = addElement(ref oParent, "OrderReference", mnCartId.ToString());
+
+                //            // Get Certificate from file.  Not a wholly secure means as not encrypted but good for now.
+                //            var oStreamreader = new StreamReader(Conversions.ToString(oDictOpt["CertificatePath"]));
+
+                //            // RequestBlock - Add the Certificate
+                //            oParent = addElement(ref oRequestBlockXml, "Certificate", Constants.vbCrLf + oStreamreader.ReadToEnd());
+                //            oStreamreader.Close();
+
+                //            // Convert the request to bytes
+                //            cRequest = oRequestBlockXml.OuterXml;
+                //            byRequest = oEncoding.GetBytes(cRequest);
+
+                //            oXpayRequest = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:5000");
+                //            oXpayRequest.ContentType = "application/x-www-form-urlencoded";
+                //            oXpayRequest.ContentLength = cRequest.Length;
+                //            oXpayRequest.Method = "POST";
+                //            oXpayStream = oXpayRequest.GetRequestStream();
+                //            oXpayStream.Write(byRequest, 0, byRequest.Length);
+                //            oXpayStream.Close();
+
+                //            oXpayResponse = (HttpWebResponse)oXpayRequest.GetResponse();
+                //            oXpayStream = oXpayResponse.GetResponseStream();
+                //            oXpayStreamReader = new StreamReader(oXpayStream, Encoding.UTF8);
+                //            cXpayResponse = oXpayStreamReader.ReadToEnd();
+
+                //            oXmlResponse = moPageXml.CreateElement("oXmlResponse");
+                //            oXmlResponse.InnerXml = cXpayResponse;
+
+                //            oXpayStreamReader.Close();
+                //            oXpayResponse.Close();
+
+                //            // Validate the response.
+                //            XmlElement oOpResponse;
+                //            oOpResponse = (XmlElement)oXmlResponse.SelectSingleNode("/ResponseBlock/Response/OperationResponse");
+                //            if (oOpResponse is null)
+                //            {
+                //                err_msg = "There was a communications error.";
+                //            }
+                //            else
+                //            {
+                //                nResult = Conversions.ToLong(oOpResponse.SelectSingleNode("Result").InnerText);
+                //                switch (nResult)
+                //                {
+                //                    case 0L:
+                //                        {
+                //                            cMessage = "";
+                //                            // Failed / Error Authorisation
+                //                            try
+                //                            {
+                //                                cMessage = oOpResponse.SelectSingleNode("Message").InnerText;
+                //                                if (Strings.InStr(cMessage, "CreditCardNumber") > 0)
+                //                                    ccXform.addNote("creditCard/number", Protean.xForm.noteTypes.Alert, "The card number is not valid.");
+                //                                if (Strings.InStr(cMessage, "IssueNumber") > 0)
+                //                                    ccXform.addNote("creditCard/issueNumber", Protean.xForm.noteTypes.Alert, "The issue number is not valid - it may not be required for non-Switch/Solo cards.");
+                //                                if (Strings.InStr(cMessage, "StartDate") > 0)
+                //                                    ccXform.addNote("creditCard/issueDate", Protean.xForm.noteTypes.Alert, "The issue date is not valid - it may not be required for Switch or Solo cards.");
+                //                                if (Strings.InStr(cMessage, "ExpiryDate") > 0)
+                //                                    ccXform.addNote("creditCard/expireDate", Protean.xForm.noteTypes.Alert, "The expiry date is not valid.");
+
+                //                                err_msg_log = cMessage;
+                //                                cMessage = "  The error detail was : " + Strings.Mid(cMessage, Strings.InStr(cMessage, ")") + 1);
+                //                            }
+                //                            catch (Exception ex2)
+                //                            {
+                //                                // Do Nothing
+                //                            }
+
+                //                            err_msg = "There was an error processing this payment.  No payment has been made.  Please check the details you entered and try again, or call for assistance. " + cMessage;
+                //                            break;
+                //                        }
+
+                //                    case 1L:
+                //                        {
+                //                            // Successful Authorisation
+                //                            err_msg = "Payment was successful. Transaction ref: " + oOpResponse.SelectSingleNode("TransactionReference").InnerText;
+                //                            bIsValid = true;
+                //                            break;
+                //                        }
+                //                    case 2L:
+                //                        {
+                //                            cMessage = "";
+                //                            try
+                //                            {
+                //                                // Declined Authorisation
+                //                                if (oOpResponse.SelectSingleNode("Message") is null)
+                //                                {
+                //                                    cMessage = "";
+                //                                }
+                //                                else
+                //                                {
+                //                                    cMessage = oOpResponse.SelectSingleNode("Message").InnerText;
+                //                                    cMessage = "  The error detail was : " + Strings.Mid(cMessage, Strings.InStr(cMessage, ")") + 1);
+                //                                }
+                //                            }
+                //                            catch (Exception ex2)
+                //                            {
+                //                                // Do Nothing
+                //                            }
+
+                //                            err_msg_log = cMessage;
+                //                            err_msg = "The authorisation for your payment was declined.  No payment has been made.  Please check the details you entered and try again, or call for assistance." + cMessage;
+                //                            break;
+                //                        }
+                //                }
+                //            }
+
+                //            // Update Seller Notes:
+                //            ccXform.addNote("creditCard", Protean.xForm.noteTypes.Alert, err_msg);
+
+                //            sSql = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
+                //            DataSet oDs;
+                //            oDs = modbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
+                //            foreach (DataRow oRow in oDs.Tables["Cart"].Rows)
+                //            {
+                //                if (bIsValid)
+                //                {
+                //                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Received) "), Constants.vbLf), "comment: "), err_msg);
+                //                }
+                //                else
+                //                {
+                //                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Failed) "), Constants.vbLf), "comment: "), err_msg_log);
+                //                }
+                //            }
+                //            modbHelper.updateDataset(ref oDs, "Order");
+
+                //            ccXform.valid = bIsValid;
+                //        }
+                //        else
+                //        {
+                //            ccXform.valid = false;
+                //        }
+
+                //        return ccXform;
+                //    }
+
+                //    catch (Exception ex)
+                //    {
+
+                //        stdTools.returnException(ref myWeb.msException, mcModuleName, "paySecureTrading", ex, "", cProcessInfo, gbDebug);
+                //        return (Cms.xForm)null;
+                //    }
+                //}
 
                 public Cms.xForm payMetaCharge(ref XmlElement oRoot, string sSubmitPath)
                 {
@@ -2994,654 +2994,654 @@ namespace Protean
                     return payMetaChargeRet;
                 }
 
-                public Cms.xForm payAuthorizeNet(ref XmlElement oRoot, string sSubmitPath)
-                {
-                    myWeb.PerfMon.Log("PaymentProviders", "payMetaCharge");
-                    HttpWebRequest oRequest;
-                    HttpWebResponse oResponse;
-                    Stream oStream;
-                    StreamReader oStreamReader;
-
-                    string cResponse;
-                    string cRequest;
-                    var oEncoding = new ASCIIEncoding();
-                    byte[] byRequest;
-
-                    string sSql;
-
-                    string cMessage = "";
-
-                    Cms.xForm ccXform;
-
-                    bool bIsValid = false;
-                    string err_msg = "";
-                    string err_msg_log = "";
-                    string sProcessInfo = "";
-                    var oDictOpt = new Hashtable();
-
-                    bool bCv2 = false;
-                    bool b3dSecure = false;
-                    Hashtable oResponseDict = null;
-                    XmlNode oCartAdd;
-                    bool b3dAuthorised = false;
-
-                    XmlNode oPPCfg;
-                    string cIPAddress = this.goRequest.ServerVariables["REMOTE_ADDR"];
-
-                    string cProcessInfo = "payAuthorizeNet";
-                    string sAPIVer = "3.1";
-                    string sAPIURL = "";
-                    bool bTest = true;
-                    try
-                    {
-
-                        // Get the payment options into a hashtable
-                        oPPCfg = moPaymentCfg.SelectSingleNode("provider[@name='AuthorizeNet']");
-                        foreach (XmlElement oElmt in oPPCfg.SelectNodes("*"))
-                        {
-                            if (oElmt.GetAttribute("value") != null)
-                            {
-                                oDictOpt.Add(oElmt.Name, oElmt.GetAttribute("value"));
-                            }
-                        }
-
-                        oCartAdd = oRoot.SelectSingleNode("Contact[@type='Billing Address']");
-
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["validateCV2"], "on", false)))
-                            bCv2 = true;
-
-                        // Load the Xform
-                        ccXform = creditCardXform(ref oRoot, "PayForm", sSubmitPath, Conversions.ToString(oDictOpt["cardsAccepted"]), true, "Make Payment of " + Strings.FormatNumber(mnPaymentAmount, 2) + " " + mcCurrency + " by Credit/Debit Card");
-
-                        switch (oDictOpt["opperationMode"])
-                        {
-                            case "live":
-                                {
-                                    sAPIURL = "https://secure.authorize.net/gateway/transact.dll";
-                                    bTest = false;
-                                    break;
-                                }
-                            case "true":
-                                {
-                                    sAPIURL = "https://test.authorize.net/gateway/transact.dll";
-                                    break;
-                                }
-                            case "false":
-                                {
-                                    sAPIURL = "https://test.authorize.net/gateway/transact.dll";
-                                    break;
-                                }
-
-                        }
-
-                        if (ccXform.valid == true | b3dAuthorised)
-                        {
-
-                            // standard card validation request
-                            cRequest = "x_version=" + sAPIVer + "&";
-                            cRequest = cRequest + "x_delim_data=True&";
-                            cRequest = cRequest + "x_relay_response=False&";
-                            cRequest = cRequest + "x_login=" + this.goServer.UrlEncode(Conversions.ToString(oDictOpt["accountId"])) + "&";
-                            cRequest = cRequest + "x_tran_key=" + this.goServer.UrlEncode(Conversions.ToString(oDictOpt["transactionKey"])) + "&";
-                            if (bTest)
-                            {
-                                cRequest = cRequest + "x_test_request=TRUE&";
-                            }
-                            cRequest = cRequest + "x_amount=" + this.goServer.UrlEncode(mnPaymentAmount.ToString()) + "&";
-                            cRequest = cRequest + "x_currency_code=" + mcCurrency + "&";
-                            cRequest = cRequest + "x_method=CC&";
-                            cRequest = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "x_type=", oDictOpt["transactionType"]), "&"));
-                            cRequest = cRequest + "x_card_num=" + this.goServer.UrlEncode(this.FormatCreditCardNumber(this.goRequest["creditCard/number"]).ToString()) + "&";
-                            cRequest = cRequest + "x_exp_date=" + this.fmtSecPayDate(this.goRequest["creditCard/expireDate"]) + "&";
-                            if (bCv2)
-                            {
-                                cRequest = cRequest + "x_card_code=" + this.goServer.UrlEncode(this.goRequest["creditCard/CV2"]) + "&";
-                            }
-
-                            cRequest = cRequest + "x_invoice_num=" + this.goServer.UrlEncode(mnCartId.ToString()) + "&";
-                            cRequest = cRequest + "x_description=" + this.goServer.UrlEncode(mcPaymentOrderDescription) + "&";
-                            cRequest = cRequest + getAutorizeNetOrder(ref oRoot);
-                            cRequest = cRequest + "x_customer_ip=" + this.goRequest.ServerVariables["REMOTE_ADDR"] + "&";
-
-                            cRequest = cRequest + "x_last_name=" + this.goServer.UrlEncode(mcCardHolderName) + "&";
-                            cRequest = cRequest + "x_address=" + this.goServer.UrlEncode(mcCardHolderAddress) + "&";
-                            cRequest = cRequest + "x_city=" + this.goServer.UrlEncode(oCartAdd.SelectSingleNode("City").InnerText) + "&";
-                            // cRequest = cRequest & "strState=" & goServer.UrlEncode(oCartAdd.SelectSingleNode("State").InnerText) & "&"
-                            cRequest = cRequest + "x_zip=" + this.goServer.UrlEncode(mcCardHolderPostcode) + "&";
-                            string localgetCountryISO2Code() { string argsCountry3 = oCartAdd.SelectSingleNode("Country").InnerText; var ret = getCountryISO2Code(ref argsCountry3); oCartAdd.SelectSingleNode("Country").InnerText = argsCountry3; return ret; }
-
-                            cRequest = cRequest + "x_country=" + localgetCountryISO2Code() + "&";  // 2 letter ISO code
-                            cRequest = cRequest + "x_phone=" + this.goServer.UrlEncode(oCartAdd.SelectSingleNode("Telephone").InnerText) + "&";
-                            cRequest = cRequest + "x_fax=" + this.goServer.UrlEncode(oCartAdd.SelectSingleNode("Fax").InnerText) + "&";
-
-                            if (!string.IsNullOrEmpty(oCartAdd.SelectSingleNode("Email").InnerText))
-                            {
-                                cRequest = cRequest + "x_email=" + this.goServer.UrlEncode(oCartAdd.SelectSingleNode("Email").InnerText) + "&";
-                                cRequest = cRequest + "x_email_customer=" + this.goServer.UrlEncode(Conversions.ToString(oDictOpt["emailCustomer"])) + "&";
-                            }
-
-                            // If Not goRequest("creditCard/issueDate") = "" Then
-                            // cRequest = cRequest & "strStartDate=" & fmtSecPayDate(goRequest("creditCard/issueDate")) & "&"
-                            // End If
-                            // cRequest = cRequest & "intCV2=" & goServer.UrlEncode(CStr(goRequest("creditCard/CV2"))) & "&"
-                            // cRequest = cRequest & "strIssueNo=" & goServer.UrlEncode(goRequest("creditCard/issueNumber")) & "&"
-                            // cRequest = cRequest & "strCardType=" & goServer.UrlEncode(goRequest("creditCard/type")) & "
-                            // 
-                            // Convert the request to bytes
-
-                            byRequest = oEncoding.GetBytes(cRequest);
-
-                            oRequest = (HttpWebRequest)WebRequest.Create(sAPIURL);
-                            oRequest.ContentType = "application/x-www-form-urlencoded";
-                            oRequest.ContentLength = byRequest.Length;
-                            oRequest.Method = "POST";
-                            oStream = oRequest.GetRequestStream();
-                            oStream.Write(byRequest, 0, byRequest.Length);
-                            oStream.Close();
-
-                            oResponse = (HttpWebResponse)oRequest.GetResponse();
-                            oStream = oResponse.GetResponseStream();
-                            oStreamReader = new StreamReader(oStream, Encoding.UTF8);
-                            cResponse = oStreamReader.ReadToEnd();
-
-                            oStreamReader.Close();
-                            oResponse.Close();
-
-                            // Validate the response.
-
-                            if (string.IsNullOrEmpty(cResponse))
-                            {
-                                err_msg = "There was a communications error.";
-                            }
-                            else
-                            {
-                                // lets take the response and put it in a hash table
-                                cProcessInfo = "error tranlating response:" + cResponse;
-                                Array aResponse = Strings.Split(" |" + cResponse, "|");
-
-                                switch (aResponse((object)1))
-                                {
-                                    case "3":
-                                        {
-                                            // Error 
-                                            err_msg_log = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(aResponse((object)3), " desc:"), aResponse((object)4)));
-
-                                            if (gbDebug)
-                                            {
-                                                err_msg = "<br/>Full Request:" + this.goServer.HtmlEncode(this.goServer.UrlDecode(cRequest)) + "<br/>Full Response:" + this.goServer.HtmlEncode(this.goServer.UrlDecode(cResponse));
-                                            }
-                                            else
-                                            {
-                                                err_msg = "There was an error processing this payment.  No payment has been made.  Please check the details you entered and try again, or call for assistance.  The error detail was : " + this.goServer.HtmlEncode(this.goServer.UrlDecode(cMessage));
-                                            }
-
-                                            break;
-                                        }
-
-                                    case "2":
-                                        {
-                                            // Failed / Error Authorisation
-                                            cMessage = Conversions.ToString(oResponseDict["strMessage"]);
-
-                                            if (Strings.InStr(cMessage, "card number") > 0)
-                                                ccXform.addNote("creditCard/number", Protean.xForm.noteTypes.Alert, "The card number given is not valid.");
-                                            if (Strings.InStr(cMessage, "IssueNumber") > 0)
-                                                ccXform.addNote("creditCard/issueNumber", Protean.xForm.noteTypes.Alert, "The issue number is not valid - it may not be required for non-Switch/Solo cards.");
-                                            if (Strings.InStr(cMessage, "StartDate") > 0 | Strings.InStr(cMessage, "Start Date") > 0)
-                                                ccXform.addNote("creditCard/issueDate", Protean.xForm.noteTypes.Alert, "The issue date is not valid - it may not be required for Switch or Solo cards.");
-                                            if (Strings.InStr(cMessage, "ExpiryDate") > 0 | Strings.InStr(cMessage, "Expiry Date") > 0)
-                                                ccXform.addNote("creditCard/expireDate", Protean.xForm.noteTypes.Alert, "The expiry date is not valid.");
-
-                                            err_msg_log = cMessage;
-
-                                            if (gbDebug)
-                                            {
-                                                err_msg = "<br/>Full Request:" + this.goServer.HtmlEncode(this.goServer.UrlDecode(cRequest)) + "<br/>Full Response:" + this.goServer.HtmlEncode(this.goServer.UrlDecode(cResponse));
-                                            }
-                                            else
-                                            {
-                                                err_msg = "There was an error processing this payment.  No payment has been made.  Please check the details you entered and try again, or call for assistance.  The error detail was : " + this.goServer.HtmlEncode(this.goServer.UrlDecode(cMessage));
-                                            }
-
-                                            break;
-                                        }
-
-                                    case "1":
-                                        {
-                                            // Successful Authorisation
-                                            err_msg = Conversions.ToString(Operators.ConcatenateObject("Payment was successful. Transaction ref: ", aResponse((object)5)));
-                                            bIsValid = true;
-                                            var oDate = new DateTime(Conversions.ToInteger("20" + Strings.Right(this.goRequest["creditCard/expireDate"], 2)), Conversions.ToInteger(Strings.Left(this.goRequest["creditCard/expireDate"], 2)), 1);
-                                            oDate = oDate.AddMonths(1);
-                                            oDate = oDate.AddDays(-1);
-                                            string cMethodName = this.goRequest["creditCard/type"] + ": " + stdTools.MaskString(this.goRequest["creditCard/number"], "*", false, 4) + " Expires: " + oDate.ToShortDateString();
-                                            savePayment((long)myWeb.mnUserId, "AuthoizeNet", mnCartId.ToString(), cMethodName, (XmlElement)ccXform.Instance.FirstChild, oDate, true, mnPaymentAmount);
-                                            break;
-                                        }
-
-                                    default:
-                                        {
-
-
-                                            if (gbDebug)
-                                            {
-                                                err_msg = Conversions.ToString(Operators.ConcatenateObject("<br/>Full Request:", aResponse((object)1)));
-                                            }
-                                            else
-                                            {
-                                                err_msg = "There was an error processing this payment.  No payment has been made.  Please check the details you entered and try again, or call for assistance.  The error detail was : " + this.goServer.HtmlEncode(this.goServer.UrlDecode(cMessage));
-                                            }
-
-                                            break;
-                                        }
-                                }
-
-                            }
-
-                            // Update Seller Notes:
-                            ccXform.addNote("creditCard", Protean.xForm.noteTypes.Alert, err_msg);
-
-                            sSql = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
-                            DataSet oDs;
-                            oDs = modbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
-                            foreach (DataRow oRow in oDs.Tables["Order"].Rows)
-                            {
-                                if (bIsValid)
-                                {
-                                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Received) "), Constants.vbLf), "comment: "), err_msg);
-                                }
-                                else
-                                {
-                                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Failed) "), Constants.vbLf), "comment: "), err_msg_log);
-                                }
-                            }
-                            modbHelper.updateDataset(ref oDs, "Order");
-
-                            ccXform.valid = bIsValid;
-                        }
-                        else
-                        {
-                            ccXform.valid = false;
-                        }
-
-                        return ccXform;
-                    }
-
-                    catch (Exception ex)
-                    {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "payAuthorizeNet", ex, "", cProcessInfo, gbDebug);
-                        return (Cms.xForm)null;
-                    }
-                }
-
-                private string getAutorizeNetOrder(ref XmlElement oRoot)
-                {
-
-                    myWeb.PerfMon.Log("PaymentProviders", "getSecPayOrder");
-                    string sOrder;
-                    string cProcessInfo = "getSecPayOrder";
-                    long nCount = 1L;
-                    string cIsTaxable = "N";
-                    try
-                    {
-                        if (Conversions.ToInteger("0" + oRoot.SelectSingleNode("@vatAmt").InnerText) > 0)
-                        {
-                            cIsTaxable = "Y";
-                        }
-                        sOrder = "";
-                        foreach (XmlElement oItem in oRoot.SelectNodes("Item"))
-                        {
-                            if (nCount < 30L)
-                            {
-                                // we can only add 30 lines here
-                                sOrder = sOrder + "x_line_item=item" + nCount + "<|>" + Strings.Replace(oItem.SelectSingleNode("Name").InnerText, " ", "_");
-                                sOrder = sOrder + "<|><|>" + oItem.SelectSingleNode("@quantity").InnerText + "<|>" + oItem.SelectSingleNode("@price").InnerText + "<|>" + cIsTaxable + "&";
-                            }
-                            nCount = nCount + 1L;
-                        }
-                        // add the shipping
-                        if (Conversions.ToInteger("0" + oRoot.SelectSingleNode("@shippingCost").InnerText) > 0)
-                        {
-                            sOrder = sOrder + "x_freight=" + oRoot.SelectSingleNode("@shippingCost").InnerText + "&";
-                        }
-                        // add the tax
-                        if (Conversions.ToInteger("0" + oRoot.SelectSingleNode("@vatAmt").InnerText) > 0)
-                        {
-                            sOrder = sOrder + "x_tax=" + oRoot.SelectSingleNode("@vatAmt").InnerText + "&";
-                        }
-
-                        return sOrder;
-                    }
-
-                    catch (Exception ex)
-                    {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "getAutorizeNetOrder", ex, "", cProcessInfo, gbDebug);
-                        return null;
-                    }
-                }
-
-                public Cms.xForm payWorldPay(ref XmlElement oRoot, string sSubmitPath, long nPageId)
-                {
-                    Cms.xForm payWorldPayRet = default;
-                    myWeb.PerfMon.Log("PaymentProviders", "payWorldPay");
-
-                    string sSql;
-
-                    XmlNode oCartAdd;
-                    string sAddress = "";
-                    string cCurrentURL = "http";
-                    var wpXform = new Cms.xForm(ref myWeb.msException);
-                    string sProcessInfo = "";
-                    XmlNode oPPCfg;
-                    var oDictOpt = new Hashtable();
-                    bool bCv2 = false;
-                    string cProcessInfo = "payWorldPay";
-                    try
-                    {
-
-                        // Get the payment options into a hashtable
-                        oPPCfg = moPaymentCfg.SelectSingleNode("provider[@name='WorldPay']");
-                        foreach (XmlElement oElmt in oPPCfg.SelectNodes("*"))
-                        {
-                            if (oElmt.GetAttribute("value") != null)
-                            {
-                                oDictOpt.Add(oElmt.Name, oElmt.GetAttribute("value"));
-                            }
-                        }
-
-                        // Get the Billing Address node and details
-                        oCartAdd = oRoot.SelectSingleNode("Contact[@type='Billing Address']");
-                        if (oCartAdd.SelectSingleNode("Street") != null)
-                        {
-                            sAddress = sAddress + oCartAdd.SelectSingleNode("Street").InnerText + "&#10;";
-                        }
-
-                        if (oCartAdd.SelectSingleNode("City") != null)
-                        {
-                            sAddress = sAddress + oCartAdd.SelectSingleNode("City").InnerText + "&#10;";
-                        }
-
-                        if (oCartAdd.SelectSingleNode("State") != null)
-                        {
-                            sAddress = sAddress + oCartAdd.SelectSingleNode("State").InnerText + "&#10;";
-                        }
-
-                        // Create a new xform
-                        wpXform.moPageXML = moPageXml;
-                        wpXform.NewFrm("PayForm");
-                        wpXform.Instance.InnerXml = "<instId/><cartId/><amount/><currency/><desc/><testMode/><accId1/><name/><address/><postcode/><country/><tel/><email/><MC_callback/><MC_pgid/><onLoad/>";
-                        wpXform.valid = false;
-
-                        // Add the values
-                        wpXform.Instance.SelectSingleNode("instId").InnerText = Conversions.ToString(oDictOpt["InstallationID"]);
-                        wpXform.Instance.SelectSingleNode("cartId").InnerText = mnCartId.ToString();
-                        wpXform.Instance.SelectSingleNode("amount").InnerText = mnPaymentAmount.ToString();
-                        wpXform.Instance.SelectSingleNode("currency").InnerText = Conversions.ToString(oDictOpt["Currency"]);
-                        wpXform.Instance.SelectSingleNode("desc").InnerText = getWorldPayOrder(ref oRoot);
-                        wpXform.Instance.SelectSingleNode("accId1").InnerText = Conversions.ToString(oDictOpt["AccountID"]);
-                        switch (oDictOpt["TestMode"])
-                        {
-                            case "0":
-                                {
-                                    wpXform.Instance.SelectSingleNode("testMode").InnerText = Conversions.ToString(oDictOpt["TestMode"]);
-                                    wpXform.Instance.SelectSingleNode("name").InnerText = mcCardHolderName;
-                                    break;
-                                }
-
-                            default:
-                                {
-                                    wpXform.Instance.SelectSingleNode("testMode").InnerText = "100";
-                                    wpXform.Instance.SelectSingleNode("name").InnerText = Conversions.ToString(oDictOpt["TestMode"]);
-                                    break;
-                                }
-                        }
-                        wpXform.Instance.SelectSingleNode("address").InnerText = sAddress;
-                        wpXform.Instance.SelectSingleNode("postcode").InnerText = oCartAdd.SelectSingleNode("PostalCode").InnerText;
-                        string argsCountry = oCartAdd.SelectSingleNode("Country").InnerText;
-                        wpXform.Instance.SelectSingleNode("country").InnerText = getCountryISO2Code(ref argsCountry);
-                        oCartAdd.SelectSingleNode("Country").InnerText = argsCountry;
-                        wpXform.Instance.SelectSingleNode("tel").InnerText = oCartAdd.SelectSingleNode("Telephone").InnerText;
-                        wpXform.Instance.SelectSingleNode("email").InnerText = oCartAdd.SelectSingleNode("Email").InnerText;
-                        wpXform.Instance.SelectSingleNode("MC_pgid").InnerText = nPageId.ToString();
-
-                        if (Conversions.ToBoolean(Operators.OrObject(oDictOpt["CallbackURL"] is DBNull, Operators.ConditionalCompareObjectEqual(oDictOpt["CallbackURL"], "", false))))
-                        {
-                            // No callback URL, let's get the current page.
-                            if (this.goRequest.ServerVariables["HTTPS"] == "on")
-                                cCurrentURL = cCurrentURL + "s";
-                            cCurrentURL = cCurrentURL + "://" + this.goRequest.ServerVariables["SERVER_NAME"] + this.goRequest.ServerVariables["PATH_INFO"];
-                            wpXform.Instance.SelectSingleNode("MC_callback").InnerText = cCurrentURL;
-                        }
-                        else
-                        {
-                            // /ewcommon/tools/cartCallback.ashx?provider=WorldPay
-                            wpXform.Instance.SelectSingleNode("MC_callback").InnerText = Conversions.ToString(oDictOpt["CallbackURL"]);
-                        }
-
-                        // TS possbily this should be the logic
-                        // If goRequest.ServerVariables("HTTPS") = "on" Then cCurrentURL = cCurrentURL & "s"
-                        // cCurrentURL = cCurrentURL & "://" & goRequest.ServerVariables("SERVER_NAME") & "/ewcommon/tools/cartCallback.ashx?provider=WorldPay"
-                        // wpXform.Instance.SelectSingleNode("MC_callback").InnerText = cCurrentURL
-
-                        // Create the group
-                        var formGroup = wpXform.addGroup(ref wpXform.moXformElmt, "creditCard", sLabel: "Proceed with Payment");
-                        wpXform.addInput(ref formGroup, "instId", false, "", "hidden");
-                        wpXform.addInput(ref formGroup, "cartId", false, "", "hidden");
-                        wpXform.addInput(ref formGroup, "amount", false, "", "hidden");
-                        wpXform.addInput(ref formGroup, "currency", false, "", "hidden");
-                        wpXform.addInput(ref formGroup, "desc", false, "", "hidden");
-                        wpXform.addInput(ref formGroup, "testMode", false, "", "hidden");
-                        wpXform.addInput(ref formGroup, "accId1", false, "", "hidden");
-                        wpXform.addInput(ref formGroup, "name", false, "", "hidden");
-                        wpXform.addInput(ref formGroup, "address", false, "", "hidden");
-                        wpXform.addInput(ref formGroup, "postcode", false, "", "hidden");
-                        wpXform.addInput(ref formGroup, "country", false, "", "hidden");
-                        wpXform.addInput(ref formGroup, "tel", false, "", "hidden");
-                        wpXform.addInput(ref formGroup, "email", false, "", "hidden");
-                        wpXform.addInput(ref formGroup, "MC_callback", false, "", "hidden");
-                        wpXform.addInput(ref formGroup, "MC_pgid", false, "", "hidden");
-
-                        // Only add the onLoad event if we are not coming back from WorldPay.
-                        if (this.goRequest["transStatus"] is null)
-                        {
-                            wpXform.Instance.SelectSingleNode("onLoad").InnerText = "document.getElementById('submitpayform').submit();";
-                            wpXform.addInput(ref formGroup, "onLoad", false, "", "hidden");
-                        }
-
-                        // Sort out the submission
-                        switch (oDictOpt["TestMode"])
-                        {
-                            case "0":
-                                {
-                                    wpXform.submission("submitpayform", "https://select.worldpay.com/wcc/purchase", "POST");
-                                    break;
-                                }
-
-                            default:
-                                {
-                                    wpXform.submission("submitpayform", "https://select-test.worldpay.com/wcc/purchase", "POST");
-                                    break;
-                                }
-                        }
-                        var buttonGroup = wpXform.addGroup(ref wpXform.moXformElmt, "buttons", sLabel: "");
-                        wpXform.addSubmit(ref buttonGroup, "submitpayform", "Proceed with Payment", "submitpayform", "principle");
-
-                        // Add hint
-                        wpXform.addNote("creditCard", Protean.xForm.noteTypes.Help, "Click \"Proceed with Payment\" to enter your payment details. You will then be transferred to the secure WorldPay server.");
-
-                        if (this.goRequest["transStatus"] != null)
-                        {
-
-                            // Update Seller Notes:
-                            sSql = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
-
-                            DataSet oDs;
-                            oDs = modbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
-                            foreach (DataRow oRow in oDs.Tables["Cart"].Rows)
-                            {
-                                if (this.goRequest["transStatus"] == "Y")
-                                {
-                                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Received) "), Constants.vbLf);
-                                    wpXform.valid = true;
-                                }
-                                else
-                                {
-                                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Failed) "), Constants.vbLf);
-                                    wpXform.addNote("creditCard", Protean.xForm.noteTypes.Alert, "The payment was not processed.  Either there was an issue processing the payment or you cancelled the payment stage.  Click \"Proceed with Payment\" if you wish to try again.");
-                                }
-                            }
-                            modbHelper.updateDataset(ref oDs, "Order");
-
-                        }
-
-                        wpXform.addValues();
-                        payWorldPayRet = wpXform;
-                    }
-
-                    catch (Exception ex)
-                    {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "paySecPay", ex, "", cProcessInfo, gbDebug);
-                        return (Cms.xForm)null;
-                    }
-
-                    return payWorldPayRet;
-                }
-
-                public Cms.xForm payNetBanx(ref XmlElement oRoot, string sSubmitPath, long nPageId)
-                {
-                    myWeb.PerfMon.Log("PaymentProviders", "payNetBanx");
-
-                    string sSql;
-
-                    XmlNode oCartAdd;
-                    string sAddress = "";
-
-                    var wpXform = new Cms.xForm(ref myWeb.msException);
-                    string sProcessInfo = "";
-                    Hashtable oDictOpt;
-                    bool bCv2 = false;
-                    string cProcessInfo = "payNetBanx";
-                    XmlNode oNetBanxCfg;
-                    string cCurrentDomain = "http";
-                    string cCurrentURL;
-                    try
-                    {
-
-                        if (this.goRequest.ServerVariables["HTTPS"] == "on")
-                            cCurrentDomain = cCurrentDomain + "s";
-                        cCurrentDomain = cCurrentDomain + "://" + this.goRequest.ServerVariables["SERVER_NAME"];
-                        cCurrentURL = cCurrentDomain + this.goRequest.ServerVariables["PATH_INFO"];
-
-                        oNetBanxCfg = moPaymentCfg.SelectSingleNode("provider[@name='NetBanx']");
-                        oDictOpt = xmlToHashTable(oNetBanxCfg, "value");
-
-
-                        // Get the Billing Address node and details
-                        oCartAdd = oRoot.SelectSingleNode("Contact[@type='Billing Address']");
-                        if (oCartAdd.SelectSingleNode("Street") != null)
-                        {
-                            sAddress = sAddress + oCartAdd.SelectSingleNode("Street").InnerText + "&#10;";
-                        }
-                        // If Not oCartAdd.SelectSingleNode("Address/City") Is Nothing Then
-                        // sAddress = sAddress & oCartAdd.SelectSingleNode("City").InnerText & "&#10;"
-                        // End If
-                        // If Not oCartAdd.SelectSingleNode("Address/State") Is Nothing Then
-                        // sAddress = sAddress & oCartAdd.SelectSingleNode("State").InnerText & "&#10;"
-                        // End If
-
-                        // Create a new xform
-                        wpXform.moPageXML = moPageXml;
-                        wpXform.NewFrm("PayForm");
-                        wpXform.Instance.InnerXml = "<nbx_payment_amount/><nbx_currency_code/><nbx_merchant_reference/><nbx_checksum/><nbx_language/><nbx_payment_type/><nbx_success_url/><nbx_failure_url/><nbx_success_redirect_url/><nbx_failure_redirect_url/><nbx_email/><nbx_cardholder_name/><nbx_houseno/><nbx_postcode/><nbx_success_show_content/><nbx_failure_show_content/>";
-                        wpXform.valid = false;
-
-                        // Add the values
-                        wpXform.Instance.SelectSingleNode("nbx_payment_amount").InnerText = Strings.Replace(Strings.FormatNumber(mnPaymentAmount, 2), ".", "");
-                        wpXform.Instance.SelectSingleNode("nbx_currency_code").InnerText = Conversions.ToString(oDictOpt["currency"]);
-                        wpXform.Instance.SelectSingleNode("nbx_merchant_reference").InnerText = mnCartId.ToString();
-                        string cHash = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Strings.Replace(Strings.FormatNumber(mnPaymentAmount, 2), ".", ""), oDictOpt["currency"]), mnCartId.ToString()), oDictOpt["secretkey"]));
-                        wpXform.Instance.SelectSingleNode("nbx_checksum").InnerText = Tools.Encryption.HashString(cHash, "SHA1", true);
-                        wpXform.Instance.SelectSingleNode("nbx_language").InnerText = Conversions.ToString(oDictOpt["language"]);
-                        wpXform.Instance.SelectSingleNode("nbx_payment_type").InnerText = Conversions.ToString(oDictOpt["paymentType"]);
-                        wpXform.Instance.SelectSingleNode("nbx_success_url").InnerText = cCurrentDomain + "/ewcommon/tools/cartcallback.ashx?provider=NetBanx";
-                        wpXform.Instance.SelectSingleNode("nbx_failure_url").InnerText = cCurrentDomain + "/ewcommon/tools/cartcallback.ashx?provider=NetBanx";
-                        wpXform.Instance.SelectSingleNode("nbx_success_redirect_url").InnerText = cCurrentURL + "?cartCmd=SubmitPaymentDetails&nbx=success";
-                        wpXform.Instance.SelectSingleNode("nbx_failure_redirect_url").InnerText = cCurrentURL + "?cartCmd=SubmitPaymentDetails&nbx=failure";
-
-                        wpXform.Instance.SelectSingleNode("nbx_email").InnerText = oCartAdd.SelectSingleNode("Email").InnerText;
-                        wpXform.Instance.SelectSingleNode("nbx_cardholder_name").InnerText = mcCardHolderName;
-                        wpXform.Instance.SelectSingleNode("nbx_houseno").InnerText = sAddress;
-                        wpXform.Instance.SelectSingleNode("nbx_postcode").InnerText = oCartAdd.SelectSingleNode("PostalCode").InnerText;
-                        wpXform.Instance.SelectSingleNode("nbx_success_show_content").InnerText = "1";
-                        wpXform.Instance.SelectSingleNode("nbx_failure_show_content").InnerText = "1";
-
-                        // Create the group
-                        wpXform.addGroup(ref wpXform.moXformElmt, "NetBanx", sLabel: "Proceed to NetBanx");
-                        wpXform.addInput(ref wpXform.moXformElmt, "nbx_payment_amount", false, "", "hidden");
-                        wpXform.addInput(ref wpXform.moXformElmt, "nbx_currency_code", false, "", "hidden");
-                        wpXform.addInput(ref wpXform.moXformElmt, "nbx_merchant_reference", false, "", "hidden");
-                        wpXform.addInput(ref wpXform.moXformElmt, "nbx_checksum", false, "", "hidden");
-                        wpXform.addInput(ref wpXform.moXformElmt, "nbx_language", false, "", "hidden");
-                        wpXform.addInput(ref wpXform.moXformElmt, "nbx_payment_type", false, "", "hidden");
-                        wpXform.addInput(ref wpXform.moXformElmt, "nbx_success_url", false, "", "hidden");
-                        wpXform.addInput(ref wpXform.moXformElmt, "nbx_failure_url", false, "", "hidden");
-                        wpXform.addInput(ref wpXform.moXformElmt, "nbx_success_redirect_url", false, "", "hidden");
-                        wpXform.addInput(ref wpXform.moXformElmt, "nbx_failure_redirect_url", false, "", "hidden");
-                        wpXform.addInput(ref wpXform.moXformElmt, "nbx_email", false, "", "hidden");
-                        wpXform.addInput(ref wpXform.moXformElmt, "nbx_cardholder_name", false, "", "hidden");
-                        wpXform.addInput(ref wpXform.moXformElmt, "nbx_houseno", false, "", "hidden");
-                        wpXform.addInput(ref wpXform.moXformElmt, "nbx_postcode", false, "", "hidden");
-                        wpXform.addInput(ref wpXform.moXformElmt, "nbx_success_show_content", false, "", "hidden");
-                        wpXform.addInput(ref wpXform.moXformElmt, "nbx_failure_show_content", false, "", "hidden");
-
-                        string submitUrl = Conversions.ToString(Operators.ConcatenateObject("https://pay.netbanx.com/", oDictOpt["accountId"]));
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["mode"], Strings.LCase("test"), false)))
-                        {
-                            submitUrl = Conversions.ToString(Operators.ConcatenateObject("https://pay.test.netbanx.com/", oDictOpt["accountId"]));
-                        }
-                        // Sort out the submission
-                        wpXform.submission("submitpayform", submitUrl, "POST");
-                        wpXform.addSubmit(ref wpXform.moXformElmt, "submitpayform", "Proceed with Payment", "submitpayform", "principle");
-
-                        // Add hint
-                        wpXform.addNote("NetBanx", Protean.xForm.noteTypes.Help, "Click \"Proceed with Payment\" You will then be transferred to the secure NetBanx server.");
-
-                        if (!string.IsNullOrEmpty(this.goRequest["nbx"]))
-                        {
-                            DataSet oDs;
-                            sSql = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
-                            oDs = modbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
-                            foreach (DataRow oRow in oDs.Tables[0].Rows)
-                            {
-                                switch (this.goRequest["nbx"] ?? "")
-                                {
-                                    case "success":
-                                        {
-                                            // Update Seller Notes:
-                                            oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Customer Redirect Success) "), Constants.vbLf);
-                                            wpXform.valid = true;
-                                            break;
-                                        }
-                                    case "failure":
-                                        {
-                                            oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Customer Redirect Failure) "), Constants.vbLf);
-                                            wpXform.addNote("NetBanx", Protean.xForm.noteTypes.Help, "<span id=\"Trans-104\">The payment was not processed.  Either there was an issue processing the payment or you cancelled the payment stage.  Click \"Proceed with Payment\" if you wish to try again.</span>");
-                                            break;
-                                        }
-                                }
-                            }
-                            modbHelper.updateDataset(ref oDs, "Order");
-                        }
-                        wpXform.addValues();
-                        return wpXform;
-                    }
-
-                    catch (Exception ex)
-                    {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "payNetBanx", ex, "", cProcessInfo, gbDebug);
-                        return (Cms.xForm)null;
-                    }
-                }
+                //public Cms.xForm payAuthorizeNet(ref XmlElement oRoot, string sSubmitPath)
+                //{
+                //    myWeb.PerfMon.Log("PaymentProviders", "payMetaCharge");
+                //    HttpWebRequest oRequest;
+                //    HttpWebResponse oResponse;
+                //    Stream oStream;
+                //    StreamReader oStreamReader;
+
+                //    string cResponse;
+                //    string cRequest;
+                //    var oEncoding = new ASCIIEncoding();
+                //    byte[] byRequest;
+
+                //    string sSql;
+
+                //    string cMessage = "";
+
+                //    Cms.xForm ccXform;
+
+                //    bool bIsValid = false;
+                //    string err_msg = "";
+                //    string err_msg_log = "";
+                //    string sProcessInfo = "";
+                //    var oDictOpt = new Hashtable();
+
+                //    bool bCv2 = false;
+                //    bool b3dSecure = false;
+                //    Hashtable oResponseDict = null;
+                //    XmlNode oCartAdd;
+                //    bool b3dAuthorised = false;
+
+                //    XmlNode oPPCfg;
+                //    string cIPAddress = this.goRequest.ServerVariables["REMOTE_ADDR"];
+
+                //    string cProcessInfo = "payAuthorizeNet";
+                //    string sAPIVer = "3.1";
+                //    string sAPIURL = "";
+                //    bool bTest = true;
+                //    try
+                //    {
+
+                //        // Get the payment options into a hashtable
+                //        oPPCfg = moPaymentCfg.SelectSingleNode("provider[@name='AuthorizeNet']");
+                //        foreach (XmlElement oElmt in oPPCfg.SelectNodes("*"))
+                //        {
+                //            if (oElmt.GetAttribute("value") != null)
+                //            {
+                //                oDictOpt.Add(oElmt.Name, oElmt.GetAttribute("value"));
+                //            }
+                //        }
+
+                //        oCartAdd = oRoot.SelectSingleNode("Contact[@type='Billing Address']");
+
+                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["validateCV2"], "on", false)))
+                //            bCv2 = true;
+
+                //        // Load the Xform
+                //        ccXform = creditCardXform(ref oRoot, "PayForm", sSubmitPath, Conversions.ToString(oDictOpt["cardsAccepted"]), true, "Make Payment of " + Strings.FormatNumber(mnPaymentAmount, 2) + " " + mcCurrency + " by Credit/Debit Card");
+
+                //        switch (oDictOpt["opperationMode"])
+                //        {
+                //            case "live":
+                //                {
+                //                    sAPIURL = "https://secure.authorize.net/gateway/transact.dll";
+                //                    bTest = false;
+                //                    break;
+                //                }
+                //            case "true":
+                //                {
+                //                    sAPIURL = "https://test.authorize.net/gateway/transact.dll";
+                //                    break;
+                //                }
+                //            case "false":
+                //                {
+                //                    sAPIURL = "https://test.authorize.net/gateway/transact.dll";
+                //                    break;
+                //                }
+
+                //        }
+
+                //        if (ccXform.valid == true | b3dAuthorised)
+                //        {
+
+                //            // standard card validation request
+                //            cRequest = "x_version=" + sAPIVer + "&";
+                //            cRequest = cRequest + "x_delim_data=True&";
+                //            cRequest = cRequest + "x_relay_response=False&";
+                //            cRequest = cRequest + "x_login=" + this.goServer.UrlEncode(Conversions.ToString(oDictOpt["accountId"])) + "&";
+                //            cRequest = cRequest + "x_tran_key=" + this.goServer.UrlEncode(Conversions.ToString(oDictOpt["transactionKey"])) + "&";
+                //            if (bTest)
+                //            {
+                //                cRequest = cRequest + "x_test_request=TRUE&";
+                //            }
+                //            cRequest = cRequest + "x_amount=" + this.goServer.UrlEncode(mnPaymentAmount.ToString()) + "&";
+                //            cRequest = cRequest + "x_currency_code=" + mcCurrency + "&";
+                //            cRequest = cRequest + "x_method=CC&";
+                //            cRequest = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "x_type=", oDictOpt["transactionType"]), "&"));
+                //            cRequest = cRequest + "x_card_num=" + this.goServer.UrlEncode(this.FormatCreditCardNumber(this.goRequest["creditCard/number"]).ToString()) + "&";
+                //            cRequest = cRequest + "x_exp_date=" + this.fmtSecPayDate(this.goRequest["creditCard/expireDate"]) + "&";
+                //            if (bCv2)
+                //            {
+                //                cRequest = cRequest + "x_card_code=" + this.goServer.UrlEncode(this.goRequest["creditCard/CV2"]) + "&";
+                //            }
+
+                //            cRequest = cRequest + "x_invoice_num=" + this.goServer.UrlEncode(mnCartId.ToString()) + "&";
+                //            cRequest = cRequest + "x_description=" + this.goServer.UrlEncode(mcPaymentOrderDescription) + "&";
+                //            cRequest = cRequest + getAutorizeNetOrder(ref oRoot);
+                //            cRequest = cRequest + "x_customer_ip=" + this.goRequest.ServerVariables["REMOTE_ADDR"] + "&";
+
+                //            cRequest = cRequest + "x_last_name=" + this.goServer.UrlEncode(mcCardHolderName) + "&";
+                //            cRequest = cRequest + "x_address=" + this.goServer.UrlEncode(mcCardHolderAddress) + "&";
+                //            cRequest = cRequest + "x_city=" + this.goServer.UrlEncode(oCartAdd.SelectSingleNode("City").InnerText) + "&";
+                //            // cRequest = cRequest & "strState=" & goServer.UrlEncode(oCartAdd.SelectSingleNode("State").InnerText) & "&"
+                //            cRequest = cRequest + "x_zip=" + this.goServer.UrlEncode(mcCardHolderPostcode) + "&";
+                //            string localgetCountryISO2Code() { string argsCountry3 = oCartAdd.SelectSingleNode("Country").InnerText; var ret = getCountryISO2Code(ref argsCountry3); oCartAdd.SelectSingleNode("Country").InnerText = argsCountry3; return ret; }
+
+                //            cRequest = cRequest + "x_country=" + localgetCountryISO2Code() + "&";  // 2 letter ISO code
+                //            cRequest = cRequest + "x_phone=" + this.goServer.UrlEncode(oCartAdd.SelectSingleNode("Telephone").InnerText) + "&";
+                //            cRequest = cRequest + "x_fax=" + this.goServer.UrlEncode(oCartAdd.SelectSingleNode("Fax").InnerText) + "&";
+
+                //            if (!string.IsNullOrEmpty(oCartAdd.SelectSingleNode("Email").InnerText))
+                //            {
+                //                cRequest = cRequest + "x_email=" + this.goServer.UrlEncode(oCartAdd.SelectSingleNode("Email").InnerText) + "&";
+                //                cRequest = cRequest + "x_email_customer=" + this.goServer.UrlEncode(Conversions.ToString(oDictOpt["emailCustomer"])) + "&";
+                //            }
+
+                //            // If Not goRequest("creditCard/issueDate") = "" Then
+                //            // cRequest = cRequest & "strStartDate=" & fmtSecPayDate(goRequest("creditCard/issueDate")) & "&"
+                //            // End If
+                //            // cRequest = cRequest & "intCV2=" & goServer.UrlEncode(CStr(goRequest("creditCard/CV2"))) & "&"
+                //            // cRequest = cRequest & "strIssueNo=" & goServer.UrlEncode(goRequest("creditCard/issueNumber")) & "&"
+                //            // cRequest = cRequest & "strCardType=" & goServer.UrlEncode(goRequest("creditCard/type")) & "
+                //            // 
+                //            // Convert the request to bytes
+
+                //            byRequest = oEncoding.GetBytes(cRequest);
+
+                //            oRequest = (HttpWebRequest)WebRequest.Create(sAPIURL);
+                //            oRequest.ContentType = "application/x-www-form-urlencoded";
+                //            oRequest.ContentLength = byRequest.Length;
+                //            oRequest.Method = "POST";
+                //            oStream = oRequest.GetRequestStream();
+                //            oStream.Write(byRequest, 0, byRequest.Length);
+                //            oStream.Close();
+
+                //            oResponse = (HttpWebResponse)oRequest.GetResponse();
+                //            oStream = oResponse.GetResponseStream();
+                //            oStreamReader = new StreamReader(oStream, Encoding.UTF8);
+                //            cResponse = oStreamReader.ReadToEnd();
+
+                //            oStreamReader.Close();
+                //            oResponse.Close();
+
+                //            // Validate the response.
+
+                //            if (string.IsNullOrEmpty(cResponse))
+                //            {
+                //                err_msg = "There was a communications error.";
+                //            }
+                //            else
+                //            {
+                //                // lets take the response and put it in a hash table
+                //                cProcessInfo = "error tranlating response:" + cResponse;
+                //                Array aResponse = Strings.Split(" |" + cResponse, "|");
+
+                //                switch (aResponse((object)1))
+                //                {
+                //                    case "3":
+                //                        {
+                //                            // Error 
+                //                            err_msg_log = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(aResponse((object)3), " desc:"), aResponse((object)4)));
+
+                //                            if (gbDebug)
+                //                            {
+                //                                err_msg = "<br/>Full Request:" + this.goServer.HtmlEncode(this.goServer.UrlDecode(cRequest)) + "<br/>Full Response:" + this.goServer.HtmlEncode(this.goServer.UrlDecode(cResponse));
+                //                            }
+                //                            else
+                //                            {
+                //                                err_msg = "There was an error processing this payment.  No payment has been made.  Please check the details you entered and try again, or call for assistance.  The error detail was : " + this.goServer.HtmlEncode(this.goServer.UrlDecode(cMessage));
+                //                            }
+
+                //                            break;
+                //                        }
+
+                //                    case "2":
+                //                        {
+                //                            // Failed / Error Authorisation
+                //                            cMessage = Conversions.ToString(oResponseDict["strMessage"]);
+
+                //                            if (Strings.InStr(cMessage, "card number") > 0)
+                //                                ccXform.addNote("creditCard/number", Protean.xForm.noteTypes.Alert, "The card number given is not valid.");
+                //                            if (Strings.InStr(cMessage, "IssueNumber") > 0)
+                //                                ccXform.addNote("creditCard/issueNumber", Protean.xForm.noteTypes.Alert, "The issue number is not valid - it may not be required for non-Switch/Solo cards.");
+                //                            if (Strings.InStr(cMessage, "StartDate") > 0 | Strings.InStr(cMessage, "Start Date") > 0)
+                //                                ccXform.addNote("creditCard/issueDate", Protean.xForm.noteTypes.Alert, "The issue date is not valid - it may not be required for Switch or Solo cards.");
+                //                            if (Strings.InStr(cMessage, "ExpiryDate") > 0 | Strings.InStr(cMessage, "Expiry Date") > 0)
+                //                                ccXform.addNote("creditCard/expireDate", Protean.xForm.noteTypes.Alert, "The expiry date is not valid.");
+
+                //                            err_msg_log = cMessage;
+
+                //                            if (gbDebug)
+                //                            {
+                //                                err_msg = "<br/>Full Request:" + this.goServer.HtmlEncode(this.goServer.UrlDecode(cRequest)) + "<br/>Full Response:" + this.goServer.HtmlEncode(this.goServer.UrlDecode(cResponse));
+                //                            }
+                //                            else
+                //                            {
+                //                                err_msg = "There was an error processing this payment.  No payment has been made.  Please check the details you entered and try again, or call for assistance.  The error detail was : " + this.goServer.HtmlEncode(this.goServer.UrlDecode(cMessage));
+                //                            }
+
+                //                            break;
+                //                        }
+
+                //                    case "1":
+                //                        {
+                //                            // Successful Authorisation
+                //                            err_msg = Conversions.ToString(Operators.ConcatenateObject("Payment was successful. Transaction ref: ", aResponse((object)5)));
+                //                            bIsValid = true;
+                //                            var oDate = new DateTime(Conversions.ToInteger("20" + Strings.Right(this.goRequest["creditCard/expireDate"], 2)), Conversions.ToInteger(Strings.Left(this.goRequest["creditCard/expireDate"], 2)), 1);
+                //                            oDate = oDate.AddMonths(1);
+                //                            oDate = oDate.AddDays(-1);
+                //                            string cMethodName = this.goRequest["creditCard/type"] + ": " + stdTools.MaskString(this.goRequest["creditCard/number"], "*", false, 4) + " Expires: " + oDate.ToShortDateString();
+                //                            savePayment((long)myWeb.mnUserId, "AuthoizeNet", mnCartId.ToString(), cMethodName, (XmlElement)ccXform.Instance.FirstChild, oDate, true, mnPaymentAmount);
+                //                            break;
+                //                        }
+
+                //                    default:
+                //                        {
+
+
+                //                            if (gbDebug)
+                //                            {
+                //                                err_msg = Conversions.ToString(Operators.ConcatenateObject("<br/>Full Request:", aResponse((object)1)));
+                //                            }
+                //                            else
+                //                            {
+                //                                err_msg = "There was an error processing this payment.  No payment has been made.  Please check the details you entered and try again, or call for assistance.  The error detail was : " + this.goServer.HtmlEncode(this.goServer.UrlDecode(cMessage));
+                //                            }
+
+                //                            break;
+                //                        }
+                //                }
+
+                //            }
+
+                //            // Update Seller Notes:
+                //            ccXform.addNote("creditCard", Protean.xForm.noteTypes.Alert, err_msg);
+
+                //            sSql = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
+                //            DataSet oDs;
+                //            oDs = modbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
+                //            foreach (DataRow oRow in oDs.Tables["Order"].Rows)
+                //            {
+                //                if (bIsValid)
+                //                {
+                //                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Received) "), Constants.vbLf), "comment: "), err_msg);
+                //                }
+                //                else
+                //                {
+                //                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Failed) "), Constants.vbLf), "comment: "), err_msg_log);
+                //                }
+                //            }
+                //            modbHelper.updateDataset(ref oDs, "Order");
+
+                //            ccXform.valid = bIsValid;
+                //        }
+                //        else
+                //        {
+                //            ccXform.valid = false;
+                //        }
+
+                //        return ccXform;
+                //    }
+
+                //    catch (Exception ex)
+                //    {
+                //        stdTools.returnException(ref myWeb.msException, mcModuleName, "payAuthorizeNet", ex, "", cProcessInfo, gbDebug);
+                //        return (Cms.xForm)null;
+                //    }
+                //}
+
+                //private string getAutorizeNetOrder(ref XmlElement oRoot)
+                //{
+
+                //    myWeb.PerfMon.Log("PaymentProviders", "getSecPayOrder");
+                //    string sOrder;
+                //    string cProcessInfo = "getSecPayOrder";
+                //    long nCount = 1L;
+                //    string cIsTaxable = "N";
+                //    try
+                //    {
+                //        if (Conversions.ToInteger("0" + oRoot.SelectSingleNode("@vatAmt").InnerText) > 0)
+                //        {
+                //            cIsTaxable = "Y";
+                //        }
+                //        sOrder = "";
+                //        foreach (XmlElement oItem in oRoot.SelectNodes("Item"))
+                //        {
+                //            if (nCount < 30L)
+                //            {
+                //                // we can only add 30 lines here
+                //                sOrder = sOrder + "x_line_item=item" + nCount + "<|>" + Strings.Replace(oItem.SelectSingleNode("Name").InnerText, " ", "_");
+                //                sOrder = sOrder + "<|><|>" + oItem.SelectSingleNode("@quantity").InnerText + "<|>" + oItem.SelectSingleNode("@price").InnerText + "<|>" + cIsTaxable + "&";
+                //            }
+                //            nCount = nCount + 1L;
+                //        }
+                //        // add the shipping
+                //        if (Conversions.ToInteger("0" + oRoot.SelectSingleNode("@shippingCost").InnerText) > 0)
+                //        {
+                //            sOrder = sOrder + "x_freight=" + oRoot.SelectSingleNode("@shippingCost").InnerText + "&";
+                //        }
+                //        // add the tax
+                //        if (Conversions.ToInteger("0" + oRoot.SelectSingleNode("@vatAmt").InnerText) > 0)
+                //        {
+                //            sOrder = sOrder + "x_tax=" + oRoot.SelectSingleNode("@vatAmt").InnerText + "&";
+                //        }
+
+                //        return sOrder;
+                //    }
+
+                //    catch (Exception ex)
+                //    {
+                //        stdTools.returnException(ref myWeb.msException, mcModuleName, "getAutorizeNetOrder", ex, "", cProcessInfo, gbDebug);
+                //        return null;
+                //    }
+                //}
+
+                //public Cms.xForm payWorldPay(ref XmlElement oRoot, string sSubmitPath, long nPageId)
+                //{
+                //    Cms.xForm payWorldPayRet = default;
+                //    myWeb.PerfMon.Log("PaymentProviders", "payWorldPay");
+
+                //    string sSql;
+
+                //    XmlNode oCartAdd;
+                //    string sAddress = "";
+                //    string cCurrentURL = "http";
+                //    var wpXform = new Cms.xForm(ref myWeb.msException);
+                //    string sProcessInfo = "";
+                //    XmlNode oPPCfg;
+                //    var oDictOpt = new Hashtable();
+                //    bool bCv2 = false;
+                //    string cProcessInfo = "payWorldPay";
+                //    try
+                //    {
+
+                //        // Get the payment options into a hashtable
+                //        oPPCfg = moPaymentCfg.SelectSingleNode("provider[@name='WorldPay']");
+                //        foreach (XmlElement oElmt in oPPCfg.SelectNodes("*"))
+                //        {
+                //            if (oElmt.GetAttribute("value") != null)
+                //            {
+                //                oDictOpt.Add(oElmt.Name, oElmt.GetAttribute("value"));
+                //            }
+                //        }
+
+                //        // Get the Billing Address node and details
+                //        oCartAdd = oRoot.SelectSingleNode("Contact[@type='Billing Address']");
+                //        if (oCartAdd.SelectSingleNode("Street") != null)
+                //        {
+                //            sAddress = sAddress + oCartAdd.SelectSingleNode("Street").InnerText + "&#10;";
+                //        }
+
+                //        if (oCartAdd.SelectSingleNode("City") != null)
+                //        {
+                //            sAddress = sAddress + oCartAdd.SelectSingleNode("City").InnerText + "&#10;";
+                //        }
+
+                //        if (oCartAdd.SelectSingleNode("State") != null)
+                //        {
+                //            sAddress = sAddress + oCartAdd.SelectSingleNode("State").InnerText + "&#10;";
+                //        }
+
+                //        // Create a new xform
+                //        wpXform.moPageXML = moPageXml;
+                //        wpXform.NewFrm("PayForm");
+                //        wpXform.Instance.InnerXml = "<instId/><cartId/><amount/><currency/><desc/><testMode/><accId1/><name/><address/><postcode/><country/><tel/><email/><MC_callback/><MC_pgid/><onLoad/>";
+                //        wpXform.valid = false;
+
+                //        // Add the values
+                //        wpXform.Instance.SelectSingleNode("instId").InnerText = Conversions.ToString(oDictOpt["InstallationID"]);
+                //        wpXform.Instance.SelectSingleNode("cartId").InnerText = mnCartId.ToString();
+                //        wpXform.Instance.SelectSingleNode("amount").InnerText = mnPaymentAmount.ToString();
+                //        wpXform.Instance.SelectSingleNode("currency").InnerText = Conversions.ToString(oDictOpt["Currency"]);
+                //        wpXform.Instance.SelectSingleNode("desc").InnerText = getWorldPayOrder(ref oRoot);
+                //        wpXform.Instance.SelectSingleNode("accId1").InnerText = Conversions.ToString(oDictOpt["AccountID"]);
+                //        switch (oDictOpt["TestMode"])
+                //        {
+                //            case "0":
+                //                {
+                //                    wpXform.Instance.SelectSingleNode("testMode").InnerText = Conversions.ToString(oDictOpt["TestMode"]);
+                //                    wpXform.Instance.SelectSingleNode("name").InnerText = mcCardHolderName;
+                //                    break;
+                //                }
+
+                //            default:
+                //                {
+                //                    wpXform.Instance.SelectSingleNode("testMode").InnerText = "100";
+                //                    wpXform.Instance.SelectSingleNode("name").InnerText = Conversions.ToString(oDictOpt["TestMode"]);
+                //                    break;
+                //                }
+                //        }
+                //        wpXform.Instance.SelectSingleNode("address").InnerText = sAddress;
+                //        wpXform.Instance.SelectSingleNode("postcode").InnerText = oCartAdd.SelectSingleNode("PostalCode").InnerText;
+                //        string argsCountry = oCartAdd.SelectSingleNode("Country").InnerText;
+                //        wpXform.Instance.SelectSingleNode("country").InnerText = getCountryISO2Code(ref argsCountry);
+                //        oCartAdd.SelectSingleNode("Country").InnerText = argsCountry;
+                //        wpXform.Instance.SelectSingleNode("tel").InnerText = oCartAdd.SelectSingleNode("Telephone").InnerText;
+                //        wpXform.Instance.SelectSingleNode("email").InnerText = oCartAdd.SelectSingleNode("Email").InnerText;
+                //        wpXform.Instance.SelectSingleNode("MC_pgid").InnerText = nPageId.ToString();
+
+                //        if (Conversions.ToBoolean(Operators.OrObject(oDictOpt["CallbackURL"] is DBNull, Operators.ConditionalCompareObjectEqual(oDictOpt["CallbackURL"], "", false))))
+                //        {
+                //            // No callback URL, let's get the current page.
+                //            if (this.goRequest.ServerVariables["HTTPS"] == "on")
+                //                cCurrentURL = cCurrentURL + "s";
+                //            cCurrentURL = cCurrentURL + "://" + this.goRequest.ServerVariables["SERVER_NAME"] + this.goRequest.ServerVariables["PATH_INFO"];
+                //            wpXform.Instance.SelectSingleNode("MC_callback").InnerText = cCurrentURL;
+                //        }
+                //        else
+                //        {
+                //            // /ewcommon/tools/cartCallback.ashx?provider=WorldPay
+                //            wpXform.Instance.SelectSingleNode("MC_callback").InnerText = Conversions.ToString(oDictOpt["CallbackURL"]);
+                //        }
+
+                //        // TS possbily this should be the logic
+                //        // If goRequest.ServerVariables("HTTPS") = "on" Then cCurrentURL = cCurrentURL & "s"
+                //        // cCurrentURL = cCurrentURL & "://" & goRequest.ServerVariables("SERVER_NAME") & "/ewcommon/tools/cartCallback.ashx?provider=WorldPay"
+                //        // wpXform.Instance.SelectSingleNode("MC_callback").InnerText = cCurrentURL
+
+                //        // Create the group
+                //        var formGroup = wpXform.addGroup(ref wpXform.moXformElmt, "creditCard", sLabel: "Proceed with Payment");
+                //        wpXform.addInput(ref formGroup, "instId", false, "", "hidden");
+                //        wpXform.addInput(ref formGroup, "cartId", false, "", "hidden");
+                //        wpXform.addInput(ref formGroup, "amount", false, "", "hidden");
+                //        wpXform.addInput(ref formGroup, "currency", false, "", "hidden");
+                //        wpXform.addInput(ref formGroup, "desc", false, "", "hidden");
+                //        wpXform.addInput(ref formGroup, "testMode", false, "", "hidden");
+                //        wpXform.addInput(ref formGroup, "accId1", false, "", "hidden");
+                //        wpXform.addInput(ref formGroup, "name", false, "", "hidden");
+                //        wpXform.addInput(ref formGroup, "address", false, "", "hidden");
+                //        wpXform.addInput(ref formGroup, "postcode", false, "", "hidden");
+                //        wpXform.addInput(ref formGroup, "country", false, "", "hidden");
+                //        wpXform.addInput(ref formGroup, "tel", false, "", "hidden");
+                //        wpXform.addInput(ref formGroup, "email", false, "", "hidden");
+                //        wpXform.addInput(ref formGroup, "MC_callback", false, "", "hidden");
+                //        wpXform.addInput(ref formGroup, "MC_pgid", false, "", "hidden");
+
+                //        // Only add the onLoad event if we are not coming back from WorldPay.
+                //        if (this.goRequest["transStatus"] is null)
+                //        {
+                //            wpXform.Instance.SelectSingleNode("onLoad").InnerText = "document.getElementById('submitpayform').submit();";
+                //            wpXform.addInput(ref formGroup, "onLoad", false, "", "hidden");
+                //        }
+
+                //        // Sort out the submission
+                //        switch (oDictOpt["TestMode"])
+                //        {
+                //            case "0":
+                //                {
+                //                    wpXform.submission("submitpayform", "https://select.worldpay.com/wcc/purchase", "POST");
+                //                    break;
+                //                }
+
+                //            default:
+                //                {
+                //                    wpXform.submission("submitpayform", "https://select-test.worldpay.com/wcc/purchase", "POST");
+                //                    break;
+                //                }
+                //        }
+                //        var buttonGroup = wpXform.addGroup(ref wpXform.moXformElmt, "buttons", sLabel: "");
+                //        wpXform.addSubmit(ref buttonGroup, "submitpayform", "Proceed with Payment", "submitpayform", "principle");
+
+                //        // Add hint
+                //        wpXform.addNote("creditCard", Protean.xForm.noteTypes.Help, "Click \"Proceed with Payment\" to enter your payment details. You will then be transferred to the secure WorldPay server.");
+
+                //        if (this.goRequest["transStatus"] != null)
+                //        {
+
+                //            // Update Seller Notes:
+                //            sSql = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
+
+                //            DataSet oDs;
+                //            oDs = modbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
+                //            foreach (DataRow oRow in oDs.Tables["Cart"].Rows)
+                //            {
+                //                if (this.goRequest["transStatus"] == "Y")
+                //                {
+                //                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Received) "), Constants.vbLf);
+                //                    wpXform.valid = true;
+                //                }
+                //                else
+                //                {
+                //                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Failed) "), Constants.vbLf);
+                //                    wpXform.addNote("creditCard", Protean.xForm.noteTypes.Alert, "The payment was not processed.  Either there was an issue processing the payment or you cancelled the payment stage.  Click \"Proceed with Payment\" if you wish to try again.");
+                //                }
+                //            }
+                //            modbHelper.updateDataset(ref oDs, "Order");
+
+                //        }
+
+                //        wpXform.addValues();
+                //        payWorldPayRet = wpXform;
+                //    }
+
+                //    catch (Exception ex)
+                //    {
+                //        stdTools.returnException(ref myWeb.msException, mcModuleName, "paySecPay", ex, "", cProcessInfo, gbDebug);
+                //        return (Cms.xForm)null;
+                //    }
+
+                //    return payWorldPayRet;
+                //}
+
+                //public Cms.xForm payNetBanx(ref XmlElement oRoot, string sSubmitPath, long nPageId)
+                //{
+                //    myWeb.PerfMon.Log("PaymentProviders", "payNetBanx");
+
+                //    string sSql;
+
+                //    XmlNode oCartAdd;
+                //    string sAddress = "";
+
+                //    var wpXform = new Cms.xForm(ref myWeb.msException);
+                //    string sProcessInfo = "";
+                //    Hashtable oDictOpt;
+                //    bool bCv2 = false;
+                //    string cProcessInfo = "payNetBanx";
+                //    XmlNode oNetBanxCfg;
+                //    string cCurrentDomain = "http";
+                //    string cCurrentURL;
+                //    try
+                //    {
+
+                //        if (this.goRequest.ServerVariables["HTTPS"] == "on")
+                //            cCurrentDomain = cCurrentDomain + "s";
+                //        cCurrentDomain = cCurrentDomain + "://" + this.goRequest.ServerVariables["SERVER_NAME"];
+                //        cCurrentURL = cCurrentDomain + this.goRequest.ServerVariables["PATH_INFO"];
+
+                //        oNetBanxCfg = moPaymentCfg.SelectSingleNode("provider[@name='NetBanx']");
+                //        oDictOpt = xmlToHashTable(oNetBanxCfg, "value");
+
+
+                //        // Get the Billing Address node and details
+                //        oCartAdd = oRoot.SelectSingleNode("Contact[@type='Billing Address']");
+                //        if (oCartAdd.SelectSingleNode("Street") != null)
+                //        {
+                //            sAddress = sAddress + oCartAdd.SelectSingleNode("Street").InnerText + "&#10;";
+                //        }
+                //        // If Not oCartAdd.SelectSingleNode("Address/City") Is Nothing Then
+                //        // sAddress = sAddress & oCartAdd.SelectSingleNode("City").InnerText & "&#10;"
+                //        // End If
+                //        // If Not oCartAdd.SelectSingleNode("Address/State") Is Nothing Then
+                //        // sAddress = sAddress & oCartAdd.SelectSingleNode("State").InnerText & "&#10;"
+                //        // End If
+
+                //        // Create a new xform
+                //        wpXform.moPageXML = moPageXml;
+                //        wpXform.NewFrm("PayForm");
+                //        wpXform.Instance.InnerXml = "<nbx_payment_amount/><nbx_currency_code/><nbx_merchant_reference/><nbx_checksum/><nbx_language/><nbx_payment_type/><nbx_success_url/><nbx_failure_url/><nbx_success_redirect_url/><nbx_failure_redirect_url/><nbx_email/><nbx_cardholder_name/><nbx_houseno/><nbx_postcode/><nbx_success_show_content/><nbx_failure_show_content/>";
+                //        wpXform.valid = false;
+
+                //        // Add the values
+                //        wpXform.Instance.SelectSingleNode("nbx_payment_amount").InnerText = Strings.Replace(Strings.FormatNumber(mnPaymentAmount, 2), ".", "");
+                //        wpXform.Instance.SelectSingleNode("nbx_currency_code").InnerText = Conversions.ToString(oDictOpt["currency"]);
+                //        wpXform.Instance.SelectSingleNode("nbx_merchant_reference").InnerText = mnCartId.ToString();
+                //        string cHash = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Strings.Replace(Strings.FormatNumber(mnPaymentAmount, 2), ".", ""), oDictOpt["currency"]), mnCartId.ToString()), oDictOpt["secretkey"]));
+                //        wpXform.Instance.SelectSingleNode("nbx_checksum").InnerText = Tools.Encryption.HashString(cHash, "SHA1", true);
+                //        wpXform.Instance.SelectSingleNode("nbx_language").InnerText = Conversions.ToString(oDictOpt["language"]);
+                //        wpXform.Instance.SelectSingleNode("nbx_payment_type").InnerText = Conversions.ToString(oDictOpt["paymentType"]);
+                //        wpXform.Instance.SelectSingleNode("nbx_success_url").InnerText = cCurrentDomain + "/ewcommon/tools/cartcallback.ashx?provider=NetBanx";
+                //        wpXform.Instance.SelectSingleNode("nbx_failure_url").InnerText = cCurrentDomain + "/ewcommon/tools/cartcallback.ashx?provider=NetBanx";
+                //        wpXform.Instance.SelectSingleNode("nbx_success_redirect_url").InnerText = cCurrentURL + "?cartCmd=SubmitPaymentDetails&nbx=success";
+                //        wpXform.Instance.SelectSingleNode("nbx_failure_redirect_url").InnerText = cCurrentURL + "?cartCmd=SubmitPaymentDetails&nbx=failure";
+
+                //        wpXform.Instance.SelectSingleNode("nbx_email").InnerText = oCartAdd.SelectSingleNode("Email").InnerText;
+                //        wpXform.Instance.SelectSingleNode("nbx_cardholder_name").InnerText = mcCardHolderName;
+                //        wpXform.Instance.SelectSingleNode("nbx_houseno").InnerText = sAddress;
+                //        wpXform.Instance.SelectSingleNode("nbx_postcode").InnerText = oCartAdd.SelectSingleNode("PostalCode").InnerText;
+                //        wpXform.Instance.SelectSingleNode("nbx_success_show_content").InnerText = "1";
+                //        wpXform.Instance.SelectSingleNode("nbx_failure_show_content").InnerText = "1";
+
+                //        // Create the group
+                //        wpXform.addGroup(ref wpXform.moXformElmt, "NetBanx", sLabel: "Proceed to NetBanx");
+                //        wpXform.addInput(ref wpXform.moXformElmt, "nbx_payment_amount", false, "", "hidden");
+                //        wpXform.addInput(ref wpXform.moXformElmt, "nbx_currency_code", false, "", "hidden");
+                //        wpXform.addInput(ref wpXform.moXformElmt, "nbx_merchant_reference", false, "", "hidden");
+                //        wpXform.addInput(ref wpXform.moXformElmt, "nbx_checksum", false, "", "hidden");
+                //        wpXform.addInput(ref wpXform.moXformElmt, "nbx_language", false, "", "hidden");
+                //        wpXform.addInput(ref wpXform.moXformElmt, "nbx_payment_type", false, "", "hidden");
+                //        wpXform.addInput(ref wpXform.moXformElmt, "nbx_success_url", false, "", "hidden");
+                //        wpXform.addInput(ref wpXform.moXformElmt, "nbx_failure_url", false, "", "hidden");
+                //        wpXform.addInput(ref wpXform.moXformElmt, "nbx_success_redirect_url", false, "", "hidden");
+                //        wpXform.addInput(ref wpXform.moXformElmt, "nbx_failure_redirect_url", false, "", "hidden");
+                //        wpXform.addInput(ref wpXform.moXformElmt, "nbx_email", false, "", "hidden");
+                //        wpXform.addInput(ref wpXform.moXformElmt, "nbx_cardholder_name", false, "", "hidden");
+                //        wpXform.addInput(ref wpXform.moXformElmt, "nbx_houseno", false, "", "hidden");
+                //        wpXform.addInput(ref wpXform.moXformElmt, "nbx_postcode", false, "", "hidden");
+                //        wpXform.addInput(ref wpXform.moXformElmt, "nbx_success_show_content", false, "", "hidden");
+                //        wpXform.addInput(ref wpXform.moXformElmt, "nbx_failure_show_content", false, "", "hidden");
+
+                //        string submitUrl = Conversions.ToString(Operators.ConcatenateObject("https://pay.netbanx.com/", oDictOpt["accountId"]));
+                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["mode"], Strings.LCase("test"), false)))
+                //        {
+                //            submitUrl = Conversions.ToString(Operators.ConcatenateObject("https://pay.test.netbanx.com/", oDictOpt["accountId"]));
+                //        }
+                //        // Sort out the submission
+                //        wpXform.submission("submitpayform", submitUrl, "POST");
+                //        wpXform.addSubmit(ref wpXform.moXformElmt, "submitpayform", "Proceed with Payment", "submitpayform", "principle");
+
+                //        // Add hint
+                //        wpXform.addNote("NetBanx", Protean.xForm.noteTypes.Help, "Click \"Proceed with Payment\" You will then be transferred to the secure NetBanx server.");
+
+                //        if (!string.IsNullOrEmpty(this.goRequest["nbx"]))
+                //        {
+                //            DataSet oDs;
+                //            sSql = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
+                //            oDs = modbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
+                //            foreach (DataRow oRow in oDs.Tables[0].Rows)
+                //            {
+                //                switch (this.goRequest["nbx"] ?? "")
+                //                {
+                //                    case "success":
+                //                        {
+                //                            // Update Seller Notes:
+                //                            oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Customer Redirect Success) "), Constants.vbLf);
+                //                            wpXform.valid = true;
+                //                            break;
+                //                        }
+                //                    case "failure":
+                //                        {
+                //                            oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Customer Redirect Failure) "), Constants.vbLf);
+                //                            wpXform.addNote("NetBanx", Protean.xForm.noteTypes.Help, "<span id=\"Trans-104\">The payment was not processed.  Either there was an issue processing the payment or you cancelled the payment stage.  Click \"Proceed with Payment\" if you wish to try again.</span>");
+                //                            break;
+                //                        }
+                //                }
+                //            }
+                //            modbHelper.updateDataset(ref oDs, "Order");
+                //        }
+                //        wpXform.addValues();
+                //        return wpXform;
+                //    }
+
+                //    catch (Exception ex)
+                //    {
+                //        stdTools.returnException(ref myWeb.msException, mcModuleName, "payNetBanx", ex, "", cProcessInfo, gbDebug);
+                //        return (Cms.xForm)null;
+                //    }
+                //}
 
                 public Cms.xForm paySecureEmail(ref XmlElement oRoot, string sSubmitPath)
                 {
@@ -3753,270 +3753,270 @@ namespace Protean
                     return paySecureEmailRet;
                 }
 
-                public Cms.xForm payDirectDebitSecureEmail(ref XmlElement oRoot, string sSubmitPath)
-                {
-                    myWeb.PerfMon.Log("PaymentProviders", "payDirectDebitSecureEmail");
-                    string sSql;
-                    var ddXform = new Cms.xForm(ref myWeb.msException);
-                    string sProcessInfo = "";
-                    string sCardAccepted = "";
-                    string cXFormPath = "";
-                    XmlElement oFrmGroup;
+                //public Cms.xForm payDirectDebitSecureEmail(ref XmlElement oRoot, string sSubmitPath)
+                //{
+                //    myWeb.PerfMon.Log("PaymentProviders", "payDirectDebitSecureEmail");
+                //    string sSql;
+                //    var ddXform = new Cms.xForm(ref myWeb.msException);
+                //    string sProcessInfo = "";
+                //    string sCardAccepted = "";
+                //    string cXFormPath = "";
+                //    XmlElement oFrmGroup;
 
-                    string action = sSubmitPath;
-                    bool bCv2 = false;
-                    bool bEncrypt = false;
-                    XmlNode oSecEmailCfg;
-                    string formname = "payDirectDebitSecureEmail";
-                    string cProcessInfo = "payDirectDebitSecureEmail";
-                    try
-                    {
+                //    string action = sSubmitPath;
+                //    bool bCv2 = false;
+                //    bool bEncrypt = false;
+                //    XmlNode oSecEmailCfg;
+                //    string formname = "payDirectDebitSecureEmail";
+                //    string cProcessInfo = "payDirectDebitSecureEmail";
+                //    try
+                //    {
 
-                        oSecEmailCfg = moPaymentCfg.SelectSingleNode("provider[@name='DirectDebitSecureEmail']");
+                //        oSecEmailCfg = moPaymentCfg.SelectSingleNode("provider[@name='DirectDebitSecureEmail']");
 
-                        if (oSecEmailCfg is null)
-                        {
-                            Information.Err().Raise(1005, "payDirectDebitSecureEmail", "The DirectDebitSecureEmail provider section is yet to be added to the Protean.Config");
-                        }
+                //        if (oSecEmailCfg is null)
+                //        {
+                //            Information.Err().Raise(1005, "payDirectDebitSecureEmail", "The DirectDebitSecureEmail provider section is yet to be added to the Protean.Config");
+                //        }
 
-                        string cGnuDirectory = oSecEmailCfg.SelectSingleNode("GnuDirectory/@value").InnerText;
-                        string cGnuOriginator = oSecEmailCfg.SelectSingleNode("GnuOriginator/@value").InnerText;
-                        string cGnuPassphrase = oSecEmailCfg.SelectSingleNode("GnuPassphrase/@value").InnerText;
-                        mcCartEmailAddress = oSecEmailCfg.SelectSingleNode("merchantEmail/@value").InnerText;
-
-
-                        mcCartEmailTextXslt = oSecEmailCfg.SelectSingleNode("textEmailTemplate/@value").InnerText;
-
-                        if (oSecEmailCfg.SelectSingleNode("xform/@value") != null)
-                        {
-                            cXFormPath = oSecEmailCfg.SelectSingleNode("xform/@value").InnerText;
-                        }
-
-                        // Reference together the root Xml from objects
-                        ddXform.moPageXML = moPageXml;
-
-                        if (!string.IsNullOrEmpty(cXFormPath))
-                        {
-                            if (!ddXform.load(cXFormPath))
-                            {
-                                ddXform.NewFrm(formname);
-                                oFrmGroup = ddXform.addGroup(ref ddXform.moXformElmt, "notes", sLabel: "Missing File: " + cXFormPath);
-                            }
-                            else
-                            {
-                                // add missing submission or submit buttons
-                                if (ddXform.moXformElmt.SelectSingleNode("model/instance/submission") is null)
-                                {
-                                    ddXform.submission(formname, action, "POST", "return form_check(this);");
-                                }
-                                if (ddXform.moXformElmt.SelectSingleNode("descendant-or-self::submit") is null)
-                                {
-                                    ddXform.addSubmit(ref ddXform.moXformElmt, formname, "Place Order", "placeOrder");
-                                }
-                            }
-                        }
-                        else
-                        {
-                            Information.Err().Raise(1005, "payDirectDebitSecureEmail", "The DirectDebitSecureEmail xform location no specified.");
-                        }
-
-                        if (ddXform.isSubmitted())
-                        {
-                            ddXform.updateInstanceFromRequest();
-                            ddXform.validate();
-
-                            if (ddXform.valid == true)
-                            {
-
-                                // Check for validating services.
-                                XmlElement postCodeAnywhereBankingKeyElement = null;
-                                string postCodeAnywhereBankingKey = "";
-                                string accountNumber = "";
-                                string sortCode = "";
-                                XmlNodeState localNodeState2() { XmlElement argoNode = (XmlElement)oSecEmailCfg; var ret = Tools.Xml.NodeState(ref argoNode, "PostCodeAnywhereBankingKey", "", "", 1, postCodeAnywhereBankingKeyElement, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false); oSecEmailCfg = argoNode; return ret; }
-
-                                if (localNodeState2() != XmlNodeState.NotInstantiated && !string.IsNullOrEmpty(postCodeAnywhereBankingKeyElement.GetAttribute("value")))
-                                {
-                                    XmlNodeState localNodeState() { var argoNode1 = ddXform.Instance; var ret = Tools.Xml.NodeState(ref argoNode1, "DirectDebit/BankAccountNumber", "", "", 1, null, "", accountNumber, bCheckTrimmedInnerText: false); ddXform.Instance = argoNode1; return ret; }
-
-                                    XmlNodeState localNodeState1() { var argoNode2 = ddXform.Instance; var ret = Tools.Xml.NodeState(ref argoNode2, "DirectDebit/BankSortCode", "", "", 1, null, "", sortCode, bCheckTrimmedInnerText: false); ddXform.Instance = argoNode2; return ret; }
-
-                                    if (localNodeState() == XmlNodeState.HasContents && localNodeState1() == XmlNodeState.HasContents)
-                                    {
-
-                                        postCodeAnywhereBankingKey = postCodeAnywhereBankingKeyElement.GetAttribute("value");
-
-                                        try
-                                        {
-
-                                            var paService = new Protean.uk.co.postcodeanywhere.services.postcodeanywhere();
-
-                                            Protean.uk.co.postcodeanywhere.services.BankAccountValidation_Interactive_Validate_v2_00_Results[] paResponses = paService.BankAccountValidation_Interactive_Validate_v2_00(postCodeAnywhereBankingKey, accountNumber, sortCode);
+                //        string cGnuDirectory = oSecEmailCfg.SelectSingleNode("GnuDirectory/@value").InnerText;
+                //        string cGnuOriginator = oSecEmailCfg.SelectSingleNode("GnuOriginator/@value").InnerText;
+                //        string cGnuPassphrase = oSecEmailCfg.SelectSingleNode("GnuPassphrase/@value").InnerText;
+                //        mcCartEmailAddress = oSecEmailCfg.SelectSingleNode("merchantEmail/@value").InnerText;
 
 
-                                            if (paResponses.Length > 0)
-                                            {
-                                                foreach (Protean.uk.co.postcodeanywhere.services.BankAccountValidation_Interactive_Validate_v2_00_Results paResponse in paResponses)
-                                                {
+                //        mcCartEmailTextXslt = oSecEmailCfg.SelectSingleNode("textEmailTemplate/@value").InnerText;
 
-                                                    if (!paResponse.IsCorrect)
-                                                    {
-                                                        ddXform.valid = false;
-                                                        XmlNode argoNode = (XmlNode)ddXform.RootGroup;
-                                                        this.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, "<span class=\"msg-20001\">Your sort code and account number could not be validated for Direct Debit.  Please check you have entered the correct information and retry.</span>");
-                                                    }
+                //        if (oSecEmailCfg.SelectSingleNode("xform/@value") != null)
+                //        {
+                //            cXFormPath = oSecEmailCfg.SelectSingleNode("xform/@value").InnerText;
+                //        }
 
-                                                    else if (!paResponse.IsDirectDebitCapable)
-                                                    {
-                                                        ddXform.valid = false;
-                                                        XmlNode argoNode1 = (XmlNode)ddXform.RootGroup;
-                                                        this.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, "<span class=\"msg-20002\">The account number and sort code provided do not have Direct Debit enabled.  Please check you have entered the correct information and retry.</span>");
+                //        // Reference together the root Xml from objects
+                //        ddXform.moPageXML = moPageXml;
 
-                                                    }
+                //        if (!string.IsNullOrEmpty(cXFormPath))
+                //        {
+                //            if (!ddXform.load(cXFormPath))
+                //            {
+                //                ddXform.NewFrm(formname);
+                //                oFrmGroup = ddXform.addGroup(ref ddXform.moXformElmt, "notes", sLabel: "Missing File: " + cXFormPath);
+                //            }
+                //            else
+                //            {
+                //                // add missing submission or submit buttons
+                //                if (ddXform.moXformElmt.SelectSingleNode("model/instance/submission") is null)
+                //                {
+                //                    ddXform.submission(formname, action, "POST", "return form_check(this);");
+                //                }
+                //                if (ddXform.moXformElmt.SelectSingleNode("descendant-or-self::submit") is null)
+                //                {
+                //                    ddXform.addSubmit(ref ddXform.moXformElmt, formname, "Place Order", "placeOrder");
+                //                }
+                //            }
+                //        }
+                //        else
+                //        {
+                //            Information.Err().Raise(1005, "payDirectDebitSecureEmail", "The DirectDebitSecureEmail xform location no specified.");
+                //        }
 
-                                                }
-                                            }
-                                            else
-                                            {
-                                                ddXform.valid = false;
-                                                XmlNode argoNode2 = (XmlNode)ddXform.RootGroup;
-                                                this.addNote(ref argoNode2, Protean.xForm.noteTypes.Alert, "<span class=\"msg-20003\">Your sort code and account number could not be validated for Direct Debit.  Please check you have entered the correct information and retry.</span>");
-                                            }
-                                        }
+                //        if (ddXform.isSubmitted())
+                //        {
+                //            ddXform.updateInstanceFromRequest();
+                //            ddXform.validate();
 
+                //            if (ddXform.valid == true)
+                //            {
 
-                                        catch (System.Web.Services.Protocols.SoapException paException)
-                                        {
-                                            // If the web service returns an error - it will be here.
-                                            ddXform.valid = false;
+                //                // Check for validating services.
+                //                XmlElement postCodeAnywhereBankingKeyElement = null;
+                //                string postCodeAnywhereBankingKey = "";
+                //                string accountNumber = "";
+                //                string sortCode = "";
+                //                XmlNodeState localNodeState2() { XmlElement argoNode = (XmlElement)oSecEmailCfg; var ret = Tools.Xml.NodeState(ref argoNode, "PostCodeAnywhereBankingKey", "", "", 1, postCodeAnywhereBankingKeyElement, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false); oSecEmailCfg = argoNode; return ret; }
 
-                                            // Try to determine the cause, format should be 100N: Message
-                                            var messageMatch = Regex.Match(paException.Message, @"^(\d+):\s(.*)$");
+                //                if (localNodeState2() != XmlNodeState.NotInstantiated && !string.IsNullOrEmpty(postCodeAnywhereBankingKeyElement.GetAttribute("value")))
+                //                {
+                //                    XmlNodeState localNodeState() { var argoNode1 = ddXform.Instance; var ret = Tools.Xml.NodeState(ref argoNode1, "DirectDebit/BankAccountNumber", "", "", 1, null, "", accountNumber, bCheckTrimmedInnerText: false); ddXform.Instance = argoNode1; return ret; }
 
-                                            if (messageMatch.Success)
-                                            {
-                                                switch (messageMatch.Groups[1].ToString() ?? "")
-                                                {
-                                                    case "1002":
-                                                    case "1001":
-                                                        {
-                                                            ddXform.addNote("BankSortCode", Protean.xForm.noteTypes.Alert, "<span class=\"msg-20004\">You must supply a valid sort code</span>");
-                                                            break;
-                                                        }
+                //                    XmlNodeState localNodeState1() { var argoNode2 = ddXform.Instance; var ret = Tools.Xml.NodeState(ref argoNode2, "DirectDebit/BankSortCode", "", "", 1, null, "", sortCode, bCheckTrimmedInnerText: false); ddXform.Instance = argoNode2; return ret; }
 
-                                                    case "1004":
-                                                    case "1003":
-                                                        {
-                                                            ddXform.addNote("AcctNumber", Protean.xForm.noteTypes.Alert, "<span class=\"msg-20005\">You must supply a valid account number</span>");
-                                                            break;
-                                                        }
+                //                    if (localNodeState() == XmlNodeState.HasContents && localNodeState1() == XmlNodeState.HasContents)
+                //                    {
 
-                                                    default:
-                                                        {
-                                                            XmlNode argoNode3 = (XmlNode)ddXform.RootGroup;
-                                                            ddXform.addNote(ref argoNode3, Protean.xForm.noteTypes.Alert, "<span class=\"msg-20006\">Your direct debit details could not be validated. " + paException.Message + "</span>");
-                                                            break;
-                                                        }
-                                                }
-                                            }
-                                            else
-                                            {
-                                                throw paException;
-                                            }
-                                        }
+                //                        postCodeAnywhereBankingKey = postCodeAnywhereBankingKeyElement.GetAttribute("value");
+
+                //                        try
+                //                        {
+
+                //                            var paService = new Protean.uk.co.postcodeanywhere.services.postcodeanywhere();
+
+                //                            Protean.uk.co.postcodeanywhere.services.BankAccountValidation_Interactive_Validate_v2_00_Results[] paResponses = paService.BankAccountValidation_Interactive_Validate_v2_00(postCodeAnywhereBankingKey, accountNumber, sortCode);
 
 
-                                        catch (Exception otherException)
-                                        {
-                                            ddXform.valid = false;
-                                            throw otherException;
+                //                            if (paResponses.Length > 0)
+                //                            {
+                //                                foreach (Protean.uk.co.postcodeanywhere.services.BankAccountValidation_Interactive_Validate_v2_00_Results paResponse in paResponses)
+                //                                {
 
-                                        }
-                                    }
-                                }
-                            }
+                //                                    if (!paResponse.IsCorrect)
+                //                                    {
+                //                                        ddXform.valid = false;
+                //                                        XmlNode argoNode = (XmlNode)ddXform.RootGroup;
+                //                                        this.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, "<span class=\"msg-20001\">Your sort code and account number could not be validated for Direct Debit.  Please check you have entered the correct information and retry.</span>");
+                //                                    }
 
-                            if (ddXform.valid == true)
-                            {
+                //                                    else if (!paResponse.IsDirectDebitCapable)
+                //                                    {
+                //                                        ddXform.valid = false;
+                //                                        XmlNode argoNode1 = (XmlNode)ddXform.RootGroup;
+                //                                        this.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, "<span class=\"msg-20002\">The account number and sort code provided do not have Direct Debit enabled.  Please check you have entered the correct information and retry.</span>");
 
-                                // Validate Card
-                                if (!string.IsNullOrEmpty(cGnuDirectory))
-                                {
-                                    bEncrypt = true;
-                                }
-                                else
-                                {
-                                    bEncrypt = false;
-                                }
+                //                                    }
 
-                                // Update Seller Notes:
-                                sSql = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
-
-                                // Send the card details via Secure Email
-                                var oMsg = new Protean.Messaging(ref myWeb.msException);
-                                oMsg.mbIsBodyHtml = false;
-
-                                if (!string.IsNullOrEmpty(cGnuDirectory))
-                                {
-                                    oMsg.mbEncrypt = true;
-                                    oMsg.msGnuDirectory = cGnuDirectory;
-                                    oMsg.msGnuOriginator = cGnuOriginator;
-                                    oMsg.msGnuPassphrase = cGnuPassphrase;
-                                }
-
-                                oRoot.AppendChild(ddXform.Instance.FirstChild.CloneNode(true));
+                //                                }
+                //                            }
+                //                            else
+                //                            {
+                //                                ddXform.valid = false;
+                //                                XmlNode argoNode2 = (XmlNode)ddXform.RootGroup;
+                //                                this.addNote(ref argoNode2, Protean.xForm.noteTypes.Alert, "<span class=\"msg-20003\">Your sort code and account number could not be validated for Direct Debit.  Please check you have entered the correct information and retry.</span>");
+                //                            }
+                //                        }
 
 
-                                savePayment((long)myWeb.mnUserId, "DirectDebitSecureEmail", mnCartId.ToString(), "", (XmlElement)ddXform.Instance.FirstChild, DateTime.Now, false, mnPaymentAmount);
+                //                        catch (System.Web.Services.Protocols.SoapException paException)
+                //                        {
+                //                            // If the web service returns an error - it will be here.
+                //                            ddXform.valid = false;
 
-                                string sResponse;
-                                Cms.dbHelper argodbHelper = null;
-                                sResponse = Conversions.ToString(oMsg.emailer(oRoot, mcCartEmailTextXslt, "SecureEmail", "secure@eonic.co.uk", mcCartEmailAddress, "Secure Payment Details", odbHelper: ref argodbHelper));
-                                oMsg = (Protean.Messaging)null;
+                //                            // Try to determine the cause, format should be 100N: Message
+                //                            var messageMatch = Regex.Match(paException.Message, @"^(\d+):\s(.*)$");
 
-                                DataSet oDs;
-                                oDs = modbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
-                                foreach (DataRow oRow in oDs.Tables["Order"].Rows)
-                                {
-                                    if (sResponse == "Message Sent")
-                                    {
-                                        oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Secure Email Sent) "), Constants.vbLf);
-                                    }
-                                    else
-                                    {
-                                        ddXform.valid = false;
-                                        XmlNode argoNode4 = (XmlNode)ddXform.moXformElmt;
-                                        ddXform.addNote(ref argoNode4, Protean.xForm.noteTypes.Alert, sResponse);
-                                        ddXform.moXformElmt = (XmlElement)argoNode4;
-                                        oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Secure Email Failed:"), sResponse), ") "), Constants.vbLf);
-                                    }
-                                }
-                                modbHelper.updateDataset(ref oDs, "Order");
-                            }
+                //                            if (messageMatch.Success)
+                //                            {
+                //                                switch (messageMatch.Groups[1].ToString() ?? "")
+                //                                {
+                //                                    case "1002":
+                //                                    case "1001":
+                //                                        {
+                //                                            ddXform.addNote("BankSortCode", Protean.xForm.noteTypes.Alert, "<span class=\"msg-20004\">You must supply a valid sort code</span>");
+                //                                            break;
+                //                                        }
 
-                            ddXform.addValues();
-                        }
+                //                                    case "1004":
+                //                                    case "1003":
+                //                                        {
+                //                                            ddXform.addNote("AcctNumber", Protean.xForm.noteTypes.Alert, "<span class=\"msg-20005\">You must supply a valid account number</span>");
+                //                                            break;
+                //                                        }
 
-                        // validate the Xform if it has been submitted.
+                //                                    default:
+                //                                        {
+                //                                            XmlNode argoNode3 = (XmlNode)ddXform.RootGroup;
+                //                                            ddXform.addNote(ref argoNode3, Protean.xForm.noteTypes.Alert, "<span class=\"msg-20006\">Your direct debit details could not be validated. " + paException.Message + "</span>");
+                //                                            break;
+                //                                        }
+                //                                }
+                //                            }
+                //                            else
+                //                            {
+                //                                throw paException;
+                //                            }
+                //                        }
+
+
+                //                        catch (Exception otherException)
+                //                        {
+                //                            ddXform.valid = false;
+                //                            throw otherException;
+
+                //                        }
+                //                    }
+                //                }
+                //            }
+
+                //            if (ddXform.valid == true)
+                //            {
+
+                //                // Validate Card
+                //                if (!string.IsNullOrEmpty(cGnuDirectory))
+                //                {
+                //                    bEncrypt = true;
+                //                }
+                //                else
+                //                {
+                //                    bEncrypt = false;
+                //                }
+
+                //                // Update Seller Notes:
+                //                sSql = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
+
+                //                // Send the card details via Secure Email
+                //                var oMsg = new Protean.Messaging(ref myWeb.msException);
+                //                oMsg.mbIsBodyHtml = false;
+
+                //                if (!string.IsNullOrEmpty(cGnuDirectory))
+                //                {
+                //                    oMsg.mbEncrypt = true;
+                //                    oMsg.msGnuDirectory = cGnuDirectory;
+                //                    oMsg.msGnuOriginator = cGnuOriginator;
+                //                    oMsg.msGnuPassphrase = cGnuPassphrase;
+                //                }
+
+                //                oRoot.AppendChild(ddXform.Instance.FirstChild.CloneNode(true));
+
+
+                //                savePayment((long)myWeb.mnUserId, "DirectDebitSecureEmail", mnCartId.ToString(), "", (XmlElement)ddXform.Instance.FirstChild, DateTime.Now, false, mnPaymentAmount);
+
+                //                string sResponse;
+                //                Cms.dbHelper argodbHelper = null;
+                //                sResponse = Conversions.ToString(oMsg.emailer(oRoot, mcCartEmailTextXslt, "SecureEmail", "secure@eonic.co.uk", mcCartEmailAddress, "Secure Payment Details", odbHelper: ref argodbHelper));
+                //                oMsg = (Protean.Messaging)null;
+
+                //                DataSet oDs;
+                //                oDs = modbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
+                //                foreach (DataRow oRow in oDs.Tables["Order"].Rows)
+                //                {
+                //                    if (sResponse == "Message Sent")
+                //                    {
+                //                        oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Secure Email Sent) "), Constants.vbLf);
+                //                    }
+                //                    else
+                //                    {
+                //                        ddXform.valid = false;
+                //                        XmlNode argoNode4 = (XmlNode)ddXform.moXformElmt;
+                //                        ddXform.addNote(ref argoNode4, Protean.xForm.noteTypes.Alert, sResponse);
+                //                        ddXform.moXformElmt = (XmlElement)argoNode4;
+                //                        oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Secure Email Failed:"), sResponse), ") "), Constants.vbLf);
+                //                    }
+                //                }
+                //                modbHelper.updateDataset(ref oDs, "Order");
+                //            }
+
+                //            ddXform.addValues();
+                //        }
+
+                //        // validate the Xform if it has been submitted.
 
 
 
-                        // If Not (mcCartEmailTextXslt <> "") Then mcCartEmailTextXslt = "/ewcommon/xsl/Cart/mailcarttextV3_0.xsl"
+                //        // If Not (mcCartEmailTextXslt <> "") Then mcCartEmailTextXslt = "/ewcommon/xsl/Cart/mailcarttextV3_0.xsl"
 
-                        else
-                        {
-                            ddXform.valid = false;
-                        }
+                //        else
+                //        {
+                //            ddXform.valid = false;
+                //        }
 
-                        return ddXform;
-                    }
+                //        return ddXform;
+                //    }
 
-                    catch (Exception ex)
-                    {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "payDirectDebitSecureEmail", ex, "", cProcessInfo, gbDebug);
-                        return (Cms.xForm)null;
-                    }
-                }
+                //    catch (Exception ex)
+                //    {
+                //        stdTools.returnException(ref myWeb.msException, mcModuleName, "payDirectDebitSecureEmail", ex, "", cProcessInfo, gbDebug);
+                //        return (Cms.xForm)null;
+                //    }
+                //}
 
                 public virtual Cms.xForm payOnAccount(ref XmlElement oRoot, string sSubmitPath)
                 {
@@ -4436,555 +4436,555 @@ namespace Protean
                     }
                 }
 
-                public Cms.xForm payPayPalExpress(ref XmlElement oOrderElmt, string sSubmitPath, string sProfile = "")
-                {
-                    myWeb.PerfMon.Log("PaymentProviders", "payPayPalExpress");
-                    string sSql;
-
-                    var ppXform = new Cms.xForm(ref myWeb.msException);
-
-                    Cms.xForm Xform3dSec = (Cms.xForm)null;
-
-                    var bIsValid = default(bool);
-                    string err_msg = "";
-                    string err_msg_log = "";
-                    string sProcessInfo = "";
-                    string cResponse = "";
-
-                    var oDictOpt = new Hashtable();
-
-                    bool bCv2 = false;
-                    bool b3DSecure = false;
-                    bool b3DAuthorised = false;
-                    string sRedirectURL = "";
-                    string sPaymentRef = "";
-
-                    string cProcessInfo = "payPayPalExpress";
-
-                    // Get the payment options into a hashtable
-                    XmlNode oSecpayCfg;
-                    bool bSavePayment = false;
-                    bool bAllowSavePayment = false;
-                    string host = "www.paypal.com";
-
-                    try
-                    {
-
-
-
-                        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
-                        if (!string.IsNullOrEmpty(sProfile))
-                        {
-                            oSecpayCfg = moPaymentCfg.SelectSingleNode("provider[@name='PayPalExpress' and @profile='" + sProfile + "']");
-                        }
-                        else
-                        {
-                            oSecpayCfg = moPaymentCfg.SelectSingleNode("provider[@name='PayPalExpress']");
-                        }
-
-                        // Get the payment options
-                        // oSecpayCfg = moPaymentCfg.SelectSingleNode("provider[@name='SecPay']")
-                        oDictOpt = xmlToHashTable(oSecpayCfg, "value");
-
-                        switch (oDictOpt["opperationMode"])
-                        {
-                            case "true":
-                                {
-                                    nTransactionMode = TransactionMode.Test;
-                                    break;
-                                }
-                            case "false":
-                                {
-                                    nTransactionMode = TransactionMode.Fail;
-                                    break;
-                                }
-                            case "live":
-                                {
-                                    nTransactionMode = TransactionMode.Live;
-                                    break;
-                                }
-                        }
-
-                        // override the currency
-                        if (oDictOpt.ContainsKey("currency"))
-                        {
-                            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDictOpt["currency"], "", false)))
-                            {
-                                mcCurrency = Conversions.ToString(oDictOpt["currency"]);
-                            }
-                        }
-
-                        // Dim ppRequest As New Protean.PayPalAPI.GetExpressCheckoutDetailsRequestType()
-                        // ppRequest.Version = "63.0"
-
-                        var ppProfile = new Protean.PayPalAPI.CustomSecurityHeaderType();
-                        ppProfile.Credentials = new Protean.PayPalAPI.UserIdPasswordType();
-                        ppProfile.Credentials.Username = Conversions.ToString(oDictOpt["accountId"]);
-                        ppProfile.Credentials.Password = Conversions.ToString(oDictOpt["accountPassword"]);
-                        ppProfile.Credentials.Signature = Conversions.ToString(oDictOpt["accountSignature"]);
-
-                        var ppProfile2 = new Protean.PayPalAPI.CustomSecurityHeaderType();
-                        ppProfile2.Credentials = new Protean.PayPalAPI.UserIdPasswordType();
-                        ppProfile2.Credentials.Username = Conversions.ToString(oDictOpt["accountId"]);
-                        ppProfile2.Credentials.Password = Conversions.ToString(oDictOpt["accountPassword"]);
-                        ppProfile2.Credentials.Signature = Conversions.ToString(oDictOpt["accountSignature"]);
-
-                        string endpointAddress = "https://api-aa-3t.paypal.com/2.0/";
-                        if (nTransactionMode == TransactionMode.Test)
-                        {
-                            endpointAddress = "https://api-aa-3t.sandbox.paypal.com/2.0/";
-                            host = "www.sandbox.paypal.com";
-                        }
-                        var ppEndpointAddress = new System.ServiceModel.EndpointAddress(endpointAddress);
-
-                        var ppBinding = new System.ServiceModel.BasicHttpBinding(System.ServiceModel.BasicHttpSecurityMode.Transport);
-                        ppBinding.MaxBufferSize = 65536;
-                        ppBinding.CloseTimeout = new TimeSpan(0, 2, 0);
-                        ppBinding.OpenTimeout = new TimeSpan(0, 2, 0);
-                        ppBinding.ReceiveTimeout = new TimeSpan(0, 10, 0);
-                        ppBinding.SendTimeout = new TimeSpan(0, 2, 0);
-                        ppBinding.AllowCookies = false;
-                        ppBinding.BypassProxyOnLocal = false;
-                        ppBinding.HostNameComparisonMode = System.ServiceModel.HostNameComparisonMode.StrongWildcard;
-                        ppBinding.MaxBufferSize = 65536;
-                        ppBinding.MaxBufferPoolSize = 524288L;
-                        ppBinding.MaxReceivedMessageSize = 65536L;
-                        ppBinding.MessageEncoding = System.ServiceModel.WSMessageEncoding.Text;
-                        ppBinding.TextEncoding = Encoding.UTF8;
-                        ppBinding.TransferMode = System.ServiceModel.TransferMode.Buffered;
-                        ppBinding.UseDefaultWebProxy = true;
-
-                        ppBinding.ReaderQuotas.MaxDepth = 32;
-                        ppBinding.ReaderQuotas.MaxStringContentLength = 8192;
-                        ppBinding.ReaderQuotas.MaxArrayLength = 16384;
-                        ppBinding.ReaderQuotas.MaxBytesPerRead = 4096;
-                        ppBinding.ReaderQuotas.MaxNameTableCharCount = 65536;
-
-                        var ppIface = new Protean.PayPalAPI.PayPalAPIAAInterfaceClient(ppBinding, ppEndpointAddress);
-
-                        // Load the Xform
-
-                        switch (myWeb.moRequest["ppCmd"] ?? "")
-                        {
-                            case "callback":
-                            case "return":
-                                {
-
-                                    // Case for Successful payment return
-                                    var oGetExpChk = new Protean.PayPalAPI.GetExpressCheckoutDetailsRequestType();
-                                    oGetExpChk.Token = myWeb.moRequest["token"];
-                                    oGetExpChk.Version = "63.0";
-
-                                    var oGetExpChkReq = new Protean.PayPalAPI.GetExpressCheckoutDetailsReq();
-                                    oGetExpChkReq.GetExpressCheckoutDetailsRequest = oGetExpChk;
-
-                                    // Get the Transaction Details back
-                                    var oExpChkResponse = new Protean.PayPalAPI.GetExpressCheckoutDetailsResponseType();
-                                    oExpChkResponse = ppIface.GetExpressCheckoutDetails(ref ppProfile, oGetExpChkReq);
-
-                                    // Confirm the Sale
-                                    var oDoExpChkReqType = new Protean.PayPalAPI.DoExpressCheckoutPaymentRequestType();
-                                    oDoExpChkReqType.Version = "63.0";
-
-                                    var oDoExpChkReq = new Protean.PayPalAPI.DoExpressCheckoutPaymentReq();
-                                    oDoExpChkReq.DoExpressCheckoutPaymentRequest = oDoExpChkReqType;
-
-                                    var oDoExpChkDetails = new Protean.PayPalAPI.DoExpressCheckoutPaymentRequestDetailsType();
-                                    oDoExpChkReqType.DoExpressCheckoutPaymentRequestDetails = oDoExpChkDetails;
-                                    oDoExpChkDetails.Token = myWeb.moRequest["token"];
-
-                                    oDoExpChkDetails.PayerID = oExpChkResponse.GetExpressCheckoutDetailsResponseDetails.PayerInfo.PayerID;
-                                    oDoExpChkDetails.PaymentAction = getPPPaymentActionFromCode(Conversions.ToString(oDictOpt["PaymentAction"]));
-                                    oDoExpChkDetails.PaymentDetails = oExpChkResponse.GetExpressCheckoutDetailsResponseDetails.PaymentDetails;
-
-                                    var oDoExpChkResponse = new Protean.PayPalAPI.DoExpressCheckoutPaymentResponseType();
-
-                                    // TS added following up on this http://stackoverflow.com/questions/15817839/you-do-not-have-permissions-to-make-this-api-call-using-soap-for-dodirectpayment
-                                    // ppProfile.Credentials.Subject = Replace(oDictOpt("accountId"), "_api1", "@")
-
-                                    try
-                                    {
-
-                                        oDoExpChkResponse = ppIface.DoExpressCheckoutPayment(ref ppProfile2, oDoExpChkReq);
-
-                                        switch (oDoExpChkResponse.Ack)
-                                        {
-                                            case Protean.PayPalAPI.AckCodeType.Success:
-                                                {
-                                                    bIsValid = true;
-
-                                                    err_msg = "Paypal Payment Completed - Ref: " + mnCartId.ToString();
-                                                    ppXform.moPageXML = moPageXml;
-                                                    ppXform.NewFrm("PayForm");
-                                                    ppXform.valid = bIsValid;
-
-                                                    string cPaymentRef = Convert.ToString(oDoExpChkResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].TransactionID); // PayPal transaction id
-                                                    string cPayerId = Convert.ToString(oExpChkResponse.GetExpressCheckoutDetailsResponseDetails.PayerInfo.PayerID); // PayPal Us
-
-                                                    // Dim cPaymentRef As String = oExpChkResponse.GetExpressCheckoutDetailsResponseDetails.PaymentInfo. 'PayPal User
-
-
-                                                    var oInstanceElmt = ppXform.Instance.OwnerDocument.CreateElement("instance");
-                                                    var oPayPalElmt = ppXform.Instance.OwnerDocument.CreateElement("PayPalExpress");
-                                                    oInstanceElmt.AppendChild(oPayPalElmt);
-                                                    // Add stuff we want to save here...
-                                                    oPayPalElmt.SetAttribute("payerId", cPayerId);
-
-                                                    ppXform.Instance = oInstanceElmt;
-
-                                                    // update delivery address
-
-                                                    // update notes ??
-                                                    err_msg = "Notes:" + oExpChkResponse.GetExpressCheckoutDetailsResponseDetails.Note;
-
-
-                                                    savedPaymentId = savePayment((long)myWeb.mnUserId, "PayPalExpress", cPaymentRef, Conversions.ToString(oDictOpt["accountId"]), (XmlElement)ppXform.Instance.FirstChild, DateTime.Now, false, mnPaymentAmount);
-                                                    break;
-                                                }
-
-                                            default:
-                                                {
-                                                    foreach (var ppError in oDoExpChkResponse.Errors)
-                                                    {
-                                                        err_msg = err_msg + " Error:" + ppError.ErrorCode;
-                                                        err_msg = err_msg + " Msg:" + ppError.LongMessage;
-                                                    }
-                                                    ppXform.moPageXML = moPageXml;
-                                                    ppXform.NewFrm("PayForm");
-                                                    ppXform.valid = false;
-                                                    XmlNode argoNode = (XmlNode)ppXform.moXformElmt;
-                                                    ppXform.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, err_msg);
-                                                    ppXform.moXformElmt = (XmlElement)argoNode;
-                                                    break;
-                                                }
-
-                                        }
-                                    }
-
-                                    catch (Exception ex)
-                                    {
-                                        err_msg = err_msg + "Could not Connect to PayPal at this time please use an alternative payment method.";
-                                        err_msg = err_msg + " Error:" + ex.Message;
-
-                                        ppXform.moPageXML = moPageXml;
-                                        ppXform.NewFrm("PayForm");
-                                        ppXform.valid = false;
-                                        XmlNode argoNode1 = (XmlNode)ppXform.moXformElmt;
-                                        ppXform.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, "Could not Connect to PayPal at this time please use an alternative payment method.");
-                                        ppXform.moXformElmt = (XmlElement)argoNode1;
-
-                                    }
-
-                                    break;
-                                }
-
-                            default:
-                                {
-
-                                    var oSetExpChk = new Protean.PayPalAPI.SetExpressCheckoutRequestType();
-                                    oSetExpChk.Version = "63.0";
-
-                                    var oSetExpChkDetails = new Protean.PayPalAPI.SetExpressCheckoutRequestDetailsType();
-                                    oSetExpChk.SetExpressCheckoutRequestDetails = oSetExpChkDetails;
-
-                                    string cCurrentURL = sSubmitPath;
-                                    oSetExpChkDetails.ReturnURL = cCurrentURL + "&ppCmd=return"; // Return to pay selector page 
-                                    oSetExpChkDetails.CancelURL = cCurrentURL + "&ppCmd=cancel"; // Return to pay selector 
-                                                                                                 // oSetExpChkDetails.CallbackURL = cCurrentURL & "&ppCmd=callback" 'Return to pay selector 
-
-                                    oSetExpChkDetails.ReqConfirmShipping = Conversions.ToString(Interaction.IIf(Conversions.ToInteger(oDictOpt["ReqConfirmShipping"]) == 0, "0", "1"));
-                                    oSetExpChkDetails.NoShipping = Conversions.ToString(Interaction.IIf(Conversions.ToInteger(oDictOpt["NoShipping"]) == 0, "0", "1"));
-                                    if (Strings.LCase(moCartConfig["NoDeliveryAddress"]) == "on")
-                                    {
-                                        oSetExpChkDetails.NoShipping = "1";
-                                    }
-                                    oSetExpChkDetails.AllowNote = Conversions.ToString(Interaction.IIf(Conversions.ToInteger(oDictOpt["AllowNote"]) == 0, "0", "1"));
-                                    oSetExpChkDetails.AddressOverride = Conversions.ToString(Interaction.IIf(Conversions.ToInteger(oDictOpt["AddressOverride"]) == 0, "0", "1"));
-                                    oSetExpChkDetails.LocaleCode = Conversions.ToString(oDictOpt["LocaleCode"]);
-                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDictOpt["PageStyle"], "", false)))
-                                    {
-                                        oSetExpChkDetails.PageStyle = Conversions.ToString(oDictOpt["PageStyle"]);
-                                    }
-                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDictOpt["cpp-header-image"], "", false)))
-                                    {
-                                        oSetExpChkDetails.cppheaderimage = Conversions.ToString(oDictOpt["cpp-header-image"]);
-                                    }
-                                    // deprecated TMS 05/09/18
-                                    // oSetExpChkDetails.cppheaderbordercolor = Replace(oDictOpt("cpp-header-border-color"), "#", "")
-                                    // oSetExpChkDetails.cppheaderbackcolor = Replace(oDictOpt("cpp-header-back-color"), "#", "")
-                                    // oSetExpChkDetails.cpppayflowcolor = Replace(oDictOpt("cpp-payflow-color"), "#", "")
-                                    oSetExpChkDetails.PaymentAction = getPPPaymentActionFromCode(Conversions.ToString(oDictOpt["PaymentAction"]));
-                                    string sType = "Billing Address";
-                                    XmlElement oCartAdd = (XmlElement)oOrderElmt.SelectSingleNode("Contact[@type='" + sType + "']");
-                                    oSetExpChkDetails.BuyerEmail = oCartAdd.SelectSingleNode("Email").InnerText;
-                                    oSetExpChkDetails.SolutionType = Protean.PayPalAPI.SolutionTypeType.Mark;
-                                    oSetExpChkDetails.LandingPage = Protean.PayPalAPI.LandingPageType.Login;
-                                    oSetExpChkDetails.ChannelType = Protean.PayPalAPI.ChannelType.Merchant;
-
-                                    if (!string.IsNullOrEmpty(moCartConfig["MerchantName"]))
-                                    {
-                                        oSetExpChkDetails.BrandName = Strings.Left(moCartConfig["MerchantName"], 127);
-                                    }
-
-                                    oSetExpChkDetails.CallbackTimeout = 3.ToString();
-
-                                    var ppPaymentDetails = new Protean.PayPalAPI.PaymentDetailsType[2];
-                                    oSetExpChkDetails.PaymentDetails = ppPaymentDetails;
-                                    oSetExpChkDetails.PaymentDetails[0] = new Protean.PayPalAPI.PaymentDetailsType();
-
-                                    // OrderTotal
-                                    var oTotalAmount = new Protean.PayPalAPI.BasicAmountType();
-                                    oTotalAmount.currencyID = getPPCurencyFromCode(mcCurrency);
-                                    oTotalAmount.Value = mnPaymentAmount.ToString();
-                                    oSetExpChkDetails.PaymentDetails[0].OrderTotal = oTotalAmount;
-
-                                    var oMaxAmount = new Protean.PayPalAPI.BasicAmountType();
-                                    oMaxAmount.currencyID = getPPCurencyFromCode(mcCurrency);
-                                    oMaxAmount.Value = (mnPaymentAmount * 2d).ToString();
-                                    oSetExpChkDetails.MaxAmount = oMaxAmount;
-
-                                    decimal nShippingCost = Conversions.ToDecimal(oOrderElmt.GetAttribute("shippingCost"));
-                                    decimal nVatCost = Round(oOrderElmt.GetAttribute("vatAmt"), bForceRoundup: true);
-
-                                    if (Conversions.ToBoolean(Operators.AndObject(Conversions.ToDouble(oOrderElmt.GetAttribute("vatRate")) > 0d, Operators.ConditionalCompareObjectEqual((oDictOpt["VATonShipping"]), "on", false))))
-                                    {
-                                        decimal nShippingVat = Round((double)nShippingCost * (Conversions.ToDouble(oOrderElmt.GetAttribute("vatRate")) / 100d), bForceRoundup: true);
-                                        nVatCost = nVatCost - nShippingVat;
-                                        nShippingCost = nShippingCost + nShippingVat;
-                                    }
-
-                                    // Item Total
-                                    var oItemTotal = new Protean.PayPalAPI.BasicAmountType();
-                                    oItemTotal.currencyID = getPPCurencyFromCode(mcCurrency);
-                                    oItemTotal.Value = Strings.FormatNumber(mnPaymentAmount - (double)nVatCost - (double)nShippingCost, 2);
-                                    oSetExpChkDetails.PaymentDetails[0].ItemTotal = oItemTotal;
-                                    // Tax Total
-                                    var oTaxTotal = new Protean.PayPalAPI.BasicAmountType();
-                                    oTaxTotal.currencyID = getPPCurencyFromCode(mcCurrency);
-                                    oTaxTotal.Value = nVatCost.ToString();
-                                    oSetExpChkDetails.PaymentDetails[0].TaxTotal = oTaxTotal;
-                                    // Shipping Total
-                                    var oShippingTotal = new Protean.PayPalAPI.BasicAmountType();
-                                    oShippingTotal.currencyID = getPPCurencyFromCode(mcCurrency);
-                                    oShippingTotal.Value = nShippingCost.ToString();
-                                    oSetExpChkDetails.PaymentDetails[0].ShippingTotal = oShippingTotal;
-
-                                    var oShippingOptions = new Protean.PayPalAPI.ShippingOptionType[1];
-                                    var oShippingOption = new Protean.PayPalAPI.ShippingOptionType();
-                                    oShippingOption.ShippingOptionIsDefault = Conversions.ToString(true);
-                                    oShippingOption.ShippingOptionName = Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(oOrderElmt.GetAttribute("shippingDesc")), "Shipping Charge", oOrderElmt.GetAttribute("shippingDesc")));
-                                    oShippingOption.ShippingOptionAmount = oShippingTotal;
-                                    oShippingOptions[0] = oShippingOption;
-                                    oSetExpChkDetails.FlatRateShippingOptions = oShippingOptions;
-
-                                    var RandGen = new Random();
-                                    oSetExpChkDetails.PaymentDetails[0].InvoiceID = moCartConfig["OrderNoPrefix"] + mnCartId.ToString() + "-" + RandGen.Next(1000, 9999).ToString();
-                                    // oSetExpChkDetails.PaymentDetails(0).InvoiceID = moCartConfig("OrderNoPrefix") & CStr(mnCartId)
-
-                                    var oDeliveryAddress = new Protean.PayPalAPI.AddressType();
-                                    sType = "Delivery Address";
-                                    oCartAdd = (XmlElement)oOrderElmt.SelectSingleNode("Contact[@type='" + sType + "']");
-                                    oDeliveryAddress.Street1 = Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(oCartAdd.SelectSingleNode("Company").InnerText), oCartAdd.SelectSingleNode("Street").InnerText, oCartAdd.SelectSingleNode("Company").InnerText));
-                                    if (string.IsNullOrEmpty(oCartAdd.SelectSingleNode("Company").InnerText))
-                                    {
-                                        oDeliveryAddress.Street2 = oCartAdd.SelectSingleNode("Street").InnerText;
-                                    }
-                                    oDeliveryAddress.CityName = oCartAdd.SelectSingleNode("City").InnerText;
-                                    oDeliveryAddress.StateOrProvince = oCartAdd.SelectSingleNode("State").InnerText;
-                                    oDeliveryAddress.PostalCode = oCartAdd.SelectSingleNode("PostalCode").InnerText;
-                                    string localgetCountryISO2Code() { string argsCountry4 = oCartAdd.SelectSingleNode("Country").InnerText; var ret = getCountryISO2Code(ref argsCountry4); oCartAdd.SelectSingleNode("Country").InnerText = argsCountry4; return ret; }
-
-                                    oDeliveryAddress.Country = getPPCountryFromCode(localgetCountryISO2Code());
-                                    oDeliveryAddress.CountryName = oCartAdd.SelectSingleNode("Country").InnerText;
-                                    oDeliveryAddress.CountrySpecified = true;
-
-                                    oSetExpChkDetails.PaymentDetails[0].ShipToAddress = oDeliveryAddress;
-                                    int nItemCount = oOrderElmt.SelectNodes("descendant-or-self::Item").Count;
-
-                                    if (mcPaymentType == "deposit")
-                                    {
-                                        nItemCount = nItemCount + 1;
-                                    }
-
-                                    var oItemGroup = new Protean.PayPalAPI.PaymentDetailsItemType[nItemCount];
-                                    int i = 0;
-
-                                    foreach (XmlElement oItemElmt in oOrderElmt.SelectNodes("Item"))
-                                    {
-                                        var oItem = new Protean.PayPalAPI.PaymentDetailsItemType();
-
-                                        oItem.Name = oItemElmt.GetAttribute("quantity") + " x " + Strings.Left(oItemElmt.SelectSingleNode("Name").InnerText, 120);
-                                        // oItem.Description = Left(oItemElmt.SelectSingleNode("Body").InnerText, 127)
-                                        // weight
-                                        var oItemWeight = new Protean.PayPalAPI.MeasureType();
-                                        oItemWeight.unit = "kg";
-                                        oItemWeight.Value = Conversions.ToDouble(oItemElmt.GetAttribute("weight"));
-                                        oItem.ItemWeight = oItemWeight;
-                                        oItem.Quantity = 1.ToString(); // oItemElmt.GetAttribute("quantity")
-                                                                       // itemtax
-                                        var oItemTax = new Protean.PayPalAPI.BasicAmountType();
-                                        oItemTax.currencyID = getPPCurencyFromCode(mcCurrency);
-                                        // oItemTax.Value = FormatNumber(CDbl("0" & oItemElmt.GetAttribute("itemTax")) / oItemElmt.GetAttribute("quantity"), 2)
-                                        oItemTax.Value = 0.ToString(); // FormatNumber(CDbl("0" & oItemElmt.GetAttribute("itemTax")), 2)
-                                                                       // oItemTax.Value = FormatNumber(CDbl("0" & oItemElmt.GetAttribute("itemTax")), 2) / oItemElmt.GetAttribute("quantity")
-                                        oItem.Tax = oItemTax;
-                                        // itemAmount
-                                        // Dim nItemPlusTax As Double = FormatNumber(oItemElmt.GetAttribute("price"), 2) + (CDbl("0" & oItemElmt.GetAttribute("itemTax")) / oItemElmt.GetAttribute("quantity"))
-                                        var oItemAmount = new Protean.PayPalAPI.BasicAmountType();
-                                        oItemAmount.currencyID = getPPCurencyFromCode(mcCurrency);
-                                        double linetotal = Conversions.ToDouble(oItemElmt.GetAttribute("itemTotal"));
-                                        // If oItemTax.Value > 0 Then
-                                        // linetotal = linetotal - oItemTax.Value
-                                        // End If
-                                        oItemAmount.Value = Strings.FormatNumber(linetotal, 2);
-                                        oItem.Amount = oItemAmount;
-                                        oItemGroup[i] = oItem;
-                                        i = i + 1;
-                                        // loop through and add any options
-                                        foreach (XmlElement oOptElmt in oItemElmt.SelectNodes("Item"))
-                                        {
-                                            var oOptItem = new Protean.PayPalAPI.PaymentDetailsItemType();
-                                            oOptItem.Quantity = oItemElmt.GetAttribute("quantity");
-                                            var oOptItemAmount = new Protean.PayPalAPI.BasicAmountType();
-                                            oOptItemAmount.currencyID = getPPCurencyFromCode(mcCurrency);
-                                            oOptItemAmount.Value = Strings.FormatNumber(oOptElmt.GetAttribute("price"), 2);
-                                            oOptItem.Amount = oOptItemAmount;
-                                            oItemGroup[i] = oOptItem;
-                                            i = i + 1;
-                                        }
-
-                                    }
-
-                                    if (mcPaymentType == "deposit")
-                                    {
-
-                                        var oDiscountItem = new Protean.PayPalAPI.PaymentDetailsItemType();
-                                        oDiscountItem.Name = "Final payment to be made later";
-                                        oDiscountItem.Quantity = "1";
-                                        // itemtax
-                                        var oItemTax = new Protean.PayPalAPI.BasicAmountType();
-                                        oItemTax.currencyID = getPPCurencyFromCode(mcCurrency);
-                                        oItemTax.Value = "0";
-                                        oDiscountItem.Tax = oItemTax;
-                                        // itemAmount
-                                        // Dim nItemPlusTax As Double = FormatNumber(oItemElmt.GetAttribute("price"), 2) + (CDbl("0" & oItemElmt.GetAttribute("itemTax")) / oItemElmt.GetAttribute("quantity"))
-                                        var oItemAmount = new Protean.PayPalAPI.BasicAmountType();
-                                        oItemAmount.currencyID = getPPCurencyFromCode(mcCurrency);
-                                        oItemAmount.Value = (Conversions.ToDouble(Strings.FormatNumber(mnPaymentMaxAmount - mnPaymentAmount, 2)) * -1).ToString();
-                                        oDiscountItem.Amount = oItemAmount;
-                                        oItemGroup[i] = oDiscountItem;
-
-                                    }
-
-                                    oSetExpChkDetails.PaymentDetails[0].PaymentDetailsItem = oItemGroup;
-                                    var oSetExpChkReq = new Protean.PayPalAPI.SetExpressCheckoutReq();
-                                    oSetExpChkReq.SetExpressCheckoutRequest = oSetExpChk;
-
-                                    Protean.PayPalAPI.SetExpressCheckoutResponseType oExpChkResponse;
-                                    oExpChkResponse = ppIface.SetExpressCheckout(ref ppProfile, oSetExpChkReq);
-
-                                    string redirectUrl;
-                                    redirectUrl = "https://" + host + "/cgi-bin/webscr?cmd=_express-checkout" + "&token=" + oExpChkResponse.Token;
-
-                                    ppXform.moPageXML = moPageXml;
-                                    ppXform.NewFrm("PayForm");
-                                    ppXform.valid = false;
-
-                                    switch (oExpChkResponse.Ack)
-                                    {
-                                        case Protean.PayPalAPI.AckCodeType.Success:
-                                        case Protean.PayPalAPI.AckCodeType.SuccessWithWarning:
-                                            {
-                                                myWeb.msRedirectOnEnd = redirectUrl;
-                                                err_msg = "Redirect to - " + redirectUrl;
-                                                break;
-                                            }
-
-                                        default:
-                                            {
-                                                foreach (var ppError in oExpChkResponse.Errors)
-                                                {
-                                                    err_msg = err_msg + " Error:" + ppError.ErrorCode;
-                                                    err_msg = err_msg + " Msg:" + ppError.LongMessage;
-                                                }
-                                                XmlNode argoNode2 = (XmlNode)ppXform.moXformElmt;
-                                                ppXform.addNote(ref argoNode2, Protean.xForm.noteTypes.Alert, err_msg);
-                                                ppXform.moXformElmt = (XmlElement)argoNode2;
-                                                break;
-                                            }
-                                    }
-
-                                    break;
-                                }
-
-                        }
-
-
-                        // Update Seller Notes:
-
-                        sSql = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
-                        DataSet oDs;
-                        oDs = modbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
-                        foreach (DataRow oRow in oDs.Tables["Order"].Rows)
-                        {
-                            if (bIsValid)
-                            {
-                                oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Received) "), Constants.vbLf), "comment: "), err_msg);
-                            }
-                            else if (err_msg.StartsWith("Redirect"))
-                            {
-                                oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (User Redirected)"), Constants.vbLf), "comment: "), err_msg);
-                            }
-                            else
-                            {
-                                oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Failed) "), Constants.vbLf), "comment: "), err_msg);
-                            }
-                        }
-                        modbHelper.updateDataset(ref oDs, "Order");
-
-                        return ppXform;
-                    }
-
-                    catch (Exception ex)
-                    {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "payPayPalExpress", ex, "", cProcessInfo, gbDebug);
-                        return (Cms.xForm)null;
-                    }
-                }
-
-                public Protean.PayPalAPI.CountryCodeType getPPCountryFromCode(string CountryCode)
-                {
-
-                    var MyEnumVal = default(Protean.PayPalAPI.CountryCodeType);
-
-                    MyEnumVal = (Protean.PayPalAPI.CountryCodeType)Conversions.ToInteger(System.ComponentModel.TypeDescriptor.GetConverter(MyEnumVal).ConvertFrom(CountryCode));
-
-                    return MyEnumVal;
-
-                }
-
-                public Protean.PayPalAPI.CurrencyCodeType getPPCurencyFromCode(string CurrencyCode)
-                {
-
-                    var MyEnumVal = default(Protean.PayPalAPI.CurrencyCodeType);
-
-                    MyEnumVal = (Protean.PayPalAPI.CurrencyCodeType)Conversions.ToInteger(System.ComponentModel.TypeDescriptor.GetConverter(MyEnumVal).ConvertFrom(CurrencyCode));
-
-                    return MyEnumVal;
-
-                }
-
-                private Protean.PayPalAPI.PaymentActionCodeType getPPPaymentActionFromCode(string PaymentActionCode)
-                {
-
-                    var MyEnumVal = default(Protean.PayPalAPI.PaymentActionCodeType);
-
-                    MyEnumVal = (Protean.PayPalAPI.PaymentActionCodeType)Conversions.ToInteger(System.ComponentModel.TypeDescriptor.GetConverter(MyEnumVal).ConvertFrom(PaymentActionCode));
-
-                    return MyEnumVal;
-
-                }
+                //public Cms.xForm payPayPalExpress(ref XmlElement oOrderElmt, string sSubmitPath, string sProfile = "")
+                //{
+                //    myWeb.PerfMon.Log("PaymentProviders", "payPayPalExpress");
+                //    string sSql;
+
+                //    var ppXform = new Cms.xForm(ref myWeb.msException);
+
+                //    Cms.xForm Xform3dSec = (Cms.xForm)null;
+
+                //    var bIsValid = default(bool);
+                //    string err_msg = "";
+                //    string err_msg_log = "";
+                //    string sProcessInfo = "";
+                //    string cResponse = "";
+
+                //    var oDictOpt = new Hashtable();
+
+                //    bool bCv2 = false;
+                //    bool b3DSecure = false;
+                //    bool b3DAuthorised = false;
+                //    string sRedirectURL = "";
+                //    string sPaymentRef = "";
+
+                //    string cProcessInfo = "payPayPalExpress";
+
+                //    // Get the payment options into a hashtable
+                //    XmlNode oSecpayCfg;
+                //    bool bSavePayment = false;
+                //    bool bAllowSavePayment = false;
+                //    string host = "www.paypal.com";
+
+                //    try
+                //    {
+
+
+
+                //        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                //        if (!string.IsNullOrEmpty(sProfile))
+                //        {
+                //            oSecpayCfg = moPaymentCfg.SelectSingleNode("provider[@name='PayPalExpress' and @profile='" + sProfile + "']");
+                //        }
+                //        else
+                //        {
+                //            oSecpayCfg = moPaymentCfg.SelectSingleNode("provider[@name='PayPalExpress']");
+                //        }
+
+                //        // Get the payment options
+                //        // oSecpayCfg = moPaymentCfg.SelectSingleNode("provider[@name='SecPay']")
+                //        oDictOpt = xmlToHashTable(oSecpayCfg, "value");
+
+                //        switch (oDictOpt["opperationMode"])
+                //        {
+                //            case "true":
+                //                {
+                //                    nTransactionMode = TransactionMode.Test;
+                //                    break;
+                //                }
+                //            case "false":
+                //                {
+                //                    nTransactionMode = TransactionMode.Fail;
+                //                    break;
+                //                }
+                //            case "live":
+                //                {
+                //                    nTransactionMode = TransactionMode.Live;
+                //                    break;
+                //                }
+                //        }
+
+                //        // override the currency
+                //        if (oDictOpt.ContainsKey("currency"))
+                //        {
+                //            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDictOpt["currency"], "", false)))
+                //            {
+                //                mcCurrency = Conversions.ToString(oDictOpt["currency"]);
+                //            }
+                //        }
+
+                //        // Dim ppRequest As New Protean.PayPalAPI.GetExpressCheckoutDetailsRequestType()
+                //        // ppRequest.Version = "63.0"
+
+                //        var ppProfile = new Protean.PayPalAPI.CustomSecurityHeaderType();
+                //        ppProfile.Credentials = new Protean.PayPalAPI.UserIdPasswordType();
+                //        ppProfile.Credentials.Username = Conversions.ToString(oDictOpt["accountId"]);
+                //        ppProfile.Credentials.Password = Conversions.ToString(oDictOpt["accountPassword"]);
+                //        ppProfile.Credentials.Signature = Conversions.ToString(oDictOpt["accountSignature"]);
+
+                //        var ppProfile2 = new Protean.PayPalAPI.CustomSecurityHeaderType();
+                //        ppProfile2.Credentials = new Protean.PayPalAPI.UserIdPasswordType();
+                //        ppProfile2.Credentials.Username = Conversions.ToString(oDictOpt["accountId"]);
+                //        ppProfile2.Credentials.Password = Conversions.ToString(oDictOpt["accountPassword"]);
+                //        ppProfile2.Credentials.Signature = Conversions.ToString(oDictOpt["accountSignature"]);
+
+                //        string endpointAddress = "https://api-aa-3t.paypal.com/2.0/";
+                //        if (nTransactionMode == TransactionMode.Test)
+                //        {
+                //            endpointAddress = "https://api-aa-3t.sandbox.paypal.com/2.0/";
+                //            host = "www.sandbox.paypal.com";
+                //        }
+                //        var ppEndpointAddress = new System.ServiceModel.EndpointAddress(endpointAddress);
+
+                //        var ppBinding = new System.ServiceModel.BasicHttpBinding(System.ServiceModel.BasicHttpSecurityMode.Transport);
+                //        ppBinding.MaxBufferSize = 65536;
+                //        ppBinding.CloseTimeout = new TimeSpan(0, 2, 0);
+                //        ppBinding.OpenTimeout = new TimeSpan(0, 2, 0);
+                //        ppBinding.ReceiveTimeout = new TimeSpan(0, 10, 0);
+                //        ppBinding.SendTimeout = new TimeSpan(0, 2, 0);
+                //        ppBinding.AllowCookies = false;
+                //        ppBinding.BypassProxyOnLocal = false;
+                //        ppBinding.HostNameComparisonMode = System.ServiceModel.HostNameComparisonMode.StrongWildcard;
+                //        ppBinding.MaxBufferSize = 65536;
+                //        ppBinding.MaxBufferPoolSize = 524288L;
+                //        ppBinding.MaxReceivedMessageSize = 65536L;
+                //        ppBinding.MessageEncoding = System.ServiceModel.WSMessageEncoding.Text;
+                //        ppBinding.TextEncoding = Encoding.UTF8;
+                //        ppBinding.TransferMode = System.ServiceModel.TransferMode.Buffered;
+                //        ppBinding.UseDefaultWebProxy = true;
+
+                //        ppBinding.ReaderQuotas.MaxDepth = 32;
+                //        ppBinding.ReaderQuotas.MaxStringContentLength = 8192;
+                //        ppBinding.ReaderQuotas.MaxArrayLength = 16384;
+                //        ppBinding.ReaderQuotas.MaxBytesPerRead = 4096;
+                //        ppBinding.ReaderQuotas.MaxNameTableCharCount = 65536;
+
+                //        var ppIface = new Protean.PayPalAPI.PayPalAPIAAInterfaceClient(ppBinding, ppEndpointAddress);
+
+                //        // Load the Xform
+
+                //        switch (myWeb.moRequest["ppCmd"] ?? "")
+                //        {
+                //            case "callback":
+                //            case "return":
+                //                {
+
+                //                    // Case for Successful payment return
+                //                    var oGetExpChk = new Protean.PayPalAPI.GetExpressCheckoutDetailsRequestType();
+                //                    oGetExpChk.Token = myWeb.moRequest["token"];
+                //                    oGetExpChk.Version = "63.0";
+
+                //                    var oGetExpChkReq = new Protean.PayPalAPI.GetExpressCheckoutDetailsReq();
+                //                    oGetExpChkReq.GetExpressCheckoutDetailsRequest = oGetExpChk;
+
+                //                    // Get the Transaction Details back
+                //                    var oExpChkResponse = new Protean.PayPalAPI.GetExpressCheckoutDetailsResponseType();
+                //                    oExpChkResponse = ppIface.GetExpressCheckoutDetails(ref ppProfile, oGetExpChkReq);
+
+                //                    // Confirm the Sale
+                //                    var oDoExpChkReqType = new Protean.PayPalAPI.DoExpressCheckoutPaymentRequestType();
+                //                    oDoExpChkReqType.Version = "63.0";
+
+                //                    var oDoExpChkReq = new Protean.PayPalAPI.DoExpressCheckoutPaymentReq();
+                //                    oDoExpChkReq.DoExpressCheckoutPaymentRequest = oDoExpChkReqType;
+
+                //                    var oDoExpChkDetails = new Protean.PayPalAPI.DoExpressCheckoutPaymentRequestDetailsType();
+                //                    oDoExpChkReqType.DoExpressCheckoutPaymentRequestDetails = oDoExpChkDetails;
+                //                    oDoExpChkDetails.Token = myWeb.moRequest["token"];
+
+                //                    oDoExpChkDetails.PayerID = oExpChkResponse.GetExpressCheckoutDetailsResponseDetails.PayerInfo.PayerID;
+                //                    oDoExpChkDetails.PaymentAction = getPPPaymentActionFromCode(Conversions.ToString(oDictOpt["PaymentAction"]));
+                //                    oDoExpChkDetails.PaymentDetails = oExpChkResponse.GetExpressCheckoutDetailsResponseDetails.PaymentDetails;
+
+                //                    var oDoExpChkResponse = new Protean.PayPalAPI.DoExpressCheckoutPaymentResponseType();
+
+                //                    // TS added following up on this http://stackoverflow.com/questions/15817839/you-do-not-have-permissions-to-make-this-api-call-using-soap-for-dodirectpayment
+                //                    // ppProfile.Credentials.Subject = Replace(oDictOpt("accountId"), "_api1", "@")
+
+                //                    try
+                //                    {
+
+                //                        oDoExpChkResponse = ppIface.DoExpressCheckoutPayment(ref ppProfile2, oDoExpChkReq);
+
+                //                        switch (oDoExpChkResponse.Ack)
+                //                        {
+                //                            case Protean.PayPalAPI.AckCodeType.Success:
+                //                                {
+                //                                    bIsValid = true;
+
+                //                                    err_msg = "Paypal Payment Completed - Ref: " + mnCartId.ToString();
+                //                                    ppXform.moPageXML = moPageXml;
+                //                                    ppXform.NewFrm("PayForm");
+                //                                    ppXform.valid = bIsValid;
+
+                //                                    string cPaymentRef = Convert.ToString(oDoExpChkResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].TransactionID); // PayPal transaction id
+                //                                    string cPayerId = Convert.ToString(oExpChkResponse.GetExpressCheckoutDetailsResponseDetails.PayerInfo.PayerID); // PayPal Us
+
+                //                                    // Dim cPaymentRef As String = oExpChkResponse.GetExpressCheckoutDetailsResponseDetails.PaymentInfo. 'PayPal User
+
+
+                //                                    var oInstanceElmt = ppXform.Instance.OwnerDocument.CreateElement("instance");
+                //                                    var oPayPalElmt = ppXform.Instance.OwnerDocument.CreateElement("PayPalExpress");
+                //                                    oInstanceElmt.AppendChild(oPayPalElmt);
+                //                                    // Add stuff we want to save here...
+                //                                    oPayPalElmt.SetAttribute("payerId", cPayerId);
+
+                //                                    ppXform.Instance = oInstanceElmt;
+
+                //                                    // update delivery address
+
+                //                                    // update notes ??
+                //                                    err_msg = "Notes:" + oExpChkResponse.GetExpressCheckoutDetailsResponseDetails.Note;
+
+
+                //                                    savedPaymentId = savePayment((long)myWeb.mnUserId, "PayPalExpress", cPaymentRef, Conversions.ToString(oDictOpt["accountId"]), (XmlElement)ppXform.Instance.FirstChild, DateTime.Now, false, mnPaymentAmount);
+                //                                    break;
+                //                                }
+
+                //                            default:
+                //                                {
+                //                                    foreach (var ppError in oDoExpChkResponse.Errors)
+                //                                    {
+                //                                        err_msg = err_msg + " Error:" + ppError.ErrorCode;
+                //                                        err_msg = err_msg + " Msg:" + ppError.LongMessage;
+                //                                    }
+                //                                    ppXform.moPageXML = moPageXml;
+                //                                    ppXform.NewFrm("PayForm");
+                //                                    ppXform.valid = false;
+                //                                    XmlNode argoNode = (XmlNode)ppXform.moXformElmt;
+                //                                    ppXform.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, err_msg);
+                //                                    ppXform.moXformElmt = (XmlElement)argoNode;
+                //                                    break;
+                //                                }
+
+                //                        }
+                //                    }
+
+                //                    catch (Exception ex)
+                //                    {
+                //                        err_msg = err_msg + "Could not Connect to PayPal at this time please use an alternative payment method.";
+                //                        err_msg = err_msg + " Error:" + ex.Message;
+
+                //                        ppXform.moPageXML = moPageXml;
+                //                        ppXform.NewFrm("PayForm");
+                //                        ppXform.valid = false;
+                //                        XmlNode argoNode1 = (XmlNode)ppXform.moXformElmt;
+                //                        ppXform.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, "Could not Connect to PayPal at this time please use an alternative payment method.");
+                //                        ppXform.moXformElmt = (XmlElement)argoNode1;
+
+                //                    }
+
+                //                    break;
+                //                }
+
+                //            default:
+                //                {
+
+                //                    var oSetExpChk = new Protean.PayPalAPI.SetExpressCheckoutRequestType();
+                //                    oSetExpChk.Version = "63.0";
+
+                //                    var oSetExpChkDetails = new Protean.PayPalAPI.SetExpressCheckoutRequestDetailsType();
+                //                    oSetExpChk.SetExpressCheckoutRequestDetails = oSetExpChkDetails;
+
+                //                    string cCurrentURL = sSubmitPath;
+                //                    oSetExpChkDetails.ReturnURL = cCurrentURL + "&ppCmd=return"; // Return to pay selector page 
+                //                    oSetExpChkDetails.CancelURL = cCurrentURL + "&ppCmd=cancel"; // Return to pay selector 
+                //                                                                                 // oSetExpChkDetails.CallbackURL = cCurrentURL & "&ppCmd=callback" 'Return to pay selector 
+
+                //                    oSetExpChkDetails.ReqConfirmShipping = Conversions.ToString(Interaction.IIf(Conversions.ToInteger(oDictOpt["ReqConfirmShipping"]) == 0, "0", "1"));
+                //                    oSetExpChkDetails.NoShipping = Conversions.ToString(Interaction.IIf(Conversions.ToInteger(oDictOpt["NoShipping"]) == 0, "0", "1"));
+                //                    if (Strings.LCase(moCartConfig["NoDeliveryAddress"]) == "on")
+                //                    {
+                //                        oSetExpChkDetails.NoShipping = "1";
+                //                    }
+                //                    oSetExpChkDetails.AllowNote = Conversions.ToString(Interaction.IIf(Conversions.ToInteger(oDictOpt["AllowNote"]) == 0, "0", "1"));
+                //                    oSetExpChkDetails.AddressOverride = Conversions.ToString(Interaction.IIf(Conversions.ToInteger(oDictOpt["AddressOverride"]) == 0, "0", "1"));
+                //                    oSetExpChkDetails.LocaleCode = Conversions.ToString(oDictOpt["LocaleCode"]);
+                //                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDictOpt["PageStyle"], "", false)))
+                //                    {
+                //                        oSetExpChkDetails.PageStyle = Conversions.ToString(oDictOpt["PageStyle"]);
+                //                    }
+                //                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDictOpt["cpp-header-image"], "", false)))
+                //                    {
+                //                        oSetExpChkDetails.cppheaderimage = Conversions.ToString(oDictOpt["cpp-header-image"]);
+                //                    }
+                //                    // deprecated TMS 05/09/18
+                //                    // oSetExpChkDetails.cppheaderbordercolor = Replace(oDictOpt("cpp-header-border-color"), "#", "")
+                //                    // oSetExpChkDetails.cppheaderbackcolor = Replace(oDictOpt("cpp-header-back-color"), "#", "")
+                //                    // oSetExpChkDetails.cpppayflowcolor = Replace(oDictOpt("cpp-payflow-color"), "#", "")
+                //                    oSetExpChkDetails.PaymentAction = getPPPaymentActionFromCode(Conversions.ToString(oDictOpt["PaymentAction"]));
+                //                    string sType = "Billing Address";
+                //                    XmlElement oCartAdd = (XmlElement)oOrderElmt.SelectSingleNode("Contact[@type='" + sType + "']");
+                //                    oSetExpChkDetails.BuyerEmail = oCartAdd.SelectSingleNode("Email").InnerText;
+                //                    oSetExpChkDetails.SolutionType = Protean.PayPalAPI.SolutionTypeType.Mark;
+                //                    oSetExpChkDetails.LandingPage = Protean.PayPalAPI.LandingPageType.Login;
+                //                    oSetExpChkDetails.ChannelType = Protean.PayPalAPI.ChannelType.Merchant;
+
+                //                    if (!string.IsNullOrEmpty(moCartConfig["MerchantName"]))
+                //                    {
+                //                        oSetExpChkDetails.BrandName = Strings.Left(moCartConfig["MerchantName"], 127);
+                //                    }
+
+                //                    oSetExpChkDetails.CallbackTimeout = 3.ToString();
+
+                //                    var ppPaymentDetails = new Protean.PayPalAPI.PaymentDetailsType[2];
+                //                    oSetExpChkDetails.PaymentDetails = ppPaymentDetails;
+                //                    oSetExpChkDetails.PaymentDetails[0] = new Protean.PayPalAPI.PaymentDetailsType();
+
+                //                    // OrderTotal
+                //                    var oTotalAmount = new Protean.PayPalAPI.BasicAmountType();
+                //                    oTotalAmount.currencyID = getPPCurencyFromCode(mcCurrency);
+                //                    oTotalAmount.Value = mnPaymentAmount.ToString();
+                //                    oSetExpChkDetails.PaymentDetails[0].OrderTotal = oTotalAmount;
+
+                //                    var oMaxAmount = new Protean.PayPalAPI.BasicAmountType();
+                //                    oMaxAmount.currencyID = getPPCurencyFromCode(mcCurrency);
+                //                    oMaxAmount.Value = (mnPaymentAmount * 2d).ToString();
+                //                    oSetExpChkDetails.MaxAmount = oMaxAmount;
+
+                //                    decimal nShippingCost = Conversions.ToDecimal(oOrderElmt.GetAttribute("shippingCost"));
+                //                    decimal nVatCost = Round(oOrderElmt.GetAttribute("vatAmt"), bForceRoundup: true);
+
+                //                    if (Conversions.ToBoolean(Operators.AndObject(Conversions.ToDouble(oOrderElmt.GetAttribute("vatRate")) > 0d, Operators.ConditionalCompareObjectEqual((oDictOpt["VATonShipping"]), "on", false))))
+                //                    {
+                //                        decimal nShippingVat = Round((double)nShippingCost * (Conversions.ToDouble(oOrderElmt.GetAttribute("vatRate")) / 100d), bForceRoundup: true);
+                //                        nVatCost = nVatCost - nShippingVat;
+                //                        nShippingCost = nShippingCost + nShippingVat;
+                //                    }
+
+                //                    // Item Total
+                //                    var oItemTotal = new Protean.PayPalAPI.BasicAmountType();
+                //                    oItemTotal.currencyID = getPPCurencyFromCode(mcCurrency);
+                //                    oItemTotal.Value = Strings.FormatNumber(mnPaymentAmount - (double)nVatCost - (double)nShippingCost, 2);
+                //                    oSetExpChkDetails.PaymentDetails[0].ItemTotal = oItemTotal;
+                //                    // Tax Total
+                //                    var oTaxTotal = new Protean.PayPalAPI.BasicAmountType();
+                //                    oTaxTotal.currencyID = getPPCurencyFromCode(mcCurrency);
+                //                    oTaxTotal.Value = nVatCost.ToString();
+                //                    oSetExpChkDetails.PaymentDetails[0].TaxTotal = oTaxTotal;
+                //                    // Shipping Total
+                //                    var oShippingTotal = new Protean.PayPalAPI.BasicAmountType();
+                //                    oShippingTotal.currencyID = getPPCurencyFromCode(mcCurrency);
+                //                    oShippingTotal.Value = nShippingCost.ToString();
+                //                    oSetExpChkDetails.PaymentDetails[0].ShippingTotal = oShippingTotal;
+
+                //                    var oShippingOptions = new Protean.PayPalAPI.ShippingOptionType[1];
+                //                    var oShippingOption = new Protean.PayPalAPI.ShippingOptionType();
+                //                    oShippingOption.ShippingOptionIsDefault = Conversions.ToString(true);
+                //                    oShippingOption.ShippingOptionName = Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(oOrderElmt.GetAttribute("shippingDesc")), "Shipping Charge", oOrderElmt.GetAttribute("shippingDesc")));
+                //                    oShippingOption.ShippingOptionAmount = oShippingTotal;
+                //                    oShippingOptions[0] = oShippingOption;
+                //                    oSetExpChkDetails.FlatRateShippingOptions = oShippingOptions;
+
+                //                    var RandGen = new Random();
+                //                    oSetExpChkDetails.PaymentDetails[0].InvoiceID = moCartConfig["OrderNoPrefix"] + mnCartId.ToString() + "-" + RandGen.Next(1000, 9999).ToString();
+                //                    // oSetExpChkDetails.PaymentDetails(0).InvoiceID = moCartConfig("OrderNoPrefix") & CStr(mnCartId)
+
+                //                    var oDeliveryAddress = new Protean.PayPalAPI.AddressType();
+                //                    sType = "Delivery Address";
+                //                    oCartAdd = (XmlElement)oOrderElmt.SelectSingleNode("Contact[@type='" + sType + "']");
+                //                    oDeliveryAddress.Street1 = Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(oCartAdd.SelectSingleNode("Company").InnerText), oCartAdd.SelectSingleNode("Street").InnerText, oCartAdd.SelectSingleNode("Company").InnerText));
+                //                    if (string.IsNullOrEmpty(oCartAdd.SelectSingleNode("Company").InnerText))
+                //                    {
+                //                        oDeliveryAddress.Street2 = oCartAdd.SelectSingleNode("Street").InnerText;
+                //                    }
+                //                    oDeliveryAddress.CityName = oCartAdd.SelectSingleNode("City").InnerText;
+                //                    oDeliveryAddress.StateOrProvince = oCartAdd.SelectSingleNode("State").InnerText;
+                //                    oDeliveryAddress.PostalCode = oCartAdd.SelectSingleNode("PostalCode").InnerText;
+                //                    string localgetCountryISO2Code() { string argsCountry4 = oCartAdd.SelectSingleNode("Country").InnerText; var ret = getCountryISO2Code(ref argsCountry4); oCartAdd.SelectSingleNode("Country").InnerText = argsCountry4; return ret; }
+
+                //                    oDeliveryAddress.Country = getPPCountryFromCode(localgetCountryISO2Code());
+                //                    oDeliveryAddress.CountryName = oCartAdd.SelectSingleNode("Country").InnerText;
+                //                    oDeliveryAddress.CountrySpecified = true;
+
+                //                    oSetExpChkDetails.PaymentDetails[0].ShipToAddress = oDeliveryAddress;
+                //                    int nItemCount = oOrderElmt.SelectNodes("descendant-or-self::Item").Count;
+
+                //                    if (mcPaymentType == "deposit")
+                //                    {
+                //                        nItemCount = nItemCount + 1;
+                //                    }
+
+                //                    var oItemGroup = new Protean.PayPalAPI.PaymentDetailsItemType[nItemCount];
+                //                    int i = 0;
+
+                //                    foreach (XmlElement oItemElmt in oOrderElmt.SelectNodes("Item"))
+                //                    {
+                //                        var oItem = new Protean.PayPalAPI.PaymentDetailsItemType();
+
+                //                        oItem.Name = oItemElmt.GetAttribute("quantity") + " x " + Strings.Left(oItemElmt.SelectSingleNode("Name").InnerText, 120);
+                //                        // oItem.Description = Left(oItemElmt.SelectSingleNode("Body").InnerText, 127)
+                //                        // weight
+                //                        var oItemWeight = new Protean.PayPalAPI.MeasureType();
+                //                        oItemWeight.unit = "kg";
+                //                        oItemWeight.Value = Conversions.ToDouble(oItemElmt.GetAttribute("weight"));
+                //                        oItem.ItemWeight = oItemWeight;
+                //                        oItem.Quantity = 1.ToString(); // oItemElmt.GetAttribute("quantity")
+                //                                                       // itemtax
+                //                        var oItemTax = new Protean.PayPalAPI.BasicAmountType();
+                //                        oItemTax.currencyID = getPPCurencyFromCode(mcCurrency);
+                //                        // oItemTax.Value = FormatNumber(CDbl("0" & oItemElmt.GetAttribute("itemTax")) / oItemElmt.GetAttribute("quantity"), 2)
+                //                        oItemTax.Value = 0.ToString(); // FormatNumber(CDbl("0" & oItemElmt.GetAttribute("itemTax")), 2)
+                //                                                       // oItemTax.Value = FormatNumber(CDbl("0" & oItemElmt.GetAttribute("itemTax")), 2) / oItemElmt.GetAttribute("quantity")
+                //                        oItem.Tax = oItemTax;
+                //                        // itemAmount
+                //                        // Dim nItemPlusTax As Double = FormatNumber(oItemElmt.GetAttribute("price"), 2) + (CDbl("0" & oItemElmt.GetAttribute("itemTax")) / oItemElmt.GetAttribute("quantity"))
+                //                        var oItemAmount = new Protean.PayPalAPI.BasicAmountType();
+                //                        oItemAmount.currencyID = getPPCurencyFromCode(mcCurrency);
+                //                        double linetotal = Conversions.ToDouble(oItemElmt.GetAttribute("itemTotal"));
+                //                        // If oItemTax.Value > 0 Then
+                //                        // linetotal = linetotal - oItemTax.Value
+                //                        // End If
+                //                        oItemAmount.Value = Strings.FormatNumber(linetotal, 2);
+                //                        oItem.Amount = oItemAmount;
+                //                        oItemGroup[i] = oItem;
+                //                        i = i + 1;
+                //                        // loop through and add any options
+                //                        foreach (XmlElement oOptElmt in oItemElmt.SelectNodes("Item"))
+                //                        {
+                //                            var oOptItem = new Protean.PayPalAPI.PaymentDetailsItemType();
+                //                            oOptItem.Quantity = oItemElmt.GetAttribute("quantity");
+                //                            var oOptItemAmount = new Protean.PayPalAPI.BasicAmountType();
+                //                            oOptItemAmount.currencyID = getPPCurencyFromCode(mcCurrency);
+                //                            oOptItemAmount.Value = Strings.FormatNumber(oOptElmt.GetAttribute("price"), 2);
+                //                            oOptItem.Amount = oOptItemAmount;
+                //                            oItemGroup[i] = oOptItem;
+                //                            i = i + 1;
+                //                        }
+
+                //                    }
+
+                //                    if (mcPaymentType == "deposit")
+                //                    {
+
+                //                        var oDiscountItem = new Protean.PayPalAPI.PaymentDetailsItemType();
+                //                        oDiscountItem.Name = "Final payment to be made later";
+                //                        oDiscountItem.Quantity = "1";
+                //                        // itemtax
+                //                        var oItemTax = new Protean.PayPalAPI.BasicAmountType();
+                //                        oItemTax.currencyID = getPPCurencyFromCode(mcCurrency);
+                //                        oItemTax.Value = "0";
+                //                        oDiscountItem.Tax = oItemTax;
+                //                        // itemAmount
+                //                        // Dim nItemPlusTax As Double = FormatNumber(oItemElmt.GetAttribute("price"), 2) + (CDbl("0" & oItemElmt.GetAttribute("itemTax")) / oItemElmt.GetAttribute("quantity"))
+                //                        var oItemAmount = new Protean.PayPalAPI.BasicAmountType();
+                //                        oItemAmount.currencyID = getPPCurencyFromCode(mcCurrency);
+                //                        oItemAmount.Value = (Conversions.ToDouble(Strings.FormatNumber(mnPaymentMaxAmount - mnPaymentAmount, 2)) * -1).ToString();
+                //                        oDiscountItem.Amount = oItemAmount;
+                //                        oItemGroup[i] = oDiscountItem;
+
+                //                    }
+
+                //                    oSetExpChkDetails.PaymentDetails[0].PaymentDetailsItem = oItemGroup;
+                //                    var oSetExpChkReq = new Protean.PayPalAPI.SetExpressCheckoutReq();
+                //                    oSetExpChkReq.SetExpressCheckoutRequest = oSetExpChk;
+
+                //                    Protean.PayPalAPI.SetExpressCheckoutResponseType oExpChkResponse;
+                //                    oExpChkResponse = ppIface.SetExpressCheckout(ref ppProfile, oSetExpChkReq);
+
+                //                    string redirectUrl;
+                //                    redirectUrl = "https://" + host + "/cgi-bin/webscr?cmd=_express-checkout" + "&token=" + oExpChkResponse.Token;
+
+                //                    ppXform.moPageXML = moPageXml;
+                //                    ppXform.NewFrm("PayForm");
+                //                    ppXform.valid = false;
+
+                //                    switch (oExpChkResponse.Ack)
+                //                    {
+                //                        case Protean.PayPalAPI.AckCodeType.Success:
+                //                        case Protean.PayPalAPI.AckCodeType.SuccessWithWarning:
+                //                            {
+                //                                myWeb.msRedirectOnEnd = redirectUrl;
+                //                                err_msg = "Redirect to - " + redirectUrl;
+                //                                break;
+                //                            }
+
+                //                        default:
+                //                            {
+                //                                foreach (var ppError in oExpChkResponse.Errors)
+                //                                {
+                //                                    err_msg = err_msg + " Error:" + ppError.ErrorCode;
+                //                                    err_msg = err_msg + " Msg:" + ppError.LongMessage;
+                //                                }
+                //                                XmlNode argoNode2 = (XmlNode)ppXform.moXformElmt;
+                //                                ppXform.addNote(ref argoNode2, Protean.xForm.noteTypes.Alert, err_msg);
+                //                                ppXform.moXformElmt = (XmlElement)argoNode2;
+                //                                break;
+                //                            }
+                //                    }
+
+                //                    break;
+                //                }
+
+                //        }
+
+
+                //        // Update Seller Notes:
+
+                //        sSql = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
+                //        DataSet oDs;
+                //        oDs = modbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
+                //        foreach (DataRow oRow in oDs.Tables["Order"].Rows)
+                //        {
+                //            if (bIsValid)
+                //            {
+                //                oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Received) "), Constants.vbLf), "comment: "), err_msg);
+                //            }
+                //            else if (err_msg.StartsWith("Redirect"))
+                //            {
+                //                oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (User Redirected)"), Constants.vbLf), "comment: "), err_msg);
+                //            }
+                //            else
+                //            {
+                //                oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Failed) "), Constants.vbLf), "comment: "), err_msg);
+                //            }
+                //        }
+                //        modbHelper.updateDataset(ref oDs, "Order");
+
+                //        return ppXform;
+                //    }
+
+                //    catch (Exception ex)
+                //    {
+                //        stdTools.returnException(ref myWeb.msException, mcModuleName, "payPayPalExpress", ex, "", cProcessInfo, gbDebug);
+                //        return (Cms.xForm)null;
+                //    }
+                //}
+
+                //public Protean.PayPalAPI.CountryCodeType getPPCountryFromCode(string CountryCode)
+                //{
+
+                //    var MyEnumVal = default(Protean.PayPalAPI.CountryCodeType);
+
+                //    MyEnumVal = (Protean.PayPalAPI.CountryCodeType)Conversions.ToInteger(System.ComponentModel.TypeDescriptor.GetConverter(MyEnumVal).ConvertFrom(CountryCode));
+
+                //    return MyEnumVal;
+
+                //}
+
+                //public Protean.PayPalAPI.CurrencyCodeType getPPCurencyFromCode(string CurrencyCode)
+                //{
+
+                //    var MyEnumVal = default(Protean.PayPalAPI.CurrencyCodeType);
+
+                //    MyEnumVal = (Protean.PayPalAPI.CurrencyCodeType)Conversions.ToInteger(System.ComponentModel.TypeDescriptor.GetConverter(MyEnumVal).ConvertFrom(CurrencyCode));
+
+                //    return MyEnumVal;
+
+                //}
+
+                //private Protean.PayPalAPI.PaymentActionCodeType getPPPaymentActionFromCode(string PaymentActionCode)
+                //{
+
+                //    var MyEnumVal = default(Protean.PayPalAPI.PaymentActionCodeType);
+
+                //    MyEnumVal = (Protean.PayPalAPI.PaymentActionCodeType)Conversions.ToInteger(System.ComponentModel.TypeDescriptor.GetConverter(MyEnumVal).ConvertFrom(PaymentActionCode));
+
+                //    return MyEnumVal;
+
+                //}
 
                 private string fmtSecPayDate(string sdate)
                 {
@@ -5028,174 +5028,174 @@ namespace Protean
                     }
                 }
 
-                private string getSecPayOrder(ref XmlElement oRoot)
-                {
+                //private string getSecPayOrder(ref XmlElement oRoot)
+                //{
 
-                    myWeb.PerfMon.Log("PaymentProviders", "getSecPayOrder");
-                    string sOrder;
-                    string cProcessInfo = "getSecPayOrder";
-                    try
-                    {
-                        sOrder = "";
-                        foreach (XmlElement oItem in oRoot.SelectNodes("Item"))
-                        {
-                            sOrder = sOrder + "prod=" + Strings.Replace(oItem.SelectSingleNode("Name").InnerText, " ", "_");
-                            sOrder = sOrder + ", item_amount=" + oItem.SelectSingleNode("@price").InnerText + "x" + oItem.SelectSingleNode("@quantity").InnerText + ";";
-                        }
-                        // add the shipping
-                        if (Conversions.ToInteger("0" + oRoot.SelectSingleNode("@shippingCost").InnerText) > 0)
-                        {
-                            sOrder = sOrder + "prod=SHIPPING,item_amount=" + oRoot.SelectSingleNode("@shippingCost").InnerText + "x1;";
-                        }
-                        // add the tax
-                        if (Conversions.ToInteger("0" + oRoot.SelectSingleNode("@vatAmt").InnerText) > 0)
-                        {
-                            sOrder = sOrder + "prod=TAX,item_amount=" + oRoot.SelectSingleNode("@vatAmt").InnerText + "x1;";
-                        }
+                //    myWeb.PerfMon.Log("PaymentProviders", "getSecPayOrder");
+                //    string sOrder;
+                //    string cProcessInfo = "getSecPayOrder";
+                //    try
+                //    {
+                //        sOrder = "";
+                //        foreach (XmlElement oItem in oRoot.SelectNodes("Item"))
+                //        {
+                //            sOrder = sOrder + "prod=" + Strings.Replace(oItem.SelectSingleNode("Name").InnerText, " ", "_");
+                //            sOrder = sOrder + ", item_amount=" + oItem.SelectSingleNode("@price").InnerText + "x" + oItem.SelectSingleNode("@quantity").InnerText + ";";
+                //        }
+                //        // add the shipping
+                //        if (Conversions.ToInteger("0" + oRoot.SelectSingleNode("@shippingCost").InnerText) > 0)
+                //        {
+                //            sOrder = sOrder + "prod=SHIPPING,item_amount=" + oRoot.SelectSingleNode("@shippingCost").InnerText + "x1;";
+                //        }
+                //        // add the tax
+                //        if (Conversions.ToInteger("0" + oRoot.SelectSingleNode("@vatAmt").InnerText) > 0)
+                //        {
+                //            sOrder = sOrder + "prod=TAX,item_amount=" + oRoot.SelectSingleNode("@vatAmt").InnerText + "x1;";
+                //        }
 
-                        // strip the trailing semiColon
-                        sOrder = Strings.Left(sOrder, Strings.Len(sOrder) - 1);
-                        return sOrder;
-                    }
+                //        // strip the trailing semiColon
+                //        sOrder = Strings.Left(sOrder, Strings.Len(sOrder) - 1);
+                //        return sOrder;
+                //    }
 
-                    catch (Exception ex)
-                    {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "getSecPayOrder", ex, "", cProcessInfo, gbDebug);
-                        return null;
-                    }
-                }
+                //    catch (Exception ex)
+                //    {
+                //        stdTools.returnException(ref myWeb.msException, mcModuleName, "getSecPayOrder", ex, "", cProcessInfo, gbDebug);
+                //        return null;
+                //    }
+                //}
 
-                private string getWorldPayOrder(ref XmlElement oRoot)
-                {
-                    myWeb.PerfMon.Log("PaymentProviders", "getWorldPayOrder");
-                    string sOrder = "";
-                    XmlNodeList oNodeList;
+                //private string getWorldPayOrder(ref XmlElement oRoot)
+                //{
+                //    myWeb.PerfMon.Log("PaymentProviders", "getWorldPayOrder");
+                //    string sOrder = "";
+                //    XmlNodeList oNodeList;
 
-                    oNodeList = oRoot.SelectNodes("Item");
+                //    oNodeList = oRoot.SelectNodes("Item");
 
-                    foreach (XmlElement oNode in oNodeList)
-                        sOrder = sOrder + oNode.SelectSingleNode("Name").InnerText + " x " + oNode.Attributes["quantity"].InnerText + ",";
+                //    foreach (XmlElement oNode in oNodeList)
+                //        sOrder = sOrder + oNode.SelectSingleNode("Name").InnerText + " x " + oNode.Attributes["quantity"].InnerText + ",";
 
-                    return Strings.Left(sOrder, Strings.Len(sOrder) - 1);
+                //    return Strings.Left(sOrder, Strings.Len(sOrder) - 1);
 
-                }
+                //}
 
-                private string getSecPayAddress(ref XmlElement oRoot, ref string sType)
-                {
-                    string getSecPayAddressRet = default;
-                    myWeb.PerfMon.Log("PaymentProviders", "getSecPayAddress");
-                    XmlElement oCartAdd;
+                //private string getSecPayAddress(ref XmlElement oRoot, ref string sType)
+                //{
+                //    string getSecPayAddressRet = default;
+                //    myWeb.PerfMon.Log("PaymentProviders", "getSecPayAddress");
+                //    XmlElement oCartAdd;
 
-                    string sAddress;
-                    string sPrefix;
-                    string cProcessInfo = "getSecPayAddress";
-                    try
-                    {
-                        sAddress = "";
+                //    string sAddress;
+                //    string sPrefix;
+                //    string cProcessInfo = "getSecPayAddress";
+                //    try
+                //    {
+                //        sAddress = "";
 
-                        oCartAdd = (XmlElement)oRoot.SelectSingleNode("Contact[@type='" + sType + "']");
+                //        oCartAdd = (XmlElement)oRoot.SelectSingleNode("Contact[@type='" + sType + "']");
 
-                        if (sType == "Delivery")
-                            sType = "Shipping";
+                //        if (sType == "Delivery")
+                //            sType = "Shipping";
 
-                        if (oCartAdd != null)
-                        {
+                //        if (oCartAdd != null)
+                //        {
 
-                            sPrefix = Strings.LCase(Strings.Left(sType, 4)) + "_";
+                //            sPrefix = Strings.LCase(Strings.Left(sType, 4)) + "_";
 
-                            // given name
-                            if (oCartAdd.SelectSingleNode("GivenName") != null)
-                            {
-                                sAddress = sAddress + sPrefix + "name=" + Strings.Replace(oCartAdd.SelectSingleNode("GivenName").InnerText, ",", "&comma;") + ",";
-                            }
+                //            // given name
+                //            if (oCartAdd.SelectSingleNode("GivenName") != null)
+                //            {
+                //                sAddress = sAddress + sPrefix + "name=" + Strings.Replace(oCartAdd.SelectSingleNode("GivenName").InnerText, ",", "&comma;") + ",";
+                //            }
 
-                            if (oCartAdd.SelectSingleNode("Company") != null)
-                            {
-                                sAddress = sAddress + sPrefix + "company=" + Strings.Replace(oCartAdd.SelectSingleNode("Company").InnerText, ",", "&comma;") + ",";
-                            }
+                //            if (oCartAdd.SelectSingleNode("Company") != null)
+                //            {
+                //                sAddress = sAddress + sPrefix + "company=" + Strings.Replace(oCartAdd.SelectSingleNode("Company").InnerText, ",", "&comma;") + ",";
+                //            }
 
-                            string[] cStreet = Strings.Split(oCartAdd.SelectSingleNode("Street").InnerText, ",");
-                            switch (Information.UBound(cStreet))
-                            {
-                                case 0:
-                                    {
-                                        if (oCartAdd.SelectSingleNode("Street") != null)
-                                        {
-                                            sAddress = sAddress + sPrefix + "addr_1=" + cStreet[0] + ",";
-                                        }
+                //            string[] cStreet = Strings.Split(oCartAdd.SelectSingleNode("Street").InnerText, ",");
+                //            switch (Information.UBound(cStreet))
+                //            {
+                //                case 0:
+                //                    {
+                //                        if (oCartAdd.SelectSingleNode("Street") != null)
+                //                        {
+                //                            sAddress = sAddress + sPrefix + "addr_1=" + cStreet[0] + ",";
+                //                        }
 
-                                        break;
-                                    }
-                                case 1:
-                                    {
-                                        if (oCartAdd.SelectSingleNode("Street") != null)
-                                        {
-                                            sAddress = sAddress + sPrefix + "addr_1=" + cStreet[0] + ",";
-                                            sAddress = sAddress + sPrefix + "addr_2=" + cStreet[1] + ",";
-                                        }
+                //                        break;
+                //                    }
+                //                case 1:
+                //                    {
+                //                        if (oCartAdd.SelectSingleNode("Street") != null)
+                //                        {
+                //                            sAddress = sAddress + sPrefix + "addr_1=" + cStreet[0] + ",";
+                //                            sAddress = sAddress + sPrefix + "addr_2=" + cStreet[1] + ",";
+                //                        }
 
-                                        break;
-                                    }
+                //                        break;
+                //                    }
 
-                                default:
-                                    {
-                                        if (oCartAdd.SelectSingleNode("Street") != null)
-                                        {
-                                            sAddress = sAddress + sPrefix + "addr_1=" + cStreet[0] + ",";
-                                            // remove commas AVC doesn't like em.
-                                            sAddress = sAddress + sPrefix + "addr_2=" + Strings.Replace(Strings.Replace(oCartAdd.SelectSingleNode("Street").InnerText, cStreet[0], ""), ",", " ") + ",";
-                                        }
+                //                default:
+                //                    {
+                //                        if (oCartAdd.SelectSingleNode("Street") != null)
+                //                        {
+                //                            sAddress = sAddress + sPrefix + "addr_1=" + cStreet[0] + ",";
+                //                            // remove commas AVC doesn't like em.
+                //                            sAddress = sAddress + sPrefix + "addr_2=" + Strings.Replace(Strings.Replace(oCartAdd.SelectSingleNode("Street").InnerText, cStreet[0], ""), ",", " ") + ",";
+                //                        }
 
-                                        break;
-                                    }
-                            }
+                //                        break;
+                //                    }
+                //            }
 
-                            if (oCartAdd.SelectSingleNode("City") != null)
-                            {
-                                sAddress = sAddress + sPrefix + "city=" + Strings.Replace(oCartAdd.SelectSingleNode("City").InnerText, ",", "&comma;") + ",";
-                            }
+                //            if (oCartAdd.SelectSingleNode("City") != null)
+                //            {
+                //                sAddress = sAddress + sPrefix + "city=" + Strings.Replace(oCartAdd.SelectSingleNode("City").InnerText, ",", "&comma;") + ",";
+                //            }
 
-                            if (oCartAdd.SelectSingleNode("State") != null)
-                            {
-                                sAddress = sAddress + sPrefix + "state=" + Strings.Replace(oCartAdd.SelectSingleNode("State").InnerText, ",", "&comma;") + ",";
-                            }
+                //            if (oCartAdd.SelectSingleNode("State") != null)
+                //            {
+                //                sAddress = sAddress + sPrefix + "state=" + Strings.Replace(oCartAdd.SelectSingleNode("State").InnerText, ",", "&comma;") + ",";
+                //            }
 
-                            if (oCartAdd.SelectSingleNode("Country") != null)
-                            {
-                                sAddress = sAddress + sPrefix + "country=" + Strings.Replace(oCartAdd.SelectSingleNode("Country").InnerText, ",", "&comma;") + ",";
-                            }
+                //            if (oCartAdd.SelectSingleNode("Country") != null)
+                //            {
+                //                sAddress = sAddress + sPrefix + "country=" + Strings.Replace(oCartAdd.SelectSingleNode("Country").InnerText, ",", "&comma;") + ",";
+                //            }
 
-                            if (oCartAdd.SelectSingleNode("PostalCode") != null)
-                            {
-                                sAddress = sAddress + sPrefix + "post_code=" + Strings.Replace(oCartAdd.SelectSingleNode("PostalCode").InnerText, ",", "&comma;") + ",";
-                            }
+                //            if (oCartAdd.SelectSingleNode("PostalCode") != null)
+                //            {
+                //                sAddress = sAddress + sPrefix + "post_code=" + Strings.Replace(oCartAdd.SelectSingleNode("PostalCode").InnerText, ",", "&comma;") + ",";
+                //            }
 
-                            if (oCartAdd.SelectSingleNode("Telephone") != null)
-                            {
-                                sAddress = sAddress + sPrefix + "tel=" + Strings.Replace(oCartAdd.SelectSingleNode("Telephone").InnerText, ",", "&comma;") + ",";
-                            }
+                //            if (oCartAdd.SelectSingleNode("Telephone") != null)
+                //            {
+                //                sAddress = sAddress + sPrefix + "tel=" + Strings.Replace(oCartAdd.SelectSingleNode("Telephone").InnerText, ",", "&comma;") + ",";
+                //            }
 
-                            if (oCartAdd.SelectSingleNode("Email") != null)
-                            {
-                                sAddress = sAddress + sPrefix + "email=" + Strings.Replace(oCartAdd.SelectSingleNode("Email").InnerText, ",", "&comma;") + ",";
-                            }
+                //            if (oCartAdd.SelectSingleNode("Email") != null)
+                //            {
+                //                sAddress = sAddress + sPrefix + "email=" + Strings.Replace(oCartAdd.SelectSingleNode("Email").InnerText, ",", "&comma;") + ",";
+                //            }
 
-                            if (!string.IsNullOrEmpty(sAddress))
-                                sAddress = Strings.Left(sAddress, Strings.Len(sAddress) - 1);
+                //            if (!string.IsNullOrEmpty(sAddress))
+                //                sAddress = Strings.Left(sAddress, Strings.Len(sAddress) - 1);
 
-                        }
+                //        }
 
-                        getSecPayAddressRet = sAddress;
-                    }
-                    catch (Exception ex)
-                    {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "getSecPayAddress", ex, "", cProcessInfo, gbDebug);
-                        return null;
-                    }
+                //        getSecPayAddressRet = sAddress;
+                //    }
+                //    catch (Exception ex)
+                //    {
+                //        stdTools.returnException(ref myWeb.msException, mcModuleName, "getSecPayAddress", ex, "", cProcessInfo, gbDebug);
+                //        return null;
+                //    }
 
-                    return getSecPayAddressRet;
+                //    return getSecPayAddressRet;
 
-                }
+                //}
 
                 public string getCountryISO2Code(ref string sCountry)
                 {
@@ -5808,589 +5808,589 @@ namespace Protean
 
                 }
 
-                public Cms.xForm UkashXform(ref XmlElement oRoot, string formName = "creditCard", string action = "", string sFormTitle = "Your Ukash Payment Details")
-                {
-                    Cms.xForm UkashXformRet = default;
-                    myWeb.PerfMon.Log("PaymentProviders", "UkashXform");
-                    var oXform = new Cms.xForm(ref myWeb.msException);
-                    XmlElement oFrmInstance;
-                    XmlElement oFrmGroup;
-                    bool bIsValid = false;
-                    string cUniqueLink = "";
-                    var oRandom = new Random();
-
-                    string sProcess;
-                    string cProcessInfo = "creditCardXform";
-                    try
-                    {
-
-                        // Reference together the root Xml from objects
-                        oXform.moPageXML = moPageXml;
-
-                        // First Define the xform
-                        oXform.NewFrm(formName);
-                        oXform.submission(formName, action, "POST", "return form_check(this);");
-                        // create the instance
-                        oFrmInstance = oXform.moPageXML.CreateElement("Ukash");
-                        oXform.Instance.AppendChild(oFrmInstance);
-
-                        oXform.Instance.FirstChild.AppendChild(oXform.moPageXML.CreateElement("VoucherNumber"));
-                        oXform.Instance.FirstChild.AppendChild(oXform.moPageXML.CreateElement("VoucherValue"));
-
-                        // create the UI
-                        oFrmGroup = oXform.addGroup(ref oXform.moXformElmt, "Ukash", "Ukash", sFormTitle);
-
-                        // Adjust the title
-                        switch (mcPaymentType ?? "")
-                        {
-                            case "deposit":
-                                {
-                                    oFrmGroup.SelectSingleNode("label").InnerText = "Make Deposit Payment";
-                                    break;
-                                }
-                            case "settlement":
-                                {
-                                    oFrmGroup.SelectSingleNode("label").InnerText = Strings.Replace(sFormTitle, "Payment", "Settlement Payment");
-                                    break;
-                                }
-                        }
-                        oXform.addInput(ref oFrmGroup, "Ukash/VoucherNumber", false, "Ukash Voucher Number", "textbox required");
-                        oXform.addInput(ref oFrmGroup, "Ukash/VoucherValue", false, "Ukash Voucher Value", "textbox required");
-
-                        oXform.addSubmit(ref oFrmGroup, formName, "Submit");
-
-                        // validate the Xform
-                        if (this.goRequest["Ukash/VoucherNumber"] != default)
-                        {
-                            oXform.valid = true;
-
-                            if (string.IsNullOrEmpty(this.goRequest["Ukash/VoucherNumber"]))
-                            {
-                                oXform.valid = false;
-                                oXform.addNote("Ukash/VoucherNumber", Protean.xForm.noteTypes.Alert, "Please enter the Ukash card number.  Please ensure that you do not enter any symbols, such as currency symbols.");
-                            }
-                            if (!Information.IsNumeric(this.goRequest["Ukash/VoucherValue"]))
-                            {
-                                oXform.valid = false;
-                                oXform.addNote("Ukash/VoucherValue", Protean.xForm.noteTypes.Alert, "Please enter the Ukash card value.  Please ensure that you do not enter any symbols, such as currency symbols.");
-                            }
-                            if (Conversions.ToDouble(this.goRequest["Ukash/VoucherValue"]) < mnPaymentAmount)
-                            {
-                                oXform.valid = false;
-                                oXform.addNote("Ukash/VoucherValue", Protean.xForm.noteTypes.Alert, "Your Ukash card value is lower than the transaction amount. To combine two Ukash cards go to www.ukash.com .");
-                            }
-                            if (oXform.valid == true)
-                            {
-                                oXform.updateInstanceFromRequest();
-                            }
-                        }
-                        oXform.addValues();
-
-                        sProcess = oXform.moXformElmt.OuterXml;
-                        sProcess = sProcess;
-
-                        UkashXformRet = oXform;
-                    }
-
-                    catch (Exception ex)
-                    {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "creditCardXform", ex, "", cProcessInfo, gbDebug);
-                        return (Cms.xForm)null;
-                    }
-
-                    return UkashXformRet;
-
-                }
-
-                public string repeatSecPay(int nPaymentMethodID, ref XmlElement oRoot, string sSubmitPath)
-                {
-                    try
-                    {
-                        string cSQL = " SELECT TOP 1 tblCartOrder.nCartOrderKey , tblCartPaymentMethod.*, tblAudit.dExpireDate " + " FROM tblCartPaymentMethod INNER JOIN tblCartOrder ON tblCartPaymentMethod.nPayMthdKey = tblCartOrder.nPayMthdId INNER JOIN tblAudit ON tblCartPaymentMethod.nAuditId = tblAudit.nAuditKey " + " WHERE (tblCartPaymentMethod.nPayMthdKey = " + nPaymentMethodID + ") " + " ORDER BY tblCartOrder.nCartOrderKey";
-                        var oSecpayCfg = moPaymentCfg.SelectSingleNode("provider[@name='SecPay']");
-                        var oSecVpn = new Protean.Paypoint.SECVPNClient();
-
-                        var oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Payments");
-                        var oRow = oDS.Tables["Payments"].Rows[0];
-
-                        string cAcc = oSecpayCfg.SelectSingleNode("accountId/@value").InnerText;
-                        string cPW = oSecpayCfg.SelectSingleNode("accountPassword/@value").InnerText;
-                        string cTransId = Conversions.ToString(oRow["ncartOrderKey"]);
-                        DateTime dExpiry = Conversions.ToDate(oRow["dExpireDate"]);
-                        string cExpiry = dExpiry.Month.ToString();
-                        if (cExpiry.Length == 1)
-                            cExpiry = "0" + cExpiry;
-                        cExpiry += " " + dExpiry.Year;
-                        string cRemotePW = "";
-                        if (oSecpayCfg.SelectSingleNode("remotePassword/@value") is null)
-                        {
-                            throw new Exception("The configuration value 'remotePassword' has not been set for repeat payments.");
-                        }
-                        else
-                        {
-                            cRemotePW = oSecpayCfg.SelectSingleNode("remotePassword/@value").InnerText;
-                        }
-                        string cResponse = oSecVpn.repeatCardFull(cAcc, cPW, cTransId, mnPaymentAmount.ToString(), cRemotePW, mnCartId.ToString(), fmtSecPayDate(cExpiry), getSecPayOrder(ref oRoot));
-                        // ?valid=false&trans_id=137&code=N&message=No {1} transaction found&resp_code=30
-                        // ?valid=false&trans_id=139&code=N&message=Invalid {1} password supplied&resp_code=30
-                        // ?valid=true&trans_id=140&code=A&auth_code=9999
-
-                        var oDictResp = new Hashtable();
-
-                        // cResponse = Replace(oXMLHttp.responseXML.selectSingleNode("//node()[local-name()='validateCardFullReturn']").Text, "+", " ")
-                        if (!string.IsNullOrEmpty(cResponse))
-                        {
-                            string[] aResponse;
-                            aResponse = Strings.Split(Strings.Right(cResponse, Strings.Len(cResponse) - 1), "&");
-                            int i;
-                            int nPos;
-                            var loopTo = Information.UBound(aResponse);
-                            for (i = 0; i <= loopTo; i++)
-                            {
-                                nPos = Strings.InStr(aResponse[i], "=");
-                                oDictResp.Add(Strings.Left(aResponse[i], nPos - 1), Strings.Right(aResponse[i], Strings.Len(aResponse[i]) - nPos));
-                            }
-                        }
-                        Debug.WriteLine(oDictResp.Count);
-                        var bIsValid = default(bool);
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictResp["valid"], "true", false)))
-                            bIsValid = true;
-
-                        string err_msg_log = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Payment Failed : ", oDictResp["message"]), " (Code::"), oDictResp["code"]), ")"));
-                        string err_msg = "";
-                        // Produce nice format error messages.
-
-                        switch (oDictResp["code"])
-                        {
-                            case "N":
-                                {
-                                    err_msg = "The transaction was not authorised by your payment provider.";
-                                    break;
-                                }
-                            case "C":
-                                {
-                                    err_msg = "There was a comunication problem. Please try resubmitting your order later.";
-                                    break;
-                                }
-                            case "P:A":
-                                {
-                                    err_msg = "There was a system error - the amount was not supplied or invalid.  Please call for assistance.";
-                                    break;
-                                }
-                            case "P:X":
-                                {
-                                    err_msg = "There was a system error - not all the mandatory parameters were supplied.  Please call for assistance.";
-                                    break;
-                                }
-                            case "P:P":
-                                {
-                                    err_msg = "The payment has already been processed.  This is a duplicate payment, and will not be processed.";
-                                    break;
-                                }
-                            case "P:S":
-                                {
-                                    err_msg = "The start date is invalid.  Please check that you have entered your card details correctly.";
-                                    break;
-                                }
-                            case "P:E":
-                                {
-                                    err_msg = "The expiry date is invalid.  Please check that you have entered your card details correctly.";
-                                    break;
-                                }
-                            case "P:I":
-                                {
-                                    err_msg = "The issue number is invalid.  Please check that you have entered your card details correctly.";
-                                    break;
-                                }
-                            case "P:C":
-                                {
-                                    err_msg = "The card number supplied is invalid.  Please check that you have entered your card details correctly.";
-                                    break;
-                                }
-                            case "P:T":
-                                {
-                                    err_msg = "The card type does not match the card number entered.  Please check that you have entered your card details correctly.";
-                                    break;
-                                }
-                            case "P:N":
-                                {
-                                    err_msg = "There was a system error - the customer name was not supplied.  Please call for assistance.";
-                                    break;
-                                }
-                            case "P:M":
-                                {
-                                    err_msg = "There was a system error - the merchant account deos not exist or has not been registered.  Please call for assistance.";
-                                    break;
-                                }
-                            case "P:B":
-                                {
-                                    err_msg = "There was a system error - the merchant account for this card type does not exist.  Please call for assistance.";
-                                    break;
-                                }
-                            case "P:D":
-                                {
-                                    err_msg = "There was a system error - the merchant account for this currency does not exist.  Please call for assistance.";
-                                    break;
-                                }
-                            case "P:V":
-                                {
-                                    err_msg = "The security code is invalid. Please check that you have entered your card details correctly. The security code can be found on the back of your card and is the last 3 digits of the series of digits on the back.";
-                                    break;
-                                }
-                            case "P:R":
-                                {
-                                    err_msg = "There was a communication problem and the transaction has timed out.  Please try resubmitting your order later.";
-                                    break;
-                                }
-                            case "P:#":
-                                {
-                                    err_msg = "There was a system error - no encryption key has been set up against this account.  Please call for assistance.";
-                                    break;
-                                }
-
-                            default:
-                                {
-                                    err_msg = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("There was an unspecified error. Please call for assistance.(code::", oDictResp["code"]), " | "), oDictResp["message"]));
-                                    break;
-                                }
-                        }
-
-                        err_msg = "Payment Failed : " + err_msg;
-
-                        if (bIsValid)
-                        {
-                            CartPaymentMethod(nPaymentMethodID);
-                            return "";
-                        }
-                        else
-                        {
-                            return err_msg;
-                        }
-                    }
-
-                    catch (Exception ex)
-                    {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "repeatSecPay", ex, "", "", gbDebug);
-                        return "An Error Occured";
-                    }
-                }
-
-                public string repeatProTx(int nPaymentMethodID, ref XmlElement oRoot, string sSubmitPath)
-                {
-
-                    myWeb.PerfMon.Log("PaymentProviders", "payProTx");
-
-                    string cSQL = " SELECT TOP 1 tblCartOrder.nCartOrderKey , tblCartPaymentMethod.*, tblAudit.dExpireDate, cPayMthdDetailXml  " + " FROM tblCartPaymentMethod INNER JOIN tblCartOrder ON tblCartPaymentMethod.nPayMthdKey = tblCartOrder.nPayMthdId INNER JOIN tblAudit ON tblCartPaymentMethod.nAuditId = tblAudit.nAuditKey " + " WHERE (tblCartPaymentMethod.nPayMthdKey = " + nPaymentMethodID + ") " + " ORDER BY tblCartOrder.nCartOrderKey";
-                    var oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Payments");
-                    var oRow = oDS.Tables["Payments"].Rows[0];
-
-                    var oRepXML = new XmlDocument();
-                    oRepXML.InnerXml = Conversions.ToString(oRow["cPayMthdDetailXml"]);
-                    XmlElement oRepElmt = (XmlElement)oRepXML.DocumentElement.SelectSingleNode("ProTx");
-                    string cRelatedVPSTxId = oRepElmt.GetAttribute("VPSTxId"); // - Returned
-                    string orderPrefix = "";
-
-                    string cRelatedVendorTxCode = Conversions.ToString(oRow["nCartOrderKey"]); // - Original Cart
-                    string cRelatedSecurityKey = oRepElmt.GetAttribute("SecurityKey"); // - Returned
-                    string cRelatedTxAuthNo = oRepElmt.GetAttribute("TxAuthNo"); // - Returned
-
-                    HttpWebRequest oRequest;
-                    HttpWebResponse oResponse;
-                    Stream oStream;
-                    StreamReader oStreamReader;
-                    long nResult;
-
-                    string cResponse;
-                    string cRequest;
-                    var oEncoding = new ASCIIEncoding();
-                    byte[] byRequest;
-
-                    string cMessage;
-
-                    bool bIsValid = false;
-                    string err_msg = "";
-
-                    var oDictOpt = new Hashtable();
-
-                    bool bCv2 = false;
-                    bool b3dSecure = false;
-                    Hashtable oResponseDict = null;
-
-                    bool b3dAuthorised = false;
-
-                    XmlNode oProTxCfg;
-                    string cIPAddress = this.goRequest.ServerVariables["REMOTE_ADDR"];
-
-                    string sAPIVer = "";
-                    string sVSPUrl = "";
-                    string sVSP3DSUrl = "";
-
-
-                    try
-                    {
-
-                        // Get the payment options into a hashtable
-                        oProTxCfg = moPaymentCfg.SelectSingleNode("provider[@name='ProTx']");
-                        foreach (XmlElement oElmt in oProTxCfg.SelectNodes("*"))
-                        {
-                            if (oElmt.GetAttribute("value") !=null)
-                            {
-                                oDictOpt.Add(oElmt.Name, oElmt.GetAttribute("value"));
-                            }
-                        }
-
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["sendPrefix"], "true", false)))
-                        {
-                            orderPrefix = Conversions.ToString(Operators.ConcatenateObject(Interaction.IIf(nTransactionMode == TransactionMode.Test, "D-", ""), moCartConfig["OrderNoPrefix"]));
-                            cRelatedVendorTxCode = orderPrefix + cRelatedVendorTxCode;
-                        }
-
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["validateCV2"], "on", false)))
-                            bCv2 = true;
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["secure3d"], "on", false)))
-                        {
-                            b3dSecure = true;
-                            // Check the IP Addresses for a block
-                            if (oDictOpt["secure3dIpBlock"] !=null)
-                            {
-                                var oRE = new Regex("(,|^)" + Strings.Replace(cIPAddress, ".", @"\.") + "(,|$)");
-                                if (oRE.IsMatch(Conversions.ToString(oDictOpt["secure3dIpBlock"])))
-                                    b3dSecure = false;
-                            }
-                        }
-
-
-                        sAPIVer = "2.22";
-                        switch (oDictOpt["opperationMode"])
-                        {
-                            case "simulator":
-                                {
-                                    // sVSPUrl = "https://ukvpstest.protx.com/VSPSimulator/VSPDirectGateway.asp"
-                                    sVSPUrl = "https://ukvpstest.protx.com/VSPSimulator/VSPServerGateway.asp?Service=VendorRepeatTx";
-                                    sVSP3DSUrl = "https://ukvpstest.protx.com/VSPSimulator/VSPDirectCallback.asp";
-                                    break;
-                                }
-                            case "test":
-                                {
-                                    // sVSPUrl = "https://ukvpstest.protx.com/vspgateway/service/vspdirect-register.vsp"
-                                    sVSPUrl = "https://ukvpstest.protx.com/vspgateway/service/repeat.vsp";
-                                    sVSP3DSUrl = "https://ukvpstest.protx.com/vspgateway/service/direct3dcallback.vsp";
-                                    break;
-                                }
-                            case "live":
-                                {
-                                    // sVSPUrl = "https://ukvps.protx.com/vspgateway/service/vspdirect-register.vsp"
-                                    sVSPUrl = "https://ukvps.protx.com/vspgateway/service/repeat.vsp";
-                                    sVSP3DSUrl = "https://ukvps.protx.com/vspgateway/service/direct3dcallback.vsp";
-                                    break;
-                                }
-                        }
-
-
-
-                        if (b3dSecure)
-                        {
-                            // check for return from aquiring bank
-                            if (!string.IsNullOrEmpty(this.goRequest["PARes"]))
-                            {
-                                b3dAuthorised = true;
-                            }
-                        }
-
-                        if (b3dAuthorised)
-                        {
-                            // 3D Secure Resume
-                            cRequest = "MD=" + this.goRequest["MD"] + "&";
-                            cRequest = cRequest + "PARes=" + this.goRequest["PARes"] + "&";
-                        }
-                        else
-                        {
-                            // standard card validation request
-
-                            cRequest = "VPSProtocol=" + sAPIVer + "&";
-                            cRequest = cRequest + "TxType=REPEAT&"; // & sTXType & "&" ' 0=omited 1=full auth 2=pre-auth only
-                            cRequest = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "Vendor=", oDictOpt["accountId"]), "&")); // 0=omited 1=full auth 2=pre-auth only
-                            cRequest = cRequest + "VendorTXCode=" + this.goServer.UrlEncode(mnCartId.ToString()) + "&";
-                            cRequest = cRequest + "Amount=" + this.goServer.UrlEncode(FullMoneyString(mnPaymentAmount.ToString())) + "&";
-                            cRequest = cRequest + "Currency=" + this.goServer.UrlEncode(Conversions.ToString(oDictOpt["currency"])) + "&";
-                            cRequest = cRequest + "Description=" + Strings.Left(this.goServer.UrlEncode(mcPaymentOrderDescription), 100) + "&";
-                            cRequest = cRequest + "RelatedVPSTxId=" + this.goServer.UrlEncode(cRelatedVPSTxId) + "&";
-                            cRequest = cRequest + "RelatedVendorTxCode=" + this.goServer.UrlEncode(cRelatedVendorTxCode) + "&";
-                            cRequest = cRequest + "RelatedSecurityKey=" + this.goServer.UrlEncode(cRelatedSecurityKey) + "&";
-                            cRequest = cRequest + "RelatedTxAuthNo=" + this.goServer.UrlEncode(cRelatedTxAuthNo);
-
-                            // Convert the request to bytes
-
-                            byRequest = oEncoding.GetBytes(cRequest);
-
-                            if (b3dAuthorised)
-                            {
-                                oRequest = (HttpWebRequest)WebRequest.Create(sVSP3DSUrl);
-                            }
-                            else
-                            {
-                                oRequest = (HttpWebRequest)WebRequest.Create(sVSPUrl);
-                            }
-
-                            oRequest.ContentType = "application/x-www-form-urlencoded";
-                            oRequest.ContentLength = byRequest.Length;
-                            oRequest.Method = "POST";
-                            oStream = oRequest.GetRequestStream();
-                            oStream.Write(byRequest, 0, byRequest.Length);
-                            oStream.Close();
-
-                            oResponse = (HttpWebResponse)oRequest.GetResponse();
-                            oStream = oResponse.GetResponseStream();
-                            oStreamReader = new StreamReader(oStream, Encoding.UTF8);
-                            cResponse = oStreamReader.ReadToEnd();
-
-                            oStreamReader.Close();
-                            oResponse.Close();
-
-                            // Validate the response.
-
-                            if (string.IsNullOrEmpty(cResponse) | Strings.InStr(cResponse, "=") == 0)
-                            {
-                                err_msg = "There was a communications error.";
-                            }
-                            else
-                            {
-                                // lets take the response and put it in a hash table
-                                oResponseDict = UrlResponseToHashTable(cResponse, Constants.vbCrLf, "=");
-
-                                nResult = Conversions.ToLong(oResponseDict["intStatus"]);
-
-                                switch (oResponseDict["Status"])
-                                {
-
-                                    case "OK":
-                                    case "AUTHENTICATED":
-                                    case "REGISTERED":
-                                        {
-                                            // Successful Authorisation
-                                            err_msg = Conversions.ToString(Operators.ConcatenateObject("Payment was successful. Transaction ref: ", oResponseDict["VPSTxId"]));
-                                            bIsValid = true;
-                                            break;
-                                        }
-
-                                    case "3DAUTH":
-                                        {
-
-                                            // create an xform that automatically redirects to Aquiring Banks 3DS portal.
-                                            // Save MD as paymentRef
-                                            this.goSession["VPSTxId"] = oResponseDict["VPSTxId"];
-                                            this.goSession["SecurityKey"] = oResponseDict["SecurityKey"];
-
-                                            string sRedirectURL;
-                                            sRedirectURL = moCartConfig["SecureURL"] + "?cartCmd=SubmitPaymentDetails" + "&";
-
-                                            bIsValid = false;
-
-                                            err_msg = "This card has subscribed to 3D Secure. You will now be re-directed to your banks website for further verification.";
-                                            break;
-                                        }
-
-
-                                    case "MALFORMED":
-                                    case "INVALID":
-                                    case "NOTAUTHED":
-                                    case "REJECTED":
-                                    case "ERROR":
-                                        {
-                                            // Failed / Error Authorisation
-
-                                            cMessage = Conversions.ToString(oResponseDict["StatusDetail"]);
-
-                                            if (Strings.InStr(cMessage, "card number") > 0)
-                                                err_msg = "The card number given is not valid.";
-                                            if (Strings.InStr(cMessage, "IssueNumber") > 0)
-                                                err_msg = "The issue number is not valid - it may not be required for non-Switch/Solo cards.";
-                                            if (Strings.InStr(cMessage, "StartDate") > 0 | Strings.InStr(cMessage, "Start Date") > 0)
-                                                err_msg = "The issue date is not valid - it may not be required for Switch or Solo cards.";
-                                            if (Strings.InStr(cMessage, "ExpiryDate") > 0 | Strings.InStr(cMessage, "Expiry Date") > 0)
-                                                err_msg = "The expiry date is not valid.";
-
-
-                                            if (gbDebug)
-                                            {
-                                                err_msg = "<br/>Full Request:" + this.goServer.HtmlEncode(this.goServer.UrlDecode(cRequest)) + "<br/>Full Response:" + this.goServer.HtmlEncode(this.goServer.UrlDecode(cResponse));
-                                            }
-                                            else
-                                            {
-                                                err_msg = "There was an error processing this payment.<br/>  No payment has been made.<br/>  Please check the details you entered and try again, or call for assistance.<br/><br/>  The error returned from the bank was :<br/><br/> " + this.goServer.HtmlEncode(this.goServer.UrlDecode(cMessage));
-                                            }
-
-                                            break;
-                                        }
-
-                                    default:
-                                        {
-                                            // Response not recognised.
-                                            cMessage = Conversions.ToString(oResponseDict["StatusDetail"]);
-
-                                            if (gbDebug)
-                                            {
-                                                err_msg = "<br/>Full Request:" + this.goServer.HtmlEncode(this.goServer.UrlDecode(cRequest)) + "<br/>Full Response:" + this.goServer.HtmlEncode(this.goServer.UrlDecode(cResponse));
-                                            }
-                                            else
-                                            {
-                                                err_msg = "There was an error processing this payment.  No payment has been made.  Please check the details you entered and try again, or call for assistance.  The error detail was : " + this.goServer.HtmlEncode(this.goServer.UrlDecode(cMessage));
-                                            }
-
-                                            break;
-                                        }
-                                }
-                            }
-
-
-                            // Update Seller Notes:
-                            cSQL = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
-                            oDS = new DataSet();
-
-                            oDS = modbHelper.getDataSetForUpdate(cSQL, "Order", "Cart");
-                            foreach (DataRow currentORow in oDS.Tables["Order"].Rows)
-                            {
-                                oRow = currentORow;
-                                if (bIsValid)
-                                {
-                                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Received) "), Constants.vbLf), "Transaction Ref:"), oResponseDict["VPSTxId"]), Constants.vbLf), "comment: "), err_msg);
-                                }
-                                else
-                                {
-                                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Failed) "), Constants.vbLf), "comment: ");
-                                }
-                            }
-                            modbHelper.updateDataset(ref oDS, "Order");
-
-                        }
-
-                        oRepXML.DocumentElement.SetAttribute("AmountPaid", mnPaymentAmount.ToString());
-                        XmlElement oProTXElmt = (XmlElement)oRepXML.DocumentElement.SelectSingleNode("ProTx");
-                        oProTXElmt.SetAttribute("VPSTxId", Conversions.ToString(oResponseDict["VPSTxId"]));
-                        oProTXElmt.SetAttribute("SecurityKey", Conversions.ToString(oResponseDict["SecurityKey"]));
-                        oProTXElmt.SetAttribute("TxAuthNo", Conversions.ToString(oResponseDict["TxAuthNo"]));
-
-                        savedPaymentId = savePayment((long)myWeb.mnUserId, "ProTx", mnCartId.ToString(), "ProTX", oRepXML.DocumentElement, DateTime.Now, false, mnPaymentAmount);
-                        if (bIsValid)
-                        {
-                            CartPaymentMethod((int)savedPaymentId);
-                            // CartPaymentMethod(cRelatedVendorTxCode)
-                            return "";
-                        }
-                        else
-                        {
-                            // err_msg = oResponseDict("Status") & "<br/>" & oResponseDict("StatusDetail")
-                            return err_msg;
-                        }
-                    }
-                    // Return ccXform
-
-                    catch (Exception ex)
-                    {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "payMetaCharge", ex, "", "", gbDebug);
-                        return "An Error Occured";
-                    }
-                }
+                //public Cms.xForm UkashXform(ref XmlElement oRoot, string formName = "creditCard", string action = "", string sFormTitle = "Your Ukash Payment Details")
+                //{
+                //    Cms.xForm UkashXformRet = default;
+                //    myWeb.PerfMon.Log("PaymentProviders", "UkashXform");
+                //    var oXform = new Cms.xForm(ref myWeb.msException);
+                //    XmlElement oFrmInstance;
+                //    XmlElement oFrmGroup;
+                //    bool bIsValid = false;
+                //    string cUniqueLink = "";
+                //    var oRandom = new Random();
+
+                //    string sProcess;
+                //    string cProcessInfo = "creditCardXform";
+                //    try
+                //    {
+
+                //        // Reference together the root Xml from objects
+                //        oXform.moPageXML = moPageXml;
+
+                //        // First Define the xform
+                //        oXform.NewFrm(formName);
+                //        oXform.submission(formName, action, "POST", "return form_check(this);");
+                //        // create the instance
+                //        oFrmInstance = oXform.moPageXML.CreateElement("Ukash");
+                //        oXform.Instance.AppendChild(oFrmInstance);
+
+                //        oXform.Instance.FirstChild.AppendChild(oXform.moPageXML.CreateElement("VoucherNumber"));
+                //        oXform.Instance.FirstChild.AppendChild(oXform.moPageXML.CreateElement("VoucherValue"));
+
+                //        // create the UI
+                //        oFrmGroup = oXform.addGroup(ref oXform.moXformElmt, "Ukash", "Ukash", sFormTitle);
+
+                //        // Adjust the title
+                //        switch (mcPaymentType ?? "")
+                //        {
+                //            case "deposit":
+                //                {
+                //                    oFrmGroup.SelectSingleNode("label").InnerText = "Make Deposit Payment";
+                //                    break;
+                //                }
+                //            case "settlement":
+                //                {
+                //                    oFrmGroup.SelectSingleNode("label").InnerText = Strings.Replace(sFormTitle, "Payment", "Settlement Payment");
+                //                    break;
+                //                }
+                //        }
+                //        oXform.addInput(ref oFrmGroup, "Ukash/VoucherNumber", false, "Ukash Voucher Number", "textbox required");
+                //        oXform.addInput(ref oFrmGroup, "Ukash/VoucherValue", false, "Ukash Voucher Value", "textbox required");
+
+                //        oXform.addSubmit(ref oFrmGroup, formName, "Submit");
+
+                //        // validate the Xform
+                //        if (this.goRequest["Ukash/VoucherNumber"] != default)
+                //        {
+                //            oXform.valid = true;
+
+                //            if (string.IsNullOrEmpty(this.goRequest["Ukash/VoucherNumber"]))
+                //            {
+                //                oXform.valid = false;
+                //                oXform.addNote("Ukash/VoucherNumber", Protean.xForm.noteTypes.Alert, "Please enter the Ukash card number.  Please ensure that you do not enter any symbols, such as currency symbols.");
+                //            }
+                //            if (!Information.IsNumeric(this.goRequest["Ukash/VoucherValue"]))
+                //            {
+                //                oXform.valid = false;
+                //                oXform.addNote("Ukash/VoucherValue", Protean.xForm.noteTypes.Alert, "Please enter the Ukash card value.  Please ensure that you do not enter any symbols, such as currency symbols.");
+                //            }
+                //            if (Conversions.ToDouble(this.goRequest["Ukash/VoucherValue"]) < mnPaymentAmount)
+                //            {
+                //                oXform.valid = false;
+                //                oXform.addNote("Ukash/VoucherValue", Protean.xForm.noteTypes.Alert, "Your Ukash card value is lower than the transaction amount. To combine two Ukash cards go to www.ukash.com .");
+                //            }
+                //            if (oXform.valid == true)
+                //            {
+                //                oXform.updateInstanceFromRequest();
+                //            }
+                //        }
+                //        oXform.addValues();
+
+                //        sProcess = oXform.moXformElmt.OuterXml;
+                //        sProcess = sProcess;
+
+                //        UkashXformRet = oXform;
+                //    }
+
+                //    catch (Exception ex)
+                //    {
+                //        stdTools.returnException(ref myWeb.msException, mcModuleName, "creditCardXform", ex, "", cProcessInfo, gbDebug);
+                //        return (Cms.xForm)null;
+                //    }
+
+                //    return UkashXformRet;
+
+                //}
+
+                //public string repeatSecPay(int nPaymentMethodID, ref XmlElement oRoot, string sSubmitPath)
+                //{
+                //    try
+                //    {
+                //        string cSQL = " SELECT TOP 1 tblCartOrder.nCartOrderKey , tblCartPaymentMethod.*, tblAudit.dExpireDate " + " FROM tblCartPaymentMethod INNER JOIN tblCartOrder ON tblCartPaymentMethod.nPayMthdKey = tblCartOrder.nPayMthdId INNER JOIN tblAudit ON tblCartPaymentMethod.nAuditId = tblAudit.nAuditKey " + " WHERE (tblCartPaymentMethod.nPayMthdKey = " + nPaymentMethodID + ") " + " ORDER BY tblCartOrder.nCartOrderKey";
+                //        var oSecpayCfg = moPaymentCfg.SelectSingleNode("provider[@name='SecPay']");
+                //        var oSecVpn = new Protean.Paypoint.SECVPNClient();
+
+                //        var oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Payments");
+                //        var oRow = oDS.Tables["Payments"].Rows[0];
+
+                //        string cAcc = oSecpayCfg.SelectSingleNode("accountId/@value").InnerText;
+                //        string cPW = oSecpayCfg.SelectSingleNode("accountPassword/@value").InnerText;
+                //        string cTransId = Conversions.ToString(oRow["ncartOrderKey"]);
+                //        DateTime dExpiry = Conversions.ToDate(oRow["dExpireDate"]);
+                //        string cExpiry = dExpiry.Month.ToString();
+                //        if (cExpiry.Length == 1)
+                //            cExpiry = "0" + cExpiry;
+                //        cExpiry += " " + dExpiry.Year;
+                //        string cRemotePW = "";
+                //        if (oSecpayCfg.SelectSingleNode("remotePassword/@value") is null)
+                //        {
+                //            throw new Exception("The configuration value 'remotePassword' has not been set for repeat payments.");
+                //        }
+                //        else
+                //        {
+                //            cRemotePW = oSecpayCfg.SelectSingleNode("remotePassword/@value").InnerText;
+                //        }
+                //        string cResponse = oSecVpn.repeatCardFull(cAcc, cPW, cTransId, mnPaymentAmount.ToString(), cRemotePW, mnCartId.ToString(), fmtSecPayDate(cExpiry), getSecPayOrder(ref oRoot));
+                //        // ?valid=false&trans_id=137&code=N&message=No {1} transaction found&resp_code=30
+                //        // ?valid=false&trans_id=139&code=N&message=Invalid {1} password supplied&resp_code=30
+                //        // ?valid=true&trans_id=140&code=A&auth_code=9999
+
+                //        var oDictResp = new Hashtable();
+
+                //        // cResponse = Replace(oXMLHttp.responseXML.selectSingleNode("//node()[local-name()='validateCardFullReturn']").Text, "+", " ")
+                //        if (!string.IsNullOrEmpty(cResponse))
+                //        {
+                //            string[] aResponse;
+                //            aResponse = Strings.Split(Strings.Right(cResponse, Strings.Len(cResponse) - 1), "&");
+                //            int i;
+                //            int nPos;
+                //            var loopTo = Information.UBound(aResponse);
+                //            for (i = 0; i <= loopTo; i++)
+                //            {
+                //                nPos = Strings.InStr(aResponse[i], "=");
+                //                oDictResp.Add(Strings.Left(aResponse[i], nPos - 1), Strings.Right(aResponse[i], Strings.Len(aResponse[i]) - nPos));
+                //            }
+                //        }
+                //        Debug.WriteLine(oDictResp.Count);
+                //        var bIsValid = default(bool);
+                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictResp["valid"], "true", false)))
+                //            bIsValid = true;
+
+                //        string err_msg_log = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Payment Failed : ", oDictResp["message"]), " (Code::"), oDictResp["code"]), ")"));
+                //        string err_msg = "";
+                //        // Produce nice format error messages.
+
+                //        switch (oDictResp["code"])
+                //        {
+                //            case "N":
+                //                {
+                //                    err_msg = "The transaction was not authorised by your payment provider.";
+                //                    break;
+                //                }
+                //            case "C":
+                //                {
+                //                    err_msg = "There was a comunication problem. Please try resubmitting your order later.";
+                //                    break;
+                //                }
+                //            case "P:A":
+                //                {
+                //                    err_msg = "There was a system error - the amount was not supplied or invalid.  Please call for assistance.";
+                //                    break;
+                //                }
+                //            case "P:X":
+                //                {
+                //                    err_msg = "There was a system error - not all the mandatory parameters were supplied.  Please call for assistance.";
+                //                    break;
+                //                }
+                //            case "P:P":
+                //                {
+                //                    err_msg = "The payment has already been processed.  This is a duplicate payment, and will not be processed.";
+                //                    break;
+                //                }
+                //            case "P:S":
+                //                {
+                //                    err_msg = "The start date is invalid.  Please check that you have entered your card details correctly.";
+                //                    break;
+                //                }
+                //            case "P:E":
+                //                {
+                //                    err_msg = "The expiry date is invalid.  Please check that you have entered your card details correctly.";
+                //                    break;
+                //                }
+                //            case "P:I":
+                //                {
+                //                    err_msg = "The issue number is invalid.  Please check that you have entered your card details correctly.";
+                //                    break;
+                //                }
+                //            case "P:C":
+                //                {
+                //                    err_msg = "The card number supplied is invalid.  Please check that you have entered your card details correctly.";
+                //                    break;
+                //                }
+                //            case "P:T":
+                //                {
+                //                    err_msg = "The card type does not match the card number entered.  Please check that you have entered your card details correctly.";
+                //                    break;
+                //                }
+                //            case "P:N":
+                //                {
+                //                    err_msg = "There was a system error - the customer name was not supplied.  Please call for assistance.";
+                //                    break;
+                //                }
+                //            case "P:M":
+                //                {
+                //                    err_msg = "There was a system error - the merchant account deos not exist or has not been registered.  Please call for assistance.";
+                //                    break;
+                //                }
+                //            case "P:B":
+                //                {
+                //                    err_msg = "There was a system error - the merchant account for this card type does not exist.  Please call for assistance.";
+                //                    break;
+                //                }
+                //            case "P:D":
+                //                {
+                //                    err_msg = "There was a system error - the merchant account for this currency does not exist.  Please call for assistance.";
+                //                    break;
+                //                }
+                //            case "P:V":
+                //                {
+                //                    err_msg = "The security code is invalid. Please check that you have entered your card details correctly. The security code can be found on the back of your card and is the last 3 digits of the series of digits on the back.";
+                //                    break;
+                //                }
+                //            case "P:R":
+                //                {
+                //                    err_msg = "There was a communication problem and the transaction has timed out.  Please try resubmitting your order later.";
+                //                    break;
+                //                }
+                //            case "P:#":
+                //                {
+                //                    err_msg = "There was a system error - no encryption key has been set up against this account.  Please call for assistance.";
+                //                    break;
+                //                }
+
+                //            default:
+                //                {
+                //                    err_msg = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("There was an unspecified error. Please call for assistance.(code::", oDictResp["code"]), " | "), oDictResp["message"]));
+                //                    break;
+                //                }
+                //        }
+
+                //        err_msg = "Payment Failed : " + err_msg;
+
+                //        if (bIsValid)
+                //        {
+                //            CartPaymentMethod(nPaymentMethodID);
+                //            return "";
+                //        }
+                //        else
+                //        {
+                //            return err_msg;
+                //        }
+                //    }
+
+                //    catch (Exception ex)
+                //    {
+                //        stdTools.returnException(ref myWeb.msException, mcModuleName, "repeatSecPay", ex, "", "", gbDebug);
+                //        return "An Error Occured";
+                //    }
+                //}
+
+                //public string repeatProTx(int nPaymentMethodID, ref XmlElement oRoot, string sSubmitPath)
+                //{
+
+                //    myWeb.PerfMon.Log("PaymentProviders", "payProTx");
+
+                //    string cSQL = " SELECT TOP 1 tblCartOrder.nCartOrderKey , tblCartPaymentMethod.*, tblAudit.dExpireDate, cPayMthdDetailXml  " + " FROM tblCartPaymentMethod INNER JOIN tblCartOrder ON tblCartPaymentMethod.nPayMthdKey = tblCartOrder.nPayMthdId INNER JOIN tblAudit ON tblCartPaymentMethod.nAuditId = tblAudit.nAuditKey " + " WHERE (tblCartPaymentMethod.nPayMthdKey = " + nPaymentMethodID + ") " + " ORDER BY tblCartOrder.nCartOrderKey";
+                //    var oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Payments");
+                //    var oRow = oDS.Tables["Payments"].Rows[0];
+
+                //    var oRepXML = new XmlDocument();
+                //    oRepXML.InnerXml = Conversions.ToString(oRow["cPayMthdDetailXml"]);
+                //    XmlElement oRepElmt = (XmlElement)oRepXML.DocumentElement.SelectSingleNode("ProTx");
+                //    string cRelatedVPSTxId = oRepElmt.GetAttribute("VPSTxId"); // - Returned
+                //    string orderPrefix = "";
+
+                //    string cRelatedVendorTxCode = Conversions.ToString(oRow["nCartOrderKey"]); // - Original Cart
+                //    string cRelatedSecurityKey = oRepElmt.GetAttribute("SecurityKey"); // - Returned
+                //    string cRelatedTxAuthNo = oRepElmt.GetAttribute("TxAuthNo"); // - Returned
+
+                //    HttpWebRequest oRequest;
+                //    HttpWebResponse oResponse;
+                //    Stream oStream;
+                //    StreamReader oStreamReader;
+                //    long nResult;
+
+                //    string cResponse;
+                //    string cRequest;
+                //    var oEncoding = new ASCIIEncoding();
+                //    byte[] byRequest;
+
+                //    string cMessage;
+
+                //    bool bIsValid = false;
+                //    string err_msg = "";
+
+                //    var oDictOpt = new Hashtable();
+
+                //    bool bCv2 = false;
+                //    bool b3dSecure = false;
+                //    Hashtable oResponseDict = null;
+
+                //    bool b3dAuthorised = false;
+
+                //    XmlNode oProTxCfg;
+                //    string cIPAddress = this.goRequest.ServerVariables["REMOTE_ADDR"];
+
+                //    string sAPIVer = "";
+                //    string sVSPUrl = "";
+                //    string sVSP3DSUrl = "";
+
+
+                //    try
+                //    {
+
+                //        // Get the payment options into a hashtable
+                //        oProTxCfg = moPaymentCfg.SelectSingleNode("provider[@name='ProTx']");
+                //        foreach (XmlElement oElmt in oProTxCfg.SelectNodes("*"))
+                //        {
+                //            if (oElmt.GetAttribute("value") !=null)
+                //            {
+                //                oDictOpt.Add(oElmt.Name, oElmt.GetAttribute("value"));
+                //            }
+                //        }
+
+                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["sendPrefix"], "true", false)))
+                //        {
+                //            orderPrefix = Conversions.ToString(Operators.ConcatenateObject(Interaction.IIf(nTransactionMode == TransactionMode.Test, "D-", ""), moCartConfig["OrderNoPrefix"]));
+                //            cRelatedVendorTxCode = orderPrefix + cRelatedVendorTxCode;
+                //        }
+
+                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["validateCV2"], "on", false)))
+                //            bCv2 = true;
+                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["secure3d"], "on", false)))
+                //        {
+                //            b3dSecure = true;
+                //            // Check the IP Addresses for a block
+                //            if (oDictOpt["secure3dIpBlock"] !=null)
+                //            {
+                //                var oRE = new Regex("(,|^)" + Strings.Replace(cIPAddress, ".", @"\.") + "(,|$)");
+                //                if (oRE.IsMatch(Conversions.ToString(oDictOpt["secure3dIpBlock"])))
+                //                    b3dSecure = false;
+                //            }
+                //        }
+
+
+                //        sAPIVer = "2.22";
+                //        switch (oDictOpt["opperationMode"])
+                //        {
+                //            case "simulator":
+                //                {
+                //                    // sVSPUrl = "https://ukvpstest.protx.com/VSPSimulator/VSPDirectGateway.asp"
+                //                    sVSPUrl = "https://ukvpstest.protx.com/VSPSimulator/VSPServerGateway.asp?Service=VendorRepeatTx";
+                //                    sVSP3DSUrl = "https://ukvpstest.protx.com/VSPSimulator/VSPDirectCallback.asp";
+                //                    break;
+                //                }
+                //            case "test":
+                //                {
+                //                    // sVSPUrl = "https://ukvpstest.protx.com/vspgateway/service/vspdirect-register.vsp"
+                //                    sVSPUrl = "https://ukvpstest.protx.com/vspgateway/service/repeat.vsp";
+                //                    sVSP3DSUrl = "https://ukvpstest.protx.com/vspgateway/service/direct3dcallback.vsp";
+                //                    break;
+                //                }
+                //            case "live":
+                //                {
+                //                    // sVSPUrl = "https://ukvps.protx.com/vspgateway/service/vspdirect-register.vsp"
+                //                    sVSPUrl = "https://ukvps.protx.com/vspgateway/service/repeat.vsp";
+                //                    sVSP3DSUrl = "https://ukvps.protx.com/vspgateway/service/direct3dcallback.vsp";
+                //                    break;
+                //                }
+                //        }
+
+
+
+                //        if (b3dSecure)
+                //        {
+                //            // check for return from aquiring bank
+                //            if (!string.IsNullOrEmpty(this.goRequest["PARes"]))
+                //            {
+                //                b3dAuthorised = true;
+                //            }
+                //        }
+
+                //        if (b3dAuthorised)
+                //        {
+                //            // 3D Secure Resume
+                //            cRequest = "MD=" + this.goRequest["MD"] + "&";
+                //            cRequest = cRequest + "PARes=" + this.goRequest["PARes"] + "&";
+                //        }
+                //        else
+                //        {
+                //            // standard card validation request
+
+                //            cRequest = "VPSProtocol=" + sAPIVer + "&";
+                //            cRequest = cRequest + "TxType=REPEAT&"; // & sTXType & "&" ' 0=omited 1=full auth 2=pre-auth only
+                //            cRequest = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "Vendor=", oDictOpt["accountId"]), "&")); // 0=omited 1=full auth 2=pre-auth only
+                //            cRequest = cRequest + "VendorTXCode=" + this.goServer.UrlEncode(mnCartId.ToString()) + "&";
+                //            cRequest = cRequest + "Amount=" + this.goServer.UrlEncode(FullMoneyString(mnPaymentAmount.ToString())) + "&";
+                //            cRequest = cRequest + "Currency=" + this.goServer.UrlEncode(Conversions.ToString(oDictOpt["currency"])) + "&";
+                //            cRequest = cRequest + "Description=" + Strings.Left(this.goServer.UrlEncode(mcPaymentOrderDescription), 100) + "&";
+                //            cRequest = cRequest + "RelatedVPSTxId=" + this.goServer.UrlEncode(cRelatedVPSTxId) + "&";
+                //            cRequest = cRequest + "RelatedVendorTxCode=" + this.goServer.UrlEncode(cRelatedVendorTxCode) + "&";
+                //            cRequest = cRequest + "RelatedSecurityKey=" + this.goServer.UrlEncode(cRelatedSecurityKey) + "&";
+                //            cRequest = cRequest + "RelatedTxAuthNo=" + this.goServer.UrlEncode(cRelatedTxAuthNo);
+
+                //            // Convert the request to bytes
+
+                //            byRequest = oEncoding.GetBytes(cRequest);
+
+                //            if (b3dAuthorised)
+                //            {
+                //                oRequest = (HttpWebRequest)WebRequest.Create(sVSP3DSUrl);
+                //            }
+                //            else
+                //            {
+                //                oRequest = (HttpWebRequest)WebRequest.Create(sVSPUrl);
+                //            }
+
+                //            oRequest.ContentType = "application/x-www-form-urlencoded";
+                //            oRequest.ContentLength = byRequest.Length;
+                //            oRequest.Method = "POST";
+                //            oStream = oRequest.GetRequestStream();
+                //            oStream.Write(byRequest, 0, byRequest.Length);
+                //            oStream.Close();
+
+                //            oResponse = (HttpWebResponse)oRequest.GetResponse();
+                //            oStream = oResponse.GetResponseStream();
+                //            oStreamReader = new StreamReader(oStream, Encoding.UTF8);
+                //            cResponse = oStreamReader.ReadToEnd();
+
+                //            oStreamReader.Close();
+                //            oResponse.Close();
+
+                //            // Validate the response.
+
+                //            if (string.IsNullOrEmpty(cResponse) | Strings.InStr(cResponse, "=") == 0)
+                //            {
+                //                err_msg = "There was a communications error.";
+                //            }
+                //            else
+                //            {
+                //                // lets take the response and put it in a hash table
+                //                oResponseDict = UrlResponseToHashTable(cResponse, Constants.vbCrLf, "=");
+
+                //                nResult = Conversions.ToLong(oResponseDict["intStatus"]);
+
+                //                switch (oResponseDict["Status"])
+                //                {
+
+                //                    case "OK":
+                //                    case "AUTHENTICATED":
+                //                    case "REGISTERED":
+                //                        {
+                //                            // Successful Authorisation
+                //                            err_msg = Conversions.ToString(Operators.ConcatenateObject("Payment was successful. Transaction ref: ", oResponseDict["VPSTxId"]));
+                //                            bIsValid = true;
+                //                            break;
+                //                        }
+
+                //                    case "3DAUTH":
+                //                        {
+
+                //                            // create an xform that automatically redirects to Aquiring Banks 3DS portal.
+                //                            // Save MD as paymentRef
+                //                            this.goSession["VPSTxId"] = oResponseDict["VPSTxId"];
+                //                            this.goSession["SecurityKey"] = oResponseDict["SecurityKey"];
+
+                //                            string sRedirectURL;
+                //                            sRedirectURL = moCartConfig["SecureURL"] + "?cartCmd=SubmitPaymentDetails" + "&";
+
+                //                            bIsValid = false;
+
+                //                            err_msg = "This card has subscribed to 3D Secure. You will now be re-directed to your banks website for further verification.";
+                //                            break;
+                //                        }
+
+
+                //                    case "MALFORMED":
+                //                    case "INVALID":
+                //                    case "NOTAUTHED":
+                //                    case "REJECTED":
+                //                    case "ERROR":
+                //                        {
+                //                            // Failed / Error Authorisation
+
+                //                            cMessage = Conversions.ToString(oResponseDict["StatusDetail"]);
+
+                //                            if (Strings.InStr(cMessage, "card number") > 0)
+                //                                err_msg = "The card number given is not valid.";
+                //                            if (Strings.InStr(cMessage, "IssueNumber") > 0)
+                //                                err_msg = "The issue number is not valid - it may not be required for non-Switch/Solo cards.";
+                //                            if (Strings.InStr(cMessage, "StartDate") > 0 | Strings.InStr(cMessage, "Start Date") > 0)
+                //                                err_msg = "The issue date is not valid - it may not be required for Switch or Solo cards.";
+                //                            if (Strings.InStr(cMessage, "ExpiryDate") > 0 | Strings.InStr(cMessage, "Expiry Date") > 0)
+                //                                err_msg = "The expiry date is not valid.";
+
+
+                //                            if (gbDebug)
+                //                            {
+                //                                err_msg = "<br/>Full Request:" + this.goServer.HtmlEncode(this.goServer.UrlDecode(cRequest)) + "<br/>Full Response:" + this.goServer.HtmlEncode(this.goServer.UrlDecode(cResponse));
+                //                            }
+                //                            else
+                //                            {
+                //                                err_msg = "There was an error processing this payment.<br/>  No payment has been made.<br/>  Please check the details you entered and try again, or call for assistance.<br/><br/>  The error returned from the bank was :<br/><br/> " + this.goServer.HtmlEncode(this.goServer.UrlDecode(cMessage));
+                //                            }
+
+                //                            break;
+                //                        }
+
+                //                    default:
+                //                        {
+                //                            // Response not recognised.
+                //                            cMessage = Conversions.ToString(oResponseDict["StatusDetail"]);
+
+                //                            if (gbDebug)
+                //                            {
+                //                                err_msg = "<br/>Full Request:" + this.goServer.HtmlEncode(this.goServer.UrlDecode(cRequest)) + "<br/>Full Response:" + this.goServer.HtmlEncode(this.goServer.UrlDecode(cResponse));
+                //                            }
+                //                            else
+                //                            {
+                //                                err_msg = "There was an error processing this payment.  No payment has been made.  Please check the details you entered and try again, or call for assistance.  The error detail was : " + this.goServer.HtmlEncode(this.goServer.UrlDecode(cMessage));
+                //                            }
+
+                //                            break;
+                //                        }
+                //                }
+                //            }
+
+
+                //            // Update Seller Notes:
+                //            cSQL = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
+                //            oDS = new DataSet();
+
+                //            oDS = modbHelper.getDataSetForUpdate(cSQL, "Order", "Cart");
+                //            foreach (DataRow currentORow in oDS.Tables["Order"].Rows)
+                //            {
+                //                oRow = currentORow;
+                //                if (bIsValid)
+                //                {
+                //                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Received) "), Constants.vbLf), "Transaction Ref:"), oResponseDict["VPSTxId"]), Constants.vbLf), "comment: "), err_msg);
+                //                }
+                //                else
+                //                {
+                //                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Failed) "), Constants.vbLf), "comment: ");
+                //                }
+                //            }
+                //            modbHelper.updateDataset(ref oDS, "Order");
+
+                //        }
+
+                //        oRepXML.DocumentElement.SetAttribute("AmountPaid", mnPaymentAmount.ToString());
+                //        XmlElement oProTXElmt = (XmlElement)oRepXML.DocumentElement.SelectSingleNode("ProTx");
+                //        oProTXElmt.SetAttribute("VPSTxId", Conversions.ToString(oResponseDict["VPSTxId"]));
+                //        oProTXElmt.SetAttribute("SecurityKey", Conversions.ToString(oResponseDict["SecurityKey"]));
+                //        oProTXElmt.SetAttribute("TxAuthNo", Conversions.ToString(oResponseDict["TxAuthNo"]));
+
+                //        savedPaymentId = savePayment((long)myWeb.mnUserId, "ProTx", mnCartId.ToString(), "ProTX", oRepXML.DocumentElement, DateTime.Now, false, mnPaymentAmount);
+                //        if (bIsValid)
+                //        {
+                //            CartPaymentMethod((int)savedPaymentId);
+                //            // CartPaymentMethod(cRelatedVendorTxCode)
+                //            return "";
+                //        }
+                //        else
+                //        {
+                //            // err_msg = oResponseDict("Status") & "<br/>" & oResponseDict("StatusDetail")
+                //            return err_msg;
+                //        }
+                //    }
+                //    // Return ccXform
+
+                //    catch (Exception ex)
+                //    {
+                //        stdTools.returnException(ref myWeb.msException, mcModuleName, "payMetaCharge", ex, "", "", gbDebug);
+                //        return "An Error Occured";
+                //    }
+                //}
 
                 public int savePayment(long nUserId, string cProviderName, string cProviderRef, string cMethodName, XmlElement oDetailXML, DateTime dExpire, bool bUserSaved, double nAmountPaid)
                 {
@@ -6498,14 +6498,14 @@ namespace Protean
                         string cResult = myWeb.moDbHelper.ExeProcessSqlScalar(cSQL);
                         switch (cResult ?? "")
                         {
-                            case "SecPay":
-                                {
-                                    return repeatSecPay(nPaymentMethodID, ref oRoot, sSubmitPath);
-                                }
-                            case "ProTx":
-                                {
-                                    return repeatProTx(nPaymentMethodID, ref oRoot, sSubmitPath);
-                                }
+                            //case "SecPay":
+                            //    {
+                            //        return repeatSecPay(nPaymentMethodID, ref oRoot, sSubmitPath);
+                            //    }
+                            //case "ProTx":
+                            //    {
+                            //        return repeatProTx(nPaymentMethodID, ref oRoot, sSubmitPath);
+                            //    }
 
                             default:
                                 {
@@ -6692,620 +6692,620 @@ namespace Protean
                 }
 
 
-                public Cms.xForm payPremiumCredit(ref XmlElement oRoot, string sSubmitPath)
-                {
-                    myWeb.PerfMon.Log("PaymentProviders", "payPremiumCredit");
-                    string sSql;
+                //public Cms.xForm payPremiumCredit(ref XmlElement oRoot, string sSubmitPath)
+                //{
+                //    myWeb.PerfMon.Log("PaymentProviders", "payPremiumCredit");
+                //    string sSql;
 
-                    var ccXform = new Cms.xForm(ref myWeb.msException);
+                //    var ccXform = new Cms.xForm(ref myWeb.msException);
 
-                    string err_msg = "";
-                    string err_msg_log = "";
-                    string sProcessInfo = "";
+                //    string err_msg = "";
+                //    string err_msg_log = "";
+                //    string sProcessInfo = "";
 
-                    var oDictOpt = new Hashtable();
+                //    var oDictOpt = new Hashtable();
 
-                    bool bCv2 = false;
-                    bool b3DSecure = false;
-                    bool b3DAuthorised = false;
-                    string sRedirectURL = "";
-                    string sPaymentRef = "";
-                    string sTransactionReport = "";
-
-                    string cProcessInfo = "payPremiumCredit";
+                //    bool bCv2 = false;
+                //    bool b3DSecure = false;
+                //    bool b3DAuthorised = false;
+                //    string sRedirectURL = "";
+                //    string sPaymentRef = "";
+                //    string sTransactionReport = "";
+
+                //    string cProcessInfo = "payPremiumCredit";
 
-                    // Get the payment options into a hashtable
-                    XmlNode oPclCfg;
-                    bool bSavePayment = false;
+                //    // Get the payment options into a hashtable
+                //    XmlNode oPclCfg;
+                //    bool bSavePayment = false;
 
-                    try
-                    {
+                //    try
+                //    {
 
-                        // Reference together the root Xml from objects
-                        ccXform.moPageXML = moPageXml;
+                //        // Reference together the root Xml from objects
+                //        ccXform.moPageXML = moPageXml;
 
-                        // Get the payment options
-                        oPclCfg = moPaymentCfg.SelectSingleNode("provider[@name='PremiumCredit']");
-                        oDictOpt = xmlToHashTable(oPclCfg, "value");
+                //        // Get the payment options
+                //        oPclCfg = moPaymentCfg.SelectSingleNode("provider[@name='PremiumCredit']");
+                //        oDictOpt = xmlToHashTable(oPclCfg, "value");
 
-                        bool bTestMode = Conversions.ToBoolean(Interaction.IIf(Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["OpperationMode"], "test", false)), true, false));
+                //        bool bTestMode = Conversions.ToBoolean(Interaction.IIf(Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["OpperationMode"], "test", false)), true, false));
 
 
-                        // override the currency
-                        if (oDictOpt.ContainsKey("currency"))
-                            oDictOpt.Remove("currency");
-                        oDictOpt.Add("currency", mcCurrency);
+                //        // override the currency
+                //        if (oDictOpt.ContainsKey("currency"))
+                //            oDictOpt.Remove("currency");
+                //        oDictOpt.Add("currency", mcCurrency);
 
-                        // Load the Xform
+                //        // Load the Xform
 
-                        if (!ccXform.load("/xforms/cart/payment/PremiumCredit.xml", myWeb.maCommonFolders))
-                        {
-                            ccXform.NewFrm("errorForm");
-                            ccXform.addGroup(ref ccXform.moXformElmt, "notes", sLabel: "Missing File: /ewcommon/xforms/cart/payment/PremiumCredit.xml");
-                        }
-
-                        // update submit path
-                        ccXform.submission("payment", sSubmitPath, "POST", "return form_check(this);");
-
-                        XmlElement oBusiness = (XmlElement)ccXform.Instance.SelectSingleNode("CreateNewBusiness/Business");
-
-
-
-                        // populate from Cart Billing Contact
-                        string[] aGivenName = Strings.Split(moBillingContact.SelectSingleNode("GivenName").InnerText, " ");
-
-                        oBusiness.SelectSingleNode("PolicyClientReference").InnerText = mcOrderRef;
-                        oBusiness.SelectSingleNode("CustTitle").InnerText = aGivenName[0];
-                        oBusiness.SelectSingleNode("CustForeNames").InnerText = aGivenName[1];
-                        oBusiness.SelectSingleNode("CustSurname").InnerText = aGivenName[2];
-                        oBusiness.SelectSingleNode("CustAddress1").InnerText = moBillingContact.SelectSingleNode("Street").InnerText;
-                        oBusiness.SelectSingleNode("CustAddress2").InnerText = "";
-                        oBusiness.SelectSingleNode("CustAddress3").InnerText = "";
-                        oBusiness.SelectSingleNode("CustAddress4").InnerText = moBillingContact.SelectSingleNode("City").InnerText;
-                        oBusiness.SelectSingleNode("CustAddress5").InnerText = moBillingContact.SelectSingleNode("State").InnerText;
-                        oBusiness.SelectSingleNode("CustPostCode").InnerText = moBillingContact.SelectSingleNode("PostalCode").InnerText;
-                        oBusiness.SelectSingleNode("CustWorkTel").InnerText = moBillingContact.SelectSingleNode("Telephone").InnerText;
-                        oBusiness.SelectSingleNode("CustHomeTel").InnerText = Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(moBillingContact.SelectSingleNode("Fax").InnerText), moBillingContact.SelectSingleNode("Telephone").InnerText, moBillingContact.SelectSingleNode("Fax").InnerText));
-
-                        if (bTestMode)
-                        {
-                            // Case for TEST
-                            XmlElement oFormGroup;
-                            oFormGroup = (XmlElement)ccXform.moXformElmt.SelectSingleNode("descendant-or-self::group");
-                            if (oFormGroup != null)
-                            {
-                                XmlNode argoNode = oFormGroup;
-                                ccXform.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, "!!! THIS TRANSACTION IS IN TEST MODE, NO FUNDS WILL BE TAKEN");
-                                oFormGroup = (XmlElement)argoNode;
-                            }
-
-                            // 'Do the stuff here...
-                            var oPclTrans = new Protean.com.pclplstest.www.XMLTransferEngine(); // Object 'com.pclpls.www.XMLTransferEngine
-                                                                                                // Lets go and get some quotes from PCL for payment options
-
-                            bool bOverrideRate = Conversions.ToBoolean(Interaction.IIf(Conversions.ToBoolean(Operators.OrObject(Operators.OrObject(Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "true", false), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "True", false)), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "on", false))), true, false));
-                            // Dim oSchemeCodeInput As XmlElement = ccXform.moXformElmt.SelectSingleNode("descendant-or-self::select1[@bind='SchemeCode']")
-
-                            Protean.com.pclplstest.www.SchemeQuote oPclSchemeQuoteSelected = (Protean.com.pclplstest.www.SchemeQuote)null;
-                            int nSchemeOptCount = 0;
-
-                            Protean.com.pclplstest.www.Quotation oPclQuotation;
-
-                            oPclQuotation = oPclTrans.GetQuote(Conversions.ToString(oDictOpt["UserName"]), Conversions.ToString(oDictOpt["Password"]), (Protean.com.pclplstest.www.eTransactionType)Protean.com.pclpls.www.eTransactionType.NewBusiness, (decimal)(mnPaymentAmount * 100d), Conversions.ToString(oDictOpt["PPICode"]), Conversions.ToDecimal(oDictOpt["ChargePercentage"]), bOverrideRate);
-
-                            foreach (var oPclSchemeQuote in oPclQuotation.SchemeQuotes)
-                            {
-                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oPclSchemeQuote.SchemeCode, oDictOpt["SchemeCode"], false)))
-                                {
-                                    oPclSchemeQuoteSelected = oPclSchemeQuote;
-                                }
-                            }
-
-                            oBusiness.SelectSingleNode("ClientPremium").InnerText = oPclSchemeQuoteSelected.Premium.ToString();
-                            oBusiness.SelectSingleNode("ChargePercentage").InnerText = oPclSchemeQuoteSelected.APR.ToString();
-                            oBusiness.SelectSingleNode("NumInstalments").InnerText = oPclSchemeQuoteSelected.NumInstalments.ToString();
-                            oBusiness.SelectSingleNode("InstalmentAmt").InnerText = oPclSchemeQuoteSelected.Instalment.ToString();
-                            oBusiness.SelectSingleNode("DepositAmt").InnerText = oPclSchemeQuoteSelected.Instalment.ToString();
-
-                            if (!string.IsNullOrEmpty(this.goRequest["cPaymentMethod"]))
-                            {
-                                oBusiness.SelectSingleNode("SchemeCode").InnerText = this.goRequest["cPaymentMethod"];
-                            }
-
-
-
-                            // nSchemeOptCount = getPremiumCreditPaymentMethods(ccXform, oSchemeCodeInput, nClientPremium, cPaymentMethod)
-
-                            // First we update the instance from the cart.
-
-                            // Customer Contact Details
-
-                            if (!string.IsNullOrEmpty(this.goRequest["confirmPaymentDetails"]))
-                            {
-                                ccXform.updateInstanceFromRequest();
-                                ccXform.validate();
-                                if (ccXform.valid)
-                                {
-
-                                    var oPclNewBusiness = new Protean.com.pclplstest.www.NewBusiness();
-
-                                    oPclNewBusiness.AddCoverCode = oBusiness.SelectSingleNode("AddCoverCode").InnerText;
-                                    oPclNewBusiness.BankAccountName = oBusiness.SelectSingleNode("BankAccountName").InnerText;
-                                    oPclNewBusiness.BankAccountNumber = oBusiness.SelectSingleNode("BankAccountNumber").InnerText;
-                                    oPclNewBusiness.BankSortCode = Strings.Replace(oBusiness.SelectSingleNode("BankSortCode").InnerText, "-", "");
-                                    oPclNewBusiness.BusinessType = 'N'; // (N)ew or (R)enewal
-                                    oPclNewBusiness.ChargePercentage = -1; // oPclSchemeQuoteSelected.ServiceChargePercentage
-                                    oPclNewBusiness.ClientPremium = (int)Math.Round(oPclSchemeQuoteSelected.Premium);
-                                    oPclNewBusiness.ContractDate = mdFulfillmentDate;
-                                    oPclNewBusiness.CreditAgreementDate = mdFulfillmentDate;
-                                    oPclNewBusiness.CreditRenewalDate = DateAndTime.DateAdd(DateInterval.Year, 1d, mdFulfillmentDate);
-                                    oPclNewBusiness.CustAddress1 = oBusiness.SelectSingleNode("CustAddress1").InnerText;
-                                    oPclNewBusiness.CustAddress2 = oBusiness.SelectSingleNode("CustAddress2").InnerText;
-                                    oPclNewBusiness.CustAddress3 = oBusiness.SelectSingleNode("CustAddress3").InnerText;
-                                    oPclNewBusiness.CustAddress4 = oBusiness.SelectSingleNode("CustAddress4").InnerText;
-                                    oPclNewBusiness.CustAddress5 = oBusiness.SelectSingleNode("CustAddress5").InnerText;
-                                    oPclNewBusiness.CustForeNames = oBusiness.SelectSingleNode("CustForeNames").InnerText;
-                                    oPclNewBusiness.CustHomeTel = oBusiness.SelectSingleNode("CustHomeTel").InnerText;
-                                    oPclNewBusiness.CustPostCode = oBusiness.SelectSingleNode("CustPostCode").InnerText;
-                                    oPclNewBusiness.CustSurname = oBusiness.SelectSingleNode("CustSurname").InnerText;
-                                    oPclNewBusiness.CustTitle = oBusiness.SelectSingleNode("CustTitle").InnerText;
-                                    oPclNewBusiness.CustWorkTel = oBusiness.SelectSingleNode("CustWorkTel").InnerText;
-                                    oPclNewBusiness.DepositAmt = (int)Math.Round(oPclSchemeQuoteSelected.Instalment);
-                                    oPclNewBusiness.EntryType = Conversions.ToChar(oBusiness.SelectSingleNode("EntryType").InnerText);
-                                    oPclNewBusiness.InstalmentAmt = (int)Math.Round(oPclSchemeQuoteSelected.Instalment);
-                                    oPclNewBusiness.NumInstalments = oPclSchemeQuoteSelected.NumInstalments;
-                                    oPclNewBusiness.PolicyClientReference = oBusiness.SelectSingleNode("PolicyClientReference").InnerText;
-                                    oPclNewBusiness.PrefPaymentDate = Conversions.ToInteger(oBusiness.SelectSingleNode("PrefPaymentDate").InnerText);
-                                    oPclNewBusiness.SchemeBranch = Conversions.ToString(oDictOpt["SchemeBrokerNo"]);
-                                    oPclNewBusiness.SchemeBrokerNo = Conversions.ToString(oDictOpt["SchemeBrokerNo"]);
-                                    oPclNewBusiness.SchemeCode = oBusiness.SelectSingleNode("SchemeCode").InnerText;
-                                    oPclNewBusiness.TransID = oPclTrans.GetNextTransactionID(Conversions.ToString(oDictOpt["UserName"]), Conversions.ToString(oDictOpt["Password"]), (Protean.com.pclplstest.www.eTransactionType)Protean.com.pclpls.www.eTransactionType.NewBusiness);
-
-                                    Protean.com.pclplstest.www.TransactionResult oPclTransResult;
-
-                                    oPclTransResult = oPclTrans.CreateNewBusiness(Conversions.ToString(oDictOpt["UserName"]), Conversions.ToString(oDictOpt["Password"]), oPclNewBusiness);
-
-                                    if (oPclTransResult.Success)
-                                    {
-
-                                        string cMethodName = "Direct Debit";
-
-                                        var oSecPayElmt = ccXform.Instance.OwnerDocument.CreateElement("PremiumCredit");
-                                        // oSecPayElmt.SetAttribute("AuthCode", cAuthCode)
-                                        ccXform.Instance.FirstChild.AppendChild(oSecPayElmt);
-
-                                        savePayment((long)myWeb.mnUserId, "PremiumCredit", mnCartId.ToString(), cMethodName, (XmlElement)ccXform.Instance.FirstChild, DateTime.Now, true, mnPaymentAmount);
-
-                                        XmlNode argoNode1 = (XmlNode)ccXform.moXformElmt;
-                                        ccXform.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, err_msg);
-                                        ccXform.moXformElmt = (XmlElement)argoNode1;
-
-                                        // Update Seller Notes:
-                                        sTransactionReport = Constants.vbLf + Conversions.ToString(DateTime.Today) + " " + Conversions.ToString(DateAndTime.TimeOfDay) + ": changed to: (PremiumCredit Payment Successfull) ";
-                                    }
-                                    else
-                                    {
-                                        // We'll sniff for error codes in an overloaded xslt
-                                        sTransactionReport = Constants.vbLf + Conversions.ToString(DateTime.Today) + " " + Conversions.ToString(DateAndTime.TimeOfDay) + ": changed to: (PremiumCredit Payment Failed) " + Constants.vbLf + "comment: " + oPclTransResult.ErrorCode.ToString() + " " + oPclTransResult.Message;
-
-                                        ccXform.addNote("payDetails", Protean.xForm.noteTypes.Alert, oPclTransResult.ErrorCode.ToString() + " " + oPclTransResult.Message, true);
-                                        ccXform.valid = false;
-
-                                    }
-                                }
-                            }
-
-                            // Update Seller Notes:
-
-                            ccXform.addValues();
-                        }
-                        else
-                        {
-                            // Case for LIVE
-                            // 'Do the stuff here...
-                            var oPclTrans = new Protean.com.pclpls.www.XMLTransferEngine(); // Object 'com.pclpls.www.XMLTransferEngine
-                                                                                            // Lets go and get some quotes from PCL for payment options
-
-
-                            bool bOverrideRate = Conversions.ToBoolean(Interaction.IIf(Conversions.ToBoolean(Operators.OrObject(Operators.OrObject(Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "true", false), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "True", false)), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "on", false))), true, false));
-                            // Dim oSchemeCodeInput As XmlElement = ccXform.moXformElmt.SelectSingleNode("descendant-or-self::select1[@bind='SchemeCode']")
-
-                            Protean.com.pclpls.www.SchemeQuote oPclSchemeQuoteSelected = (Protean.com.pclpls.www.SchemeQuote)null;
-                            int nSchemeOptCount = 0;
-
-                            Protean.com.pclpls.www.Quotation oPclQuotation;
-
-                            oPclQuotation = oPclTrans.GetQuote(Conversions.ToString(oDictOpt["UserName"]), Conversions.ToString(oDictOpt["Password"]), Protean.com.pclpls.www.eTransactionType.NewBusiness, (decimal)(mnPaymentAmount * 100d), Conversions.ToString(oDictOpt["PPICode"]), Conversions.ToDecimal(oDictOpt["ChargePercentage"]), bOverrideRate);
-
-                            foreach (var oPclSchemeQuote in oPclQuotation.SchemeQuotes)
-                            {
-                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oPclSchemeQuote.SchemeCode, oDictOpt["SchemeCode"], false)))
-                                {
-                                    oPclSchemeQuoteSelected = oPclSchemeQuote;
-                                }
-                            }
-
-                            oBusiness.SelectSingleNode("ClientPremium").InnerText = oPclSchemeQuoteSelected.Premium.ToString();
-                            oBusiness.SelectSingleNode("ChargePercentage").InnerText = oPclSchemeQuoteSelected.APR.ToString();
-                            oBusiness.SelectSingleNode("NumInstalments").InnerText = oPclSchemeQuoteSelected.NumInstalments.ToString();
-                            oBusiness.SelectSingleNode("InstalmentAmt").InnerText = oPclSchemeQuoteSelected.Instalment.ToString();
-                            oBusiness.SelectSingleNode("DepositAmt").InnerText = oPclSchemeQuoteSelected.Instalment.ToString();
-
-                            if (!string.IsNullOrEmpty(this.goRequest["cPaymentMethod"]))
-                            {
-                                oBusiness.SelectSingleNode("SchemeCode").InnerText = this.goRequest["cPaymentMethod"];
-                            }
-
-
-
-                            // nSchemeOptCount = getPremiumCreditPaymentMethods(ccXform, oSchemeCodeInput, nClientPremium, cPaymentMethod)
-
-                            // First we update the instance from the cart.
-
-                            // Customer Contact Details
-
-                            if (!string.IsNullOrEmpty(this.goRequest["confirmPaymentDetails"]))
-                            {
-                                ccXform.updateInstanceFromRequest();
-                                ccXform.validate();
-                                if (ccXform.valid)
-                                {
-
-                                    var oPclNewBusiness = new Protean.com.pclpls.www.NewBusiness();
-
-                                    oPclNewBusiness.AddCoverCode = oBusiness.SelectSingleNode("AddCoverCode").InnerText;
-                                    oPclNewBusiness.BankAccountName = oBusiness.SelectSingleNode("BankAccountName").InnerText;
-                                    oPclNewBusiness.BankAccountNumber = oBusiness.SelectSingleNode("BankAccountNumber").InnerText;
-                                    oPclNewBusiness.BankSortCode = Strings.Replace(oBusiness.SelectSingleNode("BankSortCode").InnerText, "-", "");
-                                    oPclNewBusiness.BusinessType = 'N'; // (N)ew or (R)enewal
-                                    oPclNewBusiness.ChargePercentage = -1; // oPclSchemeQuoteSelected.ServiceChargePercentage
-                                    oPclNewBusiness.ClientPremium = (int)Math.Round(oPclSchemeQuoteSelected.Premium);
-                                    oPclNewBusiness.ContractDate = mdFulfillmentDate;
-                                    oPclNewBusiness.CreditAgreementDate = mdFulfillmentDate;
-                                    oPclNewBusiness.CreditRenewalDate = DateAndTime.DateAdd(DateInterval.Year, 1d, mdFulfillmentDate);
-                                    oPclNewBusiness.CustAddress1 = oBusiness.SelectSingleNode("CustAddress1").InnerText;
-                                    oPclNewBusiness.CustAddress2 = oBusiness.SelectSingleNode("CustAddress2").InnerText;
-                                    oPclNewBusiness.CustAddress3 = oBusiness.SelectSingleNode("CustAddress3").InnerText;
-                                    oPclNewBusiness.CustAddress4 = oBusiness.SelectSingleNode("CustAddress4").InnerText;
-                                    oPclNewBusiness.CustAddress5 = oBusiness.SelectSingleNode("CustAddress5").InnerText;
-                                    oPclNewBusiness.CustForeNames = oBusiness.SelectSingleNode("CustForeNames").InnerText;
-                                    oPclNewBusiness.CustHomeTel = oBusiness.SelectSingleNode("CustHomeTel").InnerText;
-                                    oPclNewBusiness.CustPostCode = oBusiness.SelectSingleNode("CustPostCode").InnerText;
-                                    oPclNewBusiness.CustSurname = oBusiness.SelectSingleNode("CustSurname").InnerText;
-                                    oPclNewBusiness.CustTitle = oBusiness.SelectSingleNode("CustTitle").InnerText;
-                                    oPclNewBusiness.CustWorkTel = oBusiness.SelectSingleNode("CustWorkTel").InnerText;
-                                    // oPclNewBusiness.DepositAmt = oPclSchemeQuoteSelected.Instalment
-                                    oPclNewBusiness.EntryType = Conversions.ToChar(oBusiness.SelectSingleNode("EntryType").InnerText);
-                                    oPclNewBusiness.InstalmentAmt = (int)Math.Round(oPclSchemeQuoteSelected.Instalment);
-                                    oPclNewBusiness.NumInstalments = oPclSchemeQuoteSelected.NumInstalments;
-                                    oPclNewBusiness.PolicyClientReference = oBusiness.SelectSingleNode("PolicyClientReference").InnerText;
-                                    oPclNewBusiness.PrefPaymentDate = Conversions.ToInteger(oBusiness.SelectSingleNode("PrefPaymentDate").InnerText);
-                                    oPclNewBusiness.SchemeBranch = Conversions.ToString(oDictOpt["SchemeBrokerNo"]);
-                                    oPclNewBusiness.SchemeBrokerNo = Conversions.ToString(oDictOpt["SchemeBrokerNo"]);
-                                    oPclNewBusiness.SchemeCode = oBusiness.SelectSingleNode("SchemeCode").InnerText;
-                                    oPclNewBusiness.TransID = oPclTrans.GetNextTransactionID(Conversions.ToString(oDictOpt["UserName"]), Conversions.ToString(oDictOpt["Password"]), Protean.com.pclpls.www.eTransactionType.NewBusiness);
-
-                                    Protean.com.pclpls.www.TransactionResult oPclTransResult;
-
-                                    oPclTransResult = oPclTrans.CreateNewBusiness(Conversions.ToString(oDictOpt["UserName"]), Conversions.ToString(oDictOpt["Password"]), oPclNewBusiness);
-
-                                    if (oPclTransResult.Success)
-                                    {
-
-                                        string cMethodName = "Direct Debit";
-
-                                        var oSecPayElmt = ccXform.Instance.OwnerDocument.CreateElement("PremiumCredit");
-                                        // oSecPayElmt.SetAttribute("AuthCode", cAuthCode)
-                                        ccXform.Instance.FirstChild.AppendChild(oSecPayElmt);
-
-                                        savePayment((long)myWeb.mnUserId, "PremiumCredit", mnCartId.ToString(), cMethodName, (XmlElement)ccXform.Instance.FirstChild, DateTime.Now, true, mnPaymentAmount);
-
-                                        XmlNode argoNode2 = (XmlNode)ccXform.moXformElmt;
-                                        ccXform.addNote(ref argoNode2, Protean.xForm.noteTypes.Alert, err_msg);
-                                        ccXform.moXformElmt = (XmlElement)argoNode2;
-
-                                        // Update Seller Notes:
-                                        sTransactionReport = Constants.vbLf + Conversions.ToString(DateTime.Today) + " " + Conversions.ToString(DateAndTime.TimeOfDay) + ": changed to: (PremiumCredit Payment Successfull) ";
-                                    }
-                                    else
-                                    {
-                                        // We'll sniff for error codes in an overloaded xslt
-                                        sTransactionReport = Constants.vbLf + Conversions.ToString(DateTime.Today) + " " + Conversions.ToString(DateAndTime.TimeOfDay) + ": changed to: (PremiumCredit Payment Failed) " + Constants.vbLf + "comment: " + oPclTransResult.ErrorCode.ToString() + " " + oPclTransResult.Message;
-                                        ccXform.addNote("payDetails", Protean.xForm.noteTypes.Alert, oPclTransResult.ErrorCode.ToString() + " " + oPclTransResult.Message, true);
-                                        ccXform.valid = false;
-                                    }
-                                }
-                            }
-
-                            ccXform.addValues();
-
-                        }
-
-                        if (!string.IsNullOrEmpty(sTransactionReport))
-                        {
-                            sSql = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
-                            DataSet oDs;
-                            oDs = modbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
-                            foreach (DataRow oRow in oDs.Tables["Order"].Rows)
-                                oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), sTransactionReport);
-                            modbHelper.updateDataset(ref oDs, "Order");
-                        }
-
-
-                        return ccXform;
-                    }
-
-                    catch (Exception ex)
-                    {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "payPremiumCredit", ex, "", cProcessInfo, gbDebug);
-                        return (Cms.xForm)null;
-                    }
-                }
-
-                public int getPremiumCreditPaymentMethods(ref Cms.xForm oOptXform, ref XmlElement oSelectElmt, double nClientPremium, ref string cPaymentMethod)
-                {
-                    myWeb.PerfMon.Log("PaymentProviders", "getPremiumCreditPaymentMethods");
-                    string cProcessInfo = "getPremiumCreditPaymentMethods";
-                    bool bFirstRow = true;
-                    int nOptCount = 0;
-                    XmlNode oPclCfg;
-
-                    var oDictOpt = new Hashtable();
-                    try
-                    {
-
-                        oPclCfg = moPaymentCfg.SelectSingleNode("provider[@name='PremiumCredit']");
-                        oDictOpt = xmlToHashTable(oPclCfg, "value");
-
-                        bool bTestMode = Conversions.ToBoolean(Interaction.IIf(Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["OpperationMode"], "test", false)), true, false));
-
-                        if (bTestMode)
-                        {
-
-                            var oPclTrans = new Protean.com.pclplstest.www.XMLTransferEngine();
-                            Protean.com.pclplstest.www.Quotation oPclQuotation;
-
-                            bool bOverrideRate = Conversions.ToBoolean(Interaction.IIf(Conversions.ToBoolean(Operators.OrObject(Operators.OrObject(Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "true", false), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "True", false)), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "on", false))), true, false));
-
-                            oPclQuotation = oPclTrans.GetQuote(Conversions.ToString(oDictOpt["UserName"]), Conversions.ToString(oDictOpt["Password"]), (Protean.com.pclplstest.www.eTransactionType)Protean.com.pclpls.www.eTransactionType.NewBusiness, (decimal)(nClientPremium * 100d), Conversions.ToString(oDictOpt["PPICode"]), Conversions.ToDecimal(oDictOpt["ChargePercentage"]), bOverrideRate);
-
-                            foreach (var oPclSchemeQuote in oPclQuotation.SchemeQuotes)
-                            {
-                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oPclSchemeQuote.SchemeCode, oDictOpt["SchemeCode"], false)))
-                                {
-                                    var oQuoteXml = moPageXml.CreateElement("Quote");
-                                    XmlNode argoNode = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("APR", ref argoNode, oPclSchemeQuote.APR.ToString());
-                                    oQuoteXml = (XmlElement)argoNode;
-                                    XmlNode argoNode1 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("APRNoMSC", ref argoNode1, oPclSchemeQuote.APRNoMSC.ToString());
-                                    oQuoteXml = (XmlElement)argoNode1;
-                                    XmlNode argoNode2 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("BasicServiceChargePercentage", ref argoNode2, oPclSchemeQuote.BasicServiceChargePercentage.ToString());
-                                    oQuoteXml = (XmlElement)argoNode2;
-                                    XmlNode argoNode3 = oQuoteXml;
-                                    addNewTextNode("CCAScheme", ref argoNode3, Conversions.ToString(oPclSchemeQuote.CCAScheme));
-                                    oQuoteXml = (XmlElement)argoNode3;
-                                    XmlNode argoNode4 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("DefaultPeriod", ref argoNode4, oPclSchemeQuote.DefaultPeriod.ToString());
-                                    oQuoteXml = (XmlElement)argoNode4;
-                                    XmlNode argoNode5 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("Instalment", ref argoNode5, (oPclSchemeQuote.Instalment / 100m).ToString());
-                                    oQuoteXml = (XmlElement)argoNode5;
-                                    XmlNode argoNode6 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("InstalmentGap", ref argoNode6, oPclSchemeQuote.InstalmentGap.ToString());
-                                    oQuoteXml = (XmlElement)argoNode6;
-                                    XmlNode argoNode7 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("InstalmentHoliday", ref argoNode7, oPclSchemeQuote.InstalmentHoliday.ToString());
-                                    oQuoteXml = (XmlElement)argoNode7;
-                                    XmlNode argoNode8 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("InstalmentNoMSC", ref argoNode8, oPclSchemeQuote.InstalmentNoMSC.ToString());
-                                    oQuoteXml = (XmlElement)argoNode8;
-                                    XmlNode argoNode9 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("InstalmentUnit", ref argoNode9, oPclSchemeQuote.InstalmentUnit);
-                                    oQuoteXml = (XmlElement)argoNode9;
-                                    XmlNode argoNode10 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("InstalmentWithPPI", ref argoNode10, oPclSchemeQuote.InstalmentWithPPI.ToString());
-                                    oQuoteXml = (XmlElement)argoNode10;
-                                    XmlNode argoNode11 = oQuoteXml;
-                                    addNewTextNode("InterestFree", ref argoNode11, Conversions.ToString(oPclSchemeQuote.InterestFree));
-                                    oQuoteXml = (XmlElement)argoNode11;
-                                    XmlNode argoNode12 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("MinimumServiceCharge", ref argoNode12, oPclSchemeQuote.MinimumServiceCharge.ToString());
-                                    oQuoteXml = (XmlElement)argoNode12;
-                                    XmlNode argoNode13 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("NumInstalments", ref argoNode13, oPclSchemeQuote.NumInstalments.ToString());
-                                    oQuoteXml = (XmlElement)argoNode13;
-                                    XmlNode argoNode14 = oQuoteXml;
-                                    addNewTextNode("OverrideRate", ref argoNode14, Conversions.ToString(oPclSchemeQuote.OverrideRate));
-                                    oQuoteXml = (XmlElement)argoNode14;
-                                    XmlNode argoNode15 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("PlasmaMessages", ref argoNode15, oPclSchemeQuote.PlasmaMessages);
-                                    oQuoteXml = (XmlElement)argoNode15;
-                                    XmlNode argoNode16 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("PPICode", ref argoNode16, oPclSchemeQuote.PPICode);
-                                    oQuoteXml = (XmlElement)argoNode16;
-                                    XmlNode argoNode17 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("Premium", ref argoNode17, (oPclSchemeQuote.Premium / 100m).ToString());
-                                    oQuoteXml = (XmlElement)argoNode17;
-                                    XmlNode argoNode18 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("RequiredRate", ref argoNode18, oPclSchemeQuote.RequiredRate.ToString());
-                                    oQuoteXml = (XmlElement)argoNode18;
-                                    XmlNode argoNode19 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("SchemeCode", ref argoNode19, oPclSchemeQuote.SchemeCode);
-                                    oQuoteXml = (XmlElement)argoNode19;
-                                    XmlNode argoNode20 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("SchemeDefaultDeposit", ref argoNode20, oPclSchemeQuote.SchemeDefaultDeposit.ToString());
-                                    oQuoteXml = (XmlElement)argoNode20;
-                                    XmlNode argoNode21 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("SchemeMinimumServiceCharge", ref argoNode21, oPclSchemeQuote.SchemeMinimumServiceCharge.ToString());
-                                    oQuoteXml = (XmlElement)argoNode21;
-                                    XmlNode argoNode22 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("SchemeName", ref argoNode22, oPclSchemeQuote.SchemeName);
-                                    oQuoteXml = (XmlElement)argoNode22;
-                                    XmlNode argoNode23 = oQuoteXml;
-                                    addNewTextNode("SchemeType", ref argoNode23, ((int)oPclSchemeQuote.SchemeType).ToString());
-                                    oQuoteXml = (XmlElement)argoNode23;
-                                    XmlNode argoNode24 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("ServiceChargePercentage", ref argoNode24, oPclSchemeQuote.ServiceChargePercentage.ToString());
-                                    oQuoteXml = (XmlElement)argoNode24;
-                                    XmlNode argoNode25 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("ServiceChargePercentageNoMSC", ref argoNode25, oPclSchemeQuote.ServiceChargePercentageNoMSC.ToString());
-                                    oQuoteXml = (XmlElement)argoNode25;
-                                    XmlNode argoNode26 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("TotalPayable", ref argoNode26, (oPclSchemeQuote.TotalPayable / 100m).ToString());
-                                    oQuoteXml = (XmlElement)argoNode26;
-                                    XmlNode argoNode27 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("TotalPayableNoMSC", ref argoNode27, (oPclSchemeQuote.TotalPayableNoMSC / 100m).ToString());
-                                    oQuoteXml = (XmlElement)argoNode27;
-                                    XmlNode argoNode28 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("TotalPayableWithPPI", ref argoNode28, (oPclSchemeQuote.TotalPayableWithPPI / 100m).ToString());
-                                    oQuoteXml = (XmlElement)argoNode28;
-                                    XmlNode argoNode29 = oQuoteXml;
-                                    addNewTextNode("TransactionType", ref argoNode29, ((int)oPclSchemeQuote.TransactionType).ToString());
-                                    oQuoteXml = (XmlElement)argoNode29;
-
-                                    oOptXform.addOption(ref oSelectElmt, oQuoteXml.OuterXml, oPclSchemeQuote.SchemeCode, true);
-
-                                    // set the paymentMethod in cart to Premium credit
-                                    if ((this.goRequest["cPaymentMethod"] ?? "") == (oPclSchemeQuote.SchemeCode ?? ""))
-                                    {
-                                        cPaymentMethod = "PremiumCredit";
-                                    }
-
-                                }
-
-                            }
-                        }
-                        else
-                        {
-
-                            var oPclTrans = new Protean.com.pclpls.www.XMLTransferEngine();
-                            Protean.com.pclpls.www.Quotation oPclQuotation;
-
-                            bool bOverrideRate = Conversions.ToBoolean(Interaction.IIf(Conversions.ToBoolean(Operators.OrObject(Operators.OrObject(Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "true", false), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "True", false)), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "on", false))), true, false));
-
-                            oPclQuotation = oPclTrans.GetQuote(Conversions.ToString(oDictOpt["UserName"]), Conversions.ToString(oDictOpt["Password"]), Protean.com.pclpls.www.eTransactionType.NewBusiness, (decimal)nClientPremium, Conversions.ToString(oDictOpt["PPICode"]), Conversions.ToDecimal(oDictOpt["ChargePercentage"]), bOverrideRate);
-
-                            foreach (var oPclSchemeQuote in oPclQuotation.SchemeQuotes)
-                            {
-                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oPclSchemeQuote.SchemeCode, oDictOpt["SchemeCode"], false)))
-                                {
-                                    var oQuoteXml = moPageXml.CreateElement("Quote");
-                                    XmlNode argoNode30 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("APR", ref argoNode30, oPclSchemeQuote.APR.ToString());
-                                    oQuoteXml = (XmlElement)argoNode30;
-                                    XmlNode argoNode31 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("APRNoMSC", ref argoNode31, oPclSchemeQuote.APRNoMSC.ToString());
-                                    oQuoteXml = (XmlElement)argoNode31;
-                                    XmlNode argoNode32 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("BasicServiceChargePercentage", ref argoNode32, oPclSchemeQuote.BasicServiceChargePercentage.ToString());
-                                    oQuoteXml = (XmlElement)argoNode32;
-                                    XmlNode argoNode33 = oQuoteXml;
-                                    addNewTextNode("CCAScheme", ref argoNode33, Conversions.ToString(oPclSchemeQuote.CCAScheme));
-                                    oQuoteXml = (XmlElement)argoNode33;
-                                    XmlNode argoNode34 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("DefaultPeriod", ref argoNode34, oPclSchemeQuote.DefaultPeriod.ToString());
-                                    oQuoteXml = (XmlElement)argoNode34;
-                                    XmlNode argoNode35 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("Instalment", ref argoNode35, oPclSchemeQuote.Instalment.ToString());
-                                    oQuoteXml = (XmlElement)argoNode35;
-                                    XmlNode argoNode36 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("InstalmentGap", ref argoNode36, oPclSchemeQuote.InstalmentGap.ToString());
-                                    oQuoteXml = (XmlElement)argoNode36;
-                                    XmlNode argoNode37 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("InstalmentHoliday", ref argoNode37, oPclSchemeQuote.InstalmentHoliday.ToString());
-                                    oQuoteXml = (XmlElement)argoNode37;
-                                    XmlNode argoNode38 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("InstalmentNoMSC", ref argoNode38, oPclSchemeQuote.InstalmentNoMSC.ToString());
-                                    oQuoteXml = (XmlElement)argoNode38;
-                                    XmlNode argoNode39 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("InstalmentUnit", ref argoNode39, oPclSchemeQuote.InstalmentUnit);
-                                    oQuoteXml = (XmlElement)argoNode39;
-                                    XmlNode argoNode40 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("InstalmentWithPPI", ref argoNode40, oPclSchemeQuote.InstalmentWithPPI.ToString());
-                                    oQuoteXml = (XmlElement)argoNode40;
-                                    XmlNode argoNode41 = oQuoteXml;
-                                    addNewTextNode("InterestFree", ref argoNode41, Conversions.ToString(oPclSchemeQuote.InterestFree));
-                                    oQuoteXml = (XmlElement)argoNode41;
-                                    XmlNode argoNode42 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("MinimumServiceCharge", ref argoNode42, oPclSchemeQuote.MinimumServiceCharge.ToString());
-                                    oQuoteXml = (XmlElement)argoNode42;
-                                    XmlNode argoNode43 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("NumInstalments", ref argoNode43, oPclSchemeQuote.NumInstalments.ToString());
-                                    oQuoteXml = (XmlElement)argoNode43;
-                                    XmlNode argoNode44 = oQuoteXml;
-                                    addNewTextNode("OverrideRate", ref argoNode44, Conversions.ToString(oPclSchemeQuote.OverrideRate));
-                                    oQuoteXml = (XmlElement)argoNode44;
-                                    XmlNode argoNode45 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("PlasmaMessages", ref argoNode45, oPclSchemeQuote.PlasmaMessages);
-                                    oQuoteXml = (XmlElement)argoNode45;
-                                    XmlNode argoNode46 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("PPICode", ref argoNode46, oPclSchemeQuote.PPICode);
-                                    oQuoteXml = (XmlElement)argoNode46;
-                                    XmlNode argoNode47 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("Premium", ref argoNode47, oPclSchemeQuote.Premium.ToString());
-                                    oQuoteXml = (XmlElement)argoNode47;
-                                    XmlNode argoNode48 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("RequiredRate", ref argoNode48, oPclSchemeQuote.RequiredRate.ToString());
-                                    oQuoteXml = (XmlElement)argoNode48;
-                                    XmlNode argoNode49 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("SchemeCode", ref argoNode49, oPclSchemeQuote.SchemeCode);
-                                    oQuoteXml = (XmlElement)argoNode49;
-                                    XmlNode argoNode50 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("SchemeDefaultDeposit", ref argoNode50, oPclSchemeQuote.SchemeDefaultDeposit.ToString());
-                                    oQuoteXml = (XmlElement)argoNode50;
-                                    XmlNode argoNode51 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("SchemeMinimumServiceCharge", ref argoNode51, oPclSchemeQuote.SchemeMinimumServiceCharge.ToString());
-                                    oQuoteXml = (XmlElement)argoNode51;
-                                    XmlNode argoNode52 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("SchemeName", ref argoNode52, oPclSchemeQuote.SchemeName);
-                                    oQuoteXml = (XmlElement)argoNode52;
-                                    XmlNode argoNode53 = oQuoteXml;
-                                    addNewTextNode("SchemeType", ref argoNode53, ((int)oPclSchemeQuote.SchemeType).ToString());
-                                    oQuoteXml = (XmlElement)argoNode53;
-                                    XmlNode argoNode54 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("ServiceChargePercentage", ref argoNode54, oPclSchemeQuote.ServiceChargePercentage.ToString());
-                                    oQuoteXml = (XmlElement)argoNode54;
-                                    XmlNode argoNode55 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("ServiceChargePercentageNoMSC", ref argoNode55, oPclSchemeQuote.ServiceChargePercentageNoMSC.ToString());
-                                    oQuoteXml = (XmlElement)argoNode55;
-                                    XmlNode argoNode56 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("TotalPayable", ref argoNode56, oPclSchemeQuote.TotalPayable.ToString());
-                                    oQuoteXml = (XmlElement)argoNode56;
-                                    XmlNode argoNode57 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("TotalPayableNoMSC", ref argoNode57, oPclSchemeQuote.TotalPayableNoMSC.ToString());
-                                    oQuoteXml = (XmlElement)argoNode57;
-                                    XmlNode argoNode58 = oQuoteXml;
-                                    Tools.Xml.addNewTextNode("TotalPayableWithPPI", ref argoNode58, oPclSchemeQuote.TotalPayableWithPPI.ToString());
-                                    oQuoteXml = (XmlElement)argoNode58;
-                                    XmlNode argoNode59 = oQuoteXml;
-                                    addNewTextNode("TransactionType", ref argoNode59, ((int)oPclSchemeQuote.TransactionType).ToString());
-                                    oQuoteXml = (XmlElement)argoNode59;
-
-                                    oOptXform.addOption(ref oSelectElmt, oQuoteXml.OuterXml, oPclSchemeQuote.SchemeCode, true);
-
-                                    // set the paymentMethod in cart to Premium credit
-                                    if ((this.goRequest["cPaymentMethod"] ?? "") == (oPclSchemeQuote.SchemeCode ?? ""))
-                                    {
-                                        cPaymentMethod = "PremiumCredit";
-                                    }
-
-                                }
-
-                            }
-
-                        }
-
-                        return nOptCount;
-                    }
-
-                    catch (Exception ex)
-                    {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "getPremiumCreditPaymentMethods", ex, "", cProcessInfo, gbDebug);
-                        return default;
-                    }
-                }
+                //        if (!ccXform.load("/xforms/cart/payment/PremiumCredit.xml", myWeb.maCommonFolders))
+                //        {
+                //            ccXform.NewFrm("errorForm");
+                //            ccXform.addGroup(ref ccXform.moXformElmt, "notes", sLabel: "Missing File: /ewcommon/xforms/cart/payment/PremiumCredit.xml");
+                //        }
+
+                //        // update submit path
+                //        ccXform.submission("payment", sSubmitPath, "POST", "return form_check(this);");
+
+                //        XmlElement oBusiness = (XmlElement)ccXform.Instance.SelectSingleNode("CreateNewBusiness/Business");
+
+
+
+                //        // populate from Cart Billing Contact
+                //        string[] aGivenName = Strings.Split(moBillingContact.SelectSingleNode("GivenName").InnerText, " ");
+
+                //        oBusiness.SelectSingleNode("PolicyClientReference").InnerText = mcOrderRef;
+                //        oBusiness.SelectSingleNode("CustTitle").InnerText = aGivenName[0];
+                //        oBusiness.SelectSingleNode("CustForeNames").InnerText = aGivenName[1];
+                //        oBusiness.SelectSingleNode("CustSurname").InnerText = aGivenName[2];
+                //        oBusiness.SelectSingleNode("CustAddress1").InnerText = moBillingContact.SelectSingleNode("Street").InnerText;
+                //        oBusiness.SelectSingleNode("CustAddress2").InnerText = "";
+                //        oBusiness.SelectSingleNode("CustAddress3").InnerText = "";
+                //        oBusiness.SelectSingleNode("CustAddress4").InnerText = moBillingContact.SelectSingleNode("City").InnerText;
+                //        oBusiness.SelectSingleNode("CustAddress5").InnerText = moBillingContact.SelectSingleNode("State").InnerText;
+                //        oBusiness.SelectSingleNode("CustPostCode").InnerText = moBillingContact.SelectSingleNode("PostalCode").InnerText;
+                //        oBusiness.SelectSingleNode("CustWorkTel").InnerText = moBillingContact.SelectSingleNode("Telephone").InnerText;
+                //        oBusiness.SelectSingleNode("CustHomeTel").InnerText = Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(moBillingContact.SelectSingleNode("Fax").InnerText), moBillingContact.SelectSingleNode("Telephone").InnerText, moBillingContact.SelectSingleNode("Fax").InnerText));
+
+                //        if (bTestMode)
+                //        {
+                //            // Case for TEST
+                //            XmlElement oFormGroup;
+                //            oFormGroup = (XmlElement)ccXform.moXformElmt.SelectSingleNode("descendant-or-self::group");
+                //            if (oFormGroup != null)
+                //            {
+                //                XmlNode argoNode = oFormGroup;
+                //                ccXform.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, "!!! THIS TRANSACTION IS IN TEST MODE, NO FUNDS WILL BE TAKEN");
+                //                oFormGroup = (XmlElement)argoNode;
+                //            }
+
+                //            // 'Do the stuff here...
+                //            var oPclTrans = new Protean.com.pclplstest.www.XMLTransferEngine(); // Object 'com.pclpls.www.XMLTransferEngine
+                //                                                                                // Lets go and get some quotes from PCL for payment options
+
+                //            bool bOverrideRate = Conversions.ToBoolean(Interaction.IIf(Conversions.ToBoolean(Operators.OrObject(Operators.OrObject(Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "true", false), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "True", false)), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "on", false))), true, false));
+                //            // Dim oSchemeCodeInput As XmlElement = ccXform.moXformElmt.SelectSingleNode("descendant-or-self::select1[@bind='SchemeCode']")
+
+                //            Protean.com.pclplstest.www.SchemeQuote oPclSchemeQuoteSelected = (Protean.com.pclplstest.www.SchemeQuote)null;
+                //            int nSchemeOptCount = 0;
+
+                //            Protean.com.pclplstest.www.Quotation oPclQuotation;
+
+                //            oPclQuotation = oPclTrans.GetQuote(Conversions.ToString(oDictOpt["UserName"]), Conversions.ToString(oDictOpt["Password"]), (Protean.com.pclplstest.www.eTransactionType)Protean.com.pclpls.www.eTransactionType.NewBusiness, (decimal)(mnPaymentAmount * 100d), Conversions.ToString(oDictOpt["PPICode"]), Conversions.ToDecimal(oDictOpt["ChargePercentage"]), bOverrideRate);
+
+                //            foreach (var oPclSchemeQuote in oPclQuotation.SchemeQuotes)
+                //            {
+                //                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oPclSchemeQuote.SchemeCode, oDictOpt["SchemeCode"], false)))
+                //                {
+                //                    oPclSchemeQuoteSelected = oPclSchemeQuote;
+                //                }
+                //            }
+
+                //            oBusiness.SelectSingleNode("ClientPremium").InnerText = oPclSchemeQuoteSelected.Premium.ToString();
+                //            oBusiness.SelectSingleNode("ChargePercentage").InnerText = oPclSchemeQuoteSelected.APR.ToString();
+                //            oBusiness.SelectSingleNode("NumInstalments").InnerText = oPclSchemeQuoteSelected.NumInstalments.ToString();
+                //            oBusiness.SelectSingleNode("InstalmentAmt").InnerText = oPclSchemeQuoteSelected.Instalment.ToString();
+                //            oBusiness.SelectSingleNode("DepositAmt").InnerText = oPclSchemeQuoteSelected.Instalment.ToString();
+
+                //            if (!string.IsNullOrEmpty(this.goRequest["cPaymentMethod"]))
+                //            {
+                //                oBusiness.SelectSingleNode("SchemeCode").InnerText = this.goRequest["cPaymentMethod"];
+                //            }
+
+
+
+                //            // nSchemeOptCount = getPremiumCreditPaymentMethods(ccXform, oSchemeCodeInput, nClientPremium, cPaymentMethod)
+
+                //            // First we update the instance from the cart.
+
+                //            // Customer Contact Details
+
+                //            if (!string.IsNullOrEmpty(this.goRequest["confirmPaymentDetails"]))
+                //            {
+                //                ccXform.updateInstanceFromRequest();
+                //                ccXform.validate();
+                //                if (ccXform.valid)
+                //                {
+
+                //                    var oPclNewBusiness = new Protean.com.pclplstest.www.NewBusiness();
+
+                //                    oPclNewBusiness.AddCoverCode = oBusiness.SelectSingleNode("AddCoverCode").InnerText;
+                //                    oPclNewBusiness.BankAccountName = oBusiness.SelectSingleNode("BankAccountName").InnerText;
+                //                    oPclNewBusiness.BankAccountNumber = oBusiness.SelectSingleNode("BankAccountNumber").InnerText;
+                //                    oPclNewBusiness.BankSortCode = Strings.Replace(oBusiness.SelectSingleNode("BankSortCode").InnerText, "-", "");
+                //                    oPclNewBusiness.BusinessType = 'N'; // (N)ew or (R)enewal
+                //                    oPclNewBusiness.ChargePercentage = -1; // oPclSchemeQuoteSelected.ServiceChargePercentage
+                //                    oPclNewBusiness.ClientPremium = (int)Math.Round(oPclSchemeQuoteSelected.Premium);
+                //                    oPclNewBusiness.ContractDate = mdFulfillmentDate;
+                //                    oPclNewBusiness.CreditAgreementDate = mdFulfillmentDate;
+                //                    oPclNewBusiness.CreditRenewalDate = DateAndTime.DateAdd(DateInterval.Year, 1d, mdFulfillmentDate);
+                //                    oPclNewBusiness.CustAddress1 = oBusiness.SelectSingleNode("CustAddress1").InnerText;
+                //                    oPclNewBusiness.CustAddress2 = oBusiness.SelectSingleNode("CustAddress2").InnerText;
+                //                    oPclNewBusiness.CustAddress3 = oBusiness.SelectSingleNode("CustAddress3").InnerText;
+                //                    oPclNewBusiness.CustAddress4 = oBusiness.SelectSingleNode("CustAddress4").InnerText;
+                //                    oPclNewBusiness.CustAddress5 = oBusiness.SelectSingleNode("CustAddress5").InnerText;
+                //                    oPclNewBusiness.CustForeNames = oBusiness.SelectSingleNode("CustForeNames").InnerText;
+                //                    oPclNewBusiness.CustHomeTel = oBusiness.SelectSingleNode("CustHomeTel").InnerText;
+                //                    oPclNewBusiness.CustPostCode = oBusiness.SelectSingleNode("CustPostCode").InnerText;
+                //                    oPclNewBusiness.CustSurname = oBusiness.SelectSingleNode("CustSurname").InnerText;
+                //                    oPclNewBusiness.CustTitle = oBusiness.SelectSingleNode("CustTitle").InnerText;
+                //                    oPclNewBusiness.CustWorkTel = oBusiness.SelectSingleNode("CustWorkTel").InnerText;
+                //                    oPclNewBusiness.DepositAmt = (int)Math.Round(oPclSchemeQuoteSelected.Instalment);
+                //                    oPclNewBusiness.EntryType = Conversions.ToChar(oBusiness.SelectSingleNode("EntryType").InnerText);
+                //                    oPclNewBusiness.InstalmentAmt = (int)Math.Round(oPclSchemeQuoteSelected.Instalment);
+                //                    oPclNewBusiness.NumInstalments = oPclSchemeQuoteSelected.NumInstalments;
+                //                    oPclNewBusiness.PolicyClientReference = oBusiness.SelectSingleNode("PolicyClientReference").InnerText;
+                //                    oPclNewBusiness.PrefPaymentDate = Conversions.ToInteger(oBusiness.SelectSingleNode("PrefPaymentDate").InnerText);
+                //                    oPclNewBusiness.SchemeBranch = Conversions.ToString(oDictOpt["SchemeBrokerNo"]);
+                //                    oPclNewBusiness.SchemeBrokerNo = Conversions.ToString(oDictOpt["SchemeBrokerNo"]);
+                //                    oPclNewBusiness.SchemeCode = oBusiness.SelectSingleNode("SchemeCode").InnerText;
+                //                    oPclNewBusiness.TransID = oPclTrans.GetNextTransactionID(Conversions.ToString(oDictOpt["UserName"]), Conversions.ToString(oDictOpt["Password"]), (Protean.com.pclplstest.www.eTransactionType)Protean.com.pclpls.www.eTransactionType.NewBusiness);
+
+                //                    Protean.com.pclplstest.www.TransactionResult oPclTransResult;
+
+                //                    oPclTransResult = oPclTrans.CreateNewBusiness(Conversions.ToString(oDictOpt["UserName"]), Conversions.ToString(oDictOpt["Password"]), oPclNewBusiness);
+
+                //                    if (oPclTransResult.Success)
+                //                    {
+
+                //                        string cMethodName = "Direct Debit";
+
+                //                        var oSecPayElmt = ccXform.Instance.OwnerDocument.CreateElement("PremiumCredit");
+                //                        // oSecPayElmt.SetAttribute("AuthCode", cAuthCode)
+                //                        ccXform.Instance.FirstChild.AppendChild(oSecPayElmt);
+
+                //                        savePayment((long)myWeb.mnUserId, "PremiumCredit", mnCartId.ToString(), cMethodName, (XmlElement)ccXform.Instance.FirstChild, DateTime.Now, true, mnPaymentAmount);
+
+                //                        XmlNode argoNode1 = (XmlNode)ccXform.moXformElmt;
+                //                        ccXform.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, err_msg);
+                //                        ccXform.moXformElmt = (XmlElement)argoNode1;
+
+                //                        // Update Seller Notes:
+                //                        sTransactionReport = Constants.vbLf + Conversions.ToString(DateTime.Today) + " " + Conversions.ToString(DateAndTime.TimeOfDay) + ": changed to: (PremiumCredit Payment Successfull) ";
+                //                    }
+                //                    else
+                //                    {
+                //                        // We'll sniff for error codes in an overloaded xslt
+                //                        sTransactionReport = Constants.vbLf + Conversions.ToString(DateTime.Today) + " " + Conversions.ToString(DateAndTime.TimeOfDay) + ": changed to: (PremiumCredit Payment Failed) " + Constants.vbLf + "comment: " + oPclTransResult.ErrorCode.ToString() + " " + oPclTransResult.Message;
+
+                //                        ccXform.addNote("payDetails", Protean.xForm.noteTypes.Alert, oPclTransResult.ErrorCode.ToString() + " " + oPclTransResult.Message, true);
+                //                        ccXform.valid = false;
+
+                //                    }
+                //                }
+                //            }
+
+                //            // Update Seller Notes:
+
+                //            ccXform.addValues();
+                //        }
+                //        else
+                //        {
+                //            // Case for LIVE
+                //            // 'Do the stuff here...
+                //            var oPclTrans = new Protean.com.pclpls.www.XMLTransferEngine(); // Object 'com.pclpls.www.XMLTransferEngine
+                //                                                                            // Lets go and get some quotes from PCL for payment options
+
+
+                //            bool bOverrideRate = Conversions.ToBoolean(Interaction.IIf(Conversions.ToBoolean(Operators.OrObject(Operators.OrObject(Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "true", false), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "True", false)), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "on", false))), true, false));
+                //            // Dim oSchemeCodeInput As XmlElement = ccXform.moXformElmt.SelectSingleNode("descendant-or-self::select1[@bind='SchemeCode']")
+
+                //            Protean.com.pclpls.www.SchemeQuote oPclSchemeQuoteSelected = (Protean.com.pclpls.www.SchemeQuote)null;
+                //            int nSchemeOptCount = 0;
+
+                //            Protean.com.pclpls.www.Quotation oPclQuotation;
+
+                //            oPclQuotation = oPclTrans.GetQuote(Conversions.ToString(oDictOpt["UserName"]), Conversions.ToString(oDictOpt["Password"]), Protean.com.pclpls.www.eTransactionType.NewBusiness, (decimal)(mnPaymentAmount * 100d), Conversions.ToString(oDictOpt["PPICode"]), Conversions.ToDecimal(oDictOpt["ChargePercentage"]), bOverrideRate);
+
+                //            foreach (var oPclSchemeQuote in oPclQuotation.SchemeQuotes)
+                //            {
+                //                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oPclSchemeQuote.SchemeCode, oDictOpt["SchemeCode"], false)))
+                //                {
+                //                    oPclSchemeQuoteSelected = oPclSchemeQuote;
+                //                }
+                //            }
+
+                //            oBusiness.SelectSingleNode("ClientPremium").InnerText = oPclSchemeQuoteSelected.Premium.ToString();
+                //            oBusiness.SelectSingleNode("ChargePercentage").InnerText = oPclSchemeQuoteSelected.APR.ToString();
+                //            oBusiness.SelectSingleNode("NumInstalments").InnerText = oPclSchemeQuoteSelected.NumInstalments.ToString();
+                //            oBusiness.SelectSingleNode("InstalmentAmt").InnerText = oPclSchemeQuoteSelected.Instalment.ToString();
+                //            oBusiness.SelectSingleNode("DepositAmt").InnerText = oPclSchemeQuoteSelected.Instalment.ToString();
+
+                //            if (!string.IsNullOrEmpty(this.goRequest["cPaymentMethod"]))
+                //            {
+                //                oBusiness.SelectSingleNode("SchemeCode").InnerText = this.goRequest["cPaymentMethod"];
+                //            }
+
+
+
+                //            // nSchemeOptCount = getPremiumCreditPaymentMethods(ccXform, oSchemeCodeInput, nClientPremium, cPaymentMethod)
+
+                //            // First we update the instance from the cart.
+
+                //            // Customer Contact Details
+
+                //            if (!string.IsNullOrEmpty(this.goRequest["confirmPaymentDetails"]))
+                //            {
+                //                ccXform.updateInstanceFromRequest();
+                //                ccXform.validate();
+                //                if (ccXform.valid)
+                //                {
+
+                //                    var oPclNewBusiness = new Protean.com.pclpls.www.NewBusiness();
+
+                //                    oPclNewBusiness.AddCoverCode = oBusiness.SelectSingleNode("AddCoverCode").InnerText;
+                //                    oPclNewBusiness.BankAccountName = oBusiness.SelectSingleNode("BankAccountName").InnerText;
+                //                    oPclNewBusiness.BankAccountNumber = oBusiness.SelectSingleNode("BankAccountNumber").InnerText;
+                //                    oPclNewBusiness.BankSortCode = Strings.Replace(oBusiness.SelectSingleNode("BankSortCode").InnerText, "-", "");
+                //                    oPclNewBusiness.BusinessType = 'N'; // (N)ew or (R)enewal
+                //                    oPclNewBusiness.ChargePercentage = -1; // oPclSchemeQuoteSelected.ServiceChargePercentage
+                //                    oPclNewBusiness.ClientPremium = (int)Math.Round(oPclSchemeQuoteSelected.Premium);
+                //                    oPclNewBusiness.ContractDate = mdFulfillmentDate;
+                //                    oPclNewBusiness.CreditAgreementDate = mdFulfillmentDate;
+                //                    oPclNewBusiness.CreditRenewalDate = DateAndTime.DateAdd(DateInterval.Year, 1d, mdFulfillmentDate);
+                //                    oPclNewBusiness.CustAddress1 = oBusiness.SelectSingleNode("CustAddress1").InnerText;
+                //                    oPclNewBusiness.CustAddress2 = oBusiness.SelectSingleNode("CustAddress2").InnerText;
+                //                    oPclNewBusiness.CustAddress3 = oBusiness.SelectSingleNode("CustAddress3").InnerText;
+                //                    oPclNewBusiness.CustAddress4 = oBusiness.SelectSingleNode("CustAddress4").InnerText;
+                //                    oPclNewBusiness.CustAddress5 = oBusiness.SelectSingleNode("CustAddress5").InnerText;
+                //                    oPclNewBusiness.CustForeNames = oBusiness.SelectSingleNode("CustForeNames").InnerText;
+                //                    oPclNewBusiness.CustHomeTel = oBusiness.SelectSingleNode("CustHomeTel").InnerText;
+                //                    oPclNewBusiness.CustPostCode = oBusiness.SelectSingleNode("CustPostCode").InnerText;
+                //                    oPclNewBusiness.CustSurname = oBusiness.SelectSingleNode("CustSurname").InnerText;
+                //                    oPclNewBusiness.CustTitle = oBusiness.SelectSingleNode("CustTitle").InnerText;
+                //                    oPclNewBusiness.CustWorkTel = oBusiness.SelectSingleNode("CustWorkTel").InnerText;
+                //                    // oPclNewBusiness.DepositAmt = oPclSchemeQuoteSelected.Instalment
+                //                    oPclNewBusiness.EntryType = Conversions.ToChar(oBusiness.SelectSingleNode("EntryType").InnerText);
+                //                    oPclNewBusiness.InstalmentAmt = (int)Math.Round(oPclSchemeQuoteSelected.Instalment);
+                //                    oPclNewBusiness.NumInstalments = oPclSchemeQuoteSelected.NumInstalments;
+                //                    oPclNewBusiness.PolicyClientReference = oBusiness.SelectSingleNode("PolicyClientReference").InnerText;
+                //                    oPclNewBusiness.PrefPaymentDate = Conversions.ToInteger(oBusiness.SelectSingleNode("PrefPaymentDate").InnerText);
+                //                    oPclNewBusiness.SchemeBranch = Conversions.ToString(oDictOpt["SchemeBrokerNo"]);
+                //                    oPclNewBusiness.SchemeBrokerNo = Conversions.ToString(oDictOpt["SchemeBrokerNo"]);
+                //                    oPclNewBusiness.SchemeCode = oBusiness.SelectSingleNode("SchemeCode").InnerText;
+                //                    oPclNewBusiness.TransID = oPclTrans.GetNextTransactionID(Conversions.ToString(oDictOpt["UserName"]), Conversions.ToString(oDictOpt["Password"]), Protean.com.pclpls.www.eTransactionType.NewBusiness);
+
+                //                    Protean.com.pclpls.www.TransactionResult oPclTransResult;
+
+                //                    oPclTransResult = oPclTrans.CreateNewBusiness(Conversions.ToString(oDictOpt["UserName"]), Conversions.ToString(oDictOpt["Password"]), oPclNewBusiness);
+
+                //                    if (oPclTransResult.Success)
+                //                    {
+
+                //                        string cMethodName = "Direct Debit";
+
+                //                        var oSecPayElmt = ccXform.Instance.OwnerDocument.CreateElement("PremiumCredit");
+                //                        // oSecPayElmt.SetAttribute("AuthCode", cAuthCode)
+                //                        ccXform.Instance.FirstChild.AppendChild(oSecPayElmt);
+
+                //                        savePayment((long)myWeb.mnUserId, "PremiumCredit", mnCartId.ToString(), cMethodName, (XmlElement)ccXform.Instance.FirstChild, DateTime.Now, true, mnPaymentAmount);
+
+                //                        XmlNode argoNode2 = (XmlNode)ccXform.moXformElmt;
+                //                        ccXform.addNote(ref argoNode2, Protean.xForm.noteTypes.Alert, err_msg);
+                //                        ccXform.moXformElmt = (XmlElement)argoNode2;
+
+                //                        // Update Seller Notes:
+                //                        sTransactionReport = Constants.vbLf + Conversions.ToString(DateTime.Today) + " " + Conversions.ToString(DateAndTime.TimeOfDay) + ": changed to: (PremiumCredit Payment Successfull) ";
+                //                    }
+                //                    else
+                //                    {
+                //                        // We'll sniff for error codes in an overloaded xslt
+                //                        sTransactionReport = Constants.vbLf + Conversions.ToString(DateTime.Today) + " " + Conversions.ToString(DateAndTime.TimeOfDay) + ": changed to: (PremiumCredit Payment Failed) " + Constants.vbLf + "comment: " + oPclTransResult.ErrorCode.ToString() + " " + oPclTransResult.Message;
+                //                        ccXform.addNote("payDetails", Protean.xForm.noteTypes.Alert, oPclTransResult.ErrorCode.ToString() + " " + oPclTransResult.Message, true);
+                //                        ccXform.valid = false;
+                //                    }
+                //                }
+                //            }
+
+                //            ccXform.addValues();
+
+                //        }
+
+                //        if (!string.IsNullOrEmpty(sTransactionReport))
+                //        {
+                //            sSql = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
+                //            DataSet oDs;
+                //            oDs = modbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
+                //            foreach (DataRow oRow in oDs.Tables["Order"].Rows)
+                //                oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), sTransactionReport);
+                //            modbHelper.updateDataset(ref oDs, "Order");
+                //        }
+
+
+                //        return ccXform;
+                //    }
+
+                //    catch (Exception ex)
+                //    {
+                //        stdTools.returnException(ref myWeb.msException, mcModuleName, "payPremiumCredit", ex, "", cProcessInfo, gbDebug);
+                //        return (Cms.xForm)null;
+                //    }
+                //}
+
+                //public int getPremiumCreditPaymentMethods(ref Cms.xForm oOptXform, ref XmlElement oSelectElmt, double nClientPremium, ref string cPaymentMethod)
+                //{
+                //    myWeb.PerfMon.Log("PaymentProviders", "getPremiumCreditPaymentMethods");
+                //    string cProcessInfo = "getPremiumCreditPaymentMethods";
+                //    bool bFirstRow = true;
+                //    int nOptCount = 0;
+                //    XmlNode oPclCfg;
+
+                //    var oDictOpt = new Hashtable();
+                //    try
+                //    {
+
+                //        oPclCfg = moPaymentCfg.SelectSingleNode("provider[@name='PremiumCredit']");
+                //        oDictOpt = xmlToHashTable(oPclCfg, "value");
+
+                //        bool bTestMode = Conversions.ToBoolean(Interaction.IIf(Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["OpperationMode"], "test", false)), true, false));
+
+                //        if (bTestMode)
+                //        {
+
+                //            var oPclTrans = new Protean.com.pclplstest.www.XMLTransferEngine();
+                //            Protean.com.pclplstest.www.Quotation oPclQuotation;
+
+                //            bool bOverrideRate = Conversions.ToBoolean(Interaction.IIf(Conversions.ToBoolean(Operators.OrObject(Operators.OrObject(Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "true", false), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "True", false)), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "on", false))), true, false));
+
+                //            oPclQuotation = oPclTrans.GetQuote(Conversions.ToString(oDictOpt["UserName"]), Conversions.ToString(oDictOpt["Password"]), (Protean.com.pclplstest.www.eTransactionType)Protean.com.pclpls.www.eTransactionType.NewBusiness, (decimal)(nClientPremium * 100d), Conversions.ToString(oDictOpt["PPICode"]), Conversions.ToDecimal(oDictOpt["ChargePercentage"]), bOverrideRate);
+
+                //            foreach (var oPclSchemeQuote in oPclQuotation.SchemeQuotes)
+                //            {
+                //                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oPclSchemeQuote.SchemeCode, oDictOpt["SchemeCode"], false)))
+                //                {
+                //                    var oQuoteXml = moPageXml.CreateElement("Quote");
+                //                    XmlNode argoNode = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("APR", ref argoNode, oPclSchemeQuote.APR.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode;
+                //                    XmlNode argoNode1 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("APRNoMSC", ref argoNode1, oPclSchemeQuote.APRNoMSC.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode1;
+                //                    XmlNode argoNode2 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("BasicServiceChargePercentage", ref argoNode2, oPclSchemeQuote.BasicServiceChargePercentage.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode2;
+                //                    XmlNode argoNode3 = oQuoteXml;
+                //                    addNewTextNode("CCAScheme", ref argoNode3, Conversions.ToString(oPclSchemeQuote.CCAScheme));
+                //                    oQuoteXml = (XmlElement)argoNode3;
+                //                    XmlNode argoNode4 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("DefaultPeriod", ref argoNode4, oPclSchemeQuote.DefaultPeriod.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode4;
+                //                    XmlNode argoNode5 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("Instalment", ref argoNode5, (oPclSchemeQuote.Instalment / 100m).ToString());
+                //                    oQuoteXml = (XmlElement)argoNode5;
+                //                    XmlNode argoNode6 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("InstalmentGap", ref argoNode6, oPclSchemeQuote.InstalmentGap.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode6;
+                //                    XmlNode argoNode7 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("InstalmentHoliday", ref argoNode7, oPclSchemeQuote.InstalmentHoliday.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode7;
+                //                    XmlNode argoNode8 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("InstalmentNoMSC", ref argoNode8, oPclSchemeQuote.InstalmentNoMSC.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode8;
+                //                    XmlNode argoNode9 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("InstalmentUnit", ref argoNode9, oPclSchemeQuote.InstalmentUnit);
+                //                    oQuoteXml = (XmlElement)argoNode9;
+                //                    XmlNode argoNode10 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("InstalmentWithPPI", ref argoNode10, oPclSchemeQuote.InstalmentWithPPI.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode10;
+                //                    XmlNode argoNode11 = oQuoteXml;
+                //                    addNewTextNode("InterestFree", ref argoNode11, Conversions.ToString(oPclSchemeQuote.InterestFree));
+                //                    oQuoteXml = (XmlElement)argoNode11;
+                //                    XmlNode argoNode12 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("MinimumServiceCharge", ref argoNode12, oPclSchemeQuote.MinimumServiceCharge.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode12;
+                //                    XmlNode argoNode13 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("NumInstalments", ref argoNode13, oPclSchemeQuote.NumInstalments.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode13;
+                //                    XmlNode argoNode14 = oQuoteXml;
+                //                    addNewTextNode("OverrideRate", ref argoNode14, Conversions.ToString(oPclSchemeQuote.OverrideRate));
+                //                    oQuoteXml = (XmlElement)argoNode14;
+                //                    XmlNode argoNode15 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("PlasmaMessages", ref argoNode15, oPclSchemeQuote.PlasmaMessages);
+                //                    oQuoteXml = (XmlElement)argoNode15;
+                //                    XmlNode argoNode16 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("PPICode", ref argoNode16, oPclSchemeQuote.PPICode);
+                //                    oQuoteXml = (XmlElement)argoNode16;
+                //                    XmlNode argoNode17 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("Premium", ref argoNode17, (oPclSchemeQuote.Premium / 100m).ToString());
+                //                    oQuoteXml = (XmlElement)argoNode17;
+                //                    XmlNode argoNode18 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("RequiredRate", ref argoNode18, oPclSchemeQuote.RequiredRate.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode18;
+                //                    XmlNode argoNode19 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("SchemeCode", ref argoNode19, oPclSchemeQuote.SchemeCode);
+                //                    oQuoteXml = (XmlElement)argoNode19;
+                //                    XmlNode argoNode20 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("SchemeDefaultDeposit", ref argoNode20, oPclSchemeQuote.SchemeDefaultDeposit.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode20;
+                //                    XmlNode argoNode21 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("SchemeMinimumServiceCharge", ref argoNode21, oPclSchemeQuote.SchemeMinimumServiceCharge.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode21;
+                //                    XmlNode argoNode22 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("SchemeName", ref argoNode22, oPclSchemeQuote.SchemeName);
+                //                    oQuoteXml = (XmlElement)argoNode22;
+                //                    XmlNode argoNode23 = oQuoteXml;
+                //                    addNewTextNode("SchemeType", ref argoNode23, ((int)oPclSchemeQuote.SchemeType).ToString());
+                //                    oQuoteXml = (XmlElement)argoNode23;
+                //                    XmlNode argoNode24 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("ServiceChargePercentage", ref argoNode24, oPclSchemeQuote.ServiceChargePercentage.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode24;
+                //                    XmlNode argoNode25 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("ServiceChargePercentageNoMSC", ref argoNode25, oPclSchemeQuote.ServiceChargePercentageNoMSC.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode25;
+                //                    XmlNode argoNode26 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("TotalPayable", ref argoNode26, (oPclSchemeQuote.TotalPayable / 100m).ToString());
+                //                    oQuoteXml = (XmlElement)argoNode26;
+                //                    XmlNode argoNode27 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("TotalPayableNoMSC", ref argoNode27, (oPclSchemeQuote.TotalPayableNoMSC / 100m).ToString());
+                //                    oQuoteXml = (XmlElement)argoNode27;
+                //                    XmlNode argoNode28 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("TotalPayableWithPPI", ref argoNode28, (oPclSchemeQuote.TotalPayableWithPPI / 100m).ToString());
+                //                    oQuoteXml = (XmlElement)argoNode28;
+                //                    XmlNode argoNode29 = oQuoteXml;
+                //                    addNewTextNode("TransactionType", ref argoNode29, ((int)oPclSchemeQuote.TransactionType).ToString());
+                //                    oQuoteXml = (XmlElement)argoNode29;
+
+                //                    oOptXform.addOption(ref oSelectElmt, oQuoteXml.OuterXml, oPclSchemeQuote.SchemeCode, true);
+
+                //                    // set the paymentMethod in cart to Premium credit
+                //                    if ((this.goRequest["cPaymentMethod"] ?? "") == (oPclSchemeQuote.SchemeCode ?? ""))
+                //                    {
+                //                        cPaymentMethod = "PremiumCredit";
+                //                    }
+
+                //                }
+
+                //            }
+                //        }
+                //        else
+                //        {
+
+                //            var oPclTrans = new Protean.com.pclpls.www.XMLTransferEngine();
+                //            Protean.com.pclpls.www.Quotation oPclQuotation;
+
+                //            bool bOverrideRate = Conversions.ToBoolean(Interaction.IIf(Conversions.ToBoolean(Operators.OrObject(Operators.OrObject(Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "true", false), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "True", false)), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "on", false))), true, false));
+
+                //            oPclQuotation = oPclTrans.GetQuote(Conversions.ToString(oDictOpt["UserName"]), Conversions.ToString(oDictOpt["Password"]), Protean.com.pclpls.www.eTransactionType.NewBusiness, (decimal)nClientPremium, Conversions.ToString(oDictOpt["PPICode"]), Conversions.ToDecimal(oDictOpt["ChargePercentage"]), bOverrideRate);
+
+                //            foreach (var oPclSchemeQuote in oPclQuotation.SchemeQuotes)
+                //            {
+                //                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oPclSchemeQuote.SchemeCode, oDictOpt["SchemeCode"], false)))
+                //                {
+                //                    var oQuoteXml = moPageXml.CreateElement("Quote");
+                //                    XmlNode argoNode30 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("APR", ref argoNode30, oPclSchemeQuote.APR.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode30;
+                //                    XmlNode argoNode31 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("APRNoMSC", ref argoNode31, oPclSchemeQuote.APRNoMSC.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode31;
+                //                    XmlNode argoNode32 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("BasicServiceChargePercentage", ref argoNode32, oPclSchemeQuote.BasicServiceChargePercentage.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode32;
+                //                    XmlNode argoNode33 = oQuoteXml;
+                //                    addNewTextNode("CCAScheme", ref argoNode33, Conversions.ToString(oPclSchemeQuote.CCAScheme));
+                //                    oQuoteXml = (XmlElement)argoNode33;
+                //                    XmlNode argoNode34 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("DefaultPeriod", ref argoNode34, oPclSchemeQuote.DefaultPeriod.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode34;
+                //                    XmlNode argoNode35 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("Instalment", ref argoNode35, oPclSchemeQuote.Instalment.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode35;
+                //                    XmlNode argoNode36 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("InstalmentGap", ref argoNode36, oPclSchemeQuote.InstalmentGap.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode36;
+                //                    XmlNode argoNode37 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("InstalmentHoliday", ref argoNode37, oPclSchemeQuote.InstalmentHoliday.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode37;
+                //                    XmlNode argoNode38 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("InstalmentNoMSC", ref argoNode38, oPclSchemeQuote.InstalmentNoMSC.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode38;
+                //                    XmlNode argoNode39 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("InstalmentUnit", ref argoNode39, oPclSchemeQuote.InstalmentUnit);
+                //                    oQuoteXml = (XmlElement)argoNode39;
+                //                    XmlNode argoNode40 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("InstalmentWithPPI", ref argoNode40, oPclSchemeQuote.InstalmentWithPPI.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode40;
+                //                    XmlNode argoNode41 = oQuoteXml;
+                //                    addNewTextNode("InterestFree", ref argoNode41, Conversions.ToString(oPclSchemeQuote.InterestFree));
+                //                    oQuoteXml = (XmlElement)argoNode41;
+                //                    XmlNode argoNode42 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("MinimumServiceCharge", ref argoNode42, oPclSchemeQuote.MinimumServiceCharge.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode42;
+                //                    XmlNode argoNode43 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("NumInstalments", ref argoNode43, oPclSchemeQuote.NumInstalments.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode43;
+                //                    XmlNode argoNode44 = oQuoteXml;
+                //                    addNewTextNode("OverrideRate", ref argoNode44, Conversions.ToString(oPclSchemeQuote.OverrideRate));
+                //                    oQuoteXml = (XmlElement)argoNode44;
+                //                    XmlNode argoNode45 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("PlasmaMessages", ref argoNode45, oPclSchemeQuote.PlasmaMessages);
+                //                    oQuoteXml = (XmlElement)argoNode45;
+                //                    XmlNode argoNode46 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("PPICode", ref argoNode46, oPclSchemeQuote.PPICode);
+                //                    oQuoteXml = (XmlElement)argoNode46;
+                //                    XmlNode argoNode47 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("Premium", ref argoNode47, oPclSchemeQuote.Premium.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode47;
+                //                    XmlNode argoNode48 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("RequiredRate", ref argoNode48, oPclSchemeQuote.RequiredRate.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode48;
+                //                    XmlNode argoNode49 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("SchemeCode", ref argoNode49, oPclSchemeQuote.SchemeCode);
+                //                    oQuoteXml = (XmlElement)argoNode49;
+                //                    XmlNode argoNode50 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("SchemeDefaultDeposit", ref argoNode50, oPclSchemeQuote.SchemeDefaultDeposit.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode50;
+                //                    XmlNode argoNode51 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("SchemeMinimumServiceCharge", ref argoNode51, oPclSchemeQuote.SchemeMinimumServiceCharge.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode51;
+                //                    XmlNode argoNode52 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("SchemeName", ref argoNode52, oPclSchemeQuote.SchemeName);
+                //                    oQuoteXml = (XmlElement)argoNode52;
+                //                    XmlNode argoNode53 = oQuoteXml;
+                //                    addNewTextNode("SchemeType", ref argoNode53, ((int)oPclSchemeQuote.SchemeType).ToString());
+                //                    oQuoteXml = (XmlElement)argoNode53;
+                //                    XmlNode argoNode54 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("ServiceChargePercentage", ref argoNode54, oPclSchemeQuote.ServiceChargePercentage.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode54;
+                //                    XmlNode argoNode55 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("ServiceChargePercentageNoMSC", ref argoNode55, oPclSchemeQuote.ServiceChargePercentageNoMSC.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode55;
+                //                    XmlNode argoNode56 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("TotalPayable", ref argoNode56, oPclSchemeQuote.TotalPayable.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode56;
+                //                    XmlNode argoNode57 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("TotalPayableNoMSC", ref argoNode57, oPclSchemeQuote.TotalPayableNoMSC.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode57;
+                //                    XmlNode argoNode58 = oQuoteXml;
+                //                    Tools.Xml.addNewTextNode("TotalPayableWithPPI", ref argoNode58, oPclSchemeQuote.TotalPayableWithPPI.ToString());
+                //                    oQuoteXml = (XmlElement)argoNode58;
+                //                    XmlNode argoNode59 = oQuoteXml;
+                //                    addNewTextNode("TransactionType", ref argoNode59, ((int)oPclSchemeQuote.TransactionType).ToString());
+                //                    oQuoteXml = (XmlElement)argoNode59;
+
+                //                    oOptXform.addOption(ref oSelectElmt, oQuoteXml.OuterXml, oPclSchemeQuote.SchemeCode, true);
+
+                //                    // set the paymentMethod in cart to Premium credit
+                //                    if ((this.goRequest["cPaymentMethod"] ?? "") == (oPclSchemeQuote.SchemeCode ?? ""))
+                //                    {
+                //                        cPaymentMethod = "PremiumCredit";
+                //                    }
+
+                //                }
+
+                //            }
+
+                //        }
+
+                //        return nOptCount;
+                //    }
+
+                //    catch (Exception ex)
+                //    {
+                //        stdTools.returnException(ref myWeb.msException, mcModuleName, "getPremiumCreditPaymentMethods", ex, "", cProcessInfo, gbDebug);
+                //        return default;
+                //    }
+                //}
 
             }
 

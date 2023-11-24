@@ -3719,8 +3719,8 @@ namespace Protean
                     {
                         if (bindNode != null)
                         {
-
-                            cXpathOptions = getBindXpath(ref bindNode);
+                            XmlElement xmlbindNodeElmt = (XmlElement)bindNode;
+                            cXpathOptions = getBindXpath(ref xmlbindNodeElmt);
                             var argoNode = oInstance.SelectSingleNode("*[1]");
                             var nsMgr = Tools.Xml.getNsMgrRecursive(ref argoNode, ref moPageXML);
                             cXpathOptions = Protean.Tools.Xml.addNsToXpath(cXpathOptions, ref nsMgr);
@@ -3781,7 +3781,8 @@ namespace Protean
                             foreach (XmlElement oBindNode in model.SelectNodes("descendant-or-self::bind[not(ancestor::instance) and @id='" + oRptElmt.GetAttribute("bind") + "']"))
                             {
                                 // build the bind xpath
-                                sBindXpath = getBindXpath(ref oBindNode);
+                                XmlElement xmloBindNode = (XmlElement)oBindNode;
+                                sBindXpath = getBindXpath(ref xmloBindNode);
                                 sBindXpath = Protean.Tools.Xml.addNsToXpath(sBindXpath, ref nsMgr);
                                 // get the nodeset of repeating elements
 
@@ -4157,6 +4158,52 @@ namespace Protean
 
             cValidationError += errorText;
 
+        }
+
+        public string getXpathFromQueryXml(XmlElement oInstance, string sXsltPath = "")
+        {
+            Protean.XmlHelper.Transform oTransform = new Protean.XmlHelper.Transform();
+
+            System.IO.TextWriter sWriter = new System.IO.StringWriter();
+
+            if (sXsltPath != "")
+            {
+                oTransform.Compiled = false;
+                oTransform.XSLFile = goServer.MapPath(sXsltPath);
+                XmlDocument oXML = new XmlDocument();
+                oXML.InnerXml = oInstance.OuterXml;
+                oTransform.Process(oXML, sWriter);
+                // Run transformation
+
+
+                oInstance.InnerXml = sWriter.ToString();
+                sWriter.Close();
+                sWriter = null;
+            }
+
+            // build an xpath query based on the xform instance
+            // Example:
+
+            // <instance>
+            // <Query ewCmd="xpathSearch" xPathMask="//*[VARating>$RequiredVA and Uptime>$Uptime and Format=$Format]">
+            // <RequiredVA>100</RequiredVA>
+            // <Redundancy>Yes</Redundancy>
+            // <Uptime>20</Uptime>
+            // <Format>Rack</Format>
+            // </Query>
+            // </instance>
+
+            string sXpath;
+
+            // :TODO [TS] handle the instance tranform if xsl provided
+
+            sXpath = oInstance.SelectSingleNode("Query/@xPathMask").InnerText;
+            //XmlElement oElmt;
+            foreach (XmlElement oElmt in oInstance.SelectNodes("Query/*"))
+                // step through each of the child nodes and replace values in the xPathMask
+                sXpath = sXpath.Replace("$" + oElmt.Name, "\"" + oElmt.InnerText + "\"");
+
+            return sXpath;
         }
 
     }

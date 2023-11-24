@@ -643,7 +643,8 @@ namespace Protean
 
                 // Reset myWeb content
                 XmlElement contents = null;
-                Xml.NodeState(ref _myWeb.moPageXml.DocumentElement, "Contents", " ", "", XmlNodeState.HasContents, contents, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false);
+                XmlElement pageDocElmt = (XmlElement)_myWeb.moPageXml.DocumentElement;
+                Xml.NodeState(ref pageDocElmt, "Contents", " ", "", XmlNodeState.HasContents, contents, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false);
 
                 // Add some criteria to stop retrieving items that have been syndicated.
                 sqlAdditionalTables = " LEFT JOIN tblActivityLog activity ON c.nContentKey = activity.nArtId And activity.nActivityType = 205 ";
@@ -722,7 +723,8 @@ namespace Protean
             try
             {
                 XmlElement pageContentsNode = null;
-                if (Conversions.ToBoolean(Xml.NodeState(ref _myWeb.moPageXml.DocumentElement, "Contents", "", "", 1, pageContentsNode, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false)))
+                XmlElement DocElmt = (XmlElement)_myWeb.moPageXml.DocumentElement;
+                if (Conversions.ToBoolean(Xml.NodeState(ref DocElmt, "Contents", "", "", 1, pageContentsNode, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false)))
                 {
                     pageContentsNode.InnerXml = "";
                 }

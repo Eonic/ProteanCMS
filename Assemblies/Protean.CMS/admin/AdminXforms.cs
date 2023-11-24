@@ -3814,7 +3814,7 @@ namespace Protean
                         if (this.myWeb.gbVersionControl)
                         {
                             string nCurrentStatus = "";
-                            XmlNodeState localNodeState() { var argoNode3 = base.Instance; var ret = Xml.NodeState(ref argoNode3, "//nStatus", "", "", 1, null, "", nCurrentStatus, bCheckTrimmedInnerText: false); base.Instance = argoNode3; return ret; }
+                            XmlNodeState localNodeState() { var argoNode3 = base.Instance; var ret = Xml.NodeState(ref argoNode3, "//nStatus", "", "", XmlNodeState.IsEmpty, null, "", nCurrentStatus, bCheckTrimmedInnerText: false); base.Instance = argoNode3; return ret; }
 
                             if (localNodeState() == XmlNodeState.HasContents)
                             {
@@ -11001,7 +11001,7 @@ namespace Protean
                         }
 
                         // Manually populate the groups in the dropdown
-                        XmlNodeState localNodeState() { var argoNode4 = base.Instance; var ret = Xml.NodeState(ref argoNode4, "tblCodes/cCodeGroups", "", "", 1, null, "", cCodeGroups, bCheckTrimmedInnerText: false); base.Instance = argoNode4; return ret; }
+                        XmlNodeState localNodeState() { var argoNode4 = base.Instance; var ret = Xml.NodeState(ref argoNode4, "tblCodes/cCodeGroups", "", "", XmlNodeState.IsEmpty, null, "", cCodeGroups, bCheckTrimmedInnerText: false); base.Instance = argoNode4; return ret; }
 
                         if (localNodeState() == XmlNodeState.HasContents)
                         {
@@ -11075,7 +11075,7 @@ namespace Protean
                         base.Instance.SelectSingleNode("tblCodes/nCodeParentId").InnerText = nParentCodeKey.ToString();
 
                         // Update the label
-                        if (Xml.NodeState(ref base.moXformElmt, "group/label", "", "", 1, oElmt, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
+                        if (Xml.NodeState(ref base.moXformElmt, "group/label", "", "", XmlNodeState.IsEmpty, oElmt, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
                         {
                             oElmt.InnerText += " for " + oParentInstance.SelectSingleNode("tblCodes/cCodeName").InnerText;
                         }
@@ -11797,7 +11797,7 @@ namespace Protean
                         XslDocument.Load(this.goServer.MapPath(xslFilename));
                         base.submission("EditTemplate", "", "post", "form_check(this)");
 
-                        object xmlnsManager = new XmlNamespaceManager(XslDocument.NameTable);
+                        XmlNamespaceManager xmlnsManager = new XmlNamespaceManager(XslDocument.NameTable);
                         xmlnsManager.AddNamespace("xsl", "http://www.w3.org/1999/XSL/Transform");
 
                         var SelectElmt = base.addSelect1(ref oFrmElmt, "Template", true, "Template", ((int)Protean.xForm.ApperanceTypes.Minimal).ToString());

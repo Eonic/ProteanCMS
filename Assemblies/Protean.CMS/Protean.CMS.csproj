@@ -179,6 +179,7 @@
     </Reference>
     <Reference Include="System.Web.RegularExpressions" />
     <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -212,12 +213,7 @@
     <Compile Include="features\cart\Cart.Modules.cs" />
     <Compile Include="features\cart\Cart.PurchaseAction.cs" />
     <Compile Include="features\cart\Discount.cs" />
-    <Compile Include="features\cart\PaymentProviders\ePDQ.cs" />
-    <Compile Include="features\cart\PaymentProviders\Pay360.cs" />
     <Compile Include="features\cart\PaymentProviders\PaymentProviders.cs" />
-    <Compile Include="features\cart\PaymentProviders\PayPalExpress.cs" />
-    <Compile Include="features\cart\PaymentProviders\PayPalPro.cs" />
-    <Compile Include="features\cart\PaymentProviders\SagePayV3.cs" />
     <Compile Include="features\cart\PaymentProviders\SkipPayment.cs" />
     <Compile Include="features\cart\Quote.cs" />
     <Compile Include="features\membership\Alerts.cs" />

@@ -470,7 +470,7 @@ namespace Protean
                     return null;
                 }
             }
-            public new void Process(XmlReader xReader, XmlWriter xWriter)
+            public void Process(XmlReader xReader, XmlWriter xWriter)
             {
 
                 string sProcessInfo = "Processing:" + msXslFile;
@@ -505,7 +505,7 @@ namespace Protean
             }
 
 
-            public new void Process(XmlDocument oXml, HttpResponse oResponse)
+            public void Process(XmlDocument oXml, HttpResponse oResponse)
             {
                 if (!CanProcess)
                     return;

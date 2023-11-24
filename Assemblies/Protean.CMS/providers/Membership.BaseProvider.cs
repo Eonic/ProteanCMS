@@ -247,7 +247,8 @@ namespace Protean.Providers
                             // Add elements to the form if not present
                             if (Xml.NodeState(ref base.model, "bind[@id='cRemember']") == XmlNodeState.NotInstantiated)
                             {
-                                oSelElmt = base.addSelect(base.moXformElmt.SelectSingleNode("group"), "cRemember", true, "&#160;", "", ApperanceTypes.Full);
+                                XmlElement xmlGroupElmt = (XmlElement)base.moXformElmt.SelectSingleNode("group");
+                                oSelElmt = base.addSelect(ref xmlGroupElmt, "cRemember", true, "&#160;", "", ApperanceTypes.Full);
                                 base.addOption(ref oSelElmt, "Remember me", "true");
                                 base.addBind("cRemember", "user/@rememberMe", "false()");
                             }
@@ -261,12 +262,12 @@ namespace Protean.Providers
 
                                 if (!string.IsNullOrEmpty(cRememberedUsername))
                                     bRemembered = true;
-
-                                if (Xml.NodeState(ref base.Instance, "user", "", "", 1, oElmt, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated & !base.isSubmitted)
+                                XmlElement baseInstanceElmt = (XmlElement)base.Instance;                                
+                                if (Xml.NodeState(ref baseInstanceElmt, "user","","", XmlNodeState.NotInstantiated, oElmt) != XmlNodeState.NotInstantiated & !base.isSubmitted())
                                 {
 
                                     oElmt.SetAttribute("rememberMe", Strings.LCase(Conversions.ToString(bRemembered)));
-                                    Xml.NodeState(base.Instance, "user/username", cRememberedUsername);
+                                    Xml.NodeState(ref baseInstanceElmt, "user/username", cRememberedUsername);
 
                                 }
                             }
@@ -274,7 +275,7 @@ namespace Protean.Providers
 
                         base.updateInstanceFromRequest();
 
-                        if (base.isSubmitted)
+                        if (base.isSubmitted())
                         {
                             base.validate();
                             if (base.valid)
@@ -1462,7 +1463,7 @@ namespace Protean.Providers
                             myWeb.moDbHelper.UseCode(cCode, Convert.ToInt32(nUserId));
 
                             // Get the CSV list of directory items for membership
-                            string cCodeCSVList =Convert.ToString(myWeb.moDbHelper.GetDataValue("SELECT tblCodes.cCodeGroups FROM tblCodes INNER JOIN tblCodes Child ON tblCodes.nCodeKey = Child.nCodeParentId WHERE (Child.cCode = '" + cCode + "')", default, default, "");
+                            string cCodeCSVList =Convert.ToString(myWeb.moDbHelper.GetDataValue("SELECT tblCodes.cCodeGroups FROM tblCodes INNER JOIN tblCodes Child ON tblCodes.nCodeKey = Child.nCodeParentId WHERE (Child.cCode = '" + cCode + "')", default, default, ""));
 
                             // Process the List
                             foreach (string cDirId in cCodeCSVList.Split(','))
@@ -1987,7 +1988,7 @@ namespace Protean.Providers
                             }
                             else
                             {
-                                myWeb.AddContentXml(oXfmElmt);
+                                myWeb.AddContentXml(ref oXfmElmt);
                                 // mnUserId = adXfm.mnUserId
                             }
                         }
@@ -2441,7 +2442,8 @@ namespace Protean.Providers
                                         // For Each ocNode In moPageXml.SelectNodes("/Page/Contents/Content[@type='xform' and model/submission/@SOAPAction!='']")
 
                                         // Look for activation code xforms
-                                        if (Xml.NodeState(ref myWeb.moPageXml.DocumentElement, "Contents/Content[@type='xform' and @name='ActivationCode']", "", "", 1, oXfmElmt, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
+                                        XmlElement xmlPageElmt = (XmlElement)myWeb.moPageXml.DocumentElement;
+                                        if (Xml.NodeState(ref xmlPageElmt, "Contents/Content[@type='xform' and @name='ActivationCode']", "", "", 1, oXfmElmt, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
                                         {
                                             oXfmElmt.ParentNode.RemoveChild(oXfmElmt);
                                             cExistingFormXml = oXfmElmt.OuterXml;

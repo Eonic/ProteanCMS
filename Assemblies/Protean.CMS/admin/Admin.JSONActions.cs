@@ -650,7 +650,7 @@ namespace Protean
                         string xsltPath = moMailConfig["ReviewCompleteEmailTemplatePath"];
 
                         var dtReviewerEmail = new DataTable();
-                        object arrParms = new Hashtable();
+                        Hashtable arrParms = new Hashtable();
                         arrParms.Add("ReviewId", ReviewId);
                         using (var oDr = myWeb.moDbHelper.getDataReaderDisposable("spSendEmailAfterSubmitReview", CommandType.StoredProcedure, (Hashtable)arrParms))
                         {

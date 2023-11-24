@@ -49,7 +49,7 @@ namespace Protean
 
         public Messaging()
         {
-            goApp = Interaction.IIf(moCtx is null, null, moCtx.Application);
+            goApp = (System.Web.HttpApplicationState)Interaction.IIf(moCtx == null, null, moCtx.Application);
             goRequest = moCtx.Request;
             goResponse = moCtx.Response;
             goSession = moCtx.Session;
@@ -58,7 +58,7 @@ namespace Protean
         }
         public Messaging(ref string sException)
         {
-            goApp = Interaction.IIf(moCtx is null, null, moCtx.Application);
+            goApp = (System.Web.HttpApplicationState)Interaction.IIf(moCtx is null, null, moCtx.Application);
             goRequest = moCtx.Request;
             goResponse = moCtx.Response;
             goSession = moCtx.Session;

@@ -50,17 +50,18 @@ namespace Protean.Providers
             public class AdminProcess : Cms.Admin
             {
 
-                private Protean.Providers.Payment.PayPalPro.AdminXForms _oAdXfm;
+                //private Protean.Providers.Payment.PayPalPro.AdminXForms _oAdXfm;
 
                 public object oAdXfm
                 {
                     set
                     {
-                        _oAdXfm = value;
+                       // _oAdXfm = value;
                     }
                     get
                     {
-                        return _oAdXfm;
+                        // return _oAdXfm;
+                        return "";
                     }
                 }
 
