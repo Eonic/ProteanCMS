@@ -806,7 +806,7 @@ Check:
                             Dim importedNode As XmlNode = Instance.OwnerDocument.ImportNode(IntanceAppend, True)
                             Instance.AppendChild(importedNode)
                             MyBase.bProcessRepeats = True
-                            MyBase.LoadInstance(Instance)
+                            MyBase.LoadInstance(Instance, True)
                         End If
 
                         cDirectorySchemaName = MyBase.Instance.SelectSingleNode("tblDirectory/cDirSchema").InnerText

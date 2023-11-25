@@ -2182,7 +2182,7 @@
     </xsl:variable>
     <xsl:variable name="dependantClass">
       <xsl:value-of select="translate($ref,'[]#=/','')"/>
-      <xsl:text>-dependant form-group form-margin</xsl:text>
+      <xsl:text>-dependant</xsl:text>
     </xsl:variable>
     <xsl:choose>
       <xsl:when test="name()='group'">
@@ -2472,6 +2472,9 @@
         <xsl:if test="contains($class,'multiline')">
           <xsl:text> multiline</xsl:text>
         </xsl:if>
+		  <xsl:if test="contains(ancestor::*[name()='select' or name()='select1']/@class,'form-check-inline')">
+			  <xsl:text> form-check-inline</xsl:text>
+		  </xsl:if>
       </xsl:attribute>		
       <input type="{$type}" class="form-check-input {$class}">
         <xsl:if test="$ref!=''">
@@ -2588,6 +2591,9 @@
         <xsl:if test="contains($class,'multiline')">
           <xsl:text> multiline</xsl:text>
         </xsl:if>
+		  <xsl:if test="contains(ancestor::*[name()='select' or name()='select1']/@class,'form-check-inline')">
+			  <xsl:text> form-check-inline</xsl:text>
+		  </xsl:if>
       </xsl:attribute>
       <input type="{$type}" class="form-check-input">
         <xsl:if test="$ref!=''">

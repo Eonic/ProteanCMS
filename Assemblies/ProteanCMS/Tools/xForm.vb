@@ -184,7 +184,7 @@ Public Class xForm
         processRepeats(moXformElmt)
     End Sub
 
-    Sub LoadInstance(ByVal oElmt As XmlElement)
+    Sub LoadInstance(ByVal oElmt As XmlElement, Optional resetInitial As Boolean = False)
         Dim cProcessInfo As String = ""
 
         Try
@@ -195,7 +195,7 @@ Public Class xForm
                 oInstance.InnerXml = oElmt.InnerXml
             End If
 
-            If oInitialInstance Is Nothing Then
+            If oInitialInstance Is Nothing Or resetInitial = True Then
                 oInitialInstance = oInstance.Clone()
             End If
 
