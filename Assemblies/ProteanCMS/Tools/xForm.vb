@@ -376,7 +376,28 @@ Public Class xForm
 
                 ' Not used at the moment - intended for repeats where the instance needs to be loaded pre load PreLoadInstance()
                 ' processRepeats(moXformElmt)
+                If bProcessRepeats And Not goSession Is Nothing Then
 
+                    If goSession("tempInstance") Is Nothing Then
+                        Instance = model.SelectSingleNode("descendant-or-self::instance")
+                    Else
+                        Instance = goSession("tempInstance")
+                    End If
+
+                    If isTriggered Then
+                        'we have clicked a trigger so we must update the instance
+                        updateInstanceFromRequest()
+                        'lets save the instance
+                        goSession("tempInstance") = Instance
+                    Else
+                        'This has moved into validate as we must ensure valid form prior to removal
+                        'goSession("tempInstance") = Nothing
+
+                    End If
+
+                Else
+                    oInstance = model.SelectSingleNode("descendant-or-self::instance")
+                End If
 
                 'XformInclude Features....
                 Dim oInc As XmlElement
@@ -2964,6 +2985,13 @@ Public Class xForm
                                 Dim oInitialNode As XmlElement = oInitialInstance.SelectSingleNode(sBindXpath & "[position() = 1]", nsMgr)
                                 Dim oFirstNode As XmlElement = oInstance.SelectSingleNode(sBindXpath & "[position() = 1]", nsMgr)
                                 Dim oNewNode As XmlElement = oInitialNode.CloneNode(True)
+                                'strip values from new node
+                                For Each oEachNode As XmlNode In oNewNode.SelectNodes("descendant-or-self::*")
+                                    If oEachNode.SelectNodes("*").Count = 0 Then
+                                        oEachNode.InnerText = ""
+                                    End If
+                                Next
+
                                 oFirstNode.ParentNode.InsertAfter(oNewNode, oInstance.SelectSingleNode(sBindXpath & "[last()]", nsMgr))
                                 isTriggered = True
                                 isInserted = True

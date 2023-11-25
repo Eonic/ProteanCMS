@@ -371,16 +371,62 @@
 
   <!-- -->
   <!-- ========================== GROUP In Tabs ========================== -->
-  <xsl:template match="group[contains(@class,'xform-tabs')]" mode="xform">
+  <xsl:template match="group[contains(@class,'nav-tabs')]" mode="xform">
     <div>
       <ul class="nav nav-tabs" role="tablist">
         <xsl:for-each select="group">
-          <li role="presentation">
-            <xsl:if test="position()=1">
-              <xsl:attribute name="class">active</xsl:attribute>
+          <li role="presentation" class="nav-item">
+		
+          <xsl:if test="position()='1'">
+              <xsl:attribute name="class">active nav-item</xsl:attribute>
             </xsl:if>
-            <a href="#tab-{@id}" aria-controls="home" role="tab" data-toggle="tab">
-              <xsl:apply-templates select="label"/>
+
+            <a data-bs-target="#tab-{@id}" aria-controls="home" role="tab" data-bs-toggle="tab" class="nav-link">
+               <xsl:choose>     
+				   <xsl:when test="position()='1'">
+				       <xsl:attribute name="class">active nav-link</xsl:attribute>
+                      <xsl:attribute name="aria-selected">true</xsl:attribute>
+                    </xsl:when>
+				  <xsl:otherwise>
+                        <xsl:attribute name="aria-selected">false</xsl:attribute>
+				  </xsl:otherwise> 				  
+			  </xsl:choose>   
+                <xsl:apply-templates select="label"/>
+            </a>
+          </li>
+        </xsl:for-each>
+      </ul>
+      <div class="tab-content">
+        <xsl:for-each select="group">
+          <div role="tabcard" class="tab-pane" id="tab-{@id}">
+            <xsl:if test="position()=1">
+              <xsl:attribute name="class">tab-pane active</xsl:attribute>
+            </xsl:if>
+            <xsl:apply-templates select="." mode="xform"/>
+          </div>
+        </xsl:for-each>
+      </div>
+    </div>
+  </xsl:template>
+	
+	 <!-- ========================== GROUP In Tabs ========================== -->
+  <xsl:template match="group[contains(@class,'nav-pills')]" mode="xform">
+    <div>
+      <ul class="nav nav-pills" role="tablist">
+        <xsl:for-each select="group">
+          <li role="presentation" class="nav-item">
+			  <xsl:choose>
+            <xsl:when test="position()=1">
+              <xsl:attribute name="class">active nav-item</xsl:attribute>
+              <xsl:attribute name="aria-selected">true</xsl:attribute>
+            </xsl:when>
+				  <xsl:otherwise>
+              <xsl:attribute name="aria-selected">false</xsl:attribute>
+				  </xsl:otherwise> 
+				  
+			  </xsl:choose>
+            <a data-bs-target="#tab-{@id}" aria-controls="home" role="tab" data-bs-toggle="pill" class="nav-link">
+				<xsl:apply-templates select="label"/>
             </a>
           </li>
         </xsl:for-each>
@@ -435,56 +481,7 @@
     </div>
   </xsl:template>
 
-  <xsl:template match="group[contains(@class,'tabs')]" mode="xform">
-    <div class="form-tab-wrapper">
-      <div class="form-tab-nav-wrapper">
-        <div class=" nav flex-row tab-nav" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-          <xsl:apply-templates select="*" mode="xform-tab-list"/>
-        </div>
-      </div>
-      <div class="form-tab-content-wrapper">
-        <div class="tab-content" id="tabs-{@ref}">
-          <xsl:apply-templates select="*" mode="xform"/>
-        </div>
-      </div>
-    </div>
-  </xsl:template>
 	
-  <xsl:template match="group[parent::group[contains(@class,'tabs')]]" mode="xform-tab-list">
-    <xsl:variable name="isopen">
-      <xsl:if test="position()=1">
-        <xsl:text>active</xsl:text>
-      </xsl:if>
-    </xsl:variable>
-    <xsl:variable name="isclosed">
-      <xsl:choose>
-        <xsl:when test="position()=1">
-          <xsl:text> true</xsl:text>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:text> false</xsl:text>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <button class="nav-link {$isopen}" id="tab{position()}" data-bs-toggle="pill" data-bs-target="#heading{position()}" type="button" role="tab" aria-controls="heading{position()}" aria-selected="{$isclosed}">
-      <xsl:apply-templates select="label">
-        <xsl:with-param name="cLabel">
-          <xsl:value-of select="@ref"/>
-        </xsl:with-param>
-      </xsl:apply-templates>
-    </button>
-  </xsl:template>
-  <xsl:template match="group[parent::group[contains(@class,'tabs')]]" mode="xform">
-    <xsl:variable name="isopen">
-      <xsl:if test="position()=1">
-        <xsl:text>show active</xsl:text>
-      </xsl:if>
-    </xsl:variable>
-    <div id="heading{position()}" class="tab-pane fade {$isopen}" role="tabpanel" aria-labelledby="tab{position()}">
-      <xsl:apply-templates select="*" mode="xform"/>
-    </div>
-  </xsl:template>
-
   <!-- -->
   <!-- ========================== Input Group ========================== -->
 
