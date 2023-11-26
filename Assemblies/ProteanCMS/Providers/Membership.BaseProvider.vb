@@ -803,15 +803,16 @@ Check:
 
                         If Not IntanceAppend Is Nothing Then
                             If goSession("tempInstance") IsNot Nothing Then
-                                Instance = goSession("tempInstance")
+                                MyBase.Instance = goSession("tempInstance")
                                 MyBase.bProcessRepeats = True
-                                MyBase.LoadInstance(Instance, True)
+                                MyBase.LoadInstance(MyBase.Instance, True)
+                                goSession("tempInstance") = MyBase.Instance
                             Else
                                 'this enables an overload to add additional Xml for updating.
                                 Dim importedNode As XmlNode = Instance.OwnerDocument.ImportNode(IntanceAppend, True)
-                                Instance.AppendChild(importedNode)
+                                MyBase.Instance.AppendChild(importedNode)
                                 MyBase.bProcessRepeats = True
-                                MyBase.LoadInstance(Instance, True)
+                                MyBase.LoadInstance(MyBase.Instance, True)
                                 goSession("tempInstance") = MyBase.Instance
                             End If
                         End If
