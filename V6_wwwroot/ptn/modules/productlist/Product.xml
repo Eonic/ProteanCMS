@@ -396,15 +396,16 @@
                     </item>
                   </select1>
                   <group>
-                    <repeat bind="cOptRpt1" class="horizontal_cols">
-                      <input bind="cOpt1" class="short">
-                        <label>Option</label>
-                      </input>
-                      <trigger>
-                        <label>Del</label>
-                        <delete bind="cOptRpt1" at="index('cOptRpt1')"/>
-                      </trigger>
-                    </repeat>
+					  <repeat bind="cOptRpt1" class="horizontal">
+						  <input bind="cOpt1" class="short">
+							  <label>Option</label>
+						  </input>
+						  <trigger>
+							  <label>Del</label>
+							  <delete bind="cOptRpt1" at="index('cOptRpt1')"/>
+						  </trigger>
+					  </repeat>
+                    
                   </group>
                   <trigger>
                     <label>Add Option</label>

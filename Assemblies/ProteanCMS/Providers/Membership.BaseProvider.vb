@@ -802,11 +802,19 @@ Check:
                         End If
 
                         If Not IntanceAppend Is Nothing Then
-                            'this enables an overload to add additional Xml for updating.
-                            Dim importedNode As XmlNode = Instance.OwnerDocument.ImportNode(IntanceAppend, True)
-                            Instance.AppendChild(importedNode)
-                            MyBase.bProcessRepeats = True
-                            MyBase.LoadInstance(Instance)
+                            If goSession("tempInstance") IsNot Nothing Then
+                                MyBase.Instance = goSession("tempInstance")
+                                MyBase.bProcessRepeats = True
+                                MyBase.LoadInstance(MyBase.Instance, True)
+                                goSession("tempInstance") = MyBase.Instance
+                            Else
+                                'this enables an overload to add additional Xml for updating.
+                                Dim importedNode As XmlNode = Instance.OwnerDocument.ImportNode(IntanceAppend, True)
+                                MyBase.Instance.AppendChild(importedNode)
+                                MyBase.bProcessRepeats = True
+                                MyBase.LoadInstance(MyBase.Instance, True)
+                                goSession("tempInstance") = MyBase.Instance
+                            End If
                         End If
 
                         cDirectorySchemaName = MyBase.Instance.SelectSingleNode("tblDirectory/cDirSchema").InnerText

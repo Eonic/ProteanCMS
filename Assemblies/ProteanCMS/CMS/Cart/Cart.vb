@@ -1054,7 +1054,7 @@ Partial Public Class Cms
 
         End Sub
 
-        Public Function CreateCartElement(oCartXML As XmlDocument)
+        Public Function CreateCartElement(oCartXML As XmlDocument) As XmlElement
             Dim oContentElmt As XmlElement
             Dim oElmt As XmlElement
 
@@ -3513,7 +3513,7 @@ processFlow:
                 oDs = moDBHelper.GetDataSet(sSql, "Shipping", "Cart")
                 oXml.LoadXml(oDs.GetXml)
                 oDs.EnforceConstraints = False
-                oShippingXml = moPageXml.CreateElement("Cart")
+                oShippingXml = oCartXml.OwnerDocument.CreateElement("Cart")
                 oShippingXml.InnerXml = oXml.InnerXml
                 oCartXml.AppendChild(oShippingXml.FirstChild.FirstChild)
 

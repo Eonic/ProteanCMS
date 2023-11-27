@@ -14715,9 +14715,6 @@
   </xsl:template>
 	
   <!--HTML5-->
-	
-
-			
   <xsl:template match="Content[@moduleType='Video' and @videoType='HTML5']" mode="displayBrief">
     <xsl:if test="HTML5/@videoMp4!='' or HTML5/@videoGG!='' or  HTML5/@videoWebm!=''">
       <div>
@@ -14754,6 +14751,9 @@
             <xsl:attribute name="autoplay">
               <xsl:text>autoplay</xsl:text>
             </xsl:attribute>
+			  <xsl:attribute name="playsinline">
+				  <xsl:text>playsinline</xsl:text>
+			  </xsl:attribute>
           </xsl:if>
           <xsl:if test="HTML5/@controls='controls'">
             <xsl:attribute name="controls">
@@ -14804,7 +14804,7 @@
     </xsl:if>
   </xsl:template>
 
-				<xsl:template match="Content[@moduleType='Video' and @videoType='HTML5' and @link!='']" mode="displayBrief">
+  <xsl:template match="Content[@moduleType='Video' and @videoType='HTML5' and @link!='']" mode="displayBrief">
     <xsl:if test="HTML5/@videoMp4!='' or HTML5/@videoGG!='' or  HTML5/@videoWebm!=''">
       <div>
         <xsl:if test="@size!='Manual'">
@@ -14852,6 +14852,9 @@
             <xsl:attribute name="autoplay">
               <xsl:text>autoplay</xsl:text>
             </xsl:attribute>
+	    			  <xsl:attribute name="playsinline">
+				  <xsl:text>playsinline</xsl:text>
+			  </xsl:attribute>
           </xsl:if>
           <xsl:if test="HTML5/@controls='controls'">
             <xsl:attribute name="controls">
