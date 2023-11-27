@@ -160,7 +160,7 @@ namespace Protean.Providers
             {
                 private const string mcModuleName = "Providers.Messaging.Generic.AdminXForms";
 
-                public AdminXForms(ref Cms aWeb) : base(aWeb)
+                public AdminXForms(ref Cms aWeb) : base(ref aWeb)
                 {
                 }
 
@@ -175,13 +175,13 @@ namespace Protean.Providers
 
                         base.submission("SendNewsLetter", "", "post", "");
 
-                        oFrmElmt = base.addGroup(base.moXformElmt, "Unpersonalised", "", "Send Unpersonalised");
+                        oFrmElmt = base.addGroup(ref base.moXformElmt, "Unpersonalised", "", "Send Unpersonalised");
 
                         XmlElement oElmt;
-                        oElmt = base.addInput(oFrmElmt, "cEmail", true, "Email address to send to", "long");
+                        oElmt = base.addInput(ref oFrmElmt, "cEmail", true, "Email address to send to", "long");
                         base.addBind("cEmail", "cEmail");
                         oElmt.AppendChild(oElmt.OwnerDocument.CreateElement("value"));
-                        base.addSubmit(oFrmElmt, "SendUnpersonalised", "Send Unpersonalised");
+                        base.addSubmit(ref oFrmElmt, "SendUnpersonalised", "Send Unpersonalised");
 
                         // Uncomment for personalised
                         // ''oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "Personalised", "", "Send Personalised")
@@ -205,12 +205,12 @@ namespace Protean.Providers
                         {
                             base.updateInstanceFromRequest();
                             base.validate();
-                            XmlElement oEmailElmt = base.Instance.SelectSingleNode("cEmail");
-                            bool localis_valid_email() { string argstr_Renamed = oEmailElmt.InnerText; var ret = is_valid_email(ref argstr_Renamed); oEmailElmt.InnerText = argstr_Renamed; return ret; }
+                            XmlElement oEmailElmt = (XmlElement)base.Instance.SelectSingleNode("cEmail");
+                            bool localis_valid_email() { string argstr_Renamed = oEmailElmt.InnerText; var ret = Protean.Tools.Text.IsEmail(argstr_Renamed); oEmailElmt.InnerText = argstr_Renamed; return ret; }
 
                             if (!localis_valid_email())
                             {
-                                base.addNote(oElmt, Protean.xForm.noteTypes.Alert, "Incorrect Email Address Supplied");
+                                base.addNote(oElmt.ToString(), Protean.xForm.noteTypes.Alert, "Incorrect Email Address Supplied");
                                 base.valid = false;
                             }
                             if (base.valid)
@@ -275,24 +275,24 @@ namespace Protean.Providers
 
                         base.submission("SendNewsLetter", "", "post", "");
 
-                        oFrmElmt = base.addGroup(base.moXformElmt, "Groups", "2col", "Please select a group(s) to send to.");
+                        oFrmElmt = base.addGroup(ref base.moXformElmt, "Groups", "2col", "Please select a group(s) to send to.");
 
                         cDefaultEmail = Strings.Trim(cDefaultEmail);
 
-                        oCol1 = base.addGroup(oFrmElmt, "", "col1", "");
-                        oCol2 = base.addGroup(oFrmElmt, "", "col2", "");
+                        oCol1 = base.addGroup(ref oFrmElmt, "", "col1", "");
+                        oCol2 = base.addGroup(ref oFrmElmt, "", "col2", "");
 
                         XmlElement oElmt;
-                        oElmt = base.addInput(oCol1, "cDefaultEmail", true, "Email address to send from", "required long");
+                        oElmt = base.addInput(ref oCol1, "cDefaultEmail", true, "Email address to send from", "required long");
                         base.addBind("cDefaultEmail", "cDefaultEmail", "true()");
                         oElmt.AppendChild(oElmt.OwnerDocument.CreateElement("value"));
 
                         XmlElement oElmt2;
-                        oElmt2 = base.addInput(oCol1, "cDefaultEmailName", true, "Name to send from", "required long");
+                        oElmt2 = base.addInput(ref oCol1, "cDefaultEmailName", true, "Name to send from", "required long");
                         base.addBind("cDefaultEmailName", "cDefaultEmailName", "true()");
                         oElmt2.AppendChild(oElmt.OwnerDocument.CreateElement("value"));
 
-                        oElmt2 = base.addInput(oCol1, "cSubject", true, "Subject", "required long");
+                        oElmt2 = base.addInput(ref oCol1, "cSubject", true, "Subject", "required long");
                         base.addBind("cSubject", "cSubject", "true()");
                         oElmt2.AppendChild(oElmt.OwnerDocument.CreateElement("value"));
 
@@ -300,15 +300,15 @@ namespace Protean.Providers
                         string cSQL = "SELECT nDirKey, cDirName  FROM tblDirectory WHERE (cDirSchema = 'Group') ORDER BY cDirName";
                         using (SqlDataReader oDre = moDbHelper.getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
                         {
-                            XmlElement oSelElmt = base.addSelect(oCol2, "cGroups", true, "Select Groups to send to", "required multiline", ApperanceTypes.Full);
+                            XmlElement oSelElmt = base.addSelect(ref oCol2, "cGroups", true, "Select Groups to send to", "required multiline", ApperanceTypes.Full);
                             while (oDre.Read())
-                                base.addOption(oSelElmt, oDre[1], oDre[0]);
+                                base.addOption(ref oSelElmt, oDre[1].ToString(), oDre[0].ToString());
                         }
                         base.addBind("cGroups", "cGroups", "true()");
 
-                        oFrmElmt = base.addGroup(base.moXformElmt, "Send", "", "");
+                        oFrmElmt = base.addGroup(ref base.moXformElmt, "Send", "", "");
 
-                        base.addSubmit(oFrmElmt, "SendUnpersonalised", "Send Unpersonalised");
+                        base.addSubmit(ref oFrmElmt, "SendUnpersonalised", "Send Unpersonalised");
                         // Uncomment for personalised
                         // MyBase.addSubmit(oFrmElmt, "SendPersonalised", "Send Personalised")
 
@@ -318,10 +318,10 @@ namespace Protean.Providers
                         {
                             base.updateInstanceFromRequest();
                             base.validate();
-                            XmlElement oEmailElmt = base.Instance.SelectSingleNode("cDefaultEmail");
+                            XmlElement oEmailElmt = (XmlElement)base.Instance.SelectSingleNode("cDefaultEmail");
                             if (!Text.IsEmail(oEmailElmt.InnerText.Trim()))
                             {
-                                base.addNote(oElmt, Protean.xForm.noteTypes.Alert, "Incorrect Email Address Supplied");
+                                base.addNote(oElmt.ToString(), Protean.xForm.noteTypes.Alert, "Incorrect Email Address Supplied");
                                 base.valid = false;
                             }
                             if (base.valid)
@@ -330,10 +330,10 @@ namespace Protean.Providers
                                 // get the individual elements
                                 var oMessaging = new Protean.Messaging(ref myWeb.msException);
                                 // First we need to get the groups we are sending to
-                                XmlElement oGroupElmt = base.Instance.SelectSingleNode("cGroups");
-                                XmlElement oFromEmailElmt = base.Instance.SelectSingleNode("cDefaultEmail");
-                                XmlElement oFromNameElmt = base.Instance.SelectSingleNode("cDefaultEmailName");
-                                XmlElement oSubjectElmt = base.Instance.SelectSingleNode("cSubject");
+                                XmlElement oGroupElmt = (XmlElement)base.Instance.SelectSingleNode("cGroups");
+                                XmlElement oFromEmailElmt = (XmlElement)base.Instance.SelectSingleNode("cDefaultEmail");
+                                XmlElement oFromNameElmt = (XmlElement)base.Instance.SelectSingleNode("cDefaultEmailName");
+                                XmlElement oSubjectElmt = (XmlElement)base.Instance.SelectSingleNode("cSubject");
                                 // get the email addresses for these groups
                                 string cMailingXsl = moMailConfig["MailingXsl"];
                                 if (string.IsNullOrEmpty(cMailingXsl))
@@ -383,10 +383,10 @@ namespace Protean.Providers
                     try
                     {
 
-                        if (moRequest("cModuleBox") != "")
+                        if (moRequest["cModuleBox"] != "")
                         {
 
-                            xFrmEditContent(0, "Module/" + moRequest("cModuleType"), pgid, moRequest("cPosition"));
+                            xFrmEditContent(0, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"]);
                             return base.moXformElmt;
                         }
 
@@ -395,18 +395,18 @@ namespace Protean.Providers
                             base.NewFrm("EditPageLayout");
                             base.submission("AddModule", "", "post", "form_check(this)");
                             base.Instance.InnerXml = "<Module position=\"" + position + "\"></Module>";
-                            oFrmElmt = base.addGroup(base.moXformElmt, "Add Module", "", "Select Module Type");
-                            base.addInput(oFrmElmt, "nStructParId", true, "ParId", "hidden");
-                            base.addInput(oFrmElmt, "cPosition", true, "Position", "hidden");
+                            oFrmElmt = base.addGroup(ref base.moXformElmt, "Add Module", "", "Select Module Type");
+                            base.addInput(ref oFrmElmt, "nStructParId", true, "ParId", "hidden");
+                            base.addInput(ref oFrmElmt, "cPosition", true, "Position", "hidden");
                             base.addBind("cPosition", "Module/@position", "true()");
-                            base.addNote(oFrmElmt, Protean.xForm.noteTypes.Hint, "Click the image to select Module Type");
+                            base.addNote(oFrmElmt.ToString(), Protean.xForm.noteTypes.Hint, "Click the image to select Module Type");
 
-                            oSelElmt = base.addSelect1(oFrmElmt, "cModuleType", true, "", "PickByImage", Protean.xForm.ApperanceTypes.Full);
+                            oSelElmt = base.addSelect1(ref oFrmElmt, "cModuleType", true, "", "PickByImage", Protean.xForm.ApperanceTypes.Full);
 
-                            EnumberateManifestOptions(oSelElmt, "/xsl/Mailer", "ModuleTypes/ModuleGroup", "Module", true);
-                            EnumberateManifestOptions(oSelElmt, "/ewcommon/xsl/Mailer", "ModuleTypes/ModuleGroup", "Module", false);
+                            EnumberateManifestOptions(ref oSelElmt, "/xsl/Mailer", "ModuleTypes/ModuleGroup", "Module", true);
+                            EnumberateManifestOptions(ref oSelElmt, "/ewcommon/xsl/Mailer", "ModuleTypes/ModuleGroup", "Module", false);
 
-                            if (base.isSubmitted | goRequest.Form("ewsubmit.x") != "" | goRequest.Form("cModuleType") != "")
+                            if (base.isSubmitted() | goRequest.Form["ewsubmit.x"] != "" | goRequest.Form["cModuleType"] != "")
                             {
                                 base.updateInstanceFromRequest();
                                 base.validate();
@@ -414,7 +414,7 @@ namespace Protean.Providers
                                 {
                                     // Do nothing
                                     // or redirect to content form
-                                    xFrmEditContent(0, "Module/" + moRequest("cModuleType"), pgid, moRequest("cPosition"));
+                                    xFrmEditContent(0, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"]);
                                 }
                             }
                             base.addValues();
@@ -448,7 +448,7 @@ namespace Protean.Providers
                     }
                 }
 
-                public AdminProcess(ref Cms aWeb) : base(aWeb)
+                public AdminProcess(ref Cms aWeb) : base(ref aWeb)
                 {
                 }
 
@@ -522,7 +522,7 @@ namespace Protean.Providers
                                     if (nNewsletterRoot == 0)
                                     {
                                         string defaultPageXml = "<DisplayName title=\"\" linkType=\"internal\" exclude=\"false\" noindex=\"false\"/><Images><img class=\"icon\" /><img class=\"thumbnail\" /><img class=\"detail\" /></Images><Description/>";
-                                        nNewsletterRoot = myWeb.moDbHelper.insertStructure(0, "", "Newsletters", defaultPageXml, "NewsletterRoot");
+                                        nNewsletterRoot = Convert.ToInt32(myWeb.moDbHelper.insertStructure(0, "", "Newsletters", defaultPageXml, "NewsletterRoot"));
                                         Protean.Config.UpdateConfigValue(ref myWeb, "protean/mailinglist", "RootPageId", nNewsletterRoot.ToString());
 
                                     }
@@ -597,10 +597,10 @@ namespace Protean.Providers
                                     var oCommonContentTypes = new XmlDocument();
                                     if (System.IO.File.Exists(myWeb.goServer.MapPath("/ewcommon/xsl/mailer/layoutmanifest.xml")))
                                         oCommonContentTypes.Load(myWeb.goServer.MapPath("/ewcommon/xsl/pagelayouts/layoutmanifest.xml"));
-                                    if (System.IO.File.Exists(myWeb.goServer.MapPath(moConfig("ProjectPath") + "/xsl/mailer/layoutmanifest.xml")))
+                                    if (System.IO.File.Exists(myWeb.goServer.MapPath(moConfig["ProjectPath"] + "/xsl/mailer/layoutmanifest.xml")))
                                     {
                                         var oLocalContentTypes = new XmlDocument();
-                                        oLocalContentTypes.Load(myWeb.goServer.MapPath(moConfig("ProjectPath") + "/xsl/mailer/layoutmanifest.xml"));
+                                        oLocalContentTypes.Load(myWeb.goServer.MapPath(moConfig["ProjectPath"] + "/xsl/mailer/layoutmanifest.xml"));
                                         XmlElement oLocals = (XmlElement)oLocalContentTypes.SelectSingleNode("/PageLayouts/ContentTypes");
                                         if (oLocals != null)
                                         {
@@ -644,7 +644,7 @@ namespace Protean.Providers
 
                             case "MailHistory":
                                 {
-                                    myWeb.moDbHelper.ViewMailHistory(oPageDetail);
+                                    myWeb.moDbHelper.ViewMailHistory(ref oPageDetail);
                                     break;
                                 }
                             case "EditMailLayout":
@@ -713,7 +713,7 @@ namespace Protean.Providers
                                         cVersionKey = "0";
                                     long nContentId;
                                     nContentId = 0L;
-                                    oPageDetail.AppendChild(moAdXfm.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), "", Convert.ToInt64(myWeb.moRequest["pgid"]), default, default, ref Convert.ToInt32(nContentId), default, default, Conversions.ToLong(cVersionKey)));
+                                    oPageDetail.AppendChild(moAdXfm.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), "", Convert.ToInt64(myWeb.moRequest["pgid"]), default, default, ref nContentId, default, default, Conversions.ToLong(cVersionKey)));
 
                                     if (moAdXfm.valid)
                                     {
@@ -943,7 +943,7 @@ namespace Protean.Providers
 
                         oWeb.mcEwSiteXsl = cEmailXSL;
                         // get body
-                        oWeb.mnMailMenuId = moMailConfig["RootPageId"];
+                        oWeb.mnMailMenuId =Convert.ToInt64(moMailConfig["RootPageId"]);
                         string oEmailBody = oWeb.ReturnPageHTML(oWeb.mnPageId);
 
                         var i2 = default(int);

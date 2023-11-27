@@ -750,7 +750,7 @@ namespace Protean
                     // Dim oAdXfm As Cms.Admin.AdminXforms = New Cms.Admin.AdminXforms(myWeb)
                     // oAdXfm.open(moPageXml)
 
-                    var oMembershipProv = new Providers.Membership.BaseProvider(myWeb, myWeb.moConfig["MembershipProvider"]);
+                    var oMembershipProv = new Providers.Membership.BaseProvider(ref myWeb, myWeb.moConfig["MembershipProvider"]);
                     object oAdXfm = oMembershipProv.AdminXforms;
                     oAdXfm.open(moPageXml);
                     oPageDetail.AppendChild((XmlNode)oAdXfm.xFrmUserLogon("AdminLogon"));
@@ -1751,8 +1751,8 @@ namespace Protean
 
             try
             {
-
-                bUsesDirectory = moDbHelper.doesTableExist("tbl_ewu_Directory");
+                string strEwuDirectory = "tbl_ewu_Directory";
+                bUsesDirectory = moDbHelper.doesTableExist(ref strEwuDirectory);
                 if (!bUsesDirectory)
                 {
                     AddResponse(" No Directory information to import. Creating deafults.");
@@ -1928,8 +1928,8 @@ namespace Protean
 
             try
             {
-
-                bUsesDirectory = moDbHelper.doesTableExist("tbl_ewu_Directory");
+                string strewuDirectory = "tbl_ewu_Directory";
+                bUsesDirectory = moDbHelper.doesTableExist(ref strewuDirectory);
 
                 oDS = myWeb.moDbHelper.GetDataSet("Select * from tbl_ewm_structure", "Menu", "Structure");
                 // checknest(oDS, dbT)
@@ -2779,7 +2779,7 @@ namespace Protean
                 if (bIsXml)
                 {
                     // Try to validate the xml
-                    myWeb.moDbHelper.importShippingLocations2(oXml);
+                    myWeb.moDbHelper.importShippingLocations2(ref oXml);
                 }
 
                 AddResponse("Import Shipping Locations'");
@@ -3027,7 +3027,7 @@ namespace Protean
                             var oCfg = WebConfigurationManager.OpenWebConfiguration("/");
 
                             // Now lets create the database
-                            var oDbt = new Cms.dbHelper(default);
+                            var oDbt = new Cms.dbHelper(ref Cms);
                             string sDbName = this.Instance.SelectSingleNode("web/add[@key='DatabaseName']/@value").InnerText;
                             string cDbServer = this.Instance.SelectSingleNode("web/add[@key='DatabaseServer']/@value").InnerText;
                             string cDbUsername = this.Instance.SelectSingleNode("web/add[@key='DatabaseUsername']/@value").InnerText;

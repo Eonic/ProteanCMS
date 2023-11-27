@@ -1026,7 +1026,7 @@ namespace Protean
                                             {
                                                 // oDR2("nDisplayOrder") < oDR("nDisplayOrder") Then
 
-                                                myCart.RemoveItem(oDR2["nCartItemKey"]);
+                                                myCart.RemoveItem(Convert.ToInt64(oDR2["nCartItemKey"]));
                                                 oDR2.Delete();
                                                 goto RedoCheck;
                                             }
@@ -2295,10 +2295,12 @@ namespace Protean
 
                         if (paymentStatus == "Success")
                         {
+                            string strSuccess = "Success";
                             myWeb.moCart.mnProcessId = 6;
-                            myWeb.moCart.updateCart("Success");
+                            myWeb.moCart.updateCart(ref strSuccess);
                             myWeb.moCart.GetCart();
-                            myWeb.moCart.addDateAndRef(myWeb.moCart.moCartXml.FirstChild, dNewStart);
+                            XmlElement xmlmoCartXmlElmt = (XmlElement)myWeb.moCart.moCartXml.FirstChild;
+                            myWeb.moCart.addDateAndRef(ref xmlmoCartXmlElmt, dNewStart);
 
                             // Send the invoice
                             if (bEmailClient)
@@ -2312,12 +2314,12 @@ namespace Protean
                                     }
                                 }
 
-                                myWeb.moCart.emailReceipts(myWeb.moCart.moCartXml, RenewalEmailCC);
+                                myWeb.moCart.emailReceipts(ref myWeb.moCart.moCartXml, RenewalEmailCC);
                             }
 
                             // myWeb.moCart.updateCart("Success")
 
-                            myWeb.moCart.SaveCartXML(myWeb.moCart.moCartXml.FirstChild);
+                            myWeb.moCart.SaveCartXML((XmlElement)myWeb.moCart.moCartXml.FirstChild);
 
                             // On Success update subscription
                             var SubInstance = new XmlDocument();
@@ -2354,9 +2356,9 @@ namespace Protean
 
                         else
                         {
-
+                            string strFailed = "Failed";
                             myWeb.moCart.mnProcessId = 5;
-                            myWeb.moCart.updateCart("Failed");
+                            myWeb.moCart.updateCart(ref strFailed);
 
                             // On Failure
                             // Record the failure
@@ -2447,17 +2449,19 @@ namespace Protean
                         myWeb.moCart.useSavedAddressesOnCart(billingId, deliveryId);
 
                         myWeb.moCart.mnProcessId = 6;
-                        myWeb.moCart.updateCart("Success");
+                        string strSuccuess = "Success";
+                        myWeb.moCart.updateCart(ref strSuccuess);
                         myWeb.moCart.GetCart();
-                        myWeb.moCart.addDateAndRef(myWeb.moCart.moCartXml.FirstChild, dNewStart);
+                        XmlElement xmlmoCartElmt = (XmlElement)myWeb.moCart.moCartXml.FirstChild;
+                        myWeb.moCart.addDateAndRef(ref xmlmoCartElmt, dNewStart);
 
                         // Send the invoice
                         if (bEmailClient)
                         {
-                            myWeb.moCart.emailReceipts(myWeb.moCart.moCartXml);
+                            myWeb.moCart.emailReceipts(ref myWeb.moCart.moCartXml);
                         }
 
-                        myWeb.moCart.SaveCartXML(myWeb.moCart.moCartXml.FirstChild);
+                        myWeb.moCart.SaveCartXML((XmlElement)myWeb.moCart.moCartXml.FirstChild);
 
                         return "Success";
                     }
@@ -2806,7 +2810,7 @@ namespace Protean
 
                                     PaymentProviders oPay;
                                     bool bDeny = false;
-                                    oPay = new PaymentProviders(this.myWeb);
+                                    oPay = new PaymentProviders(ref this.myWeb);
                                     oPay.mcCurrency = moCartConfig["Currency"];
 
                                     if (Strings.LCase(moCartConfig["PaymentTypeButtons"]) == "on")
@@ -2822,7 +2826,7 @@ namespace Protean
                                         XmlElement PaymentBinding = (XmlElement)this.moXformElmt.SelectSingleNode("descendant-or-self::bind[@id='cPaymentMethod']");
                                         PaymentBinding.ParentNode.RemoveChild(PaymentBinding);
 
-                                        oPay.getPaymentMethodButtons(this, xfrmGroup, PaymentAmount);
+                                        oPay.getPaymentMethodButtons(ref this, xfrmGroup, PaymentAmount);
                                     }
 
                                     else

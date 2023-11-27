@@ -2313,7 +2313,7 @@ namespace Protean
                                             foreach (string folderPath in folderList)
                                             {
                                                 tidypath = folderPath.Replace(prefixFolderPath, "").Replace(@"\", "/");
-                                                oXfrms.addOption(SelectElmt, tidypath, tidypath);
+                                                oXfrms.addOption(ref SelectElmt, tidypath, tidypath);
                                             }
                                         }
 
@@ -2836,7 +2836,8 @@ namespace Protean
                             var br = Bundles.GetBundleFor(TargetPath).GenerateBundleResponse(BundlesCtx);
                             byte[] info = new System.Text.UTF8Encoding(true).GetBytes(br.Content);
 
-                            scriptFile = fsh.SaveFile("script.js", TargetPath, info);
+                            string strFileName = "script.js";
+                            scriptFile = fsh.SaveFile(ref strFileName, TargetPath, info);
 
                             if (scriptFile.StartsWith("ERROR: "))
                             {
@@ -3010,7 +3011,8 @@ namespace Protean
                                     var loopTo = Conversions.ToInteger(maxAttempt);
                                     for (cnt = 1; cnt <= loopTo; cnt++)
                                     {
-                                        scriptFile = fsh.SaveFile("style.css", TargetPath, info);
+                                        string strStylecss = "style.css";
+                                        scriptFile = fsh.SaveFile(ref strStylecss, TargetPath, info);
                                         if (!scriptFile.Contains("ERROR:"))
                                         {
                                             break;
@@ -3050,7 +3052,8 @@ namespace Protean
                                     info = new System.Text.UTF8Encoding(true).GetBytes(oCssWebClient.CssSplits[i]);
                                     // fsh.DeleteFile(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "css" & TargetFile.TrimStart("~") & "/" & String.Format("style{0}.css", i)))
                                     // TS commented out as modified save file to overwrite by using WriteAllBytes
-                                    scriptFile = "/" + myWeb.moConfig["ProjectPath"] + "css" + fsh.SaveFile(string.Format("style{0}.css", i), TargetPath, info);
+                                    string strStyle = string.Format("style{0}.css", i);
+                                    scriptFile = "/" + myWeb.moConfig["ProjectPath"] + "css" + fsh.SaveFile(ref strStyle, TargetPath, info);
 
                                     if (scriptFile.StartsWith("/" + myWeb.moConfig["ProjectPath"] + "css" + "ERROR: "))
                                     {

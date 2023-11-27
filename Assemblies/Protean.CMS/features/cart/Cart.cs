@@ -3505,7 +3505,7 @@ namespace Protean
                                 }
 
                                 weight = Conversions.ToDouble(weight + Operators.MultiplyObject(oRow["weight"], oRow["quantity"]));
-                                quant = Conversions.ToLong(quant + oRow["quantity"]);
+                                quant = Conversions.ToLong(quant + Convert.ToDecimal(oRow["quantity"]));
                                 if (moCartConfig["ProductOptionOverideQuantity"] == "on")
                                 {
                                     total = Conversions.ToDouble(total + Operators.AddObject(Operators.MultiplyObject(oRow["quantity"], Round(oRow["price"], bForceRoundup: mbRoundup)), Round(nOpPrices, bForceRoundup: mbRoundup)));
@@ -11848,7 +11848,7 @@ namespace Protean
                                     // oOpRow.EndEdit()
                                     else
                                     {
-                                        nOpPrices = Conversions.ToDecimal(nOpPrices + oOpRow["price"]);
+                                        nOpPrices = Conversions.ToDecimal(nOpPrices + Convert.ToDecimal(oOpRow["price"]));
                                     }
                                 }
                             }
