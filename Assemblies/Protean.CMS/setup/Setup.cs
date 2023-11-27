@@ -1996,7 +1996,7 @@ namespace Protean
                                 break;
                             }
                     }
-                    nParID = myWeb.moDbHelper.insertStructure(nParID, oMenuElmt.GetAttribute("nId"), CleanName(oMenuElmt.GetAttribute("cName")), "<DisplayName>" + oMenuElmt.GetAttribute("cName") + "</DisplayName><Description />", oMenuElmt.GetAttribute("cTemplateName"), nMenStatus, Convert.ToDateTime(Interaction.IIf(string.IsNullOrEmpty(oMenuElmt.GetAttribute("dPublishDate")), null, oMenuElmt.GetAttribute("dPublishDate"))),Convert.ToDateTime(Interaction.IIf(string.IsNullOrEmpty(oMenuElmt.GetAttribute("dExpireDate")), null, oMenuElmt.GetAttribute("dExpireDate"))), "", Convert.ToInt64(Interaction.IIf(string.IsNullOrEmpty(oMenuElmt.GetAttribute("nDisplayOrder")), 0, oMenuElmt.GetAttribute("nDisplayOrder"))));
+                    nParID = Convert.ToInt32(myWeb.moDbHelper.insertStructure(nParID, oMenuElmt.GetAttribute("nId"), CleanName(oMenuElmt.GetAttribute("cName")), "<DisplayName>" + oMenuElmt.GetAttribute("cName") + "</DisplayName><Description />", oMenuElmt.GetAttribute("cTemplateName"), nMenStatus, Convert.ToDateTime(Interaction.IIf(string.IsNullOrEmpty(oMenuElmt.GetAttribute("dPublishDate")), null, oMenuElmt.GetAttribute("dPublishDate"))),Convert.ToDateTime(Interaction.IIf(string.IsNullOrEmpty(oMenuElmt.GetAttribute("dExpireDate")), null, oMenuElmt.GetAttribute("dExpireDate"))), "", Convert.ToInt64(Interaction.IIf(string.IsNullOrEmpty(oMenuElmt.GetAttribute("nDisplayOrder")), 0, oMenuElmt.GetAttribute("nDisplayOrder")))));
                     oMenuElmt.SetAttribute("NewID", nParID.ToString());
                     AddResponse("   Writing Page:" + oMenuElmt.GetAttribute("cName") + "   ");
 

@@ -1690,10 +1690,10 @@ namespace Protean
 
                         case "DeleteContent":
                             {
-                                object ids = myWeb.moRequest["id"];
-                                string[] bulkIds = (string[])ids.split(",");
+                                string ids = myWeb.moRequest["id"];
+                                string[] bulkIds = (string[])ids.Split(',');
                                 var status = default(int);
-                                int count = Conversions.ToInteger(ids.Split(",").Length);
+                                int count = Conversions.ToInteger(ids.Split(',').Length);
                                 int totalStatusCount = 0;
                                 foreach (var id in bulkIds)
                                 {
@@ -3277,7 +3277,7 @@ namespace Protean
                                 }
 
                                 // If oMessaging.AdminProcess.MailingListProcess(oPageDetail, oWeb, sAdminLayout, myWeb.moRequest("ewCmd"), bLoadStructure, EditContext, clearEditContext) = "GoTo" Then GoTo ProcessFlow
-                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oMessaging.AdminProcess.MailingListProcess(oPageDetail, oWeb, sAdminLayout, passthroughCmd, bLoadStructure, EditContext, clearEditContext), "GoTo", false)))
+                                if (oMessaging.AdminProcess.MailingListProcess(oPageDetail, oWeb, sAdminLayout, passthroughCmd, bLoadStructure, EditContext, clearEditContext) = "GoTo")
                                     goto ProcessFlow;
 
                                 mcEwCmd = passthroughCmd;
@@ -3989,7 +3989,7 @@ namespace Protean
                         if (cFilePath.EndsWith(".xls") | cFilePath.EndsWith(".xlsx") | cFilePath.EndsWith(".csv"))
                         {
 
-                            var oConvert = new Tools.Conversion(Tools.Conversion.Type.Excel, Tools.Conversion.Type.Xml, cFilePath);
+                            Protean.Tools.Conversion oConvert = new Protean.Tools.Conversion(Protean.Tools.Conversion.Type.Excel, Protean.Tools.Conversion.Type.Xml, cFilePath);
                             oConvert.Convert();
                             if (oConvert.State == Tools.Conversion.Status.Succeeded)
                             {
@@ -5984,7 +5984,7 @@ from tblContentIndexDef";
 
                     foreach (XmlElement contentElmt in oElmt.FirstChild.SelectNodes("ProductCategory/Content"))
                     {
-                        object contentElmtL2 = contentElmt.FirstChild;
+                        XmlElement contentElmtL2 = contentElmt.FirstChild;
                         foreach (XmlElement ChildElmts in (IEnumerable)contentElmtL2.SelectNodes("*"))
                             contentElmt.AppendChild(ChildElmts.Clone());
                         contentElmt.RemoveChild((XmlNode)contentElmtL2);

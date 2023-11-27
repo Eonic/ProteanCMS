@@ -489,18 +489,18 @@ where cl.nStructId = " + myWeb.mnPageId));
                                 {
                                     var castObject = WebConfigurationManager.GetWebApplicationSection("protean/filterProviders");
                                     Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)castObject;
-                                    object ourProvider = moPrvConfig.Providers[providerName];
+                                    System.Configuration.ProviderSettings ourProvider = moPrvConfig.Providers[providerName];
                                     Assembly assemblyInstance;
 
-                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(ourProvider.parameters("path"), "", false)))
+                                    if (ourProvider.Parameters["path"] != "")
                                     {
-                                        assemblyInstance = Assembly.LoadFrom(myWeb.goServer.MapPath(Conversions.ToString(ourProvider.parameters("path"))));
+                                        assemblyInstance = Assembly.LoadFrom(myWeb.goServer.MapPath(Conversions.ToString(ourProvider.Parameters["path"])));
                                     }
                                     else
                                     {
                                         assemblyInstance = Assembly.Load(ourProvider.Type);
                                     }
-                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(ourProvider.parameters("rootClass"), "", false)))
+                                    if (ourProvider.Parameters["rootClass"] == "")
                                     {
                                         calledType = assemblyInstance.GetType("Protean.Providers.Filters." + providerName, true);
                                     }
@@ -566,18 +566,18 @@ where cl.nStructId = " + myWeb.mnPageId));
                                         {
                                             var castObject = WebConfigurationManager.GetWebApplicationSection("protean/filterProviders");
                                             Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)castObject;
-                                            object ourProvider = moPrvConfig.Providers[providerName];
+                                            System.Configuration.ProviderSettings ourProvider = moPrvConfig.Providers[providerName];
                                             Assembly assemblyInstance;
 
-                                            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(ourProvider.parameters("path"), "", false)))
+                                            if (ourProvider.Parameters["path"] != "")
                                             {
-                                                assemblyInstance = Assembly.LoadFrom(myWeb.goServer.MapPath(Conversions.ToString(ourProvider.parameters("path"))));
+                                                assemblyInstance = Assembly.LoadFrom(myWeb.goServer.MapPath(Conversions.ToString(ourProvider.Parameters["path"])));
                                             }
                                             else
                                             {
                                                 assemblyInstance = Assembly.Load(ourProvider.Type);
                                             }
-                                            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(ourProvider.parameters("rootClass"), "", false)))
+                                            if (ourProvider.Parameters["rootClass"] == "")
                                             {
                                                 calledType = assemblyInstance.GetType("Protean.Providers.Filters." + providerName, true);
                                             }
@@ -684,18 +684,18 @@ where cl.nStructId = " + myWeb.mnPageId));
                                     {
                                         var castObject = WebConfigurationManager.GetWebApplicationSection("protean/filterProviders");
                                         Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)castObject;
-                                        object ourProvider = moPrvConfig.Providers[providerName];
+                                        System.Configuration.ProviderSettings ourProvider = moPrvConfig.Providers[providerName];
                                         Assembly assemblyInstance;
 
-                                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(ourProvider.parameters("path"), "", false)))
+                                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(ourProvider.Parameters["path"], "", false)))
                                         {
-                                            assemblyInstance = Assembly.LoadFrom(myWeb.goServer.MapPath(Conversions.ToString(ourProvider.parameters("path"))));
+                                            assemblyInstance = Assembly.LoadFrom(myWeb.goServer.MapPath(Conversions.ToString(ourProvider.Parameters["path"])));
                                         }
                                         else
                                         {
                                             assemblyInstance = Assembly.Load(ourProvider.Type);
                                         }
-                                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(ourProvider.parameters("rootClass"), "", false)))
+                                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(ourProvider.Parameters["rootClass"], "", false)))
                                         {
                                             calledType = assemblyInstance.GetType("Protean.Providers.Filters." + providerName, true);
                                         }

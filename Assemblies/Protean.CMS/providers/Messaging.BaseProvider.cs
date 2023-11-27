@@ -87,33 +87,33 @@ namespace Protean.Providers
                     {
                         var castObject = WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders");
                         Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)castObject;
-                        object ourProvider = moPrvConfig.Providers[ProviderName];
+                        System.Configuration.ProviderSettings ourProvider = moPrvConfig.Providers[ProviderName];
                         Assembly assemblyInstance;
                         // = [Assembly].Load(moPrvConfig.Providers(ProviderName).Type)
 
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(ourProvider.parameters("path"), "", false)))
+                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(ourProvider.Parameters["path"], "", false)))
                         {
-                            cProgressInfo = goServer.MapPath(Conversions.ToString(ourProvider.parameters("path")));
-                            assemblyInstance = Assembly.LoadFrom(goServer.MapPath(Conversions.ToString(ourProvider.parameters("path"))));
+                            cProgressInfo = goServer.MapPath(Conversions.ToString(ourProvider.Parameters["path"]));
+                            assemblyInstance = Assembly.LoadFrom(goServer.MapPath(Conversions.ToString(ourProvider.Parameters["path"])));
                         }
                         else
                         {
                             assemblyInstance = Assembly.Load(ourProvider.Type);
                         }
 
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(ourProvider.parameters("className"), "", false)))
+                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(ourProvider.Parameters["className"], "", false)))
                         {
-                            ProviderName = Conversions.ToString(ourProvider.parameters("className"));
+                            ProviderName = Conversions.ToString(ourProvider.Parameters["className"]);
                         }
 
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(ourProvider.parameters("rootClass"), "", false)))
+                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(ourProvider.Parameters["rootClass"], "", false)))
                         {
                             calledType = assemblyInstance.GetType("Protean.Providers.Messaging." + ProviderName, true);
                         }
                         else
                         {
                             // calledType = assemblyInstance.GetType(ourProvider.parameters("rootClass") & ".Providers.Messaging", True)
-                            calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.parameters("rootClass"), ".Providers.Messaging."), ProviderName)), true);
+                            calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], ".Providers.Messaging."), ProviderName)), true);
                         }
                     }
 

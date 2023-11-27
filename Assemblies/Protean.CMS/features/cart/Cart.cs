@@ -10083,7 +10083,7 @@ namespace Protean
                 int nRows = 100;
 
                 int nCurrentRow = 0;
-                var moPaymentCfg = WebConfigurationManager.GetWebApplicationSection("protean/payment");
+                XmlElement moPaymentCfg = (XmlElement)WebConfigurationManager.GetWebApplicationSection("protean/payment");
 
                 try
                 {
@@ -10224,7 +10224,7 @@ namespace Protean
                                     else
                                     {
                                         oContent.SetAttribute("currency", Conversions.ToString(oDR["cCurrency"]));
-                                        XmlElement thisCurrencyNode = (XmlElement)moPaymentCfg.SelectSingleNode(Operators.ConcatenateObject(Operators.ConcatenateObject("currencies/Currency[@ref='", oDR["cCurrency"]), "']"));
+                                        XmlElement thisCurrencyNode = (XmlElement)moPaymentCfg.SelectSingleNode("currencies/Currency[@ref='" + oDR["cCurrency"] + "']");
                                         if (thisCurrencyNode != null)
                                         {
                                             oContent.SetAttribute("currencySymbol", thisCurrencyNode.GetAttribute("symbol"));
@@ -10265,7 +10265,7 @@ namespace Protean
                                         if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDR["nCartStatus"], 9, false)))
                                         {
                                             string sSql = Conversions.ToString(Operators.ConcatenateObject("Select * from tblCartOrderDelivery where nOrderId=", oDR["nCartOrderKey"]));
-                                            var oDs2 = moDBHelper.GetDataSet(sSql, "Delivery", "Details");
+                                            DataSet oDs2 = moDBHelper.GetDataSet(sSql, "Delivery", "Details");
                                             foreach (DataRow oRow2 in oDs2.Tables["Delivery"].Rows)
                                             {
                                                 var oElmt = moPageXml.CreateElement("DeliveryDetails");
@@ -10281,11 +10281,12 @@ namespace Protean
                                         string argsTableName = "tblCartPayment";
                                         if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectGreater(oDR["nCartStatus"], 5, false), moDBHelper.doesTableExist(ref argsTableName))))
                                         {
+                                            DataSet oDs3 = new DataSet();
                                             string sSql = Conversions.ToString(Operators.ConcatenateObject("Select p.*, pm.*, a.dInsertDate from tblCartPayment p inner join tblCartPaymentMethod pm on p.nCartPaymentMethodId = pm.nPayMthdKey inner join tblAudit a on a.nAuditKey = p.nAuditId where nCartOrderId=", oDR["nCartOrderKey"]));
-                                            object oDs3 = moDBHelper.GetDataSet(sSql, "Payment", "Details");
-                                            oDs3.Tables("Payment").Columns("cPayMthdDetailXml").ColumnMapping = MappingType.Element;
+                                            oDs3 = moDBHelper.GetDataSet(sSql, "Payment", "Details");
+                                            oDs3.Tables["Payment"].Columns["cPayMthdDetailXml"].ColumnMapping = MappingType.Element;
                                             var oXML2 = new XmlDocument();
-                                            oXML2.InnerXml = Strings.Replace(Strings.Replace(Conversions.ToString(oDs3.GetXml), "&gt;", ">"), "&lt;", "<");
+                                            oXML2.InnerXml = Strings.Replace(Strings.Replace(Conversions.ToString(oDs3.GetXml()), "&gt;", ">"), "&lt;", "<");
                                             var oPaymentNode = oContent.OwnerDocument.CreateElement("Payments");
                                             oPaymentNode.InnerXml = oXML2.InnerXml;
                                             foreach (XmlElement oElmt in oPaymentNode.FirstChild.SelectNodes("*"))

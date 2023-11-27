@@ -842,7 +842,7 @@ namespace Protean
 
             }
 
-            public object CleanHTMLElement(object oContextNode, string RemoveTags)
+            public object CleanHTMLElement(XPathNodeIterator oContextNode, string RemoveTags)
             {
 
                 var oXML = new XmlDocument();
@@ -883,7 +883,7 @@ namespace Protean
                             oXML.LoadXml(cHtmlOut);
                             return oXML.DocumentElement;
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             // Lets try option 2 first before we raise an error
                             // RaiseEvent XSLTError(ex.ToString)
@@ -894,7 +894,7 @@ namespace Protean
                                 oXML.DocumentElement.InnerXml = cHtmlOut;
                                 return oXML.DocumentElement;
                             }
-                            catch (Exception ex2)
+                            catch (Exception)
                             {
                                 return cHtmlOut;
                             }
@@ -1155,14 +1155,14 @@ namespace Protean
 
             }
 
-            public string FlattenNodeXml(object oContextNode)
+            public string FlattenNodeXml(XPathNodeIterator oContextNode)
             {
                 try
                 {
                     oContextNode.MoveNext();
                     return Conversions.ToString(oContextNode.Current.InnerXml);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "";
                 }
@@ -2508,10 +2508,10 @@ namespace Protean
                         methodName = aMethodName[0];
                     }
 
-                    Protean.ProviderSectionHandler moPrvConfig = WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders");
+                    Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders");
                     // Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(ProviderName).Type)
                     // 
-                    object ourProvider;
+                    System.Configuration.ProviderSettings ourProvider;
                     if (moPrvConfig.Providers[ProviderName + "Local"] != null)
                     {
                         ourProvider = moPrvConfig.Providers[ProviderName + "Local"];
@@ -2525,9 +2525,9 @@ namespace Protean
 
                     if (ourProvider != null)
                     {
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(ourProvider.parameters("path"), "", false)))
+                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(ourProvider.Parameters["path"], "", false)))
                         {
-                            assemblyInstance = Assembly.LoadFrom(goServer.MapPath(Conversions.ToString(ourProvider.parameters("path"))));
+                            assemblyInstance = Assembly.LoadFrom(goServer.MapPath(Conversions.ToString(ourProvider.Parameters["path"])));
                         }
                         else
                         {
