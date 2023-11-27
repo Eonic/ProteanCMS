@@ -2141,7 +2141,8 @@ namespace Protean
                                 sql = "select nDirKey as value, cDirName as name from tblDirectory where cDirSchema='" + Query2 + "'";
                                 using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sql))  // Done by nita on 6/7/22
                                 {
-                                    oXfrms.addOptionsFromSqlDataReader(ref SelectElmt, oDr);
+                                    SqlDataReader sqloDr = (SqlDataReader)oDr;
+                                    oXfrms.addOptionsFromSqlDataReader(ref SelectElmt, ref sqloDr);
                                 }
 
                                 break;
@@ -2155,7 +2156,8 @@ namespace Protean
                                 using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sql))  // Done by nita on 6/7/22
                                 {
                                     oXfrms.addOption(ref SelectElmt, "All", "all");
-                                    oXfrms.addOptionsFromSqlDataReader(ref SelectElmt, oDr);
+                                    SqlDataReader sqloDr = (SqlDataReader)oDr;
+                                    oXfrms.addOptionsFromSqlDataReader(ref SelectElmt, ref sqloDr);
                                 }
 
                                 break;
@@ -2169,7 +2171,8 @@ namespace Protean
                                 using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sql))  // Done by nita on 6/7/22
                                 {
                                     oXfrms.addOption(ref SelectElmt, "All", "all");
-                                    oXfrms.addOptionsFromSqlDataReader(ref SelectElmt, oDr);
+                                    SqlDataReader sqloDr = (SqlDataReader)oDr;
+                                    oXfrms.addOptionsFromSqlDataReader(ref SelectElmt, ref sqloDr);
                                 }
 
                                 break;
@@ -2204,7 +2207,8 @@ namespace Protean
                                 // Dim oDr As System.Data.SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(queryBuilder.ToString())
                                 using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(queryBuilder.ToString()))  // Done by nita on 6/7/22
                                 {
-                                    oXfrms.addOptionsFromSqlDataReader(ref SelectElmt, oDr);
+                                    SqlDataReader sqloDr = (SqlDataReader)oDr;
+                                    oXfrms.addOptionsFromSqlDataReader(ref SelectElmt, ref sqloDr);
                                 }
 
                                 break;
@@ -2216,7 +2220,8 @@ namespace Protean
                                 sql = "select nContentKey as value, cContentName as name from tblContent where cContentSchemaName='" + Query2 + "' order by cContentName ASC";
                                 using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sql))  // Done by nita on 6/7/22
                                 {
-                                    oXfrms.addOptionsFromSqlDataReader(ref SelectElmt, oDr);
+                                    SqlDataReader sqloDr = (SqlDataReader)oDr;
+                                    oXfrms.addOptionsFromSqlDataReader(ref SelectElmt, ref sqloDr);
                                 }
 
                                 break;
@@ -2356,7 +2361,8 @@ namespace Protean
                                 sql = "select nCodeKey as value, cCodeName as name from tblCodes where nCodeParentId is NULL";
                                 using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sql))  // Done by nita on 6/7/22
                                 {
-                                    oXfrms.addOptionsFromSqlDataReader(ref SelectElmt, oDr);
+                                    SqlDataReader sqloDr = (SqlDataReader)oDr;
+                                    oXfrms.addOptionsFromSqlDataReader(ref SelectElmt, ref sqloDr);
                                 }
 
                                 break;
@@ -2383,7 +2389,8 @@ namespace Protean
 
                                 using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sql))  // Done by nita on 6/7/22
                                 {
-                                    oXfrms.addOptionsFromSqlDataReader(ref SelectElmt, oDr);
+                                    SqlDataReader sqloDr = (SqlDataReader)oDr;
+                                    oXfrms.addOptionsFromSqlDataReader(ref SelectElmt, ref sqloDr);
                                 }
 
                                 break;
@@ -2442,7 +2449,8 @@ namespace Protean
                                 sql = sql + " order by cCatName";
                                 using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sql))  // Done by nita on 6/7/22
                                 {
-                                    oXfrms.addOptionsFromSqlDataReader(ref SelectElmt, oDr);
+                                    SqlDataReader sqloDr = (SqlDataReader)oDr;
+                                    oXfrms.addOptionsFromSqlDataReader(ref SelectElmt, ref sqloDr);
                                 }
 
                                 break;
@@ -2453,7 +2461,8 @@ namespace Protean
                                 string sSql = "SELECT nContentKey as value, cContentName as name  FROM tblContent LEFT OUTER JOIN tblCartCatProductRelations ON tblContent.nContentKey = tblCartCatProductRelations.nContentId WHERE (tblContent.cContentSchemaName = 'Subscription') Order By tblCartCatProductRelations.nDisplayOrder";
                                 using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                                 {
-                                    oXfrms.addOptionsFromSqlDataReader(ref SelectElmt, oDr);
+                                    SqlDataReader sqloDr = (SqlDataReader)oDr;
+                                    oXfrms.addOptionsFromSqlDataReader(ref SelectElmt, ref sqloDr);
                                 }
 
                                 break;
@@ -2464,7 +2473,8 @@ namespace Protean
                                 sql = Query1;
                                 using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sql))  // Done by nita on 6/7/22
                                 {
-                                    oXfrms.addOptionsFromSqlDataReader(ref SelectElmt, oDr);
+                                    SqlDataReader sqloDr = (SqlDataReader)oDr;
+                                    oXfrms.addOptionsFromSqlDataReader(ref SelectElmt, ref sqloDr);
                                 }
 
                                 break;

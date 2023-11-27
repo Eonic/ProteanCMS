@@ -14,21 +14,21 @@ using static Protean.stdTools;
 namespace Protean
 {
 
-    public class Proxy : MarshalByRefObject
-    {
-        public Assembly GetAssembly(string assemblyPath)
-        {
-            try
-            {
-                return Assembly.LoadFile(assemblyPath);
-            }
-            catch (Exception generatedExceptionName)
-            {
-                // throw new InvalidOperationException(ex);
-                return null;
-            }
-        }
-    }
+    //public class Proxy : MarshalByRefObject
+    //{
+    //    public Assembly GetAssembly(string assemblyPath)
+    //    {
+    //        try
+    //        {
+    //            return Assembly.LoadFile(assemblyPath);
+    //        }
+    //        catch (Exception generatedExceptionName)
+    //        {
+    //            // throw new InvalidOperationException(ex);
+    //            return null;
+    //        }
+    //    }
+    //}
 
     public class XmlHelper
     {
@@ -98,7 +98,7 @@ namespace Protean
                             {
                                 AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
                                 assemblyInstance = Assembly.LoadFrom(AssemblyPath);
-                                if (assemblyInstance is not null)
+                                if (assemblyInstance != null)
                                 {
                                     goApp[ClassName] = true;
                                 }
@@ -302,9 +302,9 @@ namespace Protean
                 {
                     myWeb = aWeb;
                     mbCompiled = bCompiled;
-                    if (myWeb.moConfig("ProjectPath") != "")
+                    if (myWeb.moConfig["ProjectPath"] != "")
                     {
-                        compiledFolder = myWeb.moConfig("ProjectPath") + compiledFolder;
+                        compiledFolder = myWeb.moConfig["ProjectPath"] + compiledFolder;
                     }
 
                     // If Not goApp("ewStarted") = True Then
@@ -662,7 +662,7 @@ namespace Protean
                 catch (Exception ex)
                 {
                     transformException = ex;
-                    if (myWeb is not null)
+                    if (myWeb != null)
                     {
                         stdTools.returnException(ref myWeb.msException, "Protean.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug);
                         oWriter.Write(myWeb.msException);
@@ -786,10 +786,10 @@ namespace Protean
                 {
 
                     Tools.Security.Impersonate oImp = null;
-                    if (myWeb.moConfig("AdminAcct") == "")
+                    if (myWeb.moConfig["AdminAcct"] == "")
                     {
                         oImp = new Tools.Security.Impersonate();
-                        oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), true, myWeb.moConfig("AdminGroup"));
+                        oImp.ImpersonateValidUser(myWeb.moConfig["AdminAcct"], myWeb.moConfig["AdminDomain"], myWeb.moConfig["AdminPassword"], true, myWeb.moConfig["AdminGroup"]);
                     }
 
                     string cWorkingDirectory = goServer.MapPath(compiledFolder);
@@ -809,7 +809,7 @@ namespace Protean
                         }
                     }
 
-                    if (myWeb.moConfig("AdminAcct") == "")
+                    if (myWeb.moConfig["AdminAcct"] == "")
                     {
                         oImp.UndoImpersonation();
                     }
