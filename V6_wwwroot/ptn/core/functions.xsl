@@ -4438,6 +4438,7 @@
 	<xsl:template match="Content[@type='Link']" mode="moreLink">
 		<xsl:param name="link"/>
 		<xsl:param name="altText"/>
+		<xsl:param name="stretchLink"/>
 
 		<div class="morelink">
 			<span>
@@ -4445,27 +4446,32 @@
 					<xsl:if test="contains($link,'www.') or contains($link,'WWW.') or contains($link,'http://') or contains($link,'HTTP://')">
 						<xsl:attribute name="rel">external</xsl:attribute>
 					</xsl:if>
-					<xsl:choose>
-						<xsl:when test="contains($link,'www.') or contains($link,'WWW.') or contains($link,'http://') or contains($link,'HTTP://')">
-							<xsl:choose>
-								<xsl:when test="string-length($altText) &gt; 70">
-									<xsl:value-of select="substring($altText,1,60)"/> ......
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="$altText"/>
+					<xsl:if test="$stretchLink='true'">
+						<xsl:attribute name="class">btn btn-custom stretched-link</xsl:attribute>
+					</xsl:if>
+					<span>
+						<xsl:choose>
+							<xsl:when test="contains($link,'www.') or contains($link,'WWW.') or contains($link,'http://') or contains($link,'HTTP://')">
+								<xsl:choose>
+									<xsl:when test="string-length($altText) &gt; 70">
+										<xsl:value-of select="substring($altText,1,60)"/> ......
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="$altText"/>
 
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:call-template name="term2042" />
-							<xsl:text> </xsl:text>
-							<span class="visually-hidden">
-								<xsl:text>about </xsl:text>
-								<xsl:value-of select="altText"/>
-							</span>
-						</xsl:otherwise>
-					</xsl:choose>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:call-template name="term2042" />
+								<xsl:text> </xsl:text>
+								<span class="visually-hidden">
+									<xsl:text>about </xsl:text>
+									<xsl:value-of select="altText"/>
+								</span>
+							</xsl:otherwise>
+						</xsl:choose>
+					</span>
 				</a>
 			</span>
 		</div>
