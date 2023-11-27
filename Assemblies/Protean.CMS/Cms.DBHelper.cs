@@ -8037,7 +8037,7 @@ namespace Protean
                                                 }
                                             }
                                             // Check user status
-                                            if (Conversions.ToBoolean(!Operators.OrObject(Operators.ConditionalCompareObjectEqual(oUserDetails["nStatus"], 1, false), Operators.ConditionalCompareObjectEqual(oUserDetails["nStatus"], -1, false))))
+                                            if (Convert.ToInt64(oUserDetails["nStatus"]) != 1 || Convert.ToInt64(oUserDetails["nStatus"]) != -1)
                                             {
                                                 sReturn = "<span class=\"msg-1013\">User account has been disabled</span>";
                                             }
@@ -9077,7 +9077,7 @@ namespace Protean
 
 
 
-                            if (Conversions.ToBoolean(!Operators.OrObject(oRow["cClientNotes"] is DBNull, Operators.ConditionalCompareObjectEqual(Operators.ConcatenateObject(oRow["cClientNotes"], ""), "", false))))
+                            if (oRow["cClientNotes"] != System.DBNull.Value || oRow["cClientNotes"].ToString() != "")
                             {
                                 oElmt = moPageXml.CreateElement("ClientNotes");
                                 oElmt.InnerXml = Conversions.ToString(oRow["cClientNotes"]);

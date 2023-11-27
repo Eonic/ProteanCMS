@@ -3504,15 +3504,15 @@ namespace Protean
                                     CheckQuantities(ref oCartElmt, Conversions.ToString(Operators.ConcatenateObject(oRow["productDetail"], "")), Conversions.ToLong(Operators.ConcatenateObject("0", oRow["quantity"])).ToString());
                                 }
 
-                                weight = Conversions.ToDouble(weight + Operators.MultiplyObject(oRow["weight"], oRow["quantity"]));
-                                quant = Conversions.ToLong(quant + Convert.ToDecimal(oRow["quantity"]));
+                                weight += Convert.ToInt32(oRow["weight"]) * Convert.ToInt32(oRow["quantity"]);
+                                quant += Convert.ToInt32(oRow["quantity"]);
                                 if (moCartConfig["ProductOptionOverideQuantity"] == "on")
                                 {
-                                    total = Conversions.ToDouble(total + Operators.AddObject(Operators.MultiplyObject(oRow["quantity"], Round(oRow["price"], bForceRoundup: mbRoundup)), Round(nOpPrices, bForceRoundup: mbRoundup)));
+                                    total = total + Conversions.ToDouble(Operators.AddObject(Operators.MultiplyObject(oRow["quantity"], Round(oRow["price"], bForceRoundup: mbRoundup)), Round(nOpPrices, bForceRoundup: mbRoundup)));
                                 }
                                 else
                                 {
-                                    total = Conversions.ToDouble(total + Operators.MultiplyObject(oRow["quantity"], Round(Operators.AddObject(oRow["price"], nOpPrices), bForceRoundup: mbRoundup)));
+                                    total = total + Conversions.ToDouble(Operators.MultiplyObject(oRow["quantity"], Round(Operators.AddObject(oRow["price"], nOpPrices), bForceRoundup: mbRoundup)));
                                 }
 
 
@@ -4005,9 +4005,8 @@ namespace Protean
                                 }
                             }
 
-
                             // Add Any Client Notes
-                            if (Conversions.ToBoolean(!Operators.OrObject(oRow["cClientNotes"] is DBNull, Operators.ConditionalCompareObjectEqual(Operators.ConcatenateObject(oRow["cClientNotes"], ""), "", false))))
+                            if (oRow["cClientNotes"]!=System.DBNull.Value || oRow["cClientNotes"].ToString() != "")
                             {
                                 oElmt = moPageXml.CreateElement("Notes");
                                 oElmt.InnerXml = Conversions.ToString(oRow["cClientNotes"]);
@@ -10944,7 +10943,7 @@ namespace Protean
                                 }
                                 else
                                 {
-                                    oHN[cKey] += 1;
+                                   oHN[cKey] += Convert.ToString(1);
                                 }
                             }
                             int nQ = 0;
