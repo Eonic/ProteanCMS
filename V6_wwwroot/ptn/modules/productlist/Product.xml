@@ -372,33 +372,38 @@
               <case id="cSkuOptions_0"/>
               <case id="cSkuOptions_1">
                 <group>
-                  <label>Product Options 1</label>
-                  <input bind="cOptName1" class="short">
-                    <label>Option Name</label>
-                  </input>
-                  <select1 bind="cOptType1">
-                    <label>Option Type</label>
-                    <item>
-                      <label>Drop Down (select 1)</label>
-                      <value>DropDown</value>
-                    </item>
-                    <item>
-                      <label>Radio Buttons (select 1)</label>
-                      <value>Radio</value>
-                    </item>
-                    <item>
-                      <label>Check Boxes (select many)</label>
-                      <value>CheckBoxes</value>
-                    </item>
-                    <item>
-                      <label>User entered text</label>
-                      <value>TextInput</value>
-                    </item>
-                  </select1>
-                  <group>
+                    <label>Product Options 1</label>
+					<group class="horizontal">
+                          <input bind="cOptName1" class="short">
+                            <label>Group Name</label>
+                          </input>
+                          <select1 bind="cOptType1">
+                            <label>Selector Type</label>
+                            <item>
+                              <label>Drop Down (select 1)</label>
+                              <value>DropDown</value>
+                            </item>
+                            <item>
+                              <label>Radio Buttons (select 1)</label>
+                              <value>Radio</value>
+                            </item>
+                            <item>
+                              <label>Check Boxes (select many)</label>
+                              <value>CheckBoxes</value>
+                            </item>
+                            <item>
+                              <label>User entered text</label>
+                              <value>TextInput</value>
+                            </item>
+                          </select1>
+						<trigger>
+							<label>Add Option</label>
+							<insert position="after" bind="cOptRpt1" at="index('cOptRpt1')" class="add"/>
+						</trigger>
+					  </group>
 					  <repeat bind="cOptRpt1" class="horizontal">
 						  <input bind="cOpt1" class="short">
-							  <label>Option</label>
+							  <label>Option Name</label>
 						  </input>
 						  <trigger>
 							  <label>Del</label>
@@ -406,19 +411,16 @@
 						  </trigger>
 					  </repeat>
                     
-                  </group>
-                  <trigger>
-                    <label>Add Option</label>
-                    <insert position="after" bind="cOptRpt1" at="index('cOptRpt1')" class="add"/>
-                  </trigger>
+
                 </group>
                 <group>
                   <label>Product Options 2</label>
+					<group class="horizontal">
                   <input bind="cOptName2" class="short">
-                    <label>Option Name</label>
+                    <label>Group Name</label>
                   </input>
                   <select1 bind="cOptType2">
-                    <label>Option Type</label>
+                    <label>Selector Type</label>
                     <item>
                       <label>Drop Down (select 1)</label>
                       <value>DropDown</value>
@@ -432,19 +434,19 @@
                       <value>CheckBoxes</value>
                     </item>
                   </select1>
+                  <trigger>
+                    <label>Add Option</label>
+                    <insert position="after" bind="cOptRpt2" at="index('cOptRpt2')" class="add"/>
+                  </trigger></group>
                   <repeat bind="cOptRpt2" class="horizontal">
                     <input bind="cOpt2" class="short">
-                      <label>Option</label>
+                      <label>Option Name</label>
                     </input>
                     <trigger>
                       <label>Del</label>
                       <delete bind="cOptRpt2" at="index('cOptRpt2')"/>
                     </trigger>
                   </repeat>
-                  <trigger>
-                    <label>Add Option</label>
-                    <insert position="after" bind="cOptRpt2" at="index('cOptRpt2')" class="add"/>
-                  </trigger>
                 </group>
               </case>
               <case id="cSkuOptions_2">

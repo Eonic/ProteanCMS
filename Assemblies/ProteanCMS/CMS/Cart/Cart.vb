@@ -8253,7 +8253,12 @@ SaveNotes:      ' this is so we can skip the appending of new node
                                         cSellerNotesHtml = cSellerNotesHtml + "<li>" + Protean.Tools.Xml.convertEntitiesToCodes(aSellerNotes(snCount)) + "</li>"
                                     Next
                                     Dim sellerNode As XmlElement = addNewTextNode("SellerNotes", oContent.FirstChild, "")
-                                    sellerNode.InnerXml = cSellerNotesHtml + "</ul>"
+                                    Try
+                                        sellerNode.InnerXml = cSellerNotesHtml + "</ul>"
+                                    Catch ex As Exception
+                                        sellerNode.InnerXml = Protean.Tools.Text.tidyXhtmlFrag(cSellerNotesHtml + "</ul>")
+                                    End Try
+
 
                                     'Add the Delivery Details
                                     'Add Delivery Details

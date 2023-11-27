@@ -249,40 +249,22 @@
   </xsl:template>
 
 
-  <!-- ========================== GROUP Horizontal ========================== -->
+	
+	 <!-- ========================== GROUP Horizontal ========================== -->
   <!-- -->
-  <xsl:template match="group[contains(@class,'horizontal_cols') and parent::group] | repeat[contains(@class,'horizontal_cols') and parent::group]" mode="xform">
-    <div class="pseudo-table">
-      <div class="pt-head">
+  <xsl:template match="group[contains(@class,'horizontal')] | repeat[contains(@class,'horizontal')]" mode="xform">
+
         <xsl:if test="label">
-          <div class="pt-row">
             <h3>
               <xsl:copy-of select="label/node()"/>
             </h3>
-          </div>
         </xsl:if>
         <xsl:apply-templates select="hint | help | alert" mode="xform">
           <xsl:with-param name="cols" select="count(group[1]/input)+1"/>
         </xsl:apply-templates>
-        <!--<div class="horizontal_cols_header pt-row">
-          <xsl:for-each select="group[1] | repeat[1]">
-            <xsl:for-each select="input | secret | select | select1 | range | textarea | upload | hint | help | alert ">
-              <div class="pt-col">
-                <xsl:apply-templates select="." mode="xform_header"/>
-                <xsl:text> </xsl:text>
-              </div>
-            </xsl:for-each>
-            <xsl:for-each select="trigger">
-              <div class="pt-col">
-                <xsl:text> </xsl:text>
-              </div>
-            </xsl:for-each>
-          </xsl:for-each>
-        </div>-->
-      </div>
-      <div class="pt-body">
+      <div class="row">
         <xsl:for-each select="group | repeat">
-          <div class="pt-row">
+          <div class="col">
             <xsl:if test="label">
               <div class="pt-col form-group">
                 <xsl:apply-templates select="label">
@@ -293,27 +275,18 @@
              </div>
             </xsl:if>
             <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | hint | help | alert | trigger" mode="xform_cols_pt"/>
-
           </div>
-          <xsl:if test="*/alert or */hint or */help">
-
-            <div class="pt-row">
-              <xsl:if test="label">
-
-                <div class="pt-col ">&#160;</div>
-              </xsl:if>
-              <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload" mode="xform_cols_notes_pt"/>
-            </div>
-          </xsl:if>
+		    
+			<div class="col">
+			    <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | submit | trigger" mode="xform-control"/>
+			</div>
         </xsl:for-each>
-      </div>
-    </div>
-    <xsl:if test="count(submit | trigger) &gt; 0">
-      <div>
-        <!-- For xFormQuiz change how these buttons work -->
-        <xsl:apply-templates select="submit | trigger" mode="xform"/>
-      </div>
-    </xsl:if>
+			<xsl:for-each select="input | secret | select | select1 | range | textarea | upload | submit | trigger">
+			<div class="col">
+			    <xsl:apply-templates select="." mode="xform"/>
+			</div>
+			</xsl:for-each>
+      </div>   
   </xsl:template>
 
 
@@ -510,25 +483,6 @@
     </legend>
   </xsl:template>
 
-  <!-- -->
-  <xsl:template match="input | secret | select | select1 | range | textarea | upload" mode="xform_cols">
-    <td>
-      <xsl:apply-templates select="." mode="xform_control"/>
-    </td>
-  </xsl:template>
-
-  <xsl:template match="trigger" mode="xform_cols">
-    <td>
-      <xsl:apply-templates select="." mode="xform"/>
-    </td>
-  </xsl:template>
-
-  <!-- -->
-  <xsl:template match="input | secret | select | select1 | range | textarea | upload" mode="xform_cols_notes">
-    <td>
-      <xsl:apply-templates select="." mode="xform_legend"/>
-    </td>
-  </xsl:template>
 
   <!-- -->
   <xsl:template match="input | secret | select | select1 | range | textarea | upload" mode="xform_cols_pt">
@@ -744,15 +698,13 @@
       </xsl:apply-templates>
     </xsl:if>
     <xsl:variable name="fmhz">
-      <xsl:if test="ancestor::group[contains(@class,'form-horizontal')]">
+      <xsl:if test="ancestor::group[contains(@class,'horizontal')]">
         <xsl:text>col-sm-9</xsl:text>
         <xsl:if test="not(label)">
           <xsl:text> col-md-offset-3</xsl:text>
         </xsl:if>
       </xsl:if>
     </xsl:variable>
-
-
     <xsl:choose>
       <xsl:when test="@prefixIcon!='' or @prefix!='' or @suffix!='' or @suffixIcon!=''">
         <div class="input-group">
@@ -797,6 +749,67 @@
     </xsl:if>
   </xsl:template>
 
+  <xsl:template match="input[parent::*[contains(@class,'horizontal')]] | select1[parent::*[contains(@class,'horizontal')]] " mode="xform">
+    <xsl:param name="nolabel"/>
+	<xsl:param name="dependantClass"/>
+    <!-- NB : the count(item)!=1 basically stops you from making a one checkbox field (ie a boolean) from being required -->
+    <xsl:if test="not($nolabel!='')">
+		  <div class="row mb-3">
+			 <label class="col-sm-3 colform-label">
+              <xsl:apply-templates select="label/node()" mode="cleanXhtml"/>		        
+            </label>              
+		  <xsl:choose>
+      <xsl:when test="@prefixIcon!='' or @prefix!='' or @suffix!='' or @suffixIcon!=''">
+		  <div class="col-sm-9">
+            <div class="input-group">
+              <xsl:if test="@prefixIcon!=''">
+                <span class="input-group-text">
+                  <i class="{@prefixIcon}">&#160;</i>
+                </span>
+              </xsl:if>
+              <xsl:if test="@prefix!=''">
+                <div class="input-group-text">
+                  <xsl:value-of select="@prefix"/>
+                </div>
+              </xsl:if>
+			    <xsl:apply-templates select="." mode="xform_control">
+				    <xsl:with-param select="$dependantClass" name="dependantClass"/>
+			    </xsl:apply-templates>
+              <xsl:if test="@suffix!=''">
+                <div class="input-group-text">
+                  <xsl:value-of select="@suffix"/>
+                </div>
+              </xsl:if>
+              <xsl:if test="@suffixIcon!=''">
+                <span class="input-group-text">
+                  <i class="{@suffixIcon}">&#160;</i>
+                </span>
+              </xsl:if>
+			<xsl:if test="hint">
+            <xsl:apply-templates select="." mode="hintButton"/>
+          </xsl:if>
+        </div>
+			  </div>
+      </xsl:when>
+      <xsl:otherwise>
+		   <div class="col-sm-9">
+		  <xsl:apply-templates select="." mode="xform_control">
+			  <xsl:with-param select="$dependantClass" name="dependantClass"/>
+		  </xsl:apply-templates>
+			   </div>
+      </xsl:otherwise>
+    </xsl:choose>
+		</div>
+    </xsl:if>
+
+
+
+    
+
+    <xsl:if test="not(contains(@class,'pickImage'))">
+      <xsl:apply-templates select="self::node()[not(item[toggle]) and not(hint)]" mode="xform_legend"/>
+    </xsl:if>
+  </xsl:template>
 
   <!-- -->
   <!-- ========================== GENERAL : CONTROL LEGEND ========================== -->
