@@ -1661,7 +1661,7 @@ namespace Protean
 
                         if (myWeb.moConfig["WebPQuality"] != "")
                         {
-                            WebPQuality = myWeb.moConfig["WebPQuality"];
+                            WebPQuality = Convert.ToInt16(myWeb.moConfig["WebPQuality"]);
                         }
 
                         cVirtualPath = cVirtualPath.Replace("%20", " ");

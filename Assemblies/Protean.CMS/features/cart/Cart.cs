@@ -8238,7 +8238,7 @@ namespace Protean
                                             var loopTo = Information.UBound(oProdOptions) - 1;
                                             for (i = 0; i <= loopTo; i++)
                                             {
-                                                if (Information.UBound((Array)oProdOptions((object)i)) < 1)
+                                                if (Information.UBound(oProdOptions(i)) < 1)
                                                 {
                                                     // Case for text option with no index
                                                     if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oProdOptions((object)i)((object)0), Conversions.ToString(oDr2["nItemOptGrpIdx"]), false)))
