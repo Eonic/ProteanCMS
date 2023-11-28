@@ -3359,7 +3359,7 @@ namespace Protean
                                             int argnReturnId = (int)nContentId;
                                             var tmp = this.moRequest;
                                             string argAlternateFormName = tmp["formName"];
-                                            xFrmContent = moAdXfm.xFrmEditContent(nContentId, this.moRequest["type"], nPageId, this.moRequest["name"], nReturnId: ref argnReturnId, AlternateFormName: ref argAlternateFormName, nVersionId: Conversions.ToLong("0" + this.moRequest["verId"]));
+                                            xFrmContent = moAdXfm.xFrmEditContent(nContentId, this.moRequest["type"], nPageId, this.moRequest["name"],false, nReturnId: ref argnReturnId, AlternateFormName: ref argAlternateFormName, nVersionId: Conversions.ToLong("0" + this.moRequest["verId"]));
                                             nContentId = argnReturnId;
                                             if (moAdXfm.valid)
                                             {
@@ -4542,7 +4542,7 @@ namespace Protean
                                 var argaWeb = this;
                                 oQuote = new Cms.Quote(ref argaWeb);
                                 XmlElement argoPageDetail = null;
-                                oQuote.ListOrders(Conversions.ToInteger("0" + this.moRequest["OrderId"]).ToString(), oPageDetail: ref argoPageDetail);
+                                oQuote.ListOrders(("0" + this.moRequest["OrderId"]).ToString(),true,0, oPageDetail: ref argoPageDetail);
                                 oQuote = (Cms.Quote)null;
                             }
 
@@ -4556,7 +4556,7 @@ namespace Protean
                                 var argaWeb1 = this;
                                 oCart = new Cms.Cart(ref argaWeb1);
                                 XmlElement argoPageDetail1 = null;
-                                oCart.ListOrders(Conversions.ToInteger("0" + this.moRequest["OrderId"]).ToString(), oPageDetail: ref argoPageDetail1);
+                                oCart.ListOrders(("0" + this.moRequest["OrderId"]).ToString(),true,0, oPageDetail: ref argoPageDetail1);
                                 oCart = (Cms.Cart)null;
                             }
 
@@ -4976,7 +4976,7 @@ namespace Protean
 
 
 
-        public void GetPageContentFromSelectFilterPagination(string sWhereSql, bool bPrimaryOnly = false, [Optional, DefaultParameterValue(0)] ref int nCount, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", [Optional, DefaultParameterValue(null)] ref XmlElement oContentsNode, string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false, string cShowSpecificContentTypes = "", bool ignoreActiveAndDate = false, long nStartPos = 0L, long nItemCount = 0L, [Optional, DefaultParameterValue(null)] ref XmlElement oPageDetail, bool bShowContentDetails = true)
+        public void GetPageContentFromSelectFilterPagination(ref int nCount, ref XmlElement oContentsNode, ref XmlElement oPageDetail, string sWhereSql, bool bPrimaryOnly = false, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false, string cShowSpecificContentTypes = "", bool ignoreActiveAndDate = false, long nStartPos = 0L, long nItemCount = 0L, bool bShowContentDetails = true)
         {
             this.PerfMon.Log("Web", "GetPageContentFromSelect");
             XmlElement oRoot;
@@ -5167,7 +5167,7 @@ namespace Protean
             }
         }
 
-        public void GetMenuContentFromSelect(string sWhereSql, bool bPrimaryOnly = false, [Optional, DefaultParameterValue(0)] ref int nCount, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", [Optional, DefaultParameterValue(null)] ref XmlElement oContentsNode, string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false)
+        public void GetMenuContentFromSelect(string sWhereSql, ref int nCount, ref XmlElement oContentsNode, bool bPrimaryOnly = false, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false)
         {
             this.PerfMon.Log("Web", "GetPageContentFromSelect");
             XmlElement oRoot;
@@ -5314,7 +5314,7 @@ namespace Protean
                 var oXml2 = oRoot.OwnerDocument.ImportNode(oXml.DocumentElement, true);
 
                 foreach (XmlElement oNode in oXml2.SelectNodes("Content"))
-                    oRoot.AppendChild(this.moDbHelper.SimpleTidyContentNode(ref oNode, "", ref mdPageExpireDate, ref mdPageUpdateDate));
+                    oRoot.AppendChild(this.moDbHelper.SimpleTidyContentNode(ref oNode, ref mdPageExpireDate, ref mdPageUpdateDate, ""));
             }
 
             // moDbHelper.AddDataSetToContent(oDs, oRoot, mnPageId, False, "", mdPageExpireDate, mdPageUpdateDate, True, gnShowRelatedBriefDepth)
@@ -7474,7 +7474,7 @@ namespace Protean
                 oRoot = moPageXml.CreateElement("Contents");
 
                 int argnCount = 0;
-                GetMenuContentFromSelect("cContentSchemaName = '" + SchemaType + "'", false, ref argnCount, false, 0, oContentsNode: ref oRoot);
+                GetMenuContentFromSelect("cContentSchemaName = '" + SchemaType + "'", ref argnCount, oContentsNode: ref oRoot, false, false, 0);
 
                 foreach (XmlElement oElmt in oRoot.SelectNodes("*"))
                 {
@@ -7838,14 +7838,15 @@ namespace Protean
                         {
                             string whereSQL = Conversions.ToString(this.moSession["FilterWhereCondition"]);
                             XmlElement argoPageDetail = null;
-                            this.GetPageContentFromSelectFilterPagination(whereSQL, oContentsNode: ref oPageElmt, cShowSpecificContentTypes: this.moRequest["singleContentType"], ignoreActiveAndDate: false, nStartPos: (long)nStart, nItemCount: (long)nRows, oPageDetail: ref argoPageDetail);
+                            int nCount = 0;
+                            this.GetPageContentFromSelectFilterPagination(ref nCount, oContentsNode: ref oPageElmt, oPageDetail: ref argoPageDetail, whereSQL, cShowSpecificContentTypes: this.moRequest["singleContentType"], ignoreActiveAndDate: false, nStartPos: (long)nStart, nItemCount: (long)nRows);
                         }
                         else
                         {
                             var argoPageElmt = moPageXml.DocumentElement;
                             XmlElement argoPageDetail1 = null;
                             XmlElement argoContentModule = null;
-                            this.GetContentXMLByTypeAndOffset(ref argoPageElmt, this.moRequest["singleContentType"] + cSort, (long)nStart, (long)nRows, sFilterSql, oPageDetail: ref argoPageDetail1, oContentModule: ref argoContentModule);
+                            this.GetContentXMLByTypeAndOffset(ref argoPageElmt, this.moRequest["singleContentType"] + cSort, (long)nStart, (long)nRows, oPageDetail: ref argoPageDetail1, oContentModule: ref argoContentModule, sFilterSql);
 
                         }
                     }
@@ -7934,7 +7935,8 @@ namespace Protean
                                         ContentModule.SetAttribute("TotalCount", 0.ToString());
                                     }
                                     var argoPageElmt1 = moPageXml.DocumentElement;
-                                    this.GetContentXMLByTypeAndOffset(ref argoPageElmt1, SingleContentType + cSort, (long)nStart, (long)nRows, sFilterSql, bShowContentDetails: false, oContentModule: ref ContentModule);
+                                    XmlElement oPagedetail = null;
+                                    this.GetContentXMLByTypeAndOffset(ref argoPageElmt1, SingleContentType + cSort, (long)nStart, (long)nRows, ref oPagedetail, oContentModule: ref ContentModule, sFilterSql, bShowContentDetails: false);
 
                                 }
 
@@ -8767,7 +8769,7 @@ namespace Protean
             }
         }
 
-        public void GetContentXMLByTypeAndOffset(ref XmlElement oPageElmt, string cContentType, long nStartPos, long nItemCount, string sqlFilter = "", string fullSQL = "", [Optional, DefaultParameterValue(null)] ref XmlElement oPageDetail, bool bShowContentDetails = true, [Optional, DefaultParameterValue(null)] ref XmlElement oContentModule)
+        public void GetContentXMLByTypeAndOffset(ref XmlElement oPageElmt, string cContentType, long nStartPos, long nItemCount, ref XmlElement oPageDetail, ref XmlElement oContentModule, string sqlFilter = "", string fullSQL = "", bool bShowContentDetails = true)
         {
             this.PerfMon.Log("Web", "GetContentXMLByTypeAndOffset");
             // <add key="ControlPanelTypes" value="Event,Document|Top_10|DESC_Publish"/>

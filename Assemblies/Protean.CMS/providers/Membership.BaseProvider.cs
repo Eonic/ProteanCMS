@@ -220,10 +220,12 @@ namespace Protean.Providers
 
                         XmlElement userIpt = base.addInput(ref oFrmElmt, "cUserName", true, "Email");
                         base.addClientSideValidation(ref userIpt, true, "Please enter Email");
-                        base.addBind("cUserName", "user/username", "true()");
-                        XmlElement pwdIpt = base.addSecret(ref oFrmElmt, "cPassword", true, "Password");
+                        XmlElement oBindParent = null;
+                        base.addBind("cUserName", "user/username",ref oBindParent, "true()");
+                        string cClass = "";
+                        XmlElement pwdIpt = base.addSecret(ref oFrmElmt, "cPassword", true, "Password", ref cClass);
                         base.addClientSideValidation(ref pwdIpt, true, "Please enter Password");
-                        base.addBind("cPassword", "user/password", "true()");
+                        base.addBind("cPassword", "user/password", ref oBindParent, "true()");
 
                         base.addSubmit(ref oFrmElmt, "ewSubmit", "Login", default, default, "fa-solid fa-right-to-bracket");
 
@@ -250,7 +252,8 @@ namespace Protean.Providers
                                 XmlElement xmlGroupElmt = (XmlElement)base.moXformElmt.SelectSingleNode("group");
                                 oSelElmt = base.addSelect(ref xmlGroupElmt, "cRemember", true, "&#160;", "", ApperanceTypes.Full);
                                 base.addOption(ref oSelElmt, "Remember me", "true");
-                                base.addBind("cRemember", "user/@rememberMe", "false()");
+                                XmlElement oBindParent1 = null;
+                                base.addBind("cRemember", "user/@rememberMe", ref oBindParent1, "false()");
                             }
 
                             // Retrieve values from the cookie
@@ -385,7 +388,8 @@ namespace Protean.Providers
                         oFrmElmt = base.addGroup(base.moXformElmt, "PasswordReminder");
                         base.addDiv(ref oFrmElmt, "Please enter your email address and we will email you with your password.");
                         base.addInput(ref oFrmElmt, "cEmail", true, "Email Address");
-                        base.addBind("cEmail", "user/email", "true()", "email");
+                        XmlElement oBindParent = null;
+                        base.addBind("cEmail", "user/email", ref oBindParent, "true()", "email");
 
                         base.addSubmit(ref oFrmElmt, "", "Send Password", "ewSubmitReminder");
 
@@ -400,7 +404,8 @@ namespace Protean.Providers
                             base.addDiv(ref oFrmElmt, "Please enter your email address and we will email you with your password.");
 
                             base.addInput(ref oFrmElmt, "cEmail", true, "Email Address");
-                            base.addBind("cEmail", "user/email", "true()", "email");
+                            XmlElement oBindParent2 = null;
+                            base.addBind("cEmail", "user/email",ref oBindParent2, "true()", "email");
 
                             base.addSubmit(ref oFrmElmt, "", "Send Password", "ewSubmitReminder");
                             base.Instance.InnerXml = "<user><email/></user>";
@@ -571,7 +576,8 @@ namespace Protean.Providers
                             base.addInput(ref oFrmElmt, "cEmail", true, "Email address / Username");
                         }
                         // check for legal chars in either email or username
-                        base.addBind("cEmail", "user/email", "true()", "format:^[a-zA-Z0-9._%+-@ ]*$");
+                        XmlElement xmlObind = null;
+                        base.addBind("cEmail", "user/email", ref xmlObind, "true()", "format:^[a-zA-Z0-9._%+-@ ]*$");
 
                         base.addSubmit(ref oFrmElmt, "", "Send Password", "ewAccountReset");
 
@@ -709,9 +715,10 @@ namespace Protean.Providers
                         oGrp = base.addGroup(base.moXformElmt, "Password", default, "Reset Password");
                         base.submission("SetPassword", "", "POST");
                         oPI1 = base.addSecret(ref oGrp, "cDirPassword", true, "Password", ref passwordClass);
-                        base.addBind("cDirPassword", "Password/cDirPassword", "true()", passwordValidation);
+                        XmlElement oxmlBind = null;
+                        base.addBind("cDirPassword", "Password/cDirPassword",ref oxmlBind, "true()", passwordValidation);
                         oPI2 = base.addSecret(ref oGrp, "cDirPassword2", true, "Confirm Password", "required");
-                        base.addBind("cDirPassword2", "Password/cDirPassword2", "true()");
+                        base.addBind("cDirPassword2", "Password/cDirPassword2", ref oxmlBind, "true()");
                         oSB = base.addSubmit(oGrp, "SetPassword", "Set Password");
 
                     Check:
@@ -836,15 +843,15 @@ namespace Protean.Providers
 
 
                         base.NewFrm("ConfirmPassword");
-
+                        XmlElement xmlObindparent = null;
                         base.Instance.InnerXml = "<Password><cDirPassword/><cDirPassword2/></Password>";
                         string formTitle = "<span class=\"trans-2031\">Enter new password</span>";
                         oGrp = base.addGroup(base.moXformElmt, "Password", default, formTitle);
                         base.submission("SetPassword", "", "POST");
                         oPI1 = base.addSecret(oGrp, "cDirPassword", true, "Password", ref passwordClass);
-                        base.addBind("cDirPassword", "Password/cDirPassword", "true()", passwordValidation);
+                        base.addBind("cDirPassword", "Password/cDirPassword",ref xmlObindparent, "true()", passwordValidation);
                         oPI2 = base.addSecret(oGrp, "cDirPassword2", true, "Confirm Password", "required secret");
-                        base.addBind("cDirPassword2", "Password/cDirPassword2", "true()");
+                        base.addBind("cDirPassword2", "Password/cDirPassword2", ref xmlObindparent, "true()");
                         oSB = base.addSubmit(oGrp, "SetPassword", "Set Password");
 
                     Check:
@@ -935,7 +942,7 @@ namespace Protean.Providers
                 // Return xFrmEditDirectoryItem(id, cDirectorySchemaName, parId, cXformName, FormXML, Nothing)
                 // End Function
 
-                public override XmlElement xFrmEditDirectoryItem(long id = 0L, string cDirectorySchemaName = "User", long parId = 0L, string cXformName = "", string FormXML = "", [Optional, DefaultParameterValue(null)] ref XmlElement IntanceAppend)
+                public XmlElement xFrmEditDirectoryItem(ref XmlElement IntanceAppend,long id = 0L, string cDirectorySchemaName = "User", long parId = 0L, string cXformName = "", string FormXML = "")
                 {
 
                     XmlElement oGrpElmt;
@@ -2370,14 +2377,14 @@ namespace Protean.Providers
                                                 if (!string.IsNullOrEmpty(recipientEmail))
                                                 {
                                                     Protean.Cms.dbHelper argodbHelper = null;
-                                                    sProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed", odbHelper: ref argodbHelper));
+                                                    sProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, odbHelper: ref argodbHelper, "Message Sent", "Message Failed"));
                                                 }
                                                 // send an email to the webadmin
                                                 recipientEmail = moConfig["SiteAdminEmail"];
                                                 if (File.Exists(goServer.MapPath(moConfig["ProjectPath"] + "/xsl/email/registrationAlert.xsl")))
                                                 {
                                                     Protean.Cms.dbHelper argodbHelper1 = null;
-                                                    sProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, moConfig["ProjectPath"] + "/xsl/email/registrationAlert.xsl", "New User", recipientEmail, fromEmail, SubjectLine, "Message Sent", "Message Failed", odbHelper: ref argodbHelper1));
+                                                    sProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, moConfig["ProjectPath"] + "/xsl/email/registrationAlert.xsl", "New User", recipientEmail, fromEmail, SubjectLine, odbHelper: ref argodbHelper1, "Message Sent", "Message Failed"));
                                                 }
                                                 oMsg = (Protean.Messaging)null;
                                             }

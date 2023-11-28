@@ -2303,7 +2303,7 @@ namespace Protean
 
 
 
-        public XmlElement addSwitch(ref XmlElement oContextNode, string sRef, string sClass = "", string sLabel = "", [Optional, DefaultParameterValue(null)] ref XmlElement oInsertBeforeNode)
+        public XmlElement addSwitch(ref XmlElement oContextNode, string sRef, ref XmlElement oInsertBeforeNode, string sClass = "", string sLabel = "")
         {
             XmlElement oGrpElmt;
             XmlElement oLabelElmt;
@@ -2504,7 +2504,7 @@ namespace Protean
         }
 
 
-        public XmlElement addBind(string sId, string sXpath, string sRequired = "false()", string sType = "string", [Optional, DefaultParameterValue(null)] ref XmlElement oBindParent, string sConstraint = "")
+        public XmlElement addBind(string sId, string sXpath, ref XmlElement oBindParent, string sRequired = "false()", string sType = "string", string sConstraint = "")
         {
 
             XmlElement oBindElmt;
@@ -2584,7 +2584,7 @@ namespace Protean
             return addSecretRet;
         }
 
-        public XmlElement addTextArea(ref XmlElement oContextNode, string sRef, bool bBound, string sLabel, [Optional, DefaultParameterValue("")] ref string sClass, [Optional, DefaultParameterValue(0)] ref int nRows, [Optional, DefaultParameterValue(0)] ref int nCols)
+        public XmlElement addTextArea(ref XmlElement oContextNode, string sRef, bool bBound, string sLabel, ref string sClass, ref int nRows, ref int nCols)
         {
             XmlElement addTextAreaRet = default;
             XmlElement oIptElmt;

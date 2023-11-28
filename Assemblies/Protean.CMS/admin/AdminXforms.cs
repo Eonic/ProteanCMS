@@ -674,18 +674,18 @@ namespace Protean
 
                         base.addInput(ref oFrmElmt, "ewDatabaseName", true, "DB Name");
                         XmlElement argoBindParent = null;
-                        base.addBind("ewDatabaseName", "web/add[@key='DatabaseName']/@value", "true()", oBindParent: ref argoBindParent);
+                        base.addBind("ewDatabaseName", "web/add[@key='DatabaseName']/@value", oBindParent: ref argoBindParent, "true()");
 
                         // MyBase.addInput(oFrmElmt, "ewDatabaseAuth", True, "DB Auth")
                         // MyBase.addBind("ewDatabaseAuth", "web/add[@key='DatabaseAuth']/@value", "false()")
 
                         base.addInput(ref oFrmElmt, "ewDatabaseUsername", true, "DB Username");
                         XmlElement argoBindParent1 = null;
-                        base.addBind("ewDatabaseUsername", "web/add[@key='DatabaseUsername']/@value", "false()", oBindParent: ref argoBindParent1);
+                        base.addBind("ewDatabaseUsername", "web/add[@key='DatabaseUsername']/@value", oBindParent: ref argoBindParent1, "false()");
 
                         base.addInput(ref oFrmElmt, "ewDatabasePassword", true, "DB Passowrd");
                         XmlElement argoBindParent2 = null;
-                        base.addBind("ewDatabasePassword", "web/add[@key='DatabasePassword']/@value", "false()", oBindParent: ref argoBindParent2);
+                        base.addBind("ewDatabasePassword", "web/add[@key='DatabasePassword']/@value", oBindParent: ref argoBindParent2, "false()");
 
                         // oSelElmt = MyBase.addSelect1(oFrmElmt, "ewSiteXsl", True, "Site Scheme", "", ApperanceTypes.Minimal)
                         // ' MyBase.addOptionsFilesFromDirectory(oSelElmt, "/ewcommon/xsl/scheme", ".xsl")
@@ -694,131 +694,131 @@ namespace Protean
 
                         base.addInput(ref oFrmElmt, "ewRootPageId", true, "Root Page Id");
                         XmlElement argoBindParent3 = null;
-                        base.addBind("ewRootPageId", "web/add[@key='RootPageId']/@value", "true()", oBindParent: ref argoBindParent3);
+                        base.addBind("ewRootPageId", "web/add[@key='RootPageId']/@value", oBindParent: ref argoBindParent3, "true()");
 
                         base.addInput(ref oFrmElmt, "ewBaseUrl", true, "Base URL");
                         XmlElement argoBindParent4 = null;
-                        base.addBind("ewBaseUrl", "web/add[@key='BaseUrl']/@value", "false()", oBindParent: ref argoBindParent4);
+                        base.addBind("ewBaseUrl", "web/add[@key='BaseUrl']/@value", oBindParent: ref argoBindParent4, "false()");
 
                         oSelElmt = base.addSelect1(ref oFrmElmt, "ewDebug", true, "Debug", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt, "On", "on");
                         base.addOption(ref oSelElmt, "Off", "off");
                         XmlElement argoBindParent5 = null;
-                        base.addBind("ewDebug", "web/add[@key='Debug']/@value", "true()", oBindParent: ref argoBindParent5);
+                        base.addBind("ewDebug", "web/add[@key='Debug']/@value", oBindParent: ref argoBindParent5, "true()");
 
                         oSelElmt = base.addSelect1(ref oFrmElmt, "ewCompiledTransform", true, "Compiled Transform", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt, "On", "on");
                         base.addOption(ref oSelElmt, "Off", "off");
                         XmlElement argoBindParent6 = null;
-                        base.addBind("ewCompiledTransform", "web/add[@key='CompiledTransform']/@value", "true()", oBindParent: ref argoBindParent6);
+                        base.addBind("ewCompiledTransform", "web/add[@key='CompiledTransform']/@value", oBindParent: ref argoBindParent6, "true()");
 
                         base.addInput(ref oFrmElmt, "ewImageRootPath", true, "Images Directory");
                         XmlElement argoBindParent7 = null;
-                        base.addBind("ewImageRootPath", "web/add[@key='ImageRootPath']/@value", "true()", oBindParent: ref argoBindParent7);
+                        base.addBind("ewImageRootPath", "web/add[@key='ImageRootPath']/@value", oBindParent: ref argoBindParent7, "true()");
 
                         base.addInput(ref oFrmElmt, "ewDocRootPath", true, "Docs Directory");
                         XmlElement argoBindParent8 = null;
-                        base.addBind("ewDocRootPath", "web/add[@key='DocRootPath']/@value", "true()", oBindParent: ref argoBindParent8);
+                        base.addBind("ewDocRootPath", "web/add[@key='DocRootPath']/@value", oBindParent: ref argoBindParent8, "true()");
 
                         base.addInput(ref oFrmElmt, "ewMediaRootPath", true, "Media Directory");
                         XmlElement argoBindParent9 = null;
-                        base.addBind("ewMediaRootPath", "web/add[@key='MediaRootPath']/@value", "true()", oBindParent: ref argoBindParent9);
+                        base.addBind("ewMediaRootPath", "web/add[@key='MediaRootPath']/@value", oBindParent: ref argoBindParent9, "true()");
 
                         oSelElmt = base.addSelect1(ref oFrmElmt, "ewCart", true, "Shopping Cart", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt, "On", "on");
                         base.addOption(ref oSelElmt, "Off", "off");
                         XmlElement argoBindParent10 = null;
-                        base.addBind("ewCart", "web/add[@key='Cart']/@value", "true()", oBindParent: ref argoBindParent10);
+                        base.addBind("ewCart", "web/add[@key='Cart']/@value", oBindParent: ref argoBindParent10, "true()");
 
                         oSelElmt = base.addSelect1(ref oFrmElmt, "ewMembership", true, "Membership", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt, "On", "on");
                         base.addOption(ref oSelElmt, "Off", "off");
                         XmlElement argoBindParent11 = null;
-                        base.addBind("ewMembership", "web/add[@key='Membership']/@value", "true()", oBindParent: ref argoBindParent11);
+                        base.addBind("ewMembership", "web/add[@key='Membership']/@value", oBindParent: ref argoBindParent11, "true()");
 
                         oSelElmt = base.addSelect1(ref oFrmElmt, "ewMailingList", true, "Mailing List", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt, "On", "on");
                         base.addOption(ref oSelElmt, "Off", "off");
                         XmlElement argoBindParent12 = null;
-                        base.addBind("ewMailingList", "web/add[@key='MailingList']/@value", "true()", oBindParent: ref argoBindParent12);
+                        base.addBind("ewMailingList", "web/add[@key='MailingList']/@value", oBindParent: ref argoBindParent12, "true()");
 
                         oSelElmt = base.addSelect1(ref oFrmElmt, "ewSubscriptions", true, "Subscriptions", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt, "On", "on");
                         base.addOption(ref oSelElmt, "Off", "off");
                         XmlElement argoBindParent13 = null;
-                        base.addBind("ewSubscriptions", "web/add[@key='Subscriptions']/@value", "true()", oBindParent: ref argoBindParent13);
+                        base.addBind("ewSubscriptions", "web/add[@key='Subscriptions']/@value", oBindParent: ref argoBindParent13, "true()");
 
                         oSelElmt = base.addSelect1(ref oFrmElmt, "ewActivityLogging", true, "Activity Logging", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt, "On", "on");
                         base.addOption(ref oSelElmt, "Off", "off");
                         XmlElement argoBindParent14 = null;
-                        base.addBind("ewActivityLogging", "web/add[@key='ActivityLogging']/@value", "true()", oBindParent: ref argoBindParent14);
+                        base.addBind("ewActivityLogging", "web/add[@key='ActivityLogging']/@value", oBindParent: ref argoBindParent14, "true()");
 
                         oSelElmt = base.addSelect1(ref oFrmElmt, "ewIPLogging", true, "IP Tracking", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt, "On", "on");
                         base.addOption(ref oSelElmt, "Off", "off");
                         XmlElement argoBindParent15 = null;
-                        base.addBind("ewIPLogging", "web/add[@key='IPLogging']/@value", "true()", oBindParent: ref argoBindParent15);
+                        base.addBind("ewIPLogging", "web/add[@key='IPLogging']/@value", oBindParent: ref argoBindParent15, "true()");
 
                         base.addInput(ref oFrmElmt, "ewMailserver", true, "Mailserver");
                         XmlElement argoBindParent16 = null;
-                        base.addBind("ewMailserver", "web/add[@key='MailServer']/@value", "false()", oBindParent: ref argoBindParent16);
+                        base.addBind("ewMailserver", "web/add[@key='MailServer']/@value", oBindParent: ref argoBindParent16, "false()");
 
                         base.addInput(ref oFrmElmt, "ewSiteAdminEmail", true, "Webmaster Email");
                         XmlElement argoBindParent17 = null;
-                        base.addBind("ewSiteAdminEmail", "web/add[@key='SiteAdminEmail']/@value", "true()", oBindParent: ref argoBindParent17);
+                        base.addBind("ewSiteAdminEmail", "web/add[@key='SiteAdminEmail']/@value", oBindParent: ref argoBindParent17, "true()");
 
                         oSelElmt = base.addSelect1(ref oFrmElmt, "ewSearch", true, "Content Search", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt, "On", "on");
                         base.addOption(ref oSelElmt, "Off", "off");
                         XmlElement argoBindParent18 = null;
-                        base.addBind("ewSearch", "web/add[@key='ContentSearch']/@value", "true()", oBindParent: ref argoBindParent18);
+                        base.addBind("ewSearch", "web/add[@key='ContentSearch']/@value", oBindParent: ref argoBindParent18, "true()");
 
                         oSelElmt = base.addSelect1(ref oFrmElmt, "ewSiteSearch", true, "Index Search", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt, "On", "on");
                         base.addOption(ref oSelElmt, "Off", "off");
                         XmlElement argoBindParent19 = null;
-                        base.addBind("ewSiteSearch", "web/add[@key='SiteSearch']/@value", "false()", oBindParent: ref argoBindParent19);
+                        base.addBind("ewSiteSearch", "web/add[@key='SiteSearch']/@value", oBindParent: ref argoBindParent19, "false()");
 
                         base.addInput(ref oFrmElmt, "ewSiteSearchPath", true, "Index Path");
                         XmlElement argoBindParent20 = null;
-                        base.addBind("ewSiteSearchPath", "web/add[@key='SiteSearchPath']/@value", "false()", oBindParent: ref argoBindParent20);
+                        base.addBind("ewSiteSearchPath", "web/add[@key='SiteSearchPath']/@value", oBindParent: ref argoBindParent20, "false()");
 
                         base.addInput(ref oFrmElmt, "ewGoogleContentTypes", true, "Google Sitemap Content Types");
                         XmlElement argoBindParent21 = null;
-                        base.addBind("ewGoogleContentTypes", "web/add[@key='GoogleContentTypes']/@value", "false()", oBindParent: ref argoBindParent21);
+                        base.addBind("ewGoogleContentTypes", "web/add[@key='GoogleContentTypes']/@value", oBindParent: ref argoBindParent21, "false()");
 
                         base.addInput(ref oFrmElmt, "ewShowRelatedBriefContentTypes", true, "Include Related Content for these Content Types");
                         XmlElement argoBindParent22 = null;
-                        base.addBind("ewShowRelatedBriefContentTypes", "web/add[@key='ShowRelatedBriefContentTypes']/@value", "false()", oBindParent: ref argoBindParent22);
+                        base.addBind("ewShowRelatedBriefContentTypes", "web/add[@key='ShowRelatedBriefContentTypes']/@value", oBindParent: ref argoBindParent22, "false()");
 
                         base.addInput(ref oFrmElmt, "ewShowRelatedBriefDepth", true, "Depth to get related content for brief content.");
                         XmlElement argoBindParent23 = null;
-                        base.addBind("ewShowRelatedBriefDepth", "web/add[@key='ShowRelatedBriefDepth']/@value", "false()", "number", oBindParent: ref argoBindParent23);
+                        base.addBind("ewShowRelatedBriefDepth", "web/add[@key='ShowRelatedBriefDepth']/@value", oBindParent: ref argoBindParent23, "false()", "number");
 
                         oSelElmt = base.addSelect1(ref oFrmElmt, "ewVersionControl", true, "Version Control", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt, "On", "on");
                         base.addOption(ref oSelElmt, "Off", "off");
                         XmlElement argoBindParent24 = null;
-                        base.addBind("ewVersionControl", "web/add[@key='VersionControl']/@value", "false()", oBindParent: ref argoBindParent24);
+                        base.addBind("ewVersionControl", "web/add[@key='VersionControl']/@value", oBindParent: ref argoBindParent24, "false()");
 
                         oSelElmt = base.addSelect1(ref oFrmElmt, "ewLegacyRedirect", true, "Legacy URL Forwarding", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt, "On", "on");
                         base.addOption(ref oSelElmt, "Off", "off");
                         XmlElement argoBindParent25 = null;
-                        base.addBind("ewLegacyRedirect", "web/add[@key='LegacyRedirect']/@value", "true()", oBindParent: ref argoBindParent25);
+                        base.addBind("ewLegacyRedirect", "web/add[@key='LegacyRedirect']/@value", oBindParent: ref argoBindParent25, "true()");
 
                         oSelElmt = base.addSelect1(ref oFrmElmt, "ewPageURLFormat", true, "Page URL Format for Spaces", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt, "Use Hyphens", "hyphens");
                         base.addOption(ref oSelElmt, "No preference", "off");
                         XmlElement argoBindParent26 = null;
-                        base.addBind("ewPageURLFormat", "web/add[@key='PageURLFormat']/@value", "true()", oBindParent: ref argoBindParent26);
+                        base.addBind("ewPageURLFormat", "web/add[@key='PageURLFormat']/@value", oBindParent: ref argoBindParent26, "true()");
 
                         oSelElmt = base.addSelect1(ref oFrmElmt, "ewAllowContentDetailAccess", true, "Always allow access to content detail regardless of location and permissions", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt, "On", "on");
                         base.addOption(ref oSelElmt, "Off", "off");
                         XmlElement argoBindParent27 = null;
-                        base.addBind("ewAllowContentDetailAccess", "web/add[@key='AllowContentDetailAccess']/@value", "true()", oBindParent: ref argoBindParent27);
+                        base.addBind("ewAllowContentDetailAccess", "web/add[@key='AllowContentDetailAccess']/@value", oBindParent: ref argoBindParent27, "true()");
 
 
                         base.addSubmit(ref oFrmElmt, "", "Save Settings");
@@ -1525,7 +1525,7 @@ namespace Protean
                             EnumberateThemeOptions(ref oSelElmt, "/ewThemes", ".xsl", "", true);
                             // MyBase.addOption(oSelElmt, "standard.xsl [bespoke]", "/xsl/standard.xsl")
                             XmlElement argoBindParent = null;
-                            base.addBind("ewSiteTheme", "theme/add[@key='CurrentTheme']/@value", "false()", oBindParent: ref argoBindParent);
+                            base.addBind("ewSiteTheme", "theme/add[@key='CurrentTheme']/@value", oBindParent: ref argoBindParent, "false()");
 
                             // MyBase.addSubmit(oFrmElmt, "", "Save Settings")
 
@@ -1697,28 +1697,28 @@ namespace Protean
                             oFrmElmt = base.addGroup(ref base.moXformElmt, "EditPage", "", "Edit Page");
                             base.addInput(ref oFrmElmt, "nStructParId", true, "ParId", "hidden");
                             XmlElement argoBindParent = null;
-                            base.addBind("nStructParId", "tblContentStructure/nStructParId", "true()", oBindParent: ref argoBindParent);
+                            base.addBind("nStructParId", "tblContentStructure/nStructParId", oBindParent: ref argoBindParent, "true()");
 
                             base.addInput(ref oFrmElmt, "cStructName", true, "Page Name", Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(cName), "", "readonly")));
                             XmlElement argoBindParent1 = null;
-                            base.addBind("cStructName", "tblContentStructure/cStructName", "true()", oBindParent: ref argoBindParent1);
+                            base.addBind("cStructName", "tblContentStructure/cStructName", oBindParent: ref argoBindParent1, "true()");
 
                             base.addInput(ref oFrmElmt, "cDisplayName", true, "Display Name");
                             XmlElement argoBindParent2 = null;
-                            base.addBind("cDisplayName", "tblContentStructure/cStructDescription/DisplayName", "false()", oBindParent: ref argoBindParent2);
+                            base.addBind("cDisplayName", "tblContentStructure/cStructDescription/DisplayName", oBindParent: ref argoBindParent2, "false()");
 
                             string argsClass = "xhtml";
                             int argnRows = 10;
                             int argnCols = 0;
                             base.addTextArea(ref oFrmElmt, "cStructDescription", true, "Description", ref argsClass, ref argnRows, nCols: ref argnCols);
                             XmlElement argoBindParent3 = null;
-                            base.addBind("cStructDescription", "tblContentStructure/cStructDescription/Description", "false()", oBindParent: ref argoBindParent3);
+                            base.addBind("cStructDescription", "tblContentStructure/cStructDescription/Description", oBindParent: ref argoBindParent3, "false()");
 
                             if (Strings.LCase(this.myWeb.moConfig["ShowStructForiegnRef"]) == "yes" | Strings.LCase(this.myWeb.moConfig["ShowStructForiegnRef"]) == "on")
                             {
                                 base.addInput(ref oFrmElmt, "cStructForiegnRef", true, "Foriegn Reference");
                                 XmlElement argoBindParent4 = null;
-                                base.addBind("cStructForiegnRef", "tblContentStructure/cStructForiegnRef", "false()", oBindParent: ref argoBindParent4);
+                                base.addBind("cStructForiegnRef", "tblContentStructure/cStructForiegnRef", oBindParent: ref argoBindParent4, "false()");
                             }
 
                             if (this.myWeb.goLangConfig != null)
@@ -1728,34 +1728,34 @@ namespace Protean
                                 foreach (XmlElement langNode in this.myWeb.goLangConfig.SelectNodes("Language"))
                                     base.addOption(ref oSelElmt, langNode.GetAttribute("systemName"), langNode.GetAttribute("code"));
                                 XmlElement argoBindParent5 = null;
-                                base.addBind("cLang", "tblContentStructure/cVersionLang", "tblContentStructure/nVersionType='3'", oBindParent: ref argoBindParent5);
+                                base.addBind("cLang", "tblContentStructure/cVersionLang", oBindParent: ref argoBindParent5, "tblContentStructure/nVersionType='3'");
                             }
 
                             base.addInput(ref oFrmElmt, "thumbnail", true, "Thumbnail Image", "short pickImage");
                             XmlElement argoBindParent6 = null;
-                            base.addBind("thumbnail", "tblContentStructure/cStructDescription/Images/img[@class='thumbnail']", "false()", "xml-replace", oBindParent: ref argoBindParent6);
+                            base.addBind("thumbnail", "tblContentStructure/cStructDescription/Images/img[@class='thumbnail']", oBindParent: ref argoBindParent6, "false()", "xml-replace");
 
                             base.addInput(ref oFrmElmt, "cUrl", true, "URL");
                             XmlElement argoBindParent7 = null;
-                            base.addBind("cUrl", "tblContentStructure/cUrl", "false()", oBindParent: ref argoBindParent7);
+                            base.addBind("cUrl", "tblContentStructure/cUrl", oBindParent: ref argoBindParent7, "false()");
 
                             base.addInput(ref oFrmElmt, "dPublishDate", true, "Publish Date", "calendar");
                             XmlElement argoBindParent8 = null;
-                            base.addBind("dPublishDate", "tblContentStructure/dPublishDate", "false()", oBindParent: ref argoBindParent8);
+                            base.addBind("dPublishDate", "tblContentStructure/dPublishDate", oBindParent: ref argoBindParent8, "false()");
 
                             base.addInput(ref oFrmElmt, "dExpireDate", true, "Expire Date", "calendar");
                             XmlElement argoBindParent9 = null;
-                            base.addBind("dExpireDate", "tblContentStructure/dExpireDate", "false()", oBindParent: ref argoBindParent9);
+                            base.addBind("dExpireDate", "tblContentStructure/dExpireDate", oBindParent: ref argoBindParent9, "false()");
 
                             oSelElmt = base.addSelect1(ref oFrmElmt, "nStatus", true, "Status", "", Protean.xForm.ApperanceTypes.Full);
                             base.addOption(ref oSelElmt, "Live", 1.ToString());
                             base.addOption(ref oSelElmt, "Hidden", 0.ToString());
                             XmlElement argoBindParent10 = null;
-                            base.addBind("nStatus", "tblContentStructure/nStatus", "true()", oBindParent: ref argoBindParent10);
+                            base.addBind("nStatus", "tblContentStructure/nStatus", oBindParent: ref argoBindParent10, "true()");
 
                             base.addInput(ref oFrmElmt, "cDescription", true, "Change Notes");
                             XmlElement argoBindParent11 = null;
-                            base.addBind("cDescription", "tblContentStructure/cDescription", "false()", oBindParent: ref argoBindParent11);
+                            base.addBind("cDescription", "tblContentStructure/cDescription", oBindParent: ref argoBindParent11, "false()");
 
                             base.addSubmit(ref oFrmElmt, "", "Save Page");
 
@@ -2068,13 +2068,13 @@ namespace Protean
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "CopyPage", "", "Copy Page");
                         base.addInput(ref oFrmElmt, "nStructParId", true, "ParId", "hidden");
                         XmlElement argoBindParent = null;
-                        base.addBind("nStructParId", "tblContentStructure/nStructParId", "true()", oBindParent: ref argoBindParent);
+                        base.addBind("nStructParId", "tblContentStructure/nStructParId", oBindParent: ref argoBindParent, "true()");
 
                         oSelElmt = base.addSelect1(ref oFrmElmt, "nCopyType", true, "Copy", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt, "This page and all its decendants", 1.ToString());
                         base.addOption(ref oSelElmt, "This page only", 0.ToString());
                         XmlElement argoBindParent1 = null;
-                        base.addBind("nCopyType", "tblContentStructure/@nCopyType", "true()", oBindParent: ref argoBindParent1);
+                        base.addBind("nCopyType", "tblContentStructure/@nCopyType", oBindParent: ref argoBindParent1, "true()");
 
                         oSelElmt = base.addSelect1(ref oFrmElmt, "nCopyContent", true, "Page Content", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt, "Create empty pages", 0.ToString());
@@ -2083,44 +2083,44 @@ namespace Protean
                         base.addOption(ref oSelElmt, "Create copies of the content", 1.ToString());
                         base.addOption(ref oSelElmt, "Force copies of the content", 4.ToString());
                         XmlElement argoBindParent2 = null;
-                        base.addBind("nCopyContent", "tblContentStructure/@nCopyContent", "true()", oBindParent: ref argoBindParent2);
+                        base.addBind("nCopyContent", "tblContentStructure/@nCopyContent", oBindParent: ref argoBindParent2, "true()");
 
                         base.addInput(ref oFrmElmt, "cStructName", true, "Page Name");
                         XmlElement argoBindParent3 = null;
-                        base.addBind("cStructName", "tblContentStructure/cStructName", "true()", oBindParent: ref argoBindParent3);
+                        base.addBind("cStructName", "tblContentStructure/cStructName", oBindParent: ref argoBindParent3, "true()");
 
                         base.addInput(ref oFrmElmt, "cDisplayName", true, "Display Name");
                         XmlElement argoBindParent4 = null;
-                        base.addBind("cDisplayName", "tblContentStructure/cStructDescription/DisplayName", "false()", oBindParent: ref argoBindParent4);
+                        base.addBind("cDisplayName", "tblContentStructure/cStructDescription/DisplayName", oBindParent: ref argoBindParent4, "false()");
 
                         string argsClass = "xhtml";
                         int argnRows = 10;
                         int argnCols = 0;
                         base.addTextArea(ref oFrmElmt, "cStructDescription", true, "Description", ref argsClass, ref argnRows, nCols: ref argnCols);
                         XmlElement argoBindParent5 = null;
-                        base.addBind("cStructDescription", "tblContentStructure/cStructDescription/Description", "false()", oBindParent: ref argoBindParent5);
+                        base.addBind("cStructDescription", "tblContentStructure/cStructDescription/Description", oBindParent: ref argoBindParent5, "false()");
 
                         base.addInput(ref oFrmElmt, "cUrl", true, "URL");
                         XmlElement argoBindParent6 = null;
-                        base.addBind("cUrl", "tblContentStructure/cUrl", "false()", oBindParent: ref argoBindParent6);
+                        base.addBind("cUrl", "tblContentStructure/cUrl", oBindParent: ref argoBindParent6, "false()");
 
                         base.addInput(ref oFrmElmt, "dPublishDate", true, "Publish Date", "calendar");
                         XmlElement argoBindParent7 = null;
-                        base.addBind("dPublishDate", "tblContentStructure/dPublishDate", "false()", oBindParent: ref argoBindParent7);
+                        base.addBind("dPublishDate", "tblContentStructure/dPublishDate", oBindParent: ref argoBindParent7, "false()");
 
                         base.addInput(ref oFrmElmt, "dExpireDate", true, "Expire Date", "calendar");
                         XmlElement argoBindParent8 = null;
-                        base.addBind("dExpireDate", "tblContentStructure/dExpireDate", "false()", oBindParent: ref argoBindParent8);
+                        base.addBind("dExpireDate", "tblContentStructure/dExpireDate", oBindParent: ref argoBindParent8, "false()");
 
                         oSelElmt = base.addSelect1(ref oFrmElmt, "nStatus", true, "Status", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt, "Live", 1.ToString());
                         base.addOption(ref oSelElmt, "Hidden", 0.ToString());
                         XmlElement argoBindParent9 = null;
-                        base.addBind("nStatus", "tblContentStructure/nStatus", "true()", oBindParent: ref argoBindParent9);
+                        base.addBind("nStatus", "tblContentStructure/nStatus", oBindParent: ref argoBindParent9, "true()");
 
                         base.addInput(ref oFrmElmt, "cDescription", true, "Change Notes");
                         XmlElement argoBindParent10 = null;
-                        base.addBind("cDescription", "tblContentStructure/cDescription", "false()", oBindParent: ref argoBindParent10);
+                        base.addBind("cDescription", "tblContentStructure/cDescription", oBindParent: ref argoBindParent10, "false()");
 
                         XmlNode argoNode = oFrmElmt;
                         base.addNote(ref argoNode, Protean.xForm.noteTypes.Hint, "This page will be copied without any permissions and will inherit the permissions from the new locations ancestors");
@@ -2245,28 +2245,28 @@ namespace Protean
 
                         base.addInput(ref oGrp2, "dPublishDate", true, "Publish Date", "calendar");
                         XmlElement argoBindParent = null;
-                        base.addBind("dPublishDate", "tblContentStructure/dPublishDate", "false()", oBindParent: ref argoBindParent);
+                        base.addBind("dPublishDate", "tblContentStructure/dPublishDate", oBindParent: ref argoBindParent, "false()");
 
                         base.addInput(ref oGrp2, "dExpireDate", true, "Expire Date", "calendar");
                         XmlElement argoBindParent1 = null;
-                        base.addBind("dExpireDate", "tblContentStructure/dExpireDate", "false()", oBindParent: ref argoBindParent1);
+                        base.addBind("dExpireDate", "tblContentStructure/dExpireDate", oBindParent: ref argoBindParent1, "false()");
 
                         oSelElmt = base.addSelect1(ref oGrp2, "nStatus", true, "Status", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt, "Live", 1.ToString());
                         base.addOption(ref oSelElmt, "Hidden", 0.ToString());
                         XmlElement argoBindParent2 = null;
-                        base.addBind("nStatus", "tblContentStructure/nStatus", "true()", oBindParent: ref argoBindParent2);
+                        base.addBind("nStatus", "tblContentStructure/nStatus", oBindParent: ref argoBindParent2, "true()");
 
                         base.addInput(ref oGrp2, "cDescription", true, "Change Notes");
                         XmlElement argoBindParent3 = null;
-                        base.addBind("cDescription", "tblContentStructure/cDescription", "false()", oBindParent: ref argoBindParent3);
+                        base.addBind("cDescription", "tblContentStructure/cDescription", oBindParent: ref argoBindParent3, "false()");
 
                         var oGrp3 = base.addGroup(ref oFrmElmt, "Group3", "", "");
                         var oGrp4 = base.addGroup(ref oGrp3, "CopySettings", "", "Copy Settings");
 
                         base.addInput(ref oGrp4, "cVersionDescription", true, "Version Description", "long");
                         XmlElement argoBindParent4 = null;
-                        base.addBind("cVersionDescription", "tblContentStructure/cVersionDescription", "true()", oBindParent: ref argoBindParent4);
+                        base.addBind("cVersionDescription", "tblContentStructure/cVersionDescription", oBindParent: ref argoBindParent4, "true()");
 
                         oSelElmt = base.addSelect1(ref oGrp4, "nVersionType", true, "Type", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt, "Personalisation", 1.ToString());
@@ -2277,7 +2277,7 @@ namespace Protean
                         }
                         // MyBase.addOption(oSelElmt, "Split Test", 4)
                         XmlElement argoBindParent5 = null;
-                        base.addBind("nVersionType", "tblContentStructure/nVersionType", "true()", oBindParent: ref argoBindParent5);
+                        base.addBind("nVersionType", "tblContentStructure/nVersionType", oBindParent: ref argoBindParent5, "true()");
 
                         if (this.myWeb.goLangConfig != null)
                         {
@@ -2286,7 +2286,7 @@ namespace Protean
                             foreach (XmlElement langNode in this.myWeb.goLangConfig.SelectNodes("Language"))
                                 base.addOption(ref oSelElmt, langNode.GetAttribute("systemName"), langNode.GetAttribute("code"));
                             XmlElement argoBindParent6 = null;
-                            base.addBind("cVersionLang", "tblContentStructure/cVersionLang", "tblContentStructure/nVersionType='3'", oBindParent: ref argoBindParent6);
+                            base.addBind("cVersionLang", "tblContentStructure/cVersionLang", oBindParent: ref argoBindParent6, "tblContentStructure/nVersionType='3'");
                         }
 
                         oSelElmt = base.addSelect1(ref oGrp4, "nCopyContent", true, "Page Content", "", Protean.xForm.ApperanceTypes.Full);
@@ -2295,28 +2295,28 @@ namespace Protean
                         // MyBase.addOption(oSelElmt, "Same content with multiple primary locations", 3)
                         base.addOption(ref oSelElmt, "Create copies of the content", 1.ToString());
                         XmlElement argoBindParent7 = null;
-                        base.addBind("nCopyContent", "tblContentStructure/@nCopyContent", "true()", oBindParent: ref argoBindParent7);
+                        base.addBind("nCopyContent", "tblContentStructure/@nCopyContent", oBindParent: ref argoBindParent7, "true()");
 
                         var oGrp6 = base.addGroup(ref oGrp3, "PageDetails", "", "Page Details");
 
                         base.addInput(ref oGrp6, "cStructName", true, "Page Name", "long");
                         XmlElement argoBindParent8 = null;
-                        base.addBind("cStructName", "tblContentStructure/cStructName", "true()", oBindParent: ref argoBindParent8);
+                        base.addBind("cStructName", "tblContentStructure/cStructName", oBindParent: ref argoBindParent8, "true()");
 
                         base.addInput(ref oGrp6, "cDisplayName", true, "Display Name", "long");
                         XmlElement argoBindParent9 = null;
-                        base.addBind("cDisplayName", "tblContentStructure/cStructDescription/DisplayName", "false()", oBindParent: ref argoBindParent9);
+                        base.addBind("cDisplayName", "tblContentStructure/cStructDescription/DisplayName", oBindParent: ref argoBindParent9, "false()");
 
                         string argsClass = "xhtml";
                         int argnRows = 10;
                         int argnCols = 0;
                         base.addTextArea(ref oGrp6, "cStructDescription", true, "Description", ref argsClass, ref argnRows, nCols: ref argnCols);
                         XmlElement argoBindParent10 = null;
-                        base.addBind("cStructDescription", "tblContentStructure/cStructDescription/Description", "false()", oBindParent: ref argoBindParent10);
+                        base.addBind("cStructDescription", "tblContentStructure/cStructDescription/Description", oBindParent: ref argoBindParent10, "false()");
 
                         base.addInput(ref oGrp6, "cUrl", true, "URL");
                         XmlElement argoBindParent11 = null;
-                        base.addBind("cUrl", "tblContentStructure/cUrl", "false()", oBindParent: ref argoBindParent11);
+                        base.addBind("cUrl", "tblContentStructure/cUrl", oBindParent: ref argoBindParent11, "false()");
 
                         var oGrp5 = base.addGroup(ref base.moXformElmt, "", "", "");
 
@@ -2451,13 +2451,13 @@ namespace Protean
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "EditPage", "", "Select Page Layout");
                         base.addInput(ref oFrmElmt, "nStructParId", true, "ParId", "hidden");
                         XmlElement argoBindParent = null;
-                        base.addBind("nStructParId", "tblContentStructure/nStructParId", "true()", oBindParent: ref argoBindParent);
+                        base.addBind("nStructParId", "tblContentStructure/nStructParId", oBindParent: ref argoBindParent, "true()");
 
                         // MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "Click the image to select page layout")
 
                         oSelElmt = base.addSelect1(ref oFrmElmt, "cStructLayout", true, "", "PickByImage", Protean.xForm.ApperanceTypes.Full);
                         XmlElement argoBindParent1 = null;
-                        base.addBind("cStructLayout", "tblContentStructure/cStructLayout", "true()", oBindParent: ref argoBindParent1);
+                        base.addBind("cStructLayout", "tblContentStructure/cStructLayout", oBindParent: ref argoBindParent1, "true()");
                         if (goConfig["cssFramework"] != "bs5")
                         {
                             try
@@ -2680,13 +2680,13 @@ namespace Protean
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "EditPage", "", "Select Page Layout");
                         base.addInput(ref oFrmElmt, "nStructParId", true, "ParId", "hidden");
                         XmlElement argoBindParent = null;
-                        base.addBind("nStructParId", "tblContentStructure/nStructParId", "true()", oBindParent: ref argoBindParent);
+                        base.addBind("nStructParId", "tblContentStructure/nStructParId", oBindParent: ref argoBindParent, "true()");
 
                         // MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "Click the image to select page layout")
 
                         oSelElmt = base.addSelect1(ref oFrmElmt, "cStructLayout", true, "", "PickByImage", Protean.xForm.ApperanceTypes.Full);
                         XmlElement argoBindParent1 = null;
-                        base.addBind("cStructLayout", "tblContentStructure/cStructLayout", "true()", oBindParent: ref argoBindParent1);
+                        base.addBind("cStructLayout", "tblContentStructure/cStructLayout", oBindParent: ref argoBindParent1, "true()");
 
                         try
                         {
@@ -2821,14 +2821,14 @@ namespace Protean
                                 int argnReturnId = 0;
                                 string argzcReturnSchema = "";
                                 string argAlternateFormName = "";
-                                xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], nReturnId: ref argnReturnId, zcReturnSchema: ref argzcReturnSchema, AlternateFormName: ref argAlternateFormName);
+                                xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"],false, nReturnId: ref argnReturnId, zcReturnSchema: ref argzcReturnSchema, AlternateFormName: ref argAlternateFormName);
                             }
                             else
                             {
                                 int argnReturnId1 = 0;
                                 string argzcReturnSchema1 = "";
                                 string argAlternateFormName1 = "";
-                                xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"], nReturnId: ref argnReturnId1, zcReturnSchema: ref argzcReturnSchema1, AlternateFormName: ref argAlternateFormName1);
+                                xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"],false, nReturnId: ref argnReturnId1, zcReturnSchema: ref argzcReturnSchema1, AlternateFormName: ref argAlternateFormName1);
                             }
 
 
@@ -2844,7 +2844,7 @@ namespace Protean
                             base.addInput(ref oFrmElmt, "nStructParId", true, "ParId", "hidden");
                             base.addInput(ref oFrmElmt, "cPosition", true, "Position", "hidden");
                             XmlElement argoBindParent = null;
-                            base.addBind("cPosition", "Module/@position", "true()", oBindParent: ref argoBindParent);
+                            base.addBind("cPosition", "Module/@position", oBindParent: ref argoBindParent, "true()");
 
                             oSelElmt = base.addSelect1(ref oFrmElmt, "cModuleType", true, "", "PickByImage", Protean.xForm.ApperanceTypes.Full);
 
@@ -2865,7 +2865,7 @@ namespace Protean
                                         int argnReturnId2 = 0;
                                         string argzcReturnSchema2 = "";
                                         string argAlternateFormName2 = "";
-                                        xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], nReturnId: ref argnReturnId2, zcReturnSchema: ref argzcReturnSchema2, AlternateFormName: ref argAlternateFormName2);
+                                        xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"],false, nReturnId: ref argnReturnId2, zcReturnSchema: ref argzcReturnSchema2, AlternateFormName: ref argAlternateFormName2);
                                     }
 
                                     else
@@ -2873,7 +2873,7 @@ namespace Protean
                                         int argnReturnId3 = 0;
                                         string argzcReturnSchema3 = "";
                                         string argAlternateFormName3 = "";
-                                        xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"], nReturnId: ref argnReturnId3, zcReturnSchema: ref argzcReturnSchema3, AlternateFormName: ref argAlternateFormName3);
+                                        xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"],false, nReturnId: ref argnReturnId3, zcReturnSchema: ref argzcReturnSchema3, AlternateFormName: ref argAlternateFormName3);
                                     }
                                 }
                             }
@@ -4998,11 +4998,11 @@ namespace Protean
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "New Folder", "ptn-admin-form", "Please enter the folder name");
                         base.addInput(ref oFrmElmt, "fld", true, "Path", "readonly");
                         XmlElement argoBindParent = null;
-                        base.addBind("fld", "folder/@path", "false() ", oBindParent: ref argoBindParent);
+                        base.addBind("fld", "folder/@path", oBindParent: ref argoBindParent, "false()");
 
                         base.addInput(ref oFrmElmt, "cFolderName", true, "Folder Name");
                         XmlElement argoBindParent1 = null;
-                        base.addBind("cFolderName", "folder/@name", "true()", oBindParent: ref argoBindParent1);
+                        base.addBind("cFolderName", "folder/@name", oBindParent: ref argoBindParent1, "true()");
 
                         base.addSubmit(ref oFrmElmt, "AddFolder", "Create Folder", "ewSubmit");
 
@@ -5066,12 +5066,12 @@ namespace Protean
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "New File", "", "Please select the file to upload");
                         base.addInput(ref oFrmElmt, "fld", true, "Upload Path", "readonly");
                         XmlElement argoBindParent = null;
-                        base.addBind("fld", "file/@path", "true()", oBindParent: ref argoBindParent);
+                        base.addBind("fld", "file/@path", oBindParent: ref argoBindParent, "true()");
 
                         string argsClass = "";
                         base.addUpload(ref oFrmElmt, "uploadFile", true, "image/*", "Pick File", sClass: ref argsClass);
                         XmlElement argoBindParent1 = null;
-                        base.addBind("uploadFile", "file", "true()", oBindParent: ref argoBindParent1);
+                        base.addBind("uploadFile", "file", oBindParent: ref argoBindParent1, "true()");
 
                         base.addSubmit(ref oFrmElmt, "", "Upload", "ewSubmit");
 
@@ -5174,12 +5174,12 @@ namespace Protean
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "New File", "", "Please select files to upload to " + SavePath);
                         base.addInput(ref oFrmElmt, "fld", true, "Upload Path", "hidden");
                         XmlElement argoBindParent = null;
-                        base.addBind("fld", "file/@path", "true()", oBindParent: ref argoBindParent);
+                        base.addBind("fld", "file/@path", oBindParent: ref argoBindParent, "true()");
 
                         string argsClass = "MultiPowUpload";
                         base.addUpload(ref oFrmElmt, "uploadFile", true, "image/*", "", ref argsClass);
                         XmlElement argoBindParent1 = null;
-                        base.addBind("uploadFile", "file", "true()", oBindParent: ref argoBindParent1);
+                        base.addBind("uploadFile", "file", oBindParent: ref argoBindParent1, "true()");
 
                         base.addSubmit(ref oFrmElmt, "", "Finish", "ewSubmit");
 
@@ -5224,23 +5224,23 @@ namespace Protean
 
                         base.addInput(ref oFrmElmt, "cName", true, "Class", "readonly");
                         XmlElement argoBindParent = null;
-                        base.addBind("cName", "img/@class", "true()", oBindParent: ref argoBindParent);
+                        base.addBind("cName", "img/@class", oBindParent: ref argoBindParent, "true()");
 
                         base.addInput(ref oFrmElmt, "cPathName", true, "Path Name");
                         XmlElement argoBindParent1 = null;
-                        base.addBind("cPathName", "img/@src", "true()", oBindParent: ref argoBindParent1);
+                        base.addBind("cPathName", "img/@src", oBindParent: ref argoBindParent1, "true()");
 
                         base.addInput(ref oFrmElmt, "nWidth", true, "Width");
                         XmlElement argoBindParent2 = null;
-                        base.addBind("nWidth", "img/@width", "true()", oBindParent: ref argoBindParent2);
+                        base.addBind("nWidth", "img/@width", oBindParent: ref argoBindParent2, "true()");
 
                         base.addInput(ref oFrmElmt, "nHeight", true, "Height");
                         XmlElement argoBindParent3 = null;
-                        base.addBind("nHeight", "img/@height", "true()", oBindParent: ref argoBindParent3);
+                        base.addBind("nHeight", "img/@height", oBindParent: ref argoBindParent3, "true()");
 
                         base.addInput(ref oFrmElmt, "cDesc", true, "Alt Description");
                         XmlElement argoBindParent4 = null;
-                        base.addBind("cDesc", "img/@alt", "false()", oBindParent: ref argoBindParent4);
+                        base.addBind("cDesc", "img/@alt", oBindParent: ref argoBindParent4, "false()");
 
 
                         base.addSubmit(ref oFrmElmt, "", "Add Image", "ewSubmit");
@@ -5386,23 +5386,23 @@ namespace Protean
                         oFrmElmt1 = base.addGroup(ref oFrmElmt, "", "", "");
                         base.addInput(ref oFrmElmt1, "cName", true, "Class", "readonly");
                         XmlElement argoBindParent = null;
-                        base.addBind("cName", "img/@class", "true()", oBindParent: ref argoBindParent);
+                        base.addBind("cName", "img/@class", oBindParent: ref argoBindParent, "true()");
 
                         base.addInput(ref oFrmElmt1, "cPathName", true, "Path Name");
                         XmlElement argoBindParent1 = null;
-                        base.addBind("cPathName", "img/@src", "true()", oBindParent: ref argoBindParent1);
+                        base.addBind("cPathName", "img/@src", oBindParent: ref argoBindParent1, "true()");
 
                         base.addInput(ref oFrmElmt1, "nWidth", true, "Width");
                         XmlElement argoBindParent2 = null;
-                        base.addBind("nWidth", "img/@width", "true()", oBindParent: ref argoBindParent2);
+                        base.addBind("nWidth", "img/@width", oBindParent: ref argoBindParent2, "true()");
 
                         base.addInput(ref oFrmElmt1, "nHeight", true, "Height");
                         XmlElement argoBindParent3 = null;
-                        base.addBind("nHeight", "img/@height", "true()", oBindParent: ref argoBindParent3);
+                        base.addBind("nHeight", "img/@height", oBindParent: ref argoBindParent3, "true()");
 
                         base.addInput(ref oFrmElmt1, "cDesc", true, "Alt Description");
                         XmlElement argoBindParent4 = null;
-                        base.addBind("cDesc", "img/@alt", "false()", oBindParent: ref argoBindParent4);
+                        base.addBind("cDesc", "img/@alt", oBindParent: ref argoBindParent4, "false()");
 
                         base.addDiv(ref oFrmElmt, "<div class=\"form-group pick-new-image\"><a href=\"?contentType=popup&amp;ewCmd=ImageLib&amp;targetField=" + cTargetFeild + "&amp;targetClass=" + cClassName + "\" class=\"btn btn-primary pull-right\" data-toggle=\"modal\"><i class=\"fa fa-picture-o\"> </i> Pick New Image</a></div>", "");
                         base.addSubmit(ref oFrmElmt, "", "Update Image", "ewSubmit", "ewSubmit");
@@ -7142,7 +7142,7 @@ namespace Protean
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "EditShippingLocation", "", "Edit Shipping Location");
                         base.addInput(ref oFrmElmt, "nStructParId", true, "ParId", "hidden");
                         XmlElement argoBindParent = null;
-                        base.addBind("nStructParId", "tblCartShippingLocations/nLocationParId", "true()", oBindParent: ref argoBindParent);
+                        base.addBind("nStructParId", "tblCartShippingLocations/nLocationParId", oBindParent: ref argoBindParent, "true()");
 
                         oSelElmt = base.addSelect1(ref oFrmElmt, "nLocationType", true, "Type", "required", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt, "Global", 0.ToString());
@@ -7153,35 +7153,35 @@ namespace Protean
                         base.addOption(ref oSelElmt, "Post Town", 5.ToString());
                         base.addOption(ref oSelElmt, "Postal Code", 5.ToString());
                         XmlElement argoBindParent1 = null;
-                        base.addBind("nLocationType", "tblCartShippingLocations/nLocationType", "true()", oBindParent: ref argoBindParent1);
+                        base.addBind("nLocationType", "tblCartShippingLocations/nLocationType", oBindParent: ref argoBindParent1, "true()");
 
                         base.addInput(ref oFrmElmt, "cNameFull", true, "Full Name", "required");
                         XmlElement argoBindParent2 = null;
-                        base.addBind("cNameFull", "tblCartShippingLocations/cLocationNameFull", "true()", oBindParent: ref argoBindParent2);
+                        base.addBind("cNameFull", "tblCartShippingLocations/cLocationNameFull", oBindParent: ref argoBindParent2, "true()");
 
                         base.addInput(ref oFrmElmt, "cNameShort", true, "Short Name", "required");
                         XmlElement argoBindParent3 = null;
-                        base.addBind("cNameShort", "tblCartShippingLocations/cLocationNameShort", "true()", oBindParent: ref argoBindParent3);
+                        base.addBind("cNameShort", "tblCartShippingLocations/cLocationNameShort", oBindParent: ref argoBindParent3, "true()");
 
                         base.addInput(ref oFrmElmt, "cISOnum", true, "ISO Num");
                         XmlElement argoBindParent4 = null;
-                        base.addBind("cISOnum", "tblCartShippingLocations/cLocationISOnum", "false()", oBindParent: ref argoBindParent4);
+                        base.addBind("cISOnum", "tblCartShippingLocations/cLocationISOnum", oBindParent: ref argoBindParent4, "false()");
 
                         base.addInput(ref oFrmElmt, "cISOa2", true, "ISOa2");
                         XmlElement argoBindParent5 = null;
-                        base.addBind("cISOa2", "tblCartShippingLocations/cLocationISOa2", "false()", oBindParent: ref argoBindParent5);
+                        base.addBind("cISOa2", "tblCartShippingLocations/cLocationISOa2", oBindParent: ref argoBindParent5, "false()");
 
                         base.addInput(ref oFrmElmt, "cISOa3", true, "ISOa3");
                         XmlElement argoBindParent6 = null;
-                        base.addBind("cISOa3", "tblCartShippingLocations/cLocationISOa3", "false()", oBindParent: ref argoBindParent6);
+                        base.addBind("cISOa3", "tblCartShippingLocations/cLocationISOa3", oBindParent: ref argoBindParent6, "false()");
 
                         base.addInput(ref oFrmElmt, "cCode", true, "Code");
                         XmlElement argoBindParent7 = null;
-                        base.addBind("cCode", "tblCartShippingLocations/cLocationCode", "false()", oBindParent: ref argoBindParent7);
+                        base.addBind("cCode", "tblCartShippingLocations/cLocationCode", oBindParent: ref argoBindParent7, "false()");
 
                         base.addInput(ref oFrmElmt, "cTaxRate", true, "TaxRate");
                         XmlElement argoBindParent8 = null;
-                        base.addBind("cTaxRate", "tblCartShippingLocations/nLocationTaxRate", "false()", oBindParent: ref argoBindParent8);
+                        base.addBind("cTaxRate", "tblCartShippingLocations/nLocationTaxRate", oBindParent: ref argoBindParent8, "false()");
 
                         base.addSubmit(ref oFrmElmt, "ewSubmit", "Save Page");
 
@@ -7255,92 +7255,92 @@ namespace Protean
 
                         base.addInput(ref oGrp1Elmt, "cShipOptName", true, "Service Name");
                         XmlElement argoBindParent1 = null;
-                        base.addBind("cShipOptName", "tblCartShippingMethods/cShipOptName", "true()", oBindParent: ref argoBindParent1);
+                        base.addBind("cShipOptName", "tblCartShippingMethods/cShipOptName", oBindParent: ref argoBindParent1, "true()");
 
                         base.addInput(ref oGrp1Elmt, "cShipOptCarrier", true, "Carrier");
                         XmlElement argoBindParent2 = null;
-                        base.addBind("cShipOptCarrier", "tblCartShippingMethods/cShipOptCarrier", "false()", oBindParent: ref argoBindParent2);
+                        base.addBind("cShipOptCarrier", "tblCartShippingMethods/cShipOptCarrier", oBindParent: ref argoBindParent2, "false()");
 
                         base.addInput(ref oGrp1Elmt, "cShipOptTime", true, "Delivery Period");
                         XmlElement argoBindParent3 = null;
-                        base.addBind("cShipOptTime", "tblCartShippingMethods/cShipOptTime", "false()", oBindParent: ref argoBindParent3);
+                        base.addBind("cShipOptTime", "tblCartShippingMethods/cShipOptTime", oBindParent: ref argoBindParent3, "false()");
 
                         base.addInput(ref oGrp1Elmt, "nShipOptCost", true, "Cost", "short");
                         XmlElement argoBindParent4 = null;
-                        base.addBind("nShipOptCost", "tblCartShippingMethods/nShipOptCost", "false()", oBindParent: ref argoBindParent4);
+                        base.addBind("nShipOptCost", "tblCartShippingMethods/nShipOptCost", oBindParent: ref argoBindParent4, "false()");
 
                         base.addInput(ref oGrp1Elmt, "nShipOptPercentage", true, "Percentage", "short");
                         XmlElement argoBindParent5 = null;
-                        base.addBind("nShipOptPercentage", "tblCartShippingMethods/nShipOptPercentage", "false()", oBindParent: ref argoBindParent5);
+                        base.addBind("nShipOptPercentage", "tblCartShippingMethods/nShipOptPercentage", oBindParent: ref argoBindParent5, "false()");
 
                         base.addInput(ref oGrp1Elmt, "nShipOptQuantMin", true, "Minimum Quantity", "short");
                         XmlElement argoBindParent6 = null;
-                        base.addBind("nShipOptQuantMin", "tblCartShippingMethods/nShipOptQuantMin", "false()", oBindParent: ref argoBindParent6);
+                        base.addBind("nShipOptQuantMin", "tblCartShippingMethods/nShipOptQuantMin", oBindParent: ref argoBindParent6, "false()");
 
                         base.addInput(ref oGrp1Elmt, "nShipOptQuantMax", true, "Maximum Quantity", "short");
                         XmlElement argoBindParent7 = null;
-                        base.addBind("nShipOptQuantMax", "tblCartShippingMethods/nShipOptQuantMax", "false()", oBindParent: ref argoBindParent7);
+                        base.addBind("nShipOptQuantMax", "tblCartShippingMethods/nShipOptQuantMax", oBindParent: ref argoBindParent7, "false()");
 
                         base.addInput(ref oGrp1Elmt, "nShipOptWeightMin", true, "Minimum Weight", "short");
                         XmlElement argoBindParent8 = null;
-                        base.addBind("nShipOptWeightMin", "tblCartShippingMethods/nShipOptWeightMin", "false()", oBindParent: ref argoBindParent8);
+                        base.addBind("nShipOptWeightMin", "tblCartShippingMethods/nShipOptWeightMin", oBindParent: ref argoBindParent8, "false()");
 
                         base.addInput(ref oGrp1Elmt, "nShipOptWeightMax", true, "Maximum Weight", "short");
                         XmlElement argoBindParent9 = null;
-                        base.addBind("nShipOptWeightMax", "tblCartShippingMethods/nShipOptWeightMax", "false()", oBindParent: ref argoBindParent9);
+                        base.addBind("nShipOptWeightMax", "tblCartShippingMethods/nShipOptWeightMax", oBindParent: ref argoBindParent9, "false()");
 
                         base.addInput(ref oGrp1Elmt, "nShipOptPriceMin", true, "Minimum Price", "short");
                         XmlElement argoBindParent10 = null;
-                        base.addBind("nShipOptPriceMin", "tblCartShippingMethods/nShipOptPriceMin", "false()", oBindParent: ref argoBindParent10);
+                        base.addBind("nShipOptPriceMin", "tblCartShippingMethods/nShipOptPriceMin", oBindParent: ref argoBindParent10, "false()");
 
                         base.addInput(ref oGrp1Elmt, "nShipOptPriceMax", true, "Maximum Price", "short");
                         XmlElement argoBindParent11 = null;
-                        base.addBind("nShipOptPriceMax", "tblCartShippingMethods/nShipOptPriceMax", "false()", oBindParent: ref argoBindParent11);
+                        base.addBind("nShipOptPriceMax", "tblCartShippingMethods/nShipOptPriceMax", oBindParent: ref argoBindParent11, "false()");
 
                         base.addInput(ref oGrp1Elmt, "nShipOptHandlingPercentage", true, "Handling Percent", "short");
                         XmlElement argoBindParent12 = null;
-                        base.addBind("nShipOptHandlingPercentage", "tblCartShippingMethods/nShipOptHandlingPercentage", "false()", oBindParent: ref argoBindParent12);
+                        base.addBind("nShipOptHandlingPercentage", "tblCartShippingMethods/nShipOptHandlingPercentage", oBindParent: ref argoBindParent12, "false()");
 
                         base.addInput(ref oGrp1Elmt, "nShipOptHandlingFixedCost", true, "Handling Fixed Cost", "short");
                         XmlElement argoBindParent13 = null;
-                        base.addBind("nShipOptHandlingFixedCost", "tblCartShippingMethods/nShipOptHandlingFixedCost", "false()", oBindParent: ref argoBindParent13);
+                        base.addBind("nShipOptHandlingFixedCost", "tblCartShippingMethods/nShipOptHandlingFixedCost", oBindParent: ref argoBindParent13, "false()");
 
                         base.addInput(ref oGrp1Elmt, "nShipOptTaxRate", true, "Tax Rate", "short");
                         XmlElement argoBindParent14 = null;
-                        base.addBind("nShipOptTaxRate", "tblCartShippingMethods/nShipOptTaxRate", "false()", oBindParent: ref argoBindParent14);
+                        base.addBind("nShipOptTaxRate", "tblCartShippingMethods/nShipOptTaxRate", oBindParent: ref argoBindParent14, "false()");
 
                         base.addInput(ref oGrp1Elmt, "nDisplayPriority", true, "Display Priority", "short");
                         XmlElement argoBindParent15 = null;
-                        base.addBind("nDisplayPriority", "tblCartShippingMethods/nDisplayPriority", "false()", oBindParent: ref argoBindParent15);
+                        base.addBind("nDisplayPriority", "tblCartShippingMethods/nDisplayPriority", oBindParent: ref argoBindParent15, "false()");
 
                         string argsClass = "xhtml";
                         int argnRows = 0;
                         int argnCols = 0;
                         base.addTextArea(ref oGrp2Elmt, "cTerms", true, "Special Terms", ref argsClass, nRows: ref argnRows, nCols: ref argnCols);
                         XmlElement argoBindParent16 = null;
-                        base.addBind("cTerms", "tblCartShippingMethods/cShipOptTandC", "false()", oBindParent: ref argoBindParent16);
+                        base.addBind("cTerms", "tblCartShippingMethods/cShipOptTandC", oBindParent: ref argoBindParent16, "false()");
 
                         base.addInput(ref oGrp2Elmt, "dPublishDate", true, "Start Date", "calendar short");
                         XmlElement argoBindParent17 = null;
-                        base.addBind("dPublishDate", "tblCartShippingMethods/dPublishDate", "false()", oBindParent: ref argoBindParent17);
+                        base.addBind("dPublishDate", "tblCartShippingMethods/dPublishDate", oBindParent: ref argoBindParent17, "false()");
 
                         base.addInput(ref oGrp2Elmt, "dExpireDate", true, "Expire Date", "calendar short");
                         XmlElement argoBindParent18 = null;
-                        base.addBind("dExpireDate", "tblCartShippingMethods/dExpireDate", "false()", oBindParent: ref argoBindParent18);
+                        base.addBind("dExpireDate", "tblCartShippingMethods/dExpireDate", oBindParent: ref argoBindParent18, "false()");
 
                         if (moDbHelper.checkTableColumnExists("tblCartShippingMethods", "bCollection"))
                         {
                             oSelElmt = base.addSelect(ref oGrp2Elmt, "bCollection", true, "Collection Option", "multiline", Protean.xForm.ApperanceTypes.Full);
                             base.addOption(ref oSelElmt, "Collection", "True");
                             XmlElement argoBindParent19 = null;
-                            base.addBind("bCollection", "tblCartShippingMethods/bCollection", "false()", oBindParent: ref argoBindParent19);
+                            base.addBind("bCollection", "tblCartShippingMethods/bCollection", oBindParent: ref argoBindParent19, "false()");
                         }
 
                         oSelElmt = base.addSelect1(ref oGrp2Elmt, "nStatus", true, "Status", "", Protean.xForm.ApperanceTypes.Minimal);
                         base.addOption(ref oSelElmt, "Active", 1.ToString());
                         base.addOption(ref oSelElmt, "In-Active", 0.ToString());
                         XmlElement argoBindParent20 = null;
-                        base.addBind("nStatus", "tblCartShippingMethods/nStatus", "true()", oBindParent: ref argoBindParent20);
+                        base.addBind("nStatus", "tblCartShippingMethods/nStatus", oBindParent: ref argoBindParent20, "true()");
 
                         base.addSubmit(ref oGrp2Elmt, "ewSubmit", "Save Method");
 
@@ -7407,30 +7407,30 @@ namespace Protean
 
                         base.addInput(ref oGrp1Elmt, "dPublishDate", true, "Start Date", "calendar short");
                         XmlElement argoBindParent = null;
-                        base.addBind("dPublishDate", "tblCartCarrier/dPublishDate", "false()", oBindParent: ref argoBindParent);
+                        base.addBind("dPublishDate", "tblCartCarrier/dPublishDate", oBindParent: ref argoBindParent, "false()");
 
                         base.addInput(ref oGrp1Elmt, "dExpireDate", true, "Expire Date", "calendar short");
                         XmlElement argoBindParent1 = null;
-                        base.addBind("dExpireDate", "tblCartCarrier/dExpireDate", "false()", oBindParent: ref argoBindParent1);
+                        base.addBind("dExpireDate", "tblCartCarrier/dExpireDate", oBindParent: ref argoBindParent1, "false()");
 
 
                         oSelElmt = base.addSelect1(ref oGrp1Elmt, "nStatus", true, "Status", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt, "Active", 1.ToString());
                         base.addOption(ref oSelElmt, "In-Active", 0.ToString());
                         XmlElement argoBindParent2 = null;
-                        base.addBind("nStatus", "tblCartCarrier/nStatus", "true()", oBindParent: ref argoBindParent2);
+                        base.addBind("nStatus", "tblCartCarrier/nStatus", oBindParent: ref argoBindParent2, "true()");
 
 
                         base.addInput(ref oGrp2Elmt, "cCarrierName", true, "Name");
                         XmlElement argoBindParent3 = null;
-                        base.addBind("cCarrierName", "tblCartCarrier/cCarrierName", "true()", oBindParent: ref argoBindParent3);
+                        base.addBind("cCarrierName", "tblCartCarrier/cCarrierName", oBindParent: ref argoBindParent3, "true()");
 
                         string argsClass = "xhtml";
                         int argnRows = 0;
                         int argnCols = 0;
                         base.addTextArea(ref oGrp2Elmt, "cCarrierTrackingInstructions", true, "Tracking Instructions", ref argsClass, nRows: ref argnRows, nCols: ref argnCols);
                         XmlElement argoBindParent4 = null;
-                        base.addBind("cCarrierTrackingInstructions", "tblCartCarrier/cCarrierTrackingInstructions", "true()", oBindParent: ref argoBindParent4);
+                        base.addBind("cCarrierTrackingInstructions", "tblCartCarrier/cCarrierTrackingInstructions", oBindParent: ref argoBindParent4, "true()");
                         XmlNode argoNode = oGrp2Elmt;
                         base.addNote(ref argoNode, Protean.xForm.noteTypes.Help, "{@code} will be replaced with the code entered at the time of sending");
                         oGrp2Elmt = (XmlElement)argoNode;
@@ -7741,7 +7741,7 @@ namespace Protean
 
                         }
                         XmlElement argoBindParent = null;
-                        base.addBind("nStatus", "tblCartOrder/nCartStatus", "true()", oBindParent: ref argoBindParent);
+                        base.addBind("nStatus", "tblCartOrder/nCartStatus", oBindParent: ref argoBindParent, "true()");
 
                         if (nStatus == 6L | this.myWeb.moRequest["nStatus"] == "9" | nStatus == 17L)
                         {
@@ -7779,16 +7779,16 @@ namespace Protean
                                 }
 
                                 XmlElement argoBindParent1 = null;
-                                base.addBind("nCarrierId", "tblCartOrderDelivery/nCarrierId", validationOn, oBindParent: ref argoBindParent1);
+                                base.addBind("nCarrierId", "tblCartOrderDelivery/nCarrierId", oBindParent: ref argoBindParent1, validationOn);
 
                                 base.addInput(ref oCarrierElmt, "cCarrierRef", true, "Carrier Reference");
                                 XmlElement argoBindParent2 = null;
-                                base.addBind("cCarrierRef", "tblCartOrderDelivery/cCarrierRef", "false()", oBindParent: ref argoBindParent2);
+                                base.addBind("cCarrierRef", "tblCartOrderDelivery/cCarrierRef", oBindParent: ref argoBindParent2, "false()");
 
 
                                 base.addInput(ref oCarrierElmt, "cCarrierNotes", true, "Carrier Notes", "long");
                                 XmlElement argoBindParent3 = null;
-                                base.addBind("cCarrierNotes", "tblCartOrderDelivery/cCarrierNotes", "false()", oBindParent: ref argoBindParent3);
+                                base.addBind("cCarrierNotes", "tblCartOrderDelivery/cCarrierNotes", oBindParent: ref argoBindParent3, "false()");
 
                                 string validClass = "";
                                 if (validationOn == "true()")
@@ -7798,11 +7798,11 @@ namespace Protean
 
                                 base.addInput(ref oCarrierElmt, "dExpectedDeliveryDate", true, "Target Delivery Date", "calendar" + validClass);
                                 XmlElement argoBindParent4 = null;
-                                base.addBind("dExpectedDeliveryDate", "tblCartOrderDelivery/dExpectedDeliveryDate", validationOn, oBindParent: ref argoBindParent4);
+                                base.addBind("dExpectedDeliveryDate", "tblCartOrderDelivery/dExpectedDeliveryDate", oBindParent: ref argoBindParent4, validationOn);
 
                                 base.addInput(ref oCarrierElmt, "dCollectionDate", true, "Collection Date", "calendar" + validClass);
                                 XmlElement argoBindParent5 = null;
-                                base.addBind("dCollectionDate", "tblCartOrderDelivery/dCollectionDate", validationOn, oBindParent: ref argoBindParent5);
+                                base.addBind("dCollectionDate", "tblCartOrderDelivery/dCollectionDate", oBindParent: ref argoBindParent5, validationOn);
 
                                 var deliveryInstance = this.moPageXML.CreateElement("instance");
                                 deliveryInstance.InnerXml = moDbHelper.getObjectInstance(Cms.dbHelper.objectTypes.CartDelivery);
@@ -8051,19 +8051,19 @@ namespace Protean
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "Refund " + providerName, "", "");
                         base.addInput(ref oFrmElmt, "RefundAmount", true, "Refund Amount");
                         XmlElement argoBindParent = null;
-                        base.addBind("RefundAmount", "Refund/RefundAmount", "true()", oBindParent: ref argoBindParent);
+                        base.addBind("RefundAmount", "Refund/RefundAmount", oBindParent: ref argoBindParent, "true()");
 
                         base.addInput(ref oFrmElmt, "ProviderName", true, "Provider Name", "readonly");
                         XmlElement argoBindParent1 = null;
-                        base.addBind("ProviderName", "Refund/ProviderName", "true()", oBindParent: ref argoBindParent1);
+                        base.addBind("ProviderName", "Refund/ProviderName", oBindParent: ref argoBindParent1, "true()");
 
                         base.addInput(ref oFrmElmt, "ProviderReference", true, "Provider Reference", "readonly");
                         XmlElement argoBindParent2 = null;
-                        base.addBind("ProviderReference", "Refund/ProviderReference", "true()", oBindParent: ref argoBindParent2);
+                        base.addBind("ProviderReference", "Refund/ProviderReference", oBindParent: ref argoBindParent2, "true()");
 
                         base.addInput(ref oFrmElmt, "id", true, "Order Id", "readonly");
                         XmlElement argoBindParent3 = null;
-                        base.addBind("id", "Refund/OrderId", "true()", oBindParent: ref argoBindParent3);
+                        base.addBind("id", "Refund/OrderId", oBindParent: ref argoBindParent3, "true()");
 
                         base.addSubmit(ref oFrmElmt, "Refund", "Refund", "ewSubmit");
 
@@ -8164,7 +8164,7 @@ namespace Protean
                         // What we are searching for
                         base.addInput(ref oFrmElmt, "cSearch", true, "Search Text");
                         XmlElement argoBindParent3 = null;
-                        base.addBind("cSearch", "cSearch", "false()", oBindParent: ref argoBindParent3);
+                        base.addBind("cSearch", "cSearch", oBindParent: ref argoBindParent3, "false()");
 
                         // Pages
                         oSelElmt1 = base.addSelect1(ref oFrmElmt, "cSection", false, "Page", "", Protean.xForm.ApperanceTypes.Minimal);
@@ -8191,19 +8191,19 @@ namespace Protean
                             base.addOption(ref oSelElmt1, cNameString, oMenuElmt.SelectSingleNode("nStructKey").InnerText);
                         }
                         XmlElement argoBindParent4 = null;
-                        base.addBind("cSection", "cSection", "true()", oBindParent: ref argoBindParent4);
+                        base.addBind("cSection", "cSection", oBindParent: ref argoBindParent4, "true()");
                         // Search sub pages
                         oSelElmt2 = base.addSelect(ref oFrmElmt, "nSearchChildren", true, "&#160;", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt2, "Search all sub-pages", 1.ToString());
                         XmlElement argoBindParent5 = null;
-                        base.addBind("nSearchChildren", "nSearchChildren", "false()", oBindParent: ref argoBindParent5);
+                        base.addBind("nSearchChildren", "nSearchChildren", oBindParent: ref argoBindParent5, "false()");
 
                         if (cContentType.Contains("Product") & cContentType.Contains("SKU"))
                         {
                             oSelElmt2 = base.addSelect(ref oFrmElmt, "nIncludeRelated", true, "&#160;", "", Protean.xForm.ApperanceTypes.Full);
                             base.addOption(ref oSelElmt2, "Include Related Sku's", 1.ToString());
                             XmlElement argoBindParent6 = null;
-                            base.addBind("nIncludeRelated", "nIncludeRelated", "false()", oBindParent: ref argoBindParent6);
+                            base.addBind("nIncludeRelated", "nIncludeRelated", oBindParent: ref argoBindParent6, "false()");
                         }
 
                         // search button
@@ -8297,7 +8297,7 @@ namespace Protean
                         // What we are searching for
                         base.addInput(ref oFrmElmt, "cSearch", true, "Search Text");
                         XmlElement argoBindParent3 = null;
-                        base.addBind("cSearch", "cSearch", "false()", oBindParent: ref argoBindParent3);
+                        base.addBind("cSearch", "cSearch", oBindParent: ref argoBindParent3, "false()");
 
                         // Pages
                         oSelElmt1 = base.addSelect1(ref oFrmElmt, "cSection", false, "Page", "", Protean.xForm.ApperanceTypes.Minimal);
@@ -8324,19 +8324,19 @@ namespace Protean
                             base.addOption(ref oSelElmt1, cNameString, oMenuElmt.SelectSingleNode("nStructKey").InnerText);
                         }
                         XmlElement argoBindParent4 = null;
-                        base.addBind("cSection", "cSection", "true()", oBindParent: ref argoBindParent4);
+                        base.addBind("cSection", "cSection", oBindParent: ref argoBindParent4, "true()");
                         // Search sub pages
                         oSelElmt2 = base.addSelect(ref oFrmElmt, "nSearchChildren", true, "&#160;", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt2, "Search all sub-pages", 1.ToString());
                         XmlElement argoBindParent5 = null;
-                        base.addBind("nSearchChildren", "nSearchChildren", "false()", oBindParent: ref argoBindParent5);
+                        base.addBind("nSearchChildren", "nSearchChildren", oBindParent: ref argoBindParent5, "false()");
 
                         if (cContentType.Contains("Product") & cContentType.Contains("SKU"))
                         {
                             oSelElmt2 = base.addSelect(ref oFrmElmt, "nIncludeRelated", true, "&#160;", "", Protean.xForm.ApperanceTypes.Full);
                             base.addOption(ref oSelElmt2, "Include Related Sku's", 1.ToString());
                             XmlElement argoBindParent6 = null;
-                            base.addBind("nIncludeRelated", "nIncludeRelated", "false()", oBindParent: ref argoBindParent6);
+                            base.addBind("nIncludeRelated", "nIncludeRelated", oBindParent: ref argoBindParent6, "false()");
                         }
 
                         // search button
@@ -8423,7 +8423,7 @@ namespace Protean
                         // MyBase.addBind("nCatParentId", "tblCartProductCategories/nCatParentId")
                         base.addInput(ref oGrp1Elmt, "cCatName", true, "Name");
                         XmlElement argoBindParent1 = null;
-                        base.addBind("cCatName", "tblCartProductCategories/cCatName", "true()", oBindParent: ref argoBindParent1);
+                        base.addBind("cCatName", "tblCartProductCategories/cCatName", oBindParent: ref argoBindParent1, "true()");
 
                         var oSchemaSelect = base.addSelect1(ref oGrp1Elmt, "cCatSchemaName", true, "Group Type", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSchemaSelect, SchemaName, SchemaName);
@@ -8443,7 +8443,8 @@ namespace Protean
 
                         int argnRows = 15;
                         int argnCols = 50;
-                        base.addTextArea(ref oGrp1Elmt, "cCatDescription", true, "Description", nRows: ref argnRows, nCols: ref argnCols);
+                        string cClass = "";
+                        base.addTextArea(ref oGrp1Elmt, "cCatDescription", true, "Description", ref cClass, nRows: ref argnRows, nCols: ref argnCols);
                         XmlElement argoBindParent3 = null;
                         base.addBind("cCatDescription", "tblCartProductCategories/cCatDescription", oBindParent: ref argoBindParent3);
 
@@ -9113,7 +9114,7 @@ namespace Protean
                         base.addOption(ref oSelElmt, "Primary", 1.ToString());
                         base.addOption(ref oSelElmt, "Link", 0.ToString());
                         XmlElement argoBindParent = null;
-                        base.addBind("nRelType", "nRelType", "true()", "number", oBindParent: ref argoBindParent);
+                        base.addBind("nRelType", "nRelType", oBindParent: ref argoBindParent, "true()", "number");
 
                         base.addSubmit(ref oFrmElmt, "Save", "Save Changes");
                         int nPrimary = 0;
@@ -10127,110 +10128,110 @@ namespace Protean
 
                         base.addInput(ref oFrmElmt, "ewSiteURL", true, "Site URL");
                         XmlElement argoBindParent = null;
-                        base.addBind("ewSiteURL", "cart/add[@key='SiteURL']/@value", "true()", oBindParent: ref argoBindParent);
+                        base.addBind("ewSiteURL", "cart/add[@key='SiteURL']/@value", oBindParent: ref argoBindParent, "true()");
 
                         base.addInput(ref oFrmElmt, "ewSecureURL", true, "Secure URL");
                         XmlElement argoBindParent1 = null;
-                        base.addBind("ewSecureURL", "cart/add[@key='SecureURL']/@value", "true()", oBindParent: ref argoBindParent1);
+                        base.addBind("ewSecureURL", "cart/add[@key='SecureURL']/@value", oBindParent: ref argoBindParent1, "true()");
 
                         base.addInput(ref oFrmElmt, "ewTaxRate", true, "Tax Rate");
                         XmlElement argoBindParent2 = null;
-                        base.addBind("ewTaxRate", "cart/add[@key='TaxRate']/@value", "true()", oBindParent: ref argoBindParent2);
+                        base.addBind("ewTaxRate", "cart/add[@key='TaxRate']/@value", oBindParent: ref argoBindParent2, "true()");
 
                         base.addInput(ref oFrmElmt, "ewMerchantName", true, "Merchant Name");
                         XmlElement argoBindParent3 = null;
-                        base.addBind("ewMerchantName", "cart/add[@key='MerchantName']/@value", "true()", oBindParent: ref argoBindParent3);
+                        base.addBind("ewMerchantName", "cart/add[@key='MerchantName']/@value", oBindParent: ref argoBindParent3, "true()");
 
                         base.addInput(ref oFrmElmt, "ewMerchantEmail", true, "Merchant Email");
                         XmlElement argoBindParent4 = null;
-                        base.addBind("ewMerchantEmail", "cart/add[@key='MerchantEmail']/@value", "true()", oBindParent: ref argoBindParent4);
+                        base.addBind("ewMerchantEmail", "cart/add[@key='MerchantEmail']/@value", oBindParent: ref argoBindParent4, "true()");
 
                         base.addInput(ref oFrmElmt, "ewOrderEmailSubject", true, "Order Email Subject");
                         XmlElement argoBindParent5 = null;
-                        base.addBind("ewOrderEmailSubject", "cart/add[@key='OrderEmailSubject']/@value", "true()", oBindParent: ref argoBindParent5);
+                        base.addBind("ewOrderEmailSubject", "cart/add[@key='OrderEmailSubject']/@value", oBindParent: ref argoBindParent5, "true()");
 
                         base.addInput(ref oFrmElmt, "ewOrderNoPrefix", true, "Order No. Prefix");
                         XmlElement argoBindParent6 = null;
-                        base.addBind("ewOrderNoPrefix", "cart/add[@key='OrderNoPrefix']/@value", "true()", oBindParent: ref argoBindParent6);
+                        base.addBind("ewOrderNoPrefix", "cart/add[@key='OrderNoPrefix']/@value", oBindParent: ref argoBindParent6, "true()");
 
                         base.addInput(ref oFrmElmt, "ewCurrencySymbol", true, "Currency Symbol");
                         XmlElement argoBindParent7 = null;
-                        base.addBind("ewCurrencySymbol", "cart/add[@key='CurrencySymbol']/@value", "false()", oBindParent: ref argoBindParent7);
+                        base.addBind("ewCurrencySymbol", "cart/add[@key='CurrencySymbol']/@value", oBindParent: ref argoBindParent7, "false()");
 
                         oSelElmt = base.addSelect1(ref oFrmElmt, "ewStockControl", true, "Stock Control", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt, "On", "on");
                         base.addOption(ref oSelElmt, "Off", "off");
                         XmlElement argoBindParent8 = null;
-                        base.addBind("ewStockControl", "cart/add[@key='StockControl']/@value", "true()", oBindParent: ref argoBindParent8);
+                        base.addBind("ewStockControl", "cart/add[@key='StockControl']/@value", oBindParent: ref argoBindParent8, "true()");
 
                         oSelElmt = base.addSelect1(ref oFrmElmt, "ewDeposit", true, "Deposit", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt, "On", "1");
                         base.addOption(ref oSelElmt, "Off", "0");
                         XmlElement argoBindParent9 = null;
-                        base.addBind("ewDeposit", "cart/add[@key='Deposit']/@value", "true()", oBindParent: ref argoBindParent9);
+                        base.addBind("ewDeposit", "cart/add[@key='Deposit']/@value", oBindParent: ref argoBindParent9, "true()");
 
                         base.addInput(ref oFrmElmt, "ewDepositAmount", true, "DepositAmount");
                         XmlElement argoBindParent10 = null;
-                        base.addBind("ewDepositAmount", "cart/add[@key='DepositAmount']/@value", "false()", oBindParent: ref argoBindParent10);
+                        base.addBind("ewDepositAmount", "cart/add[@key='DepositAmount']/@value", oBindParent: ref argoBindParent10, "false()");
 
                         base.addInput(ref oFrmElmt, "ewNotesXForm", true, "Notes Xform");
                         XmlElement argoBindParent11 = null;
-                        base.addBind("ewNotesXForm", "cart/add[@key='NotesXForm']/@value", "false()", oBindParent: ref argoBindParent11);
+                        base.addBind("ewNotesXForm", "cart/add[@key='NotesXForm']/@value", oBindParent: ref argoBindParent11, "false()");
 
                         base.addInput(ref oFrmElmt, "ewBillingAddressXForm", true, "Billing Address Xform");
                         XmlElement argoBindParent12 = null;
-                        base.addBind("ewBillingAddressXForm", "cart/add[@key='BillingAddressXForm']/@value", "false()", oBindParent: ref argoBindParent12);
+                        base.addBind("ewBillingAddressXForm", "cart/add[@key='BillingAddressXForm']/@value", oBindParent: ref argoBindParent12, "false()");
 
                         base.addInput(ref oFrmElmt, "ewDeliveryAddressXForm", true, "DeliveryAddress Xform");
                         XmlElement argoBindParent13 = null;
-                        base.addBind("ewDeliveryAddressXForm", "cart/add[@key='DeliveryAddressXForm']/@value", "false()", oBindParent: ref argoBindParent13);
+                        base.addBind("ewDeliveryAddressXForm", "cart/add[@key='DeliveryAddressXForm']/@value", oBindParent: ref argoBindParent13, "false()");
 
                         oSelElmt = base.addSelect1(ref oFrmElmt, "ewNoDeliveryAddress", true, "Disable Delivery Address", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt, "Yes", "on");
                         base.addOption(ref oSelElmt, "No", "off");
                         XmlElement argoBindParent14 = null;
-                        base.addBind("ewNoDeliveryAddress", "cart/add[@key='NoDeliveryAddress']/@value", "true()", oBindParent: ref argoBindParent14);
+                        base.addBind("ewNoDeliveryAddress", "cart/add[@key='NoDeliveryAddress']/@value", oBindParent: ref argoBindParent14, "true()");
 
                         oSelElmt = base.addSelect1(ref oFrmElmt, "ewEmailReceipts", true, "Email Receipts", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt, "Yes", "on");
                         base.addOption(ref oSelElmt, "No", "off");
                         XmlElement argoBindParent15 = null;
-                        base.addBind("ewEmailReceipts", "cart/add[@key='EmailReceipts']/@value", "true()", oBindParent: ref argoBindParent15);
+                        base.addBind("ewEmailReceipts", "cart/add[@key='EmailReceipts']/@value", oBindParent: ref argoBindParent15, "true()");
 
                         base.addInput(ref oFrmElmt, "ewMerchantEmailTemplatePath", true, "Merchant Email Template Path");
                         XmlElement argoBindParent16 = null;
-                        base.addBind("ewMerchantEmailTemplatePath", "cart/add[@key='MerchantEmailTemplatePath']/@value", "false()", oBindParent: ref argoBindParent16);
+                        base.addBind("ewMerchantEmailTemplatePath", "cart/add[@key='MerchantEmailTemplatePath']/@value", oBindParent: ref argoBindParent16, "false()");
 
                         base.addInput(ref oFrmElmt, "ewCustomerEmailTemplatePath", true, "Customer Email Template Path");
                         XmlElement argoBindParent17 = null;
-                        base.addBind("ewCustomerEmailTemplatePath", "cart/add[@key='CustomerEmailTemplatePath']/@value", "false()", oBindParent: ref argoBindParent17);
+                        base.addBind("ewCustomerEmailTemplatePath", "cart/add[@key='CustomerEmailTemplatePath']/@value", oBindParent: ref argoBindParent17, "false()");
 
 
                         base.addInput(ref oFrmElmt, "ewPriorityCountries", true, "Priority Countries");
                         XmlElement argoBindParent18 = null;
-                        base.addBind("ewPriorityCountries", "cart/add[@key='PriorityCountries']/@value", "true()", oBindParent: ref argoBindParent18);
+                        base.addBind("ewPriorityCountries", "cart/add[@key='PriorityCountries']/@value", oBindParent: ref argoBindParent18, "true()");
 
                         oSelElmt = base.addSelect1(ref oFrmElmt, "ewSavePayments", true, "SavePayments", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt, "On", "on");
                         base.addOption(ref oSelElmt, "Off", "off");
                         XmlElement argoBindParent19 = null;
-                        base.addBind("ewSavePayments", "cart/add[@key='SavePayments']/@value", "true()", oBindParent: ref argoBindParent19);
+                        base.addBind("ewSavePayments", "cart/add[@key='SavePayments']/@value", oBindParent: ref argoBindParent19, "true()");
 
                         oSelElmt = base.addSelect1(ref oFrmElmt, "ewVatAtUnit", true, "Vat At Unit", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt, "Yes", "yes");
                         base.addOption(ref oSelElmt, "No", "no");
                         XmlElement argoBindParent20 = null;
-                        base.addBind("ewVatAtUnit", "cart/add[@key='VatAtUnit']/@value", "true()", oBindParent: ref argoBindParent20);
+                        base.addBind("ewVatAtUnit", "cart/add[@key='VatAtUnit']/@value", oBindParent: ref argoBindParent20, "true()");
 
                         oSelElmt = base.addSelect1(ref oFrmElmt, "ewDiscounts", true, "Discounts", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt, "On", "on");
                         base.addOption(ref oSelElmt, "Off", "off");
                         XmlElement argoBindParent21 = null;
-                        base.addBind("ewDiscounts", "cart/add[@key='Discounts']/@value", "true()", oBindParent: ref argoBindParent21);
+                        base.addBind("ewDiscounts", "cart/add[@key='Discounts']/@value", oBindParent: ref argoBindParent21, "true()");
 
                         base.addInput(ref oFrmElmt, "ewPriceModOrder", true, "Price Mod Order");
                         XmlElement argoBindParent22 = null;
-                        base.addBind("ewPriceModOrder", "cart/add[@key='PriceModOrder']/@value", "false()", oBindParent: ref argoBindParent22);
+                        base.addBind("ewPriceModOrder", "cart/add[@key='PriceModOrder']/@value", oBindParent: ref argoBindParent22, "false()");
 
                         base.addSubmit(ref oFrmElmt, "", "Save Settings");
 
@@ -10350,19 +10351,19 @@ namespace Protean
                         // Textbox
                         base.addInput(ref oFrmElmt, "cSearchTerm", true, "Search Expression");
                         XmlElement argoBindParent2 = null;
-                        base.addBind("cSearchTerm", "cSearchTerm", "false()", oBindParent: ref argoBindParent2);
+                        base.addBind("cSearchTerm", "cSearchTerm", oBindParent: ref argoBindParent2, "false()");
 
                         // Select
                         // Pages
                         oSelElmt1 = base.addSelect1(ref oFrmElmt, "nFromPage", false, "Page", "siteTree", Protean.xForm.ApperanceTypes.Minimal);
                         XmlElement argoBindParent3 = null;
-                        base.addBind("nFromPage", "nFromPage", "true()", oBindParent: ref argoBindParent3);
+                        base.addBind("nFromPage", "nFromPage", oBindParent: ref argoBindParent3, "true()");
 
                         // Checkbox
                         oSelElmt2 = base.addSelect(ref oFrmElmt, "bIncludeChildren", true, "&#160;", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt2, "Search Children", 1.ToString());
                         XmlElement argoBindParent4 = null;
-                        base.addBind("bIncludeChildren", "bIncludeChildren", "false()", oBindParent: ref argoBindParent4);
+                        base.addBind("bIncludeChildren", "bIncludeChildren", oBindParent: ref argoBindParent4, "false()");
 
                         // search button
                         base.addSubmit(ref oFrmElmt, "Search", "Search", "Search");
@@ -10525,19 +10526,19 @@ namespace Protean
                         base.Instance.InnerXml = "<Criteria ewCmd=\"CartDownload\" output=\"csv\"><dBegin>" + XmlDate(DateTime.Now.AddMonths(-1), false) + "</dBegin><dEnd>" + XmlDate(DateTime.Now.AddDays(1d), false) + "</dEnd>" + "<cCurrencySymbol/><cOrderType>Order</cOrderType><cOrderStage>6</cOrderStage>" + "</Criteria>";
 
                         XmlElement argoBindParent = null;
-                        base.addBind("dBegin", "Criteria/dBegin", "true()", oBindParent: ref argoBindParent);
+                        base.addBind("dBegin", "Criteria/dBegin", oBindParent: ref argoBindParent, "true()");
                         XmlElement argoBindParent1 = null;
-                        base.addBind("dEnd", "Criteria/dEnd", "true()", oBindParent: ref argoBindParent1);
+                        base.addBind("dEnd", "Criteria/dEnd", oBindParent: ref argoBindParent1, "true()");
                         XmlElement argoBindParent2 = null;
                         base.addBind("cCurrencySymbol", "Criteria/cCurrencySymbol", sType: "string", oBindParent: ref argoBindParent2);
                         XmlElement argoBindParent3 = null;
-                        base.addBind("cOrderType", "Criteria/cOrderType", "true()", "string", oBindParent: ref argoBindParent3);
+                        base.addBind("cOrderType", "Criteria/cOrderType", oBindParent: ref argoBindParent3, "true()", "string");
                         XmlElement argoBindParent4 = null;
-                        base.addBind("cOrderStage", "Criteria/cOrderStage", "true()", "string", oBindParent: ref argoBindParent4);
+                        base.addBind("cOrderStage", "Criteria/cOrderStage", oBindParent: ref argoBindParent4, "true()", "string");
                         XmlElement argoBindParent5 = null;
-                        base.addBind("format", "Criteria/@output", "false()", "string", oBindParent: ref argoBindParent5);
+                        base.addBind("format", "Criteria/@output", oBindParent: ref argoBindParent5, "false()", "string");
                         XmlElement argoBindParent6 = null;
-                        base.addBind("ewCmd", "Criteria/@ewCmd", "false()", "string", oBindParent: ref argoBindParent6);
+                        base.addBind("ewCmd", "Criteria/@ewCmd", oBindParent: ref argoBindParent6, "false()", "string");
 
                         base.addInput(ref oGrp0Elmt, "ewCmd", true, "ewCmd", "hidden");
 
@@ -10664,9 +10665,9 @@ namespace Protean
                             base.addSubmit(ref oGrp0Elmt, "Results", "See Results", "Results");
 
                             XmlElement argoBindParent = null;
-                            base.addBind("dBegin", "Criteria/dBegin", "true()", oBindParent: ref argoBindParent);
+                            base.addBind("dBegin", "Criteria/dBegin", oBindParent: ref argoBindParent, "true()");
                             XmlElement argoBindParent1 = null;
-                            base.addBind("dEnd", "Criteria/dEnd", "true()", oBindParent: ref argoBindParent1);
+                            base.addBind("dEnd", "Criteria/dEnd", oBindParent: ref argoBindParent1, "true()");
                             XmlElement argoBindParent2 = null;
                             base.addBind("bSplit", "Criteria/bSplit", sType: "number", oBindParent: ref argoBindParent2);
                             XmlElement argoBindParent3 = null;
@@ -10680,7 +10681,7 @@ namespace Protean
                             if (Strings.LCase(this.myWeb.moConfig["Quote"]) == "on")
                             {
                                 XmlElement argoBindParent7 = null;
-                                base.addBind("cOrderType", "Criteria/cOrderType", "true()", "string", oBindParent: ref argoBindParent7);
+                                base.addBind("cOrderType", "Criteria/cOrderType", oBindParent: ref argoBindParent7, "true()", "string");
                             }
 
                         }
@@ -10772,7 +10773,7 @@ namespace Protean
                         XmlElement argoBindParent5 = null;
                         base.addBind("nOrderStatus", "Criteria/nOrderStatus", sType: "string", oBindParent: ref argoBindParent5);
                         XmlElement argoBindParent6 = null;
-                        base.addBind("cOrderType", "Criteria/cOrderType", "true()", "string", oBindParent: ref argoBindParent6);
+                        base.addBind("cOrderType", "Criteria/cOrderType", oBindParent: ref argoBindParent6, "true()", "string");
 
 
                         if (base.isSubmitted())
@@ -10859,7 +10860,7 @@ namespace Protean
                         XmlElement argoBindParent5 = null;
                         base.addBind("nOrderStatus", "Criteria/nOrderStatus", sType: "string", oBindParent: ref argoBindParent5);
                         XmlElement argoBindParent6 = null;
-                        base.addBind("cOrderType", "Criteria/cOrderType", "true()", "string", oBindParent: ref argoBindParent6);
+                        base.addBind("cOrderType", "Criteria/cOrderType", oBindParent: ref argoBindParent6, "true()", "string");
 
 
                         if (base.isSubmitted())
@@ -10907,9 +10908,9 @@ namespace Protean
                             base.addOptionsFromSqlDataReader(ref oSel, ref argoDr, "cDirName", "nDirKey");
                         }
                         XmlElement argoBindParent = null;
-                        base.addBind("dFrom", "Criteria/dFrom", "true()", oBindParent: ref argoBindParent);
+                        base.addBind("dFrom", "Criteria/dFrom", oBindParent: ref argoBindParent, "true()");
                         XmlElement argoBindParent1 = null;
-                        base.addBind("dTo", "Criteria/dTo", "true()", oBindParent: ref argoBindParent1);
+                        base.addBind("dTo", "Criteria/dTo", oBindParent: ref argoBindParent1, "true()");
                         XmlElement argoBindParent2 = null;
                         base.addBind("cGroups", "Criteria/cGroups", oBindParent: ref argoBindParent2);
 
@@ -11285,23 +11286,23 @@ namespace Protean
                             base.addNote("importXslt", Protean.xForm.noteTypes.Hint, "This defines the layout and columns of the import file. Each import file must be in the pre-agreed format. To create additional import filters contact your web developer.");
 
                             XmlElement argoBindParent = null;
-                            base.addBind("importXslt", "file/@importXslt", "true()", oBindParent: ref argoBindParent);
+                            base.addBind("importXslt", "file/@importXslt", oBindParent: ref argoBindParent, "true()");
 
                             base.addInput(ref oFrmElmt, "fld", true, "Upload Path", "readonly");
                             XmlElement argoBindParent1 = null;
-                            base.addBind("fld", "file/@path", "true()", oBindParent: ref argoBindParent1);
+                            base.addBind("fld", "file/@path", oBindParent: ref argoBindParent1, "true()");
 
                             string argsClass = "";
                             base.addUpload(ref oFrmElmt, "uploadFile", true, "image/*", "Upload File", sClass: ref argsClass);
                             XmlElement argoBindParent2 = null;
-                            base.addBind("uploadFile", "file", "true()", oBindParent: ref argoBindParent2);
+                            base.addBind("uploadFile", "file", oBindParent: ref argoBindParent2, "true()");
 
                             XmlElement oSelectElmt2;
                             oSelectElmt2 = base.addSelect1(ref oFrmElmt, "opperationMode", true, "Opperation Mode", "", Protean.xForm.ApperanceTypes.Full);
                             base.addOption(ref oSelectElmt2, "Test", "test");
                             base.addOption(ref oSelectElmt2, "Full Import", "import");
                             XmlElement argoBindParent3 = null;
-                            base.addBind("opperationMode", "file/@opsMode", "true()", oBindParent: ref argoBindParent3);
+                            base.addBind("opperationMode", "file/@opsMode", oBindParent: ref argoBindParent3, "true()");
 
                             // If myWeb.moConfig("debug") = "on" Then
                             XmlElement oSelectElmt3;
@@ -11310,7 +11311,7 @@ namespace Protean
                             base.addOption(ref oSelectElmt3, "off", "");
                             // End If
                             XmlElement argoBindParent4 = null;
-                            base.addBind("xml", "file/@xml", "false()", oBindParent: ref argoBindParent4);
+                            base.addBind("xml", "file/@xml", oBindParent: ref argoBindParent4, "false()");
 
                             base.addSubmit(ref oFrmElmt, "", "Upload", "ewSubmit");
 
@@ -11423,7 +11424,7 @@ namespace Protean
                             if (base.valid)
                             {
                                 bool bResult = true;
-                                idx.DoIndex(0, ref bResult);
+                                idx.DoIndex( ref bResult,0);
 
                                 string cSubResponse = idx.cExError;
                                 if (string.IsNullOrEmpty(cSubResponse))
@@ -11598,15 +11599,15 @@ namespace Protean
 
                         base.addInput(ref oGrp1Elmt, "cLkpKey", true, "Name");
                         XmlElement argoBindParent2 = null;
-                        base.addBind("cLkpKey", "tblLookup/cLkpKey", "true()", oBindParent: ref argoBindParent2);
+                        base.addBind("cLkpKey", "tblLookup/cLkpKey", oBindParent: ref argoBindParent2, "true()");
 
                         base.addInput(ref oGrp1Elmt, "cLkpValue", true, "Value");
                         XmlElement argoBindParent3 = null;
-                        base.addBind("cLkpValue", "tblLookup/cLkpValue", "true()", oBindParent: ref argoBindParent3);
+                        base.addBind("cLkpValue", "tblLookup/cLkpValue", oBindParent: ref argoBindParent3, "true()");
 
                         base.addInput(ref oGrp1Elmt, "cLkpCategory", true, "Category", "readonly");
                         XmlElement argoBindParent4 = null;
-                        base.addBind("cLkpCategory", "tblLookup/cLkpCategory", "true()", oBindParent: ref argoBindParent4);
+                        base.addBind("cLkpCategory", "tblLookup/cLkpCategory", oBindParent: ref argoBindParent4, "true()");
 
                         base.addInput(ref oGrp1Elmt, "nAuditId", true, "nAuditId", "hidden");
                         XmlElement argoBindParent5 = null;
@@ -11713,7 +11714,7 @@ namespace Protean
                         base.addOption(ref oSelElmt, "String", "2");
                         base.addOption(ref oSelElmt, "Date", "3");
                         XmlElement argoBindParent1 = null;
-                        base.addBind("nContentIndexDataType", "tblContentIndexDef/nContentIndexDataType", "true()", oBindParent: ref argoBindParent1);
+                        base.addBind("nContentIndexDataType", "tblContentIndexDef/nContentIndexDataType", oBindParent: ref argoBindParent1, "true()");
 
                         string sSql = "select distinct cContentSchemaName from tblContent";
                         using (var oDr = moDbHelper.getDataReaderDisposable(sSql))
@@ -11724,21 +11725,21 @@ namespace Protean
                             base.addOptionsFromSqlDataReader(ref oSelElmt, ref argoDr, "cContentSchemaName", "cContentSchemaName");
                         }
                         XmlElement argoBindParent2 = null;
-                        base.addBind("cContentSchemaName", "tblContentIndexDef/cContentSchemaName", "true()", oBindParent: ref argoBindParent2);
+                        base.addBind("cContentSchemaName", "tblContentIndexDef/cContentSchemaName", oBindParent: ref argoBindParent2, "true()");
 
                         base.addInput(ref oGrp1Elmt, "cDefinitionName", true, "Index Rule");
                         XmlElement argoBindParent3 = null;
-                        base.addBind("cDefinitionName", "tblContentIndexDef/cDefinitionName", "true()", oBindParent: ref argoBindParent3);
+                        base.addBind("cDefinitionName", "tblContentIndexDef/cDefinitionName", oBindParent: ref argoBindParent3, "true()");
 
                         base.addInput(ref oGrp1Elmt, "cContentValueXpath", true, "XPath");
                         XmlElement argoBindParent4 = null;
-                        base.addBind("cContentValueXpath", "tblContentIndexDef/cContentValueXpath", "true()", oBindParent: ref argoBindParent4);
+                        base.addBind("cContentValueXpath", "tblContentIndexDef/cContentValueXpath", oBindParent: ref argoBindParent4, "true()");
 
                         oSelElmt = base.addSelect1(ref oGrp1Elmt, "bProductRefForSKU", true, "Parent Ref", ((int)Protean.xForm.ApperanceTypes.Minimal).ToString());
                         base.addOption(ref oSelElmt, "Yes", "1");
                         base.addOption(ref oSelElmt, "No", "0");
                         XmlElement argoBindParent5 = null;
-                        base.addBind("bProductRefForSKU", "tblContentIndexDef/bProductRefForSKU", "false()", oBindParent: ref argoBindParent5);
+                        base.addBind("bProductRefForSKU", "tblContentIndexDef/bProductRefForSKU", oBindParent: ref argoBindParent5, "false()");
 
 
                         // oSelElmt = MyBase.addSelect1(oGrp1Elmt, "bBriefNotDetail", True, "Brief Not Detail", "hidden", ApperanceTypes.Minimal)
@@ -11818,17 +11819,17 @@ namespace Protean
 
                                 this.addInput(ref oFrmElmt, "tplt-mode", true, "Mode");
                                 XmlElement argoBindParent = null;
-                                base.addBind("tplt-mode", "Template/TemplateContent/*/@mode", "true()", oBindParent: ref argoBindParent);
+                                base.addBind("tplt-mode", "Template/TemplateContent/*/@mode", oBindParent: ref argoBindParent, "true()");
                                 this.addInput(ref oFrmElmt, "tplt-match", true, "Match");
                                 XmlElement argoBindParent1 = null;
-                                base.addBind("tplt-match", "Template/TemplateContent/*/@match", "true()", oBindParent: ref argoBindParent1);
+                                base.addBind("tplt-match", "Template/TemplateContent/*/@match", oBindParent: ref argoBindParent1, "true()");
 
                                 string argsClass = "xsl";
                                 int argnRows = 0;
                                 int argnCols = 0;
                                 base.addTextArea(ref oFrmElmt, "TemplateContent", true, "Template Content", ref argsClass, nRows: ref argnRows, nCols: ref argnCols);
                                 XmlElement argoBindParent2 = null;
-                                base.addBind("TemplateContent", "Template/TemplateContent", "true()", oBindParent: ref argoBindParent2);
+                                base.addBind("TemplateContent", "Template/TemplateContent", oBindParent: ref argoBindParent2, "true()");
                                 XmlElement oElmt = (XmlElement)base.Instance.SelectSingleNode("Template/TemplateContent");
                                 oElmt.InnerXml = oTmpt.OuterXml;
 

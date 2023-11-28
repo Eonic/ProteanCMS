@@ -17,6 +17,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.ServiceModel.Configuration;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web.Configuration;
@@ -4530,8 +4531,8 @@ namespace Protean
                         // If nothing was found and checkRelatedIfOrphan is flagged up, then find related (parent) content and search that as well
                         if (!foundLocation & checkRelatedIfOrphan)
                         {
-
-                            XmlElement relations = (XmlElement)this.getRelationsByContentId(contentId, contentRelationType: RelationType.Child);
+                            XmlElement nContentNodeXmlElt = null;
+                            XmlElement relations = (XmlElement)this.getRelationsByContentId(contentId,ref nContentNodeXmlElt, contentRelationType: RelationType.Child);
                             foreach (XmlElement relation in relations.SelectNodes("//Relation"))
                             {
                                 foundLocation = checkContentLocationsInCurrentMenu(Conversions.ToLong(relation.GetAttribute("relatedContentId")));
@@ -6155,11 +6156,13 @@ namespace Protean
                             cOrderBy += " DESC";
 
                         XmlElement argoPageDetail = null;
-                        myWeb.GetPageContentFromSelect(cWhereSql, bIgnorePermissionsCheck: myWeb.mbAdminMode, nReturnRows: (int)nTop, cOrderBy: cOrderBy, oContentsNode: ref oContent, oPageDetail: ref argoPageDetail);
+                        int nCount = 0;
+                        myWeb.GetPageContentFromSelect(cWhereSql, ref nCount, bIgnorePermissionsCheck: myWeb.mbAdminMode, nReturnRows: (int)nTop, cOrderBy: cOrderBy, oContentsNode: ref oContent, oPageDetail: ref argoPageDetail);
                         // Get Related Items
                         if (Strings.LCase(goConfig["DisableGrabberRelated"]) != "on")
                         {
                             foreach (XmlElement oContentElmt in oContent.SelectNodes("Content"))
+                             
                                 this.addRelatedContent(ref oContentElmt, Conversions.ToInteger(oContentElmt.GetAttribute("id")), myWeb.mbAdminMode);
                         }
 
@@ -6206,7 +6209,8 @@ namespace Protean
 
                         // Get Related Items
                         XmlElement argoPageDetail = null;
-                        myWeb.GetPageContentFromSelect(cWhereSql, bIgnorePermissionsCheck: myWeb.mbAdminMode, nReturnRows: 0, cOrderBy: cOrderBy, oContentsNode: ref oContent, cAdditionalJoins: cAdditionalJoin, oPageDetail: ref argoPageDetail);
+                        int nCount = 0;
+                        myWeb.GetPageContentFromSelect(cWhereSql, ref nCount, bIgnorePermissionsCheck: myWeb.mbAdminMode, nReturnRows: 0, cOrderBy: cOrderBy, oContentsNode: ref oContent, cAdditionalJoins: cAdditionalJoin, oPageDetail: ref argoPageDetail);
                         foreach (XmlElement oContentElmt in oContent.SelectNodes("Content"))
                             this.addRelatedContent(ref oContentElmt, Conversions.ToInteger(oContentElmt.GetAttribute("id")), myWeb.mbAdminMode);
 
@@ -6321,7 +6325,9 @@ namespace Protean
                             cOrderBy += " DESC";
                         PerfMonLog("DBHelper", "getContentFromContentGrabber-Start");
                         XmlElement argoPageDetail = null;
-                        myWeb.GetPageContentFromSelect(cWhereSql, nReturnRows: (int)nTop, cOrderBy: cOrderBy, cAdditionalJoins: joinSQL, oPageDetail: ref argoPageDetail);
+                        int nCount = 0;
+                        XmlElement nContentNodeElmyt = null;
+                        myWeb.GetPageContentFromSelect(cWhereSql, ref nCount,ref nContentNodeElmyt, oPageDetail: ref argoPageDetail,false,false, nReturnRows: (int)nTop, cOrderBy: cOrderBy, cAdditionalJoins: joinSQL);
                         PerfMonLog("DBHelper", "getContentFromContentGrabber-End");
 
                     }
@@ -8382,7 +8388,7 @@ namespace Protean
                                     string filePath = fsHelper.checkCommonFilePath("/xsl/email/passwordReminder.xsl");
 
                                     dbHelper argodbHelper = null;
-                                    sReturn = Conversions.ToString(oMsg.emailer(oXmlDetails.DocumentElement, goConfig["ProjectPath"] + filePath, sSenderName, sSenderEmail, cEmail, "Password Reminder", "Your password has been emailed to you", odbHelper: ref argodbHelper));
+                                    sReturn = Conversions.ToString(oMsg.emailer(oXmlDetails.DocumentElement, goConfig["ProjectPath"] + filePath, sSenderName, sSenderEmail, cEmail, "Password Reminder", odbHelper: ref argodbHelper, "Your password has been emailed to you"));
 
 
 
@@ -10428,7 +10434,7 @@ namespace Protean
                     {
                         n = n + 1L;
                         XmlElement argoContent = (XmlElement)oNode;
-                        oElmt2 = SimpleTidyContentNode(ref argoContent, cAddSourceAttribute, ref dExpireDate, ref dUpdateDate);
+                        oElmt2 = SimpleTidyContentNode(ref argoContent, ref dExpireDate, ref dUpdateDate, cAddSourceAttribute);
                         oNode = argoContent;
 
                         sNodeName = oElmt2.GetAttribute("name");
@@ -10650,7 +10656,7 @@ namespace Protean
                 }
             }
 
-            protected internal XmlElement SimpleTidyContentNode(ref XmlElement oContent, string cAddSourceAttribute = "",ref DateTime dExpireDate,  ref DateTime dUpdateDate)
+            protected internal XmlElement SimpleTidyContentNode(ref XmlElement oContent, ref DateTime dExpireDate, ref DateTime dUpdateDate, string cAddSourceAttribute = "")
             {
                 string sProcessInfo = "";
                 XmlElement oElmt;
@@ -10854,7 +10860,7 @@ namespace Protean
                     {
                         DateTime argdExpireDate2 = DateTime.Parse("0001-01-01");
                         DateTime argdUpdateDate2 = DateTime.Parse("0001-01-01");
-                        AddDataSetToContent(ref oDs, ref oContentElmt, nParentId, dExpireDate: ref argdExpireDate2, dUpdateDate: ref argdUpdateDate2);
+                        AddDataSetToContent(ref oDs, ref oContentElmt, dExpireDate: ref argdExpireDate2, dUpdateDate: ref argdUpdateDate2, nParentId);
                     }
 
                     PerfMonLog("DBHelper", "addRelatedContent - END");
@@ -11036,7 +11042,7 @@ namespace Protean
                                 foreach (XmlElement oContent in contents2.SelectNodes("Content"))
                                 {
                                     DateTime argdExpireDate = default;
-                                    oContent = SimpleTidyContentNode(ref oContent, "", ref argdExpireDate, ref dUpdateDate);
+                                    oContent = SimpleTidyContentNode(ref oContent, ref argdExpireDate, ref dUpdateDate, "");
                                 }
 
                                 // now lets take our xml's and do the magic

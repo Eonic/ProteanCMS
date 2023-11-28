@@ -151,7 +151,7 @@ namespace Protean
             }
         }
 
-        public string DoIndex(int nPage = 0, [Optional, DefaultParameterValue(false)] ref bool bResult)
+        public string DoIndex(ref bool bResult,int nPage = 0 )
         {
             // nPage = 59
             // PerfMon.Log("Indexer", "DoIndex")

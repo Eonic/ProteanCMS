@@ -2962,25 +2962,25 @@ namespace Protean
 
                     base.addInput(ref oFrmElmt, "ewDatabaseServer", true, "DB Server Hostname");
                     XmlElement argoBindParent = null;
-                    base.addBind("ewDatabaseServer", "web/add[@key='DatabaseServer']/@value", "true()", oBindParent: ref argoBindParent);
+                    base.addBind("ewDatabaseServer", "web/add[@key='DatabaseServer']/@value", oBindParent: ref argoBindParent, "true()");
 
                     // End If
 
                     base.addInput(ref oFrmElmt, "ewDatabaseName", true, "DB Name");
                     XmlElement argoBindParent1 = null;
-                    base.addBind("ewDatabaseName", "web/add[@key='DatabaseName']/@value", "true()", oBindParent: ref argoBindParent1);
+                    base.addBind("ewDatabaseName", "web/add[@key='DatabaseName']/@value", oBindParent: ref argoBindParent1, "true()");
 
                     base.addInput(ref oFrmElmt, "ewDatabaseUsername", true, "DB Username");
                     XmlElement argoBindParent2 = null;
-                    base.addBind("ewDatabaseUsername", "web/add[@key='DatabaseUsername']/@value", "false()", oBindParent: ref argoBindParent2);
+                    base.addBind("ewDatabaseUsername", "web/add[@key='DatabaseUsername']/@value", oBindParent: ref argoBindParent2, "false()");
 
                     base.addInput(ref oFrmElmt, "ewDatabasePassword", true, "DB Password / CMS Admin Password");
                     XmlElement argoBindParent3 = null;
-                    base.addBind("ewDatabasePassword", "web/add[@key='DatabasePassword']/@value", "false()", oBindParent: ref argoBindParent3);
+                    base.addBind("ewDatabasePassword", "web/add[@key='DatabasePassword']/@value", oBindParent: ref argoBindParent3, "false()");
 
                     base.addInput(ref oFrmElmt, "ewSiteAdminEmail", true, "Webmaster Email");
                     XmlElement argoBindParent4 = null;
-                    base.addBind("ewSiteAdminEmail", "web/add[@key='SiteAdminEmail']/@value", "true()", oBindParent: ref argoBindParent4);
+                    base.addBind("ewSiteAdminEmail", "web/add[@key='SiteAdminEmail']/@value", oBindParent: ref argoBindParent4, "true()");
 
                     base.addSubmit(ref oFrmElmt, "", "Save Settings");
 
@@ -3147,15 +3147,15 @@ namespace Protean
 
                     base.addInput(ref oFrmElmt, "ewDatabaseName", true, "Database Name");
                     XmlElement argoBindParent = null;
-                    base.addBind("ewDatabaseName", "backup/@name", "true()", oBindParent: ref argoBindParent);
+                    base.addBind("ewDatabaseName", "backup/@name", oBindParent: ref argoBindParent, "true()");
 
                     base.addInput(ref oFrmElmt, "ewDatabaseFilename", true, "Backup Filename");
                     XmlElement argoBindParent1 = null;
-                    base.addBind("ewDatabaseFilename", "backup/@filename", "false()", oBindParent: ref argoBindParent1);
+                    base.addBind("ewDatabaseFilename", "backup/@filename", oBindParent: ref argoBindParent1, "false()");
 
                     base.addInput(ref oFrmElmt, "ewDatabaseFilepath", true, "Backup Filepath");
                     XmlElement argoBindParent2 = null;
-                    base.addBind("ewDatabaseFilepath", "backup/@filepath", "false()", oBindParent: ref argoBindParent2);
+                    base.addBind("ewDatabaseFilepath", "backup/@filepath", oBindParent: ref argoBindParent2, "false()");
 
                     base.addSubmit(ref oFrmElmt, "", "Backup Database");
 
@@ -3240,17 +3240,17 @@ namespace Protean
 
                     base.addInput(ref oFrmElmt, "ewDatabaseName", true, "Database Name to be Overwritten");
                     XmlElement argoBindParent = null;
-                    base.addBind("ewDatabaseName", "restore/@name", "true()", oBindParent: ref argoBindParent);
+                    base.addBind("ewDatabaseName", "restore/@name", oBindParent: ref argoBindParent, "true()");
 
                     var sel1 = base.addSelect1(ref oFrmElmt, "ewDatabaseFilename", true, "Select a backup allready on the server");
                     base.addOptionsFilesFromDirectory(ref sel1, DatabaseFilepath);
                     XmlElement argoBindParent1 = null;
-                    base.addBind("ewDatabaseFilename", "restore/@filename", "false()", oBindParent: ref argoBindParent1);
+                    base.addBind("ewDatabaseFilename", "restore/@filename", oBindParent: ref argoBindParent1, "false()");
 
                     string argsClass = "";
                     base.addUpload(ref oFrmElmt, "ewDatabaseUpload", true, "bak,zip", "Or upload here....", sClass: ref argsClass);
                     XmlElement argoBindParent2 = null;
-                    base.addBind("ewDatabaseUpload", "restore/@upload", "false()", oBindParent: ref argoBindParent2);
+                    base.addBind("ewDatabaseUpload", "restore/@upload", oBindParent: ref argoBindParent2, "false()");
 
                     base.addSubmit(ref oFrmElmt, "", "Restore Database");
 
@@ -3351,13 +3351,13 @@ namespace Protean
 
                     base.addInput(ref oFrmElmt, "ewDatabaseName", true, "Database Name");
                     XmlElement argoBindParent = null;
-                    base.addBind("ewDatabaseName", "restore/@name", "true()", oBindParent: ref argoBindParent);
+                    base.addBind("ewDatabaseName", "restore/@name", oBindParent: ref argoBindParent, "true()");
 
                     var sel1 = base.addSelect1(ref oFrmElmt, "ewDatabaseFilename", true, "Install Empty DB or one containing sample data which would be better for initial evaluation of the platform", "", Protean.xForm.ApperanceTypes.Full);
                     base.addOption(ref sel1, "Empty Database", "NewV4");
                     base.addOptionsFilesFromDirectory(ref sel1, DatabaseFilepath, "zip");
                     XmlElement argoBindParent1 = null;
-                    base.addBind("ewDatabaseFilename", "restore/@filename", "false()", oBindParent: ref argoBindParent1);
+                    base.addBind("ewDatabaseFilename", "restore/@filename", oBindParent: ref argoBindParent1, "false()");
 
 
                     base.addSubmit(ref oFrmElmt, "", "Create Database");

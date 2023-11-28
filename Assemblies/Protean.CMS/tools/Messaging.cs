@@ -389,10 +389,10 @@ namespace Protean
         }
         public object emailer(XmlElement oBodyXML, string xsltPath, string fromName, string fromEmail, string recipientEmail, string SubjectLine, string successMessage = "Message Sent", string failureMessage = "Message Failed", string recipientName = "", string ccRecipient = "", string bccRecipient = "", string cSeperator = "") {
             Cms.dbHelper mydbhelper = null;
-            return emailer(oBodyXML,xsltPath,fromName, fromEmail, recipientEmail, SubjectLine,successMessage,failureMessage, recipientName, ccRecipient,bccRecipient, cSeperator,ref mydbhelper, "","");
+            return emailer(oBodyXML,xsltPath,fromName, fromEmail, recipientEmail, SubjectLine, ref mydbhelper, successMessage,failureMessage, recipientName, ccRecipient,bccRecipient, cSeperator, "","");
             }
 
-        public object emailer(XmlElement oBodyXML, string xsltPath, string fromName, string fromEmail, string recipientEmail, string SubjectLine, string successMessage = "Message Sent", string failureMessage = "Message Failed", string recipientName = "", string ccRecipient = "", string bccRecipient = "", string cSeperator = "", ref Protean.Cms.dbHelper odbHelper, string cPickupHost = "", string cPickupLocation = "")
+        public object emailer(XmlElement oBodyXML, string xsltPath, string fromName, string fromEmail, string recipientEmail, string SubjectLine, ref Protean.Cms.dbHelper odbHelper, string successMessage = "Message Sent", string failureMessage = "Message Failed", string recipientName = "", string ccRecipient = "", string bccRecipient = "", string cSeperator = "", string cPickupHost = "", string cPickupLocation = "")
         {
            
             // PerfMon.Log("Messaging", "emailer")
@@ -1257,7 +1257,8 @@ namespace Protean
                             if (!string.IsNullOrEmpty(cRecipientEmail))
                             {
                                 cProcessInfo = "Sending Email for #" + iCounter.ToString();
-                                cEmailResult = emailer(oBodyXML, xsltPath, fromName, fromEmail, cRecipientEmail, SubjectLine, recipientName: cRecipientName, cPickupHost: cPickupHost, cPickupLocation: cPickupLocation).ToString;
+                                Cms.dbHelper odbHelperElmt = null;
+                                cEmailResult = emailer(oBodyXML, xsltPath, fromName, fromEmail, cRecipientEmail, SubjectLine, ref odbHelperElmt, recipientName: cRecipientName, cPickupHost: cPickupHost, cPickupLocation: cPickupLocation).ToString();
                             }
                             else
                             {
@@ -1296,7 +1297,7 @@ namespace Protean
             return cResult;
 
         }
-        public object emailerWithXmlAttachment(XmlElement oBodyXML, string xsltPath, string fromName, string fromEmail, string recipientEmail, string SubjectLine, string XSLPath, string XSLType, string emailAttachName, string successMessage = "Message Sent", string failureMessage = "Message Failed", string recipientName = "", string ccRecipient = "", string bccRecipient = "", string cSeperator = "", [Optional, DefaultParameterValue(default)] ref Protean.Cms.dbHelper odbHelper, string cPickupHost = "", string cPickupLocation = "")
+        public object emailerWithXmlAttachment(XmlElement oBodyXML, string xsltPath, string fromName, string fromEmail, string recipientEmail, string SubjectLine, string XSLPath, string XSLType, string emailAttachName, ref Protean.Cms.dbHelper odbHelper, string successMessage = "Message Sent", string failureMessage = "Message Failed", string recipientName = "", string ccRecipient = "", string bccRecipient = "", string cSeperator = "", string cPickupHost = "", string cPickupLocation = "")
         {
 
             // PerfMon.Log("Messaging", "emailerWithXmlAttachment")
