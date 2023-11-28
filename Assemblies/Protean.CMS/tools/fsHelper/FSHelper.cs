@@ -933,7 +933,7 @@ namespace Protean
                         }
                     }
 
-                    if (response is not null)
+                    if (response != null)
                     {
                         remoteStream = response.GetResponseStream();
                         try
@@ -1251,7 +1251,7 @@ namespace Protean
                 context.Response.AddHeader("Pragma", "no-cache");
                 context.Response.AddHeader("Cache-Control", "Private, no - cache");
 
-                if (UploadDirPath is not null & !string.IsNullOrEmpty(UploadDirPath))
+                if (UploadDirPath != null & !string.IsNullOrEmpty(UploadDirPath))
                 {
 
                     mcStartFolder = mcStartFolder + UploadDirPath.Replace("/", @"\");
@@ -1384,18 +1384,18 @@ namespace Protean
             {
                 throw new HttpRequestValidationException("Attempt To upload chunked file containing more than one fragment per request");
             }
-            object inputStream = context.Request.Files[0].InputStream;
-            object fullName = mcStartFolder + Path.GetFileName(fileName);
+            Stream inputStream = context.Request.Files[0].InputStream;
+            string fullName = mcStartFolder + Path.GetFileName(fileName);
 
-            using (object fs = new FileStream(Conversions.ToString(fullName), FileMode.Append, FileAccess.Write))
+            using (FileStream fs = new FileStream(Conversions.ToString(fullName), FileMode.Append, FileAccess.Write))
             {
-                object buffer = new byte[1024];
+                byte[] buffer = new byte[1024];
 
-                var l = inputStream.Read(buffer, (object)0, (object)1024);
+                var l = inputStream.Read(buffer, 0, 1024);
                 while (Operators.ConditionalCompareObjectGreater(l, 0, false))
                 {
-                    fs.Write(buffer, (object)0, l);
-                    l = inputStream.Read(buffer, (object)0, (object)1024);
+                    fs.Write(buffer, 0, l);
+                    l = inputStream.Read(buffer, 0, 1024);
                 }
                 fs.Flush();
                 fs.Close();
@@ -1441,7 +1441,7 @@ namespace Protean
                 cFilePath = cFilePath + @"\";
             try
             {
-                if (cFilePath is not null)
+                if (cFilePath != null)
                 {
                     fileExists = File.Exists(goServer.MapPath(cFilePath + cFilename));
                 }
@@ -1620,7 +1620,7 @@ namespace Protean
 
                                             // check and return the thumbnail path
                                             bool createTn = true;
-                                            if (tnfiles is not null)
+                                            if (tnfiles != null)
                                             {
                                                 foreach (FileInfo tnfi in tnfiles)
                                                 {

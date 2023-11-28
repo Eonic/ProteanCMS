@@ -491,7 +491,6 @@ D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Unit
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\ICSharpCode.SharpZipLib.pdb
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\ICSharpCode.SharpZipLib.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Newtonsoft.Json.xml
-D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\DocumentFormat.OpenXml.xml
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Magick.Native-Q8-arm64.dll
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Magick.Native-Q8-x64.dll
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Magick.Native-Q8-x86.dll
@@ -518,6 +517,7 @@ D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTes
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Protean.Tools.dll.config
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.xml
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml
+D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\DocumentFormat.OpenXml.xml
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Magick.NET-Q8-AnyCPU.xml
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\ICSharpCode.SharpZipLib.pdb
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\ICSharpCode.SharpZipLib.xml

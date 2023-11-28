@@ -34,7 +34,7 @@ namespace Protean
             try
             {
                 var section = ConfigSection(sectionName);
-                if (section is not null)
+                if (section != null)
                 {
                     returnValue = section[key];
                 }
@@ -71,7 +71,7 @@ namespace Protean
 
                 if (string.IsNullOrEmpty(configPath))
                 {
-                    if (oCfg.AppSettings.Settings[name] is not null)
+                    if (oCfg.AppSettings.Settings[name] != null)
                     {
                         oCfg.AppSettings.Settings[name].Value = value;
                     }
@@ -88,7 +88,7 @@ namespace Protean
                     oConfigDoc.LoadXml(oCgfSect.SectionInformation.GetRawXml());
                     XmlElement oelmt;
                     oelmt = (XmlElement)oConfigDoc.DocumentElement.SelectSingleNode("add[@key='" + name + "']");
-                    if (oelmt is not null)
+                    if (oelmt != null)
                     {
                         oelmt.SetAttribute("value", value);
                     }
@@ -210,7 +210,7 @@ namespace Protean
             {
                 string s = ex.Message;
                 var innerException = ex.InnerException;
-                while (innerException is not null)
+                while (innerException != null)
                 {
                     s += " " + innerException.Message;
                     innerException = innerException.InnerException;

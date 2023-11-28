@@ -38,7 +38,7 @@ namespace Protean
 
             private bool _extendedPropertiesProcessed = false;
 
-            private Global.Protean.fsHelper.LibraryType _libraryType = fsHelper.LibraryType.Undefined;
+            private Protean.fsHelper.LibraryType _libraryType = fsHelper.LibraryType.Undefined;
             private fsHelper.WebFileExtendedProperties _extendedProperties;
 
             // Constructor for XmlSerializer

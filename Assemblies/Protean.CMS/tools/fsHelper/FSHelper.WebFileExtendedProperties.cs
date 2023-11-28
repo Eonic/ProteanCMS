@@ -9,6 +9,7 @@
 // ***********************************************************************
 
 using System;
+using System.Windows;
 using System.Windows.Media.Imaging;
 
 namespace Protean
@@ -71,7 +72,7 @@ namespace Protean
                 {
 
 
-                    if (_webFile is not null && _webFile.Exists)
+                    if (_webFile != null && _webFile.Exists)
                     {
                         switch (_webFile.LibraryType)
                         {
