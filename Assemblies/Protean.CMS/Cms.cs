@@ -2121,7 +2121,7 @@ namespace Protean
                 OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetPageHTML", ex, sProcessInfo));
                 // returnException(msException, mcModuleName, "getPageHtml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
                 this.moResponse.Write(msException);
-                Finalize();
+                //Finalize();
             }
             finally
             {
@@ -2829,7 +2829,7 @@ namespace Protean
             {
                 OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, methodName, ex, processInfo));
                 this.moResponse.Write(msException);
-                Finalize();
+               // Finalize();
             }
             this.PerfMon.Write();
         }
@@ -2962,8 +2962,10 @@ namespace Protean
                         productGrpSql = " and nContentKey IN (Select nContentId from tblCartCatProductRelations where nCatId = " + nGroupId + ")";
                     }
 
-                    XmlElement argoPageDetail = null;
-                    this.GetPageContentFromSelect("cContentSchemaName IN (" + Tools.Database.SqlString(contentSchema) + ",'FeedOutput') and CL.nStructId IN(" + pageIds + ")" + productGrpSql, true, bIgnorePermissionsCheck: true, nReturnRows: pageSize, cOrderBy: "dInsertDate DESC", bContentDetail: blnContentDetail, pageNumber: (long)pageNumber, cShowSpecificContentTypes: cRelatedSchemasToShow, oPageDetail: ref argoPageDetail);
+                    XmlElement dummyPageDetail = null;
+                    XmlElement dummyContentNode = null;
+                    int dummycount = 0;
+                    this.GetPageContentFromSelect("cContentSchemaName IN (" + Tools.Database.SqlString(contentSchema) + ",'FeedOutput') and CL.nStructId IN(" + pageIds + ")" + productGrpSql, ref dummycount,ref dummyContentNode,ref dummyPageDetail, true, bIgnorePermissionsCheck: true, nReturnRows: pageSize, cOrderBy: "dInsertDate DESC", bContentDetail: blnContentDetail, pageNumber: (long)pageNumber, cShowSpecificContentTypes: cRelatedSchemasToShow);
 
                     string ProductTypes = this.moConfig["ProductTypes"];
                     if (string.IsNullOrEmpty(ProductTypes))
@@ -2981,7 +2983,7 @@ namespace Protean
                         oElmt = currentOElmt1;
                         processInfo = "Cleaning parId for: " + oElmt.OuterXml;
                         string parId = oElmt.GetAttribute("parId");
-                        if (Conversions.ToBoolean(parId.Contains(',')))
+                        if (Conversions.ToBoolean(parId.Contains(",")))
                         {
                             parId = oElmt.GetAttribute("parId").Split(',')[1];
                         }
@@ -4622,7 +4624,7 @@ namespace Protean
         }
 
 
-        public void GetPageContentFromStoredProcedure(string SpName, Hashtable parameters = null, [Optional, DefaultParameterValue(0)] ref int nCount)
+        public void GetPageContentFromStoredProcedure(string SpName, Hashtable parameters, ref int nCount)
         {
 
             this.PerfMon.Log("Web", "GetPageContentFromStoredProcedure");
@@ -4646,7 +4648,7 @@ namespace Protean
                 if (oDs.Tables.Count > 0)
                 {
                     nCount = oDs.Tables["Content"].Rows.Count;
-                    this.moDbHelper.AddDataSetToContent(ref oDs, ref oRoot, (long)this.mnPageId, false, "", ref mdPageExpireDate, ref mdPageUpdateDate);
+                    this.moDbHelper.AddDataSetToContent(ref oDs, ref oRoot, ref mdPageExpireDate, ref mdPageUpdateDate, (long)this.mnPageId, false, "");
                     // AddGroupsToContent(oRoot)
                 }
             }
@@ -4711,14 +4713,14 @@ namespace Protean
         /// <param name="pageNumber"></param>
         /// <param name="distinct"></param>
         /// <param name="cShowSpecificContentTypes"></param>
-        public void GetPageContentFromSelect(string sWhereSql, bool bPrimaryOnly = false, [Optional, DefaultParameterValue(0)] ref int nCount, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", [Optional, DefaultParameterValue(null)] ref XmlElement oContentsNode, string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false, string cShowSpecificContentTypes = "", bool ignoreActiveAndDate = false, long nStartPos = 0L, long nItemCount = 0L, [Optional, DefaultParameterValue(null)] ref XmlElement oPageDetail, bool bShowContentDetails = true)
+        /// 
+
+
+        public void GetPageContentFromSelect(string sWhereSql, ref int nCount, ref XmlElement oContentsNode, ref XmlElement oPageDetail, bool bPrimaryOnly = false, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder",  string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false, string cShowSpecificContentTypes = "", bool ignoreActiveAndDate = false, long nStartPos = 0L, long nItemCount = 0L, bool bShowContentDetails = true)
         {
             this.PerfMon.Log("Web", "GetPageContentFromSelect");
             XmlElement oRoot;
             string sSql;
-
-
-
             string sPrimarySql = "";
             string sTopSql = "";
             string sMembershipSql = "";
@@ -5123,7 +5125,7 @@ namespace Protean
                     moPageXml.DocumentElement.AppendChild(oRoot);
                 }
 
-                this.moDbHelper.AddDataSetToContent(ref oDs, ref oRoot, (long)this.mnPageId, false, "", ref mdPageExpireDate, ref mdPageUpdateDate);
+                this.moDbHelper.AddDataSetToContent(ref oDs, ref oRoot, ref mdPageExpireDate, ref mdPageUpdateDate, (long)this.mnPageId, false, "");
                 if (bShowContentDetails)
                 {
                     // Get the content Detail element
@@ -8041,7 +8043,7 @@ namespace Protean
                 var oDs = new DataSet();
                 oDs = this.moDbHelper.GetDataSet(sSql, "Content", "Contents");
                 this.PerfMon.Log("Web", "AddDataSetToContent - For Page ", sSql);
-                this.moDbHelper.AddDataSetToContent(ref oDs, ref oRoot, Conversions.ToLong(nCurrentPageId), false, "", ref mdPageExpireDate, ref mdPageUpdateDate);
+                this.moDbHelper.AddDataSetToContent(ref oDs, ref oRoot, ref mdPageExpireDate, ref mdPageUpdateDate, Conversions.ToLong(nCurrentPageId), false, "");
             }
 
             // If gbCart Or gbQuote Then
@@ -8755,7 +8757,7 @@ namespace Protean
                     oRoot = moPageXml.CreateElement("Contents");
                     moPageXml.DocumentElement.AppendChild(oRoot);
                 }
-                this.moDbHelper.AddDataSetToContent(ref oDS, ref oRoot, (long)this.mnPageId, false, "", ref mdPageExpireDate, ref mdPageUpdateDate);
+                this.moDbHelper.AddDataSetToContent(ref oDS, ref oRoot, ref mdPageExpireDate, ref mdPageUpdateDate, (long)this.mnPageId, false, "");
             }
 
             catch (Exception ex)
@@ -8884,7 +8886,7 @@ namespace Protean
                         oRoot = moPageXml.CreateElement("Contents");
                         moPageXml.DocumentElement.AppendChild(oRoot);
                     }
-                    this.moDbHelper.AddDataSetToContent(ref oDS, ref oRoot, (long)this.mnPageId, false, "", ref mdPageExpireDate, ref mdPageUpdateDate);
+                    this.moDbHelper.AddDataSetToContent(ref oDS, ref oRoot, ref mdPageExpireDate, ref mdPageUpdateDate, (long)this.mnPageId, false, "");
                     if (bShowContentDetails)
                     {
                         // Get the content Detail element

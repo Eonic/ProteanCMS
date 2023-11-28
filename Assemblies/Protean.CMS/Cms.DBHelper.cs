@@ -4989,7 +4989,7 @@ namespace Protean
             }
 
 
-            public long insertStructure(long nStructParId, string cStructForiegnRef, string cStructName, string cStructDescription, string cStructLayout, long nStatus = 1L, [Optional, DateTimeConstant(0L/* #12:00:00 AM# */)] DateTime dPublishDate, [Optional, DateTimeConstant(0L/* #12:00:00 AM# */)] DateTime dExpireDate, string cDescription = "", long nOrder = 0L)
+            public long insertStructure(long nStructParId, string cStructForiegnRef, string cStructName, string cStructDescription, string cStructLayout, long nStatus = 1L, DateTime? dPublishDate = null, DateTime? dExpireDate = null, string cDescription = "", long nOrder = 0L)
             {
                 PerfMonLog("DBHelper", "insertStructure ([args])");
                 string sSql;
@@ -5014,7 +5014,7 @@ namespace Protean
                 return default;
             }
 
-            public long insertPageVersion(long nStructParId, string cStructForiegnRef, string cStructName, string cStructDescription, string cStructLayout, long nStatus = 1L, [Optional, DateTimeConstant(0L/* #12:00:00 AM# */)] DateTime dPublishDate, [Optional, DateTimeConstant(0L/* #12:00:00 AM# */)] DateTime dExpireDate, string cDescription = "", long nOrder = 0L, long nVersionParId = default, string cVersionLang = "", string cVersionDescription = "", PageVersionType nVersionType = default)
+            public long insertPageVersion(long nStructParId, string cStructForiegnRef, string cStructName, string cStructDescription, string cStructLayout, long nStatus = 1L, DateTime? dPublishDate = null, DateTime? dExpireDate = null, string cDescription = "", long nOrder = 0L, long nVersionParId = default, string cVersionLang = "", string cVersionDescription = "",PageVersionType nVersionType = default)
             {
                 PerfMonLog("DBHelper", "insertStructure ([args])");
                 string sSql;
@@ -10380,7 +10380,7 @@ namespace Protean
                 }
             }
 
-            public void AddDataSetToContent(ref DataSet oDs, ref XmlElement oContent, long nCurrentPageId = 0L, bool bIgnoreDuplicates = false, string cAddSourceAttribute = "", ref DateTime dExpireDate, ref DateTime dUpdateDate, bool bAllowRecursion = true)
+            public void AddDataSetToContent(ref DataSet oDs, ref XmlElement oContent,ref DateTime dExpireDate ,ref DateTime dUpdateDate, long nCurrentPageId = 0L, bool bIgnoreDuplicates = false, string cAddSourceAttribute = "", bool bAllowRecursion = true)
             {
                 try
                 {
@@ -10841,13 +10841,13 @@ namespace Protean
                             }
                             var argdExpireDate = DateTime.Parse("0001-01-01");
                             var argdUpdateDate = DateTime.Parse("0001-01-01");
-                            AddDataSetToContent(ref oDs, ref oContentElmt, nParentId, Conversions.ToBoolean(0), "", ref argdExpireDate, ref argdUpdateDate, true, nMaxDepth);
+                            AddDataSetToContent(ref oDs, ref oContentElmt, ref argdExpireDate, ref argdUpdateDate, nParentId, Conversions.ToBoolean(0), "", true, nMaxDepth);
                         }
                         else
                         {
                             DateTime argdExpireDate1 = DateTime.Parse("0001-01-01");
                             DateTime argdUpdateDate1 = DateTime.Parse("0001-01-01");
-                            AddDataSetToContent(ref oDs, ref oContentElmt, nParentId, dExpireDate: ref argdExpireDate1, dUpdateDate: ref argdUpdateDate1);
+                            AddDataSetToContent(ref oDs, ref oContentElmt, dExpireDate: ref argdExpireDate1, dUpdateDate: ref argdUpdateDate1, nParentId);
                         }
                     }
                     else
@@ -10887,7 +10887,7 @@ namespace Protean
             /// <param name="dUpdateDate">The date to get content by. E.g. find related content on such and such a day</param>
             /// <param name="nMaxDepth">The levels of related content to try to retrieve.</param>
             /// <remarks></remarks>
-            public void addBulkRelatedContent(ref XmlElement oContentParent, [Optional, DefaultParameterValue(default(DateTime))] ref DateTime dUpdateDate, int nMaxDepth = 1)
+            public void addBulkRelatedContent(ref XmlElement oContentParent,ref DateTime dUpdateDate, int nMaxDepth = 1)
             {
 
                 PerfMonLog("DBHelper", "addBulkRelatedContent");

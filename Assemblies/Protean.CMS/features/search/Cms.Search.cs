@@ -614,7 +614,7 @@ namespace Protean
                         // Log the search
                         if (_logSearches)
                         {
-                            myWeb.moDbHelper.logActivity(Interaction.IIf(_includeFuzzySearch, dbHelper.ActivityType.FuzzySearch, dbHelper.ActivityType.Search), myWeb.mnUserId, 0, 0, results.TotalHits.ToString(), cQuery);
+                            myWeb.moDbHelper.logActivity((_includeFuzzySearch)? dbHelper.ActivityType.FuzzySearch: dbHelper.ActivityType.Search, myWeb.mnUserId, 0, 0, results.TotalHits.ToString(), cQuery);
                         }
 
                         // Optional fuzzysearch for figures
@@ -1017,7 +1017,7 @@ namespace Protean
                         // Log the search
                         if (_logSearches)
                         {
-                            myAPI.moDbHelper.logActivity(Interaction.IIf(_includeFuzzySearch, dbHelper.ActivityType.FuzzySearch, dbHelper.ActivityType.Search), myAPI.mnUserId, 0, 0, results.TotalHits, cQuery);
+                            myAPI.moDbHelper.logActivity((_includeFuzzySearch)? dbHelper.ActivityType.FuzzySearch: dbHelper.ActivityType.Search, myAPI.mnUserId, 0, 0, results.TotalHits, cQuery);
                         }
 
                         // Optional fuzzysearch for figures
@@ -2352,7 +2352,8 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                     oDs = myWeb.moDbHelper.GetDataSet(sSql, "Content", "Contents");
 
                     nResultCount = oDs.Tables["Content"].Rows.Count;
-                    myWeb.moDbHelper.AddDataSetToContent(oDs, oContentElmt, myWeb.mnPageId, default, "search");
+                    DateTime? nulldate = null;
+                    myWeb.moDbHelper.AddDataSetToContent(ref oDs,ref oContentElmt,ref nulldate, ref nulldate,  myWeb.mnPageId, default, "search");
 
                     // need to remove duplicate items
 

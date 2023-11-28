@@ -2581,7 +2581,7 @@ namespace Protean
 
                         DateTime argdExpireDate = DateTime.Parse("0001-01-01");
                         DateTime argdUpdateDate = DateTime.Parse("0001-01-01");
-                        myWeb.moDbHelper.AddDataSetToContent(ref oDS, ref oContent, (long)myWeb.mnPageId, true, "", dExpireDate: ref argdExpireDate, dUpdateDate: ref argdUpdateDate, false);
+                        myWeb.moDbHelper.AddDataSetToContent(ref oDS, ref oContent, dExpireDate: ref argdExpireDate, dUpdateDate: ref argdUpdateDate, (long)myWeb.mnPageId, true, "", false);
 
                         myWeb.PerfMon.Log("Discount", "getDiscountXML-appendStart");
                         XmlElement oDisc;

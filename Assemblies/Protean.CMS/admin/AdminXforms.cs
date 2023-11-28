@@ -3507,8 +3507,15 @@ namespace Protean
                 // Public Overridable Function xFrmEditContent(Optional ByVal id As Long = 0, Optional ByVal cContentSchemaName As String = "", Optional ByVal pgid As Long = 0, Optional ByVal cContentName As String = "", Optional ByVal bCopy As Boolean = False, Optional ByRef nReturnId As Integer = 0, Optional ByVal nVersionId As Long = 0) As XmlElement
                 // xFrmEditContent(id, cContentSchemaName, pgid, cContentName, bCopy, nReturnId, "", "", Optional ByVal nVersionId As Long = 0)
                 // End Function
+                public virtual XmlElement xFrmEditContent(long id = 0L, string cContentSchemaName = "", long pgid = 0L, string cContentName = "", bool bCopy = false)
+                {
+                    int unusedReturnId = 0;
+                    string unusedReturnSchema = "";
+                    string unusedAlternateFormName = "";
+                    return xFrmEditContent(id, cContentSchemaName, pgid, cContentName, bCopy,ref unusedReturnId,ref unusedReturnSchema,ref unusedAlternateFormName);
+                }
 
-                public virtual XmlElement xFrmEditContent(long id = 0L, string cContentSchemaName = "", long pgid = 0L, string cContentName = "", bool bCopy = false, [Optional, DefaultParameterValue(0)] ref int nReturnId, [Optional, DefaultParameterValue("")] ref string zcReturnSchema, [Optional, DefaultParameterValue("")] ref string AlternateFormName, long nVersionId = 0L)
+                public virtual XmlElement xFrmEditContent(long id , string cContentSchemaName , long pgid , string cContentName , bool bCopy , ref int nReturnId , ref string zcReturnSchema , ref string AlternateFormName , long nVersionId = 0L)
                 {
                     XmlElement oFrmElmt;
                     // Dim oGrp1Elmt As XmlElement
@@ -5455,45 +5462,45 @@ namespace Protean
                 /// <returns></returns>
                 /// <remarks></remarks>
 
-                public virtual XmlElement xFrmEditDirectoryItem(long id = 0L, string cDirectorySchemaName = "User", long parId = 0L, string cXformName = "")
-                {
-                    XmlElement argIntanceAppend = null;
-                    return xFrmEditDirectoryItem(id, cDirectorySchemaName, parId, cXformName, "", ref argIntanceAppend);
-                }
+                //public virtual XmlElement xFrmEditDirectoryItem(long id = 0L, string cDirectorySchemaName = "User", long parId = 0L, string cXformName = "")
+                //{
+                //    XmlElement argIntanceAppend = null;
+                //    return xFrmEditDirectoryItem(id, cDirectorySchemaName, parId, cXformName, "", ref argIntanceAppend);
+                //}
 
-                public virtual XmlElement xFrmEditDirectoryItem(long id = 0L, string cDirectorySchemaName = "User", long parId = 0L, string cXformName = "", string FormXML = "")
-                {
-                    XmlElement argIntanceAppend = null;
-                    return xFrmEditDirectoryItem(id, cDirectorySchemaName, parId, cXformName, FormXML, ref argIntanceAppend);
-                }
+                //public virtual XmlElement xFrmEditDirectoryItem(long id = 0L, string cDirectorySchemaName = "User", long parId = 0L, string cXformName = "", string FormXML = "")
+                //{
+                //    XmlElement argIntanceAppend = null;
+                //    return xFrmEditDirectoryItem(id, cDirectorySchemaName, parId, cXformName, FormXML, ref argIntanceAppend);
+                //}
 
                 [Obsolete("Don't use this routine any more. Use the new one in Membership Provider ", false)]
-                public virtual XmlElement xFrmEditDirectoryItem(long id = 0L, string cDirectorySchemaName = "User", long parId = 0L, string cXformName = "", string FormXML = "", [Optional, DefaultParameterValue(null)] ref XmlElement IntanceAppend)
-                {
-                    string cProcessInfo = "";
+                //public virtual XmlElement xFrmEditDirectoryItem(long id = 0L, string cDirectorySchemaName = "User", long parId = 0L, string cXformName = "", string FormXML = "", ref XmlElement IntanceAppend = null)
+                //{
+                //    string cProcessInfo = "";
 
-                    try
-                    {
+                //    try
+                //    {
 
-                        object argmyWeb = (object)this.myWeb;
-                        var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.myWeb.moConfig["MembershipProvider"]);
-                        this.myWeb = (Cms)argmyWeb;
-                        var oAdXfm = oMembershipProv.AdminXforms;
+                //        object argmyWeb = (object)this.myWeb;
+                //        var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.myWeb.moConfig["MembershipProvider"]);
+                //        this.myWeb = (Cms)argmyWeb;
+                //        var oAdXfm = oMembershipProv.AdminXforms;
 
-                        oAdXfm.xFrmEditDirectoryItem(id, cDirectorySchemaName, parId, cXformName, FormXML);
+                //        oAdXfm.xFrmEditDirectoryItem(id, cDirectorySchemaName, parId, cXformName, FormXML);
 
-                        this.valid = Conversions.ToBoolean(oAdXfm.valid);
-                        this.moXformElmt = (XmlElement)oAdXfm.moXformElmt;
-                        this.updateInstance((XmlElement)oAdXfm.Instance);
-                        return this.moXformElmt;
-                    }
+                //        this.valid = Conversions.ToBoolean(oAdXfm.valid);
+                //        this.moXformElmt = (XmlElement)oAdXfm.moXformElmt;
+                //        this.updateInstance((XmlElement)oAdXfm.Instance);
+                //        return this.moXformElmt;
+                //    }
 
-                    catch (Exception ex)
-                    {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditDirectoryItem", ex, "", cProcessInfo, gbDebug);
-                        return null;
-                    }
-                }
+                //    catch (Exception ex)
+                //    {
+                //        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditDirectoryItem", ex, "", cProcessInfo, gbDebug);
+                //        return null;
+                //    }
+                //}
 
 
                 public virtual XmlElement xFrmCopyGroupMembers(long dirId)

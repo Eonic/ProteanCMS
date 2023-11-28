@@ -14,7 +14,7 @@ namespace Protean
 
     public partial class Cms
     {
-        public class Content
+        public partial class Content
         {
 
             #region Declarations

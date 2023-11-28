@@ -705,17 +705,17 @@ namespace Protean
                                     int argnCount = 0;
                                     XmlElement argoContentsNode = null;
                                     XmlElement argoPageDetail = null;
-                                    oWeb.GetPageContentFromSelect(" CAST(cContentXmlDetail as xml).exist('" + sXpath + "') = 1", nCount: ref argnCount, oContentsNode: ref argoContentsNode, oPageDetail: ref argoPageDetail);
+                                    oWeb.GetPageContentFromSelect(" CAST(cContentXmlDetail as xml).exist('" + sXpath + "') = 1", ref argnCount, ref argoContentsNode, ref argoPageDetail);
                                 }
                                 else
                                 {
                                     int argnCount1 = 0;
                                     XmlElement argoContentsNode1 = null;
                                     XmlElement argoPageDetail1 = null;
-                                    oWeb.GetPageContentFromSelect(" cContentSchemaName='" + oNotesXform.Instance.SelectSingleNode("Query/@contentType").InnerText + "' and CAST(cContentXmlDetail as xml).exist('" + sXpath + "') = 1", nCount: ref argnCount1, oContentsNode: ref argoContentsNode1, oPageDetail: ref argoPageDetail1);
+                                    oWeb.GetPageContentFromSelect(" cContentSchemaName='" + oNotesXform.Instance.SelectSingleNode("Query/@contentType").InnerText + "' and CAST(cContentXmlDetail as xml).exist('" + sXpath + "') = 1", ref argnCount1, ref argoContentsNode1, ref argoPageDetail1);
                                 }
 
-                                GetCart(oElmt);
+                                GetCart(ref oElmt);
                                 oWeb = null;
                                 break;
                             }
