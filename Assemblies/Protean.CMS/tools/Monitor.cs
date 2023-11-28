@@ -50,7 +50,7 @@ namespace Protean
             {
 
                 System.Collections.Specialized.NameValueCollection oSchedulerConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/scheduler");
-                var oMsg = new Messaging(myWeb.msException);
+                var oMsg = new Messaging(ref myWeb.msException);
 
                 if (oSchedulerConfig != null)
                 {
@@ -61,7 +61,7 @@ namespace Protean
                     if (cMonitorXsl is null)
                         cMonitorXsl = "/ewcommon/xsl/Tools/schedulermonitor.xsl";
                     oMonitorXml = GetMonitorSchedulerXml();
-                    cResponse = oMsg.emailer(oMonitorXml, cMonitorXsl, "EonicWebV5", "eonicwebV5@eonic.co.uk", cMonitorEmail, "");
+                    cResponse =Convert.ToString(oMsg.emailer(oMonitorXml, cMonitorXsl, "EonicWebV5", "eonicwebV5@eonic.co.uk", cMonitorEmail, ""));
                 }
             }
 
@@ -80,7 +80,7 @@ namespace Protean
             string cUrl = "";
 
             string cConStr;
-            var oDBh = new dbHelper(myWeb);
+            var oDBh = new dbHelper(ref myWeb);
             DataSet oDS;
             var oMXML = new XmlDataDocument();
             var oElmt = oMXML.CreateElement("NoData");
@@ -109,7 +109,7 @@ namespace Protean
                     oDBh.ResetConnection(cConStr);
 
                     oDS = oDBh.GetDataSet("EXEC spGetSchedulerSummary @date=" + Tools.Database.SqlDate(DateTime.Now.AddDays(-1), true), "Scan", "Monitor");
-                    oDBh.ReturnNullsEmpty(oDS);
+                    oDBh.ReturnNullsEmpty(ref oDS);
                     oMXML = new XmlDataDocument(oDS);
                     if (oMXML != null && oMXML.DocumentElement != null)
                     {

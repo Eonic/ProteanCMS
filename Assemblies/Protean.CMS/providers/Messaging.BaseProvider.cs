@@ -22,15 +22,16 @@ using Microsoft.VisualBasic.CompilerServices;
 using static Protean.Cms;
 using static Protean.stdTools;
 using Protean.Tools;
+using System.Dynamic;
 
 namespace Protean.Providers
 {
     namespace Messaging
     {
 
-        public class BaseProvider
+        public class BaseProvider: DynamicObject
         {
-            private object _AdminXforms;
+            private Admin.AdminXforms _AdminXforms;
             private object _AdminProcess;
             private object _Activities;
             private const string mcModuleName = "Protean.Providers.Messaging";
@@ -769,7 +770,7 @@ namespace Protean.Providers
                                 {
 
                                     string cSubject = "";
-                                    XmlElement oLocElmt = oWeb.GetPageXML.SelectSingleNode("descendant-or-self::MenuItem[@id=" + myWeb.mnPageId + "]");
+                                    XmlElement oLocElmt = (XmlElement)oWeb.GetPageXML().SelectSingleNode("descendant-or-self::MenuItem[@id=" + myWeb.mnPageId + "]");
                                     if (oLocElmt != null)
                                         cSubject = oLocElmt.GetAttribute("name");
 
@@ -803,7 +804,7 @@ namespace Protean.Providers
                                     // get subject
                                     string cSubject = "";
                                     oWeb.mnMailMenuId = Convert.ToInt64(moMailConfig["RootPageId"]);
-                                    XmlElement oLocElmt = oWeb.GetPageXML.SelectSingleNode("descendant-or-self::MenuItem[@id=" + myWeb.mnPageId + "]");
+                                    XmlElement oLocElmt = (XmlElement)oWeb.GetPageXML().SelectSingleNode("descendant-or-self::MenuItem[@id=" + myWeb.mnPageId + "]");
                                     if (oLocElmt != null)
                                         cSubject = oLocElmt.GetAttribute("name");
 

@@ -901,10 +901,10 @@ namespace Protean
                         case "List":
                             {
                                 int nI = 0;
-                                if (!(myWeb.moRequest.Item("OrderID") == ""))
-                                    nI = myWeb.moRequest.Item("OrderID");
-                                ListOrders(nI, bListAllQuotes);
-                                GetCartSummary(oElmt);
+                                if (!(myWeb.moRequest["OrderID"] == ""))
+                                    nI =Convert.ToInt32(myWeb.moRequest["OrderID"]);                                
+                                //ListOrders(nI, bListAllQuotes);
+                                //GetCartSummary(oElmt);
                                 mcCartCmd = "";
                                 break;
                             }
@@ -912,8 +912,8 @@ namespace Protean
                         case "MakeCurrent":
                             {
                                 int nI = 0;
-                                if (!(myWeb.moRequest.Item("OrderID") == ""))
-                                    nI = myWeb.moRequest.Item("OrderID");
+                                if (!(myWeb.moRequest["OrderID"] == ""))
+                                    nI =Convert.ToInt32(myWeb.moRequest["OrderID"]);
                                 if (!(nI == 0))
                                     MakeCurrent(nI);
                                 mcCartCmd = "Quote";
@@ -972,10 +972,10 @@ namespace Protean
                         case "Delete":
                             {
                                 int nI = 0;
-                                if (!(myWeb.moRequest.Item("OrderID") == ""))
-                                    nI = myWeb.moRequest.Item("OrderID");
+                                if (!(myWeb.moRequest["OrderID"] == ""))
+                                    nI = Convert.ToInt32(myWeb.moRequest["OrderID"]);
                                 if (!(nI == 0))
-                                    DeleteCart[nI];
+                                    DeleteCart(nI);
                                 mcCartCmd = "List";
                                 goto processFlow; // Show Cart Summary
                                 break;
@@ -1111,9 +1111,9 @@ namespace Protean
                     var nParentID = default(int);
                     string sSQL;
                     // okay, now we need the ID of the current cart
-                    if (!(myWeb.moSession.Item["oQID"] == ""))
+                    if (!(myWeb.moSession["oQID"].ToString() == ""))
                     {
-                        nQuoteId = myWeb.moSession.Item("oQID");
+                        nQuoteId = Convert.ToInt32(myWeb.moSession["oQID"]);
                     }
                     // pretty useless if the site doesnt have a cart
                     // if we dont have quotes then we'll never get here
@@ -1155,7 +1155,7 @@ namespace Protean
                             sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nQuantity"] is DBNull, "Null", oDR1["nQuantity"]), ","));
                             sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nWeight"] is DBNull, "Null", oDR1["nWeight"]), ","));
                             sSQL += base.moDBHelper.getAuditId() + ")";
-                            nParentID = base.moDBHelper.GetIdInsertSql(sSQL);
+                            nParentID = Convert.ToInt32(base.moDBHelper.GetIdInsertSql(sSQL));
                             // now for any children
                             foreach (DataRow oDR2 in oDS.Tables["CartItems"].Rows)
                             {

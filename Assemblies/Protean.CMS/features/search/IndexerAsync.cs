@@ -748,7 +748,7 @@ namespace Protean
                 bool lockTaken = false;
                 try
                 {
-                    Monitor.TryEnter(_tasks, ref lockTaken);
+                    System.Threading.Monitor.TryEnter(_tasks, ref lockTaken);
                     if (lockTaken)
                     {
                         return _tasks.ToArray();
@@ -762,7 +762,7 @@ namespace Protean
                 {
                     if (lockTaken)
                     {
-                        Monitor.Exit(_tasks);
+                        System.Threading.Monitor.Exit(_tasks);
                     }
                 }
             }
@@ -976,7 +976,7 @@ namespace Protean
                                     myWeb.moPageXml = new XmlDocument(); // we need to get this again with our content Detail
                                     myWeb.moDbHelper.moPageXml = myWeb.moPageXml;
                                     myWeb.mcEwSiteXsl = cXslPath;
-                                    myWeb.mnArtId = oElmt.GetAttribute("id");
+                                    myWeb.mnArtId = Convert.ToInt32(oElmt.GetAttribute("id"));
                                     myWeb.moContentDetail = null;
                                     cPageHtml = myWeb.ReturnPageHTML(0, true);
                                     // remove any declarations that might affect and Xpath Search

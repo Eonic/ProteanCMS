@@ -143,7 +143,7 @@ namespace Protean
                                     // to get all the users underneath
                                     var oDSUsers = new DataSet();
                                     cInfo = "CheckGroup";
-                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(LCase(oDR[4]), "group", false)))
+                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual((oDR[4]), "group", false)))
                                     {
                                         cInfo = "Is Group";
                                         myWeb.moDbHelper.addTableToDataSet(ref oDSUsers, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("EXEC sp_AllDirUsers ", oDR[1]), ", "), Tools.Database.SqlDate(dTimeNow, true))), "Users");

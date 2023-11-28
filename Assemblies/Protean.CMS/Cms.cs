@@ -1532,7 +1532,7 @@ namespace Protean
                     case pageResponseType.json:
                         {
 
-                            var moApi = new Protean.API();
+                            var moApi = new Protean.Rest();
 
                             moApi.InitialiseVariables();
                             moApi.JSONRequest();
@@ -2980,8 +2980,8 @@ namespace Protean
                     {
                         oElmt = currentOElmt1;
                         processInfo = "Cleaning parId for: " + oElmt.OuterXml;
-                        object parId = oElmt.GetAttribute("parId");
-                        if (Conversions.ToBoolean(parId.contains(",")))
+                        string parId = oElmt.GetAttribute("parId");
+                        if (Conversions.ToBoolean(parId.Contains(',')))
                         {
                             parId = oElmt.GetAttribute("parId").Split(',')[1];
                         }
@@ -8727,7 +8727,7 @@ namespace Protean
                 {
                     if (oDS.Tables["Content"].Rows.Count < nMax | nMax == 0)
                     {
-                        if (Conversions.ToBoolean(Operators.AndObject(Information.IsNumeric(oDR["parId"]), !oDR["parId"].Contains(","))))
+                        if (Conversions.ToBoolean(Operators.AndObject(Information.IsNumeric(oDR["parId"]), !oDR["parId"].ToString().Contains(","))))
                         {
                             ochkStr = this.moDbHelper.checkPagePermission(Conversions.ToLong(oDR["parId"])).ToString();
                             if (Information.IsNumeric(ochkStr))
@@ -8856,7 +8856,7 @@ namespace Protean
                     {
                         if (oDS.Tables["Content"].Rows.Count < nMax | nMax == 0)
                         {
-                            if (Conversions.ToBoolean(Operators.AndObject(Information.IsNumeric(oDR["parId"]), !oDR["parId"].Contains(","))))
+                            if (Conversions.ToBoolean(Operators.AndObject(Information.IsNumeric(oDR["parId"]), !oDR["parId"].ToString().Contains(","))))
                             {
                                 ochkStr = this.moDbHelper.checkPagePermission(Conversions.ToLong(oDR["parId"])).ToString();
                                 if (Information.IsNumeric(ochkStr))

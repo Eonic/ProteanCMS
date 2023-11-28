@@ -699,7 +699,7 @@ namespace Protean
                         object argmyWeb = myWeb;
                         var oMembershipProv = new Providers.Membership.BaseProvider(ref argmyWeb, myWeb.moConfig["MembershipProvider"]);
                         myWeb = (Cms)argmyWeb;
-                        var adXfm = oMembershipProv.AdminXforms;
+                        oMembershipProv.AdminXforms adXfm = oMembershipProv.AdminXforms;
                         bool bRedirect = true;
 
 

@@ -1206,7 +1206,7 @@ namespace Protean.Providers
                                         string ListId = moMailConfig["AllUsersList"];
                                         if (ListId != null)
                                         {
-                                            object valDict = new Dictionary<string, string>();
+                                            Dictionary<string, string> valDict = new Dictionary<string, string>();
 
                                             valDict.Add("Email", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Email").InnerText);
                                             valDict.Add("FirstName", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/FirstName").InnerText);

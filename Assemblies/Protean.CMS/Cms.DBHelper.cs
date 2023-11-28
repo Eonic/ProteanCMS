@@ -9425,7 +9425,7 @@ namespace Protean
                         ThreadPool.SetMaxThreads(nThreads, nThreads);
 
 
-                        object doneEvents = new List<ManualResetEvent>();
+                        List<ManualResetEvent> doneEvents = new List<ManualResetEvent>();
                         // Dim eventsDoneEvt As New System.Threading.ManualResetEvent(False)
 
                         foreach (XmlElement oInstance in ObjectsXml.SelectNodes("Instance | instance"))

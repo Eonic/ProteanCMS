@@ -1384,18 +1384,18 @@ namespace Protean
             {
                 throw new HttpRequestValidationException("Attempt To upload chunked file containing more than one fragment per request");
             }
-            object inputStream = context.Request.Files[0].InputStream;
-            object fullName = mcStartFolder + Path.GetFileName(fileName);
+            Stream inputStream = context.Request.Files[0].InputStream;
+            string fullName = mcStartFolder + Path.GetFileName(fileName);
 
-            using (object fs = new FileStream(Conversions.ToString(fullName), FileMode.Append, FileAccess.Write))
+            using (FileStream fs = new FileStream(Conversions.ToString(fullName), FileMode.Append, FileAccess.Write))
             {
-                object buffer = new byte[1024];
+                byte[] buffer = new byte[1024];
 
-                var l = inputStream.Read(buffer, (object)0, (object)1024);
+                var l = inputStream.Read(buffer, 0, 1024);
                 while (Operators.ConditionalCompareObjectGreater(l, 0, false))
                 {
-                    fs.Write(buffer, (object)0, l);
-                    l = inputStream.Read(buffer, (object)0, (object)1024);
+                    fs.Write(buffer, 0, l);
+                    l = inputStream.Read(buffer, 0, 1024);
                 }
                 fs.Flush();
                 fs.Close();
