@@ -39,7 +39,7 @@ namespace Protean
             private string cOrderNoPrefix = "";
 
 
-            public Quote(ref Cms aWeb) : base(aWeb)
+            public Quote(ref Cms aWeb) : base(ref aWeb)
             {
 
 
@@ -514,7 +514,8 @@ namespace Protean
                     {
                         case "Update":
                             {
-                                mcCartCmd = updateCart("Quote");
+                                string quote = "Quote";
+                                mcCartCmd = Convert.ToString(updateCart(ref quote));
                                 goto processFlow;
                                 break;
                             }
@@ -575,7 +576,7 @@ namespace Protean
 
                                 if (mnCartId < 1 & mcCartCmd == "addNoteLine")
                                 {
-                                    CreateNewCart(oElmt);
+                                    CreateNewCart(ref oElmt);
                                     if (mcItemOrderType != "")
                                     {
                                         mmcOrderType = mcItemOrderType;
@@ -619,11 +620,11 @@ namespace Protean
                                     mnProcessId = 0;
                                     if (bFullCartOption == true)
                                     {
-                                        GetCart(oElmt);
+                                        GetCart(ref oElmt);
                                     }
                                     else
                                     {
-                                        GetCartSummary(oElmt);
+                                        GetCartSummary(ref oElmt);
                                     }
                                     mnCartId = 0;
                                 }
@@ -635,7 +636,7 @@ namespace Protean
 
                         case "Error":
                             {
-                                GetCart(oElmt);
+                                GetCart(ref oElmt);
                                 break;
                             }
 
@@ -648,7 +649,7 @@ namespace Protean
                                     goto processFlow; // execute next step (make the payment)
                                 }
                                 // info to display the cart
-                                GetCart(oElmt);
+                                GetCart(ref oElmt);
                                 break;
                             }
                         case "Notes":
@@ -757,7 +758,7 @@ namespace Protean
                                         else
                                         {
                                             base.moPageXml.SelectSingleNode("/Page/Contents").AppendChild(oRegXform.moXformElmt);
-                                            GetCart(oElmt);
+                                            GetCart(ref oElmt);
                                         }
 
 
@@ -819,7 +820,7 @@ namespace Protean
                                     }
                                 }
 
-                                GetCart(oElmt);
+                                GetCart(ref oElmt);
                                 oPickContactXForm = (Cms.xForm)null;
                                 break;
                             }
@@ -846,7 +847,7 @@ namespace Protean
 
                                 }
 
-                                GetCart(oElmt);
+                                GetCart(ref oElmt);
                                 oPickContactXForm = (Cms.xForm)null;
                                 break;
                             }
@@ -859,7 +860,7 @@ namespace Protean
                                     mnProcessId = 6;
                                 if (oElmt.FirstChild is null)
                                 {
-                                    GetCart(oElmt);
+                                    GetCart(ref oElmt);
                                 }
 
                                 break;
@@ -867,8 +868,8 @@ namespace Protean
 
                         case "Send":
                             {
-                                GetCart(oElmt);
-                                addDateAndRef(oElmt);
+                                GetCart(ref oElmt);
+                                addDateAndRef(ref oElmt);
                                 emailReceipts(ref oElmt);
                                 oContentElmt.AppendChild(oElmt);
                                 mnProcessId = 6; // ? "Payment Successful"... erm.. yeah
@@ -887,14 +888,14 @@ namespace Protean
                         case "CookiesDisabled": // Cookies have been disabled or are undetectable
                             {
                                 mnProcessError = 1;
-                                GetCart(oElmt);
+                                GetCart(ref oElmt);
                                 break;
                             }
 
                         case "BackToSite":
                             {
                                 mcCartCmd = "";
-                                GetCartSummary(oElmt);
+                                GetCartSummary(ref oElmt);
                                 break;
                             }
 
@@ -986,11 +987,11 @@ namespace Protean
                                 mcCartCmd = "";
                                 if (bFullCartOption == true)
                                 {
-                                    GetCart(oElmt);
+                                    GetCart(ref oElmt);
                                 }
                                 else
                                 {
-                                    GetCartSummary(oElmt);
+                                    GetCartSummary(ref oElmt);
                                 }
 
                                 break;
@@ -1041,10 +1042,10 @@ namespace Protean
                 {
 
                     // send to customer
-                    sMessageResponse = emailCart(oCartElmt, moQuoteConfig["CustomerEmailTemplatePath"], moQuoteConfig["MerchantName"], moQuoteConfig["MerchantEmail"], oElmtTemp.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText, moQuoteConfig["OrderEmailSubject"]);
+                    sMessageResponse =Convert.ToString(emailCart(ref oCartElmt, moQuoteConfig["CustomerEmailTemplatePath"], moQuoteConfig["MerchantName"], moQuoteConfig["MerchantEmail"], oElmtTemp.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText, moQuoteConfig["OrderEmailSubject"]));
 
                     // Send to merchant
-                    sMessageResponse = emailCart(oCartElmt, moQuoteConfig["MerchantEmailTemplatePath"], oElmtTemp.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText, oElmtTemp.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText, moQuoteConfig["MerchantEmail"], moQuoteConfig["OrderEmailSubject"]);
+                    sMessageResponse = Convert.ToString(emailCart(ref oCartElmt, moQuoteConfig["MerchantEmailTemplatePath"], oElmtTemp.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText, oElmtTemp.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText, moQuoteConfig["MerchantEmail"], moQuoteConfig["OrderEmailSubject"]));
 
                     XmlElement oElmtEmail;
                     oElmtEmail = base.moPageXml.CreateElement("Reciept");

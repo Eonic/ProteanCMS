@@ -10847,7 +10847,7 @@ namespace Protean
                             }
                             var argdExpireDate = DateTime.Parse("0001-01-01");
                             var argdUpdateDate = DateTime.Parse("0001-01-01");
-                            AddDataSetToContent(ref oDs, ref oContentElmt, ref argdExpireDate, ref argdUpdateDate, nParentId, Conversions.ToBoolean(0), "", true, nMaxDepth);
+                            AddDataSetToContent(ref oDs, ref oContentElmt, ref argdExpireDate, ref argdUpdateDate, nParentId,true, nMaxDepth.ToString());
                         }
                         else
                         {

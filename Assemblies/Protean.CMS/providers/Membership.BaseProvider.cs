@@ -385,7 +385,7 @@ namespace Protean.Providers
 
                         base.submission("PasswordReminder", "", "post", "form_check(this)");
 
-                        oFrmElmt = base.addGroup(base.moXformElmt, "PasswordReminder");
+                        oFrmElmt = base.addGroup(ref base.moXformElmt, "PasswordReminder");
                         base.addDiv(ref oFrmElmt, "Please enter your email address and we will email you with your password.");
                         base.addInput(ref oFrmElmt, "cEmail", true, "Email Address");
                         XmlElement oBindParent = null;
@@ -712,14 +712,15 @@ namespace Protean.Providers
 
                         base.Instance.InnerXml = "<Password><cDirPassword/><cDirPassword2/></Password>";
 
-                        oGrp = base.addGroup(base.moXformElmt, "Password", default, "Reset Password");
+                        oGrp = base.addGroup(ref base.moXformElmt, "Password", default, "Reset Password");
                         base.submission("SetPassword", "", "POST");
                         oPI1 = base.addSecret(ref oGrp, "cDirPassword", true, "Password", ref passwordClass);
                         XmlElement oxmlBind = null;
                         base.addBind("cDirPassword", "Password/cDirPassword",ref oxmlBind, "true()", passwordValidation);
-                        oPI2 = base.addSecret(ref oGrp, "cDirPassword2", true, "Confirm Password", "required");
+                        string strrequired = "required";
+                        oPI2 = base.addSecret(ref oGrp, "cDirPassword2", true, "Confirm Password", ref strrequired);
                         base.addBind("cDirPassword2", "Password/cDirPassword2", ref oxmlBind, "true()");
-                        oSB = base.addSubmit(oGrp, "SetPassword", "Set Password");
+                        oSB = (XmlElement)base.addSubmit(ref oGrp, "SetPassword", "Set Password");
 
                     Check:
                         ;
@@ -846,13 +847,14 @@ namespace Protean.Providers
                         XmlElement xmlObindparent = null;
                         base.Instance.InnerXml = "<Password><cDirPassword/><cDirPassword2/></Password>";
                         string formTitle = "<span class=\"trans-2031\">Enter new password</span>";
-                        oGrp = base.addGroup(base.moXformElmt, "Password", default, formTitle);
+                        oGrp = base.addGroup(ref base.moXformElmt, "Password", default, formTitle);
                         base.submission("SetPassword", "", "POST");
-                        oPI1 = base.addSecret(oGrp, "cDirPassword", true, "Password", ref passwordClass);
+                        oPI1 = base.addSecret(ref oGrp, "cDirPassword", true, "Password", ref passwordClass);
                         base.addBind("cDirPassword", "Password/cDirPassword",ref xmlObindparent, "true()", passwordValidation);
-                        oPI2 = base.addSecret(oGrp, "cDirPassword2", true, "Confirm Password", "required secret");
+                        string strReqSecr = "required secret";
+                        oPI2 = base.addSecret(ref oGrp, "cDirPassword2", true, "Confirm Password",ref strReqSecr);
                         base.addBind("cDirPassword2", "Password/cDirPassword2", ref xmlObindparent, "true()");
-                        oSB = base.addSubmit(oGrp, "SetPassword", "Set Password");
+                        oSB =(XmlElement)base.addSubmit(ref oGrp, "SetPassword", "Set Password","","principle","","");
 
                     Check:
                         ;
@@ -1006,7 +1008,7 @@ namespace Protean.Providers
                             if (goConfig["Subscriptions"] == "on")
                             {
                                 var oSub = new Cart.Subscriptions(ref myWeb);
-                                oSub.AddSubscriptionToUserXML(base.Instance, Convert.ToInt32(id));
+                                oSub.AddSubscriptionToUserXML(ref base.Instance, Convert.ToInt32(id));
                             }
 
                             // now lets check our security, and if we are encrypted lets not show the password on edit.
@@ -2032,7 +2034,7 @@ namespace Protean.Providers
                             XmlElement oXfmElmt;
                             oXfmElmt = (XmlElement)adXfm.xFrmActivateAccount();
 
-                            myWeb.AddContentXml(oXfmElmt);
+                            myWeb.AddContentXml(ref oXfmElmt);
 
                         }
                         string sharedKey = moConfig["SharedKey"];
@@ -2505,7 +2507,7 @@ namespace Protean.Providers
                                                     XmlElement oXfmElmt = (XmlElement)adXfm.xFrmEditDirectoryContact(moRequest["id"], mnUserId);
                                                     if (Conversions.ToBoolean(!adXfm.valid))
                                                     {
-                                                        myWeb.AddContentXml(oXfmElmt);
+                                                        myWeb.AddContentXml(ref oXfmElmt);
                                                     }
                                                     else
                                                     {

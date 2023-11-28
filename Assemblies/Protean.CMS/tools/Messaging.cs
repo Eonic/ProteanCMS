@@ -1393,7 +1393,7 @@ namespace Protean
                         }
 
                         // PerfMon.Log("Messaging", "emailerWithXmlAttachment - Call Emailer")
-                        cResults = emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, successMessage, failureMessage, recipientName, ccRecipient, bccRecipient, cSeperator, ref odbHelper, cPickupHost, cPickupLocation).ToString();
+                        cResults = emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, ref odbHelper, successMessage, failureMessage, recipientName, ccRecipient, bccRecipient, cSeperator, cPickupHost, cPickupLocation).ToString();
                     }
                 }
                 else
