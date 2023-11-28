@@ -63,9 +63,9 @@ namespace Protean
                             {
                                 // NB 19th Feb 2010 - Caused Consultant Portal to fall over here without these
                                 // additional checks?
-                                if (moCartConfig is not null)
+                                if (moCartConfig != null)
                                 {
-                                    if (moCartConfig["currency"] is not null)
+                                    if (moCartConfig["currency"] != null)
                                     {
                                         myWeb.moSession["mcCurrency"] = moCartConfig["currency"];
                                     }
@@ -77,7 +77,7 @@ namespace Protean
                             mcCurrency = Conversions.ToString(myWeb.moSession["mcCurrency"]);
                         }
 
-                        if (moCartConfig is not null)
+                        if (moCartConfig != null)
                         {
                             mbRoundUp = Strings.LCase(moCartConfig["Roundup"]) == "yes" | Strings.LCase(moCartConfig["Roundup"]) == "on";
                             mbRoundDown = Conversions.ToBoolean(Interaction.IIf(Strings.LCase(moCartConfig["Roundup"]) == "down", true, false));
@@ -121,7 +121,7 @@ namespace Protean
                             bIsQuoteOn = true;
                         }
 
-                        if (moCartConfig is not null)
+                        if (moCartConfig != null)
                         {
                             mcPriceModOrder = moCartConfig["PriceModOrder"];
                             mcUnitModOrder = moCartConfig["UnitModOrder"];
@@ -181,7 +181,7 @@ namespace Protean
                             strSQL.Append(" and isnull(dExpireDate,getdate())>=getdate()  where isnull(cDiscountUserCode,'')=''");
                             using (var oDr = myWeb.moDbHelper.getDataReaderDisposable(strSQL.ToString()))
                             {
-                                if (oDr is not null & oDr.HasRows)
+                                if (oDr != null & oDr.HasRows)
                                 {
                                     bDefaultPromoCode = true;
                                 }
@@ -204,7 +204,7 @@ namespace Protean
                             // ' we may have multiple discount per product 
                             // ' In future we may have multiple discount code , right now we can apply one per order.
                             // '
-                            if (oCartXML.Attributes["InvoiceDateTime"] is not null)
+                            if (oCartXML.Attributes["InvoiceDateTime"] != null)
                             {
                                 DiscountApplyDate = Conversions.ToDate(oCartXML.Attributes["InvoiceDateTime"].Value);
                             }
@@ -287,7 +287,7 @@ namespace Protean
                             // if total crossed more or less than defined range then it will remove promocode for the user.
 
 
-                            if (oDsDiscounts is not null)
+                            if (oDsDiscounts != null)
                             {
                                 if (oDsDiscounts.Tables["Discount"].Rows.Count > 0)
                                 {
@@ -454,7 +454,7 @@ namespace Protean
                                         oDsCart.Tables[0].Columns[7].ColumnMapping = MappingType.Attribute;
                                         oDsCart.Tables[0].Columns[8].ColumnMapping = MappingType.Attribute;
 
-                                        if (oDsCart.Tables[0].Columns["CodeUsedId"] is not null)
+                                        if (oDsCart.Tables[0].Columns["CodeUsedId"] != null)
                                         {
                                             oDsCart.Tables[0].Columns["CodeUsedId"].ColumnMapping = MappingType.Attribute;
                                         }
@@ -567,7 +567,7 @@ namespace Protean
                                 string strcFreeShippingMethods = "";
                                 string strbFreeGiftBox = "";
 
-                                if (oDsDiscounts is not null)
+                                if (oDsDiscounts != null)
                                 {
                                     strcFreeShippingMethods = "";
                                     var doc = new XmlDocument();
@@ -716,7 +716,7 @@ namespace Protean
                     if (string.IsNullOrEmpty(cPromotionalCode))
                     {
                         XmlElement oPromoElmt = (XmlElement)xmlNotes.SelectSingleNode("//Notes/PromotionalCode");
-                        if (oPromoElmt is not null)
+                        if (oPromoElmt != null)
                             cPromotionalCode = oPromoElmt.InnerText;
                     }
 
@@ -804,7 +804,7 @@ namespace Protean
                         {
                             int nId = Conversions.ToInteger(oItemElmt.GetAttribute("id"));
                             oPriceElmt = (XmlElement)oDiscountXml.SelectSingleNode("Discounts/Item[@id=" + nId + "]/DiscountPrice");
-                            if (oPriceElmt is not null)
+                            if (oPriceElmt != null)
                             {
 
                                 // NB 16/02/2010 added rounding
@@ -848,7 +848,7 @@ namespace Protean
                                     oDiscountItemTest.SetAttribute("AppliedToCart", 1.ToString());
                                     oItemElmt.AppendChild(oItemElmt.OwnerDocument.ImportNode(oDiscountItemTest.CloneNode(true), true));
                                     XmlElement oDiscountInfo = (XmlElement)oDiscountXml.SelectSingleNode("Discounts/Item[@id=" + nId + "]/Discount[@nDiscountKey=" + oDiscountItemTest.GetAttribute("nDiscountKey") + "]");
-                                    if (oDiscountInfo is not null)
+                                    if (oDiscountInfo != null)
                                     {
                                         oItemElmt.AppendChild(oItemElmt.OwnerDocument.ImportNode(oDiscountInfo.CloneNode(true), true));
                                     }
@@ -879,7 +879,7 @@ namespace Protean
                                         oDiscountItemTest.SetAttribute("AppliedToCart", 1.ToString());
                                         oItemElmt.AppendChild(oItemElmt.OwnerDocument.ImportNode(oDiscountItemTest.CloneNode(true), true));
                                         XmlElement oDiscountInfo = (XmlElement)oDiscountXml.SelectSingleNode("Discounts/Item[@id=" + nId + "]/Discount[@nDiscountKey=" + oDiscountItemTest.GetAttribute("nDiscountKey") + "]");
-                                        if (oDiscountInfo is not null)
+                                        if (oDiscountInfo != null)
                                         {
                                             oItemElmt.AppendChild(oItemElmt.OwnerDocument.ImportNode(oDiscountInfo.CloneNode(true), true));
                                         }
@@ -1011,7 +1011,7 @@ namespace Protean
                                         // If (cFreeShippingMethods <> "") Then
                                         // myCart.updateGCgetValidShippingOptionsDS(cFreeShippingMethods)
                                         // End If
-                                        if (oDiscountLoop.SelectSingleNode("bApplyToOrder") is not null)
+                                        if (oDiscountLoop.SelectSingleNode("bApplyToOrder") != null)
                                         {
                                             if (oDiscountLoop.SelectSingleNode("bApplyToOrder").InnerText.ToString() == "True")
                                             {
@@ -1061,7 +1061,7 @@ namespace Protean
                                     {
                                         // 'oDiscountElmt.SetAttribute("nDiscountRemaining", oDiscountLoop.GetAttribute("nDiscountValue") - oPriceLine.GetAttribute("TotalSaving"))
 
-                                        if (oDiscountLoop.SelectSingleNode("bApplyToOrder") is not null)
+                                        if (oDiscountLoop.SelectSingleNode("bApplyToOrder") != null)
                                         {
                                             if (oDiscountLoop.SelectSingleNode("bApplyToOrder").InnerText.ToString() == "True")
                                             {
@@ -1087,18 +1087,18 @@ namespace Protean
 
                             // Code for setting default delivery option if discount code option is 'Giftbox'
 
-                            if (!string.IsNullOrEmpty(strbFreeGiftBox) & oItemLoop.SelectSingleNode("Discount") is not null)
+                            if (!string.IsNullOrEmpty(strbFreeGiftBox) & oItemLoop.SelectSingleNode("Discount") != null)
                             {
                                 myCart.updatePackagingForFreeGiftDiscount(oItemLoop.Attributes["id"].Value, AmountToDiscount);
 
-                                if (moConfig["GiftBoxDiscount"] is not null & moConfig["GiftBoxDiscount"] == "on")
+                                if (moConfig["GiftBoxDiscount"] != null & moConfig["GiftBoxDiscount"] == "on")
                                 {
                                     string sSql;
                                     var strSQL = new System.Text.StringBuilder();
                                     DataSet oDs;
                                     sSql = "select nShippingMethodId from tblCartOrder where nCartOrderKey=" + myCart.mnCartId;
                                     oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
-                                    if (moConfig["eShippingMethodId"] is not null & moConfig["DefaultShippingMethodId"] is not null)
+                                    if (moConfig["eShippingMethodId"] != null & moConfig["DefaultShippingMethodId"] != null)
                                     {
                                         if (Operators.ConditionalCompareObjectEqual(oDs.Tables[0].Rows[0]["nShippingMethodId"], moConfig["eShippingMethodId"], false))
                                         {
@@ -1209,7 +1209,7 @@ namespace Protean
                                         {
                                             myCart.updateGCgetValidShippingOptionsDS(cFreeShippingMethods);
                                         }
-                                        if (oDiscountLoop.SelectSingleNode("bApplyToOrder") is not null)
+                                        if (oDiscountLoop.SelectSingleNode("bApplyToOrder") != null)
                                         {
                                             if (oDiscountLoop.SelectSingleNode("bApplyToOrder").InnerText.ToString() == "True")
                                             {
@@ -1259,7 +1259,7 @@ namespace Protean
                                     {
                                         // 'oDiscountElmt.SetAttribute("nDiscountRemaining", oDiscountLoop.GetAttribute("nDiscountValue") - oPriceLine.GetAttribute("TotalSaving"))
 
-                                        if (oDiscountLoop.SelectSingleNode("bApplyToOrder") is not null)
+                                        if (oDiscountLoop.SelectSingleNode("bApplyToOrder") != null)
                                         {
                                             if (oDiscountLoop.SelectSingleNode("bApplyToOrder").InnerText.ToString() == "True")
                                             {
@@ -1328,7 +1328,7 @@ namespace Protean
                             foreach (XmlElement oTmpLoop in oItemLoop.SelectNodes("Discount[@nDiscountCat=2]"))
                             {
                                 // here we go through and find the biggest discount
-                                if (oPriceBreakElmt is not null)
+                                if (oPriceBreakElmt != null)
                                 {
                                     if (Operators.CompareString(oTmpLoop.GetAttribute("nDiscountMinPrice"), oPriceElmt.GetAttribute("Total"), false) <= 0 & Operators.CompareString(oTmpLoop.GetAttribute("nDiscountMinPrice"), oPriceBreakElmt.GetAttribute("nDiscountMinPrice"), false) > 0)
 
@@ -1342,7 +1342,7 @@ namespace Protean
                                     }
                                 }
 
-                                if (oQuantityBreakElmt is not null)
+                                if (oQuantityBreakElmt != null)
                                 {
                                     if (Operators.CompareString(oTmpLoop.GetAttribute("nDiscountMinQuantity"), oPriceElmt.GetAttribute("Units"), false) <= 0 & Operators.CompareString(oTmpLoop.GetAttribute("nDiscountMinQuantity"), oQuantityBreakElmt.GetAttribute("nDiscountMinQuantity"), false) > 0)
 
@@ -1377,7 +1377,7 @@ namespace Protean
                             if (oTestElmt is null)
                                 goto NextTestLoop;
                             // now the actual test
-                            if (oTestElmt is not null)
+                            if (oTestElmt != null)
                             {
                                 nUnitPrice = Conversions.ToDecimal(oPriceElmt.GetAttribute("UnitPrice"));
                                 // work out depending on value/percent
@@ -1711,7 +1711,7 @@ namespace Protean
                             }
 
                             // check that anything is below value
-                            if (aPriceArray is not null)
+                            if (aPriceArray != null)
                             {
                                 // sort the prices to discount
                                 Array.Sort(aPriceArray);
@@ -2161,7 +2161,7 @@ namespace Protean
                                     NotesXml.FirstChild.AppendChild(notesElement.FirstChild);
                                 }
 
-                                if (NotesXml.SelectSingleNode("//Notes/PromotionalCode[node()='" + sCode + "']") is not null)
+                                if (NotesXml.SelectSingleNode("//Notes/PromotionalCode[node()='" + sCode + "']") != null)
                                 {
                                 }
                                 // do nothing code exists
@@ -2334,7 +2334,7 @@ namespace Protean
                         foreach (XmlElement currentOContentElmt in oRootElmt.SelectNodes("descendant-or-self::Content" + cContentTypes))
                         {
                             oContentElmt = currentOContentElmt;
-                            if (oContentElmt.GetAttribute("id") is not null)
+                            if (oContentElmt.GetAttribute("id") != null)
                             {
                                 strItemIds.Append(Tools.Database.SqlString(oContentElmt.GetAttribute("id").Trim()));
                                 strItemIds.Append(",");
@@ -2593,7 +2593,7 @@ namespace Protean
                             // oTmp.InnerText = Replace(Replace(oTmp.InnerText, "&gt;", ">"), "&lt;", "<")
                             int nDiscID = Conversions.ToInteger(oTmp.GetAttribute("nDiscountId"));
                             oDisc = (XmlElement)oDiscounts.SelectSingleNode("Discount[@id=" + nDiscID + "]");
-                            if (oDisc is not null)
+                            if (oDisc != null)
                             {
                                 if (oDisc.SelectSingleNode("Content[@id=" + oTmp.GetAttribute("id") + "]") is null)
                                 {
@@ -2646,7 +2646,7 @@ namespace Protean
                                 myWeb.moDbHelper.updateDataset(ref oDs, "Order", true);
                                 oDs.Clear();
                                 oDs = null;
-                                if (xmlNotes is not null)
+                                if (xmlNotes != null)
                                 {
                                     sPromoCode = xmlNotes.InnerText;
                                 }
@@ -2679,7 +2679,7 @@ namespace Protean
 
                         if (!string.IsNullOrEmpty(sValidtoremove))
                         {
-                            if (moConfig["DefaultPack"] is not null & moConfig["GiftPack"] is not null)
+                            if (moConfig["DefaultPack"] != null & moConfig["GiftPack"] != null)
                             {
                                 sSQL = "";
                                 sSQL = "update tblcartitem set cItemName = '" + moConfig["DefaultPack"] + "', nPrice = 0.00 where nParentId != 0 and  cItemName = '" + moConfig["GiftPack"] + "' and nCartOrderId =" + CartId.ToString();
@@ -2726,7 +2726,7 @@ namespace Protean
                                 cGroupXPath = "[self::" + Strings.Replace(sGroups, ",", " or self::") + "]";
                                 // Get the prices
                                 oPrices = oProd.SelectNodes("Content/Prices/*" + cGroupXPath);
-                                if (oDefaultPrice is not null)
+                                if (oDefaultPrice != null)
                                 {
                                     // Get the minimum price on offer
                                     foreach (XmlNode oPrice in oPrices)
@@ -2741,7 +2741,7 @@ namespace Protean
                             }
                         }
                         // Not logged on - ensure that the default price is returned, if applicable.
-                        else if (oDefaultPrice is not null)
+                        else if (oDefaultPrice != null)
                         {
                             if (Information.IsNumeric(oDefaultPrice.InnerText))
                                 nPrice = Conversions.ToDouble(oDefaultPrice.InnerText);
@@ -2811,7 +2811,7 @@ namespace Protean
                         double nPrice = 0.0d;
                         foreach (XmlElement oPNode in oProd.SelectNodes(cxpath))
                         {
-                            if (oThePrice is not null)
+                            if (oThePrice != null)
                             {
                                 if (Information.IsNumeric(oThePrice.InnerText))
                                 {

@@ -77,7 +77,7 @@ namespace Protean.Providers
                     oProviderCfg = (XmlElement)moStreamingCfg.SelectSingleNode("provider[@name='" + ProviderName + "']");
 
                     string ProviderClass = "";
-                    if (oProviderCfg is not null)
+                    if (oProviderCfg != null)
                     {
                         if (oProviderCfg.HasAttribute("class"))
                         {
@@ -97,7 +97,7 @@ namespace Protean.Providers
                     else
                     {
                         Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/paymentProviders");
-                        if (moPrvConfig.Providers[ProviderClass] is not null)
+                        if (moPrvConfig.Providers[ProviderClass] != null)
                         {
                             var assemblyInstance = Assembly.Load(moPrvConfig.Providers[ProviderClass].Type);
                             calledType = assemblyInstance.GetType("Protean.Providers.Payment." + ProviderClass, true);

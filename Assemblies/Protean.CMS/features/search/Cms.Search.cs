@@ -614,7 +614,7 @@ namespace Protean
                         // Log the search
                         if (_logSearches)
                         {
-                            myWeb.moDbHelper.logActivity(Interaction.IIf(_includeFuzzySearch, dbHelper.ActivityType.FuzzySearch, dbHelper.ActivityType.Search), myWeb.mnUserId, 0, 0, results.TotalHits, cQuery);
+                            myWeb.moDbHelper.logActivity(Interaction.IIf(_includeFuzzySearch, dbHelper.ActivityType.FuzzySearch, dbHelper.ActivityType.Search), myWeb.mnUserId, 0, 0, results.TotalHits.ToString(), cQuery);
                         }
 
                         // Optional fuzzysearch for figures
@@ -726,7 +726,7 @@ namespace Protean
 
                                 // Get the menuitem element from the xml
                                 var argoNode = moPageXml.DocumentElement;
-                                if (Tools.Xml.NodeState(ref argoNode, "/Page/Menu/descendant-or-self::MenuItem[@id=" + pageId + "]", "", "", 1, menuItem, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
+                                if (Tools.Xml.NodeState(ref argoNode, "/Page/Menu/descendant-or-self::MenuItem[@id=" + pageId + "]", "", "", XmlNodeState.IsEmpty, menuItem, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
                                 {
 
                                     // don't add artId more than twice to results.
@@ -790,7 +790,7 @@ namespace Protean
 
                                 // Get the menuitem element from the xml
                                 var argoNode1 = moPageXml.DocumentElement;
-                                if (Tools.Xml.NodeState(ref argoNode1, "/Page/Menu/descendant-or-self::MenuItem[@id=" + pageId + "]", "", "", 1, menuItem, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
+                                if (Tools.Xml.NodeState(ref argoNode1, "/Page/Menu/descendant-or-self::MenuItem[@id=" + pageId + "]", "", "", XmlNodeState.IsEmpty, menuItem, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
                                 {
 
                                     // Only process this result if it's in the paging zone

@@ -77,8 +77,8 @@ namespace Protean.Integration.Directory
         {
             try
             {
-                string token = this.myWeb.moRequest("oauth_token");
-                string verifier = this.myWeb.moRequest("oauth_verifier");
+                string token = this.myWeb.moRequest["oauth_token"];
+                string verifier = this.myWeb.moRequest["oauth_verifier"];
                 AccessTokens(token, verifier);
             }
             catch (Exception ex)
@@ -152,7 +152,7 @@ namespace Protean.Integration.Directory
             {
 
 
-                string status = this.myWeb.moRequest("status");
+                string status = this.myWeb.moRequest["status"];
                 Update(status);
             }
 
@@ -227,7 +227,7 @@ namespace Protean.Integration.Directory
 
                     // First shorten the URL, if it exists.
                     string shortenedURL = "";
-                    if (trackbackUri is not null)
+                    if (trackbackUri != null)
                     {
                         shortenedURL = ShortenURL(trackbackUri.ToString());
                         // If shortening has failed check the original uri

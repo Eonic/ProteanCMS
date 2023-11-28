@@ -216,7 +216,7 @@ namespace Protean
                                     cInfo = "Each MemberAlert";
                                     AlertItem oAlert = (AlertItem)oAlertItems[Operators.ConcatenateObject("A", oMember.Alerts[i])];
                                     cInfo += "1";
-                                    if (oAlert.ContentElement is not null)
+                                    if (oAlert.ContentElement != null)
                                         oAlertElmt.AppendChild(oAlert.ContentElement);
                                     cInfo += "2";
                                     if (!string.IsNullOrEmpty(cAlertTitles))
@@ -636,7 +636,7 @@ namespace Protean
                                         cContentTypes += ",";
                                     cContentTypes = Conversions.ToString(cContentTypes + Operators.ConcatenateObject(Operators.ConcatenateObject("'", oRow["cContentType"]), "'"));
                                 }
-                                string cLastDone = Conversions.ToString(myWeb.moDbHelper.GetDataValue("SELECT TOP 1 dDateTime FROM tblActivityLog WHERE (nActivityType = " + ((int)Cms.dbHelper.ActivityType.Alert).ToString() + ") AND (nOtherId = " + nAlertKey + ") AND nActivityKey <> " + AlertLogKey + " ORDER BY dDateTime DESC", 1, null, ""));
+                                string cLastDone = Conversions.ToString(myWeb.moDbHelper.GetDataValue("SELECT TOP 1 dDateTime FROM tblActivityLog WHERE (nActivityType = " + ((int)Cms.dbHelper.ActivityType.Alert).ToString() + ") AND (nOtherId = " + nAlertKey + ") AND nActivityKey <> " + AlertLogKey + " ORDER BY dDateTime DESC", CommandType.Text, null, ""));
                                 if (Information.IsDate(cLastDone))
                                     dLastDone = Conversions.ToDate(cLastDone);
                                 else
@@ -671,7 +671,7 @@ namespace Protean
                             }
                             oContentElmt.SetAttribute("title", cAlertTitle);
                             XmlElement oCont = (XmlElement)myWeb.moPageXml.DocumentElement.SelectSingleNode("Contents");
-                            if (oCont is not null)
+                            if (oCont != null)
                                 oCont.InnerXml = "";
                             int argnCount = 0;
                             XmlElement argoContentsNode = null;
@@ -785,7 +785,7 @@ namespace Protean
                             var oXML = new XmlDocument();
                             oXML.LoadXml(cDirXML);
                             XmlElement oEmailelmt = (XmlElement)oXML.SelectSingleNode("descendant-or-self::Email");
-                            if (oEmailelmt is not null)
+                            if (oEmailelmt != null)
                                 cEmail = oEmailelmt.InnerText;
                             oEmailelmt = null;
                             oXML = null;

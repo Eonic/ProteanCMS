@@ -75,7 +75,7 @@ namespace Protean
                         {
                             string oCgfSectPath = "rewriteMaps/rewriteMap[@name='" + redirectType + "']";
                             var redirectSectionXmlNode = rewriteXml.SelectSingleNode(oCgfSectPath);
-                            if (redirectSectionXmlNode is not null)
+                            if (redirectSectionXmlNode != null)
                             {
                                 var replacingElement = rewriteXml.CreateElement("RedirectInfo");
                                 replacingElement.InnerXml = $"<add key='{OldUrl}' value='{NewUrl}'/>";
@@ -185,7 +185,7 @@ namespace Protean
                         string oCgfSectPath = "rewriteMaps/rewriteMap[@name='" + redirectType + "']";
                         var props = rewriteXml.SelectSingleNode(oCgfSectPath);
 
-                        if (rewriteXml.SelectSingleNode(oCgfSectPath) is not null)
+                        if (rewriteXml.SelectSingleNode(oCgfSectPath) != null)
                         {
 
                             int PerPageCount = 50;
@@ -275,7 +275,7 @@ namespace Protean
                         string oCgfSectName = "system.webServer";
                         string oCgfSectPath = "rewriteMaps/rewriteMap[@name='" + redirectType + "']";
 
-                        if (rewriteXml.SelectSingleNode(oCgfSectPath) is not null)
+                        if (rewriteXml.SelectSingleNode(oCgfSectPath) != null)
                         {
 
                             int PerPageCount = 50;
@@ -428,7 +428,7 @@ namespace Protean
                         string oCgfSectName = "system.webServer";
                         string oCgfSectPath = "rewriteMaps/rewriteMap[@name='" + redirectType + "']";
 
-                        if (rewriteXml.SelectSingleNode(oCgfSectPath) is not null)
+                        if (rewriteXml.SelectSingleNode(oCgfSectPath) != null)
                         {
 
                             int PerPageCount = 50;
@@ -528,7 +528,7 @@ namespace Protean
                 {
 
                     string result = "success";
-                    if (sRedirectType is not null & !string.IsNullOrEmpty(sRedirectType))
+                    if (sRedirectType != null & !string.IsNullOrEmpty(sRedirectType))
                     {
 
                         string sUrl = "";
@@ -538,7 +538,7 @@ namespace Protean
                             sOldUrl = sOldUrl.Replace(" ", "-");
                             sNewUrl = sNewUrl.Replace(" ", "-");
                         }
-                        if (sPageUrl is not null & !string.IsNullOrEmpty(sPageUrl))
+                        if (sPageUrl != null & !string.IsNullOrEmpty(sPageUrl))
                         {
                             sUrl = sPageUrl;
                             string[] arr;
@@ -564,7 +564,7 @@ namespace Protean
                                 {
 
                                     // If (sType = "Product") Then
-                                    if (myWeb.moConfig["DetailPrefix"] is not null & !string.IsNullOrEmpty(myWeb.moConfig["DetailPrefix"]))
+                                    if (myWeb.moConfig["DetailPrefix"] != null & !string.IsNullOrEmpty(myWeb.moConfig["DetailPrefix"]))
                                     {
                                         string[] prefixs = myWeb.moConfig["DetailPrefix"].Split(',');
                                         string thisPrefix = "";
@@ -592,7 +592,7 @@ namespace Protean
                                         sNewUrl = sUrl + url + "/" + sNewUrl;
 
                                     }
-                                    if (myWeb.moConfig["TrailingSlash"] is not null & myWeb.moConfig["TrailingSlash"] == "on")
+                                    if (myWeb.moConfig["TrailingSlash"] != null & myWeb.moConfig["TrailingSlash"] == "on")
                                     {
                                         sOldUrl = sOldUrl + "/";
                                         sNewUrl = sNewUrl + "/";

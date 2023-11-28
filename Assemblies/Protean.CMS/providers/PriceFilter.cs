@@ -48,20 +48,20 @@ namespace Protean.Providers
                     string className = string.Empty;
                     string cWhereQuery = string.Empty;
 
-                    if (aWeb.moRequest.Form("MaxPrice") is not null)
+                    if (aWeb.moRequest.Form["MaxPrice"] != null)
                     {
 
-                        oMinPrice.Value = Convert.ToString(aWeb.moRequest.Form("MinPrice"));
-                        oMaxPrice.Value = Convert.ToString(aWeb.moRequest.Form("MaxPrice"));
+                        oMinPrice.Value = Convert.ToString(aWeb.moRequest.Form["MinPrice"]);
+                        oMaxPrice.Value = Convert.ToString(aWeb.moRequest.Form["MaxPrice"]);
 
                     }
-                    if (oContentNode.Attributes["filterTarget"] is not null)
+                    if (oContentNode.Attributes["filterTarget"] != null)
                     {
                         cFilterTarget = oContentNode.Attributes["filterTarget"].Value;
                     }
 
 
-                    if (FilterConfig.Attributes["name"] is not null)
+                    if (FilterConfig.Attributes["name"] != null)
                     {
                         sCotrolDisplayName = Convert.ToString(FilterConfig.Attributes["name"].Value);
                     }
@@ -74,7 +74,7 @@ namespace Protean.Providers
                     arrParams.Add("FilterTarget", cFilterTarget);
                     using (SqlDataReader oDr = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure, arrParams))
                     {
-                        if (oDr is not null)
+                        if (oDr != null)
                         {
                             while (oDr.Read())
                             {
@@ -149,7 +149,7 @@ namespace Protean.Providers
                     oXform.addSubmit(ref oFromGroup, "", "Apply", "PriceFilter", "  btnPriceSubmit hidden", "");
 
 
-                    if (aWeb.moRequest.Form("MinPrice") is not null & aWeb.moRequest.Form("MinPrice") != "")
+                    if (aWeb.moRequest.Form["MinPrice"] != null & aWeb.moRequest.Form["MinPrice"] != "")
                     {
 
                         // Dim sText As String = "From " + aWeb.moCart.mcCurrencySymbol + "" + oMinPrice.Value.Trim() + " to " + aWeb.moCart.mcCurrencySymbol + "" + oMaxPrice.Value.Trim()
@@ -158,7 +158,7 @@ namespace Protean.Providers
 
                     }
 
-                    if (aWeb.moRequest.Form("MinPrice") is not null & aWeb.moRequest.Form("MinPrice") != "")
+                    if (aWeb.moRequest.Form["MinPrice"] != null & aWeb.moRequest.Form["MinPrice"] != "")
                     {
                         oXform.addInput(ref oFromGroup, "", false, sCotrolDisplayName, "histogramSliderMainDivPrice filter-selected");
                     }
@@ -188,8 +188,8 @@ namespace Protean.Providers
                     string cPageIds = string.Empty;
                     // cSelectedMinPrice = Convert.ToString(oXform.Instance.SelectSingleNode("PriceFilter/@MinPrice").InnerText)
                     // cSelectedMaxPrice = Convert.ToString(oXform.Instance.SelectSingleNode("PriceFilter/@MaxPrice").InnerText)
-                    cSelectedMinPrice = Convert.ToString(aWeb.moRequest.Form("MinPrice")).Replace(aWeb.moCart.mcCurrencySymbol, "");
-                    cSelectedMaxPrice = Convert.ToString(aWeb.moRequest.Form("MaxPrice")).Replace(aWeb.moCart.mcCurrencySymbol, "");
+                    cSelectedMinPrice = Convert.ToString(aWeb.moRequest.Form["MinPrice"]).Replace(aWeb.moCart.mcCurrencySymbol, "");
+                    cSelectedMaxPrice = Convert.ToString(aWeb.moRequest.Form["MaxPrice"]).Replace(aWeb.moCart.mcCurrencySymbol, "");
                     bool bParentPageId = false;
 
 
@@ -241,8 +241,8 @@ namespace Protean.Providers
                 {
                     string cSelectedMinPrice = "";
                     string cSelectedMaxPrice = "";
-                    cSelectedMinPrice = Convert.ToString(aWeb.moRequest.Form("MinPrice")).Replace(aWeb.moCart.mcCurrency, "");
-                    cSelectedMaxPrice = Convert.ToString(aWeb.moRequest.Form("MaxPrice")).Replace(aWeb.moCart.mcCurrency, "");
+                    cSelectedMinPrice = Convert.ToString(aWeb.moRequest.Form["MinPrice"]).Replace(aWeb.moCart.mcCurrency, "");
+                    cSelectedMaxPrice = Convert.ToString(aWeb.moRequest.Form["MaxPrice"]).Replace(aWeb.moCart.mcCurrency, "");
                     if (!string.IsNullOrEmpty(cSelectedMaxPrice))
                     {
                         cWhereSql = cWhereSql + " nContentKey in ( Select distinct ci.nContentId from tblContentIndex ci inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey ";

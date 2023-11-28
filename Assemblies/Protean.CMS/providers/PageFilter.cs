@@ -36,13 +36,13 @@ namespace Protean.Providers
                     XmlElement oFilterElmt = null;
                     string className = string.Empty;
 
-                    if (oContentNode.Attributes["filterTarget"] is not null)
+                    if (oContentNode.Attributes["filterTarget"] != null)
                     {
                         cFilterTarget = oContentNode.Attributes["filterTarget"].Value;
                     }
-                    if (aWeb.moRequest.Form("PageFilter") is not null)
+                    if (aWeb.moRequest.Form["PageFilter"] != null)
                     {
-                        oXml.InnerText = Convert.ToString(aWeb.moRequest.Form("PageFilter"));
+                        oXml.InnerText = Convert.ToString(aWeb.moRequest.Form["PageFilter"]);
 
                     }
 
@@ -53,16 +53,16 @@ namespace Protean.Providers
 
                     // Adding a binding to the form bindings
                     oXform.addBind("PageFilter", "PageFilter", "false()", "string", ref oXform.model);
-                    if (FilterConfig.Attributes["name"] is not null)
+                    if (FilterConfig.Attributes["name"] != null)
                     {
                         sCotrolDisplayName = Convert.ToString(FilterConfig.Attributes["name"].Value);
                     }
                     // Get Parent page id flag and current id
-                    if (FilterConfig.Attributes["parId"] is not null)
+                    if (FilterConfig.Attributes["parId"] != null)
                     {
                         nParentId = Convert.ToInt32(FilterConfig.Attributes["parId"].Value);
                     }
-                    if (FilterConfig.Attributes["parentPageId"].Value is not null)
+                    if (FilterConfig.Attributes["parentPageId"].Value != null)
                     {
                         bParentPageId = Convert.ToBoolean(Convert.ToInt32(FilterConfig.Attributes["parentPageId"].Value));
                     }
@@ -77,7 +77,7 @@ namespace Protean.Providers
                     using (SqlDataReader oDr = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure, arrParams))  // Done by nita on 6/7/22
                     {
                         // Adding controls to the form like dropdown, radiobuttons
-                        if (oDr is not null && oDr.HasRows)
+                        if (oDr != null && oDr.HasRows)
                         {
 
                             if (!string.IsNullOrEmpty(oXml.InnerText))
@@ -102,7 +102,7 @@ namespace Protean.Providers
                         }
 
                     }
-                    if (oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item") is not null)
+                    if (oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item") != null)
                     {
                         if (!string.IsNullOrEmpty(oXml.InnerText.Trim()))
                         {
@@ -145,14 +145,14 @@ namespace Protean.Providers
 
                     // Get the filter type parent or child based on the value of the parentPageId attribute
                     bool bParentPageId = false;
-                    if (FilterConfig.Attributes["parentPageId"].Value is not null)
+                    if (FilterConfig.Attributes["parentPageId"].Value != null)
                     {
                         bParentPageId = Convert.ToBoolean(Convert.ToInt32(FilterConfig.Attributes["parentPageId"].Value));
                     }
 
                     string cPageIds = string.Empty;
 
-                    if (oXform.Instance.SelectSingleNode("PageFilter") is not null)
+                    if (oXform.Instance.SelectSingleNode("PageFilter") != null)
                     {
                         cPageIds = oXform.Instance.SelectSingleNode("PageFilter").InnerText;
 
@@ -194,10 +194,10 @@ namespace Protean.Providers
                 string cPageIds = string.Empty;
                 try
                 {
-                    if (aWeb.moRequest.Form("PageFilter") is not null)
+                    if (aWeb.moRequest.Form["PageFilter"] != null)
                     {
                         // cWhereSql = cWhereSql & "  nStructId IN(" + aWeb.moRequest.Form("PageFilter") & ")"
-                        cWhereSql = cWhereSql + " nStructId IN (select nStructKey from tblContentStructure where (nStructKey in ( " + aWeb.moRequest.Form("PageFilter") + ") OR nStructParId in ( " + aWeb.moRequest.Form("PageFilter") + "))	)";
+                        cWhereSql = cWhereSql + " nStructId IN (select nStructKey from tblContentStructure where (nStructKey in ( " + aWeb.moRequest.Form["PageFilter"] + ") OR nStructParId in ( " + aWeb.moRequest.Form["PageFilter"] + "))	)";
 
                     }
                 }

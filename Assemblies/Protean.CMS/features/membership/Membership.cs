@@ -117,7 +117,7 @@ namespace Protean
                     EncryptedString = Tools.Text.DeAscString(EncryptedString);
 
                     string cSQL = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT tblDirectory.nDirKey FROM tblDirectory INNER JOIN tblAudit ON tblDirectory.nAuditId = tblAudit.nAuditKey WHERE cDirPassword = '", SqlFmt(EncryptedString)), "' AND nDirKey = "), AccountID));
-                    return Conversions.ToInteger(myWeb.moDbHelper.GetDataValue(cSQL, 1, null, (object)0));
+                    return Conversions.ToInteger(myWeb.moDbHelper.GetDataValue(cSQL, CommandType.Text, null, (object)0));
                 }
                 catch (Exception ex)
                 {
@@ -245,7 +245,7 @@ namespace Protean
 
                     // lets get the userId form the hash supplied
                     string cSQL = "SELECT tblDirectory.nDirKey FROM tblDirectory INNER JOIN tblAudit ON tblDirectory.nAuditId = tblAudit.nAuditKey WHERE cDirXml LIKE '%<ActivationKey>" + cLink + "</ActivationKey>%'";
-                    userId = Conversions.ToLong(myWeb.moDbHelper.GetDataValue(cSQL, 1, null, (object)0));
+                    userId = Conversions.ToLong(myWeb.moDbHelper.GetDataValue(cSQL, CommandType.Text, null, (object)0));
 
                     if (userId > 0L)
                     {
@@ -267,7 +267,7 @@ namespace Protean
                             case "LogonReload":
                                 {
                                     myWeb.mnUserId = (int)userId;
-                                    if (myWeb.moSession is not null)
+                                    if (myWeb.moSession != null)
                                     {
                                         myWeb.moSession["nUserId"] = (object)myWeb.mnUserId;
                                     }
@@ -348,7 +348,7 @@ namespace Protean
             {
                 try
                 {
-                    if (myWeb.moRequest.Cookies[Name] is not null)
+                    if (myWeb.moRequest.Cookies[Name] != null)
                     {
                         return myWeb.moRequest.Cookies[Name].Value;
                     }
@@ -457,9 +457,9 @@ namespace Protean
                     // myWeb.moResponse.Redirect(SecureMembershipAddress & cPath)
                     else if (oVariants.ContainsValue(SecureMembershipAddress) & myWeb.mnUserId > 0)
                     {
-                        if (myWeb.moPageXml is not null)
+                        if (myWeb.moPageXml != null)
                         {
-                            if (myWeb.moPageXml.DocumentElement is not null)
+                            if (myWeb.moPageXml.DocumentElement != null)
                             {
                                 myWeb.moPageXml.DocumentElement.SetAttribute("baseUrl", SecureMembershipAddress + myWeb.moConfig["ProjectPath"] + "/");
                             }
@@ -468,9 +468,9 @@ namespace Protean
                     }
                     else if (myWeb.moRequest.ServerVariables["HTTPS"] == "on")
                     {
-                        if (myWeb.moPageXml is not null)
+                        if (myWeb.moPageXml != null)
                         {
-                            if (myWeb.moPageXml.DocumentElement is not null)
+                            if (myWeb.moPageXml.DocumentElement != null)
                             {
                                 // don't want this for everything just the logon form
                                 myWeb.moPageXml.DocumentElement.SetAttribute("baseUrl", SecureMembershipAddress + myWeb.moConfig["ProjectPath"]);
@@ -496,7 +496,7 @@ namespace Protean
                     Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)castObject;
                     foreach (var ourProvider in moPrvConfig.Providers)
                     {
-                        if (ourProvider.parameters(actionName) is not null)
+                        if (ourProvider.parameters(actionName) != null)
                         {
                             Type calledType;
                             Assembly assemblyInstance;
@@ -587,7 +587,7 @@ namespace Protean
                             {
                                 myWeb.moContentDetail = (XmlElement)null;
                                 // mnUserId = adXfm.mnUserId
-                                if (myWeb.moSession is not null)
+                                if (myWeb.moSession != null)
                                     myWeb.moSession["nUserId"] = (object)myWeb.mnUserId;
                                 if (myWeb.moRequest["cRemember"] == "true")
                                 {
@@ -597,9 +597,9 @@ namespace Protean
                                     myWeb.moResponse.Cookies.Add(oCookie);
                                 }
                                 // Now we want to reload as permissions have changed
-                                if (myWeb.moSession is not null)
+                                if (myWeb.moSession != null)
                                 {
-                                    if (myWeb.moSession["cLogonCmd"] is not null)
+                                    if (myWeb.moSession["cLogonCmd"] != null)
                                     {
                                         cLogonCmd = Strings.Split(Conversions.ToString(myWeb.moSession["cLogonCmd"]), "=")[0];
                                         if (myWeb.mcOriginalURL.Contains(cLogonCmd + "="))
@@ -755,7 +755,7 @@ namespace Protean
                                         mnUserId = fbClient.CreateUser(ref argfbUser);
                                         tmp[0] = argfbUser;
 
-                                        if (moSession is not null)
+                                        if (moSession != null)
                                             moSession["nUserId"] = (object)mnUserId;
                                         moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Register, (int)mnUserId, moSession.SessionID, DateTime.Now, 0, 0, "First Logon");
 
@@ -864,7 +864,7 @@ namespace Protean
                                     default:
                                         {
                                             mnUserId = Conversions.ToLong(adXfm.instance.SelectSingleNode("tblDirectory/nDirKey").InnerText);
-                                            if (moSession is not null)
+                                            if (moSession != null)
                                                 moSession["nUserId"] = (object)mnUserId;
 
                                             moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Register, (int)mnUserId, moSession.SessionID, DateTime.Now, 0, 0, "First Logon");
@@ -896,7 +896,7 @@ namespace Protean
                                     string fromName = moConfig["SiteAdminName"];
                                     string fromEmail = moConfig["SiteAdminEmail"];
                                     string recipientEmail = "";
-                                    if (oUserEmail is not null)
+                                    if (oUserEmail != null)
                                         recipientEmail = oUserEmail.InnerText;
                                     string SubjectLine = "Your Registration Details";
                                     var oMsg = new Protean.Messaging(ref myWeb.msException);
@@ -951,9 +951,9 @@ namespace Protean
                         {
                             // Now we want to reload as permissions have changed
 
-                            if (moSession is not null)
+                            if (moSession != null)
                             {
-                                if (moSession["cLogonCmd"] is not null)
+                                if (moSession["cLogonCmd"] != null)
                                 {
                                     cLogonCmd = Strings.Split(Conversions.ToString(moSession["cLogonCmd"]), "=")[0];
                                     if (myWeb.mcOriginalURL.Contains(cLogonCmd + "="))
@@ -1205,7 +1205,7 @@ namespace Protean
                                         foreach (XmlElement oContactElmt in myWeb.GetUserXML((long)myWeb.mnUserId).SelectNodes("descendant-or-self::Contact"))
                                         {
                                             XmlElement oId = (XmlElement)oContactElmt.SelectSingleNode("nContactKey");
-                                            if (oId is not null)
+                                            if (oId != null)
                                             {
                                                 if ((oId.InnerText ?? "") == (myWeb.moRequest["id"] ?? ""))
                                                 {
@@ -1244,7 +1244,7 @@ namespace Protean
                             var adXfm = myWeb.getAdminXform();
                             adXfm.open(myWeb.moPageXml);
 
-                            if (Conversions.ToInteger("0" + myWeb.moRequest["id"]) > 0 & myWeb.moPageXml.SelectSingleNode("User/Company/Contacts/Contact/nContactKey[text()='" + myWeb.moRequest["id"] + "']") is not null)
+                            if (Conversions.ToInteger("0" + myWeb.moRequest["id"]) > 0 & myWeb.moPageXml.SelectSingleNode("User/Company/Contacts/Contact/nContactKey[text()='" + myWeb.moRequest["id"] + "']") != null)
                             {
                                 bUserValid = false;
                             }
@@ -1279,7 +1279,7 @@ namespace Protean
                                             foreach (XmlElement oContactElmt in myWeb.GetUserXML((long)myWeb.mnUserId).SelectNodes("descendant-or-self::Contact"))
                                             {
                                                 XmlElement oId = (XmlElement)oContactElmt.SelectSingleNode("nContactKey");
-                                                if (oId is not null)
+                                                if (oId != null)
                                                 {
                                                     if ((oId.InnerText ?? "") == (myWeb.moRequest["id"] ?? ""))
                                                     {
@@ -1311,7 +1311,7 @@ namespace Protean
                     try
                     {
 
-                        if (myWeb.mnUserId > 0 & contentNode.SelectSingleNode("ancestor::Order") is not null)
+                        if (myWeb.mnUserId > 0 & contentNode.SelectSingleNode("ancestor::Order") != null)
                         {
 
                             foreach (XmlElement groupNode in contentNode.SelectNodes("descendant-or-self::UserGroups/Group"))

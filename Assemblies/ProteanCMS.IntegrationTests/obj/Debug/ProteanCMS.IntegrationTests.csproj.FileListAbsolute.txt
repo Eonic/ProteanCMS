@@ -491,9 +491,9 @@ D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Inte
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\ICSharpCode.SharpZipLib.pdb
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\ICSharpCode.SharpZipLib.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Newtonsoft.Json.xml
-D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Magick.Native-Q8-x86.dll
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Magick.Native-Q8-arm64.dll
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Magick.Native-Q8-x64.dll
+D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Magick.Native-Q8-x86.dll
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll

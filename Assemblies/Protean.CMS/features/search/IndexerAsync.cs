@@ -212,7 +212,7 @@ namespace Protean
                     // If moConfig("SiteSearchIndexMinInterval") <> "" Then
                     // minInterval = moConfig("SiteSearchIndexMinInterval")
                     // End If
-                    if (moConfig["SiteSearchIndexResultPaging"] is not null)
+                    if (moConfig["SiteSearchIndexResultPaging"] != null)
                     {
                         minInterval = Conversions.ToInteger(moConfig["SiteSearchIndexResultPaging"]);
                     }
@@ -220,7 +220,7 @@ namespace Protean
                     // minInterval = moConfig("SiteSearchIndexResultPaging")
                     // End If
 
-                    if (oLastIndexInfo is not null)
+                    if (oLastIndexInfo != null)
                     {
                         var oLastInfoElmt = oLastIndexInfo.DocumentElement;
                         dLastRun = Conversions.ToDate(oLastInfoElmt.GetAttribute("startTime"));
@@ -246,9 +246,9 @@ namespace Protean
                     {
                         TotalSize = infoReader.Length.ToString();
 
-                        if (myWeb.moConfig("indexFileSize") is not null)
+                        if (myWeb.moConfig["indexFileSize"] != null)
                         {
-                            if (myWeb.moConfig("indexFileSize") * 1048576 < TotalSize) // converted config mb size to byte
+                            if (Convert.ToInt32(myWeb.moConfig["indexFileSize"]) * Convert.ToInt32(1048576) < Convert.ToInt32(TotalSize)) // converted config mb size to byte
                             {
                                 // StopIndex()
                                 return default;
@@ -334,9 +334,9 @@ namespace Protean
                             {
                                 TotalSize = infoReader.Length.ToString();
 
-                                if (myWeb.moConfig("indexFileSize") is not null)
+                                if (myWeb.moConfig["indexFileSize"] != null)
                                 {
-                                    if (myWeb.moConfig("indexFileSize") * 1048576 < TotalSize) // converted config mb size to byte
+                                    if (Convert.ToInt32(myWeb.moConfig["indexFileSize"]) * 1048576 < Convert.ToInt32(TotalSize)) // converted config mb size to byte
                                     {
                                         StopIndex();
                                         return default;
@@ -390,7 +390,7 @@ namespace Protean
                     }
 
                     Protean.Cms.dbHelper argodbHelper = null;
-                    msg.emailer(oInfoElmt, "/ewcommon/xsl/Email/IndexerAlert.xsl", "ProteanCMS Indexer", serverSenderEmail, recipientEmail, myWeb.moRequest.ServerVariables("SERVER_NAME") + " Indexer Report", odbHelper: ref argodbHelper);
+                    msg.emailer(oInfoElmt, "/ewcommon/xsl/Email/IndexerAlert.xsl", "ProteanCMS Indexer", serverSenderEmail, recipientEmail, myWeb.moRequest.ServerVariables["SERVER_NAME"] + " Indexer Report", odbHelper: ref argodbHelper);
                     msg = (Protean.Messaging)null;
 
                     return "Index Complete";
@@ -854,7 +854,7 @@ namespace Protean
                     myWeb.InitializeVariables();
                     myWeb.Open();
                     myWeb.mnUserId = 1;
-                    if (myWeb.moConfig("SiteSearchIndexHiddenDetail") == "on")
+                    if (myWeb.moConfig["SiteSearchIndexHiddenDetail"] == "on")
                     {
                         myWeb.mbAdminMode = true;
                     }
@@ -863,7 +863,7 @@ namespace Protean
                         myWeb.mbAdminMode = false;
                     }
                     myWeb.ibIndexMode = true;
-                    myWeb.ibIndexRelatedContent = myWeb.moConfig("SiteSearchIndexRelatedContent") == "on";
+                    myWeb.ibIndexRelatedContent = myWeb.moConfig["SiteSearchIndexRelatedContent"] == "on";
                     myWeb.moTransform = moTransform;
                     myWeb.moTransform.myWeb = myWeb;
 
@@ -886,7 +886,7 @@ namespace Protean
                     if (string.IsNullOrEmpty(cPageHtml))
                     {
                         // we have an error to handle
-                        if (myWeb.msException is not null)
+                        if (myWeb.msException != null)
                         {
                             var errorElmt = oIndexInfo.CreateElement("IndexElement");
                             errorElmt.InnerText = myWeb.msException;
@@ -917,9 +917,9 @@ namespace Protean
                             // cProcessInfo = "our page"
                             // End If
 
-                            if (oElmtRules is not null)
+                            if (oElmtRules != null)
                                 cRules = oElmtRules.GetAttribute("content");
-                            if (!(Strings.InStr(cRules, "NOINDEX") > 0) & oElmtURL is not null)
+                            if (!(Strings.InStr(cRules, "NOINDEX") > 0) & oElmtURL != null)
                             {
                                 if (!oElmtURL.GetAttribute("url").StartsWith("http"))
                                 {
@@ -943,7 +943,7 @@ namespace Protean
                         catch (Exception ex)
                         {
                             var oPageErrElmt = oIndexInfo.CreateElement("errorInfo");
-                            oPageErrElmt.SetAttribute("pgid", myWeb.mnPageId);
+                            oPageErrElmt.SetAttribute("pgid", myWeb.mnPageId.ToString());
                             oPageErrElmt.SetAttribute("type", "Page");
                             oPageErrElmt.InnerText = ex.Message;
                             oInfoElmt.AppendChild(oPageErrElmt);
@@ -988,7 +988,7 @@ namespace Protean
                                         // we have an error to handle
                                         if (myWeb.msException == "")
                                             myWeb.msException = null;
-                                        if (myWeb.msException is not null)
+                                        if (myWeb.msException != null)
                                         {
                                             var errorElmt = oIndexInfo.CreateElement("IndexElement");
                                             errorElmt.InnerXml = myWeb.msException;
@@ -1016,17 +1016,17 @@ namespace Protean
                                                 oElmtRules = (XmlElement)oPageXml.SelectSingleNode("/html/head/meta[@name='ROBOTS']");
                                                 cRules = "";
                                                 string sPageUrl = "";
-                                                if (oElmtURL is not null)
+                                                if (oElmtURL != null)
                                                 {
                                                     sPageUrl = oElmtURL.GetAttribute("url");
                                                 }
-                                                if (oElmtRules is not null)
+                                                if (oElmtRules != null)
                                                     cRules = oElmtRules.GetAttribute("content");
                                                 if (!(Strings.InStr(cRules, "NOINDEX") > 0) & !sPageUrl.StartsWith("http"))
                                                 {
 
                                                     // handle cannonical link tag
-                                                    if (oPageXml.DocumentElement.SelectSingleNode("descendant-or-self::link[@rel='canonical']") is not null)
+                                                    if (oPageXml.DocumentElement.SelectSingleNode("descendant-or-self::link[@rel='canonical']") != null)
                                                     {
                                                         XmlElement oLinkElmt = (XmlElement)oPageXml.DocumentElement.SelectSingleNode("descendant-or-self::link[@rel='canonical']");
                                                         if (!string.IsNullOrEmpty(oLinkElmt.GetAttribute("href")))
@@ -1038,7 +1038,7 @@ namespace Protean
                                                     IndexPage(sPageUrl, oPageXml.DocumentElement, oElmt.GetAttribute("type"), ref myWeb.msException);
 
                                                     var oContentElmt = oInfoElmt.OwnerDocument.CreateElement(oElmt.GetAttribute("type"));
-                                                    oContentElmt.SetAttribute("artId", myWeb.mnArtId);
+                                                    oContentElmt.SetAttribute("artId", myWeb.mnArtId.ToString());
                                                     oContentElmt.SetAttribute("url", sPageUrl);
 
                                                     oPageElmt.AppendChild(oContentElmt);
@@ -1084,7 +1084,7 @@ namespace Protean
                                         catch (Exception ex)
                                         {
                                             var oPageErrElmt = oIndexInfo.CreateElement("errorInfo");
-                                            oPageErrElmt.SetAttribute("pgid", myWeb.mnPageId);
+                                            oPageErrElmt.SetAttribute("pgid", myWeb.mnPageId.ToString());
                                             oPageErrElmt.SetAttribute("type", oElmt.GetAttribute("type"));
                                             oPageErrElmt.SetAttribute("artid", oElmt.GetAttribute("id"));
                                             oPageErrElmt.InnerText = ex.Message;
@@ -1110,35 +1110,35 @@ namespace Protean
 
                         Interlocked.Decrement(ref nPagesRemaining);
 
-                        if (oInfoElmt.GetAttribute("indexCount") is not null)
+                        if (oInfoElmt.GetAttribute("indexCount") != null)
                         {
                             oInfoElmt.SetAttribute("indexCount", nIndexed.ToString());
                         }
-                        if (oInfoElmt.GetAttribute("pagesIndexed") is not null)
+                        if (oInfoElmt.GetAttribute("pagesIndexed") != null)
                         {
                             oInfoElmt.SetAttribute("pagesIndexed", nPagesIndexed.ToString());
                         }
-                        if (oInfoElmt.GetAttribute("pagesRemaining") is not null)
+                        if (oInfoElmt.GetAttribute("pagesRemaining") != null)
                         {
                             oInfoElmt.SetAttribute("pagesRemaining", nPagesRemaining.ToString());
                         }
-                        if (oInfoElmt.GetAttribute("pagesSkipped") is not null)
+                        if (oInfoElmt.GetAttribute("pagesSkipped") != null)
                         {
                             oInfoElmt.SetAttribute("pagesSkipped", nPagesSkipped.ToString());
                         }
-                        if (oInfoElmt.GetAttribute("contentCount") is not null)
+                        if (oInfoElmt.GetAttribute("contentCount") != null)
                         {
                             oInfoElmt.SetAttribute("contentCount", nContentsIndexed.ToString());
                         }
-                        if (oInfoElmt.GetAttribute("contentSkipped") is not null)
+                        if (oInfoElmt.GetAttribute("contentSkipped") != null)
                         {
                             oInfoElmt.SetAttribute("contentSkipped", nContentSkipped.ToString());
                         }
-                        if (oInfoElmt.GetAttribute("documentsIndexed") is not null)
+                        if (oInfoElmt.GetAttribute("documentsIndexed") != null)
                         {
                             oInfoElmt.SetAttribute("documentsIndexed", nDocumentsIndexed.ToString());
                         }
-                        if (oInfoElmt.GetAttribute("documentsSkipped") is not null)
+                        if (oInfoElmt.GetAttribute("documentsSkipped") != null)
                         {
                             oInfoElmt.SetAttribute("documentsSkipped", nDocumentsSkipped.ToString());
                         }
@@ -1205,7 +1205,7 @@ namespace Protean
                     indexDoc.Add(new Field("type", pageType, Field.Store.YES, Field.Index.NOT_ANALYZED));
 
 
-                    if (pageXml is not null)
+                    if (pageXml != null)
                     {
 
                         // Add the meta data to the fields
@@ -1434,7 +1434,7 @@ namespace Protean
                     }
 
 
-                    if (metaField is not null)
+                    if (metaField != null)
                     {
                         indexDocument.Add(metaField);
 

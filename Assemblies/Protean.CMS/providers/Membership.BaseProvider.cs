@@ -410,7 +410,7 @@ namespace Protean.Providers
                             oFrmElmt = (XmlElement)base.moXformElmt.SelectSingleNode("descendant-or-self::group[1]");
                         }
 
-                        if (base.isSubmitted)
+                        if (base.isSubmitted())
                         {
                             base.updateInstanceFromRequest();
                             base.validate();
@@ -582,7 +582,7 @@ namespace Protean.Providers
                         base.Instance.InnerXml = "<user><email>" + cEmailAddress + "</email></user>";
                         base.addValues();
 
-                        if (base.isSubmitted)
+                        if (base.isSubmitted())
                         {
                             base.updateInstanceFromRequest();
                             base.validate();
@@ -718,7 +718,7 @@ namespace Protean.Providers
                         ;
 
 
-                        if (base.isSubmitted)
+                        if (base.isSubmitted())
                         {
                             base.updateInstanceFromRequest();
                             base.validate();
@@ -850,7 +850,7 @@ namespace Protean.Providers
                     Check:
                         ;
 
-                        if (base.isSubmitted)
+                        if (base.isSubmitted())
                         {
                             base.updateInstanceFromRequest();
                             base.validate();
@@ -1033,7 +1033,7 @@ namespace Protean.Providers
                             }
                         }
 
-                        if (base.isSubmitted)
+                        if (base.isSubmitted())
                         {
                             base.updateInstanceFromRequest();
                             base.validate();
@@ -1331,7 +1331,7 @@ namespace Protean.Providers
                             }
 
                             // Check if submitted
-                            if (base.isSubmitted)
+                            if (base.isSubmitted())
                             {
                                 base.updateInstanceFromRequest();
                                 base.validate();
@@ -2443,7 +2443,7 @@ namespace Protean.Providers
 
                                         // Look for activation code xforms
                                         XmlElement xmlPageElmt = (XmlElement)myWeb.moPageXml.DocumentElement;
-                                        if (Xml.NodeState(ref xmlPageElmt, "Contents/Content[@type='xform' and @name='ActivationCode']", "", "", 1, oXfmElmt, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
+                                        if (Xml.NodeState(ref xmlPageElmt, "Contents/Content[@type='xform' and @name='ActivationCode']", "", "", XmlNodeState.IsEmpty, oXfmElmt, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
                                         {
                                             oXfmElmt.ParentNode.RemoveChild(oXfmElmt);
                                             cExistingFormXml = oXfmElmt.OuterXml;

@@ -236,8 +236,8 @@ namespace Protean
                                             myWeb.moContentDetail = myWeb.moPageXml.CreateElement("ContentDetail");
                                             contentNode = myWeb.moContentDetail;
                                             myWeb.moPageXml.DocumentElement.AppendChild(contentNode);
-                                            var oADX = new Cms.Admin.AdminXforms(myWeb);
-                                            XmlElement subXform = oADX.xFrmEditUserSubscription(myWeb.moRequest["subId"], "/xforms/Subscription/EditUserSubscription.xml");
+                                            var oADX = new Cms.Admin.AdminXforms(ref myWeb);
+                                            XmlElement subXform = oADX.xFrmEditUserSubscription(Convert.ToInt32(myWeb.moRequest["subId"]), "/xforms/Subscription/EditUserSubscription.xml");
                                             if (oADX.valid)
                                             {
                                                 cmd = "details";
@@ -371,7 +371,7 @@ namespace Protean
                                         string fromName = myWeb.moConfig["SiteAdminName"];
                                         string fromEmail = myWeb.moConfig["SiteAdminEmail"];
                                         string recipientEmail = "";
-                                        if (oUserEmail is not null)
+                                        if (oUserEmail != null)
                                             recipientEmail = oUserEmail.InnerText;
 
                                         // send an email to the new registrant

@@ -114,8 +114,8 @@ namespace Protean
                 try
                 {
                     // set up our variables & elements
-                    string calendarCmd = myWeb.moRequest.QueryString("calcmd");
-                    string cMonthDate = myWeb.moRequest.QueryString("monthdate"); // -- I don't know what this does.
+                    string calendarCmd = myWeb.moRequest.QueryString["calcmd"];
+                    string cMonthDate = myWeb.moRequest.QueryString["monthdate"]; // -- I don't know what this does.
 
                     DateTime dCalendarStart;
                     var dCalendarEnd = default(DateTime);

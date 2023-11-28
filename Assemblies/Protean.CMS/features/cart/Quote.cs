@@ -79,12 +79,12 @@ namespace Protean
                         base.mcPagePath = "?pgid=" + myWeb.mnPageId + "&";
                     }
                     base.moDBHelper = myWeb.moDbHelper;
-                    if (base.moConfig("ewMembership") == "on")
+                    if (base.moConfig["ewMembership"] == "on")
                         mbEwMembership = true;
                     mcNotesXForm = moQuoteConfig["NotesXForm"];
                     mcBillingAddressXform = moQuoteConfig["BillingAddressXForm"];
                     mcDeliveryAddressXform = moQuoteConfig["DeliveryAddressXForm"];
-                    if (moQuoteConfig["ListAllQuotes"] is not null)
+                    if (moQuoteConfig["ListAllQuotes"] != null)
                     {
                         if (moQuoteConfig["ListAllQuotes"] == "on")
                         {
@@ -92,32 +92,32 @@ namespace Protean
                         }
                     }
 
-                    mcSiteURL = moCartConfig("SiteURL");
-                    mcTermsAndConditions = moCartConfig("TermsAndConditions");
+                    mcSiteURL = moCartConfig["SiteURL"];
+                    mcTermsAndConditions = moCartConfig["TermsAndConditions"];
                     // OrderNoPrefix = moQuoteConfig("QuoteNoPrefix")
-                    mcCurrencySymbol = moCartConfig("CurrencySymbol");
-                    mcCurrency = moCartConfig("Currency");
+                    mcCurrencySymbol = moCartConfig["CurrencySymbol"];
+                    mcCurrency = moCartConfig["Currency"];
                     if (mcCurrency == "")
                         mcCurrency = "GBP";
 
-                    if (moCartConfig("NoDeliveryAddress") == "on")
+                    if (moCartConfig["NoDeliveryAddress"] == "on")
                         mbNoDeliveryAddress = true;
 
-                    if (myWeb.moRequest.Form("url") != "")
+                    if (myWeb.moRequest.Form["url"] != "")
                     {
-                        myWeb.moSession("returnPage") = myWeb.moRequest.Form("url");
+                        myWeb.moSession["returnPage"] = myWeb.moRequest.Form["url"];
                     }
-                    if (myWeb.moRequest.QueryString("url") != "")
+                    if (myWeb.moRequest.QueryString["url"] != "")
                     {
-                        myWeb.moSession("returnPage") = myWeb.moRequest.QueryString("url");
+                        myWeb.moSession["returnPage"] = myWeb.moRequest.QueryString["url"];
                     }
 
-                    mcReturnPage = myWeb.moSession("returnPage");
+                    mcReturnPage = myWeb.moSession["returnPage"].ToString();
 
                     // If goApp("sCookieDomain") = "" Then
-                    if (myWeb.moSession("nEwUserId") is not null)
+                    if (myWeb.moSession["nEwUserId"] != null)
                     {
-                        mnEwUserId = "0" + myWeb.moSession("nEwUserId");
+                        mnEwUserId = Convert.ToInt32("0" + myWeb.moSession["nEwUserId"]);
                     }
                     else
                     {
@@ -126,7 +126,7 @@ namespace Protean
                     if (myWeb.mnUserId > 0 & mnEwUserId == 0)
                         mnEwUserId = myWeb.mnUserId;
                     // MEMB - eEDIT
-                    if (myWeb.moCtx.Application("bFullCartOption") == true)
+                    if (myWeb.moCtx.Application["bFullCartOption"] == true)
                     {
                         bFullCartOption = true;
                     }
@@ -135,53 +135,53 @@ namespace Protean
                         bFullCartOption = false;
                     }
 
-                    if (myWeb.moSession("QuoteId") is null)
+                    if (myWeb.moSession["QuoteId"] is null)
                     {
                         mnCartId = 0;
                     }
-                    else if (!Information.IsNumeric(myWeb.moSession("QuoteId")) | myWeb.moSession("QuoteId") <= 0)
+                    else if (!Information.IsNumeric(myWeb.moSession["QuoteId"]) | Convert.ToInt32(myWeb.moSession["QuoteId"]) <= 0)
                     {
                         mnCartId = 0;
                     }
                     else
                     {
-                        mnCartId = myWeb.moSession("QuoteId");
+                        mnCartId = Convert.ToInt32(myWeb.moSession["QuoteId"]);
                     }
 
-                    if (myWeb.moRequest("refSessionId") is not null)
+                    if (myWeb.moRequest["refSessionId"] != null)
                     {
-                        mcSessionId = myWeb.moRequest("refSessionId");
+                        mcSessionId = myWeb.moRequest["refSessionId"];
                         myWeb.moSession.Add("refSessionId", mcSessionId);
                     }
-                    else if (myWeb.moSession("refSessionId") is not null)
+                    else if (myWeb.moSession["refSessionId"] != null)
                     {
-                        mcSessionId = myWeb.moSession("refSessionId");
+                        mcSessionId = Convert.ToString(myWeb.moSession["refSessionId"]);
                     }
                     else
                     {
                         mcSessionId = myWeb.moSession.SessionID;
                     }
 
-                    if (Information.IsNumeric(myWeb.moRequest.QueryString("cartErr")))
-                        mnProcessError = myWeb.moRequest.QueryString("cartErr");
-                    mcCartCmd = (object)null;
-                    if (myWeb.moRequest.QueryString("quoteCmd") != "")
+                    if (Information.IsNumeric(myWeb.moRequest.QueryString["cartErr"]))
+                        mnProcessError = Convert.ToInt16(myWeb.moRequest.QueryString["cartErr"]);
+                    mcCartCmd = null;
+                    if (myWeb.moRequest.QueryString["quoteCmd"] != "")
                     {
-                        mcCartCmd = myWeb.moRequest.QueryString("quoteCmd");
+                        mcCartCmd = myWeb.moRequest.QueryString["quoteCmd"];
                     }
                     if (mcCartCmd == "")
                     {
-                        mcCartCmd = myWeb.moRequest.Form("quoteCmd");
+                        mcCartCmd = myWeb.moRequest.Form["quoteCmd"];
                     }
 
 
-                    mmcOrderType = myWeb.moSession("mmcOrderType");
-                    mcItemOrderType = myWeb.moRequest.Form("ordertype");
+                    mmcOrderType =Convert.ToString(myWeb.moSession["mmcOrderType"]);
+                    mcItemOrderType = myWeb.moRequest.Form["ordertype"];
 
                     // MsgBox "Item: " & mcItemOrderType & vbCrLf & "Order: " & mmcOrderType
                     // set global variable for submit button
 
-                    mcSubmitText = myWeb.moRequest("submit");
+                    mcSubmitText = myWeb.moRequest["submit"];
 
                     if (mnCartId > 0)
                     {
@@ -194,9 +194,9 @@ namespace Protean
                             {
                                 while (oDr.Read())
                                 {
-                                    mnGiftListId = oDr["nGiftListId"];
-                                    mnTaxRate = Conversions.ToDouble(Operators.ConcatenateObject("0", oDr["nTaxRate"]));
-                                    mnProcessId = Conversions.ToLong(Operators.ConcatenateObject("0", oDr["nCartStatus"]));
+                                    mnGiftListId = Convert.ToInt32(oDr["nGiftListId"]);
+                                    mnTaxRate = Convert.ToDouble(Operators.ConcatenateObject("0", oDr["nTaxRate"]));
+                                    mnProcessId = Convert.ToInt16(Operators.ConcatenateObject("0", oDr["nCartStatus"]));
                                 }
                             }
                             else
@@ -214,17 +214,17 @@ namespace Protean
                     }
                     // Cart doesn't exist - check if it can be found in the database, although only run this check if we know that we've visited the cart
                     // Also check out if this is coming from a Worldpay callback.
-                    else if (myWeb.moRequest("refSessionId") is not null | myWeb.moRequest("transStatus") is not null | myWeb.moRequest("settlementRef") is not null)
+                    else if (myWeb.moRequest["refSessionId"] != null | myWeb.moRequest["transStatus"] != null | myWeb.moRequest["settlementRef"] != null)
                     {
-                        if (myWeb.moRequest("transStatus") is not null)
+                        if (myWeb.moRequest["transStatus"] != null)
                         {
-                            sSql = "select * from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId  where o.cCartSchemaName='cart' and o.nCartOrderKey=" + myWeb.moRequest("cartId") + " and DATEDIFF(hh,a.dInsertDate,GETDATE())<24";
+                            sSql = "select * from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId  where o.cCartSchemaName='cart' and o.nCartOrderKey=" + myWeb.moRequest["cartId"] + " and DATEDIFF(hh,a.dInsertDate,GETDATE())<24";
                         }
                         // mcPaymentMethod = "WorldPay"
-                        else if (myWeb.moRequest("settlementRef") is not null)
+                        else if (myWeb.moRequest["settlementRef"] != null)
                         {
                             // Go get the cart, restore settings
-                            sSql = "select * from tblCartOrder where cCartSchemaName='cart' and cSettlementID='" + myWeb.moRequest("settlementRef") + "'";
+                            sSql = "select * from tblCartOrder where cCartSchemaName='cart' and cSettlementID='" + myWeb.moRequest["settlementRef"] + "'";
                         }
                         else
                         {
@@ -236,11 +236,11 @@ namespace Protean
                             {
                                 while (oDr.Read())
                                 {
-                                    mnGiftListId = oDr["nGiftListId"];
-                                    mnCartId = oDr["nCartOrderKey"]; // get cart id
-                                    mnProcessId = oDr["nCartStatus"]; // get cart status
-                                    mnTaxRate = oDr["nTaxRate"];
-                                    if (myWeb.moRequest("settlementRef") is not null)
+                                    mnGiftListId = Convert.ToInt32(oDr["nGiftListId"]);
+                                    mnCartId = Convert.ToInt32(oDr["nCartOrderKey"]); // get cart id
+                                    mnProcessId = Convert.ToInt16(oDr["nCartStatus"]); // get cart status
+                                    mnTaxRate = Convert.ToInt32(oDr["nTaxRate"]);
+                                    if (myWeb.moRequest["settlementRef"] != null)
                                     {
 
                                         // Set eh commands for a settlement
@@ -318,13 +318,13 @@ namespace Protean
 
                     cProcessInfo = "set session variables"; // persist global sProcessInfo
 
-                    if (myWeb.moSession("QuoteId") is null)
+                    if (myWeb.moSession["QuoteId"] is null)
                     {
                         myWeb.moSession.Add("QuoteId", mnCartId);
                     }
                     else
                     {
-                        myWeb.moSession("QuoteId") = mnCartId;
+                        myWeb.moSession["QuoteId"] = mnCartId;
                     }
                     // oResponse.Cookies(mcSiteURL & "CartId").Domain = mcSiteURL
                     // oSession("nCartOrderId") = mnCartId    '   session attribute holds Cart ID
@@ -340,9 +340,9 @@ namespace Protean
                         base.moDBHelper.ExeProcessSql(sSql);
                     }
 
-                    myWeb.moSession("nProcessId") = mnProcessId; // persist global mnProcessId
-                    myWeb.moSession("mmcOrderType") = mmcOrderType;
-                    myWeb.moSession("nTaxRate") = mnTaxRate;
+                    myWeb.moSession["nProcessId"] = mnProcessId; // persist global mnProcessId
+                    myWeb.moSession["mmcOrderType"] = mmcOrderType;
+                    myWeb.moSession["nTaxRate"] = mnTaxRate;
                 }
 
                 catch (Exception ex)
@@ -538,8 +538,8 @@ namespace Protean
                             {
                                 if (mnCartId < 1)
                                 {
-                                    myWeb.moSession("previousPage") = "ADD";
-                                    CreateNewCart(oElmt);
+                                    myWeb.moSession["previousPage"] = "ADD";
+                                    CreateNewCart(ref oElmt);
                                     if (mcItemOrderType != "")
                                     {
                                         mmcOrderType = mcItemOrderType;
@@ -555,7 +555,7 @@ namespace Protean
                                     mnProcessError = 2; // Error: The current item's order type does not match the cart's order type
 
                                 // Case for if a items have been added from a giftlist
-                                if (myWeb.moRequest("giftlistId") is not null)
+                                if (myWeb.moRequest["giftlistId"] != null)
                                 {
                                     // AddDeliveryFromGiftList(myWeb.moRequest("giftlistId"))
                                 }
@@ -658,14 +658,14 @@ namespace Protean
                                 // GoTo processFlow
                                 // End If
 
-                                myWeb.moSession("cLogonCmd") = "";
+                                myWeb.moSession["cLogonCmd"] = "";
                                 if (mcNotesXForm != "")
                                 {
                                     Cms.xForm oNotesXform = notesXform("notesForm", "?quoteCmd=Notes");
                                     if (oNotesXform.valid == false)
                                     {
                                         base.moPageXml.SelectSingleNode("/Page/Contents").AppendChild(oNotesXform.moXformElmt);
-                                        GetCart(oElmt);
+                                        GetCart(ref oElmt);
                                     }
                                     else
                                     {
@@ -730,27 +730,27 @@ namespace Protean
                                     if (myWeb.mnUserId == 0)
                                     {
                                         // addtional string for membership to check
-                                        myWeb.moSession("cLogonCmd") = "quoteCmd=Logon";
+                                        myWeb.moSession["cLogonCmd"] = "quoteCmd=Logon";
                                         // registration xform
-                                        var oMembershipProv = new Providers.Membership.BaseProvider(ref myWeb, myWeb.moConfig("MembershipProvider"));
+                                        var oMembershipProv = new Providers.Membership.BaseProvider(ref myWeb, myWeb.moConfig["MembershipProvider"]);
                                         Providers.Membership.EonicProvider.AdminXForms oRegXform = (Providers.Membership.EonicProvider.AdminXForms)oMembershipProv.AdminXforms;
                                         XmlElement argIntanceAppend = null;
-                                        oRegXform.xFrmEditDirectoryItem(myWeb.mnUserId, "User", "0" + moCartConfig("DefaultSubscriptionGroupId"), "CartRegistration", IntanceAppend: ref argIntanceAppend);
+                                        oRegXform.xFrmEditDirectoryItem(myWeb.mnUserId, "User",Convert.ToInt64("0" + moCartConfig["DefaultSubscriptionGroupId"]), "CartRegistration", IntanceAppend: ref argIntanceAppend);
                                         if (oRegXform.valid)
                                         {
-                                            string sReturn = base.moDBHelper.validateUser(myWeb.moRequest("cDirName"), myWeb.moRequest("cDirPassword"));
+                                            string sReturn = base.moDBHelper.validateUser(myWeb.moRequest["cDirName"], myWeb.moRequest["cDirPassword"]);
                                             if (Information.IsNumeric(sReturn))
                                             {
-                                                myWeb.mnUserId = Conversions.ToLong(sReturn);
+                                                myWeb.mnUserId = Convert.ToInt32(sReturn);
                                                 XmlElement oUserElmt = base.moDBHelper.GetUserXML(myWeb.mnUserId);
                                                 base.moPageXml.DocumentElement.AppendChild(oUserElmt);
-                                                myWeb.moSession("nUserId") = myWeb.mnUserId;
+                                                myWeb.moSession["nUserId"] = myWeb.mnUserId;
                                                 mcCartCmd = "Billing";
                                                 goto processFlow;
                                             }
                                             else
                                             {
-                                                oRegXform.addNote(oRegXform.moXformElmt.FirstChild, Protean.xForm.noteTypes.Alert, sReturn);
+                                                oRegXform.addNote(oRegXform.moXformElmt.FirstChild.ToString(), Protean.xForm.noteTypes.Alert, sReturn);
                                                 base.moPageXml.SelectSingleNode("/Page/Contents").AppendChild(oRegXform.moXformElmt);
                                             }
                                         }
@@ -794,13 +794,13 @@ namespace Protean
                                 else
                                 {
                                     // Valid Form, let's adjust the Vat rate
-                                    UpdateTaxRate(oPickContactXForm.Instance.SelectSingleNode("tblCartContact/cContactCountry").InnerText);
+                                    UpdateTaxRate(ref oPickContactXForm.Instance.SelectSingleNode("tblCartContact/cContactCountry").InnerText);
 
                                     // Skip Delivery if:
                                     // - Deliver to this address is selected
                                     // - mbNoDeliveryAddress is True
                                     // - the order is part of a giftlist (the delivery address is pre-determined)
-                                    if (myWeb.moRequest("cIsDelivery") == "True" | mbNoDeliveryAddress | mnGiftListId > 0)
+                                    if (myWeb.moRequest["cIsDelivery"] == "True" | mbNoDeliveryAddress | mnGiftListId > 0)
                                     {
                                         mcCartCmd = "ShowInvoice";
                                         mnProcessId = 3;
@@ -930,27 +930,27 @@ namespace Protean
                                     if (myWeb.mnUserId == 0)
                                     {
                                         // registration xform
-                                        var oMembershipProv = new Providers.Membership.BaseProvider(ref myWeb, myWeb.moConfig("MembershipProvider"));
+                                        var oMembershipProv = new Providers.Membership.BaseProvider(ref myWeb, myWeb.moConfig["MembershipProvider"]);
                                         Providers.Membership.EonicProvider.AdminXForms oRegXform = (Providers.Membership.EonicProvider.AdminXForms)oMembershipProv.AdminXforms;
                                         XmlElement argIntanceAppend1 = null;
-                                        oRegXform.xFrmEditDirectoryItem(myWeb.mnUserId, "User", "0" + moCartConfig("DefaultSubscriptionGroupId"), "CartRegistration", IntanceAppend: ref argIntanceAppend1);
+                                        oRegXform.xFrmEditDirectoryItem(myWeb.mnUserId, "User",Convert.ToInt32("0" + moCartConfig["DefaultSubscriptionGroupId"]), "CartRegistration", IntanceAppend: ref argIntanceAppend1);
                                         if (oRegXform.valid)
                                         {
-                                            string sReturn = base.moDBHelper.validateUser(myWeb.moRequest("cDirName"), myWeb.moRequest("cDirPassword"));
+                                            string sReturn = base.moDBHelper.validateUser(myWeb.moRequest["cDirName"], myWeb.moRequest["cDirPassword"]);
                                             if (Information.IsNumeric(sReturn))
                                             {
-                                                myWeb.mnUserId = Conversions.ToLong(sReturn);
+                                                myWeb.mnUserId = Convert.ToInt32(sReturn);
                                             }
                                             else
                                             {
-                                                oRegXform.addNote(oRegXform.moXformElmt.FirstChild, Protean.xForm.noteTypes.Alert, sReturn);
+                                                oRegXform.addNote(oRegXform.moXformElmt.FirstChild.ToString(), Protean.xForm.noteTypes.Alert, sReturn);
                                                 base.moPageXml.SelectSingleNode("/Page/Contents").AppendChild(oRegXform.moXformElmt);
                                             }
                                         }
                                         else
                                         {
                                             base.moPageXml.SelectSingleNode("/Page/Contents").AppendChild(oRegXform.moXformElmt);
-                                            GetCart(oElmt);
+                                            GetCart(ref oElmt);
                                         }
                                     }
                                     else
@@ -1000,12 +1000,12 @@ namespace Protean
 
                     PersistVariables(); // store data for next time this function runs
 
-                    if (oElmt is not null)
+                    if (oElmt != null)
                     {
                         oElmt.SetAttribute("cmd", mcCartCmd);
                         oElmt.SetAttribute("sessionId", mcSessionId);
                     }
-                    oContentElmt.SetAttribute("Process", mnProcessId);
+                    oContentElmt.SetAttribute("Process", mnProcessId.ToString());
                     oContentElmt.AppendChild(oElmt);
                     base.moPageXml.DocumentElement.AppendChild(oContentElmt);
 
@@ -1081,7 +1081,7 @@ namespace Protean
                     base.moDBHelper.ExeProcessSql(sSql);
                     mmcOrderType = "";
                     mnCartId = 0;
-                    myWeb.moSession("QuoteID") = (object)null;
+                    myWeb.moSession["QuoteID"] = (object)null;
                 }
 
                 catch (Exception ex)
@@ -1096,8 +1096,8 @@ namespace Protean
                 string cProcessInfo = "Quote to Order";
                 try
                 {
-                    int nCurrentCart = myWeb.moSession("CartId");
-                    var otmpcart = new Cms.Cart(myWeb);
+                    int nCurrentCart = Convert.ToInt32(myWeb.moSession["CartId"]);
+                    var otmpcart = new Cms.Cart(ref myWeb);
                     if (nCurrentCart == 0)
                     {
                         // need a way to iniate the cart and then get the ID out
@@ -1111,13 +1111,13 @@ namespace Protean
                     var nParentID = default(int);
                     string sSQL;
                     // okay, now we need the ID of the current cart
-                    if (!(myWeb.moSession.Item("oQID") == ""))
+                    if (!(myWeb.moSession.Item["oQID"] == ""))
                     {
                         nQuoteId = myWeb.moSession.Item("oQID");
                     }
                     // pretty useless if the site doesnt have a cart
                     // if we dont have quotes then we'll never get here
-                    if (!(LCase(base.moConfig("Quote")) == "on") | nQuoteId < 1)
+                    if (!((base.moConfig["Quote"]).ToLower() == "on") | nQuoteId < 1)
                     {
                         return false;
                         // also better check the user owns this quote, we dont want them
@@ -1233,8 +1233,8 @@ namespace Protean
                                 bBilling = true;
                         }
                     }
-                    myWeb.moSession("CartId") = nCurrentCart;
-                    if (otmpcart is not null)
+                    myWeb.moSession["CartId"] = nCurrentCart;
+                    if (otmpcart != null)
                     {
                         otmpcart.mnProcessId = 1;
                         otmpcart.mcCartCmd = "Cart";
@@ -1382,7 +1382,7 @@ namespace Protean
 
                     sSql = "update tblCartOrder set nCartStatus = 7, nCartUserDirId = " + myWeb.mnUserId + " where(nCartOrderKey = " + mnCartId + ")";
                     base.moDBHelper.ExeProcessSql(sSql);
-                    myWeb.moSession("QuoteId") = (object)null;
+                    myWeb.moSession["QuoteId"] = (object)null;
                     mnCartId = 0;
                 }
 

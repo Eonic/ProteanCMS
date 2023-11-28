@@ -120,7 +120,7 @@ namespace Protean
                                             XmlElement copyContentNode = (XmlElement)oContentNode.CloneNode(true);
 
                                             XmlElement oNotes = (XmlElement)oContentNode.ParentNode.ParentNode.SelectSingleNode("Notes/descendant-or-self::Item[@name='" + productName + "-" + stockCode + "' and @number='" + i + "']");
-                                            if (oNotes is not null)
+                                            if (oNotes != null)
                                             {
                                                 copyContentNode.AppendChild(oNotes.CloneNode(true));
                                             }

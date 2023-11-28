@@ -15,6 +15,7 @@ using System.Xml;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
+using static Protean.Tools.Xml;
 
 namespace Protean
 {
@@ -34,7 +35,7 @@ namespace Protean
             // deals with the error
             returnException(ref msException, e.ModuleName, e.ProcedureName, e.Exception, mcEwSiteXsl, e.AddtionalInformation, gbDebug);
             // close connection poolinguseralerts
-            if (this.moDbHelper is not null)
+            if (this.moDbHelper != null)
             {
                 try
                 {
@@ -275,7 +276,7 @@ namespace Protean
 
                 moFSHelper = new Protean.fsHelper(this.moCtx);
                 InitialiseGlobal();
-                if (this.moCtx is not null)
+                if (this.moCtx != null)
                 {
                     this.PerfMon.Log("Web", "New");
                 }
@@ -663,7 +664,7 @@ namespace Protean
                 else
                 {
 
-                    if (this.moSession is not null)
+                    if (this.moSession != null)
                     {
                         if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(this.moSession["adminMode"], "true", false)))
                         {
@@ -707,7 +708,7 @@ namespace Protean
 
                     // Get the User ID
                     // if we access base via soap the session is not available
-                    if (this.moSession is not null)
+                    if (this.moSession != null)
                     {
                         object argmyWeb = this;
                         var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.moConfig["MembershipProvider"]);
@@ -721,7 +722,7 @@ namespace Protean
                     {
                         InitialiseCart();
                         // moCart = New Cart(Me)
-                        if (moCart is not null)
+                        if (moCart != null)
                         {
                             var argaWeb = this;
                             moDiscount = new Cms.Cart.Discount(ref argaWeb);
@@ -731,7 +732,7 @@ namespace Protean
 
 
                     // Facility to allow the generation bespoke errors.
-                    if (this.moRequest["ewerror"] is not null)
+                    if (this.moRequest["ewerror"] != null)
                     {
                         // If moRequest("ewerror") <> "nodebug" Then gbDebug = True Else gbDebug = False
                         throw new Exception(Strings.LCase("errortest:" + this.moRequest["ewerror"]));
@@ -918,7 +919,7 @@ namespace Protean
                     // Version Control: Set a permission state for this page.
                     // If the permissions are great enough, this will allow content other htan just LIVE to be brought in to the page
 
-                    if (this.moSession is not null)
+                    if (this.moSession != null)
                     {
                         if (gbVersionControl)
                         {
@@ -939,7 +940,7 @@ namespace Protean
 
         public void Close()
         {
-            if (this.moCtx is not null)
+            if (this.moCtx != null)
             {
                 this.PerfMon.Log("Base", "Close");
             }
@@ -947,8 +948,8 @@ namespace Protean
             try
             {
 
-                // if we access base via soap the session is not available
-                if (this.moSession is not null)
+                // if we access base via soap the session != available
+                if (this.moSession != null)
                 {
 
                     object argmyWeb = this;
@@ -965,18 +966,18 @@ namespace Protean
                 this.goServer = (System.Web.HttpServerUtility)null;
                 this.moConfig = (System.Collections.Specialized.NameValueCollection)null;
 
-                if (moTransform is not null & ibIndexMode == false)
+                if (moTransform != null & ibIndexMode == false)
                 {
                     moTransform.Close();
                     moTransform = (Protean.XmlHelper.Transform)null;
                 }
-                if (gbCart & moCart is not null)
+                if (gbCart & moCart != null)
                 {
                     moCart.close();
                     moCart = (Cms.Cart)null;
                 }
                 // moCart.close() requires db connection
-                if (this.moDbHelper is not null)
+                if (this.moDbHelper != null)
                 {
                     // moDbHelper.Close()
                     // TS added in to ensure connections are closed
@@ -1012,7 +1013,7 @@ namespace Protean
 
                 // Set the debug mode
                 this.moConfig = this.moConfig;
-                if (this.moConfig["Debug"] is not null)
+                if (this.moConfig["Debug"] != null)
                 {
                     switch (Strings.LCase(this.moConfig["Debug"]) ?? "")
                     {
@@ -1035,7 +1036,7 @@ namespace Protean
                     }
                 }
                 bool bSessionLogging = false;
-                if (this.moSession is not null)
+                if (this.moSession != null)
                 {
                     if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(this.moSession["Logging"], "On", false)))
                     {
@@ -1047,7 +1048,7 @@ namespace Protean
                 {
                     if (this.PerfMon is null)
                         this.PerfMon = new PerfLog(this.moConfig["DatabaseName"]);
-                    if (this.moSession is not null)
+                    if (this.moSession != null)
                     {
                         // only bother if we are not doing a scheduler thingie
                         if (this.moRequest["perfmon"] == "on")
@@ -1068,7 +1069,7 @@ namespace Protean
 
                 if (this.moRequest["ewCmd"] == "admin")
                 {
-                    if (this.moSession is not null)
+                    if (this.moSession != null)
                         this.moSession["adminMode"] = "true";
                 }
 
@@ -1310,7 +1311,7 @@ namespace Protean
                             gcEwSiteXsl = this.moConfig["SiteXsl"];
                             moResponseType = pageResponseType.Page;
                             // can we get a cached page
-                            if (this.moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"] is not null)
+                            if (this.moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"] != null)
                             {
                                 if (gnResponseCode == 200L & this.moRequest.Form.Count == 0 & this.mnUserId == 0 & !this.moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"].Contains("?"))
                                 {
@@ -1322,7 +1323,7 @@ namespace Protean
                                     bPageCache = Conversions.ToBoolean(Interaction.IIf(Strings.LCase(this.moConfig["PageCache"]) == "on", true, false));
                                 }
 
-                                if (this.moRequest["reBundle"] is not null)
+                                if (this.moRequest["reBundle"] != null)
                                 {
                                     bPageCache = true;
                                 }
@@ -1333,7 +1334,7 @@ namespace Protean
                 }
 
 
-                if (this.moSession is not null)
+                if (this.moSession != null)
                 {
                     // this simply gets the userId earlier if it is in the session.
                     // behaviour to check single session or transfer from the cart is still called from Open()
@@ -1427,7 +1428,7 @@ namespace Protean
             string pageUrl = this.moRequest.RawUrl.ToString();
             bool bLowerCaseUrl = false;
             bool bTrailingSlash = false;
-            if (this.moSession is not null)
+            if (this.moSession != null)
             {
                 if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(this.moSession["adminMode"], "true", false)))
                 {
@@ -1476,7 +1477,7 @@ namespace Protean
                 object sSql = "select top 1 nUserDirId, datediff(SS,getdate(),dDateTime) as Duration from tblActivityLog where cSessionId='" + sSessionId + "' order by dDateTime desc";
                 using (var oDr = this.moDbHelper.getDataReaderDisposable(Conversions.ToString(sSql)))
                 {
-                    if (oDr is not null)
+                    if (oDr != null)
                     {
                         while (oDr.Read())
                         {
@@ -1577,10 +1578,10 @@ namespace Protean
                             }
 
 
-                            if (this.moRequest["reBundle"] is not null)
+                            if (this.moRequest["reBundle"] != null)
                             {
 
-                                if (this.moRequest["SessionId"] is not null)
+                                if (this.moRequest["SessionId"] != null)
                                 {
                                     this.RestoreRedirectSession(this.moRequest["SessionId"], 5, true);
                                 }
@@ -2071,7 +2072,7 @@ namespace Protean
                                 }
                             }
 
-                            if (this.moSession is not null)
+                            if (this.moSession != null)
                             {
                                 this.moSession["previousPage"] = mcOriginalURL;
                             }
@@ -2106,7 +2107,7 @@ namespace Protean
 
                 }
 
-                if (this.moSession is not null)
+                if (this.moSession != null)
                 {
                     // clears the recaptcha flag for the session
                     this.moSession["recaptcha"] = (object)null;
@@ -2185,7 +2186,7 @@ namespace Protean
                         if (!string.IsNullOrEmpty(this.moConfig["DetailPathType"]) & this.mnArtId == 0) // case to check for detail path setting and are we on a detail page. 
                         {
                             XmlElement oMenuNode = (XmlElement)moPageXml.SelectSingleNode("/Page/Menu/MenuItem/descendant-or-self::MenuItem[@id='" + this.mnPageId + "']");
-                            if (oMenuNode is not null)
+                            if (oMenuNode != null)
                             {
                                 if (!oMenuNode.GetAttribute("url").StartsWith("http"))
                                 {
@@ -2216,7 +2217,7 @@ namespace Protean
                                     }
                                 }
                             }
-                            else if (this.moConfig["PageNotFoundId"] is not null)
+                            else if (this.moConfig["PageNotFoundId"] != null)
                             {
                                 if ((this.mnPageId.ToString() ?? "") != (this.moConfig["PageNotFoundId"] ?? "") & string.IsNullOrEmpty(msException))
                                 {
@@ -2235,7 +2236,7 @@ namespace Protean
                     }
 
                     string layoutCmd = "";
-                    if (this.moSession is not null & !ibIndexMode)
+                    if (this.moSession != null & !ibIndexMode)
                     {
                         if (((double)this.mnUserId != Conversions.ToDouble("0") | Strings.LCase(this.moConfig["LogAll"]) == "On") & this.mbAdminMode == false & this.Features.ContainsKey("ActivityReporting"))
                         {
@@ -2358,7 +2359,7 @@ namespace Protean
                     // Add the responses
                     CommitResponsesToPage();
 
-                    if (this.moSession is not null)
+                    if (this.moSession != null)
                     {
                         if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectNotEqual(this.moSession["RedirectReason"], "", false), !bRedirectStarted))) // bRegistrationSuccessful is a local variable and is only set before the redirection occurs - hence looking for it being False.
                         {
@@ -2479,7 +2480,7 @@ namespace Protean
                         }
 
                         oPageElmt.SetAttribute("id", this.mnPageId.ToString());
-                        if (this.moSession is not null)
+                        if (this.moSession != null)
                         {
                             if (Conversions.ToBoolean(Operators.AndObject(Conversions.ToInteger(Operators.ConcatenateObject("0", this.moSession["LogonRedirectId"])) > 0, !Operators.ConditionalCompareObjectEqual(this.moSession["LogonRedirectId"], this.mnPageId, false))))
                             {
@@ -2545,7 +2546,7 @@ namespace Protean
 
                             if (Strings.LCase(this.moConfig["CheckDetailPath"]) == "on" & this.mbAdminMode == false & this.mnArtId > 0 & (mcOriginalURL.Contains("-/") | mcOriginalURL.Contains("/Item")))
                             {
-                                if (oPageElmt.SelectSingleNode("ContentDetail/Content/@name") is not null)
+                                if (oPageElmt.SelectSingleNode("ContentDetail/Content/@name") != null)
                                 {
                                     string cContentDetailName = oPageElmt.SelectSingleNode("ContentDetail/Content/@name").InnerText;
                                     cContentDetailName = Tools.Text.CleanName(cContentDetailName, false, true);
@@ -2619,7 +2620,7 @@ namespace Protean
                         // Assess if this page is a cloned page.
                         // Is it a direct clone (in which case the page id will have a @clone node in the Menu Item
                         // Or is it a child of a cloned page (in which case the page id MenuItem will have a @cloneparent node that matches the requested context, stored in mnCloneContextPageId)
-                        if (gbClone && oPageElmt.SelectSingleNode("//MenuItem[@id = /Page/@id and (@clone > 0 or (@cloneparent='" + mnCloneContextPageId + "' and @cloneparent > 0 ))]") is not null)
+                        if (gbClone && oPageElmt.SelectSingleNode("//MenuItem[@id = /Page/@id and (@clone > 0 or (@cloneparent='" + mnCloneContextPageId + "' and @cloneparent > 0 ))]") != null)
                         {
                             // If the current page is a cloned page
                             oPageElmt.SetAttribute("clone", "true");
@@ -2996,7 +2997,7 @@ namespace Protean
 
                                 foreach (string cParId in aParIds)
                                 {
-                                    if (oPageElmt.SelectSingleNode("descendant-or-self::MenuItem[@id='" + cParId + "']") is not null)
+                                    if (oPageElmt.SelectSingleNode("descendant-or-self::MenuItem[@id='" + cParId + "']") != null)
                                     {
                                         primaryParId = Conversions.ToLong(cParId);
                                     }
@@ -3021,7 +3022,7 @@ namespace Protean
                                 var xmlNodeWeight = oElmt.SelectSingleNode(this.moConfig["feedWeightXpath"]);
                                 var xmlNodePrice = oElmt.SelectSingleNode(this.moConfig["feedPriceXpath"]);
 
-                                if (xmlNodeWeight is not null & xmlNodeWeight is not null)
+                                if (xmlNodeWeight != null & xmlNodeWeight != null)
                                 {
                                     string nWeight = xmlNodeWeight.InnerText;
                                     string nPrice = xmlNodePrice.InnerText;
@@ -3204,7 +3205,7 @@ namespace Protean
 
                     GetSettingsXml(ref oPageElmt);
                     var userXml = GetUserXML();
-                    if (userXml is not null)
+                    if (userXml != null)
                     {
                         moPageXml.DocumentElement.AppendChild(GetUserXML());
                     }
@@ -3259,8 +3260,8 @@ namespace Protean
                             // Dim assemblyInstance As [Assembly]
                             Type calledType;
                             Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/bespokeProviders");
-                            object providerName = this.moRequest["provider"];
-                            var assemblyInstance = Assembly.Load(moPrvConfig.Providers(providerName).Type.ToString());
+                            string providerName = this.moRequest["provider"];
+                            var assemblyInstance = Assembly.Load(moPrvConfig.Providers[providerName].Type.ToString());
 
                             string classPath = this.moRequest["method"];
 
@@ -3314,7 +3315,7 @@ namespace Protean
                             if (nPagePermissionCheck == 0L & nContentParId > 0L)
                             {
                                 var hUnorphanedAncestor = this.moDbHelper.getUnorphanedAncestor((int)nContentParId, 1L);
-                                if (hUnorphanedAncestor is not null)
+                                if (hUnorphanedAncestor != null)
                                 {
                                     nPagePermissionCheck = Conversions.ToLong(hUnorphanedAncestor["page"]);
                                     nContentPermissionCheck = Conversions.ToLong(hUnorphanedAncestor["id"]);
@@ -3334,7 +3335,7 @@ namespace Protean
                             // Check if the permissions are valid
                             bUserValid = Cms.dbHelper.CanAddUpdate(nContentPermLevel) & this.mnUserId > 0;
 
-                            if (this.moRequest["type"] is not null)
+                            if (this.moRequest["type"] != null)
                             {
                                 if (this.moRequest["type"].ToLower() == "review")
                                 {
@@ -3547,7 +3548,7 @@ namespace Protean
 
                             var popularSearches = this.moDbHelper.GetMostPopularSearches(5, this.moRequest["filter"] + "");
 
-                            if (popularSearches is not null)
+                            if (popularSearches != null)
                             {
                                 var oPageDetail = moPageXml.CreateElement("ContentDetail");
                                 oPageElmt.AppendChild(oPageDetail);
@@ -3696,7 +3697,7 @@ namespace Protean
             {
                 if (gbCart)
                 {
-                    if (this.moSession is not null)
+                    if (this.moSession != null)
                     {
                         if (moCart is null)
                         {
@@ -3868,11 +3869,11 @@ namespace Protean
                         sVoteIdentifiers = ocNode.SelectSingleNode("Restrictions/Identifiers").InnerText;
 
                         // Check open and close dates
-                        if (ocNode.SelectSingleNode("dOpenDate") is not null && Information.IsDate(ocNode.SelectSingleNode("dOpenDate").InnerText))
+                        if (ocNode.SelectSingleNode("dOpenDate") != null && Information.IsDate(ocNode.SelectSingleNode("dOpenDate").InnerText))
                         {
                             openDate = Conversions.ToDate(ocNode.SelectSingleNode("dOpenDate").InnerText);
                         }
-                        if (ocNode.SelectSingleNode("dCloseDate") is not null && Information.IsDate(ocNode.SelectSingleNode("dCloseDate").InnerText))
+                        if (ocNode.SelectSingleNode("dCloseDate") != null && Information.IsDate(ocNode.SelectSingleNode("dCloseDate").InnerText))
                         {
                             closeDate = Conversions.ToDate(ocNode.SelectSingleNode("dCloseDate").InnerText);
                         }
@@ -3967,7 +3968,7 @@ namespace Protean
                             else
                             {
                                 // First check if a cookie is being used - if it exists then we block voting.
-                                if (bUseCookies && this.moRequest.Cookies[cCookieName] is not null)
+                                if (bUseCookies && this.moRequest.Cookies[cCookieName] != null)
                                 {
                                     bCanVote = false;
                                     nVoteBlockReason = PollBlockReason.CookieFound;
@@ -3983,7 +3984,7 @@ namespace Protean
                                         sSql += " AND cIPAddress=" + Tools.Database.SqlString(Strings.Left(this.moRequest.ServerVariables["REMOTE_ADDR"], 15));
                                     }
 
-                                    if (this.moRequest["poll-email"] is not null)
+                                    if (this.moRequest["poll-email"] != null)
                                     {
                                         sEmail = this.moRequest["poll-email"].ToString();
                                         if (bUseEmail)
@@ -4018,7 +4019,7 @@ namespace Protean
 
 
 
-                                    string blocked = Conversions.ToString(this.moDbHelper.GetDataValue(blockingScopeQuery, 1, null, ""));
+                                    string blocked = Conversions.ToString(this.moDbHelper.GetDataValue(blockingScopeQuery, CommandType.Text, null, ""));
                                     if (!string.IsNullOrEmpty(blocked))
                                     {
                                         // Block has been found
@@ -4032,7 +4033,7 @@ namespace Protean
 
 
 
-                                        string cLastVoted = Conversions.ToString(this.moDbHelper.GetDataValue(sSql, 1, null, ""));
+                                        string cLastVoted = Conversions.ToString(this.moDbHelper.GetDataValue(sSql, CommandType.Text, null, ""));
                                         if (!string.IsNullOrEmpty(cLastVoted) && Information.IsDate(cLastVoted))
                                         {
                                             // We found a vote, check the date
@@ -4058,7 +4059,7 @@ namespace Protean
                         // Look for votes being submitted
                         // ===================================================================
 
-                        if (bCanVote && this.moRequest["pollsubmit-" + sPollId] is not null && !string.IsNullOrEmpty(this.moRequest["pollsubmit-" + sPollId].ToString()) && this.moRequest["polloption-" + sPollId] is not null)
+                        if (bCanVote && this.moRequest["pollsubmit-" + sPollId] != null && !string.IsNullOrEmpty(this.moRequest["pollsubmit-" + sPollId].ToString()) && this.moRequest["polloption-" + sPollId] != null)
 
 
                         {
@@ -4066,7 +4067,7 @@ namespace Protean
                             string sResult = this.moRequest["polloption-" + sPollId].ToString();
 
                             sEmail = "";
-                            if (this.moRequest["poll-email"] is not null)
+                            if (this.moRequest["poll-email"] != null)
                             {
                                 sEmail = this.moRequest["poll-email"].ToString();
                             }
@@ -4250,7 +4251,7 @@ namespace Protean
                                 Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/" + providerType + "Providers");
                                 Assembly assemblyInstance;
 
-                                if (moPrvConfig.Providers[providerName + "Local"] is not null)
+                                if (moPrvConfig.Providers[providerName + "Local"] != null)
                                 {
                                     if (!string.IsNullOrEmpty(moPrvConfig.Providers[providerName + "Local"].Parameters["path"]))
                                     {
@@ -4594,7 +4595,7 @@ namespace Protean
                 if (moPageXml.SelectSingleNode("/Page/@layout").Value.Contains("User_Control_Panel") | moPageXml.SelectSingleNode("/Page/@layout").Value.Contains("Internal_Feed"))
                 {
                     string cContentTypes = this.moConfig["ControlPanelTypes"];
-                    if (cContentTypes is not null & !string.IsNullOrEmpty(cContentTypes))
+                    if (cContentTypes != null & !string.IsNullOrEmpty(cContentTypes))
                     {
                         string[] oTypes = Strings.Split(cContentTypes, ",");
                         int i;
@@ -4848,13 +4849,13 @@ namespace Protean
                         nAuthGroup = gnAuthUsers;
                     }
 
-                    if (oContentsNode is not null)
+                    if (oContentsNode != null)
                     {
-                        if (oContentsNode.Attributes["contentType"] is not null)
+                        if (oContentsNode.Attributes["contentType"] != null)
                         {
                             cFilterTarget = oContentsNode.Attributes["contentType"].Value;
                         }
-                        if (oContentsNode.Attributes["filterTarget"] is not null)
+                        if (oContentsNode.Attributes["filterTarget"] != null)
                         {
                             cFilterTarget = oContentsNode.Attributes["filterTarget"].Value;
                         }
@@ -4902,7 +4903,7 @@ namespace Protean
 
 
                 sSql = sSql + " where (" + combinedWhereSQL + ")";
-                if (oContentsNode is not null)
+                if (oContentsNode != null)
                 {
                     // Quick call to get the total number of records
                     string cSQL = "SET ARITHABORT ON ";
@@ -4914,7 +4915,7 @@ namespace Protean
                         cSQL += " " + cAdditionalJoins + " ";
                     cSQL = cSQL + " where (" + combinedWhereSQL + ")";
 
-                    long nTotal = Conversions.ToLong(this.moDbHelper.GetDataValue(cSQL, 1, null, (object)0));
+                    long nTotal = Conversions.ToLong(this.moDbHelper.GetDataValue(cSQL, CommandType.Text, null, (object)0));
 
                     oContentsNode.SetAttribute("resultCount", nTotal.ToString());
                 }
@@ -4948,7 +4949,7 @@ namespace Protean
                 {
                     oDs = this.moDbHelper.GetDataSet(sSql, "Content", "Contents");
                 }
-                if (oDs is not null)
+                if (oDs != null)
                 {
                     nCount = oDs.Tables["Content"].Rows.Count;
                     this.PerfMon.Log("Web", "GetPageContentFromSelect", "GetPageContentFromSelect: " + nCount + " returned");
@@ -5469,7 +5470,7 @@ namespace Protean
                     // 3 - Is the first config item a number
                     // 4 - Does the path in the config NOT match the start of the current page (check URI and Path) - in other words - don't run this check if we're actually on the site in question!
                     // 5 - Is the user a member of the directory item ID listed in the config.
-                    if (!!string.IsNullOrEmpty(this.moRequest["token"]) && cSiteConfig.Length == 3 && Information.IsNumeric(cSiteConfig[0]) && !(this.moRequest.Url.AbsoluteUri.StartsWith(cSiteConfig[1].ToString(), StringComparison.CurrentCultureIgnoreCase) || this.moRequest.Url.AbsolutePath.StartsWith(cSiteConfig[1].ToString(), StringComparison.CurrentCultureIgnoreCase)) && moPageXml.DocumentElement.SelectSingleNode("/Page/User/*[@id='" + cSiteConfig[0] + "']") is not null)
+                    if (!!string.IsNullOrEmpty(this.moRequest["token"]) && cSiteConfig.Length == 3 && Information.IsNumeric(cSiteConfig[0]) && !(this.moRequest.Url.AbsoluteUri.StartsWith(cSiteConfig[1].ToString(), StringComparison.CurrentCultureIgnoreCase) || this.moRequest.Url.AbsolutePath.StartsWith(cSiteConfig[1].ToString(), StringComparison.CurrentCultureIgnoreCase)) && moPageXml.DocumentElement.SelectSingleNode("/Page/User/*[@id='" + cSiteConfig[0] + "']") != null)
 
 
 
@@ -5517,7 +5518,7 @@ namespace Protean
                 if (gbSingleLoginSessionPerUser)
                 {
                     this.moDbHelper.logActivity(Cms.dbHelper.ActivityType.Logoff, (long)this.mnUserId, 0L);
-                    if (this.moRequest.Cookies["ewslock"] is not null)
+                    if (this.moRequest.Cookies["ewslock"] != null)
                     {
                         this.moResponse.Cookies["ewslock"].Expires = DateTime.Now.AddDays(-1);
                     }
@@ -5536,13 +5537,13 @@ namespace Protean
                 this.mnUserId = 0;
 
                 // Clear the cart
-                if (this.moSession is not null && gbCart)
+                if (this.moSession != null && gbCart)
                 {
                     string cSql = "update tblCartOrder set cCartSessionId = 'OLD_' + cCartSessionId where (cCartSessionId = '" + this.moSession.SessionID + "' and cCartSessionId <> '')";
                     this.moDbHelper.ExeProcessSql(cSql);
                 }
 
-                if (this.moSession is not null)
+                if (this.moSession != null)
                 {
                     cProcessInfo = "Abandon Session";
                     // AJG : Question - why does this not clear the Session ID?
@@ -5615,7 +5616,7 @@ namespace Protean
                             sRedirectPath = mcOriginalURL + cLogonCmd;
                         }
 
-                        if (this.goLangConfig is not null)
+                        if (this.goLangConfig != null)
                         {
                             sRedirectPath = mcPageLanguageUrlPrefix + sRedirectPath;
                         }
@@ -5671,7 +5672,7 @@ namespace Protean
             try
             {
                 // We can only do this if session exists
-                if (this.moSession is not null)
+                if (this.moSession != null)
                 {
                     if (this.moConfig["LegacyRedirect"] == "on")
                     {
@@ -5687,14 +5688,14 @@ namespace Protean
                         // Is artid being passed through
 
                         // Check if an article redirect has been called
-                        if (this.moRequest["redirect"] is not null && !string.IsNullOrEmpty(this.moRequest["artid"]) && Information.IsNumeric(this.moRequest["artid"]))
+                        if (this.moRequest["redirect"] != null && !string.IsNullOrEmpty(this.moRequest["artid"]) && Information.IsNumeric(this.moRequest["artid"]))
 
                         {
 
                             // Try to find the product
                             long nArtId = Conversions.ToLong(this.moRequest["artid"]);
                             string cSql = Conversions.ToString(Operators.ConcatenateObject("SELECT cContentName FROM tblContent WHERE nContentKey = ", SqlFmt(nArtId.ToString())));
-                            string cName = Conversions.ToString(this.moDbHelper.GetDataValue(cSql, 1, null, ""));
+                            string cName = Conversions.ToString(this.moDbHelper.GetDataValue(cSql, CommandType.Text, null, ""));
 
 
 
@@ -5807,7 +5808,7 @@ namespace Protean
 
                 oInstance.LoadXml(this.moDbHelper.getObjectInstance(Cms.dbHelper.objectTypes.Content, contentId));
 
-                if (oInstance.SelectSingleNode("/tblContent/cContentXmlDetail/Content/@providerName") is not null)
+                if (oInstance.SelectSingleNode("/tblContent/cContentXmlDetail/Content/@providerName") != null)
                 {
                     providerName = oInstance.SelectSingleNode("/tblContent/cContentXmlDetail/Content/@providerName").Value;
                 }
@@ -5817,7 +5818,7 @@ namespace Protean
 
                 }
 
-                if (oInstance.SelectSingleNode("/tblContent/cContentXmlDetail/Content/@xformeditor") is not null)
+                if (oInstance.SelectSingleNode("/tblContent/cContentXmlDetail/Content/@xformeditor") != null)
                 {
                     classPath = oInstance.SelectSingleNode("/tblContent/cContentXmlDetail/Content/@xformeditor").Value;
                 }
@@ -5921,13 +5922,13 @@ namespace Protean
 
                 newElem2 = moPageXml.CreateElement("Item");
                 newElem2.SetAttribute("name", "PREVIOUS_PAGE");
-                if (this.moSession is not null)
+                if (this.moSession != null)
                     newElem2.InnerText = Conversions.ToString(this.moSession["previousPage"]);
                 newElem.AppendChild(newElem2);
 
                 newElem2 = moPageXml.CreateElement("Item");
                 newElem2.SetAttribute("name", "SESSION_REFERRER");
-                if (this.moSession is not null)
+                if (this.moSession != null)
                     newElem2.InnerText = Referrer;
                 newElem.AppendChild(newElem2);
 
@@ -6041,7 +6042,7 @@ namespace Protean
             string sProcessInfo = "";
             try
             {
-                if (this.moRequest["reBundle"] is not null)
+                if (this.moRequest["reBundle"] != null)
                 {
                     this.moCtx.Application["ewSettings"] = (object)null;
                 }
@@ -6060,7 +6061,7 @@ namespace Protean
                     System.Collections.Specialized.NameValueCollection moCartConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/cart");
                     System.Collections.Specialized.NameValueCollection oThemeConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/theme");
                     string sCurrentTheme = null;
-                    if (oThemeConfig is not null)
+                    if (oThemeConfig != null)
                     {
                         sCurrentTheme = oThemeConfig["CurrentTheme"];
                         object themesetting = moPageXml.CreateElement("add");
@@ -6082,7 +6083,7 @@ namespace Protean
                                 }
                             case "cart":
                                 {
-                                    if (moCartConfig is not null)
+                                    if (moCartConfig != null)
                                     {
                                         setting.setAttribute("value", moCartConfig[match.Groups["Value"].Value]);
                                     }
@@ -6091,7 +6092,7 @@ namespace Protean
                                 }
                             case "theme":
                                 {
-                                    if (sCurrentTheme is not null & match.Groups["Value"].Value != "CurrentTheme")
+                                    if (sCurrentTheme != null & match.Groups["Value"].Value != "CurrentTheme")
                                     {
                                         setting.setAttribute("value", oThemeConfig[sCurrentTheme + "." + match.Groups["Value"].Value]);
                                     }
@@ -6408,7 +6409,7 @@ namespace Protean
                 // If cMenuItemNodeName <> "MenuItem" And cRootNodeName <> "Menu" Then bUseCache = False
 
                 // Project Path modifier
-                if (this.moConfig["ProjectPath"] is not null)
+                if (this.moConfig["ProjectPath"] != null)
                 {
                     cFilePathModifier = this.moConfig["ProjectPath"].TrimEnd('/').TrimStart('/');
                     if (!string.IsNullOrEmpty(cFilePathModifier))
@@ -6536,7 +6537,7 @@ namespace Protean
 
 
 
-                        if (oCache.FirstChild is not null)
+                        if (oCache.FirstChild != null)
                         {
                             bCacheXml = true;
                             oElmt = oCache;
@@ -6750,7 +6751,7 @@ namespace Protean
                                 nCloneId = Conversions.ToInteger(oMenuItem.GetAttribute("clone"));
                                 if (!(Tools.Xml.NodeState(ref oElmt, "descendant-or-self::" + cMenuItemNodeName + "[@id='" + nCloneId + "']", ref oClone) == Tools.Xml.XmlNodeState.NotInstantiated))
                                 {
-                                    if (oClone is not null)
+                                    if (oClone != null)
                                     {
                                         if (!cNodeSnapshot.ContainsKey(nCloneId))
                                             cNodeSnapshot.Add(nCloneId, oClone.InnerXml);
@@ -6768,7 +6769,7 @@ namespace Protean
                                 // Go and get the cloned node
                                 nCloneId = Conversions.ToInteger(oMenuItem.GetAttribute("clone"));
                                 nCloneParentId = Conversions.ToInteger(oMenuItem.GetAttribute("id"));
-                                if (!(Tools.Xml.NodeState(ref oElmt, "descendant-or-self::" + cMenuItemNodeName + "[@id='" + nCloneId + "']", "", "", 1, oClone, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false) == Tools.Xml.XmlNodeState.NotInstantiated))
+                                if (!(Tools.Xml.NodeState(ref oElmt, "descendant-or-self::" + cMenuItemNodeName + "[@id='" + nCloneId + "']", "", "", XmlNodeState.IsEmpty, oClone, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false) == Tools.Xml.XmlNodeState.NotInstantiated))
                                 {
 
                                     oMenuItem.InnerXml = Conversions.ToString(cNodeSnapshot[nCloneId]);
@@ -6794,7 +6795,7 @@ namespace Protean
                             oMenuItem = currentOMenuItem2;
                             // For Each oMenuItem In oElmt.SelectNodes("descendant-or-self::*")
                             XmlElement oDesc = (XmlElement)oMenuItem.SelectSingleNode("Description");
-                            if (oDesc is not null)
+                            if (oDesc != null)
                             {
 
                                 // First try to convert the node into Xml
@@ -6865,7 +6866,7 @@ namespace Protean
                         sProcessInfo = "GetStructureXML-addCacheToStructure";
                         this.PerfMon.Log("Web", sProcessInfo);
                         // ts this was commented out I have restored 04/11/2022 please leave not to say why commented next time
-                        if (this.moRequest["reBundle"] is not null)
+                        if (this.moRequest["reBundle"] != null)
                         {
                             this.moDbHelper.clearStructureCacheAll();
                         }
@@ -6948,7 +6949,7 @@ namespace Protean
                             }
 
                             // update our pageId
-                            if (verNode is not null)
+                            if (verNode != null)
                             {
                                 // Case for if our version is also the root page
                                 if (nRootId == Conversions.ToDouble(oMenuItem.GetAttribute("id")))
@@ -7006,7 +7007,7 @@ namespace Protean
                                     sInnerXml = sInnerXml + infoElmt.OuterXml;
                                 newVerNode.InnerXml = sInnerXml;
                                 sInnerXml = "";
-                                if (this.goLangConfig is not null)
+                                if (this.goLangConfig != null)
                                 {
                                     newVerNode.SetAttribute("lang", this.goLangConfig.GetAttribute("code"));
                                 }
@@ -7035,7 +7036,7 @@ namespace Protean
                                 {
                                     oPageVerElmts = currentOPageVerElmts;
                                     string nodeName = oPageVerElmts.Name;
-                                    if (oMenuItem.SelectSingleNode(nodeName) is not null)
+                                    if (oMenuItem.SelectSingleNode(nodeName) != null)
                                     {
                                         oMenuItem.SelectSingleNode(nodeName).InnerXml = verNode.SelectSingleNode(nodeName).InnerXml;
                                     }
@@ -7081,7 +7082,7 @@ namespace Protean
                                 {
                                     oPageVerElmts = currentOPageVerElmts1;
                                     string nodeName = oPageVerElmts.Name;
-                                    if (oMenuItem.SelectSingleNode(nodeName) is not null)
+                                    if (oMenuItem.SelectSingleNode(nodeName) != null)
                                     {
                                         oMenuItem.SelectSingleNode(nodeName).InnerXml = verNode.SelectSingleNode(nodeName).InnerXml;
                                     }
@@ -7103,7 +7104,7 @@ namespace Protean
                         }
                     }
 
-                    if (this.goLangConfig is not null)
+                    if (this.goLangConfig != null)
                     {
 
                         if (verNode is null & this.goLangConfig.GetAttribute("localDefaults") != "off")
@@ -7200,7 +7201,7 @@ namespace Protean
                         {
                             if (this.moRequest.QueryString.Count > 0)
                             {
-                                if (this.moRequest["path"] is not null)
+                                if (this.moRequest["path"] != null)
                                 {
                                     // If this matches the path requested then change the pageId
                                     if (!string.IsNullOrEmpty(sUrl))
@@ -7210,7 +7211,7 @@ namespace Protean
                                         string PathToTest = this.moRequest["path"].ToLower().TrimEnd('/');
                                         if ((PathToMatch ?? "") == (PathToTest ?? "") | (PathToMatch2 ?? "") == (PathToTest ?? ""))
                                         {
-                                            if (oMenuItem.SelectSingleNode("ancestor-or-self::MenuItem[@id=" + nRootId + "]") is not null)
+                                            if (oMenuItem.SelectSingleNode("ancestor-or-self::MenuItem[@id=" + nRootId + "]") != null)
                                             {
                                                 // case for if newsletter has same page name as menu item
                                                 if (this.Features.ContainsKey("PageVersions"))
@@ -7300,7 +7301,7 @@ namespace Protean
 
                                 string pvUrlPrefix = "";
                                 // Check Language by Domain
-                                if (this.goLangConfig is not null)
+                                if (this.goLangConfig != null)
                                 {
                                     string httpStart;
                                     if (this.moRequest.ServerVariables["SERVER_PORT_SECURE"] == "1")
@@ -7312,7 +7313,7 @@ namespace Protean
                                         httpStart = "http://";
                                     }
 
-                                    if (this.goLangConfig.SelectSingleNode("Language[@code='" + pageLang + "']") is not null)
+                                    if (this.goLangConfig.SelectSingleNode("Language[@code='" + pageLang + "']") != null)
                                     {
                                         foreach (XmlElement oLangElmt in this.goLangConfig.SelectNodes("Language[@code='" + pageLang + "']"))
                                         {
@@ -7396,7 +7397,7 @@ namespace Protean
 
                 // MENU - ADD THE MENU TO THE PAGE XML
                 // ===================================
-                if (bAddMenuToPageXML && moPageXml.DocumentElement is not null)
+                if (bAddMenuToPageXML && moPageXml.DocumentElement != null)
                 {
                     sProcessInfo = "GetStructureXML-addMenuToPageXML";
                     this.PerfMon.Log("Web", sProcessInfo);
@@ -7442,7 +7443,7 @@ namespace Protean
                     while (oDR.Read())
                     {
                         oElmt = (XmlElement)oMenu.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("descendant::MenuItem[@id='", oDR["nStructId"]), "']")));
-                        if (oElmt is not null)
+                        if (oElmt != null)
                         {
                             var newElmt = moPageXml.CreateElement("ContentCount");
                             newElmt.SetAttribute("type", Strings.Trim(SchemaType));
@@ -7477,7 +7478,7 @@ namespace Protean
                 {
                     parId = oElmt.GetAttribute("locId");
                     ParentMenuElmt = (XmlElement)oMenu.SelectSingleNode("descendant-or-self::MenuItem[@id='" + parId + "']");
-                    if (ParentMenuElmt is not null)
+                    if (ParentMenuElmt != null)
                     {
                         ParentMenuElmt.AppendChild(oElmt);
                     }
@@ -7805,14 +7806,14 @@ namespace Protean
                         int nRows = 500;
 
                         // Set the paging variables, if provided.
-                        if (this.moRequest["startPos"] is not null && Information.IsNumeric(this.moRequest["startPos"]))
+                        if (this.moRequest["startPos"] != null && Information.IsNumeric(this.moRequest["startPos"]))
                             nStart = Conversions.ToInteger(this.moRequest["startPos"]);
-                        if (this.moRequest["rows"] is not null && Information.IsNumeric(this.moRequest["rows"]))
+                        if (this.moRequest["rows"] != null && Information.IsNumeric(this.moRequest["rows"]))
                             nRows = Conversions.ToInteger(this.moRequest["rows"]);
                         // In admin mode want active and hidden products separatly
                         if (this.mbAdminMode)
                         {
-                            if (this.moRequest["status"] is not null && Information.IsNumeric(this.moRequest["status"]))
+                            if (this.moRequest["status"] != null && Information.IsNumeric(this.moRequest["status"]))
                             {
                                 int nstatus = Conversions.ToInteger(this.moRequest["status"]);
                                 if (nstatus == 0)
@@ -7831,7 +7832,7 @@ namespace Protean
                         {
                             sFilterSql = sFilterSql + " and nstructid=" + this.mnPageId;
                         }
-                        if (this.moSession["FilterWhereCondition"] is not null && Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(this.moSession["FilterWhereCondition"], string.Empty, false)))
+                        if (this.moSession["FilterWhereCondition"] != null && Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(this.moSession["FilterWhereCondition"], string.Empty, false)))
                         {
                             string whereSQL = Conversions.ToString(this.moSession["FilterWhereCondition"]);
                             XmlElement argoPageDetail = null;
@@ -7851,9 +7852,9 @@ namespace Protean
                     {
 
                         // Set nothing to Filter Pagination session
-                        if (this.moSession is not null)
+                        if (this.moSession != null)
                         {
-                            if (this.moSession["FilterWhereCondition"] is not null)
+                            if (this.moSession["FilterWhereCondition"] != null)
                             {
                                 this.moSession["FilterWhereCondition"] = (object)null;
                                 // moSession.Remove("FilterWhereCondition")
@@ -7902,7 +7903,7 @@ namespace Protean
                                 string SingleContentType = cContentType[0];
                                 string ModuleId = cContentType[1];
                                 XmlElement ContentModule = (XmlElement)moPageXml.SelectSingleNode("/Page/Contents/Content[@id='" + ModuleId + "']");
-                                if (ContentModule is not null)
+                                if (ContentModule != null)
                                 {
                                     string cSort = "|ASC_cl.nDisplayOrder";
                                     switch (ContentModule.GetAttribute("sortBy") ?? "")
@@ -8197,7 +8198,7 @@ namespace Protean
                 if (PrimaryPageId > 0L)
                 {
                     XmlElement pageMenuElmt = (XmlElement)moPageXml.SelectSingleNode("/Page/Menu/descendant-or-self::MenuItem[@id='" + PrimaryPageId + "']");
-                    if (pageMenuElmt is not null)
+                    if (pageMenuElmt != null)
                     {
                         ContentURL = pageMenuElmt.GetAttribute("url") + ContentURL;
                     }
@@ -8816,7 +8817,7 @@ namespace Protean
                 {
                     cSQL += sqlFilter;
                 }
-                long nTotal = Conversions.ToLong(this.moDbHelper.GetDataValue(cSQL, 1, null, (object)0));
+                long nTotal = Conversions.ToLong(this.moDbHelper.GetDataValue(cSQL, CommandType.Text, null, (object)0));
 
                 if (nTotal > 0L)
                 {
@@ -8915,7 +8916,7 @@ namespace Protean
                         oContentDetails.SetAttribute("rows", nItemCount.ToString());
                     }
 
-                    if (oContentModule is not null)
+                    if (oContentModule != null)
                     {
                         if (oContentModule.HasAttribute("TotalCount"))
                         {
@@ -8973,7 +8974,7 @@ namespace Protean
                         sProcessInfo = "loading content" + this.mnArtId;
 
                         // I don't like this but need a quick solution
-                        if (moPageXml.SelectSingleNode("Page/Contents/Content[@action='Protean.Cms+Content+Modules.ListHistoricEvents']") is not null)
+                        if (moPageXml.SelectSingleNode("Page/Contents/Content[@action='Protean.Cms+Content+Modules.ListHistoricEvents']") != null)
                         {
                             bAllowExpired = true;
                         }
@@ -9075,7 +9076,7 @@ namespace Protean
                                     // Now check if the node imported is a Content node - if so get rid of the Content node
                                     var oFirst = Tools.Xml.firstElement(ref oElmt);
                                     // NB 19-02-2010 Added to stop unsupported types falling over
-                                    if (oFirst is not null)
+                                    if (oFirst != null)
                                     {
                                         if (oFirst.LocalName == "Content")
                                         {
@@ -9119,10 +9120,10 @@ namespace Protean
                             }
                             XmlElement argoContentElmt1 = (XmlElement)oRoot.SelectSingleNode("/ContentDetail");
                             AddGroupsToContent(ref argoContentElmt1);
-                            if (oPageElmt is not null)
+                            if (oPageElmt != null)
                             {
                                 var oContentDetail = contentElmt;
-                                if (oContentDetail is not null && !string.IsNullOrEmpty(oContentDetail.InnerXml.Trim()))
+                                if (oContentDetail != null && !string.IsNullOrEmpty(oContentDetail.InnerXml.Trim()))
                                 {
                                     // If we can find a content detail Content node, 
                                     // AND it contains some InnerXml, then YAY.
@@ -9167,33 +9168,33 @@ namespace Protean
                             string ProductTypes = this.moConfig["ProductTypes"];
                             if (string.IsNullOrEmpty(ProductTypes))
                                 ProductTypes = "Product,SKU";
-                            if (ProductTypes.Contains(contentElmt.GetAttribute("type")) & moCart is not null)
+                            if (ProductTypes.Contains(contentElmt.GetAttribute("type")) & moCart != null)
                             {
                                 try
                                 {
                                     var oShippingElmt = moPageXml.CreateElement("ShippingCosts");
                                     string cDestinationCountry = moCart.moCartConfig["DefaultDeliveryCountry"];
                                     double nPrice = 0d;
-                                    if (contentElmt.SelectSingleNode("Prices/Price[@type='sale']") is not null)
+                                    if (contentElmt.SelectSingleNode("Prices/Price[@type='sale']") != null)
                                     {
                                         nPrice = Conversions.ToDouble("0" + contentElmt.SelectSingleNode("Prices/Price[@type='sale']").InnerText);
                                     }
 
                                     if (nPrice == 0d)
                                     {
-                                        if (contentElmt.SelectSingleNode("Prices/Price[@type='rrp']") is not null)
+                                        if (contentElmt.SelectSingleNode("Prices/Price[@type='rrp']") != null)
                                         {
                                             nPrice = Conversions.ToDouble("0" + contentElmt.SelectSingleNode("Prices/Price[@type='rrp']").InnerText);
                                         }
                                     }
                                     double nWeight = 0d;
-                                    if (contentElmt.SelectSingleNode("ShippingWeight") is not null)
+                                    if (contentElmt.SelectSingleNode("ShippingWeight") != null)
                                     {
                                         nWeight = Conversions.ToDouble("0" + contentElmt.SelectSingleNode("ShippingWeight").InnerText);
                                     }
                                     // Dim nWeight As Double = CDbl("0" & contentElmt.SelectSingleNode("ShippingWeight").InnerText)
                                     var dsShippingOption = moCart.getValidShippingOptionsDS(cDestinationCountry, nPrice, 1L, nWeight, this.mnArtId);
-                                    if (dsShippingOption is not null)
+                                    if (dsShippingOption != null)
                                     {
                                         oShippingElmt.InnerXml = Strings.Replace(dsShippingOption.GetXml(), "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "");
                                     }
@@ -9248,7 +9249,7 @@ namespace Protean
                     sProcessInfo = "content exists adding content";
                     oRoot = moContentDetail.OwnerDocument.CreateElement("ContentDetail");
                     oRoot.AppendChild(moContentDetail);
-                    if (oPageElmt is not null)
+                    if (oPageElmt != null)
                     {
                         oPageElmt.AppendChild(oRoot);
                     }
@@ -9360,7 +9361,7 @@ namespace Protean
                         // moDiscount.getAvailableDiscounts(oRoot)
                         // End If
 
-                        if (oPageElmt is not null)
+                        if (oPageElmt != null)
                         {
                             oPageElmt.AppendChild(oRoot.FirstChild);
                         }
@@ -9378,7 +9379,7 @@ namespace Protean
                     sProcessInfo = "content exists adding content";
                     oRoot = moPageXml.CreateElement("ContentDetail");
                     oRoot.AppendChild(moContentDetail);
-                    if (oPageElmt is not null)
+                    if (oPageElmt != null)
                     {
                         oPageElmt.AppendChild(oRoot);
                     }
@@ -9544,7 +9545,7 @@ namespace Protean
                 this.goServer.ScriptTimeout = 10000;
 
 
-                if (Regex.IsMatch(this.moRequest["docId"] + "", "^[0-9,]*$") & this.moRequest["docId"] is not null)
+                if (Regex.IsMatch(this.moRequest["docId"] + "", "^[0-9,]*$") & this.moRequest["docId"] != null)
                 {
 
                     string[] aDocId = Strings.Split(this.moRequest["docId"], ",");
@@ -9764,7 +9765,7 @@ namespace Protean
                                         if ((double)this.mnUserId != Conversions.ToDouble("0") & this.mbAdminMode == false & this.Features.ContainsKey("ActivityReporting"))
                                         {
                                             // NB: 30-03-2010 New check to add in the ArtId (original line is the 2nd, with ArtId hardcoded as 0?)
-                                            if (this.moRequest["docId"] is not null)
+                                            if (this.moRequest["docId"] != null)
                                             {
                                                 this.moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.DocumentDownloaded, this.mnUserId, this.moSession.SessionID, DateTime.Now, this.mnPageId, Conversions.ToInteger(this.moRequest["docId"]), strFileName);
                                             }
@@ -10057,7 +10058,7 @@ namespace Protean
                 // GetUserXML() - Returns XML Element of User Details
                 var oUserXml = GetUserXML();
                 // Require Error Handling
-                if (oUserXml is not null)
+                if (oUserXml != null)
                 {
                     moPageXml.DocumentElement.AppendChild(moPageXml.ImportNode(oUserXml.CloneNode(true), true));
                     // ^^ This line had some basic testing, seems to work, might need extended?
@@ -10183,7 +10184,7 @@ namespace Protean
                 for (i = 0; i <= loopTo; i++)
                 {
                     // We are only interested parIds in the current site tree
-                    if (oMenu.SelectSingleNode("descendant-or-self::MenuItem[@id='" + oParents[i] + "']") is not null)
+                    if (oMenu.SelectSingleNode("descendant-or-self::MenuItem[@id='" + oParents[i] + "']") != null)
                     {
                         if (!string.IsNullOrEmpty(cXPath))
                             cXPath += " or ";
@@ -10318,7 +10319,7 @@ namespace Protean
                 try
                 {
 
-                    if (this.moSession is not null)
+                    if (this.moSession != null)
                     {
                         mcSessionReferrer = Conversions.ToString(this.moSession["Referrer"]);
                     }
@@ -10329,7 +10330,7 @@ namespace Protean
 
                     if (mcSessionReferrer is null)
                     {
-                        if (this.moRequest.UrlReferrer is not null)
+                        if (this.moRequest.UrlReferrer != null)
                         {
                             if ((this.moRequest.UrlReferrer.Host ?? "") != (this.moRequest.ServerVariables["HTTP_HOST"] ?? ""))
                             {
@@ -10397,7 +10398,7 @@ namespace Protean
         {
             get
             {
-                return this.moSession is not null;
+                return this.moSession != null;
             }
         }
 
@@ -10434,7 +10435,7 @@ namespace Protean
             {
 
 
-                if (this.goLangConfig is not null)
+                if (this.goLangConfig != null)
                 {
 
                     if (this.moRequest.ServerVariables["SERVER_PORT_SECURE"] == "1")
@@ -10459,7 +10460,7 @@ namespace Protean
                                 }
                             case "path":
                                 {
-                                    if (this.moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"] is not null)
+                                    if (this.moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"] != null)
                                     {
                                         if (this.moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"].StartsWith("/" + oElmt.GetAttribute("identifier") + "/") | (this.moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"] ?? "") == ("/" + oElmt.GetAttribute("identifier") ?? "") | this.moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"].StartsWith("/" + oElmt.GetAttribute("identifier") + "?"))
 
@@ -10493,7 +10494,7 @@ namespace Protean
                         mcPageDefaultDomain = httpPrefix + this.goLangConfig.GetAttribute("defaultDomain");
                     }
 
-                    if (this.moSession is not null)
+                    if (this.moSession != null)
                     {
                         if (!string.IsNullOrEmpty(sCurrency))
                         {
@@ -10524,7 +10525,7 @@ namespace Protean
 
             try
             {
-                if (this.goLangConfig is not null)
+                if (this.goLangConfig != null)
                 {
 
                     if (string.IsNullOrEmpty(mcPageLanguage))
@@ -10551,12 +10552,12 @@ namespace Protean
                     }
                 }
                 // Legacy code
-                else if (moPageXml.DocumentElement.SelectSingleNode("Contents") is not null)
+                else if (moPageXml.DocumentElement.SelectSingleNode("Contents") != null)
                 {
                     // First find the page language, which should be called after content has been loaded in
                     string cLang = "";
                     var argoNode = moPageXml.DocumentElement;
-                    if (Tools.Xml.NodeState(ref argoNode, "//Content[@name='XmlLang']", "", "", 1, null, "", cLang, bCheckTrimmedInnerText: false) == Tools.Xml.XmlNodeState.HasContents)
+                    if (Tools.Xml.NodeState(ref argoNode, "//Content[@name='XmlLang']", "", "", XmlNodeState.IsEmpty, null, "", cLang, bCheckTrimmedInnerText: false) == Tools.Xml.XmlNodeState.HasContents)
                     {
                         mcPageLanguage = cLang;
                     }
@@ -10566,7 +10567,7 @@ namespace Protean
                     }
 
                     // Next check for a user language preference
-                    if (this.moRequest.Cookies["language"] is not null)
+                    if (this.moRequest.Cookies["language"] != null)
                     {
                         mcPreferredLanguage = this.moRequest.Cookies["language"].Value.ToString();
                     }
@@ -10613,7 +10614,7 @@ namespace Protean
                     keepLanguageVariants = this.moRequest["keeplanguagevariants"];
                 }
 
-                if (moAdmin is not null)
+                if (moAdmin != null)
                 {
                     isEditForm = moAdmin.Command.Contains("Add") | moAdmin.Command.Contains("Edit");
                 }
@@ -10665,13 +10666,13 @@ namespace Protean
                                         }
 
                                         // More than one node of this type.
-                                        if (parent.SelectSingleNode(langChild.Name.ToString() + "[@xml:lang='" + mcPreferredLanguage + "']", nsMgr) is not null && parent.SelectSingleNode(langChild.Name.ToString() + "[@xml:lang='" + mcPreferredLanguage + "']", nsMgr).InnerText.Trim().Length > 0 | groupNodesAreAllEmpty)
+                                        if (parent.SelectSingleNode(langChild.Name.ToString() + "[@xml:lang='" + mcPreferredLanguage + "']", nsMgr) != null && parent.SelectSingleNode(langChild.Name.ToString() + "[@xml:lang='" + mcPreferredLanguage + "']", nsMgr).InnerText.Trim().Length > 0 | groupNodesAreAllEmpty)
                                         {
                                             // Check two: Check for the user preferred language
                                             foreach (XmlElement childToRemove in parent.SelectNodes(langChild.Name.ToString() + "[not(@xml:lang) or @xml:lang!='" + mcPreferredLanguage + "']", nsMgr))
                                                 childToRemove.SetAttribute("removeUnwantedLanguageNode", "");
                                         }
-                                        else if (parent.SelectSingleNode(langChild.Name.ToString() + "[@xml:lang='" + mcPageLanguage + "']", nsMgr) is not null && parent.SelectSingleNode(langChild.Name.ToString() + "[@xml:lang='" + mcPageLanguage + "']", nsMgr).InnerText.Trim().Length > 0 | groupNodesAreAllEmpty)
+                                        else if (parent.SelectSingleNode(langChild.Name.ToString() + "[@xml:lang='" + mcPageLanguage + "']", nsMgr) != null && parent.SelectSingleNode(langChild.Name.ToString() + "[@xml:lang='" + mcPageLanguage + "']", nsMgr).InnerText.Trim().Length > 0 | groupNodesAreAllEmpty)
                                         {
                                             // Check three: Check for the user page language
                                             foreach (XmlElement childToRemove in parent.SelectNodes(langChild.Name.ToString() + "[not(@xml:lang) or @xml:lang!='" + mcPageLanguage + "']", nsMgr))
@@ -10799,7 +10800,7 @@ namespace Protean
                     response.SetAttribute("type", typeAttribute.ToString());
                 }
 
-                if (overwriteDuplicates && _responses.SelectSingleNode("Response[@name='" + responseName + "']") is not null)
+                if (overwriteDuplicates && _responses.SelectSingleNode("Response[@name='" + responseName + "']") != null)
                 {
                     _responses.ReplaceChild(response, _responses.SelectSingleNode("Response[@name='" + responseName + "']"));
                 }
@@ -10818,7 +10819,7 @@ namespace Protean
         {
             try
             {
-                if (_responses is not null && moPageXml is not null && moPageXml.SelectSingleNode("Page") is not null)
+                if (_responses != null && moPageXml != null && moPageXml.SelectSingleNode("Page") != null)
                 {
                     moPageXml.SelectSingleNode("Page").AppendChild(moPageXml.ImportNode(_responses, true));
                 }
@@ -10896,7 +10897,7 @@ namespace Protean
                 if (disposing)
                 {
                     // free managed resources when explicitly called
-                    if (icPageWriter is not null)
+                    if (icPageWriter != null)
                     {
                         icPageWriter.Dispose();
                     }
@@ -11140,7 +11141,7 @@ namespace Protean
                 }
                 using (var oDr = this.moDbHelper.getDataReaderDisposable(sSQL))  // Done by nita on 6/7/22
                 {
-                    if (oDr is not null)
+                    if (oDr != null)
                     {
                         if (oDr.HasRows)
                         {
@@ -11190,7 +11191,7 @@ namespace Protean
                         AppVarName = Strings.LCase(bundlePath + "/" + AppVarName.Trim('/'));
 
                         // check exists before we remove
-                        if (this.moCtx.Application.Get(AppVarName) is not null)
+                        if (this.moCtx.Application.Get(AppVarName) != null)
                         {
                             this.moCtx.Application.Remove(AppVarName);
                         }

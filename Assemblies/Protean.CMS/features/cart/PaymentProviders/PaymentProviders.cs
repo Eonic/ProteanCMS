@@ -5686,7 +5686,7 @@ namespace Protean
 
                             bool bDateState = false;
                             string cDateMessage = "The expiry date !=valid.  Please check the date on your card.";
-                            XmlNodeState localNodeState() { var argoNode3 = oXform.Instance; var ret = Tools.Xml.NodeState(ref argoNode3, "creditCard/expireDate", "", "", 1, oObjCheck, "", "", true); oXform.Instance = argoNode3; return ret; }
+                            XmlNodeState localNodeState() { var argoNode3 = oXform.Instance; var ret = Tools.Xml.NodeState(ref argoNode3, "creditCard/expireDate", "", "", XmlNodeState.IsEmpty, oObjCheck, "", "", true); oXform.Instance = argoNode3; return ret; }
 
                             if (localNodeState() == XmlNodeState.HasContents)
                             {
@@ -5724,7 +5724,7 @@ namespace Protean
 
                             bDateState = false;
                             cDateMessage = "The issue date is not valid.  Please check the date on your card.";
-                            XmlNodeState localNodeState1() { var argoNode4 = oXform.Instance; var ret = Tools.Xml.NodeState(ref argoNode4, "creditCard/issueDate", "", "", 1, oObjCheck, "", "", true); oXform.Instance = argoNode4; return ret; }
+                            XmlNodeState localNodeState1() { var argoNode4 = oXform.Instance; var ret = Tools.Xml.NodeState(ref argoNode4, "creditCard/issueDate", "", "", XmlNodeState.IsEmpty, oObjCheck, "", "", true); oXform.Instance = argoNode4; return ret; }
 
                             if (localNodeState1() == XmlNodeState.HasContents)
                             {

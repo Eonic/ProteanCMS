@@ -414,7 +414,7 @@ namespace Protean.Integration.Directory
                         // Get the content brief
                         XmlElement content = myWeb.GetContentBriefXml(default, contentId);
                         string contentSchema = "";
-                        Tools.Xml.NodeState(ref content, "//cContentSchemaName", "", "", 1, null, "", contentSchema, bCheckTrimmedInnerText: false);
+                        Tools.Xml.NodeState(ref content, "//cContentSchemaName", "", "", XmlNodeState.IsEmpty, null, "", contentSchema, bCheckTrimmedInnerText: false);
 
                         // Work out whether we have permission to do this.
                         // There are two places to look for permissions

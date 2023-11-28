@@ -933,7 +933,7 @@ namespace Protean
                         }
                     }
 
-                    if (response is not null)
+                    if (response != null)
                     {
                         remoteStream = response.GetResponseStream();
                         try
@@ -1251,7 +1251,7 @@ namespace Protean
                 context.Response.AddHeader("Pragma", "no-cache");
                 context.Response.AddHeader("Cache-Control", "Private, no - cache");
 
-                if (UploadDirPath is not null & !string.IsNullOrEmpty(UploadDirPath))
+                if (UploadDirPath != null & !string.IsNullOrEmpty(UploadDirPath))
                 {
 
                     mcStartFolder = mcStartFolder + UploadDirPath.Replace("/", @"\");
@@ -1441,7 +1441,7 @@ namespace Protean
                 cFilePath = cFilePath + @"\";
             try
             {
-                if (cFilePath is not null)
+                if (cFilePath != null)
                 {
                     fileExists = File.Exists(goServer.MapPath(cFilePath + cFilename));
                 }
@@ -1620,7 +1620,7 @@ namespace Protean
 
                                             // check and return the thumbnail path
                                             bool createTn = true;
-                                            if (tnfiles is not null)
+                                            if (tnfiles != null)
                                             {
                                                 foreach (FileInfo tnfi in tnfiles)
                                                 {

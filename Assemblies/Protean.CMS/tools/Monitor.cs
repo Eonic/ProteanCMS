@@ -52,7 +52,7 @@ namespace Protean
                 System.Collections.Specialized.NameValueCollection oSchedulerConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/scheduler");
                 var oMsg = new Messaging(myWeb.msException);
 
-                if (oSchedulerConfig is not null)
+                if (oSchedulerConfig != null)
                 {
                     cMonitorEmail = oSchedulerConfig["SchedulerMonitorEmail"];
                     if (cMonitorEmail is null)
@@ -89,7 +89,7 @@ namespace Protean
             try
             {
 
-                if (oSchedulerConfig is not null)
+                if (oSchedulerConfig != null)
                 {
 
                     // If Scheduler Info is present then
@@ -111,7 +111,7 @@ namespace Protean
                     oDS = oDBh.GetDataSet("EXEC spGetSchedulerSummary @date=" + Tools.Database.SqlDate(DateTime.Now.AddDays(-1), true), "Scan", "Monitor");
                     oDBh.ReturnNullsEmpty(oDS);
                     oMXML = new XmlDataDocument(oDS);
-                    if (oMXML is not null && oMXML.DocumentElement is not null)
+                    if (oMXML != null && oMXML.DocumentElement != null)
                     {
                         oElmt = oMXML.DocumentElement;
                     }
@@ -129,7 +129,7 @@ namespace Protean
                 oDBh = default;
             }
 
-            if (oSchedulerConfig is not null)
+            if (oSchedulerConfig != null)
             {
                 oElmt.SetAttribute("DatabaseServer", oSchedulerConfig["DatabaseServer"]);
                 oElmt.SetAttribute("Database", oSchedulerConfig["DatabaseName"]);

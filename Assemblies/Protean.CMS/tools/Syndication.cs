@@ -417,7 +417,7 @@ namespace Protean
                             // Go throgh all the blogArticles and add the metadata
                             foreach (XmlElement blogArticle in blogArticles)
                             {
-                                if (Xml.NodeState(ref blogControls, "Content[@parId = " + blogArticle.GetAttribute("parId") + "]", "", "", 1, blogControl, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
+                                if (Xml.NodeState(ref blogControls, "Content[@parId = " + blogArticle.GetAttribute("parId") + "]", "", "", XmlNodeState.IsEmpty, blogControl, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
                                 {
                                     blogArticle.AppendChild(blogArticle.OwnerDocument.ImportNode(blogControl, true));
                                 }
@@ -724,7 +724,7 @@ namespace Protean
             {
                 XmlElement pageContentsNode = null;
                 XmlElement DocElmt = (XmlElement)_myWeb.moPageXml.DocumentElement;
-                if (Conversions.ToBoolean(Xml.NodeState(ref DocElmt, "Contents", "", "", 1, pageContentsNode, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false)))
+                if (Conversions.ToBoolean(Xml.NodeState(ref DocElmt, "Contents", "", "", XmlNodeState.IsEmpty, pageContentsNode, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false)))
                 {
                     pageContentsNode.InnerXml = "";
                 }
@@ -1196,7 +1196,7 @@ namespace Protean
                     {
                         // Try to find the current provider
                         XmlElement distributorSettings = null;
-                        if (Xml.NodeState(ref value, "Distributor[@name='" + Name + "']", "", "", 1, distributorSettings, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
+                        if (Xml.NodeState(ref value, "Distributor[@name='" + Name + "']", "", "", XmlNodeState.IsEmpty, distributorSettings, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
                         {
                             _config = new Config(distributorSettings);
                         }
@@ -1431,7 +1431,7 @@ namespace Protean
                     try
                     {
                         XmlElement setting = null;
-                        XmlNodeState localNodeState() { var argoNode = Settings; var ret = Xml.NodeState(ref argoNode, "add[@key='" + key + "']", "", "", 1, setting, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false); Settings = argoNode; return ret; }
+                        XmlNodeState localNodeState() { var argoNode = Settings; var ret = Xml.NodeState(ref argoNode, "add[@key='" + key + "']", "", "", XmlNodeState.IsEmpty, setting, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false); Settings = argoNode; return ret; }
 
                         if (localNodeState() != XmlNodeState.NotInstantiated)
                         {

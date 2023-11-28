@@ -45,7 +45,7 @@ namespace Protean
                     this.mnUserId = myWeb.mnUserId;
                     this.moCtx = myWeb.moCtx;
 
-                    if (this.moCtx is not null)
+                    if (this.moCtx != null)
                     {
                         this.goApp = this.moCtx.Application;
                         this.goRequest = this.moCtx.Request;
@@ -75,7 +75,7 @@ namespace Protean
 
                     // Only evaulate if there is data to evaluate against!
 
-                    if (myWeb is not null & !string.IsNullOrEmpty(sValue))
+                    if (myWeb != null & !string.IsNullOrEmpty(sValue))
                     {
                         switch (sType ?? "")
                         {

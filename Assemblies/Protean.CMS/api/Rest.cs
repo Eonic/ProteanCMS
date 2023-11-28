@@ -36,7 +36,7 @@ namespace Protean
             {
 
                 // if we access base via soap the session is not available
-                if (this.moSession is not null)
+                if (this.moSession != null)
                 {
 
                     // below code has beem moved to membership base provider
@@ -55,7 +55,7 @@ namespace Protean
                 // We need the userId placed into dbhelper.
                 // moDbHelper.mnUserId = mnUserId
 
-                if (this.moConfig["Debug"] is not null)
+                if (this.moConfig["Debug"] != null)
                 {
                     switch (Strings.LCase(this.moConfig["Debug"]) ?? "")
                     {
@@ -122,7 +122,7 @@ namespace Protean
 
                 Newtonsoft.Json.Linq.JObject jObj = null;
                 Dictionary<string, string> paramDictionary = null;
-                if (jsonString is not null)
+                if (jsonString != null)
                 {
                     try
                     {
@@ -168,11 +168,11 @@ namespace Protean
 
                 var args = new object[2];
                 args[0] = this;
-                if (jObj is not null)
+                if (jObj != null)
                 {
                     args[1] = jObj;
                 }
-                else if (paramDictionary is not null)
+                else if (paramDictionary != null)
                 {
                     args[1] = paramDictionary;
                 }
@@ -237,9 +237,9 @@ namespace Protean
                         nUserId = myWeb.mnUserId;
                     }
                     // HttpContext httpContext = HttpContext.Current;
-                    else if (myWeb.moCtx.Request.Headers is not null)
+                    else if (myWeb.moCtx.Request.Headers != null)
                     {
-                        if (myWeb.moCtx.Request.Headers["Authorization"] is not null)
+                        if (myWeb.moCtx.Request.Headers["Authorization"] != null)
                         {
                             authHeader = myWeb.moCtx.Request.Headers["Authorization"];
                             if (authHeader.Substring("Basic ".Length).Trim().Length != 0)

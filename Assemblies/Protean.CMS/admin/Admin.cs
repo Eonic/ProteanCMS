@@ -5561,7 +5561,7 @@ namespace Protean
                             var pollXml = new XmlDocument();
                             pollXml.LoadXml(pollXmlString);
                             var argoNode = pollXml.DocumentElement;
-                            Xml.NodeState(ref argoNode, "//Title", "", "", 1, null, "", pollTitle, bCheckTrimmedInnerText: false);
+                            Xml.NodeState(ref argoNode, "//Title", "", "", XmlNodeState.IsEmpty, null, "", pollTitle, bCheckTrimmedInnerText: false);
                         }
                         reportName = "Poll Votes: " + pollTitle;
 
