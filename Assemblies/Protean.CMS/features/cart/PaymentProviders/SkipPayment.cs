@@ -18,7 +18,7 @@ namespace Protean.Providers
                 // do nothing
             }
 
-            public void Initiate(ref object _AdminXforms, ref object _AdminProcess, ref object _Activities, ref object PayProvider, ref Cms myWeb)
+            public void Initiate(ref object _AdminXforms, ref object _AdminProcess, ref object _Activities, ref Payment.DefaultProvider PayProvider, ref Cms myWeb)
             {
                 string cProcessInfo = "";
                 try

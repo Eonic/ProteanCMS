@@ -18,7 +18,7 @@ namespace Protean
 
             #region JSON Actions
 
-            public class JSONActions : Protean.Rest.JsonActions
+            public class JSONActions : Protean.rest.JsonActions
             {
 
                 public event OnErrorEventHandler OnError;
@@ -68,7 +68,7 @@ namespace Protean
 
 
 
-                public string DeleteObject(ref Protean.Rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
+                public string DeleteObject(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
                 {
                     string ObjType = "";  // Just declare at top
                     var result = default(long);
@@ -100,7 +100,7 @@ namespace Protean
                     }
                 }
 
-                public string QueryValue(ref Protean.Rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
+                public string QueryValue(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
                 {
                     try
                     {
@@ -126,7 +126,7 @@ namespace Protean
                     }
                 }
 
-                public string LoadUrlsForPagination(ref Protean.Rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
+                public string LoadUrlsForPagination(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
                 {
 
                     string redirectType = "";
@@ -152,7 +152,7 @@ namespace Protean
 
                 }
 
-                public string AddNewUrl(ref Protean.Rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
+                public string AddNewUrl(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
                 {
                     string JsonResult = "";
                     string redirectType = "";
@@ -189,7 +189,7 @@ namespace Protean
 
                 }
 
-                public string SearchUrl(ref Protean.Rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
+                public string SearchUrl(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
                 {
                     string redirectType = "";
                     string searchObj = "";
@@ -228,7 +228,7 @@ namespace Protean
 
 
 
-                public string SaveUrls(ref Protean.Rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
+                public string SaveUrls(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
                 {
                     string redirectType = "";
                     string oldUrl = "";
@@ -271,7 +271,7 @@ namespace Protean
                     return JsonResult;
                 }
 
-                public string DeleteUrls(ref Protean.Rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
+                public string DeleteUrls(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
                 {
                     string redirectType = "";
                     string oldUrl = "";
@@ -306,7 +306,7 @@ namespace Protean
                     }
                 }
 
-                public string IsUrlPresent(ref Protean.Rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
+                public string IsUrlPresent(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
                 {
                     string JsonResult = "";
                     string redirectType = "";
@@ -334,7 +334,7 @@ namespace Protean
                     }
                 }
 
-                public string GetTotalNumberOfUrls(ref Protean.Rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
+                public string GetTotalNumberOfUrls(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
                 {
                     string JsonResult = "";
                     string redirectType = "";
@@ -356,7 +356,7 @@ namespace Protean
                         return ex.Message;
                     }
                 }
-                public string GetTotalNumberOfSearchUrls(ref Protean.Rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
+                public string GetTotalNumberOfSearchUrls(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
                 {
                     string JsonResult = "";
                     string redirectType = "";
@@ -385,7 +385,7 @@ namespace Protean
                     }
                 }
 
-                public string LoadAllUrls(ref Protean.Rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
+                public string LoadAllUrls(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
                 {
 
                     string redirectType = "";
@@ -424,7 +424,7 @@ namespace Protean
 
 
 
-                public string IsParentPage(ref Protean.Rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
+                public string IsParentPage(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
                 {
                     string JsonResult = "";
                     string pageId = 0.ToString();
@@ -449,7 +449,7 @@ namespace Protean
                     }
                 }
 
-                public string RedirectPage(ref Protean.Rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
+                public string RedirectPage(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
                 {
                     string JsonResult = "";
                     string redirectType = "";
@@ -509,7 +509,7 @@ namespace Protean
                     }
                 }
 
-                public string ReIndexingAPI(ref Protean.Rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
+                public string ReIndexingAPI(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
                 {
                     string sString;
                     try
@@ -546,7 +546,7 @@ namespace Protean
 
                 }
 
-                public string CleanfileName(ref Protean.Rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
+                public string CleanfileName(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
                 {
                     string JsonResult = "";
                     string Filename = string.Empty;
@@ -575,7 +575,7 @@ namespace Protean
                         return ex.Message;
                     }
                 }
-                public string GetExistsFileName(ref Protean.Rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
+                public string GetExistsFileName(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
                 {
                     try
                     {
@@ -591,7 +591,7 @@ namespace Protean
 
                     return default;
                 }
-                public string CompressImage(ref Protean.Rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
+                public string CompressImage(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
                 {
                     string JsonResult = "0";
                     string Filename = string.Empty;
@@ -621,7 +621,7 @@ namespace Protean
                         return ex.Message;
                     }
                 }
-                public string SendReviewCompleteEmail(ref Protean.Rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
+                public string SendReviewCompleteEmail(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
                 {
                     string JsonResult = "";
                     string ReviewId = string.Empty;
@@ -689,7 +689,7 @@ namespace Protean
                     }
                 }
 
-                public string SaveMultipleLibraryImages(ref Protean.Rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
+                public string SaveMultipleLibraryImages(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
                 {
                     string JsonResult = "";
                     string nContentId = "";

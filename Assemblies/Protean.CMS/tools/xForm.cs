@@ -1556,7 +1556,7 @@ namespace Protean
                                                         // this has been uploaded but the form had to go through a couple of stages of validation
                                                         else if (goSession != null && !string.IsNullOrEmpty(Conversions.ToString(goSession["formFileUploaded"])))
                                                         {
-                                                            oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = Conversions.ToString(Operators.ConcatenateObject(goSession["formFileUploaded"], "").Trim());
+                                                            oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = Conversions.ToString(goSession["formFileUploaded"].ToString().Trim());
                                                         }
                                                         else
                                                         {
@@ -2635,7 +2635,7 @@ namespace Protean
 
 
 
-        public XmlElement addRange(ref XmlElement oContextNode, string sRef, bool bBound, string sLabel, object oStart, object oEnd, object oStep = "", string sClass = "")
+        public XmlElement addRange(ref XmlElement oContextNode, string sRef, bool bBound, string sLabel, string oStart, string oEnd, string oStep = "", string sClass = "")
         {
             XmlElement addRangeRet = default;
             XmlElement oIptElmt;
@@ -4164,7 +4164,7 @@ namespace Protean
         {
             Protean.XmlHelper.Transform oTransform = new Protean.XmlHelper.Transform();
 
-            System.IO.TextWriter sWriter = new System.IO.StringWriter();
+            System.Xml.XmlWriter sWriter = new System.Xml.XmlWriter.Create();
 
             if (sXsltPath != "")
             {
@@ -4172,7 +4172,8 @@ namespace Protean
                 oTransform.XSLFile = goServer.MapPath(sXsltPath);
                 XmlDocument oXML = new XmlDocument();
                 oXML.InnerXml = oInstance.OuterXml;
-                oTransform.Process(oXML, sWriter);
+                XmlReader oXMLReader = new XmlNodeReader(oXML);
+                oTransform.Process(oXMLReader, sWriter);
                 // Run transformation
 
 

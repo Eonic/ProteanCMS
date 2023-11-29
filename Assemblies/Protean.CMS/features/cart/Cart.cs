@@ -12,6 +12,7 @@ using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
+using System.Linq;
 
 namespace Protean
 {
@@ -1653,7 +1654,7 @@ namespace Protean
                                         Cms argmyWeb = myWeb;
                                         var oMembershipProv = new Providers.Membership.BaseProvider(ref argmyWeb, myWeb.moConfig["MembershipProvider"]);
                                         myWeb = (Cms)argmyWeb;
-                                        Providers.Membership.EonicProvider.AdminXForms oRegXform = (Providers.Membership.EonicProvider.AdminXForms)oMembershipProv.AdminXforms;
+                                        Providers.Membership.DefaultProvider.AdminXForms oRegXform = (Providers.Membership.DefaultProvider.AdminXForms)oMembershipProv.AdminXforms;
                                         oRegXform.open(moPageXml);
                                         XmlElement argIntanceAppend = null;
                                         oRegXform.xFrmEditDirectoryItem(IntanceAppend: ref argIntanceAppend, (long)myWeb.mnUserId, "User", (long)Conversions.ToInteger("0" + moCartConfig["DefaultSubscriptionGroupId"]), "CartRegistration");
@@ -1682,7 +1683,7 @@ namespace Protean
                                         }
 
 
-                                        oRegXform = (Providers.Membership.EonicProvider.AdminXForms)null;
+                                        oRegXform = (Providers.Membership.DefaultProvider.AdminXForms)null;
                                     }
                                     else
                                     {
@@ -7946,11 +7947,11 @@ namespace Protean
                 }
             }
 
-            private string iterateCountryList(ref Hashtable oDict, ref int nParent, ref int nIndex)
+            private string iterateCountryList(ref Hashtable oDict, ref int? nParent, ref int nIndex)
             {
                 string iterateCountryListRet = default;
                 myWeb.PerfMon.Log("Cart", "iterateCountryList");
-                object arrTmp;
+                int?[] arrTmp;
                 string sListReturn;
                 string cProcessInfo = "";
                 try
@@ -7959,12 +7960,12 @@ namespace Protean
 
                     if (oDict.ContainsKey(nParent))
                     {
-                        arrTmp = oDict[nParent];
-                        sListReturn = ",'" + SqlFmt(arrTmp(nIndex)) + "'"; // Adding this line here allows the top root location to be added
-                        if (!(Information.IsDBNull(arrTmp(0)) | arrTmp(0) == ""))
+                        arrTmp = (int?[])oDict[nParent];
+                        sListReturn = ",'" + SqlFmt(arrTmp[nIndex].ToString()) + "'"; // Adding this line here allows the top root location to be added
+                        if (!(Information.IsDBNull(arrTmp[0]) | arrTmp[0] == null))
                         {
-                            if (arrTmp(0) != nParent)
-                                sListReturn = sListReturn + iterateCountryList(ref oDict, ref arrTmp(0), ref nIndex);
+                            if (arrTmp[0] != nParent)
+                                sListReturn = sListReturn + iterateCountryList(ref oDict, ref arrTmp[0], ref nIndex);
                         }
                     }
 
@@ -8179,7 +8180,7 @@ namespace Protean
 
             }
 
-            public bool AddItem(long nProductId, long nQuantity, Array oProdOptions, string cProductText = "", double nPrice = 0d, string ProductXml = "", bool UniqueProduct = false, string overideUrl = "", bool bDepositOnly = false, string cProductOption = "", double dProductOptionPrice = 0d)
+            public bool AddItem(long nProductId, long nQuantity, string[] oProdOptions, string cProductText = "", double nPrice = 0d, string ProductXml = "", bool UniqueProduct = false, string overideUrl = "", bool bDepositOnly = false, string cProductOption = "", double dProductOptionPrice = 0d)
             {
                 myWeb.PerfMon.Log("Cart", "AddItem");
                 string cSQL = "Select * From tblCartItem WHERE nCartOrderID = " + mnCartId + " AND nItemiD =" + nProductId;
@@ -8238,13 +8239,13 @@ namespace Protean
                                             var loopTo = Information.UBound(oProdOptions) - 1;
                                             for (i = 0; i <= loopTo; i++)
                                             {
-                                                if (Information.UBound(oProdOptions(i)) < 1)
+                                                if (oProdOptions[i].Count() < 1)
                                                 {
                                                     // Case for text option with no index
-                                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oProdOptions((object)i)((object)0), Conversions.ToString(oDr2["nItemOptGrpIdx"]), false)))
+                                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oProdOptions[i][0], Conversions.ToString(oDr2["nItemOptGrpIdx"]), false)))
                                                         nCountExOptions += 1;
                                                 }
-                                                else if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(oProdOptions((object)i)((object)0), oDr2["nItemOptGrpIdx"], false), Operators.ConditionalCompareObjectEqual(oProdOptions((object)i)((object)1), oDr2["nItemOptIdx"], false))))
+                                                else if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(oProdOptions[i][0], oDr2["nItemOptGrpIdx"], false), Operators.ConditionalCompareObjectEqual(oProdOptions((object)i)((object)1), oDr2["nItemOptIdx"], false))))
                                                     nCountExOptions += 1;
                                             }
                                             NoOptions += 1;

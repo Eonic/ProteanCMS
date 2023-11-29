@@ -210,12 +210,12 @@
     <Compile Include="admin\Admin.JSONActions.cs" />
     <Compile Include="admin\Admin.Redirects.cs" />
     <Compile Include="admin\AdminXforms.cs" />
-    <Compile Include="api\Rest.cs" />
+    <Compile Include="api\rest.cs" />
     <Compile Include="api\soap.cs" />
     <Compile Include="App_Start\DynamicImage.cs" />
-    <Compile Include="Cms.cs" />
-    <Compile Include="Cms.DBHelper.cs" />
-    <Compile Include="Cms.xForm.cs" />
+    <Compile Include="core\Cms.cs" />
+    <Compile Include="core\Cms.DBHelper.cs" />
+    <Compile Include="core\Cms.xForm.cs" />
     <Compile Include="content\Calendar.cs" />
     <Compile Include="content\Contact.cs" />
     <Compile Include="content\Content.JSONActions.cs" />

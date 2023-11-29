@@ -1068,7 +1068,7 @@ namespace Protean
                                                             cProcessInfo = "Indexing - " + oDocElmt.InnerText;
                                                             string fileAsText = GetFileText(myWeb.goServer.MapPath(oDocElmt.InnerText), ref myWeb.msException);
                                                             string argsException = oElmt.GetAttribute("name");
-                                                            IndexPage(myWeb.mnPageId, "<h1>" + oElmt.GetAttribute("name") + "</h1>" + fileAsText, oDocElmt.InnerText, myWeb.msException, ref argsException, "Download", myWeb.mnArtId, cPageExtract, Convert.ToDateTime(oElmt.GetAttribute("publish")), Conversions.ToDate(oElmt.GetAttribute("publish")), null, Interaction.IIf(Information.IsDate(oElmt.GetAttribute("update")), Conversions.ToDate(oElmt.GetAttribute("update")), null);
+                                                            IndexPage(myWeb.mnPageId, "<h1>" + oElmt.GetAttribute("name") + "</h1>" + fileAsText, oDocElmt.InnerText, myWeb.msException, ref argsException, "Download", myWeb.mnArtId, cPageExtract, Convert.ToDateTime(oElmt.GetAttribute("publish")), Conversions.ToDate(oElmt.GetAttribute("publish")), null, Interaction.IIf(Information.IsDate(oElmt.GetAttribute("update")), Conversions.ToDate(oElmt.GetAttribute("update")), null));
 
                                                             var oFileElmt = oInfoElmt.OwnerDocument.CreateElement("file");
                                                             oPageElmt.SetAttribute("file", oDocElmt.InnerText);

@@ -14,13 +14,13 @@ using Newtonsoft.Json;
 namespace Protean
 {
 
-    public class Rest : Protean.Base
+    public class rest : Protean.Base
     {
 
         public bool gbDebug = false;
 
 
-        public Rest() : base(System.Web.HttpContext.Current)
+        public rest() : base(System.Web.HttpContext.Current)
         {
             InitialiseVariables();
 

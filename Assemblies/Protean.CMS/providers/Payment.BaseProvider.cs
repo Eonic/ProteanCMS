@@ -20,13 +20,14 @@ using static Protean.Cms;
 using static Protean.Cms.Cart;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
+using System.Dynamic;
 
 namespace Protean.Providers
 {
     namespace Payment
     {
 
-        public class BaseProvider
+        public class BaseProvider : DynamicObject
         {
             private const string mcModuleName = "Protean.Providers.Payment.BaseProvider";
 
@@ -144,13 +145,13 @@ namespace Protean.Providers
                 // do nothing
             }
 
-            public void Initiate(ref object _AdminXforms, ref object _AdminProcess, ref object _Activities, ref object MemProvider, ref Cms myWeb)
+            public void Initiate(ref object _AdminXforms, ref object _AdminProcess, ref object _Activities, ref BaseProvider PayProvider, ref Cms myWeb)
             {
 
-                MemProvider.AdminXforms = new AdminXForms(ref myWeb);
-                MemProvider.AdminProcess = new AdminProcess(ref myWeb);
-                MemProvider.AdminProcess.oAdXfm = MemProvider.AdminXforms;
-                MemProvider.Activities = new Activities();
+                PayProvider.AdminXforms = new AdminXForms(ref myWeb);
+                PayProvider.AdminProcess = new AdminProcess(ref myWeb);
+                PayProvider.AdminProcess.oAdXfm = PayProvider.AdminXforms;
+                PayProvider.Activities = new Activities();
 
             }
 
@@ -169,7 +170,7 @@ namespace Protean.Providers
 
                 private AdminXForms _oAdXfm;
 
-                public object oAdXfm
+                public DefaultProvider.AdminXForms oAdXfm
                 {
                     set
                     {

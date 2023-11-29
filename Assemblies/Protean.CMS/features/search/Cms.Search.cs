@@ -191,7 +191,7 @@ namespace Protean
                 }
             }
 
-            public Search(ref Protean.Rest myAPi)
+            public Search(ref Protean.rest myAPi)
             {
                 // myAPi.PerfMon.Log("Search", "New")
                 try
@@ -929,7 +929,7 @@ namespace Protean
                 }
             }
 
-            public void IndexQuery(ref Protean.Rest myAPI, string cQuery, int HitsLimit = 300, string fuzzySearch = "on")
+            public void IndexQuery(ref Protean.rest myAPI, string cQuery, int HitsLimit = 300, string fuzzySearch = "on")
             {
                 // myWeb.PerfMon.Log("Search", "IndexQuery")
                 string processInfo = "Looking for : " + cQuery;
@@ -2652,7 +2652,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
 
             }
 
-            private Filter LivePageLuceneFilter(ref Protean.Rest myApi)
+            private Filter LivePageLuceneFilter(ref Protean.rest myApi)
             {
 
                 try

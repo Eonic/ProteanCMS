@@ -436,7 +436,7 @@ namespace Protean
                     try
                     {
 
-                        Cms argmyWeb = (object)this.myWeb;
+                        Cms argmyWeb = this.myWeb;
                         var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.myWeb.moConfig["MembershipProvider"]);
                         this.myWeb = (Cms)argmyWeb;
                         var oAdXfm = oMembershipProv.AdminXforms;

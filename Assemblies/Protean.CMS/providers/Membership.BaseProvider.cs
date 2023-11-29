@@ -24,21 +24,20 @@ using static Protean.Cms;
 using static Protean.stdTools;
 using Protean.Tools;
 using static Protean.Tools.Xml;
+using System.Dynamic;
+
 
 namespace Protean.Providers
 {
     namespace Membership
     {
-
-        public class BaseProvider
+        public class BaseProvider : DynamicObject
         {
-
-
             private const string mcModuleName = "Protean.Providers.Membership.BaseProvider";
 
-            private object _AdminXforms;
-            private object _AdminProcess;
-            private object _Activities;
+            private DefaultProvider.AdminXForms _AdminXforms;
+            private DefaultProvider.AdminProcess _AdminProcess;
+            private DefaultProvider.Activities _Activities;
 
             protected XmlNode moPaymentCfg;
 
@@ -49,7 +48,7 @@ namespace Protean.Providers
 
             public delegate void OnErrorWithWebEventHandler(ref Cms myweb, object sender, Tools.Errors.ErrorEventArgs e);
 
-            public object AdminXforms
+            public DefaultProvider.AdminXForms AdminXforms
             {
                 set
                 {
@@ -61,7 +60,7 @@ namespace Protean.Providers
                 }
             }
 
-            public object AdminProcess
+            public DefaultProvider.AdminProcess AdminProcess
             {
                 set
                 {
@@ -73,7 +72,7 @@ namespace Protean.Providers
                 }
             }
 
-            public object Activities
+            public DefaultProvider.Activities Activities
             {
                 set
                 {
@@ -144,15 +143,15 @@ namespace Protean.Providers
 
         }
 
-        public class EonicProvider
+        public class DefaultProvider
         {
 
-            public EonicProvider()
+            public DefaultProvider()
             {
                 // do nothing
             }
 
-            public void Initiate(ref object _AdminXforms, ref object _AdminProcess, ref object _Activities, ref object MemProvider, ref Cms myWeb)
+            public void Initiate(ref object _AdminXforms, ref object _AdminProcess, ref DefaultProvider.Activities _Activities, ref BaseProvider MemProvider, ref Cms myWeb)
             {
 
                 MemProvider.AdminXforms = new AdminXForms(ref myWeb);
@@ -162,7 +161,7 @@ namespace Protean.Providers
 
             }
 
-            public void Initiate(ref object _AdminXforms, ref object _AdminProcess, ref object _Activities, ref object MemProvider, ref Protean.Base myWeb)
+            public void Initiate(ref object _AdminXforms, ref object _AdminProcess, ref object _Activities, ref BaseProvider MemProvider, ref Protean.Base myWeb)
             {
 
                 // MemProvider.AdminXforms = New AdminXForms(myWeb)
@@ -1814,7 +1813,7 @@ namespace Protean.Providers
                     {
 
                         // Dim adXfm As EonicProvider.AdminXForms = New EonicProvider.AdminXForms(myWeb)
-                        object adXfm = myWeb.getAdminXform();
+                        Cms.Admin.AdminXforms adXfm = myWeb.getAdminXform();
 
                         adXfm.open(myWeb.moPageXml);
 

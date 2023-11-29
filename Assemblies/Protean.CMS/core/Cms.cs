@@ -712,7 +712,7 @@ namespace Protean
                     {
                         Cms argmyWeb = this;
                         var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.moConfig["MembershipProvider"]);
-                        this.mnUserId = Conversions.ToInteger(oMembershipProv.Activities.GetUserId(this));
+                        this.mnUserId = Conversions.ToInteger(oMembershipProv.Activities.GetUserId(ref argmyWeb));
                     }
                     // We need the userId placed into dbhelper.
                     this.moDbHelper.mnUserId = (long)this.mnUserId;
@@ -954,7 +954,7 @@ namespace Protean
 
                     Cms argmyWeb = this;
                     var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.moConfig["MembershipProvider"]);
-                    oMembershipProv.Activities.SetUserId(this);
+                    oMembershipProv.Activities.SetUserId(ref argmyWeb);
                 }
 
 
@@ -1340,7 +1340,7 @@ namespace Protean
                     // behaviour to check single session or transfer from the cart is still called from Open()
                     Cms argmyWeb = this;
                     var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.moConfig["MembershipProvider"]);
-                    this.mnUserId = Conversions.ToInteger(oMembershipProv.Activities.GetUserSessionId(this));
+                    this.mnUserId = Conversions.ToInteger(oMembershipProv.Activities.GetUserSessionId(ref argmyWeb));
                     if (this.mnUserId > 0)
                     {
                         bPageCache = false;
@@ -1532,7 +1532,7 @@ namespace Protean
                     case pageResponseType.json:
                         {
 
-                            var moApi = new Protean.Rest();
+                            var moApi = new Protean.rest();
 
                             moApi.InitialiseVariables();
                             moApi.JSONRequest();
@@ -5776,7 +5776,7 @@ namespace Protean
         public virtual object getAdminXform()
         {
             // this is to allow us to overide adminXforms lower down
-            object oAdXfm;
+            Cms.Admin.AdminXforms oAdXfm;
 
             var argaWeb = this;
             oAdXfm = new Cms.Admin.AdminXforms(ref argaWeb);

@@ -34,7 +34,7 @@ namespace Protean
                 }
 
 
-                public string SubscriptionsProcess(ref Protean.Rest myApi, ref JObject jObj)
+                public string SubscriptionsProcess(ref Protean.rest myApi, ref JObject jObj)
                 {
                     try
                     {

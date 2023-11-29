@@ -40,7 +40,7 @@ namespace Protean
 
                 }
 
-                public string TwitterFeed(ref Protean.Rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
+                public string TwitterFeed(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
                 {
                     try
                     {
@@ -70,7 +70,7 @@ namespace Protean
                     }
                 }
 
-                public string UpdateContentValue(ref Protean.Rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
+                public string UpdateContentValue(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
                 {
                     try
                     {
@@ -92,7 +92,7 @@ namespace Protean
                     }
                 }
 
-                public string GetContent(ref Protean.Rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
+                public string GetContent(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
                 {
                     try
                     {
@@ -108,7 +108,7 @@ namespace Protean
                     }
                 }
 
-                public string IsUnique(ref Protean.Rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
+                public string IsUnique(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
                 {
                     try
                     {
@@ -130,7 +130,7 @@ namespace Protean
                     }
                 }
 
-                public string SearchContent(ref Protean.Rest myApi, ref Newtonsoft.Json.Linq.JObject searchFilter)
+                public string SearchContent(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject searchFilter)
                 {
                     try
                     {
@@ -175,7 +175,7 @@ namespace Protean
 
                 // to call /ewapi/Cms.Content/SearchIndex?data={query:'driving',hitsLimit:'30'}
 
-                public string SearchIndex(ref Protean.Rest myApi, ref Newtonsoft.Json.Linq.JObject searchFilter)
+                public string SearchIndex(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject searchFilter)
                 {
                     try
                     {
@@ -211,7 +211,7 @@ namespace Protean
                 }
 
 
-                public string LogActivity(ref Protean.Rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
+                public string LogActivity(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
                 {
                     try
                     {
@@ -244,7 +244,7 @@ namespace Protean
                 }
 
                 // Charts
-                public string GetChartData(ref Protean.Rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
+                public string GetChartData(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
                 {
 
                     string JsonResult = "";
@@ -326,7 +326,7 @@ namespace Protean
 
 
                 // Review Path
-                public string ImageUpload(ref Protean.Rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
+                public string ImageUpload(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
                 {
                     try
                     {
@@ -384,7 +384,7 @@ namespace Protean
                         return ex.Message;
                     }
                 }
-                public string GetLastUploadedFilePath(ref Protean.Rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
+                public string GetLastUploadedFilePath(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
                 {
                     try
                     {

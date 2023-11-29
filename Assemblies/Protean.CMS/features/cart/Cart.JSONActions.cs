@@ -27,7 +27,7 @@ namespace Protean
                 public string Value { get; set; }
             }
 
-            public class JSONActions : Protean.Rest.JsonActions
+            public class JSONActions : Protean.rest.JsonActions
             {
 
                 public event OnErrorEventHandler OnError;
@@ -76,7 +76,7 @@ namespace Protean
                     return CartXml;
                 }
 
-                public string GetCart(ref Protean.Rest myApi, ref JObject jObj)
+                public string GetCart(ref Protean.rest myApi, ref JObject jObj)
                 {
                     try
                     {
@@ -114,7 +114,7 @@ namespace Protean
                     }
                 }
 
-                public string AddItems(ref Protean.Rest myApi, ref JObject jObj)
+                public string AddItems(ref Protean.rest myApi, ref JObject jObj)
                 {
                     try
                     {
@@ -210,7 +210,7 @@ namespace Protean
 
                 }
 
-                public string RemoveItems(ref Protean.Rest myApi, ref JObject jObj)
+                public string RemoveItems(ref Protean.rest myApi, ref JObject jObj)
                 {
                     try
                     {
@@ -264,7 +264,7 @@ namespace Protean
 
                 }
 
-                public string UpdateItems(ref Protean.Rest myApi, ref JObject jObj)
+                public string UpdateItems(ref Protean.rest myApi, ref JObject jObj)
                 {
                     try
                     {
@@ -337,7 +337,7 @@ namespace Protean
 
                 }
 
-                public string GetShippingOptions(ref Protean.Rest myApi, ref JObject jObj)
+                public string GetShippingOptions(ref Protean.rest myApi, ref JObject jObj)
                 {
                     try
                     {
@@ -418,7 +418,7 @@ namespace Protean
                     }
                 }
 
-                public string UpdatedCartShippingOptions(ref Protean.Rest myApi, ref JObject jObj)
+                public string UpdatedCartShippingOptions(ref Protean.rest myApi, ref JObject jObj)
                 {
                     try
                     {
@@ -451,7 +451,7 @@ namespace Protean
 
                 }
 
-                public string UpdateDeliveryOptionByCountry(ref Protean.Rest myApi, ref JObject jObj)
+                public string UpdateDeliveryOptionByCountry(ref Protean.rest myApi, ref JObject jObj)
                 {
                     if ((int)myCart.mnProcessId > 4)
                     {
@@ -496,7 +496,7 @@ namespace Protean
                     }
                 }
 
-                public string GetContacts(ref Protean.Rest myApi, ref JObject jObj)
+                public string GetContacts(ref Protean.rest myApi, ref JObject jObj)
                 {
                     try
                     {
@@ -516,7 +516,7 @@ namespace Protean
                     }
                 }
 
-                public string GetContactForm(ref Protean.Rest myApi, ref JObject jObj)
+                public string GetContactForm(ref Protean.rest myApi, ref JObject jObj)
                 {
                     int nId;
                     try
@@ -543,7 +543,7 @@ namespace Protean
                     return JsonConvert.ToString(nId);
                 }
 
-                public string SetContact(ref Protean.Rest myApi, ref JObject jObj)
+                public string SetContact(ref Protean.rest myApi, ref JObject jObj)
                 {
                     int nId;
                     try
@@ -563,7 +563,7 @@ namespace Protean
                     return JsonConvert.ToString(nId);
                 }
 
-                public string DeleteContact(ref Protean.Rest myApi, ref JObject jObj)
+                public string DeleteContact(ref Protean.rest myApi, ref JObject jObj)
                 {
                     bool isSuccess;
                     try
@@ -581,7 +581,7 @@ namespace Protean
                     return JsonConvert.ToString(isSuccess);
                 }
 
-                public string AddProductOption(ref Protean.Rest myApi, ref JObject jObj)
+                public string AddProductOption(ref Protean.rest myApi, ref JObject jObj)
                 {
                     string jsonString = string.Empty;
 
@@ -613,7 +613,7 @@ namespace Protean
                 }
 
 
-                public string UpdatePackagingForRemovingFreeGiftDiscount(ref Protean.Rest myApi, ref JObject jObj)
+                public string UpdatePackagingForRemovingFreeGiftDiscount(ref Protean.rest myApi, ref JObject jObj)
                 {
                     try
                     {
@@ -631,7 +631,7 @@ namespace Protean
 
                 }
 
-                public string AddDiscountCode(ref Protean.Rest myApi, ref JObject jObj)
+                public string AddDiscountCode(ref Protean.rest myApi, ref JObject jObj)
                 {
                     string strMessage = string.Empty;
                     try
@@ -677,7 +677,7 @@ namespace Protean
                     }
                 }
 
-                public string RemoveDiscountCode(ref Protean.Rest myApi, ref JObject jObj)
+                public string RemoveDiscountCode(ref Protean.rest myApi, ref JObject jObj)
                 {
                     string jsonString = string.Empty;
                     try
@@ -709,7 +709,7 @@ namespace Protean
                     }
                 }
 
-                public string UpdateCartProductPrice(ref Protean.Rest myApi, ref JObject jObj)
+                public string UpdateCartProductPrice(ref Protean.rest myApi, ref JObject jObj)
                 {
                     try
                     {
@@ -744,7 +744,7 @@ namespace Protean
                     }
                 }
 
-                public int AddCartAddress(ref Protean.Rest myApi, ref JObject jObj, string contactType, int cartId, string emailAddress = "", string telphone = "")
+                public int AddCartAddress(ref Protean.rest myApi, ref JObject jObj, string contactType, int cartId, string emailAddress = "", string telphone = "")
                 {
                     try
                     {
@@ -922,7 +922,7 @@ namespace Protean
                 /// <param name="myApi"></param>
                 /// <param name="jObj"></param>
                 /// <returns></returns>
-                public string CreatePaypalOrder(ref Protean.Rest myApi, ref JObject jObj)
+                public string CreatePaypalOrder(ref Protean.rest myApi, ref JObject jObj)
                 {
                     try
                     {
@@ -959,7 +959,7 @@ namespace Protean
                     }
                 }
 
-                public string GetPaypalOrder(ref Protean.Rest myApi, ref JObject jObj)
+                public string GetPaypalOrder(ref Protean.rest myApi, ref JObject jObj)
                 {
                     try
                     {
@@ -996,7 +996,7 @@ namespace Protean
                     }
                 }
 
-                public string CapturePaypalOrder(ref Protean.Rest myApi, ref JObject jObj)
+                public string CapturePaypalOrder(ref Protean.rest myApi, ref JObject jObj)
                 {
                     try
                     {
@@ -1030,7 +1030,7 @@ namespace Protean
                     }
                 }
 
-                public bool SaveToSellerNotes(ref Protean.Rest myApi, ref JObject jObj)
+                public bool SaveToSellerNotes(ref Protean.rest myApi, ref JObject jObj)
                 {
                     try
                     {
@@ -1060,7 +1060,7 @@ namespace Protean
 
                 #region judopay functionality api functionality
                 // get county for selected country
-                public string PopulateCounty(Protean.Rest myApi, JObject searchFilter)
+                public string PopulateCounty(Protean.rest myApi, JObject searchFilter)
                 {
                     try
                     {
@@ -1106,7 +1106,7 @@ namespace Protean
                 /// <param name="myApi"></param>
                 /// <param name="searchFilter"></param>
                 /// <returns></returns>
-                public string GetISOCodeforState(Protean.Rest myApi, JObject searchFilter)
+                public string GetISOCodeforState(Protean.rest myApi, JObject searchFilter)
                 {
                     try
                     {
@@ -1148,7 +1148,7 @@ namespace Protean
                 /// <param name="myApi"></param>
                 /// <param name="jObj"></param>
                 /// <returns></returns>
-                public string RefundOrder(ref Protean.Rest myApi, ref JObject jObj)
+                public string RefundOrder(ref Protean.rest myApi, ref JObject jObj)
                 {
                     string josResult = string.Empty;
 
@@ -1202,7 +1202,7 @@ namespace Protean
                 /// <param name="myApi"></param>
                 /// <param name="jObj"></param>
                 /// <returns></returns>
-                public string UpdateOrderWithPaymentResponse(ref Protean.Rest myApi, ref JObject jObj)
+                public string UpdateOrderWithPaymentResponse(ref Protean.rest myApi, ref JObject jObj)
                 {
                     try
                     {
@@ -1239,7 +1239,7 @@ namespace Protean
                 /// <param name="myApi"></param>
                 /// <param name="jObj"></param>
                 /// <returns></returns>
-                public string ProcessNewPayment(ref Protean.Rest myApi, ref JObject jObj)
+                public string ProcessNewPayment(ref Protean.rest myApi, ref JObject jObj)
                 {
                     try
                     {

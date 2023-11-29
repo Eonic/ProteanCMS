@@ -3027,7 +3027,7 @@ namespace Protean
                             var oCfg = WebConfigurationManager.OpenWebConfiguration("/");
 
                             // Now lets create the database
-                            var oDbt = new Cms.dbHelper(ref Cms);
+                            var oDbt = new Cms.dbHelper(ref myWeb);
                             string sDbName = this.Instance.SelectSingleNode("web/add[@key='DatabaseName']/@value").InnerText;
                             string cDbServer = this.Instance.SelectSingleNode("web/add[@key='DatabaseServer']/@value").InnerText;
                             string cDbUsername = this.Instance.SelectSingleNode("web/add[@key='DatabaseUsername']/@value").InnerText;
