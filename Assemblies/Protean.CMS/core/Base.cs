@@ -25,7 +25,7 @@ namespace Protean
             // deals with the error
             // returnException(e.ModuleName, e.ProcedureName, e.Exception, mcEwSiteXsl, e.AddtionalInformation, gbDebug)
             // close connection pooling
-            if (moDbHelper is not null)
+            if (moDbHelper != null)
             {
                 try
                 {
@@ -210,7 +210,7 @@ namespace Protean
             {
                 Features.Add("PageVersions", "PageVersions");
             }
-            if (goLangConfig is not null)
+            if (goLangConfig != null)
             {
                 Features.Add("MultiLanguage", "MultiLanguage");
             }

@@ -13197,7 +13197,7 @@ namespace Protean
 
             }
 
-            public DataSet getDatasetAddRows(Array sSQL, string cTableName, string cDatasetName = "")
+            public DataSet getDatasetAddRows(string[] sSQL, string cTableName, string cDatasetName = "")
             {
                 // myWeb.PerfMon.Log("dbTools", "getDatasetAddRows")
                 // Creates a Dataset and a datatable
@@ -13216,10 +13216,10 @@ namespace Protean
 
                     SqlDataAdapter oDA;
 
-                    var loopTo = Information.UBound(sSQL);
+                    var loopTo = sSQL.Count();
                     for (nI = 0; nI <= loopTo; nI++)
                     {
-                        cSQL = Conversions.ToString(sSQL((object)nI));
+                        cSQL = Convert.ToString(sSQL[nI]);
                         cProcessInfo = "Running SQL:  " + cSQL;
                         oDA = new SqlDataAdapter(cSQL, oConn);
                         if (!string.IsNullOrEmpty(cDatasetName))

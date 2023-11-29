@@ -904,7 +904,7 @@ namespace Protean
                                     if (!string.IsNullOrEmpty(recipientEmail))
                                     {
                                         Cms.dbHelper argodbHelper = null;
-                                        sProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed", odbHelper: ref argodbHelper));
+                                        sProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, odbHelper: ref argodbHelper, "Message Sent", "Message Failed"));
                                     }
 
                                     // send an email to the webadmin
@@ -926,7 +926,7 @@ namespace Protean
                                     if (System.IO.File.Exists(goServer.MapPath(moConfig["ProjectPath"] + xsltPathAlert)))
                                     {
                                         Cms.dbHelper argodbHelper1 = null;
-                                        sProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, moConfig["ProjectPath"] + xsltPathAlert, "New User", recipientEmail, fromEmail, SubjectLine, "Message Sent", "Message Failed", odbHelper: ref argodbHelper1));
+                                        sProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, moConfig["ProjectPath"] + xsltPathAlert, "New User", recipientEmail, fromEmail, SubjectLine, odbHelper: ref argodbHelper1, "Message Sent", "Message Failed"));
                                     }
                                     oMsg = (Protean.Messaging)null;
                                 }

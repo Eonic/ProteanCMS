@@ -1383,7 +1383,7 @@ namespace Protean
                                 // work out depending on value/percent
                                 if (Conversions.ToDouble(oTestElmt.GetAttribute("bDiscountIsPercent")) == 0d)
                                 {
-                                    nUnitPrice = (decimal)(nUnitPrice - Conversions.ToDouble(oTestElmt.GetAttribute("nDiscountValue")));
+                                    nUnitPrice = (decimal)(nUnitPrice - Convert.ToDecimal(oTestElmt.GetAttribute("nDiscountValue")));
                                 }
                                 else
                                 {
@@ -1697,7 +1697,7 @@ namespace Protean
                                 }
 
                                 // calculate the total value of items associated with this discount
-                                nValueOfItems = (decimal)(nValueOfItems + (double)nCurrentUnitPrice * Conversions.ToDouble(oPriceElmt.GetAttribute("Units")));
+                                nValueOfItems = (decimal)(nValueOfItems + (decimal)nCurrentUnitPrice * Convert.ToDecimal(oPriceElmt.GetAttribute("Units")));
                                 nItemQty = (int)Math.Round(nItemQty + Conversions.ToDouble(oPriceElmt.GetAttribute("Units")));
 
                                 if (nCurrentUnitPrice > nDiscountMinPrice)
@@ -1870,7 +1870,7 @@ namespace Protean
                                         oItem.AppendChild(oPriceElmt);
                                     }
                                     nTotalItems = (int)Math.Round(nTotalItems + Conversions.ToDouble(oPriceElmt.GetAttribute("Units")));
-                                    nTotalItemsValue = (decimal)(nTotalItemsValue + Conversions.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) * Conversions.ToDouble(oPriceElmt.GetAttribute("Units")));
+                                    nTotalItemsValue = (decimal)(nTotalItemsValue + Convert.ToDecimal(oPriceElmt.GetAttribute("UnitPrice")) * Convert.ToDecimal(oPriceElmt.GetAttribute("Units")));
                                 }
                                 decimal nNewPrice = 0m;
 

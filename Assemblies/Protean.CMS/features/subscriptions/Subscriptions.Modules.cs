@@ -391,7 +391,7 @@ namespace Protean
                                             if (!string.IsNullOrEmpty(recipientEmail))
                                             {
                                                 Cms.dbHelper argodbHelper = null;
-                                                sProcessInfo = Conversions.ToString(oMsg.emailer(EmailContent, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed", odbHelper: ref argodbHelper));
+                                                sProcessInfo = Conversions.ToString(oMsg.emailer(EmailContent, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, odbHelper: ref argodbHelper, "Message Sent", "Message Failed"));
                                             }
                                             // send an email to the webadmin
 
@@ -404,7 +404,7 @@ namespace Protean
                                         {
                                             string SubjectLine = "New Trial Subscription";
                                             Cms.dbHelper argodbHelper1 = null;
-                                            sProcessInfo = Conversions.ToString(oMsg.emailer(EmailContent, xsltPath2, "New User", recipientEmail, fromEmail, SubjectLine, "Message Sent", "Message Failed", odbHelper: ref argodbHelper1));
+                                            sProcessInfo = Conversions.ToString(oMsg.emailer(EmailContent, xsltPath2, "New User", recipientEmail, fromEmail, SubjectLine, odbHelper: ref argodbHelper1, "Message Sent", "Message Failed"));
                                         }
                                         // Adding user to group could have added them to a triggered email list.
 
