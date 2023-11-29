@@ -128,14 +128,14 @@ namespace Protean.Providers
                     oXform.Instance.AppendChild(oXml);
 
 
-                    oXform.addBind("MinPrice", "PriceFilter/@MinPrice", "false()", "string", ref oXform.model);
-                    oXform.addBind("MaxPrice", "PriceFilter/@MaxPrice", "false()", "string", ref oXform.model);
-                    oXform.addBind("MaxPriceLimit", "PriceFilter/@MaxPriceLimit", "false()", "string", ref oXform.model);
-                    oXform.addBind("SliderMinPrice", "PriceFilter/@SliderMinPrice", "false()", "string", ref oXform.model);
-                    oXform.addBind("SliderMaxPrice", "PriceFilter/@SliderMaxPrice", "false()", "string", ref oXform.model);
-                    oXform.addBind("PriceStep", "PriceFilter/@PriceStep", "false()", "string", ref oXform.model);
-                    oXform.addBind("PriceListCount", "PriceFilter/@PriceCountList", "false()", "string", ref oXform.model);
-                    oXform.addBind("PriceFilter", "PriceFilter/@MaxPrice", "false()", "string", ref oXform.model);
+                    oXform.addBind("MinPrice", "PriceFilter/@MinPrice", ref oXform.model, "false()", "string");
+                    oXform.addBind("MaxPrice", "PriceFilter/@MaxPrice", ref oXform.model, "false()", "string");
+                    oXform.addBind("MaxPriceLimit", "PriceFilter/@MaxPriceLimit", ref oXform.model, "false()", "string");
+                    oXform.addBind("SliderMinPrice", "PriceFilter/@SliderMinPrice", ref oXform.model, "false()", "string");
+                    oXform.addBind("SliderMaxPrice", "PriceFilter/@SliderMaxPrice", ref oXform.model, "false()", "string");
+                    oXform.addBind("PriceStep", "PriceFilter/@PriceStep", ref oXform.model, "false()", "string");
+                    oXform.addBind("PriceListCount", "PriceFilter/@PriceCountList", ref oXform.model, "false()", "string");
+                    oXform.addBind("PriceFilter", "PriceFilter/@MaxPrice", ref oXform.model, "false()", "string");
                     // oXform.addBind("PriceTotalCount", "PriceFilter/@PriceTotalCount", "false()", "string", oXform.model)
 
                     oXform.addInput(ref oFromGroup, "MinPrice", true, "", "hidden");

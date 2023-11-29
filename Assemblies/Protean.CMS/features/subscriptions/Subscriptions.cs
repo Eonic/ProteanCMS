@@ -16,7 +16,7 @@ namespace Protean
         public partial class Cart
         {
 
-            public class Subscriptions
+            public partial class Subscriptions
             {
 
                 private string mcModuleName = "Subscriptions";
@@ -1520,7 +1520,7 @@ namespace Protean
                     return default;
                 }
 
-                public virtual void AddUserSubscriptions(int nCartId, int nSubUserId, int nPaymentMethodId = 0, [Optional, DefaultParameterValue(null)] ref XmlElement oCartXml)
+                public virtual void AddUserSubscriptions(int nCartId, int nSubUserId, ref XmlElement oCartXml, int nPaymentMethodId = 0)
                 {
 
                     string cLastSubXml = "";

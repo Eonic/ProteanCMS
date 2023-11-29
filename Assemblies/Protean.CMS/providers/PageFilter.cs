@@ -52,7 +52,7 @@ namespace Protean.Providers
 
 
                     // Adding a binding to the form bindings
-                    oXform.addBind("PageFilter", "PageFilter", "false()", "string", ref oXform.model);
+                    oXform.addBind("PageFilter", "PageFilter", ref oXform.model, "false()", "string");
                     if (FilterConfig.Attributes["name"] != null)
                     {
                         sCotrolDisplayName = Convert.ToString(FilterConfig.Attributes["name"].Value);

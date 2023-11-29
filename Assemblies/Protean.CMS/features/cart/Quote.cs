@@ -39,7 +39,7 @@ namespace Protean
             private string cOrderNoPrefix = "";
 
 
-            public Quote(ref Cms aWeb) : base(aWeb)
+            public Quote(ref Cms aWeb) : base(ref aWeb)
             {
 
 
@@ -126,7 +126,7 @@ namespace Protean
                     if (myWeb.mnUserId > 0 & mnEwUserId == 0)
                         mnEwUserId = myWeb.mnUserId;
                     // MEMB - eEDIT
-                    if (myWeb.moCtx.Application["bFullCartOption"] == true)
+                    if (Convert.ToBoolean(myWeb.moCtx.Application["bFullCartOption"]) == true)
                     {
                         bFullCartOption = true;
                     }
@@ -514,7 +514,8 @@ namespace Protean
                     {
                         case "Update":
                             {
-                                mcCartCmd = updateCart("Quote");
+                                string quote = "Quote";
+                                mcCartCmd = Convert.ToString(updateCart(ref quote));
                                 goto processFlow;
                                 break;
                             }
@@ -575,7 +576,7 @@ namespace Protean
 
                                 if (mnCartId < 1 & mcCartCmd == "addNoteLine")
                                 {
-                                    CreateNewCart(oElmt);
+                                    CreateNewCart(ref oElmt);
                                     if (mcItemOrderType != "")
                                     {
                                         mmcOrderType = mcItemOrderType;
@@ -619,11 +620,11 @@ namespace Protean
                                     mnProcessId = 0;
                                     if (bFullCartOption == true)
                                     {
-                                        GetCart(oElmt);
+                                        GetCart(ref oElmt);
                                     }
                                     else
                                     {
-                                        GetCartSummary(oElmt);
+                                        GetCartSummary(ref oElmt);
                                     }
                                     mnCartId = 0;
                                 }
@@ -635,7 +636,7 @@ namespace Protean
 
                         case "Error":
                             {
-                                GetCart(oElmt);
+                                GetCart(ref oElmt);
                                 break;
                             }
 
@@ -648,7 +649,7 @@ namespace Protean
                                     goto processFlow; // execute next step (make the payment)
                                 }
                                 // info to display the cart
-                                GetCart(oElmt);
+                                GetCart(ref oElmt);
                                 break;
                             }
                         case "Notes":
@@ -735,7 +736,7 @@ namespace Protean
                                         var oMembershipProv = new Providers.Membership.BaseProvider(ref myWeb, myWeb.moConfig["MembershipProvider"]);
                                         Providers.Membership.EonicProvider.AdminXForms oRegXform = (Providers.Membership.EonicProvider.AdminXForms)oMembershipProv.AdminXforms;
                                         XmlElement argIntanceAppend = null;
-                                        oRegXform.xFrmEditDirectoryItem(myWeb.mnUserId, "User",Convert.ToInt64("0" + moCartConfig["DefaultSubscriptionGroupId"]), "CartRegistration", IntanceAppend: ref argIntanceAppend);
+                                        oRegXform.xFrmEditDirectoryItem(IntanceAppend: ref argIntanceAppend,myWeb.mnUserId, "User",Convert.ToInt64("0" + moCartConfig["DefaultSubscriptionGroupId"]), "CartRegistration");
                                         if (oRegXform.valid)
                                         {
                                             string sReturn = base.moDBHelper.validateUser(myWeb.moRequest["cDirName"], myWeb.moRequest["cDirPassword"]);
@@ -757,7 +758,7 @@ namespace Protean
                                         else
                                         {
                                             base.moPageXml.SelectSingleNode("/Page/Contents").AppendChild(oRegXform.moXformElmt);
-                                            GetCart(oElmt);
+                                            GetCart(ref oElmt);
                                         }
 
 
@@ -819,7 +820,7 @@ namespace Protean
                                     }
                                 }
 
-                                GetCart(oElmt);
+                                GetCart(ref oElmt);
                                 oPickContactXForm = (Cms.xForm)null;
                                 break;
                             }
@@ -846,7 +847,7 @@ namespace Protean
 
                                 }
 
-                                GetCart(oElmt);
+                                GetCart(ref oElmt);
                                 oPickContactXForm = (Cms.xForm)null;
                                 break;
                             }
@@ -859,7 +860,7 @@ namespace Protean
                                     mnProcessId = 6;
                                 if (oElmt.FirstChild is null)
                                 {
-                                    GetCart(oElmt);
+                                    GetCart(ref oElmt);
                                 }
 
                                 break;
@@ -867,8 +868,8 @@ namespace Protean
 
                         case "Send":
                             {
-                                GetCart(oElmt);
-                                addDateAndRef(oElmt);
+                                GetCart(ref oElmt);
+                                addDateAndRef(ref oElmt);
                                 emailReceipts(ref oElmt);
                                 oContentElmt.AppendChild(oElmt);
                                 mnProcessId = 6; // ? "Payment Successful"... erm.. yeah
@@ -887,14 +888,14 @@ namespace Protean
                         case "CookiesDisabled": // Cookies have been disabled or are undetectable
                             {
                                 mnProcessError = 1;
-                                GetCart(oElmt);
+                                GetCart(ref oElmt);
                                 break;
                             }
 
                         case "BackToSite":
                             {
                                 mcCartCmd = "";
-                                GetCartSummary(oElmt);
+                                GetCartSummary(ref oElmt);
                                 break;
                             }
 
@@ -933,7 +934,7 @@ namespace Protean
                                         var oMembershipProv = new Providers.Membership.BaseProvider(ref myWeb, myWeb.moConfig["MembershipProvider"]);
                                         Providers.Membership.EonicProvider.AdminXForms oRegXform = (Providers.Membership.EonicProvider.AdminXForms)oMembershipProv.AdminXforms;
                                         XmlElement argIntanceAppend1 = null;
-                                        oRegXform.xFrmEditDirectoryItem(myWeb.mnUserId, "User",Convert.ToInt32("0" + moCartConfig["DefaultSubscriptionGroupId"]), "CartRegistration", IntanceAppend: ref argIntanceAppend1);
+                                        oRegXform.xFrmEditDirectoryItem(IntanceAppend: ref argIntanceAppend1,myWeb.mnUserId, "User",Convert.ToInt32("0" + moCartConfig["DefaultSubscriptionGroupId"]), "CartRegistration");
                                         if (oRegXform.valid)
                                         {
                                             string sReturn = base.moDBHelper.validateUser(myWeb.moRequest["cDirName"], myWeb.moRequest["cDirPassword"]);
@@ -986,11 +987,11 @@ namespace Protean
                                 mcCartCmd = "";
                                 if (bFullCartOption == true)
                                 {
-                                    GetCart(oElmt);
+                                    GetCart(ref oElmt);
                                 }
                                 else
                                 {
-                                    GetCartSummary(oElmt);
+                                    GetCartSummary(ref oElmt);
                                 }
 
                                 break;
@@ -1041,10 +1042,10 @@ namespace Protean
                 {
 
                     // send to customer
-                    sMessageResponse = emailCart(oCartElmt, moQuoteConfig["CustomerEmailTemplatePath"], moQuoteConfig["MerchantName"], moQuoteConfig["MerchantEmail"], oElmtTemp.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText, moQuoteConfig["OrderEmailSubject"]);
+                    sMessageResponse =Convert.ToString(emailCart(ref oCartElmt, moQuoteConfig["CustomerEmailTemplatePath"], moQuoteConfig["MerchantName"], moQuoteConfig["MerchantEmail"], oElmtTemp.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText, moQuoteConfig["OrderEmailSubject"]));
 
                     // Send to merchant
-                    sMessageResponse = emailCart(oCartElmt, moQuoteConfig["MerchantEmailTemplatePath"], oElmtTemp.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText, oElmtTemp.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText, moQuoteConfig["MerchantEmail"], moQuoteConfig["OrderEmailSubject"]);
+                    sMessageResponse = Convert.ToString(emailCart(ref oCartElmt, moQuoteConfig["MerchantEmailTemplatePath"], oElmtTemp.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText, oElmtTemp.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText, moQuoteConfig["MerchantEmail"], moQuoteConfig["OrderEmailSubject"]));
 
                     XmlElement oElmtEmail;
                     oElmtEmail = base.moPageXml.CreateElement("Reciept");
@@ -1122,7 +1123,7 @@ namespace Protean
                         return false;
                         // also better check the user owns this quote, we dont want them
                         // getting someone else quote by mucking around with the querystring
-                        if (!(base.moDBHelper.ExeProcessSqlScalar("Select nCartUserDirId FROM tblCartOrder WHERE nCartOrderKey = " + nQuoteId + " AND cCartSchemaName = 'Quote'") == mnEwUserId))
+                        if (!(Convert.ToInt32(base.moDBHelper.ExeProcessSqlScalar("Select nCartUserDirId FROM tblCartOrder WHERE nCartOrderKey = " + nQuoteId + " AND cCartSchemaName = 'Quote'")) == mnEwUserId))
                         {
                             return false; // else we carry on
                         }
@@ -1300,7 +1301,7 @@ namespace Protean
                     int nParentID;
                     string sSQL;
 
-                    base.moDBHelper.ReturnNullsEmpty(oDS);
+                    base.moDBHelper.ReturnNullsEmpty(ref oDS);
                     sSQL = "Update tblCartOrder SET cClientNotes ='" + cNotes + "'  WHERE nCartOrderKey = " + mnCartId;
                     base.moDBHelper.ExeProcessSql(sSQL);
                     foreach (DataRow oDR1 in oDS.Tables["CartItems"].Rows)
@@ -1324,7 +1325,7 @@ namespace Protean
                             sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nQuantity"] is DBNull, "Null", oDR1["nQuantity"]), ","));
                             sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nWeight"] is DBNull, "Null", oDR1["nWeight"]), ","));
                             sSQL += base.moDBHelper.getAuditId() + ")";
-                            nParentID = base.moDBHelper.GetIdInsertSql(sSQL);
+                            nParentID =Convert.ToInt32(base.moDBHelper.GetIdInsertSql(sSQL));
                             // now for any children
                             foreach (DataRow oDR2 in oDS.Tables["CartItems"].Rows)
                             {

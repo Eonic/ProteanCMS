@@ -29,15 +29,15 @@ namespace Protean.Providers
     namespace Messaging
     {
 
-        public class BaseProvider: DynamicObject
+        public class BaseProvider
         {
-            private Admin.AdminXforms _AdminXforms;
+            private object _AdminXforms;
             private object _AdminProcess;
             private object _Activities;
             private const string mcModuleName = "Protean.Providers.Messaging";
 
 
-            public object AdminXforms
+            public BaseProvider AdminXforms
             {
                 set
                 {
@@ -179,8 +179,9 @@ namespace Protean.Providers
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "Unpersonalised", "", "Send Unpersonalised");
 
                         XmlElement oElmt;
+                        XmlElement oxmlBindelmt = null;
                         oElmt = base.addInput(ref oFrmElmt, "cEmail", true, "Email address to send to", "long");
-                        base.addBind("cEmail", "cEmail");
+                        base.addBind("cEmail", "cEmail", ref oxmlBindelmt);
                         oElmt.AppendChild(oElmt.OwnerDocument.CreateElement("value"));
                         base.addSubmit(ref oFrmElmt, "SendUnpersonalised", "Send Unpersonalised");
 
@@ -284,17 +285,18 @@ namespace Protean.Providers
                         oCol2 = base.addGroup(ref oFrmElmt, "", "col2", "");
 
                         XmlElement oElmt;
+                        XmlElement oBindEmlt = null;
                         oElmt = base.addInput(ref oCol1, "cDefaultEmail", true, "Email address to send from", "required long");
-                        base.addBind("cDefaultEmail", "cDefaultEmail", "true()");
+                        base.addBind("cDefaultEmail", "cDefaultEmail", ref oBindEmlt, "true()");
                         oElmt.AppendChild(oElmt.OwnerDocument.CreateElement("value"));
 
                         XmlElement oElmt2;
                         oElmt2 = base.addInput(ref oCol1, "cDefaultEmailName", true, "Name to send from", "required long");
-                        base.addBind("cDefaultEmailName", "cDefaultEmailName", "true()");
+                        base.addBind("cDefaultEmailName", "cDefaultEmailName", ref oBindEmlt, "true()");
                         oElmt2.AppendChild(oElmt.OwnerDocument.CreateElement("value"));
 
                         oElmt2 = base.addInput(ref oCol1, "cSubject", true, "Subject", "required long");
-                        base.addBind("cSubject", "cSubject", "true()");
+                        base.addBind("cSubject", "cSubject", ref oBindEmlt, "true()");
                         oElmt2.AppendChild(oElmt.OwnerDocument.CreateElement("value"));
 
 
@@ -305,7 +307,7 @@ namespace Protean.Providers
                             while (oDre.Read())
                                 base.addOption(ref oSelElmt, oDre[1].ToString(), oDre[0].ToString());
                         }
-                        base.addBind("cGroups", "cGroups", "true()");
+                        base.addBind("cGroups", "cGroups", ref oBindEmlt, "true()");
 
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "Send", "", "");
 
@@ -393,13 +395,14 @@ namespace Protean.Providers
 
                         else
                         {
+                            XmlElement oBindParentElmt = null;
                             base.NewFrm("EditPageLayout");
                             base.submission("AddModule", "", "post", "form_check(this)");
                             base.Instance.InnerXml = "<Module position=\"" + position + "\"></Module>";
                             oFrmElmt = base.addGroup(ref base.moXformElmt, "Add Module", "", "Select Module Type");
                             base.addInput(ref oFrmElmt, "nStructParId", true, "ParId", "hidden");
                             base.addInput(ref oFrmElmt, "cPosition", true, "Position", "hidden");
-                            base.addBind("cPosition", "Module/@position", "true()");
+                            base.addBind("cPosition", "Module/@position", ref oBindParentElmt, "true()");
                             base.addNote(oFrmElmt.ToString(), Protean.xForm.noteTypes.Hint, "Click the image to select Module Type");
 
                             oSelElmt = base.addSelect1(ref oFrmElmt, "cModuleType", true, "", "PickByImage", Protean.xForm.ApperanceTypes.Full);
@@ -712,9 +715,11 @@ namespace Protean.Providers
                                     bLoadStructure = true;
                                     if (!Information.IsNumeric(cVersionKey))
                                         cVersionKey = "0";
-                                    long nContentId;
-                                    nContentId = 0L;
-                                    oPageDetail.AppendChild(moAdXfm.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), "", Convert.ToInt64(myWeb.moRequest["pgid"]), default, default, ref nContentId, default, default, Conversions.ToLong(cVersionKey)));
+                                    int nContentId;
+                                    nContentId = 0;
+                                    string zcreturn = "";
+                                    string AlernateForm = "";
+                                    oPageDetail.AppendChild(moAdXfm.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), "", Convert.ToInt64(myWeb.moRequest["pgid"]), "",false, ref nContentId,ref zcreturn,ref AlernateForm, Conversions.ToLong(cVersionKey)));
 
                                     if (moAdXfm.valid)
                                     {

@@ -1650,13 +1650,13 @@ namespace Protean
                                         // addtional string for membership to check
                                         myWeb.moSession["cLogonCmd"] = "cartCmd=Logon";
                                         // registration xform
-                                        object argmyWeb = myWeb;
+                                        Cms argmyWeb = myWeb;
                                         var oMembershipProv = new Providers.Membership.BaseProvider(ref argmyWeb, myWeb.moConfig["MembershipProvider"]);
                                         myWeb = (Cms)argmyWeb;
                                         Providers.Membership.EonicProvider.AdminXForms oRegXform = (Providers.Membership.EonicProvider.AdminXForms)oMembershipProv.AdminXforms;
                                         oRegXform.open(moPageXml);
                                         XmlElement argIntanceAppend = null;
-                                        oRegXform.xFrmEditDirectoryItem((long)myWeb.mnUserId, "User", (long)Conversions.ToInteger("0" + moCartConfig["DefaultSubscriptionGroupId"]), "CartRegistration", IntanceAppend: ref argIntanceAppend);
+                                        oRegXform.xFrmEditDirectoryItem(IntanceAppend: ref argIntanceAppend, (long)myWeb.mnUserId, "User", (long)Conversions.ToInteger("0" + moCartConfig["DefaultSubscriptionGroupId"]), "CartRegistration");
                                         if (oRegXform.valid)
                                         {
                                             string sReturn = moDBHelper.validateUser(myWeb.moRequest["cDirName"], myWeb.moRequest["cDirPassword"]);
@@ -2013,7 +2013,7 @@ namespace Protean
                                         {
                                             if (moSubscription != null)
                                             {
-                                                moSubscription.AddUserSubscriptions(mnCartId, myWeb.mnUserId, mnPaymentId, ref oContentElmt);
+                                                moSubscription.AddUserSubscriptions(mnCartId, myWeb.mnUserId, ref oContentElmt, mnPaymentId);
                                             }
                                         }
 
@@ -2453,11 +2453,11 @@ namespace Protean
                     {
                         object providerName = moCartConfig["AccountingProvider"];
                         Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/accountingProviders");
-                        var assemblyInstance = Assembly.Load(moPrvConfig.Providers(providerName).Type.ToString());
+                        var assemblyInstance = Assembly.Load(moPrvConfig.Providers[providerName.ToString()].Type.ToString());
                         Type calledType;
-                        string classPath = Conversions.ToString(moPrvConfig.Providers(providerName).Parameters("rootClass"));
+                        string classPath = Conversions.ToString(moPrvConfig.Providers[providerName.ToString()].Parameters["rootClass"]);
 
-                        string passCMS = Conversions.ToString(moPrvConfig.Providers(providerName).Parameters("passCMS"));
+                        string passCMS = Conversions.ToString(moPrvConfig.Providers[providerName.ToString()].Parameters["passCMS"]);
 
                         string methodName = "ProcessOrder";
                         calledType = assemblyInstance.GetType(classPath, true);
@@ -5321,19 +5321,19 @@ namespace Protean
 
                         oXform.addInput(ref oGrpElmt, "cContactName", true, "Name", "textbox required");
                         XmlElement argoBindParent2 = null;
-                        oXform.addBind("cContactName", "tblCartContact/cContactName", "true()", "string", oBindParent: ref argoBindParent2);
+                        oXform.addBind("cContactName", "tblCartContact/cContactName", oBindParent: ref argoBindParent2, "true()", "string");
 
                         oXform.addInput(ref oGrpElmt, "cContactCompany", true, "Company", "textbox");
                         XmlElement argoBindParent3 = null;
-                        oXform.addBind("cContactCompany", "tblCartContact/cContactCompany", "false()", oBindParent: ref argoBindParent3);
+                        oXform.addBind("cContactCompany", "tblCartContact/cContactCompany", oBindParent: ref argoBindParent3, "false()");
 
                         oXform.addInput(ref oGrpElmt, "cContactAddress", true, "Address", "textbox required");
                         XmlElement argoBindParent4 = null;
-                        oXform.addBind("cContactAddress", "tblCartContact/cContactAddress", "true()", "string", oBindParent: ref argoBindParent4);
+                        oXform.addBind("cContactAddress", "tblCartContact/cContactAddress", oBindParent: ref argoBindParent4, "true()", "string");
 
                         oXform.addInput(ref oGrpElmt, "cContactCity", true, "City", "textbox required");
                         XmlElement argoBindParent5 = null;
-                        oXform.addBind("cContactCity", "tblCartContact/cContactCity", "true()", oBindParent: ref argoBindParent5);
+                        oXform.addBind("cContactCity", "tblCartContact/cContactCity", oBindParent: ref argoBindParent5, "true()");
 
                         oXform.addInput(ref oGrpElmt, "cContactState", true, "County/State", "textbox");
                         XmlElement argoBindParent6 = null;
@@ -5341,11 +5341,11 @@ namespace Protean
 
                         oXform.addInput(ref oGrpElmt, "cContactZip", true, "Postcode/Zip", "textbox required");
                         XmlElement argoBindParent7 = null;
-                        oXform.addBind("cContactZip", "tblCartContact/cContactZip", "true()", "string", oBindParent: ref argoBindParent7);
+                        oXform.addBind("cContactZip", "tblCartContact/cContactZip", oBindParent: ref argoBindParent7, "true()", "string");
 
                         oXform.addSelect1(ref oGrpElmt, "cContactCountry", true, "Country", "dropdown required");
                         XmlElement argoBindParent8 = null;
-                        oXform.addBind("cContactCountry", "tblCartContact/cContactCountry", "true()", "string", oBindParent: ref argoBindParent8);
+                        oXform.addBind("cContactCountry", "tblCartContact/cContactCountry", oBindParent: ref argoBindParent8, "true()", "string");
 
                         oXform.addInput(ref oGrpElmt, "cContactTel", true, "Tel", "textbox");
                         XmlElement argoBindParent9 = null;
@@ -5360,7 +5360,7 @@ namespace Protean
                         {
                             oXform.addInput(ref oGrpElmt, "cContactEmail", true, "Email", "textbox required");
                             XmlElement argoBindParent11 = null;
-                            oXform.addBind("cContactEmail", "tblCartContact/cContactEmail", "true()", "email", oBindParent: ref argoBindParent11);
+                            oXform.addBind("cContactEmail", "tblCartContact/cContactEmail", oBindParent: ref argoBindParent11, "true()", "email");
                         }
                         if (myWeb.moConfig["cssFramework"] == "bs3")
                         {
@@ -9803,7 +9803,7 @@ namespace Protean
                     {
 
                         Cms.dbHelper argodbHelper = null;
-                        cProcessInfo = Conversions.ToString(oMsg.emailer(oCartXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed", ccRecipient: cCCEmail, bccRecipient: cBCCEmail, odbHelper: ref argodbHelper));
+                        cProcessInfo = Conversions.ToString(oMsg.emailer(oCartXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, odbHelper: ref argodbHelper, "Message Sent", "Message Failed", ccRecipient: cCCEmail, bccRecipient: cBCCEmail));
                     }
                     else
                     {
@@ -9844,7 +9844,7 @@ namespace Protean
 
                         oMsg.addAttachment(oPDF.GetPDFstream(foNetXml, cFontPath), FileName);
                         Cms.dbHelper argodbHelper1 = null;
-                        cProcessInfo = Conversions.ToString(oMsg.emailer(oCartXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed", ccRecipient: cCCEmail, bccRecipient: cBCCEmail, odbHelper: ref argodbHelper1));
+                        cProcessInfo = Conversions.ToString(oMsg.emailer(oCartXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, odbHelper: ref argodbHelper1, "Message Sent", "Message Failed", ccRecipient: cCCEmail, bccRecipient: cBCCEmail));
 
                     }
                     oMsg = (Protean.Messaging)null;

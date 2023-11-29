@@ -21,6 +21,7 @@ using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 using Protean.Tools;
 using static Protean.Tools.Xml;
+using System.Reflection.Emit;
 
 namespace Protean
 {
@@ -455,7 +456,7 @@ namespace Protean
                                 if (mnAdminUserId == 0)
                                 {
 
-                                    object argmyWeb = myWeb;
+                                    Cms argmyWeb = myWeb;
                                     var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, myWeb.moConfig["MembershipProvider"]);
                                     myWeb = (Cms)argmyWeb;
                                     oPageDetail.AppendChild((XmlNode)oMembershipProv.AdminXforms.xFrmUserLogon("AdminLogon"));
@@ -543,7 +544,7 @@ namespace Protean
                         case "PasswordReminder":
                             {
                                 sAdminLayout = "AdminXForm";
-                                object argmyWeb1 = myWeb;
+                                Cms argmyWeb1 = myWeb;
                                 var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb1, myWeb.moConfig["MembershipProvider"]);
                                 myWeb = (Cms)argmyWeb1;
 
@@ -570,7 +571,7 @@ namespace Protean
                         case "AR":
                             {
                                 sAdminLayout = "AdminXForm";
-                                object argmyWeb2 = myWeb;
+                                Cms argmyWeb2 = myWeb;
                                 var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb2, myWeb.moConfig["MembershipProvider"]);
                                 myWeb = (Cms)argmyWeb2;
                                 oPageDetail.AppendChild((XmlNode)oMembershipProv.AdminXforms.xFrmConfirmPassword(myWeb.moRequest["AI"]));
@@ -1116,7 +1117,7 @@ namespace Protean
 
                                                     var argoPageElmt = moPageXML.DocumentElement;
                                                     XmlElement argoContentModule = null;
-                                                    myWeb.GetContentXMLByTypeAndOffset(ref argoPageElmt, ContentType + cSort, (long)nStart, (long)nRows, FilterSQL, "", ref oPageDetail, oContentModule: ref argoContentModule);
+                                                    myWeb.GetContentXMLByTypeAndOffset(ref argoPageElmt, ContentType + cSort, (long)nStart, (long)nRows, ref oPageDetail, oContentModule: ref argoContentModule, FilterSQL, "");
 
                                                     // myWeb.GetContentXMLByTypeAndOffset(moPageXML.DocumentElement, ContentType & cSort, FilterSQL, "", oPageDetail)
                                                     XmlElement contentsNode = (XmlElement)moPageXML.SelectSingleNode("/Page/Contents");
@@ -1277,7 +1278,7 @@ namespace Protean
 
                                 string argzcReturnSchema = "";
                                 string argAlternateFormName = "";
-                                oPageDetail.AppendChild(moAdXfm.xFrmEditContent(0L, myWeb.moRequest["type"], Conversions.ToLong(myWeb.moRequest["pgid"]), myWeb.moRequest["name"], nReturnId: ref nAdditionId, zcReturnSchema: ref argzcReturnSchema, AlternateFormName: ref argAlternateFormName));
+                                oPageDetail.AppendChild(moAdXfm.xFrmEditContent(0L, myWeb.moRequest["type"], Conversions.ToLong(myWeb.moRequest["pgid"]), myWeb.moRequest["name"],false, nReturnId: ref nAdditionId, zcReturnSchema: ref argzcReturnSchema, AlternateFormName: ref argAlternateFormName));
                                 if (moAdXfm.valid)
                                 {
                                     sAdminLayout = "";
@@ -1332,7 +1333,9 @@ namespace Protean
                                 if (!Information.IsNumeric(cVersionKey))
                                     cVersionKey = "0";
                                 nContentId = 0L;
-                                XmlElement localxFrmEditContent() { int argnReturnId = (int)nContentId; var ret = moAdXfm.xFrmEditContent(Conversions.ToLong(myWeb.moRequest["id"]), "", Conversions.ToLong(myWeb.moRequest["pgid"]), nReturnId: ref argnReturnId, nVersionId: Conversions.ToLong(cVersionKey)); nContentId = argnReturnId; return ret; }
+                                string zcReturnSchema = "";
+                                string AlternateFormName = "";
+                                XmlElement localxFrmEditContent() { int argnReturnId = (int)nContentId; var ret = moAdXfm.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), "",Conversions.ToLong(myWeb.moRequest["pgid"]),"", false, nReturnId: ref argnReturnId,ref zcReturnSchema, ref AlternateFormName, nVersionId: Convert.ToInt64(cVersionKey)); nContentId = argnReturnId; return ret; }
 
                                 oPageDetail.AppendChild(localxFrmEditContent());
 
@@ -1425,9 +1428,11 @@ namespace Protean
                         case "RollbackContent":
                             {
 
-
+                                string zcReturnSchema = "";
+                                string AlternateFormName = "";
                                 bLoadStructure = true;
-                                oPageDetail.AppendChild(moAdXfm.xFrmEditContent(Conversions.ToLong(myWeb.moRequest["id"]), "", Conversions.ToLong(myWeb.moRequest["pgid"]), nVersionId: Conversions.ToLong(myWeb.moRequest["verId"])));
+                                int nReturnId = 0;
+                                oPageDetail.AppendChild(moAdXfm.xFrmEditContent(Conversions.ToLong(myWeb.moRequest["id"]), "", Conversions.ToLong(myWeb.moRequest["pgid"]),"",false, ref nReturnId, ref zcReturnSchema, ref AlternateFormName, nVersionId: Conversions.ToLong(myWeb.moRequest["verId"])));
                                 if (moAdXfm.valid)
                                 {
                                     bAdminMode = false;
@@ -1458,7 +1463,7 @@ namespace Protean
                                 int argnReturnId = 0;
                                 string argzcReturnSchema1 = "";
                                 string argAlternateFormName1 = "";
-                                oPageDetail.AppendChild(moAdXfm.xFrmEditContent(Conversions.ToLong(myWeb.moRequest["id"]), "", Conversions.ToLong(myWeb.moRequest["pgid"]), bCopy: true, nReturnId: ref argnReturnId, zcReturnSchema: ref argzcReturnSchema1, AlternateFormName: ref argAlternateFormName1));
+                                oPageDetail.AppendChild(moAdXfm.xFrmEditContent(Conversions.ToLong(myWeb.moRequest["id"]), "", Conversions.ToLong(myWeb.moRequest["pgid"]),"", bCopy: true, nReturnId: ref argnReturnId, zcReturnSchema: ref argzcReturnSchema1, AlternateFormName: ref argAlternateFormName1));
                                 if (moAdXfm.valid)
                                 {
                                     bAdminMode = false;
@@ -2522,7 +2527,7 @@ namespace Protean
 
                         case "EditDirItem":
                             {
-                                object argmyWeb3 = myWeb;
+                                Cms argmyWeb3 = myWeb;
                                 var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb3, myWeb.moConfig["MembershipProvider"]);
                                 myWeb = (Cms)argmyWeb3;
                                 // oPageDetail.AppendChild(oMembershipProv.AdminXforms.xFrmUserLogon("AdminLogon"))
@@ -2626,7 +2631,7 @@ namespace Protean
 
                         case "ResetUserAcct":
                             {
-                                object argmyWeb4 = myWeb;
+                                Cms argmyWeb4 = myWeb;
                                 var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb4, myWeb.moConfig["MembershipProvider"]);
                                 myWeb = (Cms)argmyWeb4;
 
@@ -2651,7 +2656,7 @@ namespace Protean
 
                         case "ResetUserPwd":
                             {
-                                object argmyWeb5 = myWeb;
+                                Cms argmyWeb5 = myWeb;
                                 var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb5, myWeb.moConfig["MembershipProvider"]);
                                 myWeb = (Cms)argmyWeb5;
 
@@ -5628,8 +5633,7 @@ namespace Protean
                 long contentId = 0L;
                 string lookupId = null;
                 string sSql;
-                DataSet lookupsDataset;
-
+                DataSet lookupsDataset;                
 
                 try
                 {
@@ -5648,9 +5652,9 @@ namespace Protean
                                 {
                                     oPageDetail.InnerXml = "";
                                     lookupId = null;
-                                    goto listItems;
+                                    goto default;
                                 }
-                                goto listItems;
+                                goto default;
                                 break;
                             }
                         case "hide":
@@ -5676,17 +5680,12 @@ namespace Protean
 
                                 myWeb.moDbHelper.ReorderNode(Cms.dbHelper.objectTypes.Lookup, Conversions.ToLong(lookupId), myWeb.moRequest["ewCmd2"], "cLkpCategory");
                                 lookupId = null;
-                                goto listItems;
+                                goto default;
                                 break;
                             }
 
                         default:
-                            {
-                            listItems:
-                                ;
-
-
-
+                            {                            
                                 if (string.IsNullOrEmpty(lookupId))
                                 {
                                     // list Lookup Lists
@@ -5732,7 +5731,7 @@ namespace Protean
                                     {
                                         oPageDetail.InnerXml = "";
                                         lookupId = null;
-                                        goto listItems;
+                                        goto default;
                                     }
 
                                 }
@@ -5763,37 +5762,30 @@ namespace Protean
                 string SchemaNameForUpdate;
                 DataSet indexesDataset;
 
-
                 try
                 {
-
                     if (myWeb.moRequest["id"] != default)
                     {
                         indexId = myWeb.moRequest["id"];
                     }
-
-
                     switch (myWeb.moRequest["ewCmd2"] ?? "")
                     {
                         case "delete":
                             {
-
                                 myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.indexkey, Conversions.ToLong(indexId));
                                 if (moAdXfm.valid == false & myWeb.moRequest["ewCmd2"] == "delete")
                                 {
                                     oPageDetail.InnerXml = "";
                                     indexId = null;
-                                    goto listItems;
+                                    goto default;
                                 }
-                                goto listItems;
+                                goto default;
                                 break;
                             }
                         case "updateAllRules":
                             {
-
                                 if (myWeb.moRequest["SchemaName"] != default)
                                 {
-
                                     SchemaNameForUpdate = myWeb.moRequest["SchemaName"];
                                     sSql = "spScheduleToUpdateIndexTable";
                                     var arrParms = new Hashtable();
@@ -5804,15 +5796,14 @@ namespace Protean
                                     {
                                         oPageDetail.InnerXml = "";
                                         indexId = null;
-                                        goto listItems;
+                                        goto default;
                                     }
                                 }
-                                goto listItems;
+                                goto default;
                                 break;
                             }
                         case "update":
                             {
-
                                 if (myWeb.moRequest["SchemaName"] != default)
                                 {
                                     SchemaNameForUpdate = myWeb.moRequest["SchemaName"];
@@ -5828,12 +5819,11 @@ namespace Protean
                                         {
                                             oPageDetail.InnerXml = "";
                                             indexId = null;
-                                            goto listItems;
+                                            goto default;
                                         }
                                     }
                                     else
                                     {
-
                                         sSql = "spScheduleToUpdateIndexTable";
                                         var arrParms = new Hashtable();
                                         arrParms.Add("SchemaName", SchemaNameForUpdate);
@@ -5843,21 +5833,16 @@ namespace Protean
                                         {
                                             oPageDetail.InnerXml = "";
                                             indexId = null;
-                                            goto listItems;
+                                            goto default;
                                         }
                                     }
                                 }
-                                goto listItems;
+                                goto default;
                                 break;
                             }
-
                         default:
                             {
-                            listItems:
-                                ;
-
-
-
+                            
                                 if (string.IsNullOrEmpty(indexId))
                                 {
                                     // list Lookup Lists
@@ -5884,11 +5869,7 @@ from tblContentIndexDef";
                                         // lookupsDataset.Relations.Add("rel2", lookupsDataset.Tables(0).Columns("nLkpParent"), lookupsDataset.Tables(0).Columns("id"), False)
                                         // lookupsDataset.Relations("rel2").Nested = True
                                         indexesDataset.EnforceConstraints = false;
-
                                     }
-
-
-
                                     var reportElement = moPageXML.CreateElement("Content");
                                     reportElement.SetAttribute("name", reportName);
                                     reportElement.SetAttribute("type", "Report");
@@ -5906,20 +5887,14 @@ from tblContentIndexDef";
                                     {
                                         oPageDetail.InnerXml = "";
                                         indexId = null;
-                                        goto listItems;
+                                        goto default;
                                     }
-
                                 }
-
                                 break;
                             }
-
                     }
-
-
                     sAdminLayout = "FilterIndex";
                 }
-
                 catch (Exception ex)
                 {
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "PollsProcess", ex, "", sProcessInfo, gbDebug);
@@ -5984,7 +5959,7 @@ from tblContentIndexDef";
 
                     foreach (XmlElement contentElmt in oElmt.FirstChild.SelectNodes("ProductCategory/Content"))
                     {
-                        XmlElement contentElmtL2 = contentElmt.FirstChild;
+                        XmlElement contentElmtL2 = (XmlElement)contentElmt.FirstChild;
                         foreach (XmlElement ChildElmts in (IEnumerable)contentElmtL2.SelectNodes("*"))
                             contentElmt.AppendChild(ChildElmts.Clone());
                         contentElmt.RemoveChild((XmlNode)contentElmtL2);
@@ -6600,7 +6575,8 @@ from tblContentIndexDef";
                     case "AddSubscription":
                         {
                             long nSubId = 0L;
-                            XmlElement localxFrmEditContent() { int argnReturnId1 = (int)nSubId; string argzcReturnSchema = ""; string argAlternateFormName = ""; var ret = oADX.xFrmEditContent(Conversions.ToLong(myWeb.moRequest["id"]), "Subscription", nReturnId: ref argnReturnId1, zcReturnSchema: ref argzcReturnSchema, AlternateFormName: ref argAlternateFormName); nSubId = argnReturnId1; return ret; }
+                            long pgid = 0;
+                            XmlElement localxFrmEditContent() { int argnReturnId1 = (int)nSubId; string argzcReturnSchema = ""; string argAlternateFormName = ""; var ret = oADX.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), "Subscription",pgid,"",true, nReturnId: ref argnReturnId1, zcReturnSchema: ref argzcReturnSchema, AlternateFormName: ref argAlternateFormName); nSubId = argnReturnId1; return ret; }
 
                             oPageDetail.AppendChild(oPageDetail.OwnerDocument.ImportNode(localxFrmEditContent(), true));
                             if (oADX.valid)
@@ -6620,7 +6596,8 @@ from tblContentIndexDef";
                     case "EditSubscription":
                         {
                             long nSubId = 0L;
-                            XmlElement localxFrmEditContent1() { int argnReturnId2 = (int)nSubId; string argzcReturnSchema1 = ""; string argAlternateFormName1 = ""; var ret = oADX.xFrmEditContent(Conversions.ToLong(myWeb.moRequest["id"]), "Subscription", nReturnId: ref argnReturnId2, zcReturnSchema: ref argzcReturnSchema1, AlternateFormName: ref argAlternateFormName1); nSubId = argnReturnId2; return ret; }
+                            long pgid = 0;
+                            XmlElement localxFrmEditContent1() { int argnReturnId2 = (int)nSubId; string argzcReturnSchema1 = ""; string argAlternateFormName1 = ""; var ret = oADX.xFrmEditContent(Conversions.ToLong(myWeb.moRequest["id"]), "Subscription",pgid,"",true, nReturnId: ref argnReturnId2, zcReturnSchema: ref argzcReturnSchema1, AlternateFormName: ref argAlternateFormName1); nSubId = argnReturnId2; return ret; }
 
                             oPageDetail.AppendChild(oPageDetail.OwnerDocument.ImportNode(localxFrmEditContent1(), true));
                             if (oADX.valid)

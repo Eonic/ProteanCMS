@@ -6542,7 +6542,7 @@ namespace Protean
                         if (bReValidate)
                         {
                             XmlElement argoBindParent = null;
-                            oXform.addBind("cPassword", "Password", "true()", "reValidateUser", oBindParent: ref argoBindParent);
+                            oXform.addBind("cPassword", "Password", ref argoBindParent, "true()", "reValidateUser");
                         }
                         var oGrpElmt = oXform.addGroup(ref oXform.moXformElmt, "RepeatPayment", sLabel: "Confirm Payment Using:");
                         string cSQL = "SELECT cPayMthdAcctName FROM tblCartPaymentMethod WHERE nPayMthdKey = " + nPaymentId;
