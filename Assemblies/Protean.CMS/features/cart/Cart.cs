@@ -6550,7 +6550,6 @@ namespace Protean
                         }
                         else
                         {
-
                             // add missing submission or submit buttons
                             if (oXform.moXformElmt.SelectSingleNode("model/submission") is null)
                             {
@@ -9583,7 +9582,7 @@ namespace Protean
             /// </summary>
             /// <param name="cContactCountry">Optional: The name of the current current to work out the tax rate for.  If empty, then the default tax rate is assumed.</param>
             /// <remarks>If customer is logged on user and they are in a specified group, then void their tax rate</remarks>
-            public void UpdateTaxRate([Optional, DefaultParameterValue("")] ref string cContactCountry)
+            public void UpdateTaxRate(ref string cContactCountry)
             {
                 myWeb.PerfMon.Log("Cart", "UpdateTaxRate");
                 string sCountryList;

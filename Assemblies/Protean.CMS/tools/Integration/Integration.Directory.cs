@@ -482,7 +482,7 @@ namespace Protean.Integration.Directory
                                         pageElement.AppendChild(contentsElement);
                                         if (!string.IsNullOrEmpty(Cms.gcEwBaseUrl))
                                             pageElement.SetAttribute("baseUrl", Cms.gcEwBaseUrl);
-                                        myWeb.GetRequestVariablesXml(pageElement);
+                                        myWeb.GetRequestVariablesXml(ref pageElement);
 
                                         contentsElement.AppendChild(postableContentDocument.ImportNode(content, true));
 

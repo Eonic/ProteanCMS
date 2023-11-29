@@ -692,7 +692,7 @@ namespace Protean
 
                                 string sXpath;
                                 // Remove the current content here
-                                sXpath = Protean.xmlTools.getXpathFromQueryXml(oNotesXform.Instance, "/xsl/quote/search.xsl");
+                                sXpath = xForm.getXpathFromQueryXml(oNotesXform.Instance, "/xsl/quote/search.xsl");
                                 foreach (XmlNode oNode in base.moPageXml.SelectNodes("/Page/Contents/Content[@type='" + oNotesXform.Instance.SelectSingleNode("Query/@contentType").InnerText + "']"))
                                     oNode.ParentNode.RemoveChild(oNode);
 
@@ -795,7 +795,8 @@ namespace Protean
                                 else
                                 {
                                     // Valid Form, let's adjust the Vat rate
-                                    UpdateTaxRate(ref oPickContactXForm.Instance.SelectSingleNode("tblCartContact/cContactCountry").InnerText);
+                                    string cContactCountry = oPickContactXForm.Instance.SelectSingleNode("tblCartContact/cContactCountry").InnerText;
+                                    UpdateTaxRate(ref cContactCountry);
 
                                     // Skip Delivery if:
                                     // - Deliver to this address is selected
@@ -1102,8 +1103,8 @@ namespace Protean
                     if (nCurrentCart == 0)
                     {
                         // need a way to iniate the cart and then get the ID out
-
-                        nCurrentCart = otmpcart.CreateNewCart(default);
+                        XmlElement xmlnothing = null;
+                        nCurrentCart =Convert.ToInt32(otmpcart.CreateNewCart(ref xmlnothing));
                     }
                     int nQuoteId = mnCartId;
 
@@ -1292,7 +1293,8 @@ namespace Protean
                     {
                         // create a new cart
                         otmpcart = new Quote(ref myWeb);
-                        otmpcart.CreateNewCart(default);
+                        XmlElement xmlNull = null;
+                        otmpcart.CreateNewCart(ref xmlNull);
                         mnCartId = otmpcart.mnCartId;
                     }
                     // now add the details to it
