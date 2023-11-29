@@ -837,8 +837,8 @@ namespace Protean
             }
 
 
-            public void IndexSinglePage(object oPage)
-            {
+            public void IndexSinglePage(IndexPageAsync.oPage oPage)
+            {               
                 string cPageHtml;
                 var oPageXml = new XmlDocument();
                 string cRules = "";
@@ -871,9 +871,9 @@ namespace Protean
                     // as the admin user would see it
                     // without bieng in admin mode
                     // so we can see everything
-                    myWeb.mnPageId = oPage.pgid;
+                    myWeb.mnPageId =Convert.ToInt32(oPage.pgid);
                     myWeb.moPageXml = new XmlDocument();
-                    myWeb.mnArtId = (object)null;
+                    myWeb.mnArtId = 0;
                     myWeb.mbIgnorePath = true;
                     myWeb.mcEwSiteXsl = cXslPath;
 
@@ -909,7 +909,7 @@ namespace Protean
                         {
                             oPageXml.LoadXml(cPageHtml);
                             oElmtRules = (XmlElement)oPageXml.SelectSingleNode("/html/head/meta[@name='ROBOTS']");
-                            oElmtURL = myWeb.moPageXml.SelectSingleNode("/Page/Menu/descendant-or-self::MenuItem[@id='" + myWeb.mnPageId + "']");
+                            oElmtURL =(XmlElement)myWeb.moPageXml.SelectSingleNode("/Page/Menu/descendant-or-self::MenuItem[@id='" + myWeb.mnPageId + "']");
                             cRules = "";
 
                             // If xWeb.mnPageId = 156 Then
@@ -1068,7 +1068,7 @@ namespace Protean
                                                             cProcessInfo = "Indexing - " + oDocElmt.InnerText;
                                                             string fileAsText = GetFileText(myWeb.goServer.MapPath(oDocElmt.InnerText), ref myWeb.msException);
                                                             string argsException = oElmt.GetAttribute("name");
-                                                            IndexPage(myWeb.mnPageId, "<h1>" + oElmt.GetAttribute("name") + "</h1>" + fileAsText, oDocElmt.InnerText, myWeb.msException, ref argsException, "Download", myWeb.mnArtId, cPageExtract, Interaction.IIf(Information.IsDate(oElmt.GetAttribute("publish")), Conversions.ToDate(oElmt.GetAttribute("publish")), null), Interaction.IIf(Information.IsDate(oElmt.GetAttribute("update")), Conversions.ToDate(oElmt.GetAttribute("update")), null));
+                                                            IndexPage(myWeb.mnPageId, "<h1>" + oElmt.GetAttribute("name") + "</h1>" + fileAsText, oDocElmt.InnerText, myWeb.msException, ref argsException, "Download", myWeb.mnArtId, cPageExtract, Convert.ToDateTime(oElmt.GetAttribute("publish")), Conversions.ToDate(oElmt.GetAttribute("publish")), null, Interaction.IIf(Information.IsDate(oElmt.GetAttribute("update")), Conversions.ToDate(oElmt.GetAttribute("update")), null);
 
                                                             var oFileElmt = oInfoElmt.OwnerDocument.CreateElement("file");
                                                             oPageElmt.SetAttribute("file", oDocElmt.InnerText);

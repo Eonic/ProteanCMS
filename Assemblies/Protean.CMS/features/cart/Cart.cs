@@ -1650,7 +1650,7 @@ namespace Protean
                                         // addtional string for membership to check
                                         myWeb.moSession["cLogonCmd"] = "cartCmd=Logon";
                                         // registration xform
-                                        object argmyWeb = myWeb;
+                                        Cms argmyWeb = myWeb;
                                         var oMembershipProv = new Providers.Membership.BaseProvider(ref argmyWeb, myWeb.moConfig["MembershipProvider"]);
                                         myWeb = (Cms)argmyWeb;
                                         Providers.Membership.EonicProvider.AdminXForms oRegXform = (Providers.Membership.EonicProvider.AdminXForms)oMembershipProv.AdminXforms;
@@ -2453,11 +2453,11 @@ namespace Protean
                     {
                         object providerName = moCartConfig["AccountingProvider"];
                         Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/accountingProviders");
-                        var assemblyInstance = Assembly.Load(moPrvConfig.Providers(providerName).Type.ToString());
+                        var assemblyInstance = Assembly.Load(moPrvConfig.Providers[providerName.ToString()].Type.ToString());
                         Type calledType;
-                        string classPath = Conversions.ToString(moPrvConfig.Providers(providerName).Parameters("rootClass"));
+                        string classPath = Conversions.ToString(moPrvConfig.Providers[providerName.ToString()].Parameters["rootClass"]);
 
-                        string passCMS = Conversions.ToString(moPrvConfig.Providers(providerName).Parameters("passCMS"));
+                        string passCMS = Conversions.ToString(moPrvConfig.Providers[providerName.ToString()].Parameters["passCMS"]);
 
                         string methodName = "ProcessOrder";
                         calledType = assemblyInstance.GetType(classPath, true);

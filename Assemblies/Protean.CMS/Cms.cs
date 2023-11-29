@@ -710,7 +710,7 @@ namespace Protean
                     // if we access base via soap the session is not available
                     if (this.moSession != null)
                     {
-                        object argmyWeb = this;
+                        Cms argmyWeb = this;
                         var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.moConfig["MembershipProvider"]);
                         this.mnUserId = Conversions.ToInteger(oMembershipProv.Activities.GetUserId(this));
                     }
@@ -952,7 +952,7 @@ namespace Protean
                 if (this.moSession != null)
                 {
 
-                    object argmyWeb = this;
+                    Cms argmyWeb = this;
                     var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.moConfig["MembershipProvider"]);
                     oMembershipProv.Activities.SetUserId(this);
                 }
@@ -1338,7 +1338,7 @@ namespace Protean
                 {
                     // this simply gets the userId earlier if it is in the session.
                     // behaviour to check single session or transfer from the cart is still called from Open()
-                    object argmyWeb = this;
+                    Cms argmyWeb = this;
                     var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.moConfig["MembershipProvider"]);
                     this.mnUserId = Conversions.ToInteger(oMembershipProv.Activities.GetUserSessionId(this));
                     if (this.mnUserId > 0)
@@ -5341,7 +5341,7 @@ namespace Protean
             try
             {
 
-                object argmyWeb = this;
+                Cms argmyWeb = this;
                 var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.moConfig["MembershipProvider"]);
 
                 return Conversions.ToString(oMembershipProv.Activities.MembershipProcess(this));
@@ -5375,7 +5375,7 @@ namespace Protean
             try
             {
 
-                object argmyWeb = this;
+                Cms argmyWeb = this;
                 var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.moConfig["MembershipProvider"]);
 
                 return Conversions.ToBoolean(oMembershipProv.Activities.AlternativeAuthentication(this));
@@ -6066,28 +6066,28 @@ namespace Protean
                     if (oThemeConfig != null)
                     {
                         sCurrentTheme = oThemeConfig["CurrentTheme"];
-                        object themesetting = moPageXml.CreateElement("add");
-                        themesetting.setAttribute("key", "theme.CurrentTheme");
-                        themesetting.setAttribute("value", sCurrentTheme);
+                        XmlElement themesetting = moPageXml.CreateElement("add");
+                        themesetting.SetAttribute("key", "theme.CurrentTheme");
+                        themesetting.SetAttribute("value", sCurrentTheme);
                         root.AppendChild((XmlNode)themesetting);
                     }
                     while (match.Success)
                     {
 
-                        object setting = moPageXml.CreateElement("add");
-                        setting.setAttribute("key", match.Groups["Name"].Value + "." + match.Groups["Value"].Value);
+                        XmlElement setting = moPageXml.CreateElement("add");
+                        setting.SetAttribute("key", match.Groups["Name"].Value + "." + match.Groups["Value"].Value);
                         switch (match.Groups["Name"].Value ?? "")
                         {
                             case "web":
                                 {
-                                    setting.setAttribute("value", this.moConfig[match.Groups["Value"].Value]);
+                                    setting.SetAttribute("value", this.moConfig[match.Groups["Value"].Value]);
                                     break;
                                 }
                             case "cart":
                                 {
                                     if (moCartConfig != null)
                                     {
-                                        setting.setAttribute("value", moCartConfig[match.Groups["Value"].Value]);
+                                        setting.SetAttribute("value", moCartConfig[match.Groups["Value"].Value]);
                                     }
 
                                     break;
@@ -6096,7 +6096,7 @@ namespace Protean
                                 {
                                     if (sCurrentTheme != null & match.Groups["Value"].Value != "CurrentTheme")
                                     {
-                                        setting.setAttribute("value", oThemeConfig[sCurrentTheme + "." + match.Groups["Value"].Value]);
+                                        setting.SetAttribute("value", oThemeConfig[sCurrentTheme + "." + match.Groups["Value"].Value]);
                                     }
 
                                     break;
@@ -6107,10 +6107,10 @@ namespace Protean
                     }
 
                     // create a random bundle version number
-                    object rnsetting = moPageXml.CreateElement("add");
-                    rnsetting.setAttribute("key", "bundleVersion");
+                    XmlElement rnsetting = moPageXml.CreateElement("add");
+                    rnsetting.SetAttribute("key", "bundleVersion");
                     var rn = new Random();
-                    rnsetting.setAttribute("value", (object)rn.Next(10000, 99999));
+                    rnsetting.SetAttribute("value", rn.Next(10000, 99999).ToString());
                     root.AppendChild((XmlNode)rnsetting);
 
                     this.moCtx.Application["ewSettings"] = root.InnerXml;
@@ -6138,7 +6138,7 @@ namespace Protean
             try
             {
 
-                object argmyWeb = this;
+                Cms argmyWeb = this;
                 var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.moConfig["MembershipProvider"]);
                 return (XmlElement)oMembershipProv.Activities.GetUserXml(this, nUserId);
             }
@@ -10415,7 +10415,7 @@ namespace Protean
             try
             {
 
-                object argmyWeb = this;
+                Cms argmyWeb = this;
                 var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.moConfig["MembershipProvider"]);
                 oMembershipProv.Activities.LogSingleUserSession(this);
             }

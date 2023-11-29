@@ -642,7 +642,7 @@ namespace Protean
                         }
                         // Send Email
                         var oMsg = new Protean.Messaging();
-                        object doc = new XmlDocument();
+                        XmlDocument doc = new XmlDocument();
                         string strUrl = "https://www.intotheblue.co.uk";
                         string CustomerName = string.Empty;
                         string strEmail = "";

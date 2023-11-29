@@ -85,7 +85,7 @@ namespace Protean.Providers
                 }
             }
 
-            public BaseProvider(ref object myWeb, string ProviderName)
+            public BaseProvider(ref Cms myWeb, string ProviderName)
             {
                 try
                 {
@@ -100,17 +100,17 @@ namespace Protean.Providers
                     {
                         var castObject = WebConfigurationManager.GetWebApplicationSection("protean/membershipProviders");
                         Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)castObject;
-                        object ourProvider = moPrvConfig.Providers[ProviderName];
+                        var ourProvider = moPrvConfig.Providers[ProviderName];
                         Assembly assemblyInstance;
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(ourProvider.parameters("path"), "", false)))
+                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(ourProvider.Parameters["path"], "", false)))
                         {
-                            assemblyInstance = Assembly.LoadFrom(goServer.MapPath(Conversions.ToString(ourProvider.parameters("path"))));
+                            assemblyInstance = Assembly.LoadFrom(goServer.MapPath(Conversions.ToString(ourProvider.Parameters["path"])));
                         }
                         else
                         {
                             assemblyInstance = Assembly.Load(ourProvider.Type);
                         }
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(ourProvider.parameters("rootClass"), "", false)))
+                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(ourProvider.Parameters["rootClass"], "", false)))
                         {
                             calledType = assemblyInstance.GetType("Protean.Providers.Membership." + ProviderName, true);
                         }
@@ -172,7 +172,7 @@ namespace Protean.Providers
 
             }
 
-            public class AdminXForms : Admin.AdminXforms
+            public class AdminXForms : Cms.Admin.AdminXforms
             {
                 private const string mcModuleName = "Providers.Membership.Eonic.AdminXForms";
                 public bool maintainMembershipsOnAdd = true;
@@ -180,7 +180,7 @@ namespace Protean.Providers
                 public AdminXForms(ref Cms aWeb) : base(ref aWeb)
                 {
                 }
-
+                [Obsolete]
                 public override XmlElement xFrmUserLogon(string FormName = "UserLogon") // Just replace Overridable to Overrides
                 {
 
@@ -1372,8 +1372,9 @@ namespace Protean.Providers
 
                                     // Add an indication that the form succeeded.
 
-                                    var argoParent = base.model.SelectSingleNode("instance");
-                                    Xml.addElement(ref argoParent, "formState", "success");
+                                    XmlNode argoParent = base.model.SelectSingleNode("instance");
+                                    XmlElement xmlargoParentElmt = (XmlElement)argoParent;
+                                    Xml.addElement(ref xmlargoParentElmt, "formState", "success");
 
                                     // Clear out the form
                                     // Dim oGroup As XmlElement = Nothing
@@ -1574,7 +1575,7 @@ namespace Protean.Providers
 
                 #endregion
 
-                public virtual long GetUserSessionId(ref Protean.Base myWeb)
+                public virtual long GetUserSessionId(ref Protean.Cms myWeb)
                 {
 
                     string sProcessInfo = "";
@@ -1585,7 +1586,7 @@ namespace Protean.Providers
                     {
                         if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(moSession["nUserId"], 0, false)))
                         {
-                            myWeb.mnUserId = moSession["nUserId"];
+                            myWeb.mnUserId = Convert.ToInt32(moSession["nUserId"]);
                         }
                         else
                         {
@@ -1603,7 +1604,7 @@ namespace Protean.Providers
                 }
 
 
-                public virtual string GetUserId(ref Protean.Base myWeb)
+                public virtual string GetUserId(ref Protean.Cms myWeb)
                 {
                     myWeb.PerfMon.Log(mcModuleName, "getUserId");
                     string sProcessInfo = "";
@@ -2305,7 +2306,7 @@ namespace Protean.Providers
                                                         // first we set the user account to be pending
                                                         myWeb.moDbHelper.setObjectStatus(dbHelper.objectTypes.Directory, dbHelper.Status.Pending, mnUserId);
 
-                                                        var oMembership = new Cms.Membership(myWeb);
+                                                        var oMembership = new Cms.Membership(ref myWeb);
                                                         oMembership.OnErrorWithWeb += OnComponentError;
                                                         oMembership.AccountActivateLink(mnUserId);
                                                         clearUserId = true;

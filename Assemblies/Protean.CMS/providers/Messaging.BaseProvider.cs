@@ -29,15 +29,15 @@ namespace Protean.Providers
     namespace Messaging
     {
 
-        public class BaseProvider: DynamicObject
+        public class BaseProvider
         {
-            private Admin.AdminXforms _AdminXforms;
+            private object _AdminXforms;
             private object _AdminProcess;
             private object _Activities;
             private const string mcModuleName = "Protean.Providers.Messaging";
 
 
-            public object AdminXforms
+            public BaseProvider AdminXforms
             {
                 set
                 {
@@ -715,9 +715,11 @@ namespace Protean.Providers
                                     bLoadStructure = true;
                                     if (!Information.IsNumeric(cVersionKey))
                                         cVersionKey = "0";
-                                    long nContentId;
-                                    nContentId = 0L;
-                                    oPageDetail.AppendChild(moAdXfm.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), "", Convert.ToInt64(myWeb.moRequest["pgid"]), default, default, ref nContentId, default, default, Conversions.ToLong(cVersionKey)));
+                                    int nContentId;
+                                    nContentId = 0;
+                                    string zcreturn = "";
+                                    string AlernateForm = "";
+                                    oPageDetail.AppendChild(moAdXfm.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), "", Convert.ToInt64(myWeb.moRequest["pgid"]), "",false, ref nContentId,ref zcreturn,ref AlernateForm, Conversions.ToLong(cVersionKey)));
 
                                     if (moAdXfm.valid)
                                     {

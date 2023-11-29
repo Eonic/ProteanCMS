@@ -126,7 +126,7 @@ namespace Protean
                     if (myWeb.mnUserId > 0 & mnEwUserId == 0)
                         mnEwUserId = myWeb.mnUserId;
                     // MEMB - eEDIT
-                    if (myWeb.moCtx.Application["bFullCartOption"] == true)
+                    if (Convert.ToBoolean(myWeb.moCtx.Application["bFullCartOption"]) == true)
                     {
                         bFullCartOption = true;
                     }
@@ -1123,7 +1123,7 @@ namespace Protean
                         return false;
                         // also better check the user owns this quote, we dont want them
                         // getting someone else quote by mucking around with the querystring
-                        if (!(base.moDBHelper.ExeProcessSqlScalar("Select nCartUserDirId FROM tblCartOrder WHERE nCartOrderKey = " + nQuoteId + " AND cCartSchemaName = 'Quote'") == mnEwUserId))
+                        if (!(Convert.ToInt32(base.moDBHelper.ExeProcessSqlScalar("Select nCartUserDirId FROM tblCartOrder WHERE nCartOrderKey = " + nQuoteId + " AND cCartSchemaName = 'Quote'")) == mnEwUserId))
                         {
                             return false; // else we carry on
                         }
@@ -1301,7 +1301,7 @@ namespace Protean
                     int nParentID;
                     string sSQL;
 
-                    base.moDBHelper.ReturnNullsEmpty(oDS);
+                    base.moDBHelper.ReturnNullsEmpty(ref oDS);
                     sSQL = "Update tblCartOrder SET cClientNotes ='" + cNotes + "'  WHERE nCartOrderKey = " + mnCartId;
                     base.moDBHelper.ExeProcessSql(sSQL);
                     foreach (DataRow oDR1 in oDS.Tables["CartItems"].Rows)
@@ -1325,7 +1325,7 @@ namespace Protean
                             sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nQuantity"] is DBNull, "Null", oDR1["nQuantity"]), ","));
                             sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nWeight"] is DBNull, "Null", oDR1["nWeight"]), ","));
                             sSQL += base.moDBHelper.getAuditId() + ")";
-                            nParentID = base.moDBHelper.GetIdInsertSql(sSQL);
+                            nParentID =Convert.ToInt32(base.moDBHelper.GetIdInsertSql(sSQL));
                             // now for any children
                             foreach (DataRow oDR2 in oDS.Tables["CartItems"].Rows)
                             {

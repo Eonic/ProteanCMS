@@ -219,12 +219,9 @@ namespace Protean
                     string cProcessInfo = "";
 
                     try
-                    {
-
-                        object argmyWeb = (object)this.myWeb;
-                        var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.myWeb.moConfig["MembershipProvider"]);
-                        this.myWeb = (Cms)argmyWeb;
-                        var oAdXfm = oMembershipProv.AdminXforms;
+                    {                       
+                        Protean.Providers.Membership.BaseProvider oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref myWeb, this.myWeb.moConfig["MembershipProvider"]);
+                        Protean.Providers.Membership.BaseProvider.AdminXforms oAdXfm = oMembershipProv.AdminXforms;
 
                         oAdXfm.xFrmUserLogon(FormName);
                         this.valid = Conversions.ToBoolean(oAdXfm.valid);
@@ -362,7 +359,7 @@ namespace Protean
                     try
                     {
 
-                        object argmyWeb = (object)this.myWeb;
+                        Cms argmyWeb = this.myWeb;
                         var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.myWeb.moConfig["MembershipProvider"]);
                         this.myWeb = (Cms)argmyWeb;
                         var oAdXfm = oMembershipProv.AdminXforms;
@@ -387,7 +384,7 @@ namespace Protean
                     try
                     {
 
-                        object argmyWeb = (object)this.myWeb;
+                        Cms argmyWeb = (object)this.myWeb;
                         var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.myWeb.moConfig["MembershipProvider"]);
                         this.myWeb = (Cms)argmyWeb;
                         var oAdXfm = oMembershipProv.AdminXforms;
@@ -412,7 +409,7 @@ namespace Protean
                     try
                     {
 
-                        object argmyWeb = (object)this.myWeb;
+                        Cms argmyWeb = (object)this.myWeb;
                         var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.myWeb.moConfig["MembershipProvider"]);
                         this.myWeb = (Cms)argmyWeb;
                         var oAdXfm = oMembershipProv.AdminXforms;
@@ -439,7 +436,7 @@ namespace Protean
                     try
                     {
 
-                        object argmyWeb = (object)this.myWeb;
+                        Cms argmyWeb = (object)this.myWeb;
                         var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.myWeb.moConfig["MembershipProvider"]);
                         this.myWeb = (Cms)argmyWeb;
                         var oAdXfm = oMembershipProv.AdminXforms;
@@ -466,7 +463,7 @@ namespace Protean
                     try
                     {
 
-                        object argmyWeb = (object)this.myWeb;
+                        Cms argmyWeb = myWeb;
                         var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.myWeb.moConfig["MembershipProvider"]);
                         this.myWeb = (Cms)argmyWeb;
                         var oAdXfm = oMembershipProv.AdminXforms;

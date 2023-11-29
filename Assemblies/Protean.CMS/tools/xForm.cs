@@ -1556,7 +1556,7 @@ namespace Protean
                                                         // this has been uploaded but the form had to go through a couple of stages of validation
                                                         else if (goSession != null && !string.IsNullOrEmpty(Conversions.ToString(goSession["formFileUploaded"])))
                                                         {
-                                                            oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = Conversions.ToString(Operators.ConcatenateObject(goSession["formFileUploaded"], "").Trim);
+                                                            oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = Conversions.ToString(Operators.ConcatenateObject(goSession["formFileUploaded"], "").Trim());
                                                         }
                                                         else
                                                         {
