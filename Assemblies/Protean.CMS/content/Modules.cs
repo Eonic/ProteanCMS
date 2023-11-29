@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Web.Configuration;
 
 using System.Xml;
+using System.Xml.Xsl;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
@@ -370,8 +371,9 @@ where cl.nStructId = " + myWeb.mnPageId));
                         }
 
                         // Get content by date range
+                        XmlElement xmlContentNode = null; int nCount = 0;
                         XmlElement argoPageDetail = null;
-                        myWeb.GetPageContentFromSelect("CL.nStructId = " + myWeb.mnPageId + " And c.cContentSchemaName = '" + oContentNode.GetAttribute("contentType") + "' ", nReturnRows: (int)nItemsPerPage, pageNumber: nCurrentPage, oPageDetail: ref argoPageDetail);
+                        myWeb.GetPageContentFromSelect("CL.nStructId = " + myWeb.mnPageId + " And c.cContentSchemaName = '" + oContentNode.GetAttribute("contentType") + "' ",ref nCount, ref xmlContentNode,oPageDetail: ref argoPageDetail, nReturnRows: (int)nItemsPerPage, pageNumber: nCurrentPage);
                         // remove content detail
                         if (myWeb.moContentDetail != null)
                         {
@@ -416,7 +418,8 @@ where cl.nStructId = " + myWeb.mnPageId));
                             else
                             {
                                 XmlElement argoPageDetail = null;
-                                myWeb.GetPageContentFromSelect("CL.nStructId = " + PageId + " And a.dExpireDate < GETDATE() And a.nStatus = 1 And c.cContentSchemaName = '" + oContentNode.GetAttribute("contentType") + "' ", nReturnRows: (int)nItemsPerPage, pageNumber: nCurrentPage, ignoreActiveAndDate: true, oPageDetail: ref argoPageDetail);
+                                XmlElement xmlContentNode = null;int nCount = 0;
+                                myWeb.GetPageContentFromSelect("CL.nStructId = " + PageId + " And a.dExpireDate < GETDATE() And a.nStatus = 1 And c.cContentSchemaName = '" + oContentNode.GetAttribute("contentType") + "' ",ref nCount, ref xmlContentNode, oPageDetail: ref argoPageDetail, nReturnRows: (int)nItemsPerPage, pageNumber: nCurrentPage, ignoreActiveAndDate: true);
                             }
 
 
@@ -633,8 +636,8 @@ where cl.nStructId = " + myWeb.mnPageId));
                         if (!string.IsNullOrEmpty(whereSQL))
                         {
                             myWeb.moSession["FilterWhereCondition"] = whereSQL;
-                            XmlElement argoPageDetail = null;
-                            myWeb.GetPageContentFromSelect(whereSQL, oContentsNode: ref oContentNode, cShowSpecificContentTypes: cFilterTarget, oPageDetail: ref argoPageDetail);
+                            XmlElement argoPageDetail = null;int nCount = 0;
+                            myWeb.GetPageContentFromSelect(whereSQL,ref nCount, oContentsNode: ref oContentNode, oPageDetail: ref argoPageDetail, cShowSpecificContentTypes: cFilterTarget);
 
 
                             if (oContentNode.SelectNodes("Content[@type='Product']").Count == 0)

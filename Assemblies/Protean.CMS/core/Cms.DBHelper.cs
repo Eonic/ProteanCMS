@@ -8075,11 +8075,11 @@ namespace Protean
                                         int earlierTries = Conversions.ToInteger(ExeProcessSqlScalar(sSql2));
                                         if (earlierTries >= nRetrys)
                                         {
-                                            object argmyWeb = myWeb;
+                                            Cms argmyWeb = myWeb;
                                             var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, myWeb.moConfig["MembershipProvider"]);
                                             myWeb = (Cms)argmyWeb;
 
-                                            oMembershipProv.Activities.ResetUserAcct(myWeb, nUserId);
+                                            oMembershipProv.Activities.ResetUserAcct(ref myWeb, Convert.ToInt32(nUserId));
 
                                             sReturn = "<span class=\"msg-1032\">Your account is blocked, an email has been sent to you to reset your password.</span>";
                                         }
@@ -10386,7 +10386,7 @@ namespace Protean
                 }
             }
 
-            public void AddDataSetToContent(ref DataSet oDs, ref XmlElement oContent,ref DateTime dExpireDate ,ref DateTime dUpdateDate, long nCurrentPageId = 0L, bool bIgnoreDuplicates = false, string cAddSourceAttribute = "", bool bAllowRecursion = true)
+            public void AddDataSetToContent(ref DataSet oDs, ref XmlElement oContent,ref DateTime? dExpireDate ,ref DateTime? dUpdateDate, long nCurrentPageId = 0L, bool bIgnoreDuplicates = false, string cAddSourceAttribute = "", bool bAllowRecursion = true)
             {
                 try
                 {
@@ -10398,8 +10398,9 @@ namespace Protean
                     {
                         nMaxDepth = Conversions.ToInteger(cShowRelatedBriefDepth);
                     }
-
-                    AddDataSetToContent(ref oDs, ref oContent, nCurrentPageId, bIgnoreDuplicates, cAddSourceAttribute, ref dExpireDate, ref dUpdateDate, bAllowRecursion, nMaxDepth);
+                    DateTime ExpireDate = dExpireDate ?? DateTime.Now;
+                    DateTime UpdateDate = dUpdateDate ?? DateTime.Now;
+                    AddDataSetToContent(ref oDs, ref oContent, nCurrentPageId, bIgnoreDuplicates, cAddSourceAttribute, ref ExpireDate, ref UpdateDate, bAllowRecursion, nMaxDepth);
                 }
 
                 catch (Exception ex)
@@ -10845,21 +10846,21 @@ namespace Protean
                             {
                                 nMaxDepth = Conversions.ToInteger(cShowRelatedBriefDepth);
                             }
-                            var argdExpireDate = DateTime.Parse("0001-01-01");
-                            var argdUpdateDate = DateTime.Parse("0001-01-01");
+                            DateTime? argdExpireDate = DateTime.Parse("0001-01-01");
+                            DateTime? argdUpdateDate = DateTime.Parse("0001-01-01");
                             AddDataSetToContent(ref oDs, ref oContentElmt, ref argdExpireDate, ref argdUpdateDate, nParentId,true, nMaxDepth.ToString());
                         }
                         else
                         {
-                            DateTime argdExpireDate1 = DateTime.Parse("0001-01-01");
-                            DateTime argdUpdateDate1 = DateTime.Parse("0001-01-01");
+                            DateTime? argdExpireDate1 = DateTime.Parse("0001-01-01");
+                            DateTime? argdUpdateDate1 = DateTime.Parse("0001-01-01");
                             AddDataSetToContent(ref oDs, ref oContentElmt, dExpireDate: ref argdExpireDate1, dUpdateDate: ref argdUpdateDate1, nParentId);
                         }
                     }
                     else
                     {
-                        DateTime argdExpireDate2 = DateTime.Parse("0001-01-01");
-                        DateTime argdUpdateDate2 = DateTime.Parse("0001-01-01");
+                        DateTime? argdExpireDate2 = DateTime.Parse("0001-01-01");
+                        DateTime? argdUpdateDate2 = DateTime.Parse("0001-01-01");
                         AddDataSetToContent(ref oDs, ref oContentElmt, dExpireDate: ref argdExpireDate2, dUpdateDate: ref argdUpdateDate2, nParentId);
                     }
 
@@ -14758,7 +14759,7 @@ namespace Protean
                                 TextWriter oTW = new StringWriter();
                                 TextReader oTR;
                                 string cFeedItemXML;
-                                var oInstanceDoc = new XmlDocument();
+                                XmlDocument oInstanceDoc = new XmlDocument();
                                 oInstanceDoc.LoadXml(Conversions.ToString(importStateObj.oInstance.OuterXml));
                                 importStateObj.moTransform.Process(oInstanceDoc, oTW);
                                 oTR = new StringReader(oTW.ToString());

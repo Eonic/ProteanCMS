@@ -727,7 +727,7 @@ namespace Protean
             string cContentType;
             string cDeleteMode;
             var oSoapBody = new XmlDocument();
-            var oDbt = new Cms.dbHelper(myWeb);
+            var oDbt = new Cms.dbHelper(ref myWeb);
 
             try
             {
@@ -1390,7 +1390,7 @@ namespace Protean
                     if (Conversions.ToDouble(nID) > 0d)
                     {
 
-                        return myWeb.moDbHelper.setContentLocation(Convert.ToInt64(nID), nContentId, Interaction.IIf(bPrimary == 1, true, false), bCascade, true);
+                        return myWeb.moDbHelper.setContentLocation(Convert.ToInt64(nID), nContentId, Convert.ToBoolean(bPrimary)? true: false, Convert.ToBoolean(bCascade), true);
                     }
                     else
                     {
@@ -1416,7 +1416,7 @@ namespace Protean
                     {
                         var loopTo = nIDs.Length - 1;
                         for (i = 0; i <= loopTo; i++)
-                            myWeb.moDbHelper.setContentLocation(Convert.ToInt64(nIDs[i]), nContentId, Interaction.IIf(bPrimary == 1, true, false), bCascade, true);
+                            myWeb.moDbHelper.setContentLocation(Convert.ToInt64(nIDs[i]), nContentId, Convert.ToBoolean(bPrimary)? true:false, Convert.ToBoolean(bCascade), true);
                         return string.Concat(nIDs);
                     }
                     else

@@ -35,7 +35,7 @@ namespace Protean
                     public void UpdateSubscriptionPaymentMethod(ref Cms myWeb, ref XmlElement contentNode)
                     {
 
-                        var pseudoCart = new Cart(myWeb);
+                        var pseudoCart = new Cart(ref myWeb);
                         Models.Order pseudoOrder = null;
 
                         string ewCmd = myWeb.moRequest["subCmd2"];

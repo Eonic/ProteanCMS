@@ -696,7 +696,7 @@ namespace Protean
 
                         bool bLogon = false;
 
-                        object argmyWeb = myWeb;
+                        Cms argmyWeb = myWeb;
                         var oMembershipProv = new Providers.Membership.BaseProvider(ref argmyWeb, myWeb.moConfig["MembershipProvider"]);
                         myWeb = (Cms)argmyWeb;
                         oMembershipProv.AdminXforms adXfm = oMembershipProv.AdminXforms;

@@ -232,7 +232,8 @@ namespace Protean
                                     try
                                     {
                                         var oMailer = new Protean.Messaging(ref myWeb.msException);
-                                        string cResponse = Conversions.ToString(oMailer.emailer(oAlertElmt, oAlertConfig["AlertXsl"], oAlertConfig["AlertFrom"], oAlertConfig["AlertFromEmail"], oMember.Email, cAlertTitles, cPickupHost: oAlertConfig["AlertPickupHost"], cPickupLocation: oAlertConfig["AlertPickupLocation"]));
+                                        Cms.dbHelper odbhelper = null;
+                                        string cResponse = Conversions.ToString(oMailer.emailer(oAlertElmt, oAlertConfig["AlertXsl"], oAlertConfig["AlertFrom"], oAlertConfig["AlertFromEmail"], oMember.Email, cAlertTitles,ref odbhelper, cPickupHost: oAlertConfig["AlertPickupHost"], cPickupLocation: oAlertConfig["AlertPickupLocation"]));
                                         myWeb.msException = ""; // Clear the sodding error
                                         if (bReportDeep)
                                         {

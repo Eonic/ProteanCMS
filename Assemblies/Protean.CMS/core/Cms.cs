@@ -63,8 +63,8 @@ namespace Protean
 
         public XmlDocument moPageXml = new XmlDocument();
         private XmlDocument moXmlAddedContent;
-        public DateTime mdPageExpireDate = DateAndTime.DateAdd(DateInterval.Year, 1d, DateTime.Now);
-        public DateTime mdPageUpdateDate = DateAndTime.DateAdd(DateInterval.Year, -1, DateTime.Now);
+        public DateTime? mdPageExpireDate = DateAndTime.DateAdd(DateInterval.Year, 1d, DateTime.Now);
+        public DateTime? mdPageUpdateDate = DateAndTime.DateAdd(DateInterval.Year, -1, DateTime.Now);
         private int mnPageCacheMode;
         public XmlElement moContentDetail;
         public string mcContentType = System.Net.Mime.MediaTypeNames.Text.Html;
@@ -2024,7 +2024,8 @@ namespace Protean
                                             }
                                             else
                                             {
-                                                this.moResponse.AddHeader("Last-Modified", Tools.Text.HtmlHeaderDateTime(mdPageUpdateDate) + ",");
+                                                DateTime UpdatedTime = mdPageUpdateDate ?? DateTime.Now;
+                                                this.moResponse.AddHeader("Last-Modified", Tools.Text.HtmlHeaderDateTime(UpdatedTime) + ",");
                                                 this.PerfMon.Log("Web", "GetPageHTML-startxsl");
 
                                                 oTransform.ProcessTimed(moPageXml, ref this.moResponse);
@@ -2088,7 +2089,8 @@ namespace Protean
                                     this.moResponse.AddHeader("X-Frame-Options", "DENY");
                                 }
                                 short filelen = (short)(this.goServer.MapPath("/" + gcProjectPath).Length + sServeFile.Length);
-                                this.moResponse.AddHeader("Last-Modified", Tools.Text.HtmlHeaderDateTime(mdPageUpdateDate));
+                                DateTime UpdatedTime = mdPageUpdateDate ?? DateTime.Now;
+                                this.moResponse.AddHeader("Last-Modified", Tools.Text.HtmlHeaderDateTime(UpdatedTime));
                                 this.PerfMon.Log("Web", "GetPageHTML - serve cached file");
                                 if (filelen > 260)
                                 {
@@ -2281,7 +2283,8 @@ namespace Protean
                                 nMaxDepth = Conversions.ToInteger(cShowRelatedBriefDepth);
                             }
                             XmlElement argoContentParent = (XmlElement)moPageXml.DocumentElement.SelectSingleNode("Contents");
-                            this.moDbHelper.addBulkRelatedContent(ref argoContentParent, ref mdPageUpdateDate, nMaxDepth);
+                            DateTime UpdatedTime = mdPageUpdateDate ?? DateTime.Now;
+                            this.moDbHelper.addBulkRelatedContent(ref argoContentParent, ref UpdatedTime, nMaxDepth);
 
                         }
 
@@ -3181,7 +3184,7 @@ namespace Protean
             {
                 OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetAjaxHTML", ex, sProcessInfo));
                 this.moResponse.Write(msException);
-                Finalize();
+                //Finalize();
             }
 
             this.PerfMon.Write();
@@ -4955,8 +4958,9 @@ namespace Protean
                 {
                     nCount = oDs.Tables["Content"].Rows.Count;
                     this.PerfMon.Log("Web", "GetPageContentFromSelect", "GetPageContentFromSelect: " + nCount + " returned");
-
-                    this.moDbHelper.AddDataSetToContent(ref oDs, ref oRoot, (long)this.mnPageId, false, "", ref mdPageExpireDate, ref mdPageUpdateDate, true, gnShowRelatedBriefDepth, cShowSpecificContentTypes);
+                    DateTime ExpireDate = mdPageExpireDate ?? DateTime.Now;
+                    DateTime UpdateDate = mdPageUpdateDate ?? DateTime.Now;
+                    this.moDbHelper.AddDataSetToContent(ref oDs, ref oRoot, (long)this.mnPageId, false, "", ref ExpireDate, ref UpdateDate, true, gnShowRelatedBriefDepth, cShowSpecificContentTypes);
                 }
             }
 
@@ -5309,12 +5313,17 @@ namespace Protean
                     oDs = this.moDbHelper.GetDataSet(sSql, "Content", "Contents");
                 }
                 nCount = oDs.Tables["Content"].Rows.Count;
-
-                var oXml = this.moDbHelper.ContentDataSetToXml(ref oDs, ref mdPageUpdateDate);
+                DateTime UpdatedTime = mdPageUpdateDate ?? DateTime.Now;
+                DateTime ExpireTime = mdPageExpireDate ?? DateTime.Now;
+                var oXml = this.moDbHelper.ContentDataSetToXml(ref oDs, ref UpdatedTime);
                 var oXml2 = oRoot.OwnerDocument.ImportNode(oXml.DocumentElement, true);
 
                 foreach (XmlElement oNode in oXml2.SelectNodes("Content"))
-                    oRoot.AppendChild(this.moDbHelper.SimpleTidyContentNode(ref oNode, ref mdPageExpireDate, ref mdPageUpdateDate, ""));
+                {
+                    XmlElement xmloContent = (XmlElement)oNode;
+                    oRoot.AppendChild(this.moDbHelper.SimpleTidyContentNode(ref xmloContent, ref ExpireTime, ref UpdatedTime, ""));
+                }
+                    
             }
 
             // moDbHelper.AddDataSetToContent(oDs, oRoot, mnPageId, False, "", mdPageExpireDate, mdPageUpdateDate, True, gnShowRelatedBriefDepth)
@@ -5344,7 +5353,7 @@ namespace Protean
                 Cms argmyWeb = this;
                 var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.moConfig["MembershipProvider"]);
 
-                return Conversions.ToString(oMembershipProv.Activities.MembershipProcess(this));
+                return Conversions.ToString(oMembershipProv.Activities.MembershipProcess(ref argmyWeb));
             }
 
             catch (Exception ex)
@@ -5378,7 +5387,7 @@ namespace Protean
                 Cms argmyWeb = this;
                 var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.moConfig["MembershipProvider"]);
 
-                return Conversions.ToBoolean(oMembershipProv.Activities.AlternativeAuthentication(this));
+                return Conversions.ToBoolean(oMembershipProv.Activities.AlternativeAuthentication(ref argmyWeb));
             }
 
             // ' Look for the RC4 token
@@ -9629,7 +9638,7 @@ namespace Protean
                                 var abyBuffer = new byte[(int)(oFileStream.Length - 1L) + 1];
                                 oFileStream.Read(abyBuffer, 0, abyBuffer.Length);
 
-                                var objCrc32 = new ICSharpCode.SharpZipLib.Checksum.Crc32();
+                                var objCrc32 = new ICSharpCode.SharpZipLib.Checksums.Crc32();
                                 objCrc32.Reset();
                                 objCrc32.Update(abyBuffer);
                                 oZipEntry.Crc = objCrc32.Value;
@@ -10417,7 +10426,7 @@ namespace Protean
 
                 Cms argmyWeb = this;
                 var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.moConfig["MembershipProvider"]);
-                oMembershipProv.Activities.LogSingleUserSession(this);
+                oMembershipProv.Activities.LogSingleUserSession(ref argmyWeb);
             }
 
             catch (Exception ex)

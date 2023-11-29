@@ -2352,7 +2352,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                     oDs = myWeb.moDbHelper.GetDataSet(sSql, "Content", "Contents");
 
                     nResultCount = oDs.Tables["Content"].Rows.Count;
-                    DateTime? nulldate = null;
+                    DateTime? nulldate =null;
                     myWeb.moDbHelper.AddDataSetToContent(ref oDs,ref oContentElmt,ref nulldate, ref nulldate,  myWeb.mnPageId, default, "search");
 
                     // need to remove duplicate items

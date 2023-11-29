@@ -7869,7 +7869,7 @@ namespace Protean
                 string sSql;
                 Hashtable oLocations;
 
-                int nTargetId;
+                int? nTargetId;
                 string sCountryList;
                 int nLocKey;
                 string cProcessInfo = "";
@@ -8648,7 +8648,7 @@ namespace Protean
                 string cProcessInfo = "Checking Submitted Products and Options"; // Object for product keys/quantittie
                                                                                  // Object for options
                 string strAddedProducts = "Start:"; // string of products added
-                var oOptions = new Array[2]; // an array of option arrays (2 dimensional array)
+                string[] oOptions = new string[2]; // an array of option arrays (2 dimensional array)
                 int nCurOptNo = 0;
                 string[] oCurOpt; // CurrentOption bieng evaluated
                 long nProductKey;
@@ -8745,7 +8745,7 @@ namespace Protean
                                                     for (nI = 0; nI <= loopTo; nI++) // loop through current options to split into another array
                                                     {
                                                         Array.Resize(ref oOptions, nCurOptNo + 1 + 1); // redim the array to new length while preserving the current data
-                                                        oOptions[nCurOptNo] = Strings.Split(oCurOpt[nI], "_"); // split out the arrays of options
+                                                        oOptions[nCurOptNo] = oCurOpt[nI].Split("_"); // split out the arrays of options
                                                         nCurOptNo += 1; // update number of options
                                                     }
                                                 } // end option check
@@ -9822,11 +9822,11 @@ namespace Protean
                         myWeb.msException = "";
 
                         oTransform.mbDebug = gbDebug;
-                        object icPageWriter = new StringWriter();
+                        StringWriter icPageWriter = new StringWriter();
                         var OrderDoc = new XmlDocument();
                         OrderDoc.LoadXml(oCartXML.OuterXml);
 
-                        oTransform.ProcessTimed(OrderDoc, icPageWriter);
+                        oTransform.ProcessTimed(OrderDoc, ref icPageWriter);
                         OrderDoc = null;
 
                         string foNetXml = icPageWriter.ToString();

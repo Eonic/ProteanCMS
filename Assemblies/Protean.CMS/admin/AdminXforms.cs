@@ -1861,7 +1861,8 @@ namespace Protean
                         // If the Par Id is empty then populate it
                         if (string.IsNullOrEmpty(cParId))
                         {
-                            Xml.NodeState(ref base.Instance, "tblContentStructure/nStructParId", Interaction.IIf(base.goRequest["parId"] is null, "", base.goRequest["parId"]));
+                            XmlElement xmlBase = base.Instance;
+                            Xml.NodeState(ref xmlBase, "tblContentStructure/nStructParId", Convert.ToBoolean(base.goRequest["parId"])? "": base.goRequest["parId"]);
                         }
                         else
                         {

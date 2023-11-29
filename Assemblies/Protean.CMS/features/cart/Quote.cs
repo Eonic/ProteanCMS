@@ -734,7 +734,7 @@ namespace Protean
                                         myWeb.moSession["cLogonCmd"] = "quoteCmd=Logon";
                                         // registration xform
                                         var oMembershipProv = new Providers.Membership.BaseProvider(ref myWeb, myWeb.moConfig["MembershipProvider"]);
-                                        Providers.Membership.EonicProvider.AdminXForms oRegXform = (Providers.Membership.EonicProvider.AdminXForms)oMembershipProv.AdminXforms;
+                                        Providers.Membership.DefaultProvider.AdminXForms oRegXform = (Providers.Membership.DefaultProvider.AdminXForms)oMembershipProv.AdminXforms;
                                         XmlElement argIntanceAppend = null;
                                         oRegXform.xFrmEditDirectoryItem(IntanceAppend: ref argIntanceAppend,myWeb.mnUserId, "User",Convert.ToInt64("0" + moCartConfig["DefaultSubscriptionGroupId"]), "CartRegistration");
                                         if (oRegXform.valid)
@@ -762,7 +762,7 @@ namespace Protean
                                         }
 
 
-                                        oRegXform = (Providers.Membership.EonicProvider.AdminXForms)null;
+                                        oRegXform = (Providers.Membership.DefaultProvider.AdminXForms)null;
                                     }
                                     else
                                     {
@@ -932,7 +932,7 @@ namespace Protean
                                     {
                                         // registration xform
                                         var oMembershipProv = new Providers.Membership.BaseProvider(ref myWeb, myWeb.moConfig["MembershipProvider"]);
-                                        Providers.Membership.EonicProvider.AdminXForms oRegXform = (Providers.Membership.EonicProvider.AdminXForms)oMembershipProv.AdminXforms;
+                                        Providers.Membership.DefaultProvider.AdminXForms oRegXform = (Providers.Membership.DefaultProvider.AdminXForms)oMembershipProv.AdminXforms;
                                         XmlElement argIntanceAppend1 = null;
                                         oRegXform.xFrmEditDirectoryItem(IntanceAppend: ref argIntanceAppend1,myWeb.mnUserId, "User",Convert.ToInt32("0" + moCartConfig["DefaultSubscriptionGroupId"]), "CartRegistration");
                                         if (oRegXform.valid)

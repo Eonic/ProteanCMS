@@ -2832,7 +2832,7 @@ namespace Protean
                                     else
                                     {
                                         string emptyvalue = string.Empty;
-                                        oPay.getPaymentMethods(this,ref PaymentOptionsSelect, PaymentAmount, ref emptyvalue);
+                                        oPay.getPaymentMethods(ref this,ref PaymentOptionsSelect, PaymentAmount, ref emptyvalue);
                                     }
 
                                 }

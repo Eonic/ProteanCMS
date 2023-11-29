@@ -152,7 +152,7 @@ namespace Protean.Providers
             {
                 private const string mcModuleName = "Protean.Providers.Streaming.AdminXForms";
 
-                public AdminXForms(ref Cms aWeb) : base(aWeb)
+                public AdminXForms(ref Cms aWeb) : base(ref aWeb)
                 {
                 }
 
@@ -175,7 +175,7 @@ namespace Protean.Providers
                     }
                 }
 
-                public AdminProcess(ref Cms aWeb) : base(aWeb)
+                public AdminProcess(ref Cms aWeb) : base(ref aWeb)
                 {
                 }
             }

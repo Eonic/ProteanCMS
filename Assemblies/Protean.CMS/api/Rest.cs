@@ -41,9 +41,9 @@ namespace Protean
 
                     // below code has beem moved to membership base provider
 
-                    object argmyWeb = this;
+                    rest argmyWeb = this;
                     var oMembershipProv = new Providers.Membership.BaseProvider(ref argmyWeb, this.moConfig["MembershipProvider"]);
-                    this.mnUserId = Conversions.ToInteger(oMembershipProv.Activities.GetUserId(this));
+                    this.mnUserId = Conversions.ToInteger(oMembershipProv.Activities.GetUserId(ref argmyWeb));
 
                     if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(this.moSession["adminMode"], "true", false)))
                     {
@@ -201,7 +201,7 @@ namespace Protean
                     this.moResponse.Write(ex.Message);
                 }
 
-                Finalize();
+                //Finalize();
             }
             finally
             {

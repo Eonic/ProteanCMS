@@ -636,7 +636,7 @@ namespace Protean.Providers
 
                                     var oMembershipProv = new BaseProvider(ref myWeb, myWeb.moConfig["MembershipProvider"]);
 
-                                    cResponse = Conversions.ToString(oMembershipProv.Activities.ResetUserAcct(myWeb, nAcc));
+                                    cResponse = Conversions.ToString(oMembershipProv.Activities.ResetUserAcct(ref myWeb, nAcc));
 
                                 }
 

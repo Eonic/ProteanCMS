@@ -125,11 +125,11 @@ namespace Protean
                 if (!string.IsNullOrEmpty(cModuleType))
                     cXformName = cXformName + "/" + cModuleType;
 
-                var commonfolders = new ArrayList();
+                ArrayList commonfolders = new ArrayList();
                 commonfolders.Add("");
                 commonfolders.Add("/ewcommon");
 
-                oXfrm.load("/xforms/content/" + cXformName + ".xml", commonfolders.ToArray(typeof(string)));
+                oXfrm.load("/xforms/content/" + cXformName + ".xml", commonfolders);
 
                 return oXfrm.Instance;
 
@@ -2398,7 +2398,7 @@ namespace Protean
                         case "availableIcons":
                             {
                                 string iconPath = "/ewcommon/icons/icons.xml";
-                                if (myWeb.bs5)
+                                if (Cms.bs5)
                                     iconPath = "/ptn/core/icons/icons.xml";
 
                                 if (File.Exists(goServer.MapPath(iconPath)))
