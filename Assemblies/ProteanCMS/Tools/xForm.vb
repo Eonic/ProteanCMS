@@ -2969,7 +2969,6 @@ Public Class xForm
                 For Each oRptElmt In xFormElmt.SelectNodes("descendant-or-self::repeat[not(contains(@class,'relatedContent') or contains(@class,'repeated'))]")
                     isInserted = False
                     If oRptElmt.GetAttribute("bind") <> "" Then
-
                         'get the bind elements
                         For Each oBindNode In model.SelectNodes("descendant-or-self::bind[not(ancestor::instance) and @id='" & oRptElmt.GetAttribute("bind") & "']")
                             'build the bind xpath

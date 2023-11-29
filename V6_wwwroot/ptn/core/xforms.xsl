@@ -135,7 +135,7 @@
 
 			<xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
 			<xsl:if test="count(submit) &gt; 0">
-				<xsl:if test="not(submit[contains(@class,'hideRequired')])">
+				<xsl:if test="not(submit[contains(@class,'hide-required')])">
 					<xsl:if test="ancestor::group/descendant-or-self::*[contains(@class,'required')]">
 						<label class="required required-message">
 							<span class="req">*</span>
@@ -184,8 +184,8 @@
 						<xsl:apply-templates select="submit" mode="xform"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<div class="form-actions">
-							<xsl:if test="not(submit[contains(@class,'hideRequired')])">
+						<p class="buttons">
+							<xsl:if test="not(submit[contains(@class,'hide-required')])">
 								<xsl:if test="ancestor::group/descendant-or-self::*[contains(@class,'required')]">
 									<label class="required">
 										<span class="req">*</span>
@@ -196,7 +196,7 @@
 							</xsl:if>
 							<!-- For xFormQuiz change how these buttons work -->
 							<xsl:apply-templates select="submit" mode="xform"/>
-						</div>
+						</p>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:if>
@@ -356,7 +356,11 @@
 
 						<a data-bs-target="#tab-{@id}" aria-controls="home" role="tab" data-bs-toggle="tab" class="nav-link">
 							<xsl:choose>
-								<xsl:when test="position()='1'">
+								<xsl:when test="/Page/Request/Form/Item[@name='stepto']/node()=@id">
+									<xsl:attribute name="class">active nav-link</xsl:attribute>
+									<xsl:attribute name="aria-selected">true</xsl:attribute>
+								</xsl:when>
+								<xsl:when test="position()='1' and not(/Page/Request/Form/Item[@name='stepto'])">
 									<xsl:attribute name="class">active nav-link</xsl:attribute>
 									<xsl:attribute name="aria-selected">true</xsl:attribute>
 								</xsl:when>
@@ -372,9 +376,14 @@
 			<div class="tab-content">
 				<xsl:for-each select="group">
 					<div role="tabcard" class="tab-pane" id="tab-{@id}">
-						<xsl:if test="position()=1">
+						<xsl:choose>
+						<xsl:when test="/Page/Request/Form/Item[@name='stepto']/node()=@id">
 							<xsl:attribute name="class">tab-pane active</xsl:attribute>
-						</xsl:if>
+						</xsl:when>
+						<xsl:when test="position()=1 and not(/Page/Request/Form/Item[@name='stepto'])">
+							<xsl:attribute name="class">tab-pane active</xsl:attribute>
+						</xsl:when>
+						</xsl:choose>
 						<xsl:apply-templates select="." mode="xform"/>
 					</div>
 				</xsl:for-each>
@@ -698,7 +707,7 @@
 			</xsl:apply-templates>
 		</xsl:if>
 		<xsl:variable name="fmhz">
-			<xsl:if test="ancestor::group[contains(@class,'horizontal')]">
+			<xsl:if test="ancestor::group[contains(@class,'inline-labels')]">
 				<xsl:text>col-sm-9</xsl:text>
 				<xsl:if test="not(label)">
 					<xsl:text> col-md-offset-3</xsl:text>
@@ -892,19 +901,20 @@
 					<xsl:value-of select="@data-pleasewaitdetail"/>
 				</xsl:attribute>
 			</xsl:if>
-			<!--<xsl:if test="not(contains($class,'icon-right'))">
-        <i class="fa {$icon} fa-white">
-          <xsl:text> </xsl:text>
-        </i>
-        <xsl:text> </xsl:text>
-      </xsl:if>-->
+		
+			<xsl:if test="not(contains($class,'icon-right')) and $icon!=''">
+				<i class="fa {$icon} fa-white">
+				  <xsl:text> </xsl:text>
+				</i>
+				<xsl:text> </xsl:text>
+			  </xsl:if>
 			<xsl:apply-templates select="label" mode="submitText"/>
-			<!--<xsl:if test="contains($class,'icon-right')">
-        <xsl:text> </xsl:text>
-        <i class="fa {$icon} fa-white">
-          <xsl:text> </xsl:text>
-        </i>
-      </xsl:if>-->
+			<xsl:if test="contains($class,'icon-right') and $icon!=''">
+				<xsl:text> </xsl:text>
+				<i class="fa {$icon} fa-white">
+				  <xsl:text> </xsl:text>
+				</i>
+			  </xsl:if>
 		</button>
 	</xsl:template>
 
@@ -3031,7 +3041,7 @@
 					<xsl:if test="parent::input[contains(@class,'readonly')]">
 						<xsl:text> readonly</xsl:text>
 					</xsl:if>
-					<xsl:if test="ancestor::group[contains(@class,'form-horizontal')]">
+					<xsl:if test="ancestor::group[contains(@class,'inline-labels')]">
 						<xsl:text> col-sm-3 control-label</xsl:text>
 					</xsl:if>
 				</xsl:attribute>
