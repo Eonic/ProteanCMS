@@ -63,7 +63,7 @@ namespace Protean
 
                 // called at the beginning, whenever ewCart is run
                 // sets the global variables and initialises the current cart
-                moCartConfig = WebConfigurationManager.GetWebApplicationSection("protean/quote");
+                moCartConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/quote");
                 string sSql;
                 // Dim oDr As SqlDataReader
                 mcOrderType = "Quote";

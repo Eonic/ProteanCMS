@@ -2282,7 +2282,7 @@ namespace Protean
                                 string classPath = string.Empty;
                                 string methodName = string.Empty;
 
-                                Protean.ProviderSectionHandler moPrvConfig = WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders");
+                                Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders");
                                 var assemblyInstance = Assembly.Load(moPrvConfig.Providers[ProviderName].Type);
                                 calledType = assemblyInstance.GetType(classPath, true);
 

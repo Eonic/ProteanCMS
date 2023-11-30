@@ -5253,7 +5253,7 @@ namespace Protean
             public virtual Cms.xForm contactXform(string cAddressType, string cSubmitName, string cCmdType, string cCmdAction, bool bDontPopulate, long ContactId = 0L, string cmd2 = "")
             {
                 myWeb.PerfMon.Log("Cart", "contactXform");
-                var oXform = new Cms.xForm(ref myWeb.msException);
+                xForm oXform = new xForm(ref myWeb.msException);
                 XmlElement oGrpElmt;
                 DataSet oDs;
                 XmlElement oElmt;

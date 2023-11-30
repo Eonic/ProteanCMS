@@ -393,7 +393,7 @@ namespace Protean
         /// <item>False - if the file does not exist, or an error is encountered while loading the file.</item>
         /// </list></returns>
         /// <remarks></remarks>
-        public virtual bool load(string cXformPath, System.Collections.ArrayList commonfolders)
+        public virtual bool load(string cXformPath)
         {
 
             bool fileExists = false;

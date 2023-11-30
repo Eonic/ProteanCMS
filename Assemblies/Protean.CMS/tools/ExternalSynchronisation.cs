@@ -275,8 +275,7 @@ namespace Protean
                     foreach (XmlElement oRDBesElmt in oDBResults.DocumentElement)
                     {
                         bool bNew = true; // counter
-
-                        Protean.Cms.dbHelper.TableNames oTableNameEnum = Enum.Parse(typeof(Cms.dbHelper.TableNames), oRDBesElmt.Name);
+                        Protean.Cms.dbHelper.TableNames oTableNameEnum = (Cms.dbHelper.TableNames)System.Enum.Parse(typeof(Cms.dbHelper.TableNames), oRDBesElmt.Name);                        
                         string cKeyField = moDBH.TableKey(oTableNameEnum);
                         string cSQL = "SELECT " + cKeyField + " FROM " + oRDBesElmt.Name;
                         string cWhere = "";
