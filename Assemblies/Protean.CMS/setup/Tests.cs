@@ -48,7 +48,7 @@ namespace Protean
                 }
 
                 Protean.Cms.dbHelper argodbHelper = null;
-                emailerMsg = oMsg.emailer(bodyXml, emailXSL, "ProteanCMS Test", goConfig["SiteAdminEmail"], goConfig["SiteAdminEmail"], "This is a TEST", odbHelper: ref argodbHelper).ToString;
+                emailerMsg = oMsg.emailer(bodyXml, emailXSL, "ProteanCMS Test", goConfig["SiteAdminEmail"], goConfig["SiteAdminEmail"], "This is a TEST", odbHelper: ref argodbHelper).ToString();
 
                 if (!string.IsNullOrEmpty(emailerMsg))
                 {

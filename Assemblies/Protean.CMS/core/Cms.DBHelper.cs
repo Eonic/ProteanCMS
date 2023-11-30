@@ -10441,7 +10441,7 @@ namespace Protean
                         n = n + 1L;
                         XmlElement argoContent = (XmlElement)oNode;
                         oElmt2 = SimpleTidyContentNode(ref argoContent, ref dExpireDate, ref dUpdateDate, cAddSourceAttribute);
-                        oNode = argoContent;
+                        //oNode = argoContent;
 
                         sNodeName = oElmt2.GetAttribute("name");
                         int nNodeId = Conversions.ToInteger(oElmt2.GetAttribute("id"));
@@ -11049,7 +11049,7 @@ namespace Protean
                                 {
                                     DateTime argdExpireDate = default;
                                     XmlElement xmloContent = oContent;
-                                    oContent = SimpleTidyContentNode(ref xmloContent, ref argdExpireDate, ref dUpdateDate, "");
+                                    xmloContent = SimpleTidyContentNode(ref xmloContent, ref argdExpireDate, ref dUpdateDate, "");
                                 }
 
                                 // now lets take our xml's and do the magic
@@ -11460,8 +11460,8 @@ namespace Protean
                         XmlElement argoContent = (XmlElement)oNode;
                         DateTime argdExpireDate = DateTime.Parse("0001-01-01");
                         DateTime argdUpdateDate = DateTime.Parse("0001-01-01");
-                        oNode = SimpleTidyContentNode(ref argoContent, dExpireDate: ref argdExpireDate, dUpdateDate: ref argdUpdateDate);
-                        oNode = argoContent;
+                        argoContent = SimpleTidyContentNode(ref argoContent, dExpireDate: ref argdExpireDate, dUpdateDate: ref argdUpdateDate);
+                        //oNode = argoContent;
 
                     }
 
@@ -11511,10 +11511,10 @@ namespace Protean
                             DateTime argdExpireDate1 = DateTime.Parse("0001-01-01");
                             DateTime argdUpdateDate1 = DateTime.Parse("0001-01-01");
                             XmlElement xmloRelNode = oRelNode;
-                            oRelNode = SimpleTidyContentNode(ref xmloRelNode, dExpireDate: ref argdExpireDate1, dUpdateDate: ref argdUpdateDate1);
-                            string ParId = oRelNode.GetAttribute("parId");
+                            xmloRelNode = SimpleTidyContentNode(ref xmloRelNode, dExpireDate: ref argdExpireDate1, dUpdateDate: ref argdUpdateDate1);
+                            string ParId = xmloRelNode.GetAttribute("parId");
                             XmlElement ParNode = (XmlElement)oResults.SelectSingleNode("Content[@id='" + ParId + "']");
-                            ParNode.AppendChild(oRelNode);
+                            ParNode.AppendChild(xmloRelNode);
                         }
 
                     }

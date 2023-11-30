@@ -9106,7 +9106,7 @@ namespace Protean
 
                                     XmlElement argoContentElmt = (XmlElement)oNode;
                                     this.moDbHelper.addRelatedContent(ref argoContentElmt, this.mnArtId, this.mbAdminMode);
-                                    oNode = argoContentElmt;
+                                    //oNode = argoContentElmt;
                                     if (!string.IsNullOrEmpty(this.moConfig["ShowOwnerOnDetail"]))
                                     {
                                         string cContentType = oElmt.GetAttribute("type");
@@ -9364,7 +9364,7 @@ namespace Protean
 
                                 XmlElement argoContentElmt = (XmlElement)oNode;
                                 this.moDbHelper.addRelatedContent(ref argoContentElmt, this.mnArtId, this.mbAdminMode);
-                                oNode = argoContentElmt;
+                                //oNode = argoContentElmt;
 
                             }
 
