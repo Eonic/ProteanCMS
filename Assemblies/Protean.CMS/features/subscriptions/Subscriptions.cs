@@ -623,7 +623,8 @@ namespace Protean
                                 case "renewalreminder":
                                     {
                                         // Select the subscriptions that are caught up in this case
-                                        ListUpcomingRenewals(ref oReminder, (short)Conversions.ToInteger("0" + oReminder.GetAttribute("startRange")), oReminder.GetAttribute("period"), Conversions.ToShort(oReminder.GetAttribute("count")), oReminder.GetAttribute("name"));
+                                        XmlElement xmloReminder = oReminder;
+                                        ListUpcomingRenewals(ref xmloReminder, (short)Conversions.ToInteger("0" + xmloReminder.GetAttribute("startRange")), oReminder.GetAttribute("period"), Conversions.ToShort(oReminder.GetAttribute("count")), oReminder.GetAttribute("name"));
                                         foreach (XmlElement subxml in oReminder.SelectNodes("Subscribers"))
                                         {
                                             bool force = false;
@@ -660,7 +661,8 @@ namespace Protean
                                 case "renew":
                                     {
                                         // Select the subscriptions that are caught up in this case
-                                        ListRenewalDue(ref oReminder, (short)Conversions.ToInteger("0" + oReminder.GetAttribute("startRange")), oReminder.GetAttribute("period"), Conversions.ToShort(oReminder.GetAttribute("count")), oReminder.GetAttribute("name"));
+                                        XmlElement xmloReminder = oReminder;
+                                        ListRenewalDue(ref xmloReminder, (short)Conversions.ToInteger("0" + oReminder.GetAttribute("startRange")), oReminder.GetAttribute("period"), Conversions.ToShort(oReminder.GetAttribute("count")), oReminder.GetAttribute("name"));
                                         foreach (XmlElement subxml in oReminder.SelectNodes("Subscribers"))
                                         {
                                             bool force = false;
@@ -696,14 +698,14 @@ namespace Protean
                                 case "expired":
                                 case "expirewarning":
                                     {
-
+                                        XmlElement xmloReminder = oReminder;
                                         if (oReminder.GetAttribute("action") == "expire")
-                                        {
-                                            ListExpiredSubscriptions(ref oReminder, Conversions.ToShort(oReminder.GetAttribute("count")), "", 0, Conversions.ToString(true));
+                                        {                                           
+                                            ListExpiredSubscriptions(ref xmloReminder, Conversions.ToShort(oReminder.GetAttribute("count")), "", 0, Conversions.ToString(true));
                                         }
                                         else
                                         {
-                                            ListExpiredSubscriptions(ref oReminder, 0, oReminder.GetAttribute("period"), Conversions.ToShort(oReminder.GetAttribute("count")), oReminder.GetAttribute("subType"), oReminder.GetAttribute("name"));
+                                            ListExpiredSubscriptions(ref xmloReminder, 0, oReminder.GetAttribute("period"), Conversions.ToShort(oReminder.GetAttribute("count")), oReminder.GetAttribute("subType"), oReminder.GetAttribute("name"));
                                         }
                                         foreach (XmlElement subxml in oReminder.SelectNodes("Subscribers"))
                                         {

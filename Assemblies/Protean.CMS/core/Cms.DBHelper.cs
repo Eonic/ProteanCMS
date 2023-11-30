@@ -4133,9 +4133,10 @@ namespace Protean
 
                         // Tidy Up XMl Nodes
                         foreach (XmlElement oElmt in pendingList.SelectNodes("//*[local-name()='UserXml' or local-name()='ContentXml']"))
-
-
-                            SetInnerXmlThenInnerText(ref oElmt, oElmt.InnerText);
+                        {
+                            XmlElement xmloElmt = oElmt;
+                            SetInnerXmlThenInnerText(ref xmloElmt, oElmt.InnerText);
+                        }                           
 
                         // Tidy Up - Move all Locations and Relations into a Metadata Node
                         XmlElement oLocations = null;
@@ -6162,8 +6163,11 @@ namespace Protean
                         if (Strings.LCase(goConfig["DisableGrabberRelated"]) != "on")
                         {
                             foreach (XmlElement oContentElmt in oContent.SelectNodes("Content"))
-                             
-                                this.addRelatedContent(ref oContentElmt, Conversions.ToInteger(oContentElmt.GetAttribute("id")), myWeb.mbAdminMode);
+                            {
+                                XmlElement xmloContentElmt = oContentElmt;
+                                this.addRelatedContent(ref xmloContentElmt, Conversions.ToInteger(oContentElmt.GetAttribute("id")), myWeb.mbAdminMode);
+                            }                            
+                                
                         }
 
                     }
@@ -6212,9 +6216,10 @@ namespace Protean
                         int nCount = 0;
                         myWeb.GetPageContentFromSelect(cWhereSql, ref nCount, bIgnorePermissionsCheck: myWeb.mbAdminMode, nReturnRows: 0, cOrderBy: cOrderBy, oContentsNode: ref oContent, cAdditionalJoins: cAdditionalJoin, oPageDetail: ref argoPageDetail);
                         foreach (XmlElement oContentElmt in oContent.SelectNodes("Content"))
-                            this.addRelatedContent(ref oContentElmt, Conversions.ToInteger(oContentElmt.GetAttribute("id")), myWeb.mbAdminMode);
-
-
+                        {
+                            XmlElement xmloContentElmt = oContentElmt;
+                            this.addRelatedContent(ref xmloContentElmt, Conversions.ToInteger(oContentElmt.GetAttribute("id")), myWeb.mbAdminMode);
+                        }
                     }
                 }
 
@@ -11043,7 +11048,8 @@ namespace Protean
                                 foreach (XmlElement oContent in contents2.SelectNodes("Content"))
                                 {
                                     DateTime argdExpireDate = default;
-                                    oContent = SimpleTidyContentNode(ref oContent, ref argdExpireDate, ref dUpdateDate, "");
+                                    XmlElement xmloContent = oContent;
+                                    oContent = SimpleTidyContentNode(ref xmloContent, ref argdExpireDate, ref dUpdateDate, "");
                                 }
 
                                 // now lets take our xml's and do the magic
@@ -11504,7 +11510,8 @@ namespace Protean
                         {
                             DateTime argdExpireDate1 = DateTime.Parse("0001-01-01");
                             DateTime argdUpdateDate1 = DateTime.Parse("0001-01-01");
-                            oRelNode = SimpleTidyContentNode(ref oRelNode, dExpireDate: ref argdExpireDate1, dUpdateDate: ref argdUpdateDate1);
+                            XmlElement xmloRelNode = oRelNode;
+                            oRelNode = SimpleTidyContentNode(ref xmloRelNode, dExpireDate: ref argdExpireDate1, dUpdateDate: ref argdUpdateDate1);
                             string ParId = oRelNode.GetAttribute("parId");
                             XmlElement ParNode = (XmlElement)oResults.SelectSingleNode("Content[@id='" + ParId + "']");
                             ParNode.AppendChild(oRelNode);
@@ -14027,7 +14034,10 @@ namespace Protean
                         if (column.ColumnName.ToLower().Contains("xml"))
                         {
                             foreach (XmlElement dataItem in reportXml.SelectNodes("Report/Item/" + column.ColumnName))
-                                SetInnerXmlThenInnerText(ref dataItem, dataItem.InnerText);
+                            {
+                                XmlElement xmldataItem  = dataItem;
+                                SetInnerXmlThenInnerText(ref xmldataItem, dataItem.InnerText);
+                            }                                
                         }
 
                         // Add metadata and format data based on type.

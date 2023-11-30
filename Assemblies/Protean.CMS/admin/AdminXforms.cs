@@ -29,6 +29,7 @@ using static Protean.stdTools;
 using Protean.Tools;
 using static Protean.Tools.Text;
 using static Protean.Tools.Xml;
+using System.Web.UI.HtmlControls;
 
 namespace Protean
 {
@@ -11975,9 +11976,9 @@ namespace Protean
                                 // Iterate through each select
                                 foreach (XmlElement _selectItem in _selects)
                                 {
-
+                                    XmlElement xmlselectItem = _selectItem;
                                     // Get the rootid - look for class root-id
-                                    selectItem = new xFormContentLocationsSelect(ref _selectItem);
+                                    selectItem = new xFormContentLocationsSelect(ref xmlselectItem);
 
                                     // Get the menuItems - construct an xpath
                                     // The rootmode is the path modifier
@@ -12058,8 +12059,8 @@ namespace Protean
                                             // Determine the name - NodeState effectively sets menuName as
                                             // the DisplayName node if it's populated, if not is sets it to be the
                                             // name attribute.
-
-                                            if (Xml.NodeState(ref menuItem, "DisplayName", "", "", 1, null, "", menuName, true) != XmlNodeState.HasContents)
+                                            XmlElement xmlmenuItem = menuItem;
+                                            if (Xml.NodeState(ref xmlmenuItem, "DisplayName", "", "", 1, null, "", menuName, true) != XmlNodeState.HasContents)
                                             {
                                                 menuName = menuItem.GetAttribute("name");
                                             }
@@ -12079,13 +12080,14 @@ namespace Protean
                                             {
                                                 if ((oParentParentNode.GetAttribute("id") ?? "") == (selectItem.Root.ToString() ?? "") & Strings.LCase(_selectItem.GetAttribute("showAllLevels")) != "true")
                                                 {
+                                                    XmlElement xmlselect = _selectItem;
                                                     if (proceedingParent is null)
                                                     {
-                                                        oChoices = _form.addChoices(ref _selectItem, oParentNode.GetAttribute("name"));
+                                                        oChoices = _form.addChoices(ref xmlselect, oParentNode.GetAttribute("name"));
                                                     }
                                                     else if ((proceedingParent.GetAttribute("id") ?? "") != (oParentNode.GetAttribute("id") ?? ""))
                                                     {
-                                                        oChoices = _form.addChoices(ref _selectItem, oParentNode.GetAttribute("name"));
+                                                        oChoices = _form.addChoices(ref xmlselect, oParentNode.GetAttribute("name"));
 
                                                     }
                                                     // Add the checkbox
@@ -12104,7 +12106,7 @@ namespace Protean
                                                     // End If
                                                 }
                                                 // Add the checkbox
-                                                _form.addOption(ref _selectItem, menuName, menuId.ToString());
+                                                _form.addOption(ref xmlselectItem, menuName, menuId.ToString());
                                             }
                                             else
                                             {
@@ -12119,7 +12121,7 @@ namespace Protean
                                                 }
 
                                                 // Add the checkbox
-                                                _form.addOption(ref _selectItem, menuName, menuId.ToString());
+                                                _form.addOption(ref xmlselectItem, menuName, menuId.ToString());
                                             }
                                             proceedingParent = oParentNode;
                                         }

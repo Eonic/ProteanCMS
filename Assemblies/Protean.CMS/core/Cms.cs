@@ -7572,8 +7572,8 @@ namespace Protean
 
                         oChild.RemoveAttribute("accessSource");
                         oChild.RemoveAttribute("accessSourceId");
-
-                        TidyMenunode(ref oChild, cCurrentPerm, cCurrentPermSource, bPruneDenied, nUserId, cMenuItemNodeName, cRootNodeName);
+                        XmlElement xmloChild = oChild;
+                        TidyMenunode(ref xmloChild, cCurrentPerm, cCurrentPermSource, bPruneDenied, nUserId, cMenuItemNodeName, cRootNodeName);
                     }
                 }
             }

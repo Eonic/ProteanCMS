@@ -91,8 +91,8 @@ namespace Protean
                         bool bSDateAsToday = Conversions.ToBoolean(Interaction.IIf(oCalContent.SelectSingleNode("DisplaySettings/StartDateAsToday").InnerText == "true", true, false));
                         string cSDateinMonths = oCalContent.SelectSingleNode("DisplaySettings/StartDateInMonths").InnerText;
                         string sContentTypes = oCalContent.SelectSingleNode("ContentTypes").InnerText;
-
-                        add(ref oCalContent, cGetMonth, bSDateAsToday, cSDateinMonths, sContentTypes);
+                        XmlElement xmloCalContent = oCalContent;
+                        add(ref xmloCalContent, cGetMonth, bSDateAsToday, cSDateinMonths, sContentTypes);
 
                     }
                 }
