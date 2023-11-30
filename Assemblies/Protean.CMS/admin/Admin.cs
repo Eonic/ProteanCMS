@@ -2532,7 +2532,7 @@ namespace Protean
                                 myWeb = (Cms)argmyWeb3;
                                 // oPageDetail.AppendChild(oMembershipProv.AdminXforms.xFrmUserLogon("AdminLogon"))
                                 XmlElement xmlName = null;
-                                oPageDetail.AppendChild((XmlNode)oMembershipProv.AdminXforms.xFrmEditDirectoryItem(ref xmlName, Convert.ToInt64(myWeb.moRequest["id"]), myWeb.moRequest["dirType"], Convert.ToString("0" + myWeb.moRequest["parId"])));
+                                oPageDetail.AppendChild((XmlNode)oMembershipProv.AdminXforms.xFrmEditDirectoryItem(ref xmlName, Convert.ToInt64(myWeb.moRequest["id"]), myWeb.moRequest["dirType"], Convert.ToInt64("0" + myWeb.moRequest["parId"])));
                                 if (Conversions.ToBoolean(oMembershipProv.AdminXforms.valid))
                                 {
                                     oPageDetail.RemoveAll();

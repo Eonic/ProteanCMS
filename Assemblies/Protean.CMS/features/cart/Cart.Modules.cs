@@ -191,7 +191,7 @@ namespace Protean
                             // Edit Voucher Code here....
                             Admin.AdminXforms moAdXfm = myWeb.getAdminXform();
 
-                            moAdXfm.xFrmVoucherCode(myWeb.moRequest["VoucherId"]);
+                            moAdXfm.xFrmVoucherCode(Convert.ToInt32(myWeb.moRequest["VoucherId"]));
 
                             if (!moAdXfm.valid)
                             {

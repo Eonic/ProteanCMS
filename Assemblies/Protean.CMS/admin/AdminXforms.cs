@@ -12060,7 +12060,7 @@ namespace Protean
                                             // the DisplayName node if it's populated, if not is sets it to be the
                                             // name attribute.
                                             XmlElement xmlmenuItem = menuItem;
-                                            if (Xml.NodeState(ref xmlmenuItem, "DisplayName", "", "", 1, null, "", menuName, true) != XmlNodeState.HasContents)
+                                            if (Xml.NodeState(ref xmlmenuItem, "DisplayName", "", "", XmlNodeState.IsEmpty, null, "", menuName, true) != XmlNodeState.HasContents)
                                             {
                                                 menuName = menuItem.GetAttribute("name");
                                             }

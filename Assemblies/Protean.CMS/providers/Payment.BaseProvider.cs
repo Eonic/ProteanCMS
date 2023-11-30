@@ -238,12 +238,19 @@ namespace Protean.Providers
                         }
 
                         // Build the billing address string
-                        object localgetNodeValueByType() { XmlNode argoParent = oOrder; var ret = getNodeValueByType(ref argoParent, "Contact[@type='Billing Address']/Street"); oOrder = (XmlElement)argoParent; return ret; }
-                        object localgetNodeValueByType1() { XmlNode argoParent1 = oOrder; var ret = getNodeValueByType(ref argoParent1, "Contact[@type='Billing Address']/City"); oOrder = (XmlElement)argoParent1; return ret; }
-                        object localgetNodeValueByType2() { XmlNode argoParent2 = oOrder; var ret = getNodeValueByType(ref argoParent2, "Contact[@type='Billing Address']/State"); oOrder = (XmlElement)argoParent2; return ret; }
-                        object localgetNodeValueByType3() { XmlNode argoParent3 = oOrder; var ret = getNodeValueByType(ref argoParent3, "Contact[@type='Billing Address']/Country"); oOrder = (XmlElement)argoParent3; return ret; }
+                        //object localgetNodeValueByType() { XmlNode argoParent = oOrder; var ret = getNodeValueByType(ref argoParent, "Contact[@type='Billing Address']/Street"); oOrder = (XmlElement)argoParent; return ret; }
+                        //object localgetNodeValueByType1() { XmlNode argoParent1 = oOrder; var ret = getNodeValueByType(ref argoParent1, "Contact[@type='Billing Address']/City"); oOrder = (XmlElement)argoParent1; return ret; }
+                        //object localgetNodeValueByType2() { XmlNode argoParent2 = oOrder; var ret = getNodeValueByType(ref argoParent2, "Contact[@type='Billing Address']/State"); oOrder = (XmlElement)argoParent2; return ret; }
+                        //object localgetNodeValueByType3() { XmlNode argoParent3 = oOrder; var ret = getNodeValueByType(ref argoParent3, "Contact[@type='Billing Address']/Country"); oOrder = (XmlElement)argoParent3; return ret; }
 
-                        cBillingAddress = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(localgetNodeValueByType(), Constants.vbLf), localgetNodeValueByType1()), Constants.vbLf), localgetNodeValueByType2()), Constants.vbLf), localgetNodeValueByType3()), Constants.vbLf));
+                        //cBillingAddress = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(localgetNodeValueByType(), Constants.vbLf), localgetNodeValueByType1()), Constants.vbLf), localgetNodeValueByType2()), Constants.vbLf), localgetNodeValueByType3()), Constants.vbLf));
+
+                        //Build the billing address string
+                        XmlNode xmloOrder = oOrder;
+                        cBillingAddress = getNodeValueByType(ref xmloOrder, "Contact[@type='Billing Address']/Street") + Constants.vbLf +
+                            getNodeValueByType(ref xmloOrder, "Contact[@type='Billing Address']/City") + Constants.vbLf +
+                            getNodeValueByType(ref xmloOrder, "Contact[@type='Billing Address']/State") + Constants.vbLf +
+                            getNodeValueByType(ref xmloOrder, "Contact[@type='Billing Address']/Country") + Constants.vbLf;
 
                         oEwProv.mcCardHolderAddress = cBillingAddress;
                         oEwProv.moBillingContact = (XmlElement)oOrder.SelectSingleNode("Contact[@type='Billing Address']");

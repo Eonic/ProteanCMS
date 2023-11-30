@@ -1430,7 +1430,7 @@ namespace Protean.Providers
                         // - have we got an xpath
                         // - has a code been entered?
                         XmlElement xmlXformInstance = base.Instance;
-                        if (gbMemberCodes && !string.IsNullOrEmpty(cXPathToCode) && Xml.NodeState(ref xmlXformInstance, cXPathToCode, "", "", 1, null, "", cCode, bCheckTrimmedInnerText: false) == XmlNodeState.HasContents)
+                        if (gbMemberCodes && !string.IsNullOrEmpty(cXPathToCode) && Xml.NodeState(ref xmlXformInstance, cXPathToCode, "", "", XmlNodeState.IsEmpty, null, "", cCode, bCheckTrimmedInnerText: false) == XmlNodeState.HasContents)
 
 
                         {

@@ -1098,7 +1098,8 @@ namespace Protean
                         {
                             myWeb.mbAdminMode = true;
                             XmlElement argoPageDetail = null;
-                            myWeb.GetPageContentFromSelect(WhereSql, false, cOrderBy: "", oContentsNode: ref oContentNode, distinct: true, oPageDetail: ref argoPageDetail);
+                            int ncount = 0;
+                            myWeb.GetPageContentFromSelect(WhereSql,ref ncount, oContentsNode: ref oContentNode, oPageDetail: ref argoPageDetail,false, cOrderBy: "", distinct: true);
                             myWeb.mbAdminMode = false;
                         }
                     }
