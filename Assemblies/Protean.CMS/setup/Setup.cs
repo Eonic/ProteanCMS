@@ -3611,9 +3611,9 @@ namespace Protean
                 if (value == "Content" | value == "Directory" | value == "ContentStructure")
                 {
                     cUpdateType = value;
-                    nUpdateTableType = Enum.Parse(typeof(Cms.dbHelper.objectTypes), value);
+                    nUpdateTableType =(Cms.dbHelper.objectTypes)Enum.Parse(typeof(Cms.dbHelper.objectTypes), value);
                     cUpdateTableName = myWeb.moDbHelper.getTable(nUpdateTableType);
-                    cUpdateKeyColumnName = myWeb.moDbHelper.getKey(nUpdateTableType);
+                    cUpdateKeyColumnName = myWeb.moDbHelper.getKey((int)nUpdateTableType);
 
                     // Type specific settings
                     switch (value ?? "")

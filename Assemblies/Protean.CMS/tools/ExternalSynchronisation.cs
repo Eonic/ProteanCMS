@@ -367,7 +367,7 @@ namespace Protean
 
                                 default:
                                     {
-                                        oInstance.InnerXml = moDBH.getObjectInstance(oTableNameEnum, nId);
+                                        oInstance.InnerXml = moDBH.getObjectInstance((Cms.dbHelper.objectTypes)oTableNameEnum, nId);
                                         break;
                                     }
                             }
@@ -375,7 +375,7 @@ namespace Protean
                         else
                         {
                             bNew = false;
-                            oInstance.InnerXml = moDBH.getObjectInstance(oTableNameEnum, nId);
+                            oInstance.InnerXml = moDBH.getObjectInstance((Cms.dbHelper.objectTypes)oTableNameEnum, nId);
                             if (string.IsNullOrEmpty(oInstance.InnerXml))
                             {
                                 cInfo = nId + "returned no instance data";
@@ -433,7 +433,7 @@ namespace Protean
 
                         else
                         {
-                            nReturnId = moDBH.setObjectInstance(oTableNameEnum, oFinalInstance.DocumentElement, nId);
+                            nReturnId =Convert.ToInt32(moDBH.setObjectInstance((Cms.dbHelper.objectTypes)oTableNameEnum, oFinalInstance.DocumentElement, nId));
                         }
 
 
@@ -443,7 +443,7 @@ namespace Protean
                         // lets add some instances in case they are needed
                         oFinishElmt.AppendChild(oFinalInstance.ImportNode(oForeignItem, true));
                         var oNewInstance = oFinalInstance.CreateElement("NewInstance");
-                        oNewInstance.InnerXml = myWeb.moDbHelper.getObjectInstance(oTableNameEnum, nReturnId);
+                        oNewInstance.InnerXml = myWeb.moDbHelper.getObjectInstance((Cms.dbHelper.objectTypes)oTableNameEnum, nReturnId);
                         oFinishElmt.AppendChild(oNewInstance);
 
 
@@ -1451,7 +1451,7 @@ namespace Protean
                 {
                     string cTableName = myWeb.moDbHelper.getTable(objecttype);
                     string cRefField = myWeb.moDbHelper.getFRef(objecttype);
-                    string cWhereField = myWeb.moDbHelper.TableKey(objecttype);
+                    string cWhereField = myWeb.moDbHelper.TableKey((Cms.dbHelper.TableNames)objecttype);
                     string cSQL = "UPDATE " + cTableName + " SET " + cRefField + " = '" + value + "' WHERE " + cWhereField + " = " + id;
                     myWeb.moDbHelper.ExeProcessSql(cSQL);
                     return value;
