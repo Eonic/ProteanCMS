@@ -7128,7 +7128,7 @@ from tblContentIndexDef";
                 string SchemaNameForUpdate;
                 string sSql;
                 string IpAddress;
-                var objServ = new Protean.Services();
+                var objServ = new Services();
 
                 int mnUserId = myWeb.mnUserId;
                 var moSession = myWeb.moSession;
