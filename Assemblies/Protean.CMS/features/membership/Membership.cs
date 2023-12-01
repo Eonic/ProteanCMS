@@ -496,7 +496,7 @@ namespace Protean
                     Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)castObject;
                     foreach (var ourProvider in moPrvConfig.Providers)
                     {
-                        if (ourProvider.parameters(actionName) != null)
+                        if (ourProvider.Parameters[actionName] != null)
                         {
                             Type calledType;
                             Assembly assemblyInstance;

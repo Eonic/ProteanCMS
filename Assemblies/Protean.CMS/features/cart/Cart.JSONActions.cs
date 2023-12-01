@@ -523,7 +523,7 @@ namespace Protean
                     {
 
                         string JsonResult = "";
-                        object oDdoc = new XmlDocument();
+                        XmlDocument oDdoc = new XmlDocument();
                         int contactId = (int)jObj["contactId"];
                         string cAddressType = (string)jObj["addressType"];
 

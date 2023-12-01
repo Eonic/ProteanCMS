@@ -3362,7 +3362,8 @@ namespace Protean
                                             int argnReturnId = (int)nContentId;
                                             var tmp = this.moRequest;
                                             string argAlternateFormName = tmp["formName"];
-                                            xFrmContent = moAdXfm.xFrmEditContent(nContentId, this.moRequest["type"], nPageId, this.moRequest["name"],false, nReturnId: ref argnReturnId, AlternateFormName: ref argAlternateFormName, nVersionId: Conversions.ToLong("0" + this.moRequest["verId"]));
+                                            string zcReturnSchema = null;
+                                            xFrmContent = moAdXfm.xFrmEditContent(nContentId, this.moRequest["type"], nPageId, this.moRequest["name"],false, nReturnId: ref argnReturnId,ref zcReturnSchema, AlternateFormName: ref argAlternateFormName, nVersionId: Conversions.ToLong("0" + this.moRequest["verId"]));
                                             nContentId = argnReturnId;
                                             if (moAdXfm.valid)
                                             {
@@ -9723,7 +9724,7 @@ namespace Protean
                             if (allowAccess)
                             {
 
-                                if ((oDS.Tables["Item"]?.Rows?.Count) is { } arg1 && arg1 > 0)
+                                if (oDS.Tables["Item"]?.Rows?.Count > 0)
                                 {
                                     strFilePath = this.moDbHelper.getContentFilePath(oDS.Tables["Item"].Rows[0], this.moRequest["xPath"]);
                                 }
