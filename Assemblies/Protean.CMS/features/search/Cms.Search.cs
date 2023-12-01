@@ -1212,19 +1212,12 @@ namespace Protean
 
                                             if (Array.IndexOf(reservedFieldNames, docField.Name) == -1)
                                             {
-
-                                                // check whether logged in user is csuser and skip checking status
-                                                if (myWeb.moDbHelper is null)
-                                                {
-                                                    myWeb.moDbHelper = myWeb.GetDbHelper();
-                                                }
+                                                // check whether logged in user is csuser and skip checking status                                               
                                                 result.SetAttribute(docField.Name, docField.StringValue); // search all the products
-
                                             }
 
                                             if (docField.Name == "abstract")
                                             {
-
                                                 // Try to output this as Xml
                                                 string innerString = docField.StringValue + "";
                                                 processInfo = innerString;
@@ -1302,7 +1295,7 @@ namespace Protean
                         ofrm.updateInstanceFromRequest();
                         if (ofrm.Instance is null)
                             ofrmElmt = ofrm.Instance;
-                        sXpath = Protean.xmlTools.getXpathFromQueryXml(ofrm.Instance);
+                        sXpath = xForm.getXpathFromQueryXml(ofrm.Instance);
                         ofrm.addValues();
                     }
 

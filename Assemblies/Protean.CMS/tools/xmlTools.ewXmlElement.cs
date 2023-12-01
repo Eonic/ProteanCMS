@@ -3,8 +3,8 @@ using System.Xml;
 
 namespace Protean
 {
-    //public static partial class xmlTools
-    //{
+    public static partial class xmlTools
+    {
         public class ewXmlElement
         {
 
@@ -79,5 +79,5 @@ namespace Protean
 
         }
 
-   // }
+    }
 }
