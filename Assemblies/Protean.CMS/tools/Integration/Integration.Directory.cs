@@ -482,7 +482,7 @@ namespace Protean.Integration.Directory
                                         pageElement.AppendChild(contentsElement);
                                         if (!string.IsNullOrEmpty(Cms.gcEwBaseUrl))
                                             pageElement.SetAttribute("baseUrl", Cms.gcEwBaseUrl);
-                                        myWeb.GetRequestVariablesXml(pageElement);
+                                        myWeb.GetRequestVariablesXml(ref pageElement);
 
                                         contentsElement.AppendChild(postableContentDocument.ImportNode(content, true));
 
@@ -627,7 +627,7 @@ namespace Protean.Integration.Directory
                         if (Array.IndexOf(ContentCheckboxContentTypes.Trim().ToLower().Split(','), contentSchema.ToLower()) > 0 || string.IsNullOrEmpty(ContentCheckboxContentTypes.Trim()) & userXml.SelectNodes("//Credentials[Permissions/Permission[@contentType='" + contentSchema + "']]").Count > 0)
                         {
 
-                            XmlElement providersSelect = form.addSelect(group, "postToIntegrations", false, "", "checkboxes", Protean.xForm.ApperanceTypes.Full);
+                            XmlElement providersSelect = form.addSelect(ref group, "postToIntegrations", false, "", "checkboxes", Protean.xForm.ApperanceTypes.Full);
                             addElement(ref providersSelect, "value", postingProviders);
                             foreach (XmlElement provider in userXml.SelectNodes("//Credentials"))
 

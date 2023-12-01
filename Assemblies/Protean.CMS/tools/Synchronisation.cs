@@ -73,7 +73,7 @@ namespace Protean
 
 
 
-                        if (!EnumUtility.TryParse(typeof(fsHelper.LibraryType), moduleContentBrief.GetAttribute("syncLibraryType"), true, ref fileType))
+                        if (!EnumUtility.TryParse(typeof(fsHelper.LibraryType), moduleContentBrief.GetAttribute("syncLibraryType"), true))
                         {
                             fileType = fsHelper.LibraryType.Image;
                         }

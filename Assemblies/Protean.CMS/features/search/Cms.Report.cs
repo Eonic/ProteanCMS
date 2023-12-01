@@ -68,10 +68,10 @@ namespace Protean
                         moReport = currentMoReport;
 
                         oElmt = (XmlElement)moReport.SelectSingleNode("OnArticle[node()='DisableReport']");
-                        if (oElmt is not null)
+                        if (oElmt != null)
                             bOnArticleDisableReport = true;
 
-                        if (!(myWeb.moRequest("artid") != "" & bOnArticleDisableReport))
+                        if (!(myWeb.moRequest["artid"] != "" & bOnArticleDisableReport))
                         {
                             // Run Reports
 
@@ -130,7 +130,7 @@ namespace Protean
 
                     // Get the Stored Procedure name
                     oElmt = (XmlElement)moReport.SelectSingleNode("Parameters/Parameter[@name='sp' and node()!='']");
-                    if (oElmt is not null)
+                    if (oElmt != null)
                     {
                         cStoredProcedure = oElmt.InnerText;
 
@@ -229,7 +229,7 @@ namespace Protean
                         oElmt.SetAttribute("name", "sortCol");
 
                         oElmt = (XmlElement)moPageXml.SelectSingleNode("/Page/Request/QueryString/Item[@name='sortDir']");
-                        if (oElmt is not null)
+                        if (oElmt != null)
                         {
                             oElmt.InnerText = SortDirectionVal[(int)nSortDirection];
                         }

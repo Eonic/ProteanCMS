@@ -796,7 +796,7 @@ namespace Protean
                         case "InstallTheme":
                             {
 
-                                var SoapObj = new Protean.proteancms.com.ewAdminProxySoapClient();
+                                var SoapObj = new Protean.CMS.com.ewAdminProxySoapClient();
                                 var themesPage = SoapObj.GetThemes(Environment.MachineName, myWeb.moRequest.ServerVariables["SERVER_NAME"]);
                                 var ContextThemesPage = moPageXML.CreateElement("Themes");
                                 var xreader = themesPage.CreateReader();
@@ -2531,8 +2531,8 @@ namespace Protean
                                 var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb3, myWeb.moConfig["MembershipProvider"]);
                                 myWeb = (Cms)argmyWeb3;
                                 // oPageDetail.AppendChild(oMembershipProv.AdminXforms.xFrmUserLogon("AdminLogon"))
-
-                                oPageDetail.AppendChild((XmlNode)oMembershipProv.AdminXforms.xFrmEditDirectoryItem(myWeb.moRequest["id"], myWeb.moRequest["dirType"], (object)Conversions.ToLong("0" + myWeb.moRequest["parId"])));
+                                XmlElement xmlName = null;
+                                oPageDetail.AppendChild((XmlNode)oMembershipProv.AdminXforms.xFrmEditDirectoryItem(ref xmlName, Convert.ToInt64(myWeb.moRequest["id"]), myWeb.moRequest["dirType"], Convert.ToInt64("0" + myWeb.moRequest["parId"])));
                                 if (Conversions.ToBoolean(oMembershipProv.AdminXforms.valid))
                                 {
                                     oPageDetail.RemoveAll();
@@ -2635,7 +2635,7 @@ namespace Protean
                                 var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb4, myWeb.moConfig["MembershipProvider"]);
                                 myWeb = (Cms)argmyWeb4;
 
-                                oPageDetail.AppendChild((XmlNode)oMembershipProv.AdminXforms.xFrmResetAccount(myWeb.moRequest["id"]));
+                                oPageDetail.AppendChild((XmlNode)oMembershipProv.AdminXforms.xFrmResetAccount(Convert.ToInt64(myWeb.moRequest["id"])));
 
                                 if (moAdXfm.valid)
                                 {
@@ -2660,7 +2660,7 @@ namespace Protean
                                 var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb5, myWeb.moConfig["MembershipProvider"]);
                                 myWeb = (Cms)argmyWeb5;
 
-                                oPageDetail.AppendChild((XmlNode)oMembershipProv.AdminXforms.xFrmResetPassword(myWeb.moRequest["id"]));
+                                oPageDetail.AppendChild((XmlNode)oMembershipProv.AdminXforms.xFrmResetPassword(Convert.ToInt64(myWeb.moRequest["id"])));
 
                                 if (moAdXfm.valid)
                                 {
@@ -7128,7 +7128,7 @@ from tblContentIndexDef";
                 string SchemaNameForUpdate;
                 string sSql;
                 string IpAddress;
-                var objServ = new Protean.Services();
+                var objServ = new Services();
 
                 int mnUserId = myWeb.mnUserId;
                 var moSession = myWeb.moSession;

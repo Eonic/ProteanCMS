@@ -4164,8 +4164,8 @@ namespace Protean
         {
             Protean.XmlHelper.Transform oTransform = new Protean.XmlHelper.Transform();
 
-            System.Xml.XmlWriter sWriter = new System.Xml.XmlWriter.Create();
-
+            System.IO.TextWriter sWriter = new System.IO.StringWriter();
+            XmlWriter sWritertest = XmlWriter.Create(sWriter);
             if (sXsltPath != "")
             {
                 oTransform.Compiled = false;
@@ -4173,7 +4173,7 @@ namespace Protean
                 XmlDocument oXML = new XmlDocument();
                 oXML.InnerXml = oInstance.OuterXml;
                 XmlReader oXMLReader = new XmlNodeReader(oXML);
-                oTransform.Process(oXMLReader, sWriter);
+                oTransform.Process(oXMLReader, sWritertest);
                 // Run transformation
 
 

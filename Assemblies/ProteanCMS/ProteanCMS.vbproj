@@ -72,7 +72,7 @@
     </NuGetPackageImportStamp>
     <ShouldCreateLogs>False</ShouldCreateLogs>
     <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
-    <AssemblyVersion>6.0.69.223</AssemblyVersion>
+    <AssemblyVersion>6.0.69.224</AssemblyVersion>
     <UpdatePackageVersion>False</UpdatePackageVersion>
     <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
     <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
@@ -443,7 +443,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.vb" />
-    <Compile Include="Providers\Messaging.BaseProvider.vb" />
     <Compile Include="Service References\PayPalAPI\Reference.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -459,7 +458,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="Tools\IndexerAsync.vb" />
     <Compile Include="Web References\com.pclpls.www\Reference.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

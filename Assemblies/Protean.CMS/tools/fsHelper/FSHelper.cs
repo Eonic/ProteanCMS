@@ -1327,13 +1327,13 @@ namespace Protean
         private void UploadFile(HttpContext context)
         {
             object statuses = new List<FilesStatus>();
-            object headers = context.Request.Headers;
+            System.Collections.Specialized.NameValueCollection headers = context.Request.Headers;
             string isOverwrite = context.Request["isOverwrite"];
             string cOldFile = context.Request["oldfile"];
 
             for (int i = 0, loopTo = context.Request.Files.Count - 1; i <= loopTo; i++)
             {
-                object file = context.Request.Files[i];
+                System.Web.HttpPostedFile file = context.Request.Files[i];
                 string cfileName = CleanfileName(Conversions.ToString(file.FileName));
                 string scleanFileName = cfileName;
                 string isExists = "true";
@@ -1363,13 +1363,13 @@ namespace Protean
                             File.Delete(cOldFullFileName);
                         }
                     }
-                    if (string.IsNullOrEmpty(Conversions.ToString(headers("X-File-Name"))))
+                    if (string.IsNullOrEmpty(Convert.ToString(headers["X-File-Name"])))
                     {
                         UploadWholeFile(context, (List<FilesStatus>)statuses);
                     }
                     else
                     {
-                        UploadPartialFile(Conversions.ToString(headers("X-File-Name")), context, (List<FilesStatus>)statuses);
+                        UploadPartialFile(Conversions.ToString(headers["X-File-Name"]), context, (List<FilesStatus>)statuses);
                     }
 
                     WriteJsonIframeSafe(context, (List<FilesStatus>)statuses);
@@ -1484,7 +1484,7 @@ namespace Protean
         {
             for (int i = 0, loopTo = context.Request.Files.Count - 1; i <= loopTo; i++)
             {
-                object file = context.Request.Files[i];
+                System.Web.HttpPostedFile file = context.Request.Files[i];
 
                 try
                 {
@@ -1497,8 +1497,8 @@ namespace Protean
                     if (Strings.LCase(mcStartFolder + cfileName).EndsWith(".jpg") | Strings.LCase(mcStartFolder + cfileName).EndsWith(".jpeg") | Strings.LCase(mcStartFolder + cfileName).EndsWith(".png"))
                     {
                         var eImg = new Tools.Image(mcStartFolder + cfileName);
-                        var moWebCfg = WebConfigurationManager.GetWebApplicationSection("protean/web");
-                        eImg.UploadProcessing(Conversions.ToString(moWebCfg("WatermarkText")), Conversions.ToString(Operators.ConcatenateObject(mcRoot, moWebCfg("WatermarkImage"))));
+                        System.Collections.Specialized.NameValueCollection moWebCfg = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+                        eImg.UploadProcessing(Conversions.ToString(moWebCfg["WatermarkText"]), Conversions.ToString(Operators.ConcatenateObject(mcRoot, moWebCfg["WatermarkImage"])));
                     }
 
                     string fullName = Path.GetFileName(Conversions.ToString(file.FileName)).Replace("'", "");

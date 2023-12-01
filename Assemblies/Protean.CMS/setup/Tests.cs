@@ -48,7 +48,7 @@ namespace Protean
                 }
 
                 Protean.Cms.dbHelper argodbHelper = null;
-                emailerMsg = oMsg.emailer(bodyXml, emailXSL, "ProteanCMS Test", goConfig["SiteAdminEmail"], goConfig["SiteAdminEmail"], "This is a TEST", odbHelper: ref argodbHelper).ToString;
+                emailerMsg = oMsg.emailer(bodyXml, emailXSL, "ProteanCMS Test", goConfig["SiteAdminEmail"], goConfig["SiteAdminEmail"], "This is a TEST", odbHelper: ref argodbHelper).ToString();
 
                 if (!string.IsNullOrEmpty(emailerMsg))
                 {
@@ -72,15 +72,15 @@ namespace Protean
             {
                 string htmltotest = "<h1>Test Write</h1>";
 
-                var oEw = new Cms();
+                Cms oEw = new Cms();
                 oEw.InitializeVariables();
                 string filepath = "/ewCache/";
                 string filename = "FS-TEST.html";
                 Tools.Security.Impersonate oImp = null;
-                if (oEw.moConfig("AdminAcct") != "")
+                if (oEw.moConfig["AdminAcct"] != "")
                 {
                     oImp = new Tools.Security.Impersonate();
-                    if (oImp.ImpersonateValidUser(oEw.moConfig("AdminAcct"), oEw.moConfig("AdminDomain"), oEw.moConfig("AdminPassword"), cInGroup: oEw.moConfig("AdminGroup")))
+                    if (oImp.ImpersonateValidUser(oEw.moConfig["AdminAcct"], oEw.moConfig["AdminDomain"], oEw.moConfig["AdminPassword"], cInGroup: oEw.moConfig["AdminGroup"]))
                     {
                     }
                     else
@@ -89,11 +89,11 @@ namespace Protean
                     }
                 }
 
-                oEw.moFSHelper.SaveFile(filename, oEw.goServer.MapPath("/" + oEw.gcProjectPath) + filepath, System.Text.Encoding.Unicode.GetBytes(htmltotest));
+                oEw.moFSHelper.SaveFile(ref filename, oEw.goServer.MapPath("/" + Cms.gcProjectPath) + filepath, System.Text.Encoding.Unicode.GetBytes(htmltotest));
 
                 return "File Written Using SaveFile :" + filepath + filename;
 
-                if (oEw.moConfig("AdminAcct") != "")
+                if (oEw.moConfig["AdminAcct"] != "")
                 {
                     oImp.UndoImpersonation();
                     oImp = null;
@@ -116,10 +116,10 @@ namespace Protean
                 string filepath = @"\ewCache\";
                 string filename = "FS-TEST.html";
                 Tools.Security.Impersonate oImp = null;
-                if (oEw.moConfig("AdminAcct") != "")
+                if (oEw.moConfig["AdminAcct"] != "")
                 {
                     oImp = new Tools.Security.Impersonate();
-                    if (oImp.ImpersonateValidUser(oEw.moConfig("AdminAcct"), oEw.moConfig("AdminDomain"), oEw.moConfig("AdminPassword"), cInGroup: oEw.moConfig("AdminGroup")))
+                    if (oImp.ImpersonateValidUser(oEw.moConfig["AdminAcct"], oEw.moConfig["AdminDomain"], oEw.moConfig["AdminPassword"], cInGroup: oEw.moConfig["AdminGroup"]))
                     {
                     }
                     else
@@ -129,11 +129,11 @@ namespace Protean
                 }
                 string response;
 
-                response = oEw.moFSHelper.DeleteFile(oEw.goServer.MapPath("/" + oEw.gcProjectPath) + filepath, filename);
+                response = oEw.moFSHelper.DeleteFile(oEw.goServer.MapPath("/" + Cms.gcProjectPath) + filepath, filename);
 
-                oEw.moFSHelper.DeleteFile(oEw.goServer.MapPath("/" + oEw.gcProjectPath) + filepath, "FS-Alpha-TEST.html");
+                oEw.moFSHelper.DeleteFile(oEw.goServer.MapPath("/" + Cms.gcProjectPath) + filepath, "FS-Alpha-TEST.html");
 
-                if (oEw.moConfig("AdminAcct") != "")
+                if (oEw.moConfig["AdminAcct"] != "")
                 {
                     oImp.UndoImpersonation();
                     oImp = null;
@@ -164,10 +164,10 @@ namespace Protean
                 oEw.InitializeVariables();
 
                 Tools.Security.Impersonate oImp = null;
-                if (oEw.moConfig("AdminAcct") != "")
+                if (oEw.moConfig["AdminAcct"] != "")
                 {
                     oImp = new Tools.Security.Impersonate();
-                    if (oImp.ImpersonateValidUser(oEw.moConfig("AdminAcct"), oEw.moConfig("AdminDomain"), oEw.moConfig("AdminPassword"), cInGroup: oEw.moConfig("AdminGroup")))
+                    if (oImp.ImpersonateValidUser(oEw.moConfig["AdminAcct"], oEw.moConfig["AdminDomain"], oEw.moConfig["AdminPassword"], cInGroup: oEw.moConfig["AdminGroup"]))
                     {
                         return "Impersonation Success";
                     }
@@ -181,7 +181,7 @@ namespace Protean
                     return "Impersonation Disabled";
                 }
 
-                if (oEw.moConfig("AdminAcct") != "")
+                if (oEw.moConfig["AdminAcct"] != "")
                 {
                     oImp.UndoImpersonation();
                     oImp = null;
@@ -204,10 +204,10 @@ namespace Protean
                 oEw.InitializeVariables();
                 string filepath = "/ewCache/FS-Alpha-TEST.html";
                 Tools.Security.Impersonate oImp = null;
-                if (oEw.moConfig("AdminAcct") != "")
+                if (oEw.moConfig["AdminAcct"] != "")
                 {
                     oImp = new Tools.Security.Impersonate();
-                    if (oImp.ImpersonateValidUser(oEw.moConfig("AdminAcct"), oEw.moConfig("AdminDomain"), oEw.moConfig("AdminPassword"), cInGroup: oEw.moConfig("AdminGroup")))
+                    if (oImp.ImpersonateValidUser(oEw.moConfig["AdminAcct"], oEw.moConfig["AdminDomain"], oEw.moConfig["AdminPassword"], cInGroup: oEw.moConfig["AdminGroup"]))
                     {
                     }
                     else
@@ -216,11 +216,11 @@ namespace Protean
                     }
                 }
 
-                Alphaleonis.Win32.Filesystem.File.WriteAllText(@"\\?\" + oEw.goServer.MapPath("/" + oEw.gcProjectPath) + filepath, htmltotest, System.Text.Encoding.UTF8);
+                Alphaleonis.Win32.Filesystem.File.WriteAllText(@"\\?\" + oEw.goServer.MapPath("/" + Cms.gcProjectPath) + filepath, htmltotest, System.Text.Encoding.UTF8);
 
                 return "File Written Using AlphaFS :" + filepath;
 
-                if (oEw.moConfig("AdminAcct") != "")
+                if (oEw.moConfig["AdminAcct"] != "")
                 {
                     oImp.UndoImpersonation();
                     oImp = null;

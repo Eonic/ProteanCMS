@@ -3027,7 +3027,7 @@ namespace Protean
                             var oCfg = WebConfigurationManager.OpenWebConfiguration("/");
 
                             // Now lets create the database
-                            var oDbt = new Cms.dbHelper(ref myWeb);
+                            Cms.dbHelper oDbt = new Cms.dbHelper(ref myWeb);
                             string sDbName = this.Instance.SelectSingleNode("web/add[@key='DatabaseName']/@value").InnerText;
                             string cDbServer = this.Instance.SelectSingleNode("web/add[@key='DatabaseServer']/@value").InnerText;
                             string cDbUsername = this.Instance.SelectSingleNode("web/add[@key='DatabaseUsername']/@value").InnerText;
@@ -3611,9 +3611,9 @@ namespace Protean
                 if (value == "Content" | value == "Directory" | value == "ContentStructure")
                 {
                     cUpdateType = value;
-                    nUpdateTableType = Enum.Parse(typeof(Cms.dbHelper.objectTypes), value);
+                    nUpdateTableType =(Cms.dbHelper.objectTypes)Enum.Parse(typeof(Cms.dbHelper.objectTypes), value);
                     cUpdateTableName = myWeb.moDbHelper.getTable(nUpdateTableType);
-                    cUpdateKeyColumnName = myWeb.moDbHelper.getKey(nUpdateTableType);
+                    cUpdateKeyColumnName = myWeb.moDbHelper.getKey((int)nUpdateTableType);
 
                     // Type specific settings
                     switch (value ?? "")

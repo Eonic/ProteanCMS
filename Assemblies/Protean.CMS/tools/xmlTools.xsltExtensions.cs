@@ -125,11 +125,12 @@ namespace Protean
                 if (!string.IsNullOrEmpty(cModuleType))
                     cXformName = cXformName + "/" + cModuleType;
 
-                var commonfolders = new ArrayList();
-                commonfolders.Add("");
-                commonfolders.Add("/ewcommon");
+                //ArrayList commonfolders = new ArrayList();
+                string[] commonfolders = Array.Empty<string>();
+                commonfolders.Append("");
+                commonfolders.Append("/ewcommon");
 
-                oXfrm.load("/xforms/content/" + cXformName + ".xml", commonfolders.ToArray(typeof(string)));
+                oXfrm.load("/xforms/content/" + cXformName + ".xml", commonfolders);
 
                 return oXfrm.Instance;
 
@@ -2282,7 +2283,7 @@ namespace Protean
                                 string classPath = string.Empty;
                                 string methodName = string.Empty;
 
-                                Protean.ProviderSectionHandler moPrvConfig = WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders");
+                                Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders");
                                 var assemblyInstance = Assembly.Load(moPrvConfig.Providers[ProviderName].Type);
                                 calledType = assemblyInstance.GetType(classPath, true);
 
@@ -2299,8 +2300,8 @@ namespace Protean
                         case "FolderList":
                             {
 
-                                fsHelper.LibraryType library = default;
-                                if (Tools.EnumUtility.TryParse(typeof(fsHelper.LibraryType), Query2, false, ref library))
+                                fsHelper.LibraryType library = 0;
+                                if (Tools.EnumUtility.TryParse(typeof(Protean.fsHelper.LibraryType), Query2, false))
                                 {
 
                                     string path = fsHelper.GetFileLibraryPath(library);
@@ -2398,7 +2399,7 @@ namespace Protean
                         case "availableIcons":
                             {
                                 string iconPath = "/ewcommon/icons/icons.xml";
-                                if (myWeb.bs5)
+                                if (Cms.bs5)
                                     iconPath = "/ptn/core/icons/icons.xml";
 
                                 if (File.Exists(goServer.MapPath(iconPath)))

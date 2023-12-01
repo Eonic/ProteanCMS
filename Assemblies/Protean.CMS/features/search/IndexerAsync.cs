@@ -660,7 +660,7 @@ namespace Protean
             private void NotifyThreadPoolOfPendingWork()
             {
 
-                ThreadPool.UnsafeQueueUserWorkItem(() =>
+                ThreadPool.UnsafeQueueUserWorkItem(NotifyThreadPoolOfPendingWork =>
                 {
                     // Note that the current thread is now processing work items. 
                     // This is necessary to enable inlining of tasks into this thread.
@@ -695,7 +695,7 @@ namespace Protean
                     {
                         _currentThreadIsProcessingItems = false;
                     }
-                }, (object)null);
+                }, null);
             }
 
             // Attempts to execute the specified task on the current thread. 

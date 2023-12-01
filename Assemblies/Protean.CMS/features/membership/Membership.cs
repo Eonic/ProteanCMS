@@ -496,7 +496,7 @@ namespace Protean
                     Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)castObject;
                     foreach (var ourProvider in moPrvConfig.Providers)
                     {
-                        if (ourProvider.parameters(actionName) != null)
+                        if (ourProvider.Parameters[actionName] != null)
                         {
                             Type calledType;
                             Assembly assemblyInstance;
@@ -696,7 +696,7 @@ namespace Protean
 
                         bool bLogon = false;
 
-                        object argmyWeb = myWeb;
+                        Cms argmyWeb = myWeb;
                         var oMembershipProv = new Providers.Membership.BaseProvider(ref argmyWeb, myWeb.moConfig["MembershipProvider"]);
                         myWeb = (Cms)argmyWeb;
                         oMembershipProv.AdminXforms adXfm = oMembershipProv.AdminXforms;
@@ -904,7 +904,7 @@ namespace Protean
                                     if (!string.IsNullOrEmpty(recipientEmail))
                                     {
                                         Cms.dbHelper argodbHelper = null;
-                                        sProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed", odbHelper: ref argodbHelper));
+                                        sProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, odbHelper: ref argodbHelper, "Message Sent", "Message Failed"));
                                     }
 
                                     // send an email to the webadmin
@@ -926,7 +926,7 @@ namespace Protean
                                     if (System.IO.File.Exists(goServer.MapPath(moConfig["ProjectPath"] + xsltPathAlert)))
                                     {
                                         Cms.dbHelper argodbHelper1 = null;
-                                        sProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, moConfig["ProjectPath"] + xsltPathAlert, "New User", recipientEmail, fromEmail, SubjectLine, "Message Sent", "Message Failed", odbHelper: ref argodbHelper1));
+                                        sProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, moConfig["ProjectPath"] + xsltPathAlert, "New User", recipientEmail, fromEmail, SubjectLine, odbHelper: ref argodbHelper1, "Message Sent", "Message Failed"));
                                     }
                                     oMsg = (Protean.Messaging)null;
                                 }
@@ -1098,7 +1098,8 @@ namespace Protean
                         {
                             myWeb.mbAdminMode = true;
                             XmlElement argoPageDetail = null;
-                            myWeb.GetPageContentFromSelect(WhereSql, false, cOrderBy: "", oContentsNode: ref oContentNode, distinct: true, oPageDetail: ref argoPageDetail);
+                            int ncount = 0;
+                            myWeb.GetPageContentFromSelect(WhereSql,ref ncount, oContentsNode: ref oContentNode, oPageDetail: ref argoPageDetail,false, cOrderBy: "", distinct: true);
                             myWeb.mbAdminMode = false;
                         }
                     }

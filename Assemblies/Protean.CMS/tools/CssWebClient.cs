@@ -83,26 +83,25 @@ namespace Protean
 
                     if (goRequest.ServerVariables["SERVER_NAME"] == "localhost" & goRequest.ServerVariables["SERVER_PORT"] != "80")
                     {
-                        Serviceurl = ":" + goRequest.ServerVariables["SERVER_PORT"] + Serviceurl;
+                        origServiceUrl = ":" + goRequest.ServerVariables["SERVER_PORT"] + Serviceurl;
                     }
 
                     if (!(Strings.InStr(Serviceurl, "http") == 1))
                     {
                         if (Strings.LCase(goRequest.ServerVariables["HTTPS"]) == "on")
                         {
-                            Serviceurl = "https://" + goRequest.ServerVariables["SERVER_NAME"] + Serviceurl;
+                            origServiceUrl = "https://" + goRequest.ServerVariables["SERVER_NAME"] + Serviceurl;
                             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
                             ServicePointManager.ServerCertificateValidationCallback = new Func<object, System.Security.Cryptography.X509Certificates.X509Certificate, System.Security.Cryptography.X509Certificates.X509Chain, SslPolicyErrors, bool>((se, cert, chain, sslerror) => true);
                         }
-
                         else
                         {
-                            Serviceurl = "http://" + goRequest.ServerVariables["SERVER_NAME"] + Serviceurl;
+                            origServiceUrl = "http://" + goRequest.ServerVariables["SERVER_NAME"] + Serviceurl;
                         }
                     }
-
-                    cProcessInfo = Serviceurl;
+                   
+                    cProcessInfo = origServiceUrl;
 
                     httpHandlerRequest = WebRequest.Create(Serviceurl);
 

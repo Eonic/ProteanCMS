@@ -221,6 +221,9 @@
     <Compile Include="content\Content.JSONActions.cs" />
     <Compile Include="content\Modules.cs" />
     <Compile Include="core\Base.cs" />
+    <Compile Include="core\Services.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="features\cart\Cart.cs" />
     <Compile Include="features\cart\Cart.JSONActions.cs" />
     <Compile Include="features\cart\Cart.Modules.cs" />

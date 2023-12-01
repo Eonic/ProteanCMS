@@ -275,8 +275,7 @@ namespace Protean
                     foreach (XmlElement oRDBesElmt in oDBResults.DocumentElement)
                     {
                         bool bNew = true; // counter
-
-                        Protean.Cms.dbHelper.TableNames oTableNameEnum = Enum.Parse(typeof(Cms.dbHelper.TableNames), oRDBesElmt.Name);
+                        Protean.Cms.dbHelper.TableNames oTableNameEnum = (Cms.dbHelper.TableNames)System.Enum.Parse(typeof(Cms.dbHelper.TableNames), oRDBesElmt.Name);                        
                         string cKeyField = moDBH.TableKey(oTableNameEnum);
                         string cSQL = "SELECT " + cKeyField + " FROM " + oRDBesElmt.Name;
                         string cWhere = "";
@@ -368,7 +367,7 @@ namespace Protean
 
                                 default:
                                     {
-                                        oInstance.InnerXml = moDBH.getObjectInstance(oTableNameEnum, nId);
+                                        oInstance.InnerXml = moDBH.getObjectInstance((Cms.dbHelper.objectTypes)oTableNameEnum, nId);
                                         break;
                                     }
                             }
@@ -376,7 +375,7 @@ namespace Protean
                         else
                         {
                             bNew = false;
-                            oInstance.InnerXml = moDBH.getObjectInstance(oTableNameEnum, nId);
+                            oInstance.InnerXml = moDBH.getObjectInstance((Cms.dbHelper.objectTypes)oTableNameEnum, nId);
                             if (string.IsNullOrEmpty(oInstance.InnerXml))
                             {
                                 cInfo = nId + "returned no instance data";
@@ -434,7 +433,7 @@ namespace Protean
 
                         else
                         {
-                            nReturnId = moDBH.setObjectInstance(oTableNameEnum, oFinalInstance.DocumentElement, nId);
+                            nReturnId =Convert.ToInt32(moDBH.setObjectInstance((Cms.dbHelper.objectTypes)oTableNameEnum, oFinalInstance.DocumentElement, nId));
                         }
 
 
@@ -444,7 +443,7 @@ namespace Protean
                         // lets add some instances in case they are needed
                         oFinishElmt.AppendChild(oFinalInstance.ImportNode(oForeignItem, true));
                         var oNewInstance = oFinalInstance.CreateElement("NewInstance");
-                        oNewInstance.InnerXml = myWeb.moDbHelper.getObjectInstance(oTableNameEnum, nReturnId);
+                        oNewInstance.InnerXml = myWeb.moDbHelper.getObjectInstance((Cms.dbHelper.objectTypes)oTableNameEnum, nReturnId);
                         oFinishElmt.AppendChild(oNewInstance);
 
 
@@ -727,7 +726,7 @@ namespace Protean
             string cContentType;
             string cDeleteMode;
             var oSoapBody = new XmlDocument();
-            var oDbt = new Cms.dbHelper(myWeb);
+            var oDbt = new Cms.dbHelper(ref myWeb);
 
             try
             {
@@ -1390,7 +1389,7 @@ namespace Protean
                     if (Conversions.ToDouble(nID) > 0d)
                     {
 
-                        return myWeb.moDbHelper.setContentLocation(Convert.ToInt64(nID), nContentId, Interaction.IIf(bPrimary == 1, true, false), bCascade, true);
+                        return myWeb.moDbHelper.setContentLocation(Convert.ToInt64(nID), nContentId, Convert.ToBoolean(bPrimary)? true: false, Convert.ToBoolean(bCascade), true);
                     }
                     else
                     {
@@ -1416,7 +1415,7 @@ namespace Protean
                     {
                         var loopTo = nIDs.Length - 1;
                         for (i = 0; i <= loopTo; i++)
-                            myWeb.moDbHelper.setContentLocation(Convert.ToInt64(nIDs[i]), nContentId, Interaction.IIf(bPrimary == 1, true, false), bCascade, true);
+                            myWeb.moDbHelper.setContentLocation(Convert.ToInt64(nIDs[i]), nContentId, Convert.ToBoolean(bPrimary)? true:false, Convert.ToBoolean(bCascade), true);
                         return string.Concat(nIDs);
                     }
                     else
@@ -1452,7 +1451,7 @@ namespace Protean
                 {
                     string cTableName = myWeb.moDbHelper.getTable(objecttype);
                     string cRefField = myWeb.moDbHelper.getFRef(objecttype);
-                    string cWhereField = myWeb.moDbHelper.TableKey(objecttype);
+                    string cWhereField = myWeb.moDbHelper.TableKey((Cms.dbHelper.TableNames)objecttype);
                     string cSQL = "UPDATE " + cTableName + " SET " + cRefField + " = '" + value + "' WHERE " + cWhereField + " = " + id;
                     myWeb.moDbHelper.ExeProcessSql(cSQL);
                     return value;

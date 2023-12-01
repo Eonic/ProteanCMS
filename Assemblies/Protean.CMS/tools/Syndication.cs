@@ -404,12 +404,14 @@ namespace Protean
                         }
 
                         // Now get the BlogSettings
-                        var blogControls = ContentsNode.OwnerDocument.CreateElement("Contents");
+                        XmlElement blogControls = ContentsNode.OwnerDocument.CreateElement("Contents");
 
                         string sqlCriteria = "";
+                        int nCount = 0;
+                        XmlElement xmlContentnode = null; XmlElement xmlopage = null;
                         sqlCriteria += " cContentSchemaName ='BlogSettings'";
                         sqlCriteria += " AND CL.nStructId IN (" + Dictionary.hashtableToCSV(ref blogArticlePageIds, Dictionary.Dimension.Key) + ")";
-                        _myWeb.GetPageContentFromSelect(sqlCriteria, default, default, true, default, default, blogControls);
+                        _myWeb.GetPageContentFromSelect(sqlCriteria,ref nCount, ref blogControls, ref xmlopage, true, default, default);
 
                         XmlElement blogControl = null;
                         if (blogControls.HasChildNodes)
@@ -657,9 +659,11 @@ namespace Protean
                 {
                     sqlCriteria += " AND a.dUpdateDate >= " + SqlDate(_lastRun, true) + " ";
                 }
-
+                int ncount = 0;
+                XmlElement xmlContentNode = null;
+                XmlElement xmlOpageDetail = null;
                 // Go get the content
-                _myWeb.GetPageContentFromSelect(sqlCriteria, default, default, default, default, default, default, sqlAdditionalTables);
+                _myWeb.GetPageContentFromSelect(sqlCriteria, ref ncount, ref xmlContentNode, ref xmlOpageDetail,false,false,0,sqlAdditionalTables);
 
 
                 // Add the contents to content node

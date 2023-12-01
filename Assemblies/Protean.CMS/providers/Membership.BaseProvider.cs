@@ -636,7 +636,7 @@ namespace Protean.Providers
 
                                     var oMembershipProv = new BaseProvider(ref myWeb, myWeb.moConfig["MembershipProvider"]);
 
-                                    cResponse = Conversions.ToString(oMembershipProv.Activities.ResetUserAcct(myWeb, nAcc));
+                                    cResponse = Conversions.ToString(oMembershipProv.Activities.ResetUserAcct(ref myWeb, nAcc));
 
                                 }
 
@@ -1007,7 +1007,8 @@ namespace Protean.Providers
                             if (goConfig["Subscriptions"] == "on")
                             {
                                 var oSub = new Cart.Subscriptions(ref myWeb);
-                                oSub.AddSubscriptionToUserXML(ref base.Instance, Convert.ToInt32(id));
+                                XmlElement xmlXformInstance = base.Instance;
+                                oSub.AddSubscriptionToUserXML(ref xmlXformInstance, Convert.ToInt32(id));
                             }
 
                             // now lets check our security, and if we are encrypted lets not show the password on edit.
@@ -1348,7 +1349,8 @@ namespace Protean.Providers
 
                                 // Check if we're limiting this to a codeset
                                 string zcCodeSet = "";
-                                Xml.NodeState(ref base.Instance, "//CodeSet", "", "", 1, null, "", zcCodeSet, bCheckTrimmedInnerText: false);
+                                XmlElement xmlXformInstance = base.Instance;
+                                Xml.NodeState(ref xmlXformInstance, "//CodeSet", "", "", XmlNodeState.IsEmpty, null, "", zcCodeSet, bCheckTrimmedInnerText: false);
 
                                 // Validate the code
                                 cCodeUsed = validateMemberCode("//" + cCodeNode, cCodeNode, zcCodeSet);
@@ -1427,7 +1429,8 @@ namespace Protean.Providers
                         // - is member codes on
                         // - have we got an xpath
                         // - has a code been entered?
-                        if (gbMemberCodes && !string.IsNullOrEmpty(cXPathToCode) && Xml.NodeState(ref base.Instance, cXPathToCode, "", "", 1, null, "", cCode, bCheckTrimmedInnerText: false) == XmlNodeState.HasContents)
+                        XmlElement xmlXformInstance = base.Instance;
+                        if (gbMemberCodes && !string.IsNullOrEmpty(cXPathToCode) && Xml.NodeState(ref xmlXformInstance, cXPathToCode, "", "", XmlNodeState.IsEmpty, null, "", cCode, bCheckTrimmedInnerText: false) == XmlNodeState.HasContents)
 
 
                         {
@@ -2167,7 +2170,8 @@ namespace Protean.Providers
 
                             case "UserIntegrations":
                                 {
-                                    myWeb.AddContentXml(adXfm.xFrmUserIntegrations(mnUserId, moRequest["ewCmd2"]));
+                                    XmlElement xmloContentElement = adXfm.xFrmUserIntegrations(mnUserId, moRequest["ewCmd2"]);
+                                    myWeb.AddContentXml(ref xmloContentElement);
                                     // moContentDetail.AppendChild(adXfm.xFrmUserIntegrations(mnUserId, moRequest("ewCmd2")))
                                     if (Conversions.ToBoolean(adXfm.valid))
                                     {

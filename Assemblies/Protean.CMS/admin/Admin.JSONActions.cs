@@ -514,7 +514,7 @@ namespace Protean
                     string sString;
                     try
                     {
-                        var objservices = new Protean.Services();
+                        var objservices = new Services();
 
                         if (objservices.CheckUserIP())
                         {

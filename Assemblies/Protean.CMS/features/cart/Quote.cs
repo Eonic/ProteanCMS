@@ -63,7 +63,7 @@ namespace Protean
 
                 // called at the beginning, whenever ewCart is run
                 // sets the global variables and initialises the current cart
-                moCartConfig = WebConfigurationManager.GetWebApplicationSection("protean/quote");
+                moCartConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/quote");
                 string sSql;
                 // Dim oDr As SqlDataReader
                 mcOrderType = "Quote";
@@ -692,7 +692,7 @@ namespace Protean
 
                                 string sXpath;
                                 // Remove the current content here
-                                sXpath = Protean.xmlTools.getXpathFromQueryXml(oNotesXform.Instance, "/xsl/quote/search.xsl");
+                                sXpath = xForm.getXpathFromQueryXml(oNotesXform.Instance, "/xsl/quote/search.xsl");
                                 foreach (XmlNode oNode in base.moPageXml.SelectNodes("/Page/Contents/Content[@type='" + oNotesXform.Instance.SelectSingleNode("Query/@contentType").InnerText + "']"))
                                     oNode.ParentNode.RemoveChild(oNode);
 
@@ -734,7 +734,7 @@ namespace Protean
                                         myWeb.moSession["cLogonCmd"] = "quoteCmd=Logon";
                                         // registration xform
                                         var oMembershipProv = new Providers.Membership.BaseProvider(ref myWeb, myWeb.moConfig["MembershipProvider"]);
-                                        Providers.Membership.EonicProvider.AdminXForms oRegXform = (Providers.Membership.EonicProvider.AdminXForms)oMembershipProv.AdminXforms;
+                                        Providers.Membership.DefaultProvider.AdminXForms oRegXform = (Providers.Membership.DefaultProvider.AdminXForms)oMembershipProv.AdminXforms;
                                         XmlElement argIntanceAppend = null;
                                         oRegXform.xFrmEditDirectoryItem(IntanceAppend: ref argIntanceAppend,myWeb.mnUserId, "User",Convert.ToInt64("0" + moCartConfig["DefaultSubscriptionGroupId"]), "CartRegistration");
                                         if (oRegXform.valid)
@@ -762,7 +762,7 @@ namespace Protean
                                         }
 
 
-                                        oRegXform = (Providers.Membership.EonicProvider.AdminXForms)null;
+                                        oRegXform = (Providers.Membership.DefaultProvider.AdminXForms)null;
                                     }
                                     else
                                     {
@@ -795,7 +795,8 @@ namespace Protean
                                 else
                                 {
                                     // Valid Form, let's adjust the Vat rate
-                                    UpdateTaxRate(ref oPickContactXForm.Instance.SelectSingleNode("tblCartContact/cContactCountry").InnerText);
+                                    string cContactCountry = oPickContactXForm.Instance.SelectSingleNode("tblCartContact/cContactCountry").InnerText;
+                                    UpdateTaxRate(ref cContactCountry);
 
                                     // Skip Delivery if:
                                     // - Deliver to this address is selected
@@ -932,7 +933,7 @@ namespace Protean
                                     {
                                         // registration xform
                                         var oMembershipProv = new Providers.Membership.BaseProvider(ref myWeb, myWeb.moConfig["MembershipProvider"]);
-                                        Providers.Membership.EonicProvider.AdminXForms oRegXform = (Providers.Membership.EonicProvider.AdminXForms)oMembershipProv.AdminXforms;
+                                        Providers.Membership.DefaultProvider.AdminXForms oRegXform = (Providers.Membership.DefaultProvider.AdminXForms)oMembershipProv.AdminXforms;
                                         XmlElement argIntanceAppend1 = null;
                                         oRegXform.xFrmEditDirectoryItem(IntanceAppend: ref argIntanceAppend1,myWeb.mnUserId, "User",Convert.ToInt32("0" + moCartConfig["DefaultSubscriptionGroupId"]), "CartRegistration");
                                         if (oRegXform.valid)
@@ -1102,8 +1103,8 @@ namespace Protean
                     if (nCurrentCart == 0)
                     {
                         // need a way to iniate the cart and then get the ID out
-
-                        nCurrentCart = otmpcart.CreateNewCart(default);
+                        XmlElement xmlnothing = null;
+                        nCurrentCart =Convert.ToInt32(otmpcart.CreateNewCart(ref xmlnothing));
                     }
                     int nQuoteId = mnCartId;
 
@@ -1292,7 +1293,8 @@ namespace Protean
                     {
                         // create a new cart
                         otmpcart = new Quote(ref myWeb);
-                        otmpcart.CreateNewCart(default);
+                        XmlElement xmlNull = null;
+                        otmpcart.CreateNewCart(ref xmlNull);
                         mnCartId = otmpcart.mnCartId;
                     }
                     // now add the details to it

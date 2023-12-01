@@ -815,7 +815,7 @@ namespace Protean
                     }
 
                     // reset config to on
-                    Config.UpdateConfigValue(myWeb, "protean/web", "CompliedTransform", "on");
+                    Config.UpdateConfigValue(ref myWeb, "protean/web", "CompliedTransform", "on");
                 }
 
                 // di.Delete(True)
@@ -835,7 +835,7 @@ namespace Protean
             {
 
                 string compilerPath = goServer.MapPath("/ewcommon/xsl/compiler/xsltc.exe");
-                if (myWeb.bs5)
+                if (Cms.bs5)
                 {
                     compilerPath = goServer.MapPath("/ptn/tools/compiler/xsltc.exe");
                 }

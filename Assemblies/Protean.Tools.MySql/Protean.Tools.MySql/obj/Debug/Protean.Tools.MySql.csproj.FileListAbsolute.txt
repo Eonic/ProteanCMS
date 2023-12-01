@@ -38,7 +38,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.MySql\Protean.Tools.MySql\b
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.MySql\Protean.Tools.MySql\bin\Debug\Select.HtmlToPdf.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.MySql\Protean.Tools.MySql\bin\Debug\Select.HtmlToPdf.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.MySql\Protean.Tools.MySql\bin\Debug\Select.Html.dep
-D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.MySql\Protean.Tools.MySql\bin\Debug\DocumentFormat.OpenXml.xml
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.MySql\Protean.Tools.MySql\bin\Debug\Magick.Native-Q8-arm64.dll
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.MySql\Protean.Tools.MySql\bin\Debug\Magick.Native-Q8-x64.dll
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.MySql\Protean.Tools.MySql\bin\Debug\Magick.Native-Q8-x86.dll
@@ -65,6 +64,7 @@ D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.MySq
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.MySql\Protean.Tools.MySql\bin\Debug\Google.Protobuf.xml
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.MySql\Protean.Tools.MySql\bin\Debug\MySql.Data.xml
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.MySql\Protean.Tools.MySql\bin\Debug\Renci.SshNet.xml
+D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.MySql\Protean.Tools.MySql\bin\Debug\DocumentFormat.OpenXml.xml
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.MySql\Protean.Tools.MySql\bin\Debug\Magick.NET-Q8-AnyCPU.xml
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.MySql\Protean.Tools.MySql\bin\Debug\ICSharpCode.SharpZipLib.pdb
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.MySql\Protean.Tools.MySql\bin\Debug\ICSharpCode.SharpZipLib.xml

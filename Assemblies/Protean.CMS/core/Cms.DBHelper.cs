@@ -589,7 +589,8 @@ namespace Protean
             #region Table Definition Procedures
             public string TableKey(TableNames cTableName)
             {
-                return getKey((objectTypes)cTableName);
+                //return getKey(Enum.Parse(typeof(TableNames), cTableName.ToString()));
+                return getKey((int)cTableName);
             }
 
             public string getTable(objectTypes objectType)
@@ -689,186 +690,187 @@ namespace Protean
                 // End Select
             }
 
-            protected internal string getKey(objectTypes objectType)
+            //protected internal string getKey(objectTypes objectType)
+            protected internal string getKey(int tablekey)
             {
 
                 string strReturn = "";
-                switch (objectType)
+                switch (tablekey)
                 {
-                    case 0:
+                    case (int)TableNames.tblContent:
                         {
                             strReturn = "nContentKey";
                             break;
                         }
-                    case (objectTypes)1:
+                    case (int)TableNames.tblContentLocation:
                         {
                             strReturn = "nContentLocationKey"; // "nContentId"
                             break;
                         }
-                    case (objectTypes)2:
+                    case (int)TableNames.tblContentRelation:
                         {
                             strReturn = "nContentRelationKey";
                             break;
                         }
-                    case (objectTypes)3:
-                    case (objectTypes)29:
+                    case 3:
+                    case 29:
                         {
                             strReturn = "nStructKey";
                             break;
                         }
-                    case (objectTypes)4:
+                    case 4:
                         {
                             strReturn = "nDirKey";
                             break;
                         }
-                    case (objectTypes)5:
+                    case 5:
                         {
                             strReturn = "nRelKey";
                             break;
                         }
-                    case (objectTypes)6:
+                    case 6:
                         {
                             strReturn = "nPermKey";
                             break;
                         }
-                    case (objectTypes)7:
+                    case 7:
                         {
                             strReturn = "nQResultsKey";
                             break;
                         }
-                    case (objectTypes)8:
+                    case 8:
                         {
                             strReturn = "nQDetailKey";
                             break;
                         }
-                    case (objectTypes)9:
+                    case 9:
                         {
                             strReturn = "nAuditKey";
                             break;
                         }
-                    case (objectTypes)10:
+                    case 10:
                         {
                             strReturn = "nCourseResultKey";
                             break;
                         }
-                    case (objectTypes)11:
+                    case 11:
                         {
                             strReturn = "nActivityKey";
                             break;
                         }
-                    case (objectTypes)12:
+                    case 12:
                         {
                             strReturn = "nCartOrderKey";
                             break;
                         }
-                    case (objectTypes)13:
+                    case 13:
                         {
                             strReturn = "nCartItemKey";
                             break;
                         }
-                    case (objectTypes)14:
+                    case 14:
                         {
                             strReturn = "nContactKey";
                             break;
                         }
-                    case (objectTypes)15:
+                    case 15:
                         {
                             strReturn = "nLocationKey";
                             break;
                         }
-                    case (objectTypes)16:
+                    case 16:
                         {
                             strReturn = "nShipOptKey";
                             break;
                         }
-                    case (objectTypes)17:
+                    case 17:
                         {
                             strReturn = "nShpRelKey";
                             break;
                         }
-                    case (objectTypes)18:
+                    case 18:
                         {
                             return "nCatProductRelKey";
                         }
-                    case (objectTypes)19:
+                    case 19:
                         {
                             return "nDiscountKey";
                         }
-                    case (objectTypes)20:
+                    case 20:
                         {
                             return "nDiscountDirRelationKey";
                         }
-                    case (objectTypes)21:
+                    case 21:
                         {
                             return "nDiscountProdCatRelationKey";
                         }
-                    case (objectTypes)22:
+                    case 22:
                         {
                             return "nCatKey";
                         }
-                    case (objectTypes)23:
+                    case 23:
                         {
                             return "nActionKey";
                         }
-                    case (objectTypes)24:
+                    case 24:
                         {
                             return "nSubKey";
                         }
-                    case (objectTypes)25:
+                    case 25:
                         {
                             return "nPayMthdKey";
                         }
-                    case (objectTypes)26:
+                    case 26:
                         {
                             return "nCodeKey";
                         }
-                    case (objectTypes)27:
+                    case 27:
                         {
                             return "nContentVersionKey";
                         }
-                    case (objectTypes)28:
+                    case 28:
                         {
                             return "nCartShippingPermissionKey";
                         }
                     // Case 29 'duplicate, but leave this
                     // Return "nStructKey" 
-                    case (objectTypes)30:
+                    case 30:
                         {
                             return "nLkpID";
                         }
-                    case (objectTypes)31:
+                    case 31:
                         {
                             return "nDeliveryKey";
                         }
-                    case (objectTypes)32:
+                    case 32:
                         {
                             return "nCarrierKey";
                         }
-                    case (objectTypes)33:
+                    case 33:
                         {
                             return "nSubRenewalKey";
                         }
-                    case (objectTypes)34:
+                    case 34:
                         {
                             return "nCartPaymentKey";
                         }
                     // 100-199 reserved for LMS
-                    case (objectTypes)100:
+                    case 100:
                         {
                             return "nCpdLogKey";
                         }
-                    case (objectTypes)101:
+                    case 101:
                         {
                             return "nCertificateKey";
                         }
 
                     // 200- reserved for [next thing]
                     // Add new key id for Index def table by nita
-                    case (objectTypes)200:
+                    case 200:
                         {
                             return "nContentIndexDefKey";
                         }
-                    case (objectTypes)202:
+                    case 202:
                         {
                             return "nShipProdCatRelKey";
                         }
@@ -1022,7 +1024,7 @@ namespace Protean
                         case (objectTypes)3:
                         case (objectTypes)4:
                             {
-                                sSql = "select " + getNameFname(objectType) + " from " + getTable(objectType) + " where " + getKey(objectType) + " = " + nKey;
+                                sSql = "select " + getNameFname(objectType) + " from " + getTable(objectType) + " where " + getKey((int)objectType) + " = " + nKey;
                                 using (var oDr = getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                                 {
 
@@ -1256,7 +1258,7 @@ namespace Protean
                         case (objectTypes)3:
                             {
 
-                                sSql = "select " + getKey(objectType) + " from " + getTable(objectType) + " where " + getNameFname(objectType) + " LIKE '" + cName + "'";
+                                sSql = "select " + getKey((int)objectType) + " from " + getTable(objectType) + " where " + getNameFname(objectType) + " LIKE '" + cName + "'";
                                 using (var oDr = getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                                 {
                                     if (oDr.HasRows)
@@ -1294,7 +1296,7 @@ namespace Protean
                 string cProcessInfo = "";
                 try
                 {
-                    sSql = "select nAuditId from " + getTable(objecttype) + " where " + getKey(objecttype) + " = " + nId;
+                    sSql = "select nAuditId from " + getTable(objecttype) + " where " + getKey((int)objecttype) + " = " + nId;
                     using (var oDr = getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                     {
 
@@ -1329,7 +1331,7 @@ namespace Protean
                 string cProcessInfo = "";
                 try
                 {
-                    sSql = "select nAuditId from " + getTable(objecttype) + " where " + getKey(objecttype) + " = " + nId;
+                    sSql = "select nAuditId from " + getTable(objecttype) + " where " + getKey((int)objecttype) + " = " + nId;
                     // we want to touch the parent table just incase we have any triggers asscoiated with it
                     // change get DateReader to getdataset and update.
                     using (var oDr = getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
@@ -1377,7 +1379,7 @@ namespace Protean
                 string cProcessInfo = "";
                 try
                 {
-                    sSql = "select nAuditId from " + getTable(objecttype) + " where " + getKey(objecttype) + " = " + nId;
+                    sSql = "select nAuditId from " + getTable(objecttype) + " where " + getKey((int)objecttype) + " = " + nId;
                     using (var oDr = getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                     {
 
@@ -2871,7 +2873,7 @@ namespace Protean
                         if (!(objectType == objectTypes.QuestionaireResultDetail) & !(objectType == objectTypes.ActivityLog) & !(objectType == objectTypes.Audit))
                         {
                             // delete the audit ref
-                            sSql = "select nAuditId from " + getTable(objectType) + " where " + getKey(objectType) + " = " + nId;
+                            sSql = "select nAuditId from " + getTable(objectType) + " where " + getKey((int)objectType) + " = " + nId;
                             using (var oDr = getDataReaderDisposable(sSql))
                             {
                                 while (oDr.Read())
@@ -2892,7 +2894,7 @@ namespace Protean
                         }
 
                         // delete the main item
-                        sSql = "delete from " + getTable(objectType) + " where " + getKey(objectType) + " = " + nId;
+                        sSql = "delete from " + getTable(objectType) + " where " + getKey((int)objectType) + " = " + nId;
                         ExeProcessSql(sSql);
 
 
@@ -3007,7 +3009,7 @@ namespace Protean
                             }
                     }
 
-                    sSql = "select " + getKey(objectType) + " from " + getTable(objectType);
+                    sSql = "select " + getKey((int)objectType) + " from " + getTable(objectType);
 
                     using (var oDr = getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                     {
@@ -3053,7 +3055,7 @@ namespace Protean
 
                     if (string.IsNullOrEmpty(sWhere))
                     {
-                        sSql = "select * from " + getTable(ObjectType) + " left outer join tblAudit a on nAuditId = a.nAuditKey where " + getKey(ObjectType) + " = " + nId;
+                        sSql = "select * from " + getTable(ObjectType) + " left outer join tblAudit a on nAuditId = a.nAuditKey where " + getKey((int)ObjectType) + " = " + nId;
                     }
                     else
                     {
@@ -3061,7 +3063,7 @@ namespace Protean
                     }
                     if (ObjectType == objectTypes.ScheduledItem)
                     {
-                        sSql = "select * from " + getTable(ObjectType) + " where " + getKey(ObjectType) + " = " + nId;
+                        sSql = "select * from " + getTable(ObjectType) + " where " + getKey((int)ObjectType) + " = " + nId;
                     }
 
 
@@ -3190,7 +3192,7 @@ namespace Protean
             {
                 try
                 {
-                    string query = "SELECT " + getKey(objectType) + " FROM " + getTable(objectType) + " o INNER JOIN dbo.tblAudit a ON o.nauditId = a.nauditKey " + "WHERE " + myWeb.GetStandardFilterSQLForContent(false);
+                    string query = "SELECT " + getKey((int)objectType) + " FROM " + getTable(objectType) + " o INNER JOIN dbo.tblAudit a ON o.nauditId = a.nauditKey " + "WHERE " + myWeb.GetStandardFilterSQLForContent(false);
                     return Conversions.ToBoolean(Operators.ConditionalCompareObjectGreater(this.GetDataValue(query), 0, false));
                 }
                 catch (Exception ex)
@@ -3273,7 +3275,7 @@ namespace Protean
                         oXml.AppendChild(oElmt);
                         oTableNode = oXml.CreateElement(getTable(ObjectType));
                         oXml.FirstChild.AppendChild(oTableNode);
-                        oElmt2 = oXml.CreateElement(getKey(ObjectType));
+                        oElmt2 = oXml.CreateElement(getKey((int)ObjectType));
                         oElmt2.InnerText = nKey.ToString();
                         oElmt.AppendChild(oElmt2);
                         oInstance = oXml.DocumentElement;
@@ -3301,7 +3303,7 @@ namespace Protean
                     // lets get the key from the instance if not supplied
                     if (nKey == -1)
                     {
-                        oElmt = (XmlElement)oInstance.SelectSingleNode("*/" + getKey(ObjectType));
+                        oElmt = (XmlElement)oInstance.SelectSingleNode("*/" + getKey((int)ObjectType));
                         if (oElmt != null)
                         {
                             if (Information.IsNumeric(oElmt.InnerText))
@@ -3315,7 +3317,7 @@ namespace Protean
                     if (nKey > 0L)
                     {
                         var argoNode = oInstance.SelectSingleNode("*");
-                        addNewTextNode(getKey(ObjectType), ref argoNode, nKey.ToString(), true, true);
+                        addNewTextNode(getKey((int)ObjectType), ref argoNode, nKey.ToString(), true, true);
                     }
 
                 restart:
@@ -3617,7 +3619,7 @@ namespace Protean
 
                     if (bSaveInstance)
                     {
-                        nKey = saveInstance(ref oInstance, getTable(ObjectType), getKey(ObjectType));
+                        nKey = saveInstance(ref oInstance, getTable(ObjectType), getKey((int)ObjectType));
                     }
                     else
                     {
@@ -3665,7 +3667,7 @@ namespace Protean
                     // If not set then try getting the value from the DB
                     if (!(nAuditId > 0L))
                     {
-                        nAuditId = Conversions.ToLong(this.GetDataValue("SELECT nAuditId FROM " + getTable(objectType) + " WHERE " + getKey(objectType) + "=" + nKey));
+                        nAuditId = Conversions.ToLong(this.GetDataValue("SELECT nAuditId FROM " + getTable(objectType) + " WHERE " + getKey((int)objectType) + "=" + nKey));
                     }
                     XmlElement oTableNode = (XmlElement)oInstance.FirstChild;
 
@@ -4133,9 +4135,10 @@ namespace Protean
 
                         // Tidy Up XMl Nodes
                         foreach (XmlElement oElmt in pendingList.SelectNodes("//*[local-name()='UserXml' or local-name()='ContentXml']"))
-
-
-                            SetInnerXmlThenInnerText(ref oElmt, oElmt.InnerText);
+                        {
+                            XmlElement xmloElmt = oElmt;
+                            SetInnerXmlThenInnerText(ref xmloElmt, oElmt.InnerText);
+                        }                           
 
                         // Tidy Up - Move all Locations and Relations into a Metadata Node
                         XmlElement oLocations = null;
@@ -4271,7 +4274,7 @@ namespace Protean
                 {
 
                     string cTableName = getTable(objectType);
-                    string cTableKey = getKey(objectType);
+                    string cTableKey = getKey((int)objectType);
                     string cTableFRef = getFRef(objectType);
 
                     nId = getObjectByRef(cTableName, cTableKey, cTableFRef, objectType, cForeignRef, cSchemaType).ToString();
@@ -4304,7 +4307,7 @@ namespace Protean
                 }
                 if (string.IsNullOrEmpty(cTableKey))
                 {
-                    cTableKey = getKey(objectType);
+                    cTableKey = getKey((int)objectType);
                 }
                 if (string.IsNullOrEmpty(cTableFRef))
                 {
@@ -4374,7 +4377,7 @@ namespace Protean
                 {
                     if (string.IsNullOrEmpty(cSchemaType))
                     {
-                        sSql = "select " + getKey(objectType) + " from " + getTable(objectType) + " where " + getFRef(objectType) + " = '" + SqlFmt(cForiegnRef) + "'";
+                        sSql = "select " + getKey((int)objectType) + " from " + getTable(objectType) + " where " + getFRef(objectType) + " = '" + SqlFmt(cForiegnRef) + "'";
                     }
                     else
                     {
@@ -4382,12 +4385,12 @@ namespace Protean
                         {
                             case objectTypes.Content:
                                 {
-                                    sSql = "select " + getKey(objectType) + " from " + getTable(objectType) + " where " + getFRef(objectType) + " = '" + SqlFmt(cForiegnRef) + "' and cContentSchemaName='" + cSchemaType + "'";
+                                    sSql = "select " + getKey((int)objectType) + " from " + getTable(objectType) + " where " + getFRef(objectType) + " = '" + SqlFmt(cForiegnRef) + "' and cContentSchemaName='" + cSchemaType + "'";
                                     break;
                                 }
                             case objectTypes.Directory:
                                 {
-                                    sSql = "select " + getKey(objectType) + " from " + getTable(objectType) + " where " + getFRef(objectType) + " = '" + SqlFmt(cForiegnRef) + "' and cDirSchema='" + cSchemaType + "'";
+                                    sSql = "select " + getKey((int)objectType) + " from " + getTable(objectType) + " where " + getFRef(objectType) + " = '" + SqlFmt(cForiegnRef) + "' and cDirSchema='" + cSchemaType + "'";
                                     break;
                                 }
                         }
@@ -4426,7 +4429,7 @@ namespace Protean
                 {
 
                     string cTableName = getTable(objectType);
-                    string cTableKey = getKey(objectType);
+                    string cTableKey = getKey((int)objectType);
                     string cTableFRef = getFRef(objectType);
 
                     // SQL to save the fref value
@@ -5183,7 +5186,7 @@ namespace Protean
                 int i;
 
 
-                string sKeyField = getKey(objectType);
+                string sKeyField = getKey((int)objectType);
 
                 string cProcessInfo = "";
                 try
@@ -5202,7 +5205,7 @@ namespace Protean
                         else
                         {
                             // Load Principle
-                            sSql = "Select * from " + getTable(objectType) + " where " + getKey(objectType) + "=" + nKey.ToString();
+                            sSql = "Select * from " + getTable(objectType) + " where " + getKey((int)objectType) + "=" + nKey.ToString();
                             using (var oDr = getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                             {
                                 while (oDr.Read())
@@ -5442,7 +5445,7 @@ namespace Protean
                                         i = i + 1;
                                     }
                                     // non-ideal alternative for updating the entire dataset
-                                    sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("update " + getTable(objectType) + " Set nDisplayOrder = ", oRow[getOrderFname(objectType)]), " where "), getKey(objectType)), " = "), oRow[getKey(objectType)]));
+                                    sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("update " + getTable(objectType) + " Set nDisplayOrder = ", oRow[getOrderFname(objectType)]), " where "), getKey((int)objectType)), " = "), oRow[getKey((int)objectType)]));
                                     ExeProcessSql(sSql);
                                 }
 
@@ -5463,7 +5466,7 @@ namespace Protean
                                         i = i + 1;
                                     }
                                     // non-ideal alternative for updating the entire dataset
-                                    sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("update " + getTable(objectType) + " Set nDisplayOrder = ", oRow[getOrderFname(objectType)]), " where "), getKey(objectType)), " = "), oRow[getKey(objectType)]));
+                                    sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("update " + getTable(objectType) + " Set nDisplayOrder = ", oRow[getOrderFname(objectType)]), " where "), getKey((int)objectType)), " = "), oRow[getKey((int)objectType)]));
                                     ExeProcessSql(sSql);
                                 }
 
@@ -5478,17 +5481,17 @@ namespace Protean
                                     {
                                         // swap with previous
                                         oDs.Tables[getTable(objectType)].Rows[i - 2][getOrderFname(objectType)] = i;
-                                        sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("update " + getTable(objectType) + " Set nDisplayOrder = ", oDs.Tables[getTable(objectType)].Rows[i - 2][getOrderFname(objectType)]), " where "), getKey(objectType)), " = "), oDs.Tables[getTable(objectType)].Rows[i - 2][getKey(objectType)]));
+                                        sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("update " + getTable(objectType) + " Set nDisplayOrder = ", oDs.Tables[getTable(objectType)].Rows[i - 2][getOrderFname(objectType)]), " where "), getKey((int)objectType)), " = "), oDs.Tables[getTable(objectType)].Rows[i - 2][getKey((int)objectType)]));
                                         ExeProcessSql(sSql);
 
                                         oRow[getOrderFname(objectType)] = i - 1;
-                                        sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("update " + getTable(objectType) + " Set nDisplayOrder = ", oRow[getOrderFname(objectType)]), " where "), getKey(objectType)), " = "), oRow[getKey(objectType)]));
+                                        sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("update " + getTable(objectType) + " Set nDisplayOrder = ", oRow[getOrderFname(objectType)]), " where "), getKey((int)objectType)), " = "), oRow[getKey((int)objectType)]));
                                         ExeProcessSql(sSql);
                                     }
                                     else
                                     {
                                         oRow[getOrderFname(objectType)] = i;
-                                        sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("update " + getTable(objectType) + " Set nDisplayOrder = ", oRow[getOrderFname(objectType)]), " where "), getKey(objectType)), " = "), oRow[getKey(objectType)]));
+                                        sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("update " + getTable(objectType) + " Set nDisplayOrder = ", oRow[getOrderFname(objectType)]), " where "), getKey((int)objectType)), " = "), oRow[getKey((int)objectType)]));
                                         ExeProcessSql(sSql);
                                     }
                                     i = i + 1;
@@ -5515,7 +5518,7 @@ namespace Protean
                                     }
 
                                     // non-ideal alternative for updating the entire dataset
-                                    sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("update " + getTable(objectType) + " Set nDisplayOrder = ", oRow[getOrderFname(objectType)]), " where "), getKey(objectType)), " = "), oRow[getKey(objectType)]));
+                                    sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("update " + getTable(objectType) + " Set nDisplayOrder = ", oRow[getOrderFname(objectType)]), " where "), getKey((int)objectType)), " = "), oRow[getKey((int)objectType)]));
                                     ExeProcessSql(sSql);
 
                                     i = i + 1;
@@ -6162,8 +6165,11 @@ namespace Protean
                         if (Strings.LCase(goConfig["DisableGrabberRelated"]) != "on")
                         {
                             foreach (XmlElement oContentElmt in oContent.SelectNodes("Content"))
-                             
-                                this.addRelatedContent(ref oContentElmt, Conversions.ToInteger(oContentElmt.GetAttribute("id")), myWeb.mbAdminMode);
+                            {
+                                XmlElement xmloContentElmt = oContentElmt;
+                                this.addRelatedContent(ref xmloContentElmt, Conversions.ToInteger(oContentElmt.GetAttribute("id")), myWeb.mbAdminMode);
+                            }                            
+                                
                         }
 
                     }
@@ -6212,9 +6218,10 @@ namespace Protean
                         int nCount = 0;
                         myWeb.GetPageContentFromSelect(cWhereSql, ref nCount, bIgnorePermissionsCheck: myWeb.mbAdminMode, nReturnRows: 0, cOrderBy: cOrderBy, oContentsNode: ref oContent, cAdditionalJoins: cAdditionalJoin, oPageDetail: ref argoPageDetail);
                         foreach (XmlElement oContentElmt in oContent.SelectNodes("Content"))
-                            this.addRelatedContent(ref oContentElmt, Conversions.ToInteger(oContentElmt.GetAttribute("id")), myWeb.mbAdminMode);
-
-
+                        {
+                            XmlElement xmloContentElmt = oContentElmt;
+                            this.addRelatedContent(ref xmloContentElmt, Conversions.ToInteger(oContentElmt.GetAttribute("id")), myWeb.mbAdminMode);
+                        }
                     }
                 }
 
@@ -8075,11 +8082,11 @@ namespace Protean
                                         int earlierTries = Conversions.ToInteger(ExeProcessSqlScalar(sSql2));
                                         if (earlierTries >= nRetrys)
                                         {
-                                            object argmyWeb = myWeb;
+                                            Cms argmyWeb = myWeb;
                                             var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, myWeb.moConfig["MembershipProvider"]);
                                             myWeb = (Cms)argmyWeb;
 
-                                            oMembershipProv.Activities.ResetUserAcct(myWeb, nUserId);
+                                            oMembershipProv.Activities.ResetUserAcct(ref myWeb, Convert.ToInt32(nUserId));
 
                                             sReturn = "<span class=\"msg-1032\">Your account is blocked, an email has been sent to you to reset your password.</span>";
                                         }
@@ -9791,7 +9798,7 @@ namespace Protean
                                             fRef = fRefElmt.InnerText;
                                             if (!string.IsNullOrEmpty(fRef))
                                             {
-                                                nContentId = myWeb.moDbHelper.getObjectByRef(getTable(oObjType2), getKey(oObjType2), getFRef(oObjType2), oObjType2, fRef);
+                                                nContentId = myWeb.moDbHelper.getObjectByRef(getTable(oObjType2), getKey((int)oObjType2), getFRef(oObjType2), oObjType2, fRef);
                                             }
                                         }
 
@@ -10386,7 +10393,7 @@ namespace Protean
                 }
             }
 
-            public void AddDataSetToContent(ref DataSet oDs, ref XmlElement oContent,ref DateTime dExpireDate ,ref DateTime dUpdateDate, long nCurrentPageId = 0L, bool bIgnoreDuplicates = false, string cAddSourceAttribute = "", bool bAllowRecursion = true)
+            public void AddDataSetToContent(ref DataSet oDs, ref XmlElement oContent,ref DateTime? dExpireDate ,ref DateTime? dUpdateDate, long nCurrentPageId = 0L, bool bIgnoreDuplicates = false, string cAddSourceAttribute = "", bool bAllowRecursion = true)
             {
                 try
                 {
@@ -10398,8 +10405,9 @@ namespace Protean
                     {
                         nMaxDepth = Conversions.ToInteger(cShowRelatedBriefDepth);
                     }
-
-                    AddDataSetToContent(ref oDs, ref oContent, nCurrentPageId, bIgnoreDuplicates, cAddSourceAttribute, ref dExpireDate, ref dUpdateDate, bAllowRecursion, nMaxDepth);
+                    DateTime ExpireDate = dExpireDate ?? DateTime.Now;
+                    DateTime UpdateDate = dUpdateDate ?? DateTime.Now;
+                    AddDataSetToContent(ref oDs, ref oContent, nCurrentPageId, bIgnoreDuplicates, cAddSourceAttribute, ref ExpireDate, ref UpdateDate, bAllowRecursion, nMaxDepth);
                 }
 
                 catch (Exception ex)
@@ -10435,7 +10443,7 @@ namespace Protean
                         n = n + 1L;
                         XmlElement argoContent = (XmlElement)oNode;
                         oElmt2 = SimpleTidyContentNode(ref argoContent, ref dExpireDate, ref dUpdateDate, cAddSourceAttribute);
-                        oNode = argoContent;
+                        //oNode = argoContent;
 
                         sNodeName = oElmt2.GetAttribute("name");
                         int nNodeId = Conversions.ToInteger(oElmt2.GetAttribute("id"));
@@ -10845,21 +10853,21 @@ namespace Protean
                             {
                                 nMaxDepth = Conversions.ToInteger(cShowRelatedBriefDepth);
                             }
-                            var argdExpireDate = DateTime.Parse("0001-01-01");
-                            var argdUpdateDate = DateTime.Parse("0001-01-01");
+                            DateTime? argdExpireDate = DateTime.Parse("0001-01-01");
+                            DateTime? argdUpdateDate = DateTime.Parse("0001-01-01");
                             AddDataSetToContent(ref oDs, ref oContentElmt, ref argdExpireDate, ref argdUpdateDate, nParentId,true, nMaxDepth.ToString());
                         }
                         else
                         {
-                            DateTime argdExpireDate1 = DateTime.Parse("0001-01-01");
-                            DateTime argdUpdateDate1 = DateTime.Parse("0001-01-01");
+                            DateTime? argdExpireDate1 = DateTime.Parse("0001-01-01");
+                            DateTime? argdUpdateDate1 = DateTime.Parse("0001-01-01");
                             AddDataSetToContent(ref oDs, ref oContentElmt, dExpireDate: ref argdExpireDate1, dUpdateDate: ref argdUpdateDate1, nParentId);
                         }
                     }
                     else
                     {
-                        DateTime argdExpireDate2 = DateTime.Parse("0001-01-01");
-                        DateTime argdUpdateDate2 = DateTime.Parse("0001-01-01");
+                        DateTime? argdExpireDate2 = DateTime.Parse("0001-01-01");
+                        DateTime? argdUpdateDate2 = DateTime.Parse("0001-01-01");
                         AddDataSetToContent(ref oDs, ref oContentElmt, dExpireDate: ref argdExpireDate2, dUpdateDate: ref argdUpdateDate2, nParentId);
                     }
 
@@ -11042,7 +11050,8 @@ namespace Protean
                                 foreach (XmlElement oContent in contents2.SelectNodes("Content"))
                                 {
                                     DateTime argdExpireDate = default;
-                                    oContent = SimpleTidyContentNode(ref oContent, ref argdExpireDate, ref dUpdateDate, "");
+                                    XmlElement xmloContent = oContent;
+                                    xmloContent = SimpleTidyContentNode(ref xmloContent, ref argdExpireDate, ref dUpdateDate, "");
                                 }
 
                                 // now lets take our xml's and do the magic
@@ -11453,8 +11462,8 @@ namespace Protean
                         XmlElement argoContent = (XmlElement)oNode;
                         DateTime argdExpireDate = DateTime.Parse("0001-01-01");
                         DateTime argdUpdateDate = DateTime.Parse("0001-01-01");
-                        oNode = SimpleTidyContentNode(ref argoContent, dExpireDate: ref argdExpireDate, dUpdateDate: ref argdUpdateDate);
-                        oNode = argoContent;
+                        argoContent = SimpleTidyContentNode(ref argoContent, dExpireDate: ref argdExpireDate, dUpdateDate: ref argdUpdateDate);
+                        //oNode = argoContent;
 
                     }
 
@@ -11503,10 +11512,11 @@ namespace Protean
                         {
                             DateTime argdExpireDate1 = DateTime.Parse("0001-01-01");
                             DateTime argdUpdateDate1 = DateTime.Parse("0001-01-01");
-                            oRelNode = SimpleTidyContentNode(ref oRelNode, dExpireDate: ref argdExpireDate1, dUpdateDate: ref argdUpdateDate1);
-                            string ParId = oRelNode.GetAttribute("parId");
+                            XmlElement xmloRelNode = oRelNode;
+                            xmloRelNode = SimpleTidyContentNode(ref xmloRelNode, dExpireDate: ref argdExpireDate1, dUpdateDate: ref argdUpdateDate1);
+                            string ParId = xmloRelNode.GetAttribute("parId");
                             XmlElement ParNode = (XmlElement)oResults.SelectSingleNode("Content[@id='" + ParId + "']");
-                            ParNode.AppendChild(oRelNode);
+                            ParNode.AppendChild(xmloRelNode);
                         }
 
                     }
@@ -13197,7 +13207,7 @@ namespace Protean
 
             }
 
-            public DataSet getDatasetAddRows(Array sSQL, string cTableName, string cDatasetName = "")
+            public DataSet getDatasetAddRows(string[] sSQL, string cTableName, string cDatasetName = "")
             {
                 // myWeb.PerfMon.Log("dbTools", "getDatasetAddRows")
                 // Creates a Dataset and a datatable
@@ -13216,10 +13226,10 @@ namespace Protean
 
                     SqlDataAdapter oDA;
 
-                    var loopTo = Information.UBound(sSQL);
+                    var loopTo = sSQL.Count();
                     for (nI = 0; nI <= loopTo; nI++)
                     {
-                        cSQL = Conversions.ToString(sSQL((object)nI));
+                        cSQL = Convert.ToString(sSQL[nI]);
                         cProcessInfo = "Running SQL:  " + cSQL;
                         oDA = new SqlDataAdapter(cSQL, oConn);
                         if (!string.IsNullOrEmpty(cDatasetName))
@@ -14026,7 +14036,10 @@ namespace Protean
                         if (column.ColumnName.ToLower().Contains("xml"))
                         {
                             foreach (XmlElement dataItem in reportXml.SelectNodes("Report/Item/" + column.ColumnName))
-                                SetInnerXmlThenInnerText(ref dataItem, dataItem.InnerText);
+                            {
+                                XmlElement xmldataItem  = dataItem;
+                                SetInnerXmlThenInnerText(ref xmldataItem, dataItem.InnerText);
+                            }                                
                         }
 
                         // Add metadata and format data based on type.
@@ -14605,7 +14618,7 @@ namespace Protean
                     // The purpose of this is to try to reduce the amount of table name/key/fref calls
                     // so to optimise this for bulk use.
                     // If cTableName <> cPreviousTableName Then
-                    cTableKey = modbhelper.getKey(oObjType);
+                    cTableKey = modbhelper.getKey((int)oObjType);
                     cTableFRef = modbhelper.getFRef(oObjType);
                     // End If
 
@@ -14756,11 +14769,13 @@ namespace Protean
                             {
                                 // run XSL again on instance....
                                 TextWriter oTW = new StringWriter();
+                                XmlWriter sWriterOTW = XmlWriter.Create(oTW);
                                 TextReader oTR;
                                 string cFeedItemXML;
-                                var oInstanceDoc = new XmlDocument();
+                                XmlDocument oInstanceDoc = new XmlDocument();
                                 oInstanceDoc.LoadXml(Conversions.ToString(importStateObj.oInstance.OuterXml));
-                                importStateObj.moTransform.Process(oInstanceDoc, oTW);
+                                XmlReader oXMLReaderInstance = new XmlNodeReader(oInstanceDoc);
+                                importStateObj.moTransform.Process(oXMLReaderInstance, sWriterOTW);
                                 oTR = new StringReader(oTW.ToString());
                                 cFeedItemXML = oTR.ReadToEnd();
                                 // remove whitespace
