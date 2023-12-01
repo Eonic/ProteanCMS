@@ -510,7 +510,7 @@ where cl.nStructId = " + myWeb.mnPageId));
                                     else
                                     {
 
-                                        calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.parameters("rootClass"), "."), className)), true);
+                                        calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], "."), className)), true);
                                     }
                                 }
 
@@ -587,7 +587,7 @@ where cl.nStructId = " + myWeb.mnPageId));
                                             else
                                             {
 
-                                                calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.parameters("rootClass"), "."), className)), true);
+                                                calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], "."), className)), true);
                                             }
                                         }
 
@@ -705,7 +705,7 @@ where cl.nStructId = " + myWeb.mnPageId));
                                         else
                                         {
 
-                                            calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.parameters("rootClass"), "."), className)), true);
+                                            calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], "."), className)), true);
                                         }
                                     }
 

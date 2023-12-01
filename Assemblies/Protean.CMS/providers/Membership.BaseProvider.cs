@@ -31,64 +31,43 @@ namespace Protean.Providers
 {
     namespace Membership
     {
-        public class BaseProvider : DynamicObject
+        interface IMembershipProvider {
+
+            void Initiate(ref IMembershipAdminXforms _AdminXforms, ref IMembershipAdminProcess _AdminProcess, ref IMembershipActivities _Activities, ref IMembershipProvider MemProvider, ref Cms myWeb);
+
+       //     IMembershipAdminXforms AdminXforms { get; set; }
+        //    IMembershipAdminXforms AdminProcess { get; set; }
+        //    IMembershipActivities Activities { get; set; }
+        }
+
+        interface IMembershipAdminXforms
+        {
+            XmlElement xFrmUserLogon(string FormName = "UserLogon");
+            XmlElement xFrmPasswordReminder();
+        }
+
+        interface IMembershipAdminProcess
+        {
+
+        }
+        interface IMembershipActivities
+        {
+
+        }
+
+        public class BaseProvider : IMembershipProvider
         {
             private const string mcModuleName = "Protean.Providers.Membership.BaseProvider";
-
-            private DefaultProvider.AdminXForms _AdminXforms;
-            private DefaultProvider.AdminProcess _AdminProcess;
-            private DefaultProvider.Activities _Activities;
-
             protected XmlNode moPaymentCfg;
-
             public event OnErrorEventHandler OnError;
-
             public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
             public event OnErrorWithWebEventHandler OnErrorWithWeb;
-
             public delegate void OnErrorWithWebEventHandler(ref Cms myweb, object sender, Tools.Errors.ErrorEventArgs e);
-
-            public DefaultProvider.AdminXForms AdminXforms
-            {
-                set
-                {
-                    _AdminXforms = value;
-                }
-                get
-                {
-                    return _AdminXforms;
-                }
-            }
-
-            public DefaultProvider.AdminProcess AdminProcess
-            {
-                set
-                {
-                    _AdminProcess = value;
-                }
-                get
-                {
-                    return _AdminProcess;
-                }
-            }
-
-            public DefaultProvider.Activities Activities
-            {
-                set
-                {
-                    _Activities = value;
-                }
-                get
-                {
-                    return _Activities;
-                }
-            }
 
             public BaseProvider(ref Cms myWeb, string ProviderName)
             {
                 try
                 {
-
                     Type calledType;
                     if (string.IsNullOrEmpty(ProviderName))
                     {
@@ -116,7 +95,7 @@ namespace Protean.Providers
                         else
                         {
                             // calledType = assemblyInstance.GetType(ourProvider.parameters("rootClass") & ".Providers.Messaging", True)
-                            calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.parameters("rootClass"), ".Providers.Membership."), ProviderName)), true);
+                            calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], ".Providers.Membership."), ProviderName)), true);
                         }
                     }
 
@@ -143,7 +122,7 @@ namespace Protean.Providers
 
         }
 
-        public class DefaultProvider
+        public class DefaultProvider : IMembershipProvider
         {
 
             public DefaultProvider()
@@ -151,36 +130,26 @@ namespace Protean.Providers
                 // do nothing
             }
 
-            public void Initiate(ref object _AdminXforms, ref object _AdminProcess, ref DefaultProvider.Activities _Activities, ref BaseProvider MemProvider, ref Cms myWeb)
+            void IMembershipProvider.Initiate(ref IMembershipAdminXforms _AdminXforms, ref IMembershipAdminProcess _AdminProcess, ref IMembershipActivities _Activities, ref IMembershipProvider MemProvider, ref Cms myWeb)
             {
 
-                MemProvider.AdminXforms = new AdminXForms(ref myWeb);
+                _AdminXforms = new AdminXForms(ref myWeb);
                 // MemProvider.AdminProcess = New AdminProcess(myWeb)
                 // MemProvider.AdminProcess.oAdXfm = MemProvider.AdminXforms
-                MemProvider.Activities = new Activities();
+                _Activities = new Activities();
 
             }
 
-            public void Initiate(ref object _AdminXforms, ref object _AdminProcess, ref object _Activities, ref BaseProvider MemProvider, ref Protean.Base myWeb)
+            class AdminXForms : Cms.Admin.AdminXforms, IMembershipAdminXforms
             {
-
-                // MemProvider.AdminXforms = New AdminXForms(myWeb)
-                // MemProvider.AdminProcess = New AdminProcess(myWeb)
-                // MemProvider.AdminProcess.oAdXfm = MemProvider.AdminXforms
-                MemProvider.Activities = new Activities();
-
-            }
-
-            public class AdminXForms : Cms.Admin.AdminXforms
-            {
-                private const string mcModuleName = "Providers.Membership.Eonic.AdminXForms";
+                private const string mcModuleName = "Protean.Providers.Membership.Default.AdminXForms";
                 public bool maintainMembershipsOnAdd = true;
 
                 public AdminXForms(ref Cms aWeb) : base(ref aWeb)
                 {
                 }
                 [Obsolete]
-                public override XmlElement xFrmUserLogon(string FormName = "UserLogon") // Just replace Overridable to Overrides
+                XmlElement IMembershipAdminXforms.xFrmUserLogon(string FormName = "UserLogon") // Just replace Overridable to Overrides
                 {
 
                     // Called to get XML for the User Logon.
@@ -359,14 +328,12 @@ namespace Protean.Providers
                     }
                 }
 
-                public override XmlElement xFrmPasswordReminder()  // Just replace Overridable to Overrides
+                XmlElement IMembershipAdminXforms.xFrmPasswordReminder()  // Just replace Overridable to Overrides
                 {
                     XmlElement oFrmElmt;
                     string sValidResponse;
                     string cProcessInfo = "";
                     bool getRecordByEmail;
-
-
                     try
                     {
 
@@ -936,13 +903,6 @@ namespace Protean.Providers
                     }
                 }
 
-                // Public Overrides Function xFrmEditDirectoryItem(Optional ByVal id As Long = 0, Optional ByVal cDirectorySchemaName As String = "User", Optional ByVal parId As Long = 0, Optional ByVal cXformName As String = "") As XmlElement
-                // Return xFrmEditDirectoryItem(id, cDirectorySchemaName, parId, cXformName, "", Nothing)
-                // End Function
-                // Public Overrides Function xFrmEditDirectoryItem(Optional ByVal id As Long = 0, Optional ByVal cDirectorySchemaName As String = "User", Optional ByVal parId As Long = 0, Optional ByVal cXformName As String = "", Optional ByVal FormXML As String = "") As XmlElement
-                // Return xFrmEditDirectoryItem(id, cDirectorySchemaName, parId, cXformName, FormXML, Nothing)
-                // End Function
-
                 public XmlElement xFrmEditDirectoryItem(ref XmlElement IntanceAppend,long id = 0L, string cDirectorySchemaName = "User", long parId = 0L, string cXformName = "", string FormXML = "")
                 {
 
@@ -1495,7 +1455,7 @@ namespace Protean.Providers
 
             }
 
-            public class AdminProcess : Admin
+            public class AdminProcess : Admin , IMembershipAdminProcess
             {
 
                 public event OnErrorEventHandler OnError;
@@ -1542,7 +1502,7 @@ namespace Protean.Providers
             }
 
 
-            public class Activities
+            public class Activities : IMembershipActivities
             {
                 private const string mcModuleName = "Providers.Membership.Eonic.Activities";
 
