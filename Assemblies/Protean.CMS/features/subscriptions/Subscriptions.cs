@@ -2827,14 +2827,14 @@ namespace Protean
                                         // remove binding
                                         XmlElement PaymentBinding = (XmlElement)this.moXformElmt.SelectSingleNode("descendant-or-self::bind[@id='cPaymentMethod']");
                                         PaymentBinding.ParentNode.RemoveChild(PaymentBinding);
-
-                                        oPay.getPaymentMethodButtons(ref this, xfrmGroup, PaymentAmount);
+                                        Cms.xForm thisforms = (Cms.xForm)this;
+                                        oPay.getPaymentMethodButtons(ref thisforms, ref xfrmGroup, PaymentAmount);
                                     }
-
                                     else
                                     {
                                         string emptyvalue = string.Empty;
-                                        oPay.getPaymentMethods(ref this,ref PaymentOptionsSelect, PaymentAmount, ref emptyvalue);
+                                        Cms.xForm thisforms = (Cms.xForm)this;
+                                        oPay.getPaymentMethods(ref thisforms, ref PaymentOptionsSelect, PaymentAmount, ref emptyvalue);
                                     }
 
                                 }

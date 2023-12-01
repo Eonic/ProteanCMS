@@ -125,9 +125,10 @@ namespace Protean
                 if (!string.IsNullOrEmpty(cModuleType))
                     cXformName = cXformName + "/" + cModuleType;
 
-                ArrayList commonfolders = new ArrayList();
-                commonfolders.Add("");
-                commonfolders.Add("/ewcommon");
+                //ArrayList commonfolders = new ArrayList();
+                string[] commonfolders = Array.Empty<string>();
+                commonfolders.Append("");
+                commonfolders.Append("/ewcommon");
 
                 oXfrm.load("/xforms/content/" + cXformName + ".xml", commonfolders);
 
@@ -2299,8 +2300,8 @@ namespace Protean
                         case "FolderList":
                             {
 
-                                fsHelper.LibraryType library = default;
-                                if (Tools.EnumUtility.TryParse(typeof(fsHelper.LibraryType), Query2, false, ref library))
+                                fsHelper.LibraryType library = 0;
+                                if (Tools.EnumUtility.TryParse(typeof(Protean.fsHelper.LibraryType), Query2, false))
                                 {
 
                                     string path = fsHelper.GetFileLibraryPath(library);
