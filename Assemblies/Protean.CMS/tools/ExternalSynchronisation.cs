@@ -488,7 +488,7 @@ namespace Protean
                 // cResult = " An Error occured " & cInfo & ": " & ex.ToString & "<br/>" & cLastError
                 // oFinalResultsXML.DocumentElement.InnerText = cResult
                 throw new ArgumentException("Exception");
-                return "";
+                //return "";
 
             }
 

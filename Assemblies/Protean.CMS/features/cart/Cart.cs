@@ -32,7 +32,7 @@ namespace Protean
 
             public XmlDocument moPageXml;
 
-            public new string mcModuleName = "Protean.Cms.Cart";
+            public string mcModuleName = "Protean.Cms.Cart";
 
             // Session EonicWeb Details
             public string mcEwDataConn;
@@ -1064,11 +1064,9 @@ namespace Protean
                     myWeb.moResponse.Cookies.Add(cookieEwSession);
                     cookieEwSession.Expires = DateAndTime.DateAdd(DateInterval.Month, 1d, DateTime.Now);
                 }
-
             }
 
-
-            public new void close()
+            public void close()
             {
                 myWeb.PerfMon.Log("Cart", "close");
                 string cProcessInfo = "";
@@ -4347,13 +4345,12 @@ namespace Protean
             public double getProductTaxRate(XmlElement priceXml)
             {
                 myWeb.PerfMon.Log("Cart", "getProductVatRate");
-                string cGroupXPath = "";
+               // string cGroupXPath = "";
                 var oProd = moPageXml.CreateNode(XmlNodeType.Document, "", "product");
                 try
                 {
 
-                    string vatCode = "";
-
+                   // string vatCode = "";
                     if (mbVatOnLine)
                     {
                         switch (priceXml.GetAttribute("taxCode") ?? "")
@@ -4372,7 +4369,6 @@ namespace Protean
                                 {
                                     return mnTaxRate;
                                 }
-
                         }
                     }
                     else
@@ -4386,7 +4382,6 @@ namespace Protean
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "getProductTaxRate", ex, "", "", gbDebug);
                     return (double)default;
                 }
-
             }
 
             public XmlElement getContentPricesNode(XmlElement oContentXml, string cUnit, long nQuantity, string PriceType = "Prices")
@@ -8698,7 +8693,7 @@ namespace Protean
                                     else
                                     {
                                         // injection attempt don't add to cart
-                                        return false;
+                                        //return false;
                                         return AddItemsRet;
                                     }
                                     mbDepositOnly = true;

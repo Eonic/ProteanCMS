@@ -87,7 +87,7 @@ namespace Protean
             }
         }
 
-        public new void open(XmlDocument oPageXml)
+        public void open(XmlDocument oPageXml)
         {
             // PerfMon.Log("fsHelper", "open")
             string cProcessInfo = "";
@@ -1091,7 +1091,7 @@ namespace Protean
                         if (oImp.ImpersonateValidUser(goConfig["AdminAcct"], goConfig["AdminDomain"], goConfig["AdminPassword"], cInGroup: goConfig["AdminGroup"]) == false)
                         {
                             return null;
-                            break;
+                            //break;
                         }
                     }
 

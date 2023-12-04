@@ -463,10 +463,8 @@ namespace Protean.Providers
 
 
                         }
-
-                        return ccPaymentXform;
-
                         oEwProv = default;
+                        return ccPaymentXform;                        
                     }
 
                     catch (Exception ex)

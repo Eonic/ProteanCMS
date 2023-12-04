@@ -247,7 +247,7 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
             if (ContainsKey(Key))
             {
                 throw new ApplicationException("This Parameter already exist.");
-                return;
+                //return null;
             }
 
             switch (Key)

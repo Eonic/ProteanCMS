@@ -115,7 +115,7 @@ namespace Protean.Tools
                             {
                                 nProvider = (Hash.Provider)System.Enum.Parse(typeof(Hash.Provider), Provider, true);
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                                 cResult = OriginalString;
                             }
@@ -302,7 +302,7 @@ namespace Protean.Tools
             {
                 bPlain = Convert.FromBase64CharArray(strData.ToCharArray(), 0, strData.Length);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 strResult = "Error. Input Data is not base64 encoded.";
                 return strResult;
@@ -335,7 +335,7 @@ namespace Protean.Tools
 
                 return strResult;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 strResult = "Error. Decryption Failed. Possibly due to incorrect Key or corrputed data";
                 return strResult;
@@ -1935,7 +1935,7 @@ namespace Protean.Tools
                     returnValue = returnValue.Replace("-", "");
                     return returnValue;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "";
                 }
@@ -1965,7 +1965,7 @@ namespace Protean.Tools
 
                     return returnValue;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "";
                 }
@@ -2050,7 +2050,7 @@ namespace Protean.Tools
             ///         ''' <remarks></remarks>
             private static string StringToHex(string message)
             {
-                long index;
+                //long index;
                 long maxIndex;
                 StringBuilder hexSb = new StringBuilder();
                 string hexOut = string.Empty;

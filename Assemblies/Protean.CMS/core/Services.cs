@@ -105,7 +105,7 @@ namespace Protean
                 }
                 oResponseElmt.AppendChild(oElmt);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 bResult = false;
                 // Do nothing
@@ -196,7 +196,7 @@ namespace Protean
         {
 
             string sMessage = "";
-            string cProcessInfo = "emailer";
+           //string cProcessInfo = "emailer";
             try
             {
                 if (CheckUserIP())
@@ -223,10 +223,8 @@ namespace Protean
         [WebMethod(Description = "Sends Email From Website xForm")]
         public object emailerXMLAttach(ref XmlElement oBodyXML, ref string xsltPath, ref string fromName, ref string fromEmail, ref string recipientEmail, ref string SubjectLine, string ccRecipient, string bccRecipient, string cSeperator, string attachmentFromXSLPath, string attachmentFromXSLType, string attachmentName)
         {
-
             string sMessage;
-
-            string cProcessInfo = "emailerXMLAttach";
+            //string cProcessInfo = "emailerXMLAttach";
             try
             {
 
@@ -249,10 +247,8 @@ namespace Protean
         [WebMethod(Description = "Sends Email To Multiple Recipients")]
         public object multiEmailer(ref XmlElement oBodyXML, ref string xsltPath, ref string fromName, ref string fromEmail, ref string recipientIds, ref string SubjectLine)
         {
-
             string sMessage;
-
-            string cProcessInfo = "multiEmailer";
+            //string cProcessInfo = "multiEmailer";
             try
             {
 
@@ -274,10 +270,8 @@ namespace Protean
         [WebMethod(Description = "Sends Email From Website xForm with Attachement As Stream in base 64 string format")]
         public object emailerWithAttachmentStreams(ref XmlElement oBodyXML, ref string xsltPath, ref string fromName, ref string fromEmail, ref string recipientEmail, ref string SubjectLine, string ccRecipient, string bccRecipient, string cSeperator, KeyValPair[] attachmentsBase64List)
         {
-
             string sMessage;
-
-            string cProcessInfo = "emailerWithAttachmentStreams";
+           // string cProcessInfo = "emailerWithAttachmentStreams";
             try
             {
                 var myWeb = new Cms(moCtx);
@@ -312,10 +306,8 @@ namespace Protean
         [WebMethod(Description = "Sends Email From Website xForm with Attachment (from physical file)")]
         public object emailerWithAttachment(ref XmlElement oBodyXML, ref string xsltPath, ref string fromName, ref string fromEmail, ref string recipientEmail, ref string SubjectLine, string ccRecipient, string bccRecipient, string cSeperator, string cAttachmentFilePath, bool bDeleteAfterSend)
         {
-
             string sMessage;
-
-            string cProcessInfo = "emailerWithAttachment";
+            //string cProcessInfo = "emailerWithAttachment";
             try
             {
                 var myWeb = new Cms(moCtx);
@@ -337,10 +329,8 @@ namespace Protean
         [WebMethod(Description = "Sends Email From Website xForm with Attachment and delete file (from physical file)")]
         public object emailerWithAttachmentPDF(ref XmlElement oBodyXML, ref string xsltPath, ref string fromName, ref string fromEmail, ref string recipientEmail, ref string SubjectLine, string ccRecipient, string bccRecipient, string cSeperator, string cAttachmentFilePath, bool bDeleteAfterSend)
         {
-
             string sMessage;
-
-            string cProcessInfo = "emailerWithAttachment";
+            //string cProcessInfo = "emailerWithAttachment";
             try
             {
                 var myWeb = new Cms(moCtx);
@@ -375,19 +365,13 @@ namespace Protean
         [WebMethod(Description = "Sends Email From Website xForm with Attachment (from physical file)")]
         public object emailerWithFTPAttachment(ref XmlElement oBodyXML, ref string xsltPath, ref string fromName, ref string fromEmail, ref string recipientEmail, ref string SubjectLine, string ccRecipient, string bccRecipient, string cSeperator, string cAttachmentFilePath, bool bDeleteAfterSend, string FTPServer, string FTPUsername, string FTPPassword, string FTPFolder)
         {
-
             string sMessage;
-
-
-            string cProcessInfo = "emailerWithAttachment";
+            //string cProcessInfo = "emailerWithAttachment";
             try
             {
-
                 var oMsg = new Messaging(ref myWeb.msException);
                 // oMsg.addAttachment(cAttachmentFilePath, bDeleteAfterSend)
-
                 // oMsg.deleteAttachment(cAttachmentFilePath)
-
                 string FileName = cAttachmentFilePath.Substring(cAttachmentFilePath.LastIndexOf("/") + 1);
                 FTPFolder = FTPFolder.Trim('/') + "/" + Strings.Replace(fromName, " ", "-");
 
@@ -1124,9 +1108,9 @@ namespace Protean
             myWeb.Open();
 
             int data = Convert.ToInt32(myWeb.moDbHelper.checkPagePermission(parId));
-
-            return data;
             myWeb.Close();
+            return data;
+           
         }
 
         [WebMethod(Description = "return admin mode")]

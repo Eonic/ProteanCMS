@@ -53,7 +53,7 @@ namespace Protean
 
             #region Declarations
 
-            private new const string mcModuleName = "Eonic.dbHelper";
+            private const string mcModuleName = "Eonic.dbHelper";
 
             private System.Web.HttpContext moCtx;
 
@@ -552,7 +552,7 @@ namespace Protean
 
 
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return false;
                 }
@@ -567,7 +567,7 @@ namespace Protean
 
 
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return false;
                 }
@@ -579,7 +579,7 @@ namespace Protean
                 {
                     return nPermissionLevel == PermissionLevel.AddUpdateOwnPublish | nPermissionLevel == PermissionLevel.AddUpdateOwn;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return false;
                 }
@@ -1176,7 +1176,7 @@ namespace Protean
                     return appcheckName;
                 }
 
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return dbObjectName;
                 }
@@ -3195,7 +3195,7 @@ namespace Protean
                     string query = "SELECT " + getKey((int)objectType) + " FROM " + getTable(objectType) + " o INNER JOIN dbo.tblAudit a ON o.nauditId = a.nauditKey " + "WHERE " + myWeb.GetStandardFilterSQLForContent(false);
                     return Conversions.ToBoolean(Operators.ConditionalCompareObjectGreater(this.GetDataValue(query), 0, false));
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return false;
                 }
@@ -3209,7 +3209,7 @@ namespace Protean
                     string query = "select * from tblcontentstructure P inner join tblcontentstructure C on p.nStructKey = C.nStructParId where p.nStructKey =" + objectKey;
                     return Conversions.ToBoolean(Operators.ConditionalCompareObjectGreater(this.GetDataValue(query), 0, false));
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return false;
                 }
@@ -3719,7 +3719,7 @@ namespace Protean
             {
 
                 string cProcessInfo = "";
-                XmlElement oElmt = null;
+               // XmlElement oElmt = null;
                 XmlElement oOrigInstance;
                 long nCurrentVersionNumber;
                 long nNewVersionNumber = 0L;
@@ -4024,7 +4024,7 @@ namespace Protean
                     nVersionId = Conversions.ToLong(setObjectInstance(objectTypes.Content, oTempInstance, 0L));
 
                     // Superceed previous versions
-                    string cPreviousStatus = "";
+                    //string cPreviousStatus = "";
                     // If NodeState(oTempInstance, "currentStatus", , , , , , cPreviousStatus) = XmlNodeState.HasContents Then
                     // If cPreviousStatus = "3" Or cPreviousStatus = "4" Then
                     // Update everything with a status of Pending to be DraftSuperceded
@@ -4053,8 +4053,8 @@ namespace Protean
                 try
                 {
 
-                    string cSql = "";
-                    string sContent = "";
+                    //string cSql = "";
+                   // string sContent = "";
                     string dLastRun = "";
                     string cFilterSql = "";
 
@@ -8402,7 +8402,7 @@ namespace Protean
 
                                     bValid = true;
                                 }
-                                catch (Exception ex)
+                                catch (Exception)
                                 {
                                     sReturn = "Your email failed to send from password reminder";
                                     bValid = false;
@@ -9918,7 +9918,7 @@ namespace Protean
                     i = ExeProcessSql(cSQL);
                     return i;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return i;
                 }
@@ -10199,7 +10199,7 @@ namespace Protean
                 PerfMonLog("Web", "GetContentDetailXml");
                 XmlElement oRoot;
                 XmlElement oElmt = null;
-                XmlElement retElmt = null;
+                //XmlElement retElmt = null;
                 string sContent;
                 string sSql;
                 string sProcessInfo = "GetContentDetailXml";
@@ -10262,7 +10262,7 @@ namespace Protean
                                     bLoadAsXml = true;
                                 }
 
-                                catch (Exception ex)
+                                catch (Exception)
                                 {
                                     // If the load failed, then flag it in the Content node and return the InnerText as a Comment
                                     oComment = oRoot.OwnerDocument.CreateComment(oElmt.InnerText);
@@ -10765,9 +10765,9 @@ namespace Protean
 
                 string sSql;
                 string sFilterSql = "";
-                string sSql2 = "";
-                string sNodeName = "";
-                string sContent = "";
+                //string sSql2 = "";
+                //string sNodeName = "";
+                //string sContent = "";
                 // Dim rTypePresent As Boolean = False
                 string sSepcificTypeSQL = "";
                 // 'specificTypes = "SKU"
@@ -10910,10 +10910,10 @@ namespace Protean
 
                 string sSql;
                 string sFilterSql = "";
-                string sSql2 = "";
-                string sNodeName = "";
-                string sContent = "";
-                string specificTypeSQL = "";
+                //string sSql2 = "";
+                //string sNodeName = "";
+                //string sContent = "";
+                //string specificTypeSQL = "";
                 string sProcessInfo = "building the related Content XML";
                 string sContentLevelxPath = "";
 
@@ -12525,7 +12525,7 @@ namespace Protean
                     sSearch = Strings.Replace(" " + sSearch + " ", " then ", "");
                     sSearch = Strings.Replace(" " + sSearch + " ", " or ", "");
                     sSearch = Strings.Trim(sSearch);
-                    int i = 0;
+                    //int i = 0;
 
                     var oMenuElmt = myWeb.GetStructureXML();
 
@@ -12583,16 +12583,12 @@ namespace Protean
                     oResults = oXML.DocumentElement.SelectNodes("Content");
                     return oResults;
                 }
-
-
                 catch (Exception ex)
                 {
                     OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "LocateContentSearch", ex, ""));
                     return null;
                 }
             }
-
-
             public long emailActivity(short nUserDirId, string cActivityFullDetail = "", string cEmailRecipient = "", string cEmailSender = "", string cActivityXml = "")
             {
 
@@ -13400,7 +13396,7 @@ namespace Protean
 
             public bool createDB(string DatabaseName)
             {
-                string cProcessInfo = "createDB";
+                //string cProcessInfo = "createDB";
                 try
                 {
                     System.Collections.Specialized.NameValueCollection oConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
@@ -13431,7 +13427,7 @@ namespace Protean
 
             public bool createDB(string DatabaseName, string DatabaseServer, string DatabaseUsername, string DatabasePassword)
             {
-                string cProcessInfo = "createDB";
+                //string cProcessInfo = "createDB";
                 try
                 {
                     // Dim oConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
@@ -14197,7 +14193,7 @@ namespace Protean
                     return columnExists;
                 }
 
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return false;
                 }
@@ -14254,7 +14250,7 @@ namespace Protean
                     return bUnique;
                 }
 
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return false;
                 }
@@ -14446,7 +14442,7 @@ namespace Protean
                     }
                     return strReturn;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return null;
                 }

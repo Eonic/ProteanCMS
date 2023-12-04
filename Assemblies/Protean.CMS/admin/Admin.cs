@@ -36,7 +36,7 @@ namespace Protean
 
             public XmlDocument moPageXML = new XmlDocument();
 
-            public static new string mcModuleName = "Protean.Admin";
+            public static string mcModuleName = "Protean.Admin";
             public string mcEwCmd;
             public string mcEwCmd2;
             public string mcEwCmd3;
@@ -114,7 +114,7 @@ namespace Protean
             }
 
 
-            public virtual new void open(XmlDocument oPageXml)
+            public virtual void open(XmlDocument oPageXml)
             {
                 string cProcessInfo = "";
                 try
@@ -132,7 +132,7 @@ namespace Protean
                 }
             }
 
-            public new void close()
+            public void close()
             {
                 string cProcessInfo = "";
                 try
@@ -5604,7 +5604,7 @@ namespace Protean
                                 {
                                     voteXml.InnerXml = voteInnerXml;
                                 }
-                                catch (Exception ex)
+                                catch (Exception)
                                 {
                                     voteXml.InnerText = voteInnerXml;
                                 }
@@ -5630,7 +5630,7 @@ namespace Protean
             {
                 string sProcessInfo = "";
                 string reportName = "Manage Lookups";
-                long contentId = 0L;
+                //long contentId = 0L;
                 string lookupId = null;
                 string sSql;
                 DataSet lookupsDataset;                

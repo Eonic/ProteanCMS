@@ -36,7 +36,7 @@ namespace Protean
 
             protected XmlDocument moPageXml; // the actual page, given from the web object
             private string mcIndexFolder = "";
-            private new string mcModuleName = "Eonic.Search.Search"; // module name
+            private string mcModuleName = "Eonic.Search.Search"; // module name
             public XmlElement moContextNode;
             public Cms myWeb;
             public NameValueCollection moConfig;
@@ -247,13 +247,13 @@ namespace Protean
             public virtual void apply()
             {
                 myWeb.PerfMon.Log("Search", "apply");
-                string sXpath = "";
+                //string sXpath = "";
                 string sSearch = myWeb.moRequest["searchString"];
-                string[] aNewSearchWords = null;
-                string sError = "";
-                string cSearchTerm = "";
-                bool bFirst = true;
-                bool bSearchSubmitted = false;
+                //string[] aNewSearchWords = null;
+                //string sError = "";
+                //string cSearchTerm = "";
+                //bool bFirst = true;
+                //bool bSearchSubmitted = false;
 
                 string sProcessInfo = "Search Routing";
 
@@ -1416,14 +1416,14 @@ namespace Protean
             public void RegExpQuery(string sSearch, string cContentType, bool bUserQuery = false)
             {
                 myWeb.PerfMon.Log("Search", "RegExpQuery");
-                string sXpath = "";
+              //  string sXpath = "";
                 string[] aSearchWords;
-                string[] aNewSearchWords = null;
+               // string[] aNewSearchWords = null;
                 int i;
-                string sError = "";
+               // string sError = "";
                 string cSearchTerm = "";
                 bool bFirst = true;
-                bool bSearchSubmitted = false;
+                //bool bSearchSubmitted = false;
                 Regex oRegEx;
                 string sProcessInfo = "Search Routing";
                 int nResultCount = 0;
@@ -1435,9 +1435,9 @@ namespace Protean
                 // ewSearchRegExIncludeTags - experimental.  This tries to replicate simple Xpath by only looking at what's in certain tags.
                 // This should be a pipe separated list (i.e. h1|h2|h3)
 
-                bSearchSubmitted = true;
+                //bSearchSubmitted = true;
 
-                string cIDs = "";
+                //string cIDs = "";
                 string cSearchWhereCONTENT = "";
                 string cSearchWhereUSER = "";
                 string cRegEx = "";
@@ -1445,7 +1445,7 @@ namespace Protean
                 Regex reMasterCheck;
                 string cSql = "";
                 var aSearchTerms = new Collection();
-                bool bFullMatch = true;
+               // bool bFullMatch = true;
                 string cSearchVariant;
 
 
@@ -1721,30 +1721,30 @@ namespace Protean
             public void FullTextQuery(string sSearch, string cContentType, bool bUserQuery = false)
             {
                 myWeb.PerfMon.Log("Search", "FullTextQuery");
-                string sXpath = "";
+                //string sXpath = "";
                 string[] aSearchWords;
-                string[] aNewSearchWords = null;
+               // string[] aNewSearchWords = null;
                 int i;
-                string sError = "";
+                //string sError = "";
                 string cSearchTerm = "";
                 bool bFirst = true;
-                bool bSearchSubmitted = false;
+               // bool bSearchSubmitted = false;
                 string sProcessInfo = "Search Routing";
                 int nResultCount = 0;
                 var dtStart = DateTime.Now;
 
-                bSearchSubmitted = true;
+               // bSearchSubmitted = true;
 
-                string cIDs = "";
+                //string cIDs = "";
                 string cSearchWhereCONTENT = "";
                 string cSearchWhereCONTENTforCode = "";
                 string cSearchWhereUSER = "";
                 string cRegEx = "";
-                string cRegExPattern = "";
+                //string cRegExPattern = "";
                 Regex reMasterCheck = null;
                 string cSql = "";
                 var aSearchTerms = new Collection();
-                bool bFullMatch = true;
+                //bool bFullMatch = true;
 
                 try
                 {

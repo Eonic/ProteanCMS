@@ -15,9 +15,9 @@ namespace Protean
         {
 
             #region    Error Handling
-            public new event OnErrorEventHandler OnError;
+            public event OnErrorEventHandler OnError;
 
-            public new delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs err);
+            public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs err);
 
             // Private Sub _OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs) Handles MyBase.OnError
             // RaiseEvent OnError(sender, e)
@@ -516,11 +516,11 @@ namespace Protean
                 public void Add(ref Cms myWeb, ref XmlElement oContentNode)
                 {
                     Calendar moCalendar;
-                    string sProcessInfo;
+                    //string sProcessInfo;
                     try
                     {
 
-                        sProcessInfo = "Begin Calendar";
+                        string sProcessInfo = "Begin Calendar";
                         moCalendar = new Calendar(ref myWeb);
 
                         int cGetMonth = Conversions.ToInteger(oContentNode.GetAttribute("months"));

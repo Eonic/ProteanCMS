@@ -1765,7 +1765,7 @@ namespace Protean
                     nRolex = Convert.ToInt32(myWeb.moDbHelper.insertDirectory("DefaultUser", "Role", "Default User", "", "<Role><Name>Administrator</Name><Notes/></Role>"));
                     myWeb.moDbHelper.maintainDirectoryRelation(nRolex, nUserx);
                     return true;
-                    return default;
+                    //return default;
                 }
 
 
@@ -4128,7 +4128,7 @@ namespace Protean
             }
         }
 
-        public new bool DoChange(int nContentID, string cContentType, string cContent)
+        public bool DoChange(int nContentID, string cContentType, string cContent)
         {
             try
             {

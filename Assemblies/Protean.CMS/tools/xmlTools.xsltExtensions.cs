@@ -2608,11 +2608,10 @@ namespace Protean
                     else
                     {
                         return oPageXml;
-
                     }
-                    return oNodelist;
-
                     newWeb = default;
+                    return oNodelist;
+                    
                 }
 
                 catch (Exception ex)

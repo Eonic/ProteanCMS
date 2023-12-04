@@ -32,7 +32,7 @@ namespace Protean
                 public string cleanUploadedPaths;
                 public JSONActions()
                 {
-                    string ctest = "this constructor is being hit"; // for testing
+                    //string ctest = "this constructor is being hit"; // for testing
                     myWeb = new Cms();
                     myWeb.InitializeVariables();
                     myWeb.Open();
@@ -44,7 +44,7 @@ namespace Protean
                 {
                     try
                     {
-                        string cProcessInfo = "";
+                        //string cProcessInfo = "";
                         string JsonResult = "";
                         // Dim twtKey As String
                         // Dim twtSecret As String
@@ -79,8 +79,8 @@ namespace Protean
                         // myApi.mnUserId
 
                         string JsonResult = "";
-                        string contentId = "";
-                        string xpath = "";
+                        //string contentId = "";
+                        //string xpath = "";
                         // Dim value As String 'JSON convert to XML and save ensure the xml schemas match.
 
                         return JsonResult;
