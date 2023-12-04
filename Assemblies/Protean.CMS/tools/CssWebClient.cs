@@ -92,8 +92,19 @@ namespace Protean
                         {
                             origServiceUrl = "https://" + goRequest.ServerVariables["SERVER_NAME"] + Serviceurl;
                             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
-                            ServicePointManager.ServerCertificateValidationCallback = new Func<object, System.Security.Cryptography.X509Certificates.X509Certificate, System.Security.Cryptography.X509Certificates.X509Chain, SslPolicyErrors, bool>((se, cert, chain, sslerror) => true);
+                            ServicePointManager.ServerCertificateValidationCallback +=
+                                (sender, cert, chain, error) =>
+                                {
+                                    if (cert.GetCertHashString() == "xxxxxxxxxxxxxxxx")
+                                    {
+                                        return true;
+                                    }
+                                    else
+                                    {
+                                        return error == SslPolicyErrors.None;
+                                    }
+                                };
+                            // ServicePointManager.ServerCertificateValidationCallback = new Func<object, System.Security.Cryptography.X509Certificates.X509Certificate, System.Security.Cryptography.X509Certificates.X509Chain, SslPolicyErrors, bool>((se, cert, chain, sslerror) => true);
                         }
                         else
                         {

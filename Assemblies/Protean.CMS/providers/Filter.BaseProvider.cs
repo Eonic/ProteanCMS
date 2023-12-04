@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// $Library:     Protean.Providers.messaging.base
+// $Library:     Protean.Providers.Filter.BaseProvider
 // $Revision:    3.1  
 // $Date:        2010-03-02
 // $Author:      Trevor Spink (trevor@eonic.co.uk)

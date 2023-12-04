@@ -1068,7 +1068,11 @@ namespace Protean
                                                             cProcessInfo = "Indexing - " + oDocElmt.InnerText;
                                                             string fileAsText = GetFileText(myWeb.goServer.MapPath(oDocElmt.InnerText), ref myWeb.msException);
                                                             string argsException = oElmt.GetAttribute("name");
-                                                            IndexPage(myWeb.mnPageId, "<h1>" + oElmt.GetAttribute("name") + "</h1>" + fileAsText, oDocElmt.InnerText, myWeb.msException, ref argsException, "Download", myWeb.mnArtId, cPageExtract, Convert.ToDateTime(oElmt.GetAttribute("publish")), Conversions.ToDate(oElmt.GetAttribute("publish")), null, Interaction.IIf(Information.IsDate(oElmt.GetAttribute("update")), Conversions.ToDate(oElmt.GetAttribute("update")), null));
+                                                         
+                                                            DateTime date;
+                                                            DateTime? publishDate = DateTime.TryParse(oElmt.GetAttribute("publish"), out date) ? date : (DateTime?)null;
+                                                            DateTime? expireDate = DateTime.TryParse(oElmt.GetAttribute("update"), out date) ? date : (DateTime?)null;
+                                                            IndexPage(myWeb.mnPageId, "<h1>" + oElmt.GetAttribute("name") + "</h1>" + fileAsText, oDocElmt.InnerText, myWeb.msException, ref argsException, "Download", myWeb.mnArtId, cPageExtract, publishDate, expireDate);
 
                                                             var oFileElmt = oInfoElmt.OwnerDocument.CreateElement("file");
                                                             oPageElmt.SetAttribute("file", oDocElmt.InnerText);
@@ -1257,7 +1261,7 @@ namespace Protean
             }
 
 
-            private void IndexPage(int nPageId, string cPageText, string cURL, string cPageTitle, ref string sException, string cContentType = "Page", long nContentId = 0L, string cAbstract = "", DateTime dPublish = default, DateTime dUpdate = default)
+            private void IndexPage(int nPageId, string cPageText, string cURL, string cPageTitle, ref string sException, string cContentType = "Page", long nContentId = 0L, string cAbstract = "", DateTime? dPublish = null, DateTime? dUpdate = null)
             {
                 // PerfMon.Log("Indexer", "IndexPage")
                 string cProcessInfo = cURL;

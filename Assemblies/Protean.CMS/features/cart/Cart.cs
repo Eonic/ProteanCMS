@@ -1652,7 +1652,7 @@ namespace Protean
                                         myWeb.moSession["cLogonCmd"] = "cartCmd=Logon";
                                         // registration xform
                                         Cms argmyWeb = myWeb;
-                                        ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                                        Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
                                         IMembershipProvider oMembershipProv = RetProv.Get(ref argmyWeb, this.moConfig["MembershipProvider"]);
 
                                         myWeb = (Cms)argmyWeb;
