@@ -52,7 +52,7 @@ namespace Protean
 
                 }
 
-                public new void Open(XmlDocument oPageXml)
+                public void Open(XmlDocument oPageXml)
                 {
                     string cProcessInfo = "";
                     try

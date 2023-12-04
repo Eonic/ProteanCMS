@@ -101,10 +101,9 @@ namespace Protean
                         string jsonString = JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented);
                         jsonString = jsonString.Replace("\"@", "\"_");
                         jsonString = jsonString.Replace("#cdata-section", "cDataValue");
-
-                        return jsonString;
                         // persist cart
                         myCart.close();
+                        return jsonString;                       
                     }
 
                     catch (Exception ex)

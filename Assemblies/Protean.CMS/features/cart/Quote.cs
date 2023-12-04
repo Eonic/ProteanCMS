@@ -1120,14 +1120,14 @@ namespace Protean
                     // pretty useless if the site doesnt have a cart
                     // if we dont have quotes then we'll never get here
                     if (!((base.moConfig["Quote"]).ToLower() == "on") | nQuoteId < 1)
-                    {
-                        return false;
+                    {                        
                         // also better check the user owns this quote, we dont want them
                         // getting someone else quote by mucking around with the querystring
                         if (!(Convert.ToInt32(base.moDBHelper.ExeProcessSqlScalar("Select nCartUserDirId FROM tblCartOrder WHERE nCartOrderKey = " + nQuoteId + " AND cCartSchemaName = 'Quote'")) == mnEwUserId))
                         {
                             return false; // else we carry on
                         }
+                        return false;
                     }
                     var bDelivery = default(bool);
                     var bBilling = default(bool);

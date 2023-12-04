@@ -43,7 +43,7 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
             if (string.IsNullOrEmpty(UserName))
             {
                 throw new Exception("No username specififed");
-                return UploadAndPostRet;
+                //return UploadAndPostRet;
 
             }
             if (string.IsNullOrEmpty(Password))

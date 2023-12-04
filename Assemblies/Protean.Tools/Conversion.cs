@@ -396,7 +396,7 @@ namespace Protean.Tools
             long succeeded = 0L;
             long failed = 0L;
             var ResponseXml = new XmlDocument();
-            string cProcessInfo;
+            string cProcessInfo = string.Empty;
             var sr = default(StreamReader);
             // Dim writeFilePath As String = Me.writePath & "debug.txt"
             // Dim sw As New StreamWriter(File.Open(writeFilePath, FileMode.OpenOrCreate))
@@ -535,7 +535,7 @@ namespace Protean.Tools
                 oOutputXml.LoadXml(ResponseXml.OuterXml);
                 this.oOutputXml = oOutputXml.DocumentElement;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 SetStatus(Status.Failed, StatusReason.Undefined);
             }
@@ -605,7 +605,7 @@ namespace Protean.Tools
 
                 return values;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -627,7 +627,7 @@ namespace Protean.Tools
 
                 return myString;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -679,7 +679,7 @@ namespace Protean.Tools
 
                 return bCheck;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
@@ -863,7 +863,7 @@ namespace Protean.Tools
                                         {
                                             temprow[columnIndex] = string.Empty;
                                         }
-                                        catch (Exception ex)
+                                        catch (Exception)
                                         {
                                             cProcessInfo = "Not found " + columnIndex;
                                         }
@@ -878,7 +878,7 @@ namespace Protean.Tools
                                 {
                                     temprow[columnIndex] = cellVal;
                                 }
-                                catch (Exception ex)
+                                catch (Exception)
                                 {
                                     cProcessInfo = "Not found " + columnIndex;
                                 }
@@ -1052,9 +1052,9 @@ namespace Protean.Tools
             string strLine = "";
             string strNextLine = "";
             var bytPeekChars = new byte[3];
-            const byte cCR = 13;
+            //const byte cCR = 13;
             const byte cLf = 10;
-            string test = "";
+            //string test = "";
             try
             {
                 if (m_objInputFile.EndOfStream == false)
@@ -1082,7 +1082,7 @@ namespace Protean.Tools
                         }
                         else
                         {
-                            test = "";
+                            //test = "";
                         }
                     }
                     while (strNextLine != "[Lf]");

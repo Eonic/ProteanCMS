@@ -29,7 +29,7 @@ namespace Protean.Tools
                 }
                 var assemblyInstance = Assembly.Load(assemblyName);
                 return assemblyInstance.GetType(typeFromSpecifiedAssembly, true);
-                assemblyInstance = null;
+                //assemblyInstance = null;
             }
 
         }

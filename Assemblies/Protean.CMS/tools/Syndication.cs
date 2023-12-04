@@ -408,7 +408,8 @@ namespace Protean
 
                         string sqlCriteria = "";
                         int nCount = 0;
-                        XmlElement xmlContentnode = null; XmlElement xmlopage = null;
+                        //XmlElement xmlContentnode = null; 
+                        XmlElement xmlopage = null;
                         sqlCriteria += " cContentSchemaName ='BlogSettings'";
                         sqlCriteria += " AND CL.nStructId IN (" + Dictionary.hashtableToCSV(ref blogArticlePageIds, Dictionary.Dimension.Key) + ")";
                         _myWeb.GetPageContentFromSelect(sqlCriteria,ref nCount, ref blogControls, ref xmlopage, true, default, default);

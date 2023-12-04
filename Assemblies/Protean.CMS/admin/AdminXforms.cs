@@ -104,7 +104,7 @@ namespace Protean
                         }
                     }
 
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         return false;
                     }
@@ -121,7 +121,7 @@ namespace Protean
                         }
                     }
 
-                    catch (Exception ex)
+                    catch (Exception)
                     {
 
                     }
@@ -4165,7 +4165,7 @@ namespace Protean
                                             moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, base.Instance, (long)nReturnId);
                                         }
 
-                                        catch (Exception ex)
+                                        catch (Exception)
                                         {
                                             // OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ContentActions", ex, sProcessInfo))
                                             cProcessInfo = assemblyName + "." + contentEditAction + " not found";
@@ -4176,16 +4176,12 @@ namespace Protean
 
                                 if (bPreviewRedirect)
                                 {
-                                    long VerId = 0L;
+                                    //long VerId = 0L;
                                     this.myWeb.msRedirectOnEnd = "/?ewCmd=PreviewOn&pgid=" + pgid + "&artid=" + id + "&verId=" + nReturnId;
                                 }
 
                             }
                         }
-
-
-
-
                         else if (isSubmittedOther((int)pgid)) // has another specific submit button been pressed?
                         {
                             // This should really be taken over using  xForms Triggers
@@ -5129,7 +5125,7 @@ namespace Protean
                 public XmlElement xFrmMultiUpload(string cPath, Protean.fsHelper.LibraryType nType)
                 {
                     XmlElement oFrmElmt;
-                    string sValidResponse = "";
+                    //string sValidResponse = "";
                     string cProcessInfo = "";
                     string rootDir = @"\";
                     try
@@ -5642,9 +5638,9 @@ namespace Protean
 
 
                     string cProcessInfo = "";
-                    string cCurrentPassword = "";
-                    string cCodeUsed = "";
-                    bool addNewitemToParId = false;
+                    //string cCurrentPassword = "";
+                    //string cCodeUsed = "";
+                   // bool addNewitemToParId = false;
                     string cDirectorySchemaName = "role";
                     string cXformName = "";
                     XmlElement oElmt;
@@ -8013,14 +8009,9 @@ namespace Protean
                         base.NewFrm("Refund");
                         base.submission("Refund", "", "post", "form_check(this)");
                         decimal refundAmount;
-                        string cResponse = "";   // check this
+                        //string cResponse = "";   // check this
                         var xdoc = new XmlDocument();
                         var amount = default(double);
-
-
-
-
-
                         if (nOrderId > 0L)
                         {
                             string cartXmlSql = "select cCartXml from tblCartOrder where nCartOrderKey = " + nOrderId;
@@ -8129,9 +8120,8 @@ namespace Protean
                     XmlElement oSelElmt1;
                     XmlElement oSelElmt2;
                     var oTempInstance = this.moPageXML.CreateElement("instance");
-                    bool bCascade = false;
+                    //bool bCascade = false;
                     string cProcessInfo = "";
-
                     try
                     {
                         string cParentContentName = Xml.convertEntitiesToCodes(moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Content, Conversions.ToLong(nParentID)));
@@ -8262,9 +8252,8 @@ namespace Protean
                     XmlElement oSelElmt1;
                     XmlElement oSelElmt2;
                     var oTempInstance = this.moPageXML.CreateElement("instance");
-                    bool bCascade = false;
+                    //bool bCascade = false;
                     string cProcessInfo = "";
-
                     try
                     {
                         string cParentContentName = Xml.convertEntitiesToCodes(moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Content, Conversions.ToLong(nParentID)));
@@ -9077,7 +9066,7 @@ namespace Protean
                                     var argoNode = base.moXformElmt.SelectSingleNode("group/group(1)");
                                     base.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, "Successfully Updated", true);
                                 }
-                                catch (Exception exp)
+                                catch (Exception)
                                 {
                                     var argoNode1 = base.moXformElmt.SelectSingleNode("group");
                                     base.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, "Successfully Updated", true);
@@ -9722,9 +9711,9 @@ namespace Protean
                         }
 
                         this.moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = base.Instance.InnerXml;
-                        int i = 1;
-                        bool bDone = false;
-                        string cItems = "";
+                        //int i = 1;
+                       // bool bDone = false;
+                       /// string cItems = "";
                         long initialSubContentId = Conversions.ToLong("0" + base.Instance.SelectSingleNode("tblSubscription/nSubContentId").InnerText);
 
 
@@ -10303,12 +10292,11 @@ namespace Protean
                     XmlElement oSelElmt1;
                     XmlElement oSelElmt2;
                     var oTempInstance = this.moPageXML.CreateElement("instance");
-                    bool bCascade = false;
+                    //bool bCascade = false;
                     string cProcessInfo = "";
 
                     try
                     {
-
                         base.NewFrm("FindContentToRelate");
                         // nNewLocationPage 
                         var oElement = base.Instance.OwnerDocument.CreateElement("nNewLocationPage");
@@ -10389,18 +10377,14 @@ namespace Protean
                     XmlElement oGrp1Elmt;
                     XmlElement oSelElmt2;
                     var oTempInstance = this.moPageXML.CreateElement("instance");
-                    bool bCascade = false;
+                    //bool bCascade = false;
                     string cProcessInfo = "";
 
                     try
                     {
-
-
                         base.NewFrm("SelectContentToLocate");
-
                         base.submission("SelectLocation", "", "post", "");
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "Content");
-
                         var oGrp0Elmt = base.addGroup(ref oFrmElmt, "ResultsHeader", sLabel: "&#160;");
 
                         base.addSubmit(ref oFrmElmt, "Locate", "Add To Page", "Locate");
@@ -10506,13 +10490,11 @@ namespace Protean
                     {
                         // if nNewLocationPage =0 or nFromPage=0 or cContentType="" then 
                         XmlElement oFrmElmt;
-
                         var oTempInstance = this.moPageXML.CreateElement("instance");
-                        bool bCascade = false;
-                        string cProcessInfo = "";
+                        //bool bCascade = false;
+                        //string cProcessInfo = "";
 
                         base.NewFrm("CartActivity");
-
                         base.submission("SeeReport", "/ewcommon/tools/export.ashx?ewCmd=CartDownload", "get", "");
 
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "Content", "");
@@ -10593,8 +10575,8 @@ namespace Protean
                         XmlElement oFrmElmt;
 
                         var oTempInstance = this.moPageXML.CreateElement("instance");
-                        bool bCascade = false;
-                        string cProcessInfo = "";
+                        //bool bCascade = false;
+                        //string cProcessInfo = "";
 
                         base.NewFrm("CartActivity");
 
@@ -10711,11 +10693,10 @@ namespace Protean
                         XmlElement oFrmElmt;
 
                         var oTempInstance = this.moPageXML.CreateElement("instance");
-                        bool bCascade = false;
-                        string cProcessInfo = "";
+                        //bool bCascade = false;
+                        //string cProcessInfo = "";
 
                         base.NewFrm("CartActivityDrilldown");
-
                         base.submission("SeeReport", "", "post", "form_check(this)");
 
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "Content", "");
@@ -10800,8 +10781,8 @@ namespace Protean
                         XmlElement oFrmElmt;
 
                         var oTempInstance = this.moPageXML.CreateElement("instance");
-                        bool bCascade = false;
-                        string cProcessInfo = "";
+                        //bool bCascade = false;
+                        //string cProcessInfo = "";
 
                         base.NewFrm("CartActivityDrilldown");
 
@@ -11043,16 +11024,14 @@ namespace Protean
                 /// <remarks></remarks>
                 public XmlElement xFrmMemberCodeGenerator(int nParentCodeKey, string cFormName = "CodeGenerator")
                 {
-
                     XmlElement oElmt = null;
                     XmlElement oParentInstance = null;
                     XmlElement oInstanceRoot = null;
-                    string cCodeGroups = "";
-                    string cCodeXForm = "";
+                    //string cCodeGroups = "";
+                    //string cCodeXForm = "";
 
                     try
                     {
-
                         // Build the form
                         base.NewFrm("MemberCodes");
                         object formPath = "/xforms/directory/";
@@ -12211,7 +12190,7 @@ namespace Protean
                                 _rootMode = RootModes.Exclude;
                                 Item = selectItem;
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                                 // returnException(Form.myWeb.msException, mcModuleName, "New", ex, "", "", gbDebug)
                             }
@@ -12319,7 +12298,7 @@ namespace Protean
                                 return "" + Text.SimpleRegexFind(" " + ClassName + " ", pattern, 1);
                             }
 
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                                 // returnException(myWeb.msException, mcModuleName, "getPropertyFromClass", ex, "", "", gbDebug)
                                 return "";
@@ -12745,7 +12724,7 @@ namespace Protean
                         {
                             return _masterXform != null;
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             return false;
                         }
@@ -12799,7 +12778,6 @@ namespace Protean
                 {
 
                     bool success = false;
-
                     try
                     {
 
@@ -12814,7 +12792,6 @@ namespace Protean
 
                         }
                     }
-
                     catch (Exception ex)
                     {
                         stdTools.returnException(ref myWeb.msException, mcModuleName, "loadForm", ex, "", "", gbDebug);
@@ -13186,7 +13163,7 @@ namespace Protean
                 {
 
                     XmlElement oElmt;
-                    string cBind = "";
+                    //string cBind = "";
                     XmlNode oNode;
                     string newRef;
                     string cProcessInfo = "";

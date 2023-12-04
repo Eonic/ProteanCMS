@@ -195,7 +195,7 @@ namespace Protean
                             cEntryFull += moSession.SessionID + "" + "','";
                             cEntryFull += Conversions.ToString(Operators.ConcatenateObject(moSession["SessionRequest"], "")) + "','";
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             cEntryFull += "','','";
                         }
@@ -252,7 +252,7 @@ namespace Protean
 
                     if (nStep > 128)
                     {
-                        string test = "text";
+                        //string test = "text";
                     }
 
                     // ReDim Preserve Entries(nStep)

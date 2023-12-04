@@ -32,7 +32,7 @@ namespace Protean
                 protected const string mcModuleName = "PaymentProviders";
                 public System.Collections.Specialized.NameValueCollection moCartConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/cart");
 
-                public new XmlDocument moPageXml;
+                public XmlDocument moPageXml;
                 public string mcEwDataConn;
                 public double mnPaymentAmount;
                 public double mnPaymentMaxAmount = 0.0d;
