@@ -32,18 +32,17 @@ namespace Protean.Providers
     namespace Membership
     {
         interface IMembershipProvider {
-
-            void Initiate(ref IMembershipAdminXforms _AdminXforms, ref IMembershipAdminProcess _AdminProcess, ref IMembershipActivities _Activities, ref IMembershipProvider MemProvider, ref Cms myWeb);
-
-       //     IMembershipAdminXforms AdminXforms { get; set; }
-        //    IMembershipAdminXforms AdminProcess { get; set; }
-        //    IMembershipActivities Activities { get; set; }
+            IMembershipProvider Initiate(ref IMembershipAdminXforms _AdminXforms, ref IMembershipAdminProcess _AdminProcess, ref IMembershipActivities _Activities, ref IMembershipProvider MemProvider, ref Cms myWeb);
+            IMembershipAdminXforms AdminXforms { get; set; }
+            IMembershipAdminXforms AdminProcess { get; set; }
+            IMembershipActivities Activities { get; set; }           
         }
 
         interface IMembershipAdminXforms
         {
             XmlElement xFrmUserLogon(string FormName = "UserLogon");
             XmlElement xFrmPasswordReminder();
+            XmlElement xFrmActivateAccount();
         }
 
         interface IMembershipAdminProcess
@@ -55,7 +54,7 @@ namespace Protean.Providers
 
         }
 
-        public class BaseProvider : IMembershipProvider
+        public class GetProvider 
         {
             private const string mcModuleName = "Protean.Providers.Membership.BaseProvider";
             protected XmlNode moPaymentCfg;
@@ -64,7 +63,11 @@ namespace Protean.Providers
             public event OnErrorWithWebEventHandler OnErrorWithWeb;
             public delegate void OnErrorWithWebEventHandler(ref Cms myweb, object sender, Tools.Errors.ErrorEventArgs e);
 
-            public BaseProvider(ref Cms myWeb, string ProviderName)
+            IMembershipAdminXforms AdminXforms;
+            IMembershipAdminProcess AdminProcess;
+            IMembershipActivities Activities;
+
+            private IMembershipProvider New(ref Cms myWeb, string ProviderName)
             {
                 try
                 {
@@ -102,17 +105,18 @@ namespace Protean.Providers
                     var o = Activator.CreateInstance(calledType);
 
                     var args = new object[5];
-                    args[0] = _AdminXforms;
-                    args[1] = _AdminProcess;
-                    args[2] = _Activities;
+                    args[0] = AdminXforms;
+                    args[1] = AdminProcess;
+                    args[2] = Activities;
                     args[3] = this;
                     args[4] = myWeb;
 
-                    calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args);
+                   return (IMembershipProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args);
                 }
 
                 catch (Exception ex)
                 {
+                    return null;
                     string argsException = Conversions.ToString(myWeb.msException);
                     returnException(ref argsException, mcModuleName, "New", ex, "", ProviderName + " Could Not be Loaded", gbDebug);
                     myWeb.msException = argsException;
@@ -124,6 +128,9 @@ namespace Protean.Providers
 
         public class DefaultProvider : IMembershipProvider
         {
+            IMembershipAdminXforms IMembershipProvider.AdminXforms { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+            IMembershipAdminXforms IMembershipProvider.AdminProcess { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+            IMembershipActivities IMembershipProvider.Activities { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
             public DefaultProvider()
             {
@@ -423,7 +430,7 @@ namespace Protean.Providers
                     }
                 }
 
-                public override XmlElement xFrmActivateAccount()
+                XmlElement IMembershipAdminXforms.xFrmActivateAccount()
                 {
                     XmlElement oFrmElmt;
 

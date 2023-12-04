@@ -16,6 +16,7 @@ using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
+using Protean.Providers.Membership;
 
 namespace Protean
 {
@@ -711,7 +712,7 @@ namespace Protean
                     if (this.moSession != null)
                     {
                         Cms argmyWeb = this;
-                        var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.moConfig["MembershipProvider"]);
+                        IMembershipProvider oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.moConfig["MembershipProvider"]);
                         this.mnUserId = Conversions.ToInteger(oMembershipProv.Activities.GetUserId(ref argmyWeb));
                     }
                     // We need the userId placed into dbhelper.
@@ -5783,7 +5784,7 @@ namespace Protean
         }
 
 
-        public virtual object getAdminXform()
+        public virtual Cms.Admin.AdminXforms getAdminXform()
         {
             // this is to allow us to overide adminXforms lower down
             Cms.Admin.AdminXforms oAdXfm;
