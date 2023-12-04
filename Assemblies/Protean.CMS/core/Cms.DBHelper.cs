@@ -24,6 +24,8 @@ using System.Web.Configuration;
 using System.Xml;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using Protean.Providers.Membership;
+using Protean.Providers.Messaging;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
 
@@ -75,7 +77,7 @@ namespace Protean
             private SqlDataAdapter moDataAdpt;
             private PermissionLevel nCurrentPermissionLevel = PermissionLevel.Open;
 
-            private Protean.Providers.Messaging.BaseProvider moMessaging;
+            private IMessagingProvider moMessaging;
 
             private bool gbVersionControl = false;
 
@@ -6799,7 +6801,9 @@ namespace Protean
                                 if (moMessaging is null & myWeb != null)
                                 {
                                     // myWeb IsNot Nothing prevents being called from bulk imports.
-                                    moMessaging = new Protean.Providers.Messaging.BaseProvider(ref myWeb, sMessagingProvider);
+
+                                    Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
+                                    IMessagingProvider moMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
                                 }
                                 if (moMessaging != null && moMessaging.AdminProcess != null)
                                 {
@@ -8082,10 +8086,9 @@ namespace Protean
                                         int earlierTries = Conversions.ToInteger(ExeProcessSqlScalar(sSql2));
                                         if (earlierTries >= nRetrys)
                                         {
-                                            Cms argmyWeb = myWeb;
-                                            var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, myWeb.moConfig["MembershipProvider"]);
-                                            myWeb = (Cms)argmyWeb;
 
+                                            Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                                            IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, myWeb.moConfig["MembershipProvider"]);
                                             oMembershipProv.Activities.ResetUserAcct(ref myWeb, Convert.ToInt32(nUserId));
 
                                             sReturn = "<span class=\"msg-1032\">Your account is blocked, an email has been sent to you to reset your password.</span>";
@@ -8165,13 +8168,15 @@ namespace Protean
                             }
                             if (moMessaging is null)
                             {
-                                moMessaging = new Protean.Providers.Messaging.BaseProvider(ref myWeb, sMessagingProvider);
+                                Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
+                                IMessagingProvider moMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
                             }
                             if (moMessaging != null && moMessaging.AdminProcess != null)
                             {
                                 try
                                 {
-                                    moMessaging.AdminProcess.SyncUser((object)Conversions.ToInteger(sReturn));
+                                    int UserId = Convert.ToInt16(sReturn);
+                                    moMessaging.AdminProcess.SyncUser(ref UserId);
                                 }
                                 catch (Exception ex)
                                 {

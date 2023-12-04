@@ -10,6 +10,7 @@ using System.Web.Configuration;
 using System.Xml;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using Protean.Providers.Membership;
 using static Protean.stdTools;
 
 namespace Protean
@@ -750,8 +751,10 @@ namespace Protean
                     // Dim oAdXfm As Cms.Admin.AdminXforms = New Cms.Admin.AdminXforms(myWeb)
                     // oAdXfm.open(moPageXml)
 
-                    var oMembershipProv = new Providers.Membership.BaseProvider(ref myWeb, myWeb.moConfig["MembershipProvider"]);
-                    object oAdXfm = oMembershipProv.AdminXforms;
+                    ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                    IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, myWeb.moConfig["MembershipProvider"]);
+
+                    IMembershipAdminXforms oAdXfm = oMembershipProv.AdminXforms;
                     oAdXfm.open(moPageXml);
                     oPageDetail.AppendChild((XmlNode)oAdXfm.xFrmUserLogon("AdminLogon"));
                     mnUserId = myWeb.mnUserId;
@@ -3027,7 +3030,8 @@ namespace Protean
                             var oCfg = WebConfigurationManager.OpenWebConfiguration("/");
 
                             // Now lets create the database
-                            Cms.dbHelper oDbt = new Cms.dbHelper(ref myWeb);
+                            Cms myWebArg = new Cms(moCtx);
+                            Cms.dbHelper oDbt = new Cms.dbHelper(ref myWebArg);
                             string sDbName = this.Instance.SelectSingleNode("web/add[@key='DatabaseName']/@value").InnerText;
                             string cDbServer = this.Instance.SelectSingleNode("web/add[@key='DatabaseServer']/@value").InnerText;
                             string cDbUsername = this.Instance.SelectSingleNode("web/add[@key='DatabaseUsername']/@value").InnerText;

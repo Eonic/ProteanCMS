@@ -10,6 +10,7 @@ using System.Web.Configuration;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json;
+using Protean.Providers.Membership;
 
 namespace Protean
 {
@@ -41,9 +42,10 @@ namespace Protean
 
                     // below code has beem moved to membership base provider
 
-                    rest argmyWeb = this;
-                    var oMembershipProv = new Providers.Membership.BaseProvider(ref argmyWeb, this.moConfig["MembershipProvider"]);
-                    this.mnUserId = Conversions.ToInteger(oMembershipProv.Activities.GetUserId(ref argmyWeb));
+                    Protean.Cms myWeb = new Cms();
+                    ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                    IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, this.moConfig["MembershipProvider"]);
+                    this.mnUserId = Conversions.ToInteger(oMembershipProv.Activities.GetUserId(ref myWeb));
 
                     if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(this.moSession["adminMode"], "true", false)))
                     {

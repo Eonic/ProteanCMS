@@ -12,6 +12,7 @@ using System.Xml;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using PreMailer.Net;
+using Protean.Providers.Messaging;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
 
@@ -365,7 +366,8 @@ namespace Protean
                     if (!string.IsNullOrEmpty(sMessagingProvider))
                     {
                         var myWeb = new Cms(moCtx);
-                        var oMessaging = new Providers.Messaging.BaseProvider(ref myWeb, sMessagingProvider);
+                        Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
+                        IMessagingProvider moMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
 
                         if (valDict is null)
                             valDict = new System.Collections.Generic.Dictionary<string, string>();
@@ -375,7 +377,7 @@ namespace Protean
 
                         if (!string.IsNullOrEmpty(ListId))
                         {
-                            oMessaging.Activities.addToList(ListId, Name, Email, valDict);
+                            moMessaging.Activities.AddToList(ListId, Name, Email, valDict);
                         }
                     }
                 }
@@ -1039,14 +1041,15 @@ namespace Protean
                     if (oXml.SelectSingleNode("descendant-or-self::optIn[node()='true']") != null)
                     {
 
-                        Protean.Providers.Messaging.BaseProvider moMessaging;
+                        
                         System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
                         string sMessagingProvider = "";
                         if (moMailConfig != null)
                         {
                             sMessagingProvider = moMailConfig["MessagingProvider"];
                             var myWeb = new Cms(moCtx);
-                            moMessaging = new Providers.Messaging.BaseProvider(ref myWeb, sMessagingProvider);
+                            Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
+                            IMessagingProvider moMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
                             try
                             {
 
@@ -1108,7 +1111,7 @@ namespace Protean
             // Console.WriteLine("[{0}] {1}", token, e.Error.ToString())
             else
             {
-                sender.Dispose();
+                //sender.Dispose();
                 // Console.WriteLine("Message sent.")
             }
             mailSent = true;

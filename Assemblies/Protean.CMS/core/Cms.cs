@@ -6158,7 +6158,7 @@ namespace Protean
                 Cms argmyWeb = this;
                 ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
                 IMembershipProvider oMembershipProv = RetProv.Get(ref argmyWeb, this.moConfig["MembershipProvider"]);
-                return oMembershipProv.Activities.GetUserXml(ref argmyWeb, nUserId);
+                return oMembershipProv.Activities.GetUserXML(ref argmyWeb, nUserId); 
             }
 
             catch (Exception ex)

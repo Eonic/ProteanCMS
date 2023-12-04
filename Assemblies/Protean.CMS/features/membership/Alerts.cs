@@ -128,7 +128,7 @@ namespace Protean
                                     // Add a new alert Item
                                     cInfo = "New Alert";
                                     // oNewAlert = New AlertItem(myWeb, oDR(0), oDR(1))
-                                    oNewAlert = CreateAlertItem(Conversions.ToInteger(oDR[0]), Conversions.ToInteger(oDR[1]));
+                                    AlertItem oNewAlert = CreateAlertItem(Conversions.ToInteger(oDR[0]), Conversions.ToInteger(oDR[1]));
 
                                     // Log the alert
                                     oNewAlert.Log("Started");
@@ -311,7 +311,7 @@ namespace Protean
                     return oResponseXML.DocumentElement;
                 }
 
-                public virtual object CreateAlertItem(int AlertId, int AlertDirId = 0)
+                public virtual AlertItem CreateAlertItem(int AlertId, int AlertDirId = 0)
                 {
                     var argaWeb = myWeb;
                     var oAlert = new AlertItem(ref argaWeb, AlertId, AlertDirId);

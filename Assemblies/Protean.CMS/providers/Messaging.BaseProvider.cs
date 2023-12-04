@@ -29,51 +29,62 @@ namespace Protean.Providers
     namespace Messaging
     {
 
-        public class BaseProvider
+        public interface IMessagingProvider
         {
-            private object _AdminXforms;
-            private object _AdminProcess;
-            private object _Activities;
+            void Initiate(ref Cms myWeb);
+            IMessagingAdminXforms AdminXforms { get; set; }
+            IMessagingAdminProcess AdminProcess { get; set; }
+            IMessagingActivities Activities { get; set; }
+        }
+
+        public interface IMessagingAdminXforms
+        {
+            XmlElement xFrmPreviewNewsLetter(int nPageId, ref XmlElement oPageDetail, string cSubject = "");
+
+            XmlElement xFrmSendNewsLetter(int nPageId, string cPageName, string cDefaultEmail, string cDefaultEmailName, ref XmlElement oPageDetail);
+
+            //Inherited from Proteean.Admin.AdminXForms
+            XmlElement xFrmEditPage(long pgid = 0L, string cName = "", string cFormName = "Page", string cParId = "");
+
+            XmlElement xFrmDeletePage(long pgid);
+
+            XmlElement xFrmAddModule(long pgid, string position);
+
+            XmlElement xFrmAdminOptOut();
+
+            //Inherited from Proteean.XForms
+            Boolean valid { get; set; }
+            XmlElement Instance { get; set; }
+            XmlElement moXformElmt { get; set; }
+
+            void addNote(string sRef, xForm.noteTypes nTypes, string sMessage, bool bInsertFirst = false, string sClass = "");
+            void addNote(ref XmlNode oNode, xForm.noteTypes nTypes, string sMessage, bool bInsertFirst = false, string sClass = "");
+
+        }
+
+        public interface IMessagingAdminProcess
+        {
+            string MailingListProcess(ref XmlElement oPageDetail, ref Cms oWeb, [Optional, DefaultParameterValue("")] ref string sAdminLayout, [Optional, DefaultParameterValue("")] ref string cCmd, [Optional, DefaultParameterValue(false)] ref bool bLoadStructure, [Optional, DefaultParameterValue("")] ref string sEditContext, bool bClearEditContext = false);
+            IMessagingAdminXforms oAdXfm { get; set; }
+
+            void MailingListAdminMenu(ref XmlElement oAdminMenu);
+
+            void maintainUserInGroup(long nUserId, long nGroupId, bool remove, string cUserEmail = null, string cGroupName = null, bool isLast = false);
+            void SyncUser(ref int nUserId);
+
+
+        }
+        public interface IMessagingActivities
+        {
+            bool AddToList(string ListId, string Name, string Email, IDictionary values);
+            bool RemoveFromList(string ListId, string Email);
+        }
+
+        public class ReturnProvider
+        {
             private const string mcModuleName = "Protean.Providers.Messaging";
 
-
-            public BaseProvider AdminXforms
-            {
-                set
-                {
-                    _AdminXforms = value;
-                }
-                get
-                {
-                    return _AdminXforms;
-                }
-            }
-
-            public object AdminProcess
-            {
-                set
-                {
-                    _AdminProcess = value;
-                }
-                get
-                {
-                    return _AdminProcess;
-                }
-            }
-
-            public object Activities
-            {
-                set
-                {
-                    _Activities = value;
-                }
-                get
-                {
-                    return _Activities;
-                }
-            }
-
-            public BaseProvider(ref Cms myWeb, string ProviderName)
+            public IMessagingProvider Get(ref Cms myWeb, string ProviderName)
             {
                 string cProgressInfo = "";
                 try
@@ -120,46 +131,49 @@ namespace Protean.Providers
 
                     var o = Activator.CreateInstance(calledType);
 
-                    var args = new object[5];
-                    args[0] = _AdminXforms;
-                    args[1] = _AdminProcess;
-                    args[2] = _Activities;
-                    args[3] = this;
-                    args[4] = myWeb;
+                    var args = new object[0];                
+                    args[0] = myWeb;
 
-                    calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args);
+                    return (IMessagingProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args);
                 }
 
                 catch (Exception ex)
                 {
+                    return null;
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "New", ex, vstrFurtherInfo: cProgressInfo + " - " + ProviderName + " Could Not be Loaded", bDebug: gbDebug);
                 }
 
             }
         }
 
-        public class EonicProvider
+        public class DefaultProvider : IMessagingProvider
         {
 
-            public EonicProvider()
+            public DefaultProvider()
             {
                 // do nothing
             }
 
-            public void Initiate(ref object _AdminXforms, ref object _AdminProcess, ref object _Activities, ref object MemProvider, ref Cms myWeb)
+            IMessagingAdminXforms IMessagingProvider.AdminXforms { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+            IMessagingAdminProcess IMessagingProvider.AdminProcess { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+            IMessagingActivities IMessagingProvider.Activities { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+            public void Initiate(ref Cms myWeb)
             {
 
-                MemProvider.AdminXforms = new AdminXForms(ref myWeb);
-                MemProvider.AdminProcess = new AdminProcess(ref myWeb);
-                MemProvider.AdminProcess.oAdXfm = MemProvider.AdminXforms;
+                IMessagingAdminXforms AdminXforms = new AdminXForms(ref myWeb);
+                IMessagingAdminProcess AdminProcess = new AdminProcess(ref myWeb);
+                AdminProcess.oAdXfm = AdminXforms;
                 // MemProvider.Activities = New Activities()
 
 
             }
 
-            public class AdminXForms : Admin.AdminXforms
+            public class AdminXForms : Cms.Admin.AdminXforms, IMessagingAdminXforms
             {
                 private const string mcModuleName = "Providers.Messaging.Generic.AdminXForms";
+
+                XmlElement IMessagingAdminXforms.moXformElmt { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
                 public AdminXForms(ref Cms aWeb) : base(ref aWeb)
                 {
@@ -435,12 +449,12 @@ namespace Protean.Providers
 
             }
 
-            public class AdminProcess : Admin
+            public class AdminProcess : Admin, IMessagingAdminProcess
             {
 
                 private AdminXForms _oAdXfm;
 
-                public object oAdXfm
+                public IMessagingAdminXforms oAdXfm
                 {
                     set
                     {
@@ -654,7 +668,7 @@ namespace Protean.Providers
                             case "EditMailLayout":
                                 {
                                     moAdXfm.goServer = myWeb.goServer;
-                                    oPageDetail.AppendChild(oAdXfm.xFrmEditMailLayout(myWeb.moRequest["pgid"]));
+                                    oPageDetail.AppendChild(moAdXfm.xFrmEditMailLayout(Convert.ToInt64(myWeb.moRequest["pgid"])));
                                     if (Conversions.ToBoolean(oAdXfm.valid))
                                     {
                                         cCmd = "NormalMail";
@@ -673,7 +687,7 @@ namespace Protean.Providers
                                 {
                                     bLoadStructure = true;
                                     nAdditionId = 0;
-                                    oPageDetail.AppendChild(oAdXfm.xFrmAddModule(myWeb.moRequest["pgid"], myWeb.moRequest["position"]));
+                                    oPageDetail.AppendChild(oAdXfm.xFrmAddModule(Convert.ToInt64(myWeb.moRequest["pgid"]), myWeb.moRequest["position"]));
                                     if (Conversions.ToBoolean(oAdXfm.valid))
                                     {
                                         if (myWeb.moRequest["nStatus"] != "")
@@ -779,7 +793,7 @@ namespace Protean.Providers
                                     if (oLocElmt != null)
                                         cSubject = oLocElmt.GetAttribute("name");
 
-                                    oPageDetail.AppendChild(oAdXfm.xFrmPreviewNewsLetter(myWeb.mnPageId, oPageDetail, cSubject));
+                                    oPageDetail.AppendChild(oAdXfm.xFrmPreviewNewsLetter(myWeb.mnPageId,ref oPageDetail, cSubject));
 
                                     sAdminLayout = "PreviewMail";
                                     break;
@@ -813,7 +827,7 @@ namespace Protean.Providers
                                     if (oLocElmt != null)
                                         cSubject = oLocElmt.GetAttribute("name");
 
-                                    oPageDetail.AppendChild(oAdXfm.xFrmSendNewsLetter(myWeb.mnPageId, cSubject, moMailConfig["SenderEmail"], moMailConfig["SenderName"], oPageDetail));
+                                    oPageDetail.AppendChild(oAdXfm.xFrmSendNewsLetter(myWeb.mnPageId, cSubject, moMailConfig["SenderEmail"], moMailConfig["SenderName"], ref oPageDetail));
                                     break;
                                 }
 
@@ -842,7 +856,7 @@ namespace Protean.Providers
                             case "MailOptOut":
                                 {
                                     sAdminLayout = "OptOut";
-                                    oPageDetail.AppendChild((XmlNode)oAdXfm.xFrmAdminOptOut);
+                                    oPageDetail.AppendChild((XmlNode)oAdXfm.xFrmAdminOptOut());
                                     break;
                                 }
                             case "ProcessMailbox":
@@ -854,7 +868,7 @@ namespace Protean.Providers
                             case "DeletePageMail":
                                 {
                                     bLoadStructure = true;
-                                    oPageDetail.AppendChild(oAdXfm.xFrmDeletePage(myWeb.moRequest["pgid"]));
+                                    oPageDetail.AppendChild(oAdXfm.xFrmDeletePage(Convert.ToInt64(myWeb.moRequest["pgid"])));
                                     if (Conversions.ToBoolean(oAdXfm.valid))
                                     {
                                         myWeb.msRedirectOnEnd = "/?ewCmd=MailingList";
@@ -922,7 +936,7 @@ namespace Protean.Providers
 
             }
 
-            public class Activities : Protean.Messaging
+            public class Activities : Protean.Messaging, IMessagingActivities
             {
 
                 public Activities(ref string sException) : base(ref sException)

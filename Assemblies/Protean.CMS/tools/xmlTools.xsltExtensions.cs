@@ -271,7 +271,7 @@ namespace Protean
                 }
             }
 
-            public object escapeJsHTML(object oContextNode)
+            public object escapeJsHTML(XmlNode oContextNode)
             {
                 string Text = "";
                 try
@@ -1578,7 +1578,7 @@ namespace Protean
                                         newThumbnail.goServer = goServer;
                                         newThumbnail.maxWidth = (short)maxWidth;
 
-                                        System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback((_) => ihelp.GeneratePDFThumbNail()), newThumbnail);
+                                        System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback((_) => ihelp.GeneratePDFThumbNail(newThumbnail)));
                                         newThumbnail = null;
                                         ihelp.Close();
                                         ihelp = null;
@@ -1825,7 +1825,7 @@ namespace Protean
                                         newThumbnail.goServer = goServer;
                                         newThumbnail.maxWidth = (short)maxWidth;
 
-                                        System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback((_) => ihelp.GeneratePDFThumbNail()), newThumbnail);
+                                        System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback((_) => ihelp.GeneratePDFThumbNail(newThumbnail)));
                                         newThumbnail = null;
                                         ihelp.Close();
                                         ihelp = null;

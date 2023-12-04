@@ -5,6 +5,7 @@ using System.Web.Configuration;
 using System.Xml;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using Protean.Providers.Membership;
 using static Protean.stdTools;
 
 namespace Protean
@@ -692,7 +693,9 @@ namespace Protean
 
                                 string sXpath;
                                 // Remove the current content here
-                                sXpath = xForm.getXpathFromQueryXml(oNotesXform.Instance, "/xsl/quote/search.xsl");
+                                string formRef = "";
+                                xForm newXform = new xForm(ref formRef);
+                                sXpath = newXform.getXpathFromQueryXml(oNotesXform.Instance, "/xsl/quote/search.xsl");
                                 foreach (XmlNode oNode in base.moPageXml.SelectNodes("/Page/Contents/Content[@type='" + oNotesXform.Instance.SelectSingleNode("Query/@contentType").InnerText + "']"))
                                     oNode.ParentNode.RemoveChild(oNode);
 
@@ -733,8 +736,10 @@ namespace Protean
                                         // addtional string for membership to check
                                         myWeb.moSession["cLogonCmd"] = "quoteCmd=Logon";
                                         // registration xform
-                                        var oMembershipProv = new Providers.Membership.BaseProvider(ref myWeb, myWeb.moConfig["MembershipProvider"]);
-                                        Providers.Membership.DefaultProvider.AdminXForms oRegXform = (Providers.Membership.DefaultProvider.AdminXForms)oMembershipProv.AdminXforms;
+                                        ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                                        IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, this.moConfig["MembershipProvider"]);
+                                        IMembershipAdminXforms oRegXform = oMembershipProv.AdminXforms;
+
                                         XmlElement argIntanceAppend = null;
                                         oRegXform.xFrmEditDirectoryItem(IntanceAppend: ref argIntanceAppend,myWeb.mnUserId, "User",Convert.ToInt64("0" + moCartConfig["DefaultSubscriptionGroupId"]), "CartRegistration");
                                         if (oRegXform.valid)
@@ -762,7 +767,7 @@ namespace Protean
                                         }
 
 
-                                        oRegXform = (Providers.Membership.DefaultProvider.AdminXForms)null;
+                                        oRegXform = null;
                                     }
                                     else
                                     {
@@ -932,8 +937,10 @@ namespace Protean
                                     if (myWeb.mnUserId == 0)
                                     {
                                         // registration xform
-                                        var oMembershipProv = new Providers.Membership.BaseProvider(ref myWeb, myWeb.moConfig["MembershipProvider"]);
-                                        Providers.Membership.DefaultProvider.AdminXForms oRegXform = (Providers.Membership.DefaultProvider.AdminXForms)oMembershipProv.AdminXforms;
+                                        ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                                        IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, this.moConfig["MembershipProvider"]);
+                                        IMembershipAdminXforms oRegXform = oMembershipProv.AdminXforms;
+
                                         XmlElement argIntanceAppend1 = null;
                                         oRegXform.xFrmEditDirectoryItem(IntanceAppend: ref argIntanceAppend1,myWeb.mnUserId, "User",Convert.ToInt32("0" + moCartConfig["DefaultSubscriptionGroupId"]), "CartRegistration");
                                         if (oRegXform.valid)

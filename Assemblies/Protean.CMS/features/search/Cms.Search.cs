@@ -1293,9 +1293,10 @@ namespace Protean
                         var ofrm = new Cms.xForm(ref myWeb);
                         ofrm.load(ref ofrmElmt);
                         ofrm.updateInstanceFromRequest();
-                        if (ofrm.Instance is null)
+                        if (ofrm.Instance is null) { 
                             ofrmElmt = ofrm.Instance;
-                        sXpath = xForm.getXpathFromQueryXml(ofrm.Instance);
+                        }
+                        sXpath = ofrm.getXpathFromQueryXml(ofrm.Instance);
                         ofrm.addValues();
                     }
 

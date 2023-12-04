@@ -100,8 +100,9 @@ namespace Protean.Integration.Directory
                 var str = new StreamReader(at.GetResponse().GetResponseStream());
                 string strResult = str.ReadToEnd();
 
-                object jsonResult = JsonConvert.DeserializeObject<Dictionary<string, object>>(strResult);
-                string AccessToken = jsonResult.Item("access_token").ToString();
+                // TS commented out for move to C#
+                // jsonResult = JsonConvert.DeserializeObject<Dictionary<string, object>>(strResult);
+                string AccessToken = ""; //jsonResult.Item("access_token").ToString();
 
                 // Exchange the code for an extended access token
                 var eatTargetUri = new Uri("https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=" + facebookId + "&client_secret=" + facebookKey + "&fb_exchange_token=" + AccessToken);

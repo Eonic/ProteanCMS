@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Diagnostics;
 using System.Reflection;
@@ -9,8 +10,8 @@ using System.Web.Configuration;
 using System.Xml;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-
 using static Protean.stdTools;
+using Protean.Providers.Membership;
 
 namespace Protean
 {
@@ -494,28 +495,28 @@ namespace Protean
 
                     var castObject = WebConfigurationManager.GetWebApplicationSection("protean/membershipProviders");
                     Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)castObject;
-                    foreach (var ourProvider in moPrvConfig.Providers)
+                    foreach (ProviderSettingsCollection ourProvider in moPrvConfig.Providers)
                     {
-                        if (ourProvider.Parameters[actionName] != null)
+                        if (ourProvider[actionName] != null)
                         {
                             Type calledType;
                             Assembly assemblyInstance;
 
-                            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(ourProvider.parameters("path"), "", false)))
+                            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(ourProvider["path"], "", false)))
                             {
-                                assemblyInstance = Assembly.LoadFrom(myWeb.goServer.MapPath(Conversions.ToString(ourProvider.parameters("path"))));
+                                assemblyInstance = Assembly.LoadFrom(myWeb.goServer.MapPath(Conversions.ToString(ourProvider["path"])));
                             }
                             else
                             {
-                                assemblyInstance = Assembly.Load(ourProvider.Type);
+                                assemblyInstance = Assembly.Load(ourProvider.GetType().ToString());
                             }
-                            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(ourProvider.parameters("rootClass"), "", false)))
+                            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(ourProvider["rootClass"], "", false)))
                             {
-                                calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Protean.Providers.Membership.", ourProvider.Name), "Tools.Actions")), true);
+                                calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Protean.Providers.Membership.", ourProvider["Name"]), "Tools.Actions")), true);
                             }
                             else
                             {
-                                calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.parameters("rootClass"), ".Providers.Membership."), ourProvider.Name), "Tools.Actions")), true);
+                                calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider["rootClass"], ".Providers.Membership."), ourProvider["Name"]), "Tools.Actions")), true);
                             }
 
                             var o = Activator.CreateInstance(calledType);
@@ -523,7 +524,7 @@ namespace Protean
                             var args = new object[1];
                             args[0] = myWeb;
 
-                            calledType.InvokeMember(Conversions.ToString(ourProvider.parameters(actionName)), BindingFlags.InvokeMethod, null, o, args);
+                            calledType.InvokeMember(Conversions.ToString(ourProvider[actionName]), BindingFlags.InvokeMethod, null, o, args);
 
                         }
                     }
@@ -695,11 +696,11 @@ namespace Protean
                             AccountUpdateForm = oContentNode.GetAttribute("accountUpdateFormName");
 
                         bool bLogon = false;
-
+                        
                         Cms argmyWeb = myWeb;
-                        var oMembershipProv = new Providers.Membership.BaseProvider(ref argmyWeb, myWeb.moConfig["MembershipProvider"]);
-                        myWeb = (Cms)argmyWeb;
-                        oMembershipProv.AdminXforms adXfm = oMembershipProv.AdminXforms;
+                        ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                        IMembershipProvider oMembershipProv = RetProv.Get(ref argmyWeb, myWeb.moConfig["MembershipProvider"]);
+                        IMembershipAdminXforms adXfm = oMembershipProv.AdminXforms;
                         bool bRedirect = true;
 
 
@@ -794,7 +795,7 @@ namespace Protean
                             XmlElement oContentForm = (XmlElement)myWeb.moPageXml.SelectSingleNode("descendant-or-self::Content[@type='xform' and @name='UserMyAccount']");
                             if (oContentForm is null)
                             {
-                                oXfmElmt = (XmlElement)adXfm.xFrmEditDirectoryItem(myWeb.mnUserId, "User", default, AccountUpdateForm);
+                                oXfmElmt = (XmlElement)adXfm.xFrmEditDirectoryItem( myWeb.mnUserId, "User", default, AccountUpdateForm);
                             }
                             else
                             {
@@ -844,11 +845,13 @@ namespace Protean
                                             XmlElement oFrmGrp = (XmlElement)adXfm.moXformElmt.SelectSingleNode("group");
                                             oFrmGrp.SetAttribute("class", "hidden");
                                             // create a new note
-                                            XmlElement oFrmGrp2 = (XmlElement)adXfm.addGroup(adXfm.moXformElmt, "validateByEmail");
-                                            adXfm.addNote(oFrmGrp2, Protean.xForm.noteTypes.Hint, "<span class=\"msg-1029\">Thanks for registering you have been sent an email with a link you must click to activate your account</span>", (object)true);
+                                            XmlElement frmElmt = adXfm.moXformElmt;
+                                            XmlElement oFrmGrp2 = (XmlElement)adXfm.addGroup(ref frmElmt, "validateByEmail");
+                                            XmlNode oFrmGrp2Node = (XmlNode)oFrmGrp2;
+                                            adXfm.addNote(ref oFrmGrp2Node, Protean.xForm.noteTypes.Hint, "<span class=\"msg-1029\">Thanks for registering you have been sent an email with a link you must click to activate your account</span>", true);
 
                                             // lets get the new userid from the instance
-                                            mnUserId = Conversions.ToLong(adXfm.instance.SelectSingleNode("tblDirectory/nDirKey").InnerText);
+                                            mnUserId = Conversions.ToLong(adXfm.Instance.SelectSingleNode("tblDirectory/nDirKey").InnerText);
 
                                             // first we set the user account to be pending
                                             moDbHelper.setObjectStatus(Cms.dbHelper.objectTypes.Directory, Cms.dbHelper.Status.Pending, mnUserId);
@@ -863,7 +866,7 @@ namespace Protean
 
                                     default:
                                         {
-                                            mnUserId = Conversions.ToLong(adXfm.instance.SelectSingleNode("tblDirectory/nDirKey").InnerText);
+                                            mnUserId = Conversions.ToLong(adXfm.Instance.SelectSingleNode("tblDirectory/nDirKey").InnerText);
                                             if (moSession != null)
                                                 moSession["nUserId"] = (object)mnUserId;
 
@@ -1189,7 +1192,7 @@ namespace Protean
                                 case "addContact":
                                 case "editContact":
                                     {
-                                        XmlElement oXfmElmt = (XmlElement)adXfm.xFrmEditDirectoryContact(myWeb.moRequest["id"], myWeb.mnUserId);
+                                        XmlElement oXfmElmt = (XmlElement)adXfm.xFrmEditDirectoryContact(Convert.ToInt64(myWeb.moRequest["id"]), myWeb.mnUserId);
                                         if (Conversions.ToBoolean(!adXfm.valid))
                                         {
                                             contentNode.AppendChild(oXfmElmt);
@@ -1263,7 +1266,7 @@ namespace Protean
                                     case "addContact":
                                     case "editContact":
                                         {
-                                            XmlElement oXfmElmt = (XmlElement)adXfm.xFrmEditDirectoryContact(myWeb.moRequest["id"], CompanyId, "/xforms/directory/CompanyContact.xml");
+                                            XmlElement oXfmElmt = (XmlElement)adXfm.xFrmEditDirectoryContact(Convert.ToInt64(myWeb.moRequest["id"]), Convert.ToInt16(CompanyId), "/xforms/directory/CompanyContact.xml");
                                             if (Conversions.ToBoolean(!adXfm.valid))
                                             {
                                                 contentNode.AppendChild(oXfmElmt);

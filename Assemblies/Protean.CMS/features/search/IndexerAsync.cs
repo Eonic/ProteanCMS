@@ -994,7 +994,7 @@ namespace Protean
                                             errorElmt.InnerXml = myWeb.msException;
                                             try
                                             {
-                                                errorElmt.SetAttribute("pgid", Conversions.ToString(oPage.xslPath));
+                                                errorElmt.SetAttribute("pgid", "0");
                                                 errorElmt.SetAttribute("name", Conversions.ToString(oPage.pagename));
                                             }
                                             catch (Exception ex)

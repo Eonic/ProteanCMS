@@ -213,6 +213,11 @@
     <Compile Include="api\rest.cs" />
     <Compile Include="api\soap.cs" />
     <Compile Include="App_Start\DynamicImage.cs" />
+    <Compile Include="Connected Services\AdminProxy\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="core\Cms.cs" />
     <Compile Include="core\Cms.DBHelper.cs" />
     <Compile Include="core\Cms.xForm.cs" />
@@ -248,10 +253,10 @@
     <Compile Include="providers\Filter.BaseProvider.cs" />
     <Compile Include="providers\Membership.BaseProvider.cs" />
     <Compile Include="providers\Messaging.BaseProvider.cs" />
-    <Compile Include="providers\PageFilter.cs" />
+    <Compile Include="providers\filters\PageFilter.cs" />
     <Compile Include="providers\Payment.BaseProvider.cs" />
-    <Compile Include="providers\PriceFilter.cs" />
-    <Compile Include="providers\Streaming.BaseProvider.cs" />
+    <Compile Include="providers\filters\PriceFilter.cs" />
+    <None Include="providers\Streaming.BaseProvider.cs" />
     <Compile Include="setup\Setup.cs" />
     <Compile Include="setup\Tests.cs" />
     <Compile Include="tools\Configuration.cs" />
@@ -284,10 +289,35 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Connected Services\AdminProxy\ewAdminProxy.wsdl" />
+    <None Include="Connected Services\AdminProxy\Protean.AdminProxy.GetModulesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\AdminProxy\Protean.AdminProxy.GetPageXmlResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\AdminProxy\Protean.AdminProxy.GetSiteLicenceResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\AdminProxy\Protean.AdminProxy.GetStatusResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\AdminProxy\Protean.AdminProxy.GetThemesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\AdminProxy\Protean.AdminProxy.GetThemeZipResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\AdminProxy\Protean.AdminProxy.UpgradeDatabaseResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="eonic.snk" />
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\System.Xml.Linq.XElement.datasource" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Protean.Tools\Protean.Tools.csproj">
       <Project>{12af6171-9aab-4c4d-a83b-85fe18a334c1}</Project>
@@ -298,8 +328,18 @@
     <Compile Include="tools\CSVHelper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Connected Services\AdminProxy\ewAdminProxy.disco" />
+    <None Include="Connected Services\AdminProxy\configuration91.svcinfo" />
+    <None Include="Connected Services\AdminProxy\configuration.svcinfo" />
+    <None Include="Connected Services\AdminProxy\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <Content Include="tools\Encryption.cs" />
     <Content Include="tools\Object.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Connected Services\AdminProxy\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

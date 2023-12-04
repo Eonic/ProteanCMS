@@ -13,6 +13,8 @@ using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
 using System.Linq;
+using Protean.Providers.Membership;
+using Protean.Providers.Messaging;
 
 namespace Protean
 {
@@ -1650,9 +1652,11 @@ namespace Protean
                                         myWeb.moSession["cLogonCmd"] = "cartCmd=Logon";
                                         // registration xform
                                         Cms argmyWeb = myWeb;
-                                        var oMembershipProv = new Providers.Membership.BaseProvider(ref argmyWeb, myWeb.moConfig["MembershipProvider"]);
+                                        ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                                        IMembershipProvider oMembershipProv = RetProv.Get(ref argmyWeb, this.moConfig["MembershipProvider"]);
+
                                         myWeb = (Cms)argmyWeb;
-                                        Providers.Membership.DefaultProvider.AdminXForms oRegXform = (Providers.Membership.DefaultProvider.AdminXForms)oMembershipProv.AdminXforms;
+                                        IMembershipAdminXforms oRegXform = oMembershipProv.AdminXforms;
                                         oRegXform.open(moPageXml);
                                         XmlElement argIntanceAppend = null;
                                         oRegXform.xFrmEditDirectoryItem(IntanceAppend: ref argIntanceAppend, (long)myWeb.mnUserId, "User", (long)Conversions.ToInteger("0" + moCartConfig["DefaultSubscriptionGroupId"]), "CartRegistration");
@@ -1681,7 +1685,7 @@ namespace Protean
                                         }
 
 
-                                        oRegXform = (Providers.Membership.DefaultProvider.AdminXForms)null;
+                                        oRegXform = null;
                                     }
                                     else
                                     {
@@ -2594,7 +2598,9 @@ namespace Protean
 
                         if (!string.IsNullOrEmpty(sMessagingProvider) | !string.IsNullOrEmpty(moMailConfig["InvoiceList"]) & !string.IsNullOrEmpty(moMailConfig["QuoteList"]))
                         {
-                            var oMessaging = new Providers.Messaging.BaseProvider(ref myWeb, sMessagingProvider);
+                           
+                            Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
+                            IMessagingProvider oMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
                             string xsltPath = string.Empty;
                             if (string.IsNullOrEmpty(Email))
                                 Email = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText;
@@ -2652,7 +2658,7 @@ namespace Protean
                                         ListId = moMailConfig["NewsletterList"];
                                         if (!string.IsNullOrEmpty(moMailConfig["NewsletterList"]))
                                         {
-                                            oMessaging.Activities.RemoveFromList(moMailConfig["NewsletterList"], Email);
+                                            oMessaging.Activities.RemoveFromList(moMailConfig["NewsletterList"].ToString(), Email);
                                         }
 
                                         break;
@@ -2673,7 +2679,7 @@ namespace Protean
                                 }
                                 if (oMessaging.Activities != null)
                                 {
-                                    oMessaging.Activities.addToList(ListId, firstName, Email, valDict);
+                                    oMessaging.Activities.AddToList(ListId, firstName, Email, valDict);
                                 }
                             }
 
@@ -8739,7 +8745,8 @@ namespace Protean
                                                     for (nI = 0; nI <= loopTo; nI++) // loop through current options to split into another array
                                                     {
                                                         Array.Resize(ref oOptions, nCurOptNo + 1 + 1); // redim the array to new length while preserving the current data
-                                                        oOptions[nCurOptNo] = oCurOpt[nI].Split("_"); // split out the arrays of options
+                                                        char[] delimiterChars = { '_' };
+                                                        oOptions = oCurOpt[nI].Split(delimiterChars); // split out the arrays of options
                                                         nCurOptNo += 1; // update number of options
                                                     }
                                                 } // end option check

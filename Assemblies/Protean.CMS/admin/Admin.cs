@@ -22,6 +22,8 @@ using static Protean.stdTools;
 using Protean.Tools;
 using static Protean.Tools.Xml;
 using System.Reflection.Emit;
+using Protean.Providers.Membership;
+using Protean.Providers.Messaging;
 
 namespace Protean
 {
@@ -456,9 +458,10 @@ namespace Protean
                                 if (mnAdminUserId == 0)
                                 {
 
-                                    Cms argmyWeb = myWeb;
-                                    var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, myWeb.moConfig["MembershipProvider"]);
-                                    myWeb = (Cms)argmyWeb;
+
+                                    Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                                    IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, myWeb.moConfig["MembershipProvider"]);
+                                 
                                     oPageDetail.AppendChild((XmlNode)oMembershipProv.AdminXforms.xFrmUserLogon("AdminLogon"));
 
                                     // oPageDetail.AppendChild(moAdXfm.xFrmUserLogon("AdminLogon"))
@@ -544,9 +547,9 @@ namespace Protean
                         case "PasswordReminder":
                             {
                                 sAdminLayout = "AdminXForm";
-                                Cms argmyWeb1 = myWeb;
-                                var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb1, myWeb.moConfig["MembershipProvider"]);
-                                myWeb = (Cms)argmyWeb1;
+                                Cms argmyWeb = myWeb;
+                                Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                                IMembershipProvider oMembershipProv = RetProv.Get(ref argmyWeb, this.moConfig["MembershipProvider"]);
 
                                 switch (Strings.LCase(moConfig["MembershipEncryption"]) ?? "")
                                 {
@@ -572,8 +575,9 @@ namespace Protean
                             {
                                 sAdminLayout = "AdminXForm";
                                 Cms argmyWeb2 = myWeb;
-                                var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb2, myWeb.moConfig["MembershipProvider"]);
-                                myWeb = (Cms)argmyWeb2;
+                                Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                                IMembershipProvider oMembershipProv = RetProv.Get(ref argmyWeb2, this.moConfig["MembershipProvider"]);
+
                                 oPageDetail.AppendChild((XmlNode)oMembershipProv.AdminXforms.xFrmConfirmPassword(myWeb.moRequest["AI"]));
                                 if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oMembershipProv.AdminXforms.valid, true, false)))
                                 {
@@ -796,7 +800,7 @@ namespace Protean
                         case "InstallTheme":
                             {
 
-                                var SoapObj = new Protean.CMS.com.ewAdminProxySoapClient();
+                                var SoapObj = new Protean.AdminProxy.ewAdminProxySoapClient();
                                 var themesPage = SoapObj.GetThemes(Environment.MachineName, myWeb.moRequest.ServerVariables["SERVER_NAME"]);
                                 var ContextThemesPage = moPageXML.CreateElement("Themes");
                                 var xreader = themesPage.CreateReader();
@@ -2527,9 +2531,10 @@ namespace Protean
 
                         case "EditDirItem":
                             {
-                                Cms argmyWeb3 = myWeb;
-                                var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb3, myWeb.moConfig["MembershipProvider"]);
-                                myWeb = (Cms)argmyWeb3;
+
+                                Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                                IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, myWeb.moConfig["MembershipProvider"]);
+                                                              
                                 // oPageDetail.AppendChild(oMembershipProv.AdminXforms.xFrmUserLogon("AdminLogon"))
                                 XmlElement xmlName = null;
                                 oPageDetail.AppendChild((XmlNode)oMembershipProv.AdminXforms.xFrmEditDirectoryItem(ref xmlName, Convert.ToInt64(myWeb.moRequest["id"]), myWeb.moRequest["dirType"], Convert.ToInt64("0" + myWeb.moRequest["parId"])));
@@ -2631,9 +2636,9 @@ namespace Protean
 
                         case "ResetUserAcct":
                             {
-                                Cms argmyWeb4 = myWeb;
-                                var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb4, myWeb.moConfig["MembershipProvider"]);
-                                myWeb = (Cms)argmyWeb4;
+                                Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                                IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, myWeb.moConfig["MembershipProvider"]);
+
 
                                 oPageDetail.AppendChild((XmlNode)oMembershipProv.AdminXforms.xFrmResetAccount(Convert.ToInt64(myWeb.moRequest["id"])));
 
@@ -2656,9 +2661,9 @@ namespace Protean
 
                         case "ResetUserPwd":
                             {
-                                Cms argmyWeb5 = myWeb;
-                                var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb5, myWeb.moConfig["MembershipProvider"]);
-                                myWeb = (Cms)argmyWeb5;
+                                Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                                IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, myWeb.moConfig["MembershipProvider"]);
+
 
                                 oPageDetail.AppendChild((XmlNode)oMembershipProv.AdminXforms.xFrmResetPassword(Convert.ToInt64(myWeb.moRequest["id"])));
 
@@ -3274,15 +3279,19 @@ namespace Protean
                                 {
                                     sMessagingProvider = moMailConfig["MessagingProvider"];
                                 }
-                                var oMessaging = new Protean.Providers.Messaging.BaseProvider(ref myWeb, sMessagingProvider);
+                                Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
+                                IMessagingProvider moMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
+
                                 string passthroughCmd = mcEwCmd;
                                 if (!string.IsNullOrEmpty(mcEwCmd2))
                                 {
                                     passthroughCmd = passthroughCmd + "." + mcEwCmd2;
                                 }
 
+                                string sEditContext = EditContext;
+                                string processResponse = moMessaging.AdminProcess.MailingListProcess(ref oPageDetail, ref oWeb, ref sAdminLayout, ref passthroughCmd, ref bLoadStructure, ref sEditContext, clearEditContext);
                                 // If oMessaging.AdminProcess.MailingListProcess(oPageDetail, oWeb, sAdminLayout, myWeb.moRequest("ewCmd"), bLoadStructure, EditContext, clearEditContext) = "GoTo" Then GoTo ProcessFlow
-                                if (oMessaging.AdminProcess.MailingListProcess(oPageDetail, oWeb, sAdminLayout, passthroughCmd, bLoadStructure, EditContext, clearEditContext) = "GoTo")
+                                if (processResponse == "GoTo")
                                     goto ProcessFlow;
 
                                 mcEwCmd = passthroughCmd;
@@ -3293,7 +3302,7 @@ namespace Protean
                                     mbPreviewMode = true;
                                 }
 
-                                oMessaging = (Protean.Providers.Messaging.BaseProvider)null;
+                                moMessaging = null;
                                 break;
                             }
 
@@ -3998,7 +4007,8 @@ namespace Protean
                             oConvert.Convert();
                             if (oConvert.State == Tools.Conversion.Status.Succeeded)
                             {
-                                oImportXml.LoadXml(Conversions.ToString(oConvert.Output.OuterXml));
+                                XmlDocument outputXml = (XmlDocument)oConvert.Output;
+                                oImportXml.LoadXml(outputXml.OuterXml);
                             }
                             else
                             {
@@ -4008,8 +4018,6 @@ namespace Protean
                                 moAdXfm.moXformElmt = (XmlElement)argoNode;
                                 sProcessInfo = oConvert.Message;
                             }
-
-                            oImportXml.LoadXml(Conversions.ToString(oConvert.Output.OuterXml));
                         }
                         else if (cFilePath.EndsWith(".xml"))
                         {
@@ -4604,9 +4612,10 @@ namespace Protean
                     {
                         sMessagingProvider = moMailConfig["MessagingProvider"];
                     }
-                    var oMessaging = new Protean.Providers.Messaging.BaseProvider(ref myWeb, sMessagingProvider);
-                    oMessaging.AdminProcess.MailingListAdminMenu(oMenuRoot);
-                    oMessaging = (Protean.Providers.Messaging.BaseProvider)null;
+                    Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
+                    IMessagingProvider moMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
+                    moMessaging.AdminProcess.MailingListAdminMenu(ref oMenuRoot);
+                    moMessaging = null;
 
                     // If this is a cloned page, then remove certain options under By Page
                     if (Cms.gbClone && moPageXML.DocumentElement.SelectSingleNode("//MenuItem[@id = /Page/@id and (@clone > 0 or (@cloneparent='" + myWeb.mnCloneContextPageId + "' and @cloneparent > 0 ))]") != null)

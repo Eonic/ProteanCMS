@@ -44,9 +44,12 @@ namespace Protean.Providers
             XmlElement xFrmPasswordReminder();
             XmlElement xFrmActivateAccount();
             XmlElement xFrmResetPassword(long mnUserId);
+            XmlElement xFrmEditDirectoryItem(long id = 0L, string cDirectorySchemaName = "User", long parId = 0L, string cXformName = "", string FormXML = "");
             XmlElement xFrmEditDirectoryItem(ref XmlElement IntanceAppend, long id = 0L, string cDirectorySchemaName = "User", long parId = 0L, string cXformName = "", string FormXML = "");
 
+      
             XmlElement xFrmResetAccount();
+            XmlElement xFrmResetAccount(long userId = 0L);
             XmlElement xFrmConfirmPassword(string AccountHash);
             XmlElement xFrmConfirmPassword(long nUserId);
 
@@ -54,9 +57,12 @@ namespace Protean.Providers
 
             XmlElement xFrmEditDirectoryContact(long id = 0L, int nUID = 0, string xFormPath = "/xforms/directory/UserContact.xml");
 
+            void open(XmlDocument oPageXml);
+
             Boolean valid { get; set; }
             XmlElement Instance { get; set; }
             XmlElement moXformElmt { get; set; }
+            XmlElement addGroup(ref XmlElement oContextNode, string sRef, string sClass = "", string sLabel = "", XmlElement oInsertBeforeNode = null);
 
             void addNote(string sRef, xForm.noteTypes nTypes, string sMessage, bool bInsertFirst = false, string sClass = "");
             void addNote(ref XmlNode oNode, xForm.noteTypes nTypes, string sMessage, bool bInsertFirst = false, string sClass = "");
@@ -1200,8 +1206,10 @@ namespace Protean.Providers
                                     if (cDirectorySchemaName == "User")
                                     {
                                         System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
-                                        string sMessagingProvider = moMailConfig["messagingprovider"];
-                                        var oMessaging = new Providers.Messaging.BaseProvider(ref myWeb, sMessagingProvider);
+
+                                        Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
+                                        Protean.Providers.Messaging.IMessagingProvider oMessagingProv = RetProv.Get(ref myWeb, moMailConfig["messagingprovider"]);
+                                 
                                         string ListId = moMailConfig["AllUsersList"];
                                         if (ListId != null)
                                         {
@@ -1217,7 +1225,7 @@ namespace Protean.Providers
                                             string Name = Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/FirstName").InnerText;
                                             string Email = Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Email").InnerText;
 
-                                            oMessaging.Activities.addToList(ListId, Name, Email, valDict);
+                                            oMessagingProv.Activities.AddToList(ListId, Name, Email, valDict);
                                         }
 
                                     }
@@ -1240,6 +1248,13 @@ namespace Protean.Providers
                         stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditDirectoryItem", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
+                }
+
+
+                public virtual XmlElement xFrmEditDirectoryItem(long id = 0L, string cDirectorySchemaName = "User", long parId = 0L, string cXformName = "", string FormXML = "")
+                {
+                    XmlElement argIntanceAppend = null;
+                    return xFrmEditDirectoryItem(ref argIntanceAppend, id, cDirectorySchemaName, parId, cXformName, FormXML);
                 }
 
                 /// <summary>
