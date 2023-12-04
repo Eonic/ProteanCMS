@@ -31,30 +31,60 @@ namespace Protean.Providers
 {
     namespace Membership
     {
-        interface IMembershipProvider {
-            IMembershipProvider Initiate(ref IMembershipAdminXforms _AdminXforms, ref IMembershipAdminProcess _AdminProcess, ref IMembershipActivities _Activities, ref IMembershipProvider MemProvider, ref Cms myWeb);
+       public interface IMembershipProvider {
+            void Initiate(ref Cms myWeb);
             IMembershipAdminXforms AdminXforms { get; set; }
             IMembershipAdminXforms AdminProcess { get; set; }
             IMembershipActivities Activities { get; set; }           
         }
 
-        interface IMembershipAdminXforms
+        public interface IMembershipAdminXforms 
         {
             XmlElement xFrmUserLogon(string FormName = "UserLogon");
             XmlElement xFrmPasswordReminder();
             XmlElement xFrmActivateAccount();
+            XmlElement xFrmResetPassword(long mnUserId);
+            XmlElement xFrmEditDirectoryItem(ref XmlElement IntanceAppend, long id = 0L, string cDirectorySchemaName = "User", long parId = 0L, string cXformName = "", string FormXML = "");
+
+            XmlElement xFrmResetAccount();
+            XmlElement xFrmConfirmPassword(string AccountHash);
+            XmlElement xFrmConfirmPassword(long nUserId);
+
+            XmlElement xFrmActivationCode(long nUserId, string cXformName = "ActivationCode", string cFormXml = "");
+
+            XmlElement xFrmEditDirectoryContact(long id = 0L, int nUID = 0, string xFormPath = "/xforms/directory/UserContact.xml");
+
+            Boolean valid { get; set; }
+            XmlElement Instance { get; set; }
+            XmlElement moXformElmt { get; set; }
+
+            void addNote(string sRef, xForm.noteTypes nTypes, string sMessage, bool bInsertFirst = false, string sClass = "");
+            void addNote(ref XmlNode oNode, xForm.noteTypes nTypes, string sMessage, bool bInsertFirst = false, string sClass = "");
+
         }
 
-        interface IMembershipAdminProcess
+        public interface IMembershipAdminProcess
         {
 
         }
-        interface IMembershipActivities
+       public interface IMembershipActivities
         {
+            long GetUserSessionId(ref Cms myWeb);
+            string GetUserId(ref Cms myWeb);
+            void SetUserId(ref Cms myWeb);
+            string MembershipProcess(ref Cms myWeb);
+            bool AlternativeAuthentication(ref Cms myWeb);
+
+            XmlElement GetUserXML(ref Cms myWeb, long nUserId = 0L);
+
+            void LogSingleUserSession();
+            void LogSingleUserSession(ref Cms myWeb);
+
+            string ResetUserAcct(ref Cms myWeb, int nUserId);
 
         }
 
-        public class GetProvider 
+        public class ReturnProvider 
         {
             private const string mcModuleName = "Protean.Providers.Membership.BaseProvider";
             protected XmlNode moPaymentCfg;
@@ -63,11 +93,7 @@ namespace Protean.Providers
             public event OnErrorWithWebEventHandler OnErrorWithWeb;
             public delegate void OnErrorWithWebEventHandler(ref Cms myweb, object sender, Tools.Errors.ErrorEventArgs e);
 
-            IMembershipAdminXforms AdminXforms;
-            IMembershipAdminProcess AdminProcess;
-            IMembershipActivities Activities;
-
-            private IMembershipProvider New(ref Cms myWeb, string ProviderName)
+            public IMembershipProvider Get(ref Cms myWeb, string ProviderName)
             {
                 try
                 {
@@ -97,19 +123,14 @@ namespace Protean.Providers
                         }
                         else
                         {
-                            // calledType = assemblyInstance.GetType(ourProvider.parameters("rootClass") & ".Providers.Messaging", True)
                             calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], ".Providers.Membership."), ProviderName)), true);
                         }
                     }
 
                     var o = Activator.CreateInstance(calledType);
 
-                    var args = new object[5];
-                    args[0] = AdminXforms;
-                    args[1] = AdminProcess;
-                    args[2] = Activities;
-                    args[3] = this;
-                    args[4] = myWeb;
+                    var args = new object[0];
+                    args[0] = myWeb;
 
                    return (IMembershipProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args);
                 }
@@ -137,13 +158,13 @@ namespace Protean.Providers
                 // do nothing
             }
 
-            void IMembershipProvider.Initiate(ref IMembershipAdminXforms _AdminXforms, ref IMembershipAdminProcess _AdminProcess, ref IMembershipActivities _Activities, ref IMembershipProvider MemProvider, ref Cms myWeb)
+            void IMembershipProvider.Initiate(ref Cms myWeb)
             {
 
-                _AdminXforms = new AdminXForms(ref myWeb);
+                IMembershipAdminXforms AdminXforms = new AdminXForms(ref myWeb);
                 // MemProvider.AdminProcess = New AdminProcess(myWeb)
                 // MemProvider.AdminProcess.oAdXfm = MemProvider.AdminXforms
-                _Activities = new Activities();
+                IMembershipActivities Activities = new Activities();
 
             }
 
@@ -151,6 +172,8 @@ namespace Protean.Providers
             {
                 private const string mcModuleName = "Protean.Providers.Membership.Default.AdminXForms";
                 public bool maintainMembershipsOnAdd = true;
+
+                XmlElement IMembershipAdminXforms.moXformElmt { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
                 public AdminXForms(ref Cms aWeb) : base(ref aWeb)
                 {
@@ -607,8 +630,8 @@ namespace Protean.Providers
                                 {
                                     oUserDetails = dsUsers.Tables[0].Rows[0];
                                     int nAcc = Conversions.ToInteger(oUserDetails["nDirKey"]);
-
-                                    var oMembershipProv = new BaseProvider(ref myWeb, myWeb.moConfig["MembershipProvider"]);
+                                    ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                                    IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, myWeb.moConfig["MembershipProvider"]);
 
                                     cResponse = Conversions.ToString(oMembershipProv.Activities.ResetUserAcct(ref myWeb, nAcc));
 
@@ -1460,6 +1483,72 @@ namespace Protean.Providers
                     }
                 }
 
+
+
+                public XmlElement xFrmEditDirectoryContact(long id = 0L, int nUID = 0, string xFormPath = "/xforms/directory/UserContact.xml")
+                {
+                    string cProcessInfo = "";
+                    try
+                    {
+
+
+                        base.NewFrm("EditContact");
+                        base.load(xFormPath, this.myWeb.maCommonFolders);
+
+                        if (id > 0L)
+                        {
+                            base.Instance.InnerXml = moDbHelper.getObjectInstance(Cms.dbHelper.objectTypes.CartContact, id);
+
+                        }
+
+                        // Add the countries list to the form
+                        if (base.moXformElmt.SelectSingleNode("//select1[@bind='cContactCountry']") != null)
+                        {
+                            var oEc = new Cms.Cart(ref this.myWeb);
+                            Cms.xForm argoXform = (Cms.xForm)this;
+                            XmlElement argoCountriesDropDown = (XmlElement)base.moXformElmt.SelectSingleNode("//select1[@bind='cContactCountry']");
+                            oEc.populateCountriesDropDown(ref argoXform, ref argoCountriesDropDown, "Billing Address");
+                            oEc.close();
+                            oEc = (Cms.Cart)null;
+                        }
+
+                        if (base.isSubmitted())
+                        {
+                            base.updateInstanceFromRequest();
+                            // MyBase.instance.SelectSingleNode("tblCartContact/nContactDirId").InnerText = myweb.mnUserId
+                            base.addValues();
+                            if (nUID > 0)
+                            {
+                                // if not supplied we do not want to overwrite it.
+                                base.Instance.SelectSingleNode("tblCartContact/nContactDirId").InnerText = nUID.ToString();
+                            }
+
+                            base.validate();
+                            if (base.valid)
+                            {
+                                moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartContact, base.Instance, Conversions.ToLong(Interaction.IIf(id > 0L, id, -1)));
+                                try
+                                {
+                                    var argoNode = base.moXformElmt.SelectSingleNode("group/group(1)");
+                                    base.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, "Successfully Updated", true);
+                                }
+                                catch (Exception exp)
+                                {
+                                    var argoNode1 = base.moXformElmt.SelectSingleNode("group");
+                                    base.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, "Successfully Updated", true);
+                                }
+                            }
+                        }
+
+                        base.addValues();
+                        return base.moXformElmt;
+                    }
+                    catch (Exception ex)
+                    {
+                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditDirectoryContact", ex, "", cProcessInfo, gbDebug);
+                        return null;
+                    }
+                }
             }
 
             public class AdminProcess : Admin , IMembershipAdminProcess
@@ -1514,6 +1603,10 @@ namespace Protean.Providers
                 private const string mcModuleName = "Providers.Membership.Eonic.Activities";
 
                 #region ErrorHandling
+
+               public Activities() { 
+                 //empty constructor
+               }
 
                 // for anything controlling web
                 public event OnErrorEventHandler OnError;
@@ -1572,9 +1665,8 @@ namespace Protean.Providers
                     }
                 }
 
-
-                public virtual string GetUserId(ref Protean.Cms myWeb)
-                {
+                public string GetUserId(ref Protean.Cms myWeb)
+                    {
                     myWeb.PerfMon.Log(mcModuleName, "getUserId");
                     string sProcessInfo = "";
                     string sReturnValue = null;
@@ -1782,9 +1874,8 @@ namespace Protean.Providers
                     try
                     {
 
-                        // Dim adXfm As EonicProvider.AdminXForms = New EonicProvider.AdminXForms(myWeb)
-                        Cms.Admin.AdminXforms adXfm = myWeb.getAdminXform();
-
+                        DefaultProvider.AdminXForms adXfm = new DefaultProvider.AdminXForms(ref myWeb);
+                        
                         adXfm.open(myWeb.moPageXml);
 
                         // logoff handler
@@ -2193,7 +2284,7 @@ namespace Protean.Providers
                     }
                 }
 
-                public virtual string MembershipV4LayoutProcess(ref Cms myWeb, object adXfm)
+                public virtual string MembershipV4LayoutProcess(ref Cms myWeb, IMembershipAdminXforms adXfm)
                 {
                     myWeb.PerfMon.Log("Web", "MembershipProcess");
                     string sProcessInfo = "";
@@ -2224,11 +2315,13 @@ namespace Protean.Providers
                                         XmlElement oContentForm = (XmlElement)myWeb.moPageXml.SelectSingleNode("descendant-or-self::Content[@type='xform' and @name='UserMyAccount']");
                                         if (oContentForm is null)
                                         {
-                                            oXfmElmt = (XmlElement)adXfm.xFrmEditDirectoryItem(mnUserId, "User", default, "UserMyAccount");
+                                            XmlElement instanceAppend = null;
+                                            oXfmElmt = (XmlElement)adXfm.xFrmEditDirectoryItem(ref instanceAppend, mnUserId, "User", default, "UserMyAccount");
                                         }
                                         else
                                         {
-                                            oXfmElmt = (XmlElement)adXfm.xFrmEditDirectoryItem(mnUserId, "User", default, "UserMyAccount", oContentForm.OuterXml);
+                                            XmlElement instanceAppend = null;
+                                            oXfmElmt = (XmlElement)adXfm.xFrmEditDirectoryItem(ref instanceAppend, mnUserId, "User", default, "UserMyAccount", oContentForm.OuterXml);
                                             if (!myWeb.mbAdminMode)
                                                 oContentForm.ParentNode.RemoveChild(oContentForm);
                                         }
@@ -2247,11 +2340,13 @@ namespace Protean.Providers
                                         XmlElement oContentForm = (XmlElement)myWeb.moPageXml.SelectSingleNode("descendant-or-self::Content[@type='xform' and @name='UserRegister']");
                                         if (oContentForm is null)
                                         {
-                                            oXfmElmt = (XmlElement)adXfm.xFrmEditDirectoryItem(mnUserId, "User", default, "UserRegister");
+                                            XmlElement instanceAppend = null;
+                                            oXfmElmt = (XmlElement)adXfm.xFrmEditDirectoryItem(ref instanceAppend, mnUserId, "User", default, "UserRegister");
                                         }
                                         else
                                         {
-                                            oXfmElmt = (XmlElement)adXfm.xFrmEditDirectoryItem(mnUserId, "User", default, "UserRegister", oContentForm.OuterXml);
+                                            XmlElement instanceAppend = null;
+                                            oXfmElmt = (XmlElement)adXfm.xFrmEditDirectoryItem(ref instanceAppend, mnUserId, "User", default, "UserRegister", oContentForm.OuterXml);
                                             if (!myWeb.mbAdminMode)
                                                 oContentForm.ParentNode.RemoveChild(oContentForm);
                                         }
@@ -2268,7 +2363,7 @@ namespace Protean.Providers
                                                         // don't redirect because we want to reuse this form
                                                         bRedirect = false;
                                                         // say thanks for registering and update the form
-                                                        adXfm.addNote("EditContent", Protean.xForm.noteTypes.Hint, "Thanks for registering you have been sent an email with a link you must click to activate your account", (object)true);
+                                                        adXfm.addNote("EditContent", Protean.xForm.noteTypes.Hint, "Thanks for registering you have been sent an email with a link you must click to activate your account", true);
 
                                                         // lets get the new userid from the instance
                                                         mnUserId = Conversions.ToInteger(adXfm.Instance.SelectSingleNode("tblDirectory/nDirKey").InnerText);
@@ -2391,7 +2486,8 @@ namespace Protean.Providers
 
                                     else
                                     {
-                                        var oMembershipProv = new BaseProvider(ref myWeb, myWeb.moConfig["MembershipProvider"]);
+                                        ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                                        IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, myWeb.moConfig["MembershipProvider"]);
                                         var oAdXfm = oMembershipProv.AdminXforms;
                                         oXfmElmt = (XmlElement)oAdXfm.xFrmResetAccount();
 
@@ -2403,7 +2499,9 @@ namespace Protean.Providers
                             case "Password_Change":
                                 {
 
-                                    var oMembershipProv = new BaseProvider(ref myWeb, myWeb.moConfig["MembershipProvider"]);
+                                    ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                                    IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, myWeb.moConfig["MembershipProvider"]);
+
                                     var oAdXfm = oMembershipProv.AdminXforms;
 
                                     XmlElement oXfmElmt;
@@ -2449,7 +2547,7 @@ namespace Protean.Providers
                                                 // Check if the redirect is another page or just redirect to the current url
                                                 if (oXfmElmt.SelectSingleNode("//instance/RedirectPage[number(.)=number(.)]") != null)
                                                 {
-                                                    myWeb.msRedirectOnEnd = Operators.ConcatenateObject(moConfig["ProjectPath"] + "/?pgid=", adXfm.Instance.SelectSingleNode("RedirectPage").InnerText);
+                                                    myWeb.msRedirectOnEnd = moConfig["ProjectPath"] + "/?pgid=" +  adXfm.Instance.SelectSingleNode("RedirectPage").InnerText;
                                                 }
                                                 else
                                                 {
@@ -2475,7 +2573,7 @@ namespace Protean.Providers
                                             case "addContact":
                                             case "editContact":
                                                 {
-                                                    XmlElement oXfmElmt = (XmlElement)adXfm.xFrmEditDirectoryContact(moRequest["id"], mnUserId);
+                                                    XmlElement oXfmElmt = (XmlElement)adXfm.xFrmEditDirectoryContact(Convert.ToInt64(moRequest["id"]), mnUserId);
                                                     if (Conversions.ToBoolean(!adXfm.valid))
                                                     {
                                                         myWeb.AddContentXml(ref oXfmElmt);
@@ -2818,10 +2916,6 @@ namespace Protean.Providers
 
 
 
-                public Activities()
-                {
-
-                }
             }
         }
 

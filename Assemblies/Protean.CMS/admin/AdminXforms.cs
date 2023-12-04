@@ -30,6 +30,7 @@ using Protean.Tools;
 using static Protean.Tools.Text;
 using static Protean.Tools.Xml;
 using System.Web.UI.HtmlControls;
+using Protean.Providers.Membership;
 
 namespace Protean
 {
@@ -220,9 +221,10 @@ namespace Protean
                     string cProcessInfo = "";
 
                     try
-                    {                       
-                        Protean.Providers.Membership.BaseProvider oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref myWeb, this.myWeb.moConfig["MembershipProvider"]);
-                        Protean.Providers.Membership.BaseProvider.AdminXforms oAdXfm = oMembershipProv.AdminXforms;
+                    {
+                        ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                        IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, this.myWeb.moConfig["MembershipProvider"]);
+                        IMembershipAdminXforms oAdXfm = oMembershipProv.AdminXforms;
 
                         oAdXfm.xFrmUserLogon(FormName);
                         this.valid = Conversions.ToBoolean(oAdXfm.valid);
@@ -361,9 +363,10 @@ namespace Protean
                     {
 
                         Cms argmyWeb = this.myWeb;
-                        var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.myWeb.moConfig["MembershipProvider"]);
+                        ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                        IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, this.myWeb.moConfig["MembershipProvider"]);
+                        IMembershipAdminXforms oAdXfm = oMembershipProv.AdminXforms;
                         this.myWeb = (Cms)argmyWeb;
-                        var oAdXfm = oMembershipProv.AdminXforms;
 
                         oAdXfm.xFrmPasswordReminder();
                         this.valid = Conversions.ToBoolean(oAdXfm.valid);
@@ -384,11 +387,10 @@ namespace Protean
 
                     try
                     {
-
-                        Cms argmyWeb = this.myWeb;
-                        var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.myWeb.moConfig["MembershipProvider"]);
-                        this.myWeb = (Cms)argmyWeb;
-                        var oAdXfm = oMembershipProv.AdminXforms;
+                                                          
+                        ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                        IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, this.myWeb.moConfig["MembershipProvider"]);
+                        IMembershipAdminXforms oAdXfm = oMembershipProv.AdminXforms;
 
                         oAdXfm.xFrmActivateAccount();
                         this.valid = Conversions.ToBoolean(oAdXfm.valid);
@@ -410,10 +412,9 @@ namespace Protean
                     try
                     {
 
-                        Cms argmyWeb = this.myWeb;
-                        var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.myWeb.moConfig["MembershipProvider"]);
-                        this.myWeb = (Cms)argmyWeb;
-                        var oAdXfm = oMembershipProv.AdminXforms;
+                        ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                        IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, this.myWeb.moConfig["MembershipProvider"]);
+                        IMembershipAdminXforms oAdXfm = oMembershipProv.AdminXforms;
 
                         oAdXfm.xFrmResetAccount();
                         this.valid = Conversions.ToBoolean(oAdXfm.valid);
@@ -437,10 +438,9 @@ namespace Protean
                     try
                     {
 
-                        Cms argmyWeb = this.myWeb;
-                        var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.myWeb.moConfig["MembershipProvider"]);
-                        this.myWeb = (Cms)argmyWeb;
-                        var oAdXfm = oMembershipProv.AdminXforms;
+                        ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                        IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, this.myWeb.moConfig["MembershipProvider"]);
+                        IMembershipAdminXforms oAdXfm = oMembershipProv.AdminXforms;
 
                         oAdXfm.xFrmConfirmPassword(AccountHash);
                         this.valid = Conversions.ToBoolean(oAdXfm.valid);
@@ -464,10 +464,9 @@ namespace Protean
                     try
                     {
 
-                        Cms argmyWeb = myWeb;
-                        var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.myWeb.moConfig["MembershipProvider"]);
-                        this.myWeb = (Cms)argmyWeb;
-                        var oAdXfm = oMembershipProv.AdminXforms;
+                        ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                        IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, this.myWeb.moConfig["MembershipProvider"]);
+                        IMembershipAdminXforms oAdXfm = oMembershipProv.AdminXforms;
 
                         oAdXfm.xFrmConfirmPassword(nUserId);
                         this.valid = Conversions.ToBoolean(oAdXfm.valid);

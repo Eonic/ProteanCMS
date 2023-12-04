@@ -712,7 +712,8 @@ namespace Protean
                     if (this.moSession != null)
                     {
                         Cms argmyWeb = this;
-                        IMembershipProvider oMembershipProv = new Protean.Providers.Membership.GetProvider(ref argmyWeb, this.moConfig["MembershipProvider"]);
+                        ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                        IMembershipProvider oMembershipProv = RetProv.Get(ref argmyWeb, this.moConfig["MembershipProvider"]);
                         this.mnUserId = Conversions.ToInteger(oMembershipProv.Activities.GetUserId(ref argmyWeb));
                     }
                     // We need the userId placed into dbhelper.
@@ -954,7 +955,8 @@ namespace Protean
                 {
 
                     Cms argmyWeb = this;
-                    IMembershipProvider oMembershipProv = new Protean.Providers.Membership.GetProvider(ref argmyWeb, this.moConfig["MembershipProvider"]);
+                    ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                    IMembershipProvider oMembershipProv = RetProv.Get(ref argmyWeb, this.moConfig["MembershipProvider"]);
                     oMembershipProv.Activities.SetUserId(ref argmyWeb);
                 }
 
@@ -1340,7 +1342,9 @@ namespace Protean
                     // this simply gets the userId earlier if it is in the session.
                     // behaviour to check single session or transfer from the cart is still called from Open()
                     Cms argmyWeb = this;
-                    IMembershipProvider oMembershipProv = new Protean.Providers.Membership.GetProvider(ref argmyWeb, this.moConfig["MembershipProvider"]);
+
+                    ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                    IMembershipProvider oMembershipProv = RetProv.Get(ref argmyWeb, this.moConfig["MembershipProvider"]);
                     this.mnUserId = Conversions.ToInteger(oMembershipProv.Activities.GetUserSessionId(ref argmyWeb));
                     if (this.mnUserId > 0)
                     {
@@ -5353,7 +5357,8 @@ namespace Protean
             {
 
                 Cms argmyWeb = this;
-                IMembershipProvider oMembershipProv = new Protean.Providers.Membership.GetProvider(ref argmyWeb, this.moConfig["MembershipProvider"]);
+                ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                IMembershipProvider oMembershipProv = RetProv.Get(ref argmyWeb, this.moConfig["MembershipProvider"]);
 
                 return Conversions.ToString(oMembershipProv.Activities.MembershipProcess(ref argmyWeb));
             }
@@ -5387,7 +5392,8 @@ namespace Protean
             {
 
                 Cms argmyWeb = this;
-                IMembershipProvider oMembershipProv = new Protean.Providers.Membership.GetProvider(ref argmyWeb, this.moConfig["MembershipProvider"]);
+                ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                IMembershipProvider oMembershipProv = RetProv.Get(ref argmyWeb, this.moConfig["MembershipProvider"]);
 
                 return Conversions.ToBoolean(oMembershipProv.Activities.AlternativeAuthentication(ref argmyWeb));
             }
@@ -6150,8 +6156,9 @@ namespace Protean
             {
 
                 Cms argmyWeb = this;
-                IMembershipProvider oMembershipProv = new Protean.Providers.Membership.GetProvider(ref argmyWeb, this.moConfig["MembershipProvider"]);
-                return (XmlElement)oMembershipProv.Activities.GetUserXml(this, nUserId);
+                ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                IMembershipProvider oMembershipProv = RetProv.Get(ref argmyWeb, this.moConfig["MembershipProvider"]);
+                return oMembershipProv.Activities.GetUserXml(ref argmyWeb, nUserId);
             }
 
             catch (Exception ex)
@@ -10427,7 +10434,8 @@ namespace Protean
             {
 
                 Cms argmyWeb = this;
-                IMembershipProvider oMembershipProv = new Protean.Providers.Membership.GetProvider(ref argmyWeb, this.moConfig["MembershipProvider"]);
+                ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                IMembershipProvider oMembershipProv = RetProv.Get(ref argmyWeb, this.moConfig["MembershipProvider"]);
                 oMembershipProv.Activities.LogSingleUserSession(ref argmyWeb);
             }
 
