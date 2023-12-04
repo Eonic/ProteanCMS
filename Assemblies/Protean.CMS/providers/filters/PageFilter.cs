@@ -1,3 +1,4 @@
+using Protean.Providers.Filter;
 using System;
 using System.Collections;
 using System.Data;
@@ -8,10 +9,10 @@ using System.Xml;
 
 namespace Protean.Providers
 {
-    namespace Filters
+    namespace Filter
     {
 
-        public class PageFilter
+        public class PageFilter : IFilterProvider
         {
 
             public event OnErrorEventHandler OnError;
@@ -185,7 +186,6 @@ namespace Protean.Providers
                 }
 
             }
-
 
             public string GetFilterSQL(ref Cms aWeb)
             {

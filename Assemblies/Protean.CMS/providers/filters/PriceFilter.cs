@@ -6,14 +6,15 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Xml;
 using Microsoft.VisualBasic.CompilerServices;
+using Protean.Providers.Filter;
 
 namespace Protean.Providers
 {
 
-    namespace Filters
+    namespace Filter
     {
 
-        public class PriceFilter
+        public class PriceFilter : IFilterProvider
         {
 
             public event OnErrorEventHandler OnError;
@@ -174,7 +175,6 @@ namespace Protean.Providers
                 }
             }
 
-
             public string ApplyFilter(ref Cms aWeb, ref string cWhereSql, ref Protean.xForm oXform, ref XmlElement oFromGroup, ref XmlElement FilterConfig, ref string cFilterTarget)
             {
                 string cProcessInfo = "ApplyFilter";
@@ -230,7 +230,6 @@ namespace Protean.Providers
                 }
                 return cWhereSql;
             }
-
 
             public string GetFilterSQL(ref Cms aWeb)
             {

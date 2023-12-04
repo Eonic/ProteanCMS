@@ -19,54 +19,19 @@ namespace Protean.Providers
 {
     namespace Filter
     {
+        public interface IFilterProvider {
+            void AddControl(ref Cms aWeb, ref XmlElement FilterConfig, ref Protean.xForm oXform, ref XmlElement oFromGroup, ref XmlElement oContentNode, string cWhereSql);
+            string ApplyFilter(ref Cms aWeb, ref string cWhereSql, ref Protean.xForm oXform, ref XmlElement oFromGroup, ref XmlElement FilterConfig, ref string cFilterTarget);
+            string GetFilterSQL(ref Cms aWeb);
 
-        public class BaseProvider
+        }
+
+        public class ReturnProvider
         {
             private const string mcModuleName = "Protean.Providers.Filter.BaseProvider";
-
-            private object _AdminXforms;
-            private object _AdminProcess;
-            private object _Activities;
-
             protected XmlNode moFilterCfg;
 
-            public object AdminXforms
-            {
-                set
-                {
-                    _AdminXforms = value;
-                }
-                get
-                {
-                    return _AdminXforms;
-                }
-            }
-
-            public object AdminProcess
-            {
-                set
-                {
-                    _AdminProcess = value;
-                }
-                get
-                {
-                    return _AdminProcess;
-                }
-            }
-
-            public object Activities
-            {
-                set
-                {
-                    _Activities = value;
-                }
-                get
-                {
-                    return _Activities;
-                }
-            }
-
-            public BaseProvider(ref Cms myWeb, string ProviderName)
+            public IFilterProvider Get(ref Cms myWeb, string ProviderName)
             {
                 try
                 {
@@ -112,17 +77,14 @@ namespace Protean.Providers
                     var o = Activator.CreateInstance(calledType);
 
                     var args = new object[5];
-                    args[0] = _AdminXforms;
-                    args[1] = _AdminProcess;
-                    args[2] = _Activities;
-                    args[3] = this;
-                    args[4] = myWeb;
+                    args[0] = myWeb;
 
-                    calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args);
+                    return (IFilterProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args);
                 }
 
                 catch (Exception ex)
                 {
+                    return null;
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "New", ex, "", ProviderName + " Could Not be Loaded", gbDebug);
                 }
 
@@ -130,7 +92,7 @@ namespace Protean.Providers
 
         }
 
-        public class DefaultProvider
+        public class DefaultProvider : IFilterProvider
         {
 
             public DefaultProvider()
@@ -138,13 +100,11 @@ namespace Protean.Providers
                 // do nothing
             }
 
-            public void Initiate(ref object _AdminXforms, ref object _AdminProcess, ref object _Activities, ref object MemProvider, ref Cms myWeb)
+            IFilterProvider myFilters;
+
+            public void Initiate(ref Cms myWeb)
             {
-                MemProvider.AdminXforms = new AdminXForms(ref myWeb);
-                MemProvider.AdminProcess = new AdminProcess(ref myWeb);
-                MemProvider.AdminProcess.oAdXfm = MemProvider.AdminXforms;
-                // MemProvider.Activities = New Activities()
-                MemProvider.Filters = new Filters();
+               // myFilters = new Filters();
 
             }
 
@@ -185,6 +145,21 @@ namespace Protean.Providers
             {
 
 
+            }
+
+            public void AddControl(ref Cms aWeb, ref XmlElement FilterConfig, ref xForm oXform, ref XmlElement oFromGroup, ref XmlElement oContentNode, string cWhereSql)
+            {
+                throw new NotImplementedException();
+            }
+
+            public string ApplyFilter(ref Cms aWeb, ref string cWhereSql, ref xForm oXform, ref XmlElement oFromGroup, ref XmlElement FilterConfig, ref string cFilterTarget)
+            {
+                throw new NotImplementedException();
+            }
+
+            public string GetFilterSQL(ref Cms aWeb)
+            {
+                throw new NotImplementedException();
             }
 
             public class Filters
