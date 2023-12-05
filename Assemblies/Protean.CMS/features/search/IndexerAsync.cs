@@ -21,12 +21,10 @@ using static Protean.Tools.Xml;
 
 namespace Protean
 {
-
     public class IndexerAsync
     {
 
-        private new string mcModuleName = "Protean.IndexerAsync";
-
+        private string mcModuleName = "Protean.IndexerAsync";
         private string mcIndexReadFolder = ""; // the folder where the index is stored (from config)
         private string mcIndexWriteFolder = ""; // the folder where the index is stored (from config)
         private string mcIndexCopyFolder = "";
@@ -802,9 +800,9 @@ namespace Protean
             private string mcModuleName = "IndexPageAsync";
 
             #region Error Handling
-            public new event OnErrorEventHandler OnError;
+            public event OnErrorEventHandler OnError;
 
-            public new delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
+            public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
 
             private void _OnError(object sender, Tools.Errors.ErrorEventArgs e)
             {

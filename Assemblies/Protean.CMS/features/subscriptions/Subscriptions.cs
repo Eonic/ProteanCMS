@@ -2767,10 +2767,9 @@ namespace Protean
 
                         XmlElement oFrmElmt;
                         string cProcessInfo = "";
-                        bool bRememberMe = false;
+                        //bool bRememberMe = false;
                         try
-                        {
-                            // 
+                        {                          
 
                             if (mbAdminMode & this.myWeb.mnUserId == 0)
                                 goto BuildForm;

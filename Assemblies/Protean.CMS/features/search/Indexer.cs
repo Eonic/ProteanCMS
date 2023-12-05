@@ -18,13 +18,9 @@ using static Protean.Tools.Xml;
 
 namespace Protean
 {
-
     public class Indexer
     {
-
-        private new string mcModuleName = "Protean.Indexer";
-
-
+        private string mcModuleName = "Protean.Indexer";
         private string mcIndexReadFolder = ""; // the folder where the index is stored (from config)
         private string mcIndexWriteFolder = ""; // the folder where the index is stored (from config)
         private string mcIndexCopyFolder = "";

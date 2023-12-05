@@ -19,8 +19,7 @@ namespace Protean
         public System.Web.HttpContext moCtx = System.Web.HttpContext.Current;
         public System.Web.HttpRequest goRequest;
 
-        public new string mcModuleName = "Eonic.SoapClient";
-
+        public string mcModuleName = "Eonic.SoapClient";
         public SoapClient()
         {
             goRequest = moCtx.Request;

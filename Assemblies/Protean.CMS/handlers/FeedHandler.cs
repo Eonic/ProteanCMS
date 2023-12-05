@@ -273,7 +273,7 @@ namespace Protean
                         using (var reader = XmlReader.Create(response.GetResponseStream()))
                         {
                             XElement name = null;
-                            XElement item = null;
+                           // XElement item = null;
                             string sDoc = "";
                             string sDocBefore = "";
                             reader.MoveToContent();

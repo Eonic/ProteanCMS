@@ -693,7 +693,7 @@ namespace Protean.Providers
                                         if (myWeb.moRequest["nStatus"] != "")
                                         {
                                             oPageDetail.RemoveAll();
-                                            if (myWeb.moSession["lastPage"] != "")
+                                            if (Convert.ToString(myWeb.moSession["lastPage"]) != "")
                                             {
                                                 myWeb.msRedirectOnEnd = myWeb.moSession["lastPage"].ToString();
                                                 myWeb.moSession["lastPage"] = "";
@@ -761,11 +761,9 @@ namespace Protean.Providers
                                             // Check for an optional command to redireect to
                                             if (!string.IsNullOrEmpty("" + myWeb.moRequest["ewRedirCmd"]))
                                             {
-
                                                 myWeb.msRedirectOnEnd = moConfig["ProjectPath"] + "/?ewCmd=" + myWeb.moRequest["ewRedirCmd"];
                                             }
-
-                                            else if (myWeb.moSession["lastPage"] != "")
+                                            else if (Convert.ToString(myWeb.moSession["lastPage"]) != "")
                                             {
                                                 myWeb.msRedirectOnEnd = myWeb.moSession["lastPage"].ToString();
                                                 myWeb.moSession["lastPage"] = "";

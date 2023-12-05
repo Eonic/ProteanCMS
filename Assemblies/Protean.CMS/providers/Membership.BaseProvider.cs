@@ -1897,7 +1897,7 @@ namespace Protean.Providers
                         if ((myWeb.moRequest["ewCmd"].ToLower()) == "logoff" & mnUserId != 0)
                         {
 
-                            if (myWeb.moSession["ewCmd"] != "PreviewOn")
+                            if (Convert.ToString(myWeb.moSession["ewCmd"]) != "PreviewOn")
                             {
                                 LogOffProcess(ref myWeb);
                             }

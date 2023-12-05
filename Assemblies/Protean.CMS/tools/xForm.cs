@@ -756,7 +756,7 @@ namespace Protean
                     // NB REMOVE THIS
                     if (oBindElmt.GetAttribute("type") == "fileUpload")
                     {
-                        string DELETE = "";
+                        string DELETE = string.Empty;
                     }
                     // NB
 

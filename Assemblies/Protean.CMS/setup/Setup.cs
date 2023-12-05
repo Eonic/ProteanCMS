@@ -1119,7 +1119,7 @@ namespace Protean
 
         public bool UpdateDatabase()
         {
-            bool bRes = true;
+            //bool bRes = true;
             string filePath;
 
             try
@@ -1811,9 +1811,9 @@ namespace Protean
                         strXML = "<User><FirstName>" + oDirElmt.GetAttribute("cFirstName") + "</FirstName><LastName>" + oDirElmt.GetAttribute("cLastName") + "</LastName><Position/><Email>" + oDirElmt.GetAttribute("cDirEmail") + "</Email><Notes/></User>";
                     }
                     // other details
-                    strforiegnRef = Conversions.ToString(Interaction.IIf(oDirElmt.GetAttribute("nDirId") is DBNull, "", oDirElmt.GetAttribute("nDirId")));
-                    strName = Conversions.ToString(Interaction.IIf(oDirElmt.GetAttribute("cDirDN") is DBNull, "", oDirElmt.GetAttribute("cDirDN")));
-                    strPassword = Conversions.ToString(Interaction.IIf(oDirElmt.GetAttribute("cDirPassword") is DBNull, "", oDirElmt.GetAttribute("cDirPassword")));
+                    strforiegnRef = Convert.ToString(Interaction.IIf(oDirElmt.GetAttribute("nDirId") is DBNull, "", oDirElmt.GetAttribute("nDirId")));
+                    strName = Convert.ToString(Interaction.IIf(oDirElmt.GetAttribute("cDirDN") is DBNull, "", oDirElmt.GetAttribute("cDirDN")));
+                    strPassword = Convert.ToString(Interaction.IIf(oDirElmt.GetAttribute("cDirPassword") is DBNull, "", oDirElmt.GetAttribute("cDirPassword")));
                     nDirId = myWeb.moDbHelper.insertDirectory(strforiegnRef, strSchema, strName, strPassword, strXML);
 
                     foreach (XmlElement oConElmt in oDirElmt.SelectNodes("Contacts"))

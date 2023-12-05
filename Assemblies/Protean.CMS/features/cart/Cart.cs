@@ -10996,7 +10996,7 @@ namespace Protean
                 try
                 {
                     string cSQL = "exec spCartActivityPagesPeriod ";
-                    bool bPage = false;
+                    //bool bPage = false;
                     string cReportType = "";
                     if (nYear == 0)
                         nYear = DateTime.Now.Year;
@@ -11011,9 +11011,6 @@ namespace Protean
 
                     var oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Item", "Report");
                     // For Grouped by page is going to be bloody hard
-
-
-
 
                     var oRptElmt = myWeb.moPageXml.CreateElement("Content");
                     oRptElmt.SetAttribute("type", "Report");

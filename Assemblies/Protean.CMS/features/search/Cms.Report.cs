@@ -20,7 +20,7 @@ namespace Protean
             public XmlElement moReport;
             private dbHelper moDB;
 
-            private new string mcModuleName = "Eonic.Report"; // module name
+            private string mcModuleName = "Eonic.Report"; // module name
 
 
             public Report(ref Cms aWeb)
@@ -38,7 +38,7 @@ namespace Protean
                 }
             }
 
-            public new void close()
+            public void close()
             {
                 myWeb.PerfMon.Log("mcModuleName", "close");
                 string cProcessInfo = "";
