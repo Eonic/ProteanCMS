@@ -922,109 +922,109 @@ namespace Protean
                 /// <param name="myApi"></param>
                 /// <param name="jObj"></param>
                 /// <returns></returns>
-                public string CreatePaypalOrder(ref Protean.rest myApi, ref JObject jObj)
-                {
-                    try
-                    {
-                        string cProcessInfo = string.Empty;
-                        string josResult = "SUCCESS";
+                //public string CreatePaypalOrder(ref Protean.rest myApi, ref JObject jObj)
+                //{
+                //    try
+                //    {
+                //        string cProcessInfo = string.Empty;
+                //        string josResult = "SUCCESS";
 
-                        // input params
-                        // Dim cProductPrice As Double = CDbl(jObj("orderId"))
+                //        // input params
+                //        // Dim cProductPrice As Double = CDbl(jObj("orderId"))
 
-                        try
-                        {
-                            // if we receive any response from judopay pass it from PaymentReceipt
-                            // response should contain payment related all references like result, status, cardtoken, receiptId etc
-                            // validate if weather success or declined in Judopay.cs and redirect accordingly
+                //        try
+                //        {
+                //            // if we receive any response from judopay pass it from PaymentReceipt
+                //            // response should contain payment related all references like result, status, cardtoken, receiptId etc
+                //            // validate if weather success or declined in Judopay.cs and redirect accordingly
 
-                            var myWeb = new Cms();
-                            Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
-                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, "PayPalCommerce");
-                            //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, "PayPalCommerce");
-                            oPaymentProv.Activities.CreateOrder((object)true).Wait();
-                        }
+                //            var myWeb = new Cms();
+                //            Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
+                //            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, "PayPalCommerce");
+                //            //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, "PayPalCommerce");
+                //            oPaymentProv.Activities.CreateOrder((object)true).Wait();
+                //        }
 
-                        catch (Exception)
-                        {
-                            josResult = "ERROR";
-                        }
+                //        catch (Exception)
+                //        {
+                //            josResult = "ERROR";
+                //        }
 
 
-                        return josResult;
-                    }
+                //        return josResult;
+                //    }
 
-                    catch (Exception ex)
-                    {
-                        return ex.Message;
-                    }
-                }
+                //    catch (Exception ex)
+                //    {
+                //        return ex.Message;
+                //    }
+                //}
 
-                public string GetPaypalOrder(ref Protean.rest myApi, ref JObject jObj)
-                {
-                    try
-                    {
-                        string cProcessInfo = string.Empty;
-                        string josResult = "SUCCESS";
+                //public string GetPaypalOrder(ref Protean.rest myApi, ref JObject jObj)
+                //{
+                //    try
+                //    {
+                //        string cProcessInfo = string.Empty;
+                //        string josResult = "SUCCESS";
 
-                        // input params
-                        double cOrderId = (double)jObj["orderId"];
+                //        // input params
+                //        double cOrderId = (double)jObj["orderId"];
 
-                        try
-                        {
-                            var myWeb = new Cms();
-                            //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, "PayPalCommerce");
-                            Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
-                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, "PayPalCommerce");
-                            oPaymentProv.Activities.GetOrder(cOrderId).Wait();
-                            oPaymentProv.Activities.CaptureOrder(cOrderId, (object)true).Wait();
-                            oPaymentProv.Activities.AuthorizeOrder(cOrderId, (object)true).Wait();
-                        }
-                        catch (Exception)
-                        {
-                            josResult = "ERROR";
-                        }
-                        return josResult;
-                    }
+                //        try
+                //        {
+                //            var myWeb = new Cms();
+                //            //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, "PayPalCommerce");
+                //            Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
+                //            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, "PayPalCommerce");
+                //            oPaymentProv.Activities.GetOrder(cOrderId).Wait();
+                //            oPaymentProv.Activities.CaptureOrder(cOrderId, (object)true).Wait();
+                //            oPaymentProv.Activities.AuthorizeOrder(cOrderId, (object)true).Wait();
+                //        }
+                //        catch (Exception)
+                //        {
+                //            josResult = "ERROR";
+                //        }
+                //        return josResult;
+                //    }
 
-                    catch (Exception ex)
-                    {
-                        return ex.Message;
-                    }
-                }
+                //    catch (Exception ex)
+                //    {
+                //        return ex.Message;
+                //    }
+                //}
 
-                public string CapturePaypalOrder(ref Protean.rest myApi, ref JObject jObj)
-                {
-                    try
-                    {
-                        string cProcessInfo = string.Empty;
-                        string josResult = "SUCCESS";
+                //public string CapturePaypalOrder(ref Protean.rest myApi, ref JObject jObj)
+                //{
+                //    try
+                //    {
+                //        string cProcessInfo = string.Empty;
+                //        string josResult = "SUCCESS";
 
-                        // input params
-                        double cOrderId = (double)jObj["orderId"];
+                //        // input params
+                //        double cOrderId = (double)jObj["orderId"];
 
-                        try
-                        {
-                            var myWeb = new Cms();
+                //        try
+                //        {
+                //            var myWeb = new Cms();
 
-                            //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, "PayPalCommerce");
-                            Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
-                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, "PayPalCommerce");
-                            oPaymentProv.Activities.CaptureOrder(cOrderId, (object)true).Wait();
-                        }
-                        catch (Exception)
-                        {
-                            josResult = "ERROR";
-                        }
+                //            //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, "PayPalCommerce");
+                //            Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
+                //            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, "PayPalCommerce");
+                //            oPaymentProv.Activities.CaptureOrder(cOrderId, (object)true).Wait();
+                //        }
+                //        catch (Exception)
+                //        {
+                //            josResult = "ERROR";
+                //        }
 
-                        return josResult;
-                    }
+                //        return josResult;
+                //    }
 
-                    catch (Exception ex)
-                    {
-                        return ex.Message;
-                    }
-                }
+                //    catch (Exception ex)
+                //    {
+                //        return ex.Message;
+                //    }
+                //}
 
                 public bool SaveToSellerNotes(ref Protean.rest myApi, ref JObject jObj)
                 {
@@ -1102,43 +1102,43 @@ namespace Protean
                 /// <param name="myApi"></param>
                 /// <param name="searchFilter"></param>
                 /// <returns></returns>
-                public string GetISOCodeforState(Protean.rest myApi, JObject searchFilter)
-                {
-                    try
-                    {
+                //public string GetISOCodeforState(Protean.rest myApi, JObject searchFilter)
+                //{
+                //    try
+                //    {
 
-                        // Dim JsonResult As String = ""
-                        string strISOCode = "";
-                        string strCountry = searchFilter["sCountry"].ToObject<string>();
-                        string strCounty = searchFilter["sCounty"].ToObject<string>();
-                        var cProviderName = Interaction.IIf(searchFilter["sProviderName"] != null, (string)searchFilter["sProviderName"], "");
+                //        // Dim JsonResult As String = ""
+                //        string strISOCode = "";
+                //        string strCountry = searchFilter["sCountry"].ToObject<string>();
+                //        string strCounty = searchFilter["sCounty"].ToObject<string>();
+                //        var cProviderName = Interaction.IIf(searchFilter["sProviderName"] != null, (string)searchFilter["sProviderName"], "");
 
-                        //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, Conversions.ToString(cProviderName));
-                        Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
-                        IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, Conversions.ToString(cProviderName));
+                //        //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, Conversions.ToString(cProviderName));
+                //        Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
+                //        IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, Conversions.ToString(cProviderName));
 
-                        System.Collections.Specialized.NameValueCollection moConfig;
-                        moConfig = myApi.moConfig;
+                //        System.Collections.Specialized.NameValueCollection moConfig;
+                //        moConfig = myApi.moConfig;
 
-                        if (moConfig["CountryListforJudopayISOCode"] != null)
-                        {
-                            if (moConfig["CountryListforJudopayISOCode"].ToLower().Contains(strCountry.ToLower()) & !string.IsNullOrEmpty(strCountry))
-                            {
-                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(cProviderName, "", false)))
-                                {
-                                    strISOCode = Conversions.ToString(oPaymentProv.Activities.getStateISOCode(strCounty, strCountry));
-                                }
-                            }
-                        }
+                //        if (moConfig["CountryListforJudopayISOCode"] != null)
+                //        {
+                //            if (moConfig["CountryListforJudopayISOCode"].ToLower().Contains(strCountry.ToLower()) & !string.IsNullOrEmpty(strCountry))
+                //            {
+                //                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(cProviderName, "", false)))
+                //                {
+                //                    strISOCode = Conversions.ToString(oPaymentProv.Activities.getStateISOCode(strCounty, strCountry));
+                //                }
+                //            }
+                //        }
 
-                        return strISOCode;
-                    }
-                    catch (Exception ex)
-                    {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "PopulateCounty", ex, ""));
-                        return ex.Message;
-                    }
-                }
+                //        return strISOCode;
+                //    }
+                //    catch (Exception ex)
+                //    {
+                //        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "PopulateCounty", ex, ""));
+                //        return ex.Message;
+                //    }
+                //}
 
                 /// <summary>
                 /// Refund order 
@@ -1214,7 +1214,7 @@ namespace Protean
                         // If bIsAuthorized = False Then Return "Error -Authorization Failed"
 
                         // method name UpdateOrderWithPaymentResponse
-                        object receiptID = jObj["AuthNumber"];
+                        string receiptID = jObj["AuthNumber"].ToString();
                         var cProviderName = Interaction.IIf(jObj["sProviderName"] != null, (string)jObj["sProviderName"], "");
                         object strConsumerRef = "";
                         if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectNotEqual(cProviderName, "", false), Operators.ConditionalCompareObjectNotEqual(receiptID, 0, false))))
@@ -1246,7 +1246,7 @@ namespace Protean
                     try
                     {
                         bool bIsAuthorized = false;
-                        var cValidGroup = Interaction.IIf(jObj["validGroup"] != null, (string)jObj["validGroup"], "");
+                        string cValidGroup = (jObj["validGroup"] != null)? (string)jObj["validGroup"] : "";
                         bIsAuthorized = this.ValidateAPICall(ref myWeb, Conversions.ToString(cValidGroup));
 
                         if (bIsAuthorized == false)
@@ -1255,20 +1255,20 @@ namespace Protean
                         var oCart = new Cart(ref myWeb);
                         oCart.moPageXml = myWeb.moPageXml;
 
-                        var cProviderName = Interaction.IIf(jObj["sProviderName"] != null, (string)jObj["sProviderName"], "");
-                        var nOrderId = Interaction.IIf(jObj["orderId"] != null, (string)jObj["orderId"], "0");
-                        var nAmount = Interaction.IIf(jObj["amount"] != null, (decimal)jObj["amount"], "0");
-                        var cCardNumber = Interaction.IIf(jObj["cardNumber"] != null, (string)jObj["cardNumber"], "");
-                        var cCV2 = Interaction.IIf(jObj["cV2"] != null, (string)jObj["cV2"], "");
-                        var dExpiryDate = Interaction.IIf(jObj["expiryDate"] != null, (string)jObj["expiryDate"], "");
-                        var dStartDate = Interaction.IIf(jObj["startDate"] != null, (string)jObj["startDate"], "");
-                        var cCardHolderName = Interaction.IIf(jObj["cardHolderName"] != null, (string)jObj["cardHolderName"], "");
-                        var cAddress1 = Interaction.IIf(jObj["address1"] != null, (string)jObj["address1"], "");
-                        var cAddress2 = Interaction.IIf(jObj["address2"] != null, (string)jObj["address2"], "");
-                        var cTown = Interaction.IIf(jObj["town"] != null, (string)jObj["town"], "");
-                        var cPostCode = Interaction.IIf(jObj["postCode"] != null, (string)jObj["postCode"], "");
-                        var cCountry = Interaction.IIf(jObj["country"] != null, (string)jObj["country"], "");
-                        var cCounty = Interaction.IIf(jObj["county"] != null, (string)jObj["county"], "");
+                        string cProviderName = (jObj["sProviderName"] != null) ? jObj["sProviderName"].ToString(): "";
+                        string nOrderId = (jObj["orderId"] != null) ? jObj["orderId"].ToString(): "0";
+                        decimal nAmount = (jObj["amount"] != null) ? Convert.ToDecimal(jObj["amount"]): 0;
+                        string cCardNumber = (jObj["cardNumber"] != null) ? jObj["cardNumber"].ToString(): "";
+                        string cCV2 = (jObj["cV2"] != null) ? jObj["cV2"].ToString(): "";
+                        string dExpiryDate = (jObj["expiryDate"] != null) ? jObj["expiryDate"].ToString() : "";
+                        string dStartDate = (jObj["startDate"] != null) ? jObj["startDate"].ToString() : "";
+                        string cCardHolderName = (jObj["cardHolderName"] != null) ? jObj["cardHolderName"].ToString(): "";
+                        string cAddress1 = (jObj["address1"] != null) ? jObj["address1"].ToString(): "";
+                        string cAddress2 = (jObj["address2"] != null) ? jObj["address2"].ToString(): "";
+                        string cTown = (jObj["town"] != null) ? jObj["town"].ToString(): "";
+                        string cPostCode = (jObj["postCode"] != null) ? jObj["postCode"].ToString(): "";
+                        string cCountry = (jObj["country"] != null) ? jObj["country"].ToString(): "";
+                        string cCounty = (jObj["county"] != null)? jObj["county"].ToString(): "";
 
                         string cPaymentReceipt = "";
                         string josResult = "";

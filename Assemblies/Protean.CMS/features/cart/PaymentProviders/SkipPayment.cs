@@ -8,7 +8,7 @@ namespace Protean.Providers
 {
     namespace Payment
     {
-        public class SkipPayment
+        public class SkipPayment : IPaymentProvider
         {
 
             private const string mcModuleName = "Providers.Payment.SkipPayment";
@@ -18,16 +18,20 @@ namespace Protean.Providers
                 // do nothing
             }
 
-            public void Initiate(ref object _AdminXforms, ref object _AdminProcess, ref object _Activities, ref Payment.DefaultProvider PayProvider, ref Cms myWeb)
+            public IPaymentAdminXforms AdminXforms { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+            IPaymentAdminProcess IPaymentProvider.AdminProcess { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+            IPaymentActivities IPaymentProvider.Activities { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+            public void Initiate(ref Cms myWeb)
             {
                 string cProcessInfo = "";
                 try
                 {
 
-                    PayProvider.AdminXforms = new AdminXForms(ref myWeb);
-                    PayProvider.AdminProcess = new AdminProcess(ref myWeb);
+                    IPaymentAdminXforms AdminXforms = new AdminXForms(ref myWeb);
+                    IPaymentAdminProcess AdminProcess = new AdminProcess(ref myWeb);
                     // PayProvider.AdminProcess.oAdXfm = PayProvider.AdminXforms
-                    PayProvider.Activities = new Activities();
+                    IPaymentActivities Activities = new Activities();
                 }
 
                 catch (Exception ex)
@@ -37,7 +41,7 @@ namespace Protean.Providers
                 }
             }
 
-            public class AdminXForms : Cms.Admin.AdminXforms
+            public class AdminXForms : Cms.Admin.AdminXforms, IPaymentAdminXforms
             {
                 private const string mcModuleName = "Providers.Providers.Eonic.AdminXForms";
 
@@ -47,7 +51,7 @@ namespace Protean.Providers
 
             }
 
-            public class AdminProcess : Cms.Admin
+            public class AdminProcess : Cms.Admin, IPaymentAdminProcess
             {
 
                 //private Protean.Providers.Payment.PayPalPro.AdminXForms _oAdXfm;
@@ -71,7 +75,7 @@ namespace Protean.Providers
             }
 
 
-            public class Activities
+            public class Activities : IPaymentActivities
             {
 
                 private const string mcModuleName = "Providers.Payment.PayPalPro.Activities";
@@ -166,7 +170,7 @@ namespace Protean.Providers
 
                 }
 
-                public bool AddPaymentButton(ref Protean.xForm oOptXform, ref XmlElement oFrmElmt, XmlElement configXml, double nPaymentAmount, string submissionValue, string refValue)
+                public bool AddPaymentButton(ref Cms.xForm oOptXform, ref XmlElement oFrmElmt, XmlElement configXml, double nPaymentAmount, string submissionValue, string refValue)
                 {
 
                     try
@@ -207,7 +211,40 @@ namespace Protean.Providers
                     return default;
                 }
 
+                public xForm GetRedirect3dsForm(ref Cms myWeb)
+                {
+                    throw new NotImplementedException();
+                }
 
+                public XmlElement UpdatePaymentStatus(ref Cms oWeb, ref long nPaymentMethodKey)
+                {
+                    throw new NotImplementedException();
+                }
+
+                public string GetMethodDetail(ref Cms oWeb, ref string nPaymentProviderRef)
+                {
+                    throw new NotImplementedException();
+                }
+
+                public void ValidatePaymentByCart(int nCartId, bool bValid)
+                {
+                    throw new NotImplementedException();
+                }
+
+                public string RefundPayment(string providerPaymentReference, decimal amount, string validGroup = "")
+                {
+                    throw new NotImplementedException();
+                }
+
+                public string UpdateOrderWithPaymentResponse(string AuthNumber, string validGroup = "")
+                {
+                    throw new NotImplementedException();
+                }
+
+                public string ProcessNewPayment(string orderId, decimal amount, string cardNumber, string cV2, string expiryDate, string startDate, string cardHolderName, string address1, string address2, string town, string postCode, string cCounty = "", string cCountry = "", string validGroup = "")
+                {
+                    throw new NotImplementedException();
+                }
             }
         }
     }

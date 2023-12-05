@@ -16,6 +16,7 @@ using System.Linq;
 using Protean.Providers.Membership;
 using Protean.Providers.Messaging;
 using Protean.Providers.Payment;
+using static Protean.Cms.dbImport;
 
 namespace Protean
 {
@@ -9827,14 +9828,17 @@ namespace Protean
                         myWeb.msException = "";
 
                         oTransform.mbDebug = gbDebug;
-                        StringWriter icPageWriter = new StringWriter();
+                        TextWriter oTW = new StringWriter();
+                        XmlWriter icXmlWriter = XmlWriter.Create(oTW);
                         var OrderDoc = new XmlDocument();
                         OrderDoc.LoadXml(oCartXML.OuterXml);
 
-                        oTransform.ProcessTimed(OrderDoc, ref icPageWriter);
+                        XmlReader oXMLReaderInstance = new XmlNodeReader(oCartXML);
+
+                        oTransform.ProcessTimed(oXMLReaderInstance, ref icXmlWriter);
                         OrderDoc = null;
 
-                        string foNetXml = icPageWriter.ToString();
+                        string foNetXml = icXmlWriter.ToString();
 
                         string FileName = "Attachment.pdf";
 

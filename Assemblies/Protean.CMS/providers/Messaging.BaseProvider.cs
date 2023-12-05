@@ -59,7 +59,7 @@ namespace Protean.Providers
 
             void addNote(string sRef, xForm.noteTypes nTypes, string sMessage, bool bInsertFirst = false, string sClass = "");
             void addNote(ref XmlNode oNode, xForm.noteTypes nTypes, string sMessage, bool bInsertFirst = false, string sClass = "");
-            XmlElement addBind(string sId, string sXpath, ref XmlElement oBindParent, string sRequired = "false()", string sType = "string", string sConstraint = "")
+            XmlElement addBind(string sId, string sXpath, ref XmlElement oBindParent, string sRequired = "false()", string sType = "string", string sConstraint = "");
         }
 
         public interface IMessagingAdminProcess
@@ -92,7 +92,7 @@ namespace Protean.Providers
                     Type calledType;
                     if (string.IsNullOrEmpty(ProviderName))
                     {
-                        ProviderName = "Protean.Providers.Messaging.EonicProvider";
+                        ProviderName = "Protean.Providers.Messaging.DefaultProvider";
                         calledType = Type.GetType(ProviderName, true);
                     }
                     else

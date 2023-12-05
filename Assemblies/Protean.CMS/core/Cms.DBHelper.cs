@@ -14769,7 +14769,7 @@ namespace Protean
                                 XmlDocument oInstanceDoc = new XmlDocument();
                                 oInstanceDoc.LoadXml(Conversions.ToString(importStateObj.oInstance.OuterXml));
                                 XmlReader oXMLReaderInstance = new XmlNodeReader(oInstanceDoc);
-                                importStateObj.moTransform.Process(oXMLReaderInstance, sWriterOTW);
+                                importStateObj.moTransform.Process(oXMLReaderInstance,ref sWriterOTW);
                                 oTR = new StringReader(oTW.ToString());
                                 cFeedItemXML = oTR.ReadToEnd();
                                 // remove whitespace

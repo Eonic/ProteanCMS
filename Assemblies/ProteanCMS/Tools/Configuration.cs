@@ -149,7 +149,7 @@ namespace Protean
             }
         }
 
-        [ConfigurationProperty("default", DefaultValue = "EonicProvider")]
+        [ConfigurationProperty("default", DefaultValue = "DefaultProvider")]
         public string Default
         {
             get

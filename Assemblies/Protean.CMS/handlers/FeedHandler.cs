@@ -307,7 +307,7 @@ namespace Protean
 
                                             var xreader = origInstance.CreateReader();
                                             xreader.MoveToContent();
-                                            oTransform.Process(xreader, xWriter);
+                                            oTransform.Process(xreader,ref xWriter);
 
                                             sDoc = oWriter.ToString();
 

@@ -91,7 +91,7 @@ namespace Protean.Providers
 
                     if (string.IsNullOrEmpty(ProviderClass))
                     {
-                        ProviderClass = "Protean.Providers.Streaming.EonicProvider";
+                        ProviderClass = "Protean.Providers.Streaming.DefaultProvider";
                         calledType = Type.GetType(ProviderClass, true);
                     }
                     else
@@ -130,10 +130,10 @@ namespace Protean.Providers
 
         }
 
-        public class EonicProvider
+        public class DefaultProvider
         {
 
-            public EonicProvider()
+            public DefaultProvider()
             {
                 // do nothing
             }

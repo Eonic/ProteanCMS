@@ -48,10 +48,13 @@ namespace Protean.Providers
             string CheckStatus(ref Cms oWeb, ref string nPaymentProviderRef);
             XmlElement UpdatePaymentStatus(ref Cms oWeb, ref long nPaymentMethodKey);
             string GetMethodDetail(ref Cms oWeb, ref string nPaymentProviderRef);
-            bool AddPaymentButton(ref Protean.xForm oOptXform, ref XmlElement oFrmElmt, XmlElement configXml, double nPaymentAmount, string submissionValue, string refValue);
+            bool AddPaymentButton(ref Cms.xForm oOptXform, ref XmlElement oFrmElmt, XmlElement configXml, double nPaymentAmount, string submissionValue, string refValue);
             void ValidatePaymentByCart(int nCartId, bool bValid);
             string RefundPayment(string providerPaymentReference, decimal amount, string validGroup = "");
-
+            string CancelPayments(ref Cms oWeb, ref string nPaymentProviderRef);
+            string CollectPayment(ref Cms myWeb, long nPaymentMethodId, double Amount, string CurrencyCode, string PaymentDescription, ref Cms.Cart oCart);
+            string UpdateOrderWithPaymentResponse(string AuthNumber, string validGroup = "");
+            string ProcessNewPayment(string orderId, decimal amount, string cardNumber, string cV2, string expiryDate, String startDate, String cardHolderName, string address1, string address2, string town, string postCode, string cCounty = "", string cCountry = "", string validGroup = "");
         }
         public class ReturnProvider
         {
@@ -572,7 +575,7 @@ namespace Protean.Providers
                 }
 
 
-                public bool AddPaymentButton(ref Protean.xForm oOptXform, ref XmlElement oFrmElmt, XmlElement configXml, double nPaymentAmount, string submissionValue, string refValue)
+                public bool AddPaymentButton(ref Cms.xForm oOptXform, ref XmlElement oFrmElmt, XmlElement configXml, double nPaymentAmount, string submissionValue, string refValue)
                 {
 
                     string PaymentLabel = configXml.SelectSingleNode("description/@value").InnerText;
@@ -628,8 +631,30 @@ namespace Protean.Providers
                     }
                 }
 
+                public string RefundPayment(string providerPaymentReference, decimal amount, string validGroup = "")
+                {
+                    throw new NotImplementedException();
+                }
 
+                public string CancelPayments(ref Cms oWeb, ref string nPaymentProviderRef)
+                {
+                    throw new NotImplementedException();
+                }
 
+                public string CollectPayment(ref Cms myWeb, long nPaymentMethodId, double Amount, string CurrencyCode, string PaymentDescription, ref Cart oCart)
+                {
+                    throw new NotImplementedException();
+                }
+
+                public string UpdateOrderWithPaymentResponse(string AuthNumber, string validGroup = "")
+                {
+                    throw new NotImplementedException();
+                }
+
+                public string ProcessNewPayment(string orderId, decimal amount, string cardNumber, string cV2, string expiryDate, string startDate, string cardHolderName, string address1, string address2, string town, string postCode, string cCounty = "", string cCountry = "", string validGroup = "")
+                {
+                    throw new NotImplementedException();
+                }
             }
         }
 

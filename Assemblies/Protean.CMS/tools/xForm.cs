@@ -4171,7 +4171,7 @@ namespace Protean
                 XmlDocument oXML = new XmlDocument();
                 oXML.InnerXml = oInstance.OuterXml;
                 XmlReader oXMLReader = new XmlNodeReader(oXML);
-                oTransform.Process(oXMLReader, sWritertest);
+                oTransform.Process(oXMLReader,ref sWritertest);
                 // Run transformation
 
 
