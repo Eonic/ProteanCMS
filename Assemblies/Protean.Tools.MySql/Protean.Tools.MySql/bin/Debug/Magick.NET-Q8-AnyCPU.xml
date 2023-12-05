@@ -2876,7 +2876,7 @@
             <summary>
             Sets the URL to use as a fill pattern for filling objects. Only local URLs("#identifier") are
             supported at this time. These local URLs are normally created by defining a named fill pattern
-            with DrawablePushPattern/DrawablePopPattern.
+            with <see cref="T:ImageMagick.DrawablePushPattern"/>/<see cref="T:ImageMagick.DrawablePopPattern"/>.
             </summary>
         </member>
         <member name="M:ImageMagick.DrawableFillPatternUrl.#ctor(System.String)">
@@ -3170,7 +3170,7 @@
         </member>
         <member name="T:ImageMagick.DrawablePopGraphicContext">
             <summary>
-            destroys the current drawing wand and returns to the  previously pushed drawing wand. Multiple
+            destroys the current drawing wand and returns to the previously pushed drawing wand. Multiple
             drawing wands may exist. It is an error to attempt to pop more drawing wands than have been
             pushed, and it is proper form to pop all drawing wands which have been pushed.
             </summary>
@@ -5672,7 +5672,7 @@
             Initializes a new instance that implements <see cref="T:ImageMagick.IMagickGeometry"/>.
             </summary>
             <param name="percentageWidth">The percentage of the width.</param>
-            <param name="percentageHeight">The percentage of the  height.</param>
+            <param name="percentageHeight">The percentage of the height.</param>
             <returns>A new <see cref="T:ImageMagick.IMagickGeometry"/> instance.</returns>
         </member>
         <member name="M:ImageMagick.MagickGeometryFactory.Create(System.Int32,System.Int32,ImageMagick.Percentage,ImageMagick.Percentage)">
@@ -5682,7 +5682,7 @@
             <param name="x">The X offset from origin.</param>
             <param name="y">The Y offset from origin.</param>
             <param name="percentageWidth">The percentage of the width.</param>
-            <param name="percentageHeight">The percentage of the  height.</param>
+            <param name="percentageHeight">The percentage of the height.</param>
             <returns>A new <see cref="T:ImageMagick.IMagickGeometry"/> instance.</returns>
         </member>
         <member name="M:ImageMagick.MagickGeometryFactory.Create(System.String)">
@@ -6648,7 +6648,8 @@
         </member>
         <member name="P:ImageMagick.Formats.DngReadDefines.ReadThumbnail">
             <summary>
-            Gets or sets a value indicating wether the embedded thumbnail should be read (dng:read-thumbnail).
+            Gets or sets a value indicating wether the embedded thumbnail should be read (dng:read-thumbnail). This profile can be
+            read by calling <see cref="M:ImageMagick.IMagickImage.GetProfile(System.String)"/> with dng:thumbnail as the name of the profile.
             </summary>
         </member>
         <member name="P:ImageMagick.Formats.DngReadDefines.UseAutoWhitebalance">
@@ -6729,6 +6730,11 @@
         <member name="P:ImageMagick.Formats.Jp2ReadDefines.Format">
             <summary>
             Gets the format where the defines are for.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.Formats.Jp2ReadDefines.AssumeAlpha">
+            <summary>
+            Gets or sets the flag that assumes an alpha channel when the image has 2 or 4 channels (jp2:assume-alpha).
             </summary>
         </member>
         <member name="P:ImageMagick.Formats.Jp2ReadDefines.QualityLayers">
@@ -7322,6 +7328,26 @@
             Unassociated.
             </summary>
         </member>
+        <member name="T:ImageMagick.Formats.TiffJpegTablesMode">
+            <summary>
+            Specifies jpeg tables mode that will be used when using jpeg compression in a tiff image.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Formats.TiffJpegTablesMode.None">
+            <summary>
+            Unspecified.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Formats.TiffJpegTablesMode.Quant">
+            <summary>
+            Include quantization tables.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Formats.TiffJpegTablesMode.Huff">
+            <summary>
+            Include Huffman tables.
+            </summary>
+        </member>
         <member name="T:ImageMagick.Formats.TiffReadDefines">
             <summary>
             Class for defines that are used when a <see cref="F:ImageMagick.MagickFormat.Tiff"/> image is read.
@@ -7375,6 +7401,11 @@
         <member name="P:ImageMagick.Formats.TiffWriteDefines.Format">
             <summary>
             Gets the format where the defines are for.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.Formats.TiffWriteDefines.JpegTablesMode">
+            <summary>
+            Gets or sets the jpeg tables mode (tiff:jpeg-tables-mode).
             </summary>
         </member>
         <member name="P:ImageMagick.Formats.TiffWriteDefines.Predictor">
@@ -8178,21 +8209,6 @@
             Gets the format.
             </summary>
         </member>
-        <member name="P:ImageMagick.MagickFormatInfo.IsMultiFrame">
-            <summary>
-            Gets a value indicating whether the format supports multiple frames.
-            </summary>
-        </member>
-        <member name="P:ImageMagick.MagickFormatInfo.IsReadable">
-            <summary>
-            Gets a value indicating whether the format is readable.
-            </summary>
-        </member>
-        <member name="P:ImageMagick.MagickFormatInfo.IsWritable">
-            <summary>
-            Gets a value indicating whether the format is writable.
-            </summary>
-        </member>
         <member name="P:ImageMagick.MagickFormatInfo.MimeType">
             <summary>
             Gets the mime type.
@@ -8201,6 +8217,21 @@
         <member name="P:ImageMagick.MagickFormatInfo.ModuleFormat">
             <summary>
             Gets the module.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.MagickFormatInfo.SupportsMultipleFrames">
+            <summary>
+            Gets a value indicating whether the format supports multiple frames.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.MagickFormatInfo.SupportsReading">
+            <summary>
+            Gets a value indicating whether the format can be read.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.MagickFormatInfo.SupportsWriting">
+            <summary>
+            Gets a value indicating whether the format can be written.
             </summary>
         </member>
         <member name="M:ImageMagick.MagickFormatInfo.Create(System.IO.FileInfo)">
@@ -8713,20 +8744,6 @@
             Gets the width of the image.
             </summary>
         </member>
-        <member name="M:ImageMagick.MagickImage.op_Equality(ImageMagick.MagickImage,ImageMagick.MagickImage)">
-            <summary>
-            Determines whether the specified <see cref="T:ImageMagick.MagickImage"/> instances are considered equal.
-            </summary>
-            <param name="left">The first <see cref="T:ImageMagick.MagickImage"/> to compare.</param>
-            <param name="right">The second <see cref="T:ImageMagick.MagickImage"/> to compare.</param>
-        </member>
-        <member name="M:ImageMagick.MagickImage.op_Inequality(ImageMagick.MagickImage,ImageMagick.MagickImage)">
-            <summary>
-            Determines whether the specified <see cref="T:ImageMagick.MagickImage"/> instances are not considered equal.
-            </summary>
-            <param name="left">The first <see cref="T:ImageMagick.MagickImage"/> to compare.</param>
-            <param name="right">The second <see cref="T:ImageMagick.MagickImage"/> to compare.</param>
-        </member>
         <member name="M:ImageMagick.MagickImage.op_GreaterThan(ImageMagick.MagickImage,ImageMagick.MagickImage)">
             <summary>
             Determines whether the first <see cref="T:ImageMagick.MagickImage"/> is more than the second <see cref="T:ImageMagick.MagickImage"/>.
@@ -9111,6 +9128,13 @@
             </summary>
             <param name="width">The width of the border.</param>
             <param name="height">The height of the border.</param>
+            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
+        </member>
+        <member name="M:ImageMagick.MagickImage.Border(ImageMagick.Percentage)">
+            <summary>
+            Border image (add border to image).
+            </summary>
+            <param name="percentage">The size of the border.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
         <member name="M:ImageMagick.MagickImage.BrightnessContrast(ImageMagick.Percentage,ImageMagick.Percentage)">
@@ -10015,20 +10039,6 @@
             <param name="channels">The channel(s) to apply the operator on.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
-        <member name="M:ImageMagick.MagickImage.Equals(System.Object)">
-            <summary>
-            Determines whether the specified object is equal to the current <see cref="T:ImageMagick.MagickImage"/>.
-            </summary>
-            <param name="obj">The object to compare this <see cref="T:ImageMagick.MagickImage"/> with.</param>
-            <returns>True when the specified object is equal to the current <see cref="T:ImageMagick.MagickImage"/>.</returns>
-        </member>
-        <member name="M:ImageMagick.MagickImage.Equals(ImageMagick.IMagickImage{System.Byte})">
-            <summary>
-            Determines whether the specified <see cref="T:ImageMagick.IMagickImage`1"/> is equal to the current <see cref="T:ImageMagick.MagickImage"/>.
-            </summary>
-            <param name="other">The <see cref="T:ImageMagick.IMagickImage`1"/> to compare this <see cref="T:ImageMagick.MagickImage"/> with.</param>
-            <returns>True when the specified <see cref="T:ImageMagick.IMagickImage`1"/> is equal to the current <see cref="T:ImageMagick.MagickImage"/>.</returns>
-        </member>
         <member name="M:ImageMagick.MagickImage.Evaluate(ImageMagick.Channels,ImageMagick.EvaluateFunction,System.Double[])">
             <summary>
             Apply an arithmetic or bitwise operator to the image pixel quantums.
@@ -10172,7 +10182,7 @@
         </member>
         <member name="M:ImageMagick.MagickImage.FloodFill(ImageMagick.IMagickColor{System.Byte},System.Int32,System.Int32)">
             <summary>
-            Flood-fill color across pixels that match the color of the  target pixel and are neighbors
+            Flood-fill color across pixels that match the color of the target pixel and are neighbors
             of the target pixel. Uses current fuzz setting when determining color match.
             </summary>
             <param name="color">The color to use.</param>
@@ -10394,12 +10404,6 @@
             </summary>
             <returns>The exif profile from the image.</returns>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImage.GetHashCode">
-            <summary>
-            Serves as a hash of this type.
-            </summary>
-            <returns>A hash code for the current instance.</returns>
         </member>
         <member name="M:ImageMagick.MagickImage.GetIptcProfile">
             <summary>
@@ -11974,7 +11978,7 @@
             <summary>
             Associates a mask with the image as defined by the specified region.
             </summary>
-            <param name="region">The mask region.</param>
+            <param name="geometry">The mask region.</param>
         </member>
         <member name="M:ImageMagick.MagickImage.RemoveArtifact(System.String)">
             <summary>
@@ -12380,7 +12384,8 @@
         <member name="M:ImageMagick.MagickImage.SetWriteMask(ImageMagick.IMagickImage)">
             <summary>
             Sets the associated write mask of the image. The mask must be the same dimensions as the image and
-            only contains the colors black and white.
+            only contains the colors black and white or have grayscale values that will cause blended updates of
+            the image.
             </summary>
             <param name="image">The image that contains the write mask.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>z
@@ -12779,7 +12784,7 @@
         </member>
         <member name="M:ImageMagick.MagickImage.Thumbnail(System.Int32,System.Int32)">
             <summary>
-            Resize image to thumbnail size.
+            Resize image to thumbnail size and remove all the image profiles except the icc/icm profile.
             <para />
             Resize will fit the image into the requested size. It does NOT fill, the requested box size.
             Use the <see cref="T:ImageMagick.IMagickGeometry"/> overload for more control over the resulting size.
@@ -12790,21 +12795,21 @@
         </member>
         <member name="M:ImageMagick.MagickImage.Thumbnail(ImageMagick.IMagickGeometry)">
             <summary>
-            Resize image to thumbnail size.
+            Resize image to thumbnail size and remove all the image profiles except the icc/icm profile.
             </summary>
             <param name="geometry">The geometry to use.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
         <member name="M:ImageMagick.MagickImage.Thumbnail(ImageMagick.Percentage)">
             <summary>
-            Resize image to thumbnail size.
+            Resize image to thumbnail size and remove all the image profiles except the icc/icm profile.
             </summary>
             <param name="percentage">The percentage.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
         <member name="M:ImageMagick.MagickImage.Thumbnail(ImageMagick.Percentage,ImageMagick.Percentage)">
             <summary>
-            Resize image to thumbnail size.
+            Resize image to thumbnail size and remove all the image profiles except the icc/icm profile.
             </summary>
             <param name="percentageWidth">The percentage of the width.</param>
             <param name="percentageHeight">The percentage of the height.</param>
@@ -15256,7 +15261,8 @@
         <member name="P:ImageMagick.ResourceLimits.Memory">
             <summary>
             Gets or sets the pixel cache limit in bytes. Once this memory limit is exceeded, all subsequent pixels cache
-            operations are to/from disk.
+            operations are to/from disk. The default value of this is 50% of the available memory on the machine in 64-bit mode.
+            When running in 32-bit mode this is 50% of the limit of the operating system.
             </summary>
         </member>
         <member name="P:ImageMagick.ResourceLimits.Thread">
@@ -15304,7 +15310,8 @@
         <member name="P:ImageMagick.ResourceLimits.ImageMagick#IResourceLimits#Memory">
             <summary>
             Gets or sets the pixel cache limit in bytes. Once this memory limit is exceeded, all subsequent pixels cache
-            operations are to/from disk.
+            operations are to/from disk. The default value of this is 50% of the available memory on the machine in 64-bit mode.
+            When running in 32-bit mode this is 50% of the limit of the operating system.
             </summary>
         </member>
         <member name="P:ImageMagick.ResourceLimits.ImageMagick#IResourceLimits#Thread">
@@ -15325,14 +15332,14 @@
         <member name="M:ImageMagick.ResourceLimits.LimitMemory(ImageMagick.Percentage)">
             <summary>
             Set the maximum percentage of memory that can be used for image data. This also changes
-            the <see cref="P:ImageMagick.ResourceLimits.Area"/> limit to twice the number of bytes.
+            the <see cref="P:ImageMagick.ResourceLimits.Area"/> limit to four times the number of bytes.
             </summary>
             <param name="percentage">The percentage to use.</param>
         </member>
         <member name="M:ImageMagick.ResourceLimits.ImageMagick#IResourceLimits#LimitMemory(ImageMagick.Percentage)">
             <summary>
             Set the maximum percentage of memory that can be used for image data. This also changes
-            the <see cref="P:ImageMagick.ResourceLimits.Area"/> limit to twice the number of bytes.
+            the <see cref="P:ImageMagick.ResourceLimits.Area"/> limit to four times the number of bytes.
             </summary>
             <param name="percentage">The percentage to use.</param>
         </member>
@@ -15868,101 +15875,6 @@
             </summary>
             <returns>A string representation of this hash.</returns>
         </member>
-        <member name="T:ImageMagick.ChannelStatistics">
-            <summary>
-            Encapsulation of the ImageMagick ImageChannelStatistics object.
-            </summary>
-        </member>
-        <member name="P:ImageMagick.ChannelStatistics.Channel">
-            <summary>
-            Gets the channel.
-            </summary>
-        </member>
-        <member name="P:ImageMagick.ChannelStatistics.Depth">
-            <summary>
-            Gets the depth of the channel.
-            </summary>
-        </member>
-        <member name="P:ImageMagick.ChannelStatistics.Entropy">
-            <summary>
-            Gets the entropy.
-            </summary>
-        </member>
-        <member name="P:ImageMagick.ChannelStatistics.Kurtosis">
-            <summary>
-            Gets the kurtosis.
-            </summary>
-        </member>
-        <member name="P:ImageMagick.ChannelStatistics.Maximum">
-            <summary>
-            Gets the maximum value observed.
-            </summary>
-        </member>
-        <member name="P:ImageMagick.ChannelStatistics.Mean">
-            <summary>
-            Gets the average (mean) value observed.
-            </summary>
-        </member>
-        <member name="P:ImageMagick.ChannelStatistics.Minimum">
-            <summary>
-            Gets the minimum value observed.
-            </summary>
-        </member>
-        <member name="P:ImageMagick.ChannelStatistics.Skewness">
-            <summary>
-            Gets the skewness.
-            </summary>
-        </member>
-        <member name="P:ImageMagick.ChannelStatistics.StandardDeviation">
-            <summary>
-            Gets the standard deviation, sqrt(variance).
-            </summary>
-        </member>
-        <member name="P:ImageMagick.ChannelStatistics.Sum">
-            <summary>
-            Gets the sum.
-            </summary>
-        </member>
-        <member name="P:ImageMagick.ChannelStatistics.SumCubed">
-            <summary>
-            Gets the sum cubed.
-            </summary>
-        </member>
-        <member name="P:ImageMagick.ChannelStatistics.SumFourthPower">
-            <summary>
-            Gets the sum fourth power.
-            </summary>
-        </member>
-        <member name="P:ImageMagick.ChannelStatistics.SumSquared">
-            <summary>
-            Gets the sum squared.
-            </summary>
-        </member>
-        <member name="P:ImageMagick.ChannelStatistics.Variance">
-            <summary>
-            Gets the variance.
-            </summary>
-        </member>
-        <member name="M:ImageMagick.ChannelStatistics.Equals(System.Object)">
-            <summary>
-            Determines whether the specified object is equal to the current <see cref="T:ImageMagick.ChannelStatistics"/>.
-            </summary>
-            <param name="obj">The object to compare this <see cref="T:ImageMagick.ChannelStatistics"/> with.</param>
-            <returns>True when the specified object is equal to the current <see cref="T:ImageMagick.ChannelStatistics"/>.</returns>
-        </member>
-        <member name="M:ImageMagick.ChannelStatistics.Equals(ImageMagick.IChannelStatistics)">
-            <summary>
-            Determines whether the specified <see cref="T:ImageMagick.IChannelStatistics"/> is equal to the current <see cref="T:ImageMagick.ChannelStatistics"/>.
-            </summary>
-            <param name="other">The channel statistics to compare this <see cref="T:ImageMagick.ChannelStatistics"/> with.</param>
-            <returns>True when the specified <see cref="T:ImageMagick.IChannelStatistics"/> is equal to the current <see cref="T:ImageMagick.ChannelStatistics"/>.</returns>
-        </member>
-        <member name="M:ImageMagick.ChannelStatistics.GetHashCode">
-            <summary>
-            Serves as a hash of this type.
-            </summary>
-            <returns>A hash code for the current instance.</returns>
-        </member>
         <member name="T:ImageMagick.Moments">
             <summary>
             The normalized moments of one or more image channels.
@@ -16011,49 +15923,6 @@
             Returns a string representation of this hash.
             </summary>
             <returns>A <see cref="T:System.String"/>.</returns>
-        </member>
-        <member name="T:ImageMagick.Statistics">
-            <summary>
-            Encapsulation of the ImageMagick ImageStatistics object.
-            </summary>
-        </member>
-        <member name="P:ImageMagick.Statistics.Channels">
-            <summary>
-            Gets the channels.
-            </summary>
-        </member>
-        <member name="M:ImageMagick.Statistics.Composite">
-            <summary>
-            Returns the statistics for the all the channels.
-            </summary>
-            <returns>The statistics for the all the channels.</returns>
-        </member>
-        <member name="M:ImageMagick.Statistics.GetChannel(ImageMagick.PixelChannel)">
-            <summary>
-            Returns the statistics for the specified channel.
-            </summary>
-            <param name="channel">The channel to get the statistics for.</param>
-            <returns>The statistics for the specified channel.</returns>
-        </member>
-        <member name="M:ImageMagick.Statistics.Equals(System.Object)">
-            <summary>
-            Determines whether the specified object is equal to the current <see cref="T:ImageMagick.Statistics"/>.
-            </summary>
-            <param name="obj">The object to compare this <see cref="T:ImageMagick.Statistics"/> with.</param>
-            <returns>Truw when the specified object is equal to the current <see cref="T:ImageMagick.Statistics"/>.</returns>
-        </member>
-        <member name="M:ImageMagick.Statistics.Equals(ImageMagick.IStatistics)">
-            <summary>
-            Determines whether the specified image statistics is equal to the current <see cref="T:ImageMagick.Statistics"/>.
-            </summary>
-            <param name="other">The image statistics to compare this <see cref="T:ImageMagick.Statistics"/> with.</param>
-            <returns>True when the specified image statistics is equal to the current <see cref="T:ImageMagick.Statistics"/>.</returns>
-        </member>
-        <member name="M:ImageMagick.Statistics.GetHashCode">
-            <summary>
-            Serves as a hash of this type.
-            </summary>
-            <returns>A hash code for the current instance.</returns>
         </member>
         <member name="T:ImageMagick.ConnectedComponent">
             <summary>
@@ -16150,7 +16019,7 @@
             Initializes a new instance of the <see cref="T:ImageMagick.MagickGeometry"/> class using the specified width and height.
             </summary>
             <param name="percentageWidth">The percentage of the width.</param>
-            <param name="percentageHeight">The percentage of the  height.</param>
+            <param name="percentageHeight">The percentage of the height.</param>
         </member>
         <member name="M:ImageMagick.MagickGeometry.#ctor(System.Int32,System.Int32,ImageMagick.Percentage,ImageMagick.Percentage)">
             <summary>
@@ -16159,7 +16028,7 @@
             <param name="x">The X offset from origin.</param>
             <param name="y">The Y offset from origin.</param>
             <param name="percentageWidth">The percentage of the width.</param>
-            <param name="percentageHeight">The percentage of the  height.</param>
+            <param name="percentageHeight">The percentage of the height.</param>
         </member>
         <member name="M:ImageMagick.MagickGeometry.#ctor(System.String)">
             <summary>
@@ -16308,7 +16177,7 @@
         </member>
         <member name="M:ImageMagick.MagickGeometry.Initialize(System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
-            Initializes the geometry using the sepcified value.
+            Initializes the geometry using the specified value.
             </summary>
             <param name="x">The X offset from origin.</param>
             <param name="y">The Y offset from origin.</param>

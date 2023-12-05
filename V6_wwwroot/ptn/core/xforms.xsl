@@ -250,9 +250,9 @@
 
 
 
-	<!-- ========================== GROUP Horizontal ========================== -->
+	<!-- ========================== GROUP Inline Form ========================== -->
 	<!-- -->
-	<xsl:template match="group[contains(@class,'horizontal')] | repeat[contains(@class,'horizontal')]" mode="xform">
+	<xsl:template match="group[contains(@class,'inline-form')] | repeat[contains(@class,'inline-form')]" mode="xform">
 
 		<xsl:if test="label">
 			<h3>
@@ -758,15 +758,15 @@
 		</xsl:if>
 	</xsl:template>
 
-	<xsl:template match="input[parent::*[contains(@class,'horizontal')]] | select1[parent::*[contains(@class,'horizontal')]] " mode="xform">
+	<xsl:template match="input[parent::*[contains(@class,'horizontal-form')]] | select1[parent::*[contains(@class,'horizontal-form')]]  | secret[parent::*[contains(@class,'horizontal-form')]] " mode="xform">
 		<xsl:param name="nolabel"/>
 		<xsl:param name="dependantClass"/>
 		<!-- NB : the count(item)!=1 basically stops you from making a one checkbox field (ie a boolean) from being required -->
 		<xsl:if test="not($nolabel!='')">
 			<div class="row mb-3">
-				<label class="col-sm-3 colform-label">
-					<xsl:apply-templates select="label/node()" mode="cleanXhtml"/>
-				</label>
+				<div class="col-sm-3 colform-label">
+					<xsl:apply-templates select="label"/>
+				</div>
 				<xsl:choose>
 					<xsl:when test="@prefixIcon!='' or @prefix!='' or @suffix!='' or @suffixIcon!=''">
 						<div class="col-sm-9">
@@ -3040,9 +3040,6 @@
 					</xsl:if>
 					<xsl:if test="parent::input[contains(@class,'readonly')]">
 						<xsl:text> readonly</xsl:text>
-					</xsl:if>
-					<xsl:if test="ancestor::group[contains(@class,'inline-labels')]">
-						<xsl:text> col-sm-3 control-label</xsl:text>
 					</xsl:if>
 				</xsl:attribute>
 				<xsl:for-each select="@*">
