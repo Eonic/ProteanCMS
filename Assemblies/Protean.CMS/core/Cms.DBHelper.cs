@@ -9296,11 +9296,11 @@ namespace Protean
                 string cProcessInfo = "";
                 string cContentLocationTable = "";
 
-                string cTableName = "";
-                string cTableKey = "";
-                string cTableFRef = "";
+                string cTableName = string.Empty;
+                string cTableKey = string.Empty;
+                string cTableFRef = string.Empty;
 
-                string cPreviousTableName = "";
+                string cPreviousTableName = string.Empty;
 
                 bool bDeleteNonEntries = false;
                 string cDeleteTempTableName = "";
@@ -10430,7 +10430,7 @@ namespace Protean
                 XmlElement oElmt3;
 
                 string sNodeName = "";
-                string sContentText = "";
+                string sContentText = string.Empty;
 
                 try
                 {
@@ -10595,8 +10595,8 @@ namespace Protean
                 PerfMonLog("DBHelper", "ContentDataSetToXml - Start");
                 string sProcessInfo = "";
 
-                string sNodeName = "";
-                string sContentText = "";
+                string sNodeName = string.Empty;
+                string sContentText = string.Empty;
 
                 try
                 {
@@ -11359,8 +11359,8 @@ namespace Protean
                     var oDs = new DataSet();
                     XmlDataDocument oFullData;
                     var oResults = moPageXml.CreateElement("RelatedResults");
-                    string cXPath = "";
-                    string cXPath2 = "";
+                    string cXPath = string.Empty;
+                    string cXPath2 = string.Empty;
 
                     // if schemaName is a comma separated string
                     string[] aSchema = cSchemaName.Split(',');

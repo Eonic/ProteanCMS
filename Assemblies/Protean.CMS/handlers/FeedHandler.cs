@@ -289,7 +289,7 @@ namespace Protean
                                     {
                                         origInstance = XNode.ReadFrom(reader) as XElement;
                                     }
-                                    catch (Exception ex)
+                                    catch (Exception)
                                     {
                                         // reader.Read()
                                         reader.ReadToFollowing(instanceNodeName);
@@ -725,7 +725,7 @@ namespace Protean
                 {
                     oElmt.InnerXml = cMessage;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     oElmt.InnerText = Strings.Replace(Strings.Replace(cMessage, "&gt;", ">"), "&lt;", "<");
                 }

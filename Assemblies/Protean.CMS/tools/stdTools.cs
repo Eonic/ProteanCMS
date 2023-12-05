@@ -372,13 +372,13 @@ namespace Protean
 
             string sProcessInfo = "Beginning";
             string strErrorHtml;
-            string strMessageHtml;
+            string strMessageHtml= string.Empty;
             var oExceptionXml = new XmlDocument();
             XmlElement oElmt;
 
             var oStyle = new System.Xml.Xsl.XslTransform();
             var sWriter = new System.IO.StringWriter();
-            string sReturnHtml = "";
+            string sReturnHtml = string.Empty;
             string cHost = "";
             System.Collections.Specialized.NameValueCollection oConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
 

@@ -1641,7 +1641,7 @@ namespace Protean.Providers
                         {
                             moDbHelper.CloseConnection();
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
 
                         }
@@ -2164,7 +2164,7 @@ namespace Protean.Providers
                                     }
                                     // myWeb.moResponse.Write(duration)
                                     // duration = DateDiff(DateInterval.Minute, DateTime.Parse(timestamp), DateTime.Parse(DateTime.Now.ToString("dd/MM/yyyy HH:MM")))
-                                    catch (Exception ex)
+                                    catch (Exception)
                                     {
                                         // myWeb.moResponse.Write(ex.Message)
                                     }

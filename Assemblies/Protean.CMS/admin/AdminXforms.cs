@@ -31,6 +31,7 @@ using static Protean.Tools.Text;
 using static Protean.Tools.Xml;
 using System.Web.UI.HtmlControls;
 using Protean.Providers.Membership;
+using Protean.Providers.Payment;
 
 namespace Protean
 {
@@ -129,7 +130,7 @@ namespace Protean
 
 
 
-                public new void open(XmlDocument oPageXml)
+                public void open(XmlDocument oPageXml)
                 {
                     string cProcessInfo = "";
                     try
@@ -222,7 +223,7 @@ namespace Protean
 
                     try
                     {
-                        ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                        Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
                         IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, this.myWeb.moConfig["MembershipProvider"]);
                         IMembershipAdminXforms oAdXfm = oMembershipProv.AdminXforms;
 
@@ -363,7 +364,7 @@ namespace Protean
                     {
 
                         Cms argmyWeb = this.myWeb;
-                        ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                        Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
                         IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, this.myWeb.moConfig["MembershipProvider"]);
                         IMembershipAdminXforms oAdXfm = oMembershipProv.AdminXforms;
                         this.myWeb = (Cms)argmyWeb;
@@ -387,8 +388,8 @@ namespace Protean
 
                     try
                     {
-                                                          
-                        ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+
+                        Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
                         IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, this.myWeb.moConfig["MembershipProvider"]);
                         IMembershipAdminXforms oAdXfm = oMembershipProv.AdminXforms;
 
@@ -412,7 +413,7 @@ namespace Protean
                     try
                     {
 
-                        ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                        Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
                         IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, this.myWeb.moConfig["MembershipProvider"]);
                         IMembershipAdminXforms oAdXfm = oMembershipProv.AdminXforms;
 
@@ -438,7 +439,7 @@ namespace Protean
                     try
                     {
 
-                        ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                        Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
                         IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, this.myWeb.moConfig["MembershipProvider"]);
                         IMembershipAdminXforms oAdXfm = oMembershipProv.AdminXforms;
 
@@ -464,7 +465,7 @@ namespace Protean
                     try
                     {
 
-                        ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                        Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
                         IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, this.myWeb.moConfig["MembershipProvider"]);
                         IMembershipAdminXforms oAdXfm = oMembershipProv.AdminXforms;
 
@@ -1065,7 +1066,7 @@ namespace Protean
 
                             var oTemplateInstance = this.moPageXML.CreateElement("Instance");
                             oTemplateInstance.InnerXml = base.Instance.InnerXml;
-                            string oCgfSectName = "system.webServer";
+                            //string oCgfSectName = "system.webServer";
                             string oCgfSectPath = "rewriteMaps/rewriteMap[@name='" + ConfigType + "']";
                             // Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection(oCgfSectName)
                             cProcessInfo = "Getting Section Name:" + oCgfSectPath;
@@ -1091,7 +1092,7 @@ namespace Protean
                                     {
                                         string xmlstring = "<rewriteMap name='" + ConfigType + "'>";
                                         string xmlstringend = "</rewriteMap>";
-                                        int count = 0;
+                                       // int count = 0;
 
                                         for (int i = 0, loopTo = PerPageCount - 1; i <= loopTo; i++)
                                             xmlstring = xmlstring + props.ChildNodes[i].OuterXml;
@@ -1621,7 +1622,7 @@ namespace Protean
 
                     var oXformDoc = new XmlDocument();
                     string cProcessInfo = "";
-                    string sImgPath = "";
+                    //string sImgPath = "";
                     XmlElement oOptElmt;
 
                     try
@@ -2803,7 +2804,7 @@ namespace Protean
                 {
                     XmlElement oFrmElmt;
                     XmlElement oSelElmt;
-                    string sImgPath = "";
+                    //string sImgPath = "";
 
                     string cProcessInfo = "";
                     var oXformDoc = new XmlDocument();
@@ -3065,7 +3066,7 @@ namespace Protean
                 {
 
                     string cProcessInfo = "";
-                    string sImgPath = "";
+                    //string sImgPath = "";
                     XmlElement oContentType;
                     XmlElement oModuleType;
                     // Dim oItem As XmlElement
@@ -3526,8 +3527,8 @@ namespace Protean
                     string cModuleType = "";
                     string cFilterType = "";
                     // Location specific scopes
-                    XmlNodeList oLocationSelects = null;
-                    XmlNodeList oMenuItemsFromSelect = null;
+                    //XmlNodeList oLocationSelects = null;
+                    //XmlNodeList oMenuItemsFromSelect = null;
 
                     xFormContentLocations oContentLocations;
 
@@ -8068,8 +8069,10 @@ namespace Protean
                                     // oCgfSect.SectionInformation.SetRawXml(MyBase.Instance.InnerXml)
                                     // oCfg.Save()
 
-                                    var oPayProv = new Protean.Providers.Payment.BaseProvider(ref this.myWeb, providerName);
-                                    IsRefund = Conversions.ToString(oPayProv.Activities.RefundPayment(providerPaymentReference, refundAmount));
+                                    //var oPayProv = new Protean.Providers.Payment.BaseProvider(ref this.myWeb, providerName);
+                                    Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
+                                    IPaymentProvider oPaymentProv = oPayProv.Get(ref this.myWeb, providerName);
+                                    IsRefund = Conversions.ToString(oPaymentProv.Activities.RefundPayment(providerPaymentReference, refundAmount));
                                     if (IsRefund.StartsWith("Error"))
                                     {
                                         XmlNode argoNode = oFrmElmt;
@@ -11845,7 +11848,7 @@ namespace Protean
                 {
 
                     #region  Declarations
-                    private new string mcModuleName = "xFormContentLocations";
+                    private string mcModuleName = "xFormContentLocations";
 
 
                     // Declarations
@@ -11920,7 +11923,7 @@ namespace Protean
                         XmlElement location;
                         string locationid;
                         string cXPath;
-                        string cXPathModifier;
+                        string cXPathModifier = string.Empty;
                         string menuName = "";
 
 
@@ -12168,7 +12171,7 @@ namespace Protean
                     {
 
                         #region  Declarations
-                        private new string mcModuleName = "xFormContentLocationsSelect";
+                        private string mcModuleName = "xFormContentLocationsSelect";
 
                         private XmlElement _selectItem;
                         private long _rootId;
@@ -12457,7 +12460,7 @@ namespace Protean
                         // We get the instance
                         if (nUserId > 0)
                         {
-                            string sNewGroupNames = "";
+                            string sNewGroupNames = string.Empty;
 
                             base.bProcessRepeats = true;
                             if (this.myWeb.moSession[InstanceSessionName.ToString()] is null)

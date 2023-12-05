@@ -51,7 +51,7 @@ namespace Protean
         {
             // PerfMon.Log("Indexer", "New")
             mcModuleName = "Eonic.Search.Indexer";
-            string cProcessInfo = "";
+            string cProcessInfo = string.Empty;
             myWeb = aWeb;
             moConfig = myWeb.moConfig;
             string siteSearchPath = moConfig["SiteSearchPath"];
@@ -316,7 +316,7 @@ namespace Protean
                                     errorElmt.SetAttribute("pgid", Conversions.ToString(oDR["nStructKey"]));
                                     errorElmt.SetAttribute("name", Conversions.ToString(oDR["cStructName"]));
                                 }
-                                catch (Exception ex)
+                                catch (Exception)
                                 {
 
                                 }
@@ -423,7 +423,7 @@ namespace Protean
                                                     errorElmt.SetAttribute("pgid", Conversions.ToString(oDR["nStructKey"]));
                                                     errorElmt.SetAttribute("name", Conversions.ToString(oDR["cStructName"]));
                                                 }
-                                                catch (Exception ex)
+                                                catch (Exception)
                                                 {
                                                     // Don't error if you can't set the above.
                                                 }

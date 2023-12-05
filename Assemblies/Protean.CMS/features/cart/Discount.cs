@@ -1966,7 +1966,7 @@ namespace Protean
                         }
                     }
 
-                    catch (Exception ex)
+                    catch (Exception)
                     {
 
                     }

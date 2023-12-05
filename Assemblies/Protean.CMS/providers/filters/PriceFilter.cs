@@ -178,7 +178,7 @@ namespace Protean.Providers
             public string ApplyFilter(ref Cms aWeb, ref string cWhereSql, ref Protean.xForm oXform, ref XmlElement oFromGroup, ref XmlElement FilterConfig, ref string cFilterTarget)
             {
                 string cProcessInfo = "ApplyFilter";
-                string cPriceCond = "";
+                string cPriceCond = string.Empty;
                 try
                 {
                     // Dim priceRange() As String

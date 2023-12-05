@@ -52,7 +52,7 @@ namespace Protean
         {
             // PerfMon.Log("Indexer", "New")
             mcModuleName = "Eonic.Search.Indexer";
-            string cProcessInfo = "";
+            string cProcessInfo = string.Empty;
             myWeb = aWeb;
             moConfig = myWeb.moConfig;
             string siteSearchPath = moConfig["SiteSearchPath"];
@@ -156,13 +156,13 @@ namespace Protean
             // nPage = 59
             // PerfMon.Log("Indexer", "DoIndex")
             string cProcessInfo = "";
-            string cPageHtml = "";
-            string cPageExtract = "";
+            string cPageHtml = string.Empty;
+            string cPageExtract = string.Empty;
             string cPageXsl = "/xsl/search/cleanPage.xsl";
             string cExtractXsl = "/xsl/search/extract.xsl";
             var oPageXml = new XmlDocument();
 
-            string cRules = "";
+            string cRules = string.Empty;
 
             long nPagesRemaining = 0L;
             long nPagesSkipped = 0L;
@@ -895,7 +895,7 @@ namespace Protean
                                 errorElmt.SetAttribute("pgid", Conversions.ToString(oPage.pgid));
                                 errorElmt.SetAttribute("name", Conversions.ToString(oPage.pagename));
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
 
                             }
@@ -997,7 +997,7 @@ namespace Protean
                                                 errorElmt.SetAttribute("pgid", "0");
                                                 errorElmt.SetAttribute("name", Conversions.ToString(oPage.pagename));
                                             }
-                                            catch (Exception ex)
+                                            catch (Exception)
                                             {
                                                 // Don't error if you can't set the above.
                                             }
@@ -1482,7 +1482,7 @@ namespace Protean
                 string cProcessInfo = "";
                 string filename = "";
                 string filepath = "";
-                string artId = "";
+                string artId = string.Empty;
                 string Ext = ".html";
                 try
                 {

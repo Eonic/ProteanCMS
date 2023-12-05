@@ -3,6 +3,7 @@ using System.Data;
 using System.IO;
 using System.Xml;
 using Microsoft.VisualBasic.CompilerServices;
+using Protean.Providers.Payment;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
 
@@ -143,16 +144,16 @@ namespace Protean
                                             myWeb.moSession["pseudoOrder"] = pseudoOrder;
                                         }
 
-
-                                        var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, SelectedPaymentMethod);
+                                        Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
+                                        IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, SelectedPaymentMethod);
+                                       // var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, SelectedPaymentMethod);
 
                                         var ccPaymentXform = new Protean.xForm(ref myWeb.msException);
 
                                         pseudoCart.mcPagePath = pseudoCart.mcCartURL + myWeb.mcPagePath;
-
-                                        ccPaymentXform = (Protean.xForm)oPayProv.Activities.GetPaymentForm(myWeb, pseudoCart, pseudoOrder.xml, "?subCmd=updateSubPayment&subCmd2=PaymentForm&subId=" + myWeb.moRequest["subId"]);
-
-                                        // 
+                                        XmlElement xmlpseudoOrderElmt = (XmlElement)pseudoOrder.xml;
+                                        ccPaymentXform = (Protean.xForm)oPaymentProv.Activities.GetPaymentForm(ref myWeb, ref pseudoCart, ref xmlpseudoOrderElmt, "?subCmd=updateSubPayment&subCmd2=PaymentForm&subId=" + myWeb.moRequest["subId"]);
+                                   
 
                                         if (ccPaymentXform.valid)
                                         {
@@ -288,18 +289,20 @@ namespace Protean
 
                                         if (!string.IsNullOrEmpty(oDr["providerName"].ToString()))
                                         {
-                                            var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, oDr["providerName"].ToString());
-
+                                            //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, oDr["providerName"].ToString());
+                                            Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
+                                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, oDr["providerName"].ToString());
                                             string paymentStatus;
                                             try
                                             {
-                                                paymentStatus = Conversions.ToString(oPayProv.Activities.CheckStatus(myWeb, oDr["paymentMethodId"].ToString()));
+                                                string paymentMethodid = oDr["paymentMethodId"].ToString();
+                                                paymentStatus = Conversions.ToString(oPaymentProv.Activities.CheckStatus(ref myWeb, ref paymentMethodid));
                                                 oElmt.SetAttribute("paymentStatus", paymentStatus);
                                                 var oPaymentMethodDetails = myWeb.moPageXml.CreateElement("PaymentMethodDetails");
-                                                oPaymentMethodDetails.InnerXml = Conversions.ToString(oPayProv.Activities.GetMethodDetail(myWeb, oDr["paymentMethodId"].ToString()));
+                                                oPaymentMethodDetails.InnerXml = Conversions.ToString(oPaymentProv.Activities.GetMethodDetail(ref myWeb, ref paymentMethodid));
                                                 oElmt.AppendChild(oPaymentMethodDetails);
                                             }
-                                            catch (Exception ex2)
+                                            catch (Exception)
                                             {
                                                 oElmt.SetAttribute("paymentStatus", "error");
                                             }

@@ -183,7 +183,7 @@ namespace Protean
         public xForm(System.Web.HttpContext Context, ref string sException)
         {
 
-            string sProcessInfo = "";
+            string sProcessInfo = string.Empty;
             try
             {
                 msException = sException;
@@ -1249,7 +1249,7 @@ namespace Protean
             string sRequest;
             XmlElement oBindElmt;
             string sAttribute;
-            string sValue;
+            string sValue= string.Empty;
             bool bIsXml;
             string cProcessInfo = "";
             string sDataType;
@@ -1703,7 +1703,7 @@ namespace Protean
             string sBind;
             XmlElement oBindElmt;
             string sAttribute = "";
-            string sValue;
+            string sValue= string.Empty;
             string cProcessInfo = "";
 
             try
@@ -1795,7 +1795,7 @@ namespace Protean
             string cIsCrop = "";
             string cNoStretch = "";
             long nQuality = 0L;
-            string savedImgPath = "";
+            string savedImgPath = string.Empty;
             string alreadyUploaded = "";
 
             string imgPath = "";
@@ -2173,7 +2173,7 @@ namespace Protean
 
                             }
 
-                            string sValueXpath;
+                            string sValueXpath = string.Empty;
                             sValueXpath = "value";
 
                             // If populate Then

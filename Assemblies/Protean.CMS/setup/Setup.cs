@@ -139,8 +139,7 @@ namespace Protean
 
         public Setup(System.Web.HttpContext Context)
         {
-
-            string sProcessInfo = "";
+            string sProcessInfo = string.Empty;
             try
             {
                 moCtx = Context;
@@ -243,11 +242,9 @@ namespace Protean
 
         public void close()
         {
-
-            string sProcessInfo = "";
+            string sProcessInfo = string.Empty;
             try
             {
-
                 // if we access base via soap the session is not available
                 if (mbSchemaExists)
                 {
@@ -1042,7 +1039,7 @@ namespace Protean
             XmlElement oElmt12;
             XmlElement oElmt13;
 
-            string sProcessInfo = "";
+            string sProcessInfo = string.Empty;
             try
             {
                 oElmt = moPageXml.CreateElement("AdminMenu");

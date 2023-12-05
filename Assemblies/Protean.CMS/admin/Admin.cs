@@ -2339,7 +2339,7 @@ namespace Protean
                                 sAdminLayout = "RefundOrder";
                                 string providerName = "";
                                 string providerPaymentReference = "";
-                                string IsRefund = "";
+                                //string IsRefund = "";
                                 long nStatus;
                                 var oCart = new Cms.Cart(ref myWeb);
                                 oCart.moPageXml = moPageXML;
@@ -5765,7 +5765,7 @@ namespace Protean
             {
                 string sProcessInfo = "";
                 string reportName = "Filter Indexes";
-                long contentId = 0L;
+                //long contentId = 0L;
                 string indexId = null;
                 string sSql;
                 string SchemaNameForUpdate;
@@ -6463,7 +6463,7 @@ from tblContentIndexDef";
                             {
                                 string cSQL;
                                 string dPublishDate;
-                                string dExpireDate;
+                                string dExpireDate = string.Empty;
 
                                 // Dim cTime As String = IIf(Now.Hour < 10, "0" & Now.Hour, Now.Hour) & ":" & IIf(Now.Minute < 10, "0" & Now.Minute, Now.Minute) & ":" & IIf(Now.Second < 10, "0" & Now.Second, Now.Second)
 

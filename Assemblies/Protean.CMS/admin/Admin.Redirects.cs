@@ -30,7 +30,7 @@ namespace Protean
 
                 public Redirects()
                 {
-                    string ctest = "this constructor is being hit"; // for testing
+                    //string ctest = "this constructor is being hit"; // for testing
                     myWeb = new Cms();
                     myWeb.InitializeVariables();
                     myWeb.Open();
@@ -181,7 +181,7 @@ namespace Protean
                         var rewriteXml = new XmlDocument();
                         rewriteXml.Load(myWeb.goServer.MapPath("/rewriteMaps.config"));
 
-                        string oCgfSectName = "system.webServer";
+                        //string oCgfSectName = "system.webServer";
                         string oCgfSectPath = "rewriteMaps/rewriteMap[@name='" + redirectType + "']";
                         var props = rewriteXml.SelectSingleNode(oCgfSectPath);
 
@@ -223,7 +223,7 @@ namespace Protean
                                 string xmlstring = "<rewriteMap name='" + redirectType + "'>";
                                 string xmlstringend = "</rewriteMap>";
 
-                                int count = 0;
+                                //int count = 0;
 
                                 for (int i = skipRecords, loopTo = props.ChildNodes.Count - 1; i <= loopTo; i++)
                                 {
@@ -272,7 +272,7 @@ namespace Protean
 
                         rewriteXml.Load(myWeb.goServer.MapPath("/rewriteMaps.config"));
 
-                        string oCgfSectName = "system.webServer";
+                        //string oCgfSectName = "system.webServer";
                         string oCgfSectPath = "rewriteMaps/rewriteMap[@name='" + redirectType + "']";
 
                         if (rewriteXml.SelectSingleNode(oCgfSectPath) != null)
@@ -305,7 +305,7 @@ namespace Protean
                             string searchString = "<rewriteMap name='" + redirectType + "'>";
 
                             var searchProps = new XmlDocument();
-                            int count = 0;
+                            //int count = 0;
 
                             for (int i = 0, loopTo = props.ChildNodes.Count - 1; i <= loopTo; i++)
                             {
@@ -405,7 +405,7 @@ namespace Protean
                     var rewriteXml = new XmlDocument();
                     rewriteXml.Load(myWeb.goServer.MapPath("/rewriteMaps.config"));
 
-                    string oCgfSectName = "system.webServer";
+                    //string oCgfSectName = "system.webServer";
                     string oCgfSectPath = "rewriteMaps/rewriteMap[@name='" + redirectType + "']";
 
                     var props = rewriteXml.SelectSingleNode(oCgfSectPath);
@@ -425,7 +425,7 @@ namespace Protean
                         var rewriteXml = new XmlDocument();
                         rewriteXml.Load(myWeb.goServer.MapPath("/rewriteMaps.config"));
 
-                        string oCgfSectName = "system.webServer";
+                        //string oCgfSectName = "system.webServer";
                         string oCgfSectPath = "rewriteMaps/rewriteMap[@name='" + redirectType + "']";
 
                         if (rewriteXml.SelectSingleNode(oCgfSectPath) != null)
@@ -446,7 +446,7 @@ namespace Protean
                                 string xmlstring = "<rewriteMap name='" + redirectType + "Redirect'>";
                                 string xmlstringend = "</rewriteMap>";
 
-                                int count = 0;
+                                //int count = 0;
 
                                 for (int i = skipRecords, loopTo = props.ChildNodes.Count - 1; i <= loopTo; i++)
                                 {
@@ -486,7 +486,7 @@ namespace Protean
                     var rewriteXml = new XmlDocument();
                     rewriteXml.Load(myWeb.goServer.MapPath("/rewriteMaps.config"));
 
-                    string oCgfSectName = "system.webServer";
+                    //string oCgfSectName = "system.webServer";
                     string oCgfSectPath = "rewriteMaps/rewriteMap[@name='" + redirectType + "']";
 
                     var props = rewriteXml.SelectSingleNode(oCgfSectPath);

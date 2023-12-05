@@ -65,9 +65,9 @@ namespace Protean
                 private Hashtable oAlertUsers = new Hashtable(); // List of Users
                                                                  // alert config section
                 private System.Collections.Specialized.NameValueCollection oAlertConfig = (System.Collections.Specialized.NameValueCollection)System.Web.Configuration.WebConfigurationManager.GetWebApplicationSection("protean/alerts");
-                public new event OnErrorEventHandler OnError;
+                public event OnErrorEventHandler OnError;
 
-                public new delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
+                public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
 
                 public object oNewAlert;
 
