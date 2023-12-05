@@ -78,8 +78,7 @@ namespace Protean.Integration.Directory
                     return nUserId;
                 }
             }
-
-            catch (Exception ex)
+            catch (Exception)
             {
                 return 0L;
             }

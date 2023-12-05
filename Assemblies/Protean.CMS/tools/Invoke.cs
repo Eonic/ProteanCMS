@@ -66,8 +66,7 @@ namespace Protean
                 // Call the method
                 calledObjectType.InvokeMember(calledObjectMethod, BindingFlags.InvokeMethod, null, objectInstance, calledObjectMethodArgs);
             }
-
-            catch (TypeLoadException ex)
+            catch (TypeLoadException)
             {
             }
             // Don't do anything for duff classes

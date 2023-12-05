@@ -323,7 +323,6 @@ namespace Protean
                                             }
                                             else
                                             {
-
                                                 xDoc.LoadXml(sDoc);
                                                 foreach (XmlElement oInstance in xDoc.DocumentElement.SelectNodes("descendant-or-self::instance"))
                                                 {

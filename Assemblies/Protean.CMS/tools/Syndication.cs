@@ -230,12 +230,9 @@ namespace Protean
                     // Now try to set the distributors
                     CreateDistributors();
                 }
-
-                catch (Exception ex)
+                catch (Exception)
                 {
-
                 }
-
             }
         }
 
@@ -529,7 +526,7 @@ namespace Protean
                     return csvList.Split(Conversions.ToChar(separator));
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -891,7 +888,7 @@ namespace Protean
             {
                 return Array.IndexOf(distributorTypesList, possibleDistributor) >= distributorTypesList.GetLowerBound(0);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
@@ -1418,12 +1415,10 @@ namespace Protean
                     {
                         try
                         {
-
                             _settings = value;
                             _isLoaded = true;
                         }
-
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             _settings = null;
                             _isLoaded = false;

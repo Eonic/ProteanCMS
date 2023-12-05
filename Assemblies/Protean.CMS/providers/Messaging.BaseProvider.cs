@@ -393,7 +393,7 @@ namespace Protean.Providers
                 {
                     XmlElement oFrmElmt;
                     XmlElement oSelElmt;
-                    string sImgPath = "";
+                    string sImgPath = string.Empty;
 
                     string cProcessInfo = "";
                     var oXformDoc = new XmlDocument();
@@ -472,8 +472,8 @@ namespace Protean.Providers
 
                 public string MailingListProcess(ref XmlElement oPageDetail, ref Cms oWeb, [Optional, DefaultParameterValue("")] ref string sAdminLayout, [Optional, DefaultParameterValue("")] ref string cCmd, [Optional, DefaultParameterValue(false)] ref bool bLoadStructure, [Optional, DefaultParameterValue("")] ref string sEditContext, bool bClearEditContext = false)
                 {
-                    string cRetVal = "";
-                    string cSQL = "";
+                    string cRetVal = string.Empty;
+                    string cSQL = string.Empty;
 
                     try
                     {

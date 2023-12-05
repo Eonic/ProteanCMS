@@ -31,8 +31,8 @@ namespace Protean
         {
             this.PerfMon.Log("API", "Open");
             string sProcessInfo = "";
-            string cCloneContext = "";
-            string rootPageIdFromConfig = "";
+            string cCloneContext = string.Empty;
+            string rootPageIdFromConfig = string.Empty;
             try
             {
 

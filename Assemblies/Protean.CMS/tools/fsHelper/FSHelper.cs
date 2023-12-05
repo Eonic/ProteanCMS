@@ -685,7 +685,7 @@ namespace Protean
                     return 0;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return 0;
             }
@@ -705,7 +705,7 @@ namespace Protean
                     return 0;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return 0;
             }
@@ -726,7 +726,7 @@ namespace Protean
                     return 0;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return 0;
             }
@@ -853,7 +853,7 @@ namespace Protean
                     return cFolderPath + "/" + FileName;
                 }
 
-                catch (Exception ex)
+                catch (Exception)
                 {
                     // We assume if failing to write then the file is being written allready by another process therefore we just return the filename as usual.
                     return cFolderPath + "/" + FileName;
@@ -1105,7 +1105,7 @@ namespace Protean
                     }
                 }
 
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return null;
                 }
@@ -1123,7 +1123,7 @@ namespace Protean
                 var dir = new DirectoryInfo(mcRoot);
                 return EnumerateFolders(dir);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new List<string>();
             }
@@ -1138,7 +1138,7 @@ namespace Protean
                 var dir = new DirectoryInfo(goServer.MapPath(path));
                 return EnumerateFolders(dir);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new List<string>();
             }
@@ -1169,7 +1169,7 @@ namespace Protean
                 pathsToCheck.AddRange(foldersToCheck.ConvertAll((folderToCheck) => folderToCheck.TrimEnd(@"/\".ToCharArray()) + pathToCheck));
                 return pathsToCheck.Find((path) => File.Exists(goServer.MapPath(path)));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return "";
             }
@@ -1408,7 +1408,7 @@ namespace Protean
 
             try
             {
-                string combineFile;
+                string combineFile= string.Empty;
                 string cCleanfileName = Regex.Replace(cFilename, @"\s+", "-");
                 cCleanfileName = Regex.Replace(cCleanfileName, @"(\s+|\$|\,|\'|\£|\:|\*|&|\?|\/)", "");
                 cCleanfileName = Regex.Replace(cCleanfileName, "-{2,}", "-", RegexOptions.None);
@@ -1515,7 +1515,7 @@ namespace Protean
                     }
                 }
 
-                catch (Exception ex)
+                catch (Exception)
                 {
                     statuses.Add(new FilesStatus("failed", 0));
                 }
@@ -1789,7 +1789,7 @@ namespace Protean
             {
                 return path.Replace(@"\", "/");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return path;
             }
@@ -1800,7 +1800,7 @@ namespace Protean
             {
                 return path.Replace("/", @"\");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return path;
             }
@@ -1837,16 +1837,10 @@ namespace Protean
                     }
                 }
             }
-
-
-            catch (Exception ex)
+            catch (Exception)
             {
-
             }
-
-
             return folderList;
-
         }
 
         public static string GetFileLibraryPath(LibraryType library)
@@ -1897,7 +1891,7 @@ namespace Protean
                 }
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
                 path = "";
             }
@@ -1968,13 +1962,9 @@ namespace Protean
                     fileList = fileList.ConvertAll((physicalPath) => ConvertPhysicalFilePathToVirtualPath(physicalPath, rootFolder.FullName, rootFolderPath));
                 }
             }
-
-
-            catch (Exception ex)
+            catch (Exception)
             {
-
             }
-
             return fileList;
         }
 

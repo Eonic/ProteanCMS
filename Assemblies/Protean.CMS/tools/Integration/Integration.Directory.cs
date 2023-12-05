@@ -167,7 +167,7 @@ namespace Protean.Integration.Directory
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return 0L;
             }
@@ -200,7 +200,7 @@ namespace Protean.Integration.Directory
                 }
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
                 return 0L;
             }
@@ -260,7 +260,7 @@ namespace Protean.Integration.Directory
                 return _isDirectoryItemLoaded;
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }

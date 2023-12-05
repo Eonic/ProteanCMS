@@ -41,8 +41,7 @@ namespace Protean
                         oFileInfo.IsReadOnly = false;
                         System.IO.File.Delete(fi.FullName);
                     }
-
-                    catch (Exception ex2)
+                    catch (Exception)
                     {
                         // returnException("Protean.XmlHelper.Transform", "ClearXSLTassemblyCache", ex2, msXslFile, sProcessInfo)
                     }

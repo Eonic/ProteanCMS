@@ -249,7 +249,7 @@ namespace Protean
                             }
                             Attachments.Add(oAtt);
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             strError += "Missing file: " + strFilePath + "<br/>";
                             RootElmt.SetAttribute("error", "Missing file:" + strFilePath);
@@ -924,7 +924,7 @@ namespace Protean
                                 {
                                     oSmtpn.Send(oMailn);
                                 }
-                                catch (Exception ex2)
+                                catch (Exception)
                                 {
                                     if (!string.IsNullOrEmpty(goConfig["MailServer2"]))
                                     {
@@ -965,7 +965,7 @@ namespace Protean
                                     cActivityDetail = oMailn.Body;
                                 }
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                                 cActivityDetail = oMailn.Body;
                             }
@@ -1018,7 +1018,7 @@ namespace Protean
                             }
                         }
 
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             // Dont do anything
                         }
@@ -1772,8 +1772,7 @@ namespace Protean
 
                 return emailStructure;
             }
-
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -2096,14 +2095,11 @@ namespace Protean
 
                 return Message;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
                 // Status.Items.Add("Error: " + Err.ToString())
                 return "";
             }
-
-
         }
 
         private bool Disconnect()
@@ -2120,7 +2116,7 @@ namespace Protean
                 RdStrm.Close();
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
@@ -2130,7 +2126,7 @@ namespace Protean
         public XmlDocument CreateMailXML(string cMessage, int nId)
         {
             // PerfMon.Log("POP3", "CreateMailXML")
-            string cCurrent = "";
+            string cCurrent = string.Empty;
             try
             {
                 cMessage = Strings.Replace(cMessage, "+OK", "");
@@ -2197,7 +2193,7 @@ namespace Protean
                 oXML.DocumentElement.AppendChild(oMessageElement);
                 return oXML;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // returnException("POP3", "EmailListTransform", ex, "", "EmailListTransform", )
                 return null;
@@ -2218,7 +2214,7 @@ namespace Protean
                 oParent.AppendChild(oElmt);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
@@ -2329,7 +2325,7 @@ namespace Protean
                 oEmailXML.DocumentElement.SelectSingleNode(Enum.GetName(typeof(ToType), AddType)).AppendChild(oAddElmt);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
@@ -2350,7 +2346,7 @@ namespace Protean
                 oEmailXML.DocumentElement.SelectSingleNode(Enum.GetName(typeof(ToType), AddType)).AppendChild(oAddElmt);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
@@ -2366,7 +2362,7 @@ namespace Protean
                     oElmt.ParentNode.RemoveChild(oElmt);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
@@ -2437,7 +2433,7 @@ namespace Protean
 
                 return new MailAddress(Strings.Trim(cAddress), Strings.Trim(cName));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }

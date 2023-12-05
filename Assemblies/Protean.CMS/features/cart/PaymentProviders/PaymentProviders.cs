@@ -4168,7 +4168,7 @@ namespace Protean
                     myWeb.PerfMon.Log("PaymentProviders", "payByCash");
                     string sSql;
                     var ccXform = new Cms.xForm(ref myWeb.msException);
-                    string sProcessInfo = "";
+                    string sProcessInfo = string.Empty;
                     bool bCv2 = false;
                     bool bEncrypt = false;
 
@@ -5467,7 +5467,7 @@ namespace Protean
                     string[] aCardTypes2;
                     int i;
                     // Dim nPayableAmount As Double
-                    string cUniqueLink = "";
+                    string cUniqueLink = string.Empty;
                     // Dim nLinkNumber As Long
                     var oRandom = new Random();
 

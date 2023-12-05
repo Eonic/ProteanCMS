@@ -1547,7 +1547,7 @@ namespace Protean.Providers
                                     var argoNode = base.moXformElmt.SelectSingleNode("group/group(1)");
                                     base.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, "Successfully Updated", true);
                                 }
-                                catch (Exception exp)
+                                catch (Exception)
                                 {
                                     var argoNode1 = base.moXformElmt.SelectSingleNode("group");
                                     base.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, "Successfully Updated", true);
@@ -1684,8 +1684,8 @@ namespace Protean.Providers
                     {
                     myWeb.PerfMon.Log(mcModuleName, "getUserId");
                     string sProcessInfo = "";
-                    string sReturnValue = null;
-                    string cLogonCmd = "";
+                    string sReturnValue = string.Empty;
+                    string cLogonCmd = string.Empty;
                     int mnUserId = myWeb.mnUserId;
                     System.Web.SessionState.HttpSessionState moSession = myWeb.moSession;
                     System.Web.HttpRequest moRequest = myWeb.moRequest;
@@ -1821,8 +1821,8 @@ namespace Protean.Providers
                 {
                     myWeb.PerfMon.Log("Web", "getUserId");
                     string sProcessInfo = "";
-                    string sReturnValue = null;
-                    string cLogonCmd = "";
+                    string sReturnValue = string.Empty;
+                    string cLogonCmd = string.Empty;
                     int mnUserId = myWeb.mnUserId;
                     System.Web.SessionState.HttpSessionState moSession = myWeb.moSession;
 
@@ -2854,7 +2854,7 @@ namespace Protean.Providers
                 {
                     myWeb.PerfMon.Log("Web", "UserEditProcess");
                     string sProcessInfo = "";
-                    string sReturnValue = null;
+                    string sReturnValue = string.Empty;
                     try
                     {
 

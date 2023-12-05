@@ -566,7 +566,7 @@ namespace Protean
                         var adXfm = myWeb.getAdminXform();
                         adXfm.open(myWeb.moPageXml);
                         XmlElement oXfmElmt;
-                        string sReturnValue = null;
+                        string sReturnValue = string.Empty;
                         string cLogonCmd = "";
 
                         if (myWeb.mnUserId == 0 & (myWeb.moRequest["ewCmd"] != "passwordReminder" & myWeb.moRequest["ewCmd"] != "ActivateAccount"))

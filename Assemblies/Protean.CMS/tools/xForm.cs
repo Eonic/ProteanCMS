@@ -1146,7 +1146,7 @@ namespace Protean
                                             if (!oRe.IsMatch(sValue))
                                                 cReturn = "<span class=\"msg-1005\">This must be a valid format</span>";
                                         }
-                                        catch (Exception ex)
+                                        catch (Exception)
                                         {
                                             // Do Nothing
                                         }
@@ -2094,7 +2094,7 @@ namespace Protean
 
                             }
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             cProcessInfo = sXpath + cleanXpath;
                         }
@@ -3422,7 +3422,7 @@ namespace Protean
                                     nsmgr.AddNamespace("ews", cNsURI);
                                     sResponse = oSoapElmt.SelectSingleNode("ews:" + sActionName + "Result", nsmgr).InnerText;
                                 }
-                                catch (Exception ex)
+                                catch (Exception)
                                 {
                                     if (oSoapElmt.SelectSingleNode(sActionName + "Result", nsmgr) is null)
                                     {
@@ -3442,8 +3442,7 @@ namespace Protean
                                     addNote(ref argoNode, noteTypes.Alert, sResponse, true, "alert-success");
                                     moXformElmt = (XmlElement)argoNode;
                                 }
-
-                                catch (XmlException ex)
+                                catch (XmlException)
                                 {
                                     try
                                     {
@@ -3452,14 +3451,14 @@ namespace Protean
                                         addNote(ref argoNode1, noteTypes.Alert, sResponse);
                                         moXformElmt = (XmlElement)argoNode1;
                                     }
-                                    catch (Exception ex2)
+                                    catch (Exception)
                                     {
                                         XmlNode argoNode2 = moXformElmt;
                                         addNote(ref argoNode2, noteTypes.Alert, "Response could not be added due to an Xml Error");
                                         moXformElmt = (XmlElement)argoNode2;
                                     }
                                 }
-                                catch (Exception ex)
+                                catch (Exception)
                                 {
                                     XmlNode argoNode3 = moXformElmt;
                                     addNote(ref argoNode3, noteTypes.Alert, "Response could not be added.");
@@ -4010,9 +4009,8 @@ namespace Protean
                     oInstance.InnerXml = _preLoadedInstanceXml;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
             }
         }
 

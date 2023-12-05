@@ -198,7 +198,7 @@ namespace Protean
                                     }
                                     oSmtp.Send(oMail);
                                 }
-                                catch (Exception ex)
+                                catch (Exception)
                                 {
                                     try
                                     {
@@ -472,7 +472,7 @@ namespace Protean
                                 }
                                 oSmtp.Send(oMail);
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                                 try
                                 {
@@ -1162,7 +1162,7 @@ namespace Protean
                 }
                 return RetVal;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return 0m;
             }
@@ -1217,7 +1217,7 @@ namespace Protean
                 nWholeNo += nCarry;
                 return Convert.ToDecimal(nWholeNo + "." + nDecimal);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return 0m;
                 // returnException("stdTools", "Round Up", ex, "", "", gbDebug)
@@ -1249,7 +1249,7 @@ namespace Protean
                 cNewString += Strings.Right(cInitialString, nNoCharsToLeave);
                 return cNewString;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // returnException("stdTools", "MaskString", ex, "", "", gbDebug)
                 return cNewString;

@@ -77,7 +77,7 @@ namespace Protean
         {
 
             string cProcessInfo = "";
-            string cUrl = "";
+            string cUrl = string.Empty;
 
             string cConStr;
             var oDBh = new dbHelper(ref myWeb);

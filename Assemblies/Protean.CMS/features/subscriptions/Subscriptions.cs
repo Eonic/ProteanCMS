@@ -2066,7 +2066,7 @@ namespace Protean
                             {
                                 paymentStatus = Conversions.ToString(oPaymentProv.Activities.CancelPayments(myWeb, PayInstance.DocumentElement.SelectSingleNode("cPayMthdProviderRef").InnerText));
                             }
-                            catch (Exception ex2)
+                            catch (Exception)
                             {
                                 // no payment method to cancel. to we email site owner.
                             }

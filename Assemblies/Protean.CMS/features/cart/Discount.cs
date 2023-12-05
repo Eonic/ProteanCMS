@@ -1992,7 +1992,7 @@ namespace Protean
                     double dMaxPrice = 0d;
                     int nDiscountQuantity = 0;
                     double itemCost = 0d;
-                    int productGroups = 0;
+                    //int productGroups = 0;
                     double dMinPrice = 0d;
                     int nCount = 0;
                     bool applyToTotal = false;
@@ -2058,11 +2058,8 @@ namespace Protean
                                     return oDiscountMessage;
                                 }
                             }
-
                             else
                             {
-
-
                                 string additionalInfo = Conversions.ToString(Operators.AddObject(Operators.AddObject("<additionalXml>", oDsDiscounts.Tables["Discount"].Rows[0]["cAdditionalXML"]), "</additionalXml>"));
                                 doc.LoadXml(additionalInfo);
 
@@ -2777,7 +2774,7 @@ namespace Protean
                 public double getProductPricesByXml(string cXml)
                 {
                     myWeb.PerfMon.Log("Cart", "getProductPricesByXml");
-                    string cGroupXPath = "";
+                    string cGroupXPath = string.Empty;
                     var oProd = myWeb.moPageXml.CreateNode(XmlNodeType.Document, "", "product");
                     XmlNode oDefaultPrice;
 

@@ -803,7 +803,7 @@ namespace Protean
                             var fso = new fsHelper();
                             fso.DeleteFile(fi.FullName);
                         }
-                        catch (Exception ex2)
+                        catch (Exception)
                         {
                             // returnException("Protean.XmlHelper.Transform", "ClearXSLTassemblyCache", ex2, msXslFile, sProcessInfo)
                         }

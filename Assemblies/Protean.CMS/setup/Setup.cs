@@ -114,13 +114,10 @@ namespace Protean
                 {
                     myWeb.moDbHelper.CloseConnection();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-
                 }
             }
-
-
 
             // then raises a public event
             OnError?.Invoke(sender, e);
@@ -285,10 +282,9 @@ namespace Protean
                 }
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
                 goResponse.Write("<script language=\"javascript\" type=\"text/javascript\">$('#result').append('" + Strings.Replace("<p><i class=\"fa fa-check text-danger\">&#160;</i>Error in script</p>", "'", @"\'") + "<br/>');$('#result').stop().animate({scrollTop: $('#result')[0].scrollHeight}, 800);</script>" + Constants.vbCrLf);
-
             }
         }
 
@@ -2771,7 +2767,7 @@ namespace Protean
                     oXml.Load(goServer.MapPath(ShippingLocationsPath));
                     bIsXml = true;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     // If Load fails then there's something invalid about what we just imported.
                 }
@@ -2830,7 +2826,7 @@ namespace Protean
                             oXml.LoadXml(cImport);
                             bIsXml = true;
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             // If Load fails then there's something invalid about what we just imported.
                         }

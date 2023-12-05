@@ -11047,7 +11047,6 @@ namespace Protean
             {
                 try
                 {
-
                     long nQuantity = 1L;
 
                     xmlProduct.SetAttribute("test1", "1");

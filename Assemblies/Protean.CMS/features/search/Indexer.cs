@@ -725,7 +725,7 @@ namespace Protean
                     oIndexWriter.Dispose();
                     oIndexWriter = null;
                 }
-                catch (Exception ex2)
+                catch (Exception)
                 {
 
                 }
@@ -817,7 +817,7 @@ namespace Protean
                     oIndexWriter.Dispose();
                     oIndexWriter = null;
                 }
-                catch (Exception ex2)
+                catch (Exception)
                 {
 
                 }
@@ -878,7 +878,7 @@ namespace Protean
                     oIndexWriter.Dispose();
                     oIndexWriter = null;
                 }
-                catch (Exception ex2)
+                catch (Exception)
                 {
 
                 }
@@ -940,9 +940,8 @@ namespace Protean
                     oIndexWriter.Dispose();
                     oIndexWriter = null;
                 }
-                catch (Exception ex2)
+                catch (Exception)
                 {
-
                 }
                 cExError += ex.StackTrace.ToString() + Constants.vbCrLf;
                 stdTools.returnException(ref myWeb.msException, mcModuleName, methodName, ex, "", processInfo, gbDebug);
@@ -1162,7 +1161,7 @@ namespace Protean
             string cProcessInfo = "";
             string filename = "";
             string filepath = "";
-            string artId = "";
+            string artId = string.Empty;
             string Ext = ".html";
             try
             {

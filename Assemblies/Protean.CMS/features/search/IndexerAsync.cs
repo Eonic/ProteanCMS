@@ -415,11 +415,9 @@ namespace Protean
                     oIndexWriter.Dispose();
                     oIndexWriter = null;
                 }
-                catch (Exception ex2)
+                catch (Exception)
                 {
-
                 }
-
                 return null;
             }
             finally
@@ -494,7 +492,7 @@ namespace Protean
                         oIndexWriter.Dispose();
                         oIndexWriter = null;
                     }
-                    catch (Exception ex2)
+                    catch (Exception)
                     {
 
                     }
@@ -553,7 +551,7 @@ namespace Protean
                     oIndexWriter.Dispose();
                     oIndexWriter = null;
                 }
-                catch (Exception ex2)
+                catch (Exception)
                 {
 
                 }
@@ -1250,7 +1248,7 @@ namespace Protean
                     }
                     // oIndexWriter.Close()
                     // oIndexWriter = Nothing
-                    catch (Exception ex2)
+                    catch (Exception)
                     {
 
                     }

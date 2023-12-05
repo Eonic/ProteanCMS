@@ -8349,7 +8349,7 @@ namespace Protean
                 // Dim oDr As SqlDataReader
                 string sReturn = "";
                 string cProcessInfo = "";
-                bool bValid;
+                bool bValid = false;
 
                 string sProjectPath = goConfig["ProjectPath"] + "";
                 string sSenderName = goConfig["SiteAdminName"];
@@ -9200,7 +9200,7 @@ namespace Protean
                 DataSet oDs;
 
                 string cProcessInfo = "";
-                string cExtraWhere = "";
+                string cExtraWhere = string.Empty;
                 long UserId = Conversions.ToLong(Operators.ConcatenateObject("0", goSession["nEwUserId"]));
                 XmlDocument oXml;
                 try
@@ -9311,7 +9311,7 @@ namespace Protean
                 bool bSkipExisting = false;
                 bool bResetLocations = true;
                 long nResetLocationIfHere = 0L;
-                long ProcessedQty = 0L;
+                //long ProcessedQty = 0L;
                 long completeCount = 0L;
                 long startNo = 0L;
 
@@ -9331,7 +9331,7 @@ namespace Protean
                     {
                         logActivity(ActivityType.Custom1, mnUserId, 0L, 0L, "Previous Feed Still Processing:" + FeedCheck);
                         return "Previous Feed Still Processing:" + FeedCheck;
-                        return default;
+                        //return default;
                     }
                     else
                     {
@@ -9349,7 +9349,7 @@ namespace Protean
                             else
                             {
                                 return "StartNo not found:" + FeedCheck;
-                                return default;
+                               // return default;
                             }
                         }
                     }
@@ -9487,21 +9487,14 @@ namespace Protean
                             }
                         }
 
-
-
                         // ' eventsDoneEvt.WaitOne()
-
                         // '    If System.Threading.WaitHandle.WaitAll(doneEvents, New TimeSpan(0, 0, 5), False) Then
-
-
 
                         updateActivity(logId, ReturnMessage + " Complete");
 
                         // Clear Page Cache
 
                         myWeb.ClearPageCache();
-
-
                         return ReturnMessage;
                     }
                     // '       End If
