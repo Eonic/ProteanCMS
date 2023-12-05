@@ -94,9 +94,9 @@ namespace Protean
                 bodyStream.Close();
             }
 
-            catch (Exception)
+            catch (Exception ex)
             {
-                // returnException(mcModuleName, "addSoap", ex, "", cProcessInfo, gbDebug)
+                stdTools.returnException(ref mcModuleName, cProcessInfo, "", ex, "", "", false);
             }
 
         }

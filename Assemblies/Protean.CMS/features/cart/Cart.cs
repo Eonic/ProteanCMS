@@ -9830,7 +9830,7 @@ namespace Protean
                         StringWriter icPageWriter = new StringWriter();
                         var OrderDoc = new XmlDocument();
                         OrderDoc.LoadXml(oCartXML.OuterXml);
-
+                        
                         oTransform.ProcessTimed(OrderDoc, ref icPageWriter);
                         OrderDoc = null;
 

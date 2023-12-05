@@ -2475,7 +2475,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "SubcriptionReminders", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, cProcessInfo, ex, "", "", gbDebug);
                         return null;
                     }
 
