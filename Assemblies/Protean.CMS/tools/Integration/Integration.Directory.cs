@@ -167,7 +167,7 @@ namespace Protean.Integration.Directory
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return 0L;
             }
@@ -200,7 +200,7 @@ namespace Protean.Integration.Directory
                 }
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
                 return 0L;
             }
@@ -260,7 +260,7 @@ namespace Protean.Integration.Directory
                 return _isDirectoryItemLoaded;
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
@@ -336,9 +336,9 @@ namespace Protean.Integration.Directory
 
         private bool _integrationsEnabled = false;
 
-        public new event OnErrorEventHandler OnError;
+        public event OnErrorEventHandler OnError;
 
-        public new delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
+        public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
 
         private void _OnError(object sender, Tools.Errors.ErrorEventArgs e)
         {

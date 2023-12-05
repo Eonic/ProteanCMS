@@ -38,7 +38,7 @@ namespace Protean
                 {
                     try
                     {
-                        string cProcessInfo = "";
+                        string cProcessInfo = string.Empty;
 
                         // does nothing yet
                         return null;

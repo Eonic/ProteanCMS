@@ -1080,7 +1080,7 @@ namespace Protean
             public override void EndSession()
             {
                 // PerfMon.Log("Quote", "EndSession")
-                string sProcessInfo = "";
+                string sProcessInfo = string.Empty;
                 string sSql;
                 string cProcessInfo = "";
                 try

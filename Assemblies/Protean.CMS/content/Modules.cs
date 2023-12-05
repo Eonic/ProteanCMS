@@ -56,7 +56,7 @@ namespace Protean
                     {
                     }
 
-                    catch (Exception ex)
+                    catch (Exception)
                     {
 
                     }
@@ -66,7 +66,7 @@ namespace Protean
                 {
                     try
                     {
-                        string datestring = "";
+                        string datestring = string.Empty;
                         var startDate = default(DateTime);
                         DateTime? endDate = default;
                         string dateQuery = "";

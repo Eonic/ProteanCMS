@@ -42,9 +42,8 @@ namespace Protean
                 {
                     this.moDbHelper.CloseConnection();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-
                 }
             }
             // then raises a public event
@@ -467,7 +466,7 @@ namespace Protean
                         oElmt.InnerText = sResult;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     if (string.IsNullOrEmpty(this.moConfig["VersionNumber"]))
                     {
@@ -1003,11 +1002,9 @@ namespace Protean
         public void InitialiseGlobal()
         {
 
-            string cProcessInfo = "";
-
+            string cProcessInfo = string.Empty;
             msException = "";
-
-            string sProcessInfo = "";
+            string sProcessInfo = string.Empty;
             try
             {
                 // _workingSetPrivateMemoryCounter = New PerformanceCounter("Process", "Working Set - Private", Process.GetCurrentProcess.ProcessName)
@@ -1192,7 +1189,7 @@ namespace Protean
             // Date:          2005-03-09
 
             mcModuleName = "Protean.Cms";
-            string cProcessInfo = "";
+            string cProcessInfo = string.Empty;
             msException = "";
 
             try
@@ -1387,7 +1384,7 @@ namespace Protean
                             mcEwSiteXsl = langStyleFile;
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         // Do nothing, but don't fall over
                     }
@@ -1508,7 +1505,7 @@ namespace Protean
                     return false;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
@@ -3836,7 +3833,7 @@ namespace Protean
             bool bCanVote = true;
             var nVoteBlockReason = PollBlockReason.None;
             string cCookieName = "";
-            string cLastVotedSql = "";
+            string cLastVotedSql = string.Empty;
 
             var openDate = DateTime.MinValue;
             var closeDate = DateTime.MaxValue;
@@ -5351,8 +5348,8 @@ namespace Protean
         {
             this.PerfMon.Log("Web", "MembershipProcess");
             string sProcessInfo = "";
-            string sReturnValue = null;
-            string cLogonCmd = "";
+            string sReturnValue = string.Empty;
+            string cLogonCmd = string.Empty;
             try
             {
 
@@ -5588,7 +5585,7 @@ namespace Protean
         {
             this.PerfMon.Log("Web", "UserEditProcess");
             string sProcessInfo = "";
-            string sReturnValue = null;
+            string sReturnValue = string.Empty;
             try
             {
 
@@ -5820,7 +5817,7 @@ namespace Protean
             var oInstance = new XmlDocument();
             string providerName;
             string classPath;
-            string methodName;
+            string methodName= string.Empty;
             object xFrmEditor;
             try
             {
@@ -7741,9 +7738,9 @@ namespace Protean
         {
             this.PerfMon.Log("Web", "GetContentXml");
 
-            string sNodeName = "";
+            string sNodeName = string.Empty;
             string cXPathModifier = "";
-            string sContent = "";
+            string sContent = string.Empty;
             string IsInTree = Conversions.ToString(false);
             string sProcessInfo = "building the Content XML";
 
@@ -8003,8 +8000,8 @@ namespace Protean
             string sProcessInfo = "Getting the content from page " + nPageId;
             string sSql = "";
             string sFilterSql = "";
-            string sWhereSql = "";
-            string sSql2 = "";
+            string sWhereSql = string.Empty;
+            string sSql2 = string.Empty;
             XmlElement oRoot;
             try
             {
@@ -8576,12 +8573,12 @@ namespace Protean
             this.PerfMon.Log("Web", "GetErrorXml");
             XmlElement oRoot;
             XmlElement oElmt;
-            string sFilterSql = "";
-            string sSql2 = "";
-            string sNodeName = "";
-            string sContent = "";
+            string sFilterSql = string.Empty;
+            string sSql2 = string.Empty;
+            string sNodeName = string.Empty;
+            string sContent = string.Empty;
             string sErrorModule = "";
-            string sErrorHTML = "";
+            string sErrorHTML = string.Empty;
             string strMessageHtml = "";
             string strMessageText = "";
 
@@ -8651,7 +8648,7 @@ namespace Protean
                     {
                         Information.Err().Raise((int)mnProteanCMSError, sErrorModule, strMessageText);
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         oPageElmt.SetAttribute("layout", "Error");
                         oElmt.InnerXml = strMessageHtml;
@@ -9081,7 +9078,7 @@ namespace Protean
                                     bLoadAsXml = true;
                                 }
 
-                                catch (Exception ex)
+                                catch (Exception)
                                 {
                                     // If the load failed, then flag it in the Content node and return the InnerText as a Comment
                                     oComment = oRoot.OwnerDocument.CreateComment(oElmt.InnerText);
@@ -9222,7 +9219,7 @@ namespace Protean
                                     }
                                     contentElmt.AppendChild(oShippingElmt);
                                 }
-                                catch (Exception ex)
+                                catch (Exception)
                                 {
 
                                 }
@@ -9349,7 +9346,7 @@ namespace Protean
                                 bLoadAsXml = true;
                             }
 
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                                 // If the load failed, then flag it in the Content node and return the InnerText as a Comment
                                 oComment = oRoot.OwnerDocument.CreateComment(oElmt.InnerText);
@@ -9556,7 +9553,7 @@ namespace Protean
             // Dim sWriter = New IO.StringWriter
             var oDS = new DataSet();
             string sProcessInfo = "returnDocumentFromItem";
-            string sPath = "";
+            string sPath = string.Empty;
             var oErrorXml = new XmlDocument();
             long nDocId;
             string downloadFileName = "download.zip";
@@ -9899,15 +9896,16 @@ namespace Protean
         {
             this.PerfMon.Log("Web", "returnDocumentFromItem");
             var oXML = new XmlDocument();
-            string sSql = "";
-            string strFilePath = "";
+            string sSql = string.Empty;
+            string strFilePath = string.Empty;
             string strFileName = this.moRequest["filename"] + ".pdf";
-            string objStream, strFileSize;
+            string objStream = string.Empty; 
+                string strFileSize;
             // Dim strPageInfo, strReferrer
             // Dim sWriter = New IO.StringWriter
             var oDS = new DataSet();
             string sProcessInfo = "returnDocumentFromItem";
-            string sPath = "";
+            string sPath = string.Empty;
             var oErrorXml = new XmlDocument();
             long nArtId = Conversions.ToInteger(this.moRequest["artId"]);
             long nPageId = Conversions.ToInteger(this.moRequest["pgid"]);
@@ -10168,7 +10166,7 @@ namespace Protean
         public int GetParId(string nParids, int nCurrentPage)
         {
             this.PerfMon.Log("Web", "GetParId");
-            string cProcessInfo = "";
+            string cProcessInfo = string.Empty;
             string[] oParents = Strings.Split(nParids, ",");
             try
             {
@@ -10194,7 +10192,7 @@ namespace Protean
         public int GetParId(string nParids, int nCurrentPage, ref XmlElement oMenu, ref XmlElement oCurPage)
         {
             // PerfMon.Log("Web", "GetParId")
-            string cProcessInfo = "";
+            string cProcessInfo = string.Empty;
             string[] oParents = Strings.Split(nParids, ",");
             string sFilteredParents = "";
             string cXPath = "";
@@ -10297,7 +10295,7 @@ namespace Protean
                 if (nStep == 0)
                     this.PerfMon.Log("Web", "ClosestDescendants-End");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // dont do a thing, might not be children
             }
@@ -10328,7 +10326,7 @@ namespace Protean
                 ClosestAncestor((XmlElement)oParentElmt.ParentNode, nStep, cXpath, oParents, ref oIDs, ref oSteps);
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
                 // dont do anything, there might not be ancestors
             }
@@ -10365,7 +10363,7 @@ namespace Protean
                     return mcSessionReferrer;
                 }
 
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "";
                 }
@@ -10449,7 +10447,7 @@ namespace Protean
         {
             this.PerfMon.Log("Web", "GetRequestLanguage");
 
-            string cProcessInfo = "";
+            string cProcessInfo = string.Empty;
             string sCurrency = "";
             string httpPrefix = "http://";
 
@@ -10544,7 +10542,7 @@ namespace Protean
             this.PerfMon.Log("Web", "SetPageLanguage");
 
             string cProcessInfo = "";
-            string sCurrency = "";
+            string sCurrency = string.Empty;
 
             try
             {
@@ -10977,7 +10975,7 @@ namespace Protean
             // Else
             // Return False
             // End If
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
@@ -10997,7 +10995,7 @@ namespace Protean
             string cProcessInfo = "";
             string filename = "";
             string filepath = "";
-            string artId = "";
+            string artId = string.Empty;
             string Ext = ".html";
             try
             {
@@ -11182,7 +11180,7 @@ namespace Protean
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return "";
             }

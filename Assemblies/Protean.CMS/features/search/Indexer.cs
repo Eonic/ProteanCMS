@@ -18,13 +18,9 @@ using static Protean.Tools.Xml;
 
 namespace Protean
 {
-
     public class Indexer
     {
-
-        private new string mcModuleName = "Protean.Indexer";
-
-
+        private string mcModuleName = "Protean.Indexer";
         private string mcIndexReadFolder = ""; // the folder where the index is stored (from config)
         private string mcIndexWriteFolder = ""; // the folder where the index is stored (from config)
         private string mcIndexCopyFolder = "";
@@ -51,7 +47,7 @@ namespace Protean
         {
             // PerfMon.Log("Indexer", "New")
             mcModuleName = "Eonic.Search.Indexer";
-            string cProcessInfo = "";
+            string cProcessInfo = string.Empty;
             myWeb = aWeb;
             moConfig = myWeb.moConfig;
             string siteSearchPath = moConfig["SiteSearchPath"];
@@ -316,7 +312,7 @@ namespace Protean
                                     errorElmt.SetAttribute("pgid", Conversions.ToString(oDR["nStructKey"]));
                                     errorElmt.SetAttribute("name", Conversions.ToString(oDR["cStructName"]));
                                 }
-                                catch (Exception ex)
+                                catch (Exception)
                                 {
 
                                 }
@@ -423,7 +419,7 @@ namespace Protean
                                                     errorElmt.SetAttribute("pgid", Conversions.ToString(oDR["nStructKey"]));
                                                     errorElmt.SetAttribute("name", Conversions.ToString(oDR["cStructName"]));
                                                 }
-                                                catch (Exception ex)
+                                                catch (Exception)
                                                 {
                                                     // Don't error if you can't set the above.
                                                 }
@@ -725,7 +721,7 @@ namespace Protean
                     oIndexWriter.Dispose();
                     oIndexWriter = null;
                 }
-                catch (Exception ex2)
+                catch (Exception)
                 {
 
                 }
@@ -817,7 +813,7 @@ namespace Protean
                     oIndexWriter.Dispose();
                     oIndexWriter = null;
                 }
-                catch (Exception ex2)
+                catch (Exception)
                 {
 
                 }
@@ -878,7 +874,7 @@ namespace Protean
                     oIndexWriter.Dispose();
                     oIndexWriter = null;
                 }
-                catch (Exception ex2)
+                catch (Exception)
                 {
 
                 }
@@ -940,9 +936,8 @@ namespace Protean
                     oIndexWriter.Dispose();
                     oIndexWriter = null;
                 }
-                catch (Exception ex2)
+                catch (Exception)
                 {
-
                 }
                 cExError += ex.StackTrace.ToString() + Constants.vbCrLf;
                 stdTools.returnException(ref myWeb.msException, mcModuleName, methodName, ex, "", processInfo, gbDebug);
@@ -1162,7 +1157,7 @@ namespace Protean
             string cProcessInfo = "";
             string filename = "";
             string filepath = "";
-            string artId = "";
+            string artId = string.Empty;
             string Ext = ".html";
             try
             {

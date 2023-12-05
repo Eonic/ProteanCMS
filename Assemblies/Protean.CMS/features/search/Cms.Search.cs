@@ -869,7 +869,7 @@ namespace Protean
                                                     {
                                                         result.InnerXml = innerString.Trim();
                                                     }
-                                                    catch (Exception ex)
+                                                    catch (Exception)
                                                     {
                                                         innerString = innerString.Replace("&", "&amp;").Replace("&amp;amp;", "&amp;").Trim();
                                                         processInfo = innerString;
@@ -1225,7 +1225,7 @@ namespace Protean
                                                 {
                                                     result.InnerXml = innerString.Trim();
                                                 }
-                                                catch (Exception ex)
+                                                catch (Exception)
                                                 {
                                                     innerString = innerString.Replace("&", "&amp;").Replace("&amp;amp;", "&amp;").Trim();
                                                     processInfo = innerString;
@@ -1278,7 +1278,7 @@ namespace Protean
                 string[] aSearchWords;
                 string[] aNewSearchWords = null;
                 int i;
-                string sError = "";
+                string sError = string.Empty;
                 string cSearchTerm = "";
                 bool bFirst = true;
                 bool bSearchSubmitted = false;
@@ -2639,7 +2639,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                     return new QueryWrapperFilter(livePagesQuery);
                 }
 
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return null;
                 }
@@ -2668,7 +2668,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                     return new QueryWrapperFilter(livePagesQuery);
                 }
 
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return null;
                 }
@@ -2850,12 +2850,10 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
 
                     return keywords;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-
                     return "";
                 }
-
             }
 
             #endregion

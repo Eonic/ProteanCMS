@@ -82,9 +82,9 @@ namespace Protean
 
         #region Events
 
-        public new event OnErrorEventHandler OnError;
+        public event OnErrorEventHandler OnError;
 
-        public new delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
+        public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
 
         private void _OnError(object sender, Tools.Errors.ErrorEventArgs e)
         {
@@ -230,12 +230,9 @@ namespace Protean
                     // Now try to set the distributors
                     CreateDistributors();
                 }
-
-                catch (Exception ex)
+                catch (Exception)
                 {
-
                 }
-
             }
         }
 
@@ -529,7 +526,7 @@ namespace Protean
                     return csvList.Split(Conversions.ToChar(separator));
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -891,7 +888,7 @@ namespace Protean
             {
                 return Array.IndexOf(distributorTypesList, possibleDistributor) >= distributorTypesList.GetLowerBound(0);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
@@ -930,9 +927,9 @@ namespace Protean
             #endregion
 
             #region Events
-            public new event OnErrorEventHandler OnError;
+            public event OnErrorEventHandler OnError;
 
-            public new delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
+            public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
 
             private void _OnError(object sender, Tools.Errors.ErrorEventArgs e)
             {
@@ -1380,9 +1377,9 @@ namespace Protean
                 private bool _isLoaded = false;
 
                 #region Events
-                public new event OnErrorEventHandler OnError;
+                public event OnErrorEventHandler OnError;
 
-                public new delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
+                public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
 
                 private void _OnError(object sender, Tools.Errors.ErrorEventArgs e)
                 {
@@ -1418,12 +1415,10 @@ namespace Protean
                     {
                         try
                         {
-
                             _settings = value;
                             _isLoaded = true;
                         }
-
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             _settings = null;
                             _isLoaded = false;

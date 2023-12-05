@@ -11,6 +11,7 @@ using System.Web.Configuration;
 using System.Xml;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using Protean.Providers.Payment;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
 
@@ -291,9 +292,10 @@ namespace Protean
 
                         foreach (XmlElement oElmt in xElmtPaymentProvider)
                         {
-
-                            var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, oElmt.GetAttribute("name"));
-                            oPayProv.Activities.AddPaymentButton(oOptXform, oFrmElmt, oElmt, nPaymentAmount, submissionValue, refValue);
+                            Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
+                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, oElmt.GetAttribute("name"));
+                            //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, oElmt.GetAttribute("name"));
+                            oPaymentProv.Activities.AddPaymentButton(ref oOptXform, ref oFrmElmt, oElmt, nPaymentAmount, submissionValue, refValue);
 
                             nOptCount = nOptCount + 1;
 
@@ -339,7 +341,7 @@ namespace Protean
                     try
                     {
 
-                        string cProcessInfo = "GetValidPaymentProviders";
+                        string cProcessInfo = string.Empty;
                         var oDoc = new XmlDocument();
 
                         XmlNode oProviders = oDoc.CreateElement("payment");
@@ -2722,7 +2724,7 @@ namespace Protean
                     bool bIsValid = false;
                     string err_msg = "";
                     string err_msg_log = "";
-                    string sProcessInfo = "";
+                    string sProcessInfo = string.Empty;
                     var oDictOpt = new Hashtable();
 
                     bool bCv2 = false;
@@ -3649,7 +3651,7 @@ namespace Protean
                     myWeb.PerfMon.Log("PaymentProviders", "paySecureEmail");
                     string sSql;
                     Cms.xForm ccXform;
-                    string sProcessInfo = "";
+                    string sProcessInfo = string.Empty;
                     string sCardAccepted = "";
 
 
@@ -4024,7 +4026,7 @@ namespace Protean
                     myWeb.PerfMon.Log("PaymentProviders", "payOnAccount");
                     string sSql;
                     var ccXform = new Cms.xForm(ref myWeb);
-                    string sProcessInfo = "";
+                    string sProcessInfo = string.Empty;
                     bool bCv2 = false;
                     bool bEncrypt = false;
 
@@ -4166,7 +4168,7 @@ namespace Protean
                     myWeb.PerfMon.Log("PaymentProviders", "payByCash");
                     string sSql;
                     var ccXform = new Cms.xForm(ref myWeb.msException);
-                    string sProcessInfo = "";
+                    string sProcessInfo = string.Empty;
                     bool bCv2 = false;
                     bool bEncrypt = false;
 
@@ -4303,7 +4305,7 @@ namespace Protean
                     myWeb.PerfMon.Log("PaymentProviders", "SaveOrder");
                     string sSql;
                     var ccXform = new Cms.xForm(ref myWeb);
-                    string sProcessInfo = "";
+                    string sProcessInfo = string.Empty;
                     bool bCv2 = false;
                     bool bEncrypt = false;
 
@@ -5010,7 +5012,7 @@ namespace Protean
                 {
                     myWeb.PerfMon.Log("PaymentProviders", "fmtSecureTradingDate");
                     string cProcessInfo = "fmtSecureTradingDate";
-                    string strReturn = "";
+                    string strReturn = string.Empty;
                     try
                     {
                         // The dates are formatted "mm yyyy" - convert them to "mm/yy"
@@ -5465,7 +5467,7 @@ namespace Protean
                     string[] aCardTypes2;
                     int i;
                     // Dim nPayableAmount As Double
-                    string cUniqueLink = "";
+                    string cUniqueLink = string.Empty;
                     // Dim nLinkNumber As Long
                     var oRandom = new Random();
 

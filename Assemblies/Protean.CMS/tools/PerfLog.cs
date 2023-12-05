@@ -81,12 +81,9 @@ namespace Protean
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
             }
-
-
         }
 
         private void TurnOn()
@@ -104,7 +101,7 @@ namespace Protean
                     {
                     }
                     // oPerfMonRequests = New System.Diagnostics.PerformanceCounter("ASP.NET v4.0.30319", "Requests Current")
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         // do nothing
                     }
@@ -321,7 +318,7 @@ namespace Protean
                             {
                                 oCmd.ExecuteNonQuery();
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                                 cProcessInfo = oCmd.CommandText;
                             }

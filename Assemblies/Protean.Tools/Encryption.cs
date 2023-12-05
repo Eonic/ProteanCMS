@@ -566,14 +566,14 @@ namespace Protean.Tools
             }
 
 
-            protected virtual new void Dispose(bool disposing)
+            protected virtual void Dispose(bool disposing)
             {
                 if (disposing)
                 {
                 }
             } // Dispose
 
-            public new void Dispose()
+            public void Dispose()
             {
                 Dispose(true);
                 GC.SuppressFinalize(this);
@@ -950,7 +950,7 @@ namespace Protean.Tools
                 return new EncData(b);
             }
 
-            protected virtual new void Dispose(bool disposing)
+            protected virtual void Dispose(bool disposing)
             {
                 if (disposing)
                 {
@@ -962,7 +962,7 @@ namespace Protean.Tools
             } // Dispose
 
 
-            public new void Dispose()
+            public void Dispose()
             {
                 Dispose(true);
                 GC.SuppressFinalize(this);
@@ -982,7 +982,7 @@ namespace Protean.Tools
         {
             private RSACryptoServiceProvider _rsa;
             private string _KeyContainerName = "Encryption.AsymmetricEncryption.DefaultContainerName";
-            private bool _UseMachineKeystore = true;
+            //private bool _UseMachineKeystore = true;
             private int _KeySize = 1024;
 
             private const string _ElementParent = "RSAKeyValue";

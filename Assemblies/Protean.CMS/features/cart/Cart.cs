@@ -15,6 +15,7 @@ using static Protean.Tools.Xml;
 using System.Linq;
 using Protean.Providers.Membership;
 using Protean.Providers.Messaging;
+using Protean.Providers.Payment;
 
 namespace Protean
 {
@@ -1833,9 +1834,11 @@ namespace Protean
                                 // Dim Redirect3dsXform As xForm = New xForm(myWeb.msException)
                                 // Redirect3dsXform = oEwProv.GetRedirect3dsForm(myWeb)
 
-                                var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, mcPaymentMethod);
+                                Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
+                                IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, mcPaymentMethod);
+                               // var oPayProv = new Providers.Payment.ReturnProvider(ref myWeb, mcPaymentMethod);
                                 var Redirect3dsXform = new Cms.xForm(ref myWeb.msException);
-                                Redirect3dsXform = (Cms.xForm)oPayProv.Activities.GetRedirect3dsForm(myWeb);
+                                Redirect3dsXform = (Cms.xForm)oPaymentProv.Activities.GetRedirect3dsForm(ref myWeb);
 
                                 if (Redirect3dsXform is null)
                                 {
@@ -1873,9 +1876,12 @@ namespace Protean
                                 }
 
                                 cProcessInfo = "Payment Method from session = '" + mcPaymentMethod + "'";
-                                var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, mcPaymentMethod);
+                                //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, mcPaymentMethod);
+                                Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
+                                IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, mcPaymentMethod);
                                 var ccPaymentXform = new Protean.xForm(ref myWeb.msException);
-                                ccPaymentXform = (Protean.xForm)oPayProv.Activities.GetPaymentForm(myWeb, this, oElmt);
+                                var cmsCart = this;
+                                ccPaymentXform = (Protean.xForm)oPaymentProv.Activities.GetPaymentForm(ref myWeb, ref cmsCart, ref oElmt);
 
                                 if (Strings.InStr(mcPaymentMethod, "Repeat_") > 0)
                                 {
@@ -2554,7 +2560,7 @@ namespace Protean
                             // Object Clearup ?
 
 
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                                 // OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ContentActions", ex, sProcessInfo))
                                 cProcessInfo = classPath + "." + methodName + " not found";
@@ -3581,11 +3587,9 @@ namespace Protean
                                 }
                             }
 
-                            catch (Exception ex)
+                            catch (Exception)
                             {
-
                             }
-
                         }
 
 
@@ -4320,7 +4324,7 @@ namespace Protean
             public double getProductPricesByXml(string cXml, string cUnit, long nQuantity, string PriceType = "Prices")
             {
                 myWeb.PerfMon.Log("Cart", "getProductPricesByXml");
-                string cGroupXPath = "";
+                string cGroupXPath = string.Empty;
                 var oProd = moPageXml.CreateElement("product");
                 try
                 {
@@ -4393,7 +4397,7 @@ namespace Protean
             public XmlElement getContentPricesNode(XmlElement oContentXml, string cUnit, long nQuantity, string PriceType = "Prices")
             {
                 myWeb.PerfMon.Log("Cart", "getContentPricesNode");
-                string cGroupXPath = "";
+                string cGroupXPath = string.Empty;
                 XmlNode oDefaultPrice;
 
                 try
@@ -4508,7 +4512,7 @@ namespace Protean
             public double getOptionPricesByXml(string cXml, int nGroupIndex, int nOptionIndex)
             {
                 myWeb.PerfMon.Log("Cart", "getOptionPricesByXml");
-                string cGroupXPath = "";
+                string cGroupXPath = string.Empty;
                 var oProd = moPageXml.CreateNode(XmlNodeType.Document, "", "product");
                 XmlNode oDefaultPrice;
                 try
@@ -4588,7 +4592,7 @@ namespace Protean
                 try
                 {
 
-                    string oErrorMsg = "";
+                    string oErrorMsg = string.Empty;
                     XmlElement oError;
                     XmlElement oMsg;
 
@@ -7219,14 +7223,14 @@ namespace Protean
                 var nShippingCost = default(double);
                 string cShippingDesc = "";
 
-                string cHidden = "";
+                string cHidden = string.Empty;
                 bool bHideDelivery = false;
                 bool bHidePayment = false;
                 bool bFirstRow = true;
 
                 // Dim oElmt As XmlElement
 
-                string sProcessInfo = "";
+                string sProcessInfo = string.Empty;
                 bool bForceValidation = false;
                 bool bAdjustTitle = true;
 
@@ -7250,7 +7254,7 @@ namespace Protean
                 }
 
                 oPay.mcCurrency = mcCurrency;
-                string cDenyFilter = "";
+                string cDenyFilter = string.Empty;
 
                 try
                 {
@@ -9132,7 +9136,7 @@ namespace Protean
             public virtual void EndSession()
             {
                 myWeb.PerfMon.Log("Cart", "EndSession");
-                string sProcessInfo = "";
+                string sProcessInfo = string.Empty;
                 string sSql;
                 string cProcessInfo = "";
                 try
@@ -10732,7 +10736,7 @@ namespace Protean
                 try
                 {
                     string cSQL = "exec ";
-                    string cCustomParam = "";
+                    string cCustomParam = string.Empty;
                     string cReportType = "CartDownload";
 
                     // Set the times for each date
@@ -10992,7 +10996,7 @@ namespace Protean
                 try
                 {
                     string cSQL = "exec spCartActivityPagesPeriod ";
-                    bool bPage = false;
+                    //bool bPage = false;
                     string cReportType = "";
                     if (nYear == 0)
                         nYear = DateTime.Now.Year;
@@ -11007,9 +11011,6 @@ namespace Protean
 
                     var oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Item", "Report");
                     // For Grouped by page is going to be bloody hard
-
-
-
 
                     var oRptElmt = myWeb.moPageXml.CreateElement("Content");
                     oRptElmt.SetAttribute("type", "Report");
@@ -11043,7 +11044,6 @@ namespace Protean
             {
                 try
                 {
-
                     long nQuantity = 1L;
 
                     xmlProduct.SetAttribute("test1", "1");
@@ -11523,12 +11523,9 @@ namespace Protean
                     moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement);
                 }
                 // UpdatePackagingANdDeliveryType(mnCartId, ShippingKey)
-                catch (Exception ex)
+                catch (Exception)
                 {
-
                 }
-
-
             }
 
             public void AddProductOption(int nCartItemId, string cOptionName, double nOptionCost)
@@ -11608,7 +11605,7 @@ namespace Protean
                     moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement);
                 }
                 // UpdatePackagingANdDeliveryType(mnCartId, ShippingKey)
-                catch (Exception ex)
+                catch (Exception)
                 {
 
                 }

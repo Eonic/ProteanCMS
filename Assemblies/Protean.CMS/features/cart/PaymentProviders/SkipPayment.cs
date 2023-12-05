@@ -199,7 +199,7 @@ namespace Protean.Providers
                         }
                     }
 
-                    catch (Exception ex)
+                    catch (Exception)
                     {
 
                     }

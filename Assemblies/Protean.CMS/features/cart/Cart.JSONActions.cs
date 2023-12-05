@@ -7,6 +7,7 @@ using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Protean.Providers.Payment;
 using static Protean.Tools.Xml;
 
 namespace Protean
@@ -80,7 +81,7 @@ namespace Protean
                 {
                     try
                     {
-                        string cProcessInfo = "";
+                        string cProcessInfo = string.Empty;
 
                         // Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
                         // myCart.GetCart(CartXml.FirstChild)
@@ -117,7 +118,7 @@ namespace Protean
                 {
                     try
                     {
-                        string cProcessInfo = "";
+                        string cProcessInfo = string.Empty;
                         // jsonObject("artId")
                         // myCart.AddItem()
                         // Output the new cart
@@ -219,7 +220,7 @@ namespace Protean
                         }
                         else
                         {
-                            string cProcessInfo = "";
+                            string cProcessInfo = string.Empty;
                             long ItemCount = 1L;
 
                             foreach (JObject item in jObj["Item"])
@@ -268,7 +269,7 @@ namespace Protean
                     try
                     {
 
-                        string cProcessInfo = "";
+                        string cProcessInfo = string.Empty;
                         long ItemCount = 1L;
                         XmlElement CartXml = (XmlElement)myWeb.moCart.CreateCartElement(myWeb.moPageXml);
 
@@ -340,7 +341,7 @@ namespace Protean
                 {
                     try
                     {
-                        string cProcessInfo = "";
+                        string cProcessInfo = string.Empty;
                         DataSet dsShippingOption;
 
                         string cDestinationCountry = myCart.moCartConfig["DefaultDeliveryCountry"];
@@ -422,7 +423,7 @@ namespace Protean
                     try
                     {
 
-                        string cProcessInfo = "";
+                        string cProcessInfo = string.Empty;
                         string ShipOptKey;
                         var json = jObj;
                         ShipOptKey = (string)json.SelectToken("ShipOptKey");
@@ -605,7 +606,7 @@ namespace Protean
                         return jsonString;
                     }
 
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         return null;
                     }
@@ -623,7 +624,7 @@ namespace Protean
                         return "True";
                     }
 
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         return null;
                     }
@@ -670,7 +671,7 @@ namespace Protean
                             return strMessage;
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         return null;
                     }
@@ -702,7 +703,7 @@ namespace Protean
                             return jsonString;
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         return null;
                     }
@@ -712,7 +713,7 @@ namespace Protean
                 {
                     try
                     {
-                        string cProcessInfo = "";
+                        string cProcessInfo = string.Empty;
                         double cProductPrice = (double)jObj["itemPrice"];
                         long cartItemId = (long)jObj["itemId"];
 
@@ -737,7 +738,7 @@ namespace Protean
                         return jsonString;
                     }
 
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         return null;
                     }
@@ -925,7 +926,7 @@ namespace Protean
                 {
                     try
                     {
-                        string cProcessInfo = "";
+                        string cProcessInfo = string.Empty;
                         string josResult = "SUCCESS";
 
                         // input params
@@ -938,12 +939,13 @@ namespace Protean
                             // validate if weather success or declined in Judopay.cs and redirect accordingly
 
                             var myWeb = new Cms();
-
-                            var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, "PayPalCommerce");
-                            oPayProv.Activities.CreateOrder((object)true).Wait();
+                            Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
+                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, "PayPalCommerce");
+                            //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, "PayPalCommerce");
+                            oPaymentProv.Activities.CreateOrder((object)true).Wait();
                         }
 
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             josResult = "ERROR";
                         }
@@ -962,7 +964,7 @@ namespace Protean
                 {
                     try
                     {
-                        string cProcessInfo = "";
+                        string cProcessInfo = string.Empty;
                         string josResult = "SUCCESS";
 
                         // input params
@@ -971,21 +973,17 @@ namespace Protean
                         try
                         {
                             var myWeb = new Cms();
-
-                            var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, "PayPalCommerce");
-                            oPayProv.Activities.GetOrder(cOrderId).Wait();
-
-                            oPayProv.Activities.CaptureOrder(cOrderId, (object)true).Wait();
-
-                            oPayProv.Activities.AuthorizeOrder(cOrderId, (object)true).Wait();
+                            //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, "PayPalCommerce");
+                            Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
+                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, "PayPalCommerce");
+                            oPaymentProv.Activities.GetOrder(cOrderId).Wait();
+                            oPaymentProv.Activities.CaptureOrder(cOrderId, (object)true).Wait();
+                            oPaymentProv.Activities.AuthorizeOrder(cOrderId, (object)true).Wait();
                         }
-
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             josResult = "ERROR";
                         }
-
-
                         return josResult;
                     }
 
@@ -999,7 +997,7 @@ namespace Protean
                 {
                     try
                     {
-                        string cProcessInfo = "";
+                        string cProcessInfo = string.Empty;
                         string josResult = "SUCCESS";
 
                         // input params
@@ -1009,16 +1007,15 @@ namespace Protean
                         {
                             var myWeb = new Cms();
 
-                            var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, "PayPalCommerce");
-
-                            oPayProv.Activities.CaptureOrder(cOrderId, (object)true).Wait();
+                            //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, "PayPalCommerce");
+                            Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
+                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, "PayPalCommerce");
+                            oPaymentProv.Activities.CaptureOrder(cOrderId, (object)true).Wait();
                         }
-
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             josResult = "ERROR";
                         }
-
 
                         return josResult;
                     }
@@ -1033,7 +1030,7 @@ namespace Protean
                 {
                     try
                     {
-                        string cProcessInfo = "";
+                        string cProcessInfo = string.Empty;
                         string cResponse = jObj.ToString();
                         string sSql;
                         var myWeb = new Cms();
@@ -1116,7 +1113,9 @@ namespace Protean
                         string strCounty = searchFilter["sCounty"].ToObject<string>();
                         var cProviderName = Interaction.IIf(searchFilter["sProviderName"] != null, (string)searchFilter["sProviderName"], "");
 
-                        var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, Conversions.ToString(cProviderName));
+                        //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, Conversions.ToString(cProviderName));
+                        Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
+                        IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, Conversions.ToString(cProviderName));
 
                         System.Collections.Specialized.NameValueCollection moConfig;
                         moConfig = myApi.moConfig;
@@ -1127,7 +1126,7 @@ namespace Protean
                             {
                                 if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(cProviderName, "", false)))
                                 {
-                                    strISOCode = Conversions.ToString(oPayProv.Activities.getStateISOCode(strCounty, strCountry));
+                                    strISOCode = Conversions.ToString(oPaymentProv.Activities.getStateISOCode(strCounty, strCountry));
                                 }
                             }
                         }
@@ -1166,13 +1165,15 @@ namespace Protean
                         oCart.moPageXml = myWeb.moPageXml;
 
                         var nProviderReference = Interaction.IIf(jObj["nProviderReference"] != null, (long)jObj["nProviderReference"], 0);
-                        var nAmount = Interaction.IIf(jObj["nAmount"] != null, (decimal)jObj["nAmount"], "0");
+                        decimal nAmount =Convert.ToDecimal(Interaction.IIf(jObj["nAmount"] != null, (decimal)jObj["nAmount"], "0"));
                         var cProviderName = Interaction.IIf(jObj["sProviderName"] != null, (string)jObj["sProviderName"], "");
                         object cRefundPaymentReceipt = "";
                         if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(cProviderName, "", false)))
                         {
-                            var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, Conversions.ToString(cProviderName));
-                            cRefundPaymentReceipt = oPayProv.Activities.RefundPayment(nProviderReference, nAmount);
+                            //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, Conversions.ToString(cProviderName));
+                            Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
+                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, Conversions.ToString(cProviderName));
+                            cRefundPaymentReceipt = oPaymentProv.Activities.RefundPayment(nProviderReference.ToString(), nAmount);
 
                             var xmlDoc = new XmlDocument();
                             var xmlResponse = xmlDoc.CreateElement("Response");
@@ -1218,8 +1219,10 @@ namespace Protean
                         object strConsumerRef = "";
                         if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectNotEqual(cProviderName, "", false), Operators.ConditionalCompareObjectNotEqual(receiptID, 0, false))))
                         {
-                            var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, Conversions.ToString(cProviderName));
-                            strConsumerRef = oPayProv.Activities.UpdateOrderWithPaymentResponse(receiptID);
+                            // var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, Conversions.ToString(cProviderName));
+                            Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
+                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, Conversions.ToString(cProviderName));
+                            strConsumerRef = oPaymentProv.Activities.UpdateOrderWithPaymentResponse(receiptID);
                             josResult = Conversions.ToString(strConsumerRef);
                         }
                         return josResult;
@@ -1271,8 +1274,10 @@ namespace Protean
                         string josResult = "";
                         if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(cProviderName, "", false)))
                         {
-                            var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, Conversions.ToString(cProviderName));
-                            cPaymentReceipt = Conversions.ToString(oPayProv.Activities.ProcessNewPayment(nOrderId, nAmount, cCardNumber, cCV2, dExpiryDate, dStartDate, cCardHolderName, cAddress1, cAddress2, cTown, cPostCode, cCounty, cCountry, cValidGroup));
+                            //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, Conversions.ToString(cProviderName));
+                            Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
+                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, Conversions.ToString(cProviderName));
+                            cPaymentReceipt = Conversions.ToString(oPaymentProv.Activities.ProcessNewPayment(nOrderId, nAmount, cCardNumber, cCV2, dExpiryDate, dStartDate, cCardHolderName, cAddress1, cAddress2, cTown, cPostCode, cCounty, cCountry, cValidGroup));
                             var xmlDoc = new XmlDocument();
                             var xmlResponse = xmlDoc.CreateElement("Response");
                             xmlResponse.InnerXml = "<PaymentReceiptId>" + cPaymentReceipt + "</PaymentReceiptId>";

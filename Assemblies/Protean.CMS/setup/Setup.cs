@@ -114,13 +114,10 @@ namespace Protean
                 {
                     myWeb.moDbHelper.CloseConnection();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-
                 }
             }
-
-
 
             // then raises a public event
             OnError?.Invoke(sender, e);
@@ -139,8 +136,7 @@ namespace Protean
 
         public Setup(System.Web.HttpContext Context)
         {
-
-            string sProcessInfo = "";
+            string sProcessInfo = string.Empty;
             try
             {
                 moCtx = Context;
@@ -243,11 +239,9 @@ namespace Protean
 
         public void close()
         {
-
-            string sProcessInfo = "";
+            string sProcessInfo = string.Empty;
             try
             {
-
                 // if we access base via soap the session is not available
                 if (mbSchemaExists)
                 {
@@ -288,10 +282,9 @@ namespace Protean
                 }
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
                 goResponse.Write("<script language=\"javascript\" type=\"text/javascript\">$('#result').append('" + Strings.Replace("<p><i class=\"fa fa-check text-danger\">&#160;</i>Error in script</p>", "'", @"\'") + "<br/>');$('#result').stop().animate({scrollTop: $('#result')[0].scrollHeight}, 800);</script>" + Constants.vbCrLf);
-
             }
         }
 
@@ -1042,7 +1035,7 @@ namespace Protean
             XmlElement oElmt12;
             XmlElement oElmt13;
 
-            string sProcessInfo = "";
+            string sProcessInfo = string.Empty;
             try
             {
                 oElmt = moPageXml.CreateElement("AdminMenu");
@@ -1126,7 +1119,7 @@ namespace Protean
 
         public bool UpdateDatabase()
         {
-            bool bRes = true;
+            //bool bRes = true;
             string filePath;
 
             try
@@ -1818,9 +1811,9 @@ namespace Protean
                         strXML = "<User><FirstName>" + oDirElmt.GetAttribute("cFirstName") + "</FirstName><LastName>" + oDirElmt.GetAttribute("cLastName") + "</LastName><Position/><Email>" + oDirElmt.GetAttribute("cDirEmail") + "</Email><Notes/></User>";
                     }
                     // other details
-                    strforiegnRef = Conversions.ToString(Interaction.IIf(oDirElmt.GetAttribute("nDirId") is DBNull, "", oDirElmt.GetAttribute("nDirId")));
-                    strName = Conversions.ToString(Interaction.IIf(oDirElmt.GetAttribute("cDirDN") is DBNull, "", oDirElmt.GetAttribute("cDirDN")));
-                    strPassword = Conversions.ToString(Interaction.IIf(oDirElmt.GetAttribute("cDirPassword") is DBNull, "", oDirElmt.GetAttribute("cDirPassword")));
+                    strforiegnRef = Convert.ToString(Interaction.IIf(oDirElmt.GetAttribute("nDirId") is DBNull, "", oDirElmt.GetAttribute("nDirId")));
+                    strName = Convert.ToString(Interaction.IIf(oDirElmt.GetAttribute("cDirDN") is DBNull, "", oDirElmt.GetAttribute("cDirDN")));
+                    strPassword = Convert.ToString(Interaction.IIf(oDirElmt.GetAttribute("cDirPassword") is DBNull, "", oDirElmt.GetAttribute("cDirPassword")));
                     nDirId = myWeb.moDbHelper.insertDirectory(strforiegnRef, strSchema, strName, strPassword, strXML);
 
                     foreach (XmlElement oConElmt in oDirElmt.SelectNodes("Contacts"))
@@ -2774,7 +2767,7 @@ namespace Protean
                     oXml.Load(goServer.MapPath(ShippingLocationsPath));
                     bIsXml = true;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     // If Load fails then there's something invalid about what we just imported.
                 }
@@ -2833,7 +2826,7 @@ namespace Protean
                             oXml.LoadXml(cImport);
                             bIsXml = true;
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             // If Load fails then there's something invalid about what we just imported.
                         }

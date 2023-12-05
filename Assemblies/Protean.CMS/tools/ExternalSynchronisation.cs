@@ -234,7 +234,7 @@ namespace Protean
             int nNew = 0;
             int nUpdated = 0;
             int nSkipped = 0;
-            string cResult = "";
+            string cResult = string.Empty;
             string cInfo = "Beginning";
             var oFinalResultsXML = new XmlDocument();
             int nItemCount = 0;
@@ -1037,9 +1037,8 @@ namespace Protean
                 oErr.InnerText = cInformation;
                 oLowErrors.DocumentElement.AppendChild(oErr);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
             }
         }
 
@@ -1049,7 +1048,7 @@ namespace Protean
             {
                 ReportDoc.DocumentElement.AppendChild(ReportDoc.ImportNode(oLowErrors.DocumentElement, true));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }
@@ -1127,7 +1126,7 @@ namespace Protean
                     oXML.LoadXml(cHTML);
                     return oXML.DocumentElement;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     // Lets try option 2 first before we raise an error
                     // RaiseEvent XSLTError(ex.ToString)
@@ -1159,7 +1158,7 @@ namespace Protean
                         return "'" + sDate + "'";
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "'" + sDate + "'";
                 }
@@ -1179,7 +1178,7 @@ namespace Protean
                         return 0;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return 0;
                 }
@@ -1201,7 +1200,7 @@ namespace Protean
                         return "";
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "";
                 }
@@ -1223,7 +1222,7 @@ namespace Protean
                         return "";
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "";
                 }
@@ -1259,7 +1258,7 @@ namespace Protean
                 }
 
 
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "";
                 }
@@ -1294,7 +1293,7 @@ namespace Protean
                 }
 
 
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "";
                 }
@@ -1308,7 +1307,7 @@ namespace Protean
                 {
                     return base.replacestring(text, replace, replaceWith);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return text;
                 }
@@ -1329,7 +1328,7 @@ namespace Protean
                     }
                     return text;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return text;
                 }
@@ -1343,7 +1342,7 @@ namespace Protean
                         return Text;
                     return Text.Substring(0, Text.IndexOf(Character));
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "";
                 }
@@ -1363,7 +1362,7 @@ namespace Protean
                     int nPos = Text.IndexOf(Character) + 1;
                     return Text.Substring(nPos, Text.Length - nPos);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "";
                 }
@@ -1439,7 +1438,7 @@ namespace Protean
                         cReturn = moConfig[SettingName];
                     return cReturn;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "";
                 }
@@ -1456,7 +1455,7 @@ namespace Protean
                     myWeb.moDbHelper.ExeProcessSql(cSQL);
                     return value;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "";
                 }
@@ -1471,7 +1470,7 @@ namespace Protean
                 {
                     return RemoveLocationsRefNotIncluded(cValidStructNames, nContentId);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return i;
                 }
@@ -1501,7 +1500,7 @@ namespace Protean
                     }
                     return i;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return i;
                 }
@@ -1529,7 +1528,7 @@ namespace Protean
                     }
                     return i;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return i;
                 }
@@ -1566,7 +1565,7 @@ namespace Protean
                     }
                     return i;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return i;
                 }
@@ -1659,7 +1658,7 @@ namespace Protean
                     }
                     return i;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return i;
                 }
@@ -1674,7 +1673,7 @@ namespace Protean
                     return AddContentRelationByRef(nContentId, cContentRef, true, "");
                 }
 
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return " Relation Error";
                 }
@@ -1699,7 +1698,7 @@ namespace Protean
                         return "Not Related";
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return " Relation Error";
                 }

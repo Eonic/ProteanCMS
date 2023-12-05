@@ -19,8 +19,7 @@ namespace Protean
         public System.Web.HttpContext moCtx = System.Web.HttpContext.Current;
         public System.Web.HttpRequest goRequest;
 
-        public new string mcModuleName = "Eonic.SoapClient";
-
+        public string mcModuleName = "Eonic.SoapClient";
         public SoapClient()
         {
             goRequest = moCtx.Request;
@@ -95,7 +94,7 @@ namespace Protean
                 bodyStream.Close();
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
                 // returnException(mcModuleName, "addSoap", ex, "", cProcessInfo, gbDebug)
             }
@@ -117,7 +116,7 @@ namespace Protean
                 serviceResponseStream = new StreamReader(serviceResponse.GetResponseStream(), Encoding.UTF8);
             }
 
-            catch (WebException ex)
+            catch (WebException)
             {
             }
 
@@ -125,7 +124,7 @@ namespace Protean
             // serviceResponseStream = New StreamReader(serviceResponse.GetResponseStream, System.Text.Encoding.ASCII)
             // returnException(mcModuleName, "ReturnSoapResponse", ex, "", cProcessInfo, gbDebug)
 
-            catch (Exception ex)
+            catch (Exception)
             {
 
                 // Return ex.Message.tostring
@@ -143,7 +142,7 @@ namespace Protean
 
             XmlDocument oXml;
             string sEnvelope;
-            string cProcessInfo = "getSoapEnvelope";
+            string cProcessInfo = string.Empty;
 
             try
             {
@@ -158,7 +157,7 @@ namespace Protean
                 return oXml;
             }
 
-            catch (Exception ex)
+            catch (Exception )
             {
                 // returnException(mcModuleName, "getSoapEnvelope", ex, "", cProcessInfo, gbDebug)
                 return null;
@@ -170,7 +169,7 @@ namespace Protean
 
             XmlDocument oXml;
             string sEnvelope;
-            string cProcessInfo = "getSoapEnvelope";
+            string cProcessInfo = string.Empty;
 
             try
             {
@@ -189,7 +188,7 @@ namespace Protean
                 return oXml;
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
                 // returnException(mcModuleName, "getSoapEnvelope", ex, "", cProcessInfo, gbDebug)
                 return null;

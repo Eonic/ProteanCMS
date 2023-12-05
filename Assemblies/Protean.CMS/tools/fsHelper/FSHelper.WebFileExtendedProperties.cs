@@ -100,7 +100,7 @@ namespace Protean
                         }
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     _width = 0;
                     _height = 0;

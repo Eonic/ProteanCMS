@@ -57,7 +57,7 @@ namespace Protean
             }
         }
 
-        public new string mcModuleName = "Eonic.CssWebClient";
+        public string mcModuleName = "Eonic.CssWebClient";
 
         public CssWebClient(System.Web.HttpContext context, ref string sException)
         {

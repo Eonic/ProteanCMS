@@ -941,7 +941,7 @@ namespace Protean
                     }
                     oElmt.InnerText = sResult;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     if (string.IsNullOrEmpty(moConfig["VersionNumber"]))
                     {

@@ -273,7 +273,7 @@ namespace Protean
                         using (var reader = XmlReader.Create(response.GetResponseStream()))
                         {
                             XElement name = null;
-                            XElement item = null;
+                           // XElement item = null;
                             string sDoc = "";
                             string sDocBefore = "";
                             reader.MoveToContent();
@@ -289,7 +289,7 @@ namespace Protean
                                     {
                                         origInstance = XNode.ReadFrom(reader) as XElement;
                                     }
-                                    catch (Exception ex)
+                                    catch (Exception)
                                     {
                                         // reader.Read()
                                         reader.ReadToFollowing(instanceNodeName);
@@ -323,7 +323,6 @@ namespace Protean
                                             }
                                             else
                                             {
-
                                                 xDoc.LoadXml(sDoc);
                                                 foreach (XmlElement oInstance in xDoc.DocumentElement.SelectNodes("descendant-or-self::instance"))
                                                 {
@@ -725,7 +724,7 @@ namespace Protean
                 {
                     oElmt.InnerXml = cMessage;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     oElmt.InnerText = Strings.Replace(Strings.Replace(cMessage, "&gt;", ">"), "&lt;", "<");
                 }

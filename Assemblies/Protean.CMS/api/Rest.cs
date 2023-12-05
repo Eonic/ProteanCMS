@@ -31,8 +31,8 @@ namespace Protean
         {
             this.PerfMon.Log("API", "Open");
             string sProcessInfo = "";
-            string cCloneContext = "";
-            string rootPageIdFromConfig = "";
+            string cCloneContext = string.Empty;
+            string rootPageIdFromConfig = string.Empty;
             try
             {
 
@@ -112,7 +112,7 @@ namespace Protean
                 string ProviderName = pathsplit[2];
                 string methodName = pathsplit[3];
                 string classPath = ProviderName + ".JSONActions";
-                string assemblytype = "";
+                string assemblytype = string.Empty;
 
                 var s = this.moRequest.InputStream;
                 var sr = new StreamReader(s);
@@ -130,7 +130,7 @@ namespace Protean
                     {
                         jObj = Newtonsoft.Json.Linq.JObject.Parse(jsonString);
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         // Not a valid json string we want to make the request anyway
                         string query = System.Web.HttpUtility.UrlDecode(jsonString);
@@ -274,7 +274,7 @@ namespace Protean
                 }
 
 
-                catch (Exception ex)
+                catch (Exception)
                 {
                     // OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs("API", "ValidateAPICall", ex, ""))
 

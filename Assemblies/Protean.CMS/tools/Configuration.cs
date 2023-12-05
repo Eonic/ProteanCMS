@@ -39,7 +39,7 @@ namespace Protean
                     returnValue = section[key];
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 returnValue = "";
             }
@@ -112,7 +112,7 @@ namespace Protean
 
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }

@@ -5,6 +5,7 @@ using System.Web.Configuration;
 using System.Xml;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using Protean.Providers.Payment;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
 
@@ -546,18 +547,18 @@ namespace Protean
 
                             if (!string.IsNullOrEmpty(oDr["providerName"].ToString()))
                             {
-                                var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, oDr["providerName"].ToString());
-                                // Dim paymentStatus As String
+                                //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, oDr["providerName"].ToString());
+                                Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
+                                IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, oDr["providerName"].ToString());
+                                   // Dim paymentStatus As String
                                 try
                                 {
                                     // paymentStatus = oPayProv.Activities.CheckStatus(myWeb, oDr("providerId"))
                                     // oElmt.SetAttribute("paymentStatus", paymentStatus)
-
-                                    oElmt.AppendChild((XmlNode)oPayProv.Activities.UpdatePaymentStatus(myWeb, oDr["providerId"]));
+                                    long providerid = Convert.ToInt64(oDr["providerId"]);
+                                    oElmt.AppendChild((XmlNode)oPaymentProv.Activities.UpdatePaymentStatus(ref myWeb, ref providerid));
                                 }
-
-
-                                catch (Exception ex2)
+                                catch (Exception)
                                 {
                                     oElmt.SetAttribute("paymentStatus", "error");
                                 }
@@ -1642,7 +1643,7 @@ namespace Protean
                                             myWeb.mnPageId = Conversions.ToInteger(oSub.SelectSingleNode("//AccessPage[.!='']").InnerText);
                                         }
                                     }
-                                    catch (Exception ex)
+                                    catch (Exception)
                                     {
                                         // No xml sub set the page to be the root id
                                         myWeb.mnPageId = nRootId;
@@ -2057,13 +2058,15 @@ namespace Protean
                         string PaymentMethod = PayInstance.DocumentElement.SelectSingleNode("cPayMthdProviderName").InnerText;
                         if (!string.IsNullOrEmpty(PaymentMethod))
                         {
-                            var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, PaymentMethod);
+                            //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, PaymentMethod);
+                            Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
+                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, PaymentMethod);
                             string paymentStatus;
                             try
                             {
-                                paymentStatus = Conversions.ToString(oPayProv.Activities.CancelPayments(myWeb, PayInstance.DocumentElement.SelectSingleNode("cPayMthdProviderRef").InnerText));
+                                paymentStatus = Conversions.ToString(oPaymentProv.Activities.CancelPayments(myWeb, PayInstance.DocumentElement.SelectSingleNode("cPayMthdProviderRef").InnerText));
                             }
-                            catch (Exception ex2)
+                            catch (Exception)
                             {
                                 // no payment method to cancel. to we email site owner.
                             }
@@ -2282,10 +2285,12 @@ namespace Protean
                             if (!string.IsNullOrEmpty(PaymentMethod))
                             {
                                 paymentStatus = "Failed";
-                                var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, PaymentMethod);
+                                //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, PaymentMethod);
+                                Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
+                                IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, PaymentMethod);
                                 try
                                 {
-                                    paymentStatus = Conversions.ToString(oPayProv.Activities.CollectPayment(myWeb, nPaymentMethodId, Amount, CurrencyCode, PaymentDescription, myWeb.moCart));
+                                    paymentStatus = Conversions.ToString(oPaymentProv.Activities.CollectPayment(myWeb, nPaymentMethodId, Amount, CurrencyCode, PaymentDescription, myWeb.moCart));
                                 }
                                 catch (Exception ex2)
                                 {
@@ -2762,10 +2767,9 @@ namespace Protean
 
                         XmlElement oFrmElmt;
                         string cProcessInfo = "";
-                        bool bRememberMe = false;
+                        //bool bRememberMe = false;
                         try
-                        {
-                            // 
+                        {                          
 
                             if (mbAdminMode & this.myWeb.mnUserId == 0)
                                 goto BuildForm;

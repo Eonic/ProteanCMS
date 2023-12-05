@@ -43,9 +43,8 @@ namespace Protean
                 {
                     myWeb = oWeb;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-
                 }
             }
 
@@ -489,7 +488,7 @@ namespace Protean
 
             public void ProviderActions(ref Cms myWeb, string actionName)
             {
-                string sProcessInfo = "";
+                string sProcessInfo = string.Empty;
                 try
                 {
 
@@ -567,7 +566,7 @@ namespace Protean
                         var adXfm = myWeb.getAdminXform();
                         adXfm.open(myWeb.moPageXml);
                         XmlElement oXfmElmt;
-                        string sReturnValue = null;
+                        string sReturnValue = string.Empty;
                         string cLogonCmd = "";
 
                         if (myWeb.mnUserId == 0 & (myWeb.moRequest["ewCmd"] != "passwordReminder" & myWeb.moRequest["ewCmd"] != "ActivateAccount"))
@@ -1344,7 +1343,7 @@ namespace Protean
                 public void JobApplication(ref Cms myWeb, ref XmlElement oContentNode)
                 {
 
-                    string cProcessInfo;
+                    string cProcessInfo= string.Empty;
                     var moConfig = myWeb.moConfig;
                     XmlElement oElmt;
                     long JobId = Conversions.ToLong("0" + myWeb.moRequest["JobId"]);

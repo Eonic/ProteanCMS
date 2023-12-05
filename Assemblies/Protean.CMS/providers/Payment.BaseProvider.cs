@@ -21,59 +21,46 @@ using static Protean.Cms.Cart;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
 using System.Dynamic;
+using Protean.Providers.Membership;
 
 namespace Protean.Providers
 {
     namespace Payment
     {
-
-        public class BaseProvider : DynamicObject
+        public interface IPaymentProvider
         {
-            private const string mcModuleName = "Protean.Providers.Payment.BaseProvider";
+            void Initiate(ref Cms myWeb);
+            IPaymentAdminXforms AdminXforms { get; set; }
+            IPaymentAdminProcess AdminProcess { get; set; }
+            IPaymentActivities Activities { get; set; }
+        }
+        public interface IPaymentAdminXforms
+        {            
+        }
 
-            private object _AdminXforms;
-            private object _AdminProcess;
-            private object _Activities;
+        public interface IPaymentAdminProcess
+        {           
+        }
+        public interface IPaymentActivities
+        {            
+            Protean.xForm GetPaymentForm(ref Cms myWeb, ref Protean.Cms.Cart oCart, ref XmlElement oOrder, string returnCmd = "cartCmd=SubmitPaymentDetails");
+            Protean.xForm GetRedirect3dsForm(ref Cms myWeb);
+            string CheckStatus(ref Cms oWeb, ref string nPaymentProviderRef);
+            XmlElement UpdatePaymentStatus(ref Cms oWeb, ref long nPaymentMethodKey);
+            string GetMethodDetail(ref Cms oWeb, ref string nPaymentProviderRef);
+            bool AddPaymentButton(ref Protean.xForm oOptXform, ref XmlElement oFrmElmt, XmlElement configXml, double nPaymentAmount, string submissionValue, string refValue);
+            void ValidatePaymentByCart(int nCartId, bool bValid);
+            string RefundPayment(string providerPaymentReference, decimal amount, string validGroup = "");
 
-            protected XmlNode moPaymentCfg;
-
-            public object AdminXforms
-            {
-                set
-                {
-                    _AdminXforms = value;
-                }
-                get
-                {
-                    return _AdminXforms;
-                }
-            }
-
-            public object AdminProcess
-            {
-                set
-                {
-                    _AdminProcess = value;
-                }
-                get
-                {
-                    return _AdminProcess;
-                }
-            }
-
-            public object Activities
-            {
-                set
-                {
-                    _Activities = value;
-                }
-                get
-                {
-                    return _Activities;
-                }
-            }
-
-            public BaseProvider(ref Cms myWeb, string ProviderName)
+        }
+        public class ReturnProvider
+        {
+            private const string mcModuleName = "Protean.Providers.Payment.GetProvider";
+            protected XmlNode moPaymentCfg;            
+            private IPaymentAdminXforms AdminXforms;
+            private IPaymentAdminProcess AdminProcess;
+            private IPaymentActivities Activities;           
+            public IPaymentProvider Get(ref Cms myWeb, string ProviderName)
             {
                 try
                 {
@@ -119,43 +106,44 @@ namespace Protean.Providers
                     var o = Activator.CreateInstance(calledType);
 
                     var args = new object[5];
-                    args[0] = _AdminXforms;
-                    args[1] = _AdminProcess;
-                    args[2] = _Activities;
+                    args[0] =  AdminXforms;
+                    args[1] = AdminProcess;
+                    args[2] = Activities;
                     args[3] = this;
                     args[4] = myWeb;
 
-                    calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args);
+                   return (IPaymentProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args);
                 }
 
                 catch (Exception ex)
                 {
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "New", ex, "", ProviderName + " Could Not be Loaded", gbDebug);
+                    return null;
                 }
 
             }
 
         }
 
-        public class DefaultProvider
+        public class DefaultProvider : IPaymentProvider
         {
 
             public DefaultProvider()
             {
                 // do nothing
             }
+            IPaymentAdminXforms IPaymentProvider.AdminXforms { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+            IPaymentAdminProcess IPaymentProvider.AdminProcess { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+            IPaymentActivities IPaymentProvider.Activities { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-            public void Initiate(ref object _AdminXforms, ref object _AdminProcess, ref object _Activities, ref BaseProvider PayProvider, ref Cms myWeb)
+            void IPaymentProvider.Initiate(ref Cms myWeb)
             {
-
-                PayProvider.AdminXforms = new AdminXForms(ref myWeb);
-                PayProvider.AdminProcess = new AdminProcess(ref myWeb);
-                PayProvider.AdminProcess.oAdXfm = PayProvider.AdminXforms;
-                PayProvider.Activities = new Activities();
-
+                IPaymentAdminXforms AdminXforms = new AdminXForms(ref myWeb);
+                IPaymentAdminProcess AdminProcess = new AdminProcess(ref myWeb);
+                IPaymentActivities Activities = new Activities();
             }
 
-            public class AdminXForms : Admin.AdminXforms
+            public class AdminXForms : Admin.AdminXforms, IPaymentAdminXforms
             {
                 private const string mcModuleName = "Providers.Providers.Eonic.AdminXForms";
 
@@ -165,7 +153,7 @@ namespace Protean.Providers
 
             }
 
-            public class AdminProcess : Admin
+            public class AdminProcess : Admin, IPaymentAdminProcess
             {
 
                 private AdminXForms _oAdXfm;
@@ -188,7 +176,7 @@ namespace Protean.Providers
             }
 
 
-            public class Activities
+            public class Activities : IPaymentActivities
             {
                 private const string mcModuleName = "Providers.Payment.Eonic.Activities";
 

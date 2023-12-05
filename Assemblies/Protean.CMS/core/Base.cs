@@ -31,7 +31,7 @@ namespace Protean
                 {
                     moDbHelper.CloseConnection();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
 
                 }

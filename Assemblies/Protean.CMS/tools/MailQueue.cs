@@ -189,7 +189,7 @@ namespace Protean
                 cReturnString = NameEntities(cReturnString);
                 GetEmailPageRet = cReturnString;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 GetEmailPageRet = "";
             }

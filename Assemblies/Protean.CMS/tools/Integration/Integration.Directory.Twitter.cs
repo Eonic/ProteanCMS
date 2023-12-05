@@ -118,7 +118,7 @@ namespace Protean.Integration.Directory
                             this._credentials.AddSetting("Name", user.Name);
                             this._credentials.AddSetting("ScreenName", user.ScreenName);
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
 
                         }

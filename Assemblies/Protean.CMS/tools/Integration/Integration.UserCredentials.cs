@@ -41,7 +41,7 @@ namespace Protean.Integration
                     Deserialize((XmlElement)directoryInstance.SelectSingleNode("//cDirXml/Credentials[@provider='" + providerName + "']"));
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }
@@ -174,7 +174,7 @@ namespace Protean.Integration
                 }
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }

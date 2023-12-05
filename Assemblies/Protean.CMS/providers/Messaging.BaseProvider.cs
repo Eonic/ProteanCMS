@@ -393,7 +393,7 @@ namespace Protean.Providers
                 {
                     XmlElement oFrmElmt;
                     XmlElement oSelElmt;
-                    string sImgPath = "";
+                    string sImgPath = string.Empty;
 
                     string cProcessInfo = "";
                     var oXformDoc = new XmlDocument();
@@ -472,8 +472,8 @@ namespace Protean.Providers
 
                 public string MailingListProcess(ref XmlElement oPageDetail, ref Cms oWeb, [Optional, DefaultParameterValue("")] ref string sAdminLayout, [Optional, DefaultParameterValue("")] ref string cCmd, [Optional, DefaultParameterValue(false)] ref bool bLoadStructure, [Optional, DefaultParameterValue("")] ref string sEditContext, bool bClearEditContext = false)
                 {
-                    string cRetVal = "";
-                    string cSQL = "";
+                    string cRetVal = string.Empty;
+                    string cSQL = string.Empty;
 
                     try
                     {
@@ -693,7 +693,7 @@ namespace Protean.Providers
                                         if (myWeb.moRequest["nStatus"] != "")
                                         {
                                             oPageDetail.RemoveAll();
-                                            if (myWeb.moSession["lastPage"] != "")
+                                            if (Convert.ToString(myWeb.moSession["lastPage"]) != "")
                                             {
                                                 myWeb.msRedirectOnEnd = myWeb.moSession["lastPage"].ToString();
                                                 myWeb.moSession["lastPage"] = "";
@@ -761,11 +761,9 @@ namespace Protean.Providers
                                             // Check for an optional command to redireect to
                                             if (!string.IsNullOrEmpty("" + myWeb.moRequest["ewRedirCmd"]))
                                             {
-
                                                 myWeb.msRedirectOnEnd = moConfig["ProjectPath"] + "/?ewCmd=" + myWeb.moRequest["ewRedirCmd"];
                                             }
-
-                                            else if (myWeb.moSession["lastPage"] != "")
+                                            else if (Convert.ToString(myWeb.moSession["lastPage"]) != "")
                                             {
                                                 myWeb.msRedirectOnEnd = myWeb.moSession["lastPage"].ToString();
                                                 myWeb.moSession["lastPage"] = "";

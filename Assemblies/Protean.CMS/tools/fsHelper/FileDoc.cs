@@ -17,7 +17,7 @@ namespace Protean
             {
                 cPath = thePath;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // returnException(mcModuleName, "DocWord", ex, "")
                 cPath = "";
@@ -46,7 +46,7 @@ namespace Protean
                     }
                     return cExt;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     // returnException(mcModuleName, "Extension", ex, "")
                     return "";
@@ -105,7 +105,7 @@ namespace Protean
                             }
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     // returnException(mcModuleName, "Text", ex, "")
                     return "";
@@ -120,7 +120,7 @@ namespace Protean
             {
                 return Text;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // returnException(mcModuleName, "ToString", ex, "")
                 return "";
@@ -139,7 +139,7 @@ namespace Protean
                 oIF = null;
                 return cReturn;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 oIF = null;
                 return null;
@@ -157,7 +157,7 @@ namespace Protean
                 oIF = null;
                 return cReturn;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 oIF = null;
                 return "";
@@ -175,7 +175,7 @@ namespace Protean
                 oIF = null;
                 return cReturn;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
                 oIF = null;
@@ -193,7 +193,7 @@ namespace Protean
                 oIF = null;
                 return cReturn;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
                 oIF = null;

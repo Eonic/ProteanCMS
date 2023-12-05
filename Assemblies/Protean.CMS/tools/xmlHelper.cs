@@ -610,9 +610,7 @@ namespace Protean
                 return textOut.ToString();
             }
 
-
-
-            public new void Process(XmlDocument oXml, ref TextWriter oWriter)
+            public void Process(XmlDocument oXml, ref TextWriter oWriter)
             {
                 if (!CanProcess)
                     return;
@@ -803,7 +801,7 @@ namespace Protean
                             var fso = new fsHelper();
                             fso.DeleteFile(fi.FullName);
                         }
-                        catch (Exception ex2)
+                        catch (Exception)
                         {
                             // returnException("Protean.XmlHelper.Transform", "ClearXSLTassemblyCache", ex2, msXslFile, sProcessInfo)
                         }

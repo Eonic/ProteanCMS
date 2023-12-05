@@ -21,12 +21,10 @@ using static Protean.Tools.Xml;
 
 namespace Protean
 {
-
     public class IndexerAsync
     {
 
-        private new string mcModuleName = "Protean.IndexerAsync";
-
+        private string mcModuleName = "Protean.IndexerAsync";
         private string mcIndexReadFolder = ""; // the folder where the index is stored (from config)
         private string mcIndexWriteFolder = ""; // the folder where the index is stored (from config)
         private string mcIndexCopyFolder = "";
@@ -52,7 +50,7 @@ namespace Protean
         {
             // PerfMon.Log("Indexer", "New")
             mcModuleName = "Eonic.Search.Indexer";
-            string cProcessInfo = "";
+            string cProcessInfo = string.Empty;
             myWeb = aWeb;
             moConfig = myWeb.moConfig;
             string siteSearchPath = moConfig["SiteSearchPath"];
@@ -156,13 +154,13 @@ namespace Protean
             // nPage = 59
             // PerfMon.Log("Indexer", "DoIndex")
             string cProcessInfo = "";
-            string cPageHtml = "";
-            string cPageExtract = "";
+            string cPageHtml = string.Empty;
+            string cPageExtract = string.Empty;
             string cPageXsl = "/xsl/search/cleanPage.xsl";
             string cExtractXsl = "/xsl/search/extract.xsl";
             var oPageXml = new XmlDocument();
 
-            string cRules = "";
+            string cRules = string.Empty;
 
             long nPagesRemaining = 0L;
             long nPagesSkipped = 0L;
@@ -415,11 +413,9 @@ namespace Protean
                     oIndexWriter.Dispose();
                     oIndexWriter = null;
                 }
-                catch (Exception ex2)
+                catch (Exception)
                 {
-
                 }
-
                 return null;
             }
             finally
@@ -494,7 +490,7 @@ namespace Protean
                         oIndexWriter.Dispose();
                         oIndexWriter = null;
                     }
-                    catch (Exception ex2)
+                    catch (Exception)
                     {
 
                     }
@@ -553,7 +549,7 @@ namespace Protean
                     oIndexWriter.Dispose();
                     oIndexWriter = null;
                 }
-                catch (Exception ex2)
+                catch (Exception)
                 {
 
                 }
@@ -804,9 +800,9 @@ namespace Protean
             private string mcModuleName = "IndexPageAsync";
 
             #region Error Handling
-            public new event OnErrorEventHandler OnError;
+            public event OnErrorEventHandler OnError;
 
-            public new delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
+            public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
 
             private void _OnError(object sender, Tools.Errors.ErrorEventArgs e)
             {
@@ -895,7 +891,7 @@ namespace Protean
                                 errorElmt.SetAttribute("pgid", Conversions.ToString(oPage.pgid));
                                 errorElmt.SetAttribute("name", Conversions.ToString(oPage.pagename));
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
 
                             }
@@ -997,7 +993,7 @@ namespace Protean
                                                 errorElmt.SetAttribute("pgid", "0");
                                                 errorElmt.SetAttribute("name", Conversions.ToString(oPage.pagename));
                                             }
-                                            catch (Exception ex)
+                                            catch (Exception)
                                             {
                                                 // Don't error if you can't set the above.
                                             }
@@ -1250,7 +1246,7 @@ namespace Protean
                     }
                     // oIndexWriter.Close()
                     // oIndexWriter = Nothing
-                    catch (Exception ex2)
+                    catch (Exception)
                     {
 
                     }
@@ -1482,7 +1478,7 @@ namespace Protean
                 string cProcessInfo = "";
                 string filename = "";
                 string filepath = "";
-                string artId = "";
+                string artId = string.Empty;
                 string Ext = ".html";
                 try
                 {

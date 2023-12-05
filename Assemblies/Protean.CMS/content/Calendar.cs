@@ -27,7 +27,7 @@ namespace Protean
 
             #region    Declarations
 
-            private new const string mcModuleName = "Eonic.Calendar";
+            private const string mcModuleName = "Eonic.Calendar";
             private System.Web.HttpContext moCtx = System.Web.HttpContext.Current;
             private Cms myWeb;
             private Cms.dbHelper moDB;

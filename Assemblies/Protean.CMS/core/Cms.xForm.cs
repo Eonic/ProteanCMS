@@ -66,7 +66,7 @@ namespace Protean
 
             public override string evaluateByType(string sValue, string sType, string cExtensions = "", bool isRequired = false)
             {
-                string cProcessInfo = "";
+                string cProcessInfo = string.Empty;
                 string cReturn = ""; // Set this as a clear return string
 
                 try

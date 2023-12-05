@@ -91,7 +91,7 @@ namespace Protean
                         oSaveHash.Add(Name, Item);
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     // Do Nothing
                 }
@@ -175,7 +175,7 @@ namespace Protean
                     {
                         result = Regex.IsMatch(input, pattern, RegexOptions.IgnoreCase);
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         // Do nothing - jsut here is case the input or pattern are crap
                     }
@@ -221,7 +221,7 @@ namespace Protean
                         return text;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return text;
                 }
@@ -233,8 +233,7 @@ namespace Protean
                 {
                     return Tools.Text.EscapeJS(text);
                 }
-
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return text;
                 }
@@ -265,7 +264,7 @@ namespace Protean
                         return orig;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return text;
                 }
@@ -305,7 +304,7 @@ namespace Protean
                         return orig;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return Text;
                 }
@@ -326,7 +325,7 @@ namespace Protean
                         return orig;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return text;
                 }
@@ -338,7 +337,7 @@ namespace Protean
                 {
                     return "<span>" + text.Replace("&lt;", "<") + "</span>";
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return text;
                 }
@@ -351,7 +350,7 @@ namespace Protean
                     var oRand = new Random();
                     return oRand.Next(min, max);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return min;
                 }
@@ -387,7 +386,7 @@ namespace Protean
                     return returnStr.TrimEnd(',');
                 }
 
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return min.ToString();
                 }
@@ -399,7 +398,7 @@ namespace Protean
                 {
                     return Guid.NewGuid().ToString();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "noguid";
                 }
@@ -411,7 +410,7 @@ namespace Protean
                 {
                     return Tools.Text.CleanName(name, false, true);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "error";
                 }
@@ -435,7 +434,7 @@ namespace Protean
                     }
                     return dateString;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return dateString;
                 }
@@ -482,8 +481,7 @@ namespace Protean
                     }
                     return XmlDate(dateString, false);
                 }
-
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return dateString;
                 }
@@ -499,7 +497,7 @@ namespace Protean
                     }
                     return dateString;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return dateString;
                 }
@@ -539,7 +537,7 @@ namespace Protean
                     }
                     return dateString;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return dateString;
                 }
@@ -559,7 +557,7 @@ namespace Protean
                     }
                     return nDiff;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return nDiff;
                 }
@@ -584,14 +582,11 @@ namespace Protean
                         sReturn = sInput;
                     }
                 }
-
-                catch (Exception ex)
+                catch (Exception)
                 {
                     sReturn = sInput;
                 }
-
                 return sReturn;
-
             }
 
             private string formatDateISO8601(DateTime dteIn)
@@ -612,7 +607,7 @@ namespace Protean
                     strResult.Append(normaliseTwoCharacters(dteIn.Second.ToString()));
                     return strResult.ToString();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return dteIn.ToString();
                 }
@@ -639,7 +634,7 @@ namespace Protean
                             }
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "00";
                 }
@@ -655,7 +650,7 @@ namespace Protean
                     }
                     return text;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return text;
                 }
@@ -747,7 +742,7 @@ namespace Protean
                     }
                     return nEndPrice.ToString();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return 0.ToString();
                 }
@@ -762,7 +757,7 @@ namespace Protean
                     cTheString = Tools.Text.tidyXhtmlFrag(cTheString, true);
                     return cTheString;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return cHTMLString;
                 }
@@ -815,7 +810,7 @@ namespace Protean
                                 oXML.LoadXml(cHtmlOut);
                                 return oXML.DocumentElement;
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                                 // Lets try option 2 first before we raise an error
                                 // RaiseEvent XSLTError(ex.ToString)
@@ -826,7 +821,7 @@ namespace Protean
                                     oXML.DocumentElement.InnerXml = cHtmlOut;
                                     return oXML.DocumentElement;
                                 }
-                                catch (Exception ex2)
+                                catch (Exception)
                                 {
                                     return cHtmlOut;
                                 }
@@ -834,13 +829,11 @@ namespace Protean
                         }
                     }
                 }
-
-                catch (Exception ex)
+                catch (Exception)
                 {
                     cHtml = "";
                     return cHtml;
                 }
-
             }
 
             public object CleanHTMLElement(XPathNodeIterator oContextNode, string RemoveTags)
@@ -941,9 +934,7 @@ namespace Protean
                         }
                     }
                 }
-
-
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "";
                 }
@@ -962,7 +953,7 @@ namespace Protean
                         return "";
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "";
                 }
@@ -981,7 +972,7 @@ namespace Protean
                         return "";
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "";
                 }
@@ -1051,7 +1042,7 @@ namespace Protean
                     }
                     return cLocations;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "";
                 }
@@ -1183,7 +1174,7 @@ namespace Protean
                         return 0;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return 0;
                 }
@@ -1206,7 +1197,7 @@ namespace Protean
                         return 0;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return 0;
                 }
@@ -1236,8 +1227,7 @@ namespace Protean
 
                     return oFS.SaveFile(imageUrl, cVirtualPath);
                 }
-
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "";
                 }
@@ -1255,8 +1245,7 @@ namespace Protean
                                                                                                                              // sPassword = Protean.Tools.Xml.convertEntitiesToCodes(sPassword)
                     return sPassword;
                 }
-
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "encryptionFailed";
                 }
@@ -1273,7 +1262,7 @@ namespace Protean
 
                     return sPassword;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "encryptionFailed";
                 }
@@ -1299,7 +1288,7 @@ namespace Protean
                         return "";
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "";
                 }
@@ -1322,7 +1311,7 @@ namespace Protean
                         return "";
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "";
                 }
@@ -1345,7 +1334,7 @@ namespace Protean
                         return "";
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "";
                 }
@@ -1413,7 +1402,7 @@ namespace Protean
                 {
                     return ResizeImage(cVirtualPath, maxWidth, maxHeight, "", sSuffix, 99, false, false);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "Error";
                 }
@@ -1425,7 +1414,7 @@ namespace Protean
                 {
                     return ResizeImage(cVirtualPath, maxWidth, maxHeight, "", sSuffix, nCompression, false, false);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "Error";
                 }
@@ -1433,8 +1422,7 @@ namespace Protean
 
             public string ResizeImage(string cVirtualPath, long maxWidth, long maxHeight, string sPrefix, string sSuffix, int nCompression)
             {
-                string newFilepath = "";
-
+                string newFilepath = string.Empty;
                 try
                 {
                     return ResizeImage(cVirtualPath, maxWidth, maxHeight, sPrefix, sSuffix, nCompression, false, false);
@@ -1447,8 +1435,7 @@ namespace Protean
 
             public string ResizeImage(string cVirtualPath, long maxWidth, long maxHeight, string sPrefix, string sSuffix, int nCompression, bool noStretch)
             {
-                string newFilepath = "";
-
+                string newFilepath = string.Empty;
                 try
                 {
                     return ResizeImage(cVirtualPath, maxWidth, maxHeight, sPrefix, sSuffix, nCompression, noStretch, false);
@@ -1461,8 +1448,7 @@ namespace Protean
 
             public string ResizeImage(string cVirtualPath, long maxWidth, long maxHeight, string sPrefix, string sSuffix, int nCompression, bool noStretch, bool isCrop)
             {
-                string newFilepath = "";
-
+                string newFilepath = string.Empty;
                 try
                 {
                     return ResizeImage2(cVirtualPath, maxWidth, maxHeight, sPrefix, sSuffix, nCompression, noStretch, isCrop, false);
@@ -1501,7 +1487,7 @@ namespace Protean
                                     forceCheck = true;
                                 }
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
 
                             }
@@ -1647,7 +1633,7 @@ namespace Protean
 
             public string CreateWebP(string cVirtualPath, bool forceCheck)
             {
-                string cProcessInfo = "";
+                string cProcessInfo = string.Empty;
 
                 try
                 {
@@ -1673,7 +1659,7 @@ namespace Protean
 
 
                         string webpFileName = Strings.Replace(cVirtualPath, "." + filetype, ".webp");
-                        string newFilepath = "";
+                        string newFilepath = string.Empty;
                         if (myWeb.mbAdminMode | forceCheck)
                         {
                             // create a WEBP version of the image.
@@ -1712,7 +1698,7 @@ namespace Protean
 
             public string CreateWebP(string cVirtualPath)
             {
-                string cProcessInfo = "";
+                string cProcessInfo = string.Empty;
                 try
                 {
 
@@ -1755,7 +1741,7 @@ namespace Protean
                                 forceCheck = true;
                             }
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
 
                         }
@@ -2067,7 +2053,7 @@ namespace Protean
                 try
                 {
                     XmlDocument oXformDoc;
-                    string buttonName = "";
+                    string buttonName = string.Empty;
                     string projectPath = "";
                     if (myWeb.moConfig["ProjectPath"] != string.Empty)
                     {
@@ -2710,9 +2696,7 @@ namespace Protean
 
             public object BundleJS(string CommaSeparatedFilenames, string TargetPath)
             {
-
                 string sReturnString;
-
                 try
                 {
                     object AppVariableName = Strings.LCase("js" + TargetPath.Replace("~", ""));
@@ -2759,12 +2743,8 @@ namespace Protean
 
                             sReturnString = Convert.ToString(myWeb.moCtx.Application.Get(AppVariableName.ToString()));
                         }
-
                         else
                         {
-
-
-
                             string appPath = myWeb.moRequest.ApplicationPath;
                             if (appPath.EndsWith("ewcommon"))
                             {
@@ -2781,7 +2761,7 @@ namespace Protean
                             var Bundles = new System.Web.Optimization.BundleCollection();
                             string url;
                             string fileNameToSave = "";
-                            string cmd = "";
+                            string cmd = string.Empty;
                             int cntFile = 0;
 
 
@@ -2882,12 +2862,11 @@ namespace Protean
 
                         }
                     }
-
                     return sReturnString;
-                    sReturnString = null;
+                    //sReturnString = null;
                 }
 
-                catch (IOException ioex)    // New changes on 9/12/21'
+                catch (IOException)    // New changes on 9/12/21'
                 {
                     myWeb.bPageCache = false;
                     sReturnString = TargetPath + "/script.js";
@@ -3029,7 +3008,7 @@ namespace Protean
                                         }
                                     }
                                 }
-                                catch (Exception ex)
+                                catch (Exception)
                                 {
                                     if (cnt < Conversions.ToDouble(maxAttempt))
                                     {
