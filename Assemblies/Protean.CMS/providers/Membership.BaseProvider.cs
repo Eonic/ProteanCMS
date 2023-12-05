@@ -135,10 +135,10 @@ namespace Protean.Providers
 
                     var o = Activator.CreateInstance(calledType);
 
-                    var args = new object[0];
-                    args[0] = myWeb;
+                    var args = new object[1];
+                    args[0] = myWeb;                  
 
-                   return (IMembershipProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args);
+                    return (IMembershipProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args);
                 }
 
                 catch (Exception ex)
@@ -164,7 +164,7 @@ namespace Protean.Providers
                 // do nothing
             }
 
-            void IMembershipProvider.Initiate(ref Cms myWeb)
+            public void Initiate(ref Cms myWeb)
             {
 
                 IMembershipAdminXforms AdminXforms = new AdminXForms(ref myWeb);
@@ -174,7 +174,7 @@ namespace Protean.Providers
 
             }
 
-            class AdminXForms : Cms.Admin.AdminXforms, IMembershipAdminXforms
+            public class AdminXForms : Admin.AdminXforms, IMembershipAdminXforms
             {
                 private const string mcModuleName = "Protean.Providers.Membership.Default.AdminXForms";
                 public bool maintainMembershipsOnAdd = true;
