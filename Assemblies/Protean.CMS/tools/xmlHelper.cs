@@ -375,6 +375,7 @@ namespace Protean
 
             public delegate void ProcessDelegate(XmlDocument oXml, HttpResponse oResponse);
             public delegate void ProcessDelegate2(XmlDocument oXml, ref TextWriter oWriter);
+            public delegate void ProcessDelegate3(XmlReader xReader, ref XmlWriter xWriter);
             public delegate XmlDocument ProcessDelegateDocument(XmlDocument oXml);
 
             public void ProcessTimed(XmlDocument oXml, ref HttpResponse oResponse)
@@ -405,7 +406,6 @@ namespace Protean
                     bError = true;
                 }
             }
-
             public void ProcessTimed(XmlDocument oXml, ref TextWriter oWriter)
             {
 
@@ -435,6 +435,34 @@ namespace Protean
                 }
             }
 
+            public void ProcessTimed(XmlReader xReader, ref XmlWriter xWriter)
+            {
+
+                string sProcessInfo = "";
+                try
+                {
+                    var d = new ProcessDelegate3(Process);
+                    var res = d.BeginInvoke(xReader, ref xWriter, null, null);
+                    if (res.IsCompleted == false)
+                    {
+                        res.AsyncWaitHandle.WaitOne((int)mnTimeoutSec, false);
+                        if (res.IsCompleted == false)
+                        {
+                            d.EndInvoke(ref xWriter, (System.Runtime.Remoting.Messaging.AsyncResult)res);
+                            d = null;
+                            Information.Err().Raise(1010, "TranformXSL", "The XSL took longer than " + mnTimeoutSec / 1000d + " seconds to process");
+                            bError = true;
+                        }
+                    }
+                    d.EndInvoke(ref xWriter, (System.Runtime.Remoting.Messaging.AsyncResult)res);
+                }
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, "Protean.XmlHelper.TransformTimed", "Process", ex, msXslFile, sProcessInfo);
+                    xWriter.WriteCData(myWeb.msException);
+                    bError = true;
+                }
+            }
             public XmlDocument ProcessTimedDocument(XmlDocument oXml)
             {
                 if (!CanProcess)
@@ -470,7 +498,8 @@ namespace Protean
                     return null;
                 }
             }
-            public void Process(XmlReader xReader, XmlWriter xWriter)
+
+            public void Process(XmlReader xReader,ref XmlWriter xWriter)
             {
 
                 string sProcessInfo = "Processing:" + msXslFile;
@@ -503,8 +532,6 @@ namespace Protean
                 }
 
             }
-
-
             public void Process(XmlDocument oXml, HttpResponse oResponse)
             {
                 if (!CanProcess)
@@ -577,39 +604,6 @@ namespace Protean
                     bError = true;
                 }
             }
-
-            public string stripNonValidXMLCharacters(string textIn)
-            {
-                var textOut = new System.Text.StringBuilder();
-                var textOuterr = new System.Text.StringBuilder();
-                // Used to hold the output.
-                char current;
-                // Used to reference the current character.
-                int currenti;
-
-
-                if (textIn is null || string.IsNullOrEmpty(textIn))
-                {
-                    return string.Empty;
-                }
-                // vacancy test.
-                for (int i = 0, loopTo = textIn.Length - 1; i <= loopTo; i++)
-                {
-                    current = textIn[i];
-                    currenti = Strings.AscW(current);
-
-                    if (currenti == Conversions.ToInteger("&H9") || currenti == Conversions.ToInteger("&HA") || currenti == Conversions.ToInteger("&HD") || currenti >= Conversions.ToInteger("&H20") && currenti <= Conversions.ToInteger("&HD7FF") || currenti >= Conversions.ToInteger("&HE000") && currenti <= Conversions.ToInteger("&HFFFD") || currenti >= Conversions.ToInteger("&H10000") && currenti <= Conversions.ToInteger("&H10FFFF"))
-                    {
-                        textOut.Append(current);
-                    }
-                    else
-                    {
-                        textOuterr.Append(current);
-                    }
-                }
-                return textOut.ToString();
-            }
-
             public void Process(XmlDocument oXml, ref TextWriter oWriter)
             {
                 if (!CanProcess)
@@ -667,6 +661,38 @@ namespace Protean
                     }
                     bError = true;
                 }
+            }
+
+            public string stripNonValidXMLCharacters(string textIn)
+            {
+                var textOut = new System.Text.StringBuilder();
+                var textOuterr = new System.Text.StringBuilder();
+                // Used to hold the output.
+                char current;
+                // Used to reference the current character.
+                int currenti;
+
+
+                if (textIn is null || string.IsNullOrEmpty(textIn))
+                {
+                    return string.Empty;
+                }
+                // vacancy test.
+                for (int i = 0, loopTo = textIn.Length - 1; i <= loopTo; i++)
+                {
+                    current = textIn[i];
+                    currenti = Strings.AscW(current);
+
+                    if (currenti == Conversions.ToInteger("&H9") || currenti == Conversions.ToInteger("&HA") || currenti == Conversions.ToInteger("&HD") || currenti >= Conversions.ToInteger("&H20") && currenti <= Conversions.ToInteger("&HD7FF") || currenti >= Conversions.ToInteger("&HE000") && currenti <= Conversions.ToInteger("&HFFFD") || currenti >= Conversions.ToInteger("&H10000") && currenti <= Conversions.ToInteger("&H10FFFF"))
+                    {
+                        textOut.Append(current);
+                    }
+                    else
+                    {
+                        textOuterr.Append(current);
+                    }
+                }
+                return textOut.ToString();
             }
 
             public XmlDocument ProcessDocument(XmlDocument oXml)

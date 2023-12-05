@@ -106,7 +106,7 @@ namespace Protean.Providers
                     Type calledType;
                     if (string.IsNullOrEmpty(ProviderName))
                     {
-                        ProviderName = "Protean.Providers.Membership.EonicProvider";
+                        ProviderName = "Protean.Providers.Membership.DefaultProvider";
                         calledType = Type.GetType(ProviderName, true);
                     }
                     else

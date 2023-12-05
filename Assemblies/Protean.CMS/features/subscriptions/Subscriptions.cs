@@ -2064,7 +2064,8 @@ namespace Protean
                             string paymentStatus;
                             try
                             {
-                                paymentStatus = Conversions.ToString(oPaymentProv.Activities.CancelPayments(myWeb, PayInstance.DocumentElement.SelectSingleNode("cPayMthdProviderRef").InnerText));
+                                string providerRef = PayInstance.DocumentElement.SelectSingleNode("cPayMthdProviderRef").InnerText;
+                                paymentStatus = Conversions.ToString(oPaymentProv.Activities.CancelPayments(ref myWeb,ref providerRef));
                             }
                             catch (Exception)
                             {
@@ -2290,7 +2291,7 @@ namespace Protean
                                 IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, PaymentMethod);
                                 try
                                 {
-                                    paymentStatus = Conversions.ToString(oPaymentProv.Activities.CollectPayment(myWeb, nPaymentMethodId, Amount, CurrencyCode, PaymentDescription, myWeb.moCart));
+                                    paymentStatus = Conversions.ToString(oPaymentProv.Activities.CollectPayment(ref myWeb, nPaymentMethodId, Amount, CurrencyCode, PaymentDescription,ref myWeb.moCart));
                                 }
                                 catch (Exception ex2)
                                 {
