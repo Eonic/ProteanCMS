@@ -100,7 +100,7 @@
 			<xsl:if test="descendant::upload">
 				<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
 			</xsl:if>
-
+			!"!
 			<xsl:apply-templates select="group | repeat | input | secret | select | select1 | range | textarea | upload | hint | help | alert | div" mode="xform"/>
 
 			<xsl:if test="count(submit) &gt; 0">
