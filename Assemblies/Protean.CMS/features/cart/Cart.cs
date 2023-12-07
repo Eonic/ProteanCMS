@@ -1384,8 +1384,7 @@ namespace Protean
                             {
                                 string argcSuccessfulCartCmd = "Currency";
                                 mcCartCmd = Conversions.ToString(updateCart(ref argcSuccessfulCartCmd));
-                                goto processFlow;
-                                break;
+                                goto processFlow;                                
                             }
                         case "Remove": // take away an item and set the command to display the cart
                             {
@@ -1398,10 +1397,8 @@ namespace Protean
                                     // RemoveItem has removed the last item in the cart - quit the cart.
                                     mcCartCmd = "Quit";
                                 }
-                                goto processFlow;
-                                break;
+                                goto processFlow;                                
                             }
-
 
                         case "Add": // add an item to the cart, if its a new cart we must initialise it and change its status
                             {
@@ -2098,7 +2095,7 @@ namespace Protean
                                     MakeCurrent(nI);
                                 mcCartCmd = "Cart";
                                 goto processFlow;
-                                break;
+                                
                             }
 
                         case "Delete":
@@ -2109,8 +2106,7 @@ namespace Protean
                                 if (!(nI == 0))
                                     DeleteCart(nI);
                                 mcCartCmd = "List";
-                                goto processFlow;
-                                break;
+                                goto processFlow;                                
                             }
 
                         case "Brief":

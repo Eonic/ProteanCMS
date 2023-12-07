@@ -2966,8 +2966,7 @@ namespace Protean
                                     if (oImp.ImpersonateValidUser(myWeb.moConfig["AdminAcct"], myWeb.moConfig["AdminDomain"], myWeb.moConfig["AdminPassword"], true, myWeb.moConfig["AdminGroup"]) == false)
                                     {
                                         sReturnString = "Admin-Account-Logon-Failure";
-                                        return sReturnString;
-                                        break;
+                                        return sReturnString;                                        
                                     }
                                 }
 

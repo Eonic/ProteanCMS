@@ -48,7 +48,7 @@ namespace Protean
             public string ClassName;
             private System.Xml.Xsl.XslTransform oStyle;
             private System.Xml.Xsl.XslCompiledTransform oCStyle;
-            private bool bFinished = false;
+            //private bool bFinished = false;
             public bool bError = false;
             public Exception currentError;
             public System.Xml.Xsl.XsltArgumentList xsltArgs;

@@ -9951,9 +9951,9 @@ namespace Protean
                         if (this.isSubmitted())
                         {
                             if (base.getSubmitted() == "Back")
-                            {
-                                return base.moXformElmt;
+                            {                                
                                 this.myWeb.msRedirectOnEnd = "/?ewCmd=ResendSubscription";
+                                return base.moXformElmt;
                             }
                             else if (base.getSubmitted() == "Confirm")
                             {

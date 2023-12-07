@@ -518,7 +518,7 @@ namespace Protean
 
                 public string GetContactForm(ref Protean.rest myApi, ref JObject jObj)
                 {
-                    int nId;
+                    //int nId;
                     try
                     {
 
@@ -534,13 +534,12 @@ namespace Protean
                         JsonResult = JsonConvert.SerializeXmlNode((XmlNode)oDdoc);
                         return JsonResult;
                     }
-
                     catch (Exception ex)
                     {
                         OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetLocations", ex, ""));
                         return ex.Message;
                     }
-                    return JsonConvert.ToString(nId);
+                    //return JsonConvert.ToString(nId);
                 }
 
                 public string SetContact(ref Protean.rest myApi, ref JObject jObj)

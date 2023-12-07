@@ -571,7 +571,7 @@ namespace Protean
                         if (oImp.ImpersonateValidUser(goConfig["AdminAcct"], goConfig["AdminDomain"], goConfig["AdminPassword"], cInGroup: goConfig["AdminGroup"]) == false)
                         {
                             return "Server admin permissions are not configured";
-                            break;
+                            //break;
                         }
                     }
 
@@ -630,7 +630,7 @@ namespace Protean
                         if (oImp.ImpersonateValidUser(goConfig["AdminAcct"], goConfig["AdminDomain"], goConfig["AdminPassword"], cInGroup: goConfig["AdminGroup"]) == false)
                         {
                             return "Server admin permissions are not configured";
-                            break;
+                            //break;
                         }
                     }
 
@@ -747,7 +747,7 @@ namespace Protean
                         if (oImp.ImpersonateValidUser(goConfig["AdminAcct"], goConfig["AdminDomain"], goConfig["AdminPassword"], cInGroup: goConfig["AdminGroup"]) == false)
                         {
                             return "Server admin permissions are not configured";
-                            break;
+                           // break;
                         }
                     }
 
@@ -793,7 +793,7 @@ namespace Protean
                         if (oImp.ImpersonateValidUser(goConfig["AdminAcct"], goConfig["AdminDomain"], goConfig["AdminPassword"], cInGroup: goConfig["AdminGroup"]) == false)
                         {
                             return "Server admin permissions are not configured";
-                            break;
+                            //break;
                         }
                     }
 
@@ -898,7 +898,7 @@ namespace Protean
         {
             // PerfMon.Log("fsHelper", "SaveFile")
             WebResponse response = null;
-            Stream remoteStream;
+            Stream remoteStream = new System.IO.MemoryStream(); 
            //StreamReader readStream;
             WebRequest request;
             System.Drawing.Image img = null;
@@ -976,22 +976,17 @@ namespace Protean
                                     }
                             }
                         }
-
                         else
                         {
                             return "this root folder does not exist:" + mcStartFolder;
                         }
-                        response.Close();
-                        remoteStream.Close();
-                        img.Dispose();
+                      
                     }
-
-
-
+                    response.Close();
+                    remoteStream.Close();
+                    img.Dispose();
                 }
             }
-
-
             catch (Exception ex)
             {
                 return ex.Message;
@@ -1095,14 +1090,15 @@ namespace Protean
                         }
                     }
 
-                    var oFileStream = new FileStream(FilePath, FileMode.Open, FileAccess.Read);
-                    return oFileStream;
-
                     if (ImpersonationMode)
                     {
                         oImp.UndoImpersonation();
                         oImp = null;
                     }
+
+                    var oFileStream = new FileStream(FilePath, FileMode.Open, FileAccess.Read);
+                    return oFileStream;
+                  
                 }
 
                 catch (Exception)

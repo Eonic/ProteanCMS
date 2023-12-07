@@ -798,7 +798,7 @@ namespace Protean
                                 goSession["nUserId"] = 0;
                                 mcEwCmd = "";
                                 goto Recheck;
-                                break;
+                                
                             }
                         case "ClearDB":
                             {
@@ -1875,8 +1875,11 @@ namespace Protean
                     }
 
                     // now we need to loop back through and and sort the relations
-                    if (oDirElmt.GetAttribute("cDirMemberOfIdArr") is DBNull)
+                    if (oDirElmt.GetAttribute("cDirMemberOfIdArr") != Convert.ToString(DBNull.Value))
+                    {
                         oDirElmt.SetAttribute("cDirMemberOfIdArr", "");
+                    }
+                        
                     if (!string.IsNullOrEmpty(oDirElmt.GetAttribute("cDirMemberOfIdArr")))
                     {
                         string[] myArr = Strings.Split(oDirElmt.GetAttribute("cDirMemberOfIdArr"), ",");

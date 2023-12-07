@@ -518,7 +518,7 @@ namespace Protean
                                 string quote = "Quote";
                                 mcCartCmd = Convert.ToString(updateCart(ref quote));
                                 goto processFlow;
-                                break;
+                                
                             }
 
                         case "Remove": // take away an item and set the command to display the cart
@@ -533,7 +533,7 @@ namespace Protean
                                     mcCartCmd = "Quit";
                                 }
                                 goto processFlow;
-                                break;
+                                
                             }
 
                         case "Add": // add an item to the cart, if its a new cart we must initialise it and change its status
@@ -565,7 +565,7 @@ namespace Protean
                                 // MsgBox AddItem
                                 mcCartCmd = "Quote";
                                 goto processFlow;
-                                break;
+                                
                             }
 
                         // -------------------------------------------------------------------------------
@@ -595,7 +595,7 @@ namespace Protean
                                 // bFullCartOption = True
                                 mcCartCmd = "Notes";
                                 goto processFlow;
-                                break;
+                                
                             }
 
                         // we do want to show the cart when we add a button
@@ -881,7 +881,7 @@ namespace Protean
                                 mnProcessId = 6; // ? "Payment Successful"... erm.. yeah
                                 mcCartCmd = "Quit";
                                 goto processFlow;
-                                break;
+                                
                             }
 
                         case "MakeOrder":
@@ -925,7 +925,7 @@ namespace Protean
                                     MakeCurrent(nI);
                                 mcCartCmd = "Quote";
                                 goto processFlow;
-                                break;
+                                
                             }
                         // GetCart(oElmt)
 
@@ -986,8 +986,7 @@ namespace Protean
                                 if (!(nI == 0))
                                     DeleteCart(nI);
                                 mcCartCmd = "List";
-                                goto processFlow; // Show Cart Summary
-                                break;
+                                goto processFlow; // Show Cart Summary                               
                             }
 
                         default:

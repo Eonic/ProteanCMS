@@ -138,9 +138,9 @@ namespace Protean.Providers
                 }
 
                 catch (Exception ex)
-                {
-                    return null;
+                {                    
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "New", ex, vstrFurtherInfo: cProgressInfo + " - " + ProviderName + " Could Not be Loaded", bDebug: gbDebug);
+                    return null;
                 }
 
             }

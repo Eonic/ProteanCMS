@@ -177,10 +177,11 @@ namespace Protean.Providers
 
                 catch (Exception ex)
                 {
-                    return null;
+                    
                     string argsException = Conversions.ToString(myWeb.msException);
                     returnException(ref argsException, mcModuleName, "New", ex, "", ProviderName + " Could Not be Loaded", gbDebug);
                     myWeb.msException = argsException;
+                    return null;
                 }
 
             }

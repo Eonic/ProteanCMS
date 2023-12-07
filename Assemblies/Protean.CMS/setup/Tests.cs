@@ -217,13 +217,12 @@ namespace Protean
 
                 Alphaleonis.Win32.Filesystem.File.WriteAllText(@"\\?\" + oEw.goServer.MapPath("/" + Cms.gcProjectPath) + filepath, htmltotest, System.Text.Encoding.UTF8);
 
-                return "File Written Using AlphaFS :" + filepath;
-
                 if (oEw.moConfig["AdminAcct"] != "")
                 {
                     oImp.UndoImpersonation();
                     oImp = null;
                 }
+                return "File Written Using AlphaFS :" + filepath;                
             }
 
             catch (Exception ex)
