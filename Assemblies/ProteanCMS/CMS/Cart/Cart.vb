@@ -1054,7 +1054,7 @@ Partial Public Class Cms
 
         End Sub
 
-        Public Function CreateCartElement(oCartXML As XmlDocument)
+        Public Function CreateCartElement(oCartXML As XmlDocument) As XmlElement
             Dim oContentElmt As XmlElement
             Dim oElmt As XmlElement
 
@@ -3513,7 +3513,7 @@ processFlow:
                 oDs = moDBHelper.GetDataSet(sSql, "Shipping", "Cart")
                 oXml.LoadXml(oDs.GetXml)
                 oDs.EnforceConstraints = False
-                oShippingXml = moPageXml.CreateElement("Cart")
+                oShippingXml = oCartXml.OwnerDocument.CreateElement("Cart")
                 oShippingXml.InnerXml = oXml.InnerXml
                 oCartXml.AppendChild(oShippingXml.FirstChild.FirstChild)
 
@@ -8253,7 +8253,12 @@ SaveNotes:      ' this is so we can skip the appending of new node
                                         cSellerNotesHtml = cSellerNotesHtml + "<li>" + Protean.Tools.Xml.convertEntitiesToCodes(aSellerNotes(snCount)) + "</li>"
                                     Next
                                     Dim sellerNode As XmlElement = addNewTextNode("SellerNotes", oContent.FirstChild, "")
-                                    sellerNode.InnerXml = cSellerNotesHtml + "</ul>"
+                                    Try
+                                        sellerNode.InnerXml = cSellerNotesHtml + "</ul>"
+                                    Catch ex As Exception
+                                        sellerNode.InnerXml = Protean.Tools.Text.tidyXhtmlFrag(cSellerNotesHtml + "</ul>")
+                                    End Try
+
 
                                     'Add the Delivery Details
                                     'Add Delivery Details
