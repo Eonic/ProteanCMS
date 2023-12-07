@@ -389,7 +389,7 @@ namespace Protean.Providers
                     }
                 }
 
-                public XmlElement xFrmAddModule(long pgid, string position)
+                public new XmlElement xFrmAddModule(long pgid, string position)
                 {
                     XmlElement oFrmElmt;
                     XmlElement oSelElmt;

@@ -3090,12 +3090,12 @@ namespace Protean
                                 }
                             }
                         }
-
+                        //sReturnString = null;
                         return sReturnString.Replace("~", "");
-                        sReturnString = null;
+                        
                     }
 
-                    catch (IOException ioex)    // New changes on 9/12/21'
+                    catch (IOException)    // New changes on 9/12/21'
                     {
                         myWeb.bPageCache = false;
                         sReturnString = "/" + myWeb.moConfig["ProjectPath"] + "css" + string.Format("{0}/style.css", TargetPath);

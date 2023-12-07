@@ -1988,7 +1988,7 @@ namespace Protean
                     bIsXml = false;
                     oElmt = (XmlElement)oNode;
                     sAttribute = "";
-                    bool populate = true;
+                    //bool populate = true;
 
                     // Readonly Textarea need to treat any value as Xml
                     if (oElmt.Name == "textarea" & oElmt.GetAttribute("class").Contains("readonly"))
@@ -2052,7 +2052,7 @@ namespace Protean
                                 {
                                     string oldXpath = sXpath;
                                     string modifiedXpath;
-                                    bool isModified = false;
+                                   // bool isModified = false;
                                     foreach (XmlElement valueElmt in oElmt.SelectNodes("item/value"))
                                     {
                                         modifiedXpath = oldXpath.Replace("$submittedValue", valueElmt.InnerText);
@@ -2072,18 +2072,13 @@ namespace Protean
                                         sXpath = ".";
                                     }
                                 }
-
                                 cProcessInfo = "Error Binding to Node at:" + sXpath;
-
                             }
                         }
-
-
                         catch (Exception ex2)
                         {
                             returnException(ref msException, mcModuleName, "addValues", ex2, "", cProcessInfo, gbDebug);
                         }
-
                     }
                     if (!string.IsNullOrEmpty(sXpath))
                     {
@@ -3012,7 +3007,7 @@ namespace Protean
 
             string cProcessInfo = "";
 
-            bool ordinalsChecked = false;
+            //bool ordinalsChecked = false;
 
             int nameOrdinal = 0;
             int valueOrdinal = 1;

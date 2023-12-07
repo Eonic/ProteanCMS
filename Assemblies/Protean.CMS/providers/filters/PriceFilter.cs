@@ -45,7 +45,7 @@ namespace Protean.Providers
                     int nPageId = aWeb.mnPageId;
                     int nMaxPRiceProduct = 0;
                     int nMinPriceProduct = 0;
-                    XmlElement oFilterElmt = null;
+                    //XmlElement oFilterElmt = null;
                     string className = string.Empty;
                     string cWhereQuery = string.Empty;
 

@@ -346,23 +346,17 @@ namespace Protean
 
                     public void Subscribe(ref Cms myWeb, ref XmlElement contentNode)
                     {
-
-                        bool listSubs = true;
+                        //bool listSubs = true;
                         string sProcessInfo = "Subscribe";
                         try
                         {
-
                             // First we check if free trail
-
                             if (Conversions.ToInteger("0" + contentNode.SelectSingleNode("Prices/Price[@type='sale']").InnerText) == 0 & Conversions.ToInteger("0" + contentNode.SelectSingleNode("SubscriptionPrices/Price[@type='sale']").InnerText) == 0)
                             {
-
                                 if (myWeb.mnUserId > 0)
                                 {
-
                                     if (myWeb.moRequest["subCmd"] == "Subscribe")
                                     {
-
                                         var oSubs = new Subscriptions(ref myWeb);
                                         oSubs.AddUserSubscription(myWeb.mnArtId, myWeb.mnUserId);
 

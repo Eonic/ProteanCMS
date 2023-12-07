@@ -2514,7 +2514,7 @@ namespace Protean
 
                         var aPermittedGroups = new long[1];
                         var oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Subscriptions");
-                        long ProcessedCount = 0L;
+                        //long ProcessedCount = 0L;
                         if (oDS.Tables["Subscriptions"].Rows.Count > 0)
                         {
                             foreach (DataRow oDr in oDS.Tables["Subscriptions"].Rows)

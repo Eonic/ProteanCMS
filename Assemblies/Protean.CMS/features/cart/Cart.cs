@@ -3251,7 +3251,7 @@ namespace Protean
                 short ReceiptDeliveryType;
                 DataSet oDs;
                 DataSet oDs2;
-                DataSet oDsShippingOptionKey;
+                //DataSet oDsShippingOptionKey;
 
                 string sSql;
                 DataRow oRow;
@@ -3272,7 +3272,7 @@ namespace Protean
                 // We need to read this value from somewhere so we can change where vat is added
                 // Currently defaulted to per line
                 // If true will be added to the unit
-                decimal nLineVat = 0m;
+                //decimal nLineVat = 0m;
                 object bCheckSubscriptions = false;
                 string cOptionGroupName = "";
 
@@ -4435,7 +4435,7 @@ namespace Protean
                     string cxpath = xPathStart + PriceType + "/Price[(@currency=\"" + mcCurrency + "\") " + cGroups + " and node()!=\"\"]"; // need to loop through all just in case we have splits'handled later on though
 
                     XmlElement oThePrice = (XmlElement)oDefaultPrice;
-                    double nPrice = 0.0d;
+                    //double nPrice = 0.0d;
 
                     foreach (XmlElement oPNode in oContentXml.SelectNodes(cxpath))
                     {
@@ -6021,7 +6021,7 @@ namespace Protean
                         {
 
                             oXform.updateInstanceFromRequest();
-                            bool forCollection = false;
+                           // bool forCollection = false;
                             if (moDBHelper.checkTableColumnExists("tblCartShippingMethods", "bCollection"))
                             {
                                 object bCollectionSelected = false;
@@ -6041,7 +6041,7 @@ namespace Protean
                                                 string cSqlUpdate;
                                                 cSqlUpdate = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("UPDATE tblCartOrder SET cShippingDesc='", SqlFmt(cShippingDesc)), "', nShippingCost="), SqlFmt(nShippingCost.ToString())), ", nShippingMethodId = "), oDrCollectionOptions["nShipOptKey"]), " WHERE nCartOrderKey="), mnCartId));
                                                 moDBHelper.ExeProcessSql(cSqlUpdate);
-                                                forCollection = true;
+                                               // forCollection = true;
                                                 oXform.valid = true;
                                                 oContactXform.valid = true;
                                                 mbNoDeliveryAddress = true;
@@ -11048,16 +11048,13 @@ namespace Protean
             {
                 try
                 {
-                    long nQuantity = 1L;
-
+                    //long nQuantity = 1L;
                     xmlProduct.SetAttribute("test1", "1");
-
                     var xmlShippingOptions = makeShippingOptionsXML();
 
                     // 'step through oShipping Options and add to oElmt those options 
                     // 'that are valid for our price and weight.
                     var xmlShippingOptionsValid = moPageXml.CreateElement("ShippingOptions");
-
 
                     var strXpath = new System.Text.StringBuilder();
                     strXpath.Append("Method[ ");
@@ -11936,7 +11933,7 @@ namespace Protean
                     XmlElement oeResponseElmt = (XmlElement)oCartListElmt.SelectSingleNode("/PaymentDetails/instance/Response");
                     string ReceiptId = oCartListElmt.SelectSingleNode("/PaymentDetails/instance/Response/@ReceiptId").Value.ToString();
                     double Amount = Convert.ToDouble(oCartListElmt.GetAttribute("total"));
-                    int nItemID = 0; // ID of the cart item record
+                    //int nItemID = 0; // ID of the cart item record
                                      // Dim oDs As DataSet
 
                     oInstance.AppendChild(oInstance.CreateElement("instance"));

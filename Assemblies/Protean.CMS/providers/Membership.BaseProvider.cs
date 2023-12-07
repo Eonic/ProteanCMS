@@ -1551,10 +1551,7 @@ namespace Protean.Providers
                         stdTools.returnException(ref myWeb.msException, mcModuleName, "useMemberCode", ex, "", "", gbDebug);
                     }
                 }
-
-
-
-                public XmlElement xFrmEditDirectoryContact(long id = 0L, int nUID = 0, string xFormPath = "/xforms/directory/UserContact.xml")
+                public new XmlElement xFrmEditDirectoryContact(long id = 0L, int nUID = 0, string xFormPath = "/xforms/directory/UserContact.xml")
                 {
                     string cProcessInfo = "";
                     try

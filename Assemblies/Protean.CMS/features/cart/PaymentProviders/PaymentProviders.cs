@@ -2727,7 +2727,7 @@ namespace Protean
                     string sProcessInfo = string.Empty;
                     var oDictOpt = new Hashtable();
 
-                    bool bCv2 = false;
+                    //bool bCv2 = false;
                     bool b3dSecure = false;
                     Hashtable oResponseDict;
                     XmlNode oCartAdd;
@@ -2755,7 +2755,7 @@ namespace Protean
                         oCartAdd = oRoot.SelectSingleNode("Contact[@type='Billing Address']");
 
                         if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["validateCV2"], "on", false)))
-                            bCv2 = true;
+                            //bCv2 = true;
                         if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["secure3d"], "on", false)))
                         {
                             b3dSecure = true;
@@ -4027,7 +4027,7 @@ namespace Protean
                     string sSql;
                     var ccXform = new Cms.xForm(ref myWeb);
                     string sProcessInfo = string.Empty;
-                    bool bCv2 = false;
+                    //bool bCv2 = false;
                     //bool bEncrypt = false;
 
                     string formname = "PayForm";
@@ -4169,7 +4169,7 @@ namespace Protean
                     string sSql;
                     var ccXform = new Cms.xForm(ref myWeb.msException);
                     string sProcessInfo = string.Empty;
-                    bool bCv2 = false;
+                    //bool bCv2 = false;
                     //bool bEncrypt = false;
 
                     string formname = "PayForm";
@@ -4306,7 +4306,7 @@ namespace Protean
                     string sSql;
                     var ccXform = new Cms.xForm(ref myWeb);
                     string sProcessInfo = string.Empty;
-                    bool bCv2 = false;
+                    //bool bCv2 = false;
                    // bool bEncrypt = false;
 
                     string formname = "PayForm";

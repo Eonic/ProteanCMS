@@ -899,7 +899,7 @@ namespace Protean
             // PerfMon.Log("fsHelper", "SaveFile")
             WebResponse response = null;
             Stream remoteStream;
-            StreamReader readStream;
+           //StreamReader readStream;
             WebRequest request;
             System.Drawing.Image img = null;
             try
@@ -1000,7 +1000,7 @@ namespace Protean
             {
                 response = null;
                 remoteStream = null;
-                readStream = null;
+               // readStream = null;
                 img = null;
             }
 
@@ -1182,9 +1182,7 @@ namespace Protean
             {
                 var thisDir = new DirectoryInfo(goServer.MapPath(path));
                 long newSavings = 0L;
-
-                long nLengthBefore = 0L;
-
+                //long nLengthBefore = 0L;
                 path = HttpUtility.UrlDecode(path);
 
                 foreach (var ofolder in thisDir.GetDirectories())

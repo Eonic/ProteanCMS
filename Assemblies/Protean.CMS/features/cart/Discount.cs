@@ -1635,8 +1635,8 @@ namespace Protean
                         var loopTo = Information.UBound(oIDs);
                         for (nI = 0; nI <= loopTo; nI++)
                         {
-                            decimal nCheapestPrice = 0m; // records the cheapest price
-                            XmlElement oCheapestItem = null; // records the cheapest item
+                            //decimal nCheapestPrice = 0m; // records the cheapest price
+                            //XmlElement oCheapestItem = null; // records the cheapest item
                             var oAllItems = new XmlElement[1]; // gets all the items so we dont have to do the same loop
                             decimal nValueOfItems = 0m; // records the total value of the items to check
                             int nItemQty = 0;
@@ -1665,8 +1665,7 @@ namespace Protean
                             foreach (XmlElement currentOItemLoop in oDiscXml.SelectNodes("Discounts/Item[Discount/@nDiscountKey=" + oIDs[nI] + "]"))
                             {
                                 oItemLoop = currentOItemLoop;
-
-                                bool bAllowedDiscount = false;
+                               // bool bAllowedDiscount = false;
                                 // Dim nCurrentUnitPrice As Decimal = oItemLoop.GetAttribute("price")
 
                                 // NB 16/02/2010
@@ -1881,7 +1880,7 @@ namespace Protean
                                     nDT = Conversions.ToInteger(oDiscount.GetAttribute("nDiscountMinPrice"));
                                 if (nTotalItems >= nDQ & nDQ > 0 | nTotalItemsValue >= nDT & nDT > 0)
                                 {
-                                    int nDiscountedSoFar = 0;
+                                    //int nDiscountedSoFar = 0;
                                     foreach (XmlElement currentOItem1 in oDiscountXML.DocumentElement.SelectNodes("Item[Discount/@nDiscountKey=" + oDiscount.GetAttribute("nDiscountKey") + "]"))
                                     {
                                         oItem = currentOItem1;
@@ -2287,9 +2286,7 @@ namespace Protean
                         var strSQL = new System.Text.StringBuilder();
                         var strItemIds = new System.Text.StringBuilder();
                         string cItemIds;
-
-                        int nMode = 1;
-
+                        //int nMode = 1;
                         XmlElement oDiscountElmt;
                         XmlElement oContentElmt;
 
@@ -2464,13 +2461,13 @@ namespace Protean
                                     nContentId = 0.ToString();
 
                                 // for showing basic discounts
-                                decimal nNewPrice = 0m;
+                                //decimal nNewPrice = 0m;
 
                                 string[] cPriceModifiers = new string[] { "Basic_Money", "Basic_Percent", "Cheapest_Free" };
                                 if (!string.IsNullOrEmpty(mcPriceModOrder))
                                     cPriceModifiers = Strings.Split(mcPriceModOrder, ",");
                                 int nI;
-                                int nPriceCount = 0;
+                                //int nPriceCount = 0;
                                 // this counts where we are on the prices, shows the order we done them in
                                 var loopTo = Information.UBound(cPriceModifiers);
                                 for (nI = 0; nI <= loopTo; nI++)

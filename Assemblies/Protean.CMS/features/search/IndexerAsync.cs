@@ -163,9 +163,9 @@ namespace Protean
             string cRules = string.Empty;
 
             long nPagesRemaining = 0L;
-            long nPagesSkipped = 0L;
-            long nContentSkipped = 0L;
-            int nIndexed = 0; // count of the indexed items
+            //long nPagesSkipped = 0L;
+            //long nContentSkipped = 0L;
+            //int nIndexed = 0; // count of the indexed items
             string cIndexDetailTypes = "NewsArticle,Event,Product,Contact,Document,Job";
             var oDS = new DataSet();
             string cSQL = "";

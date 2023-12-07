@@ -393,19 +393,15 @@ namespace Protean
                         string fieldMin = "";
                         string fieldMax = "";
                         string fieldType = "";
-                        string[] fieldTextTerms = null;
-
+                        //string[] fieldTextTerms = null;
 
                         foreach (string requestKey in formsAndQueryStringKeys)
                         {
-
                             if (requestKey != null)
                             {
                                 if (requestKey.StartsWith("sf-name-") & !string.IsNullOrEmpty(currentRequest[requestKey]))
                                 {
-
                                     addFilter = false;
-
                                     // Get the field data
                                     requestOrdinal = requestKey.Substring(8);
                                     fieldName = currentRequest[requestKey];
@@ -472,7 +468,7 @@ namespace Protean
                     int HitsLimit;
                     int command;
                     int Page = 0;
-                    int NextPage = 0;
+                    //int NextPage = 0;
                     // Dim pathList As String() = Split(CleanSearchString(HttpContext.Current.Request.Url.Host), "?")
 
                     Document resultDoc = null;
@@ -1276,7 +1272,7 @@ namespace Protean
                 string sXpath = "";
                 string sXpathRoot = "";
                 string[] aSearchWords;
-                string[] aNewSearchWords = null;
+                //string[] aNewSearchWords = null;
                 int i;
                 string sError = string.Empty;
                 string cSearchTerm = "";
@@ -1826,7 +1822,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                             using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(cSql))  // Done by nita on 6/7/22
                             {
 
-                                int ppppp = 0;
+                               //int ppppp = 0;
                                 while (oDr.Read())
                                 {
                                     // Debug.WriteLine("Search loop " & ppppp)

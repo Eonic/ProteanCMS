@@ -6234,7 +6234,7 @@ from tblContentIndexDef";
             {
                 // Dim oScheduler As New Scheduler
                 System.Collections.Specialized.NameValueCollection oSchedulerConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/scheduler");
-                bool bHasScheduledItems = false;
+               // bool bHasScheduledItems = false;
                 string cConStr = "";
 
                 string cProcessInfo = "";
@@ -6251,7 +6251,7 @@ from tblContentIndexDef";
                         cProcessInfo = "Connecting to the Scheduler";
                         if (!string.IsNullOrEmpty(oSchedulerConfig["SiteURL"]))
                             cUrl = oSchedulerConfig["SiteURL"];
-                        bHasScheduledItems = true;
+                        //bHasScheduledItems = true;
                         cConStr = "Data Source=" + oSchedulerConfig["DatabaseServer"] + "; ";
                         cConStr += "Initial Catalog=" + oSchedulerConfig["DatabaseName"] + "; ";
 
