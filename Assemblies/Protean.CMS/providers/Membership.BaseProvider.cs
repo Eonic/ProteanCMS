@@ -33,11 +33,11 @@ namespace Protean.Providers
     namespace Membership
     {
        public interface IMembershipProvider {
-            IMembershipProvider Initiate(ref Cms myWeb, ref DefaultProvider.Activities activities);
+            IMembershipProvider Initiate(ref Cms myWeb);
             //  void Initiate(ref Base myWeb);
                        
             IMembershipAdminXforms AdminXforms { get; set; }
-            IMembershipAdminXforms AdminProcess { get; set; }
+            IMembershipAdminProcess AdminProcess { get; set; }
             IMembershipActivities Activities { get; set; }           
         }
         public interface IMembershipAdminXforms 
@@ -162,14 +162,14 @@ namespace Protean.Providers
                     }
 
                     var o = Activator.CreateInstance(calledType);
-                   DefaultProvider.Activities activities = new DefaultProvider.Activities();
+                  // DefaultProvider.Activities activities = new DefaultProvider.Activities();
                     
-                    var args = new object[2];
+                    var args = new object[1];
                     //args[0] = _AdminXforms;
                     //args[1] = _AdminProcess;
                     args[0] = myWeb;
                     //args[3] = this;
-                    args[1] = activities;                  
+                    //args[1] = activities;                  
 
                    return (IMembershipProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args);
                    
@@ -192,8 +192,8 @@ namespace Protean.Providers
         {
             //IMembershipProvider obj1 = new DefaultProvider();
             private IMembershipAdminXforms _AdminXforms;
-            private object _AdminProcess;
-            
+            private IMembershipAdminProcess _AdminProcess;
+            private IMembershipActivities _Activities;
             IMembershipAdminXforms IMembershipProvider.AdminXforms {
                 set
                 {
@@ -204,22 +204,41 @@ namespace Protean.Providers
                     return _AdminXforms;
                 }
             }
-            IMembershipAdminXforms IMembershipProvider.AdminProcess { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-            IMembershipActivities IMembershipProvider.Activities { set; get; }         
+            IMembershipAdminProcess IMembershipProvider.AdminProcess
+            {
+                set
+                {
+                    _AdminProcess = value;
+                }
+                get
+                {
+                    return _AdminProcess;
+                }
+            }
+            IMembershipActivities IMembershipProvider.Activities
+            {
+                set
+                {
+                    _Activities = value;
+                }
+                get
+                {
+                    return _Activities;
+                }
+            }         
            
 
             public DefaultProvider()
             {
                 // do nothing
             }           
-            public IMembershipProvider Initiate(ref Cms myWeb, ref DefaultProvider.Activities activities)
-            {                
-                IMembershipAdminXforms adminXforms = new AdminXForms(ref myWeb);
-                // MemProvider.AdminProcess = New AdminProcess(myWeb)
+            public IMembershipProvider Initiate(ref Cms myWeb)
+            {
+                _AdminXforms = new AdminXForms(ref myWeb);
+                _AdminProcess = new AdminProcess(ref myWeb);
                 // MemProvider.AdminProcess.oAdXfm = MemProvider.AdminXforms
-                IMembershipActivities Activities = activities;//new Activities();
-
-                return (DefaultProvider)Activator.CreateInstance(typeof(DefaultProvider));
+                _Activities = new Activities();
+                return this;              
             }
             //public void Initiate(ref Protean.Base myWeb)
             //{
