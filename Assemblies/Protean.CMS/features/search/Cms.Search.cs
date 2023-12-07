@@ -1281,7 +1281,7 @@ namespace Protean
                 string sError = string.Empty;
                 string cSearchTerm = "";
                 bool bFirst = true;
-                bool bSearchSubmitted = false;
+                //bool bSearchSubmitted = false;
                 var dtStart = DateTime.Now;
                 try
                 {
@@ -1301,7 +1301,7 @@ namespace Protean
                     }
 
                     // XPATH Search
-                    bSearchSubmitted = true;
+                   // bSearchSubmitted = true;
 
                     if (string.IsNullOrEmpty(moConfig["ewSearchXpath"]))
                     {

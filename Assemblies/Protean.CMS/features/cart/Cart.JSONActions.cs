@@ -43,7 +43,7 @@ namespace Protean
 
                 public JSONActions()
                 {
-                    string ctest = "this constructor is being hit"; // for testing
+                   // string ctest = "this constructor is being hit"; // for testing
                     myWeb = new Cms();
                     myWeb.InitializeVariables();
                     myWeb.Open();
@@ -153,7 +153,7 @@ namespace Protean
                                     bool bUnique = false;
                                     double cProductPrice = 0d;
                                     string sProductName = "";
-                                    bool bPackegingRequired = false;
+                                    //bool bPackegingRequired = false;
                                     string sOverideURL = "";
                                     string sProductOptionName = "";
                                     double dProductOptionPrice = 0d;

@@ -2816,7 +2816,7 @@ namespace Protean
                                     XmlElement xfrmGroup = (XmlElement)PaymentOptionsSelect.SelectSingleNode("ancestor::group[1]");
 
                                     PaymentProviders oPay;
-                                    bool bDeny = false;
+                                    //bool bDeny = false;
                                     oPay = new PaymentProviders(ref this.myWeb);
                                     oPay.mcCurrency = moCartConfig["Currency"];
 

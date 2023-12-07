@@ -184,12 +184,12 @@ namespace Protean.Providers
 
                             string PaymentLabel = configXml.SelectSingleNode("description/@value").InnerText;
                             // allow html in description node...
-                            bool bXmlLabel = false;
+                           // bool bXmlLabel = false;
 
                             if (!string.IsNullOrEmpty(configXml.SelectSingleNode("description").InnerXml))
                             {
                                 PaymentLabel = configXml.SelectSingleNode("description").InnerXml;
-                                bXmlLabel = true;
+                               // bXmlLabel = true;
                             }
 
                             string iconclass = "";

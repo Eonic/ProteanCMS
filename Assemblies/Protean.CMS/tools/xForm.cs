@@ -3846,7 +3846,7 @@ namespace Protean
                                             }
 
                                             // test if the current node is one we want to delete, note that nodeCount is current nodes whereas nodePosition is the new numbering
-                                            bool bDelete = false;
+                                            //bool bDelete = false;
 
                                             // build the repeating form groups
                                             oRptElmtCopy = (XmlElement)oRptElmt.CloneNode(true);
