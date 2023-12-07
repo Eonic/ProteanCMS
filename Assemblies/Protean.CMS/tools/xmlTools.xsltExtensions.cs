@@ -790,7 +790,7 @@ namespace Protean
                             cHtml = Regex.Replace(cHtml, @"<\?xml*\?>/i", "", RegexOptions.IgnoreCase);
                             cHtml = cHtml.Replace("<?xml:namespace prefix = o ns = \"urn:schemas-microsoft-com:office:office\" />", "");
 
-                            cHtml = cHtml;
+                            //cHtml = cHtml;
                         }
 
                         cHtmlOut = Tools.Text.tidyXhtmlFrag(cHtml, true, true, RemoveTags);

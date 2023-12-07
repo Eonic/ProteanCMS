@@ -153,13 +153,11 @@ namespace Protean
                     var DiscountApplyDate = DateTime.Now;
                     // TS we should add logic here to get the invoiceDate from the xml if it exists. then we can apply historic discounts by refreshing the cartxml.
 
-
-                    string[] sSQLArr = null;
-
+                   // string[] sSQLArr = null;
                     int nCount;
                     double dDisountAmount = 0d;
                     string validateShippingGroup = string.Empty;
-                    string oDiscountMessageNew = "The promo code you have provided is invalid for this transaction";
+                    //string oDiscountMessageNew = "The promo code you have provided is invalid for this transaction";
 
                     try
                     {

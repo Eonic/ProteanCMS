@@ -8277,7 +8277,7 @@ namespace Protean
                                 XmlElement oPrice = null;
                                 long nWeight = 0L;
 
-                                XmlDataDocument oItemInstance = new XmlDataDocument();
+                                XmlDocument oItemInstance = new XmlDocument();
                                 oItemInstance.AppendChild(oItemInstance.CreateElement("instance"));
                                 XmlNode argoNode = oItemInstance.DocumentElement;
                                 oElmt = addNewTextNode("tblCartItem", ref argoNode);
@@ -8460,7 +8460,7 @@ namespace Protean
                                         if (oProdOptions[i] != null & nQuantity > 0L)
                                         {
                                             // Add Options
-                                            oItemInstance = new XmlDataDocument();
+                                            oItemInstance = new XmlDocument();
                                             oItemInstance.AppendChild(oItemInstance.CreateElement("instance"));
                                             XmlNode argoNode20 = oItemInstance.DocumentElement;
                                             oElmt = addNewTextNode("tblCartItem", ref argoNode20);
@@ -8719,7 +8719,7 @@ namespace Protean
                                     else
                                     {
                                         // injection attempt don't add to cart
-                                        return false;
+                                       //return false;
                                         return AddItemsRet;
                                     }
                                 }
@@ -11099,9 +11099,8 @@ namespace Protean
                         }
                         catch (Exception ex)
                         {
-                            xmlMethod = xmlMethod;
-                            xmlProduct = xmlProduct;
-
+                            //xmlMethod = xmlMethod;
+                            //xmlProduct = xmlProduct;
                             stdTools.returnException(ref myWeb.msException, mcModuleName, "AddShippingCosts", ex, vstrFurtherInfo: "", bDebug: gbDebug);
                         }
 
@@ -11454,7 +11453,7 @@ namespace Protean
                 {
                     XmlElement oelmt;
                     // Dim cSqlUpdate As String
-                    var oItemInstance = new XmlDataDocument();
+                    var oItemInstance = new XmlDocument();
                     oItemInstance.AppendChild(oItemInstance.CreateElement("instance"));
                     XmlNode argoNode = oItemInstance.DocumentElement;
                     oelmt = addNewTextNode("tblCartItem", ref argoNode);
@@ -11539,7 +11538,7 @@ namespace Protean
                 {
                     XmlElement oelmt;
                     // Dim cSqlUpdate As String
-                    var oItemInstance = new XmlDataDocument();
+                    var oItemInstance = new XmlDocument();
                     oItemInstance.AppendChild(oItemInstance.CreateElement("instance"));
                     XmlNode argoNode = oItemInstance.DocumentElement;
                     oelmt = addNewTextNode("tblCartItem", ref argoNode);

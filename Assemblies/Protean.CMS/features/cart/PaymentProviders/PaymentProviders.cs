@@ -5795,8 +5795,7 @@ namespace Protean
                         oXform.addValues();
 
                         sProcess = oXform.moXformElmt.OuterXml;
-                        sProcess = sProcess;
-
+                        //sProcess = sProcess;
                         creditCardXformRet = oXform;
                     }
 

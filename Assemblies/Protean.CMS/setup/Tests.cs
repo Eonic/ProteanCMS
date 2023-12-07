@@ -90,14 +90,13 @@ namespace Protean
                 }
 
                 oEw.moFSHelper.SaveFile(ref filename, oEw.goServer.MapPath("/" + Cms.gcProjectPath) + filepath, System.Text.Encoding.Unicode.GetBytes(htmltotest));
-
-                return "File Written Using SaveFile :" + filepath + filename;
-
+                               
                 if (oEw.moConfig["AdminAcct"] != "")
                 {
                     oImp.UndoImpersonation();
                     oImp = null;
                 }
+                return "File Written Using SaveFile :" + filepath + filename;
             }
 
             catch (Exception ex)

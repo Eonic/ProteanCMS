@@ -561,10 +561,10 @@ namespace Protean
             finally
             {
                 oResponseElmt.SetAttribute("bResult", Conversions.ToString(bResult));
-            }
-            return oRXML;
+            }           
 
             HttpContext.Current.ApplicationInstance.CompleteRequest();
+            return oRXML;
             // moResponse.Flush()
             // moResponse.OutputStream.Close()
             // moResponse.End()
@@ -1084,9 +1084,9 @@ namespace Protean
             myWeb.Open();
             string url;
             url = myWeb.GetContentUrl(contentId);
-
-            return url;
             myWeb.Close();
+            return url;
+           
         }
 
         [WebMethod(Description = "get standard filter for sql content")]
@@ -1096,9 +1096,9 @@ namespace Protean
             myWeb.Open();
 
             myWeb.GetStandardFilterSQLForContent();
-
-            return null;
             myWeb.Close();
+            return null;
+            
         }
 
         [WebMethod(Description = "check page permission")]
@@ -1120,9 +1120,8 @@ namespace Protean
             myWeb.Open();
 
             bool data = myWeb.mbAdminMode;
-
-            return data;
             myWeb.Close();
+            return data;           
         }
 
         [WebMethod(Description = "create Element")]
@@ -1132,8 +1131,9 @@ namespace Protean
             myWeb.Open();
             oRoot = myWeb.moPageXml.CreateElement("Contents");
             myWeb.moPageXml.DocumentElement.AppendChild(oRoot);
-            return oRoot;
             myWeb.Close();
+            return oRoot;
+            
         }
 
 

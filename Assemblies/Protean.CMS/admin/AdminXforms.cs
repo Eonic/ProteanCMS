@@ -1070,7 +1070,7 @@ namespace Protean
                             string oCgfSectPath = "rewriteMaps/rewriteMap[@name='" + ConfigType + "']";
                             // Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection(oCgfSectName)
                             cProcessInfo = "Getting Section Name:" + oCgfSectPath;
-                            bool sectionMissing = false;
+                           // bool sectionMissing = false;
 
                             // Get the current settings
                             if (rewriteXml.SelectSingleNode(oCgfSectPath) != null)
@@ -1116,7 +1116,7 @@ namespace Protean
                             else
                             {
                                 // no current settings create them
-                                sectionMissing = true;
+                               // sectionMissing = true;
                                 oFrmElmt = base.moXformElmt;
                                 XmlNode argoNode1 = oFrmElmt;
                                 base.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, "This config section has not yet been setup, saving will implement these settings for the first time and then log you off the admin system.");
@@ -9874,9 +9874,9 @@ namespace Protean
                         if (this.isSubmitted())
                         {
                             if (base.getSubmitted() == "Back")
-                            {
-                                return base.moXformElmt;
+                            {                               
                                 this.myWeb.msRedirectOnEnd = "/?ewCmd=RenewSubscription";
+                                return base.moXformElmt;
                             }
                             else if (base.getSubmitted() == "Confirm")
                             {
@@ -12779,8 +12779,7 @@ namespace Protean
 
                 protected bool loadControlForm(string controlType)
                 {
-
-                    bool success = false;
+                    //bool success = false;
                     try
                     {
 
@@ -12789,7 +12788,7 @@ namespace Protean
 
                             if (this.load(FORMPATH + "/" + schemaType + "." + controlType + ".xml", myWeb.maCommonFolders))
                             {
-                                success = true;
+                                //success = true;
                                 break;
                             }
 

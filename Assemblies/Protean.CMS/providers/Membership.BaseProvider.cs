@@ -25,6 +25,7 @@ using static Protean.stdTools;
 using Protean.Tools;
 using static Protean.Tools.Xml;
 using System.Dynamic;
+using System.Security.Policy;
 
 
 namespace Protean.Providers
@@ -32,12 +33,13 @@ namespace Protean.Providers
     namespace Membership
     {
        public interface IMembershipProvider {
-            void Initiate(ref Cms myWeb);
+            IMembershipProvider Initiate(ref Cms myWeb, ref DefaultProvider.Activities activities);
+            //  void Initiate(ref Base myWeb);
+                       
             IMembershipAdminXforms AdminXforms { get; set; }
             IMembershipAdminXforms AdminProcess { get; set; }
             IMembershipActivities Activities { get; set; }           
         }
-
         public interface IMembershipAdminXforms 
         {
             XmlElement xFrmUserLogon(string FormName = "UserLogon");
@@ -99,6 +101,32 @@ namespace Protean.Providers
             public event OnErrorWithWebEventHandler OnErrorWithWeb;
             public delegate void OnErrorWithWebEventHandler(ref Cms myweb, object sender, Tools.Errors.ErrorEventArgs e);
 
+            private IMembershipAdminXforms _AdminXforms;
+            private object _AdminProcess;
+            //public DefaultProvider.Activities _Activities;
+            IMembershipAdminXforms AdminXforms
+            {
+                set
+                {
+                    _AdminXforms = value;
+                }
+                get
+                {
+                    return _AdminXforms;
+                }
+            }
+            DefaultProvider.Activities Activities1 = new DefaultProvider.Activities();
+            public IMembershipActivities _Activities
+            {
+                set
+                {
+                    _Activities = Activities1;
+                }
+                get
+                {
+                    return _Activities;
+                }
+            }
             public IMembershipProvider Get(ref Cms myWeb, string ProviderName)
             {
                 try
@@ -134,11 +162,17 @@ namespace Protean.Providers
                     }
 
                     var o = Activator.CreateInstance(calledType);
+                   DefaultProvider.Activities activities = new DefaultProvider.Activities();
+                    
+                    var args = new object[2];
+                    //args[0] = _AdminXforms;
+                    //args[1] = _AdminProcess;
+                    args[0] = myWeb;
+                    //args[3] = this;
+                    args[1] = activities;                  
 
-                    var args = new object[1];
-                    args[0] = myWeb;                  
-
-                    return (IMembershipProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args);
+                   return (IMembershipProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args);
+                   
                 }
 
                 catch (Exception ex)
@@ -155,25 +189,44 @@ namespace Protean.Providers
 
         public class DefaultProvider : IMembershipProvider
         {
-            IMembershipAdminXforms IMembershipProvider.AdminXforms { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+            //IMembershipProvider obj1 = new DefaultProvider();
+            private IMembershipAdminXforms _AdminXforms;
+            private object _AdminProcess;
+            
+            IMembershipAdminXforms IMembershipProvider.AdminXforms {
+                set
+                {
+                    _AdminXforms = value;
+                }
+                get
+                {
+                    return _AdminXforms;
+                }
+            }
             IMembershipAdminXforms IMembershipProvider.AdminProcess { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-            IMembershipActivities IMembershipProvider.Activities { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+            IMembershipActivities IMembershipProvider.Activities { set; get; }         
+           
 
             public DefaultProvider()
             {
                 // do nothing
-            }
-
-            public void Initiate(ref Cms myWeb)
-            {
-
-                IMembershipAdminXforms AdminXforms = new AdminXForms(ref myWeb);
+            }           
+            public IMembershipProvider Initiate(ref Cms myWeb, ref DefaultProvider.Activities activities)
+            {                
+                IMembershipAdminXforms adminXforms = new AdminXForms(ref myWeb);
                 // MemProvider.AdminProcess = New AdminProcess(myWeb)
                 // MemProvider.AdminProcess.oAdXfm = MemProvider.AdminXforms
-                IMembershipActivities Activities = new Activities();
+                IMembershipActivities Activities = activities;//new Activities();
 
+                return (DefaultProvider)Activator.CreateInstance(typeof(DefaultProvider));
             }
-
+            //public void Initiate(ref Protean.Base myWeb)
+            //{
+            //    //IMembershipAdminXforms AdminXforms = new AdminXForms(ref myWeb);
+            //    // MemProvider.AdminProcess = New AdminProcess(myWeb)
+            //    // MemProvider.AdminProcess.oAdXfm = MemProvider.AdminXforms
+            //    IMembershipActivities Activities = new Activities();
+            //}
             public class AdminXForms : Admin.AdminXforms, IMembershipAdminXforms
             {
                 private const string mcModuleName = "Protean.Providers.Membership.Default.AdminXForms";
@@ -638,6 +691,7 @@ namespace Protean.Providers
                                     int nAcc = Conversions.ToInteger(oUserDetails["nDirKey"]);
                                     ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
                                     IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, myWeb.moConfig["MembershipProvider"]);
+                                    //Providers.Membership.ReturnProvider oMembershipProv = new Providers.Membership.ReturnProvider.Get(myWeb, myWeb.moConfig["MembershipProvider"]);
 
                                     cResponse = Conversions.ToString(oMembershipProv.Activities.ResetUserAcct(ref myWeb, nAcc));
 
@@ -1615,7 +1669,7 @@ namespace Protean.Providers
 
             public class Activities : IMembershipActivities
             {
-                private const string mcModuleName = "Providers.Membership.Eonic.Activities";
+                private const string mcModuleName = "Protean.Providers.Membership.Default.Activities";
 
                 #region ErrorHandling
 

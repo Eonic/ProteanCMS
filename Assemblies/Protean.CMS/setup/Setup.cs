@@ -615,7 +615,7 @@ namespace Protean
             XmlElement oPageElmt;
             string sProcessInfo = "";
 
-            string sLayout = "default";
+            //string sLayout = "default";
 
             try
             {
