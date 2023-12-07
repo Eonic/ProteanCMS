@@ -1009,7 +1009,9 @@
 		],
 	</xsl:template>
 
-	<xsl:template match="textarea" mode="tinymceContentCSS"></xsl:template>
+	<xsl:template match="textarea" mode="tinymceContentCSS">
+
+		content_css:"/ptn/admin/skin/tinymce.css",</xsl:template>
 
 	<!-- TinyMCE default configuration -->
 	<xsl:template match="textarea" mode="tinymceButtons1">

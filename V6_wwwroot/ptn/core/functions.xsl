@@ -5437,6 +5437,24 @@
 		</a>
 	</xsl:template>
 
+	<xsl:template match="div[contains(@class,'inline-module')]" mode="cleanXhtml">
+		<div style="{@style}">
+
+			<xsl:apply-templates select="/Page" mode="addModule">
+				<xsl:with-param name="text">Add Module</xsl:with-param>
+				<xsl:with-param name="position">inline-<xsl:value-of select="ancestor::Content/@id"/></xsl:with-param>
+				<xsl:with-param name="class">
+					<xsl:text>inline-module</xsl:text>
+					<xsl:if test="contains(@style,'float: left;')">
+						<xsl:text> align-left</xsl:text>
+					</xsl:if>
+				</xsl:with-param>
+			</xsl:apply-templates>
+		</div>
+	</xsl:template>
+
+
+
 	<xsl:template name="getHrefFromPgid">
 		<xsl:param name="url" />
 		<xsl:variable name="pageId" select="substring-after($url,'?pgid=')"/>
