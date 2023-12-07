@@ -513,11 +513,16 @@ where cl.nStructId = " & myWeb.mnPageId)
 
                     ' now we go and get the results from the filter.
                     If (whereSQL <> String.Empty) Then
-                        myWeb.moSession("FilterWhereCondition") = whereSQL
-                        myWeb.GetPageContentFromSelect(whereSQL,,,,,, oContentNode,,,,, cFilterTarget)
+
+                        If (whereSQL.ToLower().Trim().EndsWith(" and") = False) Then
+                            myWeb.moSession("FilterWhereCondition") = whereSQL
+                            myWeb.GetPageContentFromSelect(whereSQL,,,,,, oContentNode,,,,, cFilterTarget)
 
 
-                        If (oContentNode.SelectNodes("Content[@type='Product']").Count = 0) Then
+                            If (oContentNode.SelectNodes("Content[@type='Product']").Count = 0) Then
+                                filterForm.addSubmit(oFrmGroup, "Clear Filters", "No results found", "clearfilters", "clear-filters",, "clearfilters")
+                            End If
+                        Else
                             filterForm.addSubmit(oFrmGroup, "Clear Filters", "No results found", "clearfilters", "clear-filters",, "clearfilters")
                         End If
                     End If
