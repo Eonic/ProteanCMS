@@ -693,12 +693,12 @@ namespace Protean
             cReport = cReport + "</table></div>";
             exceptionReportRet = Xml.convertEntitiesToCodes(cReport);
 
-            switch (oException.GetType().ToString() ?? "")
-            {
+            //switch (oException.GetType().ToString() ?? "")
+            //{
 
-                // case ""
+            //    // case ""
 
-            }
+            //}
 
             return exceptionReportRet;
 

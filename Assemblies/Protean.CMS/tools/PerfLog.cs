@@ -17,7 +17,7 @@ namespace Protean
 
         private bool bLoggingOn;
         private int nStep;
-        private StringBuilder oBuilder;
+        //private StringBuilder oBuilder;
         private PerformanceCounter oPerfMonRequests;
         private string[] Entries;
         private DateTime dLast = DateTime.Now;

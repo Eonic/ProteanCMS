@@ -80,7 +80,7 @@ namespace Protean
 
         private string cStep = "";
         public XmlElement oResponse;
-        private XmlElement oContentElmt;
+        //private XmlElement oContentElmt;
         public string cPostFlushActions = "";
 
         private Protean.XmlHelper.Transform oTransform = new Protean.XmlHelper.Transform();

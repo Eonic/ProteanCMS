@@ -62,7 +62,7 @@ namespace Protean
         public bool mbPopupMode = false;
 
         public XmlDocument moPageXml = new XmlDocument();
-        private XmlDocument moXmlAddedContent;
+        //private XmlDocument moXmlAddedContent;
         public DateTime? mdPageExpireDate = DateAndTime.DateAdd(DateInterval.Year, 1d, DateTime.Now);
         public DateTime? mdPageUpdateDate = DateAndTime.DateAdd(DateInterval.Year, -1, DateTime.Now);
         private int mnPageCacheMode;

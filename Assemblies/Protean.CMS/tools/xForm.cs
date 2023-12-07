@@ -55,7 +55,7 @@ namespace Protean
 
         private string[] sNoteTypes = new string[] { "help", "hint", "alert" };
         private string[] sBindAttributes = new string[] { "calculate", "constraint", "readonly", "relevant", "required", "type" };
-        private object @this;
+       // private object this;
 
         public enum noteTypes
         {

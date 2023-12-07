@@ -53,7 +53,7 @@ namespace Protean
         #endregion
 
         #region Declarations
-        private licenceMode moLicenceMode = licenceMode.Live;
+        //private licenceMode moLicenceMode = licenceMode.Live;
 
         public System.Web.HttpContext moCtx;
 

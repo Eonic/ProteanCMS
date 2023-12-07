@@ -11853,7 +11853,7 @@ namespace Protean
 
                     // Declarations
                     private AdminXforms _form;
-                    private XmlElement _locations;
+                    //private XmlElement _locations;
                     private int _locationCount = 1;
                     private long _contentId;
                     private XmlElement _structureXml = null;
