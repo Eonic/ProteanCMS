@@ -636,7 +636,7 @@ Partial Public Class Cms
                                     oFrmGrp.SetAttribute("class", "hidden")
                                     'create a new note
                                     Dim oFrmGrp2 As XmlElement = adXfm.addGroup(adXfm.moXformElmt, "validateByEmail")
-                                    adXfm.addNote(oFrmGrp2, xForm.noteTypes.Hint, "<span class=""msg-1029"">Thanks for registering you have been sent an email with a link you must click to activate your account</span>", True)
+                                    adXfm.addNote(oFrmGrp2, xForm.noteTypes.Hint, "<span class=""msg-1029"">Thank you for registering. You have been emailed to confirm and activate your account</span>", True)
 
                                     'lets get the new userid from the instance
                                     mnUserId = adXfm.instance.SelectSingleNode("tblDirectory/nDirKey").InnerText

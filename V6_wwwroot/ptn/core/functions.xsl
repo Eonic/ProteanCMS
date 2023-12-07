@@ -8936,7 +8936,7 @@
 	<xsl:template name="getSettings">
 		<xsl:param name="sectionName"/>
 		<xsl:param name="valueName" />
-		<xsl:value-of select="ew:EonicConfigValue($sectionName,$valueName)"/>
+		<xsl:value-of select="ew:PtnConfigValue($sectionName,$valueName)"/>
 	</xsl:template>
 
 	<xsl:template name="getXmlSettings">

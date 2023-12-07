@@ -5,7 +5,9 @@
     <xsl:apply-imports/>
   </xsl:template>
   <xsl:output method="xml" indent="yes" standalone="yes" omit-xml-declaration="yes" doctype-public="-//W3C//DTD XHTML 1.1//EN" doctype-system="http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" encoding="UTF-8"/>
-  <xsl:template match="*" mode="subject">Welcome to our website</xsl:template>
+  <xsl:template match="*" mode="subject">
+	  <xsl:value-of select="$siteTitle"/> Registration Confirmation
+  </xsl:template>
   <xsl:template match="*" mode="bodyLayout">
     <table cellspacing="0" cellpadding="10" summary="Your user account details">
       <tr>
@@ -66,7 +68,24 @@
           </font>
         </td>
       </tr>
-
+		<tr>
+			<th>
+				<font face="verdana" size="2">Follow this link to activate your account</font>
+			</th>
+			<td>
+				<font face="verdana" size="2">
+					<xsl:variable name="secureLink">
+						<xsl:value-of select="$siteURL"/>
+						<xsl:value-of select="@Url"/>
+						<xsl:text>?ewCmd=AR&amp;id=</xsl:text>
+						<xsl:value-of select="User/@id"/>
+						<xsl:text>&amp;AI=</xsl:text>
+						<xsl:value-of select="ActivationKey/node()"/>
+					</xsl:variable>
+					<a href="{$secureLink}" title="Activate Account">Activate Account</a>
+				</font>
+			</td>
+		</tr>
       <!--<tr>
         <th>
           <font face="verdana" size="2">Position</font>
