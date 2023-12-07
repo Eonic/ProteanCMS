@@ -100,33 +100,7 @@ namespace Protean.Providers
             public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
             public event OnErrorWithWebEventHandler OnErrorWithWeb;
             public delegate void OnErrorWithWebEventHandler(ref Cms myweb, object sender, Tools.Errors.ErrorEventArgs e);
-
-            private IMembershipAdminXforms _AdminXforms;
-            private object _AdminProcess;
-            //public DefaultProvider.Activities _Activities;
-            IMembershipAdminXforms AdminXforms
-            {
-                set
-                {
-                    _AdminXforms = value;
-                }
-                get
-                {
-                    return _AdminXforms;
-                }
-            }
-            DefaultProvider.Activities Activities1 = new DefaultProvider.Activities();
-            public IMembershipActivities _Activities
-            {
-                set
-                {
-                    _Activities = Activities1;
-                }
-                get
-                {
-                    return _Activities;
-                }
-            }
+          
             public IMembershipProvider Get(ref Cms myWeb, string ProviderName)
             {
                 try
@@ -162,14 +136,9 @@ namespace Protean.Providers
                     }
 
                     var o = Activator.CreateInstance(calledType);
-                  // DefaultProvider.Activities activities = new DefaultProvider.Activities();
-                    
-                    var args = new object[1];
-                    //args[0] = _AdminXforms;
-                    //args[1] = _AdminProcess;
-                    args[0] = myWeb;
-                    //args[3] = this;
-                    //args[1] = activities;                  
+                  
+                    var args = new object[1];                   
+                    args[0] = myWeb;                               
 
                    return (IMembershipProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args);
                    
