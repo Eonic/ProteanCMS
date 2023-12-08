@@ -61,47 +61,49 @@
 						</xsl:apply-templates>
 					</a>
 				</xsl:if>
-				<h3 class="title">
-					<a href="{$parentURL}" title="Read more about {Headline/node()}">
-						<xsl:apply-templates select="." mode="getDisplayName"/>
-					</a>
-				</h3>
+				<div class="media-inner">
+					<h3 class="title">
+						<a href="{$parentURL}" title="Read more about {Headline/node()}">
+							<xsl:apply-templates select="." mode="getDisplayName"/>
+						</a>
+					</h3>
 
-				<span class="news-brief-info">
-					<xsl:apply-templates select="Content[@type='Contact' and @rtype='Author'][1]" mode="displayAuthorBrief"/>
-					<xsl:if test="@publish!=''">
-						<p class="date" itemprop="datePublished">
-							<xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
-							<xsl:call-template name="DisplayDate">
-								<xsl:with-param name="date" select="@publish"/>
-							</xsl:call-template>
-						</p>
-					</xsl:if>
-					<xsl:if test="@update!=''">
-						<p class="hidden" itemprop="dateModified">
-							<xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
-							<xsl:call-template name="DisplayDate">
-								<xsl:with-param name="date" select="@update"/>
-							</xsl:call-template>
-						</p>
-					</xsl:if>
-				</span>
+					<span class="news-brief-info">
+						<xsl:apply-templates select="Content[@type='Contact' and @rtype='Author'][1]" mode="displayAuthorBrief"/>
+						<xsl:if test="@publish!=''">
+							<p class="date" itemprop="datePublished">
+								<xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
+								<xsl:call-template name="DisplayDate">
+									<xsl:with-param name="date" select="@publish"/>
+								</xsl:call-template>
+							</p>
+						</xsl:if>
+						<xsl:if test="@update!=''">
+							<p class="hidden" itemprop="dateModified">
+								<xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
+								<xsl:call-template name="DisplayDate">
+									<xsl:with-param name="date" select="@update"/>
+								</xsl:call-template>
+							</p>
+						</xsl:if>
+					</span>
 
-				<xsl:if test="Strapline/node()!=''">
-					<div class="summary" itemprop="description">
-						<xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>
+					<xsl:if test="Strapline/node()!=''">
+						<div class="summary" itemprop="description">
+							<xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>
+						</div>
+					</xsl:if>
+					<div class="entryFooter">
+						<xsl:apply-templates select="." mode="displayTags"/>
+						<xsl:apply-templates select="." mode="moreLink">
+							<xsl:with-param name="link" select="$parentURL"/>
+							<xsl:with-param name="stretchLink" select="$linked"/>
+							<xsl:with-param name="altText">
+								<xsl:value-of select="Headline/node()"/>
+							</xsl:with-param>
+						</xsl:apply-templates>
+						<xsl:text> </xsl:text>
 					</div>
-				</xsl:if>
-				<div class="entryFooter">
-					<xsl:apply-templates select="." mode="displayTags"/>
-					<xsl:apply-templates select="." mode="moreLink">
-						<xsl:with-param name="link" select="$parentURL"/>
-						<xsl:with-param name="stretchLink" select="$linked"/>
-						<xsl:with-param name="altText">
-							<xsl:value-of select="Headline/node()"/>
-						</xsl:with-param>
-					</xsl:apply-templates>
-					<xsl:text> </xsl:text>
 				</div>
 			</div>
 		</div>
