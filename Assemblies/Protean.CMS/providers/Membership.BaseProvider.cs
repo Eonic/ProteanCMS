@@ -220,8 +220,17 @@ namespace Protean.Providers
             {
                 private const string mcModuleName = "Protean.Providers.Membership.Default.AdminXForms";
                 public bool maintainMembershipsOnAdd = true;
-
-                XmlElement IMembershipAdminXforms.moXformElmt { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+                private XmlElement _moXformElmt;
+                XmlElement IMembershipAdminXforms.moXformElmt {
+                    set
+                    {
+                        _moXformElmt = value;
+                    }
+                    get
+                    {
+                        return _moXformElmt;
+                    }
+                }
 
                 public AdminXForms(ref Cms aWeb) : base(ref aWeb)
                 {
@@ -1934,7 +1943,7 @@ namespace Protean.Providers
                         adXfm.open(myWeb.moPageXml);
 
                         // logoff handler
-                        if ((myWeb.moRequest["ewCmd"].ToLower()) == "logoff" & mnUserId != 0)
+                        if (Convert.ToString(myWeb.moRequest["ewCmd"]) == "logoff" & mnUserId != 0)
                         {
 
                             if (Convert.ToString(myWeb.moSession["ewCmd"]) != "PreviewOn")
@@ -1960,7 +1969,6 @@ namespace Protean.Providers
                             // BaseUrl
                             sReturnValue = "LogOff";
                         }
-
                         else if (myWeb.moRequest["ewCmd"] == "CancelSubscription")
                         {
 
@@ -2031,7 +2039,6 @@ namespace Protean.Providers
                             }
 
                         }
-
                         if (!(myWeb.moConfig["SecureMembershipAddress"] == ""))
                         {
 

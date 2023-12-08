@@ -228,8 +228,8 @@ namespace Protean
                         IMembershipAdminXforms oAdXfm = oMembershipProv.AdminXforms;
 
                         oAdXfm.xFrmUserLogon(FormName);
-                        this.valid = Conversions.ToBoolean(oAdXfm.valid);
-                        return (XmlElement)oAdXfm.moXformElmt;
+                        this.valid = Convert.ToBoolean(oAdXfm.valid);
+                        return oAdXfm.moXformElmt;
                     }
 
                     catch (Exception ex)
