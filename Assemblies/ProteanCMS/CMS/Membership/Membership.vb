@@ -636,7 +636,7 @@ Partial Public Class Cms
                                     oFrmGrp.SetAttribute("class", "hidden")
                                     'create a new note
                                     Dim oFrmGrp2 As XmlElement = adXfm.addGroup(adXfm.moXformElmt, "validateByEmail")
-                                    adXfm.addNote(oFrmGrp2, xForm.noteTypes.Hint, "<span class=""msg-1029"">Thanks for registering you have been sent an email with a link you must click to activate your account</span>", True)
+                                    adXfm.addNote(oFrmGrp2, xForm.noteTypes.Hint, "<span class=""msg-1029"">Thank you for registering. You have been emailed to confirm and activate your account</span>", True)
 
                                     'lets get the new userid from the instance
                                     mnUserId = adXfm.instance.SelectSingleNode("tblDirectory/nDirKey").InnerText
@@ -664,10 +664,12 @@ Partial Public Class Cms
                             'send registration confirmation
                             Dim xsltPath As String = "/xsl/email/registration.xsl"
                             If myWeb.moConfig("cssFramework") = "bs5" Then
-                                xsltPath = "/xsl/registration.xsl"
+                                xsltPath = "/features/membership/email/registration.xsl"
                             End If
+                            Dim fsHelper As New Protean.fsHelper
+                            xsltPath = fsHelper.checkCommonFilePath(xsltPath)
 
-                            If IO.File.Exists(goServer.MapPath(xsltPath)) Then
+                            If xsltPath <> "" Then
                                 Dim oUserElmt As XmlElement = moDbHelper.GetUserXML(mnUserId)
 
                                 Dim oElmtPwd As XmlElement = moPageXml.CreateElement("Password")
@@ -695,17 +697,17 @@ Partial Public Class Cms
 
                                 Dim xsltPathAlert As String = "/xsl/email/registrationAlert.xsl"
                                 If myWeb.moConfig("cssFramework") = "bs5" Then
-                                    xsltPath = "/email/registrationAlert.xsl"
+                                    xsltPath = "/features/membership/email/registration-alert.xsl"
                                 End If
-
+                                xsltPath = fsHelper.checkCommonFilePath(xsltPath)
                                 If IO.File.Exists(goServer.MapPath(moConfig("ProjectPath") & xsltPathAlert)) Then
                                     sProcessInfo = oMsg.emailer(oUserElmt, moConfig("ProjectPath") & xsltPathAlert, "New User", recipientEmail, fromEmail, SubjectLine, "Message Sent", "Message Failed")
                                 End If
                                 oMsg = Nothing
-                                End If
+                            End If
 
-                                'redirect to this page or alternative page.
-                                If bRedirect Then
+                            'redirect to this page or alternative page.
+                            If bRedirect Then
                                 myWeb.msRedirectOnEnd = myWeb.mcOriginalURL
                             Else
                                 oContentNode.InnerXml = oXfmElmt.InnerXml
