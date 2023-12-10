@@ -37,6 +37,40 @@
 
 	<xsl:variable name="responsiveImageSizes">off</xsl:variable>
 
+	<xsl:variable name="siteURL">
+		<xsl:variable name="baseUrl">
+			<xsl:call-template name="getXmlSettings">
+				<xsl:with-param name="sectionName" select="'web'"/>
+				<xsl:with-param name="valueName" select="'BaseUrl'"/>
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:variable name="cartSiteUrl">
+			<xsl:call-template name="getXmlSettings">
+				<xsl:with-param name="sectionName" select="'cart'"/>
+				<xsl:with-param name="valueName" select="'SiteURL'"/>
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:choose>
+			<xsl:when test="$cartSiteUrl!=''">
+				1<xsl:value-of select="$cartSiteUrl"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:choose>
+					<xsl:when test="$baseUrl!=''">
+						2<xsl:value-of select="$baseUrl"/>
+					</xsl:when>
+					<xsl:otherwise>
+						3<xsl:value-of select="/Page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+						<xsl:if test="/Page/Request/ServerVariables/Item[@name='SERVER_PORT'] != '80' and  /Page/Request/ServerVariables/Item[@name='SERVER_PORT'] != '443'">
+							<xsl:text>:</xsl:text>
+							<xsl:value-of select="/Page/Request/ServerVariables/Item[@name='SERVER_PORT']"/>
+						</xsl:if>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	
 	<xsl:variable name="sitename">
 		<xsl:choose>
 			<xsl:when test="$siteURL=''">
@@ -177,39 +211,7 @@
 		</xsl:call-template>
 	</xsl:variable>
 
-	<xsl:variable name="siteURL">
-		<xsl:variable name="baseUrl">
-			<xsl:call-template name="getXmlSettings">
-				<xsl:with-param name="sectionName" select="'web'"/>
-				<xsl:with-param name="valueName" select="'BaseUrl'"/>
-			</xsl:call-template>
-		</xsl:variable>
-		<xsl:variable name="cartSiteUrl">
-			<xsl:call-template name="getXmlSettings">
-				<xsl:with-param name="sectionName" select="'cart'"/>
-				<xsl:with-param name="valueName" select="'SiteURL'"/>
-			</xsl:call-template>
-		</xsl:variable>
-		<xsl:choose>
-			<xsl:when test="$cartSiteUrl!=''">
-				<xsl:value-of select="$cartSiteUrl"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:choose>
-					<xsl:when test="$baseUrl!=''">
-						<xsl:value-of select="$baseUrl"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="/Page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
-						<xsl:if test="/Page/Request/ServerVariables/Item[@name='SERVER_PORT'] != '80' and  /Page/Request/ServerVariables/Item[@name='SERVER_PORT'] != '443'">
-							<xsl:text>:</xsl:text>
-							<xsl:value-of select="/Page/Request/ServerVariables/Item[@name='SERVER_PORT']"/>
-						</xsl:if>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:variable>
+
 
 	<xsl:variable name="GoogleAnalyticsUniversalID">
 		<xsl:call-template name="getXmlSettings">
@@ -5438,15 +5440,27 @@
 	</xsl:template>
 
 	<xsl:template match="div[contains(@class,'inline-module')]" mode="cleanXhtml">
-		<div style="{@style}">
+		<div style="{@style}" id="{@id}">
+		<xsl:attribute name="class">
+			<xsl:text>inline-module</xsl:text>
+					<xsl:if test="contains(@style,'float: left;')">
+						<xsl:text> align-left</xsl:text>
+					</xsl:if>
+					<xsl:if test="contains(@style,'float: right;')">
+						<xsl:text> alignright</xsl:text>
+					</xsl:if>
+		</xsl:attribute>
 
 			<xsl:apply-templates select="/Page" mode="addModule">
 				<xsl:with-param name="text">Add Module</xsl:with-param>
-				<xsl:with-param name="position">inline-<xsl:value-of select="ancestor::Content/@id"/></xsl:with-param>
+				<xsl:with-param name="position"><xsl:value-of select="@id"/>-inline-<xsl:value-of select="ancestor::Content/@id"/></xsl:with-param>
 				<xsl:with-param name="class">
 					<xsl:text>inline-module</xsl:text>
 					<xsl:if test="contains(@style,'float: left;')">
 						<xsl:text> align-left</xsl:text>
+					</xsl:if>
+					<xsl:if test="contains(@style,'float: right;')">
+						<xsl:text> alignright</xsl:text>
 					</xsl:if>
 				</xsl:with-param>
 			</xsl:apply-templates>

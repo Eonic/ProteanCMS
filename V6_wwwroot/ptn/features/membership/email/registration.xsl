@@ -37,27 +37,6 @@
 				</font>
 			</td>
 		</tr>
-      <!--<tr>
-        <th>
-          <font face="verdana" size="2">Username</font>
-        </th>
-        <td>
-          <font face="verdana" size="2">
-            <xsl:value-of select="@name"/>
-          </font>
-        </td>
-      </tr>-->
-      <tr>
-        <th>
-          <font face="verdana" size="2">Password</font>
-        </th>
-        <td>
-          <font face="verdana" size="2">
-            <xsl:value-of select="Password/node()"/>
-          </font>
-        </td>
-      </tr>
-
       <tr>
         <th>
           <font face="verdana" size="2">Name</font>
@@ -68,37 +47,25 @@
           </font>
         </td>
       </tr>
+		<xsl:if test="ActivationKey/node()!=''">
 		<tr>
-			<th>
-				<font face="verdana" size="2">Follow this link to activate your account</font>
-			</th>
-			<td>
+
+			<td colspan="2" align="center">
 				<font face="verdana" size="2">
 					<xsl:variable name="secureLink">
 						<xsl:value-of select="$siteURL"/>
 						<xsl:value-of select="@Url"/>
-						<xsl:text>?ewCmd=AR&amp;id=</xsl:text>
-						<xsl:value-of select="User/@id"/>
-						<xsl:text>&amp;AI=</xsl:text>
+						<xsl:text>?ewCmd=ActivateAccount</xsl:text>						
+						<xsl:text>&amp;key=</xsl:text>
 						<xsl:value-of select="ActivationKey/node()"/>
 					</xsl:variable>
-					<a href="{$secureLink}" title="Activate Account">Activate Account</a>
+					<span class="emailBtn">
+					<a href="{$secureLink}"  title="Activate Account">Click to Activate Account</a>
+					</span>
 				</font>
 			</td>
 		</tr>
-      <!--<tr>
-        <th>
-          <font face="verdana" size="2">Position</font>
-        </th>
-        <td>
-          <font face="verdana" size="2">
-            <xsl:value-of select="Position/node()"/>
-          </font>
-        </td>
-      </tr>-->
-
-      
+		</xsl:if>     
     </table>
-
   </xsl:template>
 </xsl:stylesheet>
