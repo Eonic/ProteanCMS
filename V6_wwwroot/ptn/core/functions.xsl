@@ -70,7 +70,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
-	
+
 	<xsl:variable name="sitename">
 		<xsl:choose>
 			<xsl:when test="$siteURL=''">
@@ -5441,19 +5441,21 @@
 
 	<xsl:template match="div[contains(@class,'inline-module')]" mode="cleanXhtml">
 		<div style="{@style}" id="{@id}">
-		<xsl:attribute name="class">
-			<xsl:text>inline-module</xsl:text>
-					<xsl:if test="contains(@style,'float: left;')">
-						<xsl:text> align-left</xsl:text>
-					</xsl:if>
-					<xsl:if test="contains(@style,'float: right;')">
-						<xsl:text> alignright</xsl:text>
-					</xsl:if>
-		</xsl:attribute>
+			<xsl:attribute name="class">
+				<xsl:text>inline-module</xsl:text>
+				<xsl:if test="contains(@style,'float: left;')">
+					<xsl:text> align-left</xsl:text>
+				</xsl:if>
+				<xsl:if test="contains(@style,'float: right;')">
+					<xsl:text> alignright</xsl:text>
+				</xsl:if>
+			</xsl:attribute>
 
 			<xsl:apply-templates select="/Page" mode="addModule">
 				<xsl:with-param name="text">Add Module</xsl:with-param>
-				<xsl:with-param name="position"><xsl:value-of select="@id"/>-inline-<xsl:value-of select="ancestor::Content/@id"/></xsl:with-param>
+				<xsl:with-param name="position">
+					<xsl:value-of select="@id"/>-inline-<xsl:value-of select="ancestor::Content/@id"/>
+				</xsl:with-param>
 				<xsl:with-param name="class">
 					<xsl:text>inline-module</xsl:text>
 					<xsl:if test="contains(@style,'float: left;')">
