@@ -197,7 +197,8 @@ namespace Protean.Providers
                 _AdminXforms = new AdminXForms(ref myWeb);
                 _AdminProcess = new AdminProcess(ref myWeb);
                 // MemProvider.AdminProcess.oAdXfm = MemProvider.AdminXforms
-                _Activities = new Activities();
+                string exception = null; 
+                _Activities = new Activities(exception);
                 return this;
             }
 
@@ -268,7 +269,7 @@ namespace Protean.Providers
                                 // first we will only deal with unpersonalised
                                 var oMessager = new Protean.Messaging(ref myWeb.msException);
                                 // get the subject
-                                var oMessaging = new Activities(ref myWeb.msException);
+                                var oMessaging = new Activities(myWeb.msException);
 
                                 string cMailingXsl = moMailConfig["MailingXsl"];
                                 if (string.IsNullOrEmpty(cMailingXsl))
@@ -969,7 +970,7 @@ namespace Protean.Providers
             public class Activities : Protean.Messaging, IMessagingActivities
             {
 
-                public Activities()
+                public Activities(string msException)
                 {
                 }
                 public new bool SendMailToList_Queued(int nPageId, string cEmailXSL, string cGroups, string cFromEmail, string cFromName, string cSubject)

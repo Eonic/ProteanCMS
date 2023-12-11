@@ -18,26 +18,59 @@ namespace Protean.Providers
                 // do nothing
             }
 
-            public IPaymentAdminXforms AdminXforms { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-            IPaymentAdminProcess IPaymentProvider.AdminProcess { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-            IPaymentActivities IPaymentProvider.Activities { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-            public void Initiate(ref Cms myWeb)
+            private IPaymentAdminXforms _AdminXforms;
+            private IPaymentAdminProcess _AdminProcess;
+            private IPaymentActivities _Activities;
+            IPaymentAdminXforms IPaymentProvider.AdminXforms
+            {
+                set
+                {
+                    _AdminXforms = value;
+                }
+                get
+                {
+                    return _AdminXforms;
+                }
+            }
+            IPaymentAdminProcess IPaymentProvider.AdminProcess
+            {
+                set
+                {
+                    _AdminProcess = value;
+                }
+                get
+                {
+                    return _AdminProcess;
+                }
+            }
+            IPaymentActivities IPaymentProvider.Activities
+            {
+                set
+                {
+                    _Activities = value;
+                }
+                get
+                {
+                    return _Activities;
+                }
+            }
+            public IPaymentProvider Initiate(ref Cms myWeb)
             {
                 string cProcessInfo = "";
                 try
                 {
 
-                    IPaymentAdminXforms AdminXforms = new AdminXForms(ref myWeb);
-                    IPaymentAdminProcess AdminProcess = new AdminProcess(ref myWeb);
-                    // PayProvider.AdminProcess.oAdXfm = PayProvider.AdminXforms
-                    IPaymentActivities Activities = new Activities();
+                    _AdminXforms = new AdminXForms(ref myWeb);
+                    _AdminProcess = new AdminProcess(ref myWeb);
+                    // MemProvider.AdminProcess.oAdXfm = MemProvider.AdminXforms
+                    _Activities = new Activities();
+                    return this;
                 }
 
                 catch (Exception ex)
                 {
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "Initiate", ex, "", cProcessInfo, gbDebug);
-
+                    return this;
                 }
             }
 
