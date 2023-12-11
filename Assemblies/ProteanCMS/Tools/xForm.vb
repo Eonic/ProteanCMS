@@ -2751,7 +2751,7 @@ Public Class xForm
 
         Dim cProcessInfo As String = ""
         Try
-            isSubmitted = False
+            Dim bSubmitted As Boolean = False
             If moXformElmt Is Nothing Then
                 cProcessInfo = "xFormElement not set"
             Else
@@ -2759,21 +2759,22 @@ Public Class xForm
                     'ok get the ref or the bind name of the button
                     oElmt = oNode
                     If oElmt.GetAttribute("submission") <> "" And goRequest.Form(oElmt.GetAttribute("submission")) <> "" Then
-                        isSubmitted = True
+                        bSubmitted = True
                         SubmittedRef = oElmt.GetAttribute("submission")
                     ElseIf goRequest(oElmt.GetAttribute("ref")) <> "" Then
-                        isSubmitted = True
+                        bSubmitted = True
                         SubmittedRef = oElmt.GetAttribute("ref")
                     ElseIf goRequest(oElmt.GetAttribute("bind")) <> "" And goRequest(oElmt.GetAttribute("bind")) <> goRequest("ewCmd") Then
-                        isSubmitted = True
+                        bSubmitted = True
                         SubmittedRef = oElmt.GetAttribute("bind")
                     ElseIf goRequest("ewSubmitClone_" & oElmt.GetAttribute("ref")) <> "" Then
-                        isSubmitted = True
+                        bSubmitted = True
                         SubmittedRef = oElmt.GetAttribute("ref")
                     End If
                 Next
             End If
 
+            Return bSubmitted
 
         Catch ex As Exception
             returnException(msException, mcModuleName, "getSubmitted", ex, "", cProcessInfo, gbDebug)
