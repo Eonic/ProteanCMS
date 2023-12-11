@@ -870,6 +870,8 @@
 					<xsl:text> align-items-</xsl:text>
 					<xsl:value-of select="@position-horizontal"/>
 				</xsl:if>
+				<!--<xsl:if test="(@xsCol='' or @xsCol='1') and @smCol='' and mdCol='' and lgCol='' and xlCol='' and xxlCol=''"> single-col</xsl:if>-->
+
 			</xsl:attribute>
 			<xsl:if test="@contentType='Module'">
 				<xsl:attribute name="class">
