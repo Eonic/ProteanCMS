@@ -94,7 +94,7 @@ namespace Protean.Providers
 
         public class ReturnProvider 
         {
-            private const string mcModuleName = "Protean.Providers.Membership.BaseProvider";
+            private const string mcModuleName = "Protean.Providers.Membership.ReturnProvider";
             protected XmlNode moPaymentCfg;
             public event OnErrorEventHandler OnError;
             public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);

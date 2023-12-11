@@ -83,7 +83,7 @@ namespace Protean.Providers
 
         public class ReturnProvider
         {
-            private const string mcModuleName = "Protean.Providers.Messaging";
+            private const string mcModuleName = "Protean.Providers.Messaging.ReturnProvider";
 
             public IMessagingProvider Get(ref Cms myWeb, string ProviderName)
             {
@@ -132,7 +132,7 @@ namespace Protean.Providers
 
                     var o = Activator.CreateInstance(calledType);
 
-                    var args = new object[0];                
+                    var args = new object[1];                
                     args[0] = myWeb;
 
                     return (IMessagingProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args);
