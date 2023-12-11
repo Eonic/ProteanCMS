@@ -327,7 +327,12 @@
             String representation of the compilation options
             </summary>
         </member>
-        <member name="F:BundleTransformer.Less.Internal.LessCompiler._initializedFlag">
+        <member name="F:BundleTransformer.Less.Internal.LessCompiler._initializationSynchronizer">
+            <summary>
+            Synchronizer of compiler initialization
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.Less.Internal.LessCompiler._initialized">
             <summary>
             Flag that compiler is initialized
             </summary>
