@@ -4224,7 +4224,7 @@ namespace Protean
                     string classPath = ocNode.GetAttribute("action");
                     string assemblyName = ocNode.GetAttribute("assembly");
                     string assemblyType = ocNode.GetAttribute("assemblyType");
-                    string providerName = ocNode.GetAttribute("providerName");
+                    string providerName = ocNode.GetAttribute("providerName");                 
                     string providerType = ocNode.GetAttribute("providerType");
                     if (string.IsNullOrEmpty(providerType))
                         providerType = "messaging";
@@ -4269,7 +4269,7 @@ namespace Protean
                                 }
                                 else
                                 {
-                                    switch (moPrvConfig.Providers[providerName].Parameters["path"] ?? "")
+                                    switch (moPrvConfig.Providers[providerName].Parameters["path"])
                                     {
                                         case var @case when @case == "":
                                             {
