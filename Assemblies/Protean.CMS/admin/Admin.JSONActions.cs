@@ -268,7 +268,7 @@ namespace Protean
                         return ex.Message;
                     }
 
-                    return JsonResult;
+                   // return JsonResult;
                 }
 
                 public string DeleteUrls(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)

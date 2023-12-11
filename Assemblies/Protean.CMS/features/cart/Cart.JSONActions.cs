@@ -43,7 +43,7 @@ namespace Protean
 
                 public JSONActions()
                 {
-                    string ctest = "this constructor is being hit"; // for testing
+                   // string ctest = "this constructor is being hit"; // for testing
                     myWeb = new Cms();
                     myWeb.InitializeVariables();
                     myWeb.Open();
@@ -153,7 +153,7 @@ namespace Protean
                                     bool bUnique = false;
                                     double cProductPrice = 0d;
                                     string sProductName = "";
-                                    bool bPackegingRequired = false;
+                                    //bool bPackegingRequired = false;
                                     string sOverideURL = "";
                                     string sProductOptionName = "";
                                     double dProductOptionPrice = 0d;
@@ -518,7 +518,7 @@ namespace Protean
 
                 public string GetContactForm(ref Protean.rest myApi, ref JObject jObj)
                 {
-                    int nId;
+                    //int nId;
                     try
                     {
 
@@ -534,13 +534,12 @@ namespace Protean
                         JsonResult = JsonConvert.SerializeXmlNode((XmlNode)oDdoc);
                         return JsonResult;
                     }
-
                     catch (Exception ex)
                     {
                         OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetLocations", ex, ""));
                         return ex.Message;
                     }
-                    return JsonConvert.ToString(nId);
+                    //return JsonConvert.ToString(nId);
                 }
 
                 public string SetContact(ref Protean.rest myApi, ref JObject jObj)

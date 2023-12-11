@@ -682,7 +682,7 @@ namespace Protean
                         var goServer = myWeb.goServer;
 
                         string cLogonCmd = "";
-                        bool bRedirectStarted = false;
+                       // bool bRedirectStarted = false;
                         XmlElement oXfmElmt;
                         string sProcessInfo;
 

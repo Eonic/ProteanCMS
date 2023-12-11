@@ -271,7 +271,7 @@ namespace Protean
                 {
                     myWeb.PerfMon.Log("PaymentProviders", "getPaymentMethods");
                     string cProcessInfo = "getPaymentMethods";
-                    bool bFirstRow = true;
+                   // bool bFirstRow = true;
                     try
                     {
 
@@ -2727,7 +2727,7 @@ namespace Protean
                     string sProcessInfo = string.Empty;
                     var oDictOpt = new Hashtable();
 
-                    bool bCv2 = false;
+                    //bool bCv2 = false;
                     bool b3dSecure = false;
                     Hashtable oResponseDict;
                     XmlNode oCartAdd;
@@ -2755,7 +2755,7 @@ namespace Protean
                         oCartAdd = oRoot.SelectSingleNode("Contact[@type='Billing Address']");
 
                         if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["validateCV2"], "on", false)))
-                            bCv2 = true;
+                            //bCv2 = true;
                         if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["secure3d"], "on", false)))
                         {
                             b3dSecure = true;
@@ -4027,8 +4027,8 @@ namespace Protean
                     string sSql;
                     var ccXform = new Cms.xForm(ref myWeb);
                     string sProcessInfo = string.Empty;
-                    bool bCv2 = false;
-                    bool bEncrypt = false;
+                    //bool bCv2 = false;
+                    //bool bEncrypt = false;
 
                     string formname = "PayForm";
                     string action = sSubmitPath;
@@ -4123,7 +4123,7 @@ namespace Protean
                         if (ccXform.valid == true)
                         {
 
-                            bEncrypt = false;
+                          //  bEncrypt = false;
 
                             // Temporarily add the payment details to the cart so we can email them and show them
                             XmlElement oPayElmt;
@@ -4169,8 +4169,8 @@ namespace Protean
                     string sSql;
                     var ccXform = new Cms.xForm(ref myWeb.msException);
                     string sProcessInfo = string.Empty;
-                    bool bCv2 = false;
-                    bool bEncrypt = false;
+                    //bool bCv2 = false;
+                    //bool bEncrypt = false;
 
                     string formname = "PayForm";
                     string action = sSubmitPath;
@@ -4270,7 +4270,7 @@ namespace Protean
                         if (ccXform.valid == true)
                         {
 
-                            bEncrypt = false;
+                           // bEncrypt = false;
 
                             savedPaymentId = savePayment((long)myWeb.mnUserId, cProviderName, mnCartId.ToString(), oAccountCfg.SelectSingleNode("AcctNumber/@value").InnerText, (XmlElement)ccXform.Instance.FirstChild, DateTime.Now, false, 0d); // 0 amount paid as yet
 
@@ -4306,8 +4306,8 @@ namespace Protean
                     string sSql;
                     var ccXform = new Cms.xForm(ref myWeb);
                     string sProcessInfo = string.Empty;
-                    bool bCv2 = false;
-                    bool bEncrypt = false;
+                    //bool bCv2 = false;
+                   // bool bEncrypt = false;
 
                     string formname = "PayForm";
                     string action = sSubmitPath;
@@ -4401,8 +4401,7 @@ namespace Protean
 
                         if (ccXform.valid == true)
                         {
-
-                            bEncrypt = false;
+                          //  bEncrypt = false;
 
                             // Temporarily add the payment details to the cart so we can email them and show them
                             XmlElement oPayElmt;
@@ -5462,7 +5461,7 @@ namespace Protean
                     XmlElement oFrmGroup;
                     // Dim sSql As String
                     // Dim odr As SqlDataReader
-                    bool bIsValid = false;
+                    //bool bIsValid = false;
                     string[] aCardTypes;
                     string[] aCardTypes2;
                     int i;
@@ -5795,8 +5794,7 @@ namespace Protean
                         oXform.addValues();
 
                         sProcess = oXform.moXformElmt.OuterXml;
-                        sProcess = sProcess;
-
+                        //sProcess = sProcess;
                         creditCardXformRet = oXform;
                     }
 

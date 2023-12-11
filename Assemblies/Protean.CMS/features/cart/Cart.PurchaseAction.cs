@@ -27,7 +27,7 @@ namespace Protean
 
                 public PurchaseAction()
                 {
-                    string ctest = "this constructor is being hit"; // for testing
+                    //string ctest = "this constructor is being hit"; // for testing
                     myWeb = new Cms();
                     myWeb.InitializeVariables();
                     myWeb.Open();

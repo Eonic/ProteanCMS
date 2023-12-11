@@ -80,7 +80,7 @@ namespace Protean
 
         private string cStep = "";
         public XmlElement oResponse;
-        private XmlElement oContentElmt;
+        //private XmlElement oContentElmt;
         public string cPostFlushActions = "";
 
         private Protean.XmlHelper.Transform oTransform = new Protean.XmlHelper.Transform();
@@ -615,7 +615,7 @@ namespace Protean
             XmlElement oPageElmt;
             string sProcessInfo = "";
 
-            string sLayout = "default";
+            //string sLayout = "default";
 
             try
             {
@@ -798,7 +798,7 @@ namespace Protean
                                 goSession["nUserId"] = 0;
                                 mcEwCmd = "";
                                 goto Recheck;
-                                break;
+                                
                             }
                         case "ClearDB":
                             {
@@ -1444,7 +1444,7 @@ namespace Protean
 
         public bool buildDatabase(bool NewBuild = false)
         {
-            string cProcessInfo = "migrateData";
+            //string cProcessInfo = "migrateData";
 
             bool bResult = false;
             try
@@ -1554,7 +1554,7 @@ namespace Protean
         public bool prepareDirectory()
         {
             long nRoleId;
-            string cProcessInfo = "prepareDirectory";
+            //string cProcessInfo = "prepareDirectory";
             try
             {
 
@@ -1811,9 +1811,9 @@ namespace Protean
                         strXML = "<User><FirstName>" + oDirElmt.GetAttribute("cFirstName") + "</FirstName><LastName>" + oDirElmt.GetAttribute("cLastName") + "</LastName><Position/><Email>" + oDirElmt.GetAttribute("cDirEmail") + "</Email><Notes/></User>";
                     }
                     // other details
-                    strforiegnRef = Convert.ToString(Interaction.IIf(oDirElmt.GetAttribute("nDirId") is DBNull, "", oDirElmt.GetAttribute("nDirId")));
-                    strName = Convert.ToString(Interaction.IIf(oDirElmt.GetAttribute("cDirDN") is DBNull, "", oDirElmt.GetAttribute("cDirDN")));
-                    strPassword = Convert.ToString(Interaction.IIf(oDirElmt.GetAttribute("cDirPassword") is DBNull, "", oDirElmt.GetAttribute("cDirPassword")));
+                    strforiegnRef = Convert.ToString(Convert.ToBoolean(oDirElmt.GetAttribute("nDirId"))? "": oDirElmt.GetAttribute("nDirId"));
+                    strName = Convert.ToString(Convert.ToBoolean(oDirElmt.GetAttribute("cDirDN"))? "": oDirElmt.GetAttribute("cDirDN"));
+                    strPassword = Convert.ToString(Convert.ToBoolean(oDirElmt.GetAttribute("cDirPassword"))? "": oDirElmt.GetAttribute("cDirPassword"));
                     nDirId = myWeb.moDbHelper.insertDirectory(strforiegnRef, strSchema, strName, strPassword, strXML);
 
                     foreach (XmlElement oConElmt in oDirElmt.SelectNodes("Contacts"))
@@ -1875,8 +1875,11 @@ namespace Protean
                     }
 
                     // now we need to loop back through and and sort the relations
-                    if (oDirElmt.GetAttribute("cDirMemberOfIdArr") is DBNull)
+                    if (oDirElmt.GetAttribute("cDirMemberOfIdArr") != Convert.ToString(DBNull.Value))
+                    {
                         oDirElmt.SetAttribute("cDirMemberOfIdArr", "");
+                    }
+                        
                     if (!string.IsNullOrEmpty(oDirElmt.GetAttribute("cDirMemberOfIdArr")))
                     {
                         string[] myArr = Strings.Split(oDirElmt.GetAttribute("cDirMemberOfIdArr"), ",");
@@ -2662,7 +2665,7 @@ namespace Protean
         {
 
             string sSqlStr;
-            string cProcessInfo = "ifTableExistsDropIt";
+            //string cProcessInfo = "ifTableExistsDropIt";
             try
             {
                 sSqlStr = "if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[" + sTableName + "]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)";
@@ -2678,7 +2681,7 @@ namespace Protean
         {
 
             string sSqlStr;
-            string cProcessInfo = "ifTableExistsDropIt";
+            //string cProcessInfo = "ifTableExistsDropIt";
             string sObjProperty;
             try
             {
@@ -2749,7 +2752,8 @@ namespace Protean
             // AddResponseError(ex) 'returnException(myWeb.msException, mcModuleName, "ifSqlObjectExistsDropIt", ex, "", cProcessInfo, gbDebug)
             // Return False
             // End Try
-            string cProcessInfo = "LoadShippingLocations";
+
+            //string cProcessInfo = "LoadShippingLocations";
 
             try
             {

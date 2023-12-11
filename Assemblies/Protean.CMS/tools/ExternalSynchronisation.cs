@@ -268,7 +268,7 @@ namespace Protean
 
                     // This provides Table names and fields we need to search on and the ref of the foreign items
                     oDBResults.LoadXml(moTransform.Process());
-                    DataSet oDS = null;
+                    //DataSet oDS = null;
 
                     // Loop through each one
 

@@ -2135,7 +2135,7 @@ namespace Protean
                 cMessage = Strings.Replace(cMessage, ">," + Constants.vbCrLf + "<", ">,<");
                 string cSplitStr = "";
                 bool bMessageStarted = false;
-                bool bMessageFinished = false;
+               // bool bMessageFinished = false;
                 var oXML = new XmlDocument();
                 oXML.AppendChild(oXML.CreateElement("MailMessage"));
                 var oMessageElement = oXML.CreateElement("Message");

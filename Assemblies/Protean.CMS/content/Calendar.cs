@@ -167,7 +167,7 @@ namespace Protean
                     foreach (XmlElement xmlDay in xmlDays)
                     {
                         dCurrent = stringToDate(xmlDay.GetAttribute("dateid"));
-                        dCurrent = dCurrent;
+                        //dCurrent = dCurrent;
                         var xmlEventsToday = moPageXml.SelectNodes(getDateXpath(dCurrent, sContentTypes));
 
                         // intTest = xmlEventsToday.Count
@@ -520,7 +520,7 @@ namespace Protean
                     try
                     {
 
-                        string sProcessInfo = "Begin Calendar";
+                       // string sProcessInfo = "Begin Calendar";
                         moCalendar = new Calendar(ref myWeb);
 
                         int cGetMonth = Conversions.ToInteger(oContentNode.GetAttribute("months"));
@@ -531,7 +531,7 @@ namespace Protean
                         moCalendar.add(ref oContentNode, cGetMonth, bSDateAsToday, cSDateinMonths, cContentTypes);
 
                         moCalendar = null;
-                        sProcessInfo = "End Calendar";
+                        //sProcessInfo = "End Calendar";
                     }
 
                     catch (Exception ex)

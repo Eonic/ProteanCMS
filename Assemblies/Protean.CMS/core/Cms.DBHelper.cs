@@ -2179,13 +2179,9 @@ namespace Protean
 
             public int checkPagePermission(long nPageId)
             {
-
                 PerfMonLog("DBHelper", "checkPagePermission");
-
-
                 string sProcessInfo = "";
                 long nAuthGroup = (long)Cms.gnAuthUsers;
-
                 try
                 {
                     // if we are not in admin mode
@@ -2246,15 +2242,12 @@ namespace Protean
                     {
                         return (int)nPageId;
                     }
-
-                    PerfMonLog("DBHelper", "checkPagePermission-end");
                 }
-
                 catch (Exception ex)
                 {
                     OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "getPageIdFromPath", ex, sProcessInfo));
                 }
-
+                PerfMonLog("DBHelper", "checkPagePermission-end");
                 return default;
             }
 
@@ -3721,7 +3714,7 @@ namespace Protean
             {
 
                 string cProcessInfo = "";
-               // XmlElement oElmt = null;
+                // XmlElement oElmt = null;
                 XmlElement oOrigInstance;
                 long nCurrentVersionNumber;
                 long nNewVersionNumber = 0L;
@@ -4056,7 +4049,7 @@ namespace Protean
                 {
 
                     //string cSql = "";
-                   // string sContent = "";
+                    // string sContent = "";
                     string dLastRun = "";
                     string cFilterSql = "";
 
@@ -4140,7 +4133,7 @@ namespace Protean
                         {
                             XmlElement xmloElmt = oElmt;
                             SetInnerXmlThenInnerText(ref xmloElmt, oElmt.InnerText);
-                        }                           
+                        }
 
                         // Tidy Up - Move all Locations and Relations into a Metadata Node
                         XmlElement oLocations = null;
@@ -4537,7 +4530,7 @@ namespace Protean
                         if (!foundLocation & checkRelatedIfOrphan)
                         {
                             XmlElement nContentNodeXmlElt = null;
-                            XmlElement relations = (XmlElement)this.getRelationsByContentId(contentId,ref nContentNodeXmlElt, contentRelationType: RelationType.Child);
+                            XmlElement relations = (XmlElement)this.getRelationsByContentId(contentId, ref nContentNodeXmlElt, contentRelationType: RelationType.Child);
                             foreach (XmlElement relation in relations.SelectNodes("//Relation"))
                             {
                                 foundLocation = checkContentLocationsInCurrentMenu(Conversions.ToLong(relation.GetAttribute("relatedContentId")));
@@ -5020,7 +5013,7 @@ namespace Protean
                 return default;
             }
 
-            public long insertPageVersion(long nStructParId, string cStructForiegnRef, string cStructName, string cStructDescription, string cStructLayout, long nStatus = 1L, DateTime? dPublishDate = null, DateTime? dExpireDate = null, string cDescription = "", long nOrder = 0L, long nVersionParId = default, string cVersionLang = "", string cVersionDescription = "",PageVersionType nVersionType = default)
+            public long insertPageVersion(long nStructParId, string cStructForiegnRef, string cStructName, string cStructDescription, string cStructLayout, long nStatus = 1L, DateTime? dPublishDate = null, DateTime? dExpireDate = null, string cDescription = "", long nOrder = 0L, long nVersionParId = default, string cVersionLang = "", string cVersionDescription = "", PageVersionType nVersionType = default)
             {
                 PerfMonLog("DBHelper", "insertStructure ([args])");
                 string sSql;
@@ -6170,8 +6163,8 @@ namespace Protean
                             {
                                 XmlElement xmloContentElmt = oContentElmt;
                                 this.addRelatedContent(ref xmloContentElmt, Conversions.ToInteger(oContentElmt.GetAttribute("id")), myWeb.mbAdminMode);
-                            }                            
-                                
+                            }
+
                         }
 
                     }
@@ -6336,7 +6329,7 @@ namespace Protean
                         XmlElement argoPageDetail = null;
                         int nCount = 0;
                         XmlElement nContentNodeElmyt = null;
-                        myWeb.GetPageContentFromSelect(cWhereSql, ref nCount,ref nContentNodeElmyt, oPageDetail: ref argoPageDetail,false,false, nReturnRows: (int)nTop, cOrderBy: cOrderBy, cAdditionalJoins: joinSQL);
+                        myWeb.GetPageContentFromSelect(cWhereSql, ref nCount, ref nContentNodeElmyt, oPageDetail: ref argoPageDetail, false, false, nReturnRows: (int)nTop, cOrderBy: cOrderBy, cAdditionalJoins: joinSQL);
                         PerfMonLog("DBHelper", "getContentFromContentGrabber-End");
 
                     }
@@ -6722,7 +6715,7 @@ namespace Protean
                 string sSql;
                 // Dim oDr As SqlDataReader
                 string cProcessInfo = "";
-                long nDelRelationId = 0L;
+                // long nDelRelationId = 0L;
                 XmlDocument oXml;
                 bool bHasChanged = false;
                 PerfMonLog(mcModuleName, "maintainMembershipsFromXForm", "start");
@@ -8014,13 +8007,16 @@ namespace Protean
                                     cPasswordForm = oConvElmt.InnerXml;
                                     cPasswordForm = Strings.Replace(cPasswordForm, "&gt;", ">");
                                     cPasswordForm = Strings.Replace(cPasswordForm, "&lt;", "<");
-                                    if ((cPasswordDatabase ?? "") == (cPasswordForm ?? ""))
+                                    if (cPasswordDatabase == cPasswordForm)
+                                    {
                                         bValidPassword = true;
-
+                                    }
                                 }
                             }
-                            else if ((cPasswordDatabase ?? "") == (cPasswordForm ?? ""))
+                            else if (cPasswordDatabase == cPasswordForm)
+                            {
                                 bValidPassword = true;
+                            }
 
                             if (bValidPassword == true)
                             {
@@ -8054,7 +8050,7 @@ namespace Protean
                                                 }
                                             }
                                             // Check user status
-                                            if (Convert.ToInt64(oUserDetails["nStatus"]) != 1 || Convert.ToInt64(oUserDetails["nStatus"]) != -1)
+                                            if ((Convert.ToInt32(oUserDetails["nStatus"]) != 1 && Convert.ToInt32(oUserDetails["nStatus"]) != -1))
                                             {
                                                 sReturn = "<span class=\"msg-1013\">User account has been disabled</span>";
                                             }
@@ -8139,9 +8135,6 @@ namespace Protean
                             // Find the latest activity for this user within a timeout period - if it isn't logoff then flag up an error
                             string lastSeenActivityQuery = "" + "SELECT TOP 1 nACtivityType FROM tblActivityLog l " + "WHERE nUserDirId = " + sReturn.ToString() + " " + "AND DATEDIFF(s,l.dDateTime,GETDATE()) < " + Cms.gnSingleLoginSessionTimeout.ToString() + " " + "ORDER BY dDateTime DESC ";
 
-
-
-
                             int lastSeenActivity = Conversions.ToInteger(this.GetDataValue(lastSeenActivityQuery, CommandType.Text, null, ActivityType.Logoff));
                             if (lastSeenActivity != (int)ActivityType.Logoff)
                             {
@@ -8186,20 +8179,18 @@ namespace Protean
                             // End If
 
                         }
-
-
-
                         return sReturn;
                     }
                     // table doesn't exist
                     else if (!string.IsNullOrEmpty(cUsername))
                     {
+                        string one = "1";
                         oImp = new Tools.Security.Impersonate();
                         if (oImp.ImpersonateValidUser(cUsername, goConfig["AdminDomain"], ADPassword, true, goConfig["AdminGroup"]))
                         {
-                            return 1.ToString();
                             // RJP 7 Nov 2012. Amended to use Lower Case to prevent against case sensitive entries in Protean.Cms.Config.
                             myWeb.moSession["ewAuth"] = Tools.Encryption.HashString(myWeb.moSession.SessionID + goConfig["AdminPassword"], Strings.LCase(myWeb.moConfig["MembershipEncryption"]), true);
+                            return one;
                         }
                         else
                         {
@@ -8270,7 +8261,7 @@ namespace Protean
 
 
 
-                    cIsValidUser = (Convert.ToInt32(GetDataValue(cSql,CommandType.Text ,null , -1)) != -1);
+                    cIsValidUser = (Convert.ToInt32(GetDataValue(cSql, CommandType.Text, null, -1)) != -1);
                     return cIsValidUser;
                 }
 
@@ -8349,7 +8340,7 @@ namespace Protean
                 // Dim oDr As SqlDataReader
                 string sReturn = "";
                 string cProcessInfo = "";
-                bool bValid = false;
+                //bool bValid = false;
 
                 string sProjectPath = goConfig["ProjectPath"] + "";
                 string sSenderName = goConfig["SiteAdminName"];
@@ -8373,26 +8364,13 @@ namespace Protean
                                 var oElmtPwd = oXmlDetails.CreateElement("Password");
                                 oElmtPwd.InnerText = Conversions.ToString(oDr["cDirPassword"]);
                                 oXmlDetails.SelectSingleNode("User").AppendChild(oElmtPwd);
-
-
-
-
-
-
                                 // now lets send the email
                                 var oMsg = new Protean.Messaging(ref myWeb.msException);
-
-
-
                                 // Set the language
                                 if (moPageXml != null && moPageXml.DocumentElement != null && moPageXml.DocumentElement.HasAttribute("translang"))
-
                                 {
                                     oMsg.Language = moPageXml.DocumentElement.GetAttribute("translang");
                                 }
-
-
-
 
                                 try
                                 {
@@ -8402,18 +8380,14 @@ namespace Protean
                                     dbHelper argodbHelper = null;
                                     sReturn = Conversions.ToString(oMsg.emailer(oXmlDetails.DocumentElement, goConfig["ProjectPath"] + filePath, sSenderName, sSenderEmail, cEmail, "Password Reminder", odbHelper: ref argodbHelper, "Your password has been emailed to you"));
 
-
-
-
-                                    bValid = true;
+                                    //bValid = true;
                                 }
                                 catch (Exception)
                                 {
                                     sReturn = "Your email failed to send from password reminder";
-                                    bValid = false;
+                                    // bValid = false;
                                 }
                                 oXmlDetails = null;
-
                             }
                         }
                         else
@@ -8477,13 +8451,12 @@ namespace Protean
             public bool checkEmailUnique(string cEmail, long nCurrId = 0L)
             {
                 PerfMonLog("DBHelper", "checkEmailUnique");
-                string sSql;
+                string sSql = string.Empty;
                 // Dim oDr As SqlDataReader
                 string cProcessInfo = "";
 
                 try
                 {
-
                     if (Strings.LCase(myWeb.moConfig["EmailUsernames"]) == "on")
                     {
                         if (nCurrId > 0L)
@@ -8527,15 +8500,13 @@ namespace Protean
                             return true;
                         }
                     }
-                    PerfMonLog("DBHelper", "checkEmailUnique", sSql);
-                }
 
+                }
                 catch (Exception ex)
                 {
                     OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "checkUserExists", ex, cProcessInfo));
-
                 }
-
+                PerfMonLog("DBHelper", "checkEmailUnique", sSql);
                 return default;
             }
 
@@ -9349,7 +9320,7 @@ namespace Protean
                             else
                             {
                                 return "StartNo not found:" + FeedCheck;
-                               // return default;
+                                // return default;
                             }
                         }
                     }
@@ -10391,7 +10362,7 @@ namespace Protean
                 }
             }
 
-            public void AddDataSetToContent(ref DataSet oDs, ref XmlElement oContent,ref DateTime? dExpireDate ,ref DateTime? dUpdateDate, long nCurrentPageId = 0L, bool bIgnoreDuplicates = false, string cAddSourceAttribute = "", bool bAllowRecursion = true)
+            public void AddDataSetToContent(ref DataSet oDs, ref XmlElement oContent, ref DateTime? dExpireDate, ref DateTime? dUpdateDate, long nCurrentPageId = 0L, bool bIgnoreDuplicates = false, string cAddSourceAttribute = "", bool bAllowRecursion = true)
             {
                 try
                 {
@@ -10853,7 +10824,7 @@ namespace Protean
                             }
                             DateTime? argdExpireDate = DateTime.Parse("0001-01-01");
                             DateTime? argdUpdateDate = DateTime.Parse("0001-01-01");
-                            AddDataSetToContent(ref oDs, ref oContentElmt, ref argdExpireDate, ref argdUpdateDate, nParentId,true, nMaxDepth.ToString());
+                            AddDataSetToContent(ref oDs, ref oContentElmt, ref argdExpireDate, ref argdUpdateDate, nParentId, true, nMaxDepth.ToString());
                         }
                         else
                         {
@@ -10899,7 +10870,7 @@ namespace Protean
             /// <param name="dUpdateDate">The date to get content by. E.g. find related content on such and such a day</param>
             /// <param name="nMaxDepth">The levels of related content to try to retrieve.</param>
             /// <remarks></remarks>
-            public void addBulkRelatedContent(ref XmlElement oContentParent,ref DateTime dUpdateDate, int nMaxDepth = 1)
+            public void addBulkRelatedContent(ref XmlElement oContentParent, ref DateTime dUpdateDate, int nMaxDepth = 1)
             {
 
                 PerfMonLog("DBHelper", "addBulkRelatedContent");
@@ -11467,7 +11438,7 @@ namespace Protean
 
                     string[] SearchArr = Strings.Split(cSearchExpression, " ");
 
-                    bool bFound = false;
+                    // bool bFound = false;
 
                     string idList = "";
                     // Get each content node and check it against the Search Array
@@ -11480,7 +11451,7 @@ namespace Protean
                             if (oTempNode.InnerText.ToUpper().Contains(SearchArr[i].ToUpper()))
                             {
                                 oResults.AppendChild(moPageXml.ImportNode(oTempNode, true));
-                                bFound = true;
+                                // bFound = true;
                             }
                         }
                         if (bIncRelated)
@@ -14031,9 +14002,9 @@ namespace Protean
                         {
                             foreach (XmlElement dataItem in reportXml.SelectNodes("Report/Item/" + column.ColumnName))
                             {
-                                XmlElement xmldataItem  = dataItem;
+                                XmlElement xmldataItem = dataItem;
                                 SetInnerXmlThenInnerText(ref xmldataItem, dataItem.InnerText);
-                            }                                
+                            }
                         }
 
                         // Add metadata and format data based on type.
@@ -14769,7 +14740,7 @@ namespace Protean
                                 XmlDocument oInstanceDoc = new XmlDocument();
                                 oInstanceDoc.LoadXml(Conversions.ToString(importStateObj.oInstance.OuterXml));
                                 XmlReader oXMLReaderInstance = new XmlNodeReader(oInstanceDoc);
-                                importStateObj.moTransform.Process(oXMLReaderInstance,ref sWriterOTW);
+                                importStateObj.moTransform.Process(oXMLReaderInstance, ref sWriterOTW);
                                 oTR = new StringReader(oTW.ToString());
                                 cFeedItemXML = oTR.ReadToEnd();
                                 // remove whitespace

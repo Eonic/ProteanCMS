@@ -29,7 +29,7 @@ namespace Protean.Providers
     {
         public interface IPaymentProvider
         {
-            void Initiate(ref Cms myWeb);
+            IPaymentProvider Initiate(ref Cms myWeb);
             IPaymentAdminXforms AdminXforms { get; set; }
             IPaymentAdminProcess AdminProcess { get; set; }
             IPaymentActivities Activities { get; set; }
@@ -108,14 +108,10 @@ namespace Protean.Providers
 
                     var o = Activator.CreateInstance(calledType);
 
-                    var args = new object[5];
-                    args[0] =  AdminXforms;
-                    args[1] = AdminProcess;
-                    args[2] = Activities;
-                    args[3] = this;
-                    args[4] = myWeb;
+                    var args = new object[1];
+                    args[0] = myWeb;
 
-                   return (IPaymentProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args);
+                    return (IPaymentProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args);
                 }
 
                 catch (Exception ex)
@@ -135,15 +131,50 @@ namespace Protean.Providers
             {
                 // do nothing
             }
-            IPaymentAdminXforms IPaymentProvider.AdminXforms { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-            IPaymentAdminProcess IPaymentProvider.AdminProcess { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-            IPaymentActivities IPaymentProvider.Activities { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-            void IPaymentProvider.Initiate(ref Cms myWeb)
+            private IPaymentAdminXforms _AdminXforms;
+            private IPaymentAdminProcess _AdminProcess;
+            private IPaymentActivities _Activities;
+            IPaymentAdminXforms IPaymentProvider.AdminXforms
             {
-                IPaymentAdminXforms AdminXforms = new AdminXForms(ref myWeb);
-                IPaymentAdminProcess AdminProcess = new AdminProcess(ref myWeb);
-                IPaymentActivities Activities = new Activities();
+                set
+                {
+                    _AdminXforms = value;
+                }
+                get
+                {
+                    return _AdminXforms;
+                }
+            }
+            IPaymentAdminProcess IPaymentProvider.AdminProcess
+            {
+                set
+                {
+                    _AdminProcess = value;
+                }
+                get
+                {
+                    return _AdminProcess;
+                }
+            }
+            IPaymentActivities IPaymentProvider.Activities
+            {
+                set
+                {
+                    _Activities = value;
+                }
+                get
+                {
+                    return _Activities;
+                }
+            }
+
+            public IPaymentProvider Initiate(ref Cms myWeb)
+            {
+                _AdminXforms = new AdminXForms(ref myWeb);
+                _AdminProcess = new AdminProcess(ref myWeb);
+                // MemProvider.AdminProcess.oAdXfm = MemProvider.AdminXforms
+                _Activities = new Activities();
+                return this;
             }
 
             public class AdminXForms : Admin.AdminXforms, IPaymentAdminXforms
@@ -580,12 +611,12 @@ namespace Protean.Providers
 
                     string PaymentLabel = configXml.SelectSingleNode("description/@value").InnerText;
                     // allow html in description node...
-                    bool bXmlLabel = false;
+                   // bool bXmlLabel = false;
 
                     if (!string.IsNullOrEmpty(configXml.SelectSingleNode("description").InnerXml))
                     {
                         PaymentLabel = configXml.SelectSingleNode("description").InnerXml;
-                        bXmlLabel = true;
+                       // bXmlLabel = true;
                     }
 
                     string iconclass = "";

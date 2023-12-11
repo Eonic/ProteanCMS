@@ -1384,8 +1384,7 @@ namespace Protean
                             {
                                 string argcSuccessfulCartCmd = "Currency";
                                 mcCartCmd = Conversions.ToString(updateCart(ref argcSuccessfulCartCmd));
-                                goto processFlow;
-                                break;
+                                goto processFlow;                                
                             }
                         case "Remove": // take away an item and set the command to display the cart
                             {
@@ -1398,10 +1397,8 @@ namespace Protean
                                     // RemoveItem has removed the last item in the cart - quit the cart.
                                     mcCartCmd = "Quit";
                                 }
-                                goto processFlow;
-                                break;
+                                goto processFlow;                                
                             }
-
 
                         case "Add": // add an item to the cart, if its a new cart we must initialise it and change its status
                             {
@@ -2098,7 +2095,7 @@ namespace Protean
                                     MakeCurrent(nI);
                                 mcCartCmd = "Cart";
                                 goto processFlow;
-                                break;
+                                
                             }
 
                         case "Delete":
@@ -2109,8 +2106,7 @@ namespace Protean
                                 if (!(nI == 0))
                                     DeleteCart(nI);
                                 mcCartCmd = "List";
-                                goto processFlow;
-                                break;
+                                goto processFlow;                                
                             }
 
                         case "Brief":
@@ -3251,7 +3247,7 @@ namespace Protean
                 short ReceiptDeliveryType;
                 DataSet oDs;
                 DataSet oDs2;
-                DataSet oDsShippingOptionKey;
+                //DataSet oDsShippingOptionKey;
 
                 string sSql;
                 DataRow oRow;
@@ -3272,7 +3268,7 @@ namespace Protean
                 // We need to read this value from somewhere so we can change where vat is added
                 // Currently defaulted to per line
                 // If true will be added to the unit
-                decimal nLineVat = 0m;
+                //decimal nLineVat = 0m;
                 object bCheckSubscriptions = false;
                 string cOptionGroupName = "";
 
@@ -4435,7 +4431,7 @@ namespace Protean
                     string cxpath = xPathStart + PriceType + "/Price[(@currency=\"" + mcCurrency + "\") " + cGroups + " and node()!=\"\"]"; // need to loop through all just in case we have splits'handled later on though
 
                     XmlElement oThePrice = (XmlElement)oDefaultPrice;
-                    double nPrice = 0.0d;
+                    //double nPrice = 0.0d;
 
                     foreach (XmlElement oPNode in oContentXml.SelectNodes(cxpath))
                     {
@@ -6021,7 +6017,7 @@ namespace Protean
                         {
 
                             oXform.updateInstanceFromRequest();
-                            bool forCollection = false;
+                           // bool forCollection = false;
                             if (moDBHelper.checkTableColumnExists("tblCartShippingMethods", "bCollection"))
                             {
                                 object bCollectionSelected = false;
@@ -6041,7 +6037,7 @@ namespace Protean
                                                 string cSqlUpdate;
                                                 cSqlUpdate = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("UPDATE tblCartOrder SET cShippingDesc='", SqlFmt(cShippingDesc)), "', nShippingCost="), SqlFmt(nShippingCost.ToString())), ", nShippingMethodId = "), oDrCollectionOptions["nShipOptKey"]), " WHERE nCartOrderKey="), mnCartId));
                                                 moDBHelper.ExeProcessSql(cSqlUpdate);
-                                                forCollection = true;
+                                               // forCollection = true;
                                                 oXform.valid = true;
                                                 oContactXform.valid = true;
                                                 mbNoDeliveryAddress = true;
@@ -8277,7 +8273,7 @@ namespace Protean
                                 XmlElement oPrice = null;
                                 long nWeight = 0L;
 
-                                XmlDataDocument oItemInstance = new XmlDataDocument();
+                                XmlDocument oItemInstance = new XmlDocument();
                                 oItemInstance.AppendChild(oItemInstance.CreateElement("instance"));
                                 XmlNode argoNode = oItemInstance.DocumentElement;
                                 oElmt = addNewTextNode("tblCartItem", ref argoNode);
@@ -8460,7 +8456,7 @@ namespace Protean
                                         if (oProdOptions[i] != null & nQuantity > 0L)
                                         {
                                             // Add Options
-                                            oItemInstance = new XmlDataDocument();
+                                            oItemInstance = new XmlDocument();
                                             oItemInstance.AppendChild(oItemInstance.CreateElement("instance"));
                                             XmlNode argoNode20 = oItemInstance.DocumentElement;
                                             oElmt = addNewTextNode("tblCartItem", ref argoNode20);
@@ -8719,7 +8715,7 @@ namespace Protean
                                     else
                                     {
                                         // injection attempt don't add to cart
-                                        return false;
+                                       //return false;
                                         return AddItemsRet;
                                     }
                                 }
@@ -11048,16 +11044,13 @@ namespace Protean
             {
                 try
                 {
-                    long nQuantity = 1L;
-
+                    //long nQuantity = 1L;
                     xmlProduct.SetAttribute("test1", "1");
-
                     var xmlShippingOptions = makeShippingOptionsXML();
 
                     // 'step through oShipping Options and add to oElmt those options 
                     // 'that are valid for our price and weight.
                     var xmlShippingOptionsValid = moPageXml.CreateElement("ShippingOptions");
-
 
                     var strXpath = new System.Text.StringBuilder();
                     strXpath.Append("Method[ ");
@@ -11099,9 +11092,8 @@ namespace Protean
                         }
                         catch (Exception ex)
                         {
-                            xmlMethod = xmlMethod;
-                            xmlProduct = xmlProduct;
-
+                            //xmlMethod = xmlMethod;
+                            //xmlProduct = xmlProduct;
                             stdTools.returnException(ref myWeb.msException, mcModuleName, "AddShippingCosts", ex, vstrFurtherInfo: "", bDebug: gbDebug);
                         }
 
@@ -11454,7 +11446,7 @@ namespace Protean
                 {
                     XmlElement oelmt;
                     // Dim cSqlUpdate As String
-                    var oItemInstance = new XmlDataDocument();
+                    var oItemInstance = new XmlDocument();
                     oItemInstance.AppendChild(oItemInstance.CreateElement("instance"));
                     XmlNode argoNode = oItemInstance.DocumentElement;
                     oelmt = addNewTextNode("tblCartItem", ref argoNode);
@@ -11539,7 +11531,7 @@ namespace Protean
                 {
                     XmlElement oelmt;
                     // Dim cSqlUpdate As String
-                    var oItemInstance = new XmlDataDocument();
+                    var oItemInstance = new XmlDocument();
                     oItemInstance.AppendChild(oItemInstance.CreateElement("instance"));
                     XmlNode argoNode = oItemInstance.DocumentElement;
                     oelmt = addNewTextNode("tblCartItem", ref argoNode);
@@ -11937,7 +11929,7 @@ namespace Protean
                     XmlElement oeResponseElmt = (XmlElement)oCartListElmt.SelectSingleNode("/PaymentDetails/instance/Response");
                     string ReceiptId = oCartListElmt.SelectSingleNode("/PaymentDetails/instance/Response/@ReceiptId").Value.ToString();
                     double Amount = Convert.ToDouble(oCartListElmt.GetAttribute("total"));
-                    int nItemID = 0; // ID of the cart item record
+                    //int nItemID = 0; // ID of the cart item record
                                      // Dim oDs As DataSet
 
                     oInstance.AppendChild(oInstance.CreateElement("instance"));

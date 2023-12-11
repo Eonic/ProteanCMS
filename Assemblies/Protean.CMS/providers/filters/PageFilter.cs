@@ -34,7 +34,7 @@ namespace Protean.Providers
                     string sSql = "spGetPagesByParentPageId";
                     var arrParams = new Hashtable();
                     var oXml = oXform.moPageXML.CreateElement("PageFilter");
-                    XmlElement oFilterElmt = null;
+                    //XmlElement oFilterElmt = null;
                     string className = string.Empty;
 
                     if (oContentNode.Attributes["filterTarget"] != null)

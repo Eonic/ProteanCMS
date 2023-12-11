@@ -62,7 +62,7 @@ namespace Protean
         public bool mbPopupMode = false;
 
         public XmlDocument moPageXml = new XmlDocument();
-        private XmlDocument moXmlAddedContent;
+        //private XmlDocument moXmlAddedContent;
         public DateTime? mdPageExpireDate = DateAndTime.DateAdd(DateInterval.Year, 1d, DateTime.Now);
         public DateTime? mdPageUpdateDate = DateAndTime.DateAdd(DateInterval.Year, -1, DateTime.Now);
         private int mnPageCacheMode;
@@ -1012,7 +1012,7 @@ namespace Protean
                 // sProcessInfo = Process.GetCurrentProcess.ProcessName
 
                 // Set the debug mode
-                this.moConfig = this.moConfig;
+                //this.moConfig = this.moConfig;
                 if (this.moConfig["Debug"] != null)
                 {
                     switch (Strings.LCase(this.moConfig["Debug"]) ?? "")
@@ -1350,9 +1350,9 @@ namespace Protean
                 }
 
 
-                this.mnArtId = this.mnArtId;
-                this.mnPageId = this.mnPageId;
-                this.mnUserId = this.mnUserId;
+                //this.mnArtId = this.mnArtId;
+                //this.mnPageId = this.mnPageId;
+                //this.mnUserId = this.mnUserId;
 
                 mbIsUsingHTTPS = this.moRequest.ServerVariables["HTTPS"] == "on";
 
@@ -2877,7 +2877,7 @@ namespace Protean
 
             XmlElement oPageElmt;
             string processInfo = "";
-            string sLayout = "default";
+            //string sLayout = "default";
             XmlElement oElmt;
 
             try
@@ -3198,7 +3198,7 @@ namespace Protean
             this.PerfMon.Log("Web", "GetAjaxXML");
             XmlElement oPageElmt;
             string sProcessInfo = "";
-            string sLayout = "default";
+            //string sLayout = "default";
 
             try
             {
@@ -3446,9 +3446,6 @@ namespace Protean
 
                                 }
                             }
-
-
-
                             else
                             {
                                 // raise error or do nothing
@@ -3501,14 +3498,12 @@ namespace Protean
 
                             // Note need to fix for newsletters.
                             var FullMenuXml = GetStructureXML(-1, RootPageId, nContextId);
-
                             long getLevel = 0L;
 
                             // Move the requested ID to the top.
                             if (FullMenuXml.SelectSingleNode("descendant-or-self::MenuItem[@id = " + expId + "]") is null)
                             {
                             }
-
                             else
                             {
                                 getLevel = FullMenuXml.SelectNodes("descendant-or-self::MenuItem[@id = " + expId + "]/ancestor-or-self::MenuItem").Count;
@@ -4229,7 +4224,7 @@ namespace Protean
                     string classPath = ocNode.GetAttribute("action");
                     string assemblyName = ocNode.GetAttribute("assembly");
                     string assemblyType = ocNode.GetAttribute("assemblyType");
-                    string providerName = ocNode.GetAttribute("providerName");
+                    string providerName = ocNode.GetAttribute("providerName");                 
                     string providerType = ocNode.GetAttribute("providerType");
                     if (string.IsNullOrEmpty(providerType))
                         providerType = "messaging";
@@ -4274,7 +4269,7 @@ namespace Protean
                                 }
                                 else
                                 {
-                                    switch (moPrvConfig.Providers[providerName].Parameters["path"] ?? "")
+                                    switch (moPrvConfig.Providers[providerName].Parameters["path"])
                                     {
                                         case var @case when @case == "":
                                             {
@@ -7617,7 +7612,7 @@ namespace Protean
                 // cContentTypes = cContentTypes.Replace("''", "'")
 
 
-                string sProcessInfo = "addPageDetailLinksToStructure";
+                //string sProcessInfo = "addPageDetailLinksToStructure";
                 string cSQL = "SELECT tblContent.nContentKey, tblContent.cContentName, tblContentLocation.nStructId, tblAudit.dPublishDate, tblAudit.dUpdateDate, tblContent.cContentSchemaName" + " FROM tblContent INNER JOIN" + " tblAudit ON tblContent.nAuditId = tblAudit.nAuditKey INNER JOIN" + " tblContentLocation ON tblContent.nContentKey = tblContentLocation.nContentId" + " WHERE (tblContentLocation.bPrimary = 1) AND (tblAudit.nStatus = 1) AND (tblAudit.dPublishDate <= " + Tools.Database.SqlDate(mdDate) + " or tblAudit.dPublishDate is null) AND " + " (tblAudit.dExpireDate >= " + Tools.Database.SqlDate(mdDate) + " or tblAudit.dExpireDate is null) AND (tblContent.cContentSchemaName IN (" + cContentTypes + ")) ";
 
 
@@ -9276,17 +9271,15 @@ namespace Protean
                     retElmt = moContentDetail;
                     this.moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.ContentDetailViewed, this.mnUserId, SessionID, DateTime.Now, this.mnArtId, 0, "");
                     return moContentDetail;
-                }
-
-                sSql = null;
+                }                
             }
-
             catch (Exception ex)
             {
                 // returnException(msException, mcModuleName, "getContentDetailXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
                 OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetContentDetailXml", ex, sProcessInfo));
                 return null;
             }
+            //sSql = null;
         }
 
 
@@ -9548,7 +9541,8 @@ namespace Protean
             string sSql = "";
             string strFilePath = "";
             string strFileName = "";
-            string objStream, strFileSize, strFileType, FileExt;
+            string objStream = string.Empty;
+            string strFileSize, strFileType, FileExt;
             // Dim strPageInfo, strReferrer
             // Dim sWriter = New IO.StringWriter
             var oDS = new DataSet();
@@ -10996,7 +10990,7 @@ namespace Protean
             string filename = "";
             string filepath = "";
             string artId = string.Empty;
-            string Ext = ".html";
+            //string Ext = ".html";
             try
             {
 

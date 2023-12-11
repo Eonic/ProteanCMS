@@ -790,7 +790,7 @@ namespace Protean
                             cHtml = Regex.Replace(cHtml, @"<\?xml*\?>/i", "", RegexOptions.IgnoreCase);
                             cHtml = cHtml.Replace("<?xml:namespace prefix = o ns = \"urn:schemas-microsoft-com:office:office\" />", "");
 
-                            cHtml = cHtml;
+                            //cHtml = cHtml;
                         }
 
                         cHtmlOut = Tools.Text.tidyXhtmlFrag(cHtml, true, true, RemoveTags);
@@ -2966,8 +2966,7 @@ namespace Protean
                                     if (oImp.ImpersonateValidUser(myWeb.moConfig["AdminAcct"], myWeb.moConfig["AdminDomain"], myWeb.moConfig["AdminPassword"], true, myWeb.moConfig["AdminGroup"]) == false)
                                     {
                                         sReturnString = "Admin-Account-Logon-Failure";
-                                        return sReturnString;
-                                        break;
+                                        return sReturnString;                                        
                                     }
                                 }
 
@@ -3090,12 +3089,12 @@ namespace Protean
                                 }
                             }
                         }
-
+                        //sReturnString = null;
                         return sReturnString.Replace("~", "");
-                        sReturnString = null;
+                        
                     }
 
-                    catch (IOException ioex)    // New changes on 9/12/21'
+                    catch (IOException)    // New changes on 9/12/21'
                     {
                         myWeb.bPageCache = false;
                         sReturnString = "/" + myWeb.moConfig["ProjectPath"] + "css" + string.Format("{0}/style.css", TargetPath);

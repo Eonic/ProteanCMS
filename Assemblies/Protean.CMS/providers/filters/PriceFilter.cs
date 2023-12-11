@@ -45,7 +45,7 @@ namespace Protean.Providers
                     int nPageId = aWeb.mnPageId;
                     int nMaxPRiceProduct = 0;
                     int nMinPriceProduct = 0;
-                    XmlElement oFilterElmt = null;
+                    //XmlElement oFilterElmt = null;
                     string className = string.Empty;
                     string cWhereQuery = string.Empty;
 
@@ -182,7 +182,7 @@ namespace Protean.Providers
                 try
                 {
                     // Dim priceRange() As String
-                    string cDefinitionName = "Price";
+                    //string cDefinitionName = "Price";
                     string cSelectedMinPrice = string.Empty;
                     string cSelectedMaxPrice = string.Empty;
                     string cPageIds = string.Empty;
@@ -190,7 +190,7 @@ namespace Protean.Providers
                     // cSelectedMaxPrice = Convert.ToString(oXform.Instance.SelectSingleNode("PriceFilter/@MaxPrice").InnerText)
                     cSelectedMinPrice = Convert.ToString(aWeb.moRequest.Form["MinPrice"]).Replace(aWeb.moCart.mcCurrencySymbol, "");
                     cSelectedMaxPrice = Convert.ToString(aWeb.moRequest.Form["MaxPrice"]).Replace(aWeb.moCart.mcCurrencySymbol, "");
-                    bool bParentPageId = false;
+                    //bool bParentPageId = false;
 
 
                     // If (oXform.Instance.SelectSingleNode("PageFilter") IsNot Nothing) Then

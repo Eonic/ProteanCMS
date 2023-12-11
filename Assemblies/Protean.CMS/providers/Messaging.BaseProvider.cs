@@ -23,6 +23,7 @@ using static Protean.Cms;
 using static Protean.stdTools;
 using Protean.Tools;
 using System.Dynamic;
+using Protean.Providers.Payment;
 
 namespace Protean.Providers
 {
@@ -31,7 +32,7 @@ namespace Protean.Providers
 
         public interface IMessagingProvider
         {
-            void Initiate(ref Cms myWeb);
+            IMessagingProvider Initiate(ref Cms myWeb);
             IMessagingAdminXforms AdminXforms { get; set; }
             IMessagingAdminProcess AdminProcess { get; set; }
             IMessagingActivities Activities { get; set; }
@@ -82,7 +83,7 @@ namespace Protean.Providers
 
         public class ReturnProvider
         {
-            private const string mcModuleName = "Protean.Providers.Messaging";
+            private const string mcModuleName = "Protean.Providers.Messaging.ReturnProvider";
 
             public IMessagingProvider Get(ref Cms myWeb, string ProviderName)
             {
@@ -131,16 +132,16 @@ namespace Protean.Providers
 
                     var o = Activator.CreateInstance(calledType);
 
-                    var args = new object[0];                
+                    var args = new object[1];                
                     args[0] = myWeb;
 
                     return (IMessagingProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args);
                 }
 
                 catch (Exception ex)
-                {
-                    return null;
+                {                    
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "New", ex, vstrFurtherInfo: cProgressInfo + " - " + ProviderName + " Could Not be Loaded", bDebug: gbDebug);
+                    return null;
                 }
 
             }
@@ -154,19 +155,51 @@ namespace Protean.Providers
                 // do nothing
             }
 
-            IMessagingAdminXforms IMessagingProvider.AdminXforms { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-            IMessagingAdminProcess IMessagingProvider.AdminProcess { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-            IMessagingActivities IMessagingProvider.Activities { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-            public void Initiate(ref Cms myWeb)
+            private IMessagingAdminXforms _AdminXforms;
+            private IMessagingAdminProcess _AdminProcess;
+            private IMessagingActivities _Activities;
+            IMessagingAdminXforms IMessagingProvider.AdminXforms
             {
+                set
+                {
+                    _AdminXforms = value;
+                }
+                get
+                {
+                    return _AdminXforms;
+                }
+            }
+            IMessagingAdminProcess IMessagingProvider.AdminProcess
+            {
+                set
+                {
+                    _AdminProcess = value;
+                }
+                get
+                {
+                    return _AdminProcess;
+                }
+            }
+            IMessagingActivities IMessagingProvider.Activities
+            {
+                set
+                {
+                    _Activities = value;
+                }
+                get
+                {
+                    return _Activities;
+                }
+            }
 
-                IMessagingAdminXforms AdminXforms = new AdminXForms(ref myWeb);
-                IMessagingAdminProcess AdminProcess = new AdminProcess(ref myWeb);
-                AdminProcess.oAdXfm = AdminXforms;
-                // MemProvider.Activities = New Activities()
-
-
+            public IMessagingProvider Initiate(ref Cms myWeb)
+            {
+                _AdminXforms = new AdminXForms(ref myWeb);
+                _AdminProcess = new AdminProcess(ref myWeb);
+                // MemProvider.AdminProcess.oAdXfm = MemProvider.AdminXforms
+                string exception = null; 
+                _Activities = new Activities(exception);
+                return this;
             }
 
             public class AdminXForms : Cms.Admin.AdminXforms, IMessagingAdminXforms
@@ -236,7 +269,7 @@ namespace Protean.Providers
                                 // first we will only deal with unpersonalised
                                 var oMessager = new Protean.Messaging(ref myWeb.msException);
                                 // get the subject
-                                var oMessaging = new Activities(ref myWeb.msException);
+                                var oMessaging = new Activities(myWeb.msException);
 
                                 string cMailingXsl = moMailConfig["MailingXsl"];
                                 if (string.IsNullOrEmpty(cMailingXsl))
@@ -389,7 +422,7 @@ namespace Protean.Providers
                     }
                 }
 
-                public XmlElement xFrmAddModule(long pgid, string position)
+                public new XmlElement xFrmAddModule(long pgid, string position)
                 {
                     XmlElement oFrmElmt;
                     XmlElement oSelElmt;
@@ -937,10 +970,9 @@ namespace Protean.Providers
             public class Activities : Protean.Messaging, IMessagingActivities
             {
 
-                public Activities(ref string sException) : base(ref sException)
+                public Activities(string msException)
                 {
                 }
-
                 public new bool SendMailToList_Queued(int nPageId, string cEmailXSL, string cGroups, string cFromEmail, string cFromName, string cSubject)
                 {
                     // PerfMon.Log("Messaging", "SendMailToList_Queued")

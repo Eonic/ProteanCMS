@@ -208,10 +208,10 @@ namespace Protean
 
             string instanceNodeName = FeedItemNode;
             XElement origInstance = null;
-            long ProcessedQty = 0L;
+            //long ProcessedQty = 0L;
             long completeCount = 0L;
             long failedCount = 0L;
-            long startNo = 0L;
+            //long startNo = 0L;
             string processInfo;
             long logId = 0L;
             try
@@ -272,7 +272,7 @@ namespace Protean
                     {
                         using (var reader = XmlReader.Create(response.GetResponseStream()))
                         {
-                            XElement name = null;
+                            //XElement name = null;
                            // XElement item = null;
                             string sDoc = "";
                             string sDocBefore = "";

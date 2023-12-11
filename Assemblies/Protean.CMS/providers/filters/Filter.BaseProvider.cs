@@ -81,15 +81,12 @@ namespace Protean.Providers
 
                     return (IFilterProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args);
                 }
-
                 catch (Exception ex)
-                {
-                    return null;
+                {                   
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "New", ex, "", ProviderName + " Could Not be Loaded", gbDebug);
+                    return null;
                 }
-
             }
-
         }
 
         public class DefaultProvider : IFilterProvider

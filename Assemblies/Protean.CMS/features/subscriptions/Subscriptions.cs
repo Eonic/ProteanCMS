@@ -2476,7 +2476,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "SubcriptionReminders", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, cProcessInfo, ex, "", "", gbDebug);
                         return null;
                     }
 
@@ -2514,7 +2514,7 @@ namespace Protean
 
                         var aPermittedGroups = new long[1];
                         var oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Subscriptions");
-                        long ProcessedCount = 0L;
+                        //long ProcessedCount = 0L;
                         if (oDS.Tables["Subscriptions"].Rows.Count > 0)
                         {
                             foreach (DataRow oDr in oDS.Tables["Subscriptions"].Rows)
@@ -2816,7 +2816,7 @@ namespace Protean
                                     XmlElement xfrmGroup = (XmlElement)PaymentOptionsSelect.SelectSingleNode("ancestor::group[1]");
 
                                     PaymentProviders oPay;
-                                    bool bDeny = false;
+                                    //bool bDeny = false;
                                     oPay = new PaymentProviders(ref this.myWeb);
                                     oPay.mcCurrency = moCartConfig["Currency"];
 

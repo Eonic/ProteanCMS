@@ -49,7 +49,7 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
             if (string.IsNullOrEmpty(Password))
             {
                 throw new Exception("No password specified");
-                return UploadAndPostRet;
+               // return UploadAndPostRet;
             }
 
             HttpWebRequest rqUploadtoYFrog = (HttpWebRequest)System.Net.WebRequest.Create(YP_UPLOAD_AND_POST);

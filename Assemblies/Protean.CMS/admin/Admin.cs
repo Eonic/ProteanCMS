@@ -671,8 +671,7 @@ namespace Protean
                         case "admin":
                             {
                                 mcEwCmd = "Content";
-                                goto ProcessFlow;
-                                break;
+                                goto ProcessFlow;                                
                             }
 
 
@@ -1574,43 +1573,37 @@ namespace Protean
                                         {
                                             mcEwCmd = "MoveContent";
                                             sAdminLayout = "MoveContent";
-                                            goto ProcessFlow;
-                                            break;
+                                            goto ProcessFlow;                                           
                                         }
                                     case "Copy":
                                         {
                                             mcEwCmd = "CopyContent";
                                             sAdminLayout = "CopyContent";
-                                            goto ProcessFlow;
-                                            break;
+                                            goto ProcessFlow;                                           
                                         }
                                     case "Locate":
                                         {
                                             mcEwCmd = "LocateContent";
                                             sAdminLayout = "LocateContent";
-                                            goto ProcessFlow;
-                                            break;
+                                            goto ProcessFlow;                                            
                                         }
                                     case "Hide":
                                         {
                                             mcEwCmd = "HideContent";
                                             sAdminLayout = "HideContent";
-                                            goto ProcessFlow;
-                                            break;
+                                            goto ProcessFlow;                                          
                                         }
                                     case "Show":
                                         {
                                             mcEwCmd = "ShowContent";
                                             sAdminLayout = "ShowContent";
-                                            goto ProcessFlow;
-                                            break;
+                                            goto ProcessFlow;                                           
                                         }
                                     case "Delete":
                                         {
                                             mcEwCmd = "DeleteContent";
                                             sAdminLayout = "DeleteContent";
-                                            goto ProcessFlow;
-                                            break;
+                                            goto ProcessFlow;                                            
                                         }
                                 }
 
@@ -1979,7 +1972,7 @@ namespace Protean
                                 mcEwCmd = "PageVersions";
                                 myWeb.ClearPageCache();
                                 goto ProcessFlow;
-                                break;
+                                
                             }
                         case "CopyPage":
                             {
@@ -2449,16 +2442,14 @@ namespace Protean
                                 myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.CartContact, (long)Conversions.ToInteger("0" + myWeb.moRequest["parid"]));
                                 mcEwCmd = "ListUserContacts";
                                 myWeb.msRedirectOnEnd = "/?ewCmd=Profile&DirType=Company&id=" + myWeb.moRequest["id"];
-                                goto ProcessFlow;
-                                break;
+                                goto ProcessFlow;                               
                             }
                         case "DeleteContact":
                             {
 
                                 myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.CartContact, (long)Conversions.ToInteger("0" + myWeb.moRequest["id"]));
                                 mcEwCmd = "ListUserContacts";
-                                goto ProcessFlow;
-                                break;
+                                goto ProcessFlow;                               
                             }
                         case "ListCompanies":
                             {
@@ -2708,8 +2699,7 @@ namespace Protean
                             {
                                 myWeb.moDbHelper.setObjectStatus(Cms.dbHelper.objectTypes.Directory, Cms.dbHelper.Status.Hidden, Conversions.ToLong(myWeb.moRequest["id"]));
                                 mcEwCmd = Conversions.ToString(myWeb.moSession["ewCmd"]);
-                                goto ProcessFlow;
-                                break;
+                                goto ProcessFlow;                                
                             }
                         case "DeleteDirItem":
                             {
@@ -2757,7 +2747,7 @@ namespace Protean
                                 bResetParId = true;
 
                                 goto ProcessFlow;
-                                break;
+                                
                             }
 
                         case "Permissions":
@@ -3155,8 +3145,7 @@ namespace Protean
                             {
                                 myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.CartProductCategories, Conversions.ToLong(myWeb.moRequest.QueryString["GroupId"]));
                                 mcEwCmd = "ProductGroups";
-                                goto ProcessFlow;
-                                break;
+                                goto ProcessFlow;                               
                             }
                         case "AddProductGroupsProduct":
                             {
@@ -3186,7 +3175,7 @@ namespace Protean
                                 myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.CartCatProductRelations, Conversions.ToLong(myWeb.moRequest.QueryString["RelId"]));
                                 mcEwCmd = "ProductGroups";
                                 goto ProcessFlow;
-                                break;
+                                
                             }
                         case "DiscountRules":
                         case "EditDiscountRules":
@@ -3220,7 +3209,7 @@ namespace Protean
                                 myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.CartDiscountRules, Conversions.ToLong(myWeb.moRequest.QueryString["DiscId"]));
                                 mcEwCmd = "DiscountRules";
                                 goto ProcessFlow;
-                                break;
+                                
                             }
                         case "ApplyDirDiscountRules":
                             {
@@ -5664,7 +5653,7 @@ namespace Protean
                                     goto default;
                                 }
                                 goto default;
-                                break;
+                                
                             }
                         case "hide":
                             {
@@ -5689,8 +5678,7 @@ namespace Protean
 
                                 myWeb.moDbHelper.ReorderNode(Cms.dbHelper.objectTypes.Lookup, Conversions.ToLong(lookupId), myWeb.moRequest["ewCmd2"], "cLkpCategory");
                                 lookupId = null;
-                                goto default;
-                                break;
+                                goto default;                              
                             }
 
                         default:
@@ -5789,7 +5777,7 @@ namespace Protean
                                     goto default;
                                 }
                                 goto default;
-                                break;
+                                
                             }
                         case "updateAllRules":
                             {
@@ -5809,7 +5797,7 @@ namespace Protean
                                     }
                                 }
                                 goto default;
-                                break;
+                                
                             }
                         case "update":
                             {
@@ -5847,7 +5835,7 @@ namespace Protean
                                     }
                                 }
                                 goto default;
-                                break;
+                                
                             }
                         default:
                             {
@@ -6234,7 +6222,7 @@ from tblContentIndexDef";
             {
                 // Dim oScheduler As New Scheduler
                 System.Collections.Specialized.NameValueCollection oSchedulerConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/scheduler");
-                bool bHasScheduledItems = false;
+               // bool bHasScheduledItems = false;
                 string cConStr = "";
 
                 string cProcessInfo = "";
@@ -6251,7 +6239,7 @@ from tblContentIndexDef";
                         cProcessInfo = "Connecting to the Scheduler";
                         if (!string.IsNullOrEmpty(oSchedulerConfig["SiteURL"]))
                             cUrl = oSchedulerConfig["SiteURL"];
-                        bHasScheduledItems = true;
+                        //bHasScheduledItems = true;
                         cConStr = "Data Source=" + oSchedulerConfig["DatabaseServer"] + "; ";
                         cConStr += "Initial Catalog=" + oSchedulerConfig["DatabaseName"] + "; ";
 
@@ -6434,7 +6422,7 @@ from tblContentIndexDef";
 
                                 cewCmd = "ScheduledItems";
                                 goto Process;
-                                break;
+                                
                             }
 
                         case "ActivateScheduledItem":
@@ -6455,8 +6443,7 @@ from tblContentIndexDef";
                                 dbt.ExeProcessSql(cSQL);
 
                                 cewCmd = "ScheduledItems";
-                                goto Process;
-                                break;
+                                goto Process;                               
                             }
 
                         case "DeleteScheduledItem":
@@ -6479,8 +6466,7 @@ from tblContentIndexDef";
                                 dbt.ExeProcessSql(cSQL);
 
                                 cewCmd = "ScheduledItems";
-                                goto Process;
-                                break;
+                                goto Process;                                
                             }
                     }
                 }
@@ -6539,7 +6525,7 @@ from tblContentIndexDef";
                             oSub.ResendCancelation(Conversions.ToInteger(myWeb.moRequest["id"]));
                             cCmd = "ManageUserSubscription";
                             goto SP;
-                            break;
+                            
                         }
                     case "Subscriptions":
                         {

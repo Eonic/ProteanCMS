@@ -55,7 +55,7 @@ namespace Protean
 
         private string[] sNoteTypes = new string[] { "help", "hint", "alert" };
         private string[] sBindAttributes = new string[] { "calculate", "constraint", "readonly", "relevant", "required", "type" };
-        private object @this;
+       // private object this;
 
         public enum noteTypes
         {
@@ -850,7 +850,7 @@ namespace Protean
                     }
 
                     // case for calculate
-                    if (oBindElmt.GetAttribute("calculate") != default & bIsThisBindValid)
+                    if (oBindElmt.GetAttribute("calculate") != "" & bIsThisBindValid)
                     {
 
                         // Get the current object value
@@ -871,7 +871,7 @@ namespace Protean
                     }
 
                     // case for required 
-                    if (oBindElmt.GetAttribute("required") != default & bIsThisBindValid)
+                    if (oBindElmt.GetAttribute("required") != "" & bIsThisBindValid)
                     {
 
                         cProcessInfo = cProcessInfo + " - Required Compile Error: " + oBindElmt.GetAttribute("required");
@@ -910,7 +910,7 @@ namespace Protean
                     }
 
                     // case for constraint
-                    if (oBindElmt.GetAttribute("constraint") != default & bIsThisBindValid)
+                    if (oBindElmt.GetAttribute("constraint") != "" & bIsThisBindValid)
                     {
 
                         cProcessInfo = cProcessInfo + " - Constraint Compile Error: " + oBindElmt.GetAttribute("constraint");
@@ -1988,7 +1988,7 @@ namespace Protean
                     bIsXml = false;
                     oElmt = (XmlElement)oNode;
                     sAttribute = "";
-                    bool populate = true;
+                    //bool populate = true;
 
                     // Readonly Textarea need to treat any value as Xml
                     if (oElmt.Name == "textarea" & oElmt.GetAttribute("class").Contains("readonly"))
@@ -2052,7 +2052,7 @@ namespace Protean
                                 {
                                     string oldXpath = sXpath;
                                     string modifiedXpath;
-                                    bool isModified = false;
+                                   // bool isModified = false;
                                     foreach (XmlElement valueElmt in oElmt.SelectNodes("item/value"))
                                     {
                                         modifiedXpath = oldXpath.Replace("$submittedValue", valueElmt.InnerText);
@@ -2072,18 +2072,13 @@ namespace Protean
                                         sXpath = ".";
                                     }
                                 }
-
                                 cProcessInfo = "Error Binding to Node at:" + sXpath;
-
                             }
                         }
-
-
                         catch (Exception ex2)
                         {
                             returnException(ref msException, mcModuleName, "addValues", ex2, "", cProcessInfo, gbDebug);
                         }
-
                     }
                     if (!string.IsNullOrEmpty(sXpath))
                     {
@@ -3012,7 +3007,7 @@ namespace Protean
 
             string cProcessInfo = "";
 
-            bool ordinalsChecked = false;
+            //bool ordinalsChecked = false;
 
             int nameOrdinal = 0;
             int valueOrdinal = 1;
@@ -3846,7 +3841,7 @@ namespace Protean
                                             }
 
                                             // test if the current node is one we want to delete, note that nodeCount is current nodes whereas nodePosition is the new numbering
-                                            bool bDelete = false;
+                                            //bool bDelete = false;
 
                                             // build the repeating form groups
                                             oRptElmtCopy = (XmlElement)oRptElmt.CloneNode(true);

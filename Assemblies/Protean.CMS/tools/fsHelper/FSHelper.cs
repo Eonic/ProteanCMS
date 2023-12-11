@@ -571,7 +571,7 @@ namespace Protean
                         if (oImp.ImpersonateValidUser(goConfig["AdminAcct"], goConfig["AdminDomain"], goConfig["AdminPassword"], cInGroup: goConfig["AdminGroup"]) == false)
                         {
                             return "Server admin permissions are not configured";
-                            break;
+                            //break;
                         }
                     }
 
@@ -630,7 +630,7 @@ namespace Protean
                         if (oImp.ImpersonateValidUser(goConfig["AdminAcct"], goConfig["AdminDomain"], goConfig["AdminPassword"], cInGroup: goConfig["AdminGroup"]) == false)
                         {
                             return "Server admin permissions are not configured";
-                            break;
+                            //break;
                         }
                     }
 
@@ -747,7 +747,7 @@ namespace Protean
                         if (oImp.ImpersonateValidUser(goConfig["AdminAcct"], goConfig["AdminDomain"], goConfig["AdminPassword"], cInGroup: goConfig["AdminGroup"]) == false)
                         {
                             return "Server admin permissions are not configured";
-                            break;
+                           // break;
                         }
                     }
 
@@ -793,7 +793,7 @@ namespace Protean
                         if (oImp.ImpersonateValidUser(goConfig["AdminAcct"], goConfig["AdminDomain"], goConfig["AdminPassword"], cInGroup: goConfig["AdminGroup"]) == false)
                         {
                             return "Server admin permissions are not configured";
-                            break;
+                            //break;
                         }
                     }
 
@@ -898,8 +898,8 @@ namespace Protean
         {
             // PerfMon.Log("fsHelper", "SaveFile")
             WebResponse response = null;
-            Stream remoteStream;
-            StreamReader readStream;
+            Stream remoteStream = new System.IO.MemoryStream(); 
+           //StreamReader readStream;
             WebRequest request;
             System.Drawing.Image img = null;
             try
@@ -976,22 +976,17 @@ namespace Protean
                                     }
                             }
                         }
-
                         else
                         {
                             return "this root folder does not exist:" + mcStartFolder;
                         }
-                        response.Close();
-                        remoteStream.Close();
-                        img.Dispose();
+                      
                     }
-
-
-
+                    response.Close();
+                    remoteStream.Close();
+                    img.Dispose();
                 }
             }
-
-
             catch (Exception ex)
             {
                 return ex.Message;
@@ -1000,7 +995,7 @@ namespace Protean
             {
                 response = null;
                 remoteStream = null;
-                readStream = null;
+               // readStream = null;
                 img = null;
             }
 
@@ -1095,14 +1090,15 @@ namespace Protean
                         }
                     }
 
-                    var oFileStream = new FileStream(FilePath, FileMode.Open, FileAccess.Read);
-                    return oFileStream;
-
                     if (ImpersonationMode)
                     {
                         oImp.UndoImpersonation();
                         oImp = null;
                     }
+
+                    var oFileStream = new FileStream(FilePath, FileMode.Open, FileAccess.Read);
+                    return oFileStream;
+                  
                 }
 
                 catch (Exception)
@@ -1182,9 +1178,7 @@ namespace Protean
             {
                 var thisDir = new DirectoryInfo(goServer.MapPath(path));
                 long newSavings = 0L;
-
-                long nLengthBefore = 0L;
-
+                //long nLengthBefore = 0L;
                 path = HttpUtility.UrlDecode(path);
 
                 foreach (var ofolder in thisDir.GetDirectories())
