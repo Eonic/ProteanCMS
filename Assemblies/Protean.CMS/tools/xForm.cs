@@ -850,7 +850,7 @@ namespace Protean
                     }
 
                     // case for calculate
-                    if (oBindElmt.GetAttribute("calculate") != default & bIsThisBindValid)
+                    if (oBindElmt.GetAttribute("calculate") != "" & bIsThisBindValid)
                     {
 
                         // Get the current object value
@@ -871,7 +871,7 @@ namespace Protean
                     }
 
                     // case for required 
-                    if (oBindElmt.GetAttribute("required") != default & bIsThisBindValid)
+                    if (oBindElmt.GetAttribute("required") != "" & bIsThisBindValid)
                     {
 
                         cProcessInfo = cProcessInfo + " - Required Compile Error: " + oBindElmt.GetAttribute("required");
@@ -910,7 +910,7 @@ namespace Protean
                     }
 
                     // case for constraint
-                    if (oBindElmt.GetAttribute("constraint") != default & bIsThisBindValid)
+                    if (oBindElmt.GetAttribute("constraint") != "" & bIsThisBindValid)
                     {
 
                         cProcessInfo = cProcessInfo + " - Constraint Compile Error: " + oBindElmt.GetAttribute("constraint");
