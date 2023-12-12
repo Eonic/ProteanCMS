@@ -7,6 +7,8 @@ Imports System.Data.SqlClient
 Imports System.Reflection
 Imports System.Collections.Generic
 
+Imports Protean.stdTools
+
 
 Partial Public Class Cms
     Partial Public Class Membership
@@ -1038,7 +1040,7 @@ Partial Public Class Cms
                                     Try
                                         oElmt2.InnerXml = sContent
                                     Catch
-                                        oElmt2.InnerXml = Protean.tidyXhtmlFrag(sContent)
+                                        oElmt2.InnerXml = Tools.Text.tidyXhtmlFrag(sContent)
                                     End Try
                                 End If
                             Next

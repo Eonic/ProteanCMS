@@ -10,8 +10,9 @@ Imports System.Reflection
 Imports System.Net
 Imports System.Text.RegularExpressions
 Imports System.Collections.Generic
-Imports Org.BouncyCastle.Asn1.X509
+
 Imports Protean.fsHelper
+Imports Protean.stdTools
 
 Public Class Cms
     Inherits Base
@@ -581,7 +582,7 @@ Public Class Cms
                 mcPagePath = CStr(moRequest("path") & "")
                 mcPagePath = mcPagePath.Replace("//", "/")
 
-                InitialiseJSEngine()
+                JSStart.InitialiseJSEngine()
 
                 'Get the User ID
                 'if we access base via soap the session is not available
@@ -1346,17 +1347,17 @@ Public Class Cms
                                 End If
                                 ' Set the Content Disposition
                                 If Not String.IsNullOrEmpty(mcContentDisposition) Then
-                                        moResponse.AddHeader("Content-Disposition", mcContentDisposition)
-                                    End If
-
-                                    'ONLY CACHE html PAGES
-                                    If mcContentType <> "text/html" And Not String.IsNullOrEmpty(mcContentDisposition) Then
-                                        bPageCache = False
-                                    End If
-
+                                    moResponse.AddHeader("Content-Disposition", mcContentDisposition)
                                 End If
 
-                                If bPageCache = False Then
+                                'ONLY CACHE html PAGES
+                                If mcContentType <> "text/html" And Not String.IsNullOrEmpty(mcContentDisposition) Then
+                                    bPageCache = False
+                                End If
+
+                            End If
+
+                            If bPageCache = False Then
                                 sServeFile = ""
                             End If
 
@@ -5141,7 +5142,7 @@ Public Class Cms
                         Try
                             oElmt2.InnerXml = sContent
                         Catch
-                            oElmt2.InnerXml = Protean.tidyXhtmlFrag(sContent)
+                            oElmt2.InnerXml = Tools.Text.tidyXhtmlFrag(sContent)
                         End Try
                     End If
                 Next
@@ -5293,7 +5294,7 @@ Public Class Cms
                     Else
 
 
-                        Dim cacheSearchCriteria As String = " WHERE nCacheDirId = " & Protean.SqlFmt(nUserId) & " AND cCacheType='" & cCacheType & "'"
+                        Dim cacheSearchCriteria As String = " WHERE nCacheDirId = " & stdTools.SqlFmt(nUserId) & " AND cCacheType='" & cCacheType & "'"
                         If bAuth Then
                             cacheSearchCriteria &= " AND cCacheSessionID = '" & moSession.SessionID & "' AND DATEDIFF(hh,dCacheDate,GETDATE()) > 12"
                         End If
@@ -5355,7 +5356,7 @@ Public Class Cms
                     bIncludeExpiredAndHidden = True
                 End If
 
-                sSql = "EXEC getContentStructure_v2 @userId=" & nUserId & ", @bAdminMode=" & CInt(mbAdminMode) & ", @dateNow=" & Protean.sqlDate(mdDate) & ", @authUsersGrp = " & nAuthUsers & ", @bReturnDenied=1"
+                sSql = "EXEC getContentStructure_v2 @userId=" & nUserId & ", @bAdminMode=" & CInt(mbAdminMode) & ", @dateNow=" & sqlDate(mdDate) & ", @authUsersGrp = " & nAuthUsers & ", @bReturnDenied=1"
 
                 sProcessInfo = "GetStructureXML-getContentStrcuture"
                 PerfMon.Log("Web", sProcessInfo)
@@ -5371,7 +5372,7 @@ Public Class Cms
                         ' check we are returning strucutre for current user and not for another user such as in bespoke report (PDP for LMS system).
                         sSql = "EXEC getAllPageVersions"
                     Else
-                        sSql = "EXEC getUserPageVersions @userId=" & nUserId & ", @dateNow=" & Protean.sqlDate(mdDate) & ", @authUsersGrp = " & nAuthUsers & ", @bReturnDenied=0, @bShowAll=0"
+                        sSql = "EXEC getUserPageVersions @userId=" & nUserId & ", @dateNow=" & sqlDate(mdDate) & ", @authUsersGrp = " & nAuthUsers & ", @bReturnDenied=0, @bShowAll=0"
                     End If
 
                     sProcessInfo = "GetStructureXML-getPageVersions"
@@ -8842,7 +8843,7 @@ Public Class Cms
     ''' <param name="responseText">Optional the text that goes inside the Response node</param>
     ''' <param name="overwriteDuplicates">Optional if True this will overwrite any Response node with the same Name</param>
     ''' <remarks>If the Responses node has not been created then it will be.</remarks>
-    Public Sub AddResponse(ByVal responseName As String, Optional ByVal responseText As String = "", Optional ByVal overwriteDuplicates As Boolean = True, Optional ByVal typeAttribute As Protean.ResponseType = ResponseType.Undefined)
+    Public Sub AddResponse(ByVal responseName As String, Optional ByVal responseText As String = "", Optional ByVal overwriteDuplicates As Boolean = True, Optional ByVal typeAttribute As ResponseType = ResponseType.Undefined)
         Try
 
             If _responses Is Nothing Then

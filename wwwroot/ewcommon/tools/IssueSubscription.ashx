@@ -36,7 +36,7 @@ Public Class IssueSubscription : Implements IHttpHandler, IRequiresSessionState
 
             Dim moSubscription As Protean.Cms.Cart.Subscriptions
             moSubscription = New Protean.Cms.Cart.Subscriptions(myCms)
-            moSubscription.AddUserSubscriptions(oCart.mnCartId, oCart.mnEwUserId, oCart.mnPaymentId, itemElmt)
+            '  moSubscription.AddUserSubscriptions(oCart.mnCartId, oCart.mnEwUserId, oCart.mnPaymentId, itemElmt)
 
         Next
 

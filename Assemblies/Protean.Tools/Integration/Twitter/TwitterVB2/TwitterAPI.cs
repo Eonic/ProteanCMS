@@ -2784,7 +2784,7 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
                 }
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }
@@ -2913,11 +2913,10 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
                 }
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Deliberately doing nothing here.
                 // We just want to swallow the exception so that the application doesn't see an exception
-
             }
 
             return ReturnValue;

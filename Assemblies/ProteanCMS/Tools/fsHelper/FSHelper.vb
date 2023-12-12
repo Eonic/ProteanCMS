@@ -10,28 +10,16 @@
 
 Option Strict Off
 Option Explicit On
-Imports System.Data
-Imports System.Data.SqlClient
 Imports System.Xml
 Imports System.IO
-Imports System.Configuration
-Imports System.Collections
 Imports System.Collections.Generic
-Imports System.Drawing
-Imports System.Security.Principal
 Imports System.Web.Configuration
-Imports Protean.Tools.DelegateWrappers
-Imports System
 Imports System.Text.RegularExpressions
-Imports System.Web.UI
 Imports System.Web
-Imports Microsoft.Ajax.Utilities
 Imports DelegateWrappers
-Imports System.Drawing.Imaging
 Imports System.Net
 Imports System.Threading
-Imports Lucene.Net.Support
-Imports PayPal
+Imports Protean.stdTools
 
 Partial Public Class fsHelper
 

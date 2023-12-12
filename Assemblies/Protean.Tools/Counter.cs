@@ -41,9 +41,9 @@ namespace Protean.Tools
 
         public delegate void OnChangeEventHandler(Counter sender, EventArgs e);
 
-        public new event OnErrorEventHandler OnError;
+        public event OnErrorEventHandler OnError;
 
-        public new delegate void OnErrorEventHandler(object sender, Protean.Tools.Errors.ErrorEventArgs e);
+        public delegate void OnErrorEventHandler(object sender, Protean.Tools.Errors.ErrorEventArgs e);
 
         private void _OnError(object sender, Protean.Tools.Errors.ErrorEventArgs e)
         {
@@ -238,7 +238,7 @@ namespace Protean.Tools
             else
             {
                 throw new Exception("Counter name already exists");
-                return null;
+                //return null;
             }
         } // Add
 

@@ -12,23 +12,16 @@ Option Strict Off
 Option Explicit On
 
 Imports System.Xml
-Imports System.Web.HttpUtility
 Imports System.Web.Configuration
-Imports System.Configuration
-Imports System.IO
 Imports System.Collections
-Imports System.Data
 Imports System.Data.SqlClient
-Imports System.Text.RegularExpressions
-Imports System.Threading
 Imports Protean.Cms
 Imports Protean.Tools
 Imports Protean.Tools.Xml
 Imports System.Net.Mail
 Imports System.Reflection
-Imports System.Net
-Imports VB = Microsoft.VisualBasic
 Imports System
+Imports Protean.stdTools
 
 Namespace Providers
     Namespace Messaging
@@ -82,8 +75,8 @@ Namespace Providers
                         '= [Assembly].Load(moPrvConfig.Providers(ProviderName).Type)
 
                         If ourProvider.parameters("path") <> "" Then
-                            cProgressInfo = goServer.MapPath(ourProvider.parameters("path"))
-                            assemblyInstance = [Assembly].LoadFrom(goServer.MapPath(ourProvider.parameters("path")))
+                            cProgressInfo = Protean.stdTools.goServer.MapPath(ourProvider.parameters("path"))
+                            assemblyInstance = [Assembly].LoadFrom(Protean.stdTools.goServer.MapPath(ourProvider.parameters("path")))
                         Else
                             assemblyInstance = [Assembly].Load(ourProvider.Type)
                         End If

@@ -43,13 +43,13 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
             if (string.IsNullOrEmpty(UserName))
             {
                 throw new Exception("No username specififed");
-                return UploadAndPostRet;
+                //return UploadAndPostRet;
 
             }
             if (string.IsNullOrEmpty(Password))
             {
                 throw new Exception("No password specified");
-                return UploadAndPostRet;
+               // return UploadAndPostRet;
             }
 
             HttpWebRequest rqUploadtoYFrog = (HttpWebRequest)System.Net.WebRequest.Create(YP_UPLOAD_AND_POST);

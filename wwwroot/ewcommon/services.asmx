@@ -1,1 +1,1 @@
-<%@ WebService Class="Protean.Services,ProteanCMS" %>
+<%@ WebService Class="Protean.Services,Protean.CMS" %>

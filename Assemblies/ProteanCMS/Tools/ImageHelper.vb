@@ -9,6 +9,7 @@ Imports System.Drawing.text
 Imports System.Security.Cryptography
 Imports System.Text
 Imports Protean.Tools.Text
+Imports Protean.stdTools
 
 Public Class ImgVerify
 

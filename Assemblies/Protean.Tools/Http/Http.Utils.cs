@@ -79,9 +79,7 @@ namespace Protean.Tools.Http
                 // Build the URI
                 return BuildURI(requestUri.Host, requestUri.Scheme + "://", originalPath, queryString.ToString());
             }
-
-
-            catch (Exception ex)
+            catch (Exception)
             {
                 // If an error is encountered return Nothing
                 return null;

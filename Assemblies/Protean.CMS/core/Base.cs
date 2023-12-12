@@ -1,14 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Web.Configuration;
 using System.Xml;
-using System.Web;
+using Microsoft.VisualBasic;
 
-namespace Protean.CMS
+namespace Protean
 {
-    public partial class Base
+
+    public class Base
     {
 
 
@@ -17,9 +18,9 @@ namespace Protean.CMS
         // for anything controlling web
         public event OnErrorEventHandler OnError;
 
-        public delegate void OnErrorEventHandler(object sender, Protean.Tools.Errors.ErrorEventArgs e);
+        public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
 
-        protected virtual void OnComponentError(object sender, Protean.Tools.Errors.ErrorEventArgs e)
+        protected virtual void OnComponentError(object sender, Tools.Errors.ErrorEventArgs e)
         {
             // deals with the error
             // returnException(e.ModuleName, e.ProcedureName, e.Exception, mcEwSiteXsl, e.AddtionalInformation, gbDebug)
@@ -52,14 +53,14 @@ namespace Protean.CMS
         #endregion
 
         #region Declarations
-        private licenceMode moLicenceMode = licenceMode.Live;
+        //private licenceMode moLicenceMode = licenceMode.Live;
 
         public System.Web.HttpContext moCtx;
 
         // Session / Request Level Properties
         public System.Web.HttpRequest moRequest;
-        public Global.System.Web.HttpResponse moResponse;
-        public Global.System.Web.SessionState.HttpSessionState moSession;
+        public System.Web.HttpResponse moResponse;
+        public System.Web.SessionState.HttpSessionState moSession;
 
         public string mcPagePath;
         public string mcPageLayout;
@@ -92,15 +93,15 @@ namespace Protean.CMS
         }
 
         // Application Level Properties   
-        public NameValueCollection moConfig = WebConfigurationManager.GetWebApplicationSection("protean/web");
+        public NameValueCollection moConfig = (NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
         // Public goApp As System.Web.HttpApplicationState
-        public Global.System.Web.Caching.Cache goCache;
-        public Global.System.Web.HttpServerUtility goServer;
-        public XmlElement goLangConfig = WebConfigurationManager.GetWebApplicationSection("protean/languages");
+        public System.Web.Caching.Cache goCache;
+        public System.Web.HttpServerUtility goServer;
+        public XmlElement goLangConfig = (XmlElement)WebConfigurationManager.GetWebApplicationSection("protean/languages");
 
         public string mcModuleName = "Protean.Base";
 
-        public Dictionary<string, string> Features = new Dictionary<string, string>();
+        public System.Collections.Generic.Dictionary<string, string> Features = new System.Collections.Generic.Dictionary<string, string>();
 
         public bool mbPreview = false;
         public bool mbPreviewHidden = false;
@@ -116,7 +117,7 @@ namespace Protean.CMS
 
         }
 
-        public Base(Global.System.Web.HttpContext Context)
+        public Base(System.Web.HttpContext Context)
         {
 
             string sProcessInfo = "";
@@ -146,7 +147,7 @@ namespace Protean.CMS
             catch (Exception ex)
             {
                 // returnException(mcModuleName, "New", ex, "", sProcessInfo, gbDebug)
-                OnComponentError(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, sProcessInfo));
+                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, sProcessInfo));
             }
         }
 
@@ -209,7 +210,7 @@ namespace Protean.CMS
             {
                 Features.Add("PageVersions", "PageVersions");
             }
-            if (goLangConfig is not null)
+            if (goLangConfig != null)
             {
                 Features.Add("MultiLanguage", "MultiLanguage");
             }

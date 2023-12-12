@@ -5,6 +5,8 @@ Imports System.Text.RegularExpressions
 Imports System.Web.Configuration
 Imports System.Xml
 Imports Protean.Cms.Cart
+Imports Protean.Tools.Xml
+Imports Protean.stdTools
 
 Namespace Providers
     Namespace Payment
@@ -350,22 +352,22 @@ Namespace Providers
                                     If productDescription.Length > 100 Then
                                         productDescription = productDescription.Substring(0, 100)
                                     End If
-                                    xmlTools.addNewTextNode("description", CType(oItemRoot, XmlElement), productDescription)
+                                    addNewTextNode("description", CType(oItemRoot, XmlElement), productDescription)
                                     'If Not oItemElmt.SelectSingleNode("productDetail/StockCode") Is Nothing Then
                                     '    xmlTools.addNewTextNode("productSku", oItemRoot, oItemElmt.SelectSingleNode("productDetail/StockCode").InnerText)
                                     'End If
                                     'If Not oItemElmt.SelectSingleNode("productDetail/Manufacturer") Is Nothing Then
                                     '    xmlTools.addNewTextNode("productCode", oItemRoot, oItemElmt.SelectSingleNode("productDetail/Manufacturer").InnerText)
                                     'End If
-                                    xmlTools.addNewTextNode("quantity", CType(oItemRoot, XmlElement), oItemElmt.GetAttribute("quantity"))
-                                    xmlTools.addNewTextNode("unitNetAmount", CType(oItemRoot, XmlElement), oItemElmt.GetAttribute("price"))
-                                    xmlTools.addNewTextNode("unitTaxAmount", CType(oItemRoot, XmlElement), unitTaxAmount.ToString)
-                                    xmlTools.addNewTextNode("unitGrossAmount", CType(oItemRoot, XmlElement), unitGrossAmount.ToString)
-                                    xmlTools.addNewTextNode("totalGrossAmount", CType(oItemRoot, XmlElement), totalGrossAmount.ToString)
+                                    addNewTextNode("quantity", CType(oItemRoot, XmlElement), oItemElmt.GetAttribute("quantity"))
+                                    addNewTextNode("unitNetAmount", CType(oItemRoot, XmlElement), oItemElmt.GetAttribute("price"))
+                                    addNewTextNode("unitTaxAmount", CType(oItemRoot, XmlElement), unitTaxAmount.ToString)
+                                    addNewTextNode("unitGrossAmount", CType(oItemRoot, XmlElement), unitGrossAmount.ToString)
+                                    addNewTextNode("totalGrossAmount", CType(oItemRoot, XmlElement), totalGrossAmount.ToString)
                                     oBasketRoot.AppendChild(oItemRoot)
                                 Next
 
-                                xmlTools.addNewTextNode("deliveryGrossAmount", CType(oBasketRoot, XmlElement), oOrder.GetAttribute("shippingCost"))
+                                addNewTextNode("deliveryGrossAmount", CType(oBasketRoot, XmlElement), oOrder.GetAttribute("shippingCost"))
 
                                 cRequest = cRequest & "BasketXML=" & oBasketXml.OuterXml & "&"
 

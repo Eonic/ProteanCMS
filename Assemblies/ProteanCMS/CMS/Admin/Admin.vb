@@ -27,6 +27,8 @@ Imports Lucene.Net.Support
 Imports System.ServiceModel.Channels
 Imports ICSharpCode.SharpZipLib.Zip.ExtendedUnixData
 Imports Protean.proteancms.com
+Imports Protean.Tools.Xml
+Imports Protean.stdTools
 
 Partial Public Class Cms
     Public Class Admin
