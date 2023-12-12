@@ -284,7 +284,7 @@
 					<xsl:when test="/Page/Contents/Content[@position = $position]">
 						<xsl:apply-templates select="/Page/Contents/Content[@type='Module' and @position = $position]" mode="displayModule">
 							<xsl:with-param name="auto-col">
-								<xsl:if test="$module-type='AutoColumn'">true</xsl:if>
+								<xsl:if test="$module-type='AutoColumn' or /Page/Contents/Content[@colType='auto']">true</xsl:if>
 							</xsl:with-param>
 							<xsl:with-param name="width">
 								<xsl:value-of select="$width"/>

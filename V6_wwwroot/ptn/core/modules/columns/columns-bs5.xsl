@@ -498,6 +498,7 @@
 		</div>
 	</xsl:template>
 
+	<!--############################## EVEN, UNEVEN AND AUTO COLS COMBINED ############################-->
 	<xsl:template match="Content[@moduleType='MultiColumn']" mode="displayBrief">
 		<xsl:variable name="responsiveColumns-bs5">
 			<xsl:apply-templates select="." mode="responsiveColumns-bs5">
@@ -511,6 +512,9 @@
 		<xsl:variable name="unevenColumns2">
 			<xsl:apply-templates select="." mode="unevenColumns2">
 			</xsl:apply-templates>
+		</xsl:variable>
+		<xsl:variable name="responsiveAutoColumns">
+			<xsl:apply-templates select="." mode="responsiveAutoColumns"/>
 		</xsl:variable>
 		<xsl:choose>
 			<xsl:when test="@colType='false'">
@@ -542,6 +546,32 @@
 							</xsl:with-param>
 						</xsl:apply-templates>
 					</div>
+				</div>
+			</xsl:when>
+			<xsl:when test="@colType='auto'">
+				<div id="column1-{@id}" class="row {$responsiveAutoColumns} justify-content-{@alignment} align-items-{@alignmentV}">
+					<xsl:apply-templates select="/Page" mode="addModule">
+						<xsl:with-param name="text">Add Module</xsl:with-param>
+						<xsl:with-param name="position">
+							<xsl:text>column1-</xsl:text>
+							<xsl:value-of select="@id"/>
+						</xsl:with-param>
+
+						<xsl:with-param name="class">
+							<!--<xsl:value-of select="$responsiveColumns-bs5"/>-->
+							<xsl:value-of select="$responsiveAutoColumns"/>
+							<xsl:text> row justify-content-</xsl:text>
+							<xsl:value-of select="@alignment"/>
+							<xsl:text> align-items-</xsl:text>
+							<xsl:value-of select="@alignmentV"/>
+						</xsl:with-param>
+						<xsl:with-param name="width">
+							<xsl:value-of select="@width"/>
+						</xsl:with-param>
+						<xsl:with-param name="module-type">
+							<xsl:value-of select="@moduleType"/>
+						</xsl:with-param>
+					</xsl:apply-templates>
 				</div>
 			</xsl:when>
 			<xsl:otherwise>

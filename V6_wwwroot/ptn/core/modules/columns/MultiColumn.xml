@@ -53,6 +53,10 @@
 			<bind id="mdCol" nodeset="@mdCol" required="false()" type="string"/>
 			<bind id="smCol" nodeset="@smCol" required="false()" type="string"/>
 			<bind id="xsCol" nodeset="@xsCol" required="false()" type="string"/>
+			<bind id="alignment" nodeset="@alignment" required="false()" type="string"/>
+			<bind id="alignmentV" nodeset="@alignmentV" required="false()" type="string"/>
+			<bind id="itemWidth" nodeset="@width" required="false()" type="string"/>
+
 		</bind>
 		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
 	</model>
@@ -76,11 +80,19 @@
 							<label>Even Columns</label>
 							<value>true</value>
 							<toggle case="evenCols" event="DOMActivate"/>
+							<hint>choose 1 - 6 equal column layouts</hint>
 						</item>
 						<item>
 							<label>Uneven Columns</label>
 							<value>false</value>
+							<hint>2 column layouts in various configurations</hint>
 							<toggle case="unevenCols" event="DOMActivate"/>
+						</item>
+						<item>
+							<label>Auto Columns</label>
+							<value>auto</value>
+							<hint>Items arranged into columns automatically, depending on their width</hint>
+							<toggle case="autoCols" event="DOMActivate"/>
 						</item>
 						<help class="inline">If selected this option will display items in a single horizontal line with arrows to scroll through to the left and right.</help>
 					</select1>
@@ -596,6 +608,257 @@
 										<p>Extra extra large screens are 1400px and up</p>
 									</help>
 								</select1>
+							</group>
+							<div>
+								<p class="small">**these layouts require all of the screen sizes on which you would like this layout to be set</p>
+							</div>
+						</case>
+
+						<case id="autoCols">
+							<group class="row row-cols-auto row-cols-xxl-6 w-100">
+								<select1 bind="xsCol">
+									<label>
+										<i class="fas fa-mobile-alt"> </i> Extra small
+									</label>
+									<item>
+										<label>1</label>
+										<value>1</value>
+									</item>
+									<item>
+										<label>2</label>
+										<value>2</value>
+									</item>
+									<item>
+										<label>3</label>
+										<value>3</value>
+									</item>
+									<item>
+										<label>4</label>
+										<value>4</value>
+									</item>
+									<item>
+										<label>5</label>
+										<value>5</value>
+									</item>
+									<item>
+										<label>6</label>
+										<value>6</value>
+									</item>
+									<hint class="inline">
+										<p>Extra small means screens under 576px wide. If you set only this column width then the same columns will show on all screen sizes</p>
+									</hint>
+								</select1>
+								<select1 bind="smCol">
+									<label>
+										<i class="fas fa-mobile-alt"> </i> Small
+									</label>
+									<item>
+										<label>1</label>
+										<value>1</value>
+									</item>
+									<item>
+										<label>2</label>
+										<value>2</value>
+									</item>
+									<item>
+										<label>3</label>
+										<value>3</value>
+									</item>
+									<item>
+										<label>4</label>
+										<value>4</value>
+									</item>
+									<item>
+										<label>5</label>
+										<value>5</value>
+									</item>
+									<item>
+										<label>6</label>
+										<value>6</value>
+									</item>
+									<help class="inline">
+										<p>Small screens are 576px-767px</p>
+									</help>
+								</select1>
+								<select1 bind="mdCol">
+									<label>
+										<i class="fas fa-tablet-alt"> </i> Medium
+									</label>
+									<item>
+										<label>1</label>
+										<value>1</value>
+									</item>
+									<item>
+										<label>2</label>
+										<value>2</value>
+									</item>
+									<item>
+										<label>3</label>
+										<value>3</value>
+									</item>
+									<item>
+										<label>4</label>
+										<value>4</value>
+									</item>
+									<item>
+										<label>5</label>
+										<value>5</value>
+									</item>
+									<item>
+										<label>6</label>
+										<value>6</value>
+									</item>
+									<help class="inline">
+										<p>Medium screens are 768px-991px</p>
+									</help>
+								</select1>
+								<select1 bind="lgCol">
+									<label>
+										<i class="fas fa-laptop"> </i> Large
+									</label>
+									<item>
+										<label>1</label>
+										<value>1</value>
+									</item>
+									<item>
+										<label>2</label>
+										<value>2</value>
+									</item>
+									<item>
+										<label>3</label>
+										<value>3</value>
+									</item>
+									<item>
+										<label>4</label>
+										<value>4</value>
+									</item>
+									<item>
+										<label>5</label>
+										<value>5</value>
+									</item>
+									<item>
+										<label>6</label>
+										<value>6</value>
+									</item>
+									<help class="inline">
+										<p>Large screens are 992px-1199px</p>
+									</help>
+								</select1>
+								<select1 bind="xlCol">
+									<label>
+										<i class="fas fa-desktop"> </i> Extra Large
+									</label>
+									<item>
+										<label>1</label>
+										<value>1</value>
+									</item>
+									<item>
+										<label>2</label>
+										<value>2</value>
+									</item>
+									<item>
+										<label>3</label>
+										<value>3</value>
+									</item>
+									<item>
+										<label>4</label>
+										<value>4</value>
+									</item>
+									<item>
+										<label>5</label>
+										<value>5</value>
+									</item>
+									<item>
+										<label>6</label>
+										<value>6</value>
+									</item>
+									<help class="inline">
+										<p>Extra large screens are 1200px-1399px</p>
+									</help>
+								</select1>
+								<select1 bind="xxlCol">
+									<label>
+										<i class="fas fa-desktop"> </i> XXL
+									</label>
+									<item>
+										<label>1</label>
+										<value>1</value>
+									</item>
+									<item>
+										<label>2</label>
+										<value>2</value>
+									</item>
+									<item>
+										<label>3</label>
+										<value>3</value>
+									</item>
+									<item>
+										<label>4</label>
+										<value>4</value>
+									</item>
+									<item>
+										<label>5</label>
+										<value>5</value>
+									</item>
+									<item>
+										<label>6</label>
+										<value>6</value>
+									</item>
+									<help class="inline">
+										<p>Extra extra large screens are 1400px and up</p>
+									</help>
+								</select1>
+
+							</group>
+							<group class="row row-cols-sm-3">
+								<select1 bind="alignment">
+									<label>
+										Align Horizontally
+									</label>
+									<item>
+										<label>Left</label>
+										<value>start</value>
+									</item>
+									<item>
+										<label>Centre</label>
+										<value>center</value>
+									</item>
+									<item>
+										<label>Right</label>
+										<value>end</value>
+									</item>
+									<hint class="inline">
+										<p>Set this to align items on the last row, if there are less than other columns. This alignment will also affect all rows if there is a pixel width set for the items.</p>
+									</hint>
+								</select1>
+								<select1 bind="alignmentV">
+									<label>
+										Align Vertically
+									</label>
+									<item>
+										<label>Top</label>
+										<value>start</value>
+									</item>
+									<item>
+										<label>Centre</label>
+										<value>center</value>
+									</item>
+									<item>
+										<label>Bottom</label>
+										<value>end</value>
+									</item>
+									<item>
+										<label>Stretch</label>
+										<value>stretch</value>
+									</item>
+									<hint class="inline">
+										<p>Set this to align items on the last row, if there are less than other columns. This alignment will also affect all rows if there is a pixel width set for the items.</p>
+									</hint>
+								</select1>
+								<input bind="itemWidth" class="col-sm-4 col-md-3 col-lg-2" suffix="px">
+									<label>Item Width</label>
+									<hint>Optional - allows a specified pixel width for all items, which will automatically dictate columns needed</hint>
+								</input>
 							</group>
 						</case>
 					</switch>
