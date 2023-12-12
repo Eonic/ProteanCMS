@@ -2279,7 +2279,7 @@ namespace Protean
                                 }
                                 else if (myWeb.moRequest["ewCmd"] == "ListUsers")
                                 {
-                                    myWeb.moSession["UserParId"] = (object)0;
+                                    myWeb.moSession["UserParId"] = 0;
                                 }
                                 int nStatus = 99;
                                 if (!string.IsNullOrEmpty(myWeb.moRequest["status"]))
@@ -3552,11 +3552,11 @@ namespace Protean
 
                     if (bClearEditContext)
                     {
-                        myWeb.moSession["editContext"] = (object)null;
+                        myWeb.moSession["editContext"] = null;
                         EditContext = "";
                     }
 
-                    if (!string.IsNullOrEmpty(EditContext))
+                    if (EditContext != "")
                     {
                         moPageXML.DocumentElement.SetAttribute("editContext", EditContext);
                         myWeb.moSession["editContext"] = EditContext;
