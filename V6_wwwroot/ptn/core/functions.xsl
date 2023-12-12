@@ -5444,7 +5444,7 @@
 			<xsl:attribute name="class">
 				<xsl:text>inline-module</xsl:text>
 				<xsl:if test="contains(@style,'float: left;')">
-					<xsl:text> align-left</xsl:text>
+					<xsl:text> alignleft</xsl:text>
 				</xsl:if>
 				<xsl:if test="contains(@style,'float: right;')">
 					<xsl:text> alignright</xsl:text>
@@ -5459,7 +5459,7 @@
 				<xsl:with-param name="class">
 					<xsl:text>inline-module</xsl:text>
 					<xsl:if test="contains(@style,'float: left;')">
-						<xsl:text> align-left</xsl:text>
+						<xsl:text> alignleft</xsl:text>
 					</xsl:if>
 					<xsl:if test="contains(@style,'float: right;')">
 						<xsl:text> alignright</xsl:text>

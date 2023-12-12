@@ -10,7 +10,7 @@
 				<cContentName/>
 				<cContentSchemaName>Module</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content moduleType="NewsList" contentType="NewsArticle" box="" title="" link="" linkType="internal" linkText="More news" sortBy="publish" order="descending" cols="" carousel="false" stepBy="" stepCount="0" display="all" rss="false" position="" commentPlatform="none" fbCommentsWidth="500" listGroup="true" autoplay="false" autoPlaySpeed="5000" linkArticle="true"/>
+					<Content moduleType="NewsList" contentType="NewsArticle" box="" title="" link="" linkType="internal" linkText="More news" sortBy="publish" order="descending" cols="" carousel="false" stepBy="" stepCount="0" display="all" rss="false" position="" commentPlatform="none" fbCommentsWidth="500" listGroup="true" autoplay="false" autoPlaySpeed="5000" linkArticle="true" itemLayout="narrow"/>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
 				<nAuditId/>
@@ -54,6 +54,7 @@
 			<bind id="grabberItems" nodeset="@grabberItems" required="false()" type="string"/>
 			<bind id="grabberItterate" nodeset="@grabberItterate" required="false()" type="string"/>
 			<bind id="cCrop" nodeset="@crop" required="false()" type="string"/>
+			<bind id="itemLayout" nodeset="@itemLayout" required="false()" type="string"/>
 		</bind>
 		<bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
 		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
@@ -362,6 +363,19 @@
 							<item>
 								<label>No</label>
 								<value>false</value>
+							</item>
+						</select1>
+					</group>
+					<group class="col-lg-6">
+						<select1 bind="itemLayout" appearance="full" class="inline-items">
+							<label>Item Layout</label>
+							<item>
+								<label>Narrow</label>
+								<value>narrow</value>
+							</item>
+							<item>
+								<label>Wide</label>
+								<value>wide</value>
 							</item>
 						</select1>
 					</group>

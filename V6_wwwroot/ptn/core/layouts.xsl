@@ -1670,6 +1670,7 @@
 					<xsl:with-param name="parentId" select="@id"/>
 					<xsl:with-param name="crop" select="$cropSetting"/>
 					<xsl:with-param name="linked" select="@linkArticle"/>
+					<xsl:with-param name="itemLayout" select="@itemLayout"/>
 				</xsl:apply-templates>
 				<xsl:if test="@stepCount != '0'">
 					<xsl:apply-templates select="/" mode="genericStepper">
