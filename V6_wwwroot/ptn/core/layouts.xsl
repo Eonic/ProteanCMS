@@ -1095,6 +1095,12 @@
 
 	<xsl:template match="Content" mode="hideScreens">
 		<xsl:if test="not($adminMode)">
+			<xsl:if test="contains(@screens,'xxl')">
+				<xsl:text> hidden-xxl</xsl:text>
+			</xsl:if>
+			<xsl:if test="contains(@screens,'xl')">
+				<xsl:text> hidden-xl</xsl:text>
+			</xsl:if>
 			<xsl:if test="contains(@screens,'lg')">
 				<xsl:text> hidden-lg</xsl:text>
 			</xsl:if>
