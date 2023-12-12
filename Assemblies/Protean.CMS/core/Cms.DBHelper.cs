@@ -8007,10 +8007,10 @@ namespace Protean
                                     cPasswordForm = oConvElmt.InnerXml;
                                     cPasswordForm = Strings.Replace(cPasswordForm, "&gt;", ">");
                                     cPasswordForm = Strings.Replace(cPasswordForm, "&lt;", "<");
-                                    //if (cPasswordDatabase == cPasswordForm)
-                                   // {
+                                    if (cPasswordDatabase == cPasswordForm)
+                                    {
                                         bValidPassword = true;
-                                  //  }
+                                    }
                                 }
                             }
                             else if (cPasswordDatabase == cPasswordForm)
