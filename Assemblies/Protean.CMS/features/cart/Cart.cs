@@ -2275,7 +2275,7 @@ namespace Protean
 
                         string CustomerEmailTemplatePath = Conversions.ToString(Interaction.IIf(!string.IsNullOrEmpty(moCartConfig["CustomerEmailTemplatePath"]), moCartConfig["CustomerEmailTemplatePath"], "/xsl/Cart/mailOrderCustomer.xsl"));
                         string MerchantEmailTemplatePath = Conversions.ToString(Interaction.IIf(!string.IsNullOrEmpty(moCartConfig["MerchantEmailTemplatePath"]), moCartConfig["MerchantEmailTemplatePath"], "/xsl/Cart/mailOrderMerchant.xsl"));
-                        if (Cms.bs5)
+                        if (myWeb.bs5)
                         {
                             CustomerEmailTemplatePath = "/ptn/features/cart/email/order-customer.xsl";
                             MerchantEmailTemplatePath = "/ptn/features/cart/email/order-merchant.xsl";
@@ -9468,7 +9468,7 @@ namespace Protean
                 string Folder = "/ewcommon/xforms/PaymentProvider/";
                 FileInfo fi;
                 string ProviderName;
-                if (Cms.bs5)
+                if (myWeb.bs5)
                     Folder = "/ptn/features/cart/PaymentProvider/";
                 try
                 {

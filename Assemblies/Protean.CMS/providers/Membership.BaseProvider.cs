@@ -2310,11 +2310,8 @@ namespace Protean.Providers
                         // add the user logon details to the page xml.
                         if (mnUserId != 0)
                         {
-
                             myWeb.RefreshUserXML();
-
                             myWeb.GetUserXML(mnUserId);
-
                             // moPageXml.DocumentElement.AppendChild(moPageXml.ImportNode(GetUserXML().CloneNode(True), True))
                         }
 
@@ -2324,9 +2321,10 @@ namespace Protean.Providers
                             myWeb.SiteRedirection();
                         }
 
-
-                        // behaviour based on layout page (not required in V5 sites, this behaviour uses modules instead)
-                        MembershipV4LayoutProcess(ref myWeb, adXfm);
+                        if (!myWeb.bs5 && !myWeb.bs3) { 
+                             // behaviour based on layout page (not required in V5 sites, this behaviour uses modules instead)
+                             MembershipV4LayoutProcess(ref myWeb, adXfm);
+                        }
 
                         LogSingleUserSession(ref myWeb);
 

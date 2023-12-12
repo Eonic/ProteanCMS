@@ -109,8 +109,8 @@ namespace Protean
         public static int gnTopLevel = 0;
         public static int gnNonAuthUsers = 0;
         public static int gnAuthUsers = 0;
-        public static bool bs3 = false;
-        public static bool bs5 = false;
+        public bool bs3 = false;
+        public bool bs5 = false;
 
         public static bool gbClone = false;
         public static bool gbMemberCodes = false;
@@ -1013,6 +1013,16 @@ namespace Protean
 
                 // Set the debug mode
                 //this.moConfig = this.moConfig;
+                switch (Strings.LCase(this.moConfig["CssFramework"]) ?? "") 
+                {
+                    case "bs5":
+                        { bs5 = true; break; }
+                    case "bs3": 
+                        { bs3 = true; break; }
+                    default:
+                        { break; }
+                }
+
                 if (this.moConfig["Debug"] != null)
                 {
                     switch (Strings.LCase(this.moConfig["Debug"]) ?? "")

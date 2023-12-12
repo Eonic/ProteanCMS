@@ -2385,7 +2385,7 @@ namespace Protean
                         case "availableIcons":
                             {
                                 string iconPath = "/ewcommon/icons/icons.xml";
-                                if (Cms.bs5)
+                                if (this.myWeb.bs5)
                                     iconPath = "/ptn/core/icons/icons.xml";
 
                                 if (File.Exists(goServer.MapPath(iconPath)))

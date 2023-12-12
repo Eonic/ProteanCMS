@@ -371,8 +371,10 @@ namespace Protean
                     // Variables
                     string ASPSessionName = Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(myWeb.moConfig["ASPSessionName"]), "ASP.NET_SessionId", myWeb.moConfig["ASPSessionName"]));
                     string UserCookieName = Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(myWeb.moConfig["UserCookieName"]), "nUserId", myWeb.moConfig["UserCookieName"]));
-                    string SecureMembershipAddress = myWeb.moConfig["SecureMembershipAddress"];
-                    string SecureMembershipDomain = myWeb.moConfig["SecureMembershipDomain"];
+                    string SecureMembershipAddress = (myWeb.moConfig["SecureMembershipAddress"]?? "").ToString();
+                    string SecureMembershipDomain = (myWeb.moConfig["SecureMembershipDomain"] ?? "").ToString();
+
+
 
                     // Session Cookie
                     System.Web.HttpContext.Current.Response.Cookies[ASPSessionName].Value = System.Web.HttpContext.Current.Session.SessionID;
@@ -445,14 +447,17 @@ namespace Protean
                     // Else
                     if (!oVariants.ContainsValue(SecureMembershipAddress) & (myWeb.mnUserId > 0 | myWeb.mbAdminMode | Strings.LCase(myWeb.moRequest["ewCmd"]) == "ar"))
                     {
-                        SetCookie(UserCookieName, (object)myWeb.mnUserId, DateTime.Now.AddMinutes(20d));
-                        if (!(Strings.Right(SecureMembershipAddress, 1) == "/"))
-                            SecureMembershipAddress += "/";
-                        if (Strings.Left(cPath, 1) == "/" & Strings.Right(SecureMembershipAddress, 1) == "/")
-                            cPath = cPath.Remove(0, 1);
-                        if (cPath.StartsWith("&"))
-                            cPath = "?" + cPath.Substring(1);
-                        myWeb.msRedirectOnEnd = SecureMembershipAddress + cPath;
+                        if (!string.IsNullOrEmpty(SecureMembershipDomain))
+                        {
+                            SetCookie(UserCookieName, (object)myWeb.mnUserId, DateTime.Now.AddMinutes(20d));
+                            if (!(Strings.Right(SecureMembershipAddress, 1) == "/"))
+                                SecureMembershipAddress += "/";
+                            if (Strings.Left(cPath, 1) == "/" & Strings.Right(SecureMembershipAddress, 1) == "/")
+                                cPath = cPath.Remove(0, 1);
+                            if (cPath.StartsWith("&"))
+                                cPath = "?" + cPath.Substring(1);
+                            myWeb.msRedirectOnEnd = SecureMembershipAddress + cPath;
+                        }
                     }
                     // myWeb.moResponse.Redirect(SecureMembershipAddress & cPath)
                     else if (oVariants.ContainsValue(SecureMembershipAddress) & myWeb.mnUserId > 0)
