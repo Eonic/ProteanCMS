@@ -854,6 +854,8 @@
 				<xsl:value-of select="@position"/>
 				<xsl:text> module-</xsl:text>
 				<xsl:value-of select="@moduleType"/>
+
+        <xsl:if test="(@position='column1' or @position='custom' or @position='header' or @position='footer') and @moduleType='FormattedText'"> character-width-80 </xsl:if>
 				<xsl:if test="@panelImage!=''">
 					<xsl:text> panelImage </xsl:text>
 				</xsl:if>
