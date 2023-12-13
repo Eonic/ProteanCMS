@@ -1243,8 +1243,13 @@
 					<!-- define classes for box -->
 					<xsl:attribute name="class">
 						<xsl:text>card </xsl:text>
+						<xsl:if test="@char80Layout and @char80Layout!=''">
+							<xsl:text> char80-</xsl:text>
+							<xsl:value-of select="@char80Layout"/>
+							<xsl:text> </xsl:text>
+						</xsl:if>
 						<xsl:if test="@panelImage!=''">
-							<xsl:text>panelImage </xsl:text>
+							<xsl:text> panelImage </xsl:text>
 						</xsl:if>
 						<xsl:if test="@icon!='' or @uploadIcon!=''">
 							<xsl:text>panel-icon </xsl:text>
