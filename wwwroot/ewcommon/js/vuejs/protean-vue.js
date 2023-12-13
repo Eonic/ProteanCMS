@@ -552,27 +552,28 @@ if (rediectElement) {
                         .then(function (response) {
 
                             if (response.data == "True") {
-                                if (confirm("Old url is already exist. Do you want to replace it?")) {
+                                that.addNewUrl(oldUrl, NewUrl);
+                                //if (confirm("Old url is already exist. Do you want to replace it?")) {
 
-                                    that.addNewUrl(oldUrl, NewUrl);
+                                //    that.addNewUrl(oldUrl, NewUrl);
 
-                                    if (that.newAddedUrlList != '') {
-                                        oldindex = that.newAddedUrlList.findIndex(x => x.oldUrl === oldUrl);
+                                //    if (that.newAddedUrlList != '') {
+                                //        oldindex = that.newAddedUrlList.findIndex(x => x.oldUrl === oldUrl);
 
-                                        if (oldindex != -1) {
-                                            that.newAddedUrlList[oldindex] = { 'oldUrl': oldUrl, 'NewUrl': NewUrl };
-                                        }
-                                    }
+                                //        if (oldindex != -1) {
+                                //            that.newAddedUrlList[oldindex] = { 'oldUrl': oldUrl, 'NewUrl': NewUrl };
+                                //        }
+                                //    }
 
-                                }
-                                else {
-                                    $("#loadSpin").modal("hide");
-                                    $("#OldUrlmodal").val("");
-                                    $("#NewUrlModal").val("");
-                                    that.loading = false;
-                                    that.show = false;
-                                    return false;
-                                }
+                                //}
+                                //else {
+                                //    $("#loadSpin").modal("hide");
+                                //    $("#OldUrlmodal").val("");
+                                //    $("#NewUrlModal").val("");
+                                //    that.loading = false;
+                                //    that.show = false;
+                                //    return false;
+                                //}
                             }
                             else {
 
