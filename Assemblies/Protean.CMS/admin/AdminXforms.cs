@@ -40,7 +40,7 @@ namespace Protean
     {
         public partial class Admin
         {
-            public class AdminXforms : Cms.xForm
+            public class AdminXforms : xForm
             {
 
                 private const string mcModuleName = "ewcommon.AdminXForms";
@@ -1863,7 +1863,7 @@ namespace Protean
                         if (string.IsNullOrEmpty(cParId))
                         {
                             XmlElement xmlBase = base.Instance;
-                            Xml.NodeState(ref xmlBase, "tblContentStructure/nStructParId", Convert.ToBoolean(base.goRequest["parId"])? "": base.goRequest["parId"]);
+                            Xml.NodeState(ref xmlBase, "tblContentStructure/nStructParId", (base.goRequest["parId"] != null? "": Convert.ToString(base.goRequest["parId"])));
                         }
                         else
                         {
@@ -1920,8 +1920,6 @@ namespace Protean
                                 {
                                     moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.ContentStructure, base.Instance);
                                 }
-
-
                                 else
                                 {
 
