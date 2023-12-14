@@ -7473,7 +7473,7 @@ namespace Protean
                         // Replace Spaces with hypens
                         cProviderType = Strings.Replace(cProviderType, " ", "-");
                         object formPath = "/xforms/PaymentProvider/";
-                        if (Cms.bs5)
+                        if (myWeb.bs5)
                             formPath = "/features/cart/PaymentProvider/";
                         if (!base.load(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(formPath, cProviderType), ".xml")), this.myWeb.maCommonFolders))
                         {
@@ -11038,7 +11038,7 @@ namespace Protean
                         // Build the form
                         base.NewFrm("MemberCodes");
                         object formPath = "/xforms/directory/";
-                        if (Cms.bs5)
+                        if (this.myWeb.bs5)
                             formPath = "/admin/xforms/directory/";
                         base.load(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(formPath, cFormName), ".xml")), this.myWeb.maCommonFolders);
 
@@ -11461,7 +11461,7 @@ namespace Protean
                         // Replace Spaces with hypens
                         cReportName = Strings.Replace(cReportName, " ", "-");
                         string reportsFolder = "/xforms/Reports/";
-                        if (Cms.bs5)
+                        if (this.myWeb.bs5)
                             reportsFolder = "/admin/xforms/reports/";
 
                         if (!base.load(reportsFolder + cReportName + ".xml", this.myWeb.maCommonFolders))

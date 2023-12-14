@@ -859,7 +859,7 @@ namespace Protean
             {
 
                 string compilerPath = goServer.MapPath("/ewcommon/xsl/compiler/xsltc.exe");
-                if (Cms.bs5)
+                if (myWeb.bs5)
                 {
                     compilerPath = goServer.MapPath("/ptn/tools/compiler/xsltc.exe");
                 }

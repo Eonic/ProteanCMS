@@ -13873,7 +13873,7 @@ namespace Protean
                     {
 
                         string reportsFolder = "/xforms/Reports";
-                        if (Cms.bs5)
+                        if (this.myWeb.bs5)
                             reportsFolder = "/admin/xforms/reports";
                         dir = new DirectoryInfo(myWeb.moCtx.Server.MapPath(folder) + reportsFolder);
                         if (dir.Exists)

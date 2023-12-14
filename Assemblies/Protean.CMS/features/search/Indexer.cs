@@ -156,7 +156,7 @@ namespace Protean
             string CommonPath = "/ewcommon";
             string cPageXsl = "/xsl/search/cleanPage.xsl";
             string cExtractXsl = "/xsl/search/extract.xsl";
-            if (Cms.bs5)
+            if (myWeb.bs5)
             {
                 CommonPath = "/ptn";
                 cPageXsl = "/features/search/cleanPage.xsl";
@@ -747,7 +747,7 @@ namespace Protean
                     }
 
                     object indexerAlertXsltPath = "/ewcommon/xsl/Email/IndexerAlert.xsl";
-                    if (Cms.bs5)
+                    if (myWeb.bs5)
                     {
                         indexerAlertXsltPath = "/ptn/features/search/indexer-alert-email.xsl";
                     }
