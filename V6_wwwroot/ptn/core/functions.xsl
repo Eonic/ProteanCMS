@@ -975,7 +975,7 @@
 		<xsl:apply-templates select="." mode="pageJs"/>
 
 		<xsl:choose>
-			<xsl:when test="/Page/ContentDetail/Content">
+			<xsl:when test="/Page/ContentDetail/Content">				
 				<xsl:apply-templates select="/Page/ContentDetail/Content" mode="contentDetailJS"/>
 			</xsl:when>
 			<xsl:otherwise>
