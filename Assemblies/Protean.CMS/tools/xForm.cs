@@ -885,7 +885,7 @@ namespace Protean
                         {
 
                             // Look for data
-                            if (Conversions.ToBoolean(!Operators.ConditionalCompareObjectNotEqual(objValue, "", false)))
+                            if (objValue.ToString() == "")
                             {
                                 // No data - error message
                                 bIsValid = false;

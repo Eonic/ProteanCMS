@@ -13076,7 +13076,9 @@ namespace Protean
                                 if (!((column.ToString() ?? "") == (keyField ?? "")))
                                 {
                                     cProcessInfo += column.ToString() + " - " + instanceElmt.SelectSingleNode("*/" + column.ToString()).InnerXml;
-                                    oRow[column] = convertDtXMLtoSQL(column.DataType, instanceElmt.SelectSingleNode("*/" + column.ToString()), Conversions.ToBoolean(Interaction.IIf(Strings.InStr(column.ToString(), "Xml") > 0, true, false)));
+                                   
+                                    //convertDtXMLtoSQL(column.DataType, instanceElmt.SelectSingleNode("*/" & column.ToString).InnerXml, IIf(InStr(column.ToString, "Xml") > 0, True, False))
+                                    oRow[column] = convertDtXMLtoSQL(column.DataType, instanceElmt.SelectSingleNode("*/" + column), Strings.InStr(column.ToString(), "Xml") > 0? true: false);
                                 }
                             }
                         }
@@ -13222,7 +13224,7 @@ namespace Protean
                     {
                         case "Boolean":
                             {
-                                if (Conversions.ToBoolean(Operators.OrObject(Operators.OrObject(Operators.ConditionalCompareObjectEqual(value, "true", false), Operators.ConditionalCompareObjectEqual(value, "True", false)), Operators.ConditionalCompareObjectEqual(value, "1", false))))
+                                if (value.InnerText == "true" || value.InnerText == "True" || value.InnerText =="1")
                                 {
                                     return true;
                                 }
@@ -13233,9 +13235,9 @@ namespace Protean
                             }
                         case "DateTime":
                             {
-                                if (Information.IsDate(value) & !value.ToString().StartsWith("0001-01-01"))
+                                if (Information.IsDate(value.InnerText) & !value.InnerText.ToString().StartsWith("0001-01-01"))
                                 {
-                                    return Conversions.ToDate(value);
+                                    return Convert.ToDateTime(value.InnerText);
                                 }
                                 else
                                 {
@@ -13247,9 +13249,9 @@ namespace Protean
                         case "Int16":
                         case "Decimal":
                             {
-                                if (Information.IsNumeric(value))
+                                if (Information.IsNumeric(value.InnerText))
                                 {
-                                    return Conversions.ToDouble(value);
+                                    return Convert.ToDouble(value.InnerText);
                                 }
                                 else
                                 {
@@ -13259,7 +13261,7 @@ namespace Protean
                         case "String":
                             {
 
-                                if (Strings.Left(Strings.Trim(value.ToString()), 1) == "<" & Strings.Right(Strings.Trim(value.ToString()), 1) == ">")
+                                if (Strings.Left(Strings.Trim(value.InnerText.ToString()), 1) == "<" & Strings.Right(Strings.Trim(value.InnerText.ToString()), 1) == ">")
                                 {
                                     // we can assume this is XML
                                     bKeepXml = true;
@@ -13267,11 +13269,11 @@ namespace Protean
 
                                 if (bKeepXml)
                                 {
-                                    return value;
+                                    return value.InnerText;
                                 }
                                 else
                                 {
-                                    return convertEntitiesToString(Conversions.ToString(value));
+                                    return convertEntitiesToString(Convert.ToString(value.InnerText));
                                 }
                             }
 
@@ -13283,7 +13285,7 @@ namespace Protean
 
                         default:
                             {
-                                return value;
+                                return value.InnerText;
                             }
                     }
                 }

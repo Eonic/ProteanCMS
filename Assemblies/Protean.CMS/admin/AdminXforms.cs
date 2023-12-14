@@ -1863,7 +1863,7 @@ namespace Protean
                         if (string.IsNullOrEmpty(cParId))
                         {
                             XmlElement xmlBase = base.Instance;
-                            Xml.NodeState(ref xmlBase, "tblContentStructure/nStructParId", (base.goRequest["parId"] != null? "": Convert.ToString(base.goRequest["parId"])));
+                            Xml.NodeState(ref xmlBase, "tblContentStructure/nStructParId", (base.goRequest["parId"] == null? "": Convert.ToString(base.goRequest["parId"])));
                         }
                         else
                         {
