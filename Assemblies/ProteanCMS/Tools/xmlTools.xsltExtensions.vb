@@ -650,7 +650,7 @@ Partial Public Module xmlTools
 
         '' For Legacy sites
         Public Function EonicConfigValue(ByVal SectionName As String, ByVal ValueName As String) As String
-            PtnConfigValue(SectionName, ValueName)
+            Return PtnConfigValue(SectionName, ValueName)
         End Function
 
 
