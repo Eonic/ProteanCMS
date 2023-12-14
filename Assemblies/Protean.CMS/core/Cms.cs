@@ -8277,10 +8277,8 @@ namespace Protean
                     // Now check if it's everything we're getting, or just what the user created.
                     if (!this.mbAdminMode & nPagePermission == Cms.dbHelper.PermissionLevel.AddUpdateOwn | nPagePermission == Cms.dbHelper.PermissionLevel.AddUpdateOwnPublish)
                     {
-
                         // Put a filter in to limit checks to content we've added
                         cOwnerFilter = " and @owner=" + this.mnUserId;
-
                     }
 
                     string filter = "[@id[number(.)=number(.)]" + cOwnerFilter + "]";
@@ -8303,33 +8301,13 @@ namespace Protean
 
                     if (!string.IsNullOrEmpty(cCheckContentList))
                     {
-
                         // Get any content on the page that has a Status Pending Version
-
                         cSql = "select c.nContentPrimaryId as id, " + "   dbo.fxn_getContentParents(c.nContentPrimaryId) as parId, " + "   cContentForiegnRef as ref, cContentName as name, " + "   cContentSchemaName as type, " + "   cContentXmlBrief as content, " + "   a.nStatus as status, " + "   a.dpublishDate as publish, " + "   a.dExpireDate as expire, " + "   a.dUpdateDate as [update], " + "   c.nVersion as version, " + "   c.nContentVersionKey as versionid, " + "   a.nInsertDirId as owner " + " from tblContentVersions c " + "   inner join tblAudit a " + "   on c.nAuditId = a.nAuditKey " + " WHERE c.nContentPrimaryId IN (" + cCheckContentList + ")" + "   AND a.nStatus = " + ((int)Cms.dbHelper.Status.Pending).ToString() + " AND c.nVersion = (Select TOP 1 nVersion from tblContentVersions c2 where c.nContentPrimaryId = c2.nContentPrimaryId AND a.nStatus = " + ((int)Cms.dbHelper.Status.Pending).ToString() + " ORDER BY nVersion DESC)";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                         oDs = this.moDbHelper.GetDataSet(cSql, "Content", "Contents");
 
                         if (oDs.Tables.Count > 0 && oDs.Tables[0].Rows.Count > 0)
                         {
-
                             // If contentversion exists, replace the current node with this.
 
                             oDs.Tables[0].Columns["id"].ColumnMapping = MappingType.Attribute;

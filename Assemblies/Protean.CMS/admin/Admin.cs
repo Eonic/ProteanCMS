@@ -2097,10 +2097,11 @@ namespace Protean
                                 {
                                     // come back here if not going back elsewhere such as EditStucture
 
-                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.moSession["lastPage"], "", false)))
+                                    if (Convert.ToString(myWeb.moSession["lastPage"]) == "")
                                     {
                                         myWeb.moSession["lastPage"] = myWeb.mcOriginalURL;
                                     }
+
                                     sAdminLayout = "PageSettings";
                                 }
 
@@ -2509,7 +2510,7 @@ namespace Protean
                         case "CopyGroupMembers":
                             {
                                 sAdminLayout = "AdminXForm";
-                                oPageDetail.AppendChild(moAdXfm.xFrmCopyGroupMembers(Conversions.ToLong(myWeb.moRequest["id"])));
+                                oPageDetail.AppendChild(moAdXfm.xFrmCopyGroupMembers(Convert.ToInt64(myWeb.moRequest["id"])));
                                 if (moAdXfm.valid)
                                 {
                                     oPageDetail.RemoveAll();
