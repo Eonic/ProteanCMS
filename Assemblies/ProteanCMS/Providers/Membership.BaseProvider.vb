@@ -786,7 +786,7 @@ Check:
                         If FormXML = "" Then
                             Dim formPath As String = "/xforms/directory/" & cXformName & ".xml"
                             If myWeb.moConfig("cssFramework") = "bs5" Then
-                                formPath = "/admin" & formPath
+                                formPath = "/features/membership/" & cXformName & ".xml"
                             End If
                             If Not IntanceAppend Is Nothing Then
                                 MyBase.bProcessRepeats = False

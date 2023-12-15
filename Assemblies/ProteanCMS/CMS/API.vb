@@ -113,11 +113,21 @@ Public Class API
 
             If ProviderName <> "" Then
                 'case for external Providers
-                Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders")
-                Dim assemblyInstance As [Assembly] = [Assembly].LoadFrom(goServer.MapPath(moPrvConfig.Providers(ProviderName).Parameters("path")))
-                'Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(ProviderName).Type)
-                classPath = moPrvConfig.Providers(ProviderName).Parameters("className") & ".JSONActions"
-                calledType = assemblyInstance.GetType(classPath, True)
+                If ProviderName.Contains(".") Then
+                    Dim pnArr As String() = ProviderName.Split(".")
+                    Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/" & LCase(pnArr(0)) & "Providers")
+                    'Dim assemblyInstance As [Assembly] = [Assembly].LoadFrom(goServer.MapPath(moPrvConfig.Providers(pnArr(1)).Parameters("path")))
+                    Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(pnArr(1)).Type)
+                    classPath = "Protean.Providers." & pnArr(0) & "." & pnArr(1) & ".JSONActions"
+                    calledType = assemblyInstance.GetType(classPath, True)
+                Else
+                    Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders")
+                    Dim assemblyInstance As [Assembly] = [Assembly].LoadFrom(goServer.MapPath(moPrvConfig.Providers(ProviderName).Parameters("path")))
+                    'Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(ProviderName).Type)
+                    classPath = moPrvConfig.Providers(ProviderName).Parameters("className") & ".JSONActions"
+                    calledType = assemblyInstance.GetType(classPath, True)
+                End If
+
             Else
                 'case for methods within ProteanCMS Core DLL
                 calledType = System.Type.GetType("Protean." & Replace(classPath, ".", "+"), True)

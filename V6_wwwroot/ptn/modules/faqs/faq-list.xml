@@ -1,52 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Content type="xform" name="EditContent">
-  <model>
-    <instance>
-      <tblContent>
-        <nContentKey/>
-        <nContentPrimaryId/>
-        <nVersion/>
-        <cContentForiegnRef/>
-        <cContentName/>
-        <cContentSchemaName>Module</cContentSchemaName> 
-        <cContentXmlBrief>
-          <Content moduleType="FAQList" contentType="FAQ" box="" title="" link="" linkType="internal" linkText="More FAQ's" sortBy="publish" order="descending" cols="" stepBy="" stepCount="0" display="" position="" presentationType=""/>
-        </cContentXmlBrief>
-        <cContentXmlDetail/>
-        <nAuditId/>
-        <nAuditKey/>
-        <dPublishDate/>
-        <dExpireDate/>
-        <dInsertDate/>
-        <nInsertDirId/>
-        <dUpdateDate/>
-        <nUpdateDirId/>
-        <nStatus>1</nStatus>
-        <cDescription/>
-        <bCascade/>
-      </tblContent>
-    </instance>
-    <submission id="EditContent" action="" method="post" event="return form_check(this)"/>
-    <bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
-    <bind nodeset="tblContent/cContentXmlBrief/Content">
-      <bind id="cPosition" nodeset="@position" required="true()" type="string"/>
-      <bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
-      <bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
-      <bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
-      <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
-      <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
-      <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
-      <bind id="nStepCount" nodeset="@stepCount" required="false()" type="string"/>
-      <bind id="cDisplay" nodeset="@display" required="false()" type="string"/>
-      <bind id="cSortBy" nodeset="@sortBy" required="false()" type="string"/>
-      <bind id="cStepBy" nodeset="@stepBy" required="false()" type="string"/>
-      <bind id="cPageOrder" nodeset="@order" required="false()" type="string"/>
-      <bind id="cPresentationType" nodeset="@presentationType" required="false()" type="string"/>
-    </bind>
-    <bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
-    <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
-    <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
-  </model>
+	<model>
+		<instance>
+			<tblContent>
+				<nContentKey/>
+				<nContentPrimaryId/>
+				<nVersion/>
+				<cContentForiegnRef/>
+				<cContentName/>
+				<cContentSchemaName>Module</cContentSchemaName>
+				<cContentXmlBrief>
+					<Content moduleType="FAQList" contentType="FAQ" box="" title="" link="" linkType="internal" linkText="More FAQ's" sortBy="publish" order="descending" cols="" stepBy="" stepCount="0" display="" position="" presentationType="" char80Layout="center"/>
+				</cContentXmlBrief>
+				<cContentXmlDetail/>
+				<nAuditId/>
+				<nAuditKey/>
+				<dPublishDate/>
+				<dExpireDate/>
+				<dInsertDate/>
+				<nInsertDirId/>
+				<dUpdateDate/>
+				<nUpdateDirId/>
+				<nStatus>1</nStatus>
+				<cDescription/>
+				<bCascade/>
+			</tblContent>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+		<bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
+		<bind nodeset="tblContent/cContentXmlBrief/Content">
+			<bind id="cPosition" nodeset="@position" required="true()" type="string"/>
+			<bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
+			<bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
+			<bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
+			<bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
+			<bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
+			<bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+			<bind id="nStepCount" nodeset="@stepCount" required="false()" type="string"/>
+			<bind id="cDisplay" nodeset="@display" required="false()" type="string"/>
+			<bind id="cSortBy" nodeset="@sortBy" required="false()" type="string"/>
+			<bind id="cStepBy" nodeset="@stepBy" required="false()" type="string"/>
+			<bind id="cPageOrder" nodeset="@order" required="false()" type="string"/>
+			<bind id="cPresentationType" nodeset="@presentationType" required="false()" type="string"/>
+			<bind id="char80Layout" nodeset="@char80Layout" required="false()" type="string" />
+		</bind>
+		<bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
+		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
+		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+	</model>
 
 	<group ref="EditContent">
 		<label>FAQ List Module</label>
@@ -62,73 +63,74 @@
 						<label>Title or Name</label>
 					</input>
 					<group class="form-section-wrapper">
-					<select1 bind="cDisplay" appearance="full" class="required">
-						<label>Show Items</label>
-						<item>
-							<label>All items on the current page</label>
-							<value>all</value>
-							<toggle case="cDisplay_1" event="DOMActivate"/>
-						</item>
-						<item>
-							<label>Related items specified below</label>
-							<value>related</value>
-							<toggle case="cDisplay_2" event="DOMActivate"/>
-						</item>
-					</select1>
-					<switch class="disable">
-						<case id="cDisplay_1"/>
-						<case id="cDisplay_2">
-							<relatedContent search="find add" type="FAQ" relationType="" direction="1way">
-								<label>FAQ's</label>
-							</relatedContent>
-						</case>
-					</switch>
-				</group>
+						<select1 bind="cDisplay" appearance="full" class="required">
+							<label>Show Items</label>
+							<item>
+								<label>All items on the current page</label>
+								<value>all</value>
+								<toggle case="cDisplay_1" event="DOMActivate"/>
+							</item>
+							<item>
+								<label>Related items specified below</label>
+								<value>related</value>
+								<toggle case="cDisplay_2" event="DOMActivate"/>
+							</item>
+						</select1>
+						<switch class="disable">
+							<case id="cDisplay_1"/>
+							<case id="cDisplay_2">
+								<relatedContent search="find add" type="FAQ" relationType="" direction="1way">
+									<label>FAQ's</label>
+								</relatedContent>
+							</case>
+						</switch>
+					</group>
 				</group>
 				<group>
-				<switch class="disable">
-					<case id="cSortBy_1">
-						<select1 bind="cPageOrder" appearance="minimal" class="form-group">
-							<label>Order</label>
+					<switch class="disable">
+						<case id="cSortBy_1">
+							<select1 bind="cPageOrder" appearance="minimal" class="form-group">
+								<label>Order</label>
+								<item>
+									<label>Newest to Oldest</label>
+									<value>descending</value>
+								</item>
+								<item>
+									<label>Oldest to Newest</label>
+									<value>ascending</value>
+								</item>
+							</select1>
+						</case>
+						<case id="cSortBy_2">
+							<select1 bind="cPageOrder" appearance="minimal" class="form-group">
+								<label>Order</label>
+								<item>
+									<label>A to Z</label>
+									<value>ascending</value>
+								</item>
+								<item>
+									<label>Z to A</label>
+									<value>descending</value>
+								</item>
+							</select1>
+						</case>
+						<case id="cSortBy_3" />
+					</switch>
+
+					<group class="form-section-wrapper">
+						<select1 bind="cPresentationType" appearance="full" class="required ">
+							<label>Presentation Type</label>
 							<item>
-								<label>Newest to Oldest</label>
-								<value>descending</value>
+								<label>List</label>
+								<value>list</value>
 							</item>
 							<item>
-								<label>Oldest to Newest</label>
-								<value>ascending</value>
+								<label>Accordian</label>
+								<value>accordian</value>
 							</item>
 						</select1>
-					</case>
-					<case id="cSortBy_2">
-						<select1 bind="cPageOrder" appearance="minimal" class="form-group">
-							<label>Order</label>
-							<item>
-								<label>A to Z</label>
-								<value>ascending</value>
-							</item>
-							<item>
-								<label>Z to A</label>
-								<value>descending</value>
-							</item>
-						</select1>
-					</case>
-					<case id="cSortBy_3" />
-				</switch>
-			
-				<group class="form-section-wrapper">
-				<select1 bind="cPresentationType" appearance="full" class="required ">
-					<label>Presentation Type</label>
-					<item>
-						<label>List</label>
-						<value>list</value>
-					</item>
-					<item>
-						<label>Accordian</label>
-						<value>accordian</value>
-					</item>
-				</select1>
-			</group></group>
+					</group>
+				</group>
 			</group>
 			<group>
 				<label>
@@ -287,7 +289,27 @@
 							</case>
 						</switch>
 					</group>
-
+					<group class="col-lg-6">
+						<select1 bind="char80Layout" >
+							<label>Layout of content</label>
+							<item>
+								<label>Centre</label>
+								<value>center</value>
+							</item>
+							<item>
+								<label>Left</label>
+								<value>left</value>
+							</item>
+							<item>
+								<label>Right</label>
+								<value>right</value>
+							</item>
+							<item>
+								<label>Wide</label>
+								<value>wide</value>
+							</item>
+						</select1>
+					</group>
 				</group>
 			</group>
 			<group>
@@ -307,12 +329,12 @@
 				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
 			</group>
 
-		
+
 		</group>
-	</group>  
-  <group ref="submit" class="contentSubmit">
-    <submit submission="" ref="ewSubmit" class="principle">
-      <label>Save FAQ List</label>
-    </submit>
-  </group>
+	</group>
+	<group ref="submit" class="contentSubmit">
+		<submit submission="" ref="ewSubmit" class="principle">
+			<label>Save FAQ List</label>
+		</submit>
+	</group>
 </Content>

@@ -3,7 +3,7 @@
 
 	<xsl:template match="Content[@type='Module' and @moduleType='FormattedText']" mode="displayBrief">
 		<xsl:variable name="div-class">
-			<xsl:text>Formatted Text</xsl:text>
+			<xsl:text>FormattedText</xsl:text>
 			<xsl:if test="@position='column1' or @position='custom' or @position='header' or @position='footer'"> character-width-80</xsl:if>
 		</xsl:variable>
 		<xsl:if test="node()">
