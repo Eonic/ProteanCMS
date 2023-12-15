@@ -563,7 +563,7 @@
                 <i class="fa fa-circle fa-stack-2x">
                   <xsl:text> </xsl:text>
                 </i>
-                <i class="fab fa-twitter fa-stack-1x fa-inverse">
+                <i class="fa-brands fa-x-twitter fa-stack-1x fa-inverse">
                   <xsl:text> </xsl:text>
                 </i>
               </span>
@@ -644,7 +644,7 @@
             <xsl:if test="@twitterURL!=''">
               <li class="nav-item">
                 <a href="{@twitterURL}" target="_blank" title="{$myName} on Twitter" class="nav-link social-id-tw">
-                  <i class="fab fa-twitter">
+                  <i class="fa-brands fa-x-twitter">
                     <xsl:text> </xsl:text>
                   </i>
                 </a>
@@ -908,7 +908,7 @@
                 <i class="fa fa-circle fa-stack-2x">
                   <xsl:text> </xsl:text>
                 </i>
-                <i class="fab fa-twitter fa-stack-1x fa-inverse">
+                <i class="fa-brands fa-x-twitter fa-stack-1x fa-inverse">
                   <xsl:text> </xsl:text>
                 </i>
               </span>
@@ -1001,7 +1001,7 @@
             <xsl:if test="@twitterURL!=''">
               <li class="nav-item">
                 <a href="{@twitterURL}" title="{$myName} on Twitter" class="nav-link social-id-tw">
-                  <i class="fab fa-twitter">
+                  <i class="fa-brands fa-x-twitter">
                     <xsl:text> </xsl:text>
                   </i>
                 </a>
