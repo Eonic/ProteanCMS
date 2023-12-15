@@ -13203,10 +13203,8 @@ namespace Protean
                             oDs.DataSetName = cDatasetName;
                         oDA.Fill(oDs, cTableName);
                     }
-
                     return oDs;
                 }
-
                 catch (Exception ex)
                 {
                     OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetDatasetAddRows", ex, cProcessInfo));
@@ -13261,7 +13259,7 @@ namespace Protean
                         case "String":
                             {
 
-                                if (Strings.Left(Strings.Trim(value.InnerText.ToString()), 1) == "<" & Strings.Right(Strings.Trim(value.InnerText.ToString()), 1) == ">")
+                                if (Strings.Left(Strings.Trim(value.InnerXml.ToString()), 1) == "<" & Strings.Right(Strings.Trim(value.InnerXml.ToString()), 1) == ">")
                                 {
                                     // we can assume this is XML
                                     bKeepXml = true;
@@ -13269,11 +13267,11 @@ namespace Protean
 
                                 if (bKeepXml)
                                 {
-                                    return value.InnerText;
+                                    return value.InnerXml;
                                 }
                                 else
                                 {
-                                    return convertEntitiesToString(Convert.ToString(value.InnerText));
+                                    return convertEntitiesToString(Convert.ToString(value.InnerXml));
                                 }
                             }
 
@@ -13285,7 +13283,7 @@ namespace Protean
 
                         default:
                             {
-                                return value.InnerText;
+                                return value.InnerXml;
                             }
                     }
                 }
