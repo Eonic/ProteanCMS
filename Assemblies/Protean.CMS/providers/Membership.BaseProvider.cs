@@ -1136,14 +1136,17 @@ namespace Protean.Providers
                                         if (base.moXformElmt.SelectSingleNode("/group/descendant-or-self::*[@bind='cDirPassword']") != null)
                                         {
                                             // Passwords match?
-                                            if ((goRequest["cDirPassword2"]).Length > 0)
+                                            if(goRequest["cDirPassword2"] != null)
                                             {
-                                                if (goRequest["cDirPassword"] != goRequest["cDirPassword2"])
+                                                if ((goRequest["cDirPassword2"]).Length > 0)
                                                 {
-                                                    base.valid = false;
-                                                    base.addNote("cDirPassword", Protean.xForm.noteTypes.Alert, "Passwords must match ");
+                                                    if (goRequest["cDirPassword"] != goRequest["cDirPassword2"])
+                                                    {
+                                                        base.valid = false;
+                                                        base.addNote("cDirPassword", Protean.xForm.noteTypes.Alert, "Passwords must match ");
+                                                    }
                                                 }
-                                            }
+                                            }                                          
 
                                             if (moPolicy != null)
                                             {

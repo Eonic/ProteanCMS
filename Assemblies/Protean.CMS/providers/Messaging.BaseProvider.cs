@@ -511,10 +511,16 @@ namespace Protean.Providers
                     try
                     {
                         System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
-                        if (moMailConfig is null)
+                        if (moMailConfig == null)
+                        {
                             return "";
-
-                        long nMailMenuRoot = Conversions.ToLong(moMailConfig["RootPageId"]);
+                        }
+                        long nMailMenuRoot = 0;
+                        if (moMailConfig["RootPageId"] != "")
+                        {
+                            nMailMenuRoot = Convert.ToInt64(moMailConfig["RootPageId"]);
+                        }
+                        
                         // if we hit this we want to default to the mail root Id
                         if (myWeb.mnPageId == gnTopLevel & cCmd != "NewMail" & cCmd != "NormalMail" & cCmd != "AdvancedMail")
                         {
