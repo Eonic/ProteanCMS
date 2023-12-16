@@ -117,7 +117,7 @@
 			<xsl:call-template name="term3005a" />
 		</h1>
 		<form method="post" id="cart" class="ewXform">
-			<button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-link continue">
+			<button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-custom continue">
 				<xsl:call-template name="term3060" />
 				<xsl:text> </xsl:text>
 			</button>
@@ -1395,6 +1395,13 @@
 
 	<xsl:template match="Item" mode="CartProductName">
 		<xsl:value-of select="Name"/>
+	</xsl:template>
+
+	<xsl:template match="Item[contentType='SKU']" mode="CartProductName">
+		<xsl:if test="productDetail/ParentProduct">
+			<xsl:value-of select="substring(productDetail/ParentProduct/Content/@name,1,25)"/> -
+		</xsl:if>
+		<xsl:value-of select="Name"/> 
 	</xsl:template>
 
 	<xsl:template match="Item[contentType='Ticket']" mode="CartProductName">

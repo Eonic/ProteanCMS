@@ -118,7 +118,7 @@ Public Class API
                     Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/" & LCase(pnArr(0)) & "Providers")
                     'Dim assemblyInstance As [Assembly] = [Assembly].LoadFrom(goServer.MapPath(moPrvConfig.Providers(pnArr(1)).Parameters("path")))
                     Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(pnArr(1)).Type)
-                    classPath = "Protean.Providers." & pnArr(0) & "." & pnArr(1) & ".JSONActions"
+                    classPath = "Protean.Providers." & pnArr(0) & "." & pnArr(1) & "Extras.JSONActions"
                     calledType = assemblyInstance.GetType(classPath, True)
                 Else
                     Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders")
@@ -135,14 +135,16 @@ Public Class API
 
             Dim o As Object = Activator.CreateInstance(calledType)
 
-            Dim args(1) As Object
+            Dim args(0) As Object
             args(0) = Me
             If Not jObj Is Nothing Then
+                ReDim args(1)
                 args(1) = jObj
             ElseIf Not paramDictionary Is Nothing Then
+                ReDim args(1)
                 args(1) = paramDictionary
             Else
-                args(1) = Nothing
+                ' args(1) = Nothing
             End If
 
             'check the response whatever is coming like with code 400, 200, based on the output- return in Json
