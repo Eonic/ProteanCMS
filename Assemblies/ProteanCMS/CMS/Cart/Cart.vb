@@ -1755,6 +1755,8 @@ processFlow:
 
         End Sub
 
+
+
         Overridable Function GetPaymentProvider() As PaymentProviders
 
             Dim oEwProv As PaymentProviders = New PaymentProviders(myWeb)
@@ -6631,6 +6633,30 @@ processFlow:
 
         End Sub
 
+        Public Sub AppendSellerNotes(ByVal Notes As String, Optional ByVal Detail As String = "")
+            Dim sSql As String = ""
+            Dim oDs As DataSet
+            Dim oRow As DataRow
+            Dim cProcessInfo As String = "SetClientNotes"
+            Try
+                If mnCartId > 0 Then
+                    'Update Seller Notes:
+                    sSql = "select * from tblCartOrder where nCartOrderKey = " & mnCartId
+                    oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
+                    For Each oRow In oDs.Tables("Order").Rows
+                        oRow("cSellerNotes") = Notes
+                        oRow("cSellerNotes") = oRow("cSellerNotes") + "\n" + DateTime.Today.ToString() + " " + DateTime.Now.TimeOfDay.ToString() + ": changed to: (" + getProcessName(mnProcessId) + ") " + "\n" + "comment: " + Notes + "\n" + "Full Response:' " + "" + "'"
+
+                    Next
+                    myWeb.moDbHelper.updateDataset(oDs, "Order")
+                End If
+
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, gbDebug)
+            End Try
+
+        End Sub
+
         Public Function AddItem(ByVal nProductId As Long, ByVal nQuantity As Long, ByVal oProdOptions As Array, Optional ByVal cProductText As String = "", Optional ByVal nPrice As Double = 0, Optional ProductXml As String = "", Optional UniqueProduct As Boolean = False, Optional overideUrl As String = "", Optional bDepositOnly As Boolean = False, Optional cProductOption As String = "", Optional dProductOptionPrice As Double = 0) As Boolean
             myWeb.PerfMon.Log("Cart", "AddItem")
             Dim cSQL As String = "Select * From tblCartItem WHERE nCartOrderID = " & mnCartId & " AND nItemiD =" & nProductId
@@ -7615,34 +7641,50 @@ processFlow:
             Dim oElmt2 As XmlElement
             Dim cProcessInfo As String = ""
             Dim oPaymentCfg As XmlNode
-            Dim Folder As String = "/ewcommon/xforms/PaymentProvider/"
+            Dim ptnFolder As String = "/ewcommon/xforms/PaymentProvider/"
+            Dim localFolder As String = "/xforms/PaymentProvider/"
             Dim fi As FileInfo
             Dim ProviderName As String
-            If bs5 Then Folder = "/ptn/features/cart/PaymentProvider/"
+            If bs5 Then
+                ptnFolder = "/ptn/providers/payment/"
+                localFolder = "/providers/payment/"
+            End If
             Try
 
                 oPaymentCfg = WebConfigurationManager.GetWebApplicationSection("protean/payment")
-
                 oElmt = moPageXml.CreateElement("List")
 
-                Dim dir As New DirectoryInfo(moServer.MapPath(Folder))
-                Dim files As FileInfo() = dir.GetFiles()
 
-                For Each fi In files
-                    If fi.Extension = ".xml" Then
-                        ProviderName = Replace(fi.Name, fi.Extension, "")
-                        oElmt2 = addNewTextNode("Provider", oElmt, Replace(ProviderName, "-", " "))
-                        If Not oPaymentCfg.SelectSingleNode("/payment/provider[@name='" & Replace(ProviderName, "-", "") & "']") Is Nothing Then
-                            oElmt2.SetAttribute("active", "true")
-                        End If
+                If bs5 Then
+                    Dim dir As New DirectoryInfo(moServer.MapPath(ptnFolder))
+                    If dir.Exists Then
+                        Dim dirs As DirectoryInfo()
+                        Dim dir2 As DirectoryInfo
+                        dirs = dir.GetDirectories()
+                        For Each dir2 In dirs
+                            ProviderName = dir2.Name
+                            oElmt2 = addNewTextNode("Provider", oElmt, Replace(ProviderName, "-", " "))
+                            If Not oPaymentCfg.SelectSingleNode("/payment/provider[@name='" & Replace(ProviderName, "-", "") & "']") Is Nothing Then
+                                oElmt2.SetAttribute("active", "true")
+                            End If
+                        Next
                     End If
-                Next
-
-
-                dir = New DirectoryInfo(moServer.MapPath("/xforms/PaymentProvider/"))
-                If dir.Exists Then
-                    files = dir.GetFiles()
-
+                    dir = New DirectoryInfo(moServer.MapPath(localFolder))
+                    If Dir.Exists Then
+                        Dim dirs As DirectoryInfo()
+                        Dim dir2 As DirectoryInfo
+                        dirs = Dir.GetDirectories()
+                        For Each dir2 In dirs
+                            ProviderName = dir2.Name
+                            oElmt2 = addNewTextNode("Provider", oElmt, Replace(ProviderName, "-", " "))
+                            If Not oPaymentCfg.SelectSingleNode("/payment/provider[@name='" & Replace(ProviderName, "-", "") & "']") Is Nothing Then
+                                oElmt2.SetAttribute("active", "true")
+                            End If
+                        Next
+                    End If
+                Else
+                    Dim dir As New DirectoryInfo(moServer.MapPath(ptnFolder))
+                    Dim files As FileInfo() = dir.GetFiles()
                     For Each fi In files
                         If fi.Extension = ".xml" Then
                             ProviderName = Replace(fi.Name, fi.Extension, "")
@@ -7652,7 +7694,21 @@ processFlow:
                             End If
                         End If
                     Next
+                    dir = New DirectoryInfo(moServer.MapPath(localFolder))
+                    If dir.Exists Then
+                        files = dir.GetFiles()
+                        For Each fi In files
+                            If fi.Extension = ".xml" Then
+                                ProviderName = Replace(fi.Name, fi.Extension, "")
+                                oElmt2 = addNewTextNode("Provider", oElmt, Replace(ProviderName, "-", " "))
+                                If Not oPaymentCfg.SelectSingleNode("/payment/provider[@name='" & Replace(ProviderName, "-", "") & "']") Is Nothing Then
+                                    oElmt2.SetAttribute("active", "true")
+                                End If
+                            End If
+                        Next
+                    End If
                 End If
+
 
 
                 oContentsXML.AppendChild(oElmt)

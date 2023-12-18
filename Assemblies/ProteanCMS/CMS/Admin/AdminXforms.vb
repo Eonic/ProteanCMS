@@ -5977,8 +5977,12 @@ Partial Public Class Cms
                     'Replace Spaces with hypens
                     cProviderType = Replace(cProviderType, " ", "-")
                     Dim formPath = "/xforms/PaymentProvider/"
-                    If bs5 Then formPath = "/features/cart/PaymentProvider/"
-                    If Not MyBase.load(formPath & cProviderType & ".xml", myWeb.maCommonFolders) Then
+                    Dim filename = formPath & cProviderType & ".xml"
+                    If bs5 Then
+                        formPath = "/providers/payment/"
+                        filename = formPath & cProviderType & "/config.xml"
+                    End If
+                    If Not MyBase.load(filename, myWeb.maCommonFolders) Then
                         'show xform load error message
 
                     Else
