@@ -820,8 +820,9 @@ namespace Protean
                             cExtensions = "doc,docx,xls,xlsx,pdf,ppt,jpg,gif,png";
                         }
                     }
+                    //oBindElmt.GetAttribute("type") <> "" And(oBindElmt.GetAttribute("required") = "true()" And objValue<> "")
 
-                    if (Conversions.ToBoolean(Operators.AndObject(!string.IsNullOrEmpty(oBindElmt.GetAttribute("type")), Operators.AndObject(oBindElmt.GetAttribute("required") == "true()", Operators.ConditionalCompareObjectNotEqual(objValue, "", false)))))
+                    if (oBindElmt.GetAttribute("type") != "" && (oBindElmt.GetAttribute("required") == "true()" && objValue.ToString() !=""))
                     {
                         sMessage = evaluateByType(Conversions.ToString(objValue), oBindElmt.GetAttribute("type"), cExtensions, Strings.LCase(oBindElmt.GetAttribute("required")) == "true()");
                     }

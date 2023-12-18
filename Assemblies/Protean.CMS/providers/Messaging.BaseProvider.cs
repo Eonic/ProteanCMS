@@ -485,7 +485,7 @@ namespace Protean.Providers
             public class AdminProcess : Admin, IMessagingAdminProcess
             {
 
-                private AdminXForms _oAdXfm;
+                private Protean.Providers.Messaging.DefaultProvider.AdminXForms _oAdXfm;
 
                 public IMessagingAdminXforms oAdXfm
                 {

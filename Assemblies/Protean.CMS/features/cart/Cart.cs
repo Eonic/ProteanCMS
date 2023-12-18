@@ -1384,7 +1384,7 @@ namespace Protean
                             {
                                 string argcSuccessfulCartCmd = "Currency";
                                 mcCartCmd = Conversions.ToString(updateCart(ref argcSuccessfulCartCmd));
-                                goto processFlow;                                
+                                goto processFlow;
                             }
                         case "Remove": // take away an item and set the command to display the cart
                             {
@@ -1397,7 +1397,7 @@ namespace Protean
                                     // RemoveItem has removed the last item in the cart - quit the cart.
                                     mcCartCmd = "Quit";
                                 }
-                                goto processFlow;                                
+                                goto processFlow;
                             }
 
                         case "Add": // add an item to the cart, if its a new cart we must initialise it and change its status
@@ -1834,7 +1834,7 @@ namespace Protean
 
                                 Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
                                 IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, mcPaymentMethod);
-                               // var oPayProv = new Providers.Payment.ReturnProvider(ref myWeb, mcPaymentMethod);
+                                // var oPayProv = new Providers.Payment.ReturnProvider(ref myWeb, mcPaymentMethod);
                                 var Redirect3dsXform = new Cms.xForm(ref myWeb.msException);
                                 Redirect3dsXform = (Cms.xForm)oPaymentProv.Activities.GetRedirect3dsForm(ref myWeb);
 
@@ -2082,7 +2082,7 @@ namespace Protean
                                     nI = Conversions.ToInteger(myWeb.moRequest["OrderID"]);
                                 GetCartSummary(ref oElmt);
                                 XmlElement argoPageDetail = null;
-                                ListOrders(nI.ToString(),false,0, oPageDetail: ref argoPageDetail);
+                                ListOrders(nI.ToString(), false, 0, oPageDetail: ref argoPageDetail);
                                 break;
                             }
 
@@ -2095,7 +2095,7 @@ namespace Protean
                                     MakeCurrent(nI);
                                 mcCartCmd = "Cart";
                                 goto processFlow;
-                                
+
                             }
 
                         case "Delete":
@@ -2106,7 +2106,7 @@ namespace Protean
                                 if (!(nI == 0))
                                     DeleteCart(nI);
                                 mcCartCmd = "List";
-                                goto processFlow;                                
+                                goto processFlow;
                             }
 
                         case "Brief":
@@ -2601,7 +2601,7 @@ namespace Protean
 
                         if (!string.IsNullOrEmpty(sMessagingProvider) | !string.IsNullOrEmpty(moMailConfig["InvoiceList"]) & !string.IsNullOrEmpty(moMailConfig["QuoteList"]))
                         {
-                           
+
                             Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
                             IMessagingProvider oMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
                             string xsltPath = string.Empty;
@@ -4012,18 +4012,21 @@ namespace Protean
                             }
 
                             // Add Any Client Notes
-                            if (oRow["cClientNotes"]!=System.DBNull.Value || oRow["cClientNotes"].ToString() != "")
+                            if (oRow["cClientNotes"] != System.DBNull.Value || oRow["cClientNotes"].ToString() != "")
                             {
                                 oElmt = moPageXml.CreateElement("Notes");
                                 oElmt.InnerXml = Conversions.ToString(oRow["cClientNotes"]);
-                                if (oElmt.FirstChild.Name == "Notes")
+                                if (Convert.ToString(oElmt.FirstChild) != "")
                                 {
-                                    XmlElement NewNotes = (XmlElement)oCartElmt.OwnerDocument.ImportNode(oElmt.SelectSingleNode("Notes"), true);
-                                    oCartElmt.AppendChild(NewNotes);
-                                }
-                                else
-                                {
-                                    oCartElmt.AppendChild(oElmt);
+                                    if (oElmt.FirstChild.Name == "Notes")
+                                    {
+                                        XmlElement NewNotes = (XmlElement)oCartElmt.OwnerDocument.ImportNode(oElmt.SelectSingleNode("Notes"), true);
+                                        oCartElmt.AppendChild(NewNotes);
+                                    }
+                                    else
+                                    {
+                                        oCartElmt.AppendChild(oElmt);
+                                    }
                                 }
                             }
 
@@ -4352,12 +4355,12 @@ namespace Protean
             public double getProductTaxRate(XmlElement priceXml)
             {
                 myWeb.PerfMon.Log("Cart", "getProductVatRate");
-               // string cGroupXPath = "";
+                // string cGroupXPath = "";
                 var oProd = moPageXml.CreateNode(XmlNodeType.Document, "", "product");
                 try
                 {
 
-                   // string vatCode = "";
+                    // string vatCode = "";
                     if (mbVatOnLine)
                     {
                         switch (priceXml.GetAttribute("taxCode") ?? "")
@@ -6017,7 +6020,7 @@ namespace Protean
                         {
 
                             oXform.updateInstanceFromRequest();
-                           // bool forCollection = false;
+                            // bool forCollection = false;
                             if (moDBHelper.checkTableColumnExists("tblCartShippingMethods", "bCollection"))
                             {
                                 object bCollectionSelected = false;
@@ -6037,7 +6040,7 @@ namespace Protean
                                                 string cSqlUpdate;
                                                 cSqlUpdate = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("UPDATE tblCartOrder SET cShippingDesc='", SqlFmt(cShippingDesc)), "', nShippingCost="), SqlFmt(nShippingCost.ToString())), ", nShippingMethodId = "), oDrCollectionOptions["nShipOptKey"]), " WHERE nCartOrderKey="), mnCartId));
                                                 moDBHelper.ExeProcessSql(cSqlUpdate);
-                                               // forCollection = true;
+                                                // forCollection = true;
                                                 oXform.valid = true;
                                                 oContactXform.valid = true;
                                                 mbNoDeliveryAddress = true;
@@ -8611,7 +8614,7 @@ namespace Protean
                                             }
                                             else if (Conversions.ToBoolean(Operators.ConditionalCompareObjectLess(Operators.AddObject(oDR1["nQuantity"], nQuantity), itemLimit, false)))
                                             {
-                                                oDR1["nQuantity"] = Convert.ToInt32(oDR1["nQuantity"])+ nQuantity;
+                                                oDR1["nQuantity"] = Convert.ToInt32(oDR1["nQuantity"]) + nQuantity;
                                             }
                                             oDR1.EndEdit();
                                             break;
@@ -8715,7 +8718,7 @@ namespace Protean
                                     else
                                     {
                                         // injection attempt don't add to cart
-                                       //return false;
+                                        //return false;
                                         return AddItemsRet;
                                     }
                                 }
@@ -10073,7 +10076,7 @@ namespace Protean
                 }
             }
 
-            public void ListOrders(string sOrderID, bool bListAllQuotes, int ProcessId,ref XmlElement oPageDetail, bool bForceRefresh = false, long nUserId = 0L)
+            public void ListOrders(string sOrderID, bool bListAllQuotes, int ProcessId, ref XmlElement oPageDetail, bool bForceRefresh = false, long nUserId = 0L)
             {
                 myWeb.PerfMon.Log("Cart", "ListOrders");
                 if (myWeb.mnUserId == 0)
@@ -10950,14 +10953,14 @@ namespace Protean
                                 }
                                 else
                                 {
-                                   oHN[cKey] += Convert.ToString(1);
+                                    oHN[cKey] += Convert.ToString(1);
                                 }
                             }
                             int nQ = 0;
                             double nC = 0d;
                             foreach (string ci in oHN.Keys)
                             {
-                                nQ = Conversions.ToInteger(nQ +Convert.ToInt32(oHQ[ci]));
+                                nQ = Conversions.ToInteger(nQ + Convert.ToInt32(oHQ[ci]));
                                 nC = Conversions.ToDouble(nC + Convert.ToInt32(oHC[ci]));
                             }
                             oElmt.SetAttribute("PageAndDescendantQuantity", nQ.ToString());
@@ -11930,7 +11933,7 @@ namespace Protean
                     string ReceiptId = oCartListElmt.SelectSingleNode("/PaymentDetails/instance/Response/@ReceiptId").Value.ToString();
                     double Amount = Convert.ToDouble(oCartListElmt.GetAttribute("total"));
                     //int nItemID = 0; // ID of the cart item record
-                                     // Dim oDs As DataSet
+                    // Dim oDs As DataSet
 
                     oInstance.AppendChild(oInstance.CreateElement("instance"));
                     XmlNode argoNode = oInstance.DocumentElement;
