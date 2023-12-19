@@ -47,6 +47,7 @@
 			<bind id="cPageOrder" nodeset="@order" required="false()" type="string"/>
 			<bind id="cShowHidden" nodeset="@showHidden" required="false()" type="string"/>
 			<bind id="cShowParent" nodeset="@showParent" required="false()" type="string"/>
+			<bind id="cShowImg" nodeset="@showImg" required="false()" type="string"/>
 			<bind id="cCrop" nodeset="@crop" required="false()" type="string"/>
 			<bind id="Align" nodeset="@align" required="false()" type="string"/>
 			<bind id="cButtons" nodeset="@button" required="false()" type="string"/>
@@ -131,6 +132,19 @@
 									<group class="col-md-6">
 										<select1 bind="cButtons" appearance="full" class="inline-items">
 											<label>Buttons</label>
+											<item>
+												<label>Yes</label>
+												<value>true</value>
+											</item>
+											<item>
+												<label>No</label>
+												<value>false</value>
+											</item>
+										</select1>
+									</group>
+									<group class="col-md-6">
+										<select1 bind="cShowImg" appearance="full" class="vshort inline-items">
+											<label>Show images</label>
 											<item>
 												<label>Yes</label>
 												<value>true</value>

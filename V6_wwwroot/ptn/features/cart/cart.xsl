@@ -117,7 +117,7 @@
 			<xsl:call-template name="term3005a" />
 		</h1>
 		<form method="post" id="cart" class="ewXform">
-			<button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-link continue">
+			<button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-custom continue">
 				<xsl:call-template name="term3060" />
 				<xsl:text> </xsl:text>
 			</button>
@@ -1397,6 +1397,13 @@
 		<xsl:value-of select="Name"/>
 	</xsl:template>
 
+	<xsl:template match="Item[contentType='SKU']" mode="CartProductName">
+		<xsl:if test="productDetail/ParentProduct">
+			<xsl:value-of select="substring(productDetail/ParentProduct/Content/@name,1,25)"/> -
+		</xsl:if>
+		<xsl:value-of select="Name"/> 
+	</xsl:template>
+
 	<xsl:template match="Item[contentType='Ticket']" mode="CartProductName">
 		<xsl:if test="productDetail/ParentProduct">
 			<xsl:value-of select="substring(productDetail/ParentProduct/Content/@name,1,25)"/> -
@@ -1433,7 +1440,8 @@
 		<xsl:variable name="cartThumbHeight">
 			<xsl:apply-templates select="." mode="cartThumbHeight"/>
 		</xsl:variable>
-		<xsl:if test="productDetail/Images/img[@class='detail']/@src!='' and $showImg!='false'">
+		<xsl:choose>
+		<xsl:when test="productDetail/Images/img[@class='detail']/@src!='' and $showImg!='false'">
 			<div class="cart-thumbnail">
 				<xsl:apply-templates select="productDetail" mode="displayThumbnail">
 					<xsl:with-param name="forceResize">true</xsl:with-param>
@@ -1446,7 +1454,22 @@
 					</xsl:with-param>
 				</xsl:apply-templates>
 			</div>
-		</xsl:if>
+		</xsl:when>
+		<xsl:when test="productDetail/ParentProduct/Content/Images/img[@class='detail']/@src!='' and $showImg!='false'">
+			<div class="cart-thumbnail">
+				<xsl:apply-templates select="productDetail/ParentProduct/Content" mode="displayThumbnail">
+					<xsl:with-param name="forceResize">true</xsl:with-param>
+					<xsl:with-param name="crop">true</xsl:with-param>
+					<xsl:with-param name="width">
+						<xsl:value-of select="$cartThumbWidth" />
+					</xsl:with-param>
+					<xsl:with-param name="height">
+						<xsl:value-of select="$cartThumbHeight" />
+					</xsl:with-param>
+				</xsl:apply-templates>
+			</div>
+		</xsl:when>
+		</xsl:choose>
 		<div class="cart-desc">
 			<a href="{$siteURL}{@url}" title="">
 				<xsl:apply-templates select="." mode="CartProductName"/>

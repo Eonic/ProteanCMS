@@ -3,7 +3,7 @@
 	<!-- ############## News Articles ##############   -->
 
 	<!-- wrapping code is generic from layout.xsl with mode displayBrief, override here to customise-->
-	
+
 	<xsl:template match="Content[@type='Module' and @moduleType='NewsList']" mode="themeModuleExtras">
 		<!-- this is empty because we want this on individual listing panels not the containing module-->
 	</xsl:template>
@@ -19,6 +19,7 @@
 		<xsl:param name="class"/>
 		<xsl:param name="parentId"/>
 		<xsl:param name="linked"/>
+		<xsl:param name="itemLayout"/>
 		<xsl:variable name="parentURL">
 			<xsl:apply-templates select="." mode="getHref"/>
 		</xsl:variable>
@@ -26,6 +27,9 @@
 			<xsl:text>listItem newsarticle </xsl:text>
 			<xsl:if test="$linked='true'">
 				<xsl:text> linked-listItem </xsl:text>
+			</xsl:if>
+			<xsl:if test="$itemLayout='wide'">
+				<xsl:text> wide-item </xsl:text>
 			</xsl:if>
 			<xsl:value-of select="$class"/>
 			<xsl:text> </xsl:text>
@@ -297,8 +301,8 @@
 		</xsl:if>]
 		}
 	</xsl:template>
-	
-		<xsl:template match="Content[@moduleType='FAQList']" mode="JSONLD">
+
+	<xsl:template match="Content[@moduleType='FAQList']" mode="JSONLD">
 		{
 		"@context": "https://schema.org",
 		"@type": "FAQPage",
