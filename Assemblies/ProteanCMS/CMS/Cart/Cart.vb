@@ -1430,10 +1430,21 @@ processFlow:
                         Else
                             Dim oOptionXform As xForm = optionsXform(oElmt)
                             If oOptionXform.valid Then
-                                mnProcessId = 5
-                                mcCartCmd = "EnterPaymentDetails"
-                                '   execute next step unless form filled out wrong / not in db
-                                GoTo processFlow
+                                If myWeb.moSession("paymentRecieved") = mnCartId Then
+                                    myWeb.moSession("paymentRecieved") = Nothing
+                                    mnProcessId = Cart.cartProcess.Complete
+                                    mcCartCmd = "ShowInvoice"
+                                    GoTo processFlow
+                                Else
+                                    mnProcessId = 5
+                                    mcCartCmd = "EnterPaymentDetails"
+                                    '   execute next step unless form filled out wrong / not in db
+                                    GoTo processFlow
+                                End If
+
+
+
+
                             Else
                                 Dim oContentsElmt As XmlElement = moPageXml.SelectSingleNode("/Page/Contents")
                                 If oContentsElmt Is Nothing Then
@@ -1486,7 +1497,6 @@ processFlow:
                         End If
 
                         ' Add the date and reference to the cart
-
                         addDateAndRef(oElmt)
 
                         If mcPaymentMethod = "No Charge" Then
@@ -3096,6 +3106,7 @@ processFlow:
                             If oCartElmt.GetAttribute("bDiscountIsPercent") <> "" Then
                                 shipCost = -1
                             End If
+                            shipCost = -1
 
                             'Default Shipping Country.
                             Dim cDestinationCountry As String = moCartConfig("DefaultCountry")

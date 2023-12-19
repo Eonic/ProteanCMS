@@ -1440,7 +1440,8 @@
 		<xsl:variable name="cartThumbHeight">
 			<xsl:apply-templates select="." mode="cartThumbHeight"/>
 		</xsl:variable>
-		<xsl:if test="productDetail/Images/img[@class='detail']/@src!='' and $showImg!='false'">
+		<xsl:choose>
+		<xsl:when test="productDetail/Images/img[@class='detail']/@src!='' and $showImg!='false'">
 			<div class="cart-thumbnail">
 				<xsl:apply-templates select="productDetail" mode="displayThumbnail">
 					<xsl:with-param name="forceResize">true</xsl:with-param>
@@ -1453,7 +1454,22 @@
 					</xsl:with-param>
 				</xsl:apply-templates>
 			</div>
-		</xsl:if>
+		</xsl:when>
+		<xsl:when test="productDetail/ParentProduct/Content/Images/img[@class='detail']/@src!='' and $showImg!='false'">
+			<div class="cart-thumbnail">
+				<xsl:apply-templates select="productDetail/ParentProduct/Content" mode="displayThumbnail">
+					<xsl:with-param name="forceResize">true</xsl:with-param>
+					<xsl:with-param name="crop">true</xsl:with-param>
+					<xsl:with-param name="width">
+						<xsl:value-of select="$cartThumbWidth" />
+					</xsl:with-param>
+					<xsl:with-param name="height">
+						<xsl:value-of select="$cartThumbHeight" />
+					</xsl:with-param>
+				</xsl:apply-templates>
+			</div>
+		</xsl:when>
+		</xsl:choose>
 		<div class="cart-desc">
 			<a href="{$siteURL}{@url}" title="">
 				<xsl:apply-templates select="." mode="CartProductName"/>
