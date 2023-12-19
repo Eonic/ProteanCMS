@@ -153,6 +153,7 @@ namespace Protean.Providers
             public DefaultProvider()
             {
                 // do nothing
+               //_AdminXforms = new DefaultProvider.AdminXForms(ref myweb);
             }
 
             private IMessagingAdminXforms _AdminXforms;
@@ -196,7 +197,7 @@ namespace Protean.Providers
             {
                 _AdminXforms = new AdminXForms(ref myWeb);
                 _AdminProcess = new AdminProcess(ref myWeb);
-                // MemProvider.AdminProcess.oAdXfm = MemProvider.AdminXforms
+                _AdminProcess.oAdXfm = _AdminXforms;
                 string exception = null; 
                 _Activities = new Activities(exception);
                 return this;
@@ -485,7 +486,7 @@ namespace Protean.Providers
             public class AdminProcess : Admin, IMessagingAdminProcess
             {
 
-                private AdminXForms _oAdXfm;
+                private Protean.Providers.Messaging.DefaultProvider.AdminXForms _oAdXfm;
 
                 public IMessagingAdminXforms oAdXfm
                 {
@@ -511,10 +512,16 @@ namespace Protean.Providers
                     try
                     {
                         System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
-                        if (moMailConfig is null)
+                        if (moMailConfig == null)
+                        {
                             return "";
-
-                        long nMailMenuRoot = Conversions.ToLong(moMailConfig["RootPageId"]);
+                        }
+                        long nMailMenuRoot = 0;
+                        if (moMailConfig["RootPageId"] != "")
+                        {
+                            nMailMenuRoot = Convert.ToInt64(moMailConfig["RootPageId"]);
+                        }
+                        
                         // if we hit this we want to default to the mail root Id
                         if (myWeb.mnPageId == gnTopLevel & cCmd != "NewMail" & cCmd != "NormalMail" & cCmd != "AdvancedMail")
                         {

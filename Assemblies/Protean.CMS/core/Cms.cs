@@ -2302,7 +2302,7 @@ namespace Protean
 
                         sProcessInfo = "Check Admin Mode";
 
-                        if (Strings.LCase(this.moConfig["ActionsBeforeAddBulk"]) != "on")
+                        if (this.moConfig["ActionsBeforeAddBulk"] != "on")
                         {
                             ContentActions();
                         }
@@ -2844,7 +2844,7 @@ namespace Protean
             {
                 OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, methodName, ex, processInfo));
                 this.moResponse.Write(msException);
-               // Finalize();
+                // Finalize();
             }
             this.PerfMon.Write();
         }
@@ -2980,7 +2980,7 @@ namespace Protean
                     XmlElement dummyPageDetail = null;
                     XmlElement dummyContentNode = null;
                     int dummycount = 0;
-                    this.GetPageContentFromSelect("cContentSchemaName IN (" + Tools.Database.SqlString(contentSchema) + ",'FeedOutput') and CL.nStructId IN(" + pageIds + ")" + productGrpSql, ref dummycount,ref dummyContentNode,ref dummyPageDetail, true, bIgnorePermissionsCheck: true, nReturnRows: pageSize, cOrderBy: "dInsertDate DESC", bContentDetail: blnContentDetail, pageNumber: (long)pageNumber, cShowSpecificContentTypes: cRelatedSchemasToShow);
+                    this.GetPageContentFromSelect("cContentSchemaName IN (" + Tools.Database.SqlString(contentSchema) + ",'FeedOutput') and CL.nStructId IN(" + pageIds + ")" + productGrpSql, ref dummycount, ref dummyContentNode, ref dummyPageDetail, true, bIgnorePermissionsCheck: true, nReturnRows: pageSize, cOrderBy: "dInsertDate DESC", bContentDetail: blnContentDetail, pageNumber: (long)pageNumber, cShowSpecificContentTypes: cRelatedSchemasToShow);
 
                     string ProductTypes = this.moConfig["ProductTypes"];
                     if (string.IsNullOrEmpty(ProductTypes))
@@ -3375,7 +3375,7 @@ namespace Protean
                                             var tmp = this.moRequest;
                                             string argAlternateFormName = tmp["formName"];
                                             string zcReturnSchema = null;
-                                            xFrmContent = moAdXfm.xFrmEditContent(nContentId, this.moRequest["type"], nPageId, this.moRequest["name"],false, nReturnId: ref argnReturnId,ref zcReturnSchema, AlternateFormName: ref argAlternateFormName, nVersionId: Conversions.ToLong("0" + this.moRequest["verId"]));
+                                            xFrmContent = moAdXfm.xFrmEditContent(nContentId, this.moRequest["type"], nPageId, this.moRequest["name"], false, nReturnId: ref argnReturnId, ref zcReturnSchema, AlternateFormName: ref argAlternateFormName, nVersionId: Conversions.ToLong("0" + this.moRequest["verId"]));
                                             nContentId = argnReturnId;
                                             if (moAdXfm.valid)
                                             {
@@ -4234,11 +4234,16 @@ namespace Protean
                     string classPath = ocNode.GetAttribute("action");
                     string assemblyName = ocNode.GetAttribute("assembly");
                     string assemblyType = ocNode.GetAttribute("assemblyType");
-                    string providerName = ocNode.GetAttribute("providerName");                 
+                    string providerName = ocNode.GetAttribute("providerName");
                     string providerType = ocNode.GetAttribute("providerType");
-                    if (string.IsNullOrEmpty(providerType))
-                        providerType = "messaging";
-
+                    if(providerName == "Pure360")
+                    {
+                        providerName = "";
+                    }
+                    if (providerType == "")
+                    { 
+                        providerType = "messaging"; 
+                    }
                     string methodName = Strings.Right(classPath, Strings.Len(classPath) - classPath.LastIndexOf(".") - 1);
 
                     classPath = Strings.Left(classPath, classPath.LastIndexOf("."));
@@ -4254,10 +4259,6 @@ namespace Protean
                                 classPath = classPath + ", " + assemblyName;
                             }
                             // Dim oModules As New Protean.Cms.Membership.Modules
-
-
-
-
                             if (!string.IsNullOrEmpty(providerName))
                             {
                                 // case for external Providers
@@ -4553,7 +4554,7 @@ namespace Protean
                                 var argaWeb = this;
                                 oQuote = new Cms.Quote(ref argaWeb);
                                 XmlElement argoPageDetail = null;
-                                oQuote.ListOrders(("0" + this.moRequest["OrderId"]).ToString(),true,0, oPageDetail: ref argoPageDetail);
+                                oQuote.ListOrders(("0" + this.moRequest["OrderId"]).ToString(), true, 0, oPageDetail: ref argoPageDetail);
                                 oQuote = (Cms.Quote)null;
                             }
 
@@ -4567,7 +4568,7 @@ namespace Protean
                                 var argaWeb1 = this;
                                 oCart = new Cms.Cart(ref argaWeb1);
                                 XmlElement argoPageDetail1 = null;
-                                oCart.ListOrders(("0" + this.moRequest["OrderId"]).ToString(),true,0, oPageDetail: ref argoPageDetail1);
+                                oCart.ListOrders(("0" + this.moRequest["OrderId"]).ToString(), true, 0, oPageDetail: ref argoPageDetail1);
                                 oCart = (Cms.Cart)null;
                             }
 
@@ -4727,7 +4728,7 @@ namespace Protean
         /// 
 
 
-        public void GetPageContentFromSelect(string sWhereSql, ref int nCount, ref XmlElement oContentsNode, ref XmlElement oPageDetail, bool bPrimaryOnly = false, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder",  string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false, string cShowSpecificContentTypes = "", bool ignoreActiveAndDate = false, long nStartPos = 0L, long nItemCount = 0L, bool bShowContentDetails = true)
+        public void GetPageContentFromSelect(string sWhereSql, ref int nCount, ref XmlElement oContentsNode, ref XmlElement oPageDetail, bool bPrimaryOnly = false, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false, string cShowSpecificContentTypes = "", bool ignoreActiveAndDate = false, long nStartPos = 0L, long nItemCount = 0L, bool bShowContentDetails = true)
         {
             this.PerfMon.Log("Web", "GetPageContentFromSelect");
             XmlElement oRoot;
@@ -5331,7 +5332,7 @@ namespace Protean
                     XmlElement xmloContent = (XmlElement)oNode;
                     oRoot.AppendChild(this.moDbHelper.SimpleTidyContentNode(ref xmloContent, ref ExpireTime, ref UpdatedTime, ""));
                 }
-                    
+
             }
 
             // moDbHelper.AddDataSetToContent(oDs, oRoot, mnPageId, False, "", mdPageExpireDate, mdPageUpdateDate, True, gnShowRelatedBriefDepth)
@@ -5822,7 +5823,7 @@ namespace Protean
             var oInstance = new XmlDocument();
             string providerName;
             string classPath;
-            string methodName= string.Empty;
+            string methodName = string.Empty;
             object xFrmEditor;
             try
             {
@@ -6160,7 +6161,7 @@ namespace Protean
                 Cms argmyWeb = this;
                 ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
                 IMembershipProvider oMembershipProv = RetProv.Get(ref argmyWeb, this.moConfig["MembershipProvider"]);
-                return oMembershipProv.Activities.GetUserXML(ref argmyWeb, nUserId); 
+                return oMembershipProv.Activities.GetUserXML(ref argmyWeb, nUserId);
             }
 
             catch (Exception ex)
@@ -8286,10 +8287,8 @@ namespace Protean
                     // Now check if it's everything we're getting, or just what the user created.
                     if (!this.mbAdminMode & nPagePermission == Cms.dbHelper.PermissionLevel.AddUpdateOwn | nPagePermission == Cms.dbHelper.PermissionLevel.AddUpdateOwnPublish)
                     {
-
                         // Put a filter in to limit checks to content we've added
                         cOwnerFilter = " and @owner=" + this.mnUserId;
-
                     }
 
                     string filter = "[@id[number(.)=number(.)]" + cOwnerFilter + "]";
@@ -8312,33 +8311,13 @@ namespace Protean
 
                     if (!string.IsNullOrEmpty(cCheckContentList))
                     {
-
                         // Get any content on the page that has a Status Pending Version
-
                         cSql = "select c.nContentPrimaryId as id, " + "   dbo.fxn_getContentParents(c.nContentPrimaryId) as parId, " + "   cContentForiegnRef as ref, cContentName as name, " + "   cContentSchemaName as type, " + "   cContentXmlBrief as content, " + "   a.nStatus as status, " + "   a.dpublishDate as publish, " + "   a.dExpireDate as expire, " + "   a.dUpdateDate as [update], " + "   c.nVersion as version, " + "   c.nContentVersionKey as versionid, " + "   a.nInsertDirId as owner " + " from tblContentVersions c " + "   inner join tblAudit a " + "   on c.nAuditId = a.nAuditKey " + " WHERE c.nContentPrimaryId IN (" + cCheckContentList + ")" + "   AND a.nStatus = " + ((int)Cms.dbHelper.Status.Pending).ToString() + " AND c.nVersion = (Select TOP 1 nVersion from tblContentVersions c2 where c.nContentPrimaryId = c2.nContentPrimaryId AND a.nStatus = " + ((int)Cms.dbHelper.Status.Pending).ToString() + " ORDER BY nVersion DESC)";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                         oDs = this.moDbHelper.GetDataSet(cSql, "Content", "Contents");
 
                         if (oDs.Tables.Count > 0 && oDs.Tables[0].Rows.Count > 0)
                         {
-
                             // If contentversion exists, replace the current node with this.
 
                             oDs.Tables[0].Columns["id"].ColumnMapping = MappingType.Attribute;
@@ -9281,7 +9260,7 @@ namespace Protean
                     retElmt = moContentDetail;
                     this.moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.ContentDetailViewed, this.mnUserId, SessionID, DateTime.Now, this.mnArtId, 0, "");
                     return moContentDetail;
-                }                
+                }
             }
             catch (Exception ex)
             {
@@ -9903,8 +9882,8 @@ namespace Protean
             string sSql = string.Empty;
             string strFilePath = string.Empty;
             string strFileName = this.moRequest["filename"] + ".pdf";
-            string objStream = string.Empty; 
-                string strFileSize;
+            string objStream = string.Empty;
+            string strFileSize;
             // Dim strPageInfo, strReferrer
             // Dim sWriter = New IO.StringWriter
             var oDS = new DataSet();
