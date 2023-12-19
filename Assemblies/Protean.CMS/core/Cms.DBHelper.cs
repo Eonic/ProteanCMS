@@ -13101,10 +13101,7 @@ namespace Protean
                         Information.Err().Raise(1000, mcModuleName, "No Update");
                     }
 
-
                     PerfMonLog("dbTools", "saveInstance-End", cProcessInfo);
-
-
                     return Conversions.ToInteger(keyValue);
                 }
 

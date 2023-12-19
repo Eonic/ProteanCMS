@@ -10994,7 +10994,7 @@ namespace Protean
                 }
             }
 
-            public XmlElement CartReportsPeriod(string cGroup = "Month", int nYear = 0, int nMonth = 0, int nWeek = 0, string cCurrencySymbol = "", int nOrderStatus1 = 6, int nOrderStatus2 = 9, string cOrderType = "ORDER")
+            public XmlElement CartReportsPeriod(string cGroup = "Month", int nYear = 0, int nMonth = 0, int nWeek = 0, string cCurrencySymbol = "", string nOrderStatus="", string cOrderType = "ORDER")
             {
                 try
                 {
@@ -11008,8 +11008,8 @@ namespace Protean
                     cSQL += ",@nMonth=" + nMonth;
                     cSQL += ",@nWeek=" + nWeek;
                     cSQL += ",@cCurrencySymbol='" + cCurrencySymbol + "'";
-                    cSQL += ",@nOrderStatus1=" + nOrderStatus1;
-                    cSQL += ",@nOrderStatus2=" + nOrderStatus2;
+                    cSQL += ",@nOrderStatus='" + nOrderStatus + "'";
+                   // cSQL += ",@nOrderStatus2=" + nOrderStatus2;
                     cSQL += ",@cOrderType='" + cOrderType + "'";
 
                     var oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Item", "Report");
@@ -11027,11 +11027,9 @@ namespace Protean
                     oReturnElmt.SetAttribute("nWeek", nWeek.ToString());
                     oReturnElmt.SetAttribute("cGroup", cGroup);
                     oReturnElmt.SetAttribute("cCurrencySymbol", cCurrencySymbol);
-                    oReturnElmt.SetAttribute("nOrderStatus1", nOrderStatus1.ToString());
-                    oReturnElmt.SetAttribute("nOrderStatus2", nOrderStatus2.ToString());
+                    oReturnElmt.SetAttribute("nOrderStatus", nOrderStatus.ToString());
+                   // oReturnElmt.SetAttribute("nOrderStatus2", nOrderStatus2.ToString());
                     oReturnElmt.SetAttribute("cOrderType", cOrderType);
-
-
 
                     return oRptElmt;
                 }

@@ -153,6 +153,7 @@ namespace Protean.Providers
             public DefaultProvider()
             {
                 // do nothing
+               //_AdminXforms = new DefaultProvider.AdminXForms(ref myweb);
             }
 
             private IMessagingAdminXforms _AdminXforms;
@@ -196,7 +197,7 @@ namespace Protean.Providers
             {
                 _AdminXforms = new AdminXForms(ref myWeb);
                 _AdminProcess = new AdminProcess(ref myWeb);
-                // MemProvider.AdminProcess.oAdXfm = MemProvider.AdminXforms
+                _AdminProcess.oAdXfm = _AdminXforms;
                 string exception = null; 
                 _Activities = new Activities(exception);
                 return this;
