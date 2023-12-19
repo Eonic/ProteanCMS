@@ -435,11 +435,29 @@
 	<xsl:template match="Order[@cmd='Billing' or @cmd='Delivery']" mode="orderProcess">
 		<xsl:apply-templates select="." mode="orderProcessTitle"/>
 		<xsl:apply-templates select="." mode="orderErrorReports"/>
-		<div id="template_1_Column" class="template template_1_Column">
+		<div id="template_1_Column" class="template template_1_Column container">
 			<h1>
 				<xsl:call-template name="term4031" />
 			</h1>
-			<xsl:apply-templates select="." mode="orderEditAddresses"/>
+			<div class="row">
+				<div class="col-lg-7">
+					<xsl:apply-templates select="." mode="orderEditAddresses"/>
+				</div>
+				<div class="col-lg-5  text-bg-light">
+								<xsl:for-each select="Item">
+									<div class="clearfix cart-item">
+										<xsl:apply-templates select="." mode="orderItem">
+											<xsl:with-param name="editQty" select="false()"/>
+											<xsl:with-param name="showImg" select="true()"/>
+										</xsl:apply-templates>
+									</div>
+								</xsl:for-each>
+								<hr/>
+								<xsl:apply-templates select="." mode="orderTotals"/>								
+							
+				</div>
+			</div>
+			
 		</div>
 		<xsl:apply-templates select="." mode="displayNotes"/>
 	</xsl:template>
