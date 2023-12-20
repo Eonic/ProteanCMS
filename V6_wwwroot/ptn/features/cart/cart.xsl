@@ -448,7 +448,10 @@
 									<div class="clearfix cart-item">
 										<xsl:apply-templates select="." mode="orderItem">
 											<xsl:with-param name="editQty" select="false()"/>
-											<xsl:with-param name="showImg" select="true()"/>
+											<xsl:with-param name="showImg" select="'true'"/>
+											<xsl:with-param name="cartThumbWidth" select="'50'"/>
+											<xsl:with-param name="cartThumbHeight" select="'50'"/>
+											
 										</xsl:apply-templates>
 									</div>
 								</xsl:for-each>
@@ -1461,7 +1464,7 @@
 		<xsl:choose>
 		<xsl:when test="productDetail/Images/img[@class='detail']/@src!='' and $showImg!='false'">
 			<div class="cart-thumbnail">
-				<xsl:apply-templates select="productDetail" mode="displayThumbnail">
+				<xsl:apply-templates select="productDetail" mode="displayCartImage">
 					<xsl:with-param name="forceResize">true</xsl:with-param>
 					<xsl:with-param name="crop">true</xsl:with-param>
 					<xsl:with-param name="width">
@@ -1475,7 +1478,7 @@
 		</xsl:when>
 		<xsl:when test="productDetail/ParentProduct/Content/Images/img[@class='detail']/@src!='' and $showImg!='false'">
 			<div class="cart-thumbnail">
-				<xsl:apply-templates select="productDetail/ParentProduct/Content" mode="displayThumbnail">
+				<xsl:apply-templates select="productDetail/ParentProduct/Content" mode="displayCartImage">
 					<xsl:with-param name="forceResize">true</xsl:with-param>
 					<xsl:with-param name="crop">true</xsl:with-param>
 					<xsl:with-param name="width">
@@ -1488,6 +1491,7 @@
 			</div>
 		</xsl:when>
 		</xsl:choose>
+	
 		<div class="cart-desc">
 			<a href="{$siteURL}{@url}" title="">
 				<xsl:apply-templates select="." mode="CartProductName"/>
@@ -2314,7 +2318,7 @@
 							<form method="post" id="cart">
 								<xsl:apply-templates select="." mode="orderItems">
 									<xsl:with-param name="editQty">false</xsl:with-param>
-									<xsl:with-param name="showImg">false</xsl:with-param>
+									<xsl:with-param name="showImg">true</xsl:with-param>
 								</xsl:apply-templates>
 							</form>
 						</div>

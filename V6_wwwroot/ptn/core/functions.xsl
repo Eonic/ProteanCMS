@@ -7256,6 +7256,101 @@
 		</xsl:choose>
 	</xsl:template>
 
+		<xsl:template match="Content | productDetail" mode="displayCartImage">
+		<xsl:param name="crop" select="false()" />
+		<xsl:param name="no-stretch" select="true()" />
+			<xsl:param name="width"/>
+			<xsl:param name="height"/>
+		<xsl:param name="showImage"/>
+		<xsl:param name="class"/>
+		<xsl:param name="forceResize"/>
+		<xsl:variable name="VForceResize">
+			<xsl:choose>
+				<xsl:when test="$forceResize='false'">false</xsl:when>
+				<xsl:otherwise>true</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
+		<xsl:variable name="imgId">
+			<xsl:text>picture_</xsl:text>
+			<xsl:value-of select="@id"/>
+		</xsl:variable>
+		<!-- Needed to create unique grouping for lightbox -->
+		<xsl:variable name="parId">
+			<xsl:text>group</xsl:text>
+			<xsl:value-of select="@type"/>
+		</xsl:variable>
+
+		<!-- SRC VALUE -->
+		<xsl:variable name="src">
+			<xsl:choose>
+				<!-- IF use display -->
+				<xsl:when test="Images/img[@class='display']/@src and Images/img[@class='display']/@src!=''">
+					<xsl:value-of select="Images/img[@class='display']/@src"/>
+				</xsl:when>
+				<!-- Else Full Size use that -->
+				<xsl:when test="Images/img[@class='detail']/@src and Images/img[@class='detail']/@src!=''">
+					<xsl:value-of select="Images/img[@class='detail']/@src"/>
+				</xsl:when>
+			</xsl:choose>
+		</xsl:variable>
+		<!-- ALT VALUE -->
+		<xsl:variable name="alt">
+			<xsl:choose>
+				<!-- IF Full Size use that -->
+				<xsl:when test="Images/img[@class='detail']/@alt and Images/img[@class='detail']/@alt!=''">
+					<xsl:value-of select="Images/img[@class='detail']/@alt"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates select="." mode="getDisplayName"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="max-width" select="$width"/>
+		<xsl:variable name="max-height" select="$height"/>
+		<!-- IF Image to resize -->
+		<xsl:choose>
+			<xsl:when test="$src!=''">
+				<xsl:variable name="displaySrc">
+					<xsl:call-template name="resize-image">
+						<xsl:with-param name="path" select="$src"/>
+						<xsl:with-param name="max-width" select="$max-width"/>
+						<xsl:with-param name="max-height" select="$max-height"/>
+						<xsl:with-param name="file-prefix">
+							<xsl:text>~cart-</xsl:text>
+							<xsl:value-of select="$max-width"/>
+							<xsl:text>x</xsl:text>
+							<xsl:value-of select="$max-height"/>
+							<xsl:text>/~dis-</xsl:text>
+							<xsl:if test="$crop">
+								<xsl:text>crop-</xsl:text>
+							</xsl:if>
+							<xsl:if test="not($no-stretch)">
+								<xsl:text>strch-</xsl:text>
+							</xsl:if>
+						</xsl:with-param>
+						<xsl:with-param name="file-suffix" select="''"/>
+						<xsl:with-param name="quality" select="100"/>
+						<xsl:with-param name="crop" select="$crop"/>
+						<xsl:with-param name="no-stretch" select="$no-stretch" />
+						<xsl:with-param name="forceResize" select="$VForceResize" />
+					</xsl:call-template>
+				</xsl:variable>
+
+				<xsl:variable name="newimageSize" select="ew:ImageSize($displaySrc)"/>
+				<xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
+				<xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>
+				<img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="detail photo">
+					<xsl:if test="$imgId != ''">
+						<xsl:attribute name="id">
+							<xsl:value-of select="$imgId"/>
+						</xsl:attribute>
+					</xsl:if>
+				</img>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+	
 	<xsl:template match="Content | MenuItem" mode="displaySubPageThumb">
 		<xsl:param name="crop"/>
 		<xsl:param name="fixedThumb"/>

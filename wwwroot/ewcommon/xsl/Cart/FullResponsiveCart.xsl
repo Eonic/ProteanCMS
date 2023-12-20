@@ -1938,7 +1938,6 @@
 
       <xsl:attribute name="class">
         <xsl:value-of select="$class"/>
-
         <xsl:if test="@class!=''">
           <xsl:text> </xsl:text>
           <xsl:value-of select="@class"/>
@@ -1952,10 +1951,14 @@
       <xsl:if test="label">
         <xsl:apply-templates select="label[position()=1]" mode="legend"/>
       </xsl:if>
+
       <div class="row">
         <xsl:choose>
           <xsl:when test="group[div/tblCartContact/cContactType/node()='Delivery Address']">
             <div class="col-md-6">
+				<button type="submit" name="cartBilladdNewAddress" value="Add New Billing Address" class="btn btn-default addnew float-right" onclick="disableButton(this);"/>
+					<i class="fa fa-plus fa-white"> </i> Add New Billing Address
+				</button>
               <h3>Billing Address</h3>
               <xsl:apply-templates select="group[div/tblCartContact/cContactType/node()='Billing Address']" mode="xform"/>
             </div>
@@ -1998,6 +2001,7 @@
       <xsl:if test="label">
         <xsl:apply-templates select="label[position()=1]" mode="legend"/>
       </xsl:if>
+	
       <ol>
         <xsl:for-each select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script">
           <xsl:choose>
