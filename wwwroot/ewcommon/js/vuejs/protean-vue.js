@@ -90,7 +90,7 @@ $('.btnClear').on('click', function (event) {
 
 
 $(document).on("click", ".btn-update", function (event) {
-
+    debugger;
     $(".modalLable").addClass("hidden");
     $(this).addClass("hidden")
     var parentDiv = $(this).closest('.parentDivOfRedirect');
@@ -116,22 +116,13 @@ $(document).on("click", ".btn-update", function (event) {
             .then(function (response) {
 
                 if (response.data == "True") {
-
-                    if (confirm("Old url is already exist. Do you want to replace it?")) {
-                        RedirectPage.addNewUrl(oldUrl, NewUrl);
-                        RedirectPage.urlList[index].attributes[0].nodeValue = oldUrl;
-                        RedirectPage.urlList[index].attributes[1].nodeValue = NewUrl;
-                        var flag = "saveURL";
-                        RedirectPage.reloadPermanentList(flag);
-                    }
-                    else {
-                        $(input[0]).val(RedirectPage.urlList[index].attributes[0].nodeValue);
-                        $(input[1]).val(RedirectPage.urlList[index].attributes[1].nodeValue);
-                        $("#loadSpin").modal("hide");
-                        that.show = false;
-                        that.loading = false;
-                        return false;
-                    }
+                    debugger;
+                    RedirectPage.addNewUrl(oldUrl, NewUrl);
+                    RedirectPage.urlList[index].attributes[0].nodeValue = oldUrl;
+                    RedirectPage.urlList[index].attributes[1].nodeValue = NewUrl;
+                    var flag = "saveURL";
+                    RedirectPage.reloadPermanentList(flag);
+                    
                 }
                 else {
                     RedirectPage.saveUrl(oldUrl, NewUrl, hiddenOldUrl, index);
@@ -552,28 +543,28 @@ if (rediectElement) {
                         .then(function (response) {
 
                             if (response.data == "True") {
-                                that.addNewUrl(oldUrl, NewUrl);
-                                //if (confirm("Old url is already exist. Do you want to replace it?")) {
+                                
+                                if (confirm("Old url is already exist. Do you want to replace it?")) {
 
-                                //    that.addNewUrl(oldUrl, NewUrl);
+                                    that.addNewUrl(oldUrl, NewUrl);
 
-                                //    if (that.newAddedUrlList != '') {
-                                //        oldindex = that.newAddedUrlList.findIndex(x => x.oldUrl === oldUrl);
+                                    if (that.newAddedUrlList != '') {
+                                        oldindex = that.newAddedUrlList.findIndex(x => x.oldUrl === oldUrl);
 
-                                //        if (oldindex != -1) {
-                                //            that.newAddedUrlList[oldindex] = { 'oldUrl': oldUrl, 'NewUrl': NewUrl };
-                                //        }
-                                //    }
+                                        if (oldindex != -1) {
+                                            that.newAddedUrlList[oldindex] = { 'oldUrl': oldUrl, 'NewUrl': NewUrl };
+                                        }
+                                    }
 
-                                //}
-                                //else {
-                                //    $("#loadSpin").modal("hide");
-                                //    $("#OldUrlmodal").val("");
-                                //    $("#NewUrlModal").val("");
-                                //    that.loading = false;
-                                //    that.show = false;
-                                //    return false;
-                                //}
+                                }
+                                else {
+                                    $("#loadSpin").modal("hide");
+                                    $("#OldUrlmodal").val("");
+                                    $("#NewUrlModal").val("");
+                                    that.loading = false;
+                                    that.show = false;
+                                    return false;
+                                }
                             }
                             else {
 
