@@ -23,7 +23,7 @@ namespace Protean.Tools
                 return filePath;
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
                 return "";
             }

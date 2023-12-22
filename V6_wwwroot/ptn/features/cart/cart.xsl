@@ -117,7 +117,7 @@
 			<xsl:call-template name="term3005a" />
 		</h1>
 		<form method="post" id="cart" class="ewXform">
-			<button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-link continue">
+			<button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-custom continue">
 				<xsl:call-template name="term3060" />
 				<xsl:text> </xsl:text>
 			</button>
@@ -435,11 +435,32 @@
 	<xsl:template match="Order[@cmd='Billing' or @cmd='Delivery']" mode="orderProcess">
 		<xsl:apply-templates select="." mode="orderProcessTitle"/>
 		<xsl:apply-templates select="." mode="orderErrorReports"/>
-		<div id="template_1_Column" class="template template_1_Column">
+		<div id="template_1_Column" class="template template_1_Column container">
 			<h1>
 				<xsl:call-template name="term4031" />
 			</h1>
-			<xsl:apply-templates select="." mode="orderEditAddresses"/>
+			<div class="row">
+				<div class="col-lg-7">
+					<xsl:apply-templates select="." mode="orderEditAddresses"/>
+				</div>
+				<div class="col-lg-5  text-bg-light">
+								<xsl:for-each select="Item">
+									<div class="clearfix cart-item">
+										<xsl:apply-templates select="." mode="orderItem">
+											<xsl:with-param name="editQty" select="false()"/>
+											<xsl:with-param name="showImg" select="'true'"/>
+											<xsl:with-param name="cartThumbWidth" select="'50'"/>
+											<xsl:with-param name="cartThumbHeight" select="'50'"/>
+											
+										</xsl:apply-templates>
+									</div>
+								</xsl:for-each>
+								<hr/>
+								<xsl:apply-templates select="." mode="orderTotals"/>								
+							
+				</div>
+			</div>
+			
 		</div>
 		<xsl:apply-templates select="." mode="displayNotes"/>
 	</xsl:template>
@@ -1397,6 +1418,13 @@
 		<xsl:value-of select="Name"/>
 	</xsl:template>
 
+	<xsl:template match="Item[contentType='SKU']" mode="CartProductName">
+		<xsl:if test="productDetail/ParentProduct">
+			<xsl:value-of select="substring(productDetail/ParentProduct/Content/@name,1,25)"/> -
+		</xsl:if>
+		<xsl:value-of select="Name"/> 
+	</xsl:template>
+
 	<xsl:template match="Item[contentType='Ticket']" mode="CartProductName">
 		<xsl:if test="productDetail/ParentProduct">
 			<xsl:value-of select="substring(productDetail/ParentProduct/Content/@name,1,25)"/> -
@@ -1433,9 +1461,10 @@
 		<xsl:variable name="cartThumbHeight">
 			<xsl:apply-templates select="." mode="cartThumbHeight"/>
 		</xsl:variable>
-		<xsl:if test="productDetail/Images/img[@class='detail']/@src!='' and $showImg!='false'">
+		<xsl:choose>
+		<xsl:when test="productDetail/Images/img[@class='detail']/@src!='' and $showImg!='false'">
 			<div class="cart-thumbnail">
-				<xsl:apply-templates select="productDetail" mode="displayThumbnail">
+				<xsl:apply-templates select="productDetail" mode="displayCartImage">
 					<xsl:with-param name="forceResize">true</xsl:with-param>
 					<xsl:with-param name="crop">true</xsl:with-param>
 					<xsl:with-param name="width">
@@ -1446,7 +1475,23 @@
 					</xsl:with-param>
 				</xsl:apply-templates>
 			</div>
-		</xsl:if>
+		</xsl:when>
+		<xsl:when test="productDetail/ParentProduct/Content/Images/img[@class='detail']/@src!='' and $showImg!='false'">
+			<div class="cart-thumbnail">
+				<xsl:apply-templates select="productDetail/ParentProduct/Content" mode="displayCartImage">
+					<xsl:with-param name="forceResize">true</xsl:with-param>
+					<xsl:with-param name="crop">true</xsl:with-param>
+					<xsl:with-param name="width">
+						<xsl:value-of select="$cartThumbWidth" />
+					</xsl:with-param>
+					<xsl:with-param name="height">
+						<xsl:value-of select="$cartThumbHeight" />
+					</xsl:with-param>
+				</xsl:apply-templates>
+			</div>
+		</xsl:when>
+		</xsl:choose>
+	
 		<div class="cart-desc">
 			<a href="{$siteURL}{@url}" title="">
 				<xsl:apply-templates select="." mode="CartProductName"/>
@@ -2273,7 +2318,7 @@
 							<form method="post" id="cart">
 								<xsl:apply-templates select="." mode="orderItems">
 									<xsl:with-param name="editQty">false</xsl:with-param>
-									<xsl:with-param name="showImg">false</xsl:with-param>
+									<xsl:with-param name="showImg">true</xsl:with-param>
 								</xsl:apply-templates>
 							</form>
 						</div>

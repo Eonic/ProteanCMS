@@ -37,6 +37,40 @@
 
 	<xsl:variable name="responsiveImageSizes">off</xsl:variable>
 
+	<xsl:variable name="siteURL">
+		<xsl:variable name="baseUrl">
+			<xsl:call-template name="getXmlSettings">
+				<xsl:with-param name="sectionName" select="'web'"/>
+				<xsl:with-param name="valueName" select="'BaseUrl'"/>
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:variable name="cartSiteUrl">
+			<xsl:call-template name="getXmlSettings">
+				<xsl:with-param name="sectionName" select="'cart'"/>
+				<xsl:with-param name="valueName" select="'SiteURL'"/>
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:choose>
+			<xsl:when test="$cartSiteUrl!=''">
+				1<xsl:value-of select="$cartSiteUrl"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:choose>
+					<xsl:when test="$baseUrl!=''">
+						2<xsl:value-of select="$baseUrl"/>
+					</xsl:when>
+					<xsl:otherwise>
+						3<xsl:value-of select="/Page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+						<xsl:if test="/Page/Request/ServerVariables/Item[@name='SERVER_PORT'] != '80' and  /Page/Request/ServerVariables/Item[@name='SERVER_PORT'] != '443'">
+							<xsl:text>:</xsl:text>
+							<xsl:value-of select="/Page/Request/ServerVariables/Item[@name='SERVER_PORT']"/>
+						</xsl:if>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+
 	<xsl:variable name="sitename">
 		<xsl:choose>
 			<xsl:when test="$siteURL=''">
@@ -177,39 +211,7 @@
 		</xsl:call-template>
 	</xsl:variable>
 
-	<xsl:variable name="siteURL">
-		<xsl:variable name="baseUrl">
-			<xsl:call-template name="getXmlSettings">
-				<xsl:with-param name="sectionName" select="'web'"/>
-				<xsl:with-param name="valueName" select="'BaseUrl'"/>
-			</xsl:call-template>
-		</xsl:variable>
-		<xsl:variable name="cartSiteUrl">
-			<xsl:call-template name="getXmlSettings">
-				<xsl:with-param name="sectionName" select="'cart'"/>
-				<xsl:with-param name="valueName" select="'SiteURL'"/>
-			</xsl:call-template>
-		</xsl:variable>
-		<xsl:choose>
-			<xsl:when test="$cartSiteUrl!=''">
-				<xsl:value-of select="$cartSiteUrl"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:choose>
-					<xsl:when test="$baseUrl!=''">
-						<xsl:value-of select="$baseUrl"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="/Page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
-						<xsl:if test="/Page/Request/ServerVariables/Item[@name='SERVER_PORT'] != '80' and  /Page/Request/ServerVariables/Item[@name='SERVER_PORT'] != '443'">
-							<xsl:text>:</xsl:text>
-							<xsl:value-of select="/Page/Request/ServerVariables/Item[@name='SERVER_PORT']"/>
-						</xsl:if>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:variable>
+
 
 	<xsl:variable name="GoogleAnalyticsUniversalID">
 		<xsl:call-template name="getXmlSettings">
@@ -716,6 +718,7 @@
 
 	<xsl:template match="Page" mode="commonJsFiles">
 		<xsl:text>~/ptn/libs/jquery/dist/jquery.min.js,</xsl:text>
+		<xsl:text>~/ptn/libs/jqueryui/jquery-ui.js,</xsl:text>
 		<xsl:text>~/ptn/libs/bs5/js/bootstrap.bundle.min.js,</xsl:text>
 		<xsl:text>~/ptn/libs/swiper/swiper-bundle.min.js,</xsl:text>
 		<xsl:text>~/ptn/libs/fancyapps/ui/dist/fancybox.umd.min.js,</xsl:text>
@@ -972,7 +975,7 @@
 		<xsl:apply-templates select="." mode="pageJs"/>
 
 		<xsl:choose>
-			<xsl:when test="/Page/ContentDetail/Content">
+			<xsl:when test="/Page/ContentDetail/Content">				
 				<xsl:apply-templates select="/Page/ContentDetail/Content" mode="contentDetailJS"/>
 			</xsl:when>
 			<xsl:otherwise>
@@ -4258,24 +4261,16 @@
 	<!-- -->
 
 	<xsl:template match="MenuItem" mode="submenu_topnav">
-		<ul>
+		<ul class="nav">
 			<xsl:apply-templates select="MenuItem[not(DisplayName/@exclude='true')]" mode="submenuitem_topnav"/>
 		</ul>
 	</xsl:template>
 	<!-- -->
 	<xsl:template match="MenuItem" mode="submenuitem_topnav">
-		<li>
-			<xsl:if test="position()=1">
-				<xsl:attribute name="class">
-					<xsl:text>first</xsl:text>
-				</xsl:attribute>
-			</xsl:if>
-			<xsl:if test="position()=last()">
-				<xsl:attribute name="class">
-					<xsl:text>last</xsl:text>
-				</xsl:attribute>
-			</xsl:if>
-			<xsl:apply-templates select="self::MenuItem" mode="menuLink"/>
+		<li class="nav-item">
+			<xsl:apply-templates select="self::MenuItem" mode="menuLink">
+				<xsl:with-param name="class">nav-link</xsl:with-param>
+			</xsl:apply-templates>
 		</li>
 	</xsl:template>
 
@@ -4445,6 +4440,7 @@
 	<xsl:template match="Content[@type='Link']" mode="moreLink">
 		<xsl:param name="link"/>
 		<xsl:param name="altText"/>
+		<xsl:param name="stretchLink"/>
 
 		<div class="morelink">
 			<span>
@@ -4452,27 +4448,32 @@
 					<xsl:if test="contains($link,'www.') or contains($link,'WWW.') or contains($link,'http://') or contains($link,'HTTP://')">
 						<xsl:attribute name="rel">external</xsl:attribute>
 					</xsl:if>
-					<xsl:choose>
-						<xsl:when test="contains($link,'www.') or contains($link,'WWW.') or contains($link,'http://') or contains($link,'HTTP://')">
-							<xsl:choose>
-								<xsl:when test="string-length($altText) &gt; 70">
-									<xsl:value-of select="substring($altText,1,60)"/> ......
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="$altText"/>
+					<xsl:if test="$stretchLink='true'">
+						<xsl:attribute name="class">btn btn-custom stretched-link</xsl:attribute>
+					</xsl:if>
+					<span>
+						<xsl:choose>
+							<xsl:when test="contains($link,'www.') or contains($link,'WWW.') or contains($link,'http://') or contains($link,'HTTP://')">
+								<xsl:choose>
+									<xsl:when test="string-length($altText) &gt; 70">
+										<xsl:value-of select="substring($altText,1,60)"/> ......
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="$altText"/>
 
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:call-template name="term2042" />
-							<xsl:text> </xsl:text>
-							<span class="visually-hidden">
-								<xsl:text>about </xsl:text>
-								<xsl:value-of select="altText"/>
-							</span>
-						</xsl:otherwise>
-					</xsl:choose>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:call-template name="term2042" />
+								<xsl:text> </xsl:text>
+								<span class="visually-hidden">
+									<xsl:text>about </xsl:text>
+									<xsl:value-of select="altText"/>
+								</span>
+							</xsl:otherwise>
+						</xsl:choose>
+					</span>
 				</a>
 			</span>
 		</div>
@@ -5437,6 +5438,38 @@
 			<img src="http://mystatus.skype.com/smallclassic/{.}" border="0" alt="Skype Me ! - My Current Skype Status" title="Skype Me ! - My Current Skype Status" />
 		</a>
 	</xsl:template>
+
+	<xsl:template match="div[contains(@class,'inline-module')]" mode="cleanXhtml">
+		<div style="{@style}" id="{@id}">
+			<xsl:attribute name="class">
+				<xsl:text>inline-module</xsl:text>
+				<xsl:if test="contains(@style,'float: left;')">
+					<xsl:text> alignleft</xsl:text>
+				</xsl:if>
+				<xsl:if test="contains(@style,'float: right;')">
+					<xsl:text> alignright</xsl:text>
+				</xsl:if>
+			</xsl:attribute>
+
+			<xsl:apply-templates select="/Page" mode="addModule">
+				<xsl:with-param name="text">Add Module</xsl:with-param>
+				<xsl:with-param name="position">
+					<xsl:value-of select="@id"/>-inline-<xsl:value-of select="ancestor::Content/@id"/>
+				</xsl:with-param>
+				<xsl:with-param name="class">
+					<xsl:text>inline-module</xsl:text>
+					<xsl:if test="contains(@style,'float: left;')">
+						<xsl:text> alignleft</xsl:text>
+					</xsl:if>
+					<xsl:if test="contains(@style,'float: right;')">
+						<xsl:text> alignright</xsl:text>
+					</xsl:if>
+				</xsl:with-param>
+			</xsl:apply-templates>
+		</div>
+	</xsl:template>
+
+
 
 	<xsl:template name="getHrefFromPgid">
 		<xsl:param name="url" />
@@ -7223,6 +7256,101 @@
 		</xsl:choose>
 	</xsl:template>
 
+		<xsl:template match="Content | productDetail" mode="displayCartImage">
+		<xsl:param name="crop" select="false()" />
+		<xsl:param name="no-stretch" select="true()" />
+			<xsl:param name="width"/>
+			<xsl:param name="height"/>
+		<xsl:param name="showImage"/>
+		<xsl:param name="class"/>
+		<xsl:param name="forceResize"/>
+		<xsl:variable name="VForceResize">
+			<xsl:choose>
+				<xsl:when test="$forceResize='false'">false</xsl:when>
+				<xsl:otherwise>true</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
+		<xsl:variable name="imgId">
+			<xsl:text>picture_</xsl:text>
+			<xsl:value-of select="@id"/>
+		</xsl:variable>
+		<!-- Needed to create unique grouping for lightbox -->
+		<xsl:variable name="parId">
+			<xsl:text>group</xsl:text>
+			<xsl:value-of select="@type"/>
+		</xsl:variable>
+
+		<!-- SRC VALUE -->
+		<xsl:variable name="src">
+			<xsl:choose>
+				<!-- IF use display -->
+				<xsl:when test="Images/img[@class='display']/@src and Images/img[@class='display']/@src!=''">
+					<xsl:value-of select="Images/img[@class='display']/@src"/>
+				</xsl:when>
+				<!-- Else Full Size use that -->
+				<xsl:when test="Images/img[@class='detail']/@src and Images/img[@class='detail']/@src!=''">
+					<xsl:value-of select="Images/img[@class='detail']/@src"/>
+				</xsl:when>
+			</xsl:choose>
+		</xsl:variable>
+		<!-- ALT VALUE -->
+		<xsl:variable name="alt">
+			<xsl:choose>
+				<!-- IF Full Size use that -->
+				<xsl:when test="Images/img[@class='detail']/@alt and Images/img[@class='detail']/@alt!=''">
+					<xsl:value-of select="Images/img[@class='detail']/@alt"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates select="." mode="getDisplayName"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="max-width" select="$width"/>
+		<xsl:variable name="max-height" select="$height"/>
+		<!-- IF Image to resize -->
+		<xsl:choose>
+			<xsl:when test="$src!=''">
+				<xsl:variable name="displaySrc">
+					<xsl:call-template name="resize-image">
+						<xsl:with-param name="path" select="$src"/>
+						<xsl:with-param name="max-width" select="$max-width"/>
+						<xsl:with-param name="max-height" select="$max-height"/>
+						<xsl:with-param name="file-prefix">
+							<xsl:text>~cart-</xsl:text>
+							<xsl:value-of select="$max-width"/>
+							<xsl:text>x</xsl:text>
+							<xsl:value-of select="$max-height"/>
+							<xsl:text>/~dis-</xsl:text>
+							<xsl:if test="$crop">
+								<xsl:text>crop-</xsl:text>
+							</xsl:if>
+							<xsl:if test="not($no-stretch)">
+								<xsl:text>strch-</xsl:text>
+							</xsl:if>
+						</xsl:with-param>
+						<xsl:with-param name="file-suffix" select="''"/>
+						<xsl:with-param name="quality" select="100"/>
+						<xsl:with-param name="crop" select="$crop"/>
+						<xsl:with-param name="no-stretch" select="$no-stretch" />
+						<xsl:with-param name="forceResize" select="$VForceResize" />
+					</xsl:call-template>
+				</xsl:variable>
+
+				<xsl:variable name="newimageSize" select="ew:ImageSize($displaySrc)"/>
+				<xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
+				<xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>
+				<img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="detail photo">
+					<xsl:if test="$imgId != ''">
+						<xsl:attribute name="id">
+							<xsl:value-of select="$imgId"/>
+						</xsl:attribute>
+					</xsl:if>
+				</img>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+	
 	<xsl:template match="Content | MenuItem" mode="displaySubPageThumb">
 		<xsl:param name="crop"/>
 		<xsl:param name="fixedThumb"/>
@@ -8937,7 +9065,7 @@
 	<xsl:template name="getSettings">
 		<xsl:param name="sectionName"/>
 		<xsl:param name="valueName" />
-		<xsl:value-of select="ew:EonicConfigValue($sectionName,$valueName)"/>
+		<xsl:value-of select="ew:PtnConfigValue($sectionName,$valueName)"/>
 	</xsl:template>
 
 	<xsl:template name="getXmlSettings">

@@ -14,11 +14,11 @@
 						<Local url="">
 							<img/>
 						</Local>
-            <YouTube code="" showSuggested="false" useHttps="true"/>
+                        <YouTube code="" showSuggested="false" useHttps="true"/>
 						<Vimeo code="" portrait="false" title="true" byline="false" autoplay="false" loop="false"/>
-            <HTML5 videoMp4="" videoGG="" videoWebm="" autoplay="" controls="controls" loop="" muted="" poster="" preload="none">
-              <img class="display" />
-            </HTML5>  
+                        <HTML5 videoMp4="" videoGG="" videoWebm="" autoplay="" controls="controls" loop="" muted="" poster="" preload="none">
+                          <img class="display" />
+                        </HTML5>  
 					</Content>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
@@ -269,7 +269,7 @@
               </select>
               <select bind="cAutoplay" appearance="full">
                 <item>
-                  <label>Enable Autoplay</label>
+                  <label>Enable Autoplay (Modern browsers also require "Enable Mute" to autoplay)</label>
                   <value>autoplay</value>
                 </item>
               </select>

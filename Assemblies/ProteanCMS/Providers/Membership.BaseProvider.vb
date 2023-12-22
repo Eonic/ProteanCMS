@@ -167,9 +167,13 @@ Namespace Providers
 
                         If mbAdminMode And myWeb.mnUserId = 0 Then GoTo BuildForm
                         If myWeb.moConfig("RememberMeMode") = "KeepCookieAfterLogoff" Or myWeb.moConfig("RememberMeMode") = "ClearCookieAfterLogoff" Then bRememberMe = True
+                        Dim formPath As String = "/xforms/directory/" & FormName & ".xml"
+                        If myWeb.moConfig("cssFramework") = "bs5" Then
+                            formPath = "/features/membership/" & FormName & ".xml"
+                        End If
 
                         'maCommonFolders is an array of folder locations used to look locally, then in wellardscommon and finally eoniccommon.
-                        If Not MyBase.load("/xforms/directory/" & FormName & ".xml", myWeb.maCommonFolders) Then
+                        If Not MyBase.load(formPath, myWeb.maCommonFolders) Then
                             'If this does not load manually then build a form to do it.
                             GoTo BuildForm
                         Else
@@ -756,12 +760,12 @@ Check:
                     End Try
                 End Function
 
-                Public Overrides Function xFrmEditDirectoryItem(Optional ByVal id As Long = 0, Optional ByVal cDirectorySchemaName As String = "User", Optional ByVal parId As Long = 0, Optional ByVal cXformName As String = "") As XmlElement
-                    Return xFrmEditDirectoryItem(id, cDirectorySchemaName, parId, cXformName, "", Nothing)
-                End Function
-                Public Overrides Function xFrmEditDirectoryItem(Optional ByVal id As Long = 0, Optional ByVal cDirectorySchemaName As String = "User", Optional ByVal parId As Long = 0, Optional ByVal cXformName As String = "", Optional ByVal FormXML As String = "") As XmlElement
-                    Return xFrmEditDirectoryItem(id, cDirectorySchemaName, parId, cXformName, FormXML, Nothing)
-                End Function
+                'Public Overrides Function xFrmEditDirectoryItem(Optional ByVal id As Long = 0, Optional ByVal cDirectorySchemaName As String = "User", Optional ByVal parId As Long = 0, Optional ByVal cXformName As String = "") As XmlElement
+                '    Return xFrmEditDirectoryItem(id, cDirectorySchemaName, parId, cXformName, "", Nothing)
+                'End Function
+                'Public Overrides Function xFrmEditDirectoryItem(Optional ByVal id As Long = 0, Optional ByVal cDirectorySchemaName As String = "User", Optional ByVal parId As Long = 0, Optional ByVal cXformName As String = "", Optional ByVal FormXML As String = "") As XmlElement
+                '    Return xFrmEditDirectoryItem(id, cDirectorySchemaName, parId, cXformName, FormXML, Nothing)
+                'End Function
 
                 Public Overrides Function xFrmEditDirectoryItem(Optional ByVal id As Long = 0, Optional ByVal cDirectorySchemaName As String = "User", Optional ByVal parId As Long = 0, Optional ByVal cXformName As String = "", Optional ByVal FormXML As String = "", Optional ByRef IntanceAppend As XmlElement = Nothing) As XmlElement
 
@@ -782,7 +786,10 @@ Check:
                         If FormXML = "" Then
                             Dim formPath As String = "/xforms/directory/" & cXformName & ".xml"
                             If myWeb.moConfig("cssFramework") = "bs5" Then
-                                formPath = "/admin" & formPath
+                                formPath = "/features/membership/" & cXformName & ".xml"
+                            End If
+                            If Not IntanceAppend Is Nothing Then
+                                MyBase.bProcessRepeats = False
                             End If
                             If Not MyBase.load(formPath, myWeb.maCommonFolders) Then
                                 ' load a default content xform if no alternative.
@@ -799,10 +806,19 @@ Check:
                         End If
 
                         If Not IntanceAppend Is Nothing Then
-                            'this enables an overload to add additional Xml for updating.
-                            Dim importedNode As XmlNode = Instance.OwnerDocument.ImportNode(IntanceAppend, True)
-                            Instance.AppendChild(importedNode)
-
+                            If goSession("tempInstance") IsNot Nothing Then
+                                MyBase.Instance = goSession("tempInstance")
+                                MyBase.bProcessRepeats = True
+                                MyBase.LoadInstance(MyBase.Instance, True)
+                                goSession("tempInstance") = MyBase.Instance
+                            Else
+                                'this enables an overload to add additional Xml for updating.
+                                Dim importedNode As XmlNode = Instance.OwnerDocument.ImportNode(IntanceAppend, True)
+                                MyBase.Instance.AppendChild(importedNode)
+                                MyBase.bProcessRepeats = True
+                                MyBase.LoadInstance(MyBase.Instance, True)
+                                goSession("tempInstance") = MyBase.Instance
+                            End If
                         End If
 
                         cDirectorySchemaName = MyBase.Instance.SelectSingleNode("tblDirectory/cDirSchema").InnerText

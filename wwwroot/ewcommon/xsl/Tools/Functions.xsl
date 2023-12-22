@@ -1317,8 +1317,8 @@
             </xsl:when>
 			  
             <xsl:when test="Cart/Order/@cmd='ShowInvoice'">
-					<xsl:text>fbq('track', 'Purchase', {currency: "</xsl:text>
-				<xsl:value-of select="Cart/Order/@currency"/>  
+			    <xsl:text>fbq('track', 'Purchase', {currency: "</xsl:text>
+				<xsl:value-of select="Cart/@currency"/>  
 				<xsl:text>", value:</xsl:text>
 				<xsl:value-of select="Cart/Order/@total"/>  
 				<xsl:text>,content_type: 'product', contents: [</xsl:text>

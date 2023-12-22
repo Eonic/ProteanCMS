@@ -26,6 +26,17 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
+
+		<xsl:variable name="showImg">
+			<xsl:choose>
+				<xsl:when test="@showImg='false'">
+					<xsl:text>false</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>true</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<xsl:variable name="totalCount">
 			<xsl:choose>
 				<xsl:when test="@display='related'">
@@ -65,12 +76,14 @@
 						<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
 							<xsl:with-param name="sortBy" select="@sortBy"/>
 							<xsl:with-param name="crop" select="$cropSetting"/>
+							<xsl:with-param name="showImg" select="$showImg"/>
 							<xsl:with-param name="showHidden" select="@showHidden"/>
 							<xsl:with-param name="fixedThumb" select="@fixedThumb"/>
 							<xsl:with-param name="button" select="@button"/>
 							<xsl:with-param name="imagePosition" select="@imagePosition"/>
 							<xsl:with-param name="alignment" select="@alignment"/>
 							<xsl:with-param name="parentId" select="@id"/>
+							<xsl:with-param name="linked" select="@linkArticle"/>
 						</xsl:apply-templates>
 					</div>
 				</div>
@@ -113,12 +126,14 @@
 	<xsl:template match="MenuItem" mode="displayBrief">
 		<xsl:param name="sortBy"/>
 		<xsl:param name="crop"/>
+		<xsl:param name="showImg"/>
 		<xsl:param name="showHidden"/>
 		<xsl:param name="fixedThumb"/>
 		<xsl:param name="button"/>
 		<xsl:param name="imagePosition"/>
 		<xsl:param name="alignment"/>
 		<xsl:param name="parentId"/>
+		<xsl:param name="linked"/>
 		<xsl:variable name="url">
 			<xsl:apply-templates select="." mode="getHref"/>
 		</xsl:variable>
@@ -138,6 +153,9 @@
 		<xsl:if test="(@name!='Information' and (not(DisplayName/@exclude='true'))) or (@name!='Information' and $showHidden='true')">
 			<xsl:variable name="classValues">
 				<xsl:text>listItem subpageItem</xsl:text>
+				<xsl:if test="$linked='true'">
+					<xsl:text> linked-listItem </xsl:text>
+				</xsl:if>
 				<xsl:apply-templates select="." mode="themeModuleClassExtrasListItem">
 					<xsl:with-param name="parentId" select="$parentId"/>
 				</xsl:apply-templates>
@@ -162,7 +180,7 @@
 							<xsl:apply-templates select="." mode="menuLink"/>
 						</h3>
 					</xsl:if>
-					<xsl:if test="Images/img[@src!='']">
+					<xsl:if test="Images/img[@src!=''] and not($showImg='false')">
 						<a href="{$url}" title="{$pageName}">
 							<xsl:attribute name="title">
 								<xsl:apply-templates select="." mode="getTitleAttr"/>
@@ -192,7 +210,6 @@
 							<xsl:text> </xsl:text>
 						</span>
 					</xsl:if>
-					<xsl:if test="not($button='false')">
 						<div>
 							<xsl:attribute name="class">
 								<xsl:text>entryFooter light-flex justify-content-</xsl:text>
@@ -205,13 +222,13 @@
 									<xsl:apply-templates select="." mode="getDisplayName" />
 								</xsl:with-param>-->
 								<xsl:with-param name="link" select="$url"/>
+						<xsl:with-param name="stretchLink" select="$linked"/>
 								<xsl:with-param name="altText">
 									<xsl:apply-templates select="." mode="getTitleAttr" />
 								</xsl:with-param>
 							</xsl:apply-templates>
 							<xsl:text> </xsl:text>
 						</div>
-					</xsl:if>
 				</div>
 			</div>
 		</xsl:if>

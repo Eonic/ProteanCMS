@@ -14751,6 +14751,9 @@
             <xsl:attribute name="autoplay">
               <xsl:text>autoplay</xsl:text>
             </xsl:attribute>
+			  <xsl:attribute name="playsinline">
+				  <xsl:text>playsinline</xsl:text>
+			  </xsl:attribute>
           </xsl:if>
           <xsl:if test="HTML5/@controls='controls'">
             <xsl:attribute name="controls">
@@ -14801,6 +14804,109 @@
     </xsl:if>
   </xsl:template>
 
+  <xsl:template match="Content[@moduleType='Video' and @videoType='HTML5' and @link!='']" mode="displayBrief">
+    <xsl:if test="HTML5/@videoMp4!='' or HTML5/@videoGG!='' or  HTML5/@videoWebm!=''">
+      <div>
+        <xsl:if test="@size!='Manual'">
+          <xsl:attribute name="class">
+            <xsl:text>embed-responsive </xsl:text>
+            <xsl:choose>
+              <xsl:when test="@ratio='FourThree'">embed-responsive-4by3</xsl:when>
+              <xsl:otherwise>embed-responsive-16by9</xsl:otherwise>
+            </xsl:choose>
+          </xsl:attribute>
+        </xsl:if>
+		  		    <a>
+            <xsl:attribute name="href">
+              <xsl:choose>
+                <xsl:when test="format-number(@link,'0')!='NaN'">
+                  <xsl:variable name="pageId" select="@link"/>
+                  <xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId or PageVersion[@vParId=$pageId]]" mode="getHref"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:value-of select="@link"/>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:attribute>
+        <video>
+          <xsl:choose>
+            <xsl:when test="@size='Manual'">
+              <xsl:if test="@width!=''">
+                <xsl:attribute name="width">
+                  <xsl:value-of select="@width"/>
+                </xsl:attribute>
+              </xsl:if>
+              <xsl:if test="@height!=''">
+                <xsl:attribute name="height">
+                  <xsl:value-of select="@height"/>
+                </xsl:attribute>
+              </xsl:if>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:attribute name="class">
+                <xsl:text>embed-responsive-item</xsl:text>
+              </xsl:attribute>
+            </xsl:otherwise>
+          </xsl:choose>
+          <xsl:if test="HTML5/@autoplay='autoplay'">
+            <xsl:attribute name="autoplay">
+              <xsl:text>autoplay</xsl:text>
+            </xsl:attribute>
+	    			  <xsl:attribute name="playsinline">
+				  <xsl:text>playsinline</xsl:text>
+			  </xsl:attribute>
+          </xsl:if>
+          <xsl:if test="HTML5/@controls='controls'">
+            <xsl:attribute name="controls">
+              <xsl:text>controls</xsl:text>
+            </xsl:attribute>
+          </xsl:if>
+          <xsl:if test="HTML5/@loop='loop'">
+            <xsl:attribute name="loop">
+              <xsl:text>loop</xsl:text>
+            </xsl:attribute>
+          </xsl:if>
+          <xsl:if test="HTML5/@muted='muted'">
+            <xsl:attribute name="muted">
+              <xsl:text>muted</xsl:text>
+            </xsl:attribute>
+          </xsl:if>
+          <xsl:if test="HTML5/@preload='auto'">
+            <xsl:attribute name="preload">
+              <xsl:value-of select="HTML5/@preload"/>
+            </xsl:attribute>
+          </xsl:if>
+          <xsl:if test="HTML5/@preload='metadata'">
+            <xsl:attribute name="preload">
+              <xsl:value-of select="HTML5/@preload"/>
+            </xsl:attribute>
+          </xsl:if>
+          <xsl:if test="HTML5/@preload='none'">
+            <xsl:attribute name="preload">
+              <xsl:value-of select="HTML5/@preload"/>
+            </xsl:attribute>
+          </xsl:if>
+          <xsl:if test="HTML5/img/@src!=''">
+            <xsl:attribute name="poster">
+              <xsl:value-of select="HTML5/img/@src"/>
+            </xsl:attribute>
+          </xsl:if>
+          <xsl:if test="HTML5/@videoMp4!=''">
+            <source src="{HTML5/@videoMp4}" type="video/mp4"/>
+          </xsl:if>
+          <xsl:if test="HTML5/@videoGG!=''">
+            <source src="{HTML5/@videoGG}" type="video/ogg"/>
+          </xsl:if>
+          <xsl:if test="HTML5/@videoWebm!=''">
+            <source src="{HTML5/@videoWebm}" type="video/webm"/>
+          </xsl:if>
+        </video>
+						</a>
+      </div>
+    </xsl:if>
+  </xsl:template>
+
+				
   <!-- Video Detail -->
   <xsl:template match="Content[@type='Video']" mode="VideoDetailDisplay">
     <xsl:param name="classes"/>

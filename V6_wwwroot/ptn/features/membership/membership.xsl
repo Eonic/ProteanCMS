@@ -432,7 +432,7 @@
   
   <!-- Overide for Login so title isn't a link, that way we use the footer link for password reminder. -->
   <xsl:template match="Content[@type='Module' and @moduleType='MembershipLogon']" mode="moduleLink">
-        <xsl:apply-templates select="." mode="moduleTitle"/>
+	<xsl:apply-templates select="." mode="moduleTitle"/>
   </xsl:template>
 
   <xsl:template match="Content[@type='xform' and @name='UserLogon']" mode="loginBrief">
@@ -671,7 +671,14 @@
 
     <!-- Membership Register Module -->
     <xsl:template match="Content[@type='Module' and (@moduleType='MembershipRegister')]" mode="displayBrief">
-        <xsl:apply-templates select="." mode="xform"/>
+		<xsl:choose>
+	        <xsl:when test="$page/Request/QueryString/Item[@name='ewCmd']/node()!=''">
+				    <xsl:apply-templates select="/Page/Contents/Content[@name='UserLogon']" mode="xform"/>
+		    </xsl:when>
+		    <xsl:otherwise>
+	            <xsl:apply-templates select="." mode="xform"/>
+			</xsl:otherwise>
+	    </xsl:choose>
     </xsl:template>
 
     <xsl:template match="Content[@type='Module' and @moduleType='MembershipRegister']" mode="cleanXhtml">

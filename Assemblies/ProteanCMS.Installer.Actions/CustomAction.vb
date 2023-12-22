@@ -10,7 +10,7 @@ Imports System.Web.Management
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.0.67.0"
+    Public Shared ewAssemblyVersion As String = "6.0.69.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.0.0.0"
     Public Shared bundleAssemblyVersion As String = "1.10.0.0"
     Public Shared bundleLessAssemblyVersion As String = "1.12.44.0"
@@ -34,8 +34,8 @@ Public Class CustomActions
     Public Shared ClearScriptAssemblyVersion As String = "5.5.6.0"
     Public Shared MicrosoftClearScriptV8AssemblyVersion As String = "7.2.4.0"
     Public Shared AlphaFSAssemblyVersion As String = "2.2.0.0"
-    Public Shared MagickNETAssemblyVersion As String = "13.1.0.0"
-    Public Shared MagickNETCoreAssemblyVersion As String = "13.1.0.0"
+    Public Shared MagickNETAssemblyVersion As String = "13.4.0.0"
+    Public Shared MagickNETCoreAssemblyVersion As String = "13.4.0.0"
 
     Public Shared GoogleProtoBufAssemblyVersion As String = "3.20.1.0"
     Public Shared SharpZipLibAssemblyVersion As String = "1.4.1.12"

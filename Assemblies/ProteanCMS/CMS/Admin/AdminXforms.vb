@@ -2401,6 +2401,7 @@ Partial Public Class Cms
                             Dim fld As DirectoryInfo
                             For Each fld In rootFolder.GetDirectories
                                 EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "modules\" & fld.Name, "manifest.xml")
+                                ' EnumberateManifest(ManifestDoc, "/" & gcProjectPath & "modules\" & fld.Name, "manifest.xml")
 
                             Next
                             If myWeb.moConfig("ClientCommonFolder") <> "" Then
@@ -2485,7 +2486,7 @@ Partial Public Class Cms
                                 ' If formPath.contains("/") Then
                                 '  formPath = formPath.Split("/")(1)
                                 'End If
-                                oContentType.SetAttribute("formPath", filepath & "/" & formPath)
+                                oContentType.SetAttribute("formPath", filepath.Replace("/ptn", "") & "/" & formPath)
                             Next
                             For Each oModuleType In ManifestDoc.SelectNodes("/PageLayouts/ModuleTypes/ModuleGroup/Module")
                                 Dim formPath = oModuleType.GetAttribute("formPath")
@@ -2507,7 +2508,7 @@ Partial Public Class Cms
                                 '  If formPath.contains("/") Then
                                 '  formPath = formPath.Split("/")(1)
                                 'End If
-                                oContentType.SetAttribute("formPath", filepath & "/" & formPath)
+                                oContentType.SetAttribute("formPath", filepath.Replace("/ptn", "") & "/" & formPath)
 
                                 Dim contentTypeGroupName As String = oContentType.SelectSingleNode("parent::ContentTypeGroup/@name").InnerText()
                                 Dim contentTypeGroup As XmlElement = ManifestDoc.SelectSingleNode("/PageLayouts/ContentTypes/ContentTypeGroup[@name='" & contentTypeGroupName & "']")
@@ -2909,17 +2910,22 @@ Partial Public Class Cms
 
                     If AlternateFormName <> "" Then cXformPath = AlternateFormName
 
-                    If cModuleType <> "" Then
-                        If goConfig("cssFramework") = "bs5" Then
-                            cXformPath = GetModuleFormPath(cModuleType)
-                        Else
-                            If Not cXformPath.EndsWith("/" & cModuleType) Then
-                                cXformPath = cXformPath & "/" & cModuleType
-                            End If
+                    'Quick fix for V4 sites
+                    If cModuleType = "BasicContentTypes" Then
+                        cModuleType = ""
+                    End If
 
-                        End If
-                    Else
-                        If goConfig("cssFramework") = "bs5" Then
+                    If cModuleType <> "" Then
+                            If goConfig("cssFramework") = "bs5" Then
+                                cXformPath = GetModuleFormPath(cModuleType)
+                            Else
+                                If Not cXformPath.EndsWith("/" & cModuleType) Then
+                                    cXformPath = cXformPath & "/" & cModuleType
+                                End If
+
+                            End If
+                        Else
+                            If goConfig("cssFramework") = "bs5" Then
                             cXformPath = GetContentFormPath(cContentSchemaName)
                         End If
                     End If
@@ -5971,8 +5977,12 @@ Partial Public Class Cms
                     'Replace Spaces with hypens
                     cProviderType = Replace(cProviderType, " ", "-")
                     Dim formPath = "/xforms/PaymentProvider/"
-                    If bs5 Then formPath = "/features/cart/PaymentProvider/"
-                    If Not MyBase.load(formPath & cProviderType & ".xml", myWeb.maCommonFolders) Then
+                    Dim filename = formPath & cProviderType & ".xml"
+                    If bs5 Then
+                        formPath = "/providers/payment/"
+                        filename = formPath & cProviderType & "/config.xml"
+                    End If
+                    If Not MyBase.load(filename, myWeb.maCommonFolders) Then
                         'show xform load error message
 
                     Else
@@ -6733,13 +6743,15 @@ Partial Public Class Cms
                     Dim oSchemaSelect As XmlElement = MyBase.addSelect1(oGrp1Elmt, "cCatSchemaName", True, "Group Type",, ApperanceTypes.Full)
                     MyBase.addOption(oSchemaSelect, SchemaName, SchemaName)
                     Dim aOptions() As String = Nothing
+                    Dim ProductCategoryTypes = "Shipping"
                     If Not myWeb.moCart.moCartConfig("ProductCategoryTypes") Is Nothing Then
-                        aOptions = myWeb.moCart.moCartConfig("ProductCategoryTypes").Split(",")
-                        If aOptions.Length > 0 Then
-                            For i As Integer = 0 To aOptions.Length - 1
-                                MyBase.addOption(oSchemaSelect, aOptions(i), aOptions(i))
-                            Next
-                        End If
+                        ProductCategoryTypes = myWeb.moCart.moCartConfig("ProductCategoryTypes")
+                    End If
+                    aOptions = ProductCategoryTypes.Split(",")
+                    If aOptions.Length > 0 Then
+                        For i As Integer = 0 To aOptions.Length - 1
+                            MyBase.addOption(oSchemaSelect, aOptions(i), aOptions(i))
+                        Next
                     End If
                     MyBase.addBind("cCatSchemaName", "tblCartProductCategories/cCatSchemaName")
 

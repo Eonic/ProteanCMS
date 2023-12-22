@@ -483,6 +483,22 @@ div[class$="List"].module {
 .linked-listItem {
     position: relative;
 }
+.NewsList .listItem .lIinner {
+    padding: 0;
+
+    .list-image-link {
+        margin: 0;
+        flex-grow: 0;
+    }
+
+    .media-inner {
+        padding: 1rem;
+    }
+
+}
+.NewsList .listItem.wide-item .lIinner {
+    flex-direction: row;
+}
 
 .faqList {
     #pageMenu ul {

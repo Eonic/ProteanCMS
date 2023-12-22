@@ -178,7 +178,9 @@
 								</xsl:if>
 							</xsl:if>
 							<div id="progress">
-								<div class="bar" style="width: 0%;"></div>
+								<div class="bar" style="width: 0%;">
+									<xsl:text> </xsl:text>
+								</div>
 							</div>
 						</div>
 					</xsl:for-each>
@@ -194,7 +196,7 @@
 										<span class="count">0</span>%
 									</div>
 									<div class="progress-bar progress-bar-striped bg-info" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-
+										<xsl:text> </xsl:text>
 									</div>
 								</div>
 							</xsl:when>

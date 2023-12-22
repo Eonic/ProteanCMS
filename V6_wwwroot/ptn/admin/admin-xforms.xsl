@@ -68,9 +68,8 @@
                   </xsl:if>-->
 									<xsl:apply-templates select="submit" mode="xform"/>
 									<div class="footer-status">
-										<xsl:value-of select="$page/ContentDetail/Content/instance/tblContent/nStatus"/>!!!
 										<span>
-											<xsl:if test="not($page/ContentDetail/Content/instance/*/nStatus='1')">
+											<xsl:if test="not($page/ContentDetail/Content/model/instance/*/nStatus='1')">
 												<xsl:attribute name="class">text-muted hidden</xsl:attribute>
 											</xsl:if>
 											<i class="fas fa-eye">
@@ -1010,7 +1009,9 @@
 		],
 	</xsl:template>
 
-	<xsl:template match="textarea" mode="tinymceContentCSS"></xsl:template>
+	<xsl:template match="textarea" mode="tinymceContentCSS">
+
+		content_css:"/ptn/admin/skin/tinymce.css",</xsl:template>
 
 	<!-- TinyMCE default configuration -->
 	<xsl:template match="textarea" mode="tinymceButtons1">
@@ -1042,7 +1043,7 @@
 		+ "textarea[type|value|name|style|class|src|alt|border|size|cols|rows],"
 		+ "td/th[colspan|rowspan|align|valign|style|class],"
 		+ "h1[style|class],h2[style|class],h3[style|class],h4[style|class],h5[style|class],h6[style|class],"
-		+ "ol[style|class],ul[style|class],li[style|class],div[align|style|class],span[style|class],"
+		+ "ol[style|class],ul[style|class],li[style|class],div[align|style|class|id],span[style|class|id],"
 		+ "thead[style|class],tbody[style|class],tr[class],dd[style|class],dl[style|class],dt[style|class],"
 		+ "sup,sub,pre,address,strong,b,em,i[class],u,s,hr,blockquote,br,"
 		+ "cite[class|id|title],code[class|title],samp,iframe[width|height|src|frameborder|allowfullscreen]"
@@ -1409,7 +1410,9 @@
 				</td>
 				{{else}}
 				<td class="progress">
-					<div></div>
+					<div>
+						<xsl:text> </xsl:text>
+					</div>
 				</td>
 				<td class="start">
 					<button>Start</button>
@@ -3575,6 +3578,56 @@
 					Module Type: <xsl:value-of select="Content/@moduleType"/>
 				</xsl:if>
 			</span>
+		</div>
+	</xsl:template>
+
+	<xsl:template match="group[contains(@class,'tabs')]" mode="xform">
+		<div class="row form-tab-wrapper">
+			<div class="col-1 col-lg-3 col-xl-2 form-tab-nav-wrapper">
+				<div class=" nav flex-column nav-pills tab-nav" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+					<xsl:apply-templates select="*" mode="xform-tab-list"/>
+				</div>
+			</div>
+			<div class="col-11 col-lg-9 col-xl-10 form-tab-content-wrapper">
+				<div class="tab-content" id="tabs-{@ref}">
+					<xsl:apply-templates select="*" mode="xform"/>
+				</div>
+			</div>
+		</div>
+	</xsl:template>
+
+	<xsl:template match="group[parent::group[contains(@class,'tabs')]]" mode="xform-tab-list">
+		<xsl:variable name="isopen">
+			<xsl:if test="position()=1">
+				<xsl:text>active</xsl:text>
+			</xsl:if>
+		</xsl:variable>
+		<xsl:variable name="isclosed">
+			<xsl:choose>
+				<xsl:when test="position()=1">
+					<xsl:text> true</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text> false</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<button class="nav-link {$isopen}" id="tab{position()}" data-bs-toggle="pill" data-bs-target="#heading{position()}" type="button" role="tab" aria-controls="heading{position()}" aria-selected="{$isclosed}">
+			<xsl:apply-templates select="label">
+				<xsl:with-param name="cLabel">
+					<xsl:value-of select="@ref"/>
+				</xsl:with-param>
+			</xsl:apply-templates>
+		</button>
+	</xsl:template>
+	<xsl:template match="group[parent::group[contains(@class,'tabs')]]" mode="xform">
+		<xsl:variable name="isopen">
+			<xsl:if test="position()=1">
+				<xsl:text>show active</xsl:text>
+			</xsl:if>
+		</xsl:variable>
+		<div id="heading{position()}" class="tab-pane fade {$isopen}" role="tabpanel" aria-labelledby="tab{position()}">
+			<xsl:apply-templates select="*" mode="xform"/>
 		</div>
 	</xsl:template>
 

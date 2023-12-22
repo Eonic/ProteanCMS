@@ -260,10 +260,12 @@
     </group>
     <group ref="Email" class="inline">
       <label>Email</label>
-
+		<group>
+			    <div class="alert alert-primary">These settings are usually inherited from the hosting provider and only need to be specified if you need a specific mailserver to send for this site.</div>
+   
+		</group>
 		<group  class="row row-cols-md-2">
-      <div class="long">These settings are usually inherited from the hosting provider and only need to be specified if you need a specific mailserver to send for this site.</div>
-      <input bind="ewMailserver">
+     <input bind="ewMailserver">
         <label>Mailserver</label>
         <value />
       </input>
@@ -427,7 +429,7 @@
 						<value>on</value>
 					</item>
 					<item>
-						<label>Off</label>
+						<label>Off (Recommended)</label>
 						<value>off</value>
 					</item>
 					<value>on</value>
@@ -436,7 +438,7 @@
 				<select1 bind="ewCompiledTransform" appearance="full">
 					<label>Compiled Transform</label>
 					<item>
-						<label>On</label>
+						<label>On (Recommended)</label>
 						<value>on</value>
 					</item>
 					<item>
@@ -448,7 +450,7 @@
 				<select1 bind="ewPageCache" appearance="full">
 					<label>Page Cache</label>
 					<item>
-						<label>On</label>
+						<label>On (Recommended)</label>
 						<value>on</value>
 					</item>
 					<item>
@@ -457,8 +459,8 @@
 					</item>
 					<value>off</value>
 				</select1>
-				<input bind="ewPageCacheTimeout">
-					<label>Timeout of Cache in Hours</label>
+				<input bind="ewPageCacheTimeout" suffix="hrs">
+					<label>Timeout of Cache  (Recommended 24hrs)</label>
 				</input>
 			</group>
 		</group>
@@ -536,8 +538,10 @@
 		</group>
 		<group ref="Features" class="inline">
 			<label>Features</label>
-			<div>Enabling features may increase your support fees</div>
-			<group  class="row row-cols-md-2">
+			<group>
+				<div class="alert alert-primary">Enabling features will require further configuration and may increase your support fees</div>
+			</group>
+			<group  class="row row-cols-md-2">			
 				<select1 bind="ptnCart" appearance="full">
 					<label>Shopping Cart</label>
 					<item>
@@ -614,10 +618,8 @@
 			</group>
 		</group>
     <group ref="AdvancedSettings" class="inline">
-      <label>AdvancedSettings</label>
-
-		<group  class="row row-cols-md-2">
-    
+      <label>Advanced Settings</label>
+		<group  class="row row-cols-md-2">    
         <select1 bind="ewExcludeCategoryFromSearch" appearance="full">
          <label>Exclude Category from the Search Result</label>
          <help class="inline">

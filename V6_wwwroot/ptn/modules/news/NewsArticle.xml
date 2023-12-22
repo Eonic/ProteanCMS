@@ -169,6 +169,9 @@
 					<relatedContent search="find add" type="NewsArticle" relationType="NewsArticle" direction="2way" class="form-section-wrapper">
 						<label>Related Articles</label>
 					</relatedContent>
+					<relatedContent search="find add" type="Image" relationType="Image" direction="2way" class="form-section-wrapper">
+						<label>Related Images</label>
+					</relatedContent>
 				</group>
 			</group>
 			<group>
