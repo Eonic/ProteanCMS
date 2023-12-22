@@ -160,14 +160,10 @@ function addDeliveryAddress() {
     blankoutFormFields($('#cDelContactCity'), $('#cContactCity').val());
     blankoutFormFields($('#cDelContactState'), $('#cContactState').val());
     blankoutFormFields($('#cDelContactZip'), $('#cContactZip').val());
+  
     blankoutFormFields($('#cDelContactCountry'), $('#cContactCountry').val());
     blankoutFormFields($('#cDelContactTel'), $('#cContactTel').val());
     blankoutFormFields($('#cDelContactFax'), $('#cContactFax').val());
-
-    var foo = [];
-    $('#cDelContactCountry option:selected').each(function (i, selected) {
-        foo[i] = $(selected).text();
-    });
 
     $(".column2 .group label").each(function () {
         if ($(this).attr('for') != 'cIsDelivery_1') {
@@ -178,7 +174,8 @@ function addDeliveryAddress() {
 }
 
 function blankoutFormFields(oInput, val) {
-    oInput.attr('value', val);
+    $(oInput).val(val);
+    //oInput.attr('value', val);
     oInput.attr('readonly', 'readonly');
     oInput.addClass('greyed');
 }

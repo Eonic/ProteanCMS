@@ -3588,7 +3588,7 @@ restart:
                     oElmt = ContentNode
                 End If
                 For Each oLocElmt In oXml.SelectNodes("Content/Location")
-                    oElmt.AppendChild(moPageXml.ImportNode(oLocElmt, True))
+                    oElmt.AppendChild(oElmt.OwnerDocument.ImportNode(oLocElmt, True))
                 Next
 
                 Return oElmt

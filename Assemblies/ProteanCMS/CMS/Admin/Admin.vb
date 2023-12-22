@@ -248,6 +248,7 @@ Partial Public Class Cms
                     If LCase(myWeb.moRequest("ewCmd")) = "logoff" Then
                         myWeb.moSession("ewCmd") = ""
                     End If
+                    myWeb.moSession("tempInstance") = Nothing
                     myWeb.moSession("ewAuth") = ""
                     myWeb.mnUserId = 0
                     mcEwCmd = ""
@@ -417,6 +418,7 @@ ProcessFlow:
                                 End If
                             Else
                                 sAdminLayout = "Logon"
+                                myWeb.moSession("tempInstance") = Nothing
                             End If
                         Else
                             If myWeb.mnPageId > 0 Then
@@ -479,7 +481,7 @@ ProcessFlow:
                         Dim statusElmt As XmlElement = moPageXML.CreateElement("Status")
                         statusElmt.InnerXml = myWeb.GetStatus().OuterXml
                         oPageDetail.AppendChild(statusElmt)
-
+                        myWeb.moSession("tempInstance") = Nothing
 
                     Case ("MemberActivity")
                         MemberActivityProcess(oPageDetail, sAdminLayout)

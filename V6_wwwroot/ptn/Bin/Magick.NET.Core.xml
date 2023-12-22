@@ -1956,27 +1956,34 @@
         </member>
         <member name="F:ImageMagick.AlphaOption.Activate">
             <summary>
-            Activate.
+            Enable the image's transparency channel. Note that normally Set should be used instead of
+            this, unless you specifically need to preserve the existing (but specifically turned Off)
+            transparency channel.
             </summary>
         </member>
         <member name="F:ImageMagick.AlphaOption.Associate">
             <summary>
-            Associate.
+            Associate the alpha channel with the image.
             </summary>
         </member>
         <member name="F:ImageMagick.AlphaOption.Background">
             <summary>
-            Background.
+            Set any fully-transparent pixel to the background color, while leaving it fully-transparent.
+            This can make some image file formats, such as PNG, smaller as the RGB values of transparent
+            pixels are more uniform, and thus can compress better.
             </summary>
         </member>
         <member name="F:ImageMagick.AlphaOption.Copy">
             <summary>
-            Copy.
+            Turns 'On' the alpha/matte channel, then copies the grayscale intensity of the image, into
+            the alpha channel, converting a grayscale mask into a transparent shaped mask ready to be
+            colored appropriately. The color channels are not modified.
             </summary>
         </member>
         <member name="F:ImageMagick.AlphaOption.Deactivate">
             <summary>
-            Deactivate.
+            Disables the image's transparency channel. This does not delete or change the existing data,
+            it just turns off the use of that data.
             </summary>
         </member>
         <member name="F:ImageMagick.AlphaOption.Discrete">
@@ -1986,12 +1993,14 @@
         </member>
         <member name="F:ImageMagick.AlphaOption.Disassociate">
             <summary>
-            Disassociate.
+            Disassociate the alpha channel from the image.
             </summary>
         </member>
         <member name="F:ImageMagick.AlphaOption.Extract">
             <summary>
-            Extract.
+            Copies the alpha channel values into all the color channels and turns 'Off' the image's
+            transparency, so as to generate a grayscale mask of the image's shape. The alpha channel
+            data is left intact just deactivated. This is the inverse of 'Copy'.
             </summary>
         </member>
         <member name="F:ImageMagick.AlphaOption.Off">
@@ -2006,27 +2015,32 @@
         </member>
         <member name="F:ImageMagick.AlphaOption.Opaque">
             <summary>
-            Opaque.
+            Enables the alpha/matte channel and forces it to be fully opaque.
             </summary>
         </member>
         <member name="F:ImageMagick.AlphaOption.Remove">
             <summary>
-            Remove.
+            Composite the image over the background color.
             </summary>
         </member>
         <member name="F:ImageMagick.AlphaOption.Set">
             <summary>
-            Set.
+            Activates the alpha/matte channel. If it was previously turned off then it also
+            resets the channel to opaque. If the image already had the alpha channel turned on,
+            it will have no effect.
             </summary>
         </member>
         <member name="F:ImageMagick.AlphaOption.Shape">
             <summary>
-            Shape.
+            As per 'Copy' but also colors the resulting shape mask with the current background color.
+            That is the RGB color channels is replaced, with appropriate alpha shape.
             </summary>
         </member>
         <member name="F:ImageMagick.AlphaOption.Transparent">
             <summary>
-            Transparent.
+            Activates the alpha/matte channel and forces it to be fully transparent. This effectively
+            creates a fully transparent image the same size as the original and with all its original
+            RGB data still intact, but fully transparent.
             </summary>
         </member>
         <member name="T:ImageMagick.AutoThresholdMethod">
@@ -2064,11 +2078,6 @@
             Undefined.
             </summary>
         </member>
-        <member name="F:ImageMagick.Channels.Red">
-            <summary>
-            Red.
-            </summary>
-        </member>
         <member name="F:ImageMagick.Channels.Gray">
             <summary>
             Gray.
@@ -2079,9 +2088,9 @@
             Cyan.
             </summary>
         </member>
-        <member name="F:ImageMagick.Channels.Green">
+        <member name="F:ImageMagick.Channels.Red">
             <summary>
-            Green.
+            Red.
             </summary>
         </member>
         <member name="F:ImageMagick.Channels.Magenta">
@@ -2089,9 +2098,9 @@
             Magenta.
             </summary>
         </member>
-        <member name="F:ImageMagick.Channels.Blue">
+        <member name="F:ImageMagick.Channels.Green">
             <summary>
-            Blue.
+            Green.
             </summary>
         </member>
         <member name="F:ImageMagick.Channels.Yellow">
@@ -2099,19 +2108,24 @@
             Yellow.
             </summary>
         </member>
+        <member name="F:ImageMagick.Channels.Blue">
+            <summary>
+            Blue.
+            </summary>
+        </member>
         <member name="F:ImageMagick.Channels.Black">
             <summary>
             Black.
             </summary>
         </member>
-        <member name="F:ImageMagick.Channels.Alpha">
-            <summary>
-            Alpha.
-            </summary>
-        </member>
         <member name="F:ImageMagick.Channels.Opacity">
             <summary>
             Opacity.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Alpha">
+            <summary>
+            Alpha.
             </summary>
         </member>
         <member name="F:ImageMagick.Channels.Index">
@@ -2139,9 +2153,289 @@
             RGB.
             </summary>
         </member>
+        <member name="F:ImageMagick.Channels.RGBA">
+            <summary>
+            RGBA.
+            </summary>
+        </member>
         <member name="F:ImageMagick.Channels.CMYK">
             <summary>
             CMYK.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.CMYKA">
+            <summary>
+            CMYKA.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta0">
+            <summary>
+            Meta0.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta1">
+            <summary>
+            Meta1.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta2">
+            <summary>
+            Meta2.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta3">
+            <summary>
+            Meta3.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta4">
+            <summary>
+            Meta4.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta5">
+            <summary>
+            Meta5.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta6">
+            <summary>
+            Meta6.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta7">
+            <summary>
+            Meta7.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta8">
+            <summary>
+            Meta8.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta9">
+            <summary>
+            Meta9.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta10">
+            <summary>
+            Meta10.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta11">
+            <summary>
+            Meta11.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta12">
+            <summary>
+            Meta12.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta13">
+            <summary>
+            Meta13.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta14">
+            <summary>
+            Meta14.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta15">
+            <summary>
+            Meta15.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta16">
+            <summary>
+            Meta16.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta17">
+            <summary>
+            Meta17.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta18">
+            <summary>
+            Meta18.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta19">
+            <summary>
+            Meta19.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta20">
+            <summary>
+            Meta20.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta21">
+            <summary>
+            Meta21.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta22">
+            <summary>
+            Meta22.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta23">
+            <summary>
+            Meta23.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta24">
+            <summary>
+            Meta24.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta25">
+            <summary>
+            Meta25.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta26">
+            <summary>
+            Meta26.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta27">
+            <summary>
+            Meta27.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta28">
+            <summary>
+            Meta28.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta29">
+            <summary>
+            Meta29.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta30">
+            <summary>
+            Meta30.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta31">
+            <summary>
+            Meta31.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta32">
+            <summary>
+            Meta32.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta33">
+            <summary>
+            Meta33.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta34">
+            <summary>
+            Meta34.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta35">
+            <summary>
+            Meta35.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta36">
+            <summary>
+            Meta36.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta37">
+            <summary>
+            Meta37.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta38">
+            <summary>
+            Meta38.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta39">
+            <summary>
+            Meta39.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta40">
+            <summary>
+            Meta40.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta41">
+            <summary>
+            Meta41.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta42">
+            <summary>
+            Meta42.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta43">
+            <summary>
+            Meta43.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta44">
+            <summary>
+            Meta44.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta45">
+            <summary>
+            Meta45.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta46">
+            <summary>
+            Meta46.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta47">
+            <summary>
+            Meta47.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta48">
+            <summary>
+            Meta48.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta49">
+            <summary>
+            Meta49.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta50">
+            <summary>
+            Meta50.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta51">
+            <summary>
+            Meta51.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta52">
+            <summary>
+            Meta52.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Channels.Meta53">
+            <summary>
+            Meta5.
             </summary>
         </member>
         <member name="F:ImageMagick.Channels.Grays">
@@ -3069,6 +3363,11 @@
             BC5.
             </summary>
         </member>
+        <member name="F:ImageMagick.CompressionMethod.LERC">
+            <summary>
+            LERC.
+            </summary>
+        </member>
         <member name="T:ImageMagick.DensityUnit">
             <summary>
             Units of image resolution.
@@ -3076,7 +3375,7 @@
         </member>
         <member name="F:ImageMagick.DensityUnit.Undefined">
             <summary>
-            Undefied.
+            Undefined.
             </summary>
         </member>
         <member name="F:ImageMagick.DensityUnit.PixelsPerInch">
@@ -5074,6 +5373,11 @@
             MPEG Video Stream.
             </summary>
         </member>
+        <member name="F:ImageMagick.MagickFormat.Mpo">
+            <summary>
+            Joint Photographic Experts Group JFIF format (Jpeg).
+            </summary>
+        </member>
         <member name="F:ImageMagick.MagickFormat.Mrw">
             <summary>
             Sony (Minolta) Raw Image File.
@@ -6044,6 +6348,276 @@
             Index.
             </summary>
         </member>
+        <member name="F:ImageMagick.PixelChannel.Meta0">
+            <summary>
+            Meta0.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta1">
+            <summary>
+            Meta1.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta2">
+            <summary>
+            Meta2.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta3">
+            <summary>
+            Meta3.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta4">
+            <summary>
+            Meta4.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta5">
+            <summary>
+            Meta5.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta6">
+            <summary>
+            Meta6.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta7">
+            <summary>
+            Meta7.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta8">
+            <summary>
+            Meta8.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta9">
+            <summary>
+            Meta9.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta10">
+            <summary>
+            Meta10.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta11">
+            <summary>
+            Meta11.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta12">
+            <summary>
+            Meta12.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta13">
+            <summary>
+            Meta13.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta14">
+            <summary>
+            Meta14.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta15">
+            <summary>
+            Meta15.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta16">
+            <summary>
+            Meta16.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta17">
+            <summary>
+            Meta17.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta18">
+            <summary>
+            Meta18.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta19">
+            <summary>
+            Meta19.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta20">
+            <summary>
+            Meta20.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta21">
+            <summary>
+            Meta21.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta22">
+            <summary>
+            Meta22.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta23">
+            <summary>
+            Meta23.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta24">
+            <summary>
+            Meta24.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta25">
+            <summary>
+            Meta25.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta26">
+            <summary>
+            Meta26.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta27">
+            <summary>
+            Meta27.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta28">
+            <summary>
+            Meta28.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta29">
+            <summary>
+            Meta29.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta30">
+            <summary>
+            Meta30.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta31">
+            <summary>
+            Meta31.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta32">
+            <summary>
+            Meta32.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta33">
+            <summary>
+            Meta33.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta34">
+            <summary>
+            Meta34.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta35">
+            <summary>
+            Meta35.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta36">
+            <summary>
+            Meta36.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta37">
+            <summary>
+            Meta37.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta38">
+            <summary>
+            Meta38.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta39">
+            <summary>
+            Meta39.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta40">
+            <summary>
+            Meta40.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta41">
+            <summary>
+            Meta41.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta42">
+            <summary>
+            Meta42.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta43">
+            <summary>
+            Meta43.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta44">
+            <summary>
+            Meta44.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta45">
+            <summary>
+            Meta45.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta46">
+            <summary>
+            Meta46.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta47">
+            <summary>
+            Meta47.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta48">
+            <summary>
+            Meta48.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta49">
+            <summary>
+            Meta49.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta50">
+            <summary>
+            Meta50.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta51">
+            <summary>
+            Meta51.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta52">
+            <summary>
+            Meta52.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelChannel.Meta53">
+            <summary>
+            Meta53.
+            </summary>
+        </member>
         <member name="F:ImageMagick.PixelChannel.Composite">
             <summary>
             Composite.
@@ -6197,6 +6771,11 @@
         <member name="F:ImageMagick.PixelMapping.CMYK">
             <summary>
             CMYK.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.PixelMapping.BGRA">
+            <summary>
+            BGRA.
             </summary>
         </member>
         <member name="T:ImageMagick.RenderingIntent">
@@ -7219,7 +7798,7 @@
             Initializes a new instance that implements <see cref="T:ImageMagick.IMagickGeometry"/>.
             </summary>
             <param name="percentageWidth">The percentage of the width.</param>
-            <param name="percentageHeight">The percentage of the  height.</param>
+            <param name="percentageHeight">The percentage of the height.</param>
             <returns>A new <see cref="T:ImageMagick.IMagickGeometry"/> instance.</returns>
         </member>
         <member name="M:ImageMagick.IMagickGeometryFactory.Create(System.Int32,System.Int32,ImageMagick.Percentage,ImageMagick.Percentage)">
@@ -7229,7 +7808,7 @@
             <param name="x">The X offset from origin.</param>
             <param name="y">The Y offset from origin.</param>
             <param name="percentageWidth">The percentage of the width.</param>
-            <param name="percentageHeight">The percentage of the  height.</param>
+            <param name="percentageHeight">The percentage of the height.</param>
             <returns>A new <see cref="T:ImageMagick.IMagickGeometry"/> instance.</returns>
         </member>
         <member name="M:ImageMagick.IMagickGeometryFactory.Create(System.String)">
@@ -11112,7 +11691,8 @@
         <member name="M:ImageMagick.IMagickImage.SetWriteMask(ImageMagick.IMagickImage)">
             <summary>
             Sets the associated write mask of the image. The mask must be the same dimensions as the image and
-            only contains the colors black and white.
+            only contains the colors black and white or have grayscale values that will cause blended updates of
+            the image.
             </summary>
             <param name="image">The image that contains the write mask.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
@@ -13161,7 +13741,7 @@
         </member>
         <member name="M:ImageMagick.IMagickImage`1.FloodFill(ImageMagick.IMagickColor{`0},System.Int32,System.Int32)">
             <summary>
-            Flood-fill color across pixels that match the color of the  target pixel and are neighbors
+            Flood-fill color across pixels that match the color of the target pixel and are neighbors
             of the target pixel. Uses current fuzz setting when determining color match.
             </summary>
             <param name="color">The color to use.</param>
@@ -14155,7 +14735,8 @@
         <member name="P:ImageMagick.IResourceLimits.Memory">
             <summary>
             Gets or sets the pixel cache limit in bytes. Once this memory limit is exceeded, all subsequent pixels cache
-            operations are to/from disk.
+            operations are to/from disk. The default value of this is 50% of the available memory on the machine in 64-bit mode.
+            When running in 32-bit mode this is 50% of the limit of the operating system.
             </summary>
         </member>
         <member name="P:ImageMagick.IResourceLimits.Thread">
@@ -19783,7 +20364,7 @@
         </member>
         <member name="M:ImageMagick.IMagickGeometry.Initialize(System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
-            Initializes the geometry using the sepcified value.
+            Initializes the geometry using the specified value.
             </summary>
             <param name="x">The X offset from origin.</param>
             <param name="y">The Y offset from origin.</param>

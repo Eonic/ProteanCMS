@@ -72,7 +72,7 @@
     </NuGetPackageImportStamp>
     <ShouldCreateLogs>False</ShouldCreateLogs>
     <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
-    <AssemblyVersion>6.0.69.224</AssemblyVersion>
+    <AssemblyVersion>6.0.69.157</AssemblyVersion>
     <UpdatePackageVersion>False</UpdatePackageVersion>
     <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
     <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
@@ -442,8 +442,23 @@
     <Import Include="System.Diagnostics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyInfo.vb" />
     <Compile Include="CMS\Admin\Admin.JSONActions.vb" />
-    <Compile Include="CMS\Membership\Membership.vb" />
+    <Compile Include="CMS\Admin\Admin.Redirects.vb" />
+    <Compile Include="CMS\Cart\Cart.PurchaseAction.vb" />
+    <Compile Include="CMS\Cart\Cart.JSONActions.vb" />
+    <Compile Include="CMS\Cart\PaymentProviders\SkipPayment.vb" />
+    <Compile Include="CMS\Cart\Subscriptions.Modules.vb" />
+    <Compile Include="CMS\Content\Contact.vb" />
+    <Compile Include="Setup\Tests.vb" />
+    <Compile Include="Tools\ExternalSynchronisation.vb" />
+    <Compile Include="Providers\Filter.BaseProvider.vb" />
+    <Compile Include="Providers\Filters\PageFilter.vb" />
+    <Compile Include="Providers\Filters\PriceFilter.vb" />
+    <Compile Include="Providers\Streaming.BaseProvider.vb" />
+    <Compile Include="Providers\Membership.BaseProvider.vb" />
+    <Compile Include="Providers\Messaging.BaseProvider.vb" />
+    <Compile Include="Providers\Payment.BaseProvider.vb" />
     <Compile Include="Service References\PayPalAPI\Reference.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -459,7 +474,40 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Setup\Setup.vb" />
+    <Compile Include="Tools\Startup.vb" />
+    <Compile Include="Tools\Configuration.vb" />
+    <Compile Include="Tools\CSVHelper.vb" />
+    <Compile Include="Tools\Encryption.vb" />
+    <Compile Include="Tools\FeedHandler.vb" />
+    <Compile Include="Tools\FLVHandler.vb" />
+    <Compile Include="Tools\fsHelper\FileDoc.vb" />
+    <Compile Include="Tools\fsHelper\FSHelper.vb" />
+    <Compile Include="Tools\fsHelper\FSHelper.WebFile.vb" />
+    <Compile Include="Tools\fsHelper\FSHelper.WebFileExtendedProperties.vb" />
+    <Compile Include="Tools\FTPHelper.vb" />
+    <Compile Include="Tools\ImageHelper.vb" />
+    <Compile Include="Tools\IndexerAsync.vb" />
+    <Compile Include="Tools\Indexer.vb" />
+    <Compile Include="Tools\Integration\Integration.Directory.Facebook.vb" />
+    <Compile Include="Tools\Integration\Integration.Directory.Twitter.vb" />
+    <Compile Include="Tools\Integration\Integration.Directory.vb" />
+    <Compile Include="Tools\Integration\Integration.UserCredentials.vb" />
+    <Compile Include="Tools\Invoke.vb" />
+    <Compile Include="Tools\MailQueue.vb" />
+    <Compile Include="Tools\Messaging.vb" />
+    <Compile Include="Tools\Monitor.vb" />
+    <Compile Include="Tools\Object.vb" />
+    <Compile Include="Tools\PerfLog.vb" />
+    <Compile Include="Tools\CssWebClient.vb" />
+    <Compile Include="Tools\soap.vb" />
+    <Compile Include="Tools\stdTools.vb" />
+    <Compile Include="Tools\Synchronisation.vb" />
+    <Compile Include="Tools\Syndication.vb" />
     <Compile Include="Tools\xForm.vb" />
+    <Compile Include="Tools\xmlTools.xsltExtensions.vb" />
+    <Compile Include="Tools\xmlTools.ewXmlElement.vb" />
+    <Compile Include="Tools\xmlTools.vb" />
     <Compile Include="Web References\com.pclpls.www\Reference.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -475,6 +523,26 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
     </Compile>
+    <Compile Include="CMS\Admin\Admin.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CMS\Admin\AdminXforms.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CMS\API.vb" />
+    <Compile Include="CMS\Calendar.vb" />
+    <Compile Include="CMS\Cart\Subscriptions.JSONActions.vb" />
+    <Compile Include="CMS\Cart\Cart.Modules.vb" />
+    <Compile Include="CMS\Cart\Cart.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CMS\Cart\PaymentProviders\ePDQ.vb" />
+    <Compile Include="CMS\Cart\PaymentProviders\PayPalExpress.vb" />
+    <Compile Include="CMS\Cart\PaymentProviders\PayPalPro.vb" />
+    <Compile Include="CMS\Cart\PaymentProviders\Pay360.vb" />
+    <Compile Include="CMS\Cart\PaymentProviders\SagePayV3.vb" />
+    <Compile Include="CMS\Cart\Subscriptions.vb" />
+    <Compile Include="CMS\Cart\Discount.vb" />
     <Compile Include="My Project\Resources.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -485,9 +553,24 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="CMS\Cart\PaymentProviders\PaymentProviders.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CMS\Cart\Quote.vb" />
     <Compile Include="Services.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="CMS\Base.vb" />
+    <Compile Include="CMS\Content\Content.JSONActions.vb" />
+    <Compile Include="CMS\Content\Modules.vb" />
+    <Compile Include="CMS\httpHandler.vb" />
+    <Compile Include="CMS\Cms.DBHelper.vb" />
+    <Compile Include="CMS\Membership\Alerts.vb" />
+    <Compile Include="CMS\Membership\Membership.vb" />
+    <Compile Include="CMS\Cms.Report.vb" />
+    <Compile Include="CMS\Cms.Search.vb" />
+    <Compile Include="CMS\Cms.vb" />
+    <Compile Include="CMS\Cms.xForm.vb" />
     <EmbeddedResource Include="My Project\Resources.resx">
       <SubType>Designer</SubType>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
@@ -821,22 +904,10 @@
     <WCFMetadataStorage Include="Service References\proteancms.com\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Protean.CMS\Protean.CMS.csproj">
-      <Project>{b8c13866-2804-4975-83a4-4f76296248f5}</Project>
-      <Name>Protean.CMS</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Protean.Tools\Protean.Tools.csproj">
       <Project>{12af6171-9aab-4c4d-a83b-85fe18a334c1}</Project>
       <Name>Protean.Tools</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="CMS\Cart\PaymentProviders\" />
-    <Folder Include="CMS\Content\" />
-    <Folder Include="Providers\Filters\" />
-    <Folder Include="Setup\" />
-    <Folder Include="Tools\fsHelper\" />
-    <Folder Include="Tools\Integration\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
@@ -847,7 +918,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_IncrementBeforeBuild="False" BuildVersion_DetectChanges="False" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_ConfigurationName="Any" BuildVersion_UpdateFileVersion="False" BuildVersion_StartDate="2000/1/1" />
+      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="False" BuildVersion_ConfigurationName="Any" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_DetectChanges="False" BuildVersion_IncrementBeforeBuild="False" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

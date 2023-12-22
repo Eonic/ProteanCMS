@@ -71,10 +71,10 @@
 				</div>
 			</xsl:when>
 			<xsl:otherwise>
-				<div class="clearfix Links">
+				<div class="clearfix Links LinkList">
 					<xsl:if test="@carousel='true'">
 						<xsl:attribute name="class">
-							<xsl:text>clearfix Links content-scroller</xsl:text>
+							<xsl:text>clearfix Links LinkList content-scroller</xsl:text>
 						</xsl:attribute>
 					</xsl:if>
 					<div>
@@ -256,7 +256,8 @@
 				</xsl:if>
 				<xsl:if test="$linked='true' and $button='false'">
 					<a href="$linkURL" class="stretched-link">
-						<span class="visually-hidden"><xsl:value-of select="Name/node()"/>
+						<span class="visually-hidden">
+							<xsl:value-of select="Name/node()"/>
 							<xsl:text> </xsl:text>
 						</span>
 					</a>
@@ -270,6 +271,7 @@
 						<xsl:apply-templates select="." mode="displayTags"/>
 						<xsl:apply-templates select="." mode="moreLink">
 							<xsl:with-param name="link" select="$linkURL"/>
+							<xsl:with-param name="stretchLink" select="$linked"/>
 							<xsl:with-param name="linkType" select="Url/@type"/>
 							<xsl:with-param name="altText">
 								<xsl:value-of select="Name/node()"/>
