@@ -18,7 +18,6 @@ using System.Web.Configuration;
 using System.Xml;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using static Protean.stdTools;
 using Protean.Tools;
 using static Protean.Tools.Xml;
 
@@ -127,7 +126,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "open", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "open", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -142,7 +141,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "PersistVariables", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "PersistVariables", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -296,6 +295,7 @@ namespace Protean
                         {
                             myWeb.moSession["ewCmd"] = "";
                         }
+                        myWeb.moSession["tempInstance"] = (object)null;
                         myWeb.moSession["ewAuth"] = "";
                         myWeb.mnUserId = 0;
                         mcEwCmd = "";
@@ -523,6 +523,7 @@ namespace Protean
                                     else
                                     {
                                         sAdminLayout = "Logon";
+                                        myWeb.moSession["tempInstance"] = (object)null;
                                     }
                                 }
                                 else if (myWeb.mnPageId > 0)
@@ -626,9 +627,9 @@ namespace Protean
                                 var statusElmt = moPageXML.CreateElement("Status");
                                 statusElmt.InnerXml = myWeb.GetStatus().OuterXml;
                                 oPageDetail.AppendChild(statusElmt);
+                                myWeb.moSession["tempInstance"] = (object)null;
                                 break;
                             }
-
 
                         case "MemberActivity":
                             {
@@ -742,7 +743,7 @@ namespace Protean
                                     string rulename = oRule.GetAttribute("name");
                                     try
                                     {
-                                        XmlElement defaultRule = (XmlElement)defaultXml.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("descendant-or-self::rule[@name=", xPathEscapeQuote(rulename)), "]")));
+                                        XmlElement defaultRule = (XmlElement)defaultXml.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("descendant-or-self::rule[@name=", Protean.stdTools.xPathEscapeQuote(rulename)), "]")));
                                         if (defaultRule is null)
                                         {
                                             oRule.SetAttribute("matchDefault", "create");
@@ -2352,7 +2353,7 @@ namespace Protean
                                     nStatus = (long)Cms.Cart.cartProcess.Refunded;
                                     if (Conversions.ToInteger(orderid) > 0)
                                     {
-                                        string sSqlquery = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("update tblCartOrder set nCartStatus ='" + nStatus + "', cCartSessionId='", stdTools.SqlFmt(myWeb.moSession.SessionID)), "'  where nCartOrderKey = "), orderid));
+                                        string sSqlquery = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("update tblCartOrder set nCartStatus ='" + nStatus + "', cCartSessionId='", Protean.stdTools.SqlFmt(myWeb.moSession.SessionID)), "'  where nCartOrderKey = "), orderid));
                                         myWeb.moDbHelper.ExeProcessSql(sSqlquery);
                                     }
 
@@ -2981,7 +2982,7 @@ namespace Protean
                                     myWeb.moSession["CartId"] = myWeb.moRequest["CartId"];
 
                                     // reset cart processId
-                                    string sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("update tblCartOrder set nCartStatus = 5, cCartSessionId='", stdTools.SqlFmt(myWeb.moSession.SessionID)), "'  where nCartOrderKey = "), myWeb.moRequest["CartId"]));
+                                    string sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("update tblCartOrder set nCartStatus = 5, cCartSessionId='", Protean.stdTools.SqlFmt(myWeb.moSession.SessionID)), "'  where nCartOrderKey = "), myWeb.moRequest["CartId"]));
                                     myWeb.moDbHelper.ExeProcessSql(sSql);
 
 
@@ -2992,7 +2993,7 @@ namespace Protean
 
                         case "RelateSearch":
                             {
-                                if (stdTools.ButtonSubmitted(ref myWeb.moRequest, "saveRelated"))
+                                if (Protean.stdTools.ButtonSubmitted(ref myWeb.moRequest, "saveRelated"))
                                 {
                                     // code for saving results of 2nd form submission
                                     myWeb.moDbHelper.saveContentRelations();
@@ -3041,7 +3042,7 @@ namespace Protean
                         // New case for SKU Parent Change functionality
                         case "ParentChange":
                             {
-                                if (stdTools.ButtonSubmitted(ref myWeb.moRequest, "updateParent"))
+                                if (Protean.stdTools.ButtonSubmitted(ref myWeb.moRequest, "updateParent"))
                                 {
                                     // code for saving results of 2nd form submission
                                     // get all id's from request
@@ -3152,7 +3153,7 @@ namespace Protean
                             {
                                 bLoadStructure = true;
                                 sAdminLayout = "LocateContent";
-                                if (stdTools.ButtonSubmitted(ref myWeb.moRequest, "saveRelated"))
+                                if (Protean.stdTools.ButtonSubmitted(ref myWeb.moRequest, "saveRelated"))
                                 {
                                     myWeb.moDbHelper.saveProductsGroupRelations();
                                     myWeb.msRedirectOnEnd = myWeb.moRequest.QueryString["Path"] + "?ewCmd=ProductGroups&GroupId=" + myWeb.moRequest.QueryString["GroupId"];
@@ -3181,7 +3182,7 @@ namespace Protean
                         case "DiscountRules":
                         case "EditDiscountRules":
                             {
-                                if (stdTools.ButtonSubmitted(ref myWeb.moRequest, "addNewDiscountRule") & Information.IsNumeric(myWeb.moRequest.Form["newDiscountType"]) | stdTools.ButtonSubmitted(ref myWeb.moRequest, "ewSubmit") | mcEwCmd == "EditDiscountRules")
+                                if (Protean.stdTools.ButtonSubmitted(ref myWeb.moRequest, "addNewDiscountRule") & Information.IsNumeric(myWeb.moRequest.Form["newDiscountType"]) | Protean.stdTools.ButtonSubmitted(ref myWeb.moRequest, "ewSubmit") | mcEwCmd == "EditDiscountRules")
 
                                 {
                                     bLoadStructure = true;
@@ -3576,7 +3577,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "adminProcess", ex, "", sProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "adminProcess", ex, "", sProcessInfo, Protean.stdTools.gbDebug);
                 }
                 finally
                 {
@@ -3766,7 +3767,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "adminAccessRights", ex, "", processInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "adminAccessRights", ex, "", processInfo, Protean.stdTools.gbDebug);
                 }
                 finally
                 {
@@ -3950,7 +3951,7 @@ namespace Protean
                 // This is just a placeholder for overloading
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "EditXFormProcess", ex, "", processInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "EditXFormProcess", ex, "", processInfo, Protean.stdTools.gbDebug);
                 }
                 finally
                 {
@@ -4099,7 +4100,7 @@ namespace Protean
                                 string styleFile = myWeb.goServer.MapPath("/xsl/import/" + cXsltPath);
                                 var oTransform = new Protean.XmlHelper.Transform(ref myWeb, styleFile, false);
                                 myWeb.PerfMon.Log("Admin", "FileImportProcess-startxsl");
-                                oTransform.mbDebug = gbDebug;
+                                oTransform.mbDebug = Protean.stdTools.gbDebug;
                                 oTransform.ProcessDocument(oImportXml);
                                 myWeb.PerfMon.Log("Admin", "FileImportProcess-endxsl");
                                 // We display the results
@@ -4151,7 +4152,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "FileImportProcess", ex, "", "", gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "FileImportProcess", ex, "", "", Protean.stdTools.gbDebug);
                 }
             }
 
@@ -4225,7 +4226,7 @@ namespace Protean
                 catch (Exception ex)
                 {
 
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "buildPageXML", ex, "", sProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "buildPageXML", ex, "", sProcessInfo, Protean.stdTools.gbDebug);
 
                 }
 
@@ -4617,7 +4618,10 @@ namespace Protean
                                     oMenuElmt.SetAttribute("display", "false");
                             }
                             // <MenuItem name="Page Settings" cmd="EditPage" pgid="1" display="true"/>
-                            oMenuElmt = addElement(ref oByPage, "MenuItem");
+                            XmlNode argoParent = oByPage;
+                            XmlNode argoNodeFromXPath = null;
+                            oMenuElmt = Protean.xmlTools.addElement(ref argoParent, "MenuItem", oNodeFromXPath: ref argoNodeFromXPath);
+                            oByPage = (XmlElement)argoParent;
                             oMenuElmt.SetAttribute("name", "Go to master page");
                             oMenuElmt.SetAttribute("cmd", "GoToClone");
                             oMenuElmt.SetAttribute("display", "true");
@@ -4636,7 +4640,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetAdminMenu", ex, "", sProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "GetAdminMenu", ex, "", sProcessInfo, Protean.stdTools.gbDebug);
                     return null;
                 }
 
@@ -4678,7 +4682,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetpreviewMenu", ex, "", sProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "GetpreviewMenu", ex, "", sProcessInfo, Protean.stdTools.gbDebug);
                 }
 
             }
@@ -4713,7 +4717,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "appendMenuItem", ex, "", sProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "appendMenuItem", ex, "", sProcessInfo, Protean.stdTools.gbDebug);
                     return null;
                 }
             }
@@ -4935,7 +4939,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "LibProcess", ex, "", sProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "LibProcess", ex, "", sProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -5238,7 +5242,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "OrderProcess", ex, "", sProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "OrderProcess", ex, "", sProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -5296,7 +5300,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ShippingLocationsProcess", ex, "", sProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "ShippingLocationsProcess", ex, "", sProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -5380,7 +5384,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "DeliveryMethodProcess", ex, "", sProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "DeliveryMethodProcess", ex, "", sProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -5436,7 +5440,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "CarriersProcess", ex, "", sProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "CarriersProcess", ex, "", sProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -5491,7 +5495,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "DeliveryMethodProcess", ex, "", sProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "DeliveryMethodProcess", ex, "", sProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -5617,7 +5621,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "PollsProcess", ex, "", sProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "PollsProcess", ex, "", sProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -5748,7 +5752,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "PollsProcess", ex, "", sProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "PollsProcess", ex, "", sProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -5922,7 +5926,7 @@ from tblContentIndexDef";
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "PollsProcess", ex, "", sProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "PollsProcess", ex, "", sProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -5995,7 +5999,7 @@ from tblContentIndexDef";
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "DeliveryMethodProcess", ex, "", sProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "DeliveryMethodProcess", ex, "", sProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -6081,7 +6085,7 @@ from tblContentIndexDef";
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "DiscountRulesProcess", ex, "", sProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "DiscountRulesProcess", ex, "", sProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -6172,7 +6176,7 @@ from tblContentIndexDef";
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "updateLessVariables", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "updateLessVariables", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
 
             }
@@ -6240,7 +6244,7 @@ from tblContentIndexDef";
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "updateStandardXslVariables", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "updateStandardXslVariables", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
 
             }
@@ -6408,7 +6412,7 @@ from tblContentIndexDef";
                                 foreach (DataRow oRow in oDS.Tables["Action"].Rows)
                                 {
                                     var oTimeStart = DateTime.Now;
-                                    var oSoapClient = new Tools.SoapClient();
+                                    var oSoapClient = new SoapClient();
                                     oSoapClient.RemoveReturnSoapEnvelope = true;
                                     oSoapClient.Url = Conversions.ToString(Operators.ConcatenateObject(cUrl + "/", oRow["cSubPath"]));
                                     oSoapClient.Action = Conversions.ToString(oRow["cType"]);
@@ -6502,7 +6506,7 @@ from tblContentIndexDef";
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "SchedulerProcess", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "SchedulerProcess", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -6811,7 +6815,7 @@ from tblContentIndexDef";
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "VersionControlProcess", ex, "", "", gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "VersionControlProcess", ex, "", "", Protean.stdTools.gbDebug);
                 }
             }
 
@@ -6873,7 +6877,7 @@ from tblContentIndexDef";
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "MemberActivityProcess", ex, "", "", gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "MemberActivityProcess", ex, "", "", Protean.stdTools.gbDebug);
                 }
             }
 
@@ -7022,7 +7026,7 @@ from tblContentIndexDef";
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "MemberCodesProcess", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "MemberCodesProcess", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -7033,10 +7037,10 @@ from tblContentIndexDef";
                 try
                 {
                     // Case "cpdReportsPage"
-                    string dateQuery = " and a.dExpireDate >= " + sqlDate(DateTime.Now);
+                    string dateQuery = " and a.dExpireDate >= " + Protean.stdTools.sqlDate((object)DateTime.Now);
                     if (mcEwCmd2 == "pastbookings")
                     {
-                        dateQuery = " and a.dExpireDate < " + sqlDate(DateTime.Now);
+                        dateQuery = " and a.dExpireDate < " + Protean.stdTools.sqlDate((object)DateTime.Now);
                     }
 
 
@@ -7083,7 +7087,7 @@ from tblContentIndexDef";
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "EventBookingProcess", ex, "", sProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "EventBookingProcess", ex, "", sProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -7112,7 +7116,7 @@ from tblContentIndexDef";
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "DeliveryMethodProcess", ex, "", sProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "DeliveryMethodProcess", ex, "", sProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -7138,7 +7142,7 @@ from tblContentIndexDef";
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ResetWebConfig", ex, "", sProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "ResetWebConfig", ex, "", sProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -7183,7 +7187,7 @@ from tblContentIndexDef";
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ReIndexing", ex, "", sProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "ReIndexing", ex, "", sProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 

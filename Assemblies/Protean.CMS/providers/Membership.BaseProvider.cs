@@ -254,9 +254,14 @@ namespace Protean.Providers
                             goto BuildForm;
                         if (myWeb.moConfig["RememberMeMode"] == "KeepCookieAfterLogoff" | myWeb.moConfig["RememberMeMode"] == "ClearCookieAfterLogoff")
                             bRememberMe = true;
+                        string formPath = "/xforms/directory/" + FormName + ".xml";
+                        if (this.myWeb.moConfig["cssFramework"] == "bs5")
+                        {
+                            formPath = "/features/membership/" + FormName + ".xml";
+                        }
 
                         // maCommonFolders is an array of folder locations used to look locally, then in wellardscommon and finally eoniccommon.
-                        if (!base.load("/xforms/directory/" + FormName + ".xml", myWeb.maCommonFolders))
+                        if (!base.load(formPath, this.myWeb.maCommonFolders))
                         {
                             // If this does not load manually then build a form to do it.
                             goto BuildForm;
@@ -991,7 +996,14 @@ namespace Protean.Providers
                     }
                 }
 
-                public XmlElement xFrmEditDirectoryItem(ref XmlElement IntanceAppend,long id = 0L, string cDirectorySchemaName = "User", long parId = 0L, string cXformName = "", string FormXML = "")
+                // Public Overrides Function xFrmEditDirectoryItem(Optional ByVal id As Long = 0, Optional ByVal cDirectorySchemaName As String = "User", Optional ByVal parId As Long = 0, Optional ByVal cXformName As String = "") As XmlElement
+                // Return xFrmEditDirectoryItem(id, cDirectorySchemaName, parId, cXformName, "", Nothing)
+                // End Function
+                // Public Overrides Function xFrmEditDirectoryItem(Optional ByVal id As Long = 0, Optional ByVal cDirectorySchemaName As String = "User", Optional ByVal parId As Long = 0, Optional ByVal cXformName As String = "", Optional ByVal FormXML As String = "") As XmlElement
+                // Return xFrmEditDirectoryItem(id, cDirectorySchemaName, parId, cXformName, FormXML, Nothing)
+                // End Function
+
+                public override XmlElement xFrmEditDirectoryItem([Optional, DefaultParameterValue(0L)] long id, [Optional, DefaultParameterValue("User")] string cDirectorySchemaName, [Optional, DefaultParameterValue(0L)] long parId, [Optional, DefaultParameterValue("")] string cXformName, [Optional, DefaultParameterValue("")] string FormXML, [Optional] ref XmlElement IntanceAppend)
                 {
 
                     XmlElement oGrpElmt;
@@ -1013,11 +1025,15 @@ namespace Protean.Providers
                         if (string.IsNullOrEmpty(FormXML))
                         {
                             string formPath = "/xforms/directory/" + cXformName + ".xml";
-                            if (myWeb.moConfig["cssFramework"] == "bs5")
+                            if (this.myWeb.moConfig["cssFramework"] == "bs5")
                             {
-                                formPath = "/admin" + formPath;
+                                formPath = "/features/membership/" + cXformName + ".xml";
                             }
-                            if (!base.load(formPath, myWeb.maCommonFolders))
+                            if (IntanceAppend is not null)
+                            {
+                                base.bProcessRepeats = false;
+                            }
+                            if (!base.load(formPath, this.myWeb.maCommonFolders))
                             {
                                 // load a default content xform if no alternative.
                             }
@@ -1031,16 +1047,28 @@ namespace Protean.Providers
 
                         if (id > 0L)
                         {
-                            base.Instance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.Directory, id);
-                            cCurrentPassword = Instance.SelectSingleNode("*/cDirPassword").InnerText;
+                            base.Instance.InnerXml = this.moDbHelper.getObjectInstance(Protean.Cms.dbHelper.objectTypes.Directory, id);
+                            cCurrentPassword = this.Instance.SelectSingleNode("*/cDirPassword").InnerText;
                         }
 
-                        if (IntanceAppend != null)
+                        if (IntanceAppend is not null)
                         {
-                            // this enables an overload to add additional Xml for updating.
-                            XmlNode importedNode = Instance.OwnerDocument.ImportNode(IntanceAppend, true);
-                            Instance.AppendChild(importedNode);
-
+                            if (this.goSession["tempInstance"] is not null)
+                            {
+                                base.Instance = (XmlElement)this.goSession["tempInstance"];
+                                base.bProcessRepeats = true;
+                                base.LoadInstance(base.Instance, true);
+                                this.goSession["tempInstance"] = base.Instance;
+                            }
+                            else
+                            {
+                                // this enables an overload to add additional Xml for updating.
+                                var importedNode = this.Instance.OwnerDocument.ImportNode(IntanceAppend, true);
+                                base.Instance.AppendChild(importedNode);
+                                base.bProcessRepeats = true;
+                                base.LoadInstance(base.Instance, true);
+                                this.goSession["tempInstance"] = base.Instance;
+                            }
                         }
 
                         cDirectorySchemaName = base.Instance.SelectSingleNode("tblDirectory/cDirSchema").InnerText;

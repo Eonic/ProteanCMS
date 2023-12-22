@@ -23,7 +23,6 @@ using System.Web.Configuration;
 using System.Xml;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using static Protean.stdTools;
 using static Protean.Tools.Xml;
 
 namespace Protean
@@ -3163,7 +3162,7 @@ namespace Protean
 
                             }
                             XmlNode argoNode = oElmt;
-                            addNewTextNode(oColumn.ToString(), ref argoNode, sNewVal, true, false);
+                            Protean.xmlTools.addNewTextNode(oColumn.ToString(), ref argoNode, sNewVal, true, false);
                             oElmt = (XmlElement)argoNode; // always force this
                         }
                         oXml.AppendChild(oElmt);
@@ -3314,7 +3313,7 @@ namespace Protean
                     if (nKey > 0L)
                     {
                         var argoNode = oInstance.SelectSingleNode("*");
-                        addNewTextNode(getKey(ObjectType), ref argoNode, nKey.ToString(), true, true);
+                        Protean.xmlTools.addNewTextNode(getKey(ObjectType), ref argoNode, nKey.ToString(), true, true);
                     }
 
                 restart:
@@ -3443,11 +3442,11 @@ namespace Protean
                                     if (forceUpdate == false) // always force this
                                     {
                                         XmlNode argoNode1 = oTableNode;
-                                        addNewTextNode("dUpdateDate", ref argoNode1, XmlDate(DateTime.Now, true), true, true);
+                                        Protean.xmlTools.addNewTextNode("dUpdateDate", ref argoNode1, XmlDate(DateTime.Now, true), true, true);
                                         oTableNode = (XmlElement)argoNode1;
                                     }
                                     XmlNode argoNode2 = oTableNode;
-                                    addNewTextNode("nUpdateDirId", ref argoNode2, mnUserId.ToString(), true, true);
+                                    Protean.xmlTools.addNewTextNode("nUpdateDirId", ref argoNode2, mnUserId.ToString(), true, true);
                                     oTableNode = (XmlElement)argoNode2; // always force this
                                     break;
                                 }
@@ -3492,7 +3491,7 @@ namespace Protean
                                     // we are using getAuditId to create a new audit record.
                                     nAuditId = Conversions.ToLong(setObjectInstance(objectTypes.Audit, oInstance));
                                     XmlNode argoNode3 = oTableNode;
-                                    addNewTextNode("nAuditId", ref argoNode3, nAuditId.ToString(), true, true);
+                                    Protean.xmlTools.addNewTextNode("nAuditId", ref argoNode3, nAuditId.ToString(), true, true);
                                     oTableNode = (XmlElement)argoNode3;
                                     break;
                                 }
@@ -3529,7 +3528,7 @@ namespace Protean
                                     // we are using getAuditId to create a new audit record.
                                     nAuditId = Conversions.ToLong(setObjectInstance(objectTypes.Audit, oInstance));
                                     XmlNode argoNode4 = oTableNode;
-                                    addNewTextNode("nAuditId", ref argoNode4, nAuditId.ToString(), true, true);
+                                    Protean.xmlTools.addNewTextNode("nAuditId", ref argoNode4, nAuditId.ToString(), true, true);
                                     oTableNode = (XmlElement)argoNode4;
                                     break;
                                 }
@@ -3544,7 +3543,7 @@ namespace Protean
                                     if (oInstance.FirstChild.SelectSingleNode("dInsertDate") is null)
                                     {
                                         XmlNode argoNode5 = oTableNode;
-                                        addNewTextNode("dInsertDate", ref argoNode5, XmlDate(DateTime.Now, true), true, true);
+                                        Protean.xmlTools.addNewTextNode("dInsertDate", ref argoNode5, XmlDate(DateTime.Now, true), true, true);
                                         oTableNode = (XmlElement)argoNode5; // always force this
                                     }
                                     else if (string.IsNullOrEmpty(oInstance.FirstChild.SelectSingleNode("dInsertDate").InnerText))
@@ -3556,7 +3555,7 @@ namespace Protean
                                     if (oInstance.FirstChild.SelectSingleNode("nInsertDirId") is null)
                                     {
                                         XmlNode argoNode6 = oTableNode;
-                                        addNewTextNode("nInsertDirId", ref argoNode6, mnUserId.ToString(), true, true);
+                                        Protean.xmlTools.addNewTextNode("nInsertDirId", ref argoNode6, mnUserId.ToString(), true, true);
                                         oTableNode = (XmlElement)argoNode6; // always force this
                                     }
                                     else if (string.IsNullOrEmpty(oInstance.FirstChild.SelectSingleNode("nInsertDirId").InnerText))
@@ -3578,17 +3577,17 @@ namespace Protean
                                     if (forceUpdate == false) // always force this
                                     {
                                         XmlNode argoNode7 = oTableNode;
-                                        addNewTextNode("dUpdateDate", ref argoNode7, XmlDate(DateTime.Now, true), true, true);
+                                        Protean.xmlTools.addNewTextNode("dUpdateDate", ref argoNode7, XmlDate(DateTime.Now, true), true, true);
                                         oTableNode = (XmlElement)argoNode7;
                                     }
 
                                     XmlNode argoNode8 = oTableNode;
-                                    addNewTextNode("nUpdateDirId", ref argoNode8, mnUserId.ToString(), true, true);
+                                    Protean.xmlTools.addNewTextNode("nUpdateDirId", ref argoNode8, mnUserId.ToString(), true, true);
                                     oTableNode = (XmlElement)argoNode8; // always force this
                                     if (oInstance.SelectSingleNode("descendant-or-self::nStatus") is null)
                                     {
                                         XmlNode argoNode9 = oTableNode;
-                                        addNewTextNode("nStatus", ref argoNode9, "1", true, true);
+                                        Protean.xmlTools.addNewTextNode("nStatus", ref argoNode9, "1", true, true);
                                         oTableNode = (XmlElement)argoNode9;
                                     }
                                     else
@@ -3596,11 +3595,11 @@ namespace Protean
                                         if (string.IsNullOrEmpty(oInstance.SelectSingleNode("descendant-or-self::nStatus").InnerText))
                                         {
                                             XmlNode argoNode10 = oTableNode;
-                                            addNewTextNode("nStatus", ref argoNode10, "1", true, true);
+                                            Protean.xmlTools.addNewTextNode("nStatus", ref argoNode10, "1", true, true);
                                             oTableNode = (XmlElement)argoNode10;
                                         }
                                         XmlNode argoNode11 = oTableNode;
-                                        addNewTextNode("nStatus", ref argoNode11, "1", true, false);
+                                        Protean.xmlTools.addNewTextNode("nStatus", ref argoNode11, "1", true, false);
                                         oTableNode = (XmlElement)argoNode11;
                                     }
 
@@ -3672,27 +3671,27 @@ namespace Protean
                     if (oTableNode.SelectSingleNode("dInsertDate") is null)
                     {
                         XmlNode argoNode = oTableNode;
-                        addNewTextNode("dInsertDate", ref argoNode, XmlDate(DateTime.Now, true), true, true);
+                        Protean.xmlTools.addNewTextNode("dInsertDate", ref argoNode, XmlDate(DateTime.Now, true), true, true);
                         oTableNode = (XmlElement)argoNode; // always force this
                     }
                     else if (string.IsNullOrEmpty(oInstance.FirstChild.SelectSingleNode("dInsertDate").InnerText))
                     {
                         XmlNode argoNode1 = oTableNode;
-                        addNewTextNode("dInsertDate", ref argoNode1, XmlDate(DateTime.Now, true), true, true);
+                        Protean.xmlTools.addNewTextNode("dInsertDate", ref argoNode1, XmlDate(DateTime.Now, true), true, true);
                         oTableNode = (XmlElement)argoNode1; // always force this
                     }
 
                     if (oTableNode.SelectSingleNode("nInsertDirId") is null)
                     {
                         XmlNode argoNode2 = oTableNode;
-                        addNewTextNode("nInsertDirId", ref argoNode2, mnUserId.ToString(), true, true);
+                        Protean.xmlTools.addNewTextNode("nInsertDirId", ref argoNode2, mnUserId.ToString(), true, true);
                         oTableNode = (XmlElement)argoNode2; // always force this
                     }
                     else if (string.IsNullOrEmpty(oInstance.FirstChild.SelectSingleNode("nInsertDirId").InnerText))
                     {
 
                         XmlNode argoNode3 = oTableNode;
-                        addNewTextNode("nInsertDirId", ref argoNode3, mnUserId.ToString(), true, true);
+                        Protean.xmlTools.addNewTextNode("nInsertDirId", ref argoNode3, mnUserId.ToString(), true, true);
                         oTableNode = (XmlElement)argoNode3; // always force this
                     }
 
@@ -3730,10 +3729,10 @@ namespace Protean
                     // first we look at the status of the content being sumitted.
 
                     XmlNode argoParent = oInstance;
-                    nStatus = (Status)Conversions.ToInteger(getNodeValueByType(ref argoParent, "//nStatus", XmlDataType.TypeNumber, 1));
+                    nStatus = (Status)Conversions.ToInteger(Protean.xmlTools.getNodeValueByType(ref argoParent, "//nStatus", (Protean.xmlTools.dataType)XmlDataType.TypeNumber, (object)1));
                     oInstance = (XmlElement)argoParent;
                     XmlNode argoParent1 = oInstance;
-                    nCurrentVersionNumber = Conversions.ToLong(getNodeValueByType(ref argoParent1, "//nVersion", XmlDataType.TypeNumber, 0));
+                    nCurrentVersionNumber = Conversions.ToLong(Protean.xmlTools.getNodeValueByType(ref argoParent1, "//nVersion", (Protean.xmlTools.dataType)XmlDataType.TypeNumber, (object)0));
                     oInstance = (XmlElement)argoParent1;
 
                     // Get the maximum version number
@@ -3840,7 +3839,7 @@ namespace Protean
 
                                         // Assess the status
                                         XmlNode argoParent2 = oOrigInstance;
-                                        Status nLiveStatus = (Status)Conversions.ToInteger(getNodeValueByType(ref argoParent2, "//nStatus", XmlDataType.TypeNumber));
+                                        Status nLiveStatus = (Status)Conversions.ToInteger(Protean.xmlTools.getNodeValueByType(ref argoParent2, "//nStatus", (Protean.xmlTools.dataType)XmlDataType.TypeNumber));
                                         oOrigInstance = (XmlElement)argoParent2;
                                         switch (nLiveStatus)
                                         {
@@ -4122,7 +4121,7 @@ namespace Protean
                         pendingList.SetAttribute("name", "Content Awaiting Approval");
                         pendingList.SetAttribute("type", "Report");
                         if (!string.IsNullOrEmpty(dLastRun) && Information.IsDate(dLastRun))
-                            pendingList.SetAttribute("since", XmlDate(dLastRun, true));
+                            pendingList.SetAttribute("since", Protean.stdTools.xmlDateTime(dLastRun));
                         pendingList.InnerXml = oXml.InnerXml;
 
                         // Tidy Up - Get rid of all that orphan content from the relations
@@ -4560,7 +4559,7 @@ namespace Protean
             }
 
 
-            public XmlNode getRelationsByContentId(long contentId, [Optional, DefaultParameterValue(null)] ref XmlElement contentNode, RelationType contentRelationType = RelationType.Child | RelationType.Parent)
+            public XmlNode getRelationsByContentId(long contentId, [Optional] ref XmlElement contentNode, RelationType contentRelationType = RelationType.Child | RelationType.Parent)
             {
                 PerfMonLog("DBHelper", "getRelationsByContentId");
                 string sqlQuery = "";
@@ -4624,7 +4623,7 @@ namespace Protean
             }
 
 
-            public XmlNode getLocationsByContentId(long nContentId, [Optional, DefaultParameterValue(null)] ref XmlElement ContentNode)
+            public XmlNode getLocationsByContentId(long nContentId, [Optional] ref XmlElement ContentNode)
             {
                 PerfMonLog("DBHelper", "getLocationsByContentId");
                 string sSql;
@@ -4656,7 +4655,7 @@ namespace Protean
                         oElmt = ContentNode;
                     }
                     foreach (XmlElement oLocElmt in oXml.SelectNodes("Content/Location"))
-                        oElmt.AppendChild(moPageXml.ImportNode(oLocElmt, true));
+                        oElmt.AppendChild(oElmt.OwnerDocument.ImportNode(oLocElmt, true));
 
                     return oElmt;
                 }
@@ -4934,7 +4933,7 @@ namespace Protean
                             if (oElmt is null)
                             {
                                 var argoNode = oQuizXml.SelectSingleNode("//status");
-                                addNewTextNode("timeTaken", ref argoNode, nTimeTaken.ToString());
+                                Protean.xmlTools.addNewTextNode("timeTaken", ref argoNode, nTimeTaken.ToString());
                             }
                             else
                             {
@@ -4952,7 +4951,7 @@ namespace Protean
                         if (oElmt is null)
                         {
                             var argoNode1 = oQuizXml.SelectSingleNode("//status");
-                            addNewTextNode("dateTaken", ref argoNode1, XmlDate(dDateTaken, true));
+                            Protean.xmlTools.addNewTextNode("dateTaken", ref argoNode1, XmlDate(dDateTaken, true));
                         }
                         else
                         {
@@ -6234,22 +6233,22 @@ namespace Protean
 
                     // Get the parameters SortDirection
                     XmlNode argoParent = oGrabber;
-                    string cSchema = Conversions.ToString(getNodeValueByType(ref argoParent, "Type"));
+                    string cSchema = Conversions.ToString(Protean.xmlTools.getNodeValueByType(ref argoParent, "Type"));
                     oGrabber = (XmlElement)argoParent;
                     XmlNode argoParent1 = oGrabber;
-                    long nPageId = Conversions.ToLong(getNodeValueByType(ref argoParent1, "Page", XmlDataType.TypeNumber));
+                    long nPageId = Conversions.ToLong(Protean.xmlTools.getNodeValueByType(ref argoParent1, "Page", (Protean.xmlTools.dataType)XmlDataType.TypeNumber));
                     oGrabber = (XmlElement)argoParent1;
                     XmlNode argoParent2 = oGrabber;
-                    long nTop = Conversions.ToLong(getNodeValueByType(ref argoParent2, "NumberOfItems", XmlDataType.TypeNumber));
+                    long nTop = Conversions.ToLong(Protean.xmlTools.getNodeValueByType(ref argoParent2, "NumberOfItems", (Protean.xmlTools.dataType)XmlDataType.TypeNumber));
                     oGrabber = (XmlElement)argoParent2;
                     XmlNode argoParent3 = oGrabber;
-                    string cSort = Conversions.ToString(getNodeValueByType(ref argoParent3, "Sort"));
+                    string cSort = Conversions.ToString(Protean.xmlTools.getNodeValueByType(ref argoParent3, "Sort"));
                     oGrabber = (XmlElement)argoParent3;
                     XmlNode argoParent4 = oGrabber;
-                    string cSortDirection = Conversions.ToString(getNodeValueByType(ref argoParent4, "SortDirection"));
+                    string cSortDirection = Conversions.ToString(Protean.xmlTools.getNodeValueByType(ref argoParent4, "SortDirection"));
                     oGrabber = (XmlElement)argoParent4;
                     XmlNode argoParent5 = oGrabber;
-                    string cIncludeChildPages = Conversions.ToString(getNodeValueByType(ref argoParent5, "IncludeChildPages"));
+                    string cIncludeChildPages = Conversions.ToString(Protean.xmlTools.getNodeValueByType(ref argoParent5, "IncludeChildPages"));
                     oGrabber = (XmlElement)argoParent5;
                     string joinSQL = null;
 
@@ -8755,7 +8754,7 @@ namespace Protean
 
                     string sSql;
 
-                    sSql = "Update tblActivityLog set cActivityDetail = '" + cActivityDetail + "', dDateTime = " + sqlDateTime(DateTime.Now) + " where nActivityKey = " + activityID;
+                    sSql = "Update tblActivityLog set cActivityDetail = '" + cActivityDetail + "', dDateTime = " + Protean.stdTools.sqlDateTime((object)DateTime.Now) + " where nActivityKey = " + activityID;
 
                     ExeProcessSql(sSql);
                 }
@@ -9305,7 +9304,7 @@ namespace Protean
                     string FeedCheck = "";
                     if (!string.IsNullOrEmpty(FeedRef))
                     {
-                        string sSQL = "select TOP 1 cActivityDetail from tblActivityLog where nActivityType = 44 and cActivityDetail like '" + FeedRef + "%' and not(cActivityDetail like '%Complete') and dDateTime > " + sqlDateTime(DateAndTime.DateAdd(DateInterval.Minute, -60, DateTime.Now)) + " order by dDateTime DESC";
+                        string sSQL = "select TOP 1 cActivityDetail from tblActivityLog where nActivityType = 44 and cActivityDetail like '" + FeedRef + "%' and not(cActivityDetail like '%Complete') and dDateTime > " + Protean.stdTools.sqlDateTime((object)DateAndTime.DateAdd(DateInterval.Minute, -60, DateTime.Now)) + " order by dDateTime DESC";
                         FeedCheck = ExeProcessSqlScalar(sSQL);
                     }
 
@@ -10080,7 +10079,7 @@ namespace Protean
                         // Save the instance
                         cKey = setObjectInstance(objectTypes.CartShippingLocation, oInstance);
                         XmlNode argoNode = oShipLoc;
-                        addNewTextNode("newKey", ref argoNode, cKey);
+                        Protean.xmlTools.addNewTextNode("newKey", ref argoNode, cKey);
                         oShipLoc = (XmlElement)argoNode;
                     }
 
@@ -10380,7 +10379,7 @@ namespace Protean
                 }
             }
 
-            public void AddDataSetToContent(ref DataSet oDs, ref XmlElement oContent, long nCurrentPageId = 0L, bool bIgnoreDuplicates = false, string cAddSourceAttribute = "", [Optional, DefaultParameterValue(default(DateTime))] ref DateTime dExpireDate, [Optional, DefaultParameterValue(default(DateTime))] ref DateTime dUpdateDate, bool bAllowRecursion = true)
+            public void AddDataSetToContent(ref DataSet oDs, ref XmlElement oContent, [Optional, DefaultParameterValue(0L)] long nCurrentPageId, [Optional, DefaultParameterValue(false)] bool bIgnoreDuplicates, [Optional, DefaultParameterValue("")] string cAddSourceAttribute, [Optional] ref DateTime dExpireDate, [Optional] ref DateTime dUpdateDate, bool bAllowRecursion = true)
             {
                 try
                 {
@@ -10571,7 +10570,7 @@ namespace Protean
                 }
             }
 
-            public XmlDocument ContentDataSetToXml(ref DataSet oDs, [Optional, DefaultParameterValue(default(DateTime))] ref DateTime dUpdateDate)
+            public XmlDocument ContentDataSetToXml(ref DataSet oDs, [Optional] ref DateTime dUpdateDate)
             {
                 PerfMonLog("DBHelper", "ContentDataSetToXml - Start");
                 string sProcessInfo = "";
@@ -10650,7 +10649,7 @@ namespace Protean
                 }
             }
 
-            protected internal XmlElement SimpleTidyContentNode(ref XmlElement oContent, string cAddSourceAttribute = "", [Optional, DefaultParameterValue(default(DateTime))] ref DateTime dExpireDate, [Optional, DefaultParameterValue(default(DateTime))] ref DateTime dUpdateDate)
+            protected internal XmlElement SimpleTidyContentNode(ref XmlElement oContent, [Optional, DefaultParameterValue("")] string cAddSourceAttribute, [Optional] ref DateTime dExpireDate, [Optional] ref DateTime dUpdateDate)
             {
                 string sProcessInfo = "";
                 XmlElement oElmt;
@@ -10887,7 +10886,7 @@ namespace Protean
         /// <param name="dUpdateDate">The date to get content by. E.g. find related content on such and such a day</param>
         /// <param name="nMaxDepth">The levels of related content to try to retrieve.</param>
         /// <remarks></remarks>
-            public void addBulkRelatedContent(ref XmlElement oContentParent, [Optional, DefaultParameterValue(default(DateTime))] ref DateTime dUpdateDate, int nMaxDepth = 1)
+            public void addBulkRelatedContent(ref XmlElement oContentParent, [Optional] ref DateTime dUpdateDate, int nMaxDepth = 1)
             {
 
                 PerfMonLog("DBHelper", "addBulkRelatedContent");
@@ -13593,7 +13592,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetMostPopularSearches", ex, "", "", gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "GetMostPopularSearches", ex, "", "", Protean.stdTools.gbDebug);
                     return null;
                 }
             }
@@ -13637,7 +13636,7 @@ namespace Protean
                         XmlElement oCcNum = (XmlElement)oDetailXML.SelectSingleNode("number");
                         if (oCcNum is not null)
                         {
-                            oCcNum.InnerText = MaskString(oCcNum.InnerText, "*", false, 4);
+                            oCcNum.InnerText = Protean.stdTools.MaskString(oCcNum.InnerText, "*", false, 4);
                         }
 
                         // mask CV2 digits
@@ -13652,19 +13651,19 @@ namespace Protean
                     var oInstance = oXml.CreateElement("Instance");
                     var oElmt = oXml.CreateElement("tblCartPaymentMethod");
                     XmlNode argoNode = oElmt;
-                    addNewTextNode("nPayMthdUserId", ref argoNode, nUserId.ToString());
+                    Protean.xmlTools.addNewTextNode("nPayMthdUserId", ref argoNode, nUserId.ToString());
                     oElmt = (XmlElement)argoNode;
                     XmlNode argoNode1 = oElmt;
-                    addNewTextNode("cPayMthdProviderName", ref argoNode1, cProviderName);
+                    Protean.xmlTools.addNewTextNode("cPayMthdProviderName", ref argoNode1, cProviderName);
                     oElmt = (XmlElement)argoNode1;
                     XmlNode argoNode2 = oElmt;
-                    addNewTextNode("cPayMthdProviderRef", ref argoNode2, cProviderRef);
+                    Protean.xmlTools.addNewTextNode("cPayMthdProviderRef", ref argoNode2, cProviderRef);
                     oElmt = (XmlElement)argoNode2;
                     XmlNode argoNode3 = oElmt;
-                    addNewTextNode("cPayMthdAcctName", ref argoNode3, cMethodName);
+                    Protean.xmlTools.addNewTextNode("cPayMthdAcctName", ref argoNode3, cMethodName);
                     oElmt = (XmlElement)argoNode3;
                     XmlNode argoNode4 = oElmt;
-                    var oElmt2 = addNewTextNode("cPayMthdDetailXml", ref argoNode4);
+                    var oElmt2 = Protean.xmlTools.addNewTextNode("cPayMthdDetailXml", ref argoNode4);
                     oElmt = (XmlElement)argoNode4;
                     if (oDetailXML is not null)
                     {
@@ -13680,7 +13679,7 @@ namespace Protean
                         int nAudit = getAuditId(0, (long)myWeb.mnUserId, "Payment", DateTime.Now, dExpire, DateTime.Now, DateTime.Now);
 
                         XmlNode argoNode5 = oElmt;
-                        addNewTextNode("nAuditId", ref argoNode5, nAudit.ToString());
+                        Protean.xmlTools.addNewTextNode("nAuditId", ref argoNode5, nAudit.ToString());
                         oElmt = (XmlElement)argoNode5;
                         nPaymentId = Conversions.ToInteger(setObjectInstance(objectTypes.CartPaymentMethod, oInstance, nPaymentMethodKey));
                     }
@@ -13692,22 +13691,22 @@ namespace Protean
                         oInstance.RemoveAll();
                         oElmt = oXml.CreateElement("tblAudit");
                         XmlNode argoNode6 = oElmt;
-                        addNewTextNode("nAuditKey", ref argoNode6, nAuditId.ToString());
+                        Protean.xmlTools.addNewTextNode("nAuditKey", ref argoNode6, nAuditId.ToString());
                         oElmt = (XmlElement)argoNode6;
                         XmlNode argoNode7 = oElmt;
-                        addNewTextNode("dExpireDate", ref argoNode7, XmlDate(dExpire));
+                        Protean.xmlTools.addNewTextNode("dExpireDate", ref argoNode7, XmlDate(dExpire));
                         oElmt = (XmlElement)argoNode7;
                         XmlNode argoNode8 = oElmt;
-                        addNewTextNode("dUpdateDate", ref argoNode8, XmlDate(DateTime.Now));
+                        Protean.xmlTools.addNewTextNode("dUpdateDate", ref argoNode8, XmlDate(DateTime.Now));
                         oElmt = (XmlElement)argoNode8;
                         XmlNode argoNode9 = oElmt;
-                        Tools.Xml.addNewTextNode("nUpdateDirId", ref argoNode9, myWeb.mnUserId.ToString());
+                        Protean.xmlTools.addNewTextNode("nUpdateDirId", ref argoNode9, myWeb.mnUserId.ToString());
                         oElmt = (XmlElement)argoNode9;
                         XmlNode argoNode10 = oElmt;
-                        Tools.Xml.addNewTextNode("nInsertDirId", ref argoNode10, myWeb.mnUserId.ToString());
+                        Protean.xmlTools.addNewTextNode("nInsertDirId", ref argoNode10, myWeb.mnUserId.ToString());
                         oElmt = (XmlElement)argoNode10; // 
                         XmlNode argoNode11 = oElmt;
-                        addNewTextNode("nStatus", ref argoNode11, 1.ToString());
+                        Protean.xmlTools.addNewTextNode("nStatus", ref argoNode11, 1.ToString());
                         oElmt = (XmlElement)argoNode11;
                         oInstance.AppendChild(oElmt);
                         nPaymentId = Conversions.ToInteger(setObjectInstance(objectTypes.CartPaymentMethod, oInstance, nPaymentMethodKey));
@@ -13721,40 +13720,40 @@ namespace Protean
                         oInstance.RemoveAll();
                         oElmt = oXml.CreateElement("tblCartPayment");
                         XmlNode argoNode12 = oElmt;
-                        addNewTextNode("nCartOrderId", ref argoNode12, CartId.ToString());
+                        Protean.xmlTools.addNewTextNode("nCartOrderId", ref argoNode12, CartId.ToString());
                         oElmt = (XmlElement)argoNode12;
                         XmlNode argoNode13 = oElmt;
-                        addNewTextNode("nCartPaymentMethodId", ref argoNode13, nPaymentId.ToString());
+                        Protean.xmlTools.addNewTextNode("nCartPaymentMethodId", ref argoNode13, nPaymentId.ToString());
                         oElmt = (XmlElement)argoNode13;
                         if (paymentType == "full")
                         {
                             XmlNode argoNode14 = oElmt;
-                            addNewTextNode("bFull", ref argoNode14, "true");
+                            Protean.xmlTools.addNewTextNode("bFull", ref argoNode14, "true");
                             oElmt = (XmlElement)argoNode14;
                         }
                         if (paymentType == "deposit")
                         {
                             XmlNode argoNode15 = oElmt;
-                            addNewTextNode("bPart", ref argoNode15, "true");
+                            Protean.xmlTools.addNewTextNode("bPart", ref argoNode15, "true");
                             oElmt = (XmlElement)argoNode15;
                         }
                         if (paymentType == "settlement")
                         {
                             XmlNode argoNode16 = oElmt;
-                            addNewTextNode("bSettlement", ref argoNode16, "true");
+                            Protean.xmlTools.addNewTextNode("bSettlement", ref argoNode16, "true");
                             oElmt = (XmlElement)argoNode16;
                         }
                         XmlNode argoNode17 = oElmt;
-                        addNewTextNode("nPaymentAmount", ref argoNode17, nAmountPaid.ToString());
+                        Protean.xmlTools.addNewTextNode("nPaymentAmount", ref argoNode17, nAmountPaid.ToString());
                         oElmt = (XmlElement)argoNode17;
                         // addNewTextNode("dInsertDate", oElmt, Protean.Tools.Xml.XmlDate(Now))
                         // addNewTextNode("dUpdateDate", oElmt, Protean.Tools.Xml.XmlDate(Now))
                         // addNewTextNode("nInsertDirId", oElmt, myWeb.mnUserId) '
                         XmlNode argoNode18 = oElmt;
-                        addNewTextNode("nStatus", ref argoNode18, 1.ToString());
+                        Protean.xmlTools.addNewTextNode("nStatus", ref argoNode18, 1.ToString());
                         oElmt = (XmlElement)argoNode18;
                         XmlNode argoNode19 = oElmt;
-                        addNewTextNode("nAuditId", ref argoNode19, getAuditId().ToString());
+                        Protean.xmlTools.addNewTextNode("nAuditId", ref argoNode19, getAuditId().ToString());
                         oElmt = (XmlElement)argoNode19;
                         oInstance.AppendChild(oElmt);
                         setObjectInstance(objectTypes.CartPayment, oInstance);
@@ -13765,7 +13764,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "savePayment", ex, "", "", gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "savePayment", ex, "", "", Protean.stdTools.gbDebug);
                     return 0;
                 }
             }
@@ -13779,7 +13778,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "CartPaymentMethod", ex, "", "", gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "CartPaymentMethod", ex, "", "", Protean.stdTools.gbDebug);
                 }
             }
 
@@ -13792,7 +13791,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "SaveCartStatus", ex, "", "", gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "SaveCartStatus", ex, "", "", Protean.stdTools.gbDebug);
                 }
             }
 
@@ -13816,7 +13815,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
 
             }
@@ -13839,7 +13838,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
 
             }
@@ -13863,7 +13862,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
 
             }
@@ -13910,7 +13909,7 @@ namespace Protean
 
                                     // Add the report
                                     XmlNode argoNode = listElement;
-                                    reportElement = addNewTextNode("Report", ref argoNode, reportName.Replace("-", " "));
+                                    reportElement = Protean.xmlTools.addNewTextNode("Report", ref argoNode, reportName.Replace("-", " "));
                                     listElement = (XmlElement)argoNode;
                                     reportElement.SetAttribute("type", reportName);
 
@@ -13926,7 +13925,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ListReports", ex, "", "", gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "ListReports", ex, "", "", Protean.stdTools.gbDebug);
                 }
             }
 
@@ -14117,7 +14116,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetReport", ex, "", processInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "GetReport", ex, "", processInfo, Protean.stdTools.gbDebug);
                 }
             }
 

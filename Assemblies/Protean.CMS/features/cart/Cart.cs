@@ -1785,10 +1785,20 @@ namespace Protean
                                     var oOptionXform = optionsXform(ref oElmt);
                                     if (oOptionXform.valid)
                                     {
-                                        mnProcessId = 5;
-                                        mcCartCmd = "EnterPaymentDetails";
-                                        // execute next step unless form filled out wrong / not in db
-                                        goto processFlow;
+                                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.moSession["paymentRecieved"], mnCartId, false)))
+                                        {
+                                            myWeb.moSession["paymentRecieved"] = null;
+                                            mnProcessId = (short)cartProcess.Complete;
+                                            mcCartCmd = "ShowInvoice";
+                                            goto processFlow;
+                                        }
+                                        else
+                                        {
+                                            mnProcessId = 5;
+                                            mcCartCmd = "EnterPaymentDetails";
+                                            // execute next step unless form filled out wrong / not in db
+                                            goto processFlow;
+                                        }
                                     }
                                     else
                                     {
@@ -9468,55 +9478,95 @@ namespace Protean
                 XmlElement oElmt2;
                 string cProcessInfo = "";
                 XmlNode oPaymentCfg;
-                string Folder = "/ewcommon/xforms/PaymentProvider/";
+                string ptnFolder = "/ewcommon/xforms/PaymentProvider/";
+                string localFolder = "/xforms/PaymentProvider/";
                 FileInfo fi;
                 string ProviderName;
                 if (myWeb.bs5)
-                    Folder = "/ptn/features/cart/PaymentProvider/";
+                {
+                    ptnFolder = "/ptn/providers/payment/";
+                    localFolder = "/providers/payment/";
+                }
                 try
                 {
 
                     oPaymentCfg = (XmlNode)WebConfigurationManager.GetWebApplicationSection("protean/payment");
-
                     oElmt = moPageXml.CreateElement("List");
 
-                    var dir = new DirectoryInfo(moServer.MapPath(Folder));
-                    FileInfo[] files = dir.GetFiles();
 
-                    foreach (var currentFi in files)
+                    if (myWeb.bs5)
                     {
-                        fi = currentFi;
-                        if (fi.Extension == ".xml")
+                        var dir = new DirectoryInfo(moServer.MapPath(ptnFolder));
+                        if (dir.Exists)
                         {
-                            ProviderName = Strings.Replace(fi.Name, fi.Extension, "");
-                            XmlNode argoNode = oElmt;
-                            oElmt2 = addNewTextNode("Provider", ref argoNode, Strings.Replace(ProviderName, "-", " "));
-                            oElmt = (XmlElement)argoNode;
-                            if (oPaymentCfg.SelectSingleNode("/payment/provider[@name='" + Strings.Replace(ProviderName, "-", "") + "']") != null)
+                            DirectoryInfo[] dirs;
+                            dirs = dir.GetDirectories();
+                            foreach (var dir2 in dirs)
                             {
-                                oElmt2.SetAttribute("active", "true");
+                                ProviderName = dir2.Name;
+                                XmlNode argoNode = oElmt;
+                                oElmt2 = Protean.xmlTools.addNewTextNode("Provider", ref argoNode, Strings.Replace(ProviderName, "-", " "));
+                                oElmt = (XmlElement)argoNode;
+                                if (oPaymentCfg.SelectSingleNode("/payment/provider[@name='" + Strings.Replace(ProviderName, "-", "") + "']") is not null)
+                                {
+                                    oElmt2.SetAttribute("active", "true");
+                                }
+                            }
+                        }
+                        dir = new DirectoryInfo(moServer.MapPath(localFolder));
+                        if (dir.Exists)
+                        {
+                            DirectoryInfo[] dirs;
+                            dirs = dir.GetDirectories();
+                            foreach (var dir2 in dirs)
+                            {
+                                ProviderName = dir2.Name;
+                                XmlNode argoNode1 = oElmt;
+                                oElmt2 = Protean.xmlTools.addNewTextNode("Provider", ref argoNode1, Strings.Replace(ProviderName, "-", " "));
+                                oElmt = (XmlElement)argoNode1;
+                                if (oPaymentCfg.SelectSingleNode("/payment/provider[@name='" + Strings.Replace(ProviderName, "-", "") + "']") is not null)
+                                {
+                                    oElmt2.SetAttribute("active", "true");
+                                }
                             }
                         }
                     }
-
-
-                    dir = new DirectoryInfo(moServer.MapPath("/xforms/PaymentProvider/"));
-                    if (dir.Exists)
+                    else
                     {
-                        files = dir.GetFiles();
-
-                        foreach (var currentFi1 in files)
+                        var dir = new DirectoryInfo(moServer.MapPath(ptnFolder));
+                        FileInfo[] files = dir.GetFiles();
+                        foreach (var currentFi in files)
                         {
-                            fi = currentFi1;
+                            fi = currentFi;
                             if (fi.Extension == ".xml")
                             {
                                 ProviderName = Strings.Replace(fi.Name, fi.Extension, "");
-                                XmlNode argoNode1 = oElmt;
-                                oElmt2 = addNewTextNode("Provider", ref argoNode1, Strings.Replace(ProviderName, "-", " "));
-                                oElmt = (XmlElement)argoNode1;
-                                if (oPaymentCfg.SelectSingleNode("/payment/provider[@name='" + Strings.Replace(ProviderName, "-", "") + "']") != null)
+                                XmlNode argoNode2 = oElmt;
+                                oElmt2 = Protean.xmlTools.addNewTextNode("Provider", ref argoNode2, Strings.Replace(ProviderName, "-", " "));
+                                oElmt = (XmlElement)argoNode2;
+                                if (oPaymentCfg.SelectSingleNode("/payment/provider[@name='" + Strings.Replace(ProviderName, "-", "") + "']") is not null)
                                 {
                                     oElmt2.SetAttribute("active", "true");
+                                }
+                            }
+                        }
+                        dir = new DirectoryInfo(moServer.MapPath(localFolder));
+                        if (dir.Exists)
+                        {
+                            files = dir.GetFiles();
+                            foreach (var currentFi1 in files)
+                            {
+                                fi = currentFi1;
+                                if (fi.Extension == ".xml")
+                                {
+                                    ProviderName = Strings.Replace(fi.Name, fi.Extension, "");
+                                    XmlNode argoNode3 = oElmt;
+                                    oElmt2 = Protean.xmlTools.addNewTextNode("Provider", ref argoNode3, Strings.Replace(ProviderName, "-", " "));
+                                    oElmt = (XmlElement)argoNode3;
+                                    if (oPaymentCfg.SelectSingleNode("/payment/provider[@name='" + Strings.Replace(ProviderName, "-", "") + "']") is not null)
+                                    {
+                                        oElmt2.SetAttribute("active", "true");
+                                    }
                                 }
                             }
                         }
@@ -10266,8 +10316,15 @@ namespace Protean
                                         for (int snCount = 0, loopTo = Information.UBound(aSellerNotes); snCount <= loopTo; snCount++)
                                             cSellerNotesHtml = cSellerNotesHtml + "<li>" + convertEntitiesToCodes(aSellerNotes[snCount]) + "</li>";
                                         var argoNode = oContent.FirstChild;
-                                        var sellerNode = addNewTextNode("SellerNotes", ref argoNode, "");
-                                        sellerNode.InnerXml = cSellerNotesHtml + "</ul>";
+                                        var sellerNode = Protean.xmlTools.addNewTextNode("SellerNotes", ref argoNode, "");
+                                        try
+                                        {
+                                            sellerNode.InnerXml = cSellerNotesHtml + "</ul>";
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            sellerNode.InnerXml = Tools.Text.tidyXhtmlFrag(cSellerNotesHtml + "</ul>");
+                                        }
 
                                         // Add the Delivery Details
                                         // Add Delivery Details

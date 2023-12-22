@@ -706,9 +706,18 @@ namespace Protean
                         IMembershipProvider oMembershipProv = RetProv.Get(ref argmyWeb, myWeb.moConfig["MembershipProvider"]);
                         IMembershipAdminXforms adXfm = oMembershipProv.AdminXforms;
                         bool bRedirect = true;
+                        if (moRequest["ewCmd"] == "ActivateAccount")
+                        {
+                        }
+
+                        // We should move activate account features here. Currently in membership process.
+
+                        else
+                        {
 
 
-                        // OAuth Functionality
+
+                            // OAuth Functionality
 
                         if (!!string.IsNullOrEmpty(moRequest["oAuthResp"]))
                         {
@@ -882,16 +891,18 @@ namespace Protean
 
                                 }
 
-                                // send registration confirmation
-                                string xsltPath = "/xsl/email/registration.xsl";
-                                if (myWeb.moConfig["cssFramework"] == "bs5")
-                                {
-                                    xsltPath = "/xsl/registration.xsl";
-                                }
+                                    // send registration confirmation
+                                    string xsltPath = "/xsl/email/registration.xsl";
+                                    if (myWeb.moConfig["cssFramework"] == "bs5")
+                                    {
+                                        xsltPath = "/features/membership/email/registration.xsl";
+                                    }
+                                    var fsHelper = new Protean.fsHelper();
+                                    xsltPath = fsHelper.checkCommonFilePath(xsltPath);
 
-                                if (System.IO.File.Exists(goServer.MapPath(xsltPath)))
-                                {
-                                    var oUserElmt = moDbHelper.GetUserXML(mnUserId);
+                                    if (!string.IsNullOrEmpty(xsltPath))
+                                    {
+                                        var oUserElmt = moDbHelper.GetUserXML(mnUserId);
 
                                     var oElmtPwd = moPageXml.CreateElement("Password");
                                     oElmtPwd.InnerText = moRequest["cDirPassword"];
@@ -924,19 +935,19 @@ namespace Protean
                                         recipientEmail = moConfig["RegistrationAlertEmail"];
                                     }
 
-                                    string xsltPathAlert = "/xsl/email/registrationAlert.xsl";
-                                    if (myWeb.moConfig["cssFramework"] == "bs5")
-                                    {
-                                        xsltPath = "/email/registrationAlert.xsl";
+                                        string xsltPathAlert = "/xsl/email/registrationAlert.xsl";
+                                        if (myWeb.moConfig["cssFramework"] == "bs5")
+                                        {
+                                            xsltPath = "/features/membership/email/registration-alert.xsl";
+                                        }
+                                        xsltPath = fsHelper.checkCommonFilePath(xsltPath);
+                                        if (System.IO.File.Exists(goServer.MapPath(moConfig["ProjectPath"] + xsltPathAlert)))
+                                        {
+                                            Cms.dbHelper argodbHelper1 = null;
+                                            sProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, moConfig["ProjectPath"] + xsltPathAlert, "New User", recipientEmail, fromEmail, SubjectLine, "Message Sent", "Message Failed", odbHelper: ref argodbHelper1));
+                                        }
+                                        oMsg = (Protean.Messaging)null;
                                     }
-
-                                    if (System.IO.File.Exists(goServer.MapPath(moConfig["ProjectPath"] + xsltPathAlert)))
-                                    {
-                                        Cms.dbHelper argodbHelper1 = null;
-                                        sProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, moConfig["ProjectPath"] + xsltPathAlert, "New User", recipientEmail, fromEmail, SubjectLine, odbHelper: ref argodbHelper1, "Message Sent", "Message Failed"));
-                                    }
-                                    oMsg = (Protean.Messaging)null;
-                                }
 
                                 // redirect to this page or alternative page.
                                 if (bRedirect)
@@ -988,23 +999,24 @@ namespace Protean
                                 redirectId = oContentNode.GetAttribute("redirectPathId");
                             }
 
-                            if (!string.IsNullOrEmpty(redirectId))
-                            {
-                                // refresh the site strucutre with new userId
-                                myWeb.mnUserId = (int)mnUserId;
-                                myWeb.GetStructureXML("Site");
-                                XmlElement oElmt = (XmlElement)myWeb.moPageXml.SelectSingleNode("/Page/Menu/descendant-or-self::MenuItem[@id = '" + redirectId + "']");
-                                string redirectPath = myWeb.mcOriginalURL;
-                                if (oElmt is null)
+                                if (!string.IsNullOrEmpty(redirectId))
                                 {
-                                    myWeb.msRedirectOnEnd = redirectPath;
-                                    bRedirect = true;
-                                }
-                                else
-                                {
-                                    redirectPath = oElmt.GetAttribute("url");
-                                    myWeb.msRedirectOnEnd = redirectPath;
-                                    bRedirect = false;
+                                    // refresh the site strucutre with new userId
+                                    myWeb.mnUserId = (int)mnUserId;
+                                    myWeb.GetStructureXML("Site");
+                                    XmlElement oElmt = (XmlElement)myWeb.moPageXml.SelectSingleNode("/Page/Menu/descendant-or-self::MenuItem[@id = '" + redirectId + "']");
+                                    string redirectPath = myWeb.mcOriginalURL;
+                                    if (oElmt is null)
+                                    {
+                                        myWeb.msRedirectOnEnd = redirectPath;
+                                        bRedirect = true;
+                                    }
+                                    else
+                                    {
+                                        redirectPath = oElmt.GetAttribute("url");
+                                        myWeb.msRedirectOnEnd = redirectPath;
+                                        bRedirect = false;
+                                    }
                                 }
                             }
                         }

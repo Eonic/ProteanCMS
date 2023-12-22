@@ -10,8 +10,6 @@ using System.Xml;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
-using static Protean.stdTools;
-
 namespace Protean
 {
 
@@ -116,7 +114,7 @@ namespace Protean
                 {
                     EncryptedString = Tools.Text.DeAscString(EncryptedString);
 
-                    string cSQL = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT tblDirectory.nDirKey FROM tblDirectory INNER JOIN tblAudit ON tblDirectory.nAuditId = tblAudit.nAuditKey WHERE cDirPassword = '", SqlFmt(EncryptedString)), "' AND nDirKey = "), AccountID));
+                    string cSQL = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT tblDirectory.nDirKey FROM tblDirectory INNER JOIN tblAudit ON tblDirectory.nAuditId = tblAudit.nAuditKey WHERE cDirPassword = '", Protean.stdTools.SqlFmt(EncryptedString)), "' AND nDirKey = "), AccountID));
                     return Conversions.ToInteger(myWeb.moDbHelper.GetDataValue(cSQL, 1, null, (object)0));
                 }
                 catch (Exception ex)
@@ -697,307 +695,319 @@ namespace Protean
                         bool bLogon = false;
 
                         object argmyWeb = myWeb;
-                        var oMembershipProv = new Providers.Membership.BaseProvider(ref argmyWeb, myWeb.moConfig["MembershipProvider"]);
+                        var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, myWeb.moConfig["MembershipProvider"]);
                         myWeb = (Cms)argmyWeb;
                         var adXfm = oMembershipProv.AdminXforms;
                         bool bRedirect = true;
-
-
-                        // OAuth Functionality
-
-                        if (!!string.IsNullOrEmpty(moRequest["oAuthResp"]))
+                        if (moRequest["ewCmd"] == "ActivateAccount")
                         {
-                            if (!string.IsNullOrEmpty(moRequest["oAuthReg"]) & string.IsNullOrEmpty(myWeb.msRedirectOnEnd))
+                        }
+
+                        // We should move activate account features here. Currently in membership process.
+
+                        else
+                        {
+
+
+
+                            // OAuth Functionality
+
+                            if (!!string.IsNullOrEmpty(moRequest["oAuthResp"]))
                             {
-                                object sRedirectPath = "";
-                                object appId = "";
-                                object redirectURI = "https://" + moRequest.ServerVariables["SERVER_NAME"] + myWeb.mcPageURL + "?oAuthResp=" + moRequest["oAuthReg"];
-                                switch (moRequest["oAuthReg"] ?? "")
+                                if (!string.IsNullOrEmpty(moRequest["oAuthReg"]) & string.IsNullOrEmpty(myWeb.msRedirectOnEnd))
+                                {
+                                    object sRedirectPath = "";
+                                    object appId = "";
+                                    object redirectURI = "https://" + moRequest.ServerVariables["SERVER_NAME"] + myWeb.mcPageURL + "?oAuthResp=" + moRequest["oAuthReg"];
+                                    switch (moRequest["oAuthReg"] ?? "")
+                                    {
+                                        case "facebook":
+                                            {
+                                                sRedirectPath = "https://www.facebook.com/v2.8/dialog/oauth?";
+                                                appId = moConfig["OauthFacebookId"];
+                                                sRedirectPath = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(sRedirectPath, "client_id="), appId), "&redirect_uri="), redirectURI);
+                                                break;
+                                            }
+                                        case "twitter":
+                                            {
+                                                var twApi = new Protean.Integration.Directory.Twitter(ref myWeb);
+                                                twApi.twitterConsumerKey = moConfig["OauthTwitterId"];
+                                                twApi.twitterConsumerSecret = moConfig["OauthTwitterKey"];
+                                                sRedirectPath = twApi.GetRequestToken();
+                                                break;
+                                            }
+                                    }
+                                    myWeb.msRedirectOnEnd = Conversions.ToString(sRedirectPath);
+                                }
+                                else
+                                {
+
+                                }
+                            }
+                            else
+                            {
+                                switch (moRequest["oAuthResp"] ?? "")
                                 {
                                     case "facebook":
                                         {
-                                            sRedirectPath = "https://www.facebook.com/v2.8/dialog/oauth?";
-                                            appId = moConfig["OauthFacebookId"];
-                                            sRedirectPath = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(sRedirectPath, "client_id="), appId), "&redirect_uri="), redirectURI);
-                                            break;
-                                        }
-                                    case "twitter":
-                                        {
-                                            var twApi = new Integration.Directory.Twitter(ref myWeb);
-                                            twApi.twitterConsumerKey = moConfig["OauthTwitterId"];
-                                            twApi.twitterConsumerSecret = moConfig["OauthTwitterKey"];
-                                            sRedirectPath = twApi.GetRequestToken();
-                                            break;
-                                        }
-                                }
-                                myWeb.msRedirectOnEnd = Conversions.ToString(sRedirectPath);
-                            }
-                            else
-                            {
+                                            object redirectURI = "http://" + moRequest.ServerVariables["SERVER_NAME"] + myWeb.mcPageURL + "?oAuthResp=facebook";
+                                            sProcessInfo = "Facebook Response";
+                                            var fbClient = new Protean.Integration.Directory.Facebook(ref myWeb, moConfig["OauthFacebookId"], moConfig["OauthFacebookKey"]);
+                                            List<Protean.Integration.Directory.Facebook.User> fbUsers;
+                                            fbUsers = fbClient.GetFacebookUserData(moRequest["code"], Conversions.ToString(redirectURI));
+                                            sProcessInfo = fbUsers[0].first_name + " " + fbUsers[0].last_name;
 
-                            }
-                        }
-                        else
-                        {
-                            switch (moRequest["oAuthResp"] ?? "")
-                            {
-                                case "facebook":
-                                    {
-                                        object redirectURI = "http://" + moRequest.ServerVariables["SERVER_NAME"] + myWeb.mcPageURL + "?oAuthResp=facebook";
-                                        sProcessInfo = "Facebook Response";
-                                        var fbClient = new Integration.Directory.Facebook(ref myWeb, moConfig["OauthFacebookId"], moConfig["OauthFacebookKey"]);
-                                        List<Integration.Directory.Facebook.User> fbUsers;
-                                        fbUsers = fbClient.GetFacebookUserData(moRequest["code"], Conversions.ToString(redirectURI));
-                                        sProcessInfo = fbUsers[0].first_name + " " + fbUsers[0].last_name;
+                                            var tmp = fbUsers;
+                                            var argfbUser = tmp[0];
+                                            mnUserId = fbClient.CreateUser(ref argfbUser);
+                                            tmp[0] = argfbUser;
 
-                                        var tmp = fbUsers;
-                                        var argfbUser = tmp[0];
-                                        mnUserId = fbClient.CreateUser(ref argfbUser);
-                                        tmp[0] = argfbUser;
-
-                                        if (moSession is not null)
-                                            moSession["nUserId"] = (object)mnUserId;
-                                        moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Register, (int)mnUserId, moSession.SessionID, DateTime.Now, 0, 0, "First Logon");
-
-                                        bLogon = true;
-                                        break;
-                                    }
-
-                                case "twitter":
-                                    {
-                                        sProcessInfo = "Twitter Response";
-                                        var twApi = new Integration.Directory.Twitter(ref myWeb);
-                                        twApi.twitterConsumerKey = moConfig["OauthTwitterId"];
-                                        twApi.twitterConsumerSecret = moConfig["OauthTwitterKey"];
-                                        break;
-                                    }
-                                    // Get twitter user
-                                    // Dim twUsers As List(Of Protean.Integration.Directory.Twitter.User)   'Never used
-
-
-                            }
-                            if (mnUserId > 0L)
-                            {
-
-
-
-                            }
-
-
-                        }
-
-                        // If not in admin mode then base our choice on whether the user is logged in. 
-                        // If in Admin Mode, then present it as WYSIWYG
-                        if (!myWeb.mbAdminMode & myWeb.mnUserId > 0)
-                        {
-
-                            XmlElement oContentForm = (XmlElement)myWeb.moPageXml.SelectSingleNode("descendant-or-self::Content[@type='xform' and @name='UserMyAccount']");
-                            if (oContentForm is null)
-                            {
-                                oXfmElmt = (XmlElement)adXfm.xFrmEditDirectoryItem(myWeb.mnUserId, "User", default, AccountUpdateForm);
-                            }
-                            else
-                            {
-                                oXfmElmt = (XmlElement)adXfm.xFrmEditDirectoryItem(myWeb.mnUserId, "User", default, AccountUpdateForm, oContentForm.OuterXml);
-                                if (!myWeb.mbAdminMode)
-                                    oContentForm.ParentNode.RemoveChild(oContentForm);
-                            }
-                            oContentNode.InnerXml = oXfmElmt.InnerXml;
-                        }
-
-                        else
-                        {
-
-                            XmlElement oContentForm = (XmlElement)moPageXml.SelectSingleNode("descendant-or-self::Content[@type='xform' and @name='UserRegister']");
-                            if (oContentForm is null)
-                            {
-                                oXfmElmt = (XmlElement)adXfm.xFrmEditDirectoryItem(mnUserId, "User", default, AccountCreateForm);
-                            }
-                            else
-                            {
-                                oXfmElmt = (XmlElement)adXfm.xFrmEditDirectoryItem(mnUserId, "User", default, AccountCreateForm, oContentForm.OuterXml);
-                                if (!mbAdminMode)
-                                    oContentForm.ParentNode.RemoveChild(oContentForm);
-                            }
-
-                            if (!string.IsNullOrEmpty(myWeb.moConfig["SecureMembershipAddress"]) & myWeb.mbAdminMode == false)
-                            {
-                                XmlElement oSubElmt = (XmlElement)adXfm.moXformElmt.SelectSingleNode("descendant::submission");
-                                oSubElmt.SetAttribute("action", myWeb.moConfig["SecureMembershipAddress"] + myWeb.mcPagePath);
-                            }
-
-                            // ok if the user is valid we then need to handle what happens next.
-                            if (Conversions.ToBoolean(adXfm.valid))
-                            {
-
-                                switch (myWeb.moConfig["RegisterBehaviour"] ?? "")
-                                {
-
-                                    case "validateByEmail":
-                                        {
-                                            // don't redirect because we want to reuse this form
-                                            bRedirect = false;
-
-                                            // say thanks for registering and update the form
-
-                                            // hide the current form
-                                            XmlElement oFrmGrp = (XmlElement)adXfm.moXformElmt.SelectSingleNode("group");
-                                            oFrmGrp.SetAttribute("class", "hidden");
-                                            // create a new note
-                                            XmlElement oFrmGrp2 = (XmlElement)adXfm.addGroup(adXfm.moXformElmt, "validateByEmail");
-                                            adXfm.addNote(oFrmGrp2, Protean.xForm.noteTypes.Hint, "<span class=\"msg-1029\">Thanks for registering you have been sent an email with a link you must click to activate your account</span>", (object)true);
-
-                                            // lets get the new userid from the instance
-                                            mnUserId = Conversions.ToLong(adXfm.instance.SelectSingleNode("tblDirectory/nDirKey").InnerText);
-
-                                            // first we set the user account to be pending
-                                            moDbHelper.setObjectStatus(Cms.dbHelper.objectTypes.Directory, Cms.dbHelper.Status.Pending, mnUserId);
-
-                                            var oMembership = new Membership(ref myWeb);
-                                            oMembership.OnError += myWeb.OnComponentError;
-                                            oMembership.AccountActivateLink((int)mnUserId);
-
-                                            moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Register, (int)mnUserId, moSession.SessionID, DateTime.Now, 0, 0, "Send Activation"); // Auto logon
-                                            break;
-                                        }
-
-                                    default:
-                                        {
-                                            mnUserId = Conversions.ToLong(adXfm.instance.SelectSingleNode("tblDirectory/nDirKey").InnerText);
                                             if (moSession is not null)
                                                 moSession["nUserId"] = (object)mnUserId;
-
                                             moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Register, (int)mnUserId, moSession.SessionID, DateTime.Now, 0, 0, "First Logon");
 
                                             bLogon = true;
                                             break;
                                         }
 
+                                    case "twitter":
+                                        {
+                                            sProcessInfo = "Twitter Response";
+                                            var twApi = new Protean.Integration.Directory.Twitter(ref myWeb);
+                                            twApi.twitterConsumerKey = moConfig["OauthTwitterId"];
+                                            twApi.twitterConsumerSecret = moConfig["OauthTwitterKey"];
+                                            break;
+                                        }
+                                        // Get twitter user
+                                        // Dim twUsers As List(Of Protean.Integration.Directory.Twitter.User)   'Never used
+
+
+                                }
+                                if (mnUserId > 0L)
+                                {
+
+
+
                                 }
 
-                                // send registration confirmation
-                                string xsltPath = "/xsl/email/registration.xsl";
-                                if (myWeb.moConfig["cssFramework"] == "bs5")
+
+                            }
+
+                            // If not in admin mode then base our choice on whether the user is logged in. 
+                            // If in Admin Mode, then present it as WYSIWYG
+                            if (!myWeb.mbAdminMode & myWeb.mnUserId > 0)
+                            {
+
+                                XmlElement oContentForm = (XmlElement)myWeb.moPageXml.SelectSingleNode("descendant-or-self::Content[@type='xform' and @name='UserMyAccount']");
+                                if (oContentForm is null)
                                 {
-                                    xsltPath = "/xsl/registration.xsl";
+                                    oXfmElmt = (XmlElement)adXfm.xFrmEditDirectoryItem(myWeb.mnUserId, "User", default, AccountUpdateForm);
+                                }
+                                else
+                                {
+                                    oXfmElmt = (XmlElement)adXfm.xFrmEditDirectoryItem(myWeb.mnUserId, "User", default, AccountUpdateForm, oContentForm.OuterXml);
+                                    if (!myWeb.mbAdminMode)
+                                        oContentForm.ParentNode.RemoveChild(oContentForm);
+                                }
+                                oContentNode.InnerXml = oXfmElmt.InnerXml;
+                            }
+
+                            else
+                            {
+
+                                XmlElement oContentForm = (XmlElement)moPageXml.SelectSingleNode("descendant-or-self::Content[@type='xform' and @name='UserRegister']");
+                                if (oContentForm is null)
+                                {
+                                    oXfmElmt = (XmlElement)adXfm.xFrmEditDirectoryItem(mnUserId, "User", default, AccountCreateForm);
+                                }
+                                else
+                                {
+                                    oXfmElmt = (XmlElement)adXfm.xFrmEditDirectoryItem(mnUserId, "User", default, AccountCreateForm, oContentForm.OuterXml);
+                                    if (!mbAdminMode)
+                                        oContentForm.ParentNode.RemoveChild(oContentForm);
                                 }
 
-                                if (System.IO.File.Exists(goServer.MapPath(xsltPath)))
+                                if (!string.IsNullOrEmpty(myWeb.moConfig["SecureMembershipAddress"]) & myWeb.mbAdminMode == false)
                                 {
-                                    var oUserElmt = moDbHelper.GetUserXML(mnUserId);
+                                    XmlElement oSubElmt = (XmlElement)adXfm.moXformElmt.SelectSingleNode("descendant::submission");
+                                    oSubElmt.SetAttribute("action", myWeb.moConfig["SecureMembershipAddress"] + myWeb.mcPagePath);
+                                }
 
-                                    var oElmtPwd = moPageXml.CreateElement("Password");
-                                    oElmtPwd.InnerText = moRequest["cDirPassword"];
-                                    oUserElmt.AppendChild(oElmtPwd);
+                                // ok if the user is valid we then need to handle what happens next.
+                                if (Conversions.ToBoolean(adXfm.valid))
+                                {
 
-                                    oUserElmt.SetAttribute("Url", myWeb.mcOriginalURL);
-
-                                    XmlElement oUserEmail = (XmlElement)oUserElmt.SelectSingleNode("Email");
-                                    string fromName = moConfig["SiteAdminName"];
-                                    string fromEmail = moConfig["SiteAdminEmail"];
-                                    string recipientEmail = "";
-                                    if (oUserEmail is not null)
-                                        recipientEmail = oUserEmail.InnerText;
-                                    string SubjectLine = "Your Registration Details";
-                                    var oMsg = new Protean.Messaging(ref myWeb.msException);
-                                    // send an email to the new registrant
-                                    if (!string.IsNullOrEmpty(recipientEmail))
+                                    switch (myWeb.moConfig["RegisterBehaviour"] ?? "")
                                     {
-                                        Cms.dbHelper argodbHelper = null;
-                                        sProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed", odbHelper: ref argodbHelper));
+
+                                        case "validateByEmail":
+                                            {
+                                                // don't redirect because we want to reuse this form
+                                                bRedirect = false;
+
+                                                // say thanks for registering and update the form
+
+                                                // hide the current form
+                                                XmlElement oFrmGrp = (XmlElement)adXfm.moXformElmt.SelectSingleNode("group");
+                                                oFrmGrp.SetAttribute("class", "hidden");
+                                                // create a new note
+                                                XmlElement oFrmGrp2 = (XmlElement)adXfm.addGroup(adXfm.moXformElmt, "validateByEmail");
+                                                adXfm.addNote(oFrmGrp2, Protean.xForm.noteTypes.Hint, "<span class=\"msg-1029\">Thank you for registering. You have been emailed to confirm and activate your account</span>", (object)true);
+
+                                                // lets get the new userid from the instance
+                                                mnUserId = Conversions.ToLong(adXfm.instance.SelectSingleNode("tblDirectory/nDirKey").InnerText);
+
+                                                // first we set the user account to be pending
+                                                moDbHelper.setObjectStatus(Cms.dbHelper.objectTypes.Directory, Cms.dbHelper.Status.Pending, mnUserId);
+
+                                                var oMembership = new Membership(ref myWeb);
+                                                oMembership.OnError += myWeb.OnComponentError;
+                                                oMembership.AccountActivateLink((int)mnUserId);
+
+                                                moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Register, (int)mnUserId, moSession.SessionID, DateTime.Now, 0, 0, "Send Activation"); // Auto logon
+                                                break;
+                                            }
+
+                                        default:
+                                            {
+                                                mnUserId = Conversions.ToLong(adXfm.instance.SelectSingleNode("tblDirectory/nDirKey").InnerText);
+                                                if (moSession is not null)
+                                                    moSession["nUserId"] = (object)mnUserId;
+
+                                                moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Register, (int)mnUserId, moSession.SessionID, DateTime.Now, 0, 0, "First Logon");
+
+                                                bLogon = true;
+                                                break;
+                                            }
+
                                     }
 
-                                    // send an email to the webadmin
-                                    if (string.IsNullOrEmpty(moConfig["RegistrationAlertEmail"]))
+                                    // send registration confirmation
+                                    string xsltPath = "/xsl/email/registration.xsl";
+                                    if (myWeb.moConfig["cssFramework"] == "bs5")
                                     {
-                                        recipientEmail = moConfig["SiteAdminEmail"];
+                                        xsltPath = "/features/membership/email/registration.xsl";
+                                    }
+                                    var fsHelper = new Protean.fsHelper();
+                                    xsltPath = fsHelper.checkCommonFilePath(xsltPath);
+
+                                    if (!string.IsNullOrEmpty(xsltPath))
+                                    {
+                                        var oUserElmt = moDbHelper.GetUserXML(mnUserId);
+
+                                        var oElmtPwd = moPageXml.CreateElement("Password");
+                                        oElmtPwd.InnerText = moRequest["cDirPassword"];
+                                        oUserElmt.AppendChild(oElmtPwd);
+
+                                        oUserElmt.SetAttribute("Url", myWeb.mcOriginalURL);
+
+                                        XmlElement oUserEmail = (XmlElement)oUserElmt.SelectSingleNode("Email");
+                                        string fromName = moConfig["SiteAdminName"];
+                                        string fromEmail = moConfig["SiteAdminEmail"];
+                                        string recipientEmail = "";
+                                        if (oUserEmail is not null)
+                                            recipientEmail = oUserEmail.InnerText;
+                                        string SubjectLine = "Your Registration Details";
+                                        var oMsg = new Protean.Messaging(ref myWeb.msException);
+                                        // send an email to the new registrant
+                                        if (!string.IsNullOrEmpty(recipientEmail))
+                                        {
+                                            Cms.dbHelper argodbHelper = null;
+                                            sProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed", odbHelper: ref argodbHelper));
+                                        }
+
+                                        // send an email to the webadmin
+                                        if (string.IsNullOrEmpty(moConfig["RegistrationAlertEmail"]))
+                                        {
+                                            recipientEmail = moConfig["SiteAdminEmail"];
+                                        }
+                                        else
+                                        {
+                                            recipientEmail = moConfig["RegistrationAlertEmail"];
+                                        }
+
+                                        string xsltPathAlert = "/xsl/email/registrationAlert.xsl";
+                                        if (myWeb.moConfig["cssFramework"] == "bs5")
+                                        {
+                                            xsltPath = "/features/membership/email/registration-alert.xsl";
+                                        }
+                                        xsltPath = fsHelper.checkCommonFilePath(xsltPath);
+                                        if (System.IO.File.Exists(goServer.MapPath(moConfig["ProjectPath"] + xsltPathAlert)))
+                                        {
+                                            Cms.dbHelper argodbHelper1 = null;
+                                            sProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, moConfig["ProjectPath"] + xsltPathAlert, "New User", recipientEmail, fromEmail, SubjectLine, "Message Sent", "Message Failed", odbHelper: ref argodbHelper1));
+                                        }
+                                        oMsg = (Protean.Messaging)null;
+                                    }
+
+                                    // redirect to this page or alternative page.
+                                    if (bRedirect)
+                                    {
+                                        myWeb.msRedirectOnEnd = myWeb.mcOriginalURL;
                                     }
                                     else
                                     {
-                                        recipientEmail = moConfig["RegistrationAlertEmail"];
+                                        oContentNode.InnerXml = oXfmElmt.InnerXml;
                                     }
-
-                                    string xsltPathAlert = "/xsl/email/registrationAlert.xsl";
-                                    if (myWeb.moConfig["cssFramework"] == "bs5")
-                                    {
-                                        xsltPath = "/email/registrationAlert.xsl";
-                                    }
-
-                                    if (System.IO.File.Exists(goServer.MapPath(moConfig["ProjectPath"] + xsltPathAlert)))
-                                    {
-                                        Cms.dbHelper argodbHelper1 = null;
-                                        sProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, moConfig["ProjectPath"] + xsltPathAlert, "New User", recipientEmail, fromEmail, SubjectLine, "Message Sent", "Message Failed", odbHelper: ref argodbHelper1));
-                                    }
-                                    oMsg = (Protean.Messaging)null;
-                                }
-
-                                // redirect to this page or alternative page.
-                                if (bRedirect)
-                                {
-                                    myWeb.msRedirectOnEnd = myWeb.mcOriginalURL;
                                 }
                                 else
                                 {
                                     oContentNode.InnerXml = oXfmElmt.InnerXml;
                                 }
                             }
-                            else
-                            {
-                                oContentNode.InnerXml = oXfmElmt.InnerXml;
-                            }
-                        }
 
-                        if (bLogon)
-                        {
-                            // Now we want to reload as permissions have changed
-
-                            if (moSession is not null)
+                            if (bLogon)
                             {
-                                if (moSession["cLogonCmd"] is not null)
+                                // Now we want to reload as permissions have changed
+
+                                if (moSession is not null)
                                 {
-                                    cLogonCmd = Strings.Split(Conversions.ToString(moSession["cLogonCmd"]), "=")[0];
-                                    if (myWeb.mcOriginalURL.Contains(cLogonCmd + "="))
+                                    if (moSession["cLogonCmd"] is not null)
                                     {
-                                        cLogonCmd = "";
+                                        cLogonCmd = Strings.Split(Conversions.ToString(moSession["cLogonCmd"]), "=")[0];
+                                        if (myWeb.mcOriginalURL.Contains(cLogonCmd + "="))
+                                        {
+                                            cLogonCmd = "";
+                                        }
+                                        else if (myWeb.mcOriginalURL.Contains("="))
+                                        {
+                                            cLogonCmd = Conversions.ToString(Operators.ConcatenateObject("&", moSession["cLogonCmd"]));
+                                        }
+                                        else
+                                        {
+                                            cLogonCmd = Conversions.ToString(Operators.ConcatenateObject("?", moSession["cLogonCmd"]));
+                                        }
                                     }
-                                    else if (myWeb.mcOriginalURL.Contains("="))
+                                }
+
+                                moSession["RedirectReason"] = "registration";
+                                myWeb.bRedirectStarted = true; // This acts as a local suppressant allowing for the sessio to pass through to the redirected page
+
+                                string redirectId = myWeb.moConfig["RegisterRedirectPageId"];
+
+                                if (!string.IsNullOrEmpty(oContentNode.GetAttribute("redirectPathId")))
+                                {
+                                    redirectId = oContentNode.GetAttribute("redirectPathId");
+                                }
+
+                                if (!string.IsNullOrEmpty(redirectId))
+                                {
+                                    // refresh the site strucutre with new userId
+                                    myWeb.mnUserId = (int)mnUserId;
+                                    myWeb.GetStructureXML("Site");
+                                    XmlElement oElmt = (XmlElement)myWeb.moPageXml.SelectSingleNode("/Page/Menu/descendant-or-self::MenuItem[@id = '" + redirectId + "']");
+                                    string redirectPath = myWeb.mcOriginalURL;
+                                    if (oElmt is null)
                                     {
-                                        cLogonCmd = Conversions.ToString(Operators.ConcatenateObject("&", moSession["cLogonCmd"]));
+                                        myWeb.msRedirectOnEnd = redirectPath;
+                                        bRedirect = true;
                                     }
                                     else
                                     {
-                                        cLogonCmd = Conversions.ToString(Operators.ConcatenateObject("?", moSession["cLogonCmd"]));
+                                        redirectPath = oElmt.GetAttribute("url");
+                                        myWeb.msRedirectOnEnd = redirectPath;
+                                        bRedirect = false;
                                     }
-                                }
-                            }
-
-                            moSession["RedirectReason"] = "registration";
-                            myWeb.bRedirectStarted = true; // This acts as a local suppressant allowing for the sessio to pass through to the redirected page
-
-                            string redirectId = myWeb.moConfig["RegisterRedirectPageId"];
-
-                            if (!string.IsNullOrEmpty(oContentNode.GetAttribute("redirectPathId")))
-                            {
-                                redirectId = oContentNode.GetAttribute("redirectPathId");
-                            }
-
-                            if (!string.IsNullOrEmpty(redirectId))
-                            {
-                                // refresh the site strucutre with new userId
-                                myWeb.mnUserId = (int)mnUserId;
-                                myWeb.GetStructureXML("Site");
-                                XmlElement oElmt = (XmlElement)myWeb.moPageXml.SelectSingleNode("/Page/Menu/descendant-or-self::MenuItem[@id = '" + redirectId + "']");
-                                string redirectPath = myWeb.mcOriginalURL;
-                                if (oElmt is null)
-                                {
-                                    myWeb.msRedirectOnEnd = redirectPath;
-                                    bRedirect = true;
-                                }
-                                else
-                                {
-                                    redirectPath = oElmt.GetAttribute("url");
-                                    myWeb.msRedirectOnEnd = redirectPath;
-                                    bRedirect = false;
                                 }
                             }
                         }
@@ -1159,7 +1169,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "GetUsersByGroup", ex, "", "", gbDebug);
+                        Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "GetUsersByGroup", ex, "", "", Protean.stdTools.gbDebug);
                         // Return Nothing
                     }
 
@@ -1223,7 +1233,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "UserContacts", ex, "", "", gbDebug);
+                        Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "UserContacts", ex, "", "", Protean.stdTools.gbDebug);
                         // Return Nothing
                     }
 
@@ -1299,7 +1309,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "CompanyContact", ex, "", "", gbDebug);
+                        Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "CompanyContact", ex, "", "", Protean.stdTools.gbDebug);
                         // Return Nothing
                     }
 
@@ -1331,7 +1341,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "AddUserToGroup", ex, "", "", gbDebug);
+                        Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "AddUserToGroup", ex, "", "", Protean.stdTools.gbDebug);
                         // Return Nothing
                     }
 
@@ -1459,7 +1469,7 @@ namespace Protean
                                     if (EmailActivityId > 0L)
                                     {
                                         var strSql3 = new System.Text.StringBuilder();
-                                        strSql3.Append(Operators.ConcatenateObject(Operators.ConcatenateObject("update tblEmailActivityLog set cActivityXml = '", stdTools.SqlFmt(oXform.Instance.OuterXml)), "'"));
+                                        strSql3.Append(Operators.ConcatenateObject(Operators.ConcatenateObject("update tblEmailActivityLog set cActivityXml = '", Protean.stdTools.SqlFmt(oXform.Instance.OuterXml)), "'"));
                                         strSql3.Append("where nEmailActivityKey = " + EmailActivityId);
                                         myWeb.moDbHelper.ExeProcessSql(strSql3.ToString());
                                     }
@@ -1502,7 +1512,7 @@ namespace Protean
                                         }
 
                                         var strSql3 = new System.Text.StringBuilder();
-                                        strSql3.Append(Operators.ConcatenateObject(Operators.ConcatenateObject("update tblEmailActivityLog set cActivityXml = '", stdTools.SqlFmt(oXform.Instance.OuterXml)), "'"));
+                                        strSql3.Append(Operators.ConcatenateObject(Operators.ConcatenateObject("update tblEmailActivityLog set cActivityXml = '", Protean.stdTools.SqlFmt(oXform.Instance.OuterXml)), "'"));
                                         strSql3.Append("where nEmailActivityKey = " + EmailActivityId);
                                         myWeb.moDbHelper.ExeProcessSql(strSql3.ToString());
 

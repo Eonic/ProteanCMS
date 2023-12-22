@@ -6,7 +6,7 @@ using System.Web.Configuration;
 using System.Xml;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using static Protean.stdTools;
+using static Protean.Tools.Xml;
 
 namespace Protean
 {
@@ -124,7 +124,7 @@ namespace Protean
                 XmlElement oRootGroup = null;
                 try
                 {
-                    if (Tools.Xml.NodeState(ref moXformElmt, "group") == Tools.Xml.XmlNodeState.NotInstantiated)
+                    if (NodeState(ref moXformElmt, "group") == XmlNodeState.NotInstantiated)
                     {
 
                         oRootGroup = null;
@@ -136,7 +136,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    returnException(ref msException, mcModuleName, "RootGroup-xmlElement", ex, "", "", gbDebug);
+                    Protean.stdTools.returnException(ref msException, mcModuleName, "RootGroup-xmlElement", ex, "", "", Protean.stdTools.gbDebug);
                 }
                 return oRootGroup;
             }
@@ -201,7 +201,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "New", ex, "", "", gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "New", ex, "", "", Protean.stdTools.gbDebug);
             }
         }
 
@@ -220,7 +220,7 @@ namespace Protean
             processRepeats(ref moXformElmt);
         }
 
-        public void LoadInstance(XmlElement oElmt)
+        public void LoadInstance(XmlElement oElmt, bool resetInitial = false)
         {
             string cProcessInfo = "";
 
@@ -236,7 +236,7 @@ namespace Protean
                     oInstance.InnerXml = oElmt.InnerXml;
                 }
 
-                if (oInitialInstance is null)
+                if (oInitialInstance is null | resetInitial == true)
                 {
                     oInitialInstance = (XmlElement)oInstance.Clone();
                 }
@@ -246,7 +246,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "Loadinstance-xmlElement", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "Loadinstance-xmlElement", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
             }
         }
 
@@ -322,7 +322,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "Patchinstance-xmlElement", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "Patchinstance-xmlElement", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
             }
         }
 
@@ -347,7 +347,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "NewFrm", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "NewFrm", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
             }
         }
 
@@ -378,7 +378,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "submission", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "submission", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
             }
         }
 
@@ -437,13 +437,43 @@ namespace Protean
                     // set the model and instance
                     model = (XmlElement)moXformElmt.SelectSingleNode("model");
 
+                    Instance = (XmlElement)model.SelectSingleNode("instance");
 
                     // Not used at the moment - intended for repeats where the instance needs to be loaded pre load PreLoadInstance()
                     // processRepeats(moXformElmt)
+                    if (bProcessRepeats & goSession is not null)
+                    {
 
+                        if (goSession["tempInstance"] is null)
+                        {
+                            Instance = (XmlElement)model.SelectSingleNode("descendant-or-self::instance");
+                        }
+                        else
+                        {
+                            Instance = (XmlElement)goSession["tempInstance"];
+                        }
 
-                    // XformInclude Features....
-                    Instance = (XmlElement)model.SelectSingleNode("instance");
+                        if (isTriggered)
+                        {
+                            // we have clicked a trigger so we must update the instance
+                            updateInstanceFromRequest();
+                            // lets save the instance
+                            goSession["tempInstance"] = Instance;
+                        }
+                        else
+                        {
+                            // This has moved into validate as we must ensure valid form prior to removal
+                            // goSession("tempInstance") = Nothing
+
+                        }
+                    }
+
+                    else
+                    {
+                        oInstance = (XmlElement)model.SelectSingleNode("descendant-or-self::instance");
+
+                        // XformInclude Features....
+                    }
 
                     System.Collections.Specialized.NameValueCollection moThemeConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/theme");
                     string currentTheme = "";
@@ -496,7 +526,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "load", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "load", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 // If any problems are encountered return false.
                 // Return False
             }
@@ -558,7 +588,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "load(String,String())", ex, "", filePath, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "load(String,String())", ex, "", filePath, Protean.stdTools.gbDebug);
                 return false;
             }
         }
@@ -577,7 +607,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "load", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "load", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
             }
         }
 
@@ -654,7 +684,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "load", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "load", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
             }
         }
 
@@ -681,7 +711,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "submission", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "submission", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
             }
         }
 
@@ -713,7 +743,7 @@ namespace Protean
                 System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
 
                 var argoNode = oInstance.SelectSingleNode("*[1]");
-                var nsMgr = Tools.Xml.getNsMgrRecursive(ref argoNode, ref moPageXML);
+                var nsMgr = getNsMgrRecursive(ref argoNode, ref moPageXML);
 
                 // HANDLING FOR GOOGLE ReCAPTCHA
                 if (moXformElmt.SelectSingleNode("descendant-or-self::*[contains(@class,'recaptcha') and not(ancestor::instance)]") is not null)
@@ -1055,7 +1085,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "validate", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "validate", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
             }
 
         }
@@ -1115,7 +1145,7 @@ namespace Protean
                             }
                         case "strongpassword":
                             {
-                                if (!strongPassword(sValue + ""))
+                                if (!Protean.stdTools.strongPassword(sValue + ""))
                                     cReturn = "<span class=\"msg-1005\">This password must be stronger</span>";
                                 break;
                             }
@@ -1167,7 +1197,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "evaluateByType", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "evaluateByType", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 return "";
             }
         }
@@ -1183,7 +1213,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "isUnique", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "isUnique", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 return Conversions.ToBoolean("");
             }
         }
@@ -1230,7 +1260,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addNoteFromBind", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addNoteFromBind", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 return false;
             }
 
@@ -1261,7 +1291,7 @@ namespace Protean
 
                 // add the soap namespace to the nametable of the xmlDocument to allow xpath to query the namespace
                 var argoNode = oInstance.SelectSingleNode("*[1]");
-                var nsMgr = Tools.Xml.getNsMgrRecursive(ref argoNode, ref moPageXML);
+                var nsMgr = getNsMgrRecursive(ref argoNode, ref moPageXML);
 
                 oNodes = moXformElmt.SelectNodes("descendant::*[(@ref or @bind) and not(ancestor::model or ancestor::trigger or self::group or self::repeat)]");
 
@@ -1385,11 +1415,11 @@ namespace Protean
                                                         {
                                                             try
                                                             {
-                                                                oElmtTemp.InnerXml = (Tools.Xml.convertEntitiesToCodes(submittedValue) + "").Trim();
+                                                                oElmtTemp.InnerXml = (convertEntitiesToCodes(submittedValue) + "").Trim();
                                                             }
                                                             catch
                                                             {
-                                                                oElmtTemp.InnerXml = Protean.xmlTools.tidyXhtmlFrag((Tools.Xml.convertEntitiesToCodes(submittedValue) + "").Trim());
+                                                                oElmtTemp.InnerXml = Tools.Text.tidyXhtmlFrag((convertEntitiesToCodes(submittedValue) + "").Trim());
                                                             }
                                                             oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.ReplaceChild(oElmtTemp.FirstChild.Clone(), oInstance.SelectSingleNode(sXpath, nsMgr));
                                                         }
@@ -1414,7 +1444,7 @@ namespace Protean
                                                         }
                                                         else
                                                         {
-                                                            oElmtTemp.InnerXml = (Tools.Xml.convertEntitiesToCodes(submittedValue) + "").Trim();
+                                                            oElmtTemp.InnerXml = (convertEntitiesToCodes(submittedValue) + "").Trim();
                                                             oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.ReplaceChild(oElmtTemp.FirstChild.Clone(), oInstance.SelectSingleNode(sXpath, nsMgr));
                                                         }
                                                         oElmtTemp = null;
@@ -1460,7 +1490,7 @@ namespace Protean
                                                         // Do nothing, this is left to another part of the program to use
                                                         // all we will do is pput the name of the file in
 
-                                                        oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = Tools.Xml.convertEntitiesToCodes(Tools.Text.filenameFromPath(goRequest.Files[sRequest].FileName) + "").Trim();
+                                                        oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = convertEntitiesToCodes(Tools.Text.filenameFromPath(goRequest.Files[sRequest].FileName) + "").Trim();
                                                         break;
                                                     }
 
@@ -1570,12 +1600,12 @@ namespace Protean
                                                     }
                                                 case "datetime":
                                                     {
-                                                        oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = xmlDateTime(oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml);
+                                                        oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = Protean.stdTools.xmlDateTime(oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml);
                                                         break;
                                                     }
                                                 case "date":
                                                     {
-                                                        oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = xmlDate(oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml);
+                                                        oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = Protean.stdTools.xmlDate(oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml);
                                                         break;
                                                     }
                                                 case "string-before-comma":
@@ -1587,7 +1617,7 @@ namespace Protean
                                                         {
                                                             string cFirstPath = Strings.Left(submittedValue, Strings.InStr(submittedValue, ","));
                                                             cFirstPath = cFirstPath.TrimEnd(',');
-                                                            oElmtTemp.InnerXml = (Tools.Xml.convertEntitiesToCodes(cFirstPath) + "").Trim();
+                                                            oElmtTemp.InnerXml = (convertEntitiesToCodes(cFirstPath) + "").Trim();
                                                             // oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.ReplaceChild(oElmtTemp.FirstChild.Clone, oInstance.SelectSingleNode(sXpath, nsMgr))
                                                             oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = oElmtTemp.InnerXml;
                                                         }
@@ -1606,7 +1636,7 @@ namespace Protean
                                                         {
                                                             if (!string.IsNullOrEmpty(submittedValue))
                                                             {
-                                                                oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = Tools.Xml.convertEntitiesToCodes(submittedValue + "").Trim();
+                                                                oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = convertEntitiesToCodes(submittedValue + "").Trim();
                                                             }
                                                             else
                                                             {
@@ -1630,7 +1660,7 @@ namespace Protean
                             catch (Exception ex2)
                             {
                                 // no bind element found, do nothing
-                                returnException(ref msException, mcModuleName, "updateInstanceFromRequest", ex2, "", cProcessInfo, gbDebug);
+                                Protean.stdTools.returnException(ref msException, mcModuleName, "updateInstanceFromRequest", ex2, "", cProcessInfo, Protean.stdTools.gbDebug);
                             }
                         }
                     }
@@ -1673,7 +1703,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "updateInstanceFromRequest", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "updateInstanceFromRequest", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
             }
         }
 
@@ -1758,7 +1788,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "updateInstanceFromRequest", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "updateInstanceFromRequest", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
             }
         }
 
@@ -1934,7 +1964,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "updateImageElement", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "updateImageElement", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
             }
 
         }
@@ -1981,7 +2011,7 @@ namespace Protean
                     return;
 
                 var argoNode = oInstance.SelectSingleNode("*[1]");
-                var nsMgr = Tools.Xml.getNsMgrRecursive(ref argoNode, ref moPageXML);
+                var nsMgr = getNsMgrRecursive(ref argoNode, ref moPageXML);
 
                 foreach (XmlNode oNode in oNodes)
                 {
@@ -2081,7 +2111,7 @@ namespace Protean
 
                         catch (Exception ex2)
                         {
-                            returnException(ref msException, mcModuleName, "addValues", ex2, "", cProcessInfo, gbDebug);
+                            Protean.stdTools.returnException(ref msException, mcModuleName, "addValues", ex2, "", cProcessInfo, Protean.stdTools.gbDebug);
                         }
 
                     }
@@ -2207,7 +2237,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addValues", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addValues", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
 
             }
 
@@ -2232,7 +2262,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "ProcessLanguageLabels", ex, "", "", gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "ProcessLanguageLabels", ex, "", "", Protean.stdTools.gbDebug);
             }
         }
 
@@ -2255,7 +2285,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "resetXFormUI", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "resetXFormUI", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
             }
 
         }
@@ -2296,14 +2326,14 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addGroup", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addGroup", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 return null;
             }
         }
 
 
 
-        public XmlElement addSwitch(ref XmlElement oContextNode, string sRef, string sClass = "", string sLabel = "", [Optional, DefaultParameterValue(null)] ref XmlElement oInsertBeforeNode)
+        public XmlElement addSwitch(ref XmlElement oContextNode, string sRef, [Optional, DefaultParameterValue("")] string sClass, [Optional, DefaultParameterValue("")] string sLabel, [Optional] ref XmlElement oInsertBeforeNode)
         {
             XmlElement oGrpElmt;
             XmlElement oLabelElmt;
@@ -2341,7 +2371,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addGroup", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addGroup", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 return null;
             }
         }
@@ -2362,7 +2392,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addGroup", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addGroup", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 return null;
             }
         }
@@ -2394,7 +2424,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addRepeat", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addRepeat", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 return null;
             }
         }
@@ -2410,7 +2440,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addInput", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 return null;
             }
         }
@@ -2426,7 +2456,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addInput", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 return null;
             }
         }
@@ -2469,7 +2499,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addInput", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 return null;
             }
 
@@ -2498,13 +2528,13 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addInput", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 return null;
             }
         }
 
 
-        public XmlElement addBind(string sId, string sXpath, string sRequired = "false()", string sType = "string", [Optional, DefaultParameterValue(null)] ref XmlElement oBindParent, string sConstraint = "")
+        public XmlElement addBind(string sId, string sXpath, [Optional, DefaultParameterValue("false()")] string sRequired, [Optional, DefaultParameterValue("string")] string sType, [Optional] ref XmlElement oBindParent, string sConstraint = "")
         {
 
             XmlElement oBindElmt;
@@ -2537,7 +2567,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addBind", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addBind", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 return null;
             }
 
@@ -2577,7 +2607,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addSecret", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addSecret", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 return null;
             }
 
@@ -2626,7 +2656,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addTextArea", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addTextArea", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 return null;
             }
 
@@ -2658,7 +2688,7 @@ namespace Protean
                 }
                 if (Information.IsDate(oStart))
                 {
-                    oIptElmt.SetAttribute("start", Tools.Xml.XmlDate(oStart));
+                    oIptElmt.SetAttribute("start", XmlDate(oStart));
                 }
                 else
                 {
@@ -2666,7 +2696,7 @@ namespace Protean
                 }
                 if (Information.IsDate(oEnd))
                 {
-                    oIptElmt.SetAttribute("end", Tools.Xml.XmlDate(oEnd));
+                    oIptElmt.SetAttribute("end", XmlDate(oEnd));
                 }
                 else
                 {
@@ -2690,7 +2720,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addRange", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addRange", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 return null;
             }
 
@@ -2739,7 +2769,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addUpload", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addUpload", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 return null;
             }
 
@@ -2798,7 +2828,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addSelect", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addSelect", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 return null;
             }
 
@@ -2815,7 +2845,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addSelect1", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addSelect1", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 return null;
             }
         }
@@ -2830,7 +2860,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addSelect1", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addSelect1", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 return null;
             }
         }
@@ -2845,7 +2875,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addSelect1", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addSelect1", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 return null;
             }
         }
@@ -2905,7 +2935,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addSelect1", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addSelect1", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 return null;
             }
 
@@ -2928,7 +2958,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addValue", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addValue", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
             }
         }
 
@@ -2955,7 +2985,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addOption", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addOption", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 return null;
             }
         }
@@ -3001,7 +3031,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addOption", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addOption", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 return null;
 
             }
@@ -3044,7 +3074,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addOptionsFromSqlDataReader", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addOptionsFromSqlDataReader", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
             }
         }
 
@@ -3087,7 +3117,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addOptionsFromRecordSet", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addOptionsFromRecordSet", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
             }
         }
 
@@ -3126,7 +3156,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addOptionsFromRecordSet", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addOptionsFromRecordSet", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
             }
         }
 
@@ -3158,7 +3188,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addOptionsFromRecordSet", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addOptionsFromRecordSet", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
             }
         }
 
@@ -3212,7 +3242,7 @@ namespace Protean
             catch (Exception ex)
             {
                 cProcessInfo = sRef + " - " + ((int)nTypes).ToString() + " - " + sMessage;
-                returnException(ref msException, mcModuleName, "addNote - by ref", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addNote - by ref", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
             }
         }
 
@@ -3244,7 +3274,7 @@ namespace Protean
                         }
                 }
 
-                Tools.Xml.SetInnerXmlThenInnerText(ref oNoteElmt, sMessage);
+                SetInnerXmlThenInnerText(ref oNoteElmt, sMessage);
 
                 if (!string.IsNullOrEmpty(sClass))
                 {
@@ -3268,7 +3298,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addNote - by node", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addNote - by node", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
             }
         }
 
@@ -3298,7 +3328,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addDiv", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addDiv", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 return null;
             }
 
@@ -3343,7 +3373,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addSubmit", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "addSubmit", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 return null;
             }
 
@@ -3447,7 +3477,7 @@ namespace Protean
                                 {
                                     try
                                     {
-                                        sResponse = Tools.Xml.encodeAllHTML(sResponse);
+                                        sResponse = encodeAllHTML(sResponse);
                                         XmlNode argoNode1 = moXformElmt;
                                         addNote(ref argoNode1, noteTypes.Alert, sResponse);
                                         moXformElmt = (XmlElement)argoNode1;
@@ -3475,7 +3505,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "submit", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "submit", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
             }
 
             return default;
@@ -3485,13 +3515,12 @@ namespace Protean
         // Steps through all of the submit buttons to see if they have been pressed
         public virtual bool isSubmitted()
         {
-            bool isSubmittedRet = default;
             XmlElement oElmt;
 
             string cProcessInfo = "";
             try
             {
-                isSubmittedRet = false;
+                bool bSubmitted = false;
                 if (moXformElmt is null)
                 {
                     cProcessInfo = "xFormElement not set";
@@ -3504,35 +3533,36 @@ namespace Protean
                         oElmt = (XmlElement)oNode;
                         if (!string.IsNullOrEmpty(oElmt.GetAttribute("submission")) & !string.IsNullOrEmpty(goRequest.Form[oElmt.GetAttribute("submission")]))
                         {
-                            isSubmittedRet = true;
+                            bSubmitted = true;
                             SubmittedRef = oElmt.GetAttribute("submission");
                         }
                         else if (!string.IsNullOrEmpty(goRequest[oElmt.GetAttribute("ref")]))
                         {
-                            isSubmittedRet = true;
+                            bSubmitted = true;
                             SubmittedRef = oElmt.GetAttribute("ref");
                         }
                         else if (!string.IsNullOrEmpty(goRequest[oElmt.GetAttribute("bind")]) & (goRequest[oElmt.GetAttribute("bind")] ?? "") != (goRequest["ewCmd"] ?? ""))
                         {
-                            isSubmittedRet = true;
+                            bSubmitted = true;
                             SubmittedRef = oElmt.GetAttribute("bind");
                         }
                         else if (!string.IsNullOrEmpty(goRequest["ewSubmitClone_" + oElmt.GetAttribute("ref")]))
                         {
-                            isSubmittedRet = true;
+                            bSubmitted = true;
                             SubmittedRef = oElmt.GetAttribute("ref");
                         }
                     }
                 }
-            }
 
+                return bSubmitted;
+            }
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "getSubmitted", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "getSubmitted", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
             }
 
-            return isSubmittedRet;
+            return default;
 
         }
 
@@ -3568,7 +3598,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "getSubmitted", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "getSubmitted", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
             }
 
             return isDeletedRet;
@@ -3605,7 +3635,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "isSubmitted", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "isSubmitted", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 return null;
             }
 
@@ -3684,7 +3714,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "getNewRef", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "getNewRef", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 return null;
             }
         }
@@ -3722,7 +3752,7 @@ namespace Protean
 
                             cXpathOptions = getBindXpath(ref bindNode);
                             var argoNode = oInstance.SelectSingleNode("*[1]");
-                            var nsMgr = Tools.Xml.getNsMgrRecursive(ref argoNode, ref moPageXML);
+                            var nsMgr = getNsMgrRecursive(ref argoNode, ref moPageXML);
                             cXpathOptions = Protean.xmlTools.addNsToXpath(cXpathOptions, ref nsMgr);
 
                             XmlElement nodeToDelete = (XmlElement)oInstance.SelectSingleNode(cXpathOptions + "[position()=" + (nNodeIndex + 1) + "]", nsMgr);
@@ -3740,7 +3770,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "checkForDeleteCommand", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "checkForDeleteCommand", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
             }
 
             return default;
@@ -3776,7 +3806,6 @@ namespace Protean
                         isInserted = false;
                         if (!string.IsNullOrEmpty(oRptElmt.GetAttribute("bind")))
                         {
-
                             // get the bind elements
                             foreach (XmlElement oBindNode in model.SelectNodes("descendant-or-self::bind[not(ancestor::instance) and @id='" + oRptElmt.GetAttribute("bind") + "']"))
                             {
@@ -3794,6 +3823,15 @@ namespace Protean
                                     XmlElement oInitialNode = (XmlElement)oInitialInstance.SelectSingleNode(sBindXpath + "[position() = 1]", nsMgr);
                                     XmlElement oFirstNode = (XmlElement)oInstance.SelectSingleNode(sBindXpath + "[position() = 1]", nsMgr);
                                     XmlElement oNewNode = (XmlElement)oInitialNode.CloneNode(true);
+                                    // strip values from new node
+                                    foreach (XmlNode oEachNode in oNewNode.SelectNodes("descendant-or-self::*"))
+                                    {
+                                        if (oEachNode.SelectNodes("*").Count == 0)
+                                        {
+                                            oEachNode.InnerText = "";
+                                        }
+                                    }
+
                                     oFirstNode.ParentNode.InsertAfter(oNewNode, oInstance.SelectSingleNode(sBindXpath + "[last()]", nsMgr));
                                     isTriggered = true;
                                     isInserted = true;
@@ -3959,7 +3997,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "processRepeats", ex, "", bDebug: gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "processRepeats", ex, "", bDebug: Protean.stdTools.gbDebug);
             }
         }
 
@@ -3995,7 +4033,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "processFormParameters", ex, "", processInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "processFormParameters", ex, "", processInfo, Protean.stdTools.gbDebug);
             }
         }
 

@@ -14,7 +14,6 @@ using static System.Web.HttpUtility;
 using System.Xml;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using static Protean.stdTools;
 
 namespace Protean
 {
@@ -32,7 +31,7 @@ namespace Protean
         protected override void OnComponentError(object sender, Tools.Errors.ErrorEventArgs e)
         {
             // deals with the error
-            returnException(ref msException, e.ModuleName, e.ProcedureName, e.Exception, mcEwSiteXsl, e.AddtionalInformation, gbDebug);
+            Protean.stdTools.returnException(ref msException, e.ModuleName, e.ProcedureName, e.Exception, mcEwSiteXsl, e.AddtionalInformation, Protean.stdTools.gbDebug);
             // close connection poolinguseralerts
             if (this.moDbHelper is not null)
             {
@@ -617,7 +616,7 @@ namespace Protean
             {
                 bResult = false;
                 AddResponse(ex.ToString());
-                returnException(ref msException, mcModuleName, "GetPendingContent", ex, bDebug: gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "GetPendingContent", ex, bDebug: Protean.stdTools.gbDebug);
             }
             finally
             {
@@ -703,7 +702,7 @@ namespace Protean
                     this.mcPagePath = this.moRequest["path"] + "";
                     this.mcPagePath = this.mcPagePath.Replace("//", "/");
 
-                    JSStart.InitialiseJSEngine();
+                    Protean.JSStart.InitialiseJSEngine();
 
                     // Get the User ID
                     // if we access base via soap the session is not available
@@ -1018,18 +1017,18 @@ namespace Protean
                     {
                         case "on":
                             {
-                                gbDebug = true;
+                                Protean.stdTools.gbDebug = true;
                                 break;
                             }
                         case "off":
                             {
-                                gbDebug = false;
+                                Protean.stdTools.gbDebug = false;
                                 break;
                             }
 
                         default:
                             {
-                                gbDebug = false;
+                                Protean.stdTools.gbDebug = false;
                                 break;
                             }
                     }
@@ -1046,7 +1045,7 @@ namespace Protean
                 if (!string.IsNullOrEmpty(this.moRequest["perfmon"]) | bSessionLogging)
                 {
                     if (this.PerfMon is null)
-                        this.PerfMon = new PerfLog(this.moConfig["DatabaseName"]);
+                        this.PerfMon = new Protean.PerfLog(this.moConfig["DatabaseName"]);
                     if (this.moSession is not null)
                     {
                         // only bother if we are not doing a scheduler thingie
@@ -1857,16 +1856,16 @@ namespace Protean
                                             {
                                                 oTransform.TimeOut = Conversions.ToLong(this.moConfig["XslTimeout"]);
                                             }
-                                            oTransform.mbDebug = gbDebug;
+                                            oTransform.mbDebug = Protean.stdTools.gbDebug;
 
                                             if (bPageCache)
                                             {
 
-                                                var textWriter = new StringWriterWithEncoding(System.Text.Encoding.UTF8);
+                                                var textWriter = new Protean.stdTools.StringWriterWithEncoding(System.Text.Encoding.UTF8);
                                                 this.PerfMon.Log("Web", "GetPageHTML-startxsl");
-                                                TextWriter argoWriter = textWriter;
+                                                TextWriter argoWriter = (TextWriter)textWriter;
                                                 oTransform.ProcessTimed(moPageXml, ref argoWriter);
-                                                textWriter = (StringWriterWithEncoding)argoWriter;
+                                                textWriter = (Protean.stdTools.StringWriterWithEncoding)argoWriter;
                                                 this.PerfMon.Log("Web", "GetPageHTML-endxsl");
 
                                                 // save the page
@@ -1911,7 +1910,7 @@ namespace Protean
                                                 this.PerfMon.Log("Web", "ReturnPageHTML - loaded Style");
                                                 var argaWeb2 = this;
                                                 oTransform = new Protean.XmlHelper.Transform(ref argaWeb2, styleFile2, false);
-                                                oTransform.mbDebug = gbDebug;
+                                                oTransform.mbDebug = Protean.stdTools.gbDebug;
 
                                                 msException = "";
                                                 icPageWriter = new StringWriter();
@@ -2805,7 +2804,7 @@ namespace Protean
                         var argaWeb = this;
                         var oTransform = new Protean.XmlHelper.Transform(ref argaWeb, styleFile, gbCompiledTransform, 120000L);
                         this.PerfMon.Log("Web", "GetFeedXML-startxsl");
-                        oTransform.mbDebug = gbDebug;
+                        oTransform.mbDebug = Protean.stdTools.gbDebug;
                         oTransform.ProcessTimed(moPageXml, ref this.moResponse);
                         this.PerfMon.Log("Web", "GetFeedXML-endxsl");
                         oTransform.Close();
@@ -3162,7 +3161,7 @@ namespace Protean
                     var oTransform = new Protean.XmlHelper.Transform(ref argaWeb1, styleFile, gbCompiledTransform);
 
                     this.PerfMon.Log("Web", "GetPageHTML-startxsl");
-                    oTransform.mbDebug = gbDebug;
+                    oTransform.mbDebug = Protean.stdTools.gbDebug;
                     oTransform.ProcessTimed(moPageXml, ref this.moResponse);
                     this.PerfMon.Log("Web", "GetPageHTML-endxsl");
                     oTransform.Close();
@@ -3618,7 +3617,7 @@ namespace Protean
 
                 msException = "";
 
-                moTransform.mbDebug = gbDebug;
+                moTransform.mbDebug = Protean.stdTools.gbDebug;
                 icPageWriter = new StringWriter();
                 TextWriter argoWriter = icPageWriter;
                 moTransform.ProcessTimed(moPageXml, ref argoWriter);
@@ -3640,7 +3639,7 @@ namespace Protean
             catch (Exception ex)
             {
 
-                returnException(ref msException, mcModuleName, "returnPageHtml", ex, gcEwSiteXsl, sProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "returnPageHtml", ex, gcEwSiteXsl, sProcessInfo, Protean.stdTools.gbDebug);
                 if (bReturnBlankError)
                 {
                     return "";
@@ -3822,7 +3821,7 @@ namespace Protean
             bool bUseIPAddress = false;
 
             bool bCanVote = true;
-            var nVoteBlockReason = PollBlockReason.None;
+            var nVoteBlockReason = Protean.stdTools.PollBlockReason.None;
             string cCookieName = "";
             string cLastVotedSql = "";
 
@@ -3841,7 +3840,7 @@ namespace Protean
 
                     // Reset variables - this is why I would like this to be a class instead.
                     bCanVote = true;
-                    nVoteBlockReason = PollBlockReason.None;
+                    nVoteBlockReason = Protean.stdTools.PollBlockReason.None;
                     cValidationError = "";
                     cCookieName = "";
                     cLastVotedSql = "";
@@ -3879,7 +3878,7 @@ namespace Protean
                         if (openDate > DateTime.Now | closeDate < DateTime.Now)
                         {
                             bCanVote = false;
-                            nVoteBlockReason = PollBlockReason.PollNotAvailable;
+                            nVoteBlockReason = Protean.stdTools.PollBlockReason.PollNotAvailable;
                         }
 
 
@@ -3947,7 +3946,7 @@ namespace Protean
                         if (bUseUserId & !(this.mnUserId > 0))
                         {
                             bCanVote = false;
-                            nVoteBlockReason = PollBlockReason.RegisteredUsersOnly;
+                            nVoteBlockReason = Protean.stdTools.PollBlockReason.RegisteredUsersOnly;
                         }
 
                         if (bCanVote)
@@ -3970,7 +3969,7 @@ namespace Protean
                                 if (bUseCookies && this.moRequest.Cookies[cCookieName] is not null)
                                 {
                                     bCanVote = false;
-                                    nVoteBlockReason = PollBlockReason.CookieFound;
+                                    nVoteBlockReason = Protean.stdTools.PollBlockReason.CookieFound;
                                 }
 
                                 // If no cookie formulate the sql for the other restrictions.
@@ -4023,7 +4022,7 @@ namespace Protean
                                     {
                                         // Block has been found
                                         bCanVote = false;
-                                        nVoteBlockReason = PollBlockReason.Excluded;
+                                        nVoteBlockReason = Protean.stdTools.PollBlockReason.Excluded;
                                     }
                                     else
                                     {
@@ -4040,7 +4039,7 @@ namespace Protean
                                             {
                                                 // Block the vote
                                                 bCanVote = false;
-                                                nVoteBlockReason = PollBlockReason.LogFound;
+                                                nVoteBlockReason = Protean.stdTools.PollBlockReason.LogFound;
                                             }
                                         }
 
@@ -4086,7 +4085,7 @@ namespace Protean
 
 
                                 bCanVote = false;
-                                nVoteBlockReason = PollBlockReason.JustVoted;
+                                nVoteBlockReason = Protean.stdTools.PollBlockReason.JustVoted;
                             }
                             else if (bUseEmail & string.IsNullOrEmpty(sEmail))
                             {
@@ -4105,7 +4104,7 @@ namespace Protean
                         oCStatusNode.SetAttribute("canVote", Conversions.ToString(Interaction.IIf(bCanVote, "true", "false")));
                         if (bHasVoted)
                             oCStatusNode.SetAttribute("justVoted", "true");
-                        if (nVoteBlockReason != PollBlockReason.None)
+                        if (nVoteBlockReason != Protean.stdTools.PollBlockReason.None)
                             oCStatusNode.SetAttribute("blockReason", nVoteBlockReason.ToString());
                         if (!string.IsNullOrEmpty(cValidationError))
                             oCStatusNode.SetAttribute("validationError", cValidationError);
@@ -4480,7 +4479,7 @@ namespace Protean
                     {
                         // Invoke the integration method.
                         object[] constructorArguments = new object[] { this, Convert.ToInt64(directoryId) };
-                        Invoke.InvokeObjectMethod("Protean.Integration.Directory." + integrationCommand, constructorArguments, null, this, "OnComponentError", "OnError");
+                        Protean.Invoke.InvokeObjectMethod("Protean.Integration.Directory." + integrationCommand, constructorArguments, (object[])null, this, "OnComponentError", "OnError");
                     }
 
                 }
@@ -4621,7 +4620,7 @@ namespace Protean
         }
 
 
-        public void GetPageContentFromStoredProcedure(string SpName, Hashtable parameters = null, [Optional, DefaultParameterValue(0)] ref int nCount)
+        public void GetPageContentFromStoredProcedure(string SpName, [Optional] Hashtable parameters, [Optional, DefaultParameterValue(0)] ref int nCount)
         {
 
             this.PerfMon.Log("Web", "GetPageContentFromStoredProcedure");
@@ -4710,7 +4709,7 @@ namespace Protean
     /// <param name="pageNumber"></param>
     /// <param name="distinct"></param>
     /// <param name="cShowSpecificContentTypes"></param>
-        public void GetPageContentFromSelect(string sWhereSql, bool bPrimaryOnly = false, [Optional, DefaultParameterValue(0)] ref int nCount, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", [Optional, DefaultParameterValue(null)] ref XmlElement oContentsNode, string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false, string cShowSpecificContentTypes = "", bool ignoreActiveAndDate = false, long nStartPos = 0L, long nItemCount = 0L, [Optional, DefaultParameterValue(null)] ref XmlElement oPageDetail, bool bShowContentDetails = true)
+        public void GetPageContentFromSelect(string sWhereSql, [Optional, DefaultParameterValue(false)] bool bPrimaryOnly, [Optional, DefaultParameterValue(0)] ref int nCount, [Optional, DefaultParameterValue(false)] bool bIgnorePermissionsCheck, [Optional, DefaultParameterValue(0)] int nReturnRows, [Optional, DefaultParameterValue("type, cl.nDisplayOrder")] string cOrderBy, [Optional] ref XmlElement oContentsNode, [Optional, DefaultParameterValue("")] string cAdditionalJoins, [Optional, DefaultParameterValue(false)] bool bContentDetail, [Optional, DefaultParameterValue(0L)] long pageNumber, [Optional, DefaultParameterValue(false)] bool distinct, [Optional, DefaultParameterValue("")] string cShowSpecificContentTypes, [Optional, DefaultParameterValue(false)] bool ignoreActiveAndDate, [Optional, DefaultParameterValue(0L)] long nStartPos, [Optional, DefaultParameterValue(0L)] long nItemCount, [Optional] ref XmlElement oPageDetail, bool bShowContentDetails = true)
         {
             this.PerfMon.Log("Web", "GetPageContentFromSelect");
             XmlElement oRoot;
@@ -4973,7 +4972,7 @@ namespace Protean
 
 
 
-        public void GetPageContentFromSelectFilterPagination(string sWhereSql, bool bPrimaryOnly = false, [Optional, DefaultParameterValue(0)] ref int nCount, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", [Optional, DefaultParameterValue(null)] ref XmlElement oContentsNode, string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false, string cShowSpecificContentTypes = "", bool ignoreActiveAndDate = false, long nStartPos = 0L, long nItemCount = 0L, [Optional, DefaultParameterValue(null)] ref XmlElement oPageDetail, bool bShowContentDetails = true)
+        public void GetPageContentFromSelectFilterPagination(string sWhereSql, [Optional, DefaultParameterValue(false)] bool bPrimaryOnly, [Optional, DefaultParameterValue(0)] ref int nCount, [Optional, DefaultParameterValue(false)] bool bIgnorePermissionsCheck, [Optional, DefaultParameterValue(0)] int nReturnRows, [Optional, DefaultParameterValue("type, cl.nDisplayOrder")] string cOrderBy, [Optional] ref XmlElement oContentsNode, [Optional, DefaultParameterValue("")] string cAdditionalJoins, [Optional, DefaultParameterValue(false)] bool bContentDetail, [Optional, DefaultParameterValue(0L)] long pageNumber, [Optional, DefaultParameterValue(false)] bool distinct, [Optional, DefaultParameterValue("")] string cShowSpecificContentTypes, [Optional, DefaultParameterValue(false)] bool ignoreActiveAndDate, [Optional, DefaultParameterValue(0L)] long nStartPos, [Optional, DefaultParameterValue(0L)] long nItemCount, [Optional] ref XmlElement oPageDetail, bool bShowContentDetails = true)
         {
             this.PerfMon.Log("Web", "GetPageContentFromSelect");
             XmlElement oRoot;
@@ -5164,7 +5163,7 @@ namespace Protean
             }
         }
 
-        public void GetMenuContentFromSelect(string sWhereSql, bool bPrimaryOnly = false, [Optional, DefaultParameterValue(0)] ref int nCount, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", [Optional, DefaultParameterValue(null)] ref XmlElement oContentsNode, string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false)
+        public void GetMenuContentFromSelect(string sWhereSql, [Optional, DefaultParameterValue(false)] bool bPrimaryOnly, [Optional, DefaultParameterValue(0)] ref int nCount, [Optional, DefaultParameterValue(false)] bool bIgnorePermissionsCheck, [Optional, DefaultParameterValue(0)] int nReturnRows, [Optional, DefaultParameterValue("type, cl.nDisplayOrder")] string cOrderBy, [Optional] ref XmlElement oContentsNode, string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false)
         {
             this.PerfMon.Log("Web", "GetPageContentFromSelect");
             XmlElement oRoot;
@@ -5693,7 +5692,7 @@ namespace Protean
 
                             // Try to find the product
                             long nArtId = Conversions.ToLong(this.moRequest["artid"]);
-                            string cSql = Conversions.ToString(Operators.ConcatenateObject("SELECT cContentName FROM tblContent WHERE nContentKey = ", SqlFmt(nArtId.ToString())));
+                            string cSql = Conversions.ToString(Operators.ConcatenateObject("SELECT cContentName FROM tblContent WHERE nContentKey = ", Protean.stdTools.SqlFmt(nArtId.ToString())));
                             string cName = Conversions.ToString(this.moDbHelper.GetDataValue(cSql, 1, null, ""));
 
 
@@ -5747,7 +5746,7 @@ namespace Protean
                                         break;
                                     }
                             }
-                            stdTools.HTTPRedirect(ref this.moCtx, cPath, ref nResponseCode);
+                            Protean.stdTools.HTTPRedirect(ref this.moCtx, cPath, ref nResponseCode);
                         }
 
                         else
@@ -6495,7 +6494,7 @@ namespace Protean
                         {
 
 
-                            string cacheSearchCriteria = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" WHERE nCacheDirId = ", SqlFmt(nUserId.ToString())), " AND cCacheType='"), cCacheType), "'"));
+                            string cacheSearchCriteria = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" WHERE nCacheDirId = ", Protean.stdTools.SqlFmt(nUserId.ToString())), " AND cCacheType='"), cCacheType), "'"));
                             if (bAuth)
                             {
                                 cacheSearchCriteria += " AND cCacheSessionID = '" + this.moSession.SessionID + "' AND DATEDIFF(hh,dCacheDate,GETDATE()) > 12";
@@ -6566,7 +6565,7 @@ namespace Protean
                         bIncludeExpiredAndHidden = true;
                     }
 
-                    sSql = "EXEC getContentStructure_v2 @userId=" + nUserId + ", @bAdminMode=" + Conversions.ToInteger(this.mbAdminMode) + ", @dateNow=" + sqlDate(mdDate) + ", @authUsersGrp = " + nAuthUsers + ", @bReturnDenied=1";
+                    sSql = "EXEC getContentStructure_v2 @userId=" + nUserId + ", @bAdminMode=" + Conversions.ToInteger(this.mbAdminMode) + ", @dateNow=" + Protean.stdTools.sqlDate((object)mdDate) + ", @authUsersGrp = " + nAuthUsers + ", @bReturnDenied=1";
 
                     sProcessInfo = "GetStructureXML-getContentStrcuture";
                     this.PerfMon.Log("Web", sProcessInfo);
@@ -6587,7 +6586,7 @@ namespace Protean
                         }
                         else
                         {
-                            sSql = "EXEC getUserPageVersions @userId=" + nUserId + ", @dateNow=" + sqlDate(mdDate) + ", @authUsersGrp = " + nAuthUsers + ", @bReturnDenied=0, @bShowAll=0";
+                            sSql = "EXEC getUserPageVersions @userId=" + nUserId + ", @dateNow=" + Protean.stdTools.sqlDate((object)mdDate) + ", @authUsersGrp = " + nAuthUsers + ", @bReturnDenied=0, @bShowAll=0";
                         }
 
                         sProcessInfo = "GetStructureXML-getPageVersions";
@@ -8622,7 +8621,7 @@ namespace Protean
                         }
                 }
 
-                if (gbDebug)
+                if (Protean.stdTools.gbDebug)
                 {
                     try
                     {
@@ -8764,7 +8763,7 @@ namespace Protean
             }
         }
 
-        public void GetContentXMLByTypeAndOffset(ref XmlElement oPageElmt, string cContentType, long nStartPos, long nItemCount, string sqlFilter = "", string fullSQL = "", [Optional, DefaultParameterValue(null)] ref XmlElement oPageDetail, bool bShowContentDetails = true, [Optional, DefaultParameterValue(null)] ref XmlElement oContentModule)
+        public void GetContentXMLByTypeAndOffset(ref XmlElement oPageElmt, string cContentType, long nStartPos, long nItemCount, [Optional, DefaultParameterValue("")] string sqlFilter, [Optional, DefaultParameterValue("")] string fullSQL, [Optional] ref XmlElement oPageDetail, [Optional, DefaultParameterValue(true)] bool bShowContentDetails, [Optional] ref XmlElement oContentModule)
         {
             this.PerfMon.Log("Web", "GetContentXMLByTypeAndOffset");
             // <add key="ControlPanelTypes" value="Event,Document|Top_10|DESC_Publish"/>
@@ -9935,7 +9934,7 @@ namespace Protean
 
                 msException = "";
 
-                moTransform.mbDebug = gbDebug;
+                moTransform.mbDebug = Protean.stdTools.gbDebug;
                 icPageWriter = new StringWriter();
                 TextWriter argoWriter = icPageWriter;
                 moTransform.ProcessTimed(moPageXml, ref argoWriter);
@@ -10710,7 +10709,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "ProcessContentForLanguage", ex, "", "", gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "ProcessContentForLanguage", ex, "", "", Protean.stdTools.gbDebug);
             }
         }
 
@@ -10779,7 +10778,7 @@ namespace Protean
     /// <param name="responseText">Optional the text that goes inside the Response node</param>
     /// <param name="overwriteDuplicates">Optional if True this will overwrite any Response node with the same Name</param>
     /// <remarks>If the Responses node has not been created then it will be.</remarks>
-        public void AddResponse(string responseName, string responseText = "", bool overwriteDuplicates = true, ResponseType typeAttribute = ResponseType.Undefined)
+        public void AddResponse(string responseName, string responseText = "", bool overwriteDuplicates = true, Protean.stdTools.ResponseType typeAttribute = Protean.stdTools.ResponseType.Undefined)
         {
             try
             {
@@ -10794,7 +10793,7 @@ namespace Protean
                 response.SetAttribute("name", responseName);
                 response.InnerText = responseText;
 
-                if (typeAttribute != ResponseType.Undefined)
+                if (typeAttribute != Protean.stdTools.ResponseType.Undefined)
                 {
                     response.SetAttribute("type", typeAttribute.ToString());
                 }
@@ -11098,7 +11097,7 @@ namespace Protean
             {
                 // if saving of a page fails we are not that bothered.
                 // cExError &= "<Error>" & filepath & filename & ex.Message & "</Error>" & vbCrLf
-                AddExceptionToEventLog(ex, cProcessInfo);
+                Protean.stdTools.AddExceptionToEventLog(ex, cProcessInfo);
                 // returnException(msException, mcModuleName, "SavePage", ex, "", cProcessInfo, gbDebug)
                 // bIsError = True
                 // PerfMon.Log("Web", "SavePage - error")
@@ -11116,7 +11115,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "ClearPageCache", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "ClearPageCache", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
             }
         }
         /// <summary>
@@ -11201,7 +11200,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "ClearPageCache", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "ClearPageCache", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
             }
         }
 

@@ -19,7 +19,6 @@ Imports System.Web
 Imports DelegateWrappers
 Imports System.Net
 Imports System.Threading
-Imports Protean.stdTools
 
 Partial Public Class fsHelper
 

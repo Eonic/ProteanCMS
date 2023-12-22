@@ -4236,10 +4236,7 @@ namespace Protean
                     string assemblyType = ocNode.GetAttribute("assemblyType");
                     string providerName = ocNode.GetAttribute("providerName");
                     string providerType = ocNode.GetAttribute("providerType");
-                    if(providerName == "Pure360")
-                    {
-                        providerName = "";
-                    }
+                
                     if (providerType == "")
                     { 
                         providerType = "messaging"; 

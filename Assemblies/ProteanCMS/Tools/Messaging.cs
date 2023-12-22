@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Data;
-using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Mail;
@@ -12,8 +11,6 @@ using System.Xml;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using PreMailer.Net;
-using static Protean.stdTools;
-using static Protean.Tools.Xml;
 
 namespace Protean
 {
@@ -102,9 +99,9 @@ namespace Protean
 
             catch (Exception ex)
             {
-                if (gbDebug)
+                if (Protean.stdTools.gbDebug)
                 {
-                    returnException(ref msException, mcModuleName, "addAttachment", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref msException, mcModuleName, "addAttachment", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
         }
@@ -125,9 +122,9 @@ namespace Protean
 
             catch (Exception ex)
             {
-                if (gbDebug)
+                if (Protean.stdTools.gbDebug)
                 {
-                    returnException(ref msException, mcModuleName, "addAttachment", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref msException, mcModuleName, "addAttachment", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
         }
@@ -167,9 +164,9 @@ namespace Protean
 
             catch (Exception ex)
             {
-                if (gbDebug)
+                if (Protean.stdTools.gbDebug)
                 {
-                    returnException(ref msException, mcModuleName, "addAttachment", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref msException, mcModuleName, "addAttachment", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
         }
@@ -189,9 +186,9 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                if (gbDebug)
+                if (Protean.stdTools.gbDebug)
                 {
-                    returnException(ref msException, mcModuleName, "addAttachment", ex, "", "", gbDebug);
+                    Protean.stdTools.returnException(ref msException, mcModuleName, "addAttachment", ex, "", "", Protean.stdTools.gbDebug);
                 }
             }
         }
@@ -222,7 +219,7 @@ namespace Protean
 
                 string dbConn = "Data Source=" + goConfig["DatabaseServer"] + "; " + "Initial Catalog=" + goConfig["DatabaseName"] + "; " + dbAuth;
 
-                var moDbhelper = new Cms.dbHelper(dbConn, 1);
+                var moDbhelper = new Protean.Cms.dbHelper(dbConn, 1L);
                 moDbhelper.moPageXml = RootElmt.OwnerDocument;
                 var AttachmentsElmt = RootElmt.OwnerDocument.CreateElement("Attachments");
                 RootElmt.ParentNode.AppendChild(AttachmentsElmt);
@@ -236,7 +233,7 @@ namespace Protean
 
                         var AttachmentElmt = RootElmt.OwnerDocument.CreateElement("Attachment");
                         AttachmentsElmt.AppendChild(AttachmentElmt);
-                        AttachmentElmt.AppendChild(moDbhelper.GetContentDetailXml(dsRow["nContentKey"]));
+                        AttachmentElmt.AppendChild(moDbhelper.GetContentDetailXml(Conversions.ToLong(dsRow["nContentKey"])));
                         AttachmentElmt.SetAttribute("file", strFilePath);
 
                         try
@@ -260,9 +257,9 @@ namespace Protean
 
             catch (Exception ex)
             {
-                if (gbDebug)
+                if (Protean.stdTools.gbDebug)
                 {
-                    returnException(ref msException, mcModuleName, "addAttachment", ex, "", "", gbDebug);
+                    Protean.stdTools.returnException(ref msException, mcModuleName, "addAttachment", ex, "", "", Protean.stdTools.gbDebug);
                 }
             }
         }
@@ -281,9 +278,9 @@ namespace Protean
 
             catch (Exception ex)
             {
-                if (gbDebug)
+                if (Protean.stdTools.gbDebug)
                 {
-                    returnException(ref msException, mcModuleName, "addAttachment", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref msException, mcModuleName, "addAttachment", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
         }
@@ -301,7 +298,7 @@ namespace Protean
                         Attachments.Clear();
                     }
 
-                    Global.Protean.fsHelper fsh = new fsHelper();
+                    var fsh = new Protean.fsHelper();
                     fsh.DeleteFile(goServer.MapPath("/") + fileLocation);
 
                 }
@@ -309,9 +306,9 @@ namespace Protean
 
             catch (Exception ex)
             {
-                if (gbDebug)
+                if (Protean.stdTools.gbDebug)
                 {
-                    returnException(ref msException, mcModuleName, "addAttachment", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref msException, mcModuleName, "addAttachment", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
         }
@@ -330,7 +327,7 @@ namespace Protean
                         Attachments.Clear();
                     }
 
-                    Global.Protean.fsHelper fsh = new fsHelper();
+                    var fsh = new Protean.fsHelper();
                     fsh.DeleteFile(fileLocation);
 
                 }
@@ -338,9 +335,9 @@ namespace Protean
 
             catch (Exception ex)
             {
-                if (gbDebug)
+                if (Protean.stdTools.gbDebug)
                 {
-                    returnException(ref msException, mcModuleName, "deleteAttachmentPDF", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref msException, mcModuleName, "deleteAttachmentPDF", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
         }
@@ -364,8 +361,8 @@ namespace Protean
 
                     if (!string.IsNullOrEmpty(sMessagingProvider))
                     {
-                        var myWeb = new Cms(moCtx);
-                        var oMessaging = new Providers.Messaging.BaseProvider(myWeb, sMessagingProvider);
+                        var myWeb = new Protean.Cms(moCtx);
+                        var oMessaging = new Protean.Providers.Messaging.BaseProvider(ref myWeb, sMessagingProvider);
 
                         if (valDict is null)
                             valDict = new System.Collections.Generic.Dictionary<string, string>();
@@ -383,12 +380,12 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "purchaseActions", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "purchaseActions", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
             }
 
         }
 
-        public object emailer(XmlElement oBodyXML, string xsltPath, string fromName, string fromEmail, string recipientEmail, string SubjectLine, string successMessage = "Message Sent", string failureMessage = "Message Failed", string recipientName = "", string ccRecipient = "", string bccRecipient = "", string cSeperator = "", [Optional, DefaultParameterValue(default)] ref Global.Protean.Cms.dbHelper odbHelper, string cPickupHost = "", string cPickupLocation = "")
+        public object emailer(XmlElement oBodyXML, string xsltPath, string fromName, string fromEmail, string recipientEmail, string SubjectLine, [Optional, DefaultParameterValue("Message Sent")] string successMessage, [Optional, DefaultParameterValue("Message Failed")] string failureMessage, [Optional, DefaultParameterValue("")] string recipientName, [Optional, DefaultParameterValue("")] string ccRecipient, [Optional, DefaultParameterValue("")] string bccRecipient, [Optional, DefaultParameterValue("")] string cSeperator, [Optional] ref Protean.Cms.dbHelper odbHelper, string cPickupHost = "", string cPickupLocation = "")
         {
             // PerfMon.Log("Messaging", "emailer")
             if (cSeperator is null)
@@ -501,7 +498,7 @@ namespace Protean
                 }
 
                 // lets get the subjectline form the html title
-                var oEmailXmlDoc = htmlToXmlDoc(messageHtml);
+                var oEmailXmlDoc = Protean.xmlTools.htmlToXmlDoc(messageHtml);
                 if (oEmailXmlDoc is not null)
                 {
                     // override the subject line from the template.
@@ -873,9 +870,9 @@ namespace Protean
                                 {
                                     if (string.IsNullOrEmpty(goConfig["MailServer2"]))
                                     {
-                                        if (gbDebug)
+                                        if (Protean.stdTools.gbDebug)
                                         {
-                                            returnException(ref msException, mcModuleName, "emailer", ex, "", cProcessInfo, gbDebug);
+                                            Protean.stdTools.returnException(ref msException, mcModuleName, "emailer", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                                             return "ex: " + ex.ToString();
                                         }
                                         else
@@ -892,9 +889,9 @@ namespace Protean
                                         }
                                         catch (Exception ex3)
                                         {
-                                            if (gbDebug)
+                                            if (Protean.stdTools.gbDebug)
                                             {
-                                                returnException(ref msException, mcModuleName, "emailer", ex3, "", cProcessInfo, gbDebug);
+                                                Protean.stdTools.returnException(ref msException, mcModuleName, "emailer", ex3, "", cProcessInfo, Protean.stdTools.gbDebug);
                                                 return "ex3: " + ex3.ToString();
                                             }
                                             else
@@ -928,9 +925,9 @@ namespace Protean
                             }
                             catch (Exception ex2)
                             {
-                                if (gbDebug)
+                                if (Protean.stdTools.gbDebug)
                                 {
-                                    returnException(ref msException, mcModuleName, "emailer", ex2, "", cProcessInfo, gbDebug);
+                                    Protean.stdTools.returnException(ref msException, mcModuleName, "emailer", ex2, "", cProcessInfo, Protean.stdTools.gbDebug);
                                     return "ex2: " + ex2.ToString();
                                 }
                                 else
@@ -980,7 +977,7 @@ namespace Protean
                                 {
                                     cCon += goConfig["DatabaseAuth"] + "; ";
                                 }
-                                odbHelper = new Cms.dbHelper(cCon, mnUserId);
+                                odbHelper = new Protean.Cms.dbHelper(cCon, (long)mnUserId);
                             }
 
                             string SessionId = null;
@@ -1000,14 +997,14 @@ namespace Protean
                                 {
                                     activitySchema = oBodyXML.GetAttribute("id");
                                 }
-                                long logId = odbHelper.emailActivity(mnUserId, cActivityDetail, oMailn.To.ToString(), oMailn.From.ToString(), oXml.OuterXml);
-                                odbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Email, mnUserId, SessionId, DateTime.Now, logId, 0, activitySchema);
+                                long logId = odbHelper.emailActivity((short)mnUserId, cActivityDetail, oMailn.To.ToString(), oMailn.From.ToString(), oXml.OuterXml);
+                                odbHelper.CommitLogToDB(Protean.Cms.dbHelper.ActivityType.Email, mnUserId, SessionId, DateTime.Now, (int)logId, 0, activitySchema);
                             }
 
                             else
                             {
-                                odbHelper.emailActivity(mnUserId, cActivityDetail, oMailn.To.ToString(), oMailn.From.ToString());
-                                odbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Email, mnUserId, SessionId, DateTime.Now, 0, 0, "");
+                                odbHelper.emailActivity((short)mnUserId, cActivityDetail, oMailn.To.ToString(), oMailn.From.ToString());
+                                odbHelper.CommitLogToDB(Protean.Cms.dbHelper.ActivityType.Email, mnUserId, SessionId, DateTime.Now, 0, 0, "");
                             }
                         }
 
@@ -1021,7 +1018,7 @@ namespace Protean
                     if (nTotalAddressesSkipped > 0)
                     {
                         successMessage += " (" + nTotalAddressesSkipped + " out of " + nTotalAddressesAttempted + " e-mails were not sent, because the e-mail addresses were invalid. ";
-                        if (gbDebug)
+                        if (Protean.stdTools.gbDebug)
                             successMessage += "Skipped: " + cAddressesSkipped.TrimStart(',');
                         successMessage += ")";
                     }
@@ -1034,14 +1031,14 @@ namespace Protean
                     if (oXml.SelectSingleNode("descendant-or-self::optIn[node()='true']") is not null)
                     {
 
-                        Global.Protean.Providers.Messaging.BaseProvider moMessaging;
+                        Protean.Providers.Messaging.BaseProvider moMessaging;
                         System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
                         string sMessagingProvider = "";
                         if (moMailConfig is not null)
                         {
                             sMessagingProvider = moMailConfig["MessagingProvider"];
-                            var myWeb = new Cms(moCtx);
-                            moMessaging = new Providers.Messaging.BaseProvider(myWeb, sMessagingProvider);
+                            var myWeb = new Protean.Cms(moCtx);
+                            moMessaging = new Protean.Providers.Messaging.BaseProvider(ref myWeb, sMessagingProvider);
                             try
                             {
 
@@ -1073,9 +1070,9 @@ namespace Protean
 
             catch (Exception ex)
             {
-                if (gbDebug)
+                if (Protean.stdTools.gbDebug)
                 {
-                    returnException(ref msException, mcModuleName, "emailer", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref msException, mcModuleName, "emailer", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                     return ex.ToString();
                 }
                 else
@@ -1098,7 +1095,7 @@ namespace Protean
             }
             if (e.Error is not null)
             {
-                returnException(ref msException, "messaging", "SendCompletedCallback", e.Error, "", "[{0}] Send Error.", gbDebug);
+                Protean.stdTools.returnException(ref msException, "messaging", "SendCompletedCallback", e.Error, "", "[{0}] Send Error.", Protean.stdTools.gbDebug);
             }
             // Console.WriteLine("[{0}] {1}", token, e.Error.ToString())
             else
@@ -1196,7 +1193,7 @@ namespace Protean
                         cProcessInfo = "IDs Detected, Initialising DBHelper";
 
                         // Get a Database Helper
-                        Global.Protean.Cms.dbHelper odbHelper = default;
+                        Protean.Cms.dbHelper odbHelper = (Protean.Cms.dbHelper)null;
                         int mnUserId = 0;
 
                         if (goSession is not null)
@@ -1212,7 +1209,7 @@ namespace Protean
                             {
                                 cCon += goConfig["DatabaseAuth"] + "; ";
                             }
-                            odbHelper = new Cms.dbHelper(cCon, mnUserId);
+                            odbHelper = new Protean.Cms.dbHelper(cCon, (long)mnUserId);
                             cProcessInfo = "DBHelper Started";
                         }
 
@@ -1230,7 +1227,7 @@ namespace Protean
 
                             cSQL = "SELECT * FROM tblDirectory INNER JOIN tblContentStructure ON tblDirectory.cDirName = tblContentStructure.cStructForiegnRef WHERE tblContentStructure.cStructName = 'Student_" + cRecipientId + "'";
 
-                            using (SqlDataReader oDr = odbHelper.getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
+                            using (var oDr = odbHelper.getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
                             {
 
                                 while (oDr.Read())
@@ -1252,7 +1249,7 @@ namespace Protean
                             if (!string.IsNullOrEmpty(cRecipientEmail))
                             {
                                 cProcessInfo = "Sending Email for #" + iCounter.ToString();
-                                cEmailResult = emailer(oBodyXML, xsltPath, fromName, fromEmail, cRecipientEmail, SubjectLine, recipientName: cRecipientName, cPickupHost: cPickupHost, cPickupLocation: cPickupLocation).ToString;
+                                cEmailResult = this.emailer(oBodyXML, xsltPath, fromName, fromEmail, cRecipientEmail, SubjectLine, recipientName: cRecipientName, cPickupHost: cPickupHost, cPickupLocation: cPickupLocation).ToString();
                             }
                             else
                             {
@@ -1280,7 +1277,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "emailerMultiUsers", ex, "", cProcessInfo);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "emailerMultiUsers", ex, "", cProcessInfo);
                 return ex.ToString();
             }
 
@@ -1291,7 +1288,7 @@ namespace Protean
             return cResult;
 
         }
-        public object emailerWithXmlAttachment(XmlElement oBodyXML, string xsltPath, string fromName, string fromEmail, string recipientEmail, string SubjectLine, string XSLPath, string XSLType, string emailAttachName, string successMessage = "Message Sent", string failureMessage = "Message Failed", string recipientName = "", string ccRecipient = "", string bccRecipient = "", string cSeperator = "", [Optional, DefaultParameterValue(default)] ref Global.Protean.Cms.dbHelper odbHelper, string cPickupHost = "", string cPickupLocation = "")
+        public object emailerWithXmlAttachment(XmlElement oBodyXML, string xsltPath, string fromName, string fromEmail, string recipientEmail, string SubjectLine, string XSLPath, string XSLType, string emailAttachName, [Optional, DefaultParameterValue("Message Sent")] string successMessage, [Optional, DefaultParameterValue("Message Failed")] string failureMessage, [Optional, DefaultParameterValue("")] string recipientName, [Optional, DefaultParameterValue("")] string ccRecipient, [Optional, DefaultParameterValue("")] string bccRecipient, [Optional, DefaultParameterValue("")] string cSeperator, [Optional] ref Protean.Cms.dbHelper odbHelper, string cPickupHost = "", string cPickupLocation = "")
         {
 
             // PerfMon.Log("Messaging", "emailerWithXmlAttachment")
@@ -1359,7 +1356,7 @@ namespace Protean
                                 sWriter.Close();
                                 sWriter = null;
 
-                                oXml = htmlToXmlDoc(sMessage);
+                                oXml = Protean.xmlTools.htmlToXmlDoc(sMessage);
                             }
 
                             var oXmlRemoveHeader = oXml.FirstChild;
@@ -1382,12 +1379,12 @@ namespace Protean
                             }
                             Attachments.Add(oAtt);
                             // PerfMon.Log("Messaging", "emailerWithXmlAttachment - Delete Xml File")
-                            Global.Protean.fsHelper fsh = new fsHelper();
+                            var fsh = new Protean.fsHelper();
                             fsh.DeleteFile(cXmlPath);
                         }
 
                         // PerfMon.Log("Messaging", "emailerWithXmlAttachment - Call Emailer")
-                        cResults = emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, successMessage, failureMessage, recipientName, ccRecipient, bccRecipient, cSeperator, ref odbHelper, cPickupHost, cPickupLocation).ToString;
+                        cResults = emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, successMessage, failureMessage, recipientName, ccRecipient, bccRecipient, cSeperator, ref odbHelper, cPickupHost, cPickupLocation).ToString();
                     }
                 }
                 else
@@ -1401,7 +1398,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "emailerWithXmlAttachment", ex, "", cProcessInfo);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "emailerWithXmlAttachment", ex, "", cProcessInfo);
                 return "Error: " + ex.ToString();
             }
 
@@ -1451,7 +1448,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "PostToHTMLForm", ex, "", cProcessInfo);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "PostToHTMLForm", ex, "", cProcessInfo);
                 return "Error: " + ex.ToString();
             }
         }
@@ -1476,7 +1473,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "SendQueuedMail", ex, "", "", gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "SendQueuedMail", ex, "", "", Protean.stdTools.gbDebug);
                 return "Error";
             }
         }
@@ -1494,7 +1491,7 @@ namespace Protean
                 // max number of bcc
 
 
-                var oWeb = new Cms();
+                var oWeb = new Protean.Cms();
                 oWeb.InitializeVariables();
                 oWeb.Open();
                 oWeb.mnPageId = nPageId;
@@ -1502,8 +1499,8 @@ namespace Protean
 
                 oWeb.mcEwSiteXsl = cEmailXSL;
                 // get body
-                oWeb.mnMailMenuId = moMailConfig["RootPageId"];
-                string oEmailBody = oWeb.ReturnPageHTML(oWeb.mnPageId);
+                oWeb.mnMailMenuId = Conversions.ToLong(moMailConfig["RootPageId"]);
+                string oEmailBody = oWeb.ReturnPageHTML((long)oWeb.mnPageId);
 
                 var i2 = default(int);
 
@@ -1564,7 +1561,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "SendMailToList_Queued", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "SendMailToList_Queued", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 return false;
             }
         }
@@ -1606,7 +1603,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "SendSingleMail_Queued", ex, "", "", gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "SendSingleMail_Queued", ex, "", "", Protean.stdTools.gbDebug);
                 return false;
             }
         }
@@ -1690,7 +1687,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "SendSingleMail_Queued", ex, "", "", gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "SendSingleMail_Queued", ex, "", "", Protean.stdTools.gbDebug);
                 return false;
             }
         }
@@ -1726,7 +1723,7 @@ namespace Protean
             {
                 System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
 
-                var oWeb = new Cms();
+                var oWeb = new Protean.Cms();
                 oWeb.InitializeVariables();
                 oWeb.Open();
                 oWeb.mnPageId = nPageId;
@@ -1734,17 +1731,17 @@ namespace Protean
 
                 oWeb.mcEwSiteXsl = cEmailXSL;
                 // get body
-                oWeb.mnMailMenuId = moMailConfig["RootPageId"];
+                oWeb.mnMailMenuId = Conversions.ToLong(moMailConfig["RootPageId"]);
                 string sEmailBody;
                 var emailStructure = new Hashtable();
 
 
-                sEmailBody = oWeb.ReturnPageHTML(oWeb.mnPageId);
+                sEmailBody = oWeb.ReturnPageHTML((long)oWeb.mnPageId);
                 emailStructure.Add("EmailBody", sEmailBody);
                 // Lets get the title and override the one provided
                 var oXml = new XmlDocument();
 
-                oXml = htmlToXmlDoc(sEmailBody);
+                oXml = Protean.xmlTools.htmlToXmlDoc(sEmailBody);
 
                 if (oXml is not null)
                 {
@@ -1780,10 +1777,10 @@ namespace Protean
             {
                 // dictionary object
                 var oDic = new UserEmailDictionary();
-                var oDBH = new Cms.dbHelper("Data Source=" + goConfig["DatabaseServer"] + "; " + "Initial Catalog=" + goConfig["DatabaseName"] + "; " + goConfig["DatabaseAuth"], 1);
+                var oDBH = new Protean.Cms.dbHelper("Data Source=" + goConfig["DatabaseServer"] + "; " + "Initial Catalog=" + goConfig["DatabaseName"] + "; " + goConfig["DatabaseAuth"], 1L);
                 string cSQL = "SELECT nDirKey, cDirXml" + " FROM tblDirectory" + " WHERE (((SELECT TOP 1 tblDirectoryRelation.nDirChildId" + " FROM tblDirectoryRelation INNER JOIN" + " tblDirectory Groups ON tblDirectoryRelation.nDirParentId = Groups.nDirKey" + " WHERE (Groups.nDirKey IN (" + groupIds + ")) AND (tblDirectoryRelation.nDirChildId = tblDirectory.nDirKey)" + " GROUP BY tblDirectoryRelation.nDirChildId)) IS NOT NULL)";
 
-                DataSet oDS = oDBH.GetDataSet(cSQL, "Users", "Addresses");
+                var oDS = oDBH.GetDataSet(cSQL, "Users", "Addresses");
                 // set the table ready to be xml
                 if (oDS.Tables["Users"].Rows.Count > 0)
                 {
@@ -1792,7 +1789,7 @@ namespace Protean
                 }
                 // get the opt out addresses
                 cSQL = "SELECT EmailAddress FROM tblOptOutAddresses";
-                oDBH.addTableToDataSet(oDS, cSQL, "OptOut");
+                oDBH.addTableToDataSet(ref oDS, cSQL, "OptOut");
                 // set the table ready to be xml
                 if (oDS.Tables["OptOut"].Rows.Count > 0)
                 {
@@ -1831,7 +1828,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "emailer", ex, "GetGroupEmails", "", gbDebug);
+                Protean.stdTools.returnException(ref msException, mcModuleName, "emailer", ex, "GetGroupEmails", "", Protean.stdTools.gbDebug);
                 return null;
             }
 

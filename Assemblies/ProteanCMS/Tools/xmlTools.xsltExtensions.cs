@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Drawing;
 using System.Globalization;
 using static System.Globalization.CultureInfo;
@@ -23,7 +22,6 @@ using BundleTransformer.Core.Transformers;
 using Imazen.WebP;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using static Protean.stdTools;
 using static Protean.Tools.Xml;
 
 namespace Protean
@@ -36,7 +34,7 @@ namespace Protean
 
             #region Declarations
 
-            private Cms myWeb;
+            private Protean.Cms myWeb;
             // For saving object, dont want to keep chewing processing power during a transform
             public Hashtable oSaveHash;
 
@@ -61,7 +59,7 @@ namespace Protean
             #endregion
 
             #region Initialisation/Private
-            public xsltExtensions(ref Cms aWeb)
+            public xsltExtensions(ref Protean.Cms aWeb)
             {
                 myWeb = aWeb;
             }
@@ -119,7 +117,7 @@ namespace Protean
             public XmlElement GetContentInstance(string cXformName, string cModuleType)
             {
 
-                var oXfrm = new xForm(myWeb.msException);
+                var oXfrm = new Protean.xForm(ref myWeb.msException);
 
                 if (!string.IsNullOrEmpty(cModuleType))
                     cXformName = cXformName + "/" + cModuleType;
@@ -128,7 +126,7 @@ namespace Protean
                 commonfolders.Add("");
                 commonfolders.Add("/ewcommon");
 
-                oXfrm.load("/xforms/content/" + cXformName + ".xml", commonfolders.ToArray(typeof(string)));
+                oXfrm.load("/xforms/content/" + cXformName + ".xml", (string[])commonfolders.ToArray(typeof(string)));
 
                 return oXfrm.Instance;
 
@@ -706,7 +704,7 @@ namespace Protean
                             }
                         case "Week":
                             {
-                                nEndPrice = (double)RoundUp(dFinish.Subtract(DateTime.Now).TotalDays / 7d, 0, 0) * Conversions.ToDouble(nPrice);
+                                nEndPrice = (double)Protean.stdTools.RoundUp((object)(dFinish.Subtract(DateTime.Now).TotalDays / 7d), 0, 0) * Conversions.ToDouble(nPrice);
                                 break;
                             }
                         case "Month":
@@ -867,7 +865,7 @@ namespace Protean
                     cHtmlOut = Strings.Replace(cHtmlOut, "&#x0;", "");
                     cHtmlOut = Strings.Replace(cHtmlOut, " &#0;", "");
 
-                    cHtmlOut = convertEntitiesToCodes(cHtmlOut);
+                    cHtmlOut = xmlTools.convertEntitiesToCodes(cHtmlOut);
 
                     if (string.IsNullOrEmpty(cHtmlOut) | string.IsNullOrEmpty(cHtmlOut) | (cHtmlOut ?? "") == Constants.vbCrLf)
                     {
@@ -902,7 +900,14 @@ namespace Protean
                 }
             }
 
+            // ' For Legacy sites
             public string EonicConfigValue(string SectionName, string ValueName)
+            {
+                return PtnConfigValue(SectionName, ValueName);
+            }
+
+
+            public string PtnConfigValue(string SectionName, string ValueName)
             {
                 try
                 {
@@ -953,7 +958,7 @@ namespace Protean
                 {
                     if (myWeb is not null)
                     {
-                        return myWeb.moRequest.ServerVariables(ValueName);
+                        return myWeb.moRequest.ServerVariables[ValueName];
                     }
                     else
                     {
@@ -972,7 +977,7 @@ namespace Protean
                 {
                     if (myWeb is not null)
                     {
-                        return myWeb.moSession(ValueName);
+                        return Conversions.ToString(myWeb.moSession[ValueName]);
                     }
                     else
                     {
@@ -1036,7 +1041,7 @@ namespace Protean
 
                         cSql += " ORDER BY s.cStructName ";
 
-                        using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(cSql))  // Done by nita on 6/7/22
+                        using (var oDr = myWeb.moDbHelper.getDataReaderDisposable(cSql))  // Done by nita on 6/7/22
                         {
 
                             while (oDr.Read())
@@ -1062,7 +1067,7 @@ namespace Protean
 
                 string[] ids;
 
-                ids = myWeb.moDbHelper.getObjectsByRef(Cms.dbHelper.objectTypes.Directory, fRef);
+                ids = myWeb.moDbHelper.getObjectsByRef(Protean.Cms.dbHelper.objectTypes.Directory, fRef);
 
                 if (ids is not null)
                 {
@@ -1080,7 +1085,7 @@ namespace Protean
 
                 string[] ids;
 
-                ids = myWeb.moDbHelper.getObjectsByRef(Cms.dbHelper.objectTypes.ContentStructure, fRef);
+                ids = myWeb.moDbHelper.getObjectsByRef(Protean.Cms.dbHelper.objectTypes.ContentStructure, fRef);
 
                 if (ids is not null)
                 {
@@ -1098,7 +1103,7 @@ namespace Protean
 
                 long ids;
                 myWeb.moDbHelper.ResetConnection(myWeb.moDbHelper.DatabaseConnectionString);
-                ids = myWeb.moDbHelper.getObjectByRef(Cms.dbHelper.objectTypes.Content, fRef);
+                ids = myWeb.moDbHelper.getObjectByRef(Protean.Cms.dbHelper.objectTypes.Content, fRef);
 
                 if (!(ids == 0L))
                 {
@@ -1116,7 +1121,7 @@ namespace Protean
 
                 long ids;
                 myWeb.moDbHelper.ResetConnection(myWeb.moDbHelper.DatabaseConnectionString);
-                ids = myWeb.moDbHelper.getObjectByRef(Cms.dbHelper.objectTypes.CartProductCategories, fRef);
+                ids = myWeb.moDbHelper.getObjectByRef(Protean.Cms.dbHelper.objectTypes.CartProductCategories, fRef);
                 if (!(ids == 0L))
                 {
                     return ids.ToString();
@@ -1133,7 +1138,7 @@ namespace Protean
 
                 string ids;
                 myWeb.moDbHelper.ResetConnection(myWeb.moDbHelper.DatabaseConnectionString);
-                ids = myWeb.moDbHelper.insertProductGroupRelation(ProductId, ProductGroupId.ToString());
+                ids = myWeb.moDbHelper.insertProductGroupRelation((int)ProductId, ProductGroupId.ToString());
                 return ids;
 
             }
@@ -1142,7 +1147,7 @@ namespace Protean
             public string GetPageFref(int nPageId)
             {
 
-                return myWeb.moDbHelper.getFRefFromPageId(nPageId);
+                return myWeb.moDbHelper.getFRefFromPageId((long)nPageId);
 
             }
 
@@ -1150,7 +1155,7 @@ namespace Protean
             public XmlElement GetUserXML(int nId)
             {
 
-                return myWeb.moDbHelper.GetUserXML(nId);
+                return myWeb.moDbHelper.GetUserXML((long)nId);
 
             }
 
@@ -1171,7 +1176,7 @@ namespace Protean
             {
                 try
                 {
-                    string cVP = goServer.MapPath(cVirtualPath);
+                    string cVP = Protean.stdTools.goServer.MapPath(cVirtualPath);
                     if (File.Exists(cVP))
                     {
                         return 1;
@@ -1191,8 +1196,8 @@ namespace Protean
             {
                 try
                 {
-                    string cOP = goServer.MapPath(cOriginalPath);
-                    string cCNP = goServer.MapPath(cCheckNewerPath);
+                    string cOP = Protean.stdTools.goServer.MapPath(cOriginalPath);
+                    string cCNP = Protean.stdTools.goServer.MapPath(cCheckNewerPath);
                     var cOPwritetime = File.GetLastWriteTime(cOP);
                     var cCNPwritetime = File.GetLastWriteTime(cCNP);
                     if (cOPwritetime > cCNPwritetime)
@@ -1215,11 +1220,11 @@ namespace Protean
 
                 try
                 {
-                    var oFS = new fsHelper(myWeb.moCtx);
+                    var oFS = new Protean.fsHelper(myWeb.moCtx);
 
                     // Get the file system parent folder of the first level folder incase it is mapped in IIS
                     string FirstFolder = cVirtualPath.TrimStart('/').Substring(0, cVirtualPath.TrimStart('/').IndexOf("/"));
-                    string imgPath = goServer.MapPath("/" + FirstFolder + "/");
+                    string imgPath = Protean.stdTools.goServer.MapPath("/" + FirstFolder + "/");
                     var newDir = new DirectoryInfo(imgPath);
                     oFS.mcStartFolder = newDir.Parent.FullName;
 
@@ -1247,10 +1252,10 @@ namespace Protean
                 try
                 {
                     // Encrypt password.
-                    sPassword = Tools.Encryption.HashString(sPassword, LCase(myWeb.moConfig("MembershipEncryption")), true); // plain - md5 - sha1
-                                                                                                                             // RJP removed the following two lines as they appear to be doing nothing  the encrypted string.
-                                                                                                                             // sPassword = Protean.Tools.Xml.EncodeForXml(sPassword)
-                                                                                                                             // sPassword = Protean.Tools.Xml.convertEntitiesToCodes(sPassword)
+                    sPassword = Tools.Encryption.HashString(sPassword, Strings.LCase(myWeb.moConfig["MembershipEncryption"]), true); // plain - md5 - sha1
+                                                                                                                                     // RJP removed the following two lines as they appear to be doing nothing  the encrypted string.
+                                                                                                                                     // sPassword = Protean.Tools.Xml.EncodeForXml(sPassword)
+                                                                                                                                     // sPassword = Protean.Tools.Xml.convertEntitiesToCodes(sPassword)
                     return sPassword;
                 }
 
@@ -1284,7 +1289,7 @@ namespace Protean
                 {
                     if (VirtualFileExists(cVirtualPath) > 0)
                     {
-                        var oURI = new Uri(goServer.MapPath(cVirtualPath));
+                        var oURI = new Uri(Protean.stdTools.goServer.MapPath(cVirtualPath));
                         BitmapSource imageFromFile = BitmapFrame.Create(oURI);
                         int nWidth = imageFromFile.PixelWidth;
                         int nHeight = imageFromFile.PixelHeight;
@@ -1310,7 +1315,7 @@ namespace Protean
                 {
                     if (VirtualFileExists(cVirtualPath) > 0)
                     {
-                        BitmapSource imageFromFile = BitmapFrame.Create(new Uri(goServer.MapPath(cVirtualPath)));
+                        BitmapSource imageFromFile = BitmapFrame.Create(new Uri(Protean.stdTools.goServer.MapPath(cVirtualPath)));
                         int nWidth = imageFromFile.PixelWidth;
                         imageFromFile = null;
                         return nWidth.ToString();
@@ -1333,7 +1338,7 @@ namespace Protean
                 {
                     if (VirtualFileExists(cVirtualPath) > 0)
                     {
-                        BitmapSource imageFromFile = BitmapFrame.Create(new Uri(goServer.MapPath(cVirtualPath)));
+                        BitmapSource imageFromFile = BitmapFrame.Create(new Uri(Protean.stdTools.goServer.MapPath(cVirtualPath)));
                         int nWidth = imageFromFile.PixelHeight;
                         imageFromFile = null;
                         return nWidth.ToString();
@@ -1494,7 +1499,7 @@ namespace Protean
                         {
                             try
                             {
-                                if (myWeb.moRequest("imgRefresh") != "")
+                                if (!string.IsNullOrEmpty(myWeb.moRequest["imgRefresh"]))
                                 {
                                     forceCheck = true;
                                 }
@@ -1565,38 +1570,38 @@ namespace Protean
                                 case "pdf":
                                     {
 
-                                        var ihelp = new ImageHelper("");
+                                        var ihelp = new Protean.ImageHelper("");
 
                                         System.Threading.ThreadPool.SetMaxThreads(10, 10);
                                         var doneEvents = new System.Threading.ManualResetEvent[2];
 
-                                        var newThumbnail = new ImageHelper.PDFThumbNail();
+                                        var newThumbnail = new Protean.ImageHelper.PDFThumbNail();
                                         newThumbnail.FilePath = cVirtualPath;
                                         newThumbnail.newImageFilepath = newFilepath;
-                                        newThumbnail.goServer = goServer;
+                                        newThumbnail.goServer = Protean.stdTools.goServer;
                                         newThumbnail.maxWidth = (short)maxWidth;
 
                                         System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback((_) => ihelp.GeneratePDFThumbNail()), newThumbnail);
-                                        newThumbnail = null;
+                                        newThumbnail = (Protean.ImageHelper.PDFThumbNail)null;
                                         ihelp.Close();
-                                        ihelp = null;
+                                        ihelp = (Protean.ImageHelper)null;
                                         break;
                                     }
 
                                 default:
                                     {
                                         string cCheckServerPath = newFilepath.Substring(0, newFilepath.LastIndexOf("/") + 1);
-                                        cCheckServerPath = goServer.MapPath(cCheckServerPath);
+                                        cCheckServerPath = Protean.stdTools.goServer.MapPath(cCheckServerPath);
                                         // load the orignal image and resize
-                                        var oImage = new Tools.Image(goServer.MapPath(cVirtualPath));
+                                        var oImage = new Tools.Image(Protean.stdTools.goServer.MapPath(cVirtualPath));
                                         oImage.KeepXYRelation = true;
                                         oImage.NoStretch = noStretch;
                                         oImage.IsCrop = isCrop;
                                         oImage.SetMaxSize((int)maxWidth, (int)maxHeight);
 
-                                        oImage.Save(goServer.MapPath(newFilepath), nCompression, cCheckServerPath);
+                                        oImage.Save(Protean.stdTools.goServer.MapPath(newFilepath), nCompression, cCheckServerPath);
 
-                                        var imgFile = new FileInfo(goServer.MapPath(newFilepath));
+                                        var imgFile = new FileInfo(Protean.stdTools.goServer.MapPath(newFilepath));
                                         var ptnImg = new Tools.Image("");
                                         ptnImg.TinifyKey = moConfig["TinifyKey"];
                                         ptnImg.CompressImage(imgFile, false);
@@ -1629,9 +1634,9 @@ namespace Protean
                 catch (Exception ex)
                 {
                     // PerfMon.Log("xmlTools", "ResizeImage - End")
-                    if (LCase(myWeb.moConfig("Debug")) == "on")
+                    if (Strings.LCase(myWeb.moConfig["Debug"]) == "on")
                     {
-                        stdTools.reportException(ref myWeb.msException, "xmlTools.xsltExtensions", "ResizeImage2", ex, vstrFurtherInfo: cProcessInfo);
+                        Protean.stdTools.reportException(ref myWeb.msException, "xmlTools.xsltExtensions", "ResizeImage2", ex, vstrFurtherInfo: cProcessInfo);
                         return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" + ex.InnerException.Message + " - " + ex.Message + " - " + ex.StackTrace;
                     }
                     else
@@ -1658,9 +1663,9 @@ namespace Protean
                     {
                         short WebPQuality = 60;
 
-                        if (myWeb.moConfig("WebPQuality") != "")
+                        if (!string.IsNullOrEmpty(myWeb.moConfig["WebPQuality"]))
                         {
-                            WebPQuality = (short)myWeb.moConfig("WebPQuality");
+                            WebPQuality = (short)Conversions.ToInteger(myWeb.moConfig["WebPQuality"]);
                         }
 
                         cVirtualPath = cVirtualPath.Replace("%20", " ");
@@ -1677,9 +1682,9 @@ namespace Protean
                             // create a WEBP version of the image.
                             if (VirtualFileExists(webpFileName) == 0)
                             {
-                                using (var bitMap = new Bitmap(goServer.MapPath(cVirtualPath)))
+                                using (var bitMap = new Bitmap(Protean.stdTools.goServer.MapPath(cVirtualPath)))
                                 {
-                                    using (var saveImageStream = File.Open(goServer.MapPath(webpFileName), FileMode.Create))
+                                    using (var saveImageStream = File.Open(Protean.stdTools.goServer.MapPath(webpFileName), FileMode.Create))
                                     {
                                         var encoder = new SimpleEncoder();
                                         encoder.Encode(bitMap, saveImageStream, WebPQuality);
@@ -1695,7 +1700,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    if (LCase(myWeb.moConfig("Debug")) == "on")
+                    if (Strings.LCase(myWeb.moConfig["Debug"]) == "on")
                     {
                         // reportException("xmlTools.xsltExtensions", "ResizeImage2", ex, , cProcessInfo)
                         return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" + ex.Message + " - " + ex.StackTrace;
@@ -1720,7 +1725,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    if (LCase(myWeb.moConfig("Debug")) == "on")
+                    if (Strings.LCase(myWeb.moConfig["Debug"]) == "on")
                     {
                         // reportException("xmlTools.xsltExtensions", "ResizeImage2", ex, , cProcessInfo)
                         return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" + ex.Message + " - " + ex.StackTrace;
@@ -1748,7 +1753,7 @@ namespace Protean
                     {
                         try
                         {
-                            if (myWeb.moRequest("imgRefresh") != "")
+                            if (!string.IsNullOrEmpty(myWeb.moRequest["imgRefresh"]))
                             {
                                 forceCheck = true;
                             }
@@ -1812,30 +1817,30 @@ namespace Protean
                                 case "pdf":
                                     {
 
-                                        var ihelp = new ImageHelper("");
+                                        var ihelp = new Protean.ImageHelper("");
 
                                         System.Threading.ThreadPool.SetMaxThreads(10, 10);
                                         var doneEvents = new System.Threading.ManualResetEvent[2];
 
-                                        var newThumbnail = new ImageHelper.PDFThumbNail();
+                                        var newThumbnail = new Protean.ImageHelper.PDFThumbNail();
                                         newThumbnail.FilePath = cVirtualPath;
                                         newThumbnail.newImageFilepath = newFilepath;
-                                        newThumbnail.goServer = goServer;
+                                        newThumbnail.goServer = Protean.stdTools.goServer;
                                         newThumbnail.maxWidth = (short)maxWidth;
 
                                         System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback((_) => ihelp.GeneratePDFThumbNail()), newThumbnail);
-                                        newThumbnail = null;
+                                        newThumbnail = (Protean.ImageHelper.PDFThumbNail)null;
                                         ihelp.Close();
-                                        ihelp = null;
+                                        ihelp = (Protean.ImageHelper)null;
                                         break;
                                     }
 
                                 default:
                                     {
                                         string cCheckServerPath = newFilepath.Substring(0, newFilepath.LastIndexOf("/") + 1);
-                                        cCheckServerPath = goServer.MapPath(cCheckServerPath);
+                                        cCheckServerPath = Protean.stdTools.goServer.MapPath(cCheckServerPath);
                                         // load the orignal image and resize
-                                        var oImage = new Tools.Image(goServer.MapPath(cVirtualPath));
+                                        var oImage = new Tools.Image(Protean.stdTools.goServer.MapPath(cVirtualPath));
                                         oImage.KeepXYRelation = true;
                                         oImage.NoStretch = noStretch;
                                         oImage.IsCrop = isCrop;
@@ -1843,10 +1848,10 @@ namespace Protean
 
                                         if (!string.IsNullOrEmpty(WatermarkImage))
                                         {
-                                            oImage.AddWatermark(WatermarkText, goServer.MapPath(WatermarkImage));
+                                            oImage.AddWatermark(WatermarkText, Protean.stdTools.goServer.MapPath(WatermarkImage));
                                         }
 
-                                        oImage.Save(goServer.MapPath(newFilepath), nCompression, cCheckServerPath);
+                                        oImage.Save(Protean.stdTools.goServer.MapPath(newFilepath), nCompression, cCheckServerPath);
 
                                         oImage.Close();
                                         oImage = null;
@@ -1878,9 +1883,9 @@ namespace Protean
                 catch (Exception ex)
                 {
                     // PerfMon.Log("xmlTools", "ResizeImage - End")
-                    if (LCase(myWeb.moConfig("Debug")) == "on")
+                    if (Strings.LCase(myWeb.moConfig["Debug"]) == "on")
                     {
-                        stdTools.reportException(ref myWeb.msException, "xmlTools.xsltExtensions", "ResizeImage2", ex, vstrFurtherInfo: cProcessInfo);
+                        Protean.stdTools.reportException(ref myWeb.msException, "xmlTools.xsltExtensions", "ResizeImage2", ex, vstrFurtherInfo: cProcessInfo);
                         return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" + ex.InnerException.Message + " - " + ex.Message + " - " + ex.StackTrace;
                     }
                     else
@@ -1912,7 +1917,7 @@ namespace Protean
                         sSql = "where cContentName='" + cContentName + "'";
                     }
 
-                    targetElmt.InnerXml = myWeb.moDbHelper.getObjectInstance(Cms.dbHelper.objectTypes.Content, default, "where cContentName='" + cContentName + "'");
+                    targetElmt.InnerXml = myWeb.moDbHelper.getObjectInstance(Protean.Cms.dbHelper.objectTypes.Content, sWhere: "where cContentName='" + cContentName + "'");
 
                     queryResult = oDocInstance.DocumentElement.SelectSingleNode(cXpath);
                     if (queryResult is not null)
@@ -1962,7 +1967,7 @@ namespace Protean
                 try
                 {
 
-                    oDocInstance.LoadXml(myWeb.moDbHelper.getObjectInstance(Cms.dbHelper.objectTypes.Content, default, "where cContentForiegnRef='" + fRef + "'"));
+                    oDocInstance.LoadXml(myWeb.moDbHelper.getObjectInstance(Protean.Cms.dbHelper.objectTypes.Content, sWhere: "where cContentForiegnRef='" + fRef + "'"));
                     returnNode = oDocInstance.DocumentElement;
                     return returnNode;
                 }
@@ -1997,7 +2002,7 @@ namespace Protean
                 {
                     if (Conversions.ToLong("0" + nContentId) > 0L)
                     {
-                        return myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.Content, nContentId);
+                        return myWeb.moDbHelper.DeleteObject(Protean.Cms.dbHelper.objectTypes.Content, Conversions.ToLong(nContentId)).ToString();
                     }
                     else
                     {
@@ -2017,7 +2022,7 @@ namespace Protean
                 {
                     if (Conversions.ToLong("0" + nPageId) > 0L)
                     {
-                        return myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.ContentStructure, nPageId);
+                        return myWeb.moDbHelper.DeleteObject(Protean.Cms.dbHelper.objectTypes.ContentStructure, Conversions.ToLong(nPageId)).ToString();
                     }
                     else
                     {
@@ -2067,12 +2072,12 @@ namespace Protean
                     XmlDocument oXformDoc;
                     string buttonName = "";
                     string projectPath = "";
-                    if (myWeb.moConfig("ProjectPath") != string.Empty)
+                    if (!string.IsNullOrEmpty(myWeb.moConfig["ProjectPath"]))
                     {
-                        projectPath = myWeb.moConfig("ProjectPath");
+                        projectPath = myWeb.moConfig["ProjectPath"];
                     }
-                    var oAdminXforms = new Cms.Admin.AdminXforms(myWeb);
-                    oXformDoc = oAdminXforms.GetSiteManifest(myWeb.moConfig("cssFramework"));
+                    var oAdminXforms = new Protean.Cms.Admin.AdminXforms(ref myWeb);
+                    oXformDoc = oAdminXforms.GetSiteManifest(myWeb.moConfig["cssFramework"]);
 
                     var xmlButtons = oXformDoc.CreateElement("buttons");
                     foreach (XmlElement oChoices in oXformDoc.SelectNodes("/PageLayouts/FilterTypes/Filter"))
@@ -2099,7 +2104,7 @@ namespace Protean
             public object GetSelectOptions(string Query)
             {
                 // Dim SelectDoc As New XmlDocument()
-                XmlElement SelectElmt = myWeb.moPageXml.CreateElement("select1");
+                var SelectElmt = myWeb.moPageXml.CreateElement("select1");
                 string Query1 = "";
                 string Query2 = "";
                 string Query3 = "";
@@ -2114,13 +2119,13 @@ namespace Protean
                         Query2 = QueryArr[1];
                     if (Information.UBound(QueryArr) > 1)
                         Query3 = QueryArr[2];
-                    var oXfrms = new Cms.xForm(myWeb.msException);
+                    var oXfrms = new Protean.Cms.xForm(ref myWeb.msException);
                     oXfrms.moPageXML = myWeb.moPageXml;
                     switch (Query1 ?? "")
                     {
                         case "SiteTree":
                             {
-                                XmlElement StructElmt = myWeb.GetStructureXML(myWeb.mnUserId, 0, 0, "Site", false, false, false, true, false, "MenuItem", "Menu");
+                                var StructElmt = myWeb.GetStructureXML((long)myWeb.mnUserId, 0L, 0L, "Site", false, false, false, true, false, "MenuItem", "Menu");
 
                                 foreach (XmlElement MenuElmt in StructElmt.SelectNodes("descendant-or-self::MenuItem"))
                                 {
@@ -2128,7 +2133,7 @@ namespace Protean
                                     string Value = MenuElmt.GetAttribute("id");
                                     foreach (XmlElement ParElmt in MenuElmt.SelectNodes("ancestor::MenuItem"))
                                         Label = "-" + Label;
-                                    oXfrms.addOption(SelectElmt, Label, Value);
+                                    oXfrms.addOption(ref SelectElmt, Label, Value);
                                 }
 
                                 break;
@@ -2138,9 +2143,10 @@ namespace Protean
                                 // Returns all of a specified type in the directory to specify the type use attribute "query2"
 
                                 sql = "select nDirKey as value, cDirName as name from tblDirectory where cDirSchema='" + Query2 + "'";
-                                using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sql))  // Done by nita on 6/7/22
+                                using (var oDr = myWeb.moDbHelper.getDataReaderDisposable(sql))  // Done by nita on 6/7/22
                                 {
-                                    oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr);
+                                    var argoDr = oDr;
+                                    oXfrms.addOptionsFromSqlDataReader(ref SelectElmt, ref argoDr);
                                 }
 
                                 break;
@@ -2151,10 +2157,11 @@ namespace Protean
                                 // Returns all of a specified type in the directory to specify the type use attribute "query2"
 
                                 sql = "select cDirName as value, cDirName as name from tblDirectory where cDirSchema='" + Query2 + "'";
-                                using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sql))  // Done by nita on 6/7/22
+                                using (var oDr = myWeb.moDbHelper.getDataReaderDisposable(sql))  // Done by nita on 6/7/22
                                 {
-                                    oXfrms.addOption(SelectElmt, "All", "all");
-                                    oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr);
+                                    oXfrms.addOption(ref SelectElmt, "All", "all");
+                                    var argoDr1 = oDr;
+                                    oXfrms.addOptionsFromSqlDataReader(ref SelectElmt, ref argoDr1);
                                 }
 
                                 break;
@@ -2165,10 +2172,11 @@ namespace Protean
                                 // Returns all of a specified type in the directory to specify the type use attribute "query2"
 
                                 sql = "select nShipOptKey as value, cShipOptName as name from tblCartShippingMethods";
-                                using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sql))  // Done by nita on 6/7/22
+                                using (var oDr = myWeb.moDbHelper.getDataReaderDisposable(sql))  // Done by nita on 6/7/22
                                 {
-                                    oXfrms.addOption(SelectElmt, "All", "all");
-                                    oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr);
+                                    oXfrms.addOption(ref SelectElmt, "All", "all");
+                                    var argoDr2 = oDr;
+                                    oXfrms.addOptionsFromSqlDataReader(ref SelectElmt, ref argoDr2);
                                 }
 
                                 break;
@@ -2201,9 +2209,10 @@ namespace Protean
                                 queryBuilder.Append("ORDER BY Lastname, FirstName");
 
                                 // Dim oDr As System.Data.SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(queryBuilder.ToString())
-                                using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(queryBuilder.ToString()))  // Done by nita on 6/7/22
+                                using (var oDr = myWeb.moDbHelper.getDataReaderDisposable(queryBuilder.ToString()))  // Done by nita on 6/7/22
                                 {
-                                    oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr);
+                                    var argoDr3 = oDr;
+                                    oXfrms.addOptionsFromSqlDataReader(ref SelectElmt, ref argoDr3);
                                 }
 
                                 break;
@@ -2213,9 +2222,10 @@ namespace Protean
                             {
 
                                 sql = "select nContentKey as value, cContentName as name from tblContent where cContentSchemaName='" + Query2 + "' order by cContentName ASC";
-                                using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sql))  // Done by nita on 6/7/22
+                                using (var oDr = myWeb.moDbHelper.getDataReaderDisposable(sql))  // Done by nita on 6/7/22
                                 {
-                                    oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr);
+                                    var argoDr4 = oDr;
+                                    oXfrms.addOptionsFromSqlDataReader(ref SelectElmt, ref argoDr4);
                                 }
 
                                 break;
@@ -2223,8 +2233,8 @@ namespace Protean
 
                         case "CartStatus":
                             {
-                                foreach (Global.Protean.Cms.Cart.cartProcess process in Enum.GetValues(typeof(Cms.Cart.cartProcess)))
-                                    oXfrms.addOption(SelectElmt, process.ToString, process.ToString("D"));
+                                foreach (Protean.Cms.Cart.cartProcess process in Enum.GetValues(typeof(Protean.Cms.Cart.cartProcess)))
+                                    oXfrms.addOption(ref SelectElmt, process.ToString(), process.ToString("D"));
                                 break;
                             }
 
@@ -2233,13 +2243,13 @@ namespace Protean
 
                                 if (myWeb.goLangConfig is not null)
                                 {
-                                    oXfrms.addOption(SelectElmt, myWeb.goLangConfig.GetAttribute("default"), myWeb.goLangConfig.GetAttribute("code"));
+                                    oXfrms.addOption(ref SelectElmt, myWeb.goLangConfig.GetAttribute("default"), myWeb.goLangConfig.GetAttribute("code"));
                                     foreach (XmlElement langNode in myWeb.goLangConfig.SelectNodes("Language"))
-                                        oXfrms.addOption(SelectElmt, langNode.GetAttribute("systemName"), langNode.GetAttribute("code"));
+                                        oXfrms.addOption(ref SelectElmt, langNode.GetAttribute("systemName"), langNode.GetAttribute("code"));
                                 }
                                 else
                                 {
-                                    oXfrms.addOption(SelectElmt, "English-UK", "en-gb");
+                                    oXfrms.addOption(ref SelectElmt, "English-UK", "en-gb");
                                 }
 
                                 break;
@@ -2247,15 +2257,15 @@ namespace Protean
 
                         case "Countries":
                             {
-                                var oCart = new Cms.Cart(myWeb);
-                                oCart.populateCountriesDropDown(oXfrms, SelectElmt, "");
+                                var oCart = new Protean.Cms.Cart(ref myWeb);
+                                oCart.populateCountriesDropDown(ref oXfrms, ref SelectElmt, "");
                                 break;
                             }
 
                         case "CountriesId":
                             {
-                                var oCart = new Cms.Cart(myWeb);
-                                oCart.populateCountriesDropDown(oXfrms, SelectElmt, "", true);
+                                var oCart = new Protean.Cms.Cart(ref myWeb);
+                                oCart.populateCountriesDropDown(ref oXfrms, ref SelectElmt, "", true);
                                 break;
                             }
                         case "Currency":
@@ -2264,7 +2274,7 @@ namespace Protean
                                 moPaymentCfg = (XmlNode)WebConfigurationManager.GetWebApplicationSection("protean/payment");
                                 foreach (XmlElement oCurrencyElmt in moPaymentCfg.SelectNodes("currencies/Currency"))
                                     // going to need to do something about languages
-                                    oXfrms.addOption(SelectElmt, oCurrencyElmt.SelectSingleNode("name").InnerText, oCurrencyElmt.GetAttribute("ref"));
+                                    oXfrms.addOption(ref SelectElmt, oCurrencyElmt.SelectSingleNode("name").InnerText, oCurrencyElmt.GetAttribute("ref"));
                                 break;
                             }
 
@@ -2276,8 +2286,8 @@ namespace Protean
                                 string classPath = string.Empty;
                                 string methodName = string.Empty;
 
-                                Global.Protean.ProviderSectionHandler moPrvConfig = WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders");
-                                var assemblyInstance = Assembly.Load(moPrvConfig.Providers(ProviderName).Type);
+                                Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders");
+                                var assemblyInstance = Assembly.Load(moPrvConfig.Providers[ProviderName].Type);
                                 calledType = assemblyInstance.GetType(classPath, true);
 
                                 var o = Activator.CreateInstance(calledType);
@@ -2293,11 +2303,13 @@ namespace Protean
                         case "FolderList":
                             {
 
-                                fsHelper.LibraryType library = default;
-                                if (Tools.EnumUtility.TryParse(typeof(fsHelper.LibraryType), Query2, false, ref library))
+                                Protean.fsHelper.LibraryType library = (Protean.fsHelper.LibraryType)default;
+                                bool localTryParse() { object argoutput = library; var ret = Tools.EnumUtility.TryParse(typeof(Protean.fsHelper.LibraryType), Query2, false, ref argoutput); library = (Protean.fsHelper.LibraryType)Conversions.ToInteger(argoutput); return ret; }
+
+                                if (localTryParse())
                                 {
 
-                                    string path = fsHelper.GetFileLibraryPath(library);
+                                    string path = Protean.fsHelper.GetFileLibraryPath(library);
                                     if (!string.IsNullOrEmpty(path))
                                     {
 
@@ -2307,12 +2319,12 @@ namespace Protean
 
                                         if (rootfolder.Exists)
                                         {
-                                            List<string> folderList = fsHelper.EnumerateFolders(rootfolder);
+                                            var folderList = Protean.fsHelper.EnumerateFolders(rootfolder);
                                             string tidypath = "";
                                             foreach (string folderPath in folderList)
                                             {
                                                 tidypath = folderPath.Replace(prefixFolderPath, "").Replace(@"\", "/");
-                                                oXfrms.addOption(SelectElmt, tidypath, tidypath);
+                                                oXfrms.addOption(ref SelectElmt, tidypath, tidypath);
                                             }
                                         }
 
@@ -2339,7 +2351,7 @@ namespace Protean
                                         string cExt = Strings.LCase(fi.Extension);
                                         string tidypath = "/" + Query2.Trim(@"/\".ToCharArray()) + "/" + fi.Name;
 
-                                        oXfrms.addOption(SelectElmt, fi.Name.Replace(fi.Extension, ""), tidypath);
+                                        oXfrms.addOption(ref SelectElmt, fi.Name.Replace(fi.Extension, ""), tidypath);
 
                                     }
 
@@ -2353,9 +2365,10 @@ namespace Protean
                                 // Returns all of a specified type in the directory to specify the type use attribute "query2"
 
                                 sql = "select nCodeKey as value, cCodeName as name from tblCodes where nCodeParentId is NULL";
-                                using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sql))  // Done by nita on 6/7/22
+                                using (var oDr = myWeb.moDbHelper.getDataReaderDisposable(sql))  // Done by nita on 6/7/22
                                 {
-                                    oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr);
+                                    var argoDr5 = oDr;
+                                    oXfrms.addOptionsFromSqlDataReader(ref SelectElmt, ref argoDr5);
                                 }
 
                                 break;
@@ -2380,9 +2393,10 @@ namespace Protean
                                     sql = "select cLkpValue as value, cLkpKey as name from tblLookup where cLkpCategory like '" + Query2 + "' order by nDisplayOrder, nLkpID";
                                 }
 
-                                using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sql))  // Done by nita on 6/7/22
+                                using (var oDr = myWeb.moDbHelper.getDataReaderDisposable(sql))  // Done by nita on 6/7/22
                                 {
-                                    oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr);
+                                    var argoDr6 = oDr;
+                                    oXfrms.addOptionsFromSqlDataReader(ref SelectElmt, ref argoDr6);
                                 }
 
                                 break;
@@ -2390,14 +2404,14 @@ namespace Protean
                         case "availableIcons":
                             {
                                 string iconPath = "/ewcommon/icons/icons.xml";
-                                if (myWeb.bs5)
+                                if (Protean.Cms.bs5)
                                     iconPath = "/ptn/core/icons/icons.xml";
 
-                                if (File.Exists(goServer.MapPath(iconPath)))
+                                if (File.Exists(Protean.stdTools.goServer.MapPath(iconPath)))
                                 {
                                     var newXml = new XmlDocument();
                                     newXml.PreserveWhitespace = true;
-                                    newXml.Load(goServer.MapPath(iconPath));
+                                    newXml.Load(Protean.stdTools.goServer.MapPath(iconPath));
                                     SelectElmt.InnerXml = newXml.DocumentElement.InnerXml;
                                 }
 
@@ -2409,11 +2423,11 @@ namespace Protean
                                 System.Collections.Specialized.NameValueCollection moThemeConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/theme");
                                 string currenttheme = moThemeConfig["CurrentTheme"];
 
-                                if (File.Exists(goServer.MapPath("/ewthemes/" + currenttheme + "/themeManifest.xml")))
+                                if (File.Exists(Protean.stdTools.goServer.MapPath("/ewthemes/" + currenttheme + "/themeManifest.xml")))
                                 {
                                     var newXml = new XmlDocument();
                                     newXml.PreserveWhitespace = true;
-                                    newXml.Load(goServer.MapPath("/ewthemes/" + currenttheme + "/themeManifest.xml"));
+                                    newXml.Load(Protean.stdTools.goServer.MapPath("/ewthemes/" + currenttheme + "/themeManifest.xml"));
                                     foreach (XmlElement oElmt in newXml.SelectNodes("/Theme/Presets/Preset"))
                                     {
                                         var ItemElmt = SelectElmt.OwnerDocument.CreateElement("item");
@@ -2439,9 +2453,10 @@ namespace Protean
                                     sql = sql + " where cCatSchemaName='" + Query2 + "'";
                                 }
                                 sql = sql + " order by cCatName";
-                                using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sql))  // Done by nita on 6/7/22
+                                using (var oDr = myWeb.moDbHelper.getDataReaderDisposable(sql))  // Done by nita on 6/7/22
                                 {
-                                    oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr);
+                                    var argoDr7 = oDr;
+                                    oXfrms.addOptionsFromSqlDataReader(ref SelectElmt, ref argoDr7);
                                 }
 
                                 break;
@@ -2450,9 +2465,10 @@ namespace Protean
                             {
 
                                 string sSql = "SELECT nContentKey as value, cContentName as name  FROM tblContent LEFT OUTER JOIN tblCartCatProductRelations ON tblContent.nContentKey = tblCartCatProductRelations.nContentId WHERE (tblContent.cContentSchemaName = 'Subscription') Order By tblCartCatProductRelations.nDisplayOrder";
-                                using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
+                                using (var oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                                 {
-                                    oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr);
+                                    var argoDr8 = oDr;
+                                    oXfrms.addOptionsFromSqlDataReader(ref SelectElmt, ref argoDr8);
                                 }
 
                                 break;
@@ -2461,9 +2477,10 @@ namespace Protean
                         default:
                             {
                                 sql = Query1;
-                                using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sql))  // Done by nita on 6/7/22
+                                using (var oDr = myWeb.moDbHelper.getDataReaderDisposable(sql))  // Done by nita on 6/7/22
                                 {
-                                    oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr);
+                                    var argoDr9 = oDr;
+                                    oXfrms.addOptionsFromSqlDataReader(ref SelectElmt, ref argoDr9);
                                 }
 
                                 break;
@@ -2471,7 +2488,7 @@ namespace Protean
                     }
 
                     // Return cPosition
-                    oXfrms = default;
+                    oXfrms = (Protean.Cms.xForm)null;
 
                     return SelectElmt;
                 }
@@ -2486,7 +2503,7 @@ namespace Protean
             public object GetSelectOptions(string ProviderName, string classPath, string methodName)
             {
                 // Dim SelectDoc As New XmlDocument()
-                XmlElement SelectElmt = myWeb.moPageXml.CreateElement("select1");
+                var SelectElmt = myWeb.moPageXml.CreateElement("select1");
 
                 try
                 {
@@ -2497,17 +2514,17 @@ namespace Protean
                         methodName = aMethodName[0];
                     }
 
-                    Global.Protean.ProviderSectionHandler moPrvConfig = WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders");
+                    Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders");
                     // Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(ProviderName).Type)
                     // 
                     object ourProvider;
-                    if (moPrvConfig.Providers(ProviderName + "Local") is not null)
+                    if (moPrvConfig.Providers[ProviderName + "Local"] is not null)
                     {
-                        ourProvider = moPrvConfig.Providers(ProviderName + "Local");
+                        ourProvider = moPrvConfig.Providers[ProviderName + "Local"];
                     }
                     else
                     {
-                        ourProvider = moPrvConfig.Providers(ProviderName);
+                        ourProvider = moPrvConfig.Providers[ProviderName];
                     }
 
                     Assembly assemblyInstance;
@@ -2516,7 +2533,7 @@ namespace Protean
                     {
                         if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(ourProvider.parameters("path"), "", false)))
                         {
-                            assemblyInstance = Assembly.LoadFrom(goServer.MapPath(Conversions.ToString(ourProvider.parameters("path"))));
+                            assemblyInstance = Assembly.LoadFrom(Protean.stdTools.goServer.MapPath(Conversions.ToString(ourProvider.parameters("path"))));
                         }
                         else
                         {
@@ -2566,17 +2583,17 @@ namespace Protean
             public object GetPageXml(string PageId, string xPath)
             {
                 // Dim SelectDoc As New XmlDocument()
-                XmlElement SelectElmt = myWeb.moPageXml.CreateElement("select1");
+                var SelectElmt = myWeb.moPageXml.CreateElement("select1");
                 XmlDocument oPageXml;
                 try
                 {
-                    long existingPageId = myWeb.mnPageId;
+                    long existingPageId = (long)myWeb.mnPageId;
 
-                    var newWeb = new Cms(myWeb.moCtx);
+                    var newWeb = new Protean.Cms(myWeb.moCtx);
                     newWeb.InitializeVariables();
                     newWeb.Open();
                     // newWeb.ibIndexMode = True
-                    newWeb.mnPageId = PageId;
+                    newWeb.mnPageId = Conversions.ToInteger(PageId);
                     newWeb.mbIgnorePath = true;
 
                     oPageXml = newWeb.GetPageXML();
@@ -2600,7 +2617,7 @@ namespace Protean
                     }
                     return oNodelist;
 
-                    newWeb = default;
+                    newWeb = (Protean.Cms)null;
                 }
 
                 catch (Exception ex)
@@ -2616,7 +2633,7 @@ namespace Protean
             public object GetContentDetailXml(string ArtId)
             {
                 // Dim SelectDoc As New XmlDocument()
-                XmlElement SelectElmt = myWeb.moPageXml.CreateElement("select1");
+                var SelectElmt = myWeb.moPageXml.CreateElement("select1");
                 var oReturnXml = new XmlDocument();
                 var oReturnElmt = oReturnXml.CreateElement("Page");
                 oReturnXml.AppendChild(oReturnElmt);
@@ -2625,7 +2642,7 @@ namespace Protean
 
                     // myWeb.GetContentDetailXml(Nothing, ArtId, True, False)
 
-                    Tools.Xml.AddExistingNode(oReturnElmt, myWeb.GetContentDetailXml(default, ArtId, true, false));
+                    Tools.Xml.AddExistingNode(ref oReturnElmt, myWeb.GetContentDetailXml((XmlElement)null, Conversions.ToLong(ArtId), true, false));
 
                     return oReturnXml;
                 }
@@ -2643,7 +2660,7 @@ namespace Protean
             public object GetContentBriefXml(string ArtId)
             {
                 // Dim SelectDoc As New XmlDocument()
-                XmlElement SelectElmt = myWeb.moPageXml.CreateElement("select1");
+                var SelectElmt = myWeb.moPageXml.CreateElement("select1");
                 var oReturnXml = new XmlDocument();
                 var oReturnElmt = oReturnXml.CreateElement("Page");
                 oReturnXml.AppendChild(oReturnElmt);
@@ -2652,7 +2669,7 @@ namespace Protean
 
                     // myWeb.GetContentDetailXml(Nothing, ArtId, True, False)
 
-                    Tools.Xml.AddExistingNode(oReturnElmt, myWeb.GetContentBriefXml(default, ArtId));
+                    Tools.Xml.AddExistingNode(ref oReturnElmt, myWeb.GetContentBriefXml((XmlElement)null, Conversions.ToLong(ArtId)));
 
                     return oReturnXml;
                 }
@@ -2707,7 +2724,7 @@ namespace Protean
                     object AppVariableName = Strings.LCase("js" + TargetPath.Replace("~", ""));
 
                     bool bReset = false;
-                    if (myWeb is null | gbDebug)
+                    if (myWeb is null | Protean.stdTools.gbDebug)
                     {
                         // likely to be in error condition
                         sReturnString = CommaSeparatedFilenames.Replace("~", "");
@@ -2715,7 +2732,7 @@ namespace Protean
                     else
                     {
                         // Dim fsh As New Protean.fsHelper(myWeb.moCtx)
-                        if (myWeb.moRequest("rebundle") is not null)
+                        if (myWeb.moRequest["rebundle"] is not null)
                         {
                             // 'code for deleting script.js file from the bundle folders.
 
@@ -2734,11 +2751,11 @@ namespace Protean
                         if (bAppVarExists == false)
                         {
                             // check if the file exists.
-                            if (Conversions.ToBoolean(VirtualFileExists("/" + myWeb.moConfig("ProjectPath") + "js" + TargetPath.Replace("~", "") + "/script.js")))
+                            if (Conversions.ToBoolean(this.VirtualFileExists("/" + myWeb.moConfig["ProjectPath"] + "js" + TargetPath.Replace("~", "") + "/script.js")))
                             {
                                 // regenerate the application variable from the files in the folder
                                 // we do not want to recreate all js everytime the application pool is reset anymore.
-                                myWeb.moCtx.Application.Set(AppVariableName, "/" + myWeb.moConfig("ProjectPath") + "js" + TargetPath.Replace("~", "") + "/script.js");
+                                myWeb.moCtx.Application.Set(Conversions.ToString(AppVariableName), "/" + myWeb.moConfig["ProjectPath"] + "js" + TargetPath.Replace("~", "") + "/script.js");
                                 bAppVarExists = true;
                             }
                         }
@@ -2746,7 +2763,7 @@ namespace Protean
                         if (myWeb.moCtx.Application.Get(AppVariableName) is not null & bReset == false)
                         {
 
-                            sReturnString = myWeb.moCtx.Application.Get(AppVariableName);
+                            sReturnString = Conversions.ToString(myWeb.moCtx.Application.Get(AppVariableName));
                         }
 
                         else
@@ -2787,20 +2804,20 @@ namespace Protean
                                     {
                                         fileNameToSave = fileNameToSave + ".js";
                                     }
-                                    if (!Directory.Exists(goServer.MapPath("~/" + myWeb.moConfig("ProjectPath") + "js/external/")))
+                                    if (!Directory.Exists(Protean.stdTools.goServer.MapPath("~/" + myWeb.moConfig["ProjectPath"] + "js/external/")))
                                     {
-                                        Directory.CreateDirectory(goServer.MapPath("~/" + myWeb.moConfig("ProjectPath") + "js/external/"));
+                                        Directory.CreateDirectory(Protean.stdTools.goServer.MapPath("~/" + myWeb.moConfig["ProjectPath"] + "js/external/"));
                                     }
-                                    if (!File.Exists(goServer.MapPath("~/" + myWeb.moConfig("ProjectPath") + "js/external/") + fileNameToSave))
+                                    if (!File.Exists(Protean.stdTools.goServer.MapPath("~/" + myWeb.moConfig["ProjectPath"] + "js/external/") + fileNameToSave))
                                     {
 
                                         using (var wc = new System.Net.WebClient())
                                         {
                                             System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
-                                            wc.DownloadFile(url, goServer.MapPath("~/" + myWeb.moConfig("ProjectPath") + "js/external/") + fileNameToSave);
+                                            wc.DownloadFile(url, Protean.stdTools.goServer.MapPath("~/" + myWeb.moConfig["ProjectPath"] + "js/external/") + fileNameToSave);
                                         }
                                     }
-                                    bundleFilePaths[cntFile] = "~/" + myWeb.moConfig("ProjectPath") + ("js/external/" + fileNameToSave);
+                                    bundleFilePaths[cntFile] = "~/" + myWeb.moConfig["ProjectPath"] + ("js/external/" + fileNameToSave);
                                 }
 
 
@@ -2808,7 +2825,7 @@ namespace Protean
 
 
                             var CtxBase = new HttpContextWrapper(myWeb.moCtx);
-                            var BundlesCtx = new System.Web.Optimization.BundleContext(CtxBase, Bundles, "~/" + myWeb.moConfig("ProjectPath") + "js//");
+                            var BundlesCtx = new System.Web.Optimization.BundleContext(CtxBase, Bundles, "~/" + myWeb.moConfig["ProjectPath"] + "js//");
                             var jsBundle = new BundleTransformer.Core.Bundles.CustomScriptBundle(TargetPath);
 
                             BundlesCtx.EnableInstrumentation = false;
@@ -2829,13 +2846,14 @@ namespace Protean
                             string scriptFile;
                             scriptFile = TargetPath + "/script.js";
 
-                            var fsh = new fsHelper(myWeb.moCtx);
-                            fsh.initialiseVariables(fsHelper.LibraryType.Scripts);
+                            var fsh = new Protean.fsHelper(myWeb.moCtx);
+                            fsh.initialiseVariables(Protean.fsHelper.LibraryType.Scripts);
 
                             var br = Bundles.GetBundleFor(TargetPath).GenerateBundleResponse(BundlesCtx);
                             byte[] info = new System.Text.UTF8Encoding(true).GetBytes(br.Content);
 
-                            scriptFile = fsh.SaveFile("script.js", TargetPath, info);
+                            string argFileName = "script.js";
+                            scriptFile = fsh.SaveFile(ref argFileName, TargetPath, info);
 
                             if (scriptFile.StartsWith("ERROR: "))
                             {
@@ -2845,10 +2863,10 @@ namespace Protean
                             if (scriptFile.StartsWith(TargetPath.TrimStart('~')))
                             {
                                 // file has been saved successfully.
-                                scriptFile = "/" + myWeb.moConfig("ProjectPath") + "js" + scriptFile;
+                                scriptFile = "/" + myWeb.moConfig["ProjectPath"] + "js" + scriptFile;
                                 if (Conversions.ToBoolean(VirtualFileExists(scriptFile)))
                                 {
-                                    myWeb.moCtx.Application.Set(AppVariableName, scriptFile);
+                                    myWeb.moCtx.Application.Set(Conversions.ToString(AppVariableName), scriptFile);
                                 }
                             }
                             else
@@ -2860,7 +2878,7 @@ namespace Protean
                             sReturnString = scriptFile;
 
                             info = null;
-                            fsh = default;
+                            fsh = (Protean.fsHelper)null;
                             BundlesCtx = null;
                             jsBundle = null;
                             Bundles = null;
@@ -2913,17 +2931,17 @@ namespace Protean
                         if (myWeb is null)
                         {
                             // ONLY HAPPENS ON ERROR PAGES
-                            gbDebug = true;
+                            Protean.stdTools.gbDebug = true;
                         }
                         else if (myWeb.moRequest is not null)
                         {
-                            if (myWeb.moRequest("reBundle") is not null)
+                            if (myWeb.moRequest["reBundle"] is not null)
                             {
                                 bReset = true;
                             }
                         }
 
-                        if (gbDebug)
+                        if (Protean.stdTools.gbDebug)
                         {
                             // in debug mode we simply return the files as a list, for XSLT to render.
                             sReturnString = CommaSeparatedFilenames.Replace("~", "");
@@ -2941,14 +2959,14 @@ namespace Protean
                             if (bAppVarExists == false)
                             {
                                 // check if the file exists.
-                                if (Conversions.ToBoolean(VirtualFileExists("/" + myWeb.moConfig("ProjectPath") + "css" + TargetPath.Replace("~", "") + "/style.css")))
+                                if (Conversions.ToBoolean(this.VirtualFileExists("/" + myWeb.moConfig["ProjectPath"] + "css" + TargetPath.Replace("~", "") + "/style.css")))
                                 {
                                     // regenerate the application variable from the files in the folder
                                     // we do not want to recreate all css everytime the application pool is reset anymore.
                                     string sReturnStringNew = "";
-                                    foreach (var myFile in Directory.GetFiles(goServer.MapPath("/" + myWeb.moConfig("ProjectPath") + "css" + TargetPath.Replace("~", "")), "*.css"))
-                                        sReturnStringNew = sReturnStringNew + "/" + myWeb.moConfig("ProjectPath") + "css" + TargetPath.Replace("~", "") + "/" + Path.GetFileName(myFile) + ",";
-                                    myWeb.moCtx.Application.Set(AppVariableName, sReturnStringNew.Trim(','));
+                                    foreach (var myFile in Directory.GetFiles(Protean.stdTools.goServer.MapPath("/" + myWeb.moConfig["ProjectPath"] + "css" + TargetPath.Replace("~", "")), "*.css"))
+                                        sReturnStringNew = sReturnStringNew + "/" + myWeb.moConfig["ProjectPath"] + "css" + TargetPath.Replace("~", "") + "/" + Path.GetFileName(myFile) + ",";
+                                    myWeb.moCtx.Application.Set(Conversions.ToString(AppVariableName), sReturnStringNew.Trim(','));
                                     bAppVarExists = true;
                                 }
                             }
@@ -2958,9 +2976,9 @@ namespace Protean
                             {
                                 // check to see if the filename is saved in the application variable.
 
-                                sReturnString = myWeb.moCtx.Application.Get(AppVariableName);
+                                sReturnString = Conversions.ToString(myWeb.moCtx.Application.Get(AppVariableName));
 
-                                if (!sReturnString.StartsWith("/" + myWeb.moConfig("ProjectPath") + "css" + TargetPath.TrimStart('~')))
+                                if (!sReturnString.StartsWith("/" + myWeb.moConfig["ProjectPath"] + "css" + TargetPath.TrimStart('~')))
                                 {
                                     myWeb.bPageCache = false;
                                 }
@@ -2969,10 +2987,10 @@ namespace Protean
                             else
                             {
                                 Tools.Security.Impersonate oImp = null;
-                                if (myWeb.impersonationMode)
+                                if (Conversions.ToBoolean(myWeb.impersonationMode))
                                 {
                                     oImp = new Tools.Security.Impersonate();
-                                    if (oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), true, myWeb.moConfig("AdminGroup")) == false)
+                                    if (oImp.ImpersonateValidUser(myWeb.moConfig["AdminAcct"], myWeb.moConfig["AdminDomain"], myWeb.moConfig["AdminPassword"], true, myWeb.moConfig["AdminGroup"]) == false)
                                     {
                                         sReturnString = "Admin-Account-Logon-Failure";
                                         return sReturnString;
@@ -2987,13 +3005,13 @@ namespace Protean
                                 }
 
                                 // set the services urls list and call the handler request
-                                var oCssWebClient = new CssWebClient(myWeb.moCtx, myWeb.msException) { ServiceUrlsList = Strings.Split(CommaSeparatedFilenames, ",").ToList() };
+                                var oCssWebClient = new Protean.CssWebClient(myWeb.moCtx, ref myWeb.msException) { ServiceUrlsList = Strings.Split(CommaSeparatedFilenames, ",").ToList() };
                                 oCssWebClient.SendCssHttpHandlerRequest();
 
                                 string scriptFile = "";
-                                var fsh = new fsHelper(myWeb.moCtx);
+                                var fsh = new Protean.fsHelper(myWeb.moCtx);
 
-                                fsh.initialiseVariables(fsHelper.LibraryType.Style);
+                                fsh.initialiseVariables(Protean.fsHelper.LibraryType.Style);
 
                                 scriptFile = string.Format("{0}/style.css", TargetPath);
                                 sReturnError = "error getting " + CommaSeparatedFilenames;
@@ -3009,7 +3027,8 @@ namespace Protean
                                     var loopTo = Conversions.ToInteger(maxAttempt);
                                     for (cnt = 1; cnt <= loopTo; cnt++)
                                     {
-                                        scriptFile = fsh.SaveFile("style.css", TargetPath, info);
+                                        string argFileName = "style.css";
+                                        scriptFile = fsh.SaveFile(ref argFileName, TargetPath, info);
                                         if (!scriptFile.Contains("ERROR:"))
                                         {
                                             break;
@@ -3027,17 +3046,17 @@ namespace Protean
                                 if (scriptFile.Contains("ERROR:"))
                                 {
                                     myWeb.bPageCache = false;
-                                    scriptFile = "/" + myWeb.moConfig("ProjectPath") + "css" + string.Format("{0}/style.css", TargetPath);
+                                    scriptFile = "/" + myWeb.moConfig["ProjectPath"] + "css" + string.Format("{0}/style.css", TargetPath);
                                 }  // we can try adding addional error handling here if we have exact code returned from issue
 
                                 if (scriptFile.StartsWith(TargetPath.TrimStart('~'), StringComparison.InvariantCultureIgnoreCase))
                                 {
-                                    sReturnString = "/" + myWeb.moConfig("ProjectPath") + "css" + scriptFile;
+                                    sReturnString = "/" + myWeb.moConfig["ProjectPath"] + "css" + scriptFile;
                                 }
                                 else
                                 {
                                     myWeb.bPageCache = false;
-                                    sReturnString = "/" + myWeb.moConfig("ProjectPath") + "css" + scriptFile;
+                                    sReturnString = "/" + myWeb.moConfig["ProjectPath"] + "css" + scriptFile;
                                 }
 
 
@@ -3046,18 +3065,20 @@ namespace Protean
                                 {
                                     scriptFile = string.Format("{0}/style{1}.css", TargetPath, i);
 
-                                    info = new System.Text.UTF8Encoding(true).GetBytes(oCssWebClient.CssSplits(i));
+                                    info = new System.Text.UTF8Encoding(true).GetBytes(oCssWebClient.CssSplits[i]);
                                     // fsh.DeleteFile(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "css" & TargetFile.TrimStart("~") & "/" & String.Format("style{0}.css", i)))
                                     // TS commented out as modified save file to overwrite by using WriteAllBytes
-                                    scriptFile = "/" + myWeb.moConfig("ProjectPath") + "css" + fsh.SaveFile(string.Format("style{0}.css", i), TargetPath, info);
+                                    string localSaveFile() { string argFileName = string.Format("style{0}.css", i); var ret = fsh.SaveFile(ref argFileName, TargetPath, info); return ret; }
 
-                                    if (scriptFile.StartsWith("/" + myWeb.moConfig("ProjectPath") + "css" + "ERROR: "))
+                                    scriptFile = "/" + myWeb.moConfig["ProjectPath"] + "css" + localSaveFile();
+
+                                    if (scriptFile.StartsWith("/" + myWeb.moConfig["ProjectPath"] + "css" + "ERROR: "))
                                     {
                                         myWeb.bPageCache = false;
 
                                     }
 
-                                    if (scriptFile.StartsWith("/" + myWeb.moConfig("ProjectPath") + "css" + TargetPath.TrimStart('~')))
+                                    if (scriptFile.StartsWith("/" + myWeb.moConfig["ProjectPath"] + "css" + TargetPath.TrimStart('~')))
                                     {
                                         // file has been saved successfully.
                                         sReturnString += "," + scriptFile;
@@ -3071,12 +3092,12 @@ namespace Protean
 
                                 }
 
-                                if (sReturnString.StartsWith("/" + myWeb.moConfig("ProjectPath") + "css"))
+                                if (sReturnString.StartsWith("/" + myWeb.moConfig["ProjectPath"] + "css"))
                                 {
                                     // check the file exists before we set the application variable...
-                                    if (Conversions.ToBoolean(VirtualFileExists("/" + myWeb.moConfig("ProjectPath") + "css" + TargetPath.Replace("~", "") + "/style.css")))
+                                    if (Conversions.ToBoolean(this.VirtualFileExists("/" + myWeb.moConfig["ProjectPath"] + "css" + TargetPath.Replace("~", "") + "/style.css")))
                                     {
-                                        myWeb.moCtx.Application.Set(AppVariableName, sReturnString);
+                                        myWeb.moCtx.Application.Set(Conversions.ToString(AppVariableName), sReturnString);
                                     }
                                 }
                                 else
@@ -3084,10 +3105,10 @@ namespace Protean
                                     sReturnString = sReturnString + sReturnError;
                                 }
 
-                                oCssWebClient = default;
-                                fsh = default;
+                                oCssWebClient = (Protean.CssWebClient)null;
+                                fsh = (Protean.fsHelper)null;
 
-                                if (myWeb.impersonationMode)
+                                if (Conversions.ToBoolean(myWeb.impersonationMode))
                                 {
                                     if (!(oImp == null))
                                     {
@@ -3105,7 +3126,7 @@ namespace Protean
                     catch (IOException ioex)    // New changes on 9/12/21'
                     {
                         myWeb.bPageCache = false;
-                        sReturnString = "/" + myWeb.moConfig("ProjectPath") + "css" + string.Format("{0}/style.css", TargetPath);
+                        sReturnString = "/" + myWeb.moConfig["ProjectPath"] + "css" + string.Format("{0}/style.css", TargetPath);
                         // Return ioex.StackTrace
                         return sReturnString;
                     }
@@ -3115,10 +3136,10 @@ namespace Protean
                         // OnComponentError(myWeb, New Protean.Tools.Errors.ErrorEventArgs("xslt.BundleCSS", "LayoutActions", ex, CommaSeparatedFilenames))
                         // My.Application.Log.WriteException(ex)
 
-                        AddExceptionToEventLog(ex, sReturnString);
+                        Protean.stdTools.AddExceptionToEventLog(ex, sReturnString);
 
                         // regardless we should return the filename.
-                        sReturnString = "/" + myWeb.moConfig("ProjectPath") + "css" + string.Format("{0}/style.css", TargetPath);
+                        sReturnString = "/" + myWeb.moConfig["ProjectPath"] + "css" + string.Format("{0}/style.css", TargetPath);
 
                         myWeb.bPageCache = false; // This is not working 100% - can we understand why?????B
 

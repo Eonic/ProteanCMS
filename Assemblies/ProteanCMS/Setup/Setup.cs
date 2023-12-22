@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Configuration;
 using System.Data;
-using System.Data.SqlClient;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
@@ -10,7 +9,6 @@ using System.Web.Configuration;
 using System.Xml;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using static Protean.stdTools;
 
 namespace Protean
 {
@@ -39,10 +37,10 @@ namespace Protean
 
         public System.Collections.Specialized.NameValueCollection goConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
 
-        public Cms myWeb;
-        private Global.Protean.Cms.dbHelper _moDbHelper;
+        public Protean.Cms myWeb;
+        private Protean.Cms.dbHelper _moDbHelper;
 
-        public virtual Global.Protean.Cms.dbHelper moDbHelper
+        public virtual Protean.Cms.dbHelper moDbHelper
         {
             [MethodImpl(MethodImplOptions.Synchronized)]
             get
@@ -105,7 +103,7 @@ namespace Protean
         protected virtual void OnComponentError(object sender, Tools.Errors.ErrorEventArgs e)
         {
             // deals with the error
-            stdTools.returnException(ref myWeb.msException, e.ModuleName, e.ProcedureName, e.Exception, "/ewcommon/xsl/admin/setup.xsl", e.AddtionalInformation, gbDebug);
+            Protean.stdTools.returnException(ref myWeb.msException, e.ModuleName, e.ProcedureName, e.Exception, "/ewcommon/xsl/admin/setup.xsl", e.AddtionalInformation, gbDebug);
             // close connection pooling
             if (myWeb.moDbHelper is not null)
             {
@@ -155,7 +153,7 @@ namespace Protean
                 goSession = moCtx.Session;
                 goServer = moCtx.Server;
 
-                myWeb = new Cms(moCtx);
+                myWeb = new Protean.Cms(moCtx);
                 // myWeb.InitializeVariables()
 
                 sProcessInfo = "set session variables";
@@ -202,13 +200,13 @@ namespace Protean
                 // lets open our DB Helper if database is defined
                 if (goConfig["DatabaseName"] != default)
                 {
-                    myWeb.moDbHelper = new Cms.dbHelper(goConfig["DatabaseServer"], goConfig["DatabaseName"], mnUserId, moCtx);
+                    myWeb.moDbHelper = new Protean.Cms.dbHelper(goConfig["DatabaseServer"], goConfig["DatabaseName"], (long)mnUserId, moCtx);
                     myWeb.moDbHelper.myWeb = myWeb;
                     myWeb.moDbHelper.moPageXml = moPageXml;
                     myWeb.moDbHelper.DatabaseUser = goConfig["DatabaseUsername"];
                     myWeb.moDbHelper.DatabasePassword = goConfig["DatabasePassword"];
 
-                    ConnValid = myWeb.moDbHelper.CredentialsValid();
+                    ConnValid = myWeb.moDbHelper.CredentialsValid;
                     if (ConnValid)
                     {
                         if (myWeb.moDbHelper.checkDBObjectExists("tblContent", Tools.Database.objectTypes.Table))
@@ -404,7 +402,7 @@ namespace Protean
             catch (Exception ex)
             {
 
-                stdTools.returnException(ref myWeb.msException, mcModuleName, "getPageHtml", ex, "", sProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "getPageHtml", ex, "", sProcessInfo, gbDebug);
 
             }
 
@@ -437,7 +435,7 @@ namespace Protean
                 cPageHTML = Strings.Replace(icPageWriter.ToString(), "<?xml version=\"1.0\" encoding=\"utf-16\"?>", "");
                 cPageHTML = Strings.Replace(cPageHTML, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "");
 
-                if (bReturnBlankError & !(myWeb.msException == ""))
+                if (bReturnBlankError & !string.IsNullOrEmpty(myWeb.msException))
                 {
                     return "";
                 }
@@ -450,7 +448,7 @@ namespace Protean
             catch (Exception ex)
             {
 
-                stdTools.returnException(ref myWeb.msException, mcModuleName, "returnPageHtml", ex, "/ewcommon/xsl/admin/setup.xsl", sProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "returnPageHtml", ex, "/ewcommon/xsl/admin/setup.xsl", sProcessInfo, gbDebug);
                 if (bReturnBlankError)
                 {
                     return "";
@@ -655,7 +653,7 @@ namespace Protean
                     }
                     else
                     {
-                        oPageElmt.AppendChild(myWeb.moDbHelper.GetUserXML(mnUserId));
+                        oPageElmt.AppendChild(myWeb.moDbHelper.GetUserXML((long)mnUserId));
                         setupMenuXml();
                     }
                 }
@@ -679,7 +677,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                stdTools.returnException(ref myWeb.msException, mcModuleName, "GetSetupXML", ex, "", sProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "GetSetupXML", ex, "", sProcessInfo, gbDebug);
             }
 
         }
@@ -750,8 +748,10 @@ namespace Protean
                     // Dim oAdXfm As Cms.Admin.AdminXforms = New Cms.Admin.AdminXforms(myWeb)
                     // oAdXfm.open(moPageXml)
 
-                    var oMembershipProv = new Providers.Membership.BaseProvider(myWeb, myWeb.moConfig("MembershipProvider"));
-                    object oAdXfm = oMembershipProv.AdminXforms;
+                    object argmyWeb = (object)myWeb;
+                    var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, myWeb.moConfig["MembershipProvider"]);
+                    myWeb = (Protean.Cms)argmyWeb;
+                    var oAdXfm = oMembershipProv.AdminXforms;
                     oAdXfm.open(moPageXml);
                     oPageDetail.AppendChild((XmlNode)oAdXfm.xFrmUserLogon("AdminLogon"));
                     mnUserId = myWeb.mnUserId;
@@ -766,7 +766,7 @@ namespace Protean
                         else
                         {
                             mnUserId = myWeb.mnUserId;
-                            oRoot.AppendChild(myWeb.moDbHelper.GetUserXML(mnUserId));
+                            oRoot.AppendChild(myWeb.moDbHelper.GetUserXML((long)mnUserId));
                             if (mnUserId > 0)
                             {
                                 mcEwCmd = "Home";
@@ -785,7 +785,7 @@ namespace Protean
                     // set the userId on the DBHelper
                     if (myWeb.moDbHelper is not null)
                     {
-                        myWeb.moDbHelper.mnUserId = mnUserId;
+                        myWeb.moDbHelper.mnUserId = (long)mnUserId;
                     }
                 }
                 if (mnUserId == 0)
@@ -889,7 +889,7 @@ namespace Protean
                             {
                                 if (goRequest["ewCmd2"] == "Do")
                                 {
-                                    AddResponse(myWeb.moDbHelper.CleanAuditOrphans());
+                                    this.AddResponse(myWeb.moDbHelper.CleanAuditOrphans());
                                     cStep = 1.ToString();
                                 }
 
@@ -1014,7 +1014,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                stdTools.returnException(ref myWeb.msException, mcModuleName, "SetupProcessXML", ex, "", cProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "SetupProcessXML", ex, "", cProcessInfo, gbDebug);
             }
 
         }
@@ -1115,7 +1115,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                stdTools.returnException(ref myWeb.msException, mcModuleName, "appendMenuItem", ex, "", sProcessInfo, gbDebug);
+                Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "appendMenuItem", ex, "", sProcessInfo, gbDebug);
 
                 return null;
             }
@@ -1140,7 +1140,7 @@ namespace Protean
 
                 myWeb.InitializeVariables();
 
-                foreach (string AltFolder in myWeb.maCommonFolders)
+                foreach (var AltFolder in myWeb.maCommonFolders)
                 {
                     filePath = AltFolder.TrimEnd(@"/\".ToCharArray()) + upgradePath;
                     if (!string.IsNullOrEmpty(AltFolder))
@@ -1335,7 +1335,7 @@ namespace Protean
                                                                         long nCount;
                                                                         AddResponse("Run File '" + oActionElmt.GetAttribute("ObjectName") + "'");
                                                                         errormsg = "";
-                                                                        nCount = myWeb.moDbHelper.ExeProcessSqlfromFile(rootPath + oActionElmt.GetAttribute("ObjectName"), errormsg);
+                                                                        nCount = (long)myWeb.moDbHelper.ExeProcessSqlfromFile(rootPath + oActionElmt.GetAttribute("ObjectName"), ref errormsg);
 
                                                                         if (!string.IsNullOrEmpty(errormsg))
                                                                         {
@@ -1568,23 +1568,23 @@ namespace Protean
                 string UserEmail = "support@proteancms.com";
                 myWeb.Open();
 
-                mnUserId = myWeb.moDbHelper.insertDirectory("AdminV4", "User", "Admin", AdminPassword, "<User><FirstName>Website</FirstName><MiddleName/><LastName>Administrator</LastName><Position/><Email>" + UserEmail + "</Email><Notes/></User>");
+                mnUserId = (int)myWeb.moDbHelper.insertDirectory("AdminV4", "User", "Admin", AdminPassword, "<User><FirstName>Website</FirstName><MiddleName/><LastName>Administrator</LastName><Position/><Email>" + UserEmail + "</Email><Notes/></User>");
 
                 // create system roles
 
                 nRoleId = myWeb.moDbHelper.insertDirectory("Administrator", "Role", "Administrator", "", "<Role><Name>Administrator</Name><Notes/></Role>");
-                myWeb.moDbHelper.maintainDirectoryRelation(nRoleId, mnUserId);
+                myWeb.moDbHelper.maintainDirectoryRelation(nRoleId, (long)mnUserId);
                 nRoleId = myWeb.moDbHelper.insertDirectory("DefaultUser", "Role", "Default User", "", "<Role><Name>Administrator</Name><Notes/></Role>");
-                myWeb.moDbHelper.maintainDirectoryRelation(nRoleId, mnUserId);
+                myWeb.moDbHelper.maintainDirectoryRelation(nRoleId, (long)mnUserId);
 
                 string defaultPageXml = "<DisplayName title=\"\" linkType=\"internal\" exclude=\"false\" noindex=\"false\"/><Images><img class=\"icon\" /><img class=\"thumbnail\" /><img class=\"detail\" /></Images><Description/>";
 
-                gnTopLevel = myWeb.moDbHelper.insertStructure("0", "", "Home", defaultPageXml, "Modules_1_column");
-                myWeb.moDbHelper.insertStructure(gnTopLevel, "", "About Us", defaultPageXml, "Modules_1_column");
-                myWeb.moDbHelper.insertStructure(gnTopLevel, "", "Products", defaultPageXml, "Modules_1_column");
-                myWeb.moDbHelper.insertStructure(gnTopLevel, "", "Services", defaultPageXml, "Modules_1_column");
+                gnTopLevel = (int)myWeb.moDbHelper.insertStructure(Conversions.ToLong("0"), "", "Home", defaultPageXml, "Modules_1_column");
+                myWeb.moDbHelper.insertStructure((long)gnTopLevel, "", "About Us", defaultPageXml, "Modules_1_column");
+                myWeb.moDbHelper.insertStructure((long)gnTopLevel, "", "Products", defaultPageXml, "Modules_1_column");
+                myWeb.moDbHelper.insertStructure((long)gnTopLevel, "", "Services", defaultPageXml, "Modules_1_column");
 
-                long infoId = myWeb.moDbHelper.insertStructure(gnTopLevel, "", "Info Menu", defaultPageXml, "Modules_1_column");
+                long infoId = myWeb.moDbHelper.insertStructure((long)gnTopLevel, "", "Info Menu", defaultPageXml, "Modules_1_column");
                 myWeb.moDbHelper.insertStructure(infoId, "", "Contact Us", defaultPageXml, "Modules_1_column");
 
                 return true;
@@ -1651,7 +1651,7 @@ namespace Protean
                     oDs.Tables["VersionNo"].Rows.Add(oDr);
                 }
 
-                myWeb.moDbHelper.updateDataset(oDs, "VersionNo", false);
+                myWeb.moDbHelper.updateDataset(ref oDs, "VersionNo", false);
 
                 // oDs.Dispose()
                 oDs = null;
@@ -1702,7 +1702,7 @@ namespace Protean
                     sSql = "select * from tblSchemaVersion where nVersionKey = 1";
                     if (!string.IsNullOrEmpty(cConn))
                     {
-                        oDs = myWeb.moDbHelper.GetDataSet(sSql, "VersionNo", "", false, default, CommandType.Text, 0, 0, cConn);
+                        oDs = myWeb.moDbHelper.GetDataSet(sSql, "VersionNo", "", false, (Hashtable)null, CommandType.Text, 0, 0, cConn);
                     }
                     else
                     {
@@ -1752,18 +1752,19 @@ namespace Protean
             try
             {
 
-                bUsesDirectory = moDbHelper.doesTableExist("tbl_ewu_Directory");
+                string argsTableName = "tbl_ewu_Directory";
+                bUsesDirectory = moDbHelper.doesTableExist(ref argsTableName);
                 if (!bUsesDirectory)
                 {
                     AddResponse(" No Directory information to import. Creating deafults.");
                     int nRolex;
                     int nUserx;
-                    nUserx = myWeb.moDbHelper.insertDirectory("AdminV4", "User", "Admin", "buster", "<User><FirstName/><MiddleName/><LastName/><Position/><Email/><Notes/></User>");
+                    nUserx = (int)myWeb.moDbHelper.insertDirectory("AdminV4", "User", "Admin", "buster", "<User><FirstName/><MiddleName/><LastName/><Position/><Email/><Notes/></User>");
                     // create system roles
-                    nRolex = myWeb.moDbHelper.insertDirectory("Administrator", "Role", "Administrator", "", "<Role><Name>Administrator</Name><Notes/></Role>");
-                    myWeb.moDbHelper.maintainDirectoryRelation(nRolex, nUserx);
-                    nRolex = myWeb.moDbHelper.insertDirectory("DefaultUser", "Role", "Default User", "", "<Role><Name>Administrator</Name><Notes/></Role>");
-                    myWeb.moDbHelper.maintainDirectoryRelation(nRolex, nUserx);
+                    nRolex = (int)myWeb.moDbHelper.insertDirectory("Administrator", "Role", "Administrator", "", "<Role><Name>Administrator</Name><Notes/></Role>");
+                    myWeb.moDbHelper.maintainDirectoryRelation((long)nRolex, (long)nUserx);
+                    nRolex = (int)myWeb.moDbHelper.insertDirectory("DefaultUser", "Role", "Default User", "", "<Role><Name>Administrator</Name><Notes/></Role>");
+                    myWeb.moDbHelper.maintainDirectoryRelation((long)nRolex, (long)nUserx);
                     return true;
                     return default;
                 }
@@ -1772,11 +1773,11 @@ namespace Protean
                 AddResponse("Creating System Roles");
                 long nRoleId;
                 // create system roles
-                mnUserId = myWeb.moDbHelper.insertDirectory("AdminV4", "User", "Admin", "buster", "<User><FirstName/><MiddleName/><LastName/><Position/><Email/><Notes/></User>");
+                mnUserId = (int)myWeb.moDbHelper.insertDirectory("AdminV4", "User", "Admin", "buster", "<User><FirstName/><MiddleName/><LastName/><Position/><Email/><Notes/></User>");
                 nRoleId = myWeb.moDbHelper.insertDirectory("Administrator", "Role", "Administrator", "", "<Role><Name>Administrator</Name><Notes/></Role>");
-                myWeb.moDbHelper.maintainDirectoryRelation(nRoleId, mnUserId);
+                myWeb.moDbHelper.maintainDirectoryRelation(nRoleId, (long)mnUserId);
                 nRoleId = myWeb.moDbHelper.insertDirectory("DefaultUser", "Role", "Default User", "", "<Role><Name>Administrator</Name><Notes/></Role>");
-                myWeb.moDbHelper.maintainDirectoryRelation(nRoleId, mnUserId);
+                myWeb.moDbHelper.maintainDirectoryRelation(nRoleId, (long)mnUserId);
 
 
                 // Directory Table
@@ -1784,7 +1785,7 @@ namespace Protean
                 sSqlStr = "Select * From tbl_ewu_Directory";
                 oDSDIR = myWeb.moDbHelper.GetDataSet(sSqlStr, "Directory", "dsDIR");
 
-                myWeb.moDbHelper.addTableToDataSet(oDSDIR, "SELECT * FROM tbl_ewc_Contact where nContactParentType = 2", "Contacts");
+                myWeb.moDbHelper.addTableToDataSet(ref oDSDIR, "SELECT * FROM tbl_ewc_Contact where nContactParentType = 2", "Contacts");
                 oDSDIR.Relations.Add("CartContacts", oDSDIR.Tables["Directory"].Columns["nDirId"], oDSDIR.Tables["Contacts"].Columns["nContactParentId"], false);
                 oDSDIR.Relations["CartContacts"].Nested = true;
 
@@ -1888,9 +1889,9 @@ namespace Protean
                         var loopTo = Information.UBound(myArr);
                         for (i = 0; i <= loopTo; i++)
                         {
-                            int myID = myWeb.moDbHelper.FindDirectoryByForiegn(Conversions.ToInteger(Strings.Trim(myArr[i])));
+                            int myID = myWeb.moDbHelper.FindDirectoryByForiegn(Conversions.ToInteger(Strings.Trim(myArr[i])).ToString());
                             if (myID > 0)
-                                myWeb.moDbHelper.maintainDirectoryRelation(myID, nDirId);
+                                myWeb.moDbHelper.maintainDirectoryRelation((long)myID, nDirId);
                         }
                     }
 
@@ -1929,11 +1930,12 @@ namespace Protean
             try
             {
 
-                bUsesDirectory = moDbHelper.doesTableExist("tbl_ewu_Directory");
+                string argsTableName = "tbl_ewu_Directory";
+                bUsesDirectory = moDbHelper.doesTableExist(ref argsTableName);
 
                 oDS = myWeb.moDbHelper.GetDataSet("Select * from tbl_ewm_structure", "Menu", "Structure");
                 // checknest(oDS, dbT)
-                myWeb.moDbHelper.addTableToDataSet(oDS, "SELECT tbl_ewm_content.*, tbl_ewm_contentType.cContentTypeName AS cContentTypeName FROM tbl_ewm_content INNER JOIN tbl_ewm_contentType ON tbl_ewm_content.nContentType = tbl_ewm_contentType.nContentTypeKey", "Content");
+                myWeb.moDbHelper.addTableToDataSet(ref oDS, "SELECT tbl_ewm_content.*, tbl_ewm_contentType.cContentTypeName AS cContentTypeName FROM tbl_ewm_content INNER JOIN tbl_ewm_contentType ON tbl_ewm_content.nContentType = tbl_ewm_contentType.nContentTypeKey", "Content");
 
 
                 oDS.Relations.Add("Rel0", oDS.Tables["Menu"].Columns["nID"], oDS.Tables["Menu"].Columns["nParentID"], false);
@@ -1944,14 +1946,14 @@ namespace Protean
                 oDS.Relations.Add("Rel1", oDS.Tables["Menu"].Columns["nID"], oDS.Tables["Content"].Columns["nContentParID"], false);
                 oDS.Relations["Rel1"].Nested = true;
 
-                myWeb.moDbHelper.addTableToDataSet(oDS, "Select * from tbl_ewm_contentLocation", "Location");
+                myWeb.moDbHelper.addTableToDataSet(ref oDS, "Select * from tbl_ewm_contentLocation", "Location");
 
 
                 if (bUsesDirectory)
                 {
-                    myWeb.moDbHelper.addTableToDataSet(oDS, "Select * from tbl_ewu_permissions", "Permissions");
+                    myWeb.moDbHelper.addTableToDataSet(ref oDS, "Select * from tbl_ewu_permissions", "Permissions");
                     oDS.Relations.Add("Rel2", oDS.Tables["Menu"].Columns["nID"], oDS.Tables["Permissions"].Columns["nPermKey"], false);
-                    myWeb.moDbHelper.addTableToDataSet(oDS, "Select * From tblDirectory", "Directory");
+                    myWeb.moDbHelper.addTableToDataSet(ref oDS, "Select * From tblDirectory", "Directory");
                 }
 
                 oDS.EnforceConstraints = false;
@@ -1996,7 +1998,7 @@ namespace Protean
                                 break;
                             }
                     }
-                    nParID = myWeb.moDbHelper.insertStructure(nParID, oMenuElmt.GetAttribute("nId"), CleanName(oMenuElmt.GetAttribute("cName")), "<DisplayName>" + oMenuElmt.GetAttribute("cName") + "</DisplayName><Description />", oMenuElmt.GetAttribute("cTemplateName"), nMenStatus, Interaction.IIf(string.IsNullOrEmpty(oMenuElmt.GetAttribute("dPublishDate")), null, oMenuElmt.GetAttribute("dPublishDate")), Interaction.IIf(string.IsNullOrEmpty(oMenuElmt.GetAttribute("dExpireDate")), null, oMenuElmt.GetAttribute("dExpireDate")), "", Interaction.IIf(string.IsNullOrEmpty(oMenuElmt.GetAttribute("nDisplayOrder")), 0, oMenuElmt.GetAttribute("nDisplayOrder")));
+                    nParID = (int)myWeb.moDbHelper.insertStructure((long)nParID, oMenuElmt.GetAttribute("nId"), CleanName(oMenuElmt.GetAttribute("cName")), "<DisplayName>" + oMenuElmt.GetAttribute("cName") + "</DisplayName><Description />", oMenuElmt.GetAttribute("cTemplateName"), (long)nMenStatus, Conversions.ToDate(Interaction.IIf(string.IsNullOrEmpty(oMenuElmt.GetAttribute("dPublishDate")), null, oMenuElmt.GetAttribute("dPublishDate"))), Conversions.ToDate(Interaction.IIf(string.IsNullOrEmpty(oMenuElmt.GetAttribute("dExpireDate")), null, oMenuElmt.GetAttribute("dExpireDate"))), "", Conversions.ToLong(Interaction.IIf(string.IsNullOrEmpty(oMenuElmt.GetAttribute("nDisplayOrder")), 0, oMenuElmt.GetAttribute("nDisplayOrder"))));
                     oMenuElmt.SetAttribute("NewID", nParID.ToString());
                     AddResponse("   Writing Page:" + oMenuElmt.GetAttribute("cName") + "   ");
 
@@ -2038,7 +2040,7 @@ namespace Protean
                             bCascade = true;
                         }
 
-                        myWeb.moDbHelper.setContentLocation(nParID, nContentId, true, bCascade);
+                        myWeb.moDbHelper.setContentLocation((long)nParID, nContentId, true, bCascade);
 
                         oContElmt.SetAttribute("NewID", nContentId.ToString());
                     }
@@ -2047,8 +2049,8 @@ namespace Protean
                         foreach (XmlElement oPermElmt in oMenuElmt.SelectNodes("Permissions"))
                         {
                             long nUser = 0L;
-                            nUser = myWeb.moDbHelper.getObjectByRef(Cms.dbHelper.objectTypes.Directory, oPermElmt.GetAttribute("nPermDirId"));
-                            myWeb.moDbHelper.maintainPermission(nParID, nUser, oPermElmt.GetAttribute("nPermLevel"));
+                            nUser = myWeb.moDbHelper.getObjectByRef(Protean.Cms.dbHelper.objectTypes.Directory, oPermElmt.GetAttribute("nPermDirId"));
+                            myWeb.moDbHelper.maintainPermission((long)nParID, nUser, oPermElmt.GetAttribute("nPermLevel"));
                         }
                     }
                 }
@@ -2073,9 +2075,9 @@ namespace Protean
                 foreach (XmlElement oLocElmt in oDataXML.SelectNodes("descendant-or-self::Location"))
                 {
                     // nParID, nContentId
-                    nParID = myWeb.moDbHelper.getObjectByRef(Cms.dbHelper.objectTypes.ContentStructure, oLocElmt.GetAttribute("nStructureID"));
-                    nContentId = myWeb.moDbHelper.getObjectByRef(Cms.dbHelper.objectTypes.Content, oLocElmt.GetAttribute("nContentID"));
-                    myWeb.moDbHelper.setContentLocation(nParID, nContentId, false);
+                    nParID = (int)myWeb.moDbHelper.getObjectByRef(Protean.Cms.dbHelper.objectTypes.ContentStructure, oLocElmt.GetAttribute("nStructureID"));
+                    nContentId = myWeb.moDbHelper.getObjectByRef(Protean.Cms.dbHelper.objectTypes.Content, oLocElmt.GetAttribute("nContentID"));
+                    myWeb.moDbHelper.setContentLocation((long)nParID, nContentId, false);
                 }
 
 
@@ -2093,7 +2095,7 @@ namespace Protean
 
         public bool Migrate_Shipping()
         {
-            Global.Protean.Cms.dbHelper dbh = myWeb.moDbHelper;
+            var dbh = myWeb.moDbHelper;
             DataSet oDS;
             var oDXML = new XmlDocument();
             int nParID;
@@ -2106,8 +2108,8 @@ namespace Protean
                 if (!myWeb.moDbHelper.TableExists("tbl_ewc_shippingLocations"))
                     return true;
                 oDS = myWeb.moDbHelper.GetDataSet("SELECT * FROM tbl_ewc_shippingLocations", "Locations", "Shipping");
-                myWeb.moDbHelper.addTableToDataSet(oDS, "SELECT * FROM tbl_ewc_shippingOptions", "Options");
-                myWeb.moDbHelper.addTableToDataSet(oDS, "SELECT * FROM tbl_ewc_shippingRelations", "Relations");
+                myWeb.moDbHelper.addTableToDataSet(ref oDS, "SELECT * FROM tbl_ewc_shippingOptions", "Options");
+                myWeb.moDbHelper.addTableToDataSet(ref oDS, "SELECT * FROM tbl_ewc_shippingRelations", "Relations");
 
                 // Add new column for IDs for local stuff and make all attributes
                 if (oDS is null)
@@ -2179,7 +2181,7 @@ namespace Protean
                     else
                         cSQL += "'" + oLocElmt.GetAttribute("nLocationTaxRate") + "',";
                     cSQL += myWeb.moDbHelper.getAuditId() + ")";
-                    nParID = myWeb.moDbHelper.GetIdInsertSql(cSQL);
+                    nParID = Conversions.ToInteger(myWeb.moDbHelper.GetIdInsertSql(cSQL));
                     oLocElmt.SetAttribute("NewID", nParID.ToString());
                 }
 
@@ -2256,7 +2258,7 @@ namespace Protean
                     else
                         cSQL += oMetElmt.GetAttribute("nShipOptTaxRate") + ",";
                     cSQL += myWeb.moDbHelper.getAuditId() + ")";
-                    nParID = myWeb.moDbHelper.GetIdInsertSql(cSQL);
+                    nParID = Conversions.ToInteger(myWeb.moDbHelper.GetIdInsertSql(cSQL));
                     oMetElmt.SetAttribute("NewID", nParID.ToString());
                 }
                 AddResponse("Migrating Relations");
@@ -2266,9 +2268,9 @@ namespace Protean
                 foreach (XmlElement oRelElmt in oDXML.SelectNodes("descendant-or-self::Relations"))
                 {
                     if (!string.IsNullOrEmpty(oRelElmt.GetAttribute("nShpOptId")))
-                        nOpt = myWeb.moDbHelper.getObjectByRef(Cms.dbHelper.objectTypes.CartShippingMethod, oRelElmt.GetAttribute("nShpOptId"));
+                        nOpt = (int)myWeb.moDbHelper.getObjectByRef(Protean.Cms.dbHelper.objectTypes.CartShippingMethod, oRelElmt.GetAttribute("nShpOptId"));
                     if (!string.IsNullOrEmpty(oRelElmt.GetAttribute("nShpLocId")))
-                        nLoc = myWeb.moDbHelper.getObjectByRef(Cms.dbHelper.objectTypes.CartShippingLocation, oRelElmt.GetAttribute("nShpLocId"));
+                        nLoc = (int)myWeb.moDbHelper.getObjectByRef(Protean.Cms.dbHelper.objectTypes.CartShippingLocation, oRelElmt.GetAttribute("nShpLocId"));
                     // only add it if there is something to add on both ends of the relation
                     if (!(nOpt == 0 | nLoc == 0))
                     {
@@ -2277,7 +2279,7 @@ namespace Protean
                         cSQL += nLoc + ",";
 
                         cSQL += myWeb.moDbHelper.getAuditId() + ")";
-                        nParID = myWeb.moDbHelper.GetIdInsertSql(cSQL);
+                        nParID = Conversions.ToInteger(myWeb.moDbHelper.GetIdInsertSql(cSQL));
                         oRelElmt.SetAttribute("NewID", nParID.ToString());
                     }
                 }
@@ -2292,7 +2294,7 @@ namespace Protean
 
         public bool Migrate_Cart()
         {
-            Global.Protean.Cms.dbHelper dbh = myWeb.moDbHelper;
+            var dbh = myWeb.moDbHelper;
             DataSet oDS;
             var oDXML = new XmlDocument();
             int nParID;
@@ -2306,8 +2308,8 @@ namespace Protean
                     return true;
                 oDS = dbh.GetDataSet("SELECT * FROM tbl_ewc_cartOrder", "Orders", "Cart");
 
-                dbh.addTableToDataSet(oDS, "SELECT * FROM tbl_ewc_cartItem", "Items");
-                dbh.addTableToDataSet(oDS, "SELECT * FROM tbl_ewc_Contact where nContactParentType = 1", "Contacts");
+                dbh.addTableToDataSet(ref oDS, "SELECT * FROM tbl_ewc_cartItem", "Items");
+                dbh.addTableToDataSet(ref oDS, "SELECT * FROM tbl_ewc_Contact where nContactParentType = 1", "Contacts");
 
                 oDS.Relations.Add("CartItems", oDS.Tables["Orders"].Columns["nCartOrderKey"], oDS.Tables["Items"].Columns["nCartItemKey"], false);
                 oDS.Relations["CartItems"].Nested = true;
@@ -2376,7 +2378,7 @@ namespace Protean
                     if (string.IsNullOrEmpty(oOrdElmt.GetAttribute("nShippingId")))
                         cSQLP2 += "Null,";
                     else
-                        cSQLP2 += moDbHelper.getObjectByRef(Cms.dbHelper.objectTypes.CartShippingMethod, oOrdElmt.GetAttribute("nShippingId")) + ",";
+                        cSQLP2 += moDbHelper.getObjectByRef(Protean.Cms.dbHelper.objectTypes.CartShippingMethod, oOrdElmt.GetAttribute("nShippingId")) + ",";
                     if (string.IsNullOrEmpty(oOrdElmt.GetAttribute("cShippingDesc")))
                         cSQLP2 += "Null,";
                     else
@@ -2402,7 +2404,7 @@ namespace Protean
                     else
                         cSQLP2 += "'" + oOrdElmt.GetAttribute("nGiftListID") + "',";
                     cSQLP2 += dbh.getAuditId() + ")";
-                    nParID = dbh.GetIdInsertSql(cSQLP1 + cSQLP2);
+                    nParID = Conversions.ToInteger(dbh.GetIdInsertSql(cSQLP1 + cSQLP2));
 
                     // Now the cart Items
                     foreach (XmlElement oItElmt in oOrdElmt.SelectNodes("Items"))
@@ -2415,7 +2417,7 @@ namespace Protean
                         if (string.IsNullOrEmpty(oItElmt.GetAttribute("nItemId")))
                             cSQLP2 += "Null,";
                         else
-                            cSQLP2 += moDbHelper.getObjectByRef(Cms.dbHelper.objectTypes.Content, oItElmt.GetAttribute("nItemId")) + ",";
+                            cSQLP2 += moDbHelper.getObjectByRef(Protean.Cms.dbHelper.objectTypes.Content, oItElmt.GetAttribute("nItemId")) + ",";
                         cSQLP2 += "Null,"; // product parentID for options
                         if (string.IsNullOrEmpty(oItElmt.GetAttribute("cItemRef")))
                             cSQLP2 += "Null,";
@@ -2455,7 +2457,7 @@ namespace Protean
                         else
                             cSQLP2 += oItElmt.GetAttribute("nWeight") + ",";
                         cSQLP2 += dbh.getAuditId() + ")";
-                        nParID2 = dbh.GetIdInsertSql(cSQLP1 + cSQLP2);
+                        nParID2 = Conversions.ToInteger(dbh.GetIdInsertSql(cSQLP1 + cSQLP2));
 
                         // Now for splitting out the options
                         // basically loops through and checks if there is anything in option 1 or 2, if there is add it(ish)
@@ -2474,7 +2476,7 @@ namespace Protean
                                 if (string.IsNullOrEmpty(oItElmt.GetAttribute("nItemId")))
                                     cSQLP2 += "Null,";
                                 else
-                                    cSQLP2 += moDbHelper.getObjectByRef(Cms.dbHelper.objectTypes.Content, oItElmt.GetAttribute("nItemId")) + ",";
+                                    cSQLP2 += moDbHelper.getObjectByRef(Protean.Cms.dbHelper.objectTypes.Content, oItElmt.GetAttribute("nItemId")) + ",";
                                 cSQLP2 += nParID2 + ","; // product parentID for options
                                 cSQLP2 += "'" + oItElmt.GetAttribute("cItemOption" + nOptNo) + "',"; // New ref as option
                                 if (string.IsNullOrEmpty(oItElmt.GetAttribute("cItemURL")))
@@ -2779,7 +2781,7 @@ namespace Protean
                 if (bIsXml)
                 {
                     // Try to validate the xml
-                    myWeb.moDbHelper.importShippingLocations2(oXml);
+                    myWeb.moDbHelper.importShippingLocations2(ref oXml);
                 }
 
                 AddResponse("Import Shipping Locations'");
@@ -2838,7 +2840,7 @@ namespace Protean
                         if (bIsXml)
                         {
                             // Try to validate the xml
-                            moDbHelper.importShippingLocations(oXml);
+                            moDbHelper.importShippingLocations(ref oXml);
                         }
                     }
 
@@ -2871,22 +2873,22 @@ namespace Protean
         }
         #endregion
 
-        internal int CommitToLog(Global.Protean.Cms.dbHelper.ActivityType nEventType, int nUserId, string cSessionId, DateTime dDateTime, int nPrimaryId = 0, int nSecondaryId = 0, string cDetail = "")
+        internal int CommitToLog(Protean.Cms.dbHelper.ActivityType nEventType, int nUserId, string cSessionId, DateTime dDateTime, int nPrimaryId = 0, int nSecondaryId = 0, string cDetail = "")
         {
             string cSQL = "INSERT INTO tblActivityLog (nUserDirId, nStructId, nArtId, dDateTime, nActivityType, cActivityDetail, cSessionId) VALUES (";
             cSQL += nUserId + ",";
             cSQL += nPrimaryId + ",";
             cSQL += nSecondaryId + ",";
             cSQL += Tools.Database.SqlDate(dDateTime, true) + ",";
-            cSQL += nEventType + ",";
+            cSQL += ((int)nEventType).ToString() + ",";
             cSQL += "'" + cDetail + "',";
             cSQL += "'" + cSessionId + "')";
-            return myWeb.moDbHelper.GetIdInsertSql(cSQL);
+            return Conversions.ToInteger(myWeb.moDbHelper.GetIdInsertSql(cSQL));
         }
 
         internal void UpdateLogDetail(int nActivityKey, string cActivityDetail)
         {
-            string cSQL = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("UPDATE tblActivityLog " + "SET cActivityDetail = '", SqlFmt(cActivityDetail)), "' "), "WHERE nActivityKey = "), SqlFmt(nActivityKey.ToString())));
+            string cSQL = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("UPDATE tblActivityLog " + "SET cActivityDetail = '", Protean.stdTools.SqlFmt(cActivityDetail)), "' "), "WHERE nActivityKey = "), Protean.stdTools.SqlFmt(nActivityKey.ToString())));
 
             myWeb.moDbHelper.ExeProcessSql(cSQL);
         }
@@ -2910,7 +2912,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref Protean.xForm.msException, mcModuleName, "New", ex, "", "", true);
+                    Protean.stdTools.returnException(ref Protean.xForm.msException, mcModuleName, "New", ex, "", "", true);
                 }
             }
 
@@ -2932,7 +2934,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref Protean.xForm.msException, mcModuleName, "GuessDBName", ex, "", "", true);
+                    Protean.stdTools.returnException(ref Protean.xForm.msException, mcModuleName, "GuessDBName", ex, "", "", true);
                     return "";
                 }
             }
@@ -3027,7 +3029,8 @@ namespace Protean
                             var oCfg = WebConfigurationManager.OpenWebConfiguration("/");
 
                             // Now lets create the database
-                            var oDbt = new Cms.dbHelper(default);
+                            Protean.Cms argaWeb = (Protean.Cms)null;
+                            var oDbt = new Protean.Cms.dbHelper(ref argaWeb);
                             string sDbName = this.Instance.SelectSingleNode("web/add[@key='DatabaseName']/@value").InnerText;
                             string cDbServer = this.Instance.SelectSingleNode("web/add[@key='DatabaseServer']/@value").InnerText;
                             string cDbUsername = this.Instance.SelectSingleNode("web/add[@key='DatabaseUsername']/@value").InnerText;
@@ -3086,7 +3089,7 @@ namespace Protean
                                     oDefaultCfgXml.Save(this.goServer.MapPath("web.config"));
                                 }
                             }
-                            oDbt = default;
+                            oDbt = (Protean.Cms.dbHelper)null;
                         }
 
                         // CreateDirs = Nothing
@@ -3114,7 +3117,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref Protean.xForm.msException, mcModuleName, "xFrmWebSettings", ex, "", cProcessInfo, true);
+                    Protean.stdTools.returnException(ref Protean.xForm.msException, mcModuleName, "xFrmWebSettings", ex, "", cProcessInfo, true);
                     return null;
                 }
             }
@@ -3208,7 +3211,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref Protean.xForm.msException, mcModuleName, "xFrmBackupDatabase", ex, "", cProcessInfo, true);
+                    Protean.stdTools.returnException(ref Protean.xForm.msException, mcModuleName, "xFrmBackupDatabase", ex, "", cProcessInfo, true);
                     return null;
                 }
             }
@@ -3319,7 +3322,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref Protean.xForm.msException, mcModuleName, "xFrmRestoreDatabase", ex, "", cProcessInfo, true);
+                    Protean.stdTools.returnException(ref Protean.xForm.msException, mcModuleName, "xFrmRestoreDatabase", ex, "", cProcessInfo, true);
                     return null;
                 }
             }
@@ -3393,7 +3396,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref Protean.xForm.msException, mcModuleName, "xFrmRestoreDatabase", ex, "", cProcessInfo, true);
+                    Protean.stdTools.returnException(ref Protean.xForm.msException, mcModuleName, "xFrmRestoreDatabase", ex, "", cProcessInfo, true);
                     return null;
                 }
             }
@@ -3428,73 +3431,73 @@ namespace Protean
                 {
                     // copy the .htaccess file for version 3 of Isapi Rewrite
                     // Dim fso As IO.File
-                    if (!File.Exists(goServer.MapPath(goConfig["ProjectPath"] + "/.htaccess")))
+                    if (!File.Exists(Protean.stdTools.goServer.MapPath(goConfig["ProjectPath"] + "/.htaccess")))
                     {
-                        File.Copy(goServer.MapPath("/ewcommon/setup/rootfiles/.htaccess"), goServer.MapPath(goConfig["ProjectPath"] + "/.htaccess"));
+                        File.Copy(Protean.stdTools.goServer.MapPath("/ewcommon/setup/rootfiles/.htaccess"), Protean.stdTools.goServer.MapPath(goConfig["ProjectPath"] + "/.htaccess"));
                     }
                     // Dim fso As IO.File
-                    if (!File.Exists(goServer.MapPath(goConfig["ProjectPath"] + "/httpd.ini")))
+                    if (!File.Exists(Protean.stdTools.goServer.MapPath(goConfig["ProjectPath"] + "/httpd.ini")))
                     {
-                        File.Copy(goServer.MapPath("/ewcommon/setup/rootfiles/httpd.ini"), goServer.MapPath(goConfig["ProjectPath"] + "/httpd.ini"));
+                        File.Copy(Protean.stdTools.goServer.MapPath("/ewcommon/setup/rootfiles/httpd.ini"), Protean.stdTools.goServer.MapPath(goConfig["ProjectPath"] + "/httpd.ini"));
                     }
                 }
 
                 // delete the setup.ashx file
-                if (File.Exists(goServer.MapPath(goConfig["ProjectPath"] + "/setup.ashx")))
+                if (File.Exists(Protean.stdTools.goServer.MapPath(goConfig["ProjectPath"] + "/setup.ashx")))
                 {
-                    File.Delete(goServer.MapPath(goConfig["ProjectPath"] + "/setup.ashx"));
+                    File.Delete(Protean.stdTools.goServer.MapPath(goConfig["ProjectPath"] + "/setup.ashx"));
                 }
 
                 // create all standard Eonic Config files
                 // disable if exisits to debug
-                if (File.Exists(goServer.MapPath(goConfig["ProjectPath"] + "/web.config")))
+                if (File.Exists(Protean.stdTools.goServer.MapPath(goConfig["ProjectPath"] + "/web.config")))
                 {
-                    File.Delete(goServer.MapPath(goConfig["ProjectPath"] + "/web.config"));
+                    File.Delete(Protean.stdTools.goServer.MapPath(goConfig["ProjectPath"] + "/web.config"));
                 }
 
                 // If Not IO.File.Exists(goServer.MapPath(goConfig("ProjectPath") & "/web.config")) Then
                 // TS: Don't check for this we want to overright regardless !
 
-                File.Copy(goServer.MapPath("/ewcommon/setup/rootfiles/web_config.xml"), goServer.MapPath(goConfig["ProjectPath"] + "/web.config"));
+                File.Copy(Protean.stdTools.goServer.MapPath("/ewcommon/setup/rootfiles/web_config.xml"), Protean.stdTools.goServer.MapPath(goConfig["ProjectPath"] + "/web.config"));
                 // End If
 
-                if (!File.Exists(goServer.MapPath(goConfig["ProjectPath"] + "/protean.web.config")))
+                if (!File.Exists(Protean.stdTools.goServer.MapPath(goConfig["ProjectPath"] + "/protean.web.config")))
                 {
-                    File.Copy(goServer.MapPath("/ewcommon/setup/rootfiles/protean_config.xml"), goServer.MapPath(goConfig["ProjectPath"] + "/protean.web.config"));
+                    File.Copy(Protean.stdTools.goServer.MapPath("/ewcommon/setup/rootfiles/protean_config.xml"), Protean.stdTools.goServer.MapPath(goConfig["ProjectPath"] + "/protean.web.config"));
                 }
-                if (!File.Exists(goServer.MapPath(goConfig["ProjectPath"] + "/protean.theme.config")))
+                if (!File.Exists(Protean.stdTools.goServer.MapPath(goConfig["ProjectPath"] + "/protean.theme.config")))
                 {
-                    File.Copy(goServer.MapPath("/ewcommon/setup/rootfiles/protean_theme_config.xml"), goServer.MapPath(goConfig["ProjectPath"] + "/protean.theme.config"));
+                    File.Copy(Protean.stdTools.goServer.MapPath("/ewcommon/setup/rootfiles/protean_theme_config.xml"), Protean.stdTools.goServer.MapPath(goConfig["ProjectPath"] + "/protean.theme.config"));
                 }
-                if (!File.Exists(goServer.MapPath(goConfig["ProjectPath"] + "/protean.cart.config")))
+                if (!File.Exists(Protean.stdTools.goServer.MapPath(goConfig["ProjectPath"] + "/protean.cart.config")))
                 {
-                    File.Copy(goServer.MapPath("/ewcommon/setup/rootfiles/protean_cart_config.xml"), goServer.MapPath(goConfig["ProjectPath"] + "/protean.cart.config"));
+                    File.Copy(Protean.stdTools.goServer.MapPath("/ewcommon/setup/rootfiles/protean_cart_config.xml"), Protean.stdTools.goServer.MapPath(goConfig["ProjectPath"] + "/protean.cart.config"));
                 }
-                if (!File.Exists(goServer.MapPath(goConfig["ProjectPath"] + "/protean.payment.config")))
+                if (!File.Exists(Protean.stdTools.goServer.MapPath(goConfig["ProjectPath"] + "/protean.payment.config")))
                 {
-                    File.Copy(goServer.MapPath("/ewcommon/setup/rootfiles/protean_payment_config.xml"), goServer.MapPath(goConfig["ProjectPath"] + "/protean.payment.config"));
+                    File.Copy(Protean.stdTools.goServer.MapPath("/ewcommon/setup/rootfiles/protean_payment_config.xml"), Protean.stdTools.goServer.MapPath(goConfig["ProjectPath"] + "/protean.payment.config"));
                 }
                 // If Not IO.File.Exists(goServer.MapPath(goConfig("ProjectPath") & "/protean.payment.config")) Then
                 // IO.File.Copy(goServer.MapPath("/ewcommon/setup/rootfiles/protean_payment_config.xml"),
                 // goServer.MapPath(goConfig("ProjectPath") & "/protean.payment.config"))
                 // End If
-                if (!File.Exists(goServer.MapPath(goConfig["ProjectPath"] + "/protean.mailinglist.config")))
+                if (!File.Exists(Protean.stdTools.goServer.MapPath(goConfig["ProjectPath"] + "/protean.mailinglist.config")))
                 {
-                    File.Copy(goServer.MapPath("/ewcommon/setup/rootfiles/protean_mailinglist_config.xml"), goServer.MapPath(goConfig["ProjectPath"] + "/protean.mailinglist.config"));
+                    File.Copy(Protean.stdTools.goServer.MapPath("/ewcommon/setup/rootfiles/protean_mailinglist_config.xml"), Protean.stdTools.goServer.MapPath(goConfig["ProjectPath"] + "/protean.mailinglist.config"));
                 }
 
                 // lets create media, images and docs directories
-                if (!Directory.Exists(goServer.MapPath(imageRootPath)))
+                if (!Directory.Exists(Protean.stdTools.goServer.MapPath(imageRootPath)))
                 {
-                    Directory.CreateDirectory(goServer.MapPath(imageRootPath));
+                    Directory.CreateDirectory(Protean.stdTools.goServer.MapPath(imageRootPath));
                 }
-                if (!Directory.Exists(goServer.MapPath(docRootPath)))
+                if (!Directory.Exists(Protean.stdTools.goServer.MapPath(docRootPath)))
                 {
-                    Directory.CreateDirectory(goServer.MapPath(docRootPath));
+                    Directory.CreateDirectory(Protean.stdTools.goServer.MapPath(docRootPath));
                 }
-                if (!Directory.Exists(goServer.MapPath(docMediaPath)))
+                if (!Directory.Exists(Protean.stdTools.goServer.MapPath(docMediaPath)))
                 {
-                    Directory.CreateDirectory(goServer.MapPath(docMediaPath));
+                    Directory.CreateDirectory(Protean.stdTools.goServer.MapPath(docMediaPath));
                 }
                 // If Not IO.Directory.Exists(goServer.MapPath("/ewThemes")) Then
                 // IO.Directory.CreateDirectory(goServer.MapPath("/ewThemes"))
@@ -3536,7 +3539,7 @@ namespace Protean
 
         // class for migrating one content schema to another
         public Setup oSetup;
-        public Cms myWeb;
+        public Protean.Cms myWeb;
 
 
         public System.Web.HttpContext moCtx = System.Web.HttpContext.Current;
@@ -3555,7 +3558,7 @@ namespace Protean
         private string cUpdateTableName = "";
         private string cUpdateKeyColumnName = "";
         private string cUpdateSchemaColumnName = "";
-        private Global.Protean.Cms.dbHelper.objectTypes nUpdateTableType;
+        private Protean.Cms.dbHelper.objectTypes nUpdateTableType;
 
         private Regex rCharCheck = new Regex(@"[\u0000-\u0008\u000B\u000C\u000E-\u001F]");
 
@@ -3611,7 +3614,7 @@ namespace Protean
                 if (value == "Content" | value == "Directory" | value == "ContentStructure")
                 {
                     cUpdateType = value;
-                    nUpdateTableType = Enum.Parse(typeof(Cms.dbHelper.objectTypes), value);
+                    nUpdateTableType = (Protean.Cms.dbHelper.objectTypes)Conversions.ToInteger(Enum.Parse(typeof(Protean.Cms.dbHelper.objectTypes), value));
                     cUpdateTableName = myWeb.moDbHelper.getTable(nUpdateTableType);
                     cUpdateKeyColumnName = myWeb.moDbHelper.getKey(nUpdateTableType);
 
@@ -3751,7 +3754,7 @@ namespace Protean
                 bAllowLog = myWeb.moDbHelper.checkDBObjectExists("tblActivityLog", Tools.Database.objectTypes.Table);
                 if (bForReal & bAllowLog)
                 {
-                    nLogId = oSetup.CommitToLog(Cms.dbHelper.ActivityType.SetupDataUpgrade, oSetup.mnUserId, goSession.SessionID, DateTime.Now, cDetail: nProgress + "/" + nRowCount);
+                    nLogId = oSetup.CommitToLog(Protean.Cms.dbHelper.ActivityType.SetupDataUpgrade, oSetup.mnUserId, goSession.SessionID, DateTime.Now, cDetail: nProgress + "/" + nRowCount);
                 }
 
                 oSetup.AddResponse("Total Record to Process: " + nRowCount);
@@ -3763,10 +3766,10 @@ namespace Protean
                     // Get the id
                     long nId = Conversions.ToLong(oDR[cUpdateKeyColumnName]);
                     string cResponse = myWeb.moDbHelper.getObjectInstance(nUpdateTableType, nId);
-                    if (nUpdateTableType == 4) // Directory
+                    if ((int)nUpdateTableType == 4) // Directory
                     {
                         XmlElement oGrpElmt;
-                        oGrpElmt = myWeb.moDbHelper.getGroupsInstance(nId, 0);
+                        oGrpElmt = myWeb.moDbHelper.getGroupsInstance(nId, 0L);
                         cResponse = "<instance>" + cResponse + oGrpElmt.OuterXml + "</instance>";
                     }
                     else
@@ -3819,7 +3822,7 @@ namespace Protean
                             }
                         }
                     }
-                    if (myWeb.msException != default)
+                    if (!string.IsNullOrEmpty(myWeb.msException))
                     {
                         oSetup.AddResponse("Error Converting Original:");
                         oSetup.AddResponse("<code>" + cResponse.Replace("<", "&lt;").Replace(">", "&gt;") + "</code><!--" + cResponse + "-->");
@@ -3883,7 +3886,7 @@ namespace Protean
                 oXmlDr.LoadXml(cContentXml.Trim());
 
                 // set exception to nothing
-                myWeb.msException = null;
+                myWeb.msException = (string)null;
 
                 sWriter = new StringWriter();
                 oTransform2.Compiled = false;
@@ -3963,7 +3966,7 @@ namespace Protean
                 {
                     string cOptions = "";
                     // Dim oDR As SqlDataReader = myWeb.moDbHelper.getDataReader("SELECT " & Me.cUpdateSchemaColumnName & " FROM " & Me.cUpdateTableName & " GROUP BY " & Me.cUpdateSchemaColumnName & " ORDER BY " & Me.cUpdateSchemaColumnName)
-                    using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable("SELECT " + cUpdateSchemaColumnName + " FROM " + cUpdateTableName + " GROUP BY " + cUpdateSchemaColumnName + " ORDER BY " + cUpdateSchemaColumnName))  // Done by nita on 6/7/22
+                    using (var oDr = myWeb.moDbHelper.getDataReaderDisposable("SELECT " + cUpdateSchemaColumnName + " FROM " + cUpdateTableName + " GROUP BY " + cUpdateSchemaColumnName + " ORDER BY " + cUpdateSchemaColumnName))  // Done by nita on 6/7/22
                     {
                         while (oDr.Read())
                             cOptions = Conversions.ToString(cOptions + Operators.ConcatenateObject(Operators.ConcatenateObject("<option>", oDr.GetValue(0)), "</option>"));
@@ -4038,7 +4041,7 @@ namespace Protean
                 oContentDetail.AppendChild(oElmt);
 
                 // Dim oDR As SqlDataReader = myWeb.moDbHelper.getDataReader("SELECT cContentSchemaName FROM tblContent GROUP BY cContentSchemaName ORDER BY cContentSchemaName")
-                using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable("SELECT cContentSchemaName FROM tblContent GROUP BY cContentSchemaName ORDER BY cContentSchemaName"))  // Done by nita on 6/7/22
+                using (var oDr = myWeb.moDbHelper.getDataReaderDisposable("SELECT cContentSchemaName FROM tblContent GROUP BY cContentSchemaName ORDER BY cContentSchemaName"))  // Done by nita on 6/7/22
                 {
                     while (oDr.Read())
                     {
@@ -4050,7 +4053,7 @@ namespace Protean
                     oDr.Close();
                 }
                 // oDr = myWeb.moDbHelper.getDataReader("SELECT nStructKey, cStructName FROM tblContentStructure ORDER BY cStructName")
-                using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable("SELECT nStructKey, cStructName FROM tblContentStructure ORDER BY cStructName"))  // Done by nita on 6/7/22
+                using (var oDr = myWeb.moDbHelper.getDataReaderDisposable("SELECT nStructKey, cStructName FROM tblContentStructure ORDER BY cStructName"))  // Done by nita on 6/7/22
                 {
                     while (oDr.Read())
                     {
@@ -4162,8 +4165,8 @@ namespace Protean
                     oXForm.load(cXFormPath);
                     oXForm.LoadInstance(oElmt);
                     int nNewContentId = 0;
-                    nNewContentId = myWeb.moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, oXForm.Instance);
-                    myWeb.moDbHelper.setContentLocation(nContentID, nNewContentId, true, false);
+                    nNewContentId = Conversions.ToInteger(myWeb.moDbHelper.setObjectInstance(Protean.Cms.dbHelper.objectTypes.Content, oXForm.Instance));
+                    myWeb.moDbHelper.setContentLocation((long)nContentID, (long)nNewContentId, true, false);
                     oSetup.AddResponse("Imported Content, New ID: " + nNewContentId);
                 }
                 oSetup.AddResponse("Complete");

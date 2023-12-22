@@ -10,7 +10,6 @@ using System.Xml;
 using VB = Microsoft.VisualBasic;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using static Protean.stdTools;
 using static Protean.Tools.Xml;
 
 namespace Protean
@@ -173,7 +172,7 @@ namespace Protean
 
             public Cart.Discount moDiscount;
             public Cart.Subscriptions moSubscription;
-            protected PaymentProviders moPay;
+            protected Cart.PaymentProviders moPay;
 
             public bool mbQuitOnShowInvoice = true;
             private bool mbDepositOnly = false;
@@ -503,7 +502,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "Close", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "Close", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -876,11 +875,11 @@ namespace Protean
                                     if (mnCartId > 0)
                                     {
                                         // sSql = "select * from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId where o.cCartSchemaName='Order' and o.cCartSessionId = '" & SqlFmt(mcSessionId) & "'"
-                                        sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("select Top 1* from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId where o.cCartSchemaName='Order' and o.cCartSessionId = '", SqlFmt(mcSessionId)), "' and o.nCartOrderKey='"), Convert.ToString(mnCartId)), "' order by o.nCartOrderKey desc "));
+                                        sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("select Top 1* from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId where o.cCartSchemaName='Order' and o.cCartSessionId = '", Protean.stdTools.SqlFmt(mcSessionId)), "' and o.nCartOrderKey='"), Convert.ToString(mnCartId)), "' order by o.nCartOrderKey desc "));
                                     }
                                     else
                                     {
-                                        sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("select * from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId where o.cCartSchemaName='Order' and o.cCartSessionId = '", SqlFmt(mcSessionId)), "'"));
+                                        sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("select * from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId where o.cCartSchemaName='Order' and o.cCartSessionId = '", Protean.stdTools.SqlFmt(mcSessionId)), "'"));
                                         // logic needs here to check cart id if we have car id then pull wiith session id
                                     }
 
@@ -1030,7 +1029,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "InitializeVariables", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "InitializeVariables", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -1077,7 +1076,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "Close", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "Close", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -1148,7 +1147,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "PersistVariables", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "PersistVariables", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -1166,54 +1165,54 @@ namespace Protean
                         return;
                     }
 
-                    if (stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartAdd"))
+                    if (Protean.stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartAdd"))
                     {
                         mcCartCmd = "Add";
                     }
-                    if (stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartAddDeposit"))
+                    if (Protean.stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartAddDeposit"))
                     {
                         mcCartCmd = "Add";
                         mbDepositOnly = true;
                     }
-                    if (stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartDetail"))
+                    if (Protean.stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartDetail"))
                     {
                         mcCartCmd = "Cart";
                     }
-                    if (stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartProceed"))
+                    if (Protean.stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartProceed"))
                     {
                         mcCartCmd = "RedirectSecure";
                     }
-                    if (stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartNotes"))
+                    if (Protean.stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartNotes"))
                     {
                         mcCartCmd = "Notes";
                     }
-                    if (stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartUpdate"))
+                    if (Protean.stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartUpdate"))
                     {
                         mcCartCmd = "Update";
                     }
-                    if (stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartLogon"))
+                    if (Protean.stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartLogon"))
                     {
                         mcCartCmd = "Logon";
                     }
-                    if (stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartRegister"))
+                    if (Protean.stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartRegister"))
                     {
                         mcCartCmd = "Logon";
                     }
-                    if (stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartQuit"))
+                    if (Protean.stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartQuit"))
                     {
                         mcCartCmd = "Quit";
                     }
                     // Continue shopping
-                    if (stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartBrief"))
+                    if (Protean.stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartBrief"))
                     {
                         mcCartCmd = "Brief";
                     }
                     // Pick Address Buttions
-                    if (stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartBillAddress") | stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartBillcontact") | stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartBilladdNewAddress") | stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartBilleditAddress"))
+                    if (Protean.stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartBillAddress") | Protean.stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartBillcontact") | Protean.stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartBilladdNewAddress") | Protean.stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartBilleditAddress"))
                     {
                         mcCartCmd = "Billing";
                     }
-                    if (stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartDelAddress") | stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartDelcontact") | stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartDeladdNewAddress") | stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartDeleditAddress"))
+                    if (Protean.stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartDelAddress") | Protean.stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartDelcontact") | Protean.stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartDeladdNewAddress") | Protean.stdTools.ButtonSubmitted(ref myWeb.moRequest, "cartDeleditAddress"))
                     {
                         mcCartCmd = "Delivery";
                     }
@@ -1242,12 +1241,12 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "checkButtons", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "checkButtons", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
 
             }
 
-            public object CreateCartElement(XmlDocument oCartXML)
+            public XmlElement CreateCartElement(XmlDocument oCartXML)
             {
                 XmlElement oContentElmt;
                 XmlElement oElmt;
@@ -1270,7 +1269,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "apply", ex, "", "CreateCartElement", gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "apply", ex, "", "CreateCartElement", Protean.stdTools.gbDebug);
                     return null;
                 }
 
@@ -1296,7 +1295,7 @@ namespace Protean
 
                     // myWeb.moDbHelper.logActivity(Protean.Cms.dbHelper.ActivityType.Alert, 0, 0, 0, "Start1 CALLBACK : " & mnProcessId & mcCartCmd)
 
-                    oContentElmt = (XmlElement)CreateCartElement(oCartXML);
+                    oContentElmt = CreateCartElement(oCartXML);
                     oElmt = (XmlElement)oContentElmt.FirstChild;
                     // if the cartCmd is not on a link but on a button
                     // we need to set the cartCmd dependant upon the button name
@@ -1651,9 +1650,9 @@ namespace Protean
                                         myWeb.moSession["cLogonCmd"] = "cartCmd=Logon";
                                         // registration xform
                                         object argmyWeb = myWeb;
-                                        var oMembershipProv = new Providers.Membership.BaseProvider(ref argmyWeb, myWeb.moConfig["MembershipProvider"]);
+                                        var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, myWeb.moConfig["MembershipProvider"]);
                                         myWeb = (Cms)argmyWeb;
-                                        Providers.Membership.EonicProvider.AdminXForms oRegXform = (Providers.Membership.EonicProvider.AdminXForms)oMembershipProv.AdminXforms;
+                                        Protean.Providers.Membership.EonicProvider.AdminXForms oRegXform = (Protean.Providers.Membership.EonicProvider.AdminXForms)oMembershipProv.AdminXforms;
                                         oRegXform.open(moPageXml);
                                         XmlElement argIntanceAppend = null;
                                         oRegXform.xFrmEditDirectoryItem((long)myWeb.mnUserId, "User", (long)Conversions.ToInteger("0" + moCartConfig["DefaultSubscriptionGroupId"]), "CartRegistration", IntanceAppend: ref argIntanceAppend);
@@ -1671,7 +1670,8 @@ namespace Protean
                                             }
                                             else
                                             {
-                                                oRegXform.addNote(oRegXform.moXformElmt.FirstChild, Protean.xForm.noteTypes.Alert, sReturn);
+                                                var argoNode = oRegXform.moXformElmt.FirstChild;
+                                                oRegXform.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, sReturn);
                                                 moPageXml.SelectSingleNode("/Page/Contents").AppendChild(oRegXform.moXformElmt);
                                             }
                                         }
@@ -1682,7 +1682,7 @@ namespace Protean
                                         }
 
 
-                                        oRegXform = (Providers.Membership.EonicProvider.AdminXForms)null;
+                                        oRegXform = (Protean.Providers.Membership.EonicProvider.AdminXForms)null;
                                     }
                                     else
                                     {
@@ -1783,11 +1783,25 @@ namespace Protean
                                     var oOptionXform = optionsXform(ref oElmt);
                                     if (oOptionXform.valid)
                                     {
-                                        mnProcessId = 5;
-                                        mcCartCmd = "EnterPaymentDetails";
-                                        // execute next step unless form filled out wrong / not in db
-                                        goto processFlow;
+                                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.moSession["paymentRecieved"], mnCartId, false)))
+                                        {
+                                            myWeb.moSession["paymentRecieved"] = (object)null;
+                                            mnProcessId = (short)cartProcess.Complete;
+                                            mcCartCmd = "ShowInvoice";
+                                            goto processFlow;
+                                        }
+                                        else
+                                        {
+                                            mnProcessId = 5;
+                                            mcCartCmd = "EnterPaymentDetails";
+                                            // execute next step unless form filled out wrong / not in db
+                                            goto processFlow;
+                                        }
                                     }
+
+
+
+
                                     else
                                     {
                                         XmlElement oContentsElmt = (XmlElement)moPageXml.SelectSingleNode("/Page/Contents");
@@ -1809,8 +1823,8 @@ namespace Protean
 
                                         if (!string.IsNullOrEmpty(cRepeatPaymentError))
                                         {
-                                            var argoNode = oOptionXform.moXformElmt.SelectSingleNode("group");
-                                            oOptionXform.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, cRepeatPaymentError, true);
+                                            var argoNode1 = oOptionXform.moXformElmt.SelectSingleNode("group");
+                                            oOptionXform.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, cRepeatPaymentError, true);
                                         }
                                     }
                                 }
@@ -1830,14 +1844,14 @@ namespace Protean
                                 // Dim Redirect3dsXform As xForm = New xForm(myWeb.msException)
                                 // Redirect3dsXform = oEwProv.GetRedirect3dsForm(myWeb)
 
-                                var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, mcPaymentMethod);
+                                var oPayProv = new Protean.Providers.Payment.BaseProvider(ref myWeb, mcPaymentMethod);
                                 var Redirect3dsXform = new Cms.xForm(ref myWeb.msException);
                                 Redirect3dsXform = (Cms.xForm)oPayProv.Activities.GetRedirect3dsForm(myWeb);
 
                                 if (Redirect3dsXform is null)
                                 {
-                                    Global.Protean.Cms.Cart.PaymentProviders oEwProv = new PaymentProviders(myWeb);
-                                    Redirect3dsXform = oEwProv.GetRedirect3dsForm(myWeb);
+                                    var oEwProv = new Cart.PaymentProviders(ref myWeb);
+                                    Redirect3dsXform = oEwProv.GetRedirect3dsForm(ref myWeb);
                                 }
 
                                 moPageXml.SelectSingleNode("/Page/Contents").AppendChild(Redirect3dsXform.moXformElmt);
@@ -1859,7 +1873,6 @@ namespace Protean
                                 }
 
                                 // Add the date and reference to the cart
-
                                 addDateAndRef(ref oElmt);
 
                                 if (mcPaymentMethod == "No Charge")
@@ -1870,7 +1883,7 @@ namespace Protean
                                 }
 
                                 cProcessInfo = "Payment Method from session = '" + mcPaymentMethod + "'";
-                                var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, mcPaymentMethod);
+                                var oPayProv = new Protean.Providers.Payment.BaseProvider(ref myWeb, mcPaymentMethod);
                                 var ccPaymentXform = new Protean.xForm(ref myWeb.msException);
                                 ccPaymentXform = (Protean.xForm)oPayProv.Activities.GetPaymentForm(myWeb, this, oElmt);
 
@@ -2168,7 +2181,7 @@ namespace Protean
                     // do nothing
                     else
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "apply", ex, "", cProcessInfo, gbDebug);
+                        Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "apply", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                     }
 
                 }
@@ -2194,7 +2207,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "AddCartElement", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "AddCartElement", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -2237,15 +2250,17 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "AddBehavior", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "AddBehavior", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
 
             }
 
-            public virtual PaymentProviders GetPaymentProvider()
+
+
+            public virtual Cart.PaymentProviders GetPaymentProvider()
             {
 
-                var oEwProv = new PaymentProviders(myWeb);
+                var oEwProv = new Cart.PaymentProviders(ref myWeb);
                 return oEwProv;
 
             }
@@ -2299,7 +2314,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "emailReceipts", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "emailReceipts", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
 
             }
@@ -2331,7 +2346,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ConfirmPayment", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "ConfirmPayment", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                     return null;
                 }
                 finally
@@ -2431,7 +2446,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ConfirmPayment", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "ConfirmPayment", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                     return null;
                 }
                 finally
@@ -2564,7 +2579,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "purchaseActions", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "purchaseActions", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
 
             }
@@ -2595,7 +2610,7 @@ namespace Protean
 
                         if (!string.IsNullOrEmpty(sMessagingProvider) | !string.IsNullOrEmpty(moMailConfig["InvoiceList"]) & !string.IsNullOrEmpty(moMailConfig["QuoteList"]))
                         {
-                            var oMessaging = new Providers.Messaging.BaseProvider(ref myWeb, sMessagingProvider);
+                            var oMessaging = new Protean.Providers.Messaging.BaseProvider(ref myWeb, sMessagingProvider);
                             string xsltPath = string.Empty;
                             if (string.IsNullOrEmpty(Email))
                                 Email = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText;
@@ -2683,7 +2698,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "purchaseActions", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "purchaseActions", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
 
             }
@@ -2707,9 +2722,9 @@ namespace Protean
                 }
                 messageHtml = sWriter.ToString();
                 sWriter.Close();
-                var xMailingListDoc = htmlToXmlDoc(messageHtml);
+                var xMailingListDoc = Protean.xmlTools.htmlToXmlDoc(messageHtml);
                 var xListElement = xMailingListDoc.DocumentElement;
-                valDict = XmltoDictionary(xListElement, true);
+                valDict = Tools.Xml.XmltoDictionary(xListElement, true);
                 return valDict;
             }
             private void RemoveDeliveryOption(int nOrderId)
@@ -2721,7 +2736,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "RemoveDeliveryOption", ex, "", "", gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "RemoveDeliveryOption", ex, "", "", Protean.stdTools.gbDebug);
                 }
             }
             // Sub GetCartSummary(ByRef oCartElmt As XmlElement, Optional ByVal nSelCartId As Integer = 0)
@@ -3211,7 +3226,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetCartSummary", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "GetCartSummary", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
 
             }
@@ -3225,7 +3240,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetCart", ex, "", "", gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "GetCart", ex, "", "", Protean.stdTools.gbDebug);
                 }
             }
 
@@ -3508,11 +3523,11 @@ namespace Protean
                                 quant = Conversions.ToLong(quant + oRow["quantity"]);
                                 if (moCartConfig["ProductOptionOverideQuantity"] == "on")
                                 {
-                                    total = Conversions.ToDouble(total + Operators.AddObject(Operators.MultiplyObject(oRow["quantity"], Round(oRow["price"], bForceRoundup: mbRoundup)), Round(nOpPrices, bForceRoundup: mbRoundup)));
+                                    total = Conversions.ToDouble(total + Operators.AddObject(Operators.MultiplyObject(oRow["quantity"], Protean.stdTools.Round(oRow["price"], bForceRoundup: mbRoundup)), Protean.stdTools.Round((object)nOpPrices, bForceRoundup: mbRoundup)));
                                 }
                                 else
                                 {
-                                    total = Conversions.ToDouble(total + Operators.MultiplyObject(oRow["quantity"], Round(Operators.AddObject(oRow["price"], nOpPrices), bForceRoundup: mbRoundup)));
+                                    total = Conversions.ToDouble(total + Operators.MultiplyObject(oRow["quantity"], Protean.stdTools.Round(Operators.AddObject(oRow["price"], nOpPrices), bForceRoundup: mbRoundup)));
                                 }
 
 
@@ -3799,6 +3814,7 @@ namespace Protean
                                 {
                                     shipCost = -1;
                                 }
+                                shipCost = -1;
 
                                 // Default Shipping Country.
                                 string cDestinationCountry = moCartConfig["DefaultCountry"];
@@ -4051,8 +4067,8 @@ namespace Protean
                                     oElmt.SetAttribute("carrierName", Conversions.ToString(oRow2["cCarrierName"]));
                                     oElmt.SetAttribute("ref", Conversions.ToString(oRow2["cCarrierRef"]));
                                     oElmt.SetAttribute("notes", Conversions.ToString(oRow2["cCarrierNotes"]));
-                                    oElmt.SetAttribute("deliveryDate", XmlDate(oRow2["dExpectedDeliveryDate"]));
-                                    oElmt.SetAttribute("collectionDate", XmlDate(oRow2["dCollectionDate"]));
+                                    oElmt.SetAttribute("deliveryDate", Protean.stdTools.xmlDate(oRow2["dExpectedDeliveryDate"]));
+                                    oElmt.SetAttribute("collectionDate", Protean.stdTools.xmlDate(oRow2["dCollectionDate"]));
                                     oCartElmt.AppendChild(oCartElmt.OwnerDocument.ImportNode(oElmt, true));
                                 }
                                 oldCartId = nCartIdUse;
@@ -4164,7 +4180,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetCart", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "GetCart", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
 
             }
@@ -4215,13 +4231,13 @@ namespace Protean
                                 if (oElmt.SelectSingleNode("Discount[@nDiscountCat='4' and @bDiscountIsPercent='1' and  number(@nDiscountValue)=100]") is not null)
                                 {
                                     // checks for a 100% off discount
-                                    nLineVat = (double)Round((Conversions.ToDouble(oElmt.GetAttribute("price")) - nItemDiscount + nOpPrices) * (nLineTaxRate / 100d), bForceRoundup: mbRoundup) * Conversions.ToDouble(oDiscItem.GetAttribute("Units"));
+                                    nLineVat = (double)Protean.stdTools.Round((object)((Conversions.ToDouble(oElmt.GetAttribute("price")) - nItemDiscount + nOpPrices) * (nLineTaxRate / 100d)), bForceRoundup: mbRoundup) * Conversions.ToDouble(oDiscItem.GetAttribute("Units"));
                                 }
                                 else
                                 {
                                     // nLineVat = Round((oElmt.GetAttribute("price") - nItemDiscount + nOpPrices) * (mnTaxRate / 100), , , mbRoundup) * oDiscItem.GetAttribute("Units")
 
-                                    nLineVat = (double)Round(Conversions.ToDouble(oDiscItem.GetAttribute("Total")) * (nLineTaxRate / 100d), bForceRoundup: mbRoundup, bForceRoundDown: mbRoundDown);
+                                    nLineVat = (double)Protean.stdTools.Round((object)(Conversions.ToDouble(oDiscItem.GetAttribute("Total")) * (nLineTaxRate / 100d)), bForceRoundup: mbRoundup, bForceRoundDown: mbRoundDown);
 
                                     // nLineVat = 5000
                                 }
@@ -4237,12 +4253,12 @@ namespace Protean
                             else if (mbVatAtUnit)
                             {
                                 // Round( Price * Vat ) * Quantity
-                                nLineVat = (double)Round((Conversions.ToDouble(oElmt.GetAttribute("price")) - nItemDiscount + nOpPrices) * (nLineTaxRate / 100d), bForceRoundup: mbRoundup, bForceRoundDown: mbRoundDown) * Conversions.ToDouble(oElmt.GetAttribute("quantity"));
+                                nLineVat = (double)Protean.stdTools.Round((object)((Conversions.ToDouble(oElmt.GetAttribute("price")) - nItemDiscount + nOpPrices) * (nLineTaxRate / 100d)), bForceRoundup: mbRoundup, bForceRoundDown: mbRoundDown) * Conversions.ToDouble(oElmt.GetAttribute("quantity"));
                             }
                             else
                             {
                                 // Round( ( Price * Quantity )* VAT )
-                                nLineVat = (double)Round((Conversions.ToDouble(oElmt.GetAttribute("price")) - nItemDiscount + nOpPrices) * Conversions.ToDouble(oElmt.GetAttribute("quantity")) * (nLineTaxRate / 100d), bForceRoundup: mbRoundup, bForceRoundDown: mbRoundDown);
+                                nLineVat = (double)Protean.stdTools.Round((object)((Conversions.ToDouble(oElmt.GetAttribute("price")) - nItemDiscount + nOpPrices) * Conversions.ToDouble(oElmt.GetAttribute("quantity")) * (nLineTaxRate / 100d)), bForceRoundup: mbRoundup, bForceRoundDown: mbRoundDown);
                             }
 
 
@@ -4252,7 +4268,7 @@ namespace Protean
 
                         if (!(Strings.LCase(moCartConfig["DontTaxShipping"]) == "on"))
                         {
-                            vatAmt = (double)(Round(shipCost * (mnTaxRate / 100d), bForceRoundup: mbRoundup, bForceRoundDown: mbRoundDown) + Round(vatAmt, bForceRoundup: mbRoundup, bForceRoundDown: mbRoundDown));
+                            vatAmt = (double)(Protean.stdTools.Round((object)(shipCost * (mnTaxRate / 100d)), bForceRoundup: mbRoundup, bForceRoundDown: mbRoundDown) + Protean.stdTools.Round((object)vatAmt, bForceRoundup: mbRoundup, bForceRoundDown: mbRoundDown));
                         }
 
                         oCartElmt.SetAttribute("totalNet", Strings.FormatNumber(total + shipCost, 2, TriState.True, TriState.False, TriState.False));
@@ -4281,7 +4297,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "updateTotals", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "updateTotals", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
 
                 return default;
@@ -4301,14 +4317,14 @@ namespace Protean
                     oDs = moDBHelper.GetDataSet(sSql, "Shipping", "Cart");
                     oXml.LoadXml(oDs.GetXml());
                     oDs.EnforceConstraints = false;
-                    oShippingXml = moPageXml.CreateElement("Cart");
+                    oShippingXml = oCartXml.OwnerDocument.CreateElement("Cart");
                     oShippingXml.InnerXml = oXml.InnerXml;
                     oCartXml.AppendChild(oShippingXml.FirstChild.FirstChild);
                 }
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getShippingDetailXml", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "getShippingDetailXml", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
 
             }
@@ -4337,7 +4353,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getProductPricesByXml", ex, "", "", gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "getProductPricesByXml", ex, "", "", Protean.stdTools.gbDebug);
                 }
 
                 return default;
@@ -4383,7 +4399,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getProductTaxRate", ex, "", "", gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "getProductTaxRate", ex, "", "", Protean.stdTools.gbDebug);
                     return (double)default;
                 }
 
@@ -4498,7 +4514,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getContentPricesNode", ex, "", "", gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "getContentPricesNode", ex, "", "", Protean.stdTools.gbDebug);
                     return null;
                 }
 
@@ -4572,7 +4588,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getOptionPricesByXml", ex, "", "", gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "getOptionPricesByXml", ex, "", "", Protean.stdTools.gbDebug);
                 }
 
                 return default;
@@ -4602,7 +4618,7 @@ namespace Protean
                     {
 
                         // Check minimum value
-                        if (Conversions.ToLong(cItemQuantity) < Conversions.ToLong(getNodeValueByType(ref oProd, "//Quantities/Minimum", XmlDataType.TypeNumber, 0)))
+                        if (Conversions.ToLong(cItemQuantity) < Conversions.ToLong(Protean.xmlTools.getNodeValueByType(ref oProd, "//Quantities/Minimum", (Protean.xmlTools.dataType)XmlDataType.TypeNumber, (object)0)))
                         {
                             // Minimum has not been matched
 
@@ -4616,18 +4632,24 @@ namespace Protean
                             // Check for existence of msg node for min
                             if (oError.SelectSingleNode("msg[@type='quantity_min']") is null)
                             {
-                                oMsg = addElement(ref oError, "msg", "You have not requested enough of one or more products", true);
+                                XmlNode argoParent = oError;
+                                XmlNode argoNodeFromXPath = null;
+                                oMsg = Protean.xmlTools.addElement(ref argoParent, "msg", "You have not requested enough of one or more products", true, oNodeFromXPath: ref argoNodeFromXPath);
+                                oError = (XmlElement)argoParent;
                                 oMsg.SetAttribute("type", "quantity_min");
                             }
 
                             // Add product specific msg
-                            oMsg = addElement(ref oError, "msg", Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("<strong>", getNodeValueByType(ref oProd, "/Content/Name", XmlDataType.TypeString, "A product below ")), "</strong> requires a quantity equal to or above <em>"), getNodeValueByType(ref oProd, "//Quantities/Minimum", XmlDataType.TypeNumber, "an undetermined value (please call for assistance).")), "</em>")), true);
+                            XmlNode argoParent1 = oError;
+                            XmlNode argoNodeFromXPath1 = null;
+                            oMsg = Protean.xmlTools.addElement(ref argoParent1, "msg", Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("<strong>", Protean.xmlTools.getNodeValueByType(ref oProd, "/Content/Name", (Protean.xmlTools.dataType)XmlDataType.TypeString, "A product below ")), "</strong> requires a quantity equal to or above <em>"), Protean.xmlTools.getNodeValueByType(ref oProd, "//Quantities/Minimum", (Protean.xmlTools.dataType)XmlDataType.TypeNumber, "an undetermined value (please call for assistance).")), "</em>")), true, oNodeFromXPath: ref argoNodeFromXPath1);
+                            oError = (XmlElement)argoParent1;
                             oMsg.SetAttribute("type", "quantity_min_detail");
 
                         }
 
                         // Check maximum value
-                        if (Conversions.ToLong(cItemQuantity) > Conversions.ToLong(getNodeValueByType(ref oProd, "//Quantities/Maximum", XmlDataType.TypeNumber, int.MaxValue)))
+                        if (Conversions.ToLong(cItemQuantity) > Conversions.ToLong(Protean.xmlTools.getNodeValueByType(ref oProd, "//Quantities/Maximum", (Protean.xmlTools.dataType)XmlDataType.TypeNumber, (object)int.MaxValue)))
                         {
                             // Maximum has not been matched
 
@@ -4641,19 +4663,25 @@ namespace Protean
                             // Check for existence of msg node for min
                             if (oError.SelectSingleNode("msg[@type='quantity_max']") is null)
                             {
-                                oMsg = addElement(ref oError, "msg", "You have requested too much of one or more products");
+                                XmlNode argoParent2 = oError;
+                                XmlNode argoNodeFromXPath2 = null;
+                                oMsg = Protean.xmlTools.addElement(ref argoParent2, "msg", "You have requested too much of one or more products", oNodeFromXPath: ref argoNodeFromXPath2);
+                                oError = (XmlElement)argoParent2;
                                 oMsg.SetAttribute("type", "quantity_max");
                             }
 
                             // Add product specific msg
-                            oMsg = addElement(ref oError, "msg", Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("<strong>", getNodeValueByType(ref oProd, "/Content/Name", XmlDataType.TypeString, "A product below ")), "</strong> requires a quantity equal to or below <em>"), getNodeValueByType(ref oProd, "//Quantities/Maximum", XmlDataType.TypeNumber, "an undetermined value (please call for assistance).")), "</em>")), true);
+                            XmlNode argoParent3 = oError;
+                            XmlNode argoNodeFromXPath3 = null;
+                            oMsg = Protean.xmlTools.addElement(ref argoParent3, "msg", Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("<strong>", Protean.xmlTools.getNodeValueByType(ref oProd, "/Content/Name", (Protean.xmlTools.dataType)XmlDataType.TypeString, "A product below ")), "</strong> requires a quantity equal to or below <em>"), Protean.xmlTools.getNodeValueByType(ref oProd, "//Quantities/Maximum", (Protean.xmlTools.dataType)XmlDataType.TypeNumber, "an undetermined value (please call for assistance).")), "</em>")), true, oNodeFromXPath: ref argoNodeFromXPath3);
+                            oError = (XmlElement)argoParent3;
                             oMsg.SetAttribute("type", "quantity_max_detail");
 
                         }
 
                         // Check bulkunit value
-                        int cBulkUnit = Conversions.ToInteger(getNodeValueByType(ref oProd, "//Quantities/BulkUnit", XmlDataType.TypeNumber, 0));
-                        if (Conversions.ToLong(cItemQuantity) % Conversions.ToLong(getNodeValueByType(ref oProd, "//Quantities/BulkUnit", XmlDataType.TypeNumber, 1)) != 0L)
+                        int cBulkUnit = Conversions.ToInteger(Protean.xmlTools.getNodeValueByType(ref oProd, "//Quantities/BulkUnit", (Protean.xmlTools.dataType)XmlDataType.TypeNumber, (object)0));
+                        if (Conversions.ToLong(cItemQuantity) % Conversions.ToLong(Protean.xmlTools.getNodeValueByType(ref oProd, "//Quantities/BulkUnit", (Protean.xmlTools.dataType)XmlDataType.TypeNumber, (object)1)) != 0L)
                         {
                             // Bulk Unit has not been matched
                             // Check for existence of error node
@@ -4666,12 +4694,18 @@ namespace Protean
                             // Check for existence of msg node for min
                             if (oError.SelectSingleNode("msg[@type='quantity_mod']") is null)
                             {
-                                oMsg = addElement(ref oError, "msg", "One or more products below can only be bought in certain quantities.");
+                                XmlNode argoParent4 = oError;
+                                XmlNode argoNodeFromXPath4 = null;
+                                oMsg = Protean.xmlTools.addElement(ref argoParent4, "msg", "One or more products below can only be bought in certain quantities.", oNodeFromXPath: ref argoNodeFromXPath4);
+                                oError = (XmlElement)argoParent4;
                                 oMsg.SetAttribute("type", "quantity_mod");
                             }
 
                             // Add product specific msg
-                            oMsg = addElement(ref oError, "msg", Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("<strong>", getNodeValueByType(ref oProd, "/Content/Name", XmlDataType.TypeString, "A product below ")), "</strong> can only be bought in lots of <em>"), getNodeValueByType(ref oProd, "//Quantities/BulkUnit", XmlDataType.TypeNumber, "an undetermined value (please call for assistance).")), "</em>")), true);
+                            XmlNode argoParent5 = oError;
+                            XmlNode argoNodeFromXPath5 = null;
+                            oMsg = Protean.xmlTools.addElement(ref argoParent5, "msg", Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("<strong>", Protean.xmlTools.getNodeValueByType(ref oProd, "/Content/Name", (Protean.xmlTools.dataType)XmlDataType.TypeString, "A product below ")), "</strong> can only be bought in lots of <em>"), Protean.xmlTools.getNodeValueByType(ref oProd, "//Quantities/BulkUnit", (Protean.xmlTools.dataType)XmlDataType.TypeNumber, "an undetermined value (please call for assistance).")), "</em>")), true, oNodeFromXPath: ref argoNodeFromXPath5);
+                            oError = (XmlElement)argoParent5;
                             oMsg.SetAttribute("type", "quantity_mod_detail");
                         }
                     }
@@ -4680,7 +4714,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "CheckQuantities", ex, "", "", gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "CheckQuantities", ex, "", "", Protean.stdTools.gbDebug);
                 }
 
             }
@@ -4739,7 +4773,10 @@ namespace Protean
                                 if (oCartElmt.SelectSingleNode("error") is null)
                                     oCartElmt.AppendChild(oCartElmt.OwnerDocument.CreateElement("error"));
                                 oError = (XmlElement)oCartElmt.SelectSingleNode("error");
-                                oMsg = addElement(ref oError, "msg", "<span class=\"term3080\">You have requested more items than are currently <em>in stock</em> for <strong class=\"product-name\">" + oProd.SelectSingleNode("//Name").InnerText + "</strong> (only <span class=\"quantity-available\">" + oStock.InnerText + "</span> available).</span><br/>", true);
+                                XmlNode argoParent = oError;
+                                XmlNode argoNodeFromXPath = null;
+                                oMsg = Protean.xmlTools.addElement(ref argoParent, "msg", "<span class=\"term3080\">You have requested more items than are currently <em>in stock</em> for <strong class=\"product-name\">" + oProd.SelectSingleNode("//Name").InnerText + "</strong> (only <span class=\"quantity-available\">" + oStock.InnerText + "</span> available).</span><br/>", true, oNodeFromXPath: ref argoNodeFromXPath);
+                                oError = (XmlElement)argoParent;
                                 oMsg.SetAttribute("type", "stock");
                             }
                         }
@@ -4749,7 +4786,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "CheckStock", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "CheckStock", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -4830,7 +4867,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateStockLevels", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateStockLevels", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -4856,7 +4893,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateGiftListLevels", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateGiftListLevels", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
             // deprecated for the single call function above.
@@ -4883,13 +4920,13 @@ namespace Protean
 
                             nNewQty = Conversions.ToDecimal(oRow["nQuantity"]);
 
-                            sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("select * from tblCartItem where nCartOrderId=" + mnGiftListId + " and nItemId =" + oRow["nItemId"].ToString() + " and cItemOption1='", SqlFmt(oRow["cItemOption1"].ToString())), "' and cItemOption2='"), SqlFmt(oRow["cItemOption2"].ToString())), "'"));
+                            sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("select * from tblCartItem where nCartOrderId=" + mnGiftListId + " and nItemId =" + oRow["nItemId"].ToString() + " and cItemOption1='", Protean.stdTools.SqlFmt(oRow["cItemOption1"].ToString())), "' and cItemOption2='"), Protean.stdTools.SqlFmt(oRow["cItemOption2"].ToString())), "'"));
                             using (var oDr2 = moDBHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                             {
                                 while (oDr2.Read())
                                     nNewQty = Conversions.ToDecimal(Operators.SubtractObject(oDr2["nQuantity"], oRow["nQuantity"]));
 
-                                sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Update tblCartItem set nQuantity = " + nNewQty.ToString() + " where nCartOrderId=" + mnGiftListId + " and nItemId =" + oRow["nItemId"].ToString() + " and cItemOption1='", SqlFmt(oRow["cItemOption1"].ToString())), "' and cItemOption2='"), SqlFmt(oRow["cItemOption2"].ToString())), "'"));
+                                sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Update tblCartItem set nQuantity = " + nNewQty.ToString() + " where nCartOrderId=" + mnGiftListId + " and nItemId =" + oRow["nItemId"].ToString() + " and cItemOption1='", Protean.stdTools.SqlFmt(oRow["cItemOption1"].ToString())), "' and cItemOption2='"), Protean.stdTools.SqlFmt(oRow["cItemOption2"].ToString())), "'"));
                                 moDBHelper.ExeProcessSql(sSql);
                             }
 
@@ -4901,7 +4938,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateGiftListLevels", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateGiftListLevels", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
                 finally
                 {
@@ -4937,7 +4974,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getGroupsByName", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "getGroupsByName", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                     return null;
                 }
             }
@@ -4948,7 +4985,7 @@ namespace Protean
                 Cms.xForm oContactXform;
                 string submitPrefix = "cartBill";
                 string cProcessInfo = submitPrefix;
-                PaymentProviders oPay;
+                Cart.PaymentProviders oPay;
                 string buttonRef = "";
                 bool bSubmitPaymentMethod = false;
 
@@ -4969,7 +5006,7 @@ namespace Protean
 
                         if (moPay is null)
                         {
-                            oPay = new PaymentProviders(myWeb);
+                            oPay = new Cart.PaymentProviders(ref myWeb);
                         }
                         else
                         {
@@ -4986,7 +5023,8 @@ namespace Protean
                                 XmlElement oSubmitBtn = (XmlElement)oContactXform.moXformElmt.SelectSingleNode("descendant-or-self::submit[@submission='SubmitAdd']");
                                 buttonRef = oSubmitBtn.GetAttribute("ref");
                                 double PaymentAmount = Conversions.ToDouble("0" + oCartElmt.GetAttribute("total"));
-                                oPay.getPaymentMethodButtons(oContactXform, oSubmitBtn.ParentNode, PaymentAmount);
+                                XmlElement argoFrmElmt = (XmlElement)oSubmitBtn.ParentNode;
+                                oPay.getPaymentMethodButtons(ref oContactXform, ref argoFrmElmt, PaymentAmount);
                                 bSubmitPaymentMethod = true;
                             }
                         }
@@ -5166,7 +5204,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "addressSubProcess", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "addressSubProcess", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
 
             }
@@ -5234,7 +5272,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "addressSubProcess", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "addressSubProcess", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                     return false;
                 }
 
@@ -5577,19 +5615,19 @@ namespace Protean
                             XmlElement contact = (XmlElement)oXform.Instance.SelectSingleNode("tblCartContact");
                             cWhere = "";
                             if (Tools.Xml.NodeState(ref contact, "cContactName", "", "", 1, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
-                                cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactName='", SqlFmt(value)), "' "));
+                                cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactName='", Protean.stdTools.SqlFmt(value)), "' "));
                             if (Tools.Xml.NodeState(ref contact, "cContactCompany", "", "", 1, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
-                                cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactCompany='", SqlFmt(value)), "' "));
+                                cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactCompany='", Protean.stdTools.SqlFmt(value)), "' "));
                             if (Tools.Xml.NodeState(ref contact, "cContactAddress", "", "", 1, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
-                                cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactAddress='", SqlFmt(value)), "' "));
+                                cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactAddress='", Protean.stdTools.SqlFmt(value)), "' "));
                             if (Tools.Xml.NodeState(ref contact, "cContactCity", "", "", 1, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
-                                cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactCity='", SqlFmt(value)), "' "));
+                                cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactCity='", Protean.stdTools.SqlFmt(value)), "' "));
                             if (Tools.Xml.NodeState(ref contact, "cContactState", "", "", 1, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
-                                cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactState='", SqlFmt(value)), "' "));
+                                cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactState='", Protean.stdTools.SqlFmt(value)), "' "));
                             if (Tools.Xml.NodeState(ref contact, "cContactZip", "", "", 1, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
-                                cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactZip='", SqlFmt(value)), "' "));
+                                cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactZip='", Protean.stdTools.SqlFmt(value)), "' "));
                             if (Tools.Xml.NodeState(ref contact, "cContactCountry", "", "", 1, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
-                                cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactCountry='", SqlFmt(value)), "' "));
+                                cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactCountry='", Protean.stdTools.SqlFmt(value)), "' "));
 
                             // cWhere = " and cContactName='" & SqlFmt(oXform.Instance.SelectSingleNode("tblCartContact/cContactName").InnerText) & "' " & _
                             // "and cContactCompany='" & SqlFmt(oXform.Instance.SelectSingleNode("tblCartContact/cContactCompany").InnerText) & "' " & _
@@ -5677,7 +5715,7 @@ namespace Protean
                                             string cShippingDesc = oDrCollectionOptions2["cShipOptName"].ToString() + "-" + oDrCollectionOptions2["cShipOptCarrier"].ToString() + "</span>";
                                             double nShippingCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oDrCollectionOptions2["nShipOptCost"]));
 
-                                            cSqlUpdate = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("UPDATE tblCartOrder SET cShippingDesc='", SqlFmt(cShippingDesc)), "', nShippingCost="), SqlFmt(nShippingCost.ToString())), ", nShippingMethodId = "), myWeb.moRequest["cIsDelivery"]), " WHERE nCartOrderKey="), mnCartId));
+                                            cSqlUpdate = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("UPDATE tblCartOrder SET cShippingDesc='", Protean.stdTools.SqlFmt(cShippingDesc)), "', nShippingCost="), Protean.stdTools.SqlFmt(nShippingCost.ToString())), ", nShippingMethodId = "), myWeb.moRequest["cIsDelivery"]), " WHERE nCartOrderKey="), mnCartId));
                                         }
 
                                         moDBHelper.ExeProcessSql(cSqlUpdate);
@@ -5782,7 +5820,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "contactXform", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "contactXform", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                     return (Cms.xForm)null;
                 }
 
@@ -6032,7 +6070,7 @@ namespace Protean
                                                 string cShippingDesc = oDrCollectionOptions["cShipOptName"].ToString() + "-" + oDrCollectionOptions["cShipOptCarrier"].ToString();
                                                 double nShippingCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oDrCollectionOptions["nShipOptCost"]));
                                                 string cSqlUpdate;
-                                                cSqlUpdate = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("UPDATE tblCartOrder SET cShippingDesc='", SqlFmt(cShippingDesc)), "', nShippingCost="), SqlFmt(nShippingCost.ToString())), ", nShippingMethodId = "), oDrCollectionOptions["nShipOptKey"]), " WHERE nCartOrderKey="), mnCartId));
+                                                cSqlUpdate = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("UPDATE tblCartOrder SET cShippingDesc='", Protean.stdTools.SqlFmt(cShippingDesc)), "', nShippingCost="), Protean.stdTools.SqlFmt(nShippingCost.ToString())), ", nShippingMethodId = "), oDrCollectionOptions["nShipOptKey"]), " WHERE nCartOrderKey="), mnCartId));
                                                 moDBHelper.ExeProcessSql(cSqlUpdate);
                                                 forCollection = true;
                                                 oXform.valid = true;
@@ -6243,7 +6281,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "pickContactXform", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "pickContactXform", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                     return (Cms.xForm)null;
                 }
 
@@ -6301,7 +6339,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "setCurrentBillingAddress", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "setCurrentBillingAddress", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                     return default;
                 }
             }
@@ -6381,7 +6419,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "useAddressesOnCart", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "useAddressesOnCart", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -6403,7 +6441,7 @@ namespace Protean
                         {
 
                             // does this address allready exist?
-                            sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("select count(nContactKey) from tblCartContact where nContactDirId = " + myWeb.mnUserId + " and nContactCartId = 0 " + " and cContactName = '", SqlFmt(oAddElmt.SelectSingleNode("cContactName").InnerText)), "'"), " and cContactCompany = '"), SqlFmt(oAddElmt.SelectSingleNode("cContactCompany").InnerText)), "'"), " and cContactAddress = '"), SqlFmt(oAddElmt.SelectSingleNode("cContactAddress").InnerText)), "'"), " and cContactCity = '"), SqlFmt(oAddElmt.SelectSingleNode("cContactCity").InnerText)), "'"), " and cContactState = '"), SqlFmt(oAddElmt.SelectSingleNode("cContactState").InnerText)), "'"), " and cContactZip = '"), SqlFmt(oAddElmt.SelectSingleNode("cContactZip").InnerText)), "'"), " and cContactCountry = '"), SqlFmt(oAddElmt.SelectSingleNode("cContactCountry").InnerText)), "'"), " and cContactTel = '"), SqlFmt(oAddElmt.SelectSingleNode("cContactTel").InnerText)), "'"), " and cContactFax = '"), SqlFmt(oAddElmt.SelectSingleNode("cContactFax").InnerText)), "'"), " and cContactEmail = '"), SqlFmt(oAddElmt.SelectSingleNode("cContactEmail").InnerText)), "'"), " and cContactXml = '"), SqlFmt(oAddElmt.SelectSingleNode("cContactXml").InnerXml)), "'"));
+                            sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("select count(nContactKey) from tblCartContact where nContactDirId = " + myWeb.mnUserId + " and nContactCartId = 0 " + " and cContactName = '", Protean.stdTools.SqlFmt(oAddElmt.SelectSingleNode("cContactName").InnerText)), "'"), " and cContactCompany = '"), Protean.stdTools.SqlFmt(oAddElmt.SelectSingleNode("cContactCompany").InnerText)), "'"), " and cContactAddress = '"), Protean.stdTools.SqlFmt(oAddElmt.SelectSingleNode("cContactAddress").InnerText)), "'"), " and cContactCity = '"), Protean.stdTools.SqlFmt(oAddElmt.SelectSingleNode("cContactCity").InnerText)), "'"), " and cContactState = '"), Protean.stdTools.SqlFmt(oAddElmt.SelectSingleNode("cContactState").InnerText)), "'"), " and cContactZip = '"), Protean.stdTools.SqlFmt(oAddElmt.SelectSingleNode("cContactZip").InnerText)), "'"), " and cContactCountry = '"), Protean.stdTools.SqlFmt(oAddElmt.SelectSingleNode("cContactCountry").InnerText)), "'"), " and cContactTel = '"), Protean.stdTools.SqlFmt(oAddElmt.SelectSingleNode("cContactTel").InnerText)), "'"), " and cContactFax = '"), Protean.stdTools.SqlFmt(oAddElmt.SelectSingleNode("cContactFax").InnerText)), "'"), " and cContactEmail = '"), Protean.stdTools.SqlFmt(oAddElmt.SelectSingleNode("cContactEmail").InnerText)), "'"), " and cContactXml = '"), Protean.stdTools.SqlFmt(oAddElmt.SelectSingleNode("cContactXml").InnerXml)), "'"));
 
                             nCount = Conversions.ToLong(moDBHelper.ExeProcessSqlScalar(sSql));
 
@@ -6460,7 +6498,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateExistingUserAddress", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateExistingUserAddress", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
                 finally
                 {
@@ -6511,7 +6549,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "discountsProcess", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "discountsProcess", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                     return "";
                 }
 
@@ -6656,7 +6694,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "discountsXform", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "discountsXform", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                     return (Cms.xForm)null;
                 }
 
@@ -6712,7 +6750,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "notesProcess", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "notesProcess", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                     return "";
                 }
 
@@ -7190,7 +7228,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "notesXform", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "notesXform", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                     return (Cms.xForm)null;
                 }
 
@@ -7235,13 +7273,13 @@ namespace Protean
                 // Dim cPaymentResponse As String
                 string cProcessInfo = "";
                 bool bAddTerms = false;
-                PaymentProviders oPay;
+                Cart.PaymentProviders oPay;
                 bool bDeny = false;
                 var AllowedPaymentMethods = new System.Collections.Specialized.StringCollection();
 
                 if (moPay is null)
                 {
-                    oPay = new PaymentProviders(myWeb);
+                    oPay = new Cart.PaymentProviders(ref myWeb);
                 }
                 else
                 {
@@ -7604,7 +7642,7 @@ namespace Protean
                                     {
                                         oSelectElmt = oOptXform.addSelect1(ref oGrpElmt, "cPaymentMethod", false, "Payment Method", "radios multiline", Protean.xForm.ApperanceTypes.Full);
                                     }
-                                    int nOptCount = oPay.getPaymentMethods(oOptXform, oSelectElmt, nAmount, mcPaymentMethod);
+                                    int nOptCount = oPay.getPaymentMethods(ref oOptXform, ref oSelectElmt, nAmount, ref mcPaymentMethod);
 
                                     // Code Moved to Get PaymentMethods
 
@@ -7635,10 +7673,10 @@ namespace Protean
                                 // or just one
                                 if (!bPaymentTypeButtons)
                                 {
-                                    if (oPay.HasRepeatPayments)
+                                    if (Conversions.ToBoolean(oPay.HasRepeatPayments()))
                                     {
                                         var oSelectElmt = oOptXform.addSelect1(ref oGrpElmt, "cPaymentMethod", false, "Payment Method", "radios multiline", Protean.xForm.ApperanceTypes.Full);
-                                        oPay.ReturnRepeatPayments(oPaymentCfg.SelectSingleNode("provider/@name").InnerText, oOptXform, oSelectElmt);
+                                        oPay.ReturnRepeatPayments(oPaymentCfg.SelectSingleNode("provider/@name").InnerText, ref oOptXform, ref oSelectElmt);
 
                                         oOptXform.addOption(ref oSelectElmt, oPaymentCfg.SelectSingleNode("provider/description").Attributes["value"].Value, oPaymentCfg.SelectSingleNode("provider").Attributes["name"].Value);
                                         bHidePayment = false;
@@ -7733,7 +7771,8 @@ namespace Protean
 
                         if (bPaymentTypeButtons)
                         {
-                            oPay.getPaymentMethodButtons(oOptXform, oOptXform.moXformElmt.SelectSingleNode("group"), nAmount);
+                            XmlElement argoFrmElmt = (XmlElement)oOptXform.moXformElmt.SelectSingleNode("group");
+                            oPay.getPaymentMethodButtons(ref oOptXform, ref argoFrmElmt, nAmount);
                             foreach (XmlElement oSubmitBtn in oOptXform.moXformElmt.SelectNodes("descendant-or-self::submit"))
                                 AllowedPaymentMethods.Add(oSubmitBtn.GetAttribute("value"));
 
@@ -7802,7 +7841,7 @@ namespace Protean
                                     oRow = currentORow5;
                                     cShippingDesc = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cShipOptName"], "-"), oRow["cShipOptCarrier"]));
                                     nShippingCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShipOptCost"]));
-                                    cSqlUpdate = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("UPDATE tblCartOrder SET cShippingDesc='", SqlFmt(cShippingDesc)), "', nShippingCost="), SqlFmt(nShippingCost.ToString())), ", nShippingMethodId = "), nShipOptKey), " WHERE nCartOrderKey="), mnCartId));
+                                    cSqlUpdate = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("UPDATE tblCartOrder SET cShippingDesc='", Protean.stdTools.SqlFmt(cShippingDesc)), "', nShippingCost="), Protean.stdTools.SqlFmt(nShippingCost.ToString())), ", nShippingMethodId = "), nShipOptKey), " WHERE nCartOrderKey="), mnCartId));
                                     moDBHelper.ExeProcessSql(cSqlUpdate);
                                 }
 
@@ -7854,7 +7893,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "optionsXform", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "optionsXform", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                     return (Cms.xForm)null;
                 }
 
@@ -7940,7 +7979,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getParentCountries", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "getParentCountries", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                     return null;
                 }
             }
@@ -7959,7 +7998,7 @@ namespace Protean
                     if (oDict.ContainsKey(nParent))
                     {
                         arrTmp = oDict[nParent];
-                        sListReturn = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(",'", SqlFmt(Conversions.ToString(arrTmp((object)nIndex)))), "'")); // Adding this line here allows the top root location to be added
+                        sListReturn = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(",'", Protean.stdTools.SqlFmt(Conversions.ToString(arrTmp((object)nIndex)))), "'")); // Adding this line here allows the top root location to be added
                         if (Conversions.ToBoolean(!Operators.OrObject(arrTmp((object)0) is DBNull, Operators.ConditionalCompareObjectEqual(arrTmp((object)0), "", false)))) // You're not at the root - arrTmp(0) is the parent of the location
                         {
                             if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(arrTmp((object)0), nParent, false))) // guard against recursive loops
@@ -7976,7 +8015,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "iterateCountryList", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "iterateCountryList", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                     return null;
                 }
 
@@ -7998,7 +8037,7 @@ namespace Protean
                         invoiceDate = DateTime.Now;
                     if (nCartId == 0L)
                         nCartId = Conversions.ToLong(oCartElmt.GetAttribute("cartId"));
-                    oCartElmt.SetAttribute("InvoiceDate", niceDate(invoiceDate));
+                    oCartElmt.SetAttribute("InvoiceDate", Protean.stdTools.niceDate((object)invoiceDate));
                     oCartElmt.SetAttribute("InvoiceDateTime", XmlDate(invoiceDate, true));
                     oCartElmt.SetAttribute("InvoiceRef", OrderNoPrefix + nCartId.ToString());
                     if (!string.IsNullOrEmpty(mcVoucherNumber))
@@ -8012,7 +8051,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "addDateAndRef", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "addDateAndRef", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
 
             }
@@ -8034,81 +8073,84 @@ namespace Protean
 
                         oInstance.AppendChild(oInstance.CreateElement("instance"));
                         XmlNode argoNode = oInstance.DocumentElement;
-                        oElmt = addNewTextNode("tblCartOrder", ref argoNode);
+                        oElmt = Protean.xmlTools.addNewTextNode("tblCartOrder", ref argoNode);
                         // addNewTextNode("nCartOrderKey", oElmt)
                         XmlNode argoNode1 = oElmt;
-                        addNewTextNode("cCurrency", ref argoNode1, mcCurrencyRef);
+                        Protean.xmlTools.addNewTextNode("cCurrency", ref argoNode1, mcCurrencyRef);
                         oElmt = (XmlElement)argoNode1;
                         XmlNode argoNode2 = oElmt;
-                        addNewTextNode("cCartSiteRef", ref argoNode2, moCartConfig["OrderNoPrefix"]);
+                        Protean.xmlTools.addNewTextNode("cCartSiteRef", ref argoNode2, moCartConfig["OrderNoPrefix"]);
                         oElmt = (XmlElement)argoNode2;
                         XmlNode argoNode3 = oElmt;
-                        addNewTextNode("cCartForiegnRef", ref argoNode3);
+                        Protean.xmlTools.addNewTextNode("cCartForiegnRef", ref argoNode3);
                         oElmt = (XmlElement)argoNode3;
                         XmlNode argoNode4 = oElmt;
-                        addNewTextNode("nCartStatus", ref argoNode4, "1");
+                        Protean.xmlTools.addNewTextNode("nCartStatus", ref argoNode4, "1");
                         oElmt = (XmlElement)argoNode4;
                         XmlNode argoNode5 = oElmt;
-                        addNewTextNode("cCartSchemaName", ref argoNode5, mcOrderType);
+                        Protean.xmlTools.addNewTextNode("cCartSchemaName", ref argoNode5, mcOrderType);
                         oElmt = (XmlElement)argoNode5;
                         XmlNode argoNode6 = oElmt;
-                        addNewTextNode("cCartSessionId", ref argoNode6, mcSessionId);
+                        Protean.xmlTools.addNewTextNode("cCartSessionId", ref argoNode6, mcSessionId);
                         oElmt = (XmlElement)argoNode6;
                         // MEMB - add userid to oRs if we are logged on
                         if (mnEwUserId > 0)
                         {
                             XmlNode argoNode7 = oElmt;
-                            addNewTextNode("nCartUserDirId", ref argoNode7, mnEwUserId.ToString());
+                            Protean.xmlTools.addNewTextNode("nCartUserDirId", ref argoNode7, mnEwUserId.ToString());
                             oElmt = (XmlElement)argoNode7;
                         }
                         else
                         {
                             XmlNode argoNode8 = oElmt;
-                            addNewTextNode("nCartUserDirId", ref argoNode8, "0");
+                            Protean.xmlTools.addNewTextNode("nCartUserDirId", ref argoNode8, "0");
                             oElmt = (XmlElement)argoNode8;
                         }
                         XmlNode argoNode9 = oElmt;
-                        addNewTextNode("nPayMthdId", ref argoNode9, "0");
+                        Protean.xmlTools.addNewTextNode("nPayMthdId", ref argoNode9, "0");
                         oElmt = (XmlElement)argoNode9;
                         XmlNode argoNode10 = oElmt;
-                        addNewTextNode("cPaymentRef", ref argoNode10);
+                        Protean.xmlTools.addNewTextNode("cPaymentRef", ref argoNode10);
                         oElmt = (XmlElement)argoNode10;
                         XmlNode argoNode11 = oElmt;
-                        addNewTextNode("cCartXml", ref argoNode11);
+                        Protean.xmlTools.addNewTextNode("cCartXml", ref argoNode11);
                         oElmt = (XmlElement)argoNode11;
                         XmlNode argoNode12 = oElmt;
-                        addNewTextNode("nShippingMethodId", ref argoNode12, "0");
+                        Protean.xmlTools.addNewTextNode("nShippingMethodId", ref argoNode12, "0");
                         oElmt = (XmlElement)argoNode12;
                         XmlNode argoNode13 = oElmt;
-                        addNewTextNode("cShippingDesc", ref argoNode13, moCartConfig["DefaultShippingDesc"]);
+                        Protean.xmlTools.addNewTextNode("cShippingDesc", ref argoNode13, moCartConfig["DefaultShippingDesc"]);
                         oElmt = (XmlElement)argoNode13;
                         XmlNode argoNode14 = oElmt;
-                        addNewTextNode("nShippingCost", ref argoNode14, Conversions.ToLong(moCartConfig["DefaultShippingCost"] + "0").ToString());
+                        Protean.xmlTools.addNewTextNode("nShippingCost", ref argoNode14, Conversions.ToLong(moCartConfig["DefaultShippingCost"] + "0").ToString());
                         oElmt = (XmlElement)argoNode14;
                         XmlNode argoNode15 = oElmt;
-                        addNewTextNode("cClientNotes", ref argoNode15, cOrderReference);
+                        Protean.xmlTools.addNewTextNode("cClientNotes", ref argoNode15, cOrderReference);
                         oElmt = (XmlElement)argoNode15;
                         XmlNode argoNode16 = oElmt;
-                        addNewTextNode("cSellerNotes", ref argoNode16, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("referer:", myWeb.moSession["previousPage"]), "/n")));
+                        Protean.xmlTools.addNewTextNode("cSellerNotes", ref argoNode16, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("referer:", myWeb.moSession["previousPage"]), "/n")));
                         oElmt = (XmlElement)argoNode16;
                         if (moPageXml.SelectSingleNode("/Page/Request/GoogleCampaign") is not null)
                         {
-                            addElement(ref oElmt, "cCampaignCode", moPageXml.SelectSingleNode("/Page/Request/GoogleCampaign").OuterXml, true);
+                            XmlNode argoParent = oElmt;
+                            XmlNode argoNodeFromXPath = null;
+                            Protean.xmlTools.addElement(ref argoParent, "cCampaignCode", moPageXml.SelectSingleNode("/Page/Request/GoogleCampaign").OuterXml, true, oNodeFromXPath: ref argoNodeFromXPath);
+                            oElmt = (XmlElement)argoParent;
                         }
                         XmlNode argoNode17 = oElmt;
-                        addNewTextNode("nTaxRate", ref argoNode17, mnTaxRate.ToString());
+                        Protean.xmlTools.addNewTextNode("nTaxRate", ref argoNode17, mnTaxRate.ToString());
                         oElmt = (XmlElement)argoNode17;
                         XmlNode argoNode18 = oElmt;
-                        addNewTextNode("nGiftListId", ref argoNode18, "0");
+                        Protean.xmlTools.addNewTextNode("nGiftListId", ref argoNode18, "0");
                         oElmt = (XmlElement)argoNode18;
                         XmlNode argoNode19 = oElmt;
-                        addNewTextNode("nAuditId", ref argoNode19);
+                        Protean.xmlTools.addNewTextNode("nAuditId", ref argoNode19);
                         oElmt = (XmlElement)argoNode19;
                         // validate column exists then only
                         if (moDBHelper.checkTableColumnExists("tblCartOrder", "nReceiptType"))
                         {
                             XmlNode argoNode20 = oElmt;
-                            addNewTextNode("nReceiptType", ref argoNode20, "0");
+                            Protean.xmlTools.addNewTextNode("nReceiptType", ref argoNode20, "0");
                             oElmt = (XmlElement)argoNode20;
                         }
 
@@ -8124,7 +8166,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "CreateNewCart", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "CreateNewCart", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
 
                 }
 
@@ -8152,7 +8194,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "SetPaymentMethod", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "SetPaymentMethod", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                     return null;
                 }
             }
@@ -8177,7 +8219,36 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
+                }
+
+            }
+
+            public void AppendSellerNotes(string Notes, string Detail = "")
+            {
+                string sSql = "";
+                DataSet oDs;
+                string cProcessInfo = "SetClientNotes";
+                try
+                {
+                    if (mnCartId > 0)
+                    {
+                        // Update Seller Notes:
+                        sSql = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
+                        oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
+                        foreach (DataRow oRow in oDs.Tables["Order"].Rows)
+                        {
+                            oRow["cSellerNotes"] = Notes;
+                            oRow["cSellerNotes"] = Operators.AddObject(Operators.AddObject(Operators.AddObject(Operators.AddObject(Operators.AddObject(Operators.AddObject(Operators.AddObject(Operators.AddObject(Operators.AddObject(Operators.AddObject(Operators.AddObject(Operators.AddObject(Operators.AddObject(Operators.AddObject(oRow["cSellerNotes"], @"\n"), DateTime.Today.ToString()), " "), DateTime.Now.TimeOfDay.ToString()), ": changed to: ("), getProcessName((cartProcess)mnProcessId)), ") "), @"\n"), "comment: "), Notes), @"\n"), "Full Response:' "), ""), "'");
+
+                        }
+                        myWeb.moDbHelper.updateDataset(ref oDs, "Order");
+                    }
+                }
+
+                catch (Exception ex)
+                {
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
 
             }
@@ -8277,24 +8348,24 @@ namespace Protean
                                 var oItemInstance = new XmlDataDocument();
                                 oItemInstance.AppendChild(oItemInstance.CreateElement("instance"));
                                 XmlNode argoNode = oItemInstance.DocumentElement;
-                                oElmt = addNewTextNode("tblCartItem", ref argoNode);
+                                oElmt = Protean.xmlTools.addNewTextNode("tblCartItem", ref argoNode);
 
                                 XmlNode argoNode1 = oElmt;
-                                addNewTextNode("nCartOrderId", ref argoNode1, mnCartId.ToString());
+                                Protean.xmlTools.addNewTextNode("nCartOrderId", ref argoNode1, mnCartId.ToString());
                                 oElmt = (XmlElement)argoNode1;
                                 XmlNode argoNode2 = oElmt;
-                                addNewTextNode("nItemId", ref argoNode2, nProductId.ToString());
+                                Protean.xmlTools.addNewTextNode("nItemId", ref argoNode2, nProductId.ToString());
                                 oElmt = (XmlElement)argoNode2;
                                 if (string.IsNullOrEmpty(overideUrl))
                                 {
                                     XmlNode argoNode3 = oElmt;
-                                    Tools.Xml.addNewTextNode("cItemURL", ref argoNode3, myWeb.GetContentUrl(nProductId));
+                                    Protean.xmlTools.addNewTextNode("cItemURL", ref argoNode3, myWeb.GetContentUrl(nProductId));
                                     oElmt = (XmlElement)argoNode3; // Erm?
                                 }
                                 else
                                 {
                                     XmlNode argoNode4 = oElmt;
-                                    addNewTextNode("cItemURL", ref argoNode4, overideUrl);
+                                    Protean.xmlTools.addNewTextNode("cItemURL", ref argoNode4, overideUrl);
                                     oElmt = (XmlElement)argoNode4;
                                 } // Erm?
 
@@ -8317,7 +8388,7 @@ namespace Protean
                                     if (oProdXml.SelectSingleNode("/Content/StockCode") is not null)
                                     {
                                         XmlNode argoNode5 = oElmt;
-                                        addNewTextNode("cItemRef", ref argoNode5, oProdXml.SelectSingleNode("/Content/StockCode").InnerText);
+                                        Protean.xmlTools.addNewTextNode("cItemRef", ref argoNode5, oProdXml.SelectSingleNode("/Content/StockCode").InnerText);
                                         oElmt = (XmlElement)argoNode5;
                                     } // @ Where do we get this from?
                                     if (string.IsNullOrEmpty(cProductText))
@@ -8345,7 +8416,7 @@ namespace Protean
                                     {
                                         string strDiscount1 = oProdXml.SelectSingleNode("/Content/Prices/Discount[@currency='" + mcCurrency + "']").InnerText;
                                         XmlNode argoNode6 = oElmt;
-                                        addNewTextNode("nDiscountValue", ref argoNode6, Conversions.ToString(Interaction.IIf(Information.IsNumeric(strDiscount1), strDiscount1, 0)));
+                                        Protean.xmlTools.addNewTextNode("nDiscountValue", ref argoNode6, Conversions.ToString(Interaction.IIf(Information.IsNumeric(strDiscount1), strDiscount1, 0)));
                                         oElmt = (XmlElement)argoNode6;
                                     }
 
@@ -8372,7 +8443,7 @@ namespace Protean
 
                                         long nParentId = Conversions.ToLong(moDBHelper.ExeProcessSqlScalar(sSQL2));
                                         XmlNode argoNode7 = oProdXml.DocumentElement;
-                                        var ItemParent = addNewTextNode("ParentProduct", ref argoNode7, "");
+                                        var ItemParent = Protean.xmlTools.addNewTextNode("ParentProduct", ref argoNode7, "");
 
                                         ItemParent.InnerXml = moDBHelper.GetContentDetailXml(nParentId).OuterXml;
                                     }
@@ -8381,19 +8452,19 @@ namespace Protean
                                 }
 
                                 XmlNode argoNode8 = oElmt;
-                                addNewTextNode("cItemName", ref argoNode8, cProductText);
+                                Protean.xmlTools.addNewTextNode("cItemName", ref argoNode8, cProductText);
                                 oElmt = (XmlElement)argoNode8;
                                 XmlNode argoNode9 = oElmt;
-                                addNewTextNode("nItemOptGrpIdx", ref argoNode9, 0.ToString());
+                                Protean.xmlTools.addNewTextNode("nItemOptGrpIdx", ref argoNode9, 0.ToString());
                                 oElmt = (XmlElement)argoNode9; // Dont Need
                                 XmlNode argoNode10 = oElmt;
-                                addNewTextNode("nItemOptIdx", ref argoNode10, 0.ToString());
+                                Protean.xmlTools.addNewTextNode("nItemOptIdx", ref argoNode10, 0.ToString());
                                 oElmt = (XmlElement)argoNode10; // Dont Need
 
                                 if (!string.IsNullOrEmpty(myWeb.moRequest["unit"]))
                                 {
                                     XmlNode argoNode11 = oElmt;
-                                    Tools.Xml.addNewTextNode("cItemUnit", ref argoNode11, myWeb.moRequest["unit"]);
+                                    Protean.xmlTools.addNewTextNode("cItemUnit", ref argoNode11, myWeb.moRequest["unit"]);
                                     oElmt = (XmlElement)argoNode11;
                                 }
 
@@ -8416,33 +8487,33 @@ namespace Protean
                                 }
 
                                 XmlNode argoNode12 = oElmt;
-                                addNewTextNode("nPrice", ref argoNode12, Conversions.ToString(Interaction.IIf(Information.IsNumeric(strPrice1), strPrice1, 0)));
+                                Protean.xmlTools.addNewTextNode("nPrice", ref argoNode12, Conversions.ToString(Interaction.IIf(Information.IsNumeric(strPrice1), strPrice1, 0)));
                                 oElmt = (XmlElement)argoNode12;
                                 XmlNode argoNode13 = oElmt;
-                                addNewTextNode("nShpCat", ref argoNode13, (-1).ToString());
+                                Protean.xmlTools.addNewTextNode("nShpCat", ref argoNode13, (-1).ToString());
                                 oElmt = (XmlElement)argoNode13; // @ Where do we get this from?
                                 XmlNode argoNode14 = oElmt;
-                                addNewTextNode("nTaxRate", ref argoNode14, nTaxRate.ToString());
+                                Protean.xmlTools.addNewTextNode("nTaxRate", ref argoNode14, nTaxRate.ToString());
                                 oElmt = (XmlElement)argoNode14;
                                 XmlNode argoNode15 = oElmt;
-                                addNewTextNode("nQuantity", ref argoNode15, nQuantity.ToString());
+                                Protean.xmlTools.addNewTextNode("nQuantity", ref argoNode15, nQuantity.ToString());
                                 oElmt = (XmlElement)argoNode15;
                                 XmlNode argoNode16 = oElmt;
-                                addNewTextNode("nWeight", ref argoNode16, nWeight.ToString());
+                                Protean.xmlTools.addNewTextNode("nWeight", ref argoNode16, nWeight.ToString());
                                 oElmt = (XmlElement)argoNode16;
                                 XmlNode argoNode17 = oElmt;
-                                addNewTextNode("nParentId", ref argoNode17, 0.ToString());
+                                Protean.xmlTools.addNewTextNode("nParentId", ref argoNode17, 0.ToString());
                                 oElmt = (XmlElement)argoNode17;
 
                                 if (bDepositOnly)
                                 {
                                     XmlNode argoNode18 = oElmt;
-                                    addNewTextNode("nDepositAmount", ref argoNode18, Conversions.ToString(Interaction.IIf(Information.IsNumeric(oPrice.GetAttribute("deposit")), oPrice.GetAttribute("deposit"), 0)));
+                                    Protean.xmlTools.addNewTextNode("nDepositAmount", ref argoNode18, Conversions.ToString(Interaction.IIf(Information.IsNumeric(oPrice.GetAttribute("deposit")), oPrice.GetAttribute("deposit"), 0)));
                                     oElmt = (XmlElement)argoNode18;
                                 }
 
                                 XmlNode argoNode19 = oElmt;
-                                var ProductXmlElmt = addNewTextNode("xItemXml", ref argoNode19, "");
+                                var ProductXmlElmt = Protean.xmlTools.addNewTextNode("xItemXml", ref argoNode19, "");
                                 oElmt = (XmlElement)argoNode19;
                                 ProductXmlElmt.InnerXml = oProdXml.DocumentElement.OuterXml;
 
@@ -8460,9 +8531,9 @@ namespace Protean
                                             oItemInstance = new XmlDataDocument();
                                             oItemInstance.AppendChild(oItemInstance.CreateElement("instance"));
                                             XmlNode argoNode20 = oItemInstance.DocumentElement;
-                                            oElmt = addNewTextNode("tblCartItem", ref argoNode20);
+                                            oElmt = Protean.xmlTools.addNewTextNode("tblCartItem", ref argoNode20);
                                             XmlNode argoNode21 = oElmt;
-                                            addNewTextNode("nCartOrderId", ref argoNode21, mnCartId.ToString());
+                                            Protean.xmlTools.addNewTextNode("nCartOrderId", ref argoNode21, mnCartId.ToString());
                                             oElmt = (XmlElement)argoNode21;
 
                                             string cStockCode = "";
@@ -8513,39 +8584,39 @@ namespace Protean
                                             }
 
                                             XmlNode argoNode22 = oElmt;
-                                            addNewTextNode("cItemRef", ref argoNode22, cStockCode);
+                                            Protean.xmlTools.addNewTextNode("cItemRef", ref argoNode22, cStockCode);
                                             oElmt = (XmlElement)argoNode22;
                                             XmlNode argoNode23 = oElmt;
-                                            addNewTextNode("nItemId", ref argoNode23, nProductId.ToString());
+                                            Protean.xmlTools.addNewTextNode("nItemId", ref argoNode23, nProductId.ToString());
                                             oElmt = (XmlElement)argoNode23;
                                             XmlNode argoNode24 = oElmt;
-                                            Tools.Xml.addNewTextNode("cItemURL", ref argoNode24, myWeb.mcOriginalURL);
+                                            Protean.xmlTools.addNewTextNode("cItemURL", ref argoNode24, myWeb.mcOriginalURL);
                                             oElmt = (XmlElement)argoNode24; // Erm?
                                             XmlNode argoNode25 = oElmt;
-                                            addNewTextNode("cItemName", ref argoNode25, cOptName);
+                                            Protean.xmlTools.addNewTextNode("cItemName", ref argoNode25, cOptName);
                                             oElmt = (XmlElement)argoNode25;
 
                                             if (bTextOption)
                                             {
                                                 // save the option index as -1 for text option
                                                 XmlNode argoNode26 = oElmt;
-                                                addNewTextNode("nItemOptGrpIdx", ref argoNode26, (i + 1).ToString());
+                                                Protean.xmlTools.addNewTextNode("nItemOptGrpIdx", ref argoNode26, (i + 1).ToString());
                                                 oElmt = (XmlElement)argoNode26;
                                                 XmlNode argoNode27 = oElmt;
-                                                addNewTextNode("nItemOptIdx", ref argoNode27, (-1).ToString());
+                                                Protean.xmlTools.addNewTextNode("nItemOptIdx", ref argoNode27, (-1).ToString());
                                                 oElmt = (XmlElement)argoNode27;
                                                 // No price variation for text options
                                                 XmlNode argoNode28 = oElmt;
-                                                addNewTextNode("nPrice", ref argoNode28, "0");
+                                                Protean.xmlTools.addNewTextNode("nPrice", ref argoNode28, "0");
                                                 oElmt = (XmlElement)argoNode28;
                                             }
                                             else
                                             {
                                                 XmlNode argoNode29 = oElmt;
-                                                addNewTextNode("nItemOptGrpIdx", ref argoNode29, Conversions.ToString(oProdOptions((object)i)((object)0)));
+                                                Protean.xmlTools.addNewTextNode("nItemOptGrpIdx", ref argoNode29, Conversions.ToString(oProdOptions((object)i)((object)0)));
                                                 oElmt = (XmlElement)argoNode29;
                                                 XmlNode argoNode30 = oElmt;
-                                                addNewTextNode("nItemOptIdx", ref argoNode30, Conversions.ToString(oProdOptions((object)i)((object)1)));
+                                                Protean.xmlTools.addNewTextNode("nItemOptIdx", ref argoNode30, Conversions.ToString(oProdOptions((object)i)((object)1)));
                                                 oElmt = (XmlElement)argoNode30;
 
                                                 XmlElement oPriceElmt = (XmlElement)oProdXml.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("/Content/Options/OptGroup[", oProdOptions((object)i)((object)0)), "]"), "/option["), oProdOptions((object)i)((object)1)), "]/Prices/Price[@currency='"), mcCurrency), "']")));
@@ -8553,23 +8624,23 @@ namespace Protean
                                                 if (oPriceElmt is not null)
                                                     strPrice2 = oPriceElmt.InnerText;
                                                 XmlNode argoNode31 = oElmt;
-                                                addNewTextNode("nPrice", ref argoNode31, Conversions.ToString(Interaction.IIf(Information.IsNumeric(strPrice2), strPrice2, 0)));
+                                                Protean.xmlTools.addNewTextNode("nPrice", ref argoNode31, Conversions.ToString(Interaction.IIf(Information.IsNumeric(strPrice2), strPrice2, 0)));
                                                 oElmt = (XmlElement)argoNode31;
                                             }
                                             XmlNode argoNode32 = oElmt;
-                                            addNewTextNode("nShpCat", ref argoNode32, (-1).ToString());
+                                            Protean.xmlTools.addNewTextNode("nShpCat", ref argoNode32, (-1).ToString());
                                             oElmt = (XmlElement)argoNode32;
                                             XmlNode argoNode33 = oElmt;
-                                            addNewTextNode("nTaxRate", ref argoNode33, 0.ToString());
+                                            Protean.xmlTools.addNewTextNode("nTaxRate", ref argoNode33, 0.ToString());
                                             oElmt = (XmlElement)argoNode33;
                                             XmlNode argoNode34 = oElmt;
-                                            addNewTextNode("nQuantity", ref argoNode34, 1.ToString());
+                                            Protean.xmlTools.addNewTextNode("nQuantity", ref argoNode34, 1.ToString());
                                             oElmt = (XmlElement)argoNode34;
                                             XmlNode argoNode35 = oElmt;
-                                            addNewTextNode("nWeight", ref argoNode35, 0.ToString());
+                                            Protean.xmlTools.addNewTextNode("nWeight", ref argoNode35, 0.ToString());
                                             oElmt = (XmlElement)argoNode35;
                                             XmlNode argoNode36 = oElmt;
-                                            addNewTextNode("nParentId", ref argoNode36, nItemID.ToString());
+                                            Protean.xmlTools.addNewTextNode("nParentId", ref argoNode36, nItemID.ToString());
                                             oElmt = (XmlElement)argoNode36;
                                             moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement);
 
@@ -8632,7 +8703,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "addItem", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "addItem", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
 
                 return default;
@@ -8795,7 +8866,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "addItems", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "addItems", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                     return false;
                 }
 
@@ -8862,7 +8933,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "removeItem", ex, "", cProcessInfo, gbDebug);
+                        Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "removeItem", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                     }
                 }
 
@@ -8955,7 +9026,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "removeItem", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "removeItem", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
 
                 return default;
@@ -9002,7 +9073,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "removeItem", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "removeItem", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
 
             }
@@ -9037,7 +9108,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "EmptyCart", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "EmptyCart", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
 
             }
@@ -9088,7 +9159,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateCartDeposit", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateCartDeposit", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
                 finally
                 {
@@ -9125,7 +9196,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "QuitCart", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "QuitCart", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
 
             }
@@ -9151,7 +9222,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "EndSession", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "EndSession", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
 
             }
@@ -9277,7 +9348,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateCart", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateCart", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                     return null;
                 }
             }
@@ -9319,7 +9390,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ListShippingLocations", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "ListShippingLocations", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -9382,7 +9453,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ListShippingLocations", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "ListShippingLocations", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -9419,7 +9490,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ListDeliveryMethods", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "ListDeliveryMethods", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -9454,7 +9525,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ListCarriers", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "ListCarriers", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -9465,51 +9536,51 @@ namespace Protean
                 XmlElement oElmt2;
                 string cProcessInfo = "";
                 XmlNode oPaymentCfg;
-                string Folder = "/ewcommon/xforms/PaymentProvider/";
+                string ptnFolder = "/ewcommon/xforms/PaymentProvider/";
+                string localFolder = "/xforms/PaymentProvider/";
                 FileInfo fi;
                 string ProviderName;
                 if (Cms.bs5)
-                    Folder = "/ptn/features/cart/PaymentProvider/";
+                {
+                    ptnFolder = "/ptn/providers/payment/";
+                    localFolder = "/providers/payment/";
+                }
                 try
                 {
 
                     oPaymentCfg = (XmlNode)WebConfigurationManager.GetWebApplicationSection("protean/payment");
-
                     oElmt = moPageXml.CreateElement("List");
 
-                    var dir = new DirectoryInfo(moServer.MapPath(Folder));
-                    FileInfo[] files = dir.GetFiles();
 
-                    foreach (var currentFi in files)
+                    if (Cms.bs5)
                     {
-                        fi = currentFi;
-                        if (fi.Extension == ".xml")
+                        var dir = new DirectoryInfo(moServer.MapPath(ptnFolder));
+                        if (dir.Exists)
                         {
-                            ProviderName = Strings.Replace(fi.Name, fi.Extension, "");
-                            XmlNode argoNode = oElmt;
-                            oElmt2 = addNewTextNode("Provider", ref argoNode, Strings.Replace(ProviderName, "-", " "));
-                            oElmt = (XmlElement)argoNode;
-                            if (oPaymentCfg.SelectSingleNode("/payment/provider[@name='" + Strings.Replace(ProviderName, "-", "") + "']") is not null)
+                            DirectoryInfo[] dirs;
+                            dirs = dir.GetDirectories();
+                            foreach (var dir2 in dirs)
                             {
-                                oElmt2.SetAttribute("active", "true");
+                                ProviderName = dir2.Name;
+                                XmlNode argoNode = oElmt;
+                                oElmt2 = Protean.xmlTools.addNewTextNode("Provider", ref argoNode, Strings.Replace(ProviderName, "-", " "));
+                                oElmt = (XmlElement)argoNode;
+                                if (oPaymentCfg.SelectSingleNode("/payment/provider[@name='" + Strings.Replace(ProviderName, "-", "") + "']") is not null)
+                                {
+                                    oElmt2.SetAttribute("active", "true");
+                                }
                             }
                         }
-                    }
-
-
-                    dir = new DirectoryInfo(moServer.MapPath("/xforms/PaymentProvider/"));
-                    if (dir.Exists)
-                    {
-                        files = dir.GetFiles();
-
-                        foreach (var currentFi1 in files)
+                        dir = new DirectoryInfo(moServer.MapPath(localFolder));
+                        if (dir.Exists)
                         {
-                            fi = currentFi1;
-                            if (fi.Extension == ".xml")
+                            DirectoryInfo[] dirs;
+                            dirs = dir.GetDirectories();
+                            foreach (var dir2 in dirs)
                             {
-                                ProviderName = Strings.Replace(fi.Name, fi.Extension, "");
+                                ProviderName = dir2.Name;
                                 XmlNode argoNode1 = oElmt;
-                                oElmt2 = addNewTextNode("Provider", ref argoNode1, Strings.Replace(ProviderName, "-", " "));
+                                oElmt2 = Protean.xmlTools.addNewTextNode("Provider", ref argoNode1, Strings.Replace(ProviderName, "-", " "));
                                 oElmt = (XmlElement)argoNode1;
                                 if (oPaymentCfg.SelectSingleNode("/payment/provider[@name='" + Strings.Replace(ProviderName, "-", "") + "']") is not null)
                                 {
@@ -9518,6 +9589,47 @@ namespace Protean
                             }
                         }
                     }
+                    else
+                    {
+                        var dir = new DirectoryInfo(moServer.MapPath(ptnFolder));
+                        FileInfo[] files = dir.GetFiles();
+                        foreach (var currentFi in files)
+                        {
+                            fi = currentFi;
+                            if (fi.Extension == ".xml")
+                            {
+                                ProviderName = Strings.Replace(fi.Name, fi.Extension, "");
+                                XmlNode argoNode2 = oElmt;
+                                oElmt2 = Protean.xmlTools.addNewTextNode("Provider", ref argoNode2, Strings.Replace(ProviderName, "-", " "));
+                                oElmt = (XmlElement)argoNode2;
+                                if (oPaymentCfg.SelectSingleNode("/payment/provider[@name='" + Strings.Replace(ProviderName, "-", "") + "']") is not null)
+                                {
+                                    oElmt2.SetAttribute("active", "true");
+                                }
+                            }
+                        }
+                        dir = new DirectoryInfo(moServer.MapPath(localFolder));
+                        if (dir.Exists)
+                        {
+                            files = dir.GetFiles();
+                            foreach (var currentFi1 in files)
+                            {
+                                fi = currentFi1;
+                                if (fi.Extension == ".xml")
+                                {
+                                    ProviderName = Strings.Replace(fi.Name, fi.Extension, "");
+                                    XmlNode argoNode3 = oElmt;
+                                    oElmt2 = Protean.xmlTools.addNewTextNode("Provider", ref argoNode3, Strings.Replace(ProviderName, "-", " "));
+                                    oElmt = (XmlElement)argoNode3;
+                                    if (oPaymentCfg.SelectSingleNode("/payment/provider[@name='" + Strings.Replace(ProviderName, "-", "") + "']") is not null)
+                                    {
+                                        oElmt2.SetAttribute("active", "true");
+                                    }
+                                }
+                            }
+                        }
+                    }
+
 
 
                     oContentsXML.AppendChild(oElmt);
@@ -9525,7 +9637,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ListPaymentProviders", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "ListPaymentProviders", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -9575,7 +9687,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "AddDeliveryFromGiftList", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "AddDeliveryFromGiftList", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
 
             }
@@ -9675,7 +9787,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateTaxRate", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateTaxRate", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
 
                 }
 
@@ -9781,7 +9893,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "populateCountriesDropDown", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "populateCountriesDropDown", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
@@ -9823,7 +9935,7 @@ namespace Protean
 
                         myWeb.msException = "";
 
-                        oTransform.mbDebug = gbDebug;
+                        oTransform.mbDebug = Protean.stdTools.gbDebug;
                         object icPageWriter = new StringWriter();
                         var OrderDoc = new XmlDocument();
                         OrderDoc.LoadXml(oCartXML.OuterXml);
@@ -9857,7 +9969,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "emailCart", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "emailCart", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                     return null;
                 }
 
@@ -10066,11 +10178,11 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "addItems", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "addItems", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
             }
 
-            public void ListOrders(string sOrderID = "0", bool bListAllQuotes = false, int ProcessId = 0, [Optional, DefaultParameterValue(null)] ref XmlElement oPageDetail, bool bForceRefresh = false, long nUserId = 0L)
+            public void ListOrders([Optional, DefaultParameterValue("0")] string sOrderID, [Optional, DefaultParameterValue(false)] bool bListAllQuotes, [Optional, DefaultParameterValue(0)] int ProcessId, [Optional] ref XmlElement oPageDetail, bool bForceRefresh = false, long nUserId = 0L)
             {
                 myWeb.PerfMon.Log("Cart", "ListOrders");
                 if (myWeb.mnUserId == 0)
@@ -10260,8 +10372,16 @@ namespace Protean
                                         for (int snCount = 0, loopTo = Information.UBound(aSellerNotes); snCount <= loopTo; snCount++)
                                             cSellerNotesHtml = cSellerNotesHtml + "<li>" + convertEntitiesToCodes(aSellerNotes[snCount]) + "</li>";
                                         var argoNode = oContent.FirstChild;
-                                        var sellerNode = addNewTextNode("SellerNotes", ref argoNode, "");
-                                        sellerNode.InnerXml = cSellerNotesHtml + "</ul>";
+                                        var sellerNode = Protean.xmlTools.addNewTextNode("SellerNotes", ref argoNode, "");
+                                        try
+                                        {
+                                            sellerNode.InnerXml = cSellerNotesHtml + "</ul>";
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            sellerNode.InnerXml = Tools.Text.tidyXhtmlFrag(cSellerNotesHtml + "</ul>");
+                                        }
+
 
                                         // Add the Delivery Details
                                         // Add Delivery Details
@@ -10275,8 +10395,8 @@ namespace Protean
                                                 oElmt.SetAttribute("carrierName", Conversions.ToString(oRow2["cCarrierName"]));
                                                 oElmt.SetAttribute("ref", Conversions.ToString(oRow2["cCarrierRef"]));
                                                 oElmt.SetAttribute("notes", Conversions.ToString(oRow2["cCarrierNotes"]));
-                                                oElmt.SetAttribute("deliveryDate", XmlDate(oRow2["dExpectedDeliveryDate"]));
-                                                oElmt.SetAttribute("collectionDate", XmlDate(oRow2["dCollectionDate"]));
+                                                oElmt.SetAttribute("deliveryDate", Protean.stdTools.xmlDate(oRow2["dExpectedDeliveryDate"]));
+                                                oElmt.SetAttribute("collectionDate", Protean.stdTools.xmlDate(oRow2["dCollectionDate"]));
                                                 oContent.AppendChild(oElmt);
                                             }
                                         }
@@ -10332,7 +10452,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ListOrders", ex, "", "", gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "ListOrders", ex, "", "", Protean.stdTools.gbDebug);
                 }
             }
 
@@ -10436,7 +10556,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "MakeCurrent", ex, "", "", gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "MakeCurrent", ex, "", "", Protean.stdTools.gbDebug);
                 }
             }
 
@@ -10476,7 +10596,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "Delete Cart", ex, "", "", gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "Delete Cart", ex, "", "", Protean.stdTools.gbDebug);
                 }
 
                 return default;
@@ -10491,14 +10611,14 @@ namespace Protean
                 {
                     if (nCartId > 0L)
                     {
-                        string sSQL = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Update tblCartOrder SET cCartXML ='", SqlFmt(cartXML.OuterXml.ToString())), "' WHERE nCartOrderKey = "), nCartId));
+                        string sSQL = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Update tblCartOrder SET cCartXML ='", Protean.stdTools.SqlFmt(cartXML.OuterXml.ToString())), "' WHERE nCartOrderKey = "), nCartId));
                         moDBHelper.ExeProcessSql(sSQL);
                     }
                 }
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "SaveCartXML", ex, "", "", gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "SaveCartXML", ex, "", "", Protean.stdTools.gbDebug);
                 }
             }
 
@@ -10650,7 +10770,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "SelectCurrency", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "SelectCurrency", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                 }
 
                 return default;
@@ -10702,7 +10822,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetCurrencyDefinition", ex, vstrFurtherInfo: cProcessInfo, bDebug: gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "GetCurrencyDefinition", ex, vstrFurtherInfo: cProcessInfo, bDebug: Protean.stdTools.gbDebug);
                 }
             }
 
@@ -10721,7 +10841,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "CartOverview", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "CartOverview", ex, vstrFurtherInfo: "", bDebug: Protean.stdTools.gbDebug);
                     return null;
                 }
 
@@ -10777,7 +10897,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "CartReports", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "CartReports", ex, vstrFurtherInfo: "", bDebug: Protean.stdTools.gbDebug);
                     return null;
                 }
             }
@@ -10842,7 +10962,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "CartReports", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "CartReports", ex, vstrFurtherInfo: "", bDebug: Protean.stdTools.gbDebug);
                     return null;
                 }
             }
@@ -10982,7 +11102,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "CartReports", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "CartReports", ex, vstrFurtherInfo: "", bDebug: Protean.stdTools.gbDebug);
                     return null;
                 }
             }
@@ -11033,7 +11153,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "CartReports", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "CartReports", ex, vstrFurtherInfo: "", bDebug: Protean.stdTools.gbDebug);
                     return null;
                 }
             }
@@ -11098,7 +11218,7 @@ namespace Protean
                             xmlMethod = xmlMethod;
                             xmlProduct = xmlProduct;
 
-                            stdTools.returnException(ref myWeb.msException, mcModuleName, "AddShippingCosts", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                            Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "AddShippingCosts", ex, vstrFurtherInfo: "", bDebug: Protean.stdTools.gbDebug);
                         }
 
                     }
@@ -11109,7 +11229,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "AddShippingCosts", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "AddShippingCosts", ex, vstrFurtherInfo: "", bDebug: Protean.stdTools.gbDebug);
 
                 }
 
@@ -11126,7 +11246,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getValidShippingOptionsDS", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "getValidShippingOptionsDS", ex, vstrFurtherInfo: "", bDebug: Protean.stdTools.gbDebug);
                     return null;
                 }
             }
@@ -11139,7 +11259,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getValidShippingOptionsDS", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "getValidShippingOptionsDS", ex, vstrFurtherInfo: "", bDebug: Protean.stdTools.gbDebug);
                     return null;
                 }
             }
@@ -11152,7 +11272,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getValidShippingOptionsDS", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "getValidShippingOptionsDS", ex, vstrFurtherInfo: "", bDebug: Protean.stdTools.gbDebug);
                     return null;
                 }
             }
@@ -11283,7 +11403,7 @@ namespace Protean
                 catch (Exception ex)
                 {
 
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getValidShippingOptionsDS", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "getValidShippingOptionsDS", ex, vstrFurtherInfo: "", bDebug: Protean.stdTools.gbDebug);
                     return null;
                 }
 
@@ -11351,7 +11471,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "makeShippingOptionsXML", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "makeShippingOptionsXML", ex, vstrFurtherInfo: "", bDebug: Protean.stdTools.gbDebug);
                     return null;
                 }
 
@@ -11369,7 +11489,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "updatePackagingForFreeGiftDiscount", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "updatePackagingForFreeGiftDiscount", ex, vstrFurtherInfo: "", bDebug: Protean.stdTools.gbDebug);
                     return null;
                 }
             }
@@ -11385,7 +11505,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "updatePackagingForFreeGiftDiscount", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "updatePackagingForFreeGiftDiscount", ex, vstrFurtherInfo: "", bDebug: Protean.stdTools.gbDebug);
                     return null;
                 }
             }
@@ -11427,7 +11547,7 @@ namespace Protean
                             {
                                 cShippingDesc = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(oDr["cShipOptName"], "-"), oDr["cShipOptCarrier"]));
                                 nShippingCost = Conversions.ToString(oDr["nShipOptCost"]);
-                                cSqlUpdate = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("UPDATE tblCartOrder Set cShippingDesc='", SqlFmt(cShippingDesc)), "', nShippingCost="), SqlFmt(nShippingCost)), ", nShippingMethodId = "), nShipOptKey), " WHERE nCartOrderKey="), mnCartId));
+                                cSqlUpdate = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("UPDATE tblCartOrder Set cShippingDesc='", Protean.stdTools.SqlFmt(cShippingDesc)), "', nShippingCost="), Protean.stdTools.SqlFmt(nShippingCost)), ", nShippingMethodId = "), nShipOptKey), " WHERE nCartOrderKey="), mnCartId));
                                 moDBHelper.ExeProcessSql(cSqlUpdate);
                             }
                         }
@@ -11437,7 +11557,7 @@ namespace Protean
                 catch (Exception ex)
                 {
 
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "updateGCgetValidShippingOptionsDS", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "updateGCgetValidShippingOptionsDS", ex, vstrFurtherInfo: "", bDebug: Protean.stdTools.gbDebug);
                     return null;
                 }
             }
@@ -11453,7 +11573,7 @@ namespace Protean
                     var oItemInstance = new XmlDataDocument();
                     oItemInstance.AppendChild(oItemInstance.CreateElement("instance"));
                     XmlNode argoNode = oItemInstance.DocumentElement;
-                    oelmt = addNewTextNode("tblCartItem", ref argoNode);
+                    oelmt = Protean.xmlTools.addNewTextNode("tblCartItem", ref argoNode);
 
                     var json = jObj;
 
@@ -11465,59 +11585,59 @@ namespace Protean
                     if (ReplaceId != 0L)
                     {
                         XmlNode argoNode1 = oelmt;
-                        addNewTextNode("nCartItemKey", ref argoNode1, ReplaceId.ToString());
+                        Protean.xmlTools.addNewTextNode("nCartItemKey", ref argoNode1, ReplaceId.ToString());
                         oelmt = (XmlElement)argoNode1;
                     }
                     XmlNode argoNode2 = oelmt;
-                    addNewTextNode("nCartOrderId", ref argoNode2, mnCartId.ToString());
+                    Protean.xmlTools.addNewTextNode("nCartOrderId", ref argoNode2, mnCartId.ToString());
                     oelmt = (XmlElement)argoNode2;
                     XmlNode argoNode3 = oelmt;
-                    addNewTextNode("nItemId", ref argoNode3, (string)json.SelectToken("ItemId"));
+                    Protean.xmlTools.addNewTextNode("nItemId", ref argoNode3, (string)json.SelectToken("ItemId"));
                     oelmt = (XmlElement)argoNode3;
                     XmlNode argoNode4 = oelmt;
-                    addNewTextNode("cItemURL", ref argoNode4, (string)json.SelectToken("ItemURL"));
+                    Protean.xmlTools.addNewTextNode("cItemURL", ref argoNode4, (string)json.SelectToken("ItemURL"));
                     oelmt = (XmlElement)argoNode4; // Erm?
                     XmlNode argoNode5 = oelmt;
-                    addNewTextNode("cItemName", ref argoNode5, OptionName);
+                    Protean.xmlTools.addNewTextNode("cItemName", ref argoNode5, OptionName);
                     oelmt = (XmlElement)argoNode5;
                     XmlNode argoNode6 = oelmt;
-                    addNewTextNode("nItemOptGrpIdx", ref argoNode6, (string)json.SelectToken("ItemOptGrpIdx"));
+                    Protean.xmlTools.addNewTextNode("nItemOptGrpIdx", ref argoNode6, (string)json.SelectToken("ItemOptGrpIdx"));
                     oelmt = (XmlElement)argoNode6; // Dont Need
                     XmlNode argoNode7 = oelmt;
-                    addNewTextNode("nItemOptIdx", ref argoNode7, (string)json.SelectToken("ItemOptIdx"));
+                    Protean.xmlTools.addNewTextNode("nItemOptIdx", ref argoNode7, (string)json.SelectToken("ItemOptIdx"));
                     oelmt = (XmlElement)argoNode7; // Dont Need
                     XmlNode argoNode8 = oelmt;
-                    addNewTextNode("cItemRef", ref argoNode8, (string)json.SelectToken("ItemRef"));
+                    Protean.xmlTools.addNewTextNode("cItemRef", ref argoNode8, (string)json.SelectToken("ItemRef"));
                     oelmt = (XmlElement)argoNode8;
                     XmlNode argoNode9 = oelmt;
-                    addNewTextNode("nPrice", ref argoNode9, (string)json.SelectToken("Price"));
+                    Protean.xmlTools.addNewTextNode("nPrice", ref argoNode9, (string)json.SelectToken("Price"));
                     oelmt = (XmlElement)argoNode9;
                     XmlNode argoNode10 = oelmt;
-                    addNewTextNode("nShpCat", ref argoNode10, (string)json.SelectToken("ShpCat"));
+                    Protean.xmlTools.addNewTextNode("nShpCat", ref argoNode10, (string)json.SelectToken("ShpCat"));
                     oelmt = (XmlElement)argoNode10;
                     XmlNode argoNode11 = oelmt;
-                    addNewTextNode("nDiscountCat", ref argoNode11, (string)json.SelectToken("DiscountCat"));
+                    Protean.xmlTools.addNewTextNode("nDiscountCat", ref argoNode11, (string)json.SelectToken("DiscountCat"));
                     oelmt = (XmlElement)argoNode11;
                     XmlNode argoNode12 = oelmt;
-                    addNewTextNode("nDiscountValue", ref argoNode12, (string)json.SelectToken("DiscountValue"));
+                    Protean.xmlTools.addNewTextNode("nDiscountValue", ref argoNode12, (string)json.SelectToken("DiscountValue"));
                     oelmt = (XmlElement)argoNode12;
                     XmlNode argoNode13 = oelmt;
-                    addNewTextNode("nTaxRate", ref argoNode13, (string)json.SelectToken("TaxRate"));
+                    Protean.xmlTools.addNewTextNode("nTaxRate", ref argoNode13, (string)json.SelectToken("TaxRate"));
                     oelmt = (XmlElement)argoNode13;
                     XmlNode argoNode14 = oelmt;
-                    addNewTextNode("nParentId", ref argoNode14, CartItemId.ToString());
+                    Protean.xmlTools.addNewTextNode("nParentId", ref argoNode14, CartItemId.ToString());
                     oelmt = (XmlElement)argoNode14;
                     XmlNode argoNode15 = oelmt;
-                    addNewTextNode("cItemUnit", ref argoNode15, (string)json.SelectToken("TaxRate"));
+                    Protean.xmlTools.addNewTextNode("cItemUnit", ref argoNode15, (string)json.SelectToken("TaxRate"));
                     oelmt = (XmlElement)argoNode15;
                     XmlNode argoNode16 = oelmt;
-                    addNewTextNode("nQuantity", ref argoNode16, (string)json.SelectToken("Qunatity"));
+                    Protean.xmlTools.addNewTextNode("nQuantity", ref argoNode16, (string)json.SelectToken("Qunatity"));
                     oelmt = (XmlElement)argoNode16;
                     XmlNode argoNode17 = oelmt;
-                    addNewTextNode("nweight", ref argoNode17, (string)json.SelectToken("Weight"));
+                    Protean.xmlTools.addNewTextNode("nweight", ref argoNode17, (string)json.SelectToken("Weight"));
                     oelmt = (XmlElement)argoNode17;
                     XmlNode argoNode18 = oelmt;
-                    addNewTextNode("xItemXml", ref argoNode18, (string)json.SelectToken("ItemXml"));
+                    Protean.xmlTools.addNewTextNode("xItemXml", ref argoNode18, (string)json.SelectToken("ItemXml"));
                     oelmt = (XmlElement)argoNode18;
 
                     moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement);
@@ -11541,7 +11661,7 @@ namespace Protean
                     var oItemInstance = new XmlDataDocument();
                     oItemInstance.AppendChild(oItemInstance.CreateElement("instance"));
                     XmlNode argoNode = oItemInstance.DocumentElement;
-                    oelmt = addNewTextNode("tblCartItem", ref argoNode);
+                    oelmt = Protean.xmlTools.addNewTextNode("tblCartItem", ref argoNode);
 
                     // Dim json As Newtonsoft.Json.Linq.JObject = jObj
 
@@ -11554,55 +11674,55 @@ namespace Protean
                     // addNewTextNode("nCartItemKey", oelmt, CStr(ReplaceId))
                     // End If
                     XmlNode argoNode1 = oelmt;
-                    addNewTextNode("nCartOrderId", ref argoNode1, mnCartId.ToString());
+                    Protean.xmlTools.addNewTextNode("nCartOrderId", ref argoNode1, mnCartId.ToString());
                     oelmt = (XmlElement)argoNode1;
                     XmlNode argoNode2 = oelmt;
-                    addNewTextNode("nItemId", ref argoNode2, "0");
+                    Protean.xmlTools.addNewTextNode("nItemId", ref argoNode2, "0");
                     oelmt = (XmlElement)argoNode2;
                     XmlNode argoNode3 = oelmt;
-                    addNewTextNode("cItemURL", ref argoNode3, "");
+                    Protean.xmlTools.addNewTextNode("cItemURL", ref argoNode3, "");
                     oelmt = (XmlElement)argoNode3; // Erm?
                     XmlNode argoNode4 = oelmt;
-                    addNewTextNode("cItemName", ref argoNode4, cOptionName);
+                    Protean.xmlTools.addNewTextNode("cItemName", ref argoNode4, cOptionName);
                     oelmt = (XmlElement)argoNode4;
                     XmlNode argoNode5 = oelmt;
-                    addNewTextNode("nItemOptGrpIdx", ref argoNode5, "0");
+                    Protean.xmlTools.addNewTextNode("nItemOptGrpIdx", ref argoNode5, "0");
                     oelmt = (XmlElement)argoNode5; // Dont Need
                     XmlNode argoNode6 = oelmt;
-                    addNewTextNode("nItemOptIdx", ref argoNode6, "0");
+                    Protean.xmlTools.addNewTextNode("nItemOptIdx", ref argoNode6, "0");
                     oelmt = (XmlElement)argoNode6; // Dont Need
                     XmlNode argoNode7 = oelmt;
-                    addNewTextNode("cItemRef", ref argoNode7, "0");
+                    Protean.xmlTools.addNewTextNode("cItemRef", ref argoNode7, "0");
                     oelmt = (XmlElement)argoNode7;
                     XmlNode argoNode8 = oelmt;
-                    addNewTextNode("nPrice", ref argoNode8, nOptionCost.ToString());
+                    Protean.xmlTools.addNewTextNode("nPrice", ref argoNode8, nOptionCost.ToString());
                     oelmt = (XmlElement)argoNode8;
                     XmlNode argoNode9 = oelmt;
-                    addNewTextNode("nShpCat", ref argoNode9, "-1");
+                    Protean.xmlTools.addNewTextNode("nShpCat", ref argoNode9, "-1");
                     oelmt = (XmlElement)argoNode9;
                     XmlNode argoNode10 = oelmt;
-                    addNewTextNode("nDiscountCat", ref argoNode10, "");
+                    Protean.xmlTools.addNewTextNode("nDiscountCat", ref argoNode10, "");
                     oelmt = (XmlElement)argoNode10;
                     XmlNode argoNode11 = oelmt;
-                    addNewTextNode("nDiscountValue", ref argoNode11, "0.00");
+                    Protean.xmlTools.addNewTextNode("nDiscountValue", ref argoNode11, "0.00");
                     oelmt = (XmlElement)argoNode11;
                     XmlNode argoNode12 = oelmt;
-                    addNewTextNode("nTaxRate", ref argoNode12, "0");
+                    Protean.xmlTools.addNewTextNode("nTaxRate", ref argoNode12, "0");
                     oelmt = (XmlElement)argoNode12;
                     XmlNode argoNode13 = oelmt;
-                    addNewTextNode("nParentId", ref argoNode13, nCartItemId.ToString());
+                    Protean.xmlTools.addNewTextNode("nParentId", ref argoNode13, nCartItemId.ToString());
                     oelmt = (XmlElement)argoNode13;
                     XmlNode argoNode14 = oelmt;
-                    addNewTextNode("cItemUnit", ref argoNode14, "0");
+                    Protean.xmlTools.addNewTextNode("cItemUnit", ref argoNode14, "0");
                     oelmt = (XmlElement)argoNode14;
                     XmlNode argoNode15 = oelmt;
-                    addNewTextNode("nQuantity", ref argoNode15, "1");
+                    Protean.xmlTools.addNewTextNode("nQuantity", ref argoNode15, "1");
                     oelmt = (XmlElement)argoNode15;
                     XmlNode argoNode16 = oelmt;
-                    addNewTextNode("nweight", ref argoNode16, "0");
+                    Protean.xmlTools.addNewTextNode("nweight", ref argoNode16, "0");
                     oelmt = (XmlElement)argoNode16;
                     XmlNode argoNode17 = oelmt;
-                    addNewTextNode("xItemXml", ref argoNode17, "");
+                    Protean.xmlTools.addNewTextNode("xItemXml", ref argoNode17, "");
                     oelmt = (XmlElement)argoNode17;
 
                     moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement);
@@ -11663,7 +11783,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "AddDiscountCode", ex, "", cProcessInfo, gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "AddDiscountCode", ex, "", cProcessInfo, Protean.stdTools.gbDebug);
                     return null;
                 }
             }
@@ -11714,7 +11834,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "CheckPromocodeAppliedForDelivery", ex, "", "", gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "CheckPromocodeAppliedForDelivery", ex, "", "", Protean.stdTools.gbDebug);
                     return null;
                 }
             }
@@ -11868,7 +11988,7 @@ namespace Protean
                             weight = Conversions.ToDouble(Operators.AddObject(weight, Operators.MultiplyObject(oRow["weight"], oRow["quantity"])));
                             quant = Conversions.ToLong(Operators.AddObject(quant, oRow["quantity"]));
 
-                            total = Conversions.ToDouble(Operators.AddObject(total, Operators.MultiplyObject(oRow["quantity"], Round(Operators.AddObject(oRow["price"], nOpPrices), bForceRoundup: mbRoundup))));
+                            total = Conversions.ToDouble(Operators.AddObject(total, Operators.MultiplyObject(oRow["quantity"], Protean.stdTools.Round(Operators.AddObject(oRow["price"], nOpPrices), bForceRoundup: mbRoundup))));
                         }
                     }
 
@@ -11913,7 +12033,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "setDeliveryOptionByCountry", ex, "", "", gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "setDeliveryOptionByCountry", ex, "", "", Protean.stdTools.gbDebug);
                     return null;
                 }
             }
@@ -11941,76 +12061,76 @@ namespace Protean
 
                     oInstance.AppendChild(oInstance.CreateElement("instance"));
                     XmlNode argoNode = oInstance.DocumentElement;
-                    oElmt = addNewTextNode("tblCartOrder", ref argoNode);
+                    oElmt = Protean.xmlTools.addNewTextNode("tblCartOrder", ref argoNode);
                     XmlNode argoNode1 = oElmt;
-                    addNewTextNode("cCurrency", ref argoNode1, oCartListElmt.GetAttribute("currency"));
+                    Protean.xmlTools.addNewTextNode("cCurrency", ref argoNode1, oCartListElmt.GetAttribute("currency"));
                     oElmt = (XmlElement)argoNode1;
                     XmlNode argoNode2 = oElmt;
-                    addNewTextNode("cCartSiteRef", ref argoNode2, moCartConfig["OrderNoPrefix"]);
+                    Protean.xmlTools.addNewTextNode("cCartSiteRef", ref argoNode2, moCartConfig["OrderNoPrefix"]);
                     oElmt = (XmlElement)argoNode2;
                     XmlNode argoNode3 = oElmt;
-                    addNewTextNode("cCartForiegnRef", ref argoNode3);
+                    Protean.xmlTools.addNewTextNode("cCartForiegnRef", ref argoNode3);
                     oElmt = (XmlElement)argoNode3;
                     XmlNode argoNode4 = oElmt;
-                    addNewTextNode("nCartStatus", ref argoNode4, oCartListElmt.GetAttribute("statusId"));
+                    Protean.xmlTools.addNewTextNode("nCartStatus", ref argoNode4, oCartListElmt.GetAttribute("statusId"));
                     oElmt = (XmlElement)argoNode4;
                     XmlNode argoNode5 = oElmt;
-                    addNewTextNode("cCartSchemaName", ref argoNode5, "Order");
+                    Protean.xmlTools.addNewTextNode("cCartSchemaName", ref argoNode5, "Order");
                     oElmt = (XmlElement)argoNode5;
                     XmlNode argoNode6 = oElmt;
-                    addNewTextNode("cCartSessionId", ref argoNode6, oCartListElmt.GetAttribute("session"));
+                    Protean.xmlTools.addNewTextNode("cCartSessionId", ref argoNode6, oCartListElmt.GetAttribute("session"));
                     oElmt = (XmlElement)argoNode6;
 
                     XmlNode argoNode7 = oElmt;
-                    addNewTextNode("nCartUserDirId", ref argoNode7, "0");
+                    Protean.xmlTools.addNewTextNode("nCartUserDirId", ref argoNode7, "0");
                     oElmt = (XmlElement)argoNode7;
                     XmlNode argoNode8 = oElmt;
-                    addNewTextNode("nPayMthdId", ref argoNode8, "0");
+                    Protean.xmlTools.addNewTextNode("nPayMthdId", ref argoNode8, "0");
                     oElmt = (XmlElement)argoNode8;
                     XmlNode argoNode9 = oElmt;
-                    addNewTextNode("cPaymentRef", ref argoNode9);
+                    Protean.xmlTools.addNewTextNode("cPaymentRef", ref argoNode9);
                     oElmt = (XmlElement)argoNode9;
                     XmlNode argoNode10 = oElmt;
-                    addNewTextNode("cCartXml", ref argoNode10);
+                    Protean.xmlTools.addNewTextNode("cCartXml", ref argoNode10);
                     oElmt = (XmlElement)argoNode10;
                     XmlNode argoNode11 = oElmt;
-                    addNewTextNode("nShippingMethodId", ref argoNode11, oCartListElmt.GetAttribute("shippingType"));
+                    Protean.xmlTools.addNewTextNode("nShippingMethodId", ref argoNode11, oCartListElmt.GetAttribute("shippingType"));
                     oElmt = (XmlElement)argoNode11;
                     XmlNode argoNode12 = oElmt;
-                    addNewTextNode("cShippingDesc", ref argoNode12, oCartListElmt.GetAttribute("shippingDesc"));
+                    Protean.xmlTools.addNewTextNode("cShippingDesc", ref argoNode12, oCartListElmt.GetAttribute("shippingDesc"));
                     oElmt = (XmlElement)argoNode12;
                     XmlNode argoNode13 = oElmt;
-                    addNewTextNode("nShippingCost", ref argoNode13, oCartListElmt.GetAttribute("shippingCost"));
+                    Protean.xmlTools.addNewTextNode("nShippingCost", ref argoNode13, oCartListElmt.GetAttribute("shippingCost"));
                     oElmt = (XmlElement)argoNode13;
                     if (oCartListElmt.SelectSingleNode("/Notes") is not null)
                     {
                         XmlNode argoNode14 = oElmt;
-                        addNewTextNode("cClientNotes", ref argoNode14, oCartListElmt.SelectSingleNode("/Notes").OuterXml);
+                        Protean.xmlTools.addNewTextNode("cClientNotes", ref argoNode14, oCartListElmt.SelectSingleNode("/Notes").OuterXml);
                         oElmt = (XmlElement)argoNode14;
                     }
                     else
                     {
                         XmlNode argoNode15 = oElmt;
-                        addNewTextNode("cClientNotes", ref argoNode15, "");
+                        Protean.xmlTools.addNewTextNode("cClientNotes", ref argoNode15, "");
                         oElmt = (XmlElement)argoNode15;
                     }
                     XmlNode argoNode16 = oElmt;
-                    addNewTextNode("cSellerNotes", ref argoNode16);
+                    Protean.xmlTools.addNewTextNode("cSellerNotes", ref argoNode16);
                     oElmt = (XmlElement)argoNode16;
                     XmlNode argoNode17 = oElmt;
-                    addNewTextNode("nTaxRate", ref argoNode17, "0");
+                    Protean.xmlTools.addNewTextNode("nTaxRate", ref argoNode17, "0");
                     oElmt = (XmlElement)argoNode17;
                     XmlNode argoNode18 = oElmt;
-                    addNewTextNode("nGiftListId", ref argoNode18, "-1");
+                    Protean.xmlTools.addNewTextNode("nGiftListId", ref argoNode18, "-1");
                     oElmt = (XmlElement)argoNode18;
                     XmlNode argoNode19 = oElmt;
-                    addNewTextNode("nAuditId", ref argoNode19);
+                    Protean.xmlTools.addNewTextNode("nAuditId", ref argoNode19);
                     oElmt = (XmlElement)argoNode19;
                     // validate column exists then only
                     if (moDBHelper.checkTableColumnExists("tblCartOrder", "nReceiptType"))
                     {
                         XmlNode argoNode20 = oElmt;
-                        addNewTextNode("nReceiptType", ref argoNode20, "0");
+                        Protean.xmlTools.addNewTextNode("nReceiptType", ref argoNode20, "0");
                         oElmt = (XmlElement)argoNode20;
                     }
 
@@ -12088,7 +12208,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "CreateDuplicateOrder", ex, "", "", gbDebug);
+                    Protean.stdTools.returnException(ref myWeb.msException, mcModuleName, "CreateDuplicateOrder", ex, "", "", Protean.stdTools.gbDebug);
                     return null;
                 }
             }

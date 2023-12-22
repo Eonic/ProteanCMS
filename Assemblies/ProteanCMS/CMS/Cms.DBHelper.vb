@@ -19,7 +19,6 @@ Imports System.Text.RegularExpressions
 Imports Protean.Tools.Xml
 Imports System.Threading
 Imports System.Linq
-Imports Protean.stdTools
 
 
 
@@ -3150,7 +3149,7 @@ restart:
                     pendingList = moPageXml.CreateElement("Content")
                     pendingList.SetAttribute("name", "Content Awaiting Approval")
                     pendingList.SetAttribute("type", "Report")
-                    If Not (String.IsNullOrEmpty(dLastRun)) AndAlso IsDate(dLastRun) Then pendingList.SetAttribute("since", XmlDate(dLastRun, True))
+                    If Not (String.IsNullOrEmpty(dLastRun)) AndAlso IsDate(dLastRun) Then pendingList.SetAttribute("since", xmlDateTime(dLastRun))
                     pendingList.InnerXml = oXml.InnerXml
 
                     ' Tidy Up - Get rid of all that orphan content from the relations

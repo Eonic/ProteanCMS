@@ -299,6 +299,7 @@ namespace Protean
                         {
                             myWeb.moSession["ewCmd"] = "";
                         }
+                        myWeb.moSession["tempInstance"] = (object)null;
                         myWeb.moSession["ewAuth"] = "";
                         myWeb.mnUserId = 0;
                         mcEwCmd = "";
@@ -527,6 +528,7 @@ namespace Protean
                                     else
                                     {
                                         sAdminLayout = "Logon";
+                                        myWeb.moSession["tempInstance"] = (object)null;
                                     }
                                 }
                                 else if (myWeb.mnPageId > 0)
@@ -630,6 +632,7 @@ namespace Protean
                                 var statusElmt = moPageXML.CreateElement("Status");
                                 statusElmt.InnerXml = myWeb.GetStatus().OuterXml;
                                 oPageDetail.AppendChild(statusElmt);
+                                myWeb.moSession["tempInstance"] = (object)null;
                                 break;
                             }
 
@@ -671,6 +674,7 @@ namespace Protean
                             {
                                 mcEwCmd = "Content";
                                 goto ProcessFlow;
+                                break;
                             }
 
 
@@ -2332,7 +2336,7 @@ namespace Protean
                                 sAdminLayout = "RefundOrder";
                                 string providerName = "";
                                 string providerPaymentReference = "";
-                                //string IsRefund = "";
+                                string IsRefund = "";
                                 long nStatus;
                                 var oCart = new Cms.Cart(ref myWeb);
                                 oCart.moPageXml = moPageXML;
@@ -4007,6 +4011,8 @@ namespace Protean
                                 moAdXfm.moXformElmt = (XmlElement)argoNode;
                                 sProcessInfo = oConvert.Message;
                             }
+
+                            oImportXml.LoadXml(Conversions.ToString(oConvert.Output.OuterXml));
                         }
                         else if (cFilePath.EndsWith(".xml"))
                         {
@@ -5637,7 +5643,7 @@ namespace Protean
             {
                 string sProcessInfo = "";
                 string reportName = "Manage Lookups";
-                //long contentId = 0L;
+                long contentId = 0L;
                 string lookupId = null;
                 string sSql;
                 DataSet lookupsDataset;

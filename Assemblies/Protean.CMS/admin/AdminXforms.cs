@@ -7471,9 +7471,13 @@ namespace Protean
                         // Replace Spaces with hypens
                         cProviderType = Strings.Replace(cProviderType, " ", "-");
                         object formPath = "/xforms/PaymentProvider/";
+                        var filename = Operators.ConcatenateObject(Operators.ConcatenateObject(formPath, cProviderType), ".xml");
                         if (myWeb.bs5)
-                            formPath = "/features/cart/PaymentProvider/";
-                        if (!base.load(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(formPath, cProviderType), ".xml")), this.myWeb.maCommonFolders))
+                        {
+                            formPath = "/providers/payment/";
+                            filename = Operators.ConcatenateObject(Operators.ConcatenateObject(formPath, cProviderType), "/config.xml");
+                        }
+                        if (!base.load(Conversions.ToString(filename), this.myWeb.maCommonFolders))
                         {
                         }
                         // show xform load error message

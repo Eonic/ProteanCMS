@@ -4655,7 +4655,7 @@ namespace Protean
                         oElmt = ContentNode;
                     }
                     foreach (XmlElement oLocElmt in oXml.SelectNodes("Content/Location"))
-                        oElmt.AppendChild(moPageXml.ImportNode(oLocElmt, true));
+                        oElmt.AppendChild(oElmt.OwnerDocument.ImportNode(oLocElmt, true));
 
                     return oElmt;
                 }

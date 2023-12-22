@@ -9,7 +9,7 @@ namespace Protean.Tools
         // .NET 4 Upgrade would provide this function natively.
         // Try not to use too much as it's a bit ineffective.
        // public static bool TryParse(Type enumType, string value, bool ignoreCase, ref object output)
-        public static bool TryParse(Type enumType, string value, bool ignoreCase)
+        public static bool TryParse(Type enumType, string value, bool ignoreCase, ref object output)
         {
             try
             {

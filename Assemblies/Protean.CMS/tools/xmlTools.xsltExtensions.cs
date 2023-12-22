@@ -899,6 +899,12 @@ namespace Protean
 
             public string EonicConfigValue(string SectionName, string ValueName)
             {
+                return PtnConfigValue(SectionName, ValueName);
+            }
+
+
+            public string PtnConfigValue(string SectionName, string ValueName)
+            {
                 try
                 {
                     if (Strings.LCase(SectionName) == "payment")
@@ -2286,8 +2292,8 @@ namespace Protean
                         case "FolderList":
                             {
 
-                                fsHelper.LibraryType library = 0;
-                                if (Tools.EnumUtility.TryParse(typeof(Protean.fsHelper.LibraryType), Query2, false))
+                                fsHelper.LibraryType library = 0; object output = "";
+                                if (Tools.EnumUtility.TryParse(typeof(Protean.fsHelper.LibraryType), Query2, false, ref output))
                                 {
 
                                     string path = fsHelper.GetFileLibraryPath(library);

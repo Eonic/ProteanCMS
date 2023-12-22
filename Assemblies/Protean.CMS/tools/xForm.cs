@@ -220,7 +220,7 @@ namespace Protean
             processRepeats(ref moXformElmt);
         }
 
-        public void LoadInstance(XmlElement oElmt)
+        public void LoadInstance(XmlElement oElmt, bool resetInitial = false)
         {
             string cProcessInfo = "";
 
@@ -236,7 +236,7 @@ namespace Protean
                     oInstance.InnerXml = oElmt.InnerXml;
                 }
 
-                if (oInitialInstance is null)
+                if (oInitialInstance is null | resetInitial == true)
                 {
                     oInitialInstance = (XmlElement)oInstance.Clone();
                 }
@@ -437,13 +437,43 @@ namespace Protean
                     // set the model and instance
                     model = (XmlElement)moXformElmt.SelectSingleNode("model");
 
+                    Instance = (XmlElement)model.SelectSingleNode("instance");
 
                     // Not used at the moment - intended for repeats where the instance needs to be loaded pre load PreLoadInstance()
                     // processRepeats(moXformElmt)
+                    if (bProcessRepeats & goSession is not null)
+                    {
 
+                        if (goSession["tempInstance"] is null)
+                        {
+                            Instance = (XmlElement)model.SelectSingleNode("descendant-or-self::instance");
+                        }
+                        else
+                        {
+                            Instance = (XmlElement)goSession["tempInstance"];
+                        }
 
-                    // XformInclude Features....
-                    Instance = (XmlElement)model.SelectSingleNode("instance");
+                        if (isTriggered)
+                        {
+                            // we have clicked a trigger so we must update the instance
+                            updateInstanceFromRequest();
+                            // lets save the instance
+                            goSession["tempInstance"] = Instance;
+                        }
+                        else
+                        {
+                            // This has moved into validate as we must ensure valid form prior to removal
+                            // goSession("tempInstance") = Nothing
+
+                        }
+                    }
+
+                    else
+                    {
+                        oInstance = (XmlElement)model.SelectSingleNode("descendant-or-self::instance");
+
+                        // XformInclude Features....
+                    }
 
                     System.Collections.Specialized.NameValueCollection moThemeConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/theme");
                     string currentTheme = "";
@@ -3798,6 +3828,15 @@ namespace Protean
                                     XmlElement oInitialNode = (XmlElement)oInitialInstance.SelectSingleNode(sBindXpath + "[position() = 1]", nsMgr);
                                     XmlElement oFirstNode = (XmlElement)oInstance.SelectSingleNode(sBindXpath + "[position() = 1]", nsMgr);
                                     XmlElement oNewNode = (XmlElement)oInitialNode.CloneNode(true);
+                                    // strip values from new node
+                                    foreach (XmlNode oEachNode in oNewNode.SelectNodes("descendant-or-self::*"))
+                                    {
+                                        if (oEachNode.SelectNodes("*").Count == 0)
+                                        {
+                                            oEachNode.InnerText = "";
+                                        }
+                                    }
+
                                     oFirstNode.ParentNode.InsertAfter(oNewNode, oInstance.SelectSingleNode(sBindXpath + "[last()]", nsMgr));
                                     isTriggered = true;
                                     isInserted = true;

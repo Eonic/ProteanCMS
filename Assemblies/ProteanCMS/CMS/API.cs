@@ -42,7 +42,7 @@ namespace Protean
                     // below code has beem moved to membership base provider
 
                     object argmyWeb = this;
-                    var oMembershipProv = new Providers.Membership.BaseProvider(ref argmyWeb, this.moConfig["MembershipProvider"]);
+                    var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.moConfig["MembershipProvider"]);
                     this.mnUserId = Conversions.ToInteger(oMembershipProv.Activities.GetUserId(this));
 
                     if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(this.moSession["adminMode"], "true", false)))
@@ -112,9 +112,9 @@ namespace Protean
                 string classPath = ProviderName + ".JSONActions";
                 string assemblytype = "";
 
-                var s = this.moRequest.InputStream;
-                var sr = new StreamReader(s);
-                string jsonString = sr.ReadLine();
+                var reader = new StreamReader(this.moRequest.InputStream);
+                string jsonString = reader.ReadToEnd();
+
                 if (string.IsNullOrEmpty(jsonString))
                 {
                     jsonString = this.moRequest["data"];
@@ -143,8 +143,23 @@ namespace Protean
                     }
                 }
 
-                Type calledType;
+                if (this.moCtx.Request.QueryString.Count > 1)
+                {
+                    paramDictionary = moCtx.Request.QueryString.AllKeys.ToDictionary(k => k, k => this.moCtx.Request.QueryString[k]);
+                }
+                // add paramDict to jObj
 
+                if (paramDictionary is not null)
+                {
+                    if (jObj is null)
+                    {
+                        jObj = new Newtonsoft.Json.Linq.JObject();
+                    }
+                    foreach (KeyValuePair<string, string> kvp in paramDictionary)
+                        jObj.Add(new Newtonsoft.Json.Linq.JProperty(kvp.Key, kvp.Value));
+                }
+
+                Type calledType;
 
                 if (Strings.LCase(ProviderName) == "cms.cart" | Strings.LCase(ProviderName) == "cms.content" | Strings.LCase(ProviderName) == "cms.admin")
                     ProviderName = "";
@@ -152,12 +167,25 @@ namespace Protean
                 if (!string.IsNullOrEmpty(ProviderName))
                 {
                     // case for external Providers
-                    Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders");
-                    var assemblyInstance = Assembly.LoadFrom(this.goServer.MapPath(moPrvConfig.Providers[ProviderName].Parameters["path"]));
-                    // Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(ProviderName).Type)
-                    classPath = moPrvConfig.Providers[ProviderName].Parameters["className"] + ".JSONActions";
-                    calledType = assemblyInstance.GetType(classPath, true);
+                    if (ProviderName.Contains("."))
+                    {
+                        string[] pnArr = ProviderName.Split('.');
+                        Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/" + Strings.LCase(pnArr[0]) + "Providers");
+                        // Dim assemblyInstance As [Assembly] = [Assembly].LoadFrom(goServer.MapPath(moPrvConfig.Providers(pnArr(1)).Parameters("path")))
+                        var assemblyInstance = Assembly.Load(moPrvConfig.Providers[pnArr[1]].Type);
+                        classPath = "Protean.Providers." + pnArr[0] + "." + pnArr[1] + "Extras.JSONActions";
+                        calledType = assemblyInstance.GetType(classPath, true);
+                    }
+                    else
+                    {
+                        Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders");
+                        var assemblyInstance = Assembly.LoadFrom(this.goServer.MapPath(moPrvConfig.Providers[ProviderName].Parameters["path"]));
+                        // Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(ProviderName).Type)
+                        classPath = moPrvConfig.Providers[ProviderName].Parameters["className"] + ".JSONActions";
+                        calledType = assemblyInstance.GetType(classPath, true);
+                    }
                 }
+
                 else
                 {
                     // case for methods within ProteanCMS Core DLL
@@ -168,14 +196,15 @@ namespace Protean
 
                 var args = new object[2];
                 args[0] = this;
+
                 if (jObj is not null)
                 {
                     args[1] = jObj;
                 }
-                else if (paramDictionary is not null)
-                {
-                    args[1] = paramDictionary;
-                }
+                // ElseIf Not paramDictionary Is Nothing Then
+                // Dim json As String = JsonConvert.SerializeObject(paramDictionary, Formatting.Indented)
+                // jObj = Newtonsoft.Json.Linq.JObject.Parse(json)
+                // args(1) = jObj
                 else
                 {
                     args[1] = null;
@@ -214,7 +243,7 @@ namespace Protean
         public class JsonActions
         {
 
-            public bool ValidateAPICall(ref Cms myWeb, string sGroupName, string cSchemaName = "Role")
+            public bool ValidateAPICall(ref Protean.Cms myWeb, string sGroupName, string cSchemaName = "Role")
             {
                 // Create -InsertOrder Group and pass as a input
                 // check user present in the group
