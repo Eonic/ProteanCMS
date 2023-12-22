@@ -2275,7 +2275,7 @@
         </xsl:for-each>
    <xsl:if test="@shippingType &gt; 0">
           <div class="shipping">
-            <strong>
+            <strong>				
               <xsl:choose>
                 <xsl:when test="/Page/Contents/Content[@name='shippingCostLabel']!=''">
                   <xsl:value-of select="/Page/Contents/Content[@name='shippingCostLabel']"/>

@@ -3313,6 +3313,14 @@ namespace Protean
             string cProcessInfo = "";
             try
             {
+                if(sRef == null)
+                {
+                    sRef = "submit";
+                }
+                if (sClass == null)
+                {
+                    sClass = "principle";
+                }
                 oIptElmt = oContextNode.OwnerDocument.CreateElement("submit");
                 oIptElmt.SetAttribute("submission", sSubmission);
                 oIptElmt.SetAttribute("ref", sRef);

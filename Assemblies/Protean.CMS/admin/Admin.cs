@@ -608,17 +608,16 @@ namespace Protean
                             }
                         case "LogOff":
                             {
-
                                 if (Cms.gbSingleLoginSessionPerUser)
                                 {
-                                    myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.Logoff, (long)mnAdminUserId, 0L);
+                                    myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.Logoff, Convert.ToInt64(mnAdminUserId), 0L);
                                     if (myWeb.moRequest.Cookies["ewslock"] != null)
                                     {
                                         myWeb.moResponse.Cookies["ewslock"].Expires = DateTime.Now.AddDays(-1);
                                     }
                                 }
                                 myWeb.moSession["ewAuth"] = "";
-                                myWeb.moSession["nUserId"] = (object)0;
+                                myWeb.moSession["nUserId"] = 0;
                                 myWeb.moSession.Abandon();
                                 myWeb.mnUserId = 0;
                                 myWeb.msRedirectOnEnd = Cms.gcProjectPath + "/" + mcPagePath;

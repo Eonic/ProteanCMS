@@ -282,7 +282,7 @@ namespace Protean.Providers
                         base.addClientSideValidation(ref pwdIpt, true, "Please enter Password");
                         base.addBind("cPassword", "user/password", ref oBindParent, "true()");
 
-                        base.addSubmit(ref oFrmElmt, "ewSubmit", "Login", default, default, "fa-solid fa-right-to-bracket");
+                        base.addSubmit(ref oFrmElmt, "ewSubmit", "Login",default, default, "fa-solid fa-right-to-bracket");
 
                         base.Instance.InnerXml = "<user rememberMe=\"\"><username/><password/></user>";
                     Check:
