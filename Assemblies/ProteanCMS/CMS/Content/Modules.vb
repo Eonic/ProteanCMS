@@ -501,10 +501,10 @@ where cl.nStructId = " & myWeb.mnPageId)
                                     whereSQL = " AND " & whereSQL
                                 End If
 
-                                whereSQL = " c.cContentSchemaName='" & cFilterTarget & "' And nStructId IN (select nStructKey from tblContentStructure where nStructParId in (" & parentPageId & "))" & whereSQL
-                                    'Else
-                                    '    whereSQL = " c.cContentSchemaName='" & cFilterTarget & whereSQL
-                                End If
+                                whereSQL = " c.cContentSchemaName='" & cFilterTarget & "' And nStructId IN (select nStructKey from tblContentStructure where (nStructParId in (" & parentPageId & ") or nStructKey=" & parentPageId & "))" & whereSQL
+                                'Else
+                                '    whereSQL = " c.cContentSchemaName='" & cFilterTarget & whereSQL
+                            End If
                             End If
                     End If
 
