@@ -151,7 +151,7 @@ namespace Protean
                 }
                 // add paramDict to jObj
 
-                if (paramDictionary is not null)
+                if (paramDictionary != null)
                 {
                     if (jObj is null)
                     {
@@ -231,7 +231,7 @@ namespace Protean
                     this.moResponse.Write(ex.Message);
                 }
 
-                Finalize();
+                //Finalize();
             }
             finally
             {

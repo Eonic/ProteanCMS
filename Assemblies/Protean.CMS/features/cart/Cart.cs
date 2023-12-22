@@ -9505,9 +9505,9 @@ namespace Protean
                             {
                                 ProviderName = dir2.Name;
                                 XmlNode argoNode = oElmt;
-                                oElmt2 = Protean.xmlTools.addNewTextNode("Provider", ref argoNode, Strings.Replace(ProviderName, "-", " "));
+                                oElmt2 = Protean.Tools.Xml.addNewTextNode("Provider", ref argoNode, Strings.Replace(ProviderName, "-", " "));
                                 oElmt = (XmlElement)argoNode;
-                                if (oPaymentCfg.SelectSingleNode("/payment/provider[@name='" + Strings.Replace(ProviderName, "-", "") + "']") is not null)
+                                if (oPaymentCfg.SelectSingleNode("/payment/provider[@name='" + Strings.Replace(ProviderName, "-", "") + "']") != null)
                                 {
                                     oElmt2.SetAttribute("active", "true");
                                 }
@@ -9522,9 +9522,9 @@ namespace Protean
                             {
                                 ProviderName = dir2.Name;
                                 XmlNode argoNode1 = oElmt;
-                                oElmt2 = Protean.xmlTools.addNewTextNode("Provider", ref argoNode1, Strings.Replace(ProviderName, "-", " "));
+                                oElmt2 = Protean.Tools.Xml.addNewTextNode("Provider", ref argoNode1, Strings.Replace(ProviderName, "-", " "));
                                 oElmt = (XmlElement)argoNode1;
-                                if (oPaymentCfg.SelectSingleNode("/payment/provider[@name='" + Strings.Replace(ProviderName, "-", "") + "']") is not null)
+                                if (oPaymentCfg.SelectSingleNode("/payment/provider[@name='" + Strings.Replace(ProviderName, "-", "") + "']") != null)
                                 {
                                     oElmt2.SetAttribute("active", "true");
                                 }
@@ -9542,9 +9542,9 @@ namespace Protean
                             {
                                 ProviderName = Strings.Replace(fi.Name, fi.Extension, "");
                                 XmlNode argoNode2 = oElmt;
-                                oElmt2 = Protean.xmlTools.addNewTextNode("Provider", ref argoNode2, Strings.Replace(ProviderName, "-", " "));
+                                oElmt2 = Protean.Tools.Xml.addNewTextNode("Provider", ref argoNode2, Strings.Replace(ProviderName, "-", " "));
                                 oElmt = (XmlElement)argoNode2;
-                                if (oPaymentCfg.SelectSingleNode("/payment/provider[@name='" + Strings.Replace(ProviderName, "-", "") + "']") is not null)
+                                if (oPaymentCfg.SelectSingleNode("/payment/provider[@name='" + Strings.Replace(ProviderName, "-", "") + "']") != null)
                                 {
                                     oElmt2.SetAttribute("active", "true");
                                 }
@@ -9561,9 +9561,9 @@ namespace Protean
                                 {
                                     ProviderName = Strings.Replace(fi.Name, fi.Extension, "");
                                     XmlNode argoNode3 = oElmt;
-                                    oElmt2 = Protean.xmlTools.addNewTextNode("Provider", ref argoNode3, Strings.Replace(ProviderName, "-", " "));
+                                    oElmt2 = Protean.Tools.Xml.addNewTextNode("Provider", ref argoNode3, Strings.Replace(ProviderName, "-", " "));
                                     oElmt = (XmlElement)argoNode3;
-                                    if (oPaymentCfg.SelectSingleNode("/payment/provider[@name='" + Strings.Replace(ProviderName, "-", "") + "']") is not null)
+                                    if (oPaymentCfg.SelectSingleNode("/payment/provider[@name='" + Strings.Replace(ProviderName, "-", "") + "']") != null)
                                     {
                                         oElmt2.SetAttribute("active", "true");
                                     }
@@ -10316,7 +10316,7 @@ namespace Protean
                                         for (int snCount = 0, loopTo = Information.UBound(aSellerNotes); snCount <= loopTo; snCount++)
                                             cSellerNotesHtml = cSellerNotesHtml + "<li>" + convertEntitiesToCodes(aSellerNotes[snCount]) + "</li>";
                                         var argoNode = oContent.FirstChild;
-                                        var sellerNode = Protean.xmlTools.addNewTextNode("SellerNotes", ref argoNode, "");
+                                        var sellerNode = Protean.Tools.Xml.addNewTextNode("SellerNotes", ref argoNode, "");
                                         try
                                         {
                                             sellerNode.InnerXml = cSellerNotesHtml + "</ul>";

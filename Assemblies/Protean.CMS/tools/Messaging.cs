@@ -389,10 +389,10 @@ namespace Protean
             }
 
         }
-        public object emailer(XmlElement oBodyXML, string xsltPath, string fromName, string fromEmail, string recipientEmail, string SubjectLine, string successMessage = "Message Sent", string failureMessage = "Message Failed", string recipientName = "", string ccRecipient = "", string bccRecipient = "", string cSeperator = "") {
-            Cms.dbHelper mydbhelper = null;
-            return emailer(oBodyXML,xsltPath,fromName, fromEmail, recipientEmail, SubjectLine, ref mydbhelper, successMessage,failureMessage, recipientName, ccRecipient,bccRecipient, cSeperator, "","");
-            }
+        //public object emailer(XmlElement oBodyXML, string xsltPath, string fromName, string fromEmail, string recipientEmail, string SubjectLine, string successMessage = "Message Sent", string failureMessage = "Message Failed", string recipientName = "", string ccRecipient = "", string bccRecipient = "", string cSeperator = "") {
+        //    Cms.dbHelper mydbhelper = null;
+        //    return emailer(oBodyXML,xsltPath,fromName, fromEmail, recipientEmail, SubjectLine, ref mydbhelper, successMessage,failureMessage, recipientName, ccRecipient,bccRecipient, cSeperator, "","");
+        //    }
 
         public object emailer(XmlElement oBodyXML, string xsltPath, string fromName, string fromEmail, string recipientEmail, string SubjectLine, ref Protean.Cms.dbHelper odbHelper, string successMessage = "Message Sent", string failureMessage = "Message Failed", string recipientName = "", string ccRecipient = "", string bccRecipient = "", string cSeperator = "", string cPickupHost = "", string cPickupLocation = "")
         {

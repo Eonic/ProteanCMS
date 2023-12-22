@@ -4012,7 +4012,7 @@ namespace Protean
                                 sProcessInfo = oConvert.Message;
                             }
 
-                            oImportXml.LoadXml(Conversions.ToString(oConvert.Output.OuterXml));
+                          //  oImportXml.LoadXml(Conversions.ToString(oConvert.Output.OuterXml));
                         }
                         else if (cFilePath.EndsWith(".xml"))
                         {

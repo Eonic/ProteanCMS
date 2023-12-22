@@ -61,7 +61,8 @@ namespace Protean
                     if (cMonitorXsl is null)
                         cMonitorXsl = "/ewcommon/xsl/Tools/schedulermonitor.xsl";
                     oMonitorXml = GetMonitorSchedulerXml();
-                    cResponse =Convert.ToString(oMsg.emailer(oMonitorXml, cMonitorXsl, "EonicWebV5", "eonicwebV5@eonic.co.uk", cMonitorEmail, ""));
+                    Cms.dbHelper odbhelper=null;
+                    cResponse =Convert.ToString(oMsg.emailer(oMonitorXml, cMonitorXsl, "EonicWebV5", "eonicwebV5@eonic.co.uk", cMonitorEmail, "", ref odbhelper));
                 }
             }
 

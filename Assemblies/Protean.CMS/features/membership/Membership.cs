@@ -944,7 +944,7 @@ namespace Protean
                                         if (System.IO.File.Exists(goServer.MapPath(moConfig["ProjectPath"] + xsltPathAlert)))
                                         {
                                             Cms.dbHelper argodbHelper1 = null;
-                                            sProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, moConfig["ProjectPath"] + xsltPathAlert, "New User", recipientEmail, fromEmail, SubjectLine, "Message Sent", "Message Failed", odbHelper: ref argodbHelper1));
+                                            sProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, moConfig["ProjectPath"] + xsltPathAlert, "New User", recipientEmail, fromEmail, SubjectLine, odbHelper: ref argodbHelper1, "Message Sent", "Message Failed"));
                                         }
                                         oMsg = (Protean.Messaging)null;
                                     }

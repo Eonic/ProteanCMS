@@ -441,7 +441,7 @@ namespace Protean
 
                     // Not used at the moment - intended for repeats where the instance needs to be loaded pre load PreLoadInstance()
                     // processRepeats(moXformElmt)
-                    if (bProcessRepeats & goSession is not null)
+                    if (bProcessRepeats & goSession != null)
                     {
 
                         if (goSession["tempInstance"] is null)

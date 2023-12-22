@@ -203,7 +203,8 @@ namespace Protean
                 {
                     var myWeb = new Cms(moCtx);
                     var oMsg = new Messaging(ref myWeb.msException);
-                    sMessage = oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine,ccRecipient, bccRecipient, cSeperator).ToString();
+                    Cms.dbHelper odbhelper = null;
+                    sMessage = oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine,ref odbhelper,"","","",ccRecipient, bccRecipient, cSeperator).ToString();
                 }
                 else
                 {
@@ -291,8 +292,8 @@ namespace Protean
                         }
                     }
                 }
-
-                sMessage = Conversions.ToString(oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed", "", ccRecipient, bccRecipient, cSeperator));
+                Cms.dbHelper odbhelper = null;
+                sMessage = Conversions.ToString(oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine,ref odbhelper, "Message Sent", "Message Failed", "", ccRecipient, bccRecipient, cSeperator));
                 return sMessage;
             }
 
@@ -314,7 +315,8 @@ namespace Protean
                 var oMsg = new Messaging(ref myWeb.msException);
 
                 oMsg.addAttachment(cAttachmentFilePath, bDeleteAfterSend);
-                sMessage = Conversions.ToString(oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed", "", ccRecipient, bccRecipient, cSeperator));
+                Cms.dbHelper odbhelper = null;
+                sMessage = Conversions.ToString(oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine,ref odbhelper, "Message Sent", "Message Failed", "", ccRecipient, bccRecipient, cSeperator));
                 oMsg.deleteAttachment(cAttachmentFilePath);
                 return sMessage;
             }
@@ -343,8 +345,8 @@ namespace Protean
                     arrayItem = currentArrayItem;
                     oMsg.addAttachment(arrayItem, bDeleteAfterSend);
                 }
-
-                sMessage = Conversions.ToString(oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed", "", ccRecipient, bccRecipient, cSeperator));
+                Cms.dbHelper odbhelper = null;
+                sMessage = Conversions.ToString(oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine,ref odbhelper, "Message Sent", "Message Failed", "", ccRecipient, bccRecipient, cSeperator));
                 // deleting physical files given full path
                 foreach (var currentArrayItem1 in strFilePath)
                 {
@@ -407,7 +409,8 @@ namespace Protean
                     // Throw New Exception(ex.Message & "FTP Failed")
                     oBodyXML.SetAttribute("error", "FTP Failed: " + ex.Message);
                 }
-                sMessage = Conversions.ToString(oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed", "", ccRecipient, bccRecipient, cSeperator));
+                Cms.dbHelper odbhelper = null;
+                sMessage = Conversions.ToString(oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine,ref odbhelper, "Message Sent", "Message Failed", "", ccRecipient, bccRecipient, cSeperator));
 
                 return sMessage;
             }
@@ -773,8 +776,8 @@ namespace Protean
                                 cWebmasterEmail = myWeb.moConfig["SiteAdminEmail"];
                             string SenderName = myWeb.moConfig["SiteName"] + " Notification";
 
-
-                            string cMessage = Conversions.ToString(oMsg.emailer(oResponse, cXSLPath, SenderName, cWebmasterEmail, cEmail, "", "Message Sent", "Message Failed", "", "", "", ""));
+                            Cms.dbHelper odbhelper = null;
+                            string cMessage = Conversions.ToString(oMsg.emailer(oResponse, cXSLPath, SenderName, cWebmasterEmail, cEmail, "",ref odbhelper, "Message Sent", "Message Failed", "", "", "", ""));
                             AddResponse(cMessage);
                         }
                         bResult = true;

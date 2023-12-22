@@ -996,14 +996,7 @@ namespace Protean.Providers
                     }
                 }
 
-                // Public Overrides Function xFrmEditDirectoryItem(Optional ByVal id As Long = 0, Optional ByVal cDirectorySchemaName As String = "User", Optional ByVal parId As Long = 0, Optional ByVal cXformName As String = "") As XmlElement
-                // Return xFrmEditDirectoryItem(id, cDirectorySchemaName, parId, cXformName, "", Nothing)
-                // End Function
-                // Public Overrides Function xFrmEditDirectoryItem(Optional ByVal id As Long = 0, Optional ByVal cDirectorySchemaName As String = "User", Optional ByVal parId As Long = 0, Optional ByVal cXformName As String = "", Optional ByVal FormXML As String = "") As XmlElement
-                // Return xFrmEditDirectoryItem(id, cDirectorySchemaName, parId, cXformName, FormXML, Nothing)
-                // End Function
-
-                public override XmlElement xFrmEditDirectoryItem([Optional, DefaultParameterValue(0L)] long id, [Optional, DefaultParameterValue("User")] string cDirectorySchemaName, [Optional, DefaultParameterValue(0L)] long parId, [Optional, DefaultParameterValue("")] string cXformName, [Optional, DefaultParameterValue("")] string FormXML, [Optional] ref XmlElement IntanceAppend)
+                public XmlElement xFrmEditDirectoryItem(ref XmlElement IntanceAppend,long id = 0L, string cDirectorySchemaName = "User", long parId = 0L, string cXformName = "", string FormXML = "")
                 {
 
                     XmlElement oGrpElmt;
@@ -1029,7 +1022,7 @@ namespace Protean.Providers
                             {
                                 formPath = "/features/membership/" + cXformName + ".xml";
                             }
-                            if (IntanceAppend is not null)
+                            if (IntanceAppend != null)
                             {
                                 base.bProcessRepeats = false;
                             }
@@ -1051,9 +1044,9 @@ namespace Protean.Providers
                             cCurrentPassword = this.Instance.SelectSingleNode("*/cDirPassword").InnerText;
                         }
 
-                        if (IntanceAppend is not null)
+                        if (IntanceAppend != null)
                         {
-                            if (this.goSession["tempInstance"] is not null)
+                            if (this.goSession["tempInstance"] != null)
                             {
                                 base.Instance = (XmlElement)this.goSession["tempInstance"];
                                 base.bProcessRepeats = true;
