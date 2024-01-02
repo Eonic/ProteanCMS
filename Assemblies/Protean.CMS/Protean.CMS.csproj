@@ -60,8 +60,8 @@
     <Reference Include="BundleTransformer.Less, Version=1.12.44.0, Culture=neutral, PublicKeyToken=973c344c93aac60d, processorArchitecture=MSIL">
       <HintPath>..\..\packages\BundleTransformer.Less.1.12.44\lib\net40\BundleTransformer.Less.dll</HintPath>
     </Reference>
-    <Reference Include="ClearScript.V8, Version=7.2.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\..\Intotheblue\intotheblue_devops\packages\Microsoft.ClearScript.V8.7.2.4\lib\net471\ClearScript.V8.dll</HintPath>
+    <Reference Include="ClearScript.V8, Version=7.3.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\Intotheblue\intotheblue_devops\packages\Microsoft.ClearScript.V8.7.3.4\lib\net471\ClearScript.V8.dll</HintPath>
     </Reference>
     <Reference Include="ClearScript.V8.ICUData, Version=7.4.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.ClearScript.V8.ICUData.7.4.4\lib\netstandard1.0\ClearScript.V8.ICUData.dll</HintPath>
