@@ -51,6 +51,11 @@
             resource lookups using this strongly typed resource class
             </summary>
         </member>
+        <member name="P:JavaScriptEngineSwitcher.V8.Resources.Strings.Engine_InternationalizationApiNotFullySupported">
+            <summary>
+            Looks up a localized string similar to "By default, some features of the JavaScript Internationalization API are not supported."
+            </summary>
+        </member>
         <member name="P:JavaScriptEngineSwitcher.V8.Resources.Strings.Usage_PrecompiledScriptNotAccepted">
             <summary>
             Looks up a localized string similar to "Pre-compiled script is not accepted. To be accepted, the pre-compiled script must have been created..."

@@ -9,12 +9,10 @@ namespace Protean
 /// allows handling of various scenarios that return a type.
 /// </summary>
 /// <remarks></remarks>
-    public partial class Web
+    public class Web
     {
         public class TypeExtensions : Tools.TypeExtensions
         {
-
-
 
             public static Type TypeFromProviderName(string typeFromSpecifiedAssembly, string providerName, string providerSection)
             {

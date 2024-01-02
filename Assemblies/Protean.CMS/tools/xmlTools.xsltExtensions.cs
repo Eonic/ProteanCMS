@@ -1609,17 +1609,12 @@ namespace Protean
                             return newFilepath;
                         }
                     }
-
                     else
                     {
                         // PerfMon.Log("xmlTools", "ResizeImage - End")
                         return "/ewcommon/images/awaiting-image-thumbnail.gif";
-
-
                     }
                 }
-
-
                 catch (Exception ex)
                 {
                     // PerfMon.Log("xmlTools", "ResizeImage - End")
@@ -1635,8 +1630,6 @@ namespace Protean
 
                 }
             }
-
-
             public string CreateWebP(string cVirtualPath, bool forceCheck)
             {
                 string cProcessInfo = string.Empty;
@@ -1707,11 +1700,8 @@ namespace Protean
                 string cProcessInfo = string.Empty;
                 try
                 {
-
                     return CreateWebP(cVirtualPath, false);
                 }
-
-
                 catch (Exception ex)
                 {
                     if ((myWeb.moConfig["Debug"]).ToLower() == "on")

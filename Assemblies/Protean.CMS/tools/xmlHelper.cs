@@ -142,7 +142,6 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-
                         transformException = ex;
                         stdTools.returnException(ref myWeb.msException, "Protean.XmlHelper.Transform", "XslFilePath.Set", ex, msXslFile, value, gbDebug);
                         bError = true;

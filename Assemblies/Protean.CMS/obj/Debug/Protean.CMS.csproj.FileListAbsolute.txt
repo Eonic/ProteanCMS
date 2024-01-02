@@ -305,7 +305,7 @@ D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\De
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Magick.NET.Core.xml
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ru-ru\BundleTransformer.Core.resources.dll
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ru-ru\BundleTransformer.Less.resources.dll
-D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ru-ru\JavaScriptEngineSwitcher.Core.resources.dll
+D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ru-RU\JavaScriptEngineSwitcher.Core.resources.dll
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ru-ru\JavaScriptEngineSwitcher.V8.resources.dll
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Select.Html.dep
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Debug\Protean.CMS.csproj.AssemblyReference.cache

@@ -1956,7 +1956,7 @@
         <xsl:choose>
           <xsl:when test="group[div/tblCartContact/cContactType/node()='Delivery Address']">
             <div class="col-md-6">
-				<button type="submit" name="cartBilladdNewAddress" value="Add New Billing Address" class="btn btn-default addnew float-right" onclick="disableButton(this);"/>
+				<button type="submit" name="cartBilladdNewAddress" value="Add New Billing Address" class="btn btn-default addnew float-right" onclick="disableButton(this);">
 					<i class="fa fa-plus fa-white"> </i> Add New Billing Address
 				</button>
               <h3>Billing Address</h3>
