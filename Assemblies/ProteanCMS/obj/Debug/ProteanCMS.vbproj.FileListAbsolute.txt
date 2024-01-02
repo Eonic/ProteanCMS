@@ -1531,7 +1531,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\AjaxMin.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\AlphaFS.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\AngleSharp.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Antlr3.Runtime.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\BouncyCastle.Crypto.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\BundleTransformer.Core.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\BundleTransformer.Less.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\BundleTransformer.MicrosoftAjax.dll
