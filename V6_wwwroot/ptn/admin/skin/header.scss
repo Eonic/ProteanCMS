@@ -120,6 +120,12 @@ body.normalMode, #adminLayout {
 
     .preview {
         margin-right: 10px;
+
+        @include media-breakpoint-down(xl) {
+            flex-grow: 3;
+            justify-content: flex-end;
+            display: flex;
+        }
     }
 
     .navbar-nav {
@@ -146,6 +152,15 @@ body.normalMode, #adminLayout {
             }
         }
     }
+
+    #bs-admin-navbar-collapse-1 {
+        @include media-breakpoint-down(xl) {
+            position: absolute;
+            top: 46px;
+            background: $admin-header-bg;
+            right: 0;
+        }
+    }
     /*.dashboard-logo {
         position: static;
     }
@@ -163,7 +178,6 @@ body.normalMode, #adminLayout {
             }
         }
     }*/
-
     .admin-logo-dropdown {
         display: none;
         position: absolute;
@@ -365,8 +379,6 @@ body.normalMode, #adminLayout {
             box-shadow: none;
         }
     }
-
-
 }
 .ptn-edit #footerCopyright {
     color: #999 !important;
