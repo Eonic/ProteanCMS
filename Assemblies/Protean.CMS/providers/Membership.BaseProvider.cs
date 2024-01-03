@@ -131,7 +131,7 @@ namespace Protean.Providers
                         }
                         else
                         {
-                            calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], ".Providers.Membership."), ProviderName)), true);
+                            calledType = assemblyInstance.GetType(ourProvider.Parameters["rootClass"] + ".Providers.Membership." + ProviderName, true);
                         }
                     }
 

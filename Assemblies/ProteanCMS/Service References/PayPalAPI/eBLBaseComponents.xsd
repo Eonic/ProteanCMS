@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:ns="urn:ebay:apis:eBLBaseComponents" xmlns:cc="urn:ebay:apis:CoreComponentTypes" xmlns:ed="urn:ebay:apis:EnhancedDataTypes" xmlns="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:ebay:apis:eBLBaseComponents" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema xmlns:cc="urn:ebay:apis:CoreComponentTypes" xmlns:ns="urn:ebay:apis:eBLBaseComponents" xmlns:ed="urn:ebay:apis:EnhancedDataTypes" xmlns="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:ebay:apis:eBLBaseComponents" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:import schemaLocation="CoreComponentTypes.xsd" namespace="urn:ebay:apis:CoreComponentTypes" />
   <xs:import schemaLocation="EnhancedDataTypes.xsd" namespace="urn:ebay:apis:EnhancedDataTypes" />
   <xs:simpleType name="AccountStateCodeType">
@@ -6287,6 +6287,13 @@ Optional
 					</xs:documentation>
         </xs:annotation>
       </xs:element>
+      <xs:element minOccurs="0" maxOccurs="1" name="BillingAgreementID" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+						Billing agreement id for edit funding instrument which enables buyer to select given instrument for current purchase
+                                       </xs:documentation>
+        </xs:annotation>
+      </xs:element>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="ExecuteCheckoutOperationsRequestDetailsType">
@@ -6569,6 +6576,19 @@ Optional
       </xs:element>
     </xs:sequence>
   </xs:complexType>
+  <xs:simpleType name="ChargePatternType">
+    <xs:annotation>
+      <xs:documentation />
+    </xs:annotation>
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="IMMEDIATE" />
+      <xs:enumeration value="RECURRINGPREPAID" />
+      <xs:enumeration value="RECURRINGPOSTPAID" />
+      <xs:enumeration value="THRESHOLDPREPAID" />
+      <xs:enumeration value="THRESHOLDPOSTPAID" />
+      <xs:enumeration value="DEFERRED" />
+    </xs:restriction>
+  </xs:simpleType>
   <xs:complexType name="BillingAgreementDetailsType">
     <xs:sequence>
       <xs:element minOccurs="1" maxOccurs="1" name="BillingType" type="ns:BillingCodeType">
@@ -6593,6 +6613,29 @@ Optional
           <xs:documentation>
 						Custom annotation field for your exclusive use.
 					</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="1" name="ProductCode" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+						Businesses will define a code for a product service. 
+<br /><br />In v2/vault endpoint, product_label should be set to the value of product code to retrieve name and desc in the Risk OOB Data request
+                                          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+						Free flowing text, a product service name that
+<br /><br />Business wants to be identify the product service to its buyers. Used in 8Ball for display purpose against the BA/PMT.
+                                          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" maxOccurs="1" name="ChargePattern" type="ns:ChargePatternType">
+        <xs:annotation>
+          <xs:documentation>
+						The chargePattern attribute determines the type of FIs to display while setting up Billing Agreement
+                                          </xs:documentation>
         </xs:annotation>
       </xs:element>
     </xs:sequence>
@@ -8302,25 +8345,25 @@ Character length and limitations: Two single-byte characters
   <xs:complexType name="PayeeInfoType">
     <xs:annotation>
       <xs:documentation>
-				PayeeInfoType
-				Payee Information
-			</xs:documentation>
+					PayeeInfoType
+					Payee Information
+				</xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:element minOccurs="0" name="PayeeEmail" type="ns:EmailAddressType">
         <xs:annotation>
           <xs:documentation>
-					Email address of payee/agreement owner
-					<br />Character length and limitations: 127 single-byte characters
-				</xs:documentation>
+							Email address of payee/agreement owner
+							<br />Character length and limitations: 127 single-byte characters
+						</xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element minOccurs="0" name="PayeeID" type="ns:UserIDType">
         <xs:annotation>
           <xs:documentation>
-						Unique Merchant ID
-						<br />Character length and limitations: 17 single-byte characters
-					</xs:documentation>
+							Unique Merchant ID
+							<br />Character length and limitations: 17 single-byte characters
+						 </xs:documentation>
         </xs:annotation>
       </xs:element>
     </xs:sequence>
@@ -8504,6 +8547,12 @@ credit: Transaction created via merchant virtual terminal or API to credit a cus
 			Transaction fee associated with the payment </xs:documentation>
         </xs:annotation>
       </xs:element>
+      <xs:element minOccurs="0" name="SettlementFeeAmount" type="cc:BasicAmountType">
+        <xs:annotation>
+          <xs:documentation>
+			Settlement Transaction fee associated with the payment </xs:documentation>
+        </xs:annotation>
+      </xs:element>
       <xs:element minOccurs="0" name="FinancingFeeAmount" type="cc:BasicAmountType">
         <xs:annotation>
           <xs:documentation>
@@ -8533,6 +8582,20 @@ credit: Transaction created via merchant virtual terminal or API to credit a cus
         </xs:annotation>
       </xs:element>
       <xs:element minOccurs="0" name="IsFinancing" type="xs:string" />
+      <xs:element minOccurs="0" name="FinancingDiscountAmount" type="cc:BasicAmountType">
+        <xs:annotation>
+          <xs:documentation>
+					Discount Amount for buyer, if paid in one installment.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="RegularTakeFeeAmount" type="cc:BasicAmountType">
+        <xs:annotation>
+          <xs:documentation>
+					Fee of Regular take rate on the transaction amount. It could be equal to FeeAmount, if not installment.
+					</xs:documentation>
+        </xs:annotation>
+      </xs:element>
       <xs:element minOccurs="0" name="SettleAmount" type="cc:BasicAmountType">
         <xs:annotation>
           <xs:documentation>Amount deposited into the account's primary balance after a currency conversion from automatic conversion through your Payment Receiving Preferences or manual conversion through manually accepting a payment. This amount is calculated after fees and taxes have been assessed. </xs:documentation>
@@ -10044,6 +10107,8 @@ n.
       <xs:enumeration value="pro-hosted" />
       <xs:enumeration value="pro-api" />
       <xs:enumeration value="credit" />
+      <xs:enumeration value="refund" />
+      <xs:enumeration value="reversal" />
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="PaymentStatusCodeType">
@@ -10664,9 +10729,7 @@ If you have a credit card mapped in your PayPal account, PayPal returns the bill
       </xs:element>
       <xs:element minOccurs="0" maxOccurs="1" name="RiskSessionCorrelationID" type="xs:string">
         <xs:annotation>
-          <xs:documentation>
-						Correlation id related to risk process done for the device. Max length is 36 Chars.
-					</xs:documentation>
+          <xs:documentation />
         </xs:annotation>
       </xs:element>
       <xs:element minOccurs="0" maxOccurs="1" name="MerchantSessionId" type="xs:string">
@@ -10868,7 +10931,7 @@ Character length and limitations: 2,048 alphanumeric characters</xs:documentatio
       <xs:element minOccurs="0" name="BusinessInfo" type="ns:BusinessInfoType">
         <xs:annotation>
           <xs:documentation>
-			Information about the merchantÃ¢s business</xs:documentation>
+			Information about the merchantâs business</xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element minOccurs="0" name="OwnerInfo" type="ns:BusinessOwnerInfoType">
@@ -10939,13 +11002,13 @@ Character length and limitations: 75 alphanumeric characters</xs:documentation>
       <xs:element minOccurs="0" name="Address" type="ns:AddressType">
         <xs:annotation>
           <xs:documentation>
-			MerchantÃ¢s business postal address</xs:documentation>
+			Merchantâs business postal address</xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element minOccurs="0" name="WorkPhone" type="xs:string">
         <xs:annotation>
           <xs:documentation>
-			BusinessÃ¢s primary telephone number
+			Businessâs primary telephone number
 <br /><br />
 Character length and limitations: 20 alphanumeric characters</xs:documentation>
         </xs:annotation>
@@ -11001,13 +11064,13 @@ Character length and limitations: 20 alphanumeric characters</xs:documentation>
       <xs:element minOccurs="0" name="BusinessEstablished" type="xs:dateTime">
         <xs:annotation>
           <xs:documentation>
-			Date the merchantÃ¢s business was established</xs:documentation>
+			Date the merchantâs business was established</xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element minOccurs="0" name="CustomerServiceEmail" type="ns:EmailAddressType">
         <xs:annotation>
           <xs:documentation>
-			Email address to contact businessÃ¢s customer service
+			Email address to contact businessâs customer service
 <br /><br />
 Character length and limitations: 127 alphanumeric characters</xs:documentation>
         </xs:annotation>
@@ -11015,7 +11078,7 @@ Character length and limitations: 127 alphanumeric characters</xs:documentation>
       <xs:element minOccurs="0" name="CustomerServicePhone" type="xs:string">
         <xs:annotation>
           <xs:documentation>
-			Telephone number to contact businessÃ¢s customer service
+			Telephone number to contact businessâs customer service
 <br /><br />Character length and limitations: 32 alphanumeric characters</xs:documentation>
         </xs:annotation>
       </xs:element>
@@ -11435,14 +11498,14 @@ Character length and limitations: 127 alphanumeric characters</xs:documentation>
       <xs:element minOccurs="0" name="HomePhone" type="xs:string">
         <xs:annotation>
           <xs:documentation>
-			Business ownerÃ¢s home telephone number
+			Business ownerâs home telephone number
 <br /><br />Character length and limitations: 32 alphanumeric characters</xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element minOccurs="0" name="MobilePhone" type="xs:string">
         <xs:annotation>
           <xs:documentation>
-			Business ownerÃ¢s mobile telephone number
+			Business ownerâs mobile telephone number
 <br /><br />
 Character length and limitations: 32 alphanumeric characters</xs:documentation>
         </xs:annotation>
@@ -11450,7 +11513,7 @@ Character length and limitations: 32 alphanumeric characters</xs:documentation>
       <xs:element minOccurs="0" name="SSN" type="xs:string">
         <xs:annotation>
           <xs:documentation>
-			Business ownerÃ¢s social security number
+			Business ownerâs social security number
 <br /><br />
 Character length and limitations: 9 alphanumeric characters</xs:documentation>
         </xs:annotation>
@@ -11481,7 +11544,7 @@ Character length and limitations: 9 alphanumeric characters</xs:documentation>
       <xs:element name="RoutingNumber" type="xs:string">
         <xs:annotation>
           <xs:documentation>
-			MerchantÃ¢s bank routing number
+			Merchantâs bank routing number
 <br /><br />
 Character length and limitations: 23 alphanumeric characters</xs:documentation>
         </xs:annotation>
@@ -11489,7 +11552,7 @@ Character length and limitations: 23 alphanumeric characters</xs:documentation>
       <xs:element name="AccountNumber" type="xs:string">
         <xs:annotation>
           <xs:documentation>
-			MerchantÃ¢s bank account number
+			Merchantâs bank account number
 <br /><br />
 Character length and limitations: 256 alphanumeric characters</xs:documentation>
         </xs:annotation>
@@ -11532,13 +11595,13 @@ Character length and limitations: 256 alphanumeric characters</xs:documentation>
       <xs:element name="LastUpdated" type="xs:dateTime">
         <xs:annotation>
           <xs:documentation>
-			Date the merchantÃ¢s status or progress was last updated</xs:documentation>
+			Date the merchantâs status or progress was last updated</xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element minOccurs="0" name="Reason" type="xs:string">
         <xs:annotation>
           <xs:documentation>
-			Reason for merchantÃ¢s cancellation of sign-up.
+			Reason for merchantâs cancellation of sign-up.
 <br /><br />
 Character length and limitations: 1,024 alphanumeric characters</xs:documentation>
         </xs:annotation>
@@ -11568,7 +11631,7 @@ Character length and limitations: 1,024 alphanumeric characters</xs:documentatio
       <xs:element minOccurs="0" name="Credentials" type="ns:APICredentialsType">
         <xs:annotation>
           <xs:documentation>
-			MerchantÃ¢s PayPal API credentials</xs:documentation>
+			Merchantâs PayPal API credentials</xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element minOccurs="0" name="ConfigureAPIs" type="xs:string">
@@ -11639,28 +11702,28 @@ SetExpressCheckout,GetExpressCheckoutDetails,DoExpressCheckoutPayment
       <xs:element name="Username" type="xs:string">
         <xs:annotation>
           <xs:documentation>
-			MerchantÃ¢s PayPal API username
+			Merchantâs PayPal API username
 Character length and limitations: 128 alphanumeric characters</xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element name="Password" type="xs:string">
         <xs:annotation>
           <xs:documentation>
-			MerchantÃ¢s PayPal API password
+			Merchantâs PayPal API password
 Character length and limitations: 40 alphanumeric characters</xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element minOccurs="0" name="Signature" type="xs:string">
         <xs:annotation>
           <xs:documentation>
-			MerchantÃ¢s PayPal API signature, if one exists.
+			Merchantâs PayPal API signature, if one exists.
 <br /><br />Character length and limitations: 256 alphanumeric characters</xs:documentation>
         </xs:annotation>
       </xs:element>
       <xs:element minOccurs="0" name="Certificate" type="xs:string">
         <xs:annotation>
           <xs:documentation>
-			MerchantÃ¢s PayPal API certificate in PEM format, if one exists
+			Merchantâs PayPal API certificate in PEM format, if one exists
 			<br /><br />
 			The certificate consists of two parts: the private key (2,048 bytes) and the certificate proper (4,000 bytes).
 <br /><br /><br />Character length and limitations: 6,048 alphanumeric characters</xs:documentation>
@@ -11669,7 +11732,7 @@ Character length and limitations: 40 alphanumeric characters</xs:documentation>
       <xs:element name="Type" type="ns:APIAuthenticationType">
         <xs:annotation>
           <xs:documentation>
-			MerchantÃ¢s PayPal API authentication mechanism.
+			Merchantâs PayPal API authentication mechanism.
 			<br /><br />
 Auth-None: no authentication mechanism on file
 <br /><br />Cert: API certificate
@@ -12359,7 +12422,7 @@ Optional
       <xs:element minOccurs="0" maxOccurs="1" name="PendingReason" type="xs:string">
         <xs:annotation>
           <xs:documentation>
-						Interchange Plus Pricing pending reason
+					Interchange Plus Pricing pending reason
 					</xs:documentation>
         </xs:annotation>
       </xs:element>
