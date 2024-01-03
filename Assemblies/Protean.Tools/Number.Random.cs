@@ -32,7 +32,7 @@ namespace Protean.Tools
         /// particular seed.
         /// </summary>
         /// <param name="seed">The seed for the generator.</param>
-        [CLSCompliant(false)]
+       // [CLSCompliant(false)]
         public Random(uint seed)
         {
             mt[0] = seed;
