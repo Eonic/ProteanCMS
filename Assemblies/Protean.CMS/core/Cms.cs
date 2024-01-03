@@ -17,6 +17,7 @@ using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
 using Protean.Providers.Membership;
+using Microsoft.ClearScript.Windows;
 
 namespace Protean
 {
@@ -4249,7 +4250,7 @@ namespace Protean
                     {
                         try
                         {
-                            Type calledType;
+                            Type calledType = null;
 
                             if (!string.IsNullOrEmpty(assemblyName))
                             {
@@ -4277,7 +4278,9 @@ namespace Protean
                                 }
                                 else
                                 {
-                                    switch (moPrvConfig.Providers[providerName].Parameters["path"])
+                                    if (moPrvConfig.Providers[providerName] != null)
+                                    {
+      switch (moPrvConfig.Providers[providerName].Parameters["path"])
                                     {
                                         case var @case when @case == "":
                                             {
@@ -4302,6 +4305,9 @@ namespace Protean
                                                 break;
                                             }
                                     }
+                                    }
+
+                              
                                 }
                             }
                             else if (!string.IsNullOrEmpty(assemblyType))
@@ -4315,6 +4321,7 @@ namespace Protean
                                 // case for methods within EonicWeb Core DLL
                                 calledType = Type.GetType(classPath, true);
                             }
+                            if (calledType != null) { 
 
                             var o = Activator.CreateInstance(calledType);
 
@@ -4324,9 +4331,9 @@ namespace Protean
 
                             calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, null, o, args);
 
-                            // Error Handling ?
-                            // Object Clearup ?
-
+                                // Error Handling ?
+                                // Object Clearup ?
+                            }
                             calledType = null;
                         }
 
