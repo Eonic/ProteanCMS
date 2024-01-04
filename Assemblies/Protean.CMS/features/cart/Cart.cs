@@ -4969,6 +4969,8 @@ namespace Protean
 
                 try
                 {
+                    myWeb.moSession["tempInstance"] = null;
+
 
                     if (cAddressType.Contains("Delivery"))
                         submitPrefix = "cartDel";
@@ -5281,6 +5283,7 @@ namespace Protean
 
                 try
                 {
+
                     // Build the xform
                     oXform.moPageXML = moPageXml;
                     oXform.NewFrm(cAddressType);
@@ -5830,7 +5833,7 @@ namespace Protean
                 string contactFormCmd2 = "";
                 try
                 {
-
+                    myWeb.moSession["tempInstance"] = null;
                     // Get any existing addresses for user
                     // Changed this so it gets any
 
