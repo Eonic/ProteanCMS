@@ -38,7 +38,9 @@ namespace Protean.Providers
                        
             IMembershipAdminXforms AdminXforms { get; set; }
             IMembershipAdminProcess AdminProcess { get; set; }
-            IMembershipActivities Activities { get; set; }           
+            IMembershipActivities Activities { get; set; }
+
+            void Dispose();
         }
         public interface IMembershipAdminXforms 
         {
@@ -49,8 +51,6 @@ namespace Protean.Providers
             XmlElement xFrmEditDirectoryItem(long id = 0L, string cDirectorySchemaName = "User", long parId = 0L, string cXformName = "", string FormXML = "");
             XmlElement xFrmEditDirectoryItem(ref XmlElement IntanceAppend, long id = 0L, string cDirectorySchemaName = "User", long parId = 0L, string cXformName = "", string FormXML = "");
 
-      
-            XmlElement xFrmResetAccount();
             XmlElement xFrmResetAccount(long userId = 0L);
             XmlElement xFrmConfirmPassword(string AccountHash);
             XmlElement xFrmConfirmPassword(long nUserId);
@@ -209,6 +209,14 @@ namespace Protean.Providers
                 _Activities = new Activities();
                 return this;              
             }
+
+            public void Dispose()
+            {
+                _AdminXforms = null;
+                _AdminProcess = null;
+                _Activities = null;    
+            }
+
             //public void Initiate(ref Protean.Base myWeb)
             //{
             //    //IMembershipAdminXforms AdminXforms = new AdminXForms(ref myWeb);
@@ -220,15 +228,15 @@ namespace Protean.Providers
             {
                 private const string mcModuleName = "Protean.Providers.Membership.Default.AdminXForms";
                 public bool maintainMembershipsOnAdd = true;
-                private XmlElement _moXformElmt;
+
                 XmlElement IMembershipAdminXforms.moXformElmt {
                     set
                     {
-                        _moXformElmt = value;
+                        base.moXformElmt = value;
                     }
                     get
                     {
-                        return _moXformElmt;
+                        return base.moXformElmt;
                     }
                 }
 
@@ -430,9 +438,13 @@ namespace Protean.Providers
                     {
 
                         // Does the configuration setting indicate that email addresses are allowed.
-                        if ((myWeb.moConfig["EmailUsernames"].ToLower()) == "on")
+                        if (myWeb.moConfig["EmailUsernames"] != null)
                         {
-                            getRecordByEmail = true;
+                            if ((myWeb.moConfig["EmailUsernames"].ToLower()) == "on") {
+                                getRecordByEmail = true;
+                            }
+                            else {getRecordByEmail = false; }
+                                
                         }
                         else
                         {
@@ -548,7 +560,7 @@ namespace Protean.Providers
                     }
                 }
 
-                public XmlElement xFrmResetAccount(long userId = 0L)
+                public override XmlElement xFrmResetAccount(long userId = 0L)
                 {
 
                     XmlElement oFrmElmt;
@@ -567,9 +579,15 @@ namespace Protean.Providers
                     {
 
                         // Does the configuration setting indicate that email addresses are allowed.
-                        if ((myWeb.moConfig["EmailUsernames"].ToLower()) == "on")
+                        // Does the configuration setting indicate that email addresses are allowed.
+                        if (myWeb.moConfig["EmailUsernames"] != null)
                         {
-                            areEmailAddressesAllowed = true;
+                            if ((myWeb.moConfig["EmailUsernames"].ToLower()) == "on")
+                            {
+                                areEmailAddressesAllowed = true;
+                            }
+                            else { areEmailAddressesAllowed = false; }
+
                         }
                         else
                         {

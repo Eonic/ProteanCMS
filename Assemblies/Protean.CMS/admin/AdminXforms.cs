@@ -223,9 +223,8 @@ namespace Protean
 
                     try
                     {
-                        Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
-                        IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, this.myWeb.moConfig["MembershipProvider"]);
-                        IMembershipAdminXforms oAdXfm = oMembershipProv.AdminXforms;
+
+                        IMembershipAdminXforms oAdXfm = myWeb.moMemProv.AdminXforms;
 
                         oAdXfm.xFrmUserLogon(FormName);
                         this.valid = Convert.ToBoolean(oAdXfm.valid);
@@ -364,9 +363,8 @@ namespace Protean
                     {
 
                         Cms argmyWeb = this.myWeb;
-                        Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
-                        IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, this.myWeb.moConfig["MembershipProvider"]);
-                        IMembershipAdminXforms oAdXfm = oMembershipProv.AdminXforms;
+
+                        IMembershipAdminXforms oAdXfm = myWeb.moMemProv.AdminXforms;
                         this.myWeb = (Cms)argmyWeb;
 
                         oAdXfm.xFrmPasswordReminder();
@@ -389,9 +387,8 @@ namespace Protean
                     try
                     {
 
-                        Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
-                        IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, this.myWeb.moConfig["MembershipProvider"]);
-                        IMembershipAdminXforms oAdXfm = oMembershipProv.AdminXforms;
+
+                        IMembershipAdminXforms oAdXfm = myWeb.moMemProv.AdminXforms;
 
                         oAdXfm.xFrmActivateAccount();
                         this.valid = Conversions.ToBoolean(oAdXfm.valid);
@@ -406,18 +403,17 @@ namespace Protean
                 }
 
                 [Obsolete("Don't use this routine any more. Use the new one in Membership Provider ", false)]
-                public virtual XmlElement xFrmResetAccount()
+                public virtual XmlElement xFrmResetAccount(long userId = 0L)
                 {
                     string cProcessInfo = "";
 
                     try
                     {
 
-                        Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
-                        IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, this.myWeb.moConfig["MembershipProvider"]);
-                        IMembershipAdminXforms oAdXfm = oMembershipProv.AdminXforms;
 
-                        oAdXfm.xFrmResetAccount();
+                        IMembershipAdminXforms oAdXfm = myWeb.moMemProv.AdminXforms;
+
+                        oAdXfm.xFrmResetAccount(userId);
                         this.valid = Conversions.ToBoolean(oAdXfm.valid);
                         return (XmlElement)oAdXfm.moXformElmt;
                     }
@@ -439,9 +435,7 @@ namespace Protean
                     try
                     {
 
-                        Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
-                        IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, this.myWeb.moConfig["MembershipProvider"]);
-                        IMembershipAdminXforms oAdXfm = oMembershipProv.AdminXforms;
+                        IMembershipAdminXforms oAdXfm = myWeb.moMemProv.AdminXforms;
 
                         oAdXfm.xFrmConfirmPassword(AccountHash);
                         this.valid = Conversions.ToBoolean(oAdXfm.valid);
@@ -465,9 +459,8 @@ namespace Protean
                     try
                     {
 
-                        Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
-                        IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, this.myWeb.moConfig["MembershipProvider"]);
-                        IMembershipAdminXforms oAdXfm = oMembershipProv.AdminXforms;
+
+                        IMembershipAdminXforms oAdXfm = myWeb.moMemProv.AdminXforms;
 
                         oAdXfm.xFrmConfirmPassword(nUserId);
                         this.valid = Conversions.ToBoolean(oAdXfm.valid);
@@ -5468,32 +5461,29 @@ namespace Protean
                 //}
 
                 [Obsolete("Don't use this routine any more. Use the new one in Membership Provider ", false)]
-                //public virtual XmlElement xFrmEditDirectoryItem(long id = 0L, string cDirectorySchemaName = "User", long parId = 0L, string cXformName = "", string FormXML = "", ref XmlElement IntanceAppend = null)
-                //{
-                //    string cProcessInfo = "";
+                public virtual XmlElement xFrmEditDirectoryItem(ref XmlElement InstanceAppend,long id = 0L, string cDirectorySchemaName = "User", long parId = 0L, string cXformName = "", string FormXML = "")
+                {
+                    string cProcessInfo = "";
 
-                //    try
-                //    {
+                    try
+                    {
 
-                //        object argmyWeb = (object)this.myWeb;
-                //        var oMembershipProv = new Protean.Providers.Membership.BaseProvider(ref argmyWeb, this.myWeb.moConfig["MembershipProvider"]);
-                //        this.myWeb = (Cms)argmyWeb;
-                //        var oAdXfm = oMembershipProv.AdminXforms;
+                        var oAdXfm = myWeb.moMemProv.AdminXforms;
 
-                //        oAdXfm.xFrmEditDirectoryItem(id, cDirectorySchemaName, parId, cXformName, FormXML);
+                        oAdXfm.xFrmEditDirectoryItem(ref InstanceAppend, id, cDirectorySchemaName, parId, cXformName, FormXML);
 
-                //        this.valid = Conversions.ToBoolean(oAdXfm.valid);
-                //        this.moXformElmt = (XmlElement)oAdXfm.moXformElmt;
-                //        this.updateInstance((XmlElement)oAdXfm.Instance);
-                //        return this.moXformElmt;
-                //    }
+                        this.valid = Conversions.ToBoolean(oAdXfm.valid);
+                        this.moXformElmt = (XmlElement)oAdXfm.moXformElmt;
+                        this.updateInstance((XmlElement)oAdXfm.Instance);
+                        return this.moXformElmt;
+                    }
 
-                //    catch (Exception ex)
-                //    {
-                //        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditDirectoryItem", ex, "", cProcessInfo, gbDebug);
-                //        return null;
-                //    }
-                //}
+                    catch (Exception ex)
+                    {
+                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditDirectoryItem", ex, "", cProcessInfo, gbDebug);
+                        return null;
+                    }
+                }
 
 
                 public virtual XmlElement xFrmCopyGroupMembers(long dirId)

@@ -160,6 +160,9 @@ namespace Protean
         public string[] maCommonFolders = Array.Empty<string>();
 
         public new string mcModuleName = "Protean.Cms";
+
+        public IMembershipProvider moMemProv;
+
         public Cms.Cart moCart;
         public Cms.Cart.Discount moDiscount;
         public bool mbIsUsingHTTPS = false;
@@ -712,9 +715,13 @@ namespace Protean
                     if (this.moSession != null)
                     {
                         Cms argmyWeb = this;
-                        ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
-                        IMembershipProvider oMembershipProv = RetProv.Get(ref argmyWeb, this.moConfig["MembershipProvider"]);
-                        this.mnUserId = Conversions.ToInteger(oMembershipProv.Activities.GetUserId(ref argmyWeb));
+                        if (moMemProv == null)
+                        {
+                            ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                            moMemProv = RetProv.Get(ref argmyWeb, this.moConfig["MembershipProvider"]);
+                            RetProv = null;
+                        }
+                        this.mnUserId = Conversions.ToInteger(moMemProv.Activities.GetUserId(ref argmyWeb));       
                     }
                     // We need the userId placed into dbhelper.
                     this.moDbHelper.mnUserId = (long)this.mnUserId;
@@ -955,9 +962,10 @@ namespace Protean
                 {
 
                     Cms argmyWeb = this;
-                    ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
-                    IMembershipProvider oMembershipProv = RetProv.Get(ref argmyWeb, this.moConfig["MembershipProvider"]);
-                    oMembershipProv.Activities.SetUserId(ref argmyWeb);
+                    moMemProv.Activities.SetUserId(ref argmyWeb);
+                    moMemProv.Dispose();
+                    moMemProv = null;
+
                 }
 
 
@@ -1350,10 +1358,14 @@ namespace Protean
                     // this simply gets the userId earlier if it is in the session.
                     // behaviour to check single session or transfer from the cart is still called from Open()
                     Cms argmyWeb = this;
+                    if (moMemProv == null)
+                    { 
+                        ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                        moMemProv = RetProv.Get(ref argmyWeb, this.moConfig["MembershipProvider"]);
+                        RetProv = null;
+                    }
+                    this.mnUserId = Conversions.ToInteger(moMemProv.Activities.GetUserSessionId(ref argmyWeb));
 
-                    ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
-                    IMembershipProvider oMembershipProv = RetProv.Get(ref argmyWeb, this.moConfig["MembershipProvider"]);
-                    this.mnUserId = Conversions.ToInteger(oMembershipProv.Activities.GetUserSessionId(ref argmyWeb));
                     if (this.mnUserId > 0)
                     {
                         bPageCache = false;
@@ -5364,10 +5376,8 @@ namespace Protean
             {
 
                 Cms argmyWeb = this;
-                ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
-                IMembershipProvider oMembershipProv = RetProv.Get(ref argmyWeb, this.moConfig["MembershipProvider"]);
+                return Conversions.ToString(moMemProv.Activities.MembershipProcess(ref argmyWeb));
 
-                return Conversions.ToString(oMembershipProv.Activities.MembershipProcess(ref argmyWeb));
             }
 
             catch (Exception ex)
@@ -5397,12 +5407,8 @@ namespace Protean
 
             try
             {
-
                 Cms argmyWeb = this;
-                ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
-                IMembershipProvider oMembershipProv = RetProv.Get(ref argmyWeb, this.moConfig["MembershipProvider"]);
-
-                return Conversions.ToBoolean(oMembershipProv.Activities.AlternativeAuthentication(ref argmyWeb));
+                return Conversions.ToBoolean(moMemProv.Activities.AlternativeAuthentication(ref argmyWeb));
             }
 
             // ' Look for the RC4 token
@@ -6161,11 +6167,8 @@ namespace Protean
             string sProcessInfo = "";
             try
             {
-
                 Cms argmyWeb = this;
-                ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
-                IMembershipProvider oMembershipProv = RetProv.Get(ref argmyWeb, this.moConfig["MembershipProvider"]);
-                return oMembershipProv.Activities.GetUserXML(ref argmyWeb, nUserId);
+                return moMemProv.Activities.GetUserXML(ref argmyWeb, nUserId);
             }
 
             catch (Exception ex)
@@ -10419,9 +10422,8 @@ namespace Protean
             {
 
                 Cms argmyWeb = this;
-                ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
-                IMembershipProvider oMembershipProv = RetProv.Get(ref argmyWeb, this.moConfig["MembershipProvider"]);
-                oMembershipProv.Activities.LogSingleUserSession(ref argmyWeb);
+                moMemProv.Activities.LogSingleUserSession(ref argmyWeb);
+
             }
 
             catch (Exception ex)
