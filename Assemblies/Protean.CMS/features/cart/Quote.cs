@@ -55,7 +55,7 @@ namespace Protean
                 }
             }
 
-            private void InitializeVariables()
+            private new void InitializeVariables()
             {
                 // PerfMon.Log("Quote", "InitializeVariables")
                 // Author:        Trevor Spink
