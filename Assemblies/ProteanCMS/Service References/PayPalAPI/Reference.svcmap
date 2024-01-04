@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="2f2a7198-2dc1-4b8c-8dfa-a69057ed613d" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="2f2a7198-2dc1-4b8c-8dfa-a69057ed613d" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <EnableDataBinding>true</EnableDataBinding>
@@ -21,10 +21,10 @@
     <MetadataSource Address="https://www.sandbox.paypal.com/wsdl/PayPalSvc.wsdl" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="eBLBaseComponents1.xsd" MetadataType="Schema" ID="0de91577-2304-4390-99c6-03b04c353a01" SourceId="1" SourceUrl="https://www.sandbox.paypal.com/wsdl/eBLBaseComponents.xsd" />
-    <MetadataFile FileName="EnhancedDataTypes1.xsd" MetadataType="Schema" ID="df1c9d15-c067-47ef-bd32-c88162077eb1" SourceId="1" SourceUrl="https://www.sandbox.paypal.com/wsdl/EnhancedDataTypes.xsd" />
-    <MetadataFile FileName="CoreComponentTypes1.xsd" MetadataType="Schema" ID="fb28329c-1f7c-4db1-b7ed-18109019030e" SourceId="1" SourceUrl="https://www.sandbox.paypal.com/wsdl/CoreComponentTypes.xsd" />
-    <MetadataFile FileName="PayPalSvc.wsdl" MetadataType="Wsdl" ID="c6ecadc9-401e-4491-9193-e106f28d5d4b" SourceId="1" SourceUrl="https://www.sandbox.paypal.com/wsdl/PayPalSvc.wsdl" />
+    <MetadataFile FileName="CoreComponentTypes.xsd" MetadataType="Schema" ID="60ca7cea-e7b5-4c08-8ff8-eb1a612c8ad4" SourceId="1" SourceUrl="https://www.paypalobjects.com/wsdl/CoreComponentTypes.xsd" />
+    <MetadataFile FileName="PayPalSvc1.wsdl" MetadataType="Wsdl" ID="b533bcff-09e2-469e-9060-bf3a78fba449" SourceId="1" SourceUrl="https://www.paypalobjects.com/wsdl/PayPalSvc.wsdl" />
+    <MetadataFile FileName="EnhancedDataTypes.xsd" MetadataType="Schema" ID="2e204a7e-5af6-48a8-b554-99a850aea3b3" SourceId="1" SourceUrl="https://www.paypalobjects.com/wsdl/EnhancedDataTypes.xsd" />
+    <MetadataFile FileName="eBLBaseComponents.xsd" MetadataType="Schema" ID="716d9ef7-3afb-4cd6-8fb4-ac7040ed1995" SourceId="1" SourceUrl="https://www.paypalobjects.com/wsdl/eBLBaseComponents.xsd" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

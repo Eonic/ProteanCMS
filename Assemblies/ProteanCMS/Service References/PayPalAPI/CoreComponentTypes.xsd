@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:ns="urn:ebay:apis:CoreComponentTypes" xmlns:ebl="urn:ebay:apis:eBLBaseComponents" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:ebay:apis:CoreComponentTypes" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema xmlns:ebl="urn:ebay:apis:eBLBaseComponents" xmlns:ns="urn:ebay:apis:CoreComponentTypes" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:ebay:apis:CoreComponentTypes" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:import schemaLocation="eBLBaseComponents.xsd" namespace="urn:ebay:apis:eBLBaseComponents" />
   <xs:complexType name="AmountType">
     <xs:simpleContent>

@@ -12,6 +12,7 @@ using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 using Protean.Providers.Membership;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace Protean
 {
@@ -568,8 +569,10 @@ namespace Protean
                 {
                     try
                     {
-                        var adXfm = myWeb.getAdminXform();
-                        adXfm.open(myWeb.moPageXml);
+                        Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                        IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, myWeb.moConfig["MembershipProvider"]);
+                        IMembershipAdminXforms oAdXfm = oMembershipProv.AdminXforms;
+                     
                         XmlElement oXfmElmt;
                         string sReturnValue = string.Empty;
                         string cLogonCmd = "";
@@ -577,9 +580,9 @@ namespace Protean
                         if (myWeb.mnUserId == 0 & (myWeb.moRequest["ewCmd"] != "passwordReminder" & myWeb.moRequest["ewCmd"] != "ActivateAccount"))
                         {
 
-                            oXfmElmt = (XmlElement)adXfm.xFrmUserLogon();
+                            oXfmElmt = (XmlElement)oAdXfm.xFrmUserLogon();
                             bool bAdditionalChecks = false;
-                            if (Conversions.ToBoolean(!adXfm.valid))
+                            if (Conversions.ToBoolean(!oAdXfm.valid))
                             {
                                 // Call in additional authentication checks
                                 if (myWeb.moConfig["AlternativeAuthentication"] == "On")
@@ -588,7 +591,7 @@ namespace Protean
                                 }
                             }
 
-                            if (Conversions.ToBoolean(Operators.OrObject(adXfm.valid, bAdditionalChecks)))
+                            if (Conversions.ToBoolean(Operators.OrObject(oAdXfm.valid, bAdditionalChecks)))
                             {
                                 myWeb.moContentDetail = (XmlElement)null;
                                 // mnUserId = adXfm.mnUserId
@@ -643,13 +646,13 @@ namespace Protean
                                 case "sha1":
                                 case "sha256":
                                     {
-                                        oXfmElmt = (XmlElement)adXfm.xFrmResetAccount();
+                                        oXfmElmt = (XmlElement)oAdXfm.xFrmResetAccount();
                                         break;
                                     }
 
                                 default:
                                     {
-                                        oXfmElmt = (XmlElement)adXfm.xFrmPasswordReminder();
+                                        oXfmElmt = (XmlElement)oAdXfm.xFrmPasswordReminder();
                                         break;
                                     }
                             }
@@ -659,7 +662,7 @@ namespace Protean
                         else if (myWeb.moRequest["ewCmd"] == "ActivateAccount")
                         {
 
-                            oXfmElmt = (XmlElement)adXfm.xFrmActivateAccount();
+                            oXfmElmt = (XmlElement)oAdXfm.xFrmActivateAccount();
                             oContentNode.InnerXml = oXfmElmt.InnerXml;
 
                         }
@@ -1034,7 +1037,9 @@ namespace Protean
                     var moConfig = myWeb.moConfig;
                     try
                     {
-                        var adXfm = myWeb.getAdminXform();
+                        Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                        IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, myWeb.moConfig["MembershipProvider"]);
+                        IMembershipAdminXforms oAdXfm = oMembershipProv.AdminXforms;
 
                         XmlElement oXfmElmt;
                         if (myWeb.mnUserId == 0)
@@ -1068,16 +1073,16 @@ namespace Protean
 
                                             if (!string.IsNullOrEmpty(cAccountHash))
                                             {
-                                                oXfmElmt = (XmlElement)adXfm.xFrmConfirmPassword(cAccountHash);
+                                                oXfmElmt = (XmlElement)oAdXfm.xFrmConfirmPassword(cAccountHash);
                                             }
                                             else
                                             {
-                                                oXfmElmt = (XmlElement)adXfm.xFrmResetAccount();
+                                                oXfmElmt = (XmlElement)oAdXfm.xFrmResetAccount();
                                             }
                                         }
                                         else
                                         {
-                                            oXfmElmt = (XmlElement)adXfm.xFrmResetAccount();
+                                            oXfmElmt = (XmlElement)oAdXfm.xFrmResetAccount();
                                         }
 
                                         break;
@@ -1085,14 +1090,14 @@ namespace Protean
 
                                 default:
                                     {
-                                        oXfmElmt = (XmlElement)adXfm.xFrmPasswordReminder();
+                                        oXfmElmt = (XmlElement)oAdXfm.xFrmPasswordReminder();
                                         break;
                                     }
                             }
                         }
                         else
                         {
-                            oXfmElmt = (XmlElement)adXfm.xFrmConfirmPassword(myWeb.mnUserId);
+                            oXfmElmt = (XmlElement)oAdXfm.xFrmConfirmPassword(myWeb.mnUserId);
                         }
 
 
