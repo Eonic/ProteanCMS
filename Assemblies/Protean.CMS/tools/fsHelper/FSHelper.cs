@@ -1430,13 +1430,18 @@ namespace Protean
         {
 
             bool fileExists = false;
-            string cFilePath = context.Request["storageRoot"].Replace(@"\", "/").Replace("\"", "");
-            if (!cFilePath.EndsWith(@"\"))
-                cFilePath = cFilePath + @"\";
+            string cFilePath = null;
+            if (context.Request["storageRoot"] != "" && context.Request["storageRoot"] != null)
+            {
+                cFilePath = context.Request["storageRoot"].Replace(@"\", "/").Replace("\"", "");
+            } 
+            
             try
             {
                 if (cFilePath != null)
                 {
+                    if (!cFilePath.EndsWith(@"\"))
+                        cFilePath = cFilePath + @"\";
                     fileExists = File.Exists(goServer.MapPath(cFilePath + cFilename));
                 }
                 if (fileExists)

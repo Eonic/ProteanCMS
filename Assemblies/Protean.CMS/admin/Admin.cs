@@ -2943,18 +2943,18 @@ namespace Protean
                                 mbPreviewMode = true;
                                 if (myWeb.moSession["PreviewDate"] is null)
                                 {
-                                    myWeb.moSession["PreviewDate"] = (object)DateTime.Now.Date;
+                                    myWeb.moSession["PreviewDate"] = DateTime.Now.Date;
                                 }
 
                                 // ensure if no preview user is specified we are anonomous
                                 if (string.IsNullOrEmpty(Conversions.ToString(Operators.ConcatenateObject("", myWeb.moSession["PreviewUser"]))) & Conversions.ToInteger("0" + myWeb.moRequest["PreviewUser"]) == 0)
                                 {
-                                    myWeb.moSession["PreviewUser"] = (object)0;
+                                    myWeb.moSession["PreviewUser"] = 0;
                                 }
 
                                 if (Strings.LCase(myWeb.moRequest["ewCmd"]) == "logoff")
                                 {
-                                    myWeb.moSession["PreviewUser"] = (object)0;
+                                    myWeb.moSession["PreviewUser"] = 0;
                                     myWeb.msRedirectOnEnd = "/";
                                 }
 
