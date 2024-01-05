@@ -435,33 +435,35 @@
 	<xsl:template match="Order[@cmd='Billing' or @cmd='Delivery']" mode="orderProcess">
 		<xsl:apply-templates select="." mode="orderProcessTitle"/>
 		<xsl:apply-templates select="." mode="orderErrorReports"/>
-		<div id="template_1_Column" class="template template_1_Column container">
 			<h1>
 				<xsl:call-template name="term4031" />
 			</h1>
 			<div class="row">
-				<div class="col-lg-7">
+				<div class="col-lg-8">
 					<xsl:apply-templates select="." mode="orderEditAddresses"/>
 				</div>
-				<div class="col-lg-5  text-bg-light">
-								<xsl:for-each select="Item">
+				<div class="col-lg-4">
+					<div class="card">
+						<div class="card-body">
+									<xsl:for-each select="Item">
 									<div class="clearfix cart-item">
 										<xsl:apply-templates select="." mode="orderItem">
 											<xsl:with-param name="editQty" select="false()"/>
 											<xsl:with-param name="showImg" select="'true'"/>
 											<xsl:with-param name="cartThumbWidth" select="'50'"/>
-											<xsl:with-param name="cartThumbHeight" select="'50'"/>
-											
+											<xsl:with-param name="cartThumbHeight" select="'50'"/>											
 										</xsl:apply-templates>
 									</div>
 								</xsl:for-each>
 								<hr/>
-								<xsl:apply-templates select="." mode="orderTotals"/>								
+								<xsl:apply-templates select="." mode="orderTotals"/>	
+						</div>
+					</div>
+							
 							
 				</div>
 			</div>
 			
-		</div>
 		<xsl:apply-templates select="." mode="displayNotes"/>
 	</xsl:template>
 
@@ -995,12 +997,16 @@
 				<div class="cart-summary">
 					<div class="card cartBox payment-tcs">
 						<div class="card-body">
-							<form method="post" id="cart">
 								<xsl:apply-templates select="." mode="orderItems">
 									<xsl:with-param name="editQty">false</xsl:with-param>
-									<xsl:with-param name="showImg">false</xsl:with-param>
+									<xsl:with-param name="showImg" select="'true'"/>
+									<xsl:with-param name="cartThumbWidth" select="'50'"/>
+									<xsl:with-param name="cartThumbHeight" select="'50'"/>
 								</xsl:apply-templates>
-							</form>
+							
+							<hr/>
+							<xsl:apply-templates select="." mode="orderTotals"/>
+							<hr/>
 							<xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='optionsForm']" mode="xform"/>
 						</div>
 					</div>

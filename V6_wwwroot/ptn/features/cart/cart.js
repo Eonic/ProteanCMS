@@ -1,6 +1,8 @@
 ﻿$(document).ready(function () {
     if ($("form#contact").exists()) {
 
+        $(".delivery-address").hide();
+
         if ($('#cDelContactAddress').val() == $('#cContactAddress').val()) {
             if ($('#cContactAddress').val() == '') {
                 //empty so hide delivery
@@ -19,6 +21,7 @@
         //when is delivery clicked
         $('input[name="cIsDelivery"]').click(function () {
             // alert($(this).attr('value'));
+            $(".delivery-address").show();
             if ($(this).attr('value') == 'true') {
                 resetDelAddress();
             }
