@@ -90,8 +90,7 @@
 			<bind id="cDelContactCity" nodeset="cContactCity" required="true()" type="string" />
 			<bind id="cDelContactState" nodeset="cContactState" required="false()" type="string" />
 			<bind id="cDelContactZip" nodeset="cContactZip" required="true()" type="string" />
-			<bind id="cDelContactCountry" nodeset="cContactCountry" required="true()" type="string" />
-			
+			<bind id="cDelContactCountry" nodeset="cContactCountry" required="true()" type="string" />			
 		</bind>
 		<bind id="cIsDelivery" nodeset="cIsDelivery" required="false()" type="string" />
 	</model>
