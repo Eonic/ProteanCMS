@@ -343,17 +343,21 @@ namespace Protean
 
                         if (jObj != null)
                         {
-                            if (jObj["cPageContentId"].ToString() != null)
+                            if (jObj["contentId"] != null)
                             {
-                                cPageContentId = jObj["cPageContentId"].ToString();
+                                cPageContentId =Convert.ToString(jObj["contentId"]);
                             }
-                            if (jObj["cContentName"].ToString() != null)
+                            if (jObj["cContentName"] != null)
                             {
-                                cContentName = jObj["cContentName"].ToString();
+                                cContentName =Convert.ToString(jObj["cContentName"]);
                             }
-                            if (jObj["uploadFiles"].ToString() != null)
+                            if (jObj["uploadFiles"] != null)
                             {
-                                uploadedfiles = jObj["uploadFiles"].ToString();
+                                uploadedfiles = Convert.ToString(jObj["uploadFiles"]);
+                            }
+                            if (jObj["storagePath"] != null)
+                            {
+                                UploadDirPath = Convert.ToString(jObj["storagePath"]);
                             }
                         }
                         else

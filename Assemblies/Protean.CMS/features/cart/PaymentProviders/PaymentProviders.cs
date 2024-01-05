@@ -80,7 +80,6 @@ namespace Protean
                     Fail = 2
                 }
 
-
                 public PaymentProviders(ref Cms aWeb) : base(ref aWeb)
                 {
                     aWeb.PerfMon.Log("PaymentProviders", "New");
