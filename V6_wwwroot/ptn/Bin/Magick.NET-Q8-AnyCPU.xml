@@ -2876,7 +2876,7 @@
             <summary>
             Sets the URL to use as a fill pattern for filling objects. Only local URLs("#identifier") are
             supported at this time. These local URLs are normally created by defining a named fill pattern
-            with DrawablePushPattern/DrawablePopPattern.
+            with <see cref="T:ImageMagick.DrawablePushPattern"/>/<see cref="T:ImageMagick.DrawablePopPattern"/>.
             </summary>
         </member>
         <member name="M:ImageMagick.DrawableFillPatternUrl.#ctor(System.String)">
@@ -3170,7 +3170,7 @@
         </member>
         <member name="T:ImageMagick.DrawablePopGraphicContext">
             <summary>
-            destroys the current drawing wand and returns to the  previously pushed drawing wand. Multiple
+            destroys the current drawing wand and returns to the previously pushed drawing wand. Multiple
             drawing wands may exist. It is an error to attempt to pop more drawing wands than have been
             pushed, and it is proper form to pop all drawing wands which have been pushed.
             </summary>
@@ -5672,7 +5672,7 @@
             Initializes a new instance that implements <see cref="T:ImageMagick.IMagickGeometry"/>.
             </summary>
             <param name="percentageWidth">The percentage of the width.</param>
-            <param name="percentageHeight">The percentage of the  height.</param>
+            <param name="percentageHeight">The percentage of the height.</param>
             <returns>A new <see cref="T:ImageMagick.IMagickGeometry"/> instance.</returns>
         </member>
         <member name="M:ImageMagick.MagickGeometryFactory.Create(System.Int32,System.Int32,ImageMagick.Percentage,ImageMagick.Percentage)">
@@ -5682,7 +5682,7 @@
             <param name="x">The X offset from origin.</param>
             <param name="y">The Y offset from origin.</param>
             <param name="percentageWidth">The percentage of the width.</param>
-            <param name="percentageHeight">The percentage of the  height.</param>
+            <param name="percentageHeight">The percentage of the height.</param>
             <returns>A new <see cref="T:ImageMagick.IMagickGeometry"/> instance.</returns>
         </member>
         <member name="M:ImageMagick.MagickGeometryFactory.Create(System.String)">
@@ -6730,6 +6730,11 @@
         <member name="P:ImageMagick.Formats.Jp2ReadDefines.Format">
             <summary>
             Gets the format where the defines are for.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.Formats.Jp2ReadDefines.AssumeAlpha">
+            <summary>
+            Gets or sets the flag that assumes an alpha channel when the image has 2 or 4 channels (jp2:assume-alpha).
             </summary>
         </member>
         <member name="P:ImageMagick.Formats.Jp2ReadDefines.QualityLayers">
@@ -10177,7 +10182,7 @@
         </member>
         <member name="M:ImageMagick.MagickImage.FloodFill(ImageMagick.IMagickColor{System.Byte},System.Int32,System.Int32)">
             <summary>
-            Flood-fill color across pixels that match the color of the  target pixel and are neighbors
+            Flood-fill color across pixels that match the color of the target pixel and are neighbors
             of the target pixel. Uses current fuzz setting when determining color match.
             </summary>
             <param name="color">The color to use.</param>
@@ -11973,7 +11978,7 @@
             <summary>
             Associates a mask with the image as defined by the specified region.
             </summary>
-            <param name="region">The mask region.</param>
+            <param name="geometry">The mask region.</param>
         </member>
         <member name="M:ImageMagick.MagickImage.RemoveArtifact(System.String)">
             <summary>
@@ -12379,7 +12384,8 @@
         <member name="M:ImageMagick.MagickImage.SetWriteMask(ImageMagick.IMagickImage)">
             <summary>
             Sets the associated write mask of the image. The mask must be the same dimensions as the image and
-            only contains the colors black and white.
+            only contains the colors black and white or have grayscale values that will cause blended updates of
+            the image.
             </summary>
             <param name="image">The image that contains the write mask.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>z
@@ -15255,7 +15261,8 @@
         <member name="P:ImageMagick.ResourceLimits.Memory">
             <summary>
             Gets or sets the pixel cache limit in bytes. Once this memory limit is exceeded, all subsequent pixels cache
-            operations are to/from disk.
+            operations are to/from disk. The default value of this is 50% of the available memory on the machine in 64-bit mode.
+            When running in 32-bit mode this is 50% of the limit of the operating system.
             </summary>
         </member>
         <member name="P:ImageMagick.ResourceLimits.Thread">
@@ -15303,7 +15310,8 @@
         <member name="P:ImageMagick.ResourceLimits.ImageMagick#IResourceLimits#Memory">
             <summary>
             Gets or sets the pixel cache limit in bytes. Once this memory limit is exceeded, all subsequent pixels cache
-            operations are to/from disk.
+            operations are to/from disk. The default value of this is 50% of the available memory on the machine in 64-bit mode.
+            When running in 32-bit mode this is 50% of the limit of the operating system.
             </summary>
         </member>
         <member name="P:ImageMagick.ResourceLimits.ImageMagick#IResourceLimits#Thread">
@@ -16011,7 +16019,7 @@
             Initializes a new instance of the <see cref="T:ImageMagick.MagickGeometry"/> class using the specified width and height.
             </summary>
             <param name="percentageWidth">The percentage of the width.</param>
-            <param name="percentageHeight">The percentage of the  height.</param>
+            <param name="percentageHeight">The percentage of the height.</param>
         </member>
         <member name="M:ImageMagick.MagickGeometry.#ctor(System.Int32,System.Int32,ImageMagick.Percentage,ImageMagick.Percentage)">
             <summary>
@@ -16020,7 +16028,7 @@
             <param name="x">The X offset from origin.</param>
             <param name="y">The Y offset from origin.</param>
             <param name="percentageWidth">The percentage of the width.</param>
-            <param name="percentageHeight">The percentage of the  height.</param>
+            <param name="percentageHeight">The percentage of the height.</param>
         </member>
         <member name="M:ImageMagick.MagickGeometry.#ctor(System.String)">
             <summary>
@@ -16169,7 +16177,7 @@
         </member>
         <member name="M:ImageMagick.MagickGeometry.Initialize(System.Int32,System.Int32,System.Int32,System.Int32)">
             <summary>
-            Initializes the geometry using the sepcified value.
+            Initializes the geometry using the specified value.
             </summary>
             <param name="x">The X offset from origin.</param>
             <param name="y">The Y offset from origin.</param>

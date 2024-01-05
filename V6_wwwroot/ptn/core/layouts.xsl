@@ -284,7 +284,7 @@
 					<xsl:when test="/Page/Contents/Content[@position = $position]">
 						<xsl:apply-templates select="/Page/Contents/Content[@type='Module' and @position = $position]" mode="displayModule">
 							<xsl:with-param name="auto-col">
-								<xsl:if test="$module-type='AutoColumn'">true</xsl:if>
+								<xsl:if test="$module-type='AutoColumn' or /Page/Contents/Content[@colType='auto']">true</xsl:if>
 							</xsl:with-param>
 							<xsl:with-param name="width">
 								<xsl:value-of select="$width"/>
@@ -854,6 +854,12 @@
 				<xsl:value-of select="@position"/>
 				<xsl:text> module-</xsl:text>
 				<xsl:value-of select="@moduleType"/>
+
+				<!--<xsl:if test="(@position='column1' or @position='custom' or @position='header' or @position='footer') and @moduleType='FormattedText'"> character-width-80 </xsl:if>-->
+				<xsl:if test="@char80Layout and @char80Layout!=''">
+					<xsl:text> char80-</xsl:text>
+					<xsl:value-of select="@char80Layout"/>
+				</xsl:if>
 				<xsl:if test="@panelImage!=''">
 					<xsl:text> panelImage </xsl:text>
 				</xsl:if>
@@ -870,6 +876,8 @@
 					<xsl:text> align-items-</xsl:text>
 					<xsl:value-of select="@position-horizontal"/>
 				</xsl:if>
+				<!--<xsl:if test="(@xsCol='' or @xsCol='1') and @smCol='' and mdCol='' and lgCol='' and xlCol='' and xxlCol=''"> single-col</xsl:if>-->
+
 			</xsl:attribute>
 			<xsl:if test="@contentType='Module'">
 				<xsl:attribute name="class">
@@ -1093,6 +1101,12 @@
 
 	<xsl:template match="Content" mode="hideScreens">
 		<xsl:if test="not($adminMode)">
+			<xsl:if test="contains(@screens,'xxl')">
+				<xsl:text> hidden-xxl</xsl:text>
+			</xsl:if>
+			<xsl:if test="contains(@screens,'xl')">
+				<xsl:text> hidden-xl</xsl:text>
+			</xsl:if>
 			<xsl:if test="contains(@screens,'lg')">
 				<xsl:text> hidden-lg</xsl:text>
 			</xsl:if>
@@ -1229,8 +1243,13 @@
 					<!-- define classes for box -->
 					<xsl:attribute name="class">
 						<xsl:text>card </xsl:text>
+						<xsl:if test="@char80Layout and @char80Layout!=''">
+							<xsl:text> char80-</xsl:text>
+							<xsl:value-of select="@char80Layout"/>
+							<xsl:text> </xsl:text>
+						</xsl:if>
 						<xsl:if test="@panelImage!=''">
-							<xsl:text>panelImage </xsl:text>
+							<xsl:text> panelImage </xsl:text>
 						</xsl:if>
 						<xsl:if test="@icon!='' or @uploadIcon!=''">
 							<xsl:text>panel-icon </xsl:text>
@@ -1662,6 +1681,7 @@
 					<xsl:with-param name="parentId" select="@id"/>
 					<xsl:with-param name="crop" select="$cropSetting"/>
 					<xsl:with-param name="linked" select="@linkArticle"/>
+					<xsl:with-param name="itemLayout" select="@itemLayout"/>
 				</xsl:apply-templates>
 				<xsl:if test="@stepCount != '0'">
 					<xsl:apply-templates select="/" mode="genericStepper">

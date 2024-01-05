@@ -193,7 +193,7 @@
           <span class="space"> </span>
           <span>Content</span>
         </label>
-        <group>
+        <group class="horizontal-form">
           <input bind="cContentProductName" class="required long">
             <label>Product name</label>
             <help class="inline">
@@ -202,7 +202,7 @@
             </help>
           </input>
         </group>
-        <group class="form-2-col">
+        <group class="form-2-col horizontal-form">
           <label>Product Identifiers</label>
           <input bind="cContentStockCode" class="short">
             <label>Stock code</label>
@@ -243,7 +243,7 @@
           </input>
         </group>
 
-        <group class="form-2-col">
+        <group class="form-2-col horizontal-form">
           <label>Stock Control and Shipping</label>
           <input bind="cContentShippingWeight" class="short">
             <label>Weight</label>
@@ -279,7 +279,7 @@
             <label>Stock level</label>
           </input>
         </group>
-        <group  class="form-2-col">
+        <group  class="form-2-col horizontal-form">
           <label>Prices</label>
           <input bind="cContentPrice" class="short">
             <label>Purchase price</label>
@@ -304,7 +304,7 @@
               <help class="inline">The interval of a payment e.g. pm</help>
           </input>-->
         </group>
-        <group>
+        <group class="horizontal-form">
           <input bind="cContentSpecificationDocument" class="short pickDocument">
             <label>Specification document</label>
           </input>
@@ -327,7 +327,7 @@
 				</input>
 			</group>-->
         <group>
-          <group class="form-section-wrapper">
+          <group class="form-section-wrapper horizontal-form">
             <label>Product Variations</label>
             <select1 bind="cSkuOptions" appearance="full" class="">
               <label>Product options or SKU's</label>
@@ -372,52 +372,55 @@
               <case id="cSkuOptions_0"/>
               <case id="cSkuOptions_1">
                 <group>
-                  <label>Product Options 1</label>
-                  <input bind="cOptName1" class="short">
-                    <label>Option Name</label>
-                  </input>
-                  <select1 bind="cOptType1">
-                    <label>Option Type</label>
-                    <item>
-                      <label>Drop Down (select 1)</label>
-                      <value>DropDown</value>
-                    </item>
-                    <item>
-                      <label>Radio Buttons (select 1)</label>
-                      <value>Radio</value>
-                    </item>
-                    <item>
-                      <label>Check Boxes (select many)</label>
-                      <value>CheckBoxes</value>
-                    </item>
-                    <item>
-                      <label>User entered text</label>
-                      <value>TextInput</value>
-                    </item>
-                  </select1>
-                  <group>
-                    <repeat bind="cOptRpt1" class="horizontal_cols">
-                      <input bind="cOpt1" class="short">
-                        <label>Option</label>
-                      </input>
-                      <trigger>
-                        <label>Del</label>
-                        <delete bind="cOptRpt1" at="index('cOptRpt1')"/>
-                      </trigger>
-                    </repeat>
-                  </group>
-                  <trigger>
-                    <label>Add Option</label>
-                    <insert position="after" bind="cOptRpt1" at="index('cOptRpt1')" class="add"/>
-                  </trigger>
+                    <label>Product Options 1</label>
+					<group class="inline-form horizontal-form">
+                          <input bind="cOptName1" class="short">
+                            <label>Group Name</label>
+                          </input>
+                          <select1 bind="cOptType1">
+                            <label>Selector Type</label>
+                            <item>
+                              <label>Drop Down (select 1)</label>
+                              <value>DropDown</value>
+                            </item>
+                            <item>
+                              <label>Radio Buttons (select 1)</label>
+                              <value>Radio</value>
+                            </item>
+                            <item>
+                              <label>Check Boxes (select many)</label>
+                              <value>CheckBoxes</value>
+                            </item>
+                            <item>
+                              <label>User entered text</label>
+                              <value>TextInput</value>
+                            </item>
+                          </select1>
+						<trigger>
+							<label>Add Option</label>
+							<insert position="after" bind="cOptRpt1" at="index('cOptRpt1')" class="add"/>
+						</trigger>
+					  </group>
+					  <repeat bind="cOptRpt1" class="inline-form horizontal-form">
+						  <input bind="cOpt1" class="short">
+							  <label>Option Name</label>
+						  </input>
+						  <trigger>
+							  <label>Del</label>
+							  <delete bind="cOptRpt1" at="index('cOptRpt1')"/>
+						  </trigger>
+					  </repeat>
+                    
+
                 </group>
                 <group>
                   <label>Product Options 2</label>
+					<group class="inline-form horizontal-form">
                   <input bind="cOptName2" class="short">
-                    <label>Option Name</label>
+                    <label>Group Name</label>
                   </input>
                   <select1 bind="cOptType2">
-                    <label>Option Type</label>
+                    <label>Selector Type</label>
                     <item>
                       <label>Drop Down (select 1)</label>
                       <value>DropDown</value>
@@ -431,19 +434,19 @@
                       <value>CheckBoxes</value>
                     </item>
                   </select1>
-                  <repeat bind="cOptRpt2" class="horizontal">
+                  <trigger>
+                    <label>Add Option</label>
+                    <insert position="after" bind="cOptRpt2" at="index('cOptRpt2')" class="add"/>
+                  </trigger></group>
+                  <repeat bind="cOptRpt2" class="inline-form horizontal-form">
                     <input bind="cOpt2" class="short">
-                      <label>Option</label>
+                      <label>Option Name</label>
                     </input>
                     <trigger>
                       <label>Del</label>
                       <delete bind="cOptRpt2" at="index('cOptRpt2')"/>
                     </trigger>
                   </repeat>
-                  <trigger>
-                    <label>Add Option</label>
-                    <insert position="after" bind="cOptRpt2" at="index('cOptRpt2')" class="add"/>
-                  </trigger>
                 </group>
               </case>
               <case id="cSkuOptions_2">

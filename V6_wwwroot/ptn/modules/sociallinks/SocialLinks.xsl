@@ -75,7 +75,7 @@
 					<xsl:if test="@twitterURL!=''">
 						<a href="{@twitterURL}" target="_blank" title="{$myName} on Twitter" class="social-id-tw">
 
-							<i class="fab fa-2x fa-twitter">
+							<i class="fa-brands fa-2x fa-x-twitter">
 								<span class="visually-hidden">
 									<xsl:value-of select="$myName"/> on Twitter
 								</span>
@@ -138,7 +138,7 @@
 					</xsl:if>
 					<xsl:if test="@twitterURL!=''">
 						<a href="{@twitterURL}" target="_blank" title="{$myName} on Twitter" class="social-id-tw">
-							<i class="fab fa-3x fa-twitter-square">
+							<i class="fa-brands fa-3x fa-x-twitter-square">
 								<xsl:text> </xsl:text>
 							</i>
 						</a>
@@ -198,7 +198,7 @@
 								<i class="fab fa-circle fa-stack-2x">
 									<xsl:text> </xsl:text>
 								</i>
-								<i class="fab fa-twitter fa-stack-1x fa-inverse">
+								<i class="fa-brands fa-x-twitter fa-stack-1x fa-inverse">
 									<xsl:text> </xsl:text>
 								</i>
 							</span>
@@ -278,7 +278,7 @@
 					</xsl:if>
 					<xsl:if test="@twitterURL!=''">
 						<a href="{@twitterURL}" target="_blank" title="{$myName} on Twitter" class="social-id-tw">
-							<i class="fab fa-twitter">
+							<i class="fa-brands fa-x-twitter">
 								<span class="visually-hidden">
 									<xsl:value-of select="$myName"/> on Twitter
 								</span>
@@ -487,7 +487,7 @@
 					</xsl:if>
 					<xsl:if test="@twitterURL!=''">
 						<a href="{@twitterURL}" title="{$myName} on Twitter" class="social-id-tw">
-							<i class="fab fa-2x fa-twitter">
+							<i class="fa-brands fa-2x fa-x-twitter">
 								<xsl:text> </xsl:text>
 							</i>
 						</a>
@@ -538,7 +538,7 @@
 					</xsl:if>
 					<xsl:if test="@twitterURL!=''">
 						<a href="{@twitterURL}" title="{$myName} on Twitter" class="social-id-tw">
-							<i class="fab fa-3x fa-twitter-square">
+							<i class="fa-brands fa-3x fa-x-twitter-square">
 								<xsl:text> </xsl:text>
 							</i>
 						</a>
@@ -605,7 +605,7 @@
 								<i class="fa fa-circle fa-stack-2x">
 									<xsl:text> </xsl:text>
 								</i>
-								<i class="fab fa-twitter fa-stack-1x fa-inverse">
+								<i class="fa-brands fa-x-twitter fa-stack-1x fa-inverse">
 									<xsl:text> </xsl:text>
 								</i>
 							</span>
@@ -694,7 +694,7 @@
 					</xsl:if>
 					<xsl:if test="@twitterURL!=''">
 						<a href="{@twitterURL}" title="{$myName} on Twitter" class="social-id-tw">
-							<i class="fab fa-twitter">
+							<i class="fa-brands fa-x-twitter">
 								<xsl:text> </xsl:text>
 							</i>
 						</a>
@@ -789,7 +789,7 @@
 			</xsl:if>
 			<xsl:if test="@twitterURL!=''">
 				<a href="{@twitterURL}" title="{$myName} on Twitter" class="social-id-tw">
-					<i class="fab fa-twitter">
+					<i class="fa-brands fa-x-twitter">
 						<xsl:text> </xsl:text>
 					</i>
 				</a>

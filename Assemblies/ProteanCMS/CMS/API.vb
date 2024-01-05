@@ -9,6 +9,10 @@ Imports System.Linq
 Imports System.Collections.Generic
 Imports Newtonsoft.Json
 Imports System.Text
+Imports Protean.Tools
+Imports Lucene.Net.Search.FieldValueHitQueue
+Imports Protean.Services
+Imports Microsoft.Ajax.Utilities
 
 Public Class API
     Inherits Base
@@ -83,9 +87,9 @@ Public Class API
             Dim classPath As String = ProviderName & ".JSONActions"
             Dim assemblytype As String = ""
 
-            Dim s As Stream = moRequest.InputStream
-            Dim sr As New StreamReader(s)
-            Dim jsonString As String = sr.ReadLine()
+            Dim reader As New StreamReader(moRequest.InputStream())
+            Dim jsonString As String = reader.ReadToEnd()
+
             If jsonString = Nothing Then
                 jsonString = moRequest("data")
             End If
@@ -106,18 +110,41 @@ Public Class API
                 End Try
             End If
 
-            Dim calledType As Type
+            If moCtx.Request.QueryString.Count() > 1 Then
+                paramDictionary = moCtx.Request.QueryString.AllKeys.ToDictionary(Function(k) k, Function(k) moCtx.Request.QueryString(k))
+            End If
+            'add paramDict to jObj
 
+            If Not paramDictionary Is Nothing Then
+                If jObj Is Nothing Then
+                    jObj = New Newtonsoft.Json.Linq.JObject
+                End If
+                For Each kvp As KeyValuePair(Of String, String) In paramDictionary
+                    jObj.Add(New Newtonsoft.Json.Linq.JProperty(kvp.Key, kvp.Value))
+                Next
+            End If
+
+            Dim calledType As Type
 
             If LCase(ProviderName) = "cms.cart" Or LCase(ProviderName) = "cms.content" Or LCase(ProviderName) = "cms.admin" Then ProviderName = ""
 
             If ProviderName <> "" Then
                 'case for external Providers
-                Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders")
-                Dim assemblyInstance As [Assembly] = [Assembly].LoadFrom(goServer.MapPath(moPrvConfig.Providers(ProviderName).Parameters("path")))
-                'Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(ProviderName).Type)
-                classPath = moPrvConfig.Providers(ProviderName).Parameters("className") & ".JSONActions"
-                calledType = assemblyInstance.GetType(classPath, True)
+                If ProviderName.Contains(".") Then
+                    Dim pnArr As String() = ProviderName.Split(".")
+                    Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/" & LCase(pnArr(0)) & "Providers")
+                    'Dim assemblyInstance As [Assembly] = [Assembly].LoadFrom(goServer.MapPath(moPrvConfig.Providers(pnArr(1)).Parameters("path")))
+                    Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(pnArr(1)).Type)
+                    classPath = "Protean.Providers." & pnArr(0) & "." & pnArr(1) & "Extras.JSONActions"
+                    calledType = assemblyInstance.GetType(classPath, True)
+                Else
+                    Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders")
+                    Dim assemblyInstance As [Assembly] = [Assembly].LoadFrom(goServer.MapPath(moPrvConfig.Providers(ProviderName).Parameters("path")))
+                    'Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(ProviderName).Type)
+                    classPath = moPrvConfig.Providers(ProviderName).Parameters("className") & ".JSONActions"
+                    calledType = assemblyInstance.GetType(classPath, True)
+                End If
+
             Else
                 'case for methods within ProteanCMS Core DLL
                 calledType = System.Type.GetType("Protean." & Replace(classPath, ".", "+"), True)
@@ -127,10 +154,13 @@ Public Class API
 
             Dim args(1) As Object
             args(0) = Me
+
             If Not jObj Is Nothing Then
                 args(1) = jObj
-            ElseIf Not paramDictionary Is Nothing Then
-                args(1) = paramDictionary
+                'ElseIf Not paramDictionary Is Nothing Then
+                '    Dim json As String = JsonConvert.SerializeObject(paramDictionary, Formatting.Indented)
+                '    jObj = Newtonsoft.Json.Linq.JObject.Parse(json)
+                '    args(1) = jObj
             Else
                 args(1) = Nothing
             End If

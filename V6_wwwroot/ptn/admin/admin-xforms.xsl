@@ -1009,7 +1009,9 @@
 		],
 	</xsl:template>
 
-	<xsl:template match="textarea" mode="tinymceContentCSS"></xsl:template>
+	<xsl:template match="textarea" mode="tinymceContentCSS">
+
+		content_css:"/ptn/admin/skin/tinymce.css",</xsl:template>
 
 	<!-- TinyMCE default configuration -->
 	<xsl:template match="textarea" mode="tinymceButtons1">
@@ -1041,7 +1043,7 @@
 		+ "textarea[type|value|name|style|class|src|alt|border|size|cols|rows],"
 		+ "td/th[colspan|rowspan|align|valign|style|class],"
 		+ "h1[style|class],h2[style|class],h3[style|class],h4[style|class],h5[style|class],h6[style|class],"
-		+ "ol[style|class],ul[style|class],li[style|class],div[align|style|class],span[style|class],"
+		+ "ol[style|class],ul[style|class],li[style|class],div[align|style|class|id],span[style|class|id],"
 		+ "thead[style|class],tbody[style|class],tr[class],dd[style|class],dl[style|class],dt[style|class],"
 		+ "sup,sub,pre,address,strong,b,em,i[class],u,s,hr,blockquote,br,"
 		+ "cite[class|id|title],code[class|title],samp,iframe[width|height|src|frameborder|allowfullscreen]"

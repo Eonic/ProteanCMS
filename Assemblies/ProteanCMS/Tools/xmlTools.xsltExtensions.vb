@@ -648,7 +648,13 @@ Partial Public Module xmlTools
             End If
         End Function
 
+        '' For Legacy sites
         Public Function EonicConfigValue(ByVal SectionName As String, ByVal ValueName As String) As String
+            Return PtnConfigValue(SectionName, ValueName)
+        End Function
+
+
+        Public Function PtnConfigValue(ByVal SectionName As String, ByVal ValueName As String) As String
             Try
                 If LCase(SectionName) = "payment" Then Return ""
                 If LCase(ValueName).Contains("password") Then Return ""

@@ -6,12 +6,12 @@
   <xsl:template match="/">
     <xsl:apply-imports/>
   </xsl:template>
+	
   <xsl:output method="xml" indent="yes" standalone="yes" omit-xml-declaration="yes" doctype-public="-//W3C//DTD XHTML 1.1//EN" doctype-system="http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" encoding="UTF-8"/>
 
   <xsl:template match="*" mode="subject">
     <xsl:value-of select="$siteTitle"/> - <xsl:value-of select="@subjectLine"/>
   </xsl:template>
-
 
   <xsl:template match="*" mode="bodyLayout">
           <h2>Email Enquiry</h2>
