@@ -4726,9 +4726,11 @@ namespace Protean
                         if (oStock is null)
                         {
                             oStock = oProd.SelectSingleNode("//Stock");
+                            if (oStock != null) {
                             if (Information.IsNumeric(oStock.InnerText))
                             {
                                 StockLevel = Conversions.ToLong(oStock.InnerText);
+                            }
                             }
                         }
                         else

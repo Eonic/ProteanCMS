@@ -747,9 +747,20 @@
 							<a data-bs-toggle="modal" data-bs-target="#cartLogonBox" role="button" class="btn btn-outline-primary btn-block">
 								Log in
 							</a>
-							<a href="?pgid={/Page/@id}&amp;cartCmd=Notes" class="without-account-btn">
-								Continue without account
-							</a>
+							<xsl:choose>
+								<xsl:when test="Item/productDetail[@type='Subscription']">
+									<br/>
+									<div class="alert alert-info">
+										For regular payments you need to create an account with us.
+									</div>
+								</xsl:when>
+								<xsl:otherwise>
+									<a href="?pgid={/Page/@id}&amp;cartCmd=Notes" class="without-account-btn">
+										Continue without account
+									</a>
+								</xsl:otherwise>
+							</xsl:choose>
+
 							<xsl:apply-templates select="." mode="orderProcessSkipButton"/>
 						</div>
 					</div>
