@@ -42,7 +42,7 @@ namespace Protean
         public string mcModuleName = "Protean.Messaging";
         public bool sendAsync = false;
 
-        private string msAttachmentPath = "";
+       // private string msAttachmentPath = "";
         private Collection Attachments;
         private static bool mailSent = false;
 

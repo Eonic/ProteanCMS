@@ -60,9 +60,9 @@ namespace Protean.Providers
         {
             private const string mcModuleName = "Protean.Providers.Payment.GetProvider";
             protected XmlNode moPaymentCfg;            
-            private IPaymentAdminXforms AdminXforms;
-            private IPaymentAdminProcess AdminProcess;
-            private IPaymentActivities Activities;           
+            //private IPaymentAdminXforms AdminXforms;
+            //private IPaymentAdminProcess AdminProcess;
+            //private IPaymentActivities Activities;           
             public IPaymentProvider Get(ref Cms myWeb, string ProviderName)
             {
                 try
@@ -113,7 +113,6 @@ namespace Protean.Providers
 
                     return (IPaymentProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args);
                 }
-
                 catch (Exception ex)
                 {
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "New", ex, "", ProviderName + " Could Not be Loaded", gbDebug);

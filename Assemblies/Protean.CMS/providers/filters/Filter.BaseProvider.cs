@@ -97,7 +97,7 @@ namespace Protean.Providers
                 // do nothing
             }
 
-            IFilterProvider myFilters;
+           // IFilterProvider myFilters;
 
             public void Initiate(ref Cms myWeb)
             {

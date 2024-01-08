@@ -5643,7 +5643,7 @@ namespace Protean
             {
                 string sProcessInfo = "";
                 string reportName = "Manage Lookups";
-                long contentId = 0L;
+                //long contentId = 0L;
                 string lookupId = null;
                 string sSql;
                 DataSet lookupsDataset;

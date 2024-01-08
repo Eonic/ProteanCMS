@@ -10326,7 +10326,7 @@ namespace Protean
                                         {
                                             sellerNode.InnerXml = cSellerNotesHtml + "</ul>";
                                         }
-                                        catch (Exception ex)
+                                        catch (Exception)
                                         {
                                             sellerNode.InnerXml = Tools.Text.tidyXhtmlFrag(cSellerNotesHtml + "</ul>");
                                         }
