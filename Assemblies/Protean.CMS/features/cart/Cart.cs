@@ -10252,6 +10252,10 @@ namespace Protean
                                     if (Conversions.ToBoolean(Operators.AndObject(!Operators.ConditionalCompareObjectEqual(oDR["cCartXML"], "", false), bForceRefresh == false)))
                                     {
                                         oContent.InnerXml = Conversions.ToString(oDR["cCartXML"]);
+                                        if(oContent.InnerXml.Contains("\n"))
+                                        {
+                                            oContent.InnerXml = oContent.InnerXml.TrimStart('\n');
+                                        }
                                         XmlElement oCartElmt = (XmlElement)oContent.FirstChild;
 
                                         // check for invoice date etc.
