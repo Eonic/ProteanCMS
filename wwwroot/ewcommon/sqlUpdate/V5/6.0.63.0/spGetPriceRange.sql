@@ -1,6 +1,6 @@
              
            
-  ALTER PROCEDURE [dbo].[spGetPriceRange] -- 0,10000,50,'91,823','   nStructId IN (select nStructKey from tblContentStructure where (nStructKey in ( 91,823) OR nStructParId in (91,823))	)' ,'Product'    
+  CREATE PROCEDURE [dbo].[spGetPriceRange] -- 0,10000,50,'91,823','   nStructId IN (select nStructKey from tblContentStructure where (nStructKey in ( 91,823) OR nStructParId in (91,823))	)' ,'Product'    
             
   @MinPrice int,          
   @MaxPrice int,          
