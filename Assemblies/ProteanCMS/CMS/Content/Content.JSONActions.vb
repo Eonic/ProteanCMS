@@ -284,13 +284,16 @@ Partial Public Class Cms
                     Dim UploadDirPath As String = String.Empty
 
                     If Not jObj Is Nothing Then
-                        If jObj("cPageContentId").ToString() IsNot Nothing Then
-                            cPageContentId = jObj("cPageContentId").ToString()
+                        If jObj("contentId") IsNot Nothing Then
+                            cPageContentId = jObj("contentId").ToString()
                         End If
-                        If jObj("cContentName").ToString() IsNot Nothing Then
+                        If jObj("cContentName") IsNot Nothing Then
                             cContentName = jObj("cContentName").ToString()
                         End If
-                        If jObj("uploadFiles").ToString() IsNot Nothing Then
+                        If jObj("storagePath") IsNot Nothing Then
+                            UploadDirPath = jObj("storagePath").ToString()
+                        End If
+                        If jObj("uploadFiles") IsNot Nothing Then
                             uploadedfiles = jObj("uploadFiles").ToString()
                         End If
                     Else

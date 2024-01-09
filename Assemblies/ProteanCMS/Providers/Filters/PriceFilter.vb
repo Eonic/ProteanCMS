@@ -62,9 +62,13 @@ Namespace Providers
                     If (FilterConfig.Attributes("name") IsNot Nothing) Then
                         sCotrolDisplayName = Convert.ToString(FilterConfig.Attributes("name").Value)
                     End If
-                    If (oXform.Instance.SelectSingleNode("PageFilter").InnerText <> "") Then
-                        nPageId = oXform.Instance.SelectSingleNode("PageFilter").InnerText.ToString()
 
+                    If (oXform.Instance.SelectSingleNode("PageFilter") IsNot Nothing) Then
+                        If (oXform.Instance.SelectSingleNode("PageFilter").InnerText <> "") Then
+                            nPageId = oXform.Instance.SelectSingleNode("PageFilter").InnerText.ToString()
+                        Else
+                            nPageId = aWeb.mnPageId
+                        End If
                     Else
                         nPageId = aWeb.mnPageId
                     End If
