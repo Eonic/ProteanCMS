@@ -10,6 +10,7 @@ Imports System.Reflection
 Imports System.Collections.Generic
 Imports Microsoft.Ajax.Utilities
 Imports System.Management
+Imports System.Math.pi
 
 Partial Public Class Cms
     Public Class Content
@@ -31,6 +32,8 @@ Partial Public Class Cms
 
             Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
             Private Const mcModuleName As String = "Protean.Cms.Content.Modules"
+            Public goConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
+
 
             Public Sub New()
 
