@@ -1,4 +1,4 @@
-﻿ALTER PROCEDURE [dbo].[spOrderDownload]
+﻿CREATE PROCEDURE [dbo].[spOrderDownload]
 	-- Add the parameters for the stored procedure here
 		@dStartDate datetime = NULL,
 		@dEndDate datetime = NULL,
