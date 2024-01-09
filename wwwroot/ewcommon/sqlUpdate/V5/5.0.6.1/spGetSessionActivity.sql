@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[spGetSessionActivity] (
+﻿ALTER PROCEDURE [dbo].[spGetSessionActivity] (
  @FROM datetime,
  @TO datetime,
  @GROUPS nvarchar(255)
