@@ -521,17 +521,6 @@ where cl.nStructId = " & myWeb.mnPageId)
                             myWeb.moSession("FilterWhereCondition") = whereSQL
                             myWeb.GetPageContentFromSelect(whereSQL,,,,,, oContentNode,,,,, cFilterTarget)
 
-                            Dim bIsCalculateDistance As Boolean = IIf(LCase(goConfig("IsCalculateDistance")) = "on", True, False)
-
-                            If bIsCalculateDistance Then
-                                Dim latitude As Decimal = 0
-                                Dim longitude As Decimal = 0
-                                Dim dProdLatitude As Decimal = 0
-                                Dim dProdLongitude As Decimal = 0
-                                dProdLatitude = Convert.ToDecimal(oContentNode.SelectNodes("Content/LocationMap/@lat").ToString())
-                                dProdLongitude = Convert.ToDecimal(oContentNode.SelectNodes("Content/LocationMap/@long").ToString())
-
-                            End If
 
                             If (oContentNode.SelectNodes("Content[@type='Product']").Count = 0) Then
                                 filterForm.addSubmit(oFrmGroup, "Clear Filters", "No results found", "clearfilters", "clear-filters",, "clearfilters")
@@ -628,44 +617,6 @@ where cl.nStructId = " & myWeb.mnPageId)
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Logon", ex, ""))
                 End Try
             End Sub
-            Public Function GetShortestDistanceByProduct(ByVal Latitude As Decimal, ByVal Longitude As Decimal, ByVal SourceLatitude As Decimal, ByVal SourceLongitude As Decimal) As Decimal
-                Try
-                    Dim LatitudeInRad1 As Decimal = 0
-                    Dim LongitudeInRad1 As Decimal = 0
-
-                    Dim LatitudeInRad2 As Decimal = 0
-                    Dim LongitudeInRad2 As Decimal = 0
-
-                    Dim dLatitude As Decimal = 0
-                    Dim dLongitude As Decimal = 0
-
-                    Dim a As Decimal = 0
-                    Dim c As Decimal = 0
-
-                    Dim nSquareVlaueLat As Decimal = 0
-                    Dim nSquareVlaueLong As Decimal = 0
-
-                    Dim kEarthRadius As Decimal = 6376.5
-                    Dim dDistance As Decimal = 0
-                    LatitudeInRad1 = Latitude * (3.14 / 180.0)
-                    LongitudeInRad1 = Longitude * (3.14 / 180.0)
-
-                    LatitudeInRad2 = SourceLatitude * (3.14 / 180.0)
-                    LongitudeInRad2 = SourceLongitude * (3.14 / 180.0)
-
-                    dLatitude = LatitudeInRad2 - LatitudeInRad1
-                    dLongitude = LongitudeInRad2 - LongitudeInRad1
-                    nSquareVlaueLat = Math.Sin(dLatitude / 2.0) * Math.Sin(dLatitude / 2.0)
-                    nSquareVlaueLong = Math.Sin(dLongitude / 2.0) * Math.Sin(dLongitude / 2.0)
-                    a = nSquareVlaueLat + Math.Cos(LatitudeInRad1) * Math.Cos(LatitudeInRad2) * nSquareVlaueLong
-
-                    c = 2.0 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1.0 - a))
-                    dDistance = kEarthRadius * c
-                    Return dDistance
-                Catch ex As Exception
-                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Logon", ex, ""))
-                End Try
-            End Function
 
         End Class
 
