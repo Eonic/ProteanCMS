@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[spPurchasersLast2Years]
+﻿ALTER PROCEDURE [dbo].[spPurchasersLast2Years]
 AS
 BEGIN
 	SELECT cc.* 
