@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[spGetDirectoryItems]
+﻿ALTER PROCEDURE [dbo].[spGetDirectoryItems]
 	(
 		@cSchemaName nvarchar(50),
 		@nParDirId integer = 0

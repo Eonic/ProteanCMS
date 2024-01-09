@@ -1,4 +1,4 @@
-CREATE PROCEDURE [dbo].[getContentStructure_Admin]
+ALTER PROCEDURE [dbo].[getContentStructure_Admin]
 	-- Add the parameters for the stored procedure here
 AS
 SELECT		

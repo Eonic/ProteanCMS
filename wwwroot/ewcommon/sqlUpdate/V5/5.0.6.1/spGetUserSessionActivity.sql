@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[spGetUserSessionActivity]
+﻿ALTER PROCEDURE [dbo].[spGetUserSessionActivity]
 (
 	@UserId int
 )
