@@ -269,14 +269,14 @@ function disableButton(oBtn, disableMessage) {
 
 }
 
-//bootstrap validation alert
 function displayErrorMessage() {
-    if (document.getElementById("xFrmAlertModal") != null) {
+    if ($('#xFrmAlertModal').exists()) {
+       // alert(arguments[0]);
         var iconClassName = document.getElementById("errorIcon").className;
-        $('#xFrmAlertModal #errorMessage').text(arguments[0]);
+        $('#xFrmAlertModal #errorMessage').text($('#xFrmAlertModal #errorMessage').text() + ',' + arguments[0]);
         $("#xFrmAlertModal #errorIcon").removeClass(iconClassName);
-        $("#xFrmAlertModal #errorIcon").addClass(arguments[1]);
-        var xFrmAlertModal = new bootstrap.Modal(document.getElementById('xFrmAlertModal'))
+        $("#xFrmAlertModal #errorIcon").addClass(arguments[1]);     
+        let xFrmAlertModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('xFrmAlertModal')) // Returns a Bootstrap modal instance
         xFrmAlertModal.show();
     } else { alert(arguments[0]); }
 }

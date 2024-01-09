@@ -7922,6 +7922,12 @@
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Select User Groups
           </a>
+			<xsl:text> </xsl:text>
+			<a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=ShippingGroup&amp;id={@id}&amp;name={@name}" class="btn btn-sm btn-outline-primary">
+				<i class="fa fa-user fa-white">
+					<xsl:text> </xsl:text>
+				</i><xsl:text> </xsl:text>Select Shipping Groups
+			</a>
           <xsl:text> </xsl:text>
           <a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=delete&amp;id={@id}" class="btn btn-sm btn-outline-danger">
             <i class="fas fa-trash-alt fa-white">

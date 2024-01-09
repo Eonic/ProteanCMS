@@ -294,3 +294,6 @@ D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\De
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Debug\Protean.CMS.csproj.CopyComplete
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Debug\ProteanCMS.dll
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Debug\ProteanCMS.pdb
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.V8.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\JavaScriptEngineSwitcher.Core.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ru-ru\JavaScriptEngineSwitcher.Core.resources.dll
