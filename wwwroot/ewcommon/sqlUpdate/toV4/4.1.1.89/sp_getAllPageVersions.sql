@@ -1,5 +1,5 @@
 
-ALTER PROCEDURE [dbo].[getAllPageVersions]
+CREATE PROCEDURE [dbo].[getAllPageVersions]
 	-- Add the parameters for the stored procedure here
 AS
 SELECT		

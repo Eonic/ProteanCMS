@@ -4834,15 +4834,19 @@ restart:
                 Dim nGroupId As Long = CLng("0" & oContent.GetAttribute("groupid"))
                 Dim cSort As String = oContent.GetAttribute("sortBy")
                 Dim cSortDirection As String = oContent.GetAttribute("order")
-
+                Dim cAdditionalJoin As String = String.Empty
                 ' Validate and Build the SQL conditions that we are going to need
 
                 If cSchema <> "" Then
-                    ' Dim cWhereSql As String = " (tblCartCatProductRelations.nCatId =" & nGroupId & ")"
-                    Dim cWhereSql As String = " nContentKey IN (Select nContentId from tblCartCatProductRelations where nCatId=" & nGroupId & ")"
-                    'cOrderBy = "tblCartCatProductRelations.nDisplayOrder"
+                    Dim cWhereSql As String = " (tblCartCatProductRelations.nCatId =" & nGroupId & ")"
+                    ' Dim cWhereSql As String = " nContentKey IN (Select nContentId from tblCartCatProductRelations where nCatId=" & nGroupId & ")"
+                    If (nGroupId <> 0) Then
+                        cAdditionalJoin = "INNER Join tblCartCatProductRelations On c.nContentKey = tblCartCatProductRelations.nContentId and tblCartCatProductRelations.nCatId=" & nGroupId.ToString()
+                    End If
 
-                    myWeb.GetPageContentFromSelect(cWhereSql, , , myWeb.mbAdminMode, 0, cOrderBy, oContent)
+                    cOrderBy = "tblCartCatProductRelations.nDisplayOrder"
+
+                    myWeb.GetPageContentFromSelect(cWhereSql, , , myWeb.mbAdminMode, 0, cOrderBy, oContent, cAdditionalJoin)
 
                     'Get Related Items
                     Dim oContentElmt As XmlElement

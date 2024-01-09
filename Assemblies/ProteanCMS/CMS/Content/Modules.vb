@@ -10,6 +10,7 @@ Imports System.Reflection
 Imports System.Collections.Generic
 Imports Microsoft.Ajax.Utilities
 Imports System.Management
+Imports System.Math.pi
 
 Partial Public Class Cms
     Public Class Content
@@ -31,6 +32,8 @@ Partial Public Class Cms
 
             Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
             Private Const mcModuleName As String = "Protean.Cms.Content.Modules"
+            Public goConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
+
 
             Public Sub New()
 
@@ -501,10 +504,10 @@ where cl.nStructId = " & myWeb.mnPageId)
                                     whereSQL = " AND " & whereSQL
                                 End If
 
-                                whereSQL = " c.cContentSchemaName='" & cFilterTarget & "' And nStructId IN (select nStructKey from tblContentStructure where nStructParId in (" & parentPageId & "))" & whereSQL
-                                    'Else
-                                    '    whereSQL = " c.cContentSchemaName='" & cFilterTarget & whereSQL
-                                End If
+                                whereSQL = " c.cContentSchemaName='" & cFilterTarget & "' And nStructId IN (select nStructKey from tblContentStructure where (nStructParId in (" & parentPageId & ") or nStructKey=" & parentPageId & "))" & whereSQL
+                                'Else
+                                '    whereSQL = " c.cContentSchemaName='" & cFilterTarget & whereSQL
+                            End If
                             End If
                     End If
 
@@ -513,11 +516,16 @@ where cl.nStructId = " & myWeb.mnPageId)
 
                     ' now we go and get the results from the filter.
                     If (whereSQL <> String.Empty) Then
-                        myWeb.moSession("FilterWhereCondition") = whereSQL
-                        myWeb.GetPageContentFromSelect(whereSQL,,,,,, oContentNode,,,,, cFilterTarget)
+
+                        If (whereSQL.ToLower().Trim().EndsWith(" and") = False) Then
+                            myWeb.moSession("FilterWhereCondition") = whereSQL
+                            myWeb.GetPageContentFromSelect(whereSQL,,,,,, oContentNode,,,,, cFilterTarget)
 
 
-                        If (oContentNode.SelectNodes("Content[@type='Product']").Count = 0) Then
+                            If (oContentNode.SelectNodes("Content[@type='Product']").Count = 0) Then
+                                filterForm.addSubmit(oFrmGroup, "Clear Filters", "No results found", "clearfilters", "clear-filters",, "clearfilters")
+                            End If
+                        Else
                             filterForm.addSubmit(oFrmGroup, "Clear Filters", "No results found", "clearfilters", "clear-filters",, "clearfilters")
                         End If
                     End If

@@ -1,6 +1,6 @@
 ﻿/****** Object:  StoredProcedure [dbo].[spMailFormDownload]    Script Date: 01/17/2011 14:39:14 ******/
 
-ALTER PROCEDURE [dbo].[spMailFormDownload]
+CREATE PROCEDURE [dbo].[spMailFormDownload]
 	-- Add the parameters for the stored procedure here
 (
 	@lastDownload int = NULL,

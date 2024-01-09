@@ -1,4 +1,4 @@
-ALTER PROCEDURE [dbo].[getContentStructure_Basic]
+CREATE PROCEDURE [dbo].[getContentStructure_Basic]
 	-- Add the parameters for the stored procedure here
 		@UserId int,
 		@dateNow datetime,

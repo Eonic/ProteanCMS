@@ -18,6 +18,7 @@
             </Images>
             <Category/>
             <Body/>
+            <ButtonText/>
           </Content>
         </cContentXmlBrief>
         <cContentXmlDetail/>
@@ -42,6 +43,7 @@
       <bind id="cContentLinkTitle" nodeset="Name" required="true()" type="string"/>
       <bind id="cContentBody" nodeset="Body" required="false()" type="string"/>
       <bind id="cContentURL" nodeset="Url" required="false()" type="string"/>
+      <bind id="cContentButtonText" nodeset="ButtonText" required="false()" type="string"/>
       <bind nodeset="Url">
         <bind id="cLinkType" nodeset="@type" required="false()" type="string"/>
         <bind id="cLinkTarget" nodeset="@target" required="false()" type="string"/>
@@ -51,6 +53,7 @@
     </bind>
     <bind id="nStatus" nodeset="tblContent/nStatus" required="true()" type="string"/>
     <bind id="cDescription" nodeset="tblContent/cDescription" required="false()" type="string"/>
+  
     <!--bind id="cContentRecRead" nodeset="tblContent/cContentXmlDetail/Content/group/div[@class='recRead']" required="false()" type="string"/-->
   </model>
   <group ref="EditContent" class="2col">
@@ -124,6 +127,8 @@
                 <value>Same Window</value>
               </item>
             </select1>
+          
+           
           </case>
           <case id="cLinkType_2">
             <select1 bind="cContentURL" class="siteTree">
@@ -131,6 +136,10 @@
             </select1>
           </case>
         </switch>
+        <input bind="cContentButtonText" class="">
+          <label>Button text</label>
+        </input>
+
       </group>
       <group ref="Content" class="Content">
         <label>Link Accompanying Text</label>
