@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[spGetSessionActivity]
+﻿ALTER PROCEDURE [dbo].[spGetSessionActivity]
 	-- Add the parameters for the stored procedure here
  @FROM datetime,
  @TO datetime,

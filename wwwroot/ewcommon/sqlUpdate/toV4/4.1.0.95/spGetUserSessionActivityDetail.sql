@@ -1,4 +1,4 @@
-CREATE PROCEDURE spGetUserSessionActivityDetail
+ALTER PROCEDURE spGetUserSessionActivityDetail
 (
 	@SessionId nvarchar(255)
 )
