@@ -3,7 +3,7 @@
 -- Create date: 11/03/06
 -- Description:	Returns Site Structure with users access level
 -- =============================================
-CREATE PROCEDURE [dbo].[getContentStructure]
+ALTER PROCEDURE [dbo].[getContentStructure]
 	-- Add the parameters for the stored procedure here
 		@UserId int,
 		@bAdminMode bit = 0,
