@@ -215,9 +215,6 @@ D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\De
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\BundleTransformer.Core.dll
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\BundleTransformer.Less.dll
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.V8.dll
-D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.V8.ICUData.dll
-D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.Windows.Core.dll
-D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.Windows.dll
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Fonet.dll
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ICSharpCode.SharpZipLib.dll
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Imazen.WebP.dll
@@ -261,9 +258,6 @@ D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\De
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\BundleTransformer.Core.xml
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\BundleTransformer.Less.xml
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.V8.xml
-D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.V8.ICUData.xml
-D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.Windows.xml
-D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.Windows.Core.xml
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Fonet.xml
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\JavaScriptEngineSwitcher.Core.xml
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\JavaScriptEngineSwitcher.V8.xml

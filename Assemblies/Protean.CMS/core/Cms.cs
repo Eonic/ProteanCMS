@@ -17,7 +17,6 @@ using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
 using Protean.Providers.Membership;
-using Microsoft.ClearScript.Windows;
 
 namespace Protean
 {

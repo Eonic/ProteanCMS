@@ -63,15 +63,6 @@
     <Reference Include="ClearScript.V8, Version=7.3.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\Intotheblue\intotheblue_devops\packages\Microsoft.ClearScript.V8.7.3.4\lib\net471\ClearScript.V8.dll</HintPath>
     </Reference>
-    <Reference Include="ClearScript.V8.ICUData, Version=7.4.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.ClearScript.V8.ICUData.7.4.4\lib\netstandard1.0\ClearScript.V8.ICUData.dll</HintPath>
-    </Reference>
-    <Reference Include="ClearScript.Windows, Version=7.4.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.ClearScript.Windows.7.4.4\lib\net45\ClearScript.Windows.dll</HintPath>
-    </Reference>
-    <Reference Include="ClearScript.Windows.Core, Version=7.4.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.ClearScript.Windows.Core.7.4.4\lib\net45\ClearScript.Windows.Core.dll</HintPath>
-    </Reference>
     <Reference Include="Fonet, Version=1.0.0.0, Culture=neutral, PublicKeyToken=52effa152c4a9dc6, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Fonet.1.0\lib\net20\Fonet.dll</HintPath>
     </Reference>

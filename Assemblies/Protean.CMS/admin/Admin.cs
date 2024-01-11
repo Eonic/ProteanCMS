@@ -2336,7 +2336,7 @@ namespace Protean
                                 sAdminLayout = "RefundOrder";
                                 string providerName = "";
                                 string providerPaymentReference = "";
-                                string IsRefund = "";
+                                //string IsRefund = "";
                                 long nStatus;
                                 var oCart = new Cms.Cart(ref myWeb);
                                 oCart.moPageXml = moPageXML;
