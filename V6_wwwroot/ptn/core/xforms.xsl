@@ -9,7 +9,6 @@
 				<div class="modal-dialog">
 					<div class="modal-content  alert alert-danger" role="alert">
 						<div class="modal-header">
-
 							<button type="button" class="btn-close"  data-bs-dismiss="modal">
 								&#160;
 							</button>
@@ -17,7 +16,6 @@
 						<div class="modal-body" aria-automic="true">
 							<i id="errorIcon" class="fa fa-exclamation-triangle" aria-hidden="true">&#160;</i>
 							<xsl:text disable-output-escaping="yes">&amp;</xsl:text>nbsp;
-
 							<span id="errorMessage">&#160;</span>
 						</div>
 					</div>

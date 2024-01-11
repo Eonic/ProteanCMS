@@ -319,14 +319,13 @@
           <span class="label">
             <xsl:call-template name="term2014" />
             <xsl:text>: </xsl:text>
-          </span>
-         
+          </span>         
           <xsl:value-of select="StockCode/node()"/>
         </p>
       </xsl:if>
       
       <xsl:apply-templates select="." mode="displayPrice" />
-
+	 
       <p class="duration">
         <span class="label">
           <!-- Duration -->

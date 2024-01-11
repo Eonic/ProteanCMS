@@ -1527,6 +1527,21 @@
 					<xsl:value-of select="@quantity"/>
 				</div>
 			</xsl:if>
+			<xsl:if test="productDetail[@type='Subscription']">
+				<p class="duration">
+
+					<xsl:apply-templates select="/Page" mode="formatPrice">
+						<xsl:with-param name="price" select="productDetail/Prices/Price[@type='sale']"/>
+						<xsl:with-param name="currency" select="$page/Cart/@currencySymbol"/>
+					</xsl:apply-templates>&#160;
+					<xsl:value-of select="productDetail/Prices/Price[@type='sale']/@suffix"/>&#160;then
+					<xsl:apply-templates select="/Page" mode="formatPrice">
+						<xsl:with-param name="price" select="productDetail/SubscriptionPrices/Price[@type='sale']"/>
+						<xsl:with-param name="currency" select="$page/Cart/@currencySymbol"/>
+					</xsl:apply-templates>&#160;
+					<xsl:value-of select="productDetail/SubscriptionPrices/Price[@type='sale']/@suffix"/>
+				</p>
+			</xsl:if>		
 		</div>
 		<!-- ################################# Line Options Info ################################# -->
 		<xsl:if test="Item">

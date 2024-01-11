@@ -544,7 +544,7 @@ namespace Protean
                         // Check for settings
                         if (fuzzySearch != "off")
                         {
-                            if ((myWeb.moConfig["SiteSearchFuzzy"].ToLower()) == "on")
+                            if ((myWeb.moConfig["SiteSearchFuzzy"] ?? "").ToLower()  == "on")
                                 _includeFuzzySearch = true;
                         }
 
@@ -554,10 +554,10 @@ namespace Protean
                         {
                             _includeFuzzySearch = false; // to get exact matching result
                                                          // keep page size for csuser as default
-                            HitsLimit = Convert.ToInt32("0" + myWeb.moConfig["SiteSearchDefaultHitsLimit"]); // 300
+                            HitsLimit = Convert.ToInt32("0" + myWeb.moConfig["SiteSearchDefaultHitsLimit"] ?? ""); // 300
                             if (HitsLimit == 0)
                                 HitsLimit = 300;
-                            pageSize = Convert.ToInt32("0" + myWeb.moConfig["SiteSearchDefaultHitsLimit"]);
+                            pageSize = Convert.ToInt32("0" + myWeb.moConfig["SiteSearchDefaultHitsLimit"] ?? "");
                             if (pageSize == 0)
                                 pageSize = 300;
                         }
@@ -590,7 +590,7 @@ namespace Protean
                         // Perform the search
                         TopDocs results;
 
-                        if ((myWeb.moConfig["SiteSearchDebug"]).ToLower() == "on")
+                        if ((myWeb.moConfig["SiteSearchDebug"] ?? "").ToLower() == "on")
                         {
                             var argoParent = resultsXML;
                             addElement(ref argoParent, "LuceneQuery", searchQuery.ToString());
