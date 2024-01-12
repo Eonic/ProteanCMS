@@ -90,7 +90,7 @@ $('.btnClear').on('click', function (event) {
 
 
 $(document).on("click", ".btn-update", function (event) {
-
+    debugger;
     $(".modalLable").addClass("hidden");
     $(this).addClass("hidden")
     var parentDiv = $(this).closest('.parentDivOfRedirect');
@@ -116,22 +116,13 @@ $(document).on("click", ".btn-update", function (event) {
             .then(function (response) {
 
                 if (response.data == "True") {
-
-                    if (confirm("Old url is already exist. Do you want to replace it?")) {
-                        RedirectPage.addNewUrl(oldUrl, NewUrl);
-                        RedirectPage.urlList[index].attributes[0].nodeValue = oldUrl;
-                        RedirectPage.urlList[index].attributes[1].nodeValue = NewUrl;
-                        var flag = "saveURL";
-                        RedirectPage.reloadPermanentList(flag);
-                    }
-                    else {
-                        $(input[0]).val(RedirectPage.urlList[index].attributes[0].nodeValue);
-                        $(input[1]).val(RedirectPage.urlList[index].attributes[1].nodeValue);
-                        $("#loadSpin").modal("hide");
-                        that.show = false;
-                        that.loading = false;
-                        return false;
-                    }
+                    debugger;
+                    RedirectPage.addNewUrl(oldUrl, NewUrl);
+                    RedirectPage.urlList[index].attributes[0].nodeValue = oldUrl;
+                    RedirectPage.urlList[index].attributes[1].nodeValue = NewUrl;
+                    var flag = "saveURL";
+                    RedirectPage.reloadPermanentList(flag);
+                    
                 }
                 else {
                     RedirectPage.saveUrl(oldUrl, NewUrl, hiddenOldUrl, index);
@@ -536,6 +527,7 @@ if (rediectElement) {
                 }
             },
             SaveNewUrl: function () {
+                
                 $(".modalLable").addClass("hidden");
                 var that = this;
                 var oldUrl = $("#OldUrlmodal").val();
@@ -546,11 +538,12 @@ if (rediectElement) {
                 var flag = "saveURL";
                 type = RedirectPage.redirectType();
                 if (oldUrl != "") {
-                    var inputJson = { redirectType: type, oldUrl: oldUrl };
+                    var inputJson = { redirectType: type, oldUrl: oldUrl, NewUrl: NewUrl };
                     axios.post(IsUrlPResentAPI, inputJson)
                         .then(function (response) {
 
                             if (response.data == "True") {
+                                
                                 if (confirm("Old url is already exist. Do you want to replace it?")) {
 
                                     that.addNewUrl(oldUrl, NewUrl);

@@ -1042,11 +1042,16 @@ Partial Public Class fsHelper
             Dim scleanFileName As String = cfileName
             Dim isExists As String = "true"
             Dim NewFileName As String = CleanFileExists(cfileName, context)
-            If NewFileName = cfileName Then
-                isExists = "false"
+            If NewFileName <> Nothing Then
+                If NewFileName = cfileName Then
+                    isExists = "false"
+                Else
+                    cfileName = NewFileName
+                End If
             Else
-                cfileName = NewFileName
+                isExists = "false"
             End If
+
             If isExists AndAlso isOverwrite = "" Then
                 context.Session("ExistsFileName") = cfileName + "," + scleanFileName + "," + isExists
             Else
@@ -1117,29 +1122,32 @@ Partial Public Class fsHelper
     Public Function CleanFileExists(ByVal cFilename As String, ByVal context As System.Web.HttpContext) As String
 
         Dim fileExists As Boolean = False
-        Dim cFilePath As String = context.Request("storageRoot").Replace("\", "/").Replace("""", "")
-        If Not cFilePath.EndsWith("\") Then cFilePath = cFilePath & "\"
         Try
-            If cFilePath IsNot Nothing Then
-                fileExists = IO.File.Exists(goServer.MapPath(cFilePath & cFilename))
-            End If
-            If fileExists Then
-                For i As Integer = 0 To 1000
-                    'save Regex to replace filename-{digit}.jpg with filename-{newdigit}.jpg 
-                    Dim cExtension As String = System.IO.Path.GetExtension(cFilename)
-                    If Regex.IsMatch(cFilename, "(-\d+).([a-z]{3,4})$") Then    'this regex checks hyphen and number present only before dot.
-                        cFilename = Regex.Replace(cFilename, "(-\d+).([a-z]{3,4})$", "-" & i) & cExtension
-                    Else
-                        cFilename = cFilename.Replace(".", "-" & i & ".")
-                    End If
+            If context.Request("storageRoot") <> Nothing Then
+                Dim cFilePath As String = context.Request("storageRoot").Replace("\", "/").Replace("""", "")
+                If Not cFilePath.EndsWith("\") Then cFilePath = cFilePath & "\"
+                If cFilePath IsNot Nothing Then
+                    fileExists = IO.File.Exists(goServer.MapPath(cFilePath & cFilename))
+                End If
+                If fileExists Then
+                    For i As Integer = 0 To 1000
+                        'save Regex to replace filename-{digit}.jpg with filename-{newdigit}.jpg 
+                        Dim cExtension As String = System.IO.Path.GetExtension(cFilename)
+                        If Regex.IsMatch(cFilename, "(-\d+).([a-z]{3,4})$") Then    'this regex checks hyphen and number present only before dot.
+                            cFilename = Regex.Replace(cFilename, "(-\d+).([a-z]{3,4})$", "-" & i) & cExtension
+                        Else
+                            cFilename = cFilename.Replace(".", "-" & i & ".")
+                        End If
 
-                    If Not IO.File.Exists(goServer.MapPath(cFilePath & cFilename)) Then
-                        Exit For
-                    End If
-                Next
-                Return cFilename
-            Else
-                Return cFilename
+                        If Not IO.File.Exists(goServer.MapPath(cFilePath & cFilename)) Then
+                            Exit For
+                        End If
+                    Next
+                    Return cFilename
+                Else
+                    Return cFilename
+                End If
+
             End If
 
         Catch ex As Exception
