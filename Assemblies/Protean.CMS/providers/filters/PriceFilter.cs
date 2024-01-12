@@ -5,6 +5,7 @@ using System.Data;
 
 using System.Data.SqlClient;
 using System.Xml;
+using Lucene.Net.Search;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Filter;
 
@@ -42,7 +43,7 @@ namespace Protean.Providers
                     string sProductCount = string.Empty;
                     int cnt = 0;
                     string cProductCountList = string.Empty;
-                    int nPageId = aWeb.mnPageId;
+                    string nPageId = string.Empty;
                     int nMaxPRiceProduct = 0;
                     int nMinPriceProduct = 0;
                     //XmlElement oFilterElmt = null;
@@ -67,6 +68,21 @@ namespace Protean.Providers
                         sCotrolDisplayName = Convert.ToString(FilterConfig.Attributes["name"].Value);
                     }
 
+                    if (oXform.Instance.SelectSingleNode("PageFilter") != null)
+                    {
+                        if (!string.IsNullOrEmpty(oXform.Instance.SelectSingleNode("PageFilter").InnerText))
+                        {
+                            nPageId = oXform.Instance.SelectSingleNode("PageFilter").InnerText.ToString();
+                        }
+                        else
+                        {
+                            nPageId = aWeb.mnPageId.ToString();
+                        }
+                    }
+                    else
+                    {
+                        nPageId = aWeb.mnPageId.ToString();
+                    }
                     arrParams.Add("MinPrice", FilterConfig.GetAttribute("fromPrice"));
                     arrParams.Add("MaxPrice", FilterConfig.GetAttribute("toPrice"));
                     arrParams.Add("Step", FilterConfig.GetAttribute("step"));

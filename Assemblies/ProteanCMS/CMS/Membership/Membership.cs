@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Reflection;
 using System.Web.Configuration;
@@ -24,10 +25,10 @@ namespace Protean
             private Cms myWeb;
             public event OnErrorEventHandler OnError;
 
-            public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
+            public delegate void OnErrorEventHandler(object sender, Global.Protean.Tools.Errors.ErrorEventArgs e);
             public event OnErrorWithWebEventHandler OnErrorWithWeb;
 
-            public delegate void OnErrorWithWebEventHandler(ref Cms myweb, object sender, Tools.Errors.ErrorEventArgs e);
+            public delegate void OnErrorWithWebEventHandler(ref Cms myweb, object sender, Global.Protean.Tools.Errors.ErrorEventArgs e);
             private const string mcModuleName = "Eonic.EonicWeb.Membership.Membership";
 
             #endregion
@@ -55,7 +56,7 @@ namespace Protean
                     string cSQL = "UPDATE tblDirectory SET cDirPassword = '" + cLink + "' WHERE nDirKey = " + AccountID;
                     cLink = Tools.Text.AscString(cLink);
                     Debug.WriteLine(cLink);
-                    if (Information.IsNumeric((object)myWeb.moDbHelper.ExeProcessSql(cSQL)))
+                    if (Information.IsNumeric(myWeb.moDbHelper.ExeProcessSql(cSQL)))
                     {
                         return cLink;
                     }
@@ -115,7 +116,7 @@ namespace Protean
                     EncryptedString = Tools.Text.DeAscString(EncryptedString);
 
                     string cSQL = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT tblDirectory.nDirKey FROM tblDirectory INNER JOIN tblAudit ON tblDirectory.nAuditId = tblAudit.nAuditKey WHERE cDirPassword = '", Protean.stdTools.SqlFmt(EncryptedString)), "' AND nDirKey = "), AccountID));
-                    return Conversions.ToInteger(myWeb.moDbHelper.GetDataValue(cSQL, 1, null, (object)0));
+                    return myWeb.moDbHelper.GetDataValue(cSQL, default, default, 0);
                 }
                 catch (Exception ex)
                 {
@@ -133,7 +134,7 @@ namespace Protean
 
                     if (Strings.LCase(myWeb.moConfig["MembershipEncryption"]) == "md5salt")
                     {
-                        string cSalt = Tools.Encryption.generateSalt();
+                        string cSalt = Tools.Encryption.generateSalt;
                         string inputPassword = string.Concat(cSalt, cPassword); // Take the users password and add the salt at the front
                                                                                 // Note leave the value below hard coded md5.
                         string md5Password = Tools.Encryption.HashString(inputPassword, "md5", true); // Md5 the marged string of the password and salt
@@ -159,7 +160,7 @@ namespace Protean
 
                     string sSql2 = "select cActivityDetail as password, dDatetime from tblActivityLog where nActivityType=" + ((int)Cms.dbHelper.ActivityType.HistoricPassword).ToString() + " and nUserDirId = " + AccountID + " Order By dDateTime Desc";
 
-                    using (var oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql2))  // Done by nita on 6/7/22
+                    using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql2))  // Done by nita on 6/7/22
                     {
                         while (oDr.Read())
                         {
@@ -192,7 +193,7 @@ namespace Protean
                     // RJP 7 Nov 2012. Added LCase to MembershipEncryption. Note leave the value below for md5Password hard coded as md5.
                     if (Strings.LCase(myWeb.moConfig["MembershipEncryption"]) == "md5salt")
                     {
-                        string cSalt = Tools.Encryption.generateSalt();
+                        string cSalt = Tools.Encryption.generateSalt;
                         string inputPassword = string.Concat(cSalt, cPassword); // Take the users password and add the salt at the front
                                                                                 // Note leave the value below hard coded md5.
                         string md5Password = Tools.Encryption.HashString(inputPassword, "md5", true); // Md5 the marged string of the password and salt
@@ -243,7 +244,7 @@ namespace Protean
 
                     // lets get the userId form the hash supplied
                     string cSQL = "SELECT tblDirectory.nDirKey FROM tblDirectory INNER JOIN tblAudit ON tblDirectory.nAuditId = tblAudit.nAuditKey WHERE cDirXml LIKE '%<ActivationKey>" + cLink + "</ActivationKey>%'";
-                    userId = Conversions.ToLong(myWeb.moDbHelper.GetDataValue(cSQL, 1, null, (object)0));
+                    userId = myWeb.moDbHelper.GetDataValue(cSQL, default, default, 0);
 
                     if (userId > 0L)
                     {
@@ -543,7 +544,7 @@ namespace Protean
 
                 public event OnErrorEventHandler OnError;
 
-                public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
+                public delegate void OnErrorEventHandler(object sender, Global.Protean.Tools.Errors.ErrorEventArgs e);
                 private const string mcModuleName = "Protean.Cms.Membership.Modules";
 
                 public Modules()
@@ -1159,7 +1160,7 @@ namespace Protean
                             strSql.Append(" AND (tblGroups.nDirKey in (" + sArrDirKeys + ")) ");
 
                             // add each result to content node xml
-                            var oDsUsers = myWeb.moDbHelper.GetDataSet(strSql.ToString(), "User", "UserGroups");
+                            DataSet oDsUsers = myWeb.moDbHelper.GetDataSet(strSql.ToString(), "User", "UserGroups", default);
                             foreach (DataRow oDrUser in oDsUsers.Tables[0].Rows)
                                 contentNode.AppendChild(myWeb.GetUserXML(Conversions.ToLong(oDrUser["id"])).Clone());
 
@@ -1374,7 +1375,7 @@ namespace Protean
                             strSql.Append("SELECT * FROM [tblEmailActivityLog] eal ");
                             strSql.Append("INNER JOIN tblActivityLog al on al.nOtherId = eal.nEmailActivityKey ");
                             strSql.Append("where al.nUserDirId = " + myWeb.mnUserId);
-                            var oDsJobs = myWeb.moDbHelper.GetDataSet(strSql.ToString(), "Application", "JobApplications");
+                            DataSet oDsJobs = myWeb.moDbHelper.GetDataSet(strSql.ToString(), "Application", "JobApplications", default);
                             oContentNode.InnerXml = Strings.Replace(oDsJobs.GetXml(), "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "");
                             string sContent;
                             foreach (XmlElement oElmt2 in oContentNode.SelectNodes("descendant-or-self::cActivityXml | descendant-or-self::cActivityDetail"))
@@ -1425,7 +1426,7 @@ namespace Protean
                                 strSql.Append("SELECT eal.nEmailActivityKey FROM [tblEmailActivityLog] eal ");
                                 strSql.Append("INNER JOIN tblActivityLog al on al.nOtherId = eal.nEmailActivityKey ");
                                 strSql.Append("where al.nUserDirId = " + myWeb.mnUserId + " and al.nArtId = " + JobId);
-                                long EmailActivityId = Conversions.ToLong(Operators.ConcatenateObject("0", myWeb.moDbHelper.GetDataValue(strSql.ToString())));
+                                long EmailActivityId = "0" + myWeb.moDbHelper.GetDataValue(strSql.ToString());
                                 if (EmailActivityId > 0L)
                                 {
                                     // load in a saved instance
@@ -1434,7 +1435,7 @@ namespace Protean
                                     strSql2.Append("INNER JOIN tblActivityLog al on al.nOtherId = eal.nEmailActivityKey ");
                                     strSql2.Append("where al.nUserDirId = " + myWeb.mnUserId + " and al.nArtId = " + JobId);
 
-                                    string loadedInstance = Conversions.ToString(myWeb.moDbHelper.GetDataValue(strSql2.ToString()));
+                                    string loadedInstance = myWeb.moDbHelper.GetDataValue(strSql2.ToString());
                                     if (!string.IsNullOrEmpty(loadedInstance) & myWeb.moSession["tempInstance"] is null)
                                     {
                                         var oLoadedInstance = myWeb.moPageXml.CreateElement("instance");
