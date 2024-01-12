@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -10,7 +11,6 @@ using System.Xml;
 using VB = Microsoft.VisualBasic;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using static Protean.Tools.Xml;
 
 namespace Protean
 {
@@ -760,7 +760,7 @@ namespace Protean
                                 sSql = "select * from tblCartOrder where ((nCartStatus < 7 and not(cCartSessionId like 'OLD_%')) or nCartStatus IN (10,13,14)) and nCartOrderKey = " + mnCartId;
                             }
 
-                            using (var oDr = moDBHelper.getDataReaderDisposable(sSql))
+                            using (SqlDataReader oDr = moDBHelper.getDataReaderDisposable(sSql))
                             {
                                 if (oDr.HasRows)
                                 {
@@ -886,7 +886,7 @@ namespace Protean
                                 }
 
                                 myWeb.PerfMon.Log("Cart", "InitializeVariables - check for cart start");
-                                using (var oDr = moDBHelper.getDataReaderDisposable(sSql))
+                                using (SqlDataReader oDr = moDBHelper.getDataReaderDisposable(sSql))
                                 {
                                     myWeb.PerfMon.Log("Cart", "InitializeVariables - check for cart end");
 
@@ -1114,7 +1114,7 @@ namespace Protean
                     if (mnCartId > 0)
                     {
                         // Only update the process if less than 6 we don't ever want to change the status of a completed order other than within the admin system. Boo Yah!
-                        int currentStatus = Conversions.ToInteger(moDBHelper.ExeProcessSqlScalar("select nCartStatus from tblCartOrder where nCartOrderKey = " + mnCartId));
+                        int currentStatus = moDBHelper.ExeProcessSqlScalar("select nCartStatus from tblCartOrder where nCartOrderKey = " + mnCartId);
                         if (currentStatus < 6 | currentStatus == 10 & mnProcessId == 6)
                         {
                             // If we have a cart, update its status in the db
@@ -2328,7 +2328,7 @@ namespace Protean
                     var nAmountReceived = default(double);
                     // Get the amount received so far
                     sSql = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
-                    using (var oDr = moDBHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
+                    using (SqlDataReader oDr = moDBHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                     {
                         if (oDr.HasRows)
                         {
@@ -2391,7 +2391,7 @@ namespace Protean
                                 {
                                     object testLink = Guid.NewGuid().ToString();
                                     string sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("select * from tblCartOrder where cSettlementID = '", testLink), "'"));
-                                    using (var oDr = moDBHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
+                                    using (SqlDataReader oDr = moDBHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                                     {
                                         if (!oDr.HasRows)
                                             cUniqueLink = Conversions.ToString(testLink);
@@ -2724,7 +2724,7 @@ namespace Protean
                 sWriter.Close();
                 var xMailingListDoc = Protean.xmlTools.htmlToXmlDoc(messageHtml);
                 var xListElement = xMailingListDoc.DocumentElement;
-                valDict = Tools.Xml.XmltoDictionary(xListElement, true);
+                valDict = XmltoDictionary(xListElement, true);
                 return valDict;
             }
             private void RemoveDeliveryOption(int nOrderId)
@@ -3550,7 +3550,7 @@ namespace Protean
                             // Get Shipping Group from query if assigned to that product and add new node in order and use this node for displaying messages for x50 and t03 category.
                             if (myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure))
                             {
-                                string sSqlShippingGroup = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("select csm.nShipOptKey,CPC.cCatName  from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey left join tblAudit A ON p.nAuditId= A.nAuditKey left join tblCartCatProductRelations cpr on p.nContentKey = cpr.nContentId left join tblCartProductCategories CPC ON cpr.nCatId= cpc.nCatKey Left JOIN tblCartShippingProductCategoryRelations cspcr ON cpr.nCatId= cspcr.nCatId LEFT join tblCartShippingMethods csm on csm.nShipOptKey=cspcr.nShipOptId where nCartOrderId=" + nCartIdUse + " and nCartItemKey=", oRow["id"]), " and cCatSchemaName = 'Shipping' and nItemId <>0 and cspcr.nRuleType=1 order by nShipOptCost asc"));
+                                string sSqlShippingGroup = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("select csm.nShipOptKey,CPC.cCatName  from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey left join tblAudit A ON p.nAuditId= A.nAuditKey left join tblCartCatProductRelations cpr on p.nContentKey = cpr.nContentId left join tblCartProductCategories CPC ON cpr.nCatId= cpc.nCatKey Left JOIN tblCartShippingProductCategoryRelations cspcr ON cpr.nCatId= cspcr.nCatId LEFT join tblCartShippingMethods csm on csm.nShipOptKey=cspcr.nShipOptId where nCartOrderId=" + nCartIdUse + " and nCartItemKey=", oRow["id"]), " and cCatSchemaName = 'Shipping' and csm.nShipOptKey is not null and nItemId <>0 and cspcr.nRuleType=1 order by nShipOptCost asc"));
                                 // oDsShippingOptionKey = moDBHelper.getDataSetForUpdate(sSqlShippingGroup, "Item", "Cart")
                                 // If oDsShippingOptionKey.Tables(0).Rows.Count > 0 Then
                                 // ShippingOptionKey = Convert.ToInt64(oDsShippingOptionKey.Tables(0).Rows(0).ItemArray(0))
@@ -3559,7 +3559,7 @@ namespace Protean
                                 // updateGCgetValidShippingOptionsDS(ShippingOptionKey)
                                 // End If
 
-                                using (var oDr = myWeb.moDbHelper.getDataReaderDisposable(sSqlShippingGroup))
+                                using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sSqlShippingGroup))
                                 {
                                     if (oDr is not null)
                                     {
@@ -3643,7 +3643,7 @@ namespace Protean
                             {
                                 sSql = "Select cContactType As type, cContactName As GivenName, cContactCompany As Company, cContactAddress As Street, cContactCity As City, cContactState As State, cContactZip As PostalCode, cContactCountry As Country, cContactTel As Telephone, cContactFax As Fax, cContactEmail As Email, cContactXml As Details from tblCartContact where nContactCartId=" + nCartIdUse;
                             }
-                            moDBHelper.addTableToDataSet(ref oDs, sSql, "Contact");
+                            moDBHelper.addTableToDataSet(oDs, sSql, "Contact");
                         }
 
                         // Add Items - note - do this AFTER we've updated the prices! 
@@ -4618,7 +4618,7 @@ namespace Protean
                     {
 
                         // Check minimum value
-                        if (Conversions.ToLong(cItemQuantity) < Conversions.ToLong(Protean.xmlTools.getNodeValueByType(ref oProd, "//Quantities/Minimum", (Protean.xmlTools.dataType)XmlDataType.TypeNumber, (object)0)))
+                        if (Conversions.ToLong(cItemQuantity) < Conversions.ToLong(Protean.xmlTools.getNodeValueByType(ref oProd, "//Quantities/Minimum", XmlDataType.TypeNumber, 0)))
                         {
                             // Minimum has not been matched
 
@@ -4640,16 +4640,14 @@ namespace Protean
                             }
 
                             // Add product specific msg
-                            XmlNode argoParent1 = oError;
                             XmlNode argoNodeFromXPath1 = null;
-                            oMsg = Protean.xmlTools.addElement(ref argoParent1, "msg", Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("<strong>", Protean.xmlTools.getNodeValueByType(ref oProd, "/Content/Name", (Protean.xmlTools.dataType)XmlDataType.TypeString, "A product below ")), "</strong> requires a quantity equal to or above <em>"), Protean.xmlTools.getNodeValueByType(ref oProd, "//Quantities/Minimum", (Protean.xmlTools.dataType)XmlDataType.TypeNumber, "an undetermined value (please call for assistance).")), "</em>")), true, oNodeFromXPath: ref argoNodeFromXPath1);
-                            oError = (XmlElement)argoParent1;
+                            oMsg = Protean.xmlTools.addElement(ref oError, "msg", Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("<strong>", Protean.xmlTools.getNodeValueByType(ref oProd, "/Content/Name", XmlDataType.TypeString, "A product below ")), "</strong> requires a quantity equal to or above <em>"), Protean.xmlTools.getNodeValueByType(ref oProd, "//Quantities/Minimum", XmlDataType.TypeNumber, "an undetermined value (please call for assistance).")), "</em>"), true, oNodeFromXPath: ref argoNodeFromXPath1);
                             oMsg.SetAttribute("type", "quantity_min_detail");
 
                         }
 
                         // Check maximum value
-                        if (Conversions.ToLong(cItemQuantity) > Conversions.ToLong(Protean.xmlTools.getNodeValueByType(ref oProd, "//Quantities/Maximum", (Protean.xmlTools.dataType)XmlDataType.TypeNumber, (object)int.MaxValue)))
+                        if (Conversions.ToLong(cItemQuantity) > Conversions.ToLong(Protean.xmlTools.getNodeValueByType(ref oProd, "//Quantities/Maximum", XmlDataType.TypeNumber, int.MaxValue)))
                         {
                             // Maximum has not been matched
 
@@ -4663,25 +4661,23 @@ namespace Protean
                             // Check for existence of msg node for min
                             if (oError.SelectSingleNode("msg[@type='quantity_max']") is null)
                             {
-                                XmlNode argoParent2 = oError;
+                                XmlNode argoParent1 = oError;
                                 XmlNode argoNodeFromXPath2 = null;
-                                oMsg = Protean.xmlTools.addElement(ref argoParent2, "msg", "You have requested too much of one or more products", oNodeFromXPath: ref argoNodeFromXPath2);
-                                oError = (XmlElement)argoParent2;
+                                oMsg = Protean.xmlTools.addElement(ref argoParent1, "msg", "You have requested too much of one or more products", oNodeFromXPath: ref argoNodeFromXPath2);
+                                oError = (XmlElement)argoParent1;
                                 oMsg.SetAttribute("type", "quantity_max");
                             }
 
                             // Add product specific msg
-                            XmlNode argoParent3 = oError;
                             XmlNode argoNodeFromXPath3 = null;
-                            oMsg = Protean.xmlTools.addElement(ref argoParent3, "msg", Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("<strong>", Protean.xmlTools.getNodeValueByType(ref oProd, "/Content/Name", (Protean.xmlTools.dataType)XmlDataType.TypeString, "A product below ")), "</strong> requires a quantity equal to or below <em>"), Protean.xmlTools.getNodeValueByType(ref oProd, "//Quantities/Maximum", (Protean.xmlTools.dataType)XmlDataType.TypeNumber, "an undetermined value (please call for assistance).")), "</em>")), true, oNodeFromXPath: ref argoNodeFromXPath3);
-                            oError = (XmlElement)argoParent3;
+                            oMsg = Protean.xmlTools.addElement(ref oError, "msg", Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("<strong>", Protean.xmlTools.getNodeValueByType(ref oProd, "/Content/Name", XmlDataType.TypeString, "A product below ")), "</strong> requires a quantity equal to or below <em>"), Protean.xmlTools.getNodeValueByType(ref oProd, "//Quantities/Maximum", XmlDataType.TypeNumber, "an undetermined value (please call for assistance).")), "</em>"), true, oNodeFromXPath: ref argoNodeFromXPath3);
                             oMsg.SetAttribute("type", "quantity_max_detail");
 
                         }
 
                         // Check bulkunit value
-                        int cBulkUnit = Conversions.ToInteger(Protean.xmlTools.getNodeValueByType(ref oProd, "//Quantities/BulkUnit", (Protean.xmlTools.dataType)XmlDataType.TypeNumber, (object)0));
-                        if (Conversions.ToLong(cItemQuantity) % Conversions.ToLong(Protean.xmlTools.getNodeValueByType(ref oProd, "//Quantities/BulkUnit", (Protean.xmlTools.dataType)XmlDataType.TypeNumber, (object)1)) != 0L)
+                        int cBulkUnit = Conversions.ToInteger(Protean.xmlTools.getNodeValueByType(ref oProd, "//Quantities/BulkUnit", XmlDataType.TypeNumber, 0));
+                        if (Conversions.ToLong(cItemQuantity) % Conversions.ToLong(Protean.xmlTools.getNodeValueByType(ref oProd, "//Quantities/BulkUnit", XmlDataType.TypeNumber, 1)) != 0L)
                         {
                             // Bulk Unit has not been matched
                             // Check for existence of error node
@@ -4694,18 +4690,16 @@ namespace Protean
                             // Check for existence of msg node for min
                             if (oError.SelectSingleNode("msg[@type='quantity_mod']") is null)
                             {
-                                XmlNode argoParent4 = oError;
+                                XmlNode argoParent2 = oError;
                                 XmlNode argoNodeFromXPath4 = null;
-                                oMsg = Protean.xmlTools.addElement(ref argoParent4, "msg", "One or more products below can only be bought in certain quantities.", oNodeFromXPath: ref argoNodeFromXPath4);
-                                oError = (XmlElement)argoParent4;
+                                oMsg = Protean.xmlTools.addElement(ref argoParent2, "msg", "One or more products below can only be bought in certain quantities.", oNodeFromXPath: ref argoNodeFromXPath4);
+                                oError = (XmlElement)argoParent2;
                                 oMsg.SetAttribute("type", "quantity_mod");
                             }
 
                             // Add product specific msg
-                            XmlNode argoParent5 = oError;
                             XmlNode argoNodeFromXPath5 = null;
-                            oMsg = Protean.xmlTools.addElement(ref argoParent5, "msg", Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("<strong>", Protean.xmlTools.getNodeValueByType(ref oProd, "/Content/Name", (Protean.xmlTools.dataType)XmlDataType.TypeString, "A product below ")), "</strong> can only be bought in lots of <em>"), Protean.xmlTools.getNodeValueByType(ref oProd, "//Quantities/BulkUnit", (Protean.xmlTools.dataType)XmlDataType.TypeNumber, "an undetermined value (please call for assistance).")), "</em>")), true, oNodeFromXPath: ref argoNodeFromXPath5);
-                            oError = (XmlElement)argoParent5;
+                            oMsg = Protean.xmlTools.addElement(ref oError, "msg", Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("<strong>", Protean.xmlTools.getNodeValueByType(ref oProd, "/Content/Name", XmlDataType.TypeString, "A product below ")), "</strong> can only be bought in lots of <em>"), Protean.xmlTools.getNodeValueByType(ref oProd, "//Quantities/BulkUnit", XmlDataType.TypeNumber, "an undetermined value (please call for assistance).")), "</em>"), true, oNodeFromXPath: ref argoNodeFromXPath5);
                             oMsg.SetAttribute("type", "quantity_mod_detail");
                         }
                     }
@@ -4921,7 +4915,7 @@ namespace Protean
                             nNewQty = Conversions.ToDecimal(oRow["nQuantity"]);
 
                             sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("select * from tblCartItem where nCartOrderId=" + mnGiftListId + " and nItemId =" + oRow["nItemId"].ToString() + " and cItemOption1='", Protean.stdTools.SqlFmt(oRow["cItemOption1"].ToString())), "' and cItemOption2='"), Protean.stdTools.SqlFmt(oRow["cItemOption2"].ToString())), "'"));
-                            using (var oDr2 = moDBHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
+                            using (SqlDataReader oDr2 = moDBHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                             {
                                 while (oDr2.Read())
                                     nNewQty = Conversions.ToDecimal(Operators.SubtractObject(oDr2["nQuantity"], oRow["nQuantity"]));
@@ -5467,7 +5461,7 @@ namespace Protean
                             bool bCollection = false;
                             // Get the collection delivery options
                             // Dim oDrCollectionOptions As SqlDataReader = moDBHelper.getDataReader("select * from tblCartShippingMethods where bCollection = 1")
-                            using (var oDrCollectionOptions = moDBHelper.getDataReaderDisposable("select * from tblCartShippingMethods where bCollection = 1"))  // Done by nita on 6/7/22
+                            using (SqlDataReader oDrCollectionOptions = moDBHelper.getDataReaderDisposable("select * from tblCartShippingMethods where bCollection = 1"))  // Done by nita on 6/7/22
                             {
                                 while (oDrCollectionOptions.Read())
                                 {
@@ -5614,19 +5608,19 @@ namespace Protean
                             string value = string.Empty;
                             XmlElement contact = (XmlElement)oXform.Instance.SelectSingleNode("tblCartContact");
                             cWhere = "";
-                            if (Tools.Xml.NodeState(ref contact, "cContactName", "", "", 1, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
+                            if (NodeState(contact, "cContactName", default, default, default, default, default, value) != NotInstantiated)
                                 cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactName='", Protean.stdTools.SqlFmt(value)), "' "));
-                            if (Tools.Xml.NodeState(ref contact, "cContactCompany", "", "", 1, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
+                            if (NodeState(contact, "cContactCompany", default, default, default, default, default, value) != NotInstantiated)
                                 cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactCompany='", Protean.stdTools.SqlFmt(value)), "' "));
-                            if (Tools.Xml.NodeState(ref contact, "cContactAddress", "", "", 1, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
+                            if (NodeState(contact, "cContactAddress", default, default, default, default, default, value) != NotInstantiated)
                                 cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactAddress='", Protean.stdTools.SqlFmt(value)), "' "));
-                            if (Tools.Xml.NodeState(ref contact, "cContactCity", "", "", 1, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
+                            if (NodeState(contact, "cContactCity", default, default, default, default, default, value) != NotInstantiated)
                                 cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactCity='", Protean.stdTools.SqlFmt(value)), "' "));
-                            if (Tools.Xml.NodeState(ref contact, "cContactState", "", "", 1, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
+                            if (NodeState(contact, "cContactState", default, default, default, default, default, value) != NotInstantiated)
                                 cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactState='", Protean.stdTools.SqlFmt(value)), "' "));
-                            if (Tools.Xml.NodeState(ref contact, "cContactZip", "", "", 1, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
+                            if (NodeState(contact, "cContactZip", default, default, default, default, default, value) != NotInstantiated)
                                 cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactZip='", Protean.stdTools.SqlFmt(value)), "' "));
-                            if (Tools.Xml.NodeState(ref contact, "cContactCountry", "", "", 1, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
+                            if (NodeState(contact, "cContactCountry", default, default, default, default, default, value) != NotInstantiated)
                                 cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactCountry='", Protean.stdTools.SqlFmt(value)), "' "));
 
                             // cWhere = " and cContactName='" & SqlFmt(oXform.Instance.SelectSingleNode("tblCartContact/cContactName").InnerText) & "' " & _
@@ -5708,7 +5702,7 @@ namespace Protean
                                     // Save the delivery method allready
                                     string cSqlUpdate = "";
                                     // Dim oDrCollectionOptions2 As SqlDataReader = moDBHelper.getDataReader("select * from tblCartShippingMethods where nShipOptKey = " & myWeb.moRequest("cIsDelivery"))
-                                    using (var oDrCollectionOptions2 = moDBHelper.getDataReaderDisposable("select * from tblCartShippingMethods where nShipOptKey = " + myWeb.moRequest["cIsDelivery"]))  // Done by nita on 6/7/22
+                                    using (SqlDataReader oDrCollectionOptions2 = moDBHelper.getDataReaderDisposable("select * from tblCartShippingMethods where nShipOptKey = " + myWeb.moRequest["cIsDelivery"]))  // Done by nita on 6/7/22
                                     {
                                         while (oDrCollectionOptions2.Read())
                                         {
@@ -5973,7 +5967,7 @@ namespace Protean
                             // Add Collection options
                             // Get the collection delivery options
                             // Dim oDrCollectionOptions As SqlDataReader = moDBHelper.getDataReader("select * from tblCartShippingMethods where bCollection = 1")
-                            using (var oDrCollectionOptions = moDBHelper.getDataReaderDisposable("select * from tblCartShippingMethods where bCollection = 1"))  // Done by nita on 6/7/22
+                            using (SqlDataReader oDrCollectionOptions = moDBHelper.getDataReaderDisposable("select * from tblCartShippingMethods where bCollection = 1"))  // Done by nita on 6/7/22
                             {
                                 if (oDrCollectionOptions.HasRows)
                                 {
@@ -6057,7 +6051,7 @@ namespace Protean
                             {
                                 object bCollectionSelected = false;
                                 // Dim oDrCollectionOptions As SqlDataReader = moDBHelper.getDataReader("select * from tblCartShippingMethods where bCollection = 1")
-                                using (var oDrCollectionOptions = moDBHelper.getDataReaderDisposable("select * from tblCartShippingMethods where bCollection = 1"))  // Done by nita on 6/7/22
+                                using (SqlDataReader oDrCollectionOptions = moDBHelper.getDataReaderDisposable("select * from tblCartShippingMethods where bCollection = 1"))  // Done by nita on 6/7/22
                                 {
                                     if (oDrCollectionOptions.HasRows)
                                     {
@@ -6324,7 +6318,7 @@ namespace Protean
                             }
                             if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDr["nContactKey"], ContactId, false)))
                             {
-                                moDBHelper.ExeProcessSql(Conversions.ToString(Operators.ConcatenateObject("update tblCartContact set cContactType='Previous Billing Address' where nContactKey=", oDr["nContactKey"])));
+                                moDBHelper.ExeProcessSql(Operators.ConcatenateObject("update tblCartContact set cContactType='Previous Billing Address' where nContactKey=", oDr["nContactKey"]));
                             }
                         }
 
@@ -6443,7 +6437,7 @@ namespace Protean
                             // does this address allready exist?
                             sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("select count(nContactKey) from tblCartContact where nContactDirId = " + myWeb.mnUserId + " and nContactCartId = 0 " + " and cContactName = '", Protean.stdTools.SqlFmt(oAddElmt.SelectSingleNode("cContactName").InnerText)), "'"), " and cContactCompany = '"), Protean.stdTools.SqlFmt(oAddElmt.SelectSingleNode("cContactCompany").InnerText)), "'"), " and cContactAddress = '"), Protean.stdTools.SqlFmt(oAddElmt.SelectSingleNode("cContactAddress").InnerText)), "'"), " and cContactCity = '"), Protean.stdTools.SqlFmt(oAddElmt.SelectSingleNode("cContactCity").InnerText)), "'"), " and cContactState = '"), Protean.stdTools.SqlFmt(oAddElmt.SelectSingleNode("cContactState").InnerText)), "'"), " and cContactZip = '"), Protean.stdTools.SqlFmt(oAddElmt.SelectSingleNode("cContactZip").InnerText)), "'"), " and cContactCountry = '"), Protean.stdTools.SqlFmt(oAddElmt.SelectSingleNode("cContactCountry").InnerText)), "'"), " and cContactTel = '"), Protean.stdTools.SqlFmt(oAddElmt.SelectSingleNode("cContactTel").InnerText)), "'"), " and cContactFax = '"), Protean.stdTools.SqlFmt(oAddElmt.SelectSingleNode("cContactFax").InnerText)), "'"), " and cContactEmail = '"), Protean.stdTools.SqlFmt(oAddElmt.SelectSingleNode("cContactEmail").InnerText)), "'"), " and cContactXml = '"), Protean.stdTools.SqlFmt(oAddElmt.SelectSingleNode("cContactXml").InnerXml)), "'"));
 
-                            nCount = Conversions.ToLong(moDBHelper.ExeProcessSqlScalar(sSql));
+                            nCount = moDBHelper.ExeProcessSqlScalar(sSql);
 
                             if (nCount == 0L)
                             {
@@ -6799,21 +6793,15 @@ namespace Protean
                                 if (moDiscount.bHasPromotionalDiscounts)
                                 {
                                     // If oXform.Instance.FirstChild.SelectSingleNode("Notes") Is Nothing Then
-                                    XmlElement localfirstElement1() { var argoElement = oXform.Instance; var ret = Tools.Xml.firstElement(ref argoElement); oXform.Instance = argoElement; return ret; }
-
-                                    if (localfirstElement1().SelectSingleNode("Notes") is null)
+                                    if (Tools.Xml.firstElement(oXform.Instance).SelectSingleNode("Notes") is null)
                                     {
                                         // oXform.Instance.FirstChild.AppendChild(oXform.Instance.OwnerDocument.CreateElement("Notes"))
                                         // Protean.Tools.Xml.firstElement(oXform.Instance).AppendChild(oXform.Instance.OwnerDocument.CreateElement("Notes"))
-                                        XmlElement localfirstElement() { XmlElement argoElement1 = (XmlElement)oXform.moXformElmt.SelectSingleNode("descendant-or-self::instance"); var ret = firstElement(ref argoElement1); return ret; }
-
-                                        localfirstElement().AppendChild(oXform.Instance.OwnerDocument.CreateElement("Notes"));
+                                        Tools.Xml.firstElement(oXform.moXformElmt.SelectSingleNode("descendant-or-self::instance")).AppendChild(oXform.Instance.OwnerDocument.CreateElement("Notes"));
                                     }
                                     // oXform.Instance.FirstChild.AppendChild(oXform.Instance.OwnerDocument.CreateElement("PromotionalCode"))
                                     // Protean.Tools.Xml.firstElement(oXform.Instance).AppendChild(oXform.Instance.OwnerDocument.CreateElement("PromotionalCode"))
-                                    XmlElement localfirstElement2() { XmlElement argoElement2 = (XmlElement)oXform.moXformElmt.SelectSingleNode("descendant-or-self::instance"); var ret = firstElement(ref argoElement2); return ret; }
-
-                                    promocodeElement = (XmlElement)localfirstElement2().AppendChild(oXform.Instance.OwnerDocument.CreateElement("PromotionalCode"));
+                                    promocodeElement = Tools.Xml.firstElement(oXform.moXformElmt.SelectSingleNode("descendant-or-self::instance")).AppendChild(oXform.Instance.OwnerDocument.CreateElement("PromotionalCode"));
                                     oXform.addInput(ref oFormGrp, "Notes/PromotionalCode", false, "Promotional Code", "");
                                 }
                                 oXform.addSubmit(ref oFormGrp, "Submit", "Continue");
@@ -6827,7 +6815,7 @@ namespace Protean
                                     // get any Xform related to cart items
                                     long contentId = Conversions.ToLong(oOrderLine.GetAttribute("contentId"));
                                     sSql = "select nContentKey from tblContent c inner join tblContentRelation cr on cr.nContentChildId = c.nContentKey where c.cContentSchemaName = 'xform' and cr.nContentParentId = " + contentId;
-                                    long FormId = Conversions.ToLong(myWeb.moDbHelper.GetDataValue(sSql));
+                                    long FormId = myWeb.moDbHelper.GetDataValue(sSql);
                                     if (FormId != default)
                                     {
                                         var oFormXml = moPageXml.CreateElement("NewXform");
@@ -7089,22 +7077,16 @@ namespace Protean
                                         if (oXform.Instance.SelectSingleNode("descendant-or-self::PromotionalCode") is null)
                                         {
                                             // If oXform.Instance.FirstChild.SelectSingleNode("Notes") Is Nothing Then
-                                            XmlElement localfirstElement4() { var argoElement3 = oXform.Instance; var ret = Tools.Xml.firstElement(ref argoElement3); oXform.Instance = argoElement3; return ret; }
-
-                                            if (localfirstElement4().SelectSingleNode("Notes") is null)
+                                            if (Tools.Xml.firstElement(oXform.Instance).SelectSingleNode("Notes") is null)
                                             {
                                                 // ocNode.AppendChild(moPageXml.ImportNode(Protean.Tools.Xml.firstElement(newXml.DocumentElement), True))
                                                 // oXform.Instance.FirstChild.AppendChild(oXform.Instance.OwnerDocument.CreateElement("Notes"))
                                                 // Protean.Tools.Xml.firstElement(oXform.Instance).AppendChild(oXform.Instance.OwnerDocument.CreateElement("Notes"))
-                                                XmlElement localfirstElement3() { XmlElement argoElement4 = (XmlElement)oXform.moXformElmt.SelectSingleNode("descendant-or-self::instance"); var ret = firstElement(ref argoElement4); return ret; }
-
-                                                localfirstElement3().AppendChild(oXform.Instance.OwnerDocument.CreateElement("Notes"));
+                                                Tools.Xml.firstElement(oXform.moXformElmt.SelectSingleNode("descendant-or-self::instance")).AppendChild(oXform.Instance.OwnerDocument.CreateElement("Notes"));
                                             }
                                             // oXform.Instance.FirstChild.AppendChild(oXform.Instance.OwnerDocument.CreateElement("PromotionalCode"))
                                             // Protean.Tools.Xml.firstElement(oXform.Instance).AppendChild(oXform.Instance.OwnerDocument.CreateElement("PromotionalCode"))
-                                            XmlElement localfirstElement5() { XmlElement argoElement5 = (XmlElement)oXform.moXformElmt.SelectSingleNode("descendant-or-self::instance"); var ret = firstElement(ref argoElement5); return ret; }
-
-                                            promocodeElement = (XmlElement)localfirstElement5().AppendChild(oXform.Instance.OwnerDocument.CreateElement("PromotionalCode"));
+                                            promocodeElement = Tools.Xml.firstElement(oXform.moXformElmt.SelectSingleNode("descendant-or-self::instance")).AppendChild(oXform.Instance.OwnerDocument.CreateElement("PromotionalCode"));
                                             oXform.addInput(ref oFormGrp, "Notes/PromotionalCode", false, "Promotional Code", "");
                                         }
                                     }
@@ -7405,7 +7387,7 @@ namespace Protean
                                 if (!string.IsNullOrEmpty(cUserGroups))
                                 {
                                     permSQL = Conversions.ToString(Operators.ConcatenateObject("select count(*) from tblCartShippingPermission where nPermLevel = 0 and nDirId IN (" + cUserGroups + ") and nShippingMethodId = ", oRow["nShipOptKey"]));
-                                    denyCount = Conversions.ToInteger(moDBHelper.ExeProcessSqlScalar(permSQL));
+                                    denyCount = moDBHelper.ExeProcessSqlScalar(permSQL);
                                 }
                             }
                             if (denyCount > 0)
@@ -7916,7 +7898,7 @@ namespace Protean
                     // First let's go and get a list of all the countries and their parent id's
                     sSql = "SELECT * FROM tblCartShippingLocations ORDER BY nLocationParId";
 
-                    using (var oDr = moDBHelper.getDataReaderDisposable(sSql))
+                    using (SqlDataReader oDr = moDBHelper.getDataReaderDisposable(sSql))
                     {
                         sCountryList = "";
                         nTargetId = -1;
@@ -8038,7 +8020,7 @@ namespace Protean
                     if (nCartId == 0L)
                         nCartId = Conversions.ToLong(oCartElmt.GetAttribute("cartId"));
                     oCartElmt.SetAttribute("InvoiceDate", Protean.stdTools.niceDate((object)invoiceDate));
-                    oCartElmt.SetAttribute("InvoiceDateTime", XmlDate(invoiceDate, true));
+                    oCartElmt.SetAttribute("InvoiceDateTime", Tools.Xml.XmlDate(invoiceDate, true));
                     oCartElmt.SetAttribute("InvoiceRef", OrderNoPrefix + nCartId.ToString());
                     if (!string.IsNullOrEmpty(mcVoucherNumber))
                     {
@@ -8441,7 +8423,7 @@ namespace Protean
                                         // Then we need to add the Xml for the ParentProduct.
                                         string sSQL2 = "select TOP 1 nContentParentId from tblContentRelation as a inner join tblAudit as b on a.nAuditId=b.nAuditKey where nContentChildId =" + nProductId + "Order by nContentParentId desc";
 
-                                        long nParentId = Conversions.ToLong(moDBHelper.ExeProcessSqlScalar(sSQL2));
+                                        long nParentId = moDBHelper.ExeProcessSqlScalar(sSQL2);
                                         XmlNode argoNode7 = oProdXml.DocumentElement;
                                         var ItemParent = Protean.xmlTools.addNewTextNode("ParentProduct", ref argoNode7, "");
 
@@ -8917,7 +8899,7 @@ namespace Protean
                         // REturn the cart order item count
                         sSql = "select count(*) As ItemCount from tblCartItem where nCartOrderId = " + mnCartId;
                         // oDr = moDBHelper.getDataReader(sSql)
-                        using (var oDr = moDBHelper.getDataReaderDisposable(sSql))
+                        using (SqlDataReader oDr = moDBHelper.getDataReaderDisposable(sSql))
                         {
                             if (oDr.HasRows)
                             {
@@ -9012,7 +8994,7 @@ namespace Protean
 
                     // REturn the cart order item count
                     sSql = "select count(*) As ItemCount from tblCartItem where nCartOrderId = " + mnCartId;
-                    using (var oDr = moDBHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
+                    using (SqlDataReader oDr = moDBHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                     {
                         if (oDr.HasRows)
                         {
@@ -9095,7 +9077,7 @@ namespace Protean
                 {
                     // Return the cart order item count
                     sSql = "select nCartItemKey from tblCartItem where nCartOrderId = " + mnCartId;
-                    using (var oDr = moDBHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
+                    using (SqlDataReader oDr = moDBHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                     {
                         if (oDr.HasRows)
                         {
@@ -9136,7 +9118,7 @@ namespace Protean
                             // Get the amount received so far
 
                             sSql = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
-                            using (var oDr = moDBHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
+                            using (SqlDataReader oDr = moDBHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                             {
                                 if (oDr.HasRows)
                                 {
@@ -9719,9 +9701,7 @@ namespace Protean
                     cVatExclusionGroup = "" + moCartConfig["TaxRateExclusionGroupId"];
 
                     // First check if the user is in a tax exclusion group
-                    XmlNodeState localNodeState() { var argoNode = myWeb.moPageXml.DocumentElement; var ret = Tools.Xml.NodeState(ref argoNode, "/Page/User/*[@id='" + cVatExclusionGroup + "']"); return ret; }
-
-                    if (Information.IsNumeric(cVatExclusionGroup) && Conversions.ToInteger(cVatExclusionGroup) > 0 && Conversions.ToBoolean(localNodeState()))
+                    if (Information.IsNumeric(cVatExclusionGroup) && Conversions.ToInteger(cVatExclusionGroup) > 0 && Tools.Xml.NodeState(myWeb.moPageXml.DocumentElement, "/Page/User/*[@id='" + cVatExclusionGroup + "']"))
 
                     {
                         cProcessInfo = "User is in Tax Rate exclusion group";
@@ -9765,7 +9745,7 @@ namespace Protean
                             if (string.IsNullOrWhiteSpace(sCountryList) & !string.IsNullOrEmpty(cDefaultCountry))
                             {
                                 sSql = $"SELECT nLocationTaxRate FROM tblCartShippingLocations WHERE cLocationNameFull='{cDefaultCountry}' OR cLocationNameShort='{cDefaultCountry}'";
-                                nUpdateTaxRate = Conversions.ToDouble(moDBHelper.ExeProcessSqlScalar(sSql));
+                                nUpdateTaxRate = moDBHelper.ExeProcessSqlScalar(sSql);
                             }
                             else
                             {
@@ -9835,7 +9815,7 @@ namespace Protean
 
                                 // Now let's go and get a list of all the COUNTRIES sorted ALPHABETICALLY
                                 sSql = "SELECT DISTINCT cLocationNameShort FROM tblCartShippingLocations WHERE nLocationType = 2 ORDER BY cLocationNameShort";
-                                using (var oDr = moDBHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
+                                using (SqlDataReader oDr = moDBHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                                 {
 
                                     while (oDr.Read())
@@ -9879,7 +9859,7 @@ namespace Protean
                                     sSql = "SELECT DISTINCT cLocationNameShort as name, cLocationNameShort as value FROM tblCartShippingLocations WHERE nLocationType = 2 ORDER BY cLocationNameShort";
 
                                 }
-                                using (var oDr = moDBHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
+                                using (SqlDataReader oDr = moDBHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                                 {
                                     var argoDr = oDr;
                                     oXform.addOptionsFromSqlDataReader(ref oCountriesDropDown, ref argoDr);
@@ -10234,7 +10214,7 @@ namespace Protean
 
                     // Quick call to get the total number of records
                     cSQL = "SELECT COUNT(*) As Count FROM tblCartOrder " + cWhereSQL;
-                    long nTotal = Conversions.ToLong(moDBHelper.GetDataValue(cSQL, 1, null, (object)0));
+                    long nTotal = moDBHelper.GetDataValue(cSQL, default, default, 0);
 
                     if (nTotal > 0L)
                     {
@@ -10293,7 +10273,7 @@ namespace Protean
                                     oContent.SetAttribute("cartForiegnRef", Conversions.ToString(oDR["cCartForiegnRef"]));
                                     // Get Date
                                     cSQL = Conversions.ToString(Operators.ConcatenateObject("Select dInsertDate from tblAudit where nAuditKey =", oDR["nAuditId"]));
-                                    using (var oDRe = moDBHelper.getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
+                                    using (SqlDataReader oDRe = moDBHelper.getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
                                     {
                                         while (oDRe.Read())
                                             oContent.SetAttribute("created", Tools.Xml.XmlDate(oDRe.GetValue(0), true));
@@ -10370,7 +10350,7 @@ namespace Protean
                                         string[] aSellerNotes = Strings.Split(Conversions.ToString(oDR["cSellerNotes"]), "/n");
                                         string cSellerNotesHtml = "<ul>";
                                         for (int snCount = 0, loopTo = Information.UBound(aSellerNotes); snCount <= loopTo; snCount++)
-                                            cSellerNotesHtml = cSellerNotesHtml + "<li>" + convertEntitiesToCodes(aSellerNotes[snCount]) + "</li>";
+                                            cSellerNotesHtml = cSellerNotesHtml + "<li>" + Tools.Xml.convertEntitiesToCodes(aSellerNotes[snCount]) + "</li>";
                                         var argoNode = oContent.FirstChild;
                                         var sellerNode = Protean.xmlTools.addNewTextNode("SellerNotes", ref argoNode, "");
                                         try
@@ -10388,7 +10368,7 @@ namespace Protean
                                         if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDR["nCartStatus"], 9, false)))
                                         {
                                             string sSql = Conversions.ToString(Operators.ConcatenateObject("Select * from tblCartOrderDelivery where nOrderId=", oDR["nCartOrderKey"]));
-                                            var oDs2 = moDBHelper.GetDataSet(sSql, "Delivery", "Details");
+                                            DataSet oDs2 = moDBHelper.GetDataSet(sSql, "Delivery", "Details");
                                             foreach (DataRow oRow2 in oDs2.Tables["Delivery"].Rows)
                                             {
                                                 var oElmt = moPageXml.CreateElement("DeliveryDetails");
@@ -10471,7 +10451,7 @@ namespace Protean
 
                     if (myWeb.mnUserId == 0)
                         return;
-                    if (!(Conversions.ToDouble(moDBHelper.ExeProcessSqlScalar("Select nCartUserDirId FROM tblCartOrder WHERE nCartOrderKey = " + nOrderID)) == (double)mnEwUserId))
+                    if (!(moDBHelper.ExeProcessSqlScalar("Select nCartUserDirId FROM tblCartOrder WHERE nCartOrderKey = " + nOrderID) == mnEwUserId))
                     {
                         return; // else we carry on
                     }
@@ -10490,7 +10470,7 @@ namespace Protean
                     int nParentID;
                     string sSQL;
 
-                    moDBHelper.ReturnNullsEmpty(ref oDS);
+                    moDBHelper.ReturnNullsEmpty(oDS);
 
                     foreach (DataRow oDR1 in oDS.Tables["CartItems"].Rows)
                     {
@@ -10513,7 +10493,7 @@ namespace Protean
                             sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nQuantity"] is DBNull, "Null", oDR1["nQuantity"]), ","));
                             sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nWeight"] is DBNull, "Null", oDR1["nWeight"]), ","));
                             sSQL += moDBHelper.getAuditId() + ")";
-                            nParentID = Conversions.ToInteger(moDBHelper.GetIdInsertSql(sSQL));
+                            nParentID = moDBHelper.GetIdInsertSql(sSQL);
                             // now for any children
                             foreach (DataRow oDR2 in oDS.Tables["CartItems"].Rows)
                             {
@@ -10572,7 +10552,7 @@ namespace Protean
                     clearSessionCookie();
 
                     string cSQL = "Select nCartStatus, nCartUserDirId from tblCartOrder WHERE nCartOrderKey=" + nOrderID;
-                    using (var oDR = moDBHelper.getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
+                    using (SqlDataReader oDR = moDBHelper.getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
                     {
                         int nStat;
                         var nOwner = default(int);
@@ -10869,7 +10849,7 @@ namespace Protean
                     cSQL += "'" + cOrderType + "',";
                     cSQL += nOrderStage.ToString();
 
-                    var oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Item", "Report");
+                    DataSet oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Item", "Report");
 
                     if (oDS.Tables["Item"].Columns.Contains("cCartXML"))
                     {
@@ -10937,7 +10917,7 @@ namespace Protean
                     cSQL += nOrderStatus + "',";
                     cSQL += "'" + cOrderType + "'";
 
-                    var oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Item", "Report");
+                    DataSet oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Item", "Report");
 
                     if (oDS.Tables["Item"].Columns.Contains("cCartXML"))
                     {
@@ -10984,13 +10964,13 @@ namespace Protean
                     cSQL += nOrderStatus2 + ",";
                     cSQL += "'" + cOrderType + "'";
 
-                    var oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Item", "Report");
+                    DataSet oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Item", "Report");
                     // For Grouped by page is going to be bloody hard
                     if (oDS.Tables["Item"].Columns.Contains("nStructId"))
                     {
                         bPage = true;
                         cSQL = "EXEC getContentStructure @userId=" + myWeb.mnUserId + ", @bAdminMode=1, @dateNow=" + Tools.Database.SqlDate(DateTime.Now) + ", @authUsersGrp = " + Cms.gnAuthUsers;
-                        myWeb.moDbHelper.addTableToDataSet(ref oDS, cSQL, "MenuItem");
+                        myWeb.moDbHelper.addTableToDataSet(oDS, cSQL, "MenuItem");
                         // oDS.Tables("MenuItem").Columns.Add(New DataColumn("PageQuantity", GetType(Double)))
                         // oDS.Tables("MenuItem").Columns.Add(New DataColumn("PageCost", GetType(Double)))
                         // oDS.Tables("MenuItem").Columns.Add(New DataColumn("DecendantQuantity", GetType(Double)))
@@ -11125,7 +11105,7 @@ namespace Protean
                     cSQL += ",@nOrderStatus2=" + nOrderStatus2;
                     cSQL += ",@cOrderType='" + cOrderType + "'";
 
-                    var oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Item", "Report");
+                    DataSet oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Item", "Report");
                     // For Grouped by page is going to be bloody hard
 
 
@@ -11448,7 +11428,7 @@ namespace Protean
 
 
 
-                        var oDs = moDBHelper.GetDataSet(strSql.ToString(), "Method", "ShippingMethods");
+                        DataSet oDs = moDBHelper.GetDataSet(strSql.ToString(), "Method", "ShippingMethods", default);
                         oShippingOptions.InnerXml = oDs.GetXml();
 
                         // move all the shipping methods up a level
@@ -11539,7 +11519,7 @@ namespace Protean
                     // moDBHelper.ExeProcessSql(cSqlUpdate)
                     // Next
 
-                    using (var oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql))
+                    using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql))
                     {
                         if (oDr is not null)
                         {
@@ -12153,7 +12133,7 @@ namespace Protean
 
                                 string sSQL2 = "select TOP 1 nCartItemKey  from tblCartItem  as a inner join tblAudit as b on a.nAuditId=b.nAuditKey where b.nStatus=1 and nParentId=0 and nCartOrderId =" + mnCartId.ToString() + "Order by nCartItemKey desc";
 
-                                long nCartItemId = Conversions.ToLong(moDBHelper.ExeProcessSqlScalar(sSQL2));
+                                long nCartItemId = moDBHelper.ExeProcessSqlScalar(sSQL2);
 
                                 foreach (XmlElement oOption in oItem.SelectNodes("Item"))
                                 {
@@ -12175,7 +12155,7 @@ namespace Protean
                     int deliveryAddId = 0;
                     int billingAddId = 0;
                     string sSql = "select nContactKey, cContactType, nAuditKey from tblCartContact inner join tblAudit a on nAuditId = a.nAuditKey where nContactCartId = " + nOrderId.ToString();
-                    using (var oDr = moDBHelper.getDataReaderDisposable(sSql))
+                    using (SqlDataReader oDr = moDBHelper.getDataReaderDisposable(sSql))
                     {
                         while (oDr.Read())
                         {
