@@ -9,7 +9,7 @@ using System.Xml;
 
 namespace Protean.Providers
 {
-    namespace Filter
+    namespace Filters
     {
 
         public class PageFilter : IFilterProvider

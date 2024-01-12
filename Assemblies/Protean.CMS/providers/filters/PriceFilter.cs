@@ -12,7 +12,7 @@ using Protean.Providers.Filter;
 namespace Protean.Providers
 {
 
-    namespace Filter
+    namespace Filters
     {
 
         public class PriceFilter : IFilterProvider
