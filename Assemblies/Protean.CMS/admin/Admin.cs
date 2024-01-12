@@ -3163,6 +3163,10 @@ namespace Protean
                                 else
                                 {
                                     string sProductTypes = "Product,SKU,Ticket";
+                                    if (myWeb.Features.ContainsKey("Subscriptions"))
+                                    {
+                                        sProductTypes = sProductTypes + ",Subscription";
+                                    }
                                     if (!string.IsNullOrEmpty(moConfig["ProductTypes"]))
                                     {
                                         sProductTypes = moConfig["ProductTypes"];

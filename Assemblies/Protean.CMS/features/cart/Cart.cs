@@ -3767,6 +3767,11 @@ namespace Protean
                         if (oPromoElmt != null)
                             cPromoCode = oPromoElmt.InnerText;
 
+                        if (moSubscription.CheckCartForSubscriptions(mnCartId, myWeb.mnUserId))
+                        {
+                            mbNoDeliveryAddress = true;
+                        }
+
                         if (mbNoDeliveryAddress)
                             oCartElmt.SetAttribute("hideDeliveryAddress", "True");
                         if (mnGiftListId > 0)
@@ -5214,7 +5219,7 @@ namespace Protean
                                 {
                                     billingAddId = Conversions.ToLong(odr["nContactKey"]);
                                 }
-                                if (Strings.LCase(moCartConfig["NoDeliveryAddress"]) == "on")
+                                if (mbNoDeliveryAddress)
                                 {
                                     deliveryAddId = billingAddId;
                                 }
@@ -5407,7 +5412,7 @@ namespace Protean
                         {
                             cThisAddressType = oElmt.ParentNode.SelectSingleNode("input[@bind='cContactType' or @bind='cDelContactType']/value").InnerText;
                         }
-                        if (Strings.LCase(moCartConfig["NoDeliveryAddress"]) == "on")
+                        if (mbNoDeliveryAddress)
                         {
                             cThisAddressType = "Delivery Address";
                         }
@@ -5999,7 +6004,7 @@ namespace Protean
                             else
                             {
 
-                                if (Strings.LCase(moCartConfig["NoDeliveryAddress"]) == "on")
+                                if (mbNoDeliveryAddress)
                                 {
                                     oXform.addSubmit(ref oAddressGrp, "addNewAddress", "Add New Address", submitPrefix + "addNewAddress", "btn-default addnew", "fa-plus");
                                 }
@@ -6008,14 +6013,14 @@ namespace Protean
                                     oXform.addSubmit(ref oAddressGrp, "addNewAddress", "Add New Billing Address", submitPrefix + "addNewAddress", "btn-default addnew", "fa-plus");
                                 }
 
-                                if (!(Strings.LCase(moCartConfig["NoDeliveryAddress"]) == "on"))
+                                if (mbNoDeliveryAddress == false)
                                 {
                                     oXform.addSubmit(ref oGrpElmt, Conversions.ToString(oDr["nContactKey"]), "New Delivery Address", Conversions.ToString(Operators.ConcatenateObject(submitPrefix + "addDelivery", oDr["nContactKey"])), "setAsBilling btn-success principle", "fa-plus");
                                 }
 
                             }
 
-                            if (Strings.LCase(moCartConfig["NoDeliveryAddress"]) == "on")
+                            if (mbNoDeliveryAddress)
                             {
                                 oXform.addSubmit(ref oAddressGrp, Conversions.ToString(oDr["nContactKey"]), "Use This Address", Conversions.ToString(Operators.ConcatenateObject(submitPrefix + "contact", oDr["nContactKey"])), "deliver-here principle", "fas fa-truck");
                             }
@@ -12123,7 +12128,7 @@ namespace Protean
                             {
                                 billingAddId = Conversions.ToInteger(oDr["nContactKey"]);
                             }
-                            if (Strings.LCase(moCartConfig["NoDeliveryAddress"]) == "on")
+                            if (mbNoDeliveryAddress)
                             {
                                 deliveryAddId = billingAddId;
                             }

@@ -29,6 +29,8 @@ namespace Protean
         private string cValidationError = "";
         private string[] _formParameters = null;
 
+        public string FormName = "form";
+
         public XmlDocument moPageXML = new XmlDocument();
         public XmlElement moXformElmt;
         public XmlElement model;
@@ -426,9 +428,10 @@ namespace Protean
                 if (fileExists)
                 {
                     oXformDoc.Load(goServer.MapPath(cXformPath));
+                    FormName = oXformDoc.DocumentElement.GetAttribute("name");
                     oFrmElmt = moPageXML.CreateElement("Content");
                     oFrmElmt.SetAttribute("type", "xform");
-                    oFrmElmt.SetAttribute("name", oXformDoc.DocumentElement.GetAttribute("name"));
+                    oFrmElmt.SetAttribute("name", FormName);
                     oFrmElmt.InnerXml = oXformDoc.DocumentElement.InnerXml;
 
                     moXformElmt = oFrmElmt;
@@ -444,13 +447,13 @@ namespace Protean
                     if (bProcessRepeats & goSession != null)
                     {
 
-                        if (goSession["tempInstance"] is null)
+                        if (goSession[$"tempInstance-{FormName}"] is null)
                         {
                             Instance = (XmlElement)model.SelectSingleNode("descendant-or-self::instance");
                         }
                         else
                         {
-                            Instance = (XmlElement)goSession["tempInstance"];
+                            Instance = (XmlElement)goSession[$"tempInstance-{FormName}"];
                         }
 
                         if (isTriggered)
@@ -458,7 +461,7 @@ namespace Protean
                             // we have clicked a trigger so we must update the instance
                             updateInstanceFromRequest();
                             // lets save the instance
-                            goSession["tempInstance"] = Instance;
+                            goSession[$"tempInstance-{FormName}"] = Instance;
                         }
                         else
                         {
@@ -648,13 +651,13 @@ namespace Protean
                     if (bWithRepeats & goSession != null)
                     {
 
-                        if (goSession["tempInstance"] is null)
+                        if (goSession[$"tempInstance-{FormName}"] is null)
                         {
                             Instance = (XmlElement)model.SelectSingleNode("descendant-or-self::instance");
                         }
                         else
                         {
-                            Instance = (XmlElement)goSession["tempInstance"];
+                            Instance = (XmlElement)goSession[$"tempInstance-{FormName}"];
                         }
 
                         if (isTriggered)
@@ -662,7 +665,7 @@ namespace Protean
                             // we have clicked a trigger so we must update the instance
                             updateInstanceFromRequest();
                             // lets save the instance
-                            goSession["tempInstance"] = Instance;
+                            goSession[$"tempInstance-{FormName}"] = Instance;
                         }
                         else
                         {
@@ -921,20 +924,28 @@ namespace Protean
                                 // No data - error message
                                 bIsValid = false;
                                 bIsThisBindValid = false;
-                                string label = "Please complete";
+                                string validationMsg = "";
                                 string sRef = oBindElmt.GetAttribute("id");
                                 if (moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/label") != null)
+                                    
                                 {
-                                    label += " " + moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/label").InnerText;
+                                    validationMsg = moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/label").InnerText;
+                                    if (validationMsg == "")
+                                    {
+                                        string innerHtml = moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/label").InnerXml;
+                                        validationMsg = $"<span class=\"term4053\">Please Enter</span>&#160;{innerHtml}";
+                                    }
+                                    else {
+                                        validationMsg = $"<span class=\"term4053\">Please Enter</span>&#160;{validationMsg}";
+                                    }
                                 }
-                                if (addNoteFromBind(oBindElmt, noteTypes.Alert, BindAttributes.Required, "<span class=\"msg-1007\">" + label + " </span>") == false)
+                                if (addNoteFromBind(oBindElmt, noteTypes.Alert, BindAttributes.Required, "<span class=\"msg-1007\">" + validationMsg + " </span>") == false)
                                 {
                                     missedError = true;
                                 }
-
-                                if (cValidationError.Contains("<span class=\"labelName\">" + labelText + "</span> must be completed") != true)
+                                if (cValidationError.Contains(validationMsg) != true)
                                 {
-                                    cValidationError += "<span class=\"msg-1007\"><span class=\"labelName\">" + labelText + "</span> must be completed" + "</span>";
+                                    cValidationError += validationMsg;
                                 }
                             }
                         }
@@ -1051,7 +1062,7 @@ namespace Protean
 
                 if (bIsValid & bProcessRepeats)
                 {
-                    goSession["tempInstance"] = null;
+                    goSession[$"tempInstance-{FormName}"] = null;
                 }
 
                 if (!string.IsNullOrEmpty(cValidationError) & missedError)

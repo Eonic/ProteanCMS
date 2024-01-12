@@ -37,38 +37,13 @@
 							<xsl:apply-templates select="." mode="showQuantity"/>
 						</xsl:otherwise>
 					</xsl:choose>
-					<xsl:apply-templates select="/" mode="addtoCartButtons"/>
+					<xsl:apply-templates select="." mode="addtoCartButtons"/>
 				</xsl:if>
 			</form>
 		</div>
 	</xsl:template>
 	<!-- -->
-	<!-- -->
-	<xsl:template match="Content[@type='Subscription']" mode="addToCartButton">
-		<xsl:variable name="parentURL">
-			<xsl:call-template name="getContentParURL"/>
-		</xsl:variable>
-		<xsl:variable name="siteURL">
-			<xsl:call-template name="getSiteURL"/>
-		</xsl:variable>
-		<xsl:variable name="secureURL">
-			<xsl:call-template name="getSecureURL"/>
-		</xsl:variable>
-		<xsl:variable name="price">
-			<xsl:value-of select="Prices/Price[@type='sale' and @currency=$page/Cart/@currency]/node()"/>
-		</xsl:variable>
-		<div id="cartButtons{@id}" class="cartButtons">
-			<form action="" method="post" class="ewXform">
-				<xsl:apply-templates select="." mode="Options_List"/>
-				<xsl:if test="not(format-number($price, '#.00')='NaN')">
-					<!-- Hard code 1 qty -->
-					<!--input class="qtybox" type="text" name="price_{@id}" id="price_{@id}" value="1"/-->
-					<input type="hidden" name="qty_{@id}" id="qty_{@id}" value="1"/>
-					<xsl:apply-templates select="/" mode="addtoCartButtons"/>
-				</xsl:if>
-			</form>
-		</div>
-	</xsl:template>
+
 	<!-- -->
 	<!--   ################################################   Cart Full  ##############################################   -->
 	<!-- -->
@@ -2032,7 +2007,7 @@
 			<!-- Qui? -->
 			<!--<xsl:text> </xsl:text>-->
 
-			<ol>
+			<ul>
 				<xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | repeat | relatedContent | label[position()!=1] | trigger" mode="xform"/>
 				<xsl:if test="count(submit) &gt; 0">
 					<li>
@@ -2047,7 +2022,7 @@
 					</li>
 
 				</xsl:if>
-			</ol>
+			</ul>
 		</fieldset>
 	</xsl:template>
 	<!--#-->
@@ -2143,18 +2118,25 @@
 			<div class="row">
 				<xsl:choose>
 					<xsl:when test="group[div/tblCartContact/cContactType/node()='Delivery Address']">
-						<div>
+						<div class="card">
+							<div class="card-body">
 							<h3>Billing Address</h3>
 							<xsl:apply-templates select="group[div/tblCartContact/cContactType/node()='Billing Address']" mode="xform"/>
+							</div>
 						</div>
-						<div>
+						<xsl:if test="$page/Cart/Order/@hideDeliveryAddress != 'True'">
+							<div class="card">
+							<div class="card-body">
 							<h3>Delivery Addresses</h3>
 							<xsl:apply-templates select="group[@class='collection-options']" mode="xform"/>
 							<xsl:apply-templates select="group[div/tblCartContact/cContactType/node()!='Billing Address']" mode="xform"/>
 							<div class="pull-right">
 								<xsl:apply-templates select="submit" mode="xform"/>
 							</div>
+							</div>
 						</div>
+						</xsl:if>
+						
 					</xsl:when>
 					<xsl:otherwise>
 						<div class="col-md-12">
@@ -2186,11 +2168,10 @@
 			<xsl:if test="label">
 				<xsl:apply-templates select="label[position()=1]" mode="legend"/>
 			</xsl:if>
-			<ol>
 				<xsl:for-each select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script">
 					<xsl:choose>
 						<xsl:when test="name()='group'">
-							<li>
+
 								<xsl:if test="./@class">
 									<xsl:attribute name="class">
 										<xsl:text>li-</xsl:text>
@@ -2198,27 +2179,27 @@
 									</xsl:attribute>
 								</xsl:if>
 								<xsl:apply-templates select="." mode="xform"/>
-							</li>
+
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:apply-templates select="." mode="xform"/>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:for-each>
-				<xsl:if test="count(submit) &gt; 0">
-					<li>
-						<xsl:if test="ancestor::group/descendant-or-self::*[contains(@class,'required')]">
-							<label class="required">
-								<span class="req">*</span>
-								<xsl:text> </xsl:text>
-								<xsl:call-template name="msg_required"/>
-							</label>
-						</xsl:if>
-						<!-- For xFormQuiz change how these buttons work -->
-						<xsl:apply-templates select="submit" mode="xform"/>
-					</li>
+			<xsl:if test="count(submit) &gt; 0">
+
+				<xsl:if test="ancestor::group/descendant-or-self::*[contains(@class,'required')]">
+					<label class="required">
+						<span class="req">*</span>
+						<xsl:text> </xsl:text>
+						<xsl:call-template name="msg_required"/>
+					</label>
 				</xsl:if>
-			</ol>
+				<!-- For xFormQuiz change how these buttons work -->
+				<xsl:apply-templates select="submit" mode="xform"/>
+
+			</xsl:if>
+
 		</fieldset>
 	</xsl:template>
 
@@ -2227,7 +2208,7 @@
 
 
 	<xsl:template match="div[@class='pickAddress']" mode="xform">
-		<li class="pickAddress">
+		<div class="pickAddress">
 			<div>
 				<xsl:if test="tblCartContact/cContactName/node()!=''">
 					<strong>
@@ -2271,11 +2252,11 @@
 				<br/>
 				<br/>
 			</div>
-		</li>
+		</div>
 	</xsl:template>
 
 	<!-- -->
-	<xsl:template match="/" mode="addtoCartButtons">
+	<xsl:template match="Content" mode="addtoCartButtons">
 		<xsl:if test="/Page/Contents/Content[@type='giftlist' and @name='cart']">
 			<button type="submit" name="glAdd" class="btn btn-action">
 				<xsl:attribute name="value">
@@ -2294,6 +2275,7 @@
 				<xsl:call-template name="term3058" />
 			</button>
 		</xsl:if>
+
 		<button type="submit" name="cartAdd" class="btn btn-custom">
 			<xsl:attribute name="value">
 				<!--Add to Cart-->

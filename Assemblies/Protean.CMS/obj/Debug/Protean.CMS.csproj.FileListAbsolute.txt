@@ -129,9 +129,6 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\AngleSharp.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Antlr3.Runtime.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\BundleTransformer.Core.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\BundleTransformer.Less.dll
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.V8.ICUData.dll
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.Windows.Core.dll
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.Windows.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Fonet.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ICSharpCode.SharpZipLib.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Imazen.WebP.dll
@@ -172,9 +169,6 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\AngleSharp.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Antlr3.Runtime.pdb
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\BundleTransformer.Core.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\BundleTransformer.Less.xml
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.V8.ICUData.xml
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.Windows.xml
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.Windows.Core.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Fonet.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Lucene.Net.pdb
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Lucene.Net.xml
@@ -291,3 +285,6 @@ D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\De
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Debug\Protean.CMS.csproj.CopyComplete
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Debug\ProteanCMS.dll
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Debug\ProteanCMS.pdb
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.V8.xml
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\JavaScriptEngineSwitcher.Core.xml
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ru-ru\JavaScriptEngineSwitcher.Core.resources.dll
