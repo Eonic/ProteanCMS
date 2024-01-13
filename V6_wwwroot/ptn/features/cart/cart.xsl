@@ -392,6 +392,9 @@
 					<button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-link continue">
 						<xsl:call-template name="term3060" />
 					</button>
+					<xsl:if test="parent::Cart/@Process &gt; 3">
+					<a href="?cartCmd=Quit" class="btn btn-link continue">Quit Cart</a>
+					</xsl:if>
 					<xsl:apply-templates select="." mode="principleButton">
 						<xsl:with-param name="buttonClass">btn-custom</xsl:with-param>
 					</xsl:apply-templates>
@@ -472,7 +475,7 @@
 						</div>
 					</xsl:when>
 				</xsl:choose>
-				<xsl:if test="not(@hideDeliveryAddress)">
+				<xsl:if test="@hideDeliveryAddress!='True'">
 					<xsl:choose>
 						<xsl:when test="/Page/Contents/Content[@type='xform' and @name='Delivery Address']">
 							<div>
