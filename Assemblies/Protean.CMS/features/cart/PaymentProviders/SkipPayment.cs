@@ -203,7 +203,7 @@ namespace Protean.Providers
 
                 }
 
-                public bool AddPaymentButton(ref Cms.xForm oOptXform, ref XmlElement oFrmElmt, XmlElement configXml, double nPaymentAmount, string submissionValue, string refValue)
+                public bool AddPaymentButton(ref Cms myWeb, ref Cms.Cart myCart, ref Cms.xForm oOptXform, ref XmlElement oFrmElmt, XmlElement configXml, double nPaymentAmount, string submissionValue, string refValue)
                 {
 
                     try

@@ -48,7 +48,7 @@ namespace Protean.Providers
             string CheckStatus(ref Cms oWeb, ref string nPaymentProviderRef);
             XmlElement UpdatePaymentStatus(ref Cms oWeb, ref long nPaymentMethodKey);
             string GetMethodDetail(ref Cms oWeb, ref string nPaymentProviderRef);
-            bool AddPaymentButton(ref Cms.xForm oOptXform, ref XmlElement oFrmElmt, XmlElement configXml, double nPaymentAmount, string submissionValue, string refValue);
+            bool AddPaymentButton(ref Cms myWeb, ref Protean.Cms.Cart oCart, ref Cms.xForm oOptXform, ref XmlElement oFrmElmt, XmlElement configXml, double nPaymentAmount, string submissionValue, string refValue);
             void ValidatePaymentByCart(int nCartId, bool bValid);
             string RefundPayment(string providerPaymentReference, decimal amount, string validGroup = "");
             string CancelPayments(ref Cms oWeb, ref string nPaymentProviderRef);
@@ -605,7 +605,7 @@ namespace Protean.Providers
                 }
 
 
-                public bool AddPaymentButton(ref Cms.xForm oOptXform, ref XmlElement oFrmElmt, XmlElement configXml, double nPaymentAmount, string submissionValue, string refValue)
+                public bool AddPaymentButton(ref Cms myWeb, ref Protean.Cms.Cart oCart, ref Cms.xForm oOptXform, ref XmlElement oFrmElmt, XmlElement configXml, double nPaymentAmount, string submissionValue, string refValue)
                 {
 
                     string PaymentLabel = configXml.SelectSingleNode("description/@value").InnerText;

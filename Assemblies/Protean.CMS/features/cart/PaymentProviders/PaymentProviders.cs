@@ -294,7 +294,7 @@ namespace Protean
                             Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
                             IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, oElmt.GetAttribute("name"));
 
-                            oPaymentProv.Activities.AddPaymentButton(ref oOptXform, ref oFrmElmt, oElmt, nPaymentAmount, submissionValue, refValue);
+                            oPaymentProv.Activities.AddPaymentButton(ref myWeb, ref myWeb.moCart, ref oOptXform, ref oFrmElmt, oElmt, nPaymentAmount, submissionValue, refValue);
 
                             nOptCount = nOptCount + 1;
 
