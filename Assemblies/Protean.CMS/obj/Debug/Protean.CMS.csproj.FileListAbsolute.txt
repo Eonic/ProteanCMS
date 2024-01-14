@@ -44,9 +44,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\AngleSharp.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Antlr3.Runtime.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\BundleTransformer.Core.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\BundleTransformer.Less.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.V8.ICUData.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.Windows.Core.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.Windows.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Fonet.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ICSharpCode.SharpZipLib.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Imazen.WebP.dll
@@ -87,9 +84,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\AngleSharp.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Antlr3.Runtime.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\BundleTransformer.Core.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\BundleTransformer.Less.xml
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.V8.ICUData.xml
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.Windows.xml
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.Windows.Core.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Fonet.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Lucene.Net.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Lucene.Net.xml

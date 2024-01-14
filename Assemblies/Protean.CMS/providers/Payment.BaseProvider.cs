@@ -608,14 +608,22 @@ namespace Protean.Providers
                 public bool AddPaymentButton(ref Cms myWeb, ref Protean.Cms.Cart oCart, ref Cms.xForm oOptXform, ref XmlElement oFrmElmt, XmlElement configXml, double nPaymentAmount, string submissionValue, string refValue)
                 {
 
-                    string PaymentLabel = configXml.SelectSingleNode("description/@value").InnerText;
-                    // allow html in description node...
-                   // bool bXmlLabel = false;
+                    string PaymentLabel = "Pay Now";
 
-                    if (!string.IsNullOrEmpty(configXml.SelectSingleNode("description").InnerXml))
+                    XmlNode LabelNode = configXml.SelectSingleNode("description/@value");
+                    if (LabelNode != null)
+                    {
+                        PaymentLabel = LabelNode.InnerText;
+                    }
+
+                    // allow html in description node...
+                    bool bXmlLabel = false;
+
+                    LabelNode = configXml.SelectSingleNode("description");
+                    if (LabelNode != null)
                     {
                         PaymentLabel = configXml.SelectSingleNode("description").InnerXml;
-                       // bXmlLabel = true;
+                        bXmlLabel = true;
                     }
 
                     string iconclass = "";
