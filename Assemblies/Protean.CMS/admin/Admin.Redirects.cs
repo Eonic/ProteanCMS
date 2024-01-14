@@ -48,33 +48,88 @@ namespace Protean
                         var rewriteXml = new XmlDocument();
                         string Result = "success";
                         rewriteXml.Load(myWeb.goServer.MapPath("/rewriteMaps.config"));
-
+                        string oCgfSectPath = "rewriteMaps/rewriteMap[@name='" + redirectType + "']";
+                        var redirectSectionXmlNode = rewriteXml.SelectSingleNode(oCgfSectPath);
                         // 'Check we do not have a redirect for the OLD URL allready. Remove if exists
-                        XmlNodeList existingRedirects;
+                        XmlNodeList existingRedirectsForOldUrlAsKey;
+                        XmlNodeList existingRedirectsForOldUrlAsValue;
+                        XmlNodeList existingRedirectsForNewUrlAsKey;
+                        XmlNodeList existingRedirectsForNewUrlAsValue;
                         if (string.IsNullOrEmpty(hiddenOldUrl))
                         {
-                            existingRedirects = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" + redirectType + "']/add[@key='" + OldUrl + "']");
+                            existingRedirectsForOldUrlAsKey = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" + redirectType + "']/add[@key='" + OldUrl + "']");
+                            existingRedirectsForOldUrlAsValue = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" + redirectType + "']/add[@value='" + OldUrl + "']");
+
+                            existingRedirectsForNewUrlAsKey = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" + redirectType + "']/add[@key='" + NewUrl + "']");
                         }
+                        // existingRedirectsForOldUrlAsValue = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" & redirectType & "']/add[@value='" & OldUrl & "']")
+
                         else
                         {
-                            existingRedirects = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" + redirectType + "']/add[@key='" + hiddenOldUrl + "']");
+                            existingRedirectsForOldUrlAsKey = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" + redirectType + "']/add[@key='" + hiddenOldUrl + "']");
+                            existingRedirectsForOldUrlAsValue = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" + redirectType + "']/add[@value='" + hiddenOldUrl + "']");
+                            existingRedirectsForNewUrlAsKey = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" + redirectType + "']/add[@key='" + NewUrl + "']");
+
                         }
 
-                        if (existingRedirects.Count > 0)
+                        if (existingRedirectsForOldUrlAsKey.Count > 0 | existingRedirectsForOldUrlAsValue.Count > 0)
                         {
-                            foreach (XmlNode existingNode in existingRedirects)
+                            if (existingRedirectsForOldUrlAsKey.Count > 0)
                             {
-                                var newNode = existingNode;
-                                newNode.Attributes.Item(0).InnerXml = OldUrl;
-                                newNode.Attributes.Item(1).InnerXml = NewUrl;
-                                rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"));
+                                foreach (XmlNode existingNode in existingRedirectsForOldUrlAsKey)
+                                {
+                                    var newNode = existingNode;
+                                    newNode.Attributes.Item(0).InnerXml = OldUrl;
+                                    newNode.Attributes.Item(1).InnerXml = NewUrl;
+                                    rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"));
+                                }
+                            }
+                            if (existingRedirectsForNewUrlAsKey.Count > 0)
+                            {
+                                foreach (XmlNode existingNewUrlNode in existingRedirectsForNewUrlAsKey)
+                                {
+
+                                    var newUrlNode = existingNewUrlNode;
+                                    string existingNewUrl = newUrlNode.Attributes.Item(1).InnerXml;
+                                    // newNode.Attributes.Item(1).InnerXml = 
+
+                                    foreach (XmlNode existingNode in existingRedirectsForOldUrlAsKey)
+                                    {
+
+                                        var newNode = existingNode;
+                                        newNode.Attributes.Item(0).InnerXml = OldUrl;
+                                        newNode.Attributes.Item(1).InnerXml = existingNewUrl;
+                                        rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"));
+                                    }
+                                }
+                            }
+                            if (existingRedirectsForOldUrlAsValue.Count > 0)
+                            {
+
+                                foreach (XmlNode existingNode in existingRedirectsForOldUrlAsValue)
+                                {
+                                    var newNode = existingNode;
+                                    // newNode.Attributes.Item(0).InnerXml = OldUrl
+                                    newNode.Attributes.Item(1).InnerXml = NewUrl;
+                                    rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"));
+
+                                }
+                                if (existingRedirectsForOldUrlAsKey.Count == 0)
+                                {
+                                    if (redirectSectionXmlNode != null)
+                                    {
+                                        var replacingElement = rewriteXml.CreateElement("RedirectInfo");
+                                        replacingElement.InnerXml = $"<add key='{OldUrl}' value='{NewUrl}'/>";
+                                        rewriteXml.SelectSingleNode(oCgfSectPath).AppendChild(replacingElement.FirstChild);
+                                        rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"));
+
+                                    }
+                                }
                             }
                         }
                         // Add redirect
                         else if (isParentPage.ToLower() == "false")
-                        {
-                            string oCgfSectPath = "rewriteMaps/rewriteMap[@name='" + redirectType + "']";
-                            var redirectSectionXmlNode = rewriteXml.SelectSingleNode(oCgfSectPath);
+                        {                           
                             if (redirectSectionXmlNode != null)
                             {
                                 var replacingElement = rewriteXml.CreateElement("RedirectInfo");
@@ -387,8 +442,10 @@ namespace Protean
                     rewriteXml.Load(myWeb.goServer.MapPath("/rewriteMaps.config"));
 
                     // 'Check we do not have a redirect for the OLD URL allready. Remove if exists
-                    var existingRedirects = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" + redirectType + "']/add[@key='" + oldUrl + "']");
-                    if (existingRedirects.Count > 0)
+                    var existingRedirectsForOldUrl = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" + redirectType + "']/add[@key='" + oldUrl + "']");
+                    var existingRedirectsForNewUrl = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" + redirectType + "']/add[@value='" + oldUrl + "']");
+
+                    if (existingRedirectsForOldUrl.Count > 0 | existingRedirectsForNewUrl.Count > 0)
                     {
                         Result = "True";
                     }

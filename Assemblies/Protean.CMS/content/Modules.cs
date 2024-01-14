@@ -10,6 +10,7 @@ using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 
+
 namespace Protean
 {
 
@@ -635,12 +636,20 @@ where cl.nStructId = " + myWeb.mnPageId));
                         // now we go and get the results from the filter.
                         if (!string.IsNullOrEmpty(whereSQL))
                         {
-                            myWeb.moSession["FilterWhereCondition"] = whereSQL;
+
+                            if (whereSQL.ToLower().Trim().EndsWith(" and") == false)
+                            {
+                                myWeb.moSession["FilterWhereCondition"] = whereSQL;
                             XmlElement argoPageDetail = null;int nCount = 0;
                             myWeb.GetPageContentFromSelect(whereSQL,ref nCount, oContentsNode: ref oContentNode, oPageDetail: ref argoPageDetail, cShowSpecificContentTypes: cFilterTarget);
 
 
-                            if (oContentNode.SelectNodes("Content[@type='Product']").Count == 0)
+                                if (oContentNode.SelectNodes("Content[@type='Product']").Count == 0)
+                                {
+                                    filterForm.addSubmit(ref oFrmGroup, "Clear Filters", "No results found", "clearfilters", "clear-filters", sValue: "clearfilters");
+                                }
+                            }
+                            else
                             {
                                 filterForm.addSubmit(ref oFrmGroup, "Clear Filters", "No results found", "clearfilters", "clear-filters", sValue: "clearfilters");
                             }

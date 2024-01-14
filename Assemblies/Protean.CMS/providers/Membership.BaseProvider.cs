@@ -1064,12 +1064,12 @@ namespace Protean.Providers
 
                         if (IntanceAppend != null)
                         {
-                            if (this.goSession["tempInstance"] != null)
+                            if (this.goSession[$"tempInstance-{FormName}"] != null)
                             {
-                                base.Instance = (XmlElement)this.goSession["tempInstance"];
+                                base.Instance = (XmlElement)this.goSession[$"tempInstance-{FormName}"];
                                 base.bProcessRepeats = true;
                                 base.LoadInstance(base.Instance, true);
-                                this.goSession["tempInstance"] = base.Instance;
+                                this.goSession[$"tempInstance-{FormName}"] = base.Instance;
                             }
                             else
                             {
@@ -1078,7 +1078,7 @@ namespace Protean.Providers
                                 base.Instance.AppendChild(importedNode);
                                 base.bProcessRepeats = true;
                                 base.LoadInstance(base.Instance, true);
-                                this.goSession["tempInstance"] = base.Instance;
+                                this.goSession[$"tempInstance-{FormName}"] = base.Instance;
                             }
                         }
 

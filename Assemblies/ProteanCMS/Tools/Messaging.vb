@@ -463,7 +463,7 @@ Public Class Messaging
                         End If
 
                     End If
-                    End If
+                End If
             End If
 
             ' All throught the process check if the e-mail address is actually valid.

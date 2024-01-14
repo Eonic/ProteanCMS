@@ -12419,7 +12419,7 @@
 
   <!-- Library Image Brief -->
   <xsl:template match="Content[@type='LibraryImageWithLink']" mode="displayBriefSliderGalleryBackground">
-    <div class="item" style="background-image:url({Images/img[@class='detail']/@src})">
+    <div class="item" style="background-image:url('{Images/img[@class='detail']/@src}')">
       <xsl:if test="position()=1">
         <xsl:attribute name="class">item active</xsl:attribute>
       </xsl:if>
@@ -15833,7 +15833,7 @@
   </xsl:template>
   <!-- Library Image Brief -->
   <xsl:template match="Content[@type='LibraryImageWithLink' or @type='BackgroundCarouselSlide']" mode="displayBriefSliderGalleryBackground">
-    <div class="item" style="background-image:url({Images/img[@class='detail']/@src})">
+    <div class="item" style="background-image:url('{Images/img[@class='detail']/@src}')">
       <xsl:if test="position()=1">
         <xsl:attribute name="class">item active</xsl:attribute>
       </xsl:if>

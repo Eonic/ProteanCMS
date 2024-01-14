@@ -2614,10 +2614,10 @@
   <xsl:template name="term3058">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">
-        <xsl:text>Add to basket</xsl:text>
+        <xsl:text>Buy Now</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Add to basket</xsl:text>
+        <xsl:text>Buy Now</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -3013,6 +3013,17 @@
     </xsl:choose>
   </xsl:template>
 
+
+	<xsl:template name="term3094">
+		<xsl:choose>
+			<xsl:when test="$lang='en-pr'">
+				<xsl:text>Subscribe Now</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>Subscribe Now</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 
   <!-- ################################################################################################ -->
   <!-- ProteanCMS Membership Template phrases -->
@@ -3685,6 +3696,17 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+
+	<xsl:template name="term4053">
+		<xsl:choose>
+			<xsl:when test="$lang='en-pr'">
+				<xsl:text>Please Enter</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>Please Enter</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 
   <xsl:template name="term4060">
     <xsl:choose>

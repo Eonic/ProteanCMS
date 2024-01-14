@@ -507,7 +507,7 @@
               <!-- Hard code 1 qty -->
               <!--input class="qtybox" type="text" name="price_{@id}" id="price_{@id}" value="1"/-->
               <input type="hidden" name="qty_{@id}" id="qty_{@id}" value="1"/>
-              <xsl:apply-templates select="/" mode="addtoCartButtons"/>
+              <xsl:apply-templates select="." mode="addtoCartButtons"/>
             </xsl:if>
           </form>
         </xsl:when>
@@ -524,6 +524,16 @@
 
   </xsl:template>
 
+	<xsl:template match="Content[@type='Subscription']" mode="addtoCartButtons">		
+		<button type="submit" name="cartAdd" class="btn btn-custom">
+			<xsl:attribute name="value">
+				<!--Add to Cart-->
+				<xsl:call-template name="term3094" />
+			</xsl:attribute>
+			<xsl:call-template name="term3094" />
+		</button>
+	</xsl:template>
+	
   <!-- Subscriptions Module -->
   <xsl:template match="Content[@type='Module' and @moduleType='ManageUserSubscriptions']" mode="displayBrief">
     <xsl:variable name="contentType" select="@contentType" />

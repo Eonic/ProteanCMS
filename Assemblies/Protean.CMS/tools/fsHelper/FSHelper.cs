@@ -1332,14 +1332,22 @@ namespace Protean
                 string scleanFileName = cfileName;
                 string isExists = "true";
                 string NewFileName = CleanFileExists(cfileName, context);
-                if ((NewFileName ?? "") == (cfileName ?? ""))
+                if (!string.IsNullOrEmpty(NewFileName))
                 {
-                    isExists = "false";
+                    if ((NewFileName ?? "") == (cfileName ?? ""))
+                    {
+                        isExists = "false";
+                    }
+                    else
+                    {
+                        cfileName = NewFileName;
+                    }
                 }
                 else
                 {
-                    cfileName = NewFileName;
+                    isExists = "false";
                 }
+
                 if (Conversions.ToBoolean(isExists) && string.IsNullOrEmpty(isOverwrite))
                 {
                     context.Session["ExistsFileName"] = cfileName + "," + scleanFileName + "," + isExists;

@@ -3585,6 +3585,9 @@ namespace Protean
 
                             // Add ProductCategories
                             string sProductTypes = "Product,SKU";
+                            if (myWeb.Features.ContainsKey("Subscriptions")) {
+                                sProductTypes = sProductTypes + ",Subscription";
+                            }
                             if (!string.IsNullOrEmpty(this.myWeb.moConfig["ProductTypes"]))
                             {
                                 sProductTypes = this.myWeb.moConfig["ProductTypes"];

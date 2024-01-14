@@ -41,7 +41,7 @@ Namespace Providers
                     Dim sProductCount As String = String.Empty
                     Dim cnt As Integer = 0
                     Dim cProductCountList As String = String.Empty
-                    Dim nPageId As Integer = aWeb.mnPageId
+                    Dim nPageId As String = String.Empty
                     Dim nMaxPRiceProduct As Integer = 0
                     Dim nMinPriceProduct As Integer = 0
                     Dim oFilterElmt As XmlElement = Nothing
@@ -63,6 +63,15 @@ Namespace Providers
                         sCotrolDisplayName = Convert.ToString(FilterConfig.Attributes("name").Value)
                     End If
 
+                    If (oXform.Instance.SelectSingleNode("PageFilter") IsNot Nothing) Then
+                        If (oXform.Instance.SelectSingleNode("PageFilter").InnerText <> "") Then
+                            nPageId = oXform.Instance.SelectSingleNode("PageFilter").InnerText.ToString()
+                        Else
+                            nPageId = aWeb.mnPageId
+                        End If
+                    Else
+                        nPageId = aWeb.mnPageId
+                    End If
                     arrParams.Add("MinPrice", FilterConfig.GetAttribute("fromPrice"))
                     arrParams.Add("MaxPrice", FilterConfig.GetAttribute("toPrice"))
                     arrParams.Add("Step", FilterConfig.GetAttribute("step"))

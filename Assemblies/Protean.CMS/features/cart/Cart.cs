@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -3553,7 +3554,7 @@ namespace Protean
                             // Get Shipping Group from query if assigned to that product and add new node in order and use this node for displaying messages for x50 and t03 category.
                             if (myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure))
                             {
-                                string sSqlShippingGroup = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("select csm.nShipOptKey,CPC.cCatName  from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey left join tblAudit A ON p.nAuditId= A.nAuditKey left join tblCartCatProductRelations cpr on p.nContentKey = cpr.nContentId left join tblCartProductCategories CPC ON cpr.nCatId= cpc.nCatKey Left JOIN tblCartShippingProductCategoryRelations cspcr ON cpr.nCatId= cspcr.nCatId LEFT join tblCartShippingMethods csm on csm.nShipOptKey=cspcr.nShipOptId where nCartOrderId=" + nCartIdUse + " and nCartItemKey=", oRow["id"]), " and cCatSchemaName = 'Shipping' and nItemId <>0 and cspcr.nRuleType=1 order by nShipOptCost asc"));
+                                string sSqlShippingGroup = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("select csm.nShipOptKey,CPC.cCatName  from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey left join tblAudit A ON p.nAuditId= A.nAuditKey left join tblCartCatProductRelations cpr on p.nContentKey = cpr.nContentId left join tblCartProductCategories CPC ON cpr.nCatId= cpc.nCatKey Left JOIN tblCartShippingProductCategoryRelations cspcr ON cpr.nCatId= cspcr.nCatId LEFT join tblCartShippingMethods csm on csm.nShipOptKey=cspcr.nShipOptId where nCartOrderId=" + nCartIdUse + " and nCartItemKey=", oRow["id"]), " and cCatSchemaName = 'Shipping' and csm.nShipOptKey is not null and nItemId <>0 and cspcr.nRuleType=1 order by nShipOptCost asc"));
                                 // oDsShippingOptionKey = moDBHelper.getDataSetForUpdate(sSqlShippingGroup, "Item", "Cart")
                                 // If oDsShippingOptionKey.Tables(0).Rows.Count > 0 Then
                                 // ShippingOptionKey = Convert.ToInt64(oDsShippingOptionKey.Tables(0).Rows(0).ItemArray(0))
@@ -3562,7 +3563,7 @@ namespace Protean
                                 // updateGCgetValidShippingOptionsDS(ShippingOptionKey)
                                 // End If
 
-                                using (var oDr = myWeb.moDbHelper.getDataReaderDisposable(sSqlShippingGroup))
+                                using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sSqlShippingGroup))
                                 {
                                     if (oDr != null)
                                     {
@@ -3766,6 +3767,11 @@ namespace Protean
                         XmlElement oPromoElmt = (XmlElement)oNotes.SelectSingleNode("//Notes/PromotionalCode");
                         if (oPromoElmt != null)
                             cPromoCode = oPromoElmt.InnerText;
+
+                        if (moSubscription.CheckCartForSubscriptions(mnCartId, myWeb.mnUserId))
+                        {
+                            mbNoDeliveryAddress = true;
+                        }
 
                         if (mbNoDeliveryAddress)
                             oCartElmt.SetAttribute("hideDeliveryAddress", "True");
@@ -5214,7 +5220,7 @@ namespace Protean
                                 {
                                     billingAddId = Conversions.ToLong(odr["nContactKey"]);
                                 }
-                                if (Strings.LCase(moCartConfig["NoDeliveryAddress"]) == "on")
+                                if (mbNoDeliveryAddress)
                                 {
                                     deliveryAddId = billingAddId;
                                 }
@@ -5407,7 +5413,7 @@ namespace Protean
                         {
                             cThisAddressType = oElmt.ParentNode.SelectSingleNode("input[@bind='cContactType' or @bind='cDelContactType']/value").InnerText;
                         }
-                        if (Strings.LCase(moCartConfig["NoDeliveryAddress"]) == "on")
+                        if (mbNoDeliveryAddress)
                         {
                             cThisAddressType = "Delivery Address";
                         }
@@ -5999,7 +6005,7 @@ namespace Protean
                             else
                             {
 
-                                if (Strings.LCase(moCartConfig["NoDeliveryAddress"]) == "on")
+                                if (mbNoDeliveryAddress)
                                 {
                                     oXform.addSubmit(ref oAddressGrp, "addNewAddress", "Add New Address", submitPrefix + "addNewAddress", "btn-default addnew", "fa-plus");
                                 }
@@ -6008,14 +6014,14 @@ namespace Protean
                                     oXform.addSubmit(ref oAddressGrp, "addNewAddress", "Add New Billing Address", submitPrefix + "addNewAddress", "btn-default addnew", "fa-plus");
                                 }
 
-                                if (!(Strings.LCase(moCartConfig["NoDeliveryAddress"]) == "on"))
+                                if (mbNoDeliveryAddress == false)
                                 {
                                     oXform.addSubmit(ref oGrpElmt, Conversions.ToString(oDr["nContactKey"]), "New Delivery Address", Conversions.ToString(Operators.ConcatenateObject(submitPrefix + "addDelivery", oDr["nContactKey"])), "setAsBilling btn-success principle", "fa-plus");
                                 }
 
                             }
 
-                            if (Strings.LCase(moCartConfig["NoDeliveryAddress"]) == "on")
+                            if (mbNoDeliveryAddress)
                             {
                                 oXform.addSubmit(ref oAddressGrp, Conversions.ToString(oDr["nContactKey"]), "Use This Address", Conversions.ToString(Operators.ConcatenateObject(submitPrefix + "contact", oDr["nContactKey"])), "deliver-here principle", "fas fa-truck");
                             }
@@ -12123,7 +12129,7 @@ namespace Protean
                             {
                                 billingAddId = Conversions.ToInteger(oDr["nContactKey"]);
                             }
-                            if (Strings.LCase(moCartConfig["NoDeliveryAddress"]) == "on")
+                            if (mbNoDeliveryAddress)
                             {
                                 deliveryAddId = billingAddId;
                             }

@@ -9,8 +9,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Eonic Digital LLP.")]
-[assembly: AssemblyProduct("Protean.CMS")]
-[assembly: AssemblyCopyright("Copyright © Eonic Digital LLP.  2024")]
+[assembly: AssemblyProduct("ProteanCMS")]
+[assembly: AssemblyCopyright("Copyright © Eonic Digital LLP.  2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -33,8 +33,8 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion("6.1.0.30")]
-[assembly: AssemblyFileVersion("6.1.0.30")]
+[assembly: AssemblyVersion("6.0.69.67")]
+[assembly: AssemblyFileVersion("6.0.69.67")]
 
 
 [assembly: AssemblyInformationalVersion("0.0.0.112")]

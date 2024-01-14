@@ -2336,7 +2336,7 @@ namespace Protean
                                 sAdminLayout = "RefundOrder";
                                 string providerName = "";
                                 string providerPaymentReference = "";
-                                string IsRefund = "";
+                                //string IsRefund = "";
                                 long nStatus;
                                 var oCart = new Cms.Cart(ref myWeb);
                                 oCart.moPageXml = moPageXML;
@@ -3163,6 +3163,10 @@ namespace Protean
                                 else
                                 {
                                     string sProductTypes = "Product,SKU,Ticket";
+                                    if (myWeb.Features.ContainsKey("Subscriptions"))
+                                    {
+                                        sProductTypes = sProductTypes + ",Subscription";
+                                    }
                                     if (!string.IsNullOrEmpty(moConfig["ProductTypes"]))
                                     {
                                         sProductTypes = moConfig["ProductTypes"];
