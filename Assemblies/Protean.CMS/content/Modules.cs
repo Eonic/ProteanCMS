@@ -496,7 +496,7 @@ where cl.nStructId = " + myWeb.mnPageId));
                                     System.Configuration.ProviderSettings ourProvider = moPrvConfig.Providers[providerName];
                                     Assembly assemblyInstance;
 
-                                    if (ourProvider.Parameters["path"] != "")
+                                    if (ourProvider.Parameters["path"] != "" && ourProvider.Parameters["path"] != null)
                                     {
                                         assemblyInstance = Assembly.LoadFrom(myWeb.goServer.MapPath(Conversions.ToString(ourProvider.Parameters["path"])));
                                     }
@@ -573,7 +573,7 @@ where cl.nStructId = " + myWeb.mnPageId));
                                             System.Configuration.ProviderSettings ourProvider = moPrvConfig.Providers[providerName];
                                             Assembly assemblyInstance;
 
-                                            if (ourProvider.Parameters["path"] != "")
+                                            if (ourProvider.Parameters["path"] != "" && ourProvider.Parameters["path"] != null)
                                             {
                                                 assemblyInstance = Assembly.LoadFrom(myWeb.goServer.MapPath(Conversions.ToString(ourProvider.Parameters["path"])));
                                             }
@@ -699,7 +699,7 @@ where cl.nStructId = " + myWeb.mnPageId));
                                         System.Configuration.ProviderSettings ourProvider = moPrvConfig.Providers[providerName];
                                         Assembly assemblyInstance;
 
-                                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(ourProvider.Parameters["path"], "", false)))
+                                        if (ourProvider.Parameters["path"] != "" && ourProvider.Parameters["path"] != null)
                                         {
                                             assemblyInstance = Assembly.LoadFrom(myWeb.goServer.MapPath(Conversions.ToString(ourProvider.Parameters["path"])));
                                         }

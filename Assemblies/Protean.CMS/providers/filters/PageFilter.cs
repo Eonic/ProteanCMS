@@ -12,7 +12,7 @@ namespace Protean.Providers
     namespace Filters
     {
 
-        public class PageFilter : IFilterProvider
+        public class PageFilter : DefaultProvider, IFilterProvider
         {
 
             public event OnErrorEventHandler OnError;
