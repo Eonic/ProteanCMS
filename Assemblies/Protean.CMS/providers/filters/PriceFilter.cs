@@ -15,7 +15,7 @@ namespace Protean.Providers
     namespace Filters
     {
 
-        public class PriceFilter : IFilterProvider
+        public class PriceFilter : DefaultProvider, IFilterProvider
         {
 
             public event OnErrorEventHandler OnError;

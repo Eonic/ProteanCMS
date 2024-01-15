@@ -8,6 +8,7 @@
 // $Copyright:   Copyright (c) 2002 - 2010 Eonic Ltd.
 // ***********************************************************************
 
+using Protean.Providers.Membership;
 using System;
 using System.Reflection;
 using System.Web.Configuration;
@@ -19,16 +20,29 @@ namespace Protean.Providers
 {
     namespace Filter
     {
-        public interface IFilterProvider {
+        public interface IFilterProvider
+        {
+            IFilterAdminXforms AdminXforms { get; set; }
+            IFilterAdminProcess AdminProcess { get; set; }
+            IFilterActivities Activities { get; set; }           
+
+        }
+        public interface IFilterAdminXforms
+        {
             void AddControl(ref Cms aWeb, ref XmlElement FilterConfig, ref Protean.xForm oXform, ref XmlElement oFromGroup, ref XmlElement oContentNode, string cWhereSql);
             string ApplyFilter(ref Cms aWeb, ref string cWhereSql, ref Protean.xForm oXform, ref XmlElement oFromGroup, ref XmlElement FilterConfig, ref string cFilterTarget);
             string GetFilterSQL(ref Cms aWeb);
-
+        }
+        public interface IFilterAdminProcess
+        {
+        }
+        public interface IFilterActivities
+        { 
         }
 
         public class ReturnProvider
         {
-            private const string mcModuleName = "Protean.Providers.Filter.BaseProvider";
+            private const string mcModuleName = "Protean.Providers.Filter.ReturnProvider";
             protected XmlNode moFilterCfg;
 
             public IFilterProvider Get(ref Cms myWeb, string ProviderName)
@@ -82,7 +96,7 @@ namespace Protean.Providers
                     return (IFilterProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args);
                 }
                 catch (Exception ex)
-                {                   
+                {
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "New", ex, "", ProviderName + " Could Not be Loaded", gbDebug);
                     return null;
                 }
@@ -91,21 +105,61 @@ namespace Protean.Providers
 
         public class DefaultProvider : IFilterProvider
         {
+            private IFilterAdminXforms _AdminXforms;
+            private IFilterAdminProcess _AdminProcess;
+            private IFilterActivities _Activities;
+            IFilterAdminXforms IFilterProvider.AdminXforms
+            {
+                set
+                {
+                    _AdminXforms = value;
+                }
+                get
+                {
+                    return _AdminXforms;
+                }
+            }
+            IFilterAdminProcess IFilterProvider.AdminProcess
+            {
+                set
+                {
+                    _AdminProcess = value;
+                }
+                get
+                {
+                    return _AdminProcess;
+                }
+            }
+            IFilterActivities IFilterProvider.Activities
+            {
+                set
+                {
+                    _Activities = value;
+                }
+                get
+                {
+                    return _Activities;
+                }
+            }
 
             public DefaultProvider()
             {
                 // do nothing
             }
 
-           // IFilterProvider myFilters;
+            // IFilterProvider myFilters;
 
-            public void Initiate(ref Cms myWeb)
+            public IFilterProvider Initiate(ref Cms myWeb)
             {
-               // myFilters = new Filters();
-
+                // myFilters = new Filters();
+                _AdminXforms = new AdminXForms(ref myWeb);
+                _AdminProcess = new AdminProcess(ref myWeb);
+                // MemProvider.AdminProcess.oAdXfm = MemProvider.AdminXforms
+               // _Activities = new Activities();
+                return this;
             }
 
-            public class AdminXForms : Cms.Admin.AdminXforms
+            public class AdminXForms : Cms.Admin.AdminXforms, IFilterAdminXforms
             {
                 private const string mcModuleName = "Providers.Providers.Eonic.AdminXForms";
 
@@ -113,9 +167,24 @@ namespace Protean.Providers
                 {
                 }
 
+                public void AddControl(ref Cms aWeb, ref XmlElement FilterConfig, ref xForm oXform, ref XmlElement oFromGroup, ref XmlElement oContentNode, string cWhereSql)
+                {
+                    throw new NotImplementedException();
+                }
+
+                public string ApplyFilter(ref Cms aWeb, ref string cWhereSql, ref xForm oXform, ref XmlElement oFromGroup, ref XmlElement FilterConfig, ref string cFilterTarget)
+                {
+                    throw new NotImplementedException();
+                }
+
+                public string GetFilterSQL(ref Cms aWeb)
+                {
+                    throw new NotImplementedException();
+                }
+
             }
 
-            public class AdminProcess : Cms.Admin
+            public class AdminProcess : Cms.Admin, IFilterAdminProcess
             {
 
                 private AdminXForms _oAdXfm;
@@ -136,28 +205,9 @@ namespace Protean.Providers
                 {
                 }
             }
-
-
             public void DoContentIndex()
             {
-
-
-            }
-
-            public void AddControl(ref Cms aWeb, ref XmlElement FilterConfig, ref xForm oXform, ref XmlElement oFromGroup, ref XmlElement oContentNode, string cWhereSql)
-            {
-                throw new NotImplementedException();
-            }
-
-            public string ApplyFilter(ref Cms aWeb, ref string cWhereSql, ref xForm oXform, ref XmlElement oFromGroup, ref XmlElement FilterConfig, ref string cFilterTarget)
-            {
-                throw new NotImplementedException();
-            }
-
-            public string GetFilterSQL(ref Cms aWeb)
-            {
-                throw new NotImplementedException();
-            }
+            }                    
 
             public class Filters
             {
