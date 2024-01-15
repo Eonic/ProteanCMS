@@ -455,7 +455,7 @@
 		</xsl:variable>
 		<xsl:if test="/Page/Contents/Content[@type='xform' and (@name='Delivery Address' or @name='Billing Address') ]">
 			<!-- Don't display delivery address if hideDeliveryADress attribute is present -->
-			<div id="edit-addresses" class="row">
+			<div id="edit-addresses">
 				<xsl:choose>
 					<xsl:when test="/Page/Contents/Content[@type='xform' and @name='Billing Address']">
 						<div>
@@ -2118,7 +2118,7 @@
 			<xsl:if test="label">
 				<xsl:apply-templates select="label[position()=1]" mode="legend"/>
 			</xsl:if>
-			<div class="row">
+		
 				<xsl:choose>
 					<xsl:when test="group[div/tblCartContact/cContactType/node()='Delivery Address']">
 						<div class="card">
@@ -2150,7 +2150,7 @@
 						</div>
 					</xsl:otherwise>
 				</xsl:choose>
-			</div>
+		
 		</fieldset>
 	</xsl:template>
 

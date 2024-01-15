@@ -1786,8 +1786,10 @@ namespace Protean
                                     var oOptionXform = optionsXform(ref oElmt);
                                     if (oOptionXform.valid)
                                     {
-                                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.moSession["paymentRecieved"], mnCartId, false)))
+                                        if (myWeb.moSession["paymentRecieved"] != null)
                                         {
+                                            string sPaymentId = myWeb.moSession["paymentRecieved"].ToString();
+                                            mnPaymentId = Int32.Parse(sPaymentId);
                                             myWeb.moSession["paymentRecieved"] = null;
                                             mnProcessId = (short)cartProcess.Complete;
                                             mcCartCmd = "ShowInvoice";
