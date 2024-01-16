@@ -3770,9 +3770,12 @@ namespace Protean
                         if (oPromoElmt != null)
                             cPromoCode = oPromoElmt.InnerText;
 
-                        if (moSubscription.CheckCartForSubscriptions(mnCartId, myWeb.mnUserId))
+                        if (moSubscription != null)
                         {
-                            mbNoDeliveryAddress = true;
+                            if (moSubscription.CheckCartForSubscriptions(mnCartId, myWeb.mnUserId))
+                            {
+                                mbNoDeliveryAddress = true;
+                            }
                         }
 
                         if (mbNoDeliveryAddress)
