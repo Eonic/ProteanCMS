@@ -522,7 +522,7 @@
 
 	<xsl:template match="Order" mode="orderTotals">
 		<div class="product-totals">
-			<span class="amount-label">Products: </span>
+			<span class="amount-label">Item Total: </span>
 			<span class="amount">
 				<xsl:apply-templates select="/Page" mode="formatPrice">
 					<xsl:with-param name="price" select="@total - @shippingCost"/>
@@ -530,7 +530,7 @@
 				</xsl:apply-templates>
 			</span>
 		</div>
-		<xsl:if test="@shippingType &gt; 0">
+		<xsl:if test="@shippingType &gt; 0 and @shippingDesc!='No Delivery Required-'">
 			<div class="shipping">
 				<strong>
 					<xsl:choose>
@@ -651,7 +651,7 @@
 					</div>
 				</div>
 			</xsl:if>
-			<xsl:if test="@payableAmount &gt; 0">
+			<xsl:if test="@payableAmount &lt; @total">
 
 				<div class="total">
 					<xsl:choose>
@@ -992,8 +992,7 @@
 									<xsl:with-param name="cartThumbWidth" select="'50'"/>
 									<xsl:with-param name="cartThumbHeight" select="'50'"/>
 								</xsl:apply-templates>
-							
-							<hr/>
+
 							<xsl:apply-templates select="." mode="orderTotals"/>
 							<hr/>
 							<xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='optionsForm']" mode="xform"/>
@@ -2429,7 +2428,7 @@
 						</xsl:apply-templates>
 					</div>
 				</xsl:for-each>
-				<xsl:if test="@shippingType &gt; 0">
+				<xsl:if test="@shippingType &gt; 0 and @shippingDesc!='No Delivery Required-'">
 					<div class="shipping">
 						<strong>
 							<xsl:choose>
