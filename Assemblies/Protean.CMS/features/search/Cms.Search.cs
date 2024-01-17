@@ -569,7 +569,7 @@ namespace Protean
                         _overrideQueryBuilder = myWeb.moRequest["overrideQueryBuilder"] == "true";
                         _includePrefixNameSearch = myWeb.moRequest["prefixNameSearch"] == "true";
 
-                        bool _SearchExact = myWeb.moRequest["SearchExact"] == "on";
+                        bool _SearchExact = myWeb.moConfig["SearchExact"] == "on";
 
                         resultsXML.SetAttribute("fuzzy", Conversions.ToString(Interaction.IIf(_includeFuzzySearch, "on", "off")));
                         resultsXML.SetAttribute("prefixNameSearch", Conversions.ToString(Interaction.IIf(_includePrefixNameSearch, "true", "false")));
@@ -984,6 +984,11 @@ namespace Protean
                         var searchFilters = BuildFiltersFromRequest(ref argXmlDoc, ref myAPI.moRequest);
                         if (searchFilters != null)
                             resultsXML.AppendChild(searchFilters);
+                        bool _SearchExact = myWeb.moRequest["SearchExact"] == "on";
+                        if (_SearchExact)
+                        {
+                            cQuery = "\"" + cQuery + "\"";
+                        }
 
                         // Generate the search query
                         var searchQuery = BuildLuceneQuery(cQuery, searchFilters, bShowHiddenForUser);
