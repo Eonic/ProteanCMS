@@ -145,13 +145,21 @@
 					<xsl:when test="(@imgDetail and @imgDetail!='') or @lightbox='true'">
 						<xsl:choose>
 							<xsl:when test="@imgDetail and @imgDetail!=''">
-								<a href="{@imgDetail}" title="{@title}" class="responsive-lightbox">
+								<!--<a href="{@imgDetail}" title="{@title}" class="responsive-lightbox">-->
+								<a data-src="{@imgDetail}" data-fancybox="" class="lightbox-link">
 									<xsl:apply-templates select="node()" mode="cleanXhtml"/>
+									<div class="imageEnlarge">
+										<xsl:apply-templates select="self::Content" mode="imageEnlarge"/>
+									</div>
 								</a>
 							</xsl:when>
 							<xsl:otherwise>
-								<a href="{node()/@src}" title="{@title}" class="responsive-lightbox">
+								<!--<a href="{node()/@src}" title="{@title}" class="responsive-lightbox">-->
+								<a data-src="{node()/@src}" data-fancybox="" class="lightbox-link">
 									<xsl:apply-templates select="node()" mode="cleanXhtml"/>
+									<div class="imageEnlarge">
+										<xsl:apply-templates select="self::Content" mode="imageEnlarge"/>
+									</div>
 								</a>
 							</xsl:otherwise>
 						</xsl:choose>
