@@ -54,7 +54,7 @@ namespace Protean
                         XmlNodeList existingRedirectsForOldUrlAsKey;
                         XmlNodeList existingRedirectsForOldUrlAsValue;
                         XmlNodeList existingRedirectsForNewUrlAsKey;
-                        XmlNodeList existingRedirectsForNewUrlAsValue;
+                       // XmlNodeList existingRedirectsForNewUrlAsValue;
                         if (string.IsNullOrEmpty(hiddenOldUrl))
                         {
                             existingRedirectsForOldUrlAsKey = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" + redirectType + "']/add[@key='" + OldUrl + "']");

@@ -71,7 +71,7 @@ namespace Protean
         public bool mbAdminMode = false;
 
         private bool mbSystemPage = false;
-        private Cms.dbHelper.PermissionLevel mnUserPagePermission = Cms.dbHelper.PermissionLevel.Open;
+       // private Cms.dbHelper.PermissionLevel mnUserPagePermission = Cms.dbHelper.PermissionLevel.Open;
 
         public bool mbOutputXml = false;
 
