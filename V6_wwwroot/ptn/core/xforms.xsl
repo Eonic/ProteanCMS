@@ -2571,6 +2571,7 @@
 					</xsl:if>
 				</xsl:if>
 			</input>
+		
 			<label for="{$ref}_{$value}">
 				<xsl:attribute name="class">
 					<xsl:text>form-check-label</xsl:text>

@@ -158,6 +158,16 @@ namespace Protean
             string cPageExtract = string.Empty;
             string cPageXsl = "/xsl/search/cleanPage.xsl";
             string cExtractXsl = "/xsl/search/extract.xsl";
+            string cAlertXsl = "/ewcommon/xsl/Email/IndexerAlert.xsl";
+            string cCommonPath = "/ewcommon";
+
+            if (myWeb.bs5) {
+                cPageXsl = "/features/search/clean-page.xsl";
+                cExtractXsl = "/features/search/extract.xsl";
+                cAlertXsl = "/ptn/features/search/indexer-alert-email.xsl";
+                cCommonPath = "/ptn";
+            } 
+
             var oPageXml = new XmlDocument();
 
             string cRules = string.Empty;
@@ -265,11 +275,11 @@ namespace Protean
                     // Check for local xsl or go to common
                     if (!File.Exists(goServer.MapPath(cPageXsl)))
                     {
-                        cPageXsl = "/ewcommon" + cPageXsl;
+                        cPageXsl = cCommonPath + cPageXsl;
                     }
                     if (!File.Exists(goServer.MapPath(cExtractXsl)))
                     {
-                        cExtractXsl = "/ewcommon" + cExtractXsl;
+                        cExtractXsl = cCommonPath + cExtractXsl;
                     }
 
 
@@ -388,7 +398,7 @@ namespace Protean
                     }
 
                     Protean.Cms.dbHelper argodbHelper = null;
-                    msg.emailer(oInfoElmt, "/ewcommon/xsl/Email/IndexerAlert.xsl", "ProteanCMS Indexer", serverSenderEmail, recipientEmail, myWeb.moRequest.ServerVariables["SERVER_NAME"] + " Indexer Report", odbHelper: ref argodbHelper);
+                    msg.emailer(oInfoElmt, cAlertXsl, "ProteanCMS Indexer", serverSenderEmail, recipientEmail, myWeb.moRequest.ServerVariables["SERVER_NAME"] + " Indexer Report", odbHelper: ref argodbHelper);
                     msg = (Protean.Messaging)null;
 
                     return "Index Complete";

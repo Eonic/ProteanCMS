@@ -475,7 +475,8 @@
 						</div>
 					</xsl:when>
 				</xsl:choose>
-				<xsl:if test="@hideDeliveryAddress!='True'">
+				<xsl:variable name="hideDeliveryAddress"></xsl:variable>
+				<xsl:if test="$hideDeliveryAddress=''">
 					<xsl:choose>
 						<xsl:when test="/Page/Contents/Content[@type='xform' and @name='Delivery Address']">
 							<div>
@@ -2126,7 +2127,7 @@
 							<xsl:apply-templates select="group[div/tblCartContact/cContactType/node()='Billing Address']" mode="xform"/>
 							</div>
 						</div>
-						<xsl:if test="$page/Cart/Order/@hideDeliveryAddress != 'True'">
+						<xsl:if test="not($page/Cart/Order/@hideDeliveryAddress='True')">
 							<div class="card">
 							<div class="card-body">
 							<h3>Delivery Addresses</h3>

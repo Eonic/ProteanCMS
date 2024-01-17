@@ -5502,7 +5502,7 @@ namespace Protean
                         oXform.Instance.InnerXml = moDBHelper.getObjectInstance(Cms.dbHelper.objectTypes.CartContact, ContactId);
                         if (ContactId > 0L)
                         {
-                            bDontPopulate = true;
+                            bDontPopulate = false;
                         }
                     }
 

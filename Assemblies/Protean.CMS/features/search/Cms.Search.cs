@@ -154,7 +154,7 @@ namespace Protean
                     // General settings
                     _logSearches = moConfig["SearchLogging"] == "on";
                     _includeFuzzySearch = moConfig["SearchFuzzy"] == "on";
-                    _runPreFuzzySearch = moConfig["SearchGetFuzzyCount"] == "on";
+                    _runPreFuzzySearch = moConfig["SearchGetFuzzyCount"] == "on";               
 
                     string pageDefaultSize = moConfig["SearchDefaultPageSize"] + "";
                     _pagingDefaultSize = ConvertStringToIntegerWithFallback(pageDefaultSize, _pagingDefaultSize);
@@ -569,6 +569,8 @@ namespace Protean
                         _overrideQueryBuilder = myWeb.moRequest["overrideQueryBuilder"] == "true";
                         _includePrefixNameSearch = myWeb.moRequest["prefixNameSearch"] == "true";
 
+                        bool _SearchExact = myWeb.moRequest["SearchExact"] == "on";
+
                         resultsXML.SetAttribute("fuzzy", Conversions.ToString(Interaction.IIf(_includeFuzzySearch, "on", "off")));
                         resultsXML.SetAttribute("prefixNameSearch", Conversions.ToString(Interaction.IIf(_includePrefixNameSearch, "true", "false")));
 
@@ -580,6 +582,10 @@ namespace Protean
                         var searchFilters = BuildFiltersFromRequest(ref argXmlDoc, ref myWeb.moRequest);
                         if (searchFilters != null)
                             resultsXML.AppendChild(searchFilters);
+
+                        if (_SearchExact) {
+                            cQuery = "\"" +  cQuery + "\"";
+                        }
 
                         // Generate the search query
                         var searchQuery = BuildLuceneQuery(cQuery, searchFilters, bShowHiddenForUser);
