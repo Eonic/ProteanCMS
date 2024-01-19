@@ -974,6 +974,12 @@ dd {
         padding-bottom: 0;
         border-bottom: 0;
     }
+
+    .modal-body .btn-close {
+        position: absolute;
+        top: 7px;
+        right: 7px;
+    }
 }
 
 .MembershipUserContacts .add {

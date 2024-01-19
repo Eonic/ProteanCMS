@@ -32,6 +32,10 @@
 }
 //General Header Settings
 header {
+    &.header-one-line {
+        border-bottom: 0;
+    }
+
     &.navbar {
         padding: 0;
     }
