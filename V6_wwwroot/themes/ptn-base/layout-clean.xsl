@@ -60,6 +60,13 @@
 						<xsl:with-param name="containerClass" select="$container"/>
 					</xsl:apply-templates>
 				</xsl:when>
+				<xsl:when test="$header-layout='header-one-line'">
+					<xsl:apply-templates select="." mode="header-one-line">
+						<xsl:with-param name="nav-collapse">false</xsl:with-param>
+						<xsl:with-param name="social-links">false</xsl:with-param>
+						<xsl:with-param name="containerClass" select="$container"/>
+					</xsl:apply-templates>
+				</xsl:when>
 				<xsl:otherwise>
 					<xsl:apply-templates select="." mode="header-menu-below">
 						<xsl:with-param name="nav-collapse">false</xsl:with-param>
