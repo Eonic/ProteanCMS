@@ -39,6 +39,22 @@
     }
 }
 
+.btn-clean {
+    padding: 0;
+    background: none;
+    border: 0;
+    box-shadow: none;
+    color: $link-color;
+
+    &:hover,
+    &:focus {
+        padding: 0;
+        background: none;
+        border: 0;
+        box-shadow: none;
+        color: $link-color;
+    }
+}
 @mixin btn-clean($color: $link-color, $hover: $link-hover-color) {
     background: none;
     border: none;

@@ -36,8 +36,9 @@ $header-menu: "header-menu-right";
 //$btn-border-width: $input-btn-border-width !default;
 
 //nav
-//$navbar-light-color: $body-color;
-
+$navbar-light-color: $body-color;
+$nav-link-hover-color: $secondary;
+$navbar-light-hover-color: $nav-link-hover-color;
 //grid
 $spacer: 1.5rem;
 $grid-gutter-width:1.5rem;
