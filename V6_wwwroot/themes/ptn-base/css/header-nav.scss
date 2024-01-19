@@ -32,6 +32,10 @@
 }
 //General Header Settings
 header {
+    &.header-one-line {
+        border-bottom: 0;
+    }
+
     &.navbar {
         padding: 0;
     }
@@ -221,8 +225,56 @@ header {
     }
 }
 
+@mixin search-simple {
+    position: relative;
+
+    .input-group {
+        display: block;
+
+        input {
+            border-radius: 100px !important;
+            overflow: hidden;
+            border: #808080 2px solid;
+            padding-left: 0.8rem;
+            padding-right: 2rem;
+            width: 100%;
+        }
+
+        button {
+            border: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            z-index: 20;
+            padding: 0.5rem 0.8rem;
+
+            &:focus,
+            &:active {
+                box-shadow: none;
+            }
+        }
+
+
+        button:hover,
+        button:focus,
+        button:active,
+        button.btn-outline-primary:hover,
+        button.btn-outline-primary:focus,
+        button.btn-outline-primary:active {
+            background: transparent;
+            color: rgba($body-color,0.8);
+        }
+
+        button,
+        button.btn-outline-primary {
+            color: $body-color;
+        }
+    }
+}
+
 .search-wrapper {
     margin: 0 ($header-spacing/2);
+    @include search-simple;
 }
 
 .tabbed-module {

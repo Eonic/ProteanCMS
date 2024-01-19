@@ -3988,6 +3988,7 @@
 		<xsl:param name="mobileDD"/>
 		<xsl:param name="class"/>
 		<xsl:param name="overviewLink"/>
+		<xsl:param name="level2"/>
 		<xsl:variable name="liClass">
 			<xsl:text>nav-item </xsl:text>
 			<xsl:if test="self::MenuItem[@id=/Page/@id]">
@@ -4017,7 +4018,9 @@
 			<xsl:if test="$class!=''">
 				<xsl:value-of select="$class"/>
 			</xsl:if>
-
+			<xsl:if test="$level2='true'">
+				<xsl:text> level2</xsl:text>
+			</xsl:if>
 		</xsl:variable>
 
 		<li class="{$liClass} dropdown">
@@ -4102,6 +4105,7 @@
 				</xsl:if>
 				<xsl:apply-templates select="MenuItem[@name!='Information' and @name!='Footer' and not(DisplayName/@exclude='true')]" mode="submenuitem">
 					<xsl:with-param name="class" select="'dropdown-item'"/>
+					<xsl:with-param name="level2" select="$level2"/>
 				</xsl:apply-templates>
 			</ul>
 		</li>
@@ -4218,6 +4222,7 @@
 	<xsl:template match="MenuItem" mode="submenuitem">
 		<xsl:param name="class"/>
 		<xsl:param name="li-class"/>
+		<xsl:param name="level2"/>
 		<li>
 			<xsl:attribute name="class">
 				<xsl:value-of select="$li-class"/>
@@ -4237,7 +4242,8 @@
 			<xsl:apply-templates select="self::MenuItem" mode="menuLink">
 				<xsl:with-param name="class" select="$class"/>
 			</xsl:apply-templates>
-			<xsl:if test="count(child::MenuItem[not(DisplayName/@exclude='true')])&gt;0 and descendant-or-self::MenuItem[@id=/Page/@id]">
+			<!--<xsl:if test="count(child::MenuItem[not(DisplayName/@exclude='true')])&gt;0 and descendant-or-self::MenuItem[@id=/Page/@id]">-->
+			<xsl:if test="count(child::MenuItem[not(DisplayName/@exclude='true')])&gt;0 and $level2='true'">
 				<ul>
 					<xsl:attribute name="class">
 						<xsl:text>nav nav-pills</xsl:text>

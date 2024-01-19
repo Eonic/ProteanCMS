@@ -165,6 +165,52 @@ img {
 .matchHeight.nobox.module-FormattedText {
     @include faux-card;
 }
+//FLUID CONTAINER
+.container-fluid {
+    .nobox.module-FormattedText,
+    .accordion-body .FormattedText,
+    .module-FAQList,
+    .char80-center,
+    .module-Video {
+        max-width: 55rem;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .card.module-FormattedText {
+        max-width: 55rem + ($card-spacer-x * 2);
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .char80-left {
+        margin-left: 0 !important;
+
+        .alignleft {
+            position: static !important;
+            float: none !important;
+        }
+    }
+
+    .char80-right {
+        margin-right: 0 !important;
+
+        .alignright {
+            position: static !important;
+            float: none !important;
+        }
+    }
+
+    .char80-wide {
+        max-width: none !important;
+
+        .alignleft,
+        .alignright {
+            position: static !important;
+            float: none !important;
+        }
+    }
+}
 // BACKGROUNDS
 .section-spacing {
     padding-top: $section-padding;
@@ -871,6 +917,13 @@ dd {
     background: $footer-bg;
     padding-top: $grid-gutter-height;
     padding-bottom: $grid-gutter-height;
+    color: rgba(color-contrast($footer-bg),0.7);
+
+    h1, h2, h3, h4, h5, h6 {
+        color: rgba(color-contrast($footer-bg),0.9);
+    }
+
+
 
     .footer-nav {
         margin-left: -1rem;
@@ -920,6 +973,12 @@ dd {
     .modal-header {
         padding-bottom: 0;
         border-bottom: 0;
+    }
+
+    .modal-body .btn-close {
+        position: absolute;
+        top: 7px;
+        right: 7px;
     }
 }
 
