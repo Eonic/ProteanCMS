@@ -699,7 +699,7 @@ namespace Protean.Tools
                         }
 
                         var imgFile = new FileInfo(szFileName);
-                        if (compression == 100L)
+                        if (compression == 100)
                         {
                             CompressImage(imgFile, true);
                         }

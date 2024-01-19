@@ -136,6 +136,11 @@
     </xsl:if>
   </xsl:template>
 
+	<xsl:template match="Content" mode="getAbstractContent">
+		<xsl:apply-templates select="*" mode="getValues"/>
+	</xsl:template>
+	
+	
   <xsl:template match="PublishDate | StartDate | EndDate" mode="getValues">
     <xsl:call-template name="DD_Mon_YYYY">
       <xsl:with-param name="date" select="node()"/>

@@ -1645,7 +1645,7 @@ namespace Protean
                     {
                         short WebPQuality = 60;
 
-                        if (myWeb.moConfig["WebPQuality"] != "")
+                        if (myWeb.moConfig["WebPQuality"] != null)
                         {
                             WebPQuality = Convert.ToInt16(myWeb.moConfig["WebPQuality"]);
                         }

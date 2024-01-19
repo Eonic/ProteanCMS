@@ -1029,6 +1029,8 @@ namespace Protean.Providers
 
                         moPolicy = (XmlElement)WebConfigurationManager.GetWebApplicationSection("protean/PasswordPolicy");
 
+                        bool formFound = true;
+
                         if (string.IsNullOrEmpty(cXformName))
                             cXformName = cDirectorySchemaName;
 
@@ -1047,6 +1049,9 @@ namespace Protean.Providers
                             if (!base.load(formPath, this.myWeb.maCommonFolders))
                             {
                                 // load a default content xform if no alternative.
+                                base.NewFrm(cXformName);
+                                
+                                formFound = false;
                             }
                         }
                         else
@@ -1055,288 +1060,301 @@ namespace Protean.Providers
                             base.loadtext(FormXML);
 
                         }
-
-                        if (id > 0L)
+                        if (formFound)
                         {
-                            base.Instance.InnerXml = this.moDbHelper.getObjectInstance(Protean.Cms.dbHelper.objectTypes.Directory, id);
-                            cCurrentPassword = this.Instance.SelectSingleNode("*/cDirPassword").InnerText;
-                        }
-
-                        if (IntanceAppend != null)
-                        {
-                            if (this.goSession[$"tempInstance-{FormName}"] != null)
+                            if (id > 0L)
                             {
-                                base.Instance = (XmlElement)this.goSession[$"tempInstance-{FormName}"];
-                                base.bProcessRepeats = true;
-                                base.LoadInstance(base.Instance, true);
-                                this.goSession[$"tempInstance-{FormName}"] = base.Instance;
+                                base.Instance.InnerXml = this.moDbHelper.getObjectInstance(Protean.Cms.dbHelper.objectTypes.Directory, id);
+                                cCurrentPassword = this.Instance.SelectSingleNode("*/cDirPassword").InnerText;
+                            }
+
+                            if (IntanceAppend != null)
+                            {
+                                if (this.goSession[$"tempInstance-{FormName}"] != null)
+                                {
+                                    base.Instance = (XmlElement)this.goSession[$"tempInstance-{FormName}"];
+                                    base.bProcessRepeats = true;
+                                    base.LoadInstance(base.Instance, true);
+                                    this.goSession[$"tempInstance-{FormName}"] = base.Instance;
+                                }
+                                else
+                                {
+                                    // this enables an overload to add additional Xml for updating.
+                                    var importedNode = this.Instance.OwnerDocument.ImportNode(IntanceAppend, true);
+                                    base.Instance.AppendChild(importedNode);
+                                    base.bProcessRepeats = true;
+                                    base.LoadInstance(base.Instance, true);
+                                    this.goSession[$"tempInstance-{FormName}"] = base.Instance;
+                                }
+                            }
+
+                            if (base.Instance.SelectSingleNode("tblDirectory/cDirSchema") != null)
+                            {
+                                cDirectorySchemaName = base.Instance.SelectSingleNode("tblDirectory/cDirSchema").InnerText;
                             }
                             else
                             {
-                                // this enables an overload to add additional Xml for updating.
-                                var importedNode = this.Instance.OwnerDocument.ImportNode(IntanceAppend, true);
-                                base.Instance.AppendChild(importedNode);
-                                base.bProcessRepeats = true;
-                                base.LoadInstance(base.Instance, true);
-                                this.goSession[$"tempInstance-{FormName}"] = base.Instance;
-                            }
-                        }
-
-                        cDirectorySchemaName = base.Instance.SelectSingleNode("tblDirectory/cDirSchema").InnerText;
-
-                        // lets add the groups to the instance
-                        oGrpElmt = moDbHelper.getGroupsInstance(id, parId);
-                        base.Instance.InsertAfter(oGrpElmt, base.Instance.LastChild);
-
-                        if (cDirectorySchemaName == "User")
-                        {
-
-                            if (goConfig["Subscriptions"] == "on")
-                            {
-                                var oSub = new Cart.Subscriptions(ref myWeb);
-                                XmlElement xmlXformInstance = base.Instance;
-                                oSub.AddSubscriptionToUserXML(ref xmlXformInstance, Convert.ToInt32(id));
+                                base.addNote(moXformElmt.ToString(), Protean.xForm.noteTypes.Alert, "xForm does not specify Schema Name");
                             }
 
-                            // now lets check our security, and if we are encrypted lets not show the password on edit.
-                            if (id > 0L)
-                            {
-                                // RJP 7 Nov 2012. Added LCase as a precaution against people entering string in Protean.Cms.Config lowercase, i.e. md5.
-                                if (myWeb.moConfig["MembershipEncryption"] != null)
-                                {
-                                    if ((myWeb.moConfig["MembershipEncryption"].ToLower()).StartsWith("md5") | (myWeb.moConfig["MembershipEncryption"].ToLower()).StartsWith("sha"))
-                                    {
-                                        // Remove password (and confirm password) fields
-                                        foreach (XmlElement oPwdNode in base.moXformElmt.SelectNodes("/group/descendant-or-self::*[contains(@bind,'cDirPassword')]"))
-                                            oPwdNode.ParentNode.RemoveChild(oPwdNode);
-                                    }
-                                }
-
-                            }
-
-                            // Is the membership email address secure.
-                            if (myWeb.moConfig["SecureMembershipAddress"] != "" & myWeb.mbAdminMode == false)
-                            {
-                                XmlElement oSubElmt = (XmlElement)base.moXformElmt.SelectSingleNode("descendant::submission");
-                                if (myWeb.mcPagePath is null)
-                                {
-                                    oSubElmt.SetAttribute("action", myWeb.moConfig["SecureMembershipAddress"] + myWeb.mcOriginalURL);
-                                }
-                                else
-                                {
-                                    oSubElmt.SetAttribute("action", myWeb.moConfig["SecureMembershipAddress"] + myWeb.moConfig["ProjectPath"] + "/" + myWeb.mcPagePath);
-                                }
-                            }
-                        }
-
-                        if (base.isSubmitted())
-                        {
-                            base.updateInstanceFromRequest();
-                            base.validate();
-                            // any additonal validation goes here
-                            switch (cDirectorySchemaName ?? "")
-                            {
-                                case "User":
-                                case "UserMyAccount":
-                                    {
-                                        if (base.valid == false)
-                                        {
-                                            base.addNote("cDirName", Protean.xForm.noteTypes.Alert, base.validationError);
-                                        }
 
 
-                                        // Username exists?
-                                        if (base.Instance.SelectSingleNode("*/cDirName").InnerXml != base.Instance.SelectSingleNode("*/cDirXml/User/Email").InnerXml)
-                                        {
-                                            if (!moDbHelper.checkUserUnique(base.Instance.SelectSingleNode("*/cDirName").InnerXml, id))
-                                            {
-                                                base.valid = false;
-                                                base.addNote("cDirName", Protean.xForm.noteTypes.Alert, "This username already exists please select another");
-                                            }
-                                        }
+                            // lets add the groups to the instance
+                            oGrpElmt = moDbHelper.getGroupsInstance(id, parId);
+                            base.Instance.InsertAfter(oGrpElmt, base.Instance.LastChild);
 
-                                        // Email Exists?
-                                        if (!moDbHelper.checkEmailUnique(base.Instance.SelectSingleNode("*/cDirXml/User/Email").InnerXml, id))
-                                        {
-                                            base.valid = false;
-                                            if (base.Instance.SelectSingleNode("*/cDirName").InnerXml == base.Instance.SelectSingleNode("*/cDirXml/User/Email").InnerXml)
-                                            {
-                                                base.addNote("cEmail", Protean.xForm.noteTypes.Alert, "<span class=\"msg-1031\">This email address already has an account, please use password reminder facility.</span>");
-                                                base.addNote("cDirName", Protean.xForm.noteTypes.Alert, "<span class=\"msg-1031\">This email address already has an account, please use password reminder facility.</span>");
-                                            }
-                                            else
-                                            {
-                                                base.addNote("cEmail", Protean.xForm.noteTypes.Alert, "<span class=\"msg-1031\">This email address already has an account, please use password reminder facility.</span>");
-                                            }
-
-                                        }
-
-                                        // Only validate passwords if form contains the fields.
-                                        if (base.moXformElmt.SelectSingleNode("/group/descendant-or-self::*[@bind='cDirPassword']") != null)
-                                        {
-                                            // Passwords match?
-                                            if(goRequest["cDirPassword2"] != null)
-                                            {
-                                                if ((goRequest["cDirPassword2"]).Length > 0)
-                                                {
-                                                    if (goRequest["cDirPassword"] != goRequest["cDirPassword2"])
-                                                    {
-                                                        base.valid = false;
-                                                        base.addNote("cDirPassword", Protean.xForm.noteTypes.Alert, "Passwords must match ");
-                                                    }
-                                                }
-                                            }                                          
-
-                                            if (moPolicy != null)
-                                            {
-                                                // Password policy?
-                                                if ((base.Instance.SelectSingleNode("*/cDirPassword").InnerXml).Length < 4)
-                                                {
-                                                    base.valid = false;
-                                                    base.addNote("cDirPassword", Protean.xForm.noteTypes.Alert, "Passwords must be 4 characters long ");
-                                                }
-                                            }
-                                        }
-
-                                        // Email exists...?
-
-                                        // Membership codes
-                                        cCodeUsed = validateMemberCode("*/RegistrationCode", "RegistrationCode");
-                                        break;
-                                    }
-
-                            }
-                            if (base.valid)
+                            if (cDirectorySchemaName == "User")
                             {
 
-                                string cPassword = Instance.SelectSingleNode("*/cDirPassword").InnerText;
-                                string cClearPassword = cPassword;
-                                // RJP 7 Nov 2012. Added LCase to MembershipEncryption. Note leave the value below for md5Password hard coded as MD5.
-                                if ((myWeb.moConfig["MembershipEncryption"].ToLower()) == "md5salt")
+                                if (goConfig["Subscriptions"] == "on")
                                 {
-                                    string cSalt = Encryption.generateSalt();
-                                    string inputPassword = string.Concat(cSalt, cPassword); // Take the users password and add the salt at the front
-                                    string md5Password = Encryption.HashString(inputPassword, "md5", true); // Md5 the marged string of the password and salt
-                                    string resultPassword = string.Concat(md5Password, ":", cSalt); // Adds the salt to the end of the hashed password
-                                    cPassword = resultPassword; // Store the resultant password with salt in the database
-                                }
-                                else
-                                {
-                                    cPassword = Encryption.HashString(cPassword, (myWeb.moConfig["MembershipEncryption"].ToLower()), true);
-                                } // plain - md5 - sha1
-                                if (!((cPassword ?? "") == (cCurrentPassword ?? "")) & !((cClearPassword ?? "") == (cCurrentPassword ?? "")))
-                                {
-                                    Instance.SelectSingleNode("*/cDirPassword").InnerText = cPassword;
+                                    var oSub = new Cart.Subscriptions(ref myWeb);
+                                    XmlElement xmlXformInstance = base.Instance;
+                                    oSub.AddSubscriptionToUserXML(ref xmlXformInstance, Convert.ToInt32(id));
                                 }
 
+                                // now lets check our security, and if we are encrypted lets not show the password on edit.
                                 if (id > 0L)
                                 {
-
-                                    moDbHelper.setObjectInstance(dbHelper.objectTypes.Directory, base.Instance, id);
-                                    if (moXformElmt.SelectSingleNode("descendant-or-self::*[@ref='EditContent' or @bind='EditContent']") != null)
+                                    // RJP 7 Nov 2012. Added LCase as a precaution against people entering string in Protean.Cms.Config lowercase, i.e. md5.
+                                    if (myWeb.moConfig["MembershipEncryption"] != null)
                                     {
-                                        base.addNote("EditContent", Protean.xForm.noteTypes.Alert, "<span class=\"msg-1010\">Your details have been updated.</span>", true);
+                                        if ((myWeb.moConfig["MembershipEncryption"].ToLower()).StartsWith("md5") | (myWeb.moConfig["MembershipEncryption"].ToLower()).StartsWith("sha"))
+                                        {
+                                            // Remove password (and confirm password) fields
+                                            foreach (XmlElement oPwdNode in base.moXformElmt.SelectNodes("/group/descendant-or-self::*[contains(@bind,'cDirPassword')]"))
+                                                oPwdNode.ParentNode.RemoveChild(oPwdNode);
+                                        }
+                                    }
+
+                                }
+
+                                // Is the membership email address secure.
+                                if (myWeb.moConfig["SecureMembershipAddress"] != "" & myWeb.mbAdminMode == false)
+                                {
+                                    XmlElement oSubElmt = (XmlElement)base.moXformElmt.SelectSingleNode("descendant::submission");
+                                    if (myWeb.mcPagePath is null)
+                                    {
+                                        oSubElmt.SetAttribute("action", myWeb.moConfig["SecureMembershipAddress"] + myWeb.mcOriginalURL);
                                     }
                                     else
                                     {
-                                        XmlElement oSubElmt = (XmlElement)moXformElmt.SelectSingleNode("descendant-or-self::group[parent::Content][1]");
-                                        if (oSubElmt != null)
-                                        {
-                                            base.addNote(oSubElmt.ToString(), Protean.xForm.noteTypes.Alert, "<span class=\"msg-1010\">Your details have been updated.</span>", true);
-                                        }
+                                        oSubElmt.SetAttribute("action", myWeb.moConfig["SecureMembershipAddress"] + myWeb.moConfig["ProjectPath"] + "/" + myWeb.mcPagePath);
                                     }
                                 }
-                                else
-                                {
-                                    // add new
-                                    id =Convert.ToInt64(moDbHelper.setObjectInstance(dbHelper.objectTypes.Directory, base.Instance));
-
-                                    // update the instance with the id
-                                    base.Instance.SelectSingleNode("tblDirectory/nDirKey").InnerText = id.ToString();
-                                    addNewitemToParId = parId > 0L;
-                                    base.addNote("EditContent", Protean.xForm.noteTypes.Alert, "This user has been added.", true);
-
-                                    // add addresses
-                                    if (base.Instance.SelectSingleNode("tblCartContact") != null)
-                                    {
-                                        foreach (XmlElement oCartContact in base.Instance.SelectNodes("tblCartContact"))
-                                        {
-                                            var TempInstance = new XmlDocument();
-                                            TempInstance.LoadXml("<instance/>");
-                                            TempInstance.DocumentElement.InnerXml = oCartContact.OuterXml;
-                                            TempInstance.DocumentElement.SelectSingleNode("tblCartContact/nContactDirId").InnerText = id.ToString();
-                                            moDbHelper.setObjectInstance(dbHelper.objectTypes.CartContact, TempInstance.DocumentElement);
-                                        }
-                                    }
-
-                                    // Save the member code, if applicable
-                                    useMemberCode(cCodeUsed, id);
-
-                                    // If member codes were being applied then reconstruct the Group Instance.
-                                    if (gbMemberCodes & !string.IsNullOrEmpty(cCodeUsed))
-                                    {
-                                        oGrpElmt = moDbHelper.getGroupsInstance(id, parId);
-                                        base.Instance.ReplaceChild(oGrpElmt, base.Instance.LastChild);
-                                    }
-
-                                }
-
-                                // lets add the user to any groups
-                                if ((cDirectorySchemaName == "User" | cDirectorySchemaName == "Company") & maintainMembershipsOnAdd)
-                                {
-                                    maintainMembershipsFromXForm((int)id);
-
-                                    // we want to ad the user to a specified group from a pick list of groups.
-                                    XmlElement GroupsElmt = (XmlElement)base.Instance.SelectSingleNode("groups");
-                                    if (GroupsElmt != null)
-                                    {
-                                        if (!string.IsNullOrEmpty(GroupsElmt.GetAttribute("addIds")))
-                                        {
-                                            foreach (var i in Strings.Split(GroupsElmt.GetAttribute("addIds"), ","))
-                                                moDbHelper.maintainDirectoryRelation(Conversions.ToLong(i), id, false);
-                                        }
-                                    }
-                                    // code added by sonali for pure360
-                                    if (cDirectorySchemaName == "User")
-                                    {
-                                        System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
-
-                                        Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
-                                        Protean.Providers.Messaging.IMessagingProvider oMessagingProv = RetProv.Get(ref myWeb, moMailConfig["messagingprovider"]);
-                                 
-                                        string ListId = moMailConfig["AllUsersList"];
-                                        if (ListId != null)
-                                        {
-                                            Dictionary<string, string> valDict = new Dictionary<string, string>();
-
-                                            valDict.Add("Email", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Email").InnerText);
-                                            valDict.Add("FirstName", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/FirstName").InnerText);
-                                            valDict.Add("LastName", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/LastName").InnerText);
-                                            if (Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Mobile") != null)
-                                            {
-                                                valDict.Add("Mobile", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Mobile").InnerText);
-                                            }
-                                            string Name = Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/FirstName").InnerText;
-                                            string Email = Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Email").InnerText;
-
-                                            oMessagingProv.Activities.AddToList(ListId, Name, Email, valDict);
-                                        }
-
-                                    }
-                                }
-
-                                if (addNewitemToParId)
-                                {
-                                    moDbHelper.maintainDirectoryRelation(parId, id, false);
-                                }
-
                             }
+
+                            if (base.isSubmitted())
+                            {
+                                base.updateInstanceFromRequest();
+                                base.validate();
+                                // any additonal validation goes here
+                                switch (cDirectorySchemaName ?? "")
+                                {
+                                    case "User":
+                                    case "UserMyAccount":
+                                        {
+                                            if (base.valid == false)
+                                            {
+                                                base.addNote("cDirName", Protean.xForm.noteTypes.Alert, base.validationError);
+                                            }
+
+
+                                            // Username exists?
+                                            if (base.Instance.SelectSingleNode("*/cDirName").InnerXml != base.Instance.SelectSingleNode("*/cDirXml/User/Email").InnerXml)
+                                            {
+                                                if (!moDbHelper.checkUserUnique(base.Instance.SelectSingleNode("*/cDirName").InnerXml, id))
+                                                {
+                                                    base.valid = false;
+                                                    base.addNote("cDirName", Protean.xForm.noteTypes.Alert, "This username already exists please select another");
+                                                }
+                                            }
+
+                                            // Email Exists?
+                                            if (!moDbHelper.checkEmailUnique(base.Instance.SelectSingleNode("*/cDirXml/User/Email").InnerXml, id))
+                                            {
+                                                base.valid = false;
+                                                if (base.Instance.SelectSingleNode("*/cDirName").InnerXml == base.Instance.SelectSingleNode("*/cDirXml/User/Email").InnerXml)
+                                                {
+                                                    base.addNote("cEmail", Protean.xForm.noteTypes.Alert, "<span class=\"msg-1031\">This email address already has an account, please use password reminder facility.</span>");
+                                                    base.addNote("cDirName", Protean.xForm.noteTypes.Alert, "<span class=\"msg-1031\">This email address already has an account, please use password reminder facility.</span>");
+                                                }
+                                                else
+                                                {
+                                                    base.addNote("cEmail", Protean.xForm.noteTypes.Alert, "<span class=\"msg-1031\">This email address already has an account, please use password reminder facility.</span>");
+                                                }
+
+                                            }
+
+                                            // Only validate passwords if form contains the fields.
+                                            if (base.moXformElmt.SelectSingleNode("/group/descendant-or-self::*[@bind='cDirPassword']") != null)
+                                            {
+                                                // Passwords match?
+                                                if (goRequest["cDirPassword2"] != null)
+                                                {
+                                                    if ((goRequest["cDirPassword2"]).Length > 0)
+                                                    {
+                                                        if (goRequest["cDirPassword"] != goRequest["cDirPassword2"])
+                                                        {
+                                                            base.valid = false;
+                                                            base.addNote("cDirPassword", Protean.xForm.noteTypes.Alert, "Passwords must match ");
+                                                        }
+                                                    }
+                                                }
+
+                                                if (moPolicy != null)
+                                                {
+                                                    // Password policy?
+                                                    if ((base.Instance.SelectSingleNode("*/cDirPassword").InnerXml).Length < 4)
+                                                    {
+                                                        base.valid = false;
+                                                        base.addNote("cDirPassword", Protean.xForm.noteTypes.Alert, "Passwords must be 4 characters long ");
+                                                    }
+                                                }
+                                            }
+
+                                            // Email exists...?
+
+                                            // Membership codes
+                                            cCodeUsed = validateMemberCode("*/RegistrationCode", "RegistrationCode");
+                                            break;
+                                        }
+
+                                }
+                                if (base.valid)
+                                {
+
+                                    string cPassword = Instance.SelectSingleNode("*/cDirPassword").InnerText;
+                                    string cClearPassword = cPassword;
+                                    // RJP 7 Nov 2012. Added LCase to MembershipEncryption. Note leave the value below for md5Password hard coded as MD5.
+                                    if ((myWeb.moConfig["MembershipEncryption"].ToLower()) == "md5salt")
+                                    {
+                                        string cSalt = Encryption.generateSalt();
+                                        string inputPassword = string.Concat(cSalt, cPassword); // Take the users password and add the salt at the front
+                                        string md5Password = Encryption.HashString(inputPassword, "md5", true); // Md5 the marged string of the password and salt
+                                        string resultPassword = string.Concat(md5Password, ":", cSalt); // Adds the salt to the end of the hashed password
+                                        cPassword = resultPassword; // Store the resultant password with salt in the database
+                                    }
+                                    else
+                                    {
+                                        cPassword = Encryption.HashString(cPassword, (myWeb.moConfig["MembershipEncryption"].ToLower()), true);
+                                    } // plain - md5 - sha1
+                                    if (!((cPassword ?? "") == (cCurrentPassword ?? "")) & !((cClearPassword ?? "") == (cCurrentPassword ?? "")))
+                                    {
+                                        Instance.SelectSingleNode("*/cDirPassword").InnerText = cPassword;
+                                    }
+
+                                    if (id > 0L)
+                                    {
+
+                                        moDbHelper.setObjectInstance(dbHelper.objectTypes.Directory, base.Instance, id);
+                                        if (moXformElmt.SelectSingleNode("descendant-or-self::*[@ref='EditContent' or @bind='EditContent']") != null)
+                                        {
+                                            base.addNote("EditContent", Protean.xForm.noteTypes.Alert, "<span class=\"msg-1010\">Your details have been updated.</span>", true);
+                                        }
+                                        else
+                                        {
+                                            XmlElement oSubElmt = (XmlElement)moXformElmt.SelectSingleNode("descendant-or-self::group[parent::Content][1]");
+                                            if (oSubElmt != null)
+                                            {
+                                                base.addNote(oSubElmt.ToString(), Protean.xForm.noteTypes.Alert, "<span class=\"msg-1010\">Your details have been updated.</span>", true);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // add new
+                                        id = Convert.ToInt64(moDbHelper.setObjectInstance(dbHelper.objectTypes.Directory, base.Instance));
+
+                                        // update the instance with the id
+                                        base.Instance.SelectSingleNode("tblDirectory/nDirKey").InnerText = id.ToString();
+                                        addNewitemToParId = parId > 0L;
+                                        base.addNote("EditContent", Protean.xForm.noteTypes.Alert, "This user has been added.", true);
+
+                                        // add addresses
+                                        if (base.Instance.SelectSingleNode("tblCartContact") != null)
+                                        {
+                                            foreach (XmlElement oCartContact in base.Instance.SelectNodes("tblCartContact"))
+                                            {
+                                                var TempInstance = new XmlDocument();
+                                                TempInstance.LoadXml("<instance/>");
+                                                TempInstance.DocumentElement.InnerXml = oCartContact.OuterXml;
+                                                TempInstance.DocumentElement.SelectSingleNode("tblCartContact/nContactDirId").InnerText = id.ToString();
+                                                moDbHelper.setObjectInstance(dbHelper.objectTypes.CartContact, TempInstance.DocumentElement);
+                                            }
+                                        }
+
+                                        // Save the member code, if applicable
+                                        useMemberCode(cCodeUsed, id);
+
+                                        // If member codes were being applied then reconstruct the Group Instance.
+                                        if (gbMemberCodes & !string.IsNullOrEmpty(cCodeUsed))
+                                        {
+                                            oGrpElmt = moDbHelper.getGroupsInstance(id, parId);
+                                            base.Instance.ReplaceChild(oGrpElmt, base.Instance.LastChild);
+                                        }
+
+                                    }
+
+                                    // lets add the user to any groups
+                                    if ((cDirectorySchemaName == "User" | cDirectorySchemaName == "Company") & maintainMembershipsOnAdd)
+                                    {
+                                        maintainMembershipsFromXForm((int)id);
+
+                                        // we want to ad the user to a specified group from a pick list of groups.
+                                        XmlElement GroupsElmt = (XmlElement)base.Instance.SelectSingleNode("groups");
+                                        if (GroupsElmt != null)
+                                        {
+                                            if (!string.IsNullOrEmpty(GroupsElmt.GetAttribute("addIds")))
+                                            {
+                                                foreach (var i in Strings.Split(GroupsElmt.GetAttribute("addIds"), ","))
+                                                    moDbHelper.maintainDirectoryRelation(Conversions.ToLong(i), id, false);
+                                            }
+                                        }
+                                        // code added by sonali for pure360
+                                        if (cDirectorySchemaName == "User")
+                                        {
+                                            System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
+
+                                            Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
+                                            Protean.Providers.Messaging.IMessagingProvider oMessagingProv = RetProv.Get(ref myWeb, moMailConfig["messagingprovider"]);
+
+                                            string ListId = moMailConfig["AllUsersList"];
+                                            if (ListId != null)
+                                            {
+                                                Dictionary<string, string> valDict = new Dictionary<string, string>();
+
+                                                valDict.Add("Email", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Email").InnerText);
+                                                valDict.Add("FirstName", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/FirstName").InnerText);
+                                                valDict.Add("LastName", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/LastName").InnerText);
+                                                if (Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Mobile") != null)
+                                                {
+                                                    valDict.Add("Mobile", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Mobile").InnerText);
+                                                }
+                                                string Name = Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/FirstName").InnerText;
+                                                string Email = Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Email").InnerText;
+
+                                                oMessagingProv.Activities.AddToList(ListId, Name, Email, valDict);
+                                            }
+
+                                        }
+                                    }
+
+                                    if (addNewitemToParId)
+                                    {
+                                        moDbHelper.maintainDirectoryRelation(parId, id, false);
+                                    }
+
+                                }
+                            }
+
+                            base.addValues();
+                            return base.moXformElmt;
                         }
-
-                        base.addValues();
-                        return base.moXformElmt;
+                        else {
+                            return base.moXformElmt;
+                        }
                     }
-
                     catch (Exception ex)
                     {
                         stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditDirectoryItem", ex, "", cProcessInfo, gbDebug);

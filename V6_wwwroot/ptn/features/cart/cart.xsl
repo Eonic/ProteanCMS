@@ -1405,6 +1405,38 @@
 		</xsl:if>
 	</xsl:template>
 
+	<xsl:template match="label[parent::textarea[contains(@class,'readonly terms-and-condiditons')]]">
+		
+	</xsl:template>
+	
+	<xsl:template match="textarea[contains(@class,'readonly terms-and-condiditons')]" mode="xform_legend">
+		<button type="button" class="btn btn-link continue" data-bs-toggle="modal" data-bs-target="#terms-modal">
+			View Terms and Conditions
+		</button>
+	</xsl:template>
+	
+	<xsl:template match="textarea[contains(@class,'readonly terms-and-condiditons')]" mode="xform_control">
+		<div class="modal" tabindex="-1" id="terms-modal">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Terms and Conditions</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<small>
+							<xsl:copy-of select="value/node()"/>
+						</small>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</xsl:template>
+	
+
 	<xsl:template match="Order" mode="suggestedItems">
 
 	</xsl:template>
@@ -2477,8 +2509,8 @@
 		<xsl:choose>
 			<xsl:when test="Content[@type='SKU']">
 				<!--and @SkuOptions='skus'-->
-				<div class="selectOptions">
-					<select class="skuOptions form-control">
+				<div class="selectOptions select1-group">
+					<select class="skuOptions form-select">
 						<!--<xsl:if test="count(Content[@type='SKU']) &gt; 1">
               <option value="">Please select option</option>
             </xsl:if>-->
