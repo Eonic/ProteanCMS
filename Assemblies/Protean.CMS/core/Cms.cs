@@ -8455,22 +8455,6 @@ namespace Protean
 
                         cSql = "select TOP 1 c.nContentPrimaryId as id, " + "   dbo.fxn_getContentParents(c.nContentPrimaryId) as parId, " + "   cContentForiegnRef as ref, cContentName as name, " + "   cContentSchemaName as type, " + "   cContentXmlBrief as content, " + "   a.nStatus as status, " + "   a.dpublishDate as publish, " + "   a.dExpireDate as expire, " + "   a.dUpdateDate as [update], " + "   c.nVersion as version, " + "   c.nContentVersionKey as versionid, " + "   a.nInsertDirId as owner " + " from tblContentVersions c " + "   inner join tblAudit a " + "     on c.nAuditId = a.nAuditKey " + " WHERE c.nContentPrimaryId = " + oContent.GetAttribute("id") + "   AND a.nStatus = " + ((int)Cms.dbHelper.Status.Pending).ToString() + " ORDER BY c.nVersion DESC ";
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         oDs = this.moDbHelper.GetDataSet(cSql, "Content", "Contents");
 
                         if (oDs.Tables.Count > 0 && oDs.Tables[0].Rows.Count > 0)
