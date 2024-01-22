@@ -8705,6 +8705,8 @@ namespace Protean
                         }
                     }
 
+
+
                     if ((Strings.LCase(mmcOrderType) ?? "") == (Strings.LCase(mcItemOrderType) ?? "")) // test for order?
                     {
                         foreach (string oItem1 in myWeb.moRequest.Form) // Loop for getting products/quants
@@ -8760,6 +8762,41 @@ namespace Protean
                                 if (nQuantity > 0L)
                                 {
                                     qtyAdded = (int)(qtyAdded + nQuantity);
+                                    bool bBlockCartAdd = false;
+                                    string sBlockCartAddMsg = "";
+                                    if (moSubscription != null) {
+                                        if (Strings.LCase(moCartConfig["SubsExclusiveOrder"]) == "on") {
+
+                                            // get contentType to be added
+                                            XmlDocument tempProduct = new XmlDocument();
+                                            XmlElement rootxml = tempProduct.CreateElement("page");
+                                            XmlElement ProductXml = myWeb.GetContentBriefXml(rootxml,nProductKey);
+                                            switch (ProductXml.SelectSingleNode("@contentType").InnerText) {
+                                                case "Subscription":
+                                                    
+
+
+
+                                                    break;
+                                                default:
+
+                                                    break;
+
+                                            }
+
+                                                // if contentType = sub
+
+                                                // if cart contains product then block
+                                                sBlockCartAddMsg = "You cannot purchase a subscription and a product as part of the same order. Please complete origional purchase then start again.";
+
+                                            // else
+
+
+
+
+                                        }
+                                    }
+
                                     if (!(Strings.InStr(strAddedProducts, "'" + nProductKey + "'") > 0)) // double check we havent added this product (dont really need but good just in case)
                                     {
                                         foreach (string oItem2 in myWeb.moRequest.Form) // loop through again checking for options

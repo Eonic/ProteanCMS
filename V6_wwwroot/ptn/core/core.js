@@ -271,11 +271,18 @@ function disableButton(oBtn, disableMessage) {
 
 function displayErrorMessage() {
     if ($('#xFrmAlertModal').exists()) {
-       // alert(arguments[0]);
         var iconClassName = document.getElementById("errorIcon").className;
-        $('#xFrmAlertModal #errorMessage').text($('#xFrmAlertModal #errorMessage').text() + ',' + arguments[0]);
-        $("#xFrmAlertModal #errorIcon").removeClass(iconClassName);
-        $("#xFrmAlertModal #errorIcon").addClass(arguments[1]);     
+        if ($('#xFrmAlertModal #errorMessage').html() == "&nbsp;") {
+            $('#xFrmAlertModal #errorMessage').html('');
+            $('#xFrmAlertModal #errorMessage').html(arguments[0]);
+            $("#xFrmAlertModal #errorIcon").removeClass(iconClassName);
+            $("#xFrmAlertModal #errorIcon").addClass(arguments[1]);
+        }
+        else {
+            var NewAlert = '<br/><i class="' + iconClassName + '">&nbsp;</i>&nbsp; <span>' + arguments[0] + '</span>';
+            $("#xFrmAlertModal .modal-body").append(NewAlert);
+        }
+       
         let xFrmAlertModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('xFrmAlertModal')) // Returns a Bootstrap modal instance
         xFrmAlertModal.show();
     } else { alert(arguments[0]); }
