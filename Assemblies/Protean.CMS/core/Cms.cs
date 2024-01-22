@@ -1971,7 +1971,13 @@ namespace Protean
                                                     // rendererOpts.Kerning = True
                                                     // rendererOpts.EnableCopy = True
 
-                                                    var dir = new DirectoryInfo(this.goServer.MapPath("/") + "/fonts");
+                                                    string fontPath = this.goServer.MapPath("") + "/fonts";
+                                                    if (bs5)
+                                                    {
+                                                        fontPath = this.goServer.MapPath("") + "/fonts";
+                                                    }
+
+                                                    var dir = new DirectoryInfo(fontPath);
 
                                                     if (dir.Exists)
                                                     {
@@ -1992,7 +1998,12 @@ namespace Protean
                                                         }
                                                     }
 
-                                                    dir = new DirectoryInfo(this.goServer.MapPath("/ewcommon") + "/fonts");
+                                                    fontPath = this.goServer.MapPath("/ewcommon") + "/fonts";
+                                                    if (bs5) {
+                                                        fontPath = this.goServer.MapPath("/ptn") + "/fonts";
+                                                    } 
+
+                                                    dir = new DirectoryInfo(fontPath);
 
                                                     if (dir.Exists)
                                                     {

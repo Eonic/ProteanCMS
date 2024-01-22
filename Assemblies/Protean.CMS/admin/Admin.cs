@@ -5050,7 +5050,13 @@ namespace Protean
                                     var ofs = new Protean.fsHelper();
                                     myWeb.moResponseType = Cms.pageResponseType.pdf;
                                     myWeb.mcOutputFileName = "DeliveryNote.pdf";
-                                    myWeb.mcEwSiteXsl = ofs.checkCommonFilePath(moConfig["ProjectPath"] + @"\xsl\docs\deliverynote.xsl");
+
+                                    string DeliveryNoteXslPath = @"\xsl\docs\deliverynote.xsl";
+                                    if (myWeb.bs5) {
+                                        DeliveryNoteXslPath = @"\features\cart\docs\delivery-note.xsl";
+                                    }
+
+                                    myWeb.mcEwSiteXsl = ofs.checkCommonFilePath(moConfig["ProjectPath"] + DeliveryNoteXslPath);
 
                                     oCart.ListOrders(myWeb.moRequest["id"], true, 0, ref oPageDetail, bForceRefresh: false, nUserId: 0L);
                                     break;

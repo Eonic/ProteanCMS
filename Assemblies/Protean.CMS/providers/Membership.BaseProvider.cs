@@ -456,12 +456,12 @@ namespace Protean.Providers
                         base.submission("PasswordReminder", "", "post", "form_check(this)");
 
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "PasswordReminder");
-                        base.addDiv(ref oFrmElmt, "Please enter your email address and we will email you with your password.");
+                        base.addDiv(ref oFrmElmt, "Please enter your email address and we will email you with a reset link..", "term-1038");
                         base.addInput(ref oFrmElmt, "cEmail", true, "Email Address");
                         XmlElement oBindParent = null;
                         base.addBind("cEmail", "user/email", ref oBindParent, "true()", "email");
 
-                        base.addSubmit(ref oFrmElmt, "", "Send Password", "ewSubmitReminder");
+                        base.addSubmit(ref oFrmElmt, "", "Reset Password", "ewSubmitReminder");
 
                         if (!base.load("/xforms/passwordreminder.xml", myWeb.maCommonFolders))
                         {
@@ -471,13 +471,13 @@ namespace Protean.Providers
 
                             oFrmElmt = base.addGroup(ref base.moXformElmt, "PasswordReminder");
 
-                            base.addDiv(ref oFrmElmt, "Please enter your email address and we will email you with your password.");
+                            base.addDiv(ref oFrmElmt, "Please enter your email address and we will email you with a reset link.", "term-1038");
 
                             base.addInput(ref oFrmElmt, "cEmail", true, "Email Address");
                             XmlElement oBindParent2 = null;
                             base.addBind("cEmail", "user/email",ref oBindParent2, "true()", "email");
 
-                            base.addSubmit(ref oFrmElmt, "", "Send Password", "ewSubmitReminder");
+                            base.addSubmit(ref oFrmElmt, "", "Reset Password", "ewSubmitReminder");
                             base.Instance.InnerXml = "<user><email/></user>";
                         }
                         else
@@ -496,18 +496,18 @@ namespace Protean.Providers
                                 // congigured to store usernames as email addresses.
                                 sValidResponse = moDbHelper.passwordReminder(goRequest["cEmail"]);
 
-                                if (sValidResponse == "Your password has been emailed to you")
+                                if (sValidResponse == "Your reset link has been emailed to you")
                                 {
                                     // remove old form
                                     valid = true;
                                     foreach (XmlElement oElmt in oFrmElmt.SelectNodes("*"))
                                         oFrmElmt.RemoveChild(oElmt);
-                                    base.addNote(oFrmElmt.ToString(), Protean.xForm.noteTypes.Hint, sValidResponse, true);
+                                    base.addNote(oFrmElmt.ToString(), Protean.xForm.noteTypes.Hint, sValidResponse, true, "msg-1037");
                                 }
                                 else
                                 {
                                     valid = false;
-                                    base.addNote(oFrmElmt.ToString(), Protean.xForm.noteTypes.Alert, sValidResponse, true);
+                                    base.addNote(oFrmElmt.ToString(), Protean.xForm.noteTypes.Alert, sValidResponse, true, "msg-1037");
                                 }
                             }
                             else
@@ -608,7 +608,7 @@ namespace Protean.Providers
                         }
                         else
                         {
-                            formTitle = "<span class=\"msg-028\">Please enter your email address and we will email you with your password.</span>";
+                            formTitle = "<span class=\"msg-028\">Please enter your email address and we will email you a reset link.</span>";
                         }
 
 
@@ -655,7 +655,7 @@ namespace Protean.Providers
                         XmlElement xmlObind = null;
                         base.addBind("cEmail", "user/email", ref xmlObind, "true()", "format:^[a-zA-Z0-9._%+-@ ]*$");
 
-                        base.addSubmit(ref oFrmElmt, "", "Send Password", "ewAccountReset");
+                        base.addSubmit(ref oFrmElmt, "", "Reset Password", "ewAccountReset");
 
                     Check:
                         ;
@@ -715,15 +715,14 @@ namespace Protean.Providers
                                     //Providers.Membership.ReturnProvider oMembershipProv = new Providers.Membership.ReturnProvider.Get(myWeb, myWeb.moConfig["MembershipProvider"]);
 
                                     cResponse = Conversions.ToString(oMembershipProv.Activities.ResetUserAcct(ref myWeb, nAcc));
-
                                 }
-
                                 if (!string.IsNullOrEmpty(cResponse))
                                 {
-                                    base.addNote(oFrmElmt.ToString(), Protean.xForm.noteTypes.Hint, cResponse, true);
+                                    oFrmElmt.InnerXml = "";
+                                    XmlNode oFrmNode = (XmlNode)oFrmElmt;
+                                    base.addNote(ref oFrmNode, Protean.xForm.noteTypes.Hint, cResponse, true);
                                 }
                             }
-
                             else
                             {
                                 cResponse = "<span class=\"msg-1028\">There was a problem resetting this account. Please contact the website administrator</span>";
@@ -783,8 +782,6 @@ namespace Protean.Providers
 
                     BuildForm:
                         ;
-
-
                         base.NewFrm("ResetPassword");
 
                         base.Instance.InnerXml = "<Password><cDirPassword/><cDirPassword2/></Password>";
@@ -817,7 +814,6 @@ namespace Protean.Providers
                                     base.addNote("cDirPassword", Protean.xForm.noteTypes.Alert, "Passwords must match ");
                                 }
                             }
-
                             if (moPolicy is null)
                             {
                                 // Password policy?
@@ -827,7 +823,6 @@ namespace Protean.Providers
                                     base.addNote("cDirPassword", Protean.xForm.noteTypes.Alert, "Passwords must be 4 characters long ");
                                 }
                             }
-
                             if (base.valid)
                             {
                                 var oMembership = new Cms.Membership(ref myWeb);
@@ -843,16 +838,12 @@ namespace Protean.Providers
                                     oPI1.ParentNode.RemoveChild(oPI1);
                                     oPI2.ParentNode.RemoveChild(oPI2);
                                     oSB.ParentNode.RemoveChild(oSB);
-
                                 }
-
                             }
                         }
-
                         base.addValues();
                         return base.moXformElmt;
                     }
-
                     catch (Exception ex)
                     {
                         stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmResetPassword", ex, "", "", gbDebug);
@@ -917,8 +908,6 @@ namespace Protean.Providers
                         }
 
                     BuildForm:
-                        ;
-
 
                         base.NewFrm("ConfirmPassword");
                         XmlElement xmlObindparent = null;
@@ -932,6 +921,15 @@ namespace Protean.Providers
                         oPI2 = base.addSecret(ref oGrp, "cDirPassword2", true, "Confirm Password",ref strReqSecr);
                         base.addBind("cDirPassword2", "Password/cDirPassword2", ref xmlObindparent, "true()");
                         oSB =(XmlElement)base.addSubmit(ref oGrp, "SetPassword", "Set Password","","principle","","");
+
+                        int nAccount = (int)nUserId;
+                        if (nAccount == 0)
+                        {
+                            oGrp.InnerXml = "";
+                            XmlNode GrpNode = (XmlNode)oGrp;
+                            base.addNote(ref GrpNode, Protean.xForm.noteTypes.Alert, "This reset link has already been used");
+                            base.valid = false;
+                        }
 
                     Check:
                         ;
@@ -973,15 +971,12 @@ namespace Protean.Providers
                             if (base.valid)
                             {
 
-                                int nAccount = (int)nUserId;
-                                if (nAccount == 0)
+                                 nAccount = (int)nUserId;
+                               if (!oMembership.ReactivateAccount(nAccount, goRequest["cDirPassword"]))
                                 {
-                                    base.addNote("cDirPassword2", Protean.xForm.noteTypes.Alert, "This reset link has already been used");
-                                    base.valid = false;
-                                }
-                                else if (!oMembership.ReactivateAccount(nAccount, goRequest["cDirPassword"]))
-                                {
-                                    base.addNote("cDirPassword2", Protean.xForm.noteTypes.Alert, "There was an problem updating your account");
+                                    oGrp.InnerXml = "";
+                                    XmlNode GrpNode = (XmlNode)oGrp;
+                                    base.addNote(ref GrpNode, Protean.xForm.noteTypes.Alert, "There was an problem updating your account");
                                     base.valid = false;
                                 }
                                 else
@@ -991,14 +986,14 @@ namespace Protean.Providers
                                     oPI2.ParentNode.RemoveChild(oPI2);
                                     oSB.ParentNode.RemoveChild(oSB);
                                     // delete failed logon attempts record
-                                    string sSql = "delete from tblActivityLog where nActivityType = " + dbHelper.ActivityType.LogonInvalidPassword + " and nUserDirId=" + nAccount;
+                                    string sSql = $"delete from tblActivityLog where nActivityType = {dbHelper.ActivityType.LogonInvalidPassword} and nUserDirId={nAccount}";
                                     myWeb.moDbHelper.ExeProcessSql(sSql);
 
                                     if (myWeb.mnUserId == 0)
                                     {
                                         myWeb.mnUserId = nAccount;
                                     }
-                                    // myWeb.msRedirectOnEnd = myWeb.moConfig("LogonRedirectPath")
+                                    myWeb.msRedirectOnEnd = myWeb.moConfig["LogonRedirectPath"].ToString();
                                 }
                             }
                         }
@@ -3005,7 +3000,7 @@ namespace Protean.Providers
                             oEmailDoc.DocumentElement.AppendChild(oEmailDoc.ImportNode(oUserXml, true));
                             oEmailDoc.DocumentElement.SetAttribute("Link", oMembership.AccountResetLink(nUserId));
                             oEmailDoc.DocumentElement.SetAttribute("Url", myWeb.mcOriginalURL);
-                            oEmailDoc.DocumentElement.SetAttribute("logonRedirect", myWeb.moSession["LogonRedirectId"].ToString());
+                          //  oEmailDoc.DocumentElement.SetAttribute("logonRedirect", myWeb.moSession["LogonRedirectId"].ToString());
                             oEmailDoc.DocumentElement.SetAttribute("lang", myWeb.mcPageLanguage);
                             oEmailDoc.DocumentElement.SetAttribute("translang", myWeb.mcPreferredLanguage);
 
@@ -3015,7 +3010,7 @@ namespace Protean.Providers
                             string path = fs.FindFilePathInCommonFolders("/xsl/Email/passwordReset.xsl", myWeb.maCommonFolders);
                             if (myWeb.moConfig["cssFramework"] == "bs5")
                             {
-                                path = "/email/passwordReset.xsl";
+                                path = "/features/membership/email/passwordReset.xsl";
                             }
                             Protean.Cms.dbHelper argodbHelper = null;
                             sReturnValue = Conversions.ToString(oMessage.emailer(oEmailDoc.DocumentElement, path, myWeb.moConfig["SiteAdminName"], myWeb.moConfig["SiteAdminEmail"], userEmail, "Account Reset ", odbHelper: ref argodbHelper));

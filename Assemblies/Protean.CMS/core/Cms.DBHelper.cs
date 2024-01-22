@@ -8378,7 +8378,7 @@ namespace Protean
                                     string filePath = fsHelper.checkCommonFilePath("/xsl/email/passwordReminder.xsl");
 
                                     dbHelper argodbHelper = null;
-                                    sReturn = Conversions.ToString(oMsg.emailer(oXmlDetails.DocumentElement, goConfig["ProjectPath"] + filePath, sSenderName, sSenderEmail, cEmail, "Password Reminder", odbHelper: ref argodbHelper, "Your password has been emailed to you"));
+                                    sReturn = Conversions.ToString(oMsg.emailer(oXmlDetails.DocumentElement, goConfig["ProjectPath"] + filePath, sSenderName, sSenderEmail, cEmail, "Password Reminder", odbHelper: ref argodbHelper, "Your reset link has been emailed to you"));
 
                                     //bValid = true;
                                 }
