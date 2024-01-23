@@ -4301,6 +4301,7 @@
 						<xsl:with-param name="class" select="$class"/>
 						<xsl:with-param name="link-class" select="$li-class"/>
 						<xsl:with-param name="level3" select="$level3"/>
+						<xsl:with-param name="menu-back" select="$menu-back"/>
 					</xsl:apply-templates>
 				</ul>
 			</xsl:if>
