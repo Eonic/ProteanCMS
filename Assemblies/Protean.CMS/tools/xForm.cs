@@ -3820,7 +3820,9 @@ namespace Protean
                         isInserted = false;
                         if (!string.IsNullOrEmpty(oRptElmt.GetAttribute("bind")))
                         {
-
+                            if (model == null) {
+                                model = (XmlElement)xFormElmt.SelectSingleNode("model");
+                            }
                             // get the bind elements
                             foreach (XmlElement oBindNode in model.SelectNodes("descendant-or-self::bind[not(ancestor::instance) and @id='" + oRptElmt.GetAttribute("bind") + "']"))
                             {

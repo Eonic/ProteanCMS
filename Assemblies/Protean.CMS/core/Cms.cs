@@ -9970,6 +9970,7 @@ namespace Protean
                     rendererOpts.FontType = Fonet.Render.Pdf.FontType.Embed;
 
                     var dir = new DirectoryInfo(this.goServer.MapPath("/") + "/fonts");
+                    if (dir.Exists) { 
                     DirectoryInfo[] subDirs = dir.GetDirectories();
                     FileInfo[] files = dir.GetFiles();
 
@@ -9985,7 +9986,7 @@ namespace Protean
                                 }
                         }
                     }
-
+                    }
                     oFoNet.Options = rendererOpts;
                     oFoNet.Render(oTxtReader, ofileStream);
 
