@@ -975,7 +975,7 @@
 		<xsl:apply-templates select="." mode="pageJs"/>
 
 		<xsl:choose>
-			<xsl:when test="/Page/ContentDetail/Content">				
+			<xsl:when test="/Page/ContentDetail/Content">
 				<xsl:apply-templates select="/Page/ContentDetail/Content" mode="contentDetailJS"/>
 			</xsl:when>
 			<xsl:otherwise>
@@ -3989,6 +3989,8 @@
 		<xsl:param name="class"/>
 		<xsl:param name="overviewLink"/>
 		<xsl:param name="level2"/>
+		<xsl:param name="level3"/>
+		<xsl:param name="menu-back"/>
 		<xsl:variable name="liClass">
 			<xsl:text>nav-item </xsl:text>
 			<xsl:if test="self::MenuItem[@id=/Page/@id]">
@@ -4021,6 +4023,9 @@
 			<xsl:if test="$level2='true'">
 				<xsl:text> level2</xsl:text>
 			</xsl:if>
+			<xsl:if test="$level3='true'">
+				<xsl:text> level3</xsl:text>
+			</xsl:if>
 		</xsl:variable>
 
 		<li class="{$liClass} dropdown">
@@ -4051,7 +4056,8 @@
 							<xsl:value-of select="DisplayName/@icon"/>
 						</xsl:attribute>
 						<xsl:text> </xsl:text>
-					</i>&#160;
+					</i>
+					<span class="space">&#160;</span>
 				</xsl:if>
 				<xsl:if test="DisplayName[@uploadIcon!='']">
 					<span class="nav-icon">
@@ -4067,6 +4073,21 @@
 				</span>
 			</xsl:if>
 			<ul class="dropdown-menu" aria-labelledby="mainNavDD{@id}">
+				<xsl:if test="$menu-back='true'">
+					<li class="xs-only nav-item menu-back">
+						<span class="nav-link">
+							<button class="btn btn-sm btn-outline-secondary">
+								<span>
+									<i class="fas fa-arrow-left">
+										<xsl:text> </xsl:text>
+									</i>
+									<span class="space">&#160;</span>
+									<xsl:text>back</xsl:text>
+								</span>
+							</button>
+						</span>
+					</li>
+				</xsl:if>
 				<xsl:if test="$overviewLink='true'">
 					<li>
 						<a href="{@url}">
@@ -4106,8 +4127,10 @@
 				<xsl:apply-templates select="MenuItem[@name!='Information' and @name!='Footer' and not(DisplayName/@exclude='true')]" mode="submenuitem">
 					<xsl:with-param name="class" select="'dropdown-item'"/>
 					<xsl:with-param name="level2" select="$level2"/>
+					<xsl:with-param name="level3" select="$level3"/>
 				</xsl:apply-templates>
 			</ul>
+
 		</li>
 	</xsl:template>
 
@@ -4223,6 +4246,7 @@
 		<xsl:param name="class"/>
 		<xsl:param name="li-class"/>
 		<xsl:param name="level2"/>
+		<xsl:param name="level3"/>
 		<li>
 			<xsl:attribute name="class">
 				<xsl:value-of select="$li-class"/>
@@ -4238,23 +4262,21 @@
 				<xsl:if test="descendant::MenuItem[@id=/Page/@id] and @url!='/'">
 					<xsl:text> active </xsl:text>
 				</xsl:if>
+				<xsl:if test="count(child::MenuItem[not(DisplayName/@exclude='true')])&gt;0 and ($level2='true' or $level3='true')"><xsl:text> dropdown-mobile-next </xsl:text></xsl:if>
 			</xsl:attribute>
 			<xsl:apply-templates select="self::MenuItem" mode="menuLink">
 				<xsl:with-param name="class" select="$class"/>
 			</xsl:apply-templates>
 			<!--<xsl:if test="count(child::MenuItem[not(DisplayName/@exclude='true')])&gt;0 and descendant-or-self::MenuItem[@id=/Page/@id]">-->
-			<xsl:if test="count(child::MenuItem[not(DisplayName/@exclude='true')])&gt;0 and $level2='true'">
+			<xsl:if test="count(child::MenuItem[not(DisplayName/@exclude='true')])&gt;0 and ($level2='true' or $level3='true')">
 				<ul>
 					<xsl:attribute name="class">
 						<xsl:text>nav nav-pills</xsl:text>
-						<!--TS Theme specfic setting must not be here - Moved to Layout XSL -->
-						<!--xsl:if test="$themeLayout='TopNavSideSub' or $themeLayout='SideNav'">
-                  <xsl:text> nav-stacked</xsl:text>
-                </xsl:if-->
 					</xsl:attribute>
 					<xsl:apply-templates select="MenuItem[not(DisplayName/@exclude='true')]" mode="submenuitem">
 						<xsl:with-param name="class" select="$class"/>
 						<xsl:with-param name="link-class" select="$li-class"/>
+						<xsl:with-param name="level3" select="$level3"/>
 					</xsl:apply-templates>
 				</ul>
 			</xsl:if>
@@ -7262,11 +7284,11 @@
 		</xsl:choose>
 	</xsl:template>
 
-		<xsl:template match="Content | productDetail" mode="displayCartImage">
+	<xsl:template match="Content | productDetail" mode="displayCartImage">
 		<xsl:param name="crop" select="false()" />
 		<xsl:param name="no-stretch" select="true()" />
-			<xsl:param name="width"/>
-			<xsl:param name="height"/>
+		<xsl:param name="width"/>
+		<xsl:param name="height"/>
 		<xsl:param name="showImage"/>
 		<xsl:param name="class"/>
 		<xsl:param name="forceResize"/>
@@ -7356,7 +7378,7 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<xsl:template match="Content | MenuItem" mode="displaySubPageThumb">
 		<xsl:param name="crop"/>
 		<xsl:param name="fixedThumb"/>
