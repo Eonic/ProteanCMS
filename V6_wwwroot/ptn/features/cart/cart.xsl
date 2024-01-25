@@ -355,50 +355,56 @@
 
 	<xsl:template match="Order[@cmd='Add' or @cmd='Cart' or @cmd='Confirm']" mode="orderProcess">
 
-<<<<<<< Updated upstream
-				<div class="cart-btns-btm clearfix">
-					<button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-link continue">
-						<xsl:call-template name="term3060" />
-					</button>
-					<xsl:apply-templates select="." mode="principleButton">
-						<xsl:with-param name="buttonClass">btn-custom</xsl:with-param>
-					</xsl:apply-templates>
-=======
-		<h1>Your Basket</h1>
-		<div class="row">
-			<div class="col-lg-8">
-				<xsl:apply-templates select="." mode="orderProcessTitle"/>
-				<xsl:apply-templates select="." mode="orderErrorReports"/>
-				<xsl:apply-templates select="." mode="orderAddresses"/>
-			</div>
-			<div class="col-lg-4">
-				<div class="basket card">
-					<div class="card-body">
-						<xsl:if test="@cmd='Add' or @cmd='Cart'">
-							<xsl:apply-templates select="." mode="suggestedItems"/>
-						</xsl:if>
-						<form method="post" id="cart" class="ewXform">
-							<xsl:apply-templates select="." mode="orderItems">
-								<xsl:with-param name="editQty">true</xsl:with-param>
-							</xsl:apply-templates>
 
-				<div class="cart-btns-btm clearfix">
-					<button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-link continue">
-						<xsl:call-template name="term3060" />
-					</button>
-					<xsl:if test="parent::Cart/@Process &gt; 3">
-					<a href="?cartCmd=Quit" class="btn btn-link continue"><span class="empty-basket-icon">
-						<i class="fas fa-trash">
-							<xsl:text> </xsl:text>
-						</i>
-						<xsl:text> </xsl:text>
-					</span>Empty Basket</a>
-					</xsl:if>
-					<xsl:apply-templates select="." mode="principleButton">
-						<xsl:with-param name="buttonClass">btn-custom</xsl:with-param>
-					</xsl:apply-templates>
+		<div class="cart-btns-btm clearfix">
+			<button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-link continue">
+				<xsl:call-template name="term3060" />
+			</button>
+			<xsl:apply-templates select="." mode="principleButton">
+				<xsl:with-param name="buttonClass">btn-custom</xsl:with-param>
+			</xsl:apply-templates>
+
+			<h1>Your Basket</h1>
+			<div class="row">
+				<div class="col-lg-8">
+					<xsl:apply-templates select="." mode="orderProcessTitle"/>
+					<xsl:apply-templates select="." mode="orderErrorReports"/>
+					<xsl:apply-templates select="." mode="orderAddresses"/>
 				</div>
-			</form>
+				<div class="col-lg-4">
+					<div class="basket card">
+						<div class="card-body">
+							<xsl:if test="@cmd='Add' or @cmd='Cart'">
+								<xsl:apply-templates select="." mode="suggestedItems"/>
+							</xsl:if>
+							<form method="post" id="cart" class="ewXform">
+								<xsl:apply-templates select="." mode="orderItems">
+									<xsl:with-param name="editQty">true</xsl:with-param>
+								</xsl:apply-templates>
+
+								<div class="cart-btns-btm clearfix">
+									<button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-link continue">
+										<xsl:call-template name="term3060" />
+									</button>
+									<xsl:if test="parent::Cart/@Process &gt; 3">
+										<a href="?cartCmd=Quit" class="btn btn-link continue">
+											<span class="empty-basket-icon">
+												<i class="fas fa-trash">
+													<xsl:text> </xsl:text>
+												</i>
+												<xsl:text> </xsl:text>
+											</span>Empty Basket
+										</a>
+									</xsl:if>
+									<xsl:apply-templates select="." mode="principleButton">
+										<xsl:with-param name="buttonClass">btn-custom</xsl:with-param>
+									</xsl:apply-templates>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</xsl:template>
 
@@ -412,7 +418,7 @@
 	<xsl:template match="Order[@cmd='Billing' or @cmd='Delivery']" mode="orderProcess">
 		<xsl:apply-templates select="." mode="orderProcessTitle"/>
 		<xsl:apply-templates select="." mode="orderErrorReports"/>
-<<<<<<< Updated upstream
+
 		<div id="template_1_Column" class="template template_1_Column container">
 			<h1>
 				<xsl:call-template name="term4031" />
@@ -444,7 +450,7 @@
 			</div>
 			
 		</div>
-=======
+
 		<h1>
 			<xsl:call-template name="term4031" />
 		</h1>
@@ -1435,8 +1441,8 @@
 		</xsl:if>
 	</xsl:template>
 
-<<<<<<< Updated upstream
-=======
+
+
 	<xsl:template match="label[parent::textarea[contains(@class,'readonly terms-and-condiditons')]]">
 
 	</xsl:template>
@@ -1469,7 +1475,7 @@
 	</xsl:template>
 
 
->>>>>>> Stashed changes
+
 	<xsl:template match="Order" mode="suggestedItems">
 
 	</xsl:template>
@@ -2183,7 +2189,7 @@
 			<xsl:if test="label">
 				<xsl:apply-templates select="label[position()=1]" mode="legend"/>
 			</xsl:if>
-<<<<<<< Updated upstream
+
 			<div class="row">
 				<xsl:choose>
 					<xsl:when test="group[div/tblCartContact/cContactType/node()='Delivery Address']">
@@ -2217,7 +2223,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</div>
-=======
+
 
 			<xsl:choose>
 				<xsl:when test="group[div/tblCartContact/cContactType/node()='Delivery Address']">
