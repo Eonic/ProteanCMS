@@ -262,6 +262,12 @@
 										<xsl:value-of select="@name"/>&#160;
 									</span>
 								</xsl:when>
+								<xsl:when test="@contenttype='CaseStudy'">
+									<i class="fa-solid fa-book fa-2xl">&#160;</i>
+									<span class="visually-hidden">
+										<xsl:value-of select="@name"/>&#160;
+									</span>
+								</xsl:when>
 								<xsl:otherwise>
 									<i class="far fa-file fa-2xl">&#160;</i>
 									<span class="visually-hidden">

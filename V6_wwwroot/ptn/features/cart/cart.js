@@ -1,6 +1,8 @@
 ﻿$(document).ready(function () {
     if ($("form#contact").exists()) {
 
+        $(".delivery-address").hide();
+
         if ($('#cDelContactAddress').val() == $('#cContactAddress').val()) {
             if ($('#cContactAddress').val() == '') {
                 //empty so hide delivery
@@ -17,12 +19,14 @@
         }
 
         //when is delivery clicked
-        $('input[name="cIsDelivery"]').click(function () {
-            // alert($(this).attr('value'));
-            if ($(this).attr('value') == 'true') {
+        $('input[name="cIsDelivery"]').change(function () {
+
+            if ($('input[name="cIsDelivery"]').is(":checked")) {
+                $(".delivery-address").show();
                 resetDelAddress();
-            }
-            else {
+            } 
+            if ($('input[name="cIsDelivery"]').is(":checked") == false) {
+                $(".delivery-address").hide();
                 if ($.isNumeric($(this).attr('value')) == true) {
 
                     blankoutFormFields($('#cDelContactName'), 'Collection');
@@ -38,8 +42,7 @@
                 } else {
                     addDeliveryAddress();
                 }
-
-            }
+            }            
         });
 
         //when form submitted
@@ -75,6 +78,16 @@
                 }
             }
         });
+        $(".pay-button").hide();
+        $("#confirmterms_Agree").change(function () {
+            if (this.checked) {
+                $(".pay-button").show();
+                enablePayPal();
+            } else {
+                $(".pay-button").hide();
+            }
+        });
+
     }
 
     if ($("form#PayForm").exists()) {

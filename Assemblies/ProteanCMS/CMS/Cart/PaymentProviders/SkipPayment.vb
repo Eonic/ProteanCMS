@@ -15,6 +15,8 @@ Imports System.Security.Claims
 Imports System.Text
 Imports Newtonsoft.Json.Linq
 
+Imports Protean.stdTools
+
 
 Namespace Providers
     Namespace Payment

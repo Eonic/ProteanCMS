@@ -90,8 +90,7 @@
 			<bind id="cDelContactCity" nodeset="cContactCity" required="true()" type="string" />
 			<bind id="cDelContactState" nodeset="cContactState" required="false()" type="string" />
 			<bind id="cDelContactZip" nodeset="cContactZip" required="true()" type="string" />
-			<bind id="cDelContactCountry" nodeset="cContactCountry" required="true()" type="string" />
-			
+			<bind id="cDelContactCountry" nodeset="cContactCountry" required="true()" type="string" />			
 		</bind>
 		<bind id="cIsDelivery" nodeset="cIsDelivery" required="false()" type="string" />
 	</model>
@@ -105,8 +104,10 @@
 
 					<group class="horizontal-form">
 							<label>Contact</label>
-
-
+						<input bind="cContactName" class="textbox required">
+							<label>Your Name</label>
+							<value />
+						</input>
 							<input bind="cContactEmail" class="textbox required">
 								<label>Email</label>
 								<value />
@@ -119,10 +120,7 @@
 								<label>Type</label>
 								<value>Billing Address</value>
 							</input>
-							<input bind="cContactName" class="textbox required">
-								<label>Name</label>
-								<value />
-							</input>
+
 							<input bind="cContactAddress" class="textbox required">
 								<label>Address Line 1</label>
 								<value />
@@ -182,8 +180,8 @@
 				</group>
 			</group>
 		</group>
-		<submit submission="SubmitAdd" ref="cartBillAddress" class="principle">
-			<label>Continue To Delivery</label>
+		<submit submission="contact" ref="cartBillAddress" class="principle">
+			<label>Continue To Payment</label>
 		</submit>
 	</group>
 

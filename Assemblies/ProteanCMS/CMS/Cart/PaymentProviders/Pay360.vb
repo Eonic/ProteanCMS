@@ -2,6 +2,8 @@
 Imports System.Web.Configuration
 Imports System.Text.RegularExpressions
 Imports Protean.Cms.Cart
+Imports Protean.Tools.Xml
+Imports Protean.stdTools
 
 
 Namespace Providers
@@ -110,7 +112,7 @@ Namespace Providers
                         myWeb = oWeb
                         moPaymentCfg = WebConfigurationManager.GetWebApplicationSection("protean/payment")
                         oPay360Cfg = moPaymentCfg.SelectSingleNode("provider[@name='Pay360']")
-                        oDictOpt = xmlTools.xmlToHashTable(oPay360Cfg, "value")
+                        oDictOpt = xmlToHashTable(oPay360Cfg, "value")
 
 
                         Dim oEwProv As Protean.Cms.Cart.PaymentProviders = New PaymentProviders(myWeb)
@@ -136,7 +138,7 @@ Namespace Providers
 
                         ' Get the payment options
                         'oPay360Cfg = moPaymentCfg.SelectSingleNode("provider[@name='SecPay']")
-                        oDictOpt = xmlTools.xmlToHashTable(oPay360Cfg, "value")
+                        oDictOpt = Protean.Tools.Xml.xmlToHashTable(oPay360Cfg, "value")
 
                         Select Case Convert.ToString(oDictOpt("opperationMode"))
                             Case "true"
@@ -775,7 +777,7 @@ Namespace Providers
 
                         moPaymentCfg = WebConfigurationManager.GetWebApplicationSection("protean/payment")
                         oPay360Cfg = moPaymentCfg.SelectSingleNode("provider[@name='Pay360']")
-                        oDictOpt = xmlTools.xmlToHashTable(oPay360Cfg, "value")
+                        oDictOpt = Protean.Tools.Xml.xmlToHashTable(oPay360Cfg, "value")
                         Dim RemotePassword As String = ""
                         Dim sToken As String = myWeb.moDbHelper.GetDataValue("select cPayMthdProviderRef from tblCartPaymentMethod where nPayMthdKey = " & nPaymentMethodId)
                         Dim cardXml As New XmlDocument

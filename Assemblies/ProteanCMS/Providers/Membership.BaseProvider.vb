@@ -31,6 +31,7 @@ Imports System.Net.Mail
 Imports System.Reflection
 Imports System.Net
 Imports VB = Microsoft.VisualBasic
+Imports Protean.stdTools
 
 Namespace Providers
     Namespace Membership
@@ -89,7 +90,7 @@ Namespace Providers
                         Dim ourProvider As Object = moPrvConfig.Providers(ProviderName)
                         Dim assemblyInstance As [Assembly]
                         If ourProvider.parameters("path") <> "" Then
-                            assemblyInstance = [Assembly].LoadFrom(goServer.MapPath(ourProvider.parameters("path")))
+                            assemblyInstance = [Assembly].LoadFrom(Protean.stdTools.goServer.MapPath(ourProvider.parameters("path")))
                         Else
                             assemblyInstance = [Assembly].Load(ourProvider.Type)
                         End If
@@ -1904,7 +1905,7 @@ Check:
                                         'send registration confirmation
                                         Dim xsltPath As String = "/xsl/email/registration.xsl"
 
-                                        If IO.File.Exists(goServer.MapPath(xsltPath)) Then
+                                        If IO.File.Exists(Protean.stdTools.goServer.MapPath(xsltPath)) Then
                                             Dim oUserElmt As XmlElement = myWeb.moDbHelper.GetUserXML(mnUserId)
                                             If clearUserId Then mnUserId = 0 ' clear user Id so we don't stay logged on
                                             Dim oElmtPwd As XmlElement = myWeb.moPageXml.CreateElement("Password")
@@ -1922,7 +1923,7 @@ Check:
                                             If Not recipientEmail = "" Then sProcessInfo = oMsg.emailer(oUserElmt, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed")
                                             'send an email to the webadmin
                                             recipientEmail = moConfig("SiteAdminEmail")
-                                            If IO.File.Exists(goServer.MapPath(moConfig("ProjectPath") & "/xsl/email/registrationAlert.xsl")) Then
+                                            If IO.File.Exists(Protean.stdTools.goServer.MapPath(moConfig("ProjectPath") & "/xsl/email/registrationAlert.xsl")) Then
                                                 sProcessInfo = oMsg.emailer(oUserElmt, moConfig("ProjectPath") & "/xsl/email/registrationAlert.xsl", "New User", recipientEmail, fromEmail, SubjectLine, "Message Sent", "Message Failed")
                                             End If
                                             oMsg = Nothing
@@ -1989,7 +1990,7 @@ Check:
                                             ' Clear the cache.
                                             Dim cSql As String = "DELETE dbo.tblXmlCache " _
                                                     & " WHERE cCacheSessionID = '" & moSession.SessionID & "' " _
-                                                    & "         AND nCacheDirId = " & Protean.SqlFmt(mnUserId)
+                                                    & "         AND nCacheDirId = " & SqlFmt(mnUserId)
                                             myWeb.moDbHelper.ExeProcessSqlorIgnore(cSql)
 
                                             ' Check if the redirect is another page or just redirect to the current url

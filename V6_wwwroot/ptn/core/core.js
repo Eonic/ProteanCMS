@@ -269,14 +269,21 @@ function disableButton(oBtn, disableMessage) {
 
 }
 
-//bootstrap validation alert
 function displayErrorMessage() {
-    if (document.getElementById("xFrmAlertModal") != null) {
+    if ($('#xFrmAlertModal').exists()) {
         var iconClassName = document.getElementById("errorIcon").className;
-        $('#xFrmAlertModal #errorMessage').text(arguments[0]);
-        $("#xFrmAlertModal #errorIcon").removeClass(iconClassName);
-        $("#xFrmAlertModal #errorIcon").addClass(arguments[1]);
-        var xFrmAlertModal = new bootstrap.Modal(document.getElementById('xFrmAlertModal'))
+        if ($('#xFrmAlertModal #errorMessage').html() == "&nbsp;") {
+            $('#xFrmAlertModal #errorMessage').html('');
+            $('#xFrmAlertModal #errorMessage').html(arguments[0]);
+            $("#xFrmAlertModal #errorIcon").removeClass(iconClassName);
+            $("#xFrmAlertModal #errorIcon").addClass(arguments[1]);
+        }
+        else {
+            var NewAlert = '<br/><i class="' + iconClassName + '">&nbsp;</i>&nbsp; <span>' + arguments[0] + '</span>';
+            $("#xFrmAlertModal .modal-body").append(NewAlert);
+        }
+       
+        let xFrmAlertModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('xFrmAlertModal')) // Returns a Bootstrap modal instance
         xFrmAlertModal.show();
     } else { alert(arguments[0]); }
 }

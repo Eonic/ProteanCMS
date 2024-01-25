@@ -9,6 +9,8 @@ Imports VB = Microsoft.VisualBasic
 Imports System
 Imports Protean.Providers.Membership.EonicProvider
 
+Imports Protean.stdTools
+
 Partial Public Class Cms
 
     Public Class Quote

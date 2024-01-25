@@ -7,6 +7,7 @@ Imports System.Data
 Imports System.Data.SqlClient
 Imports System
 Imports Microsoft.Ajax.Utilities
+Imports Protean.stdTools
 
 Partial Public Class Cms
     Partial Public Class Cart

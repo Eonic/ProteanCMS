@@ -10,6 +10,8 @@ Imports System.Web.Configuration
 Imports System.Configuration
 Imports System
 Imports System.Web.UI
+Imports Protean.Tools.Xml
+Imports Protean.stdTools
 
 
 Public Class xForm
@@ -1139,7 +1141,7 @@ Public Class xForm
                                                         Try
                                                             oElmtTemp.InnerXml = (Protean.Tools.Xml.convertEntitiesToCodes(submittedValue) & "").Trim
                                                         Catch
-                                                            oElmtTemp.InnerXml = tidyXhtmlFrag((Protean.Tools.Xml.convertEntitiesToCodes(submittedValue) & "").Trim)
+                                                            oElmtTemp.InnerXml = Tools.Text.tidyXhtmlFrag((Protean.Tools.Xml.convertEntitiesToCodes(submittedValue) & "").Trim)
                                                         End Try
                                                         oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.ReplaceChild(oElmtTemp.FirstChild.Clone, oInstance.SelectSingleNode(sXpath, nsMgr))
                                                     End If
