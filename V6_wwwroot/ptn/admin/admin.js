@@ -32,9 +32,7 @@ var IsParentPageAPI = '/ewapi/Cms.Admin/IsParentPage';
 var checkiFrameLoaded;
 
 $(document).ready(function () {
-    $(".ptn-edit > .dropdown > .dropdown-toggle").click(function () {
-        $(this).parent().parent().find('.dropdown-menu').addClass("active-admin-dd");
-    });
+    
     $(".all-breadcrumb").click(function () {
         $(".admin-breadcrumb").addClass("breadcrumb-height");
         $(".all-breadcrumb").hide();
