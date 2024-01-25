@@ -3277,6 +3277,7 @@ namespace Protean
                 double vatAmt;
                 double shipCost;
                 var nCheckPrice = default(double);
+                long nStatusId = 0;
                 XmlElement oCheckPrice;
                 // We need to read this value from somewhere so we can change where vat is added
                 // Currently defaulted to per line
@@ -3556,7 +3557,9 @@ namespace Protean
                             // Get Shipping Group from query if assigned to that product and add new node in order and use this node for displaying messages for x50 and t03 category.
                             if (myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure))
                             {
-                                string sSqlShippingGroup = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("select csm.nShipOptKey,CPC.cCatName  from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey left join tblAudit A ON p.nAuditId= A.nAuditKey left join tblCartCatProductRelations cpr on p.nContentKey = cpr.nContentId left join tblCartProductCategories CPC ON cpr.nCatId= cpc.nCatKey Left JOIN tblCartShippingProductCategoryRelations cspcr ON cpr.nCatId= cspcr.nCatId LEFT join tblCartShippingMethods csm on csm.nShipOptKey=cspcr.nShipOptId where nCartOrderId=" + nCartIdUse + " and nCartItemKey=", oRow["id"]), " and cCatSchemaName = 'Shipping' and csm.nShipOptKey is not null and nItemId <>0 and cspcr.nRuleType=1 order by nShipOptCost asc"));
+                                if (nStatusId > 100) {
+
+                                string sSqlShippingGroup = $"select csm.nShipOptKey,CPC.cCatName  from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey left join tblAudit A ON p.nAuditId= A.nAuditKey left join tblCartCatProductRelations cpr on p.nContentKey = cpr.nContentId left join tblCartProductCategories CPC ON cpr.nCatId= cpc.nCatKey Left JOIN tblCartShippingProductCategoryRelations cspcr ON cpr.nCatId= cspcr.nCatId LEFT join tblCartShippingMethods csm on csm.nShipOptKey=cspcr.nShipOptId where nCartOrderId={nCartIdUse.ToString()} and nCartItemKey={oRow["id"].ToString()} and cCatSchemaName = 'Shipping' and csm.nShipOptKey is not null and nItemId <>0 and cspcr.nRuleType=1 order by nShipOptCost asc";
                                 // oDsShippingOptionKey = moDBHelper.getDataSetForUpdate(sSqlShippingGroup, "Item", "Cart")
                                 // If oDsShippingOptionKey.Tables(0).Rows.Count > 0 Then
                                 // ShippingOptionKey = Convert.ToInt64(oDsShippingOptionKey.Tables(0).Rows(0).ItemArray(0))
@@ -3577,6 +3580,7 @@ namespace Protean
                                             updateGCgetValidShippingOptionsDS(ShippingOptionKey.ToString());
                                         }
                                     }
+                                }
                                 }
                             }
 
@@ -3619,7 +3623,7 @@ namespace Protean
 
                         // add to Cart XML
                         sSql = "Select nCartStatus from tblCartOrder where nCartOrderKey = " + nCartIdUse;
-                        long nStatusId = Conversions.ToLong(moDBHelper.DBN2Str(moDBHelper.ExeProcessSqlScalar(sSql), false, false));
+                        nStatusId = Conversions.ToLong(moDBHelper.DBN2Str(moDBHelper.ExeProcessSqlScalar(sSql), false, false));
                         // moCartConfig("OrderPaymentStatusId") = nStatusId
                         oCartElmt.SetAttribute("statusId", nStatusId.ToString());
                         oCartElmt.SetAttribute("status", getProcessName((cartProcess)nStatusId));
@@ -3819,8 +3823,10 @@ namespace Protean
                                 }
                             }
 
+                            Int32 nShipMethod = (int)oRow["nShippingMethodId"];
+                            Int32 nCartStatus = (int)oRow["nCartStatus"];
 
-                            if (Conversions.ToBoolean(Operators.OrObject(Operators.AndObject(Operators.ConditionalCompareObjectEqual(oRow["nShippingMethodId"], 0, false), Operators.ConditionalCompareObjectLess(oRow["nCartStatus"], 5, false)), IsPromocodeValid == true)))
+                            if ((nShipMethod==0 && nCartStatus!=5) | IsPromocodeValid == true)
                             {
                                 if (!string.IsNullOrEmpty(oCartElmt.GetAttribute("bDiscountIsPercent")))
                                 {
@@ -3898,7 +3904,7 @@ namespace Protean
                                                     }
                                                 }
                                             }
-                                            else if ((shipCost == -1 | Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"])) < shipCost) & bCollection == false)
+                                            else if ((shipCost == -1 | Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"])) >= shipCost) & bCollection == false)
                                             {
                                                 shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"]));
                                                 oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig["DefaultCountry"]);

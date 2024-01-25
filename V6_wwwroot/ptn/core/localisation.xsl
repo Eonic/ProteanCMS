@@ -3658,10 +3658,10 @@
   <xsl:template name="term4047">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">
-        <xsl:text>Select Delivery Option</xsl:text>
+        <xsl:text>Select Delivery</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Select Delivery Option</xsl:text>
+        <xsl:text>Select Delivery</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
