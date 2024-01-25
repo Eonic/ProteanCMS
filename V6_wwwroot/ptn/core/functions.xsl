@@ -975,7 +975,7 @@
 		<xsl:apply-templates select="." mode="pageJs"/>
 
 		<xsl:choose>
-			<xsl:when test="/Page/ContentDetail/Content">				
+			<xsl:when test="/Page/ContentDetail/Content">
 				<xsl:apply-templates select="/Page/ContentDetail/Content" mode="contentDetailJS"/>
 			</xsl:when>
 			<xsl:otherwise>
@@ -4281,10 +4281,6 @@
 				<ul>
 					<xsl:attribute name="class">
 						<xsl:text>nav nav-pills</xsl:text>
-						<!--TS Theme specfic setting must not be here - Moved to Layout XSL -->
-						<!--xsl:if test="$themeLayout='TopNavSideSub' or $themeLayout='SideNav'">
-                  <xsl:text> nav-stacked</xsl:text>
-                </xsl:if-->
 					</xsl:attribute>
 					<xsl:if test="$menu-back='true'">
 						<li class="xs-only nav-item menu-back">
@@ -4304,6 +4300,8 @@
 					<xsl:apply-templates select="MenuItem[not(DisplayName/@exclude='true')]" mode="submenuitem">
 						<xsl:with-param name="class" select="$class"/>
 						<xsl:with-param name="link-class" select="$li-class"/>
+						<xsl:with-param name="level3" select="$level3"/>
+						<xsl:with-param name="menu-back" select="$menu-back"/>
 					</xsl:apply-templates>
 				</ul>
 			</xsl:if>
@@ -7311,11 +7309,11 @@
 		</xsl:choose>
 	</xsl:template>
 
-		<xsl:template match="Content | productDetail" mode="displayCartImage">
+	<xsl:template match="Content | productDetail" mode="displayCartImage">
 		<xsl:param name="crop" select="false()" />
 		<xsl:param name="no-stretch" select="true()" />
-			<xsl:param name="width"/>
-			<xsl:param name="height"/>
+		<xsl:param name="width"/>
+		<xsl:param name="height"/>
 		<xsl:param name="showImage"/>
 		<xsl:param name="class"/>
 		<xsl:param name="forceResize"/>
@@ -7405,7 +7403,7 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<xsl:template match="Content | MenuItem" mode="displaySubPageThumb">
 		<xsl:param name="crop"/>
 		<xsl:param name="fixedThumb"/>
