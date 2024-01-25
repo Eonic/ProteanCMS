@@ -619,10 +619,10 @@ namespace Protean.Providers
                     // allow html in description node...
                     bool bXmlLabel = false;
 
-                    LabelNode = configXml.SelectSingleNode("description");
+                    LabelNode = configXml.SelectSingleNode("description/@value");
                     if (LabelNode != null)
                     {
-                        PaymentLabel = configXml.SelectSingleNode("description").InnerXml;
+                        PaymentLabel = configXml.SelectSingleNode("description/@value").InnerXml;
                         bXmlLabel = true;
                     }
 
