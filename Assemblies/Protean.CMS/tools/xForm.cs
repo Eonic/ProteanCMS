@@ -965,7 +965,7 @@ namespace Protean
                         expr.SetContext(nsMgr);
 
                         // Evaluate the constraint
-                        if (Conversions.ToBoolean(xPathNav2.Evaluate(expr) != null))
+                        if (Convert.ToBoolean(xPathNav2.Evaluate(expr)) == false)
                         {
                             // Constraint not met
                             bIsValid = false;
