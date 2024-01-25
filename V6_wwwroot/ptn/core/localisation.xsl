@@ -2813,10 +2813,10 @@
   <xsl:template name="term3076">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">
-        <xsl:text>Terms and Conditions</xsl:text>
+        <xsl:text>terms and conditions</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Terms and Conditions</xsl:text>
+        <xsl:text>terms and conditions</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -2916,10 +2916,10 @@
   <xsl:template name="term3085">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">
-        <xsl:text>I agree to the Terms and Conditions</xsl:text>
+        <xsl:text>I agree to the terms and conditions</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>I agree to the Terms and Conditions</xsl:text>
+        <xsl:text>I agree to the terms and conditions</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
