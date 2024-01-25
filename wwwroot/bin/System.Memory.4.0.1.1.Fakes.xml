@@ -1,0 +1,644 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>System.Memory.4.0.1.1.Fakes</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.QualityTools.Testing.Fakes.Delegates.SystemMemoryDelegates">
+            <summary>Contains custom delegates used for the stubs and shims of System.Memory</summary>
+        </member>
+        <member name="T:System.Buffers.Binary.Fakes.ShimBinaryPrimitives">
+            <summary>Shim type of System.Buffers.Binary.BinaryPrimitives</summary>
+        </member>
+        <member name="M:System.Buffers.Binary.Fakes.ShimBinaryPrimitives.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:System.Buffers.Binary.Fakes.ShimBinaryPrimitives.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Buffers.Binary.Fakes.ShimBinaryPrimitives.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Buffers.Binary.Fakes.ShimBinaryPrimitives.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Buffers.Binary.Fakes.ShimBinaryPrimitives.ReverseEndiannessByte">
+            <summary>Sets the Shim of BinaryPrimitives.ReverseEndianness(Byte value)</summary>
+        </member>
+        <member name="P:System.Buffers.Binary.Fakes.ShimBinaryPrimitives.ReverseEndiannessInt16">
+            <summary>Sets the Shim of BinaryPrimitives.ReverseEndianness(Int16 value)</summary>
+        </member>
+        <member name="P:System.Buffers.Binary.Fakes.ShimBinaryPrimitives.ReverseEndiannessInt32">
+            <summary>Sets the Shim of BinaryPrimitives.ReverseEndianness(Int32 value)</summary>
+        </member>
+        <member name="P:System.Buffers.Binary.Fakes.ShimBinaryPrimitives.ReverseEndiannessInt64">
+            <summary>Sets the Shim of BinaryPrimitives.ReverseEndianness(Int64 value)</summary>
+        </member>
+        <member name="P:System.Buffers.Binary.Fakes.ShimBinaryPrimitives.ReverseEndiannessSByte">
+            <summary>Sets the Shim of BinaryPrimitives.ReverseEndianness(SByte value)</summary>
+        </member>
+        <member name="P:System.Buffers.Binary.Fakes.ShimBinaryPrimitives.ReverseEndiannessUInt16">
+            <summary>Sets the Shim of BinaryPrimitives.ReverseEndianness(UInt16 value)</summary>
+        </member>
+        <member name="P:System.Buffers.Binary.Fakes.ShimBinaryPrimitives.ReverseEndiannessUInt32">
+            <summary>Sets the Shim of BinaryPrimitives.ReverseEndianness(UInt32 value)</summary>
+        </member>
+        <member name="P:System.Buffers.Binary.Fakes.ShimBinaryPrimitives.ReverseEndiannessUInt64">
+            <summary>Sets the Shim of BinaryPrimitives.ReverseEndianness(UInt64 value)</summary>
+        </member>
+        <member name="T:System.Buffers.Fakes.ShimBuffersExtensions">
+            <summary>Shim type of System.Buffers.BuffersExtensions</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimBuffersExtensions.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimBuffersExtensions.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimBuffersExtensions.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimBuffersExtensions.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimBuffersExtensions.PositionOfMultiSegmentOf1ReadOnlySequenceOfM0RefM0``1(Microsoft.QualityTools.Testing.Fakes.Delegates.SystemMemoryDelegates.Ref0Func3{System.Buffers.ReadOnlySequence{``0},``0,System.Nullable{System.SequencePosition}})">
+            <summary>Sets the Shim of BuffersExtensions.PositionOfMultiSegment(ReadOnlySequence`1&lt;!!0&gt;&amp; source, !!0 value)</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimBuffersExtensions.PositionOfOf1ReadOnlySequenceOfM0RefM0``1(Microsoft.QualityTools.Testing.Fakes.Delegates.SystemMemoryDelegates.Ref0Func3{System.Buffers.ReadOnlySequence{``0},``0,System.Nullable{System.SequencePosition}})">
+            <summary>Sets the Shim of BuffersExtensions.PositionOf(ReadOnlySequence`1&lt;!!0&gt;&amp; source, !!0 value)</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimBuffersExtensions.ToArrayOf1ReadOnlySequenceOfM0Ref``1(Microsoft.QualityTools.Testing.Fakes.Delegates.SystemMemoryDelegates.Ref0Func2{System.Buffers.ReadOnlySequence{``0},``0[]})">
+            <summary>Sets the Shim of BuffersExtensions.ToArray(ReadOnlySequence`1&lt;!!0&gt;&amp; sequence)</summary>
+        </member>
+        <member name="T:System.Buffers.Fakes.ShimMemoryHandle">
+            <summary>Shim type of System.Buffers.MemoryHandle</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimMemoryHandle.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="T:System.Buffers.Fakes.ShimMemoryHandle.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimMemoryHandle.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimMemoryHandle.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimMemoryHandle.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="T:System.Buffers.Fakes.ShimMemoryManager`1">
+            <summary>Shim type of System.Buffers.MemoryManager`1</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimMemoryManager`1.#ctor(System.Buffers.MemoryManager{`0})">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:System.Buffers.Fakes.ShimMemoryManager`1.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimMemoryManager`1.AllInstances.CreateMemoryInt32">
+            <summary>Sets the Shim of MemoryManager`1.CreateMemory(Int32 length)</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimMemoryManager`1.AllInstances.CreateMemoryInt32Int32">
+            <summary>Sets the Shim of MemoryManager`1.CreateMemory(Int32 start, Int32 length)</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimMemoryManager`1.AllInstances.MemoryGet">
+            <summary>Sets the Shim of MemoryManager`1.get_Memory()</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimMemoryManager`1.AllInstances.SystemIDisposableDispose">
+            <summary>Sets the Shim of MemoryManager`1.System.IDisposable.Dispose()</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimMemoryManager`1.AllInstances.TryGetArrayArraySegmentOfT0Out">
+            <summary>Sets the Shim of MemoryManager`1.TryGetArray(ArraySegment`1&lt;!0&gt;&amp; segment)</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimMemoryManager`1.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimMemoryManager`1.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimMemoryManager`1.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimMemoryManager`1.Bind(System.Buffers.IPinnable)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimMemoryManager`1.Bind(System.Buffers.IMemoryOwner{`0})">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimMemoryManager`1.Bind(System.IDisposable)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimMemoryManager`1.Constructor">
+            <summary>Sets the Shim of MemoryManager`1.MemoryManager`1()</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimMemoryManager`1.CreateMemoryInt32">
+            <summary>Sets the Shim of MemoryManager`1.CreateMemory(Int32 length)</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimMemoryManager`1.CreateMemoryInt32Int32">
+            <summary>Sets the Shim of MemoryManager`1.CreateMemory(Int32 start, Int32 length)</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimMemoryManager`1.MemoryGet">
+            <summary>Sets the Shim of MemoryManager`1.get_Memory()</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimMemoryManager`1.SystemIDisposableDispose">
+            <summary>Sets the Shim of MemoryManager`1.System.IDisposable.Dispose()</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimMemoryManager`1.TryGetArrayArraySegmentOfT0Out">
+            <summary>Sets the Shim of MemoryManager`1.TryGetArray(ArraySegment`1&lt;!0&gt;&amp; segment)</summary>
+        </member>
+        <member name="T:System.Buffers.Fakes.ShimMemoryPool`1">
+            <summary>Shim type of System.Buffers.MemoryPool`1</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimMemoryPool`1.#ctor(System.Buffers.MemoryPool{`0})">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:System.Buffers.Fakes.ShimMemoryPool`1.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimMemoryPool`1.AllInstances.Dispose">
+            <summary>Sets the Shim of MemoryPool`1.Dispose()</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimMemoryPool`1.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimMemoryPool`1.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimMemoryPool`1.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimMemoryPool`1.Bind(System.IDisposable)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimMemoryPool`1.Constructor">
+            <summary>Sets the Shim of MemoryPool`1.MemoryPool`1()</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimMemoryPool`1.Dispose">
+            <summary>Sets the Shim of MemoryPool`1.Dispose()</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimMemoryPool`1.SharedGet">
+            <summary>Sets the Shim of MemoryPool`1.get_Shared()</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimMemoryPool`1.StaticConstructor">
+            <summary>Sets the Shim of MemoryPool`1.MemoryPool`1()</summary>
+        </member>
+        <member name="T:System.Buffers.Fakes.ShimReadOnlySequence`1">
+            <summary>Shim type of System.Buffers.ReadOnlySequence`1</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimReadOnlySequence`1.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="T:System.Buffers.Fakes.ShimReadOnlySequence`1.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimReadOnlySequence`1.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimReadOnlySequence`1.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimReadOnlySequence`1.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimReadOnlySequence`1.GetEndPositionReadOnlySequenceSegmentOfT0ObjectInt32ObjectInt32Int64">
+            <summary>Sets the Shim of ReadOnlySequence`1.GetEndPosition(ReadOnlySequenceSegment`1&lt;!0&gt; startSegment, Object startObject, Int32 startIndex, Object endObject, Int32 endIndex, Int64 length)</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimReadOnlySequence`1.GetIndexSequencePositionRef">
+            <summary>Sets the Shim of ReadOnlySequence`1.GetIndex(SequencePosition&amp; position)</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimReadOnlySequence`1.InRangeUInt32UInt32UInt32">
+            <summary>Sets the Shim of ReadOnlySequence`1.InRange(UInt32 value, UInt32 start, UInt32 end)</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimReadOnlySequence`1.InRangeUInt64UInt64UInt64">
+            <summary>Sets the Shim of ReadOnlySequence`1.InRange(UInt64 value, UInt64 start, UInt64 end)</summary>
+        </member>
+        <member name="T:System.Buffers.Fakes.ShimReadOnlySequence`1.ShimEnumerator">
+            <summary>Shim type of System.Buffers.ReadOnlySequence`1+Enumerator</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimReadOnlySequence`1.ShimEnumerator.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="T:System.Buffers.Fakes.ShimReadOnlySequence`1.ShimEnumerator.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimReadOnlySequence`1.ShimEnumerator.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimReadOnlySequence`1.ShimEnumerator.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimReadOnlySequence`1.ShimEnumerator.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimReadOnlySequence`1.StaticConstructor">
+            <summary>Sets the Shim of ReadOnlySequence`1.ReadOnlySequence`1()</summary>
+        </member>
+        <member name="T:System.Buffers.Fakes.ShimReadOnlySequenceSegment`1">
+            <summary>Shim type of System.Buffers.ReadOnlySequenceSegment`1</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimReadOnlySequenceSegment`1.#ctor(System.Buffers.ReadOnlySequenceSegment{`0})">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:System.Buffers.Fakes.ShimReadOnlySequenceSegment`1.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimReadOnlySequenceSegment`1.AllInstances.MemoryGet">
+            <summary>Sets the Shim of ReadOnlySequenceSegment`1.get_Memory()</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimReadOnlySequenceSegment`1.AllInstances.MemorySetReadOnlyMemoryOfT0">
+            <summary>Sets the Shim of ReadOnlySequenceSegment`1.set_Memory(ReadOnlyMemory`1&lt;!0&gt; value)</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimReadOnlySequenceSegment`1.AllInstances.NextGet">
+            <summary>Sets the Shim of ReadOnlySequenceSegment`1.get_Next()</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimReadOnlySequenceSegment`1.AllInstances.NextSetReadOnlySequenceSegmentOfT0">
+            <summary>Sets the Shim of ReadOnlySequenceSegment`1.set_Next(ReadOnlySequenceSegment`1&lt;!0&gt; value)</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimReadOnlySequenceSegment`1.AllInstances.RunningIndexGet">
+            <summary>Sets the Shim of ReadOnlySequenceSegment`1.get_RunningIndex()</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimReadOnlySequenceSegment`1.AllInstances.RunningIndexSetInt64">
+            <summary>Sets the Shim of ReadOnlySequenceSegment`1.set_RunningIndex(Int64 value)</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimReadOnlySequenceSegment`1.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimReadOnlySequenceSegment`1.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimReadOnlySequenceSegment`1.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimReadOnlySequenceSegment`1.Constructor">
+            <summary>Sets the Shim of ReadOnlySequenceSegment`1.ReadOnlySequenceSegment`1()</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimReadOnlySequenceSegment`1.MemoryGet">
+            <summary>Sets the Shim of ReadOnlySequenceSegment`1.get_Memory()</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimReadOnlySequenceSegment`1.MemorySetReadOnlyMemoryOfT0">
+            <summary>Sets the Shim of ReadOnlySequenceSegment`1.set_Memory(ReadOnlyMemory`1&lt;!0&gt; value)</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimReadOnlySequenceSegment`1.NextGet">
+            <summary>Sets the Shim of ReadOnlySequenceSegment`1.get_Next()</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimReadOnlySequenceSegment`1.NextSetReadOnlySequenceSegmentOfT0">
+            <summary>Sets the Shim of ReadOnlySequenceSegment`1.set_Next(ReadOnlySequenceSegment`1&lt;!0&gt; value)</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimReadOnlySequenceSegment`1.RunningIndexGet">
+            <summary>Sets the Shim of ReadOnlySequenceSegment`1.get_RunningIndex()</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimReadOnlySequenceSegment`1.RunningIndexSetInt64">
+            <summary>Sets the Shim of ReadOnlySequenceSegment`1.set_RunningIndex(Int64 value)</summary>
+        </member>
+        <member name="T:System.Buffers.Fakes.ShimStandardFormat">
+            <summary>Shim type of System.Buffers.StandardFormat</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimStandardFormat.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="T:System.Buffers.Fakes.ShimStandardFormat.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimStandardFormat.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.ShimStandardFormat.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimStandardFormat.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimStandardFormat.EqualityOpStandardFormatStandardFormat">
+            <summary>Sets the Shim of StandardFormat.op_Equality(StandardFormat left, StandardFormat right)</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimStandardFormat.ImplicitOpCharStandardFormat">
+            <summary>Sets the Shim of StandardFormat.op_Implicit(Char symbol)</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimStandardFormat.InequalityOpStandardFormatStandardFormat">
+            <summary>Sets the Shim of StandardFormat.op_Inequality(StandardFormat left, StandardFormat right)</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.ShimStandardFormat.ParseString">
+            <summary>Sets the Shim of StandardFormat.Parse(String format)</summary>
+        </member>
+        <member name="T:System.Buffers.Fakes.StubIMemoryOwner`1">
+            <summary>Stub type of System.Buffers.IMemoryOwner`1</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.StubIMemoryOwner`1.#ctor">
+            <summary>Initializes a new instance of type StubIMemoryOwner</summary>
+        </member>
+        <member name="F:System.Buffers.Fakes.StubIMemoryOwner`1.Dispose">
+            <summary>Sets the stub of IDisposable.Dispose()</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.StubIMemoryOwner`1.System#Buffers#IMemoryOwner{T}#Memory">
+            <summary>Sets the stub of IMemoryOwner`1.get_Memory()</summary>
+        </member>
+        <member name="F:System.Buffers.Fakes.StubIMemoryOwner`1.MemoryGet">
+            <summary>Sets the stub of IMemoryOwner`1.get_Memory()</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.StubIMemoryOwner`1.System#IDisposable#Dispose">
+            <summary>Sets the Stub of IDisposable.Dispose()</summary>
+        </member>
+        <member name="T:System.Buffers.Fakes.StubIPinnable">
+            <summary>Stub type of System.Buffers.IPinnable</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.StubIPinnable.#ctor">
+            <summary>Initializes a new instance of type StubIPinnable</summary>
+        </member>
+        <member name="F:System.Buffers.Fakes.StubIPinnable.PinInt32">
+            <summary>Sets the stub of IPinnable.Pin(Int32 elementIndex)</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.StubIPinnable.System#Buffers#IPinnable#Pin(System.Int32)">
+            <summary>Sets the Stub of IPinnable.Pin(Int32 elementIndex)</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.StubIPinnable.System#Buffers#IPinnable#Unpin">
+            <summary>Sets the Stub of IPinnable.Unpin()</summary>
+        </member>
+        <member name="F:System.Buffers.Fakes.StubIPinnable.Unpin">
+            <summary>Sets the stub of IPinnable.Unpin()</summary>
+        </member>
+        <member name="T:System.Buffers.Fakes.StubMemoryPool`1">
+            <summary>Stub type of System.Buffers.MemoryPool`1</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.StubMemoryPool`1.#ctor">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.StubMemoryPool`1.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.StubMemoryPool`1.Dispose(System.Boolean)">
+            <summary>Sets the Stub of MemoryPool`1.Dispose(Boolean disposing)</summary>
+        </member>
+        <member name="F:System.Buffers.Fakes.StubMemoryPool`1.DisposeBoolean">
+            <summary>Sets the stub of MemoryPool`1.Dispose(Boolean disposing)</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.StubMemoryPool`1.InitializeStub">
+            <summary>Initializes a new instance of type StubMemoryPool</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.StubMemoryPool`1.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.StubMemoryPool`1.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.StubMemoryPool`1.MaxBufferSize">
+            <summary>Sets the stub of MemoryPool`1.get_MaxBufferSize()</summary>
+        </member>
+        <member name="F:System.Buffers.Fakes.StubMemoryPool`1.MaxBufferSizeGet">
+            <summary>Sets the stub of MemoryPool`1.get_MaxBufferSize()</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.StubMemoryPool`1.Rent(System.Int32)">
+            <summary>Sets the Stub of MemoryPool`1.Rent(Int32 minBufferSize)</summary>
+        </member>
+        <member name="F:System.Buffers.Fakes.StubMemoryPool`1.RentInt32">
+            <summary>Sets the stub of MemoryPool`1.Rent(Int32 minBufferSize)</summary>
+        </member>
+        <member name="T:System.Buffers.Fakes.StubReadOnlySequenceSegment`1">
+            <summary>Stub type of System.Buffers.ReadOnlySequenceSegment`1</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.StubReadOnlySequenceSegment`1.#ctor">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.StubReadOnlySequenceSegment`1.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="M:System.Buffers.Fakes.StubReadOnlySequenceSegment`1.InitializeStub">
+            <summary>Initializes a new instance of type StubReadOnlySequenceSegment</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.StubReadOnlySequenceSegment`1.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:System.Buffers.Fakes.StubReadOnlySequenceSegment`1.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+        <member name="T:System.Buffers.Text.Fakes.ShimBase64">
+            <summary>Shim type of System.Buffers.Text.Base64</summary>
+        </member>
+        <member name="M:System.Buffers.Text.Fakes.ShimBase64.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:System.Buffers.Text.Fakes.ShimBase64.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Buffers.Text.Fakes.ShimBase64.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Buffers.Text.Fakes.ShimBase64.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Buffers.Text.Fakes.ShimBase64.DecodeByteRefSByteRef">
+            <summary>Sets the Shim of Base64.Decode(Byte&amp; encodedBytes, SByte&amp; decodingMap)</summary>
+        </member>
+        <member name="P:System.Buffers.Text.Fakes.ShimBase64.EncodeAndPadOneByteRefByteRef">
+            <summary>Sets the Shim of Base64.EncodeAndPadOne(Byte&amp; twoBytes, Byte&amp; encodingMap)</summary>
+        </member>
+        <member name="P:System.Buffers.Text.Fakes.ShimBase64.EncodeAndPadTwoByteRefByteRef">
+            <summary>Sets the Shim of Base64.EncodeAndPadTwo(Byte&amp; oneByte, Byte&amp; encodingMap)</summary>
+        </member>
+        <member name="P:System.Buffers.Text.Fakes.ShimBase64.EncodeByteRefByteRef">
+            <summary>Sets the Shim of Base64.Encode(Byte&amp; threeBytes, Byte&amp; encodingMap)</summary>
+        </member>
+        <member name="P:System.Buffers.Text.Fakes.ShimBase64.GetMaxDecodedFromUtf8LengthInt32">
+            <summary>Sets the Shim of Base64.GetMaxDecodedFromUtf8Length(Int32 length)</summary>
+        </member>
+        <member name="P:System.Buffers.Text.Fakes.ShimBase64.GetMaxEncodedToUtf8LengthInt32">
+            <summary>Sets the Shim of Base64.GetMaxEncodedToUtf8Length(Int32 length)</summary>
+        </member>
+        <member name="P:System.Buffers.Text.Fakes.ShimBase64.StaticConstructor">
+            <summary>Sets the Shim of Base64.Base64()</summary>
+        </member>
+        <member name="P:System.Buffers.Text.Fakes.ShimBase64.WriteThreeLowOrderBytesByteRefInt32">
+            <summary>Sets the Shim of Base64.WriteThreeLowOrderBytes(Byte&amp; destination, Int32 value)</summary>
+        </member>
+        <member name="T:System.Buffers.Text.Fakes.ShimUtf8Formatter">
+            <summary>Shim type of System.Buffers.Text.Utf8Formatter</summary>
+        </member>
+        <member name="M:System.Buffers.Text.Fakes.ShimUtf8Formatter.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:System.Buffers.Text.Fakes.ShimUtf8Formatter.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Buffers.Text.Fakes.ShimUtf8Formatter.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Buffers.Text.Fakes.ShimUtf8Formatter.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Buffers.Text.Fakes.ShimUtf8Formatter.StaticConstructor">
+            <summary>Sets the Shim of Utf8Formatter.Utf8Formatter()</summary>
+        </member>
+        <member name="T:System.Buffers.Text.Fakes.ShimUtf8Parser">
+            <summary>Shim type of System.Buffers.Text.Utf8Parser</summary>
+        </member>
+        <member name="M:System.Buffers.Text.Fakes.ShimUtf8Parser.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:System.Buffers.Text.Fakes.ShimUtf8Parser.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Buffers.Text.Fakes.ShimUtf8Parser.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Buffers.Text.Fakes.ShimUtf8Parser.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Buffers.Text.Fakes.ShimUtf8Parser.StaticConstructor">
+            <summary>Sets the Shim of Utf8Parser.Utf8Parser()</summary>
+        </member>
+        <member name="P:System.Buffers.Text.Fakes.ShimUtf8Parser.TryCreateDateTimeInt32Int32Int32Int32Int32Int32Int32DateTimeKindDateTimeOut">
+            <summary>Sets the Shim of Utf8Parser.TryCreateDateTime(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second, Int32 fraction, DateTimeKind kind, DateTime&amp; value)</summary>
+        </member>
+        <member name="P:System.Buffers.Text.Fakes.ShimUtf8Parser.TryCreateDateTimeOffsetDateTimeBooleanInt32Int32DateTimeOffsetOut">
+            <summary>Sets the Shim of Utf8Parser.TryCreateDateTimeOffset(DateTime dateTime, Boolean offsetNegative, Int32 offsetHours, Int32 offsetMinutes, DateTimeOffset&amp; value)</summary>
+        </member>
+        <member name="P:System.Buffers.Text.Fakes.ShimUtf8Parser.TryCreateDateTimeOffsetInt32Int32Int32Int32Int32Int32Int32BooleanInt32Int32DateTimeOffsetOut">
+            <summary>Sets the Shim of Utf8Parser.TryCreateDateTimeOffset(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second, Int32 fraction, Boolean offsetNegative, Int32 offsetHours, Int32 offsetMinutes, DateTimeOffset&amp; value)</summary>
+        </member>
+        <member name="P:System.Buffers.Text.Fakes.ShimUtf8Parser.TryCreateDateTimeOffsetInterpretingDataAsLocalTimeInt32Int32Int32Int32Int32Int32Int32DateTimeOffsetOut">
+            <summary>Sets the Shim of Utf8Parser.TryCreateDateTimeOffsetInterpretingDataAsLocalTime(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second, Int32 fraction, DateTimeOffset&amp; value)</summary>
+        </member>
+        <member name="P:System.Buffers.Text.Fakes.ShimUtf8Parser.TryCreateTimeSpanBooleanUInt32UInt32UInt32UInt32UInt32TimeSpanOut">
+            <summary>Sets the Shim of Utf8Parser.TryCreateTimeSpan(Boolean isNegative, UInt32 days, UInt32 hours, UInt32 minutes, UInt32 seconds, UInt32 fraction, TimeSpan&amp; timeSpan)</summary>
+        </member>
+        <member name="T:System.Fakes.ShimMemory`1">
+            <summary>Shim type of System.Memory`1</summary>
+        </member>
+        <member name="M:System.Fakes.ShimMemory`1.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="T:System.Fakes.ShimMemory`1.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="M:System.Fakes.ShimMemory`1.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Fakes.ShimMemory`1.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Fakes.ShimMemory`1.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Fakes.ShimMemory`1.CombineHashCodesInt32Int32">
+            <summary>Sets the Shim of Memory`1.CombineHashCodes(Int32 left, Int32 right)</summary>
+        </member>
+        <member name="P:System.Fakes.ShimMemory`1.CombineHashCodesInt32Int32Int32">
+            <summary>Sets the Shim of Memory`1.CombineHashCodes(Int32 h1, Int32 h2, Int32 h3)</summary>
+        </member>
+        <member name="P:System.Fakes.ShimMemory`1.EmptyGet">
+            <summary>Sets the Shim of Memory`1.get_Empty()</summary>
+        </member>
+        <member name="P:System.Fakes.ShimMemory`1.ImplicitOpArraySegmentOfT0MemoryOfT0">
+            <summary>Sets the Shim of Memory`1.op_Implicit(ArraySegment`1&lt;!0&gt; segment)</summary>
+        </member>
+        <member name="P:System.Fakes.ShimMemory`1.ImplicitOpMemoryOfT0ReadOnlyMemoryOfT0">
+            <summary>Sets the Shim of Memory`1.op_Implicit(Memory`1&lt;!0&gt; memory)</summary>
+        </member>
+        <member name="P:System.Fakes.ShimMemory`1.ImplicitOpT0ArrayMemoryOfT0">
+            <summary>Sets the Shim of Memory`1.op_Implicit(!0[] array)</summary>
+        </member>
+        <member name="T:System.Fakes.ShimMemoryExtensions">
+            <summary>Shim type of System.MemoryExtensions</summary>
+        </member>
+        <member name="M:System.Fakes.ShimMemoryExtensions.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:System.Fakes.ShimMemoryExtensions.AsMemoryOf1ArraySegmentOfM0``1(Microsoft.QualityTools.Testing.Fakes.FakesDelegates.Func{System.ArraySegment{``0},System.Memory{``0}})">
+            <summary>Sets the Shim of MemoryExtensions.AsMemory(ArraySegment`1&lt;!!0&gt; segment)</summary>
+        </member>
+        <member name="M:System.Fakes.ShimMemoryExtensions.AsMemoryOf1ArraySegmentOfM0Int32``1(Microsoft.QualityTools.Testing.Fakes.FakesDelegates.Func{System.ArraySegment{``0},System.Int32,System.Memory{``0}})">
+            <summary>Sets the Shim of MemoryExtensions.AsMemory(ArraySegment`1&lt;!!0&gt; segment, Int32 start)</summary>
+        </member>
+        <member name="M:System.Fakes.ShimMemoryExtensions.AsMemoryOf1ArraySegmentOfM0Int32Int32``1(Microsoft.QualityTools.Testing.Fakes.FakesDelegates.Func{System.ArraySegment{``0},System.Int32,System.Int32,System.Memory{``0}})">
+            <summary>Sets the Shim of MemoryExtensions.AsMemory(ArraySegment`1&lt;!!0&gt; segment, Int32 start, Int32 length)</summary>
+        </member>
+        <member name="M:System.Fakes.ShimMemoryExtensions.AsMemoryOf1M0Array``1(Microsoft.QualityTools.Testing.Fakes.FakesDelegates.Func{``0[],System.Memory{``0}})">
+            <summary>Sets the Shim of MemoryExtensions.AsMemory(!!0[] array)</summary>
+        </member>
+        <member name="M:System.Fakes.ShimMemoryExtensions.AsMemoryOf1M0ArrayInt32``1(Microsoft.QualityTools.Testing.Fakes.FakesDelegates.Func{``0[],System.Int32,System.Memory{``0}})">
+            <summary>Sets the Shim of MemoryExtensions.AsMemory(!!0[] array, Int32 start)</summary>
+        </member>
+        <member name="M:System.Fakes.ShimMemoryExtensions.AsMemoryOf1M0ArrayInt32Int32``1(Microsoft.QualityTools.Testing.Fakes.FakesDelegates.Func{``0[],System.Int32,System.Int32,System.Memory{``0}})">
+            <summary>Sets the Shim of MemoryExtensions.AsMemory(!!0[] array, Int32 start, Int32 length)</summary>
+        </member>
+        <member name="P:System.Fakes.ShimMemoryExtensions.AsMemoryString">
+            <summary>Sets the Shim of MemoryExtensions.AsMemory(String text)</summary>
+        </member>
+        <member name="P:System.Fakes.ShimMemoryExtensions.AsMemoryStringInt32">
+            <summary>Sets the Shim of MemoryExtensions.AsMemory(String text, Int32 start)</summary>
+        </member>
+        <member name="P:System.Fakes.ShimMemoryExtensions.AsMemoryStringInt32Int32">
+            <summary>Sets the Shim of MemoryExtensions.AsMemory(String text, Int32 start, Int32 length)</summary>
+        </member>
+        <member name="M:System.Fakes.ShimMemoryExtensions.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Fakes.ShimMemoryExtensions.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Fakes.ShimMemoryExtensions.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Fakes.ShimMemoryExtensions.CopyToOf1M0ArrayMemoryOfM0``1(Microsoft.QualityTools.Testing.Fakes.FakesDelegates.Action{``0[],System.Memory{``0}})">
+            <summary>Sets the Shim of MemoryExtensions.CopyTo(!!0[] source, Memory`1&lt;!!0&gt; destination)</summary>
+        </member>
+        <member name="P:System.Fakes.ShimMemoryExtensions.MeasureStringAdjustment">
+            <summary>Sets the Shim of MemoryExtensions.MeasureStringAdjustment()</summary>
+        </member>
+        <member name="P:System.Fakes.ShimMemoryExtensions.StaticConstructor">
+            <summary>Sets the Shim of MemoryExtensions.MemoryExtensions()</summary>
+        </member>
+        <member name="T:System.Fakes.ShimReadOnlyMemory`1">
+            <summary>Shim type of System.ReadOnlyMemory`1</summary>
+        </member>
+        <member name="M:System.Fakes.ShimReadOnlyMemory`1.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="T:System.Fakes.ShimReadOnlyMemory`1.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="M:System.Fakes.ShimReadOnlyMemory`1.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Fakes.ShimReadOnlyMemory`1.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Fakes.ShimReadOnlyMemory`1.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Fakes.ShimReadOnlyMemory`1.CombineHashCodesInt32Int32">
+            <summary>Sets the Shim of ReadOnlyMemory`1.CombineHashCodes(Int32 left, Int32 right)</summary>
+        </member>
+        <member name="P:System.Fakes.ShimReadOnlyMemory`1.CombineHashCodesInt32Int32Int32">
+            <summary>Sets the Shim of ReadOnlyMemory`1.CombineHashCodes(Int32 h1, Int32 h2, Int32 h3)</summary>
+        </member>
+        <member name="P:System.Fakes.ShimReadOnlyMemory`1.EmptyGet">
+            <summary>Sets the Shim of ReadOnlyMemory`1.get_Empty()</summary>
+        </member>
+        <member name="P:System.Fakes.ShimReadOnlyMemory`1.ImplicitOpArraySegmentOfT0ReadOnlyMemoryOfT0">
+            <summary>Sets the Shim of ReadOnlyMemory`1.op_Implicit(ArraySegment`1&lt;!0&gt; segment)</summary>
+        </member>
+        <member name="P:System.Fakes.ShimReadOnlyMemory`1.ImplicitOpT0ArrayReadOnlyMemoryOfT0">
+            <summary>Sets the Shim of ReadOnlyMemory`1.op_Implicit(!0[] array)</summary>
+        </member>
+        <member name="T:System.Fakes.ShimSequencePosition">
+            <summary>Shim type of System.SequencePosition</summary>
+        </member>
+        <member name="M:System.Fakes.ShimSequencePosition.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="T:System.Fakes.ShimSequencePosition.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="M:System.Fakes.ShimSequencePosition.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Fakes.ShimSequencePosition.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Fakes.ShimSequencePosition.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+    </members>
+</doc>

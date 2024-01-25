@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<DatabaseUpgrade LatestVersion="6.0.65.0">
+<DatabaseUpgrade LatestVersion="6.0.67.0">
 	<!-- Instructions	
 	   Add SQL scripts to the directory structure as below.
 	   Separate each "create" into its own file
@@ -539,6 +539,12 @@
 				<Action Order="1" Type="File" ObjectType="" ObjectName="/v5/6.0.65.0/spGetPriceRange.sql"/>
 				<Action Order="2" Type="Drop" ObjectType="Procedure" ObjectName="spGetPagesByParentPageId"/>
 				<Action Order="3" Type="File" ObjectType="" ObjectName="/v5/6.0.65.0/spGetPagesByParentPageId.sql"/>
+			</Sub3>
+		</Sub2>
+		<Sub2 Number="67">
+			<Sub3 Number="0">
+				<Action Order="0" Type="Drop" ObjectType="Procedure" ObjectName="spGetValidShippingOptions"/>
+				<Action Order="1" Type="File" ObjectType="" ObjectName="/v5/6.0.67.0/spGetValidShippingOptions.sql"/>
 			</Sub3>
 		</Sub2>
     </Sub1>

@@ -6,6 +6,8 @@ Imports System.Collections
 Imports System.Data
 Imports System.Data.SqlClient
 Imports System
+Imports Protean.Tools.Xml
+Imports Protean.stdTools
 
 Partial Public Class Cms
     Partial Public Class Cart
@@ -1461,7 +1463,7 @@ RedoCheck:
                     addNewTextNode("nSubContentId", oElmt, nid)
                     Dim oElmt2 As XmlElement = addNewTextNode("cSubXml", oElmt)
                     oElmt2.InnerXml = oSubDetailElmt.OuterXml
-                    addNewTextNode("dStartDate", oElmt, Protean.xmlDate(dStart))
+                    addNewTextNode("dStartDate", oElmt, XmlDate(dStart))
 
 
                     addNewTextNode("cSubName", oElmt, oSubDetailElmt.SelectSingleNode("Name").InnerText)

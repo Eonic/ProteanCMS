@@ -10,6 +10,7 @@ Imports System.Net
 Imports System.IO
 Imports System.Collections.Generic
 Imports System.Data.SqlClient
+Imports Protean.stdTools
 
 <WebService(Namespace:="http://www.eonic.co.uk/ewcommon/Services")>
 <WebServiceBinding(ConformsTo:=WsiProfiles.BasicProfile1_1)>

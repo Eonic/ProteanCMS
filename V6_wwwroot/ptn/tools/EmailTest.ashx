@@ -16,7 +16,7 @@ Public Class ewEmailTest : Implements IHttpHandler, IRequiresSessionState
         oBodyXml.LoadXml("<Items><Name /><Telephone /><Email>support@eonic.co.uk</Email><Message>This is a test</Message></Items>")
         Dim emailerMsg As String
 
-        emailerMsg = oMsg.emailer(oBodyXml.FirstChild, "/ewcommon/xsl/email/mailform.xsl", "ProteanCMS Test", "trevor@eonic.co.uk", "trevor@eonic.co.uk", "This is a TEST")
+        '   emailerMsg = oMsg.emailer(oBodyXml.FirstChild, "/ewcommon/xsl/email/mailform.xsl", "ProteanCMS Test", "trevor@eonic.co.uk", "trevor@eonic.co.uk", "This is a TEST")
 
         If emailerMsg <> "" Then
             context.Response.Write(emailerMsg)

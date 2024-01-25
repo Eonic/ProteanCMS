@@ -21,17 +21,14 @@ Imports System.Collections
 Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Text.RegularExpressions
-Imports System.Threading
 Imports System.Collections.Specialized
 Imports Protean.Tools
 Imports Protean.Tools.Xml
 Imports Protean.Tools.Text
 Imports System
-Imports System.Linq
 Imports System.Collections.Generic
 Imports System.Reflection
-Imports Protean.proteancms.com
-Imports System.Windows.Controls.Primitives
+Imports Protean.stdTools
 
 Partial Public Class Cms
     Partial Public Class Admin
@@ -3708,7 +3705,7 @@ Partial Public Class Cms
                     MyBase.submission("DeleteFolder", "", "post")
                     oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "folderItem", "", "Delete Content")
                     oinputElmt = MyBase.addInput(oFrmElmt, "cFolderName", False, "FolderName", "hidden")
-                    xmlTools.addNewTextNode("value", oinputElmt, cPath)
+                    addNewTextNode("value", oinputElmt, cPath)
                     If cPath = "" Or cPath = "\" Or cPath = "/" Then
                         MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "You cannot delete the root folder", , "alert-danger")
                     Else
@@ -5686,7 +5683,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    Protean.returnException(myWeb.msException, mcModuleName, "xFrmDirMemberships", ex, "", cProcessInfo, Protean.gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmDirMemberships", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -9964,7 +9961,7 @@ Partial Public Class Cms
                         Try
 
                             Dim pattern As String = "^.*\s" & propertyName & "-([\S]*)\s.*$"
-                            Return "" & SimpleRegexFind(" " & ClassName() & " ", pattern, 1)
+                            Return "" & Protean.Tools.Text.SimpleRegexFind(" " & ClassName() & " ", pattern, 1)
 
                         Catch ex As Exception
                             '   returnException(myWeb.msException, mcModuleName, "getPropertyFromClass", ex, "", "", gbDebug)

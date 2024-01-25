@@ -225,10 +225,10 @@ namespace Protean.Tools
         public string CreateThumbnail(string VirtualPath, string VirtualThumbnailPath)
         {
             // saves the file to designated location
-            int nCompression = 50;
+            //int nCompression = 50;
             try
             {
-                string thumbnailVirtualPath = "";
+                //string thumbnailVirtualPath = "";
                 var fi = new FileInfo(cLocation);
                 string thumbnailPath = cLocation.Remove(cLocation.Length - fi.Name.Length) + VirtualThumbnailPath.Replace("/","") + @"\";
                 var thfi = new FileInfo(thumbnailPath + fi.Name.Replace(".gif",".png"));
@@ -244,11 +244,8 @@ namespace Protean.Tools
 
                 }
                 thfi = null;
-
                 return VirtualThumbnailPath + "/" + fi.Name.Replace(".gif", ".png");
             }
-
-
             catch (Exception ex)
             {
                 OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Save", ex, ""));
@@ -702,7 +699,7 @@ namespace Protean.Tools
                         }
 
                         var imgFile = new FileInfo(szFileName);
-                        if (compression == 100L)
+                        if (compression == 100)
                         {
                             CompressImage(imgFile, true);
                         }
@@ -1107,11 +1104,11 @@ namespace Protean.Tools
                     oImg = bmPhoto;
                 }
                 Save(cLocation);
-                return oImg;
                 grPhoto.Dispose();
+                return oImg;                
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
                 return imgPhoto;
             }
@@ -1204,11 +1201,12 @@ namespace Protean.Tools
                 }
                 else
                     oImg = bmPhoto;
+                grPhoto.Dispose();
                 // Save(cLocation)
                 return oImg;
-                grPhoto.Dispose();
+                
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return oImg;
             }
@@ -1309,18 +1307,19 @@ namespace Protean.Tools
                     oImg = bmPhoto;
                 }
                 // Save(cLocation)
-                return oImg;
                 grPhoto.Dispose();
+                return oImg;
+                
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
                 return oImg;
             }
 
         }
 
-        private string[] _RandomFontFamily_ff = default;
+        //private string[] _RandomFontFamily_ff = default;
 
         #endregion
 
@@ -1437,7 +1436,7 @@ namespace Protean.Tools
                         _fontFamilyName = value;
                         font1.Dispose();
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         _fontFamilyName = System.Drawing.FontFamily.GenericSerif.Name;
                     }

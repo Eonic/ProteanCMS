@@ -44,7 +44,6 @@
     <bind id="cContactZip" nodeset="tblCartContact/cContactZip" required="false()" type="string" />
     <bind id="cContactCountry" nodeset="tblCartContact/cContactCountry" required="true()" type="string" />
     <bind id="cContactTel" nodeset="tblCartContact/cContactTel" required="true()" type="string" />
-    <bind id="cContactFax" nodeset="tblCartContact/cContactFax" required="false()" type="string" />
     <bind id="cContactEmail" nodeset="tblCartContact/cContactEmail" required="true()" type="email" />
     <bind id="cIsDelivery" nodeset="tblCartContact/cIsDelivery" required="false()" type="string" />
   </model>
@@ -60,11 +59,11 @@
     <input bind="cContactName" class="textbox required">
       <label>Name</label>
       <value />
-    </input>
+    </input><!--
     <input bind="cContactCompany" class="textbox">
       <label>Company</label>
       <value />
-    </input>
+    </input>-->
     <input bind="cContactAddress" class="textbox required">
       <label>Address</label>
       <value />
@@ -86,10 +85,6 @@
     </select1>
     <input bind="cContactTel" class="textbox required">
       <label>Tel</label>
-      <value />
-    </input>
-    <input bind="cContactFax" class="textbox">
-      <label>Fax</label>
       <value />
     </input>
     <input bind="cContactEmail" class="textbox required">

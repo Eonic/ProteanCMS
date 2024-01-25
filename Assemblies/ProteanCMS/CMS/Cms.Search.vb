@@ -28,6 +28,7 @@ Imports System
 Imports System.Collections.Generic
 Imports System.Web
 Imports System.Collections.Specialized
+Imports Protean.stdTools
 
 Partial Public Class Cms
 

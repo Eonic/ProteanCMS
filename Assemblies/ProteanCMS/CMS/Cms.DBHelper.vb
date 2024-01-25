@@ -10,20 +10,13 @@
 
 Option Strict Off
 Option Explicit On
-Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Xml
 Imports System.IO
 Imports System.Web.Configuration
-Imports System.Collections
 Imports System.Collections.Generic
-Imports VB = Microsoft.VisualBasic
-Imports System.Web.Mail
 Imports System.Text.RegularExpressions
-Imports System.Net.Mail
-Imports Protean.Tools.Dictionary
 Imports Protean.Tools.Xml
-Imports System
 Imports System.Threading
 Imports System.Linq
 
@@ -2414,7 +2407,7 @@ Partial Public Class Cms
                             oElmt.InnerXml = sContent
                         Catch
                             'run tidy...
-                            oElmt.InnerXml = tidyXhtmlFrag(sContent, True, False)
+                            oElmt.InnerXml = Tools.Text.tidyXhtmlFrag(sContent, True, False)
                         End Try
                         'empty empty dates
                         If oElmt.InnerXml.StartsWith("0001-01-01T00:00:00") Then oElmt.InnerXml = ""
@@ -2834,8 +2827,8 @@ restart:
 
                 'first we look at the status of the content being sumitted.
 
-                nStatus = getNodeValueByType(oInstance, "//nStatus", dataType.TypeNumber, 1)
-                nCurrentVersionNumber = getNodeValueByType(oInstance, "//nVersion", dataType.TypeNumber, 0)
+                nStatus = getNodeValueByType(oInstance, "//nStatus", XmlDataType.TypeNumber, 1)
+                nCurrentVersionNumber = getNodeValueByType(oInstance, "//nVersion", XmlDataType.TypeNumber, 0)
 
                 ' Get the maximum version number
                 If nKey > 0 Then
@@ -2922,7 +2915,7 @@ restart:
 
 
                                 ' Assess the status
-                                Dim nLiveStatus As Status = getNodeValueByType(oOrigInstance, "//nStatus", dataType.TypeNumber)
+                                Dim nLiveStatus As Status = getNodeValueByType(oOrigInstance, "//nStatus", XmlDataType.TypeNumber)
                                 Select Case nLiveStatus
                                     Case Status.Live, Status.Hidden
                                         ' Leave the live content alone, set the pending content as a version
@@ -4874,8 +4867,8 @@ restart:
 
                 ' Get the parameters SortDirection
                 Dim cSchema As String = getNodeValueByType(oGrabber, "Type")
-                Dim nPageId As Long = getNodeValueByType(oGrabber, "Page", dataType.TypeNumber)
-                Dim nTop As Long = getNodeValueByType(oGrabber, "NumberOfItems", dataType.TypeNumber)
+                Dim nPageId As Long = getNodeValueByType(oGrabber, "Page", XmlDataType.TypeNumber)
+                Dim nTop As Long = getNodeValueByType(oGrabber, "NumberOfItems", XmlDataType.TypeNumber)
                 Dim cSort As String = getNodeValueByType(oGrabber, "Sort")
                 Dim cSortDirection As String = getNodeValueByType(oGrabber, "SortDirection")
                 Dim cIncludeChildPages As String = getNodeValueByType(oGrabber, "IncludeChildPages")
@@ -6072,7 +6065,7 @@ restart:
                     If myWeb.mnUserId > 0 Then
                         ' user id exists
                         sSql = "DELETE FROM dbo.tblXmlCache " _
-                            & " WHERE nCacheDirId = " & Protean.SqlFmt(myWeb.mnUserId)
+                            & " WHERE nCacheDirId = " & SqlFmt(myWeb.mnUserId)
                     Else
                         ' No user id - delete the cache based on session id.
                         sSql = "DELETE FROM dbo.tblXmlCache " _
@@ -6129,7 +6122,7 @@ restart:
 
                     ' Automatically clear up historical caches
                     If bAuth Then
-                        ExeProcessSqlScalar("DELETE FROM dbo.tblXmlCache WHERE cCacheSessionId = '" & IIf(bAuth, Protean.SqlFmt(goSession.SessionID), "") & "' AND DATEDIFF(hh,dCacheDate,GETDATE()) > 12")
+                        ExeProcessSqlScalar("DELETE FROM dbo.tblXmlCache WHERE cCacheSessionId = '" & IIf(bAuth, SqlFmt(goSession.SessionID), "") & "' AND DATEDIFF(hh,dCacheDate,GETDATE()) > 12")
                     Else
                         ExeProcessSqlScalar("DELETE FROM dbo.tblXmlCache WHERE DATEDIFF(hh,dCacheDate,GETDATE()) > 12")
                     End If
@@ -6138,8 +6131,8 @@ restart:
                     Dim nUpdateCount As String
                     sSql = "INSERT INTO dbo.tblXmlCache (cCacheSessionID,nCacheDirId,cCacheStructure,cCacheType) " _
                                                & "VALUES (" _
-                                               & "'" & IIf(bAuth, Protean.SqlFmt(goSession.SessionID), "") & "'," _
-                                               & Protean.SqlFmt(nUserId) & "," _
+                                               & "'" & IIf(bAuth, SqlFmt(goSession.SessionID), "") & "'," _
+                                               & SqlFmt(nUserId) & "," _
                                                & " @XmlValue," _
                                                & "'" & cCacheType & "'" _
                                                & ")"

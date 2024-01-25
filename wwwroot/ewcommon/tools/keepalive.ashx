@@ -7,15 +7,15 @@ Public Class keepalive : Implements IHttpHandler, IRequiresSessionState
 
     Public Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
 
-     
+
         Dim oEw As Protean.Cms = New Protean.Cms
         oEw.InitializeVariables()
-      '  If oEw.gbSingleLoginSessionPerUser Then
-     '       oEw.Open()
-           ' oEw.LogSingleUserSession()
-     '       oEw.Close()
-    '    End If
-        oEw = Nothing
+        '  If oEw.gbSingleLoginSessionPerUser Then
+        '       oEw.Open()
+        ' oEw.LogSingleUserSession()
+        '       oEw.Close()
+        '    End If
+#Const oEw = Nothing
 
         context.Response.ContentType = "text/html"
         context.Response.AddHeader("Refresh", Convert.ToString((context.Session.Timeout * 60) - 120))

@@ -11,6 +11,7 @@ Imports System.Collections.Generic
 Imports Microsoft.Ajax.Utilities
 Imports System.Management
 Imports System.Math.pi
+Imports Protean.stdTools
 
 Partial Public Class Cms
     Public Class Content
@@ -343,7 +344,7 @@ where cl.nStructId = " & myWeb.mnPageId)
 
 
                         myWeb.bAllowExpired = True
-                        End If
+                    End If
 
 
                 Catch ex As Exception
@@ -508,7 +509,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                                 'Else
                                 '    whereSQL = " c.cContentSchemaName='" & cFilterTarget & whereSQL
                             End If
-                            End If
+                        End If
                     End If
 
 

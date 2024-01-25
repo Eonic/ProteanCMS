@@ -189,37 +189,26 @@
   </xsl:template>
 
 	<xsl:template match="Page[@layout='Password_Change']" mode="Layout">
-		<div id="template_Logon_Register">
-			<xsl:apply-templates select="/" mode="layoutHeader"/>
-			<div id="body">
+		<div id="template_Logon_Register" class="template">
+			<section class="wrapper-sm">
+				<div class="container content">
 				<xsl:apply-templates select="/Page/Contents/Content[@type='xform' and (@name='ResetPassword')]" mode="xform"/>
-        <xsl:text> </xsl:text>
-			</div>
-			<!-- Terminus class fix to floating columns -->
-			<div class="terminus">&#160;</div>
-			<xsl:apply-templates select="/" mode="layoutFooter"/>
+					<xsl:text> </xsl:text>
+				</div>
+			</section>
 		</div>
 	</xsl:template>	
 	
   <xsl:template match="Page[@layout='Account_Reset']" mode="Layout">
-    <div id="template_Logon_Register">
-      <xsl:apply-templates select="/" mode="layoutHeader"/>
-      <div id="column1">
-        <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='ConfirmPassword']" mode="xform"/>
-        <xsl:text> </xsl:text>
-      </div>
-      <div id="column2">
-        <xsl:apply-templates select="/Page" mode="inlinePopupSingle">
-          <xsl:with-param name="type">FormattedText</xsl:with-param>
-          <xsl:with-param name="text">Add Column 2</xsl:with-param>
-          <xsl:with-param name="name">column2</xsl:with-param>
-        </xsl:apply-templates>
-        <xsl:apply-templates select="/Page/Contents/Content[@name='column2']" mode="displayContent"/>
-        <xsl:text> </xsl:text>
-      </div>
-      <!-- Terminus class fix to floating columns -->
-      <div class="terminus">&#160;</div>
-      <xsl:apply-templates select="/" mode="layoutFooter"/>
+    <div id="template_Logon_Register" class="template">
+		<div>
+		<section class="wrapper-sm">
+	        <div class="container content">
+                <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='ConfirmPassword']" mode="xform"/>
+                <xsl:text> </xsl:text>
+              </div>
+		</section>
+			</div>
     </div>
   </xsl:template>
 

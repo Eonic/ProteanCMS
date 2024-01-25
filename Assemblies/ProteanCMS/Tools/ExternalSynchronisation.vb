@@ -2,7 +2,7 @@ Imports System.Xml
 Imports System.Web.Configuration
 Imports System
 Imports System.Data.SqlClient
-
+Imports Protean.stdTools
 Public Class ExternalSynchronisation
     Inherits Protean.Tools.SoapClient
 
@@ -827,7 +827,7 @@ EndIt:
             Dim sTidyXhtml As String
             'PerfMon.Log("Web", "tidyXhtmlFrag")
 
-            sTidyXhtml = tidyXhtmlFrag(shtml, bReturnNumbericEntities)
+            sTidyXhtml = Tools.Text.tidyXhtmlFrag(shtml, bReturnNumbericEntities)
 
             Return sTidyXhtml
 

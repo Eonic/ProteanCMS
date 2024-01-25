@@ -7,6 +7,7 @@ Imports System.Data.SqlClient
 Imports System.Text.RegularExpressions
 Imports System.IO
 Imports Fonet.Pdf
+Imports Protean.stdTools
 
 
 Public Class Setup

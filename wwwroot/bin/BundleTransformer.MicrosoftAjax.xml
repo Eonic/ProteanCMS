@@ -1,0 +1,963 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BundleTransformer.MicrosoftAjax</name>
+    </assembly>
+    <members>
+        <member name="T:BundleTransformer.MicrosoftAjax.BlockStart">
+            <summary>
+            Describes how to output the opening curly-brace for blocks when the OutputMode
+            is set to <code>MultipleLines</code>
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.MicrosoftAjax.BlockStart.NewLine">
+            <summary>
+            Output the opening curly-brace block-start character on its own new line.
+            Example:
+            <code>if (condition)
+            {
+                ...
+            }</code>
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.MicrosoftAjax.BlockStart.SameLine">
+            <summary>
+            Output the opening curly-brace block-start character at the end of the previous line.
+            Example:
+            <code>if (condition) {
+                ...
+            }</code>
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.MicrosoftAjax.BlockStart.UseSource">
+            <summary>
+            Output the opening curly-brace block-start character on the same line or a new line
+            depending on how it was specified in the sources
+            </summary>
+        </member>
+        <member name="T:BundleTransformer.MicrosoftAjax.Configuration.ConfigurationContextExtensions">
+            <summary>
+            Configuration context extensions
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.MicrosoftAjax.Configuration.ConfigurationContextExtensions._microsoftAjaxConfig">
+            <summary>
+            Configuration settings of Microsoft Ajax Minifier
+            </summary>
+        </member>
+        <member name="M:BundleTransformer.MicrosoftAjax.Configuration.ConfigurationContextExtensions.GetMicrosoftAjaxSettings(BundleTransformer.Core.Configuration.IConfigurationContext)">
+            <summary>
+            Gets a Microsoft Ajax Minifier configuration settings
+            </summary>
+            <param name="context">Configuration context</param>
+            <returns>Configuration settings of Microsoft Ajax Minifier</returns>
+        </member>
+        <member name="T:BundleTransformer.MicrosoftAjax.Configuration.CssMinifierSettings">
+            <summary>
+            Configuration settings of Microsoft Ajax CSS minifier
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.CssMinifierSettings.ColorNames">
+            <summary>
+            Gets or sets ColorNames setting
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.CssMinifierSettings.CommentMode">
+            <summary>
+            Gets or sets CommentMode setting
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.CssMinifierSettings.MinifyExpressions">
+            <summary>
+            Gets or sets a value indicating whether to minify the
+            JS within expression functions
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.CssMinifierSettings.RemoveEmptyBlocks">
+            <summary>
+            Gets or sets a value indicating whether empty blocks removes
+            the corresponding rule or directive
+            </summary>
+        </member>
+        <member name="T:BundleTransformer.MicrosoftAjax.Configuration.JsMinifierSettings">
+            <summary>
+            Configuration settings of Microsoft Ajax JS minifier
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.JsMinifierSettings.AlwaysEscapeNonAscii">
+            <summary>
+            Gets or sets a flag indicating whether to always escape non-ASCII characters as <code>\uXXXX</code>
+            or to let the output encoding object handle that via the <code>JsEncoderFallback</code> object for the
+            specified output encoding format
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.JsMinifierSettings.AmdSupport">
+            <summary>
+            Gets or sets a flag indicating whether to perform extra tasks on AMD-style defines
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.JsMinifierSettings.CollapseToLiteral">
+            <summary>
+            Gets or sets a flag for whether to collapse <code>new Array()</code>
+            to <code>[]</code> and <code>new Object()</code> to <code>{}</code>
+            (true) or leave as-is (false)
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.JsMinifierSettings.ConstStatementsMozilla">
+            <summary>
+            Gets or sets a boolean value indicating whether to use old-style
+            const statements (just var-statements that define unchangeable fields)
+            or new EcmaScript 6 lexical declarations
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.JsMinifierSettings.DebugLookupList">
+            <summary>
+            Gets or sets a string representation of the list of debug
+            lookups (comma-separated)
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.JsMinifierSettings.ErrorIfNotInlineSafe">
+            <summary>
+            Gets or sets a flag for whether to throw an error
+            if a source string is not safe for inclusion in an
+            HTML inline script block
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.JsMinifierSettings.EvalLiteralExpressions">
+            <summary>
+            Gets or sets a flag for whether to evaluate expressions containing
+            only literal bool, string, numeric, or null values (true).
+            Leave literal expressions alone and do not evaluate them (false).
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.JsMinifierSettings.EvalTreatment">
+            <summary>
+            EvalTreatment setting
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.JsMinifierSettings.IgnoreConditionalCompilation">
+            <summary>
+            Gets or sets a flag for whether or not to ignore conditional-compilation
+            comment syntax (true) or to try to retain the comments in the output (false)
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.JsMinifierSettings.IgnorePreprocessorDefines">
+            <summary>
+            Gets or sets a boolean value indicating whether or not to ignore preprocessor
+            defines comment syntax (true) or to evaluate them (false)
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.JsMinifierSettings.InlineSafeStrings">
+            <summary>
+            Gets or sets a flag for whether to break up string literals containing
+            <code>&lt;/script&gt;</code> so inline code won't break (true).
+            Leave string literals as-is (false).
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.JsMinifierSettings.KnownGlobalNamesList">
+            <summary>
+            Gets or sets the known global names list as a single comma-separated string
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.JsMinifierSettings.LocalRenaming">
+            <summary>
+            Gets or sets a value indicating whether to how to rename local variables and functions:
+            <code>KeepAll</code> - do not rename local variables and functions;
+            <code>CrunchAll</code> - rename all local variables and functions to shorter names;
+            <code>KeepLocalizationVars</code> - rename all local variables and functions that do NOT start with L_
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.JsMinifierSettings.MacSafariQuirks">
+            <summary>
+            Gets or sets a value indicating whether to add characters to the output
+            to make sure Mac Safari bugs are not generated (true).
+            Disregard potential Mac Safari bugs (false).
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.JsMinifierSettings.ManualRenamesProperties">
+            <summary>
+            Gets or sets a boolean value indicating whether object property
+            names with the specified "from" names will get renamed to
+            the corresponding "to" names (true) when using
+            the manual-rename feature, or left alone (false)
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.JsMinifierSettings.NoAutoRenameList">
+            <summary>
+            Get or sets the no-automatic-renaming list as a single string of
+            comma-separated identifiers
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.JsMinifierSettings.PreserveFunctionNames">
+            <summary>
+            Gets or sets a value indicating whether all function names
+            must be preserved and remain as-named
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.JsMinifierSettings.PreserveImportantComments">
+            <summary>
+            Gets or sets a value indicating whether to preserve important
+            comments in the output
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.JsMinifierSettings.QuoteObjectLiteralProperties">
+            <summary>
+            Gets or sets a value indicating whether to always quote object literal property names
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.JsMinifierSettings.RemoveFunctionExpressionNames">
+            <summary>
+            Gets or sets a value indicating whether or not to remove
+            unreferenced function expression names
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.JsMinifierSettings.RemoveUnneededCode">
+            <summary>
+            Remove unneeded code, like uncalled local functions (true).
+            Keep all code (false).
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.JsMinifierSettings.RenamePairs">
+            <summary>
+            Gets or sets a string representation of all the indentifier
+            replacements as a comma-separated list of "source=target" identifiers
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.JsMinifierSettings.ReorderScopeDeclarations">
+            <summary>
+            Gets or sets a value indicating whether or not to reorder function and variable
+            declarations within scopes (true), or to leave the order as specified in
+            the original source
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.JsMinifierSettings.ScriptVersion">
+            <summary>
+            Gets or sets an enumeration that gives the parser a hint as to which version
+            of EcmaScript standards to parse the source as
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.JsMinifierSettings.StrictMode">
+            <summary>
+            Gets or sets a boolean value indicating whether or not to force
+            the input code into strict mode (can still specify strict-mode in
+            the sources if this value is false)
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.JsMinifierSettings.StripDebugStatements">
+            <summary>
+            Strip debug statements (true).
+            Leave debug statements (false).
+            </summary>
+        </member>
+        <member name="T:BundleTransformer.MicrosoftAjax.Configuration.MicrosoftAjaxSettings">
+            <summary>
+            Common configuration settings of Microsoft Ajax Minifier
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.MicrosoftAjaxSettings.CssMinifier">
+            <summary>
+            Gets a configuration settings of Microsoft Ajax CSS minifier
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.MicrosoftAjaxSettings.JsMinifier">
+            <summary>
+            Gets a configuration settings of Microsoft Ajax JS minifier
+            </summary>
+        </member>
+        <member name="T:BundleTransformer.MicrosoftAjax.Configuration.MinifierSettingsBase">
+            <summary>
+            Configuration settings of minifier
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.MinifierSettingsBase.AllowEmbeddedAspNetBlocks">
+            <summary>
+            Gets or sets whether embedded ASP.NET blocks (<code>&lt;% %&gt;</code>)
+            should be recognized and output as is
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.MinifierSettingsBase.BlocksStartOnSameLine">
+            <summary>
+            Gets or sets a value indicating whether the opening curly brace for blocks is
+            on its own line (<code>NewLine</code>) or on the same line as
+            the preceding code (<code>SameLine</code>)
+            or taking a hint from the source code position (<code>UseSource</code>).
+            Only relevant when OutputMode is set to <code>MultipleLines</code>.
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.MinifierSettingsBase.IgnoreAllErrors">
+            <summary>
+            Gets or sets a flag for whether to ignore all errors found in the input code
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.MinifierSettingsBase.IgnoreErrorList">
+            <summary>
+            Gets or sets a string representation of the list of errors to ignore (comma-separated)
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.MinifierSettingsBase.IndentSize">
+            <summary>
+            Gets or sets a number of spaces per indent level when in
+            <code>MultipleLines</code> output mode
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.MinifierSettingsBase.LineBreakThreshold">
+            <summary>
+            Gets or sets a column position at which the line
+            will be broken at the next available opportunity
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.MinifierSettingsBase.OutputMode">
+            <summary>
+            Gets or sets a output mode:
+            <code>SingleLine</code> - output all code on a single line;
+            <code>MultipleLines</code> - break the output into multiple lines to be more human-readable
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.MinifierSettingsBase.PreprocessorDefineList">
+            <summary>
+            Gets or sets a string representation of the list
+            of names defined for the preprocessor (comma-separated)
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.MinifierSettingsBase.TermSemicolons">
+            <summary>
+            Gets or sets a flag for whether to add a semicolon
+            at the end of the parsed code
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Configuration.MinifierSettingsBase.Severity">
+            <summary>
+            Gets or sets a severity level of errors:
+            	0 - syntax error;
+            	1 - the programmer probably did not intend to do this;
+            	2 - this can lead to problems in the future;
+            	3 - this can lead to performance problems;
+            	4 - this is just not right
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.MicrosoftAjax.CssColor.Strict">
+            <summary>
+            Convert strict names to hex values if shorter; hex values to strict names if shorter. Leave all other
+            color names or hex values as-specified.
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.MicrosoftAjax.CssColor.Hex">
+            <summary>
+            Always use hex values; do not convert any hex values to color names
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.MicrosoftAjax.CssColor.Major">
+            <summary>
+            Convert known hex values to major-browser color names if shorter; and known major-browser color
+            names to hex if shorter
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.MicrosoftAjax.CssColor.NoSwap">
+            <summary>
+            Don't swap names for hex or hex for names, whether or not one is shorter
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.MicrosoftAjax.CssComment.Important">
+            <summary>
+            Remove all comments except those marked as important (<code>//!</code> or <code>/*!</code>)
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.MicrosoftAjax.CssComment.None">
+            <summary>
+            Remove all source comments from the output
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.MicrosoftAjax.CssComment.All">
+            <summary>
+            Keep all source comments in the output
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.MicrosoftAjax.CssComment.Hacks">
+            <summary>
+            Remove all source comments except those for approved comment-based hacks
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.MicrosoftAjax.EvalTreatment.Ignore">
+            <summary>
+            Ignore all eval statements. This assumes that code that is eval'd will not attempt
+            to access any local variables or functions, as those variables and function may be renamed.
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.MicrosoftAjax.EvalTreatment.MakeImmediateSafe">
+            <summary>
+            Assume any code that is eval'd will attempt to access local variables and functions declared
+            in the same scope as the eval statement. This will turn off local variable and function renaming
+            in any scope that contains an eval statement.
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.MicrosoftAjax.EvalTreatment.MakeAllSafe">
+            <summary>
+            Assume that any local variable or function in any accessible scope chain may be referenced by
+            code that is eval'd. This will turn off local variable and function renaming for all scopes that
+            contain an eval statement, and all their parent scopes up the chain to the global scope.
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.MicrosoftAjax.LocalRenaming.KeepAll">
+            <summary>
+            Keep all names; don't rename anything
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.MicrosoftAjax.LocalRenaming.KeepLocalizationVars">
+            <summary>
+            Rename all local variables and functions that do not begin with "L_"
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.MicrosoftAjax.LocalRenaming.CrunchAll">
+            <summary>
+            Rename all local variables and functions
+            </summary>
+        </member>
+        <member name="T:BundleTransformer.MicrosoftAjax.MicrosoftAjaxParsingException">
+            <summary>
+            The exception that is thrown when a parsing of asset code by Microsoft Ajax Minifier is failed
+            </summary>
+        </member>
+        <member name="M:BundleTransformer.MicrosoftAjax.MicrosoftAjaxParsingException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the BundleTransformer.MicrosoftAjax.MicrosoftAjaxParsingException class
+            with a specified error message
+            </summary>
+            <param name="message">The message that describes the error</param>
+        </member>
+        <member name="M:BundleTransformer.MicrosoftAjax.MicrosoftAjaxParsingException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the BundleTransformer.MicrosoftAjax.MicrosoftAjaxParsingException class
+            with a specified error message and a reference to the inner exception that is the cause of this exception
+            </summary>
+            <param name="message">The error message that explains the reason for the exception</param>
+            <param name="innerException">The exception that is the cause of the current exception</param>
+        </member>
+        <member name="T:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxCssMinifier">
+            <summary>
+            Minifier, which produces minifiction of CSS code
+            by using Microsoft Ajax Minifier
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxCssMinifier.MINIFIER_NAME">
+            <summary>
+            Name of minifier
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxCssMinifier.CODE_TYPE">
+            <summary>
+            Name of code type
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxCssMinifier._cssParserConfiguration">
+            <summary>
+            Configuration settings of CSS parser
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxCssMinifier.AllowEmbeddedAspNetBlocks">
+            <summary>
+            Gets or sets whether embedded ASP.NET blocks (<code>&lt;% %gt;</code>)
+            should be recognized and output as is
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxCssMinifier.BlocksStartOnSameLine">
+            <summary>
+            Gets or sets a value indicating whether the opening curly brace for blocks is
+            on its own line (<code>NewLine</code>) or on the same line as
+            the preceding code (<code>SameLine</code>)
+            or taking a hint from the source code position (<code>UseSource</code>).
+            Only relevant when OutputMode is set to <code>MultipleLines</code>.
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxCssMinifier.IgnoreAllErrors">
+            <summary>
+            Gets or sets a flag for whether to ignore all errors found in the input code
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxCssMinifier.IgnoreErrorList">
+            <summary>
+            Gets or sets a string representation of the list of
+            debug lookups (comma-separated)
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxCssMinifier.IndentSize">
+            <summary>
+            Gets or sets number of spaces per indent level when in
+            <code>MultipleLines</code> output mode
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxCssMinifier.LineBreakThreshold">
+            <summary>
+            Gets or sets a column position at which the line
+            will be broken at the next available opportunity
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxCssMinifier.OutputMode">
+            <summary>
+            Gets or sets a output mode:
+            <code>SingleLine</code> - output all code on a single line;
+            <code>MultipleLines</code> - break the output into multiple lines to be more human-readable
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxCssMinifier.PreprocessorDefineList">
+            <summary>
+            Gets or sets string representation of the list
+            of names defined for the preprocessor (comma-separated)
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxCssMinifier.TermSemicolons">
+            <summary>
+            Gets or sets a flag for whether to add a semicolon
+            at the end of the parsed code
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxCssMinifier.ColorNames">
+            <summary>
+            Gets or sets ColorNames setting
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxCssMinifier.CommentMode">
+            <summary>
+            Gets or sets CommentMode setting
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxCssMinifier.MinifyExpressions">
+            <summary>
+            Gets or sets a value indicating whether to minify the
+            JS within expression functions
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxCssMinifier.RemoveEmptyBlocks">
+            <summary>
+            Gets or sets a value indicating whether empty blocks removes
+            the corresponding rule or directive
+            </summary>
+        </member>
+        <member name="M:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxCssMinifier.#ctor">
+            <summary>
+            Constructs a instance of Microsoft Ajax CSS minifier
+            </summary>
+        </member>
+        <member name="M:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxCssMinifier.#ctor(BundleTransformer.MicrosoftAjax.Configuration.MicrosoftAjaxSettings)">
+            <summary>
+            Constructs a instance of Microsoft Ajax CSS minifier
+            </summary>
+            <param name="microsoftAjaxConfig">Configuration settings of Microsoft Ajax Minifier</param>
+        </member>
+        <member name="M:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxCssMinifier.Minify(BundleTransformer.Core.Assets.IAsset)">
+            <summary>
+            Produces a code minifiction of CSS asset by using Microsoft Ajax Minifier
+            </summary>
+            <param name="asset">CSS asset</param>
+            <returns>CSS asset with minified text content</returns>
+        </member>
+        <member name="M:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxCssMinifier.Minify(System.Collections.Generic.IList{BundleTransformer.Core.Assets.IAsset})">
+            <summary>
+            Produces a code minifiction of CSS assets by using Microsoft Ajax Minifier
+            </summary>
+            <param name="assets">Set of CSS assets</param>
+            <returns>Set of CSS assets with minified text content</returns>
+        </member>
+        <member name="M:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxCssMinifier.ParserErrorHandler(System.Object,Microsoft.Ajax.Utilities.ContextErrorEventArgs)">
+            <summary>
+            CSS parser error handler
+            </summary>
+            <param name="source">The source of the event</param>
+            <param name="args">A Microsoft.Ajax.Utilities.ContextErrorEventArgs
+            that contains the event data</param>
+        </member>
+        <member name="T:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier">
+            <summary>
+            Minifier, which produces minifiction of JS code
+            by using Microsoft Ajax Minifier
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.MINIFIER_NAME">
+            <summary>
+            Name of minifier
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.CODE_TYPE">
+            <summary>
+            Name of code type
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier._jsParserConfiguration">
+            <summary>
+            Configuration settings of JS parser
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.AllowEmbeddedAspNetBlocks">
+            <summary>
+            Gets or sets whether embedded ASP.NET blocks (<code>&lt;% %&gt;</code>)
+            should be recognized and output as is
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.BlocksStartOnSameLine">
+            <summary>
+            Gets or sets a value indicating whether the opening curly brace for blocks is
+            on its own line (<code>NewLine</code>) or on the same line as
+            the preceding code (<code>SameLine</code>)
+            or taking a hint from the source code position (<code>UseSource</code>).
+            Only relevant when OutputMode is set to <code>MultipleLines</code>.
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.IgnoreAllErrors">
+            <summary>
+            Gets or sets a flag for whether to ignore all errors found in the input code
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.IgnoreErrorList">
+            <summary>
+            Gets or sets a string representation of the list of
+            debug lookups (comma-separated)
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.IndentSize">
+            <summary>
+            Gets or sets number of spaces per indent level when in
+            <code>MultipleLines</code> output mode
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.LineBreakThreshold">
+            <summary>
+            Gets or sets a column position at which the line
+            will be broken at the next available opportunity
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.OutputMode">
+            <summary>
+            Gets or sets a output mode:
+            <code>SingleLine</code> - output all code on a single line;
+            <code>MultipleLines</code> - break the output into multiple lines to be more human-readable
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.PreprocessorDefineList">
+            <summary>
+            Gets or sets string representation of the list
+            of names defined for the preprocessor (comma-separated)
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.TermSemicolons">
+            <summary>
+            Gets or sets a flag for whether to add a semicolon
+            at the end of the parsed code
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.AlwaysEscapeNonAscii">
+            <summary>
+            Gets or sets a flag indicating whether to always escape non-ASCII characters as <code>\uXXXX</code>
+            or to let the output encoding object handle that via the <code>JsEncoderFallback</code> object for the
+            specified output encoding format
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.AmdSupport">
+            <summary>
+            Gets or sets a flag indicating whether to perform extra tasks on AMD-style defines
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.CollapseToLiteral">
+            <summary>
+            Gets or sets a flag for whether to collapse <code>new Array()</code>
+            to <code>[]</code> and <code>new Object()</code> to <code>{}</code>
+            (true) or leave as-is (false)
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.ConstStatementsMozilla">
+            <summary>
+            Gets or sets a boolean value indicating whether to use old-style
+            const statements (just var-statements that define unchangeable fields)
+            or new EcmaScript 6 lexical declarations
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.DebugLookupList">
+            <summary>
+            Gets or sets a string representation of the list of debug
+            lookups (comma-separated)
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.ErrorIfNotInlineSafe">
+            <summary>
+            Gets or sets a flag for whether to throw an error
+            if a source string is not safe for inclusion in an
+            HTML inline script block
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.EvalLiteralExpressions">
+            <summary>
+            Gets or sets a flag for whether to evaluate expressions containing
+            only literal bool, string, numeric, or null values (true).
+            Leave literal expressions alone and do not evaluate them (false).
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.EvalTreatment">
+            <summary>
+            EvalTreatment setting
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.IgnoreConditionalCompilation">
+            <summary>
+            Gets or sets a flag for whether or not to ignore conditional-compilation
+            comment syntax (true) or to try to retain the comments in the output (false)
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.IgnorePreprocessorDefines">
+            <summary>
+            Gets or sets a boolean value indicating whether or not to ignore preprocessor
+            defines comment syntax (true) or to evaluate them (false)
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.InlineSafeStrings">
+            <summary>
+            Gets or sets a flag for whether to break up string literals containing
+            <code>&lt;/script&gt;</code> so inline code won't break (true).
+            Leave string literals as-is (false).
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.KnownGlobalNamesList">
+            <summary>
+            Gets or sets the known global names list as a single comma-separated string
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.LocalRenaming">
+            <summary>
+            Gets or sets a value indicating whether to how to rename local variables and functions:
+            <code>KeepAll</code> - do not rename local variables and functions;
+            <code>CrunchAll</code> - rename all local variables and functions to shorter names;
+            <code>KeepLocalizationVars</code> - rename all local variables and functions that do NOT start with L_
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.MacSafariQuirks">
+            <summary>
+            Gets or sets a value indicating whether to add characters to the output
+            to make sure Mac Safari bugs are not generated (true).
+            Disregard potential Mac Safari bugs (false).
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.ManualRenamesProperties">
+            <summary>
+            Gets or sets a boolean value indicating whether object property
+            names with the specified "from" names will get renamed to
+            the corresponding "to" names (true) when using
+            the manual-rename feature, or left alone (false)
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.NoAutoRenameList">
+            <summary>
+            Get or sets the no-automatic-renaming list as a single string of
+            comma-separated identifiers
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.PreserveFunctionNames">
+            <summary>
+            Gets or sets a value indicating whether all function names
+            must be preserved and remain as-named
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.PreserveImportantComments">
+            <summary>
+            Gets or sets a value indicating whether to preserve important
+            comments in the output
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.QuoteObjectLiteralProperties">
+            <summary>
+            Gets or sets a value indicating whether to always quote object literal property names
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.RemoveFunctionExpressionNames">
+            <summary>
+            Gets or sets a value indicating whether or not to remove
+            unreferenced function expression names
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.RemoveUnneededCode">
+            <summary>
+            Remove unneeded code, like uncalled local functions (true).
+            Keep all code (false).
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.RenamePairs">
+            <summary>
+            Gets or sets a string representation of all the indentifier
+            replacements as a comma-separated list of "source=target" identifiers.
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.ReorderScopeDeclarations">
+            <summary>
+            Gets or sets a value indicating whether or not to reorder function and variable
+            declarations within scopes (true), or to leave the order as specified in
+            the original source
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.ScriptVersion">
+            <summary>
+            Gets or sets an enumeration that gives the parser a hint as to which version
+            of EcmaScript standards to parse the source as
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.StrictMode">
+            <summary>
+            Gets or sets a boolean value indicating whether or not to force
+            the input code into strict mode (can still specify strict-mode in
+            the sources if this value is false)
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.StripDebugStatements">
+            <summary>
+            Strip debug statements (true).
+            Leave debug statements (false).
+            </summary>
+        </member>
+        <member name="M:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.#ctor">
+            <summary>
+            Constructs a instance of Microsoft Ajax JS minifier
+            </summary>
+        </member>
+        <member name="M:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.#ctor(BundleTransformer.MicrosoftAjax.Configuration.MicrosoftAjaxSettings)">
+            <summary>
+            Constructs a instance of Microsoft Ajax JS minifier
+            </summary>
+            <param name="microsoftAjaxConfig">Configuration settings of Microsoft Ajax Minifier</param>
+        </member>
+        <member name="M:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.Minify(BundleTransformer.Core.Assets.IAsset)">
+            <summary>
+            Produces a code minifiction of JS asset by using Microsoft Ajax Minifier
+            </summary>
+            <param name="asset">JS asset</param>
+            <returns>JS asset with minified text content</returns>
+        </member>
+        <member name="M:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.Minify(System.Collections.Generic.IList{BundleTransformer.Core.Assets.IAsset})">
+            <summary>
+            Produces a code minifiction of JS assets by using Microsoft Ajax Minifier
+            </summary>
+            <param name="assets">Set of JS assets</param>
+            <returns>Set of JS assets with minified text content</returns>
+        </member>
+        <member name="M:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxJsMinifier.ParserErrorHandler(System.Object,Microsoft.Ajax.Utilities.ContextErrorEventArgs)">
+            <summary>
+            JS parser error handler
+            </summary>
+            <param name="source">The source of the event</param>
+            <param name="args">A Microsoft.Ajax.Utilities.ContextErrorEventArgs that
+            contains the event data</param>
+        </member>
+        <member name="T:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxMinifierBase">
+            <summary>
+            Base class of minifier, which produces minifiction of code
+            by using Microsoft Ajax Minifier
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxMinifierBase.AllowEmbeddedAspNetBlocks">
+            <summary>
+            Gets or sets whether embedded ASP.NET blocks (<code>&lt;% %&gt;</code>)
+            should be recognized and output as is
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxMinifierBase.BlocksStartOnSameLine">
+            <summary>
+            Gets or sets a value indicating whether the opening curly brace for blocks is
+            on its own line (<code>NewLine</code>) or on the same line as
+            the preceding code (<code>SameLine</code>)
+            or taking a hint from the source code position (UseSource).
+            Only relevant when OutputMode is set to MultipleLines.
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxMinifierBase.IgnoreAllErrors">
+            <summary>
+            Gets or sets a flag for whether to ignore all errors found in the input code
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxMinifierBase.IgnoreErrorList">
+            <summary>
+            Gets or sets a string representation of the list of errors to ignore (comma-separated)
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxMinifierBase.IndentSize">
+            <summary>
+            Gets or sets a number of spaces per indent level when in
+            <code>MultipleLines</code> output mode
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxMinifierBase.LineBreakThreshold">
+            <summary>
+            Gets or sets the column position at which the line
+            will be broken at the next available opportunity
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxMinifierBase.OutputMode">
+            <summary>
+            Gets or sets a output mode:
+            <code>SingleLine</code> - output all code on a single line;
+            <code>MultipleLines</code> - break the output into multiple lines to be more human-readable
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxMinifierBase.PreprocessorDefineList">
+            <summary>
+            Gets or sets a string representation of the list
+            of names defined for the preprocessor (comma-separated)
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxMinifierBase.TermSemicolons">
+            <summary>
+            Gets or sets a flag for whether to add a semicolon
+            at the end of the parsed code
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxMinifierBase.Severity">
+            <summary>
+            Gets or sets a severity level of errors
+            	0 - syntax error;
+            	1 - the programmer probably did not intend to do this;
+            	2 - this can lead to problems in the future;
+            	3 - this can lead to performance problems;
+            	4 - this is just not right
+            </summary>
+        </member>
+        <member name="M:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxMinifierBase.Minify(BundleTransformer.Core.Assets.IAsset)">
+            <summary>
+            Produces a code minifiction of asset
+            </summary>
+            <param name="asset">Asset</param>
+            <returns>Asset with minified text content</returns>
+        </member>
+        <member name="M:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxMinifierBase.Minify(System.Collections.Generic.IList{BundleTransformer.Core.Assets.IAsset})">
+            <summary>
+            Produces a code minifiction of assets
+            </summary>
+            <param name="assets">Set of assets</param>
+            <returns>Set of assets with minified text content</returns>
+        </member>
+        <member name="M:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxMinifierBase.FormatContextError(Microsoft.Ajax.Utilities.ContextError)">
+            <summary>
+            Generates a detailed error message based on object ContextError
+            </summary>
+            <param name="error">Object ContextError</param>
+            <returns>Detailed error message</returns>
+        </member>
+        <member name="M:BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxMinifierBase.MapCommonSettings(BundleTransformer.MicrosoftAjax.Minifiers.MicrosoftAjaxMinifierBase,BundleTransformer.MicrosoftAjax.Configuration.MinifierSettingsBase)">
+            <summary>
+            Maps a common settings
+            </summary>
+            <param name="minifier">Minifier</param>
+            <param name="commonMinifierSettings">Common configuration settings of Microsoft Ajax Minifier</param>
+        </member>
+        <member name="T:BundleTransformer.MicrosoftAjax.OutputMode">
+            <summary>
+            Output mode setting
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.MicrosoftAjax.OutputMode.SingleLine">
+            <summary>
+            Output the minified code on a single line for maximum minification.
+            LineBreakThreshold may still break the single line into multiple lines
+            at a syntactically correct point after the given line length is reached.
+            Not easily human-readable.
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.MicrosoftAjax.OutputMode.MultipleLines">
+            <summary>
+            Output the minified code on multiple lines to increase readability
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -66,10 +66,6 @@
       ]
     },
     {
-      "library": "swiper@8.1.6",
-      "destination": "ptn/libs/swiper/"
-    },
-    {
       "library": "@fancyapps/ui@4.0.27",
       "destination": "ptn/libs/fancyapps/ui/"
     },
@@ -80,6 +76,11 @@
     {
       "library": "@fortawesome/fontawesome-free@6.4.2",
       "destination": "ptn/core/icons/fa6"
+    },
+    {
+      "provider": "cdnjs",
+      "library": "Swiper@11.0.5",
+      "destination": "ptn/libs/Swiper/"
     }
   ]
 }
