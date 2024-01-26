@@ -4,6 +4,8 @@ Imports System.Web.Configuration
 Imports System.Xml
 Imports CardinalCommerce
 Imports Protean.Cms.Cart
+Imports Protean.Tools.Xml
+Imports Protean.stdTools
 
 
 Namespace Providers
@@ -162,7 +164,7 @@ Namespace Providers
                         moPaymentCfg = WebConfigurationManager.GetWebApplicationSection("protean/payment")
 
                         oPaymentCfg = moPaymentCfg.SelectSingleNode("provider[@name='PayPalPro']")
-                        oDictOpt = xmlTools.xmlToHashTable(oPaymentCfg, "value")
+                        oDictOpt = xmlToHashTable(oPaymentCfg, "value")
 
                         Select Case CStr(oDictOpt("opperationMode"))
                             Case "true", "test"

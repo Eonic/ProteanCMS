@@ -67,7 +67,7 @@ h1, h2, h3 {
     }
 }
 //images
-img {
+img, svg {
     max-width: 100%;
     height: auto;
     overflow: hidden;
@@ -106,22 +106,7 @@ img {
     }
 }
 
-.btn-clean {
-    padding: 0;
-    background: none;
-    border: 0;
-    box-shadow: 0;
-    color: $link-color;
 
-    &:hover,
-    &:focus {
-        padding: 0;
-        background: none;
-        border: 0;
-        box-shadow: 0;
-        color: $link-color;
-    }
-}
 
 .btn-custom {
     @extend .btn-primary;
@@ -167,6 +152,16 @@ img {
 }
 //FLUID CONTAINER
 .container-fluid {
+    padding: 0 ($grid-gutter-width/2);
+
+    @include media-breakpoint-up(md) {
+        padding: 0 2vw;
+    }
+
+    #main-footer > div > .row {
+        margin: 0 -2vw;
+    }
+
     .nobox.module-FormattedText,
     .accordion-body .FormattedText,
     .module-FAQList,

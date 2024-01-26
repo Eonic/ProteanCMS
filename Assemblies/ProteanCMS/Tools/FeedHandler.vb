@@ -1,16 +1,11 @@
 Imports System.Xml
-Imports System.Web.HttpUtility
 Imports System.Web.Configuration
 Imports System.IO
-Imports System.Collections
-Imports System.Data
-Imports System.Data.sqlClient
-Imports VB = Microsoft.VisualBasic
 Imports System.Net
 Imports System.Text.RegularExpressions
 Imports Protean.Tools
 Imports System.Xml.Linq
-Imports System
+Imports Protean.stdTools
 
 
 Public Class FeedHandler
@@ -430,7 +425,7 @@ Public Class FeedHandler
                         oBodyItem.InnerXml = sContent
                         oBodyItem.SetAttribute("htmlTransform", "innertext-innerxml")
                     Catch
-                        oBodyItem.InnerXml = Protean.tidyXhtmlFrag(sContent)
+                        oBodyItem.InnerXml = Tools.Text.tidyXhtmlFrag(sContent)
                         oBodyItem.SetAttribute("htmlTransform", "tidyXhtml")
                     End Try
                 End If

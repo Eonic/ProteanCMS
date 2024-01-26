@@ -8,6 +8,7 @@ Imports System.Configuration
 Imports Alphaleonis.Win32.Filesystem
 Imports System.Drawing.Imaging
 Imports System.Data.SqlClient
+Imports Protean.stdTools
 
 Partial Public Class Cms
 

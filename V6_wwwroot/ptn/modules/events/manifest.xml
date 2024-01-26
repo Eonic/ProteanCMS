@@ -3,6 +3,7 @@
   <ContentTypes>
     <ContentTypeGroup name="News And Events">
       <ContentType type="Event" formPath="event" name="Event">An event in the future</ContentType>
+		<ContentType type="Ticket" formPath="ticket" name="Ticket">Ticket for an event</ContentType>
     </ContentTypeGroup>   
   </ContentTypes>
   <ModuleTypes>

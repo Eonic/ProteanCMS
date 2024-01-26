@@ -9,7 +9,6 @@
 				<div class="modal-dialog">
 					<div class="modal-content  alert alert-danger" role="alert">
 						<div class="modal-header">
-
 							<button type="button" class="btn-close"  data-bs-dismiss="modal">
 								&#160;
 							</button>
@@ -17,7 +16,6 @@
 						<div class="modal-body" aria-automic="true">
 							<i id="errorIcon" class="fa fa-exclamation-triangle" aria-hidden="true">&#160;</i>
 							<xsl:text disable-output-escaping="yes">&amp;</xsl:text>nbsp;
-
 							<span id="errorMessage">&#160;</span>
 						</div>
 					</div>
@@ -50,9 +48,8 @@
 			<xsl:value-of select="translate($ref,'/','-')"/>
 		</xsl:variable>
 		<xsl:if test="$ref!=''">
-
 			<script>
-				displayErrorMessage('<xsl:copy-of select="alert/span/node()"/>', 'fa fa-info-circle');
+				displayErrorMessage('<xsl:copy-of select="alert/node()"/>', 'fa fa-info-circle');
 			</script>
 		</xsl:if>
 	</xsl:template>
@@ -131,7 +128,7 @@
 					<xsl:value-of select="@id"/>
 				</xsl:attribute>
 			</xsl:if>
-			<xsl:apply-templates select="hint | help | alert" mode="xform"/>
+			<xsl:apply-templates select="hint | help " mode="xform"/>
 
 			<xsl:apply-templates select="label[position()=1]" mode="legend"/>
 
@@ -621,9 +618,11 @@
 			<xsl:when test="name()='group'">
 				<xsl:apply-templates select="." mode="xform"/>
 			</xsl:when>
+		
 			<xsl:when test="name()='alert'">
 				<xsl:apply-templates select="." mode="xform"/>
 			</xsl:when>
+
 			<xsl:when test="contains(@class,'hidden')">
 				<div class="form-group hidden">
 					<xsl:apply-templates select="." mode="xform"/>
@@ -2573,6 +2572,7 @@
 					</xsl:if>
 				</xsl:if>
 			</input>
+		
 			<label for="{$ref}_{$value}">
 				<xsl:attribute name="class">
 					<xsl:text>form-check-label</xsl:text>
@@ -2976,8 +2976,11 @@
 		<legend>
 			<xsl:choose>
 				<!-- for Multilanguage-->
-				<xsl:when test="span[contains(@class,'term')]">
-					<xsl:apply-templates select="span" mode="term" />
+				<xsl:when test="*[contains(@class,'term-')]">
+					<xsl:apply-templates select="*[contains(@class,'term-')]" mode="term" />
+				</xsl:when>
+				<xsl:when test="*[contains(@class,'msg-')]">
+					<xsl:apply-templates select="*[contains(@class,'msg-')]" mode="term" />
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:apply-templates select="./node()" mode="cleanXhtml"/>

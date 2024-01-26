@@ -33,7 +33,18 @@
 //General Header Settings
 header {
     &.header-one-line {
+        flex-wrap: nowrap;
         border-bottom: 0;
+
+        i {
+            font-size: 1.3rem;
+        }
+
+        .navbar-content {
+            flex-wrap: nowrap;
+        .main-nav ul.navbar-nav {
+            justify-content: center;
+        }
     }
 
     &.navbar {
@@ -70,6 +81,7 @@ header {
         margin: -0.1rem -0.2rem;
     }
 }
+
 .nav-close-btn {
     background: none;
     border: 0;
@@ -80,6 +92,7 @@ header {
     top: 0;
     padding: 10px 15px;
     color: $navbar-light-color;
+    z-index: 20;
 }
 //Navigation
 .main-nav {
@@ -98,6 +111,11 @@ header {
 
             .nav-link {
                 padding: $nav-padding-y $nav-padding-x;
+
+                &.active,
+                &.on {
+                    color: $nav-link-hover-color;
+                }
             }
         }
     }
@@ -120,7 +138,7 @@ header {
             &.active,
             &.on,
             &:focus {
-                color: $primary;
+                color: $nav-link-hover-color;
             }
 
             &:first-child {
@@ -163,6 +181,18 @@ header {
             margin-left: 0.4rem;
         }
     }
+
+    .dropdown-toggle {
+        &:after {
+            content: '\f078';
+            border: none;
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            font-size: 0.8rem;
+            vertical-align: middle;
+            margin-left: 0.4em;
+        }
+    }
 }
 
 .info-nav {
@@ -181,6 +211,10 @@ header {
 
 .login-btn {
     white-space: nowrap;
+
+    &:hover {
+        color: $nav-link-hover-color;
+    }
 }
 
 .socialLinks.iconset-plain {
@@ -277,6 +311,61 @@ header {
     @include search-simple;
 }
 
+.search-btn {
+    color: $navbar-light-color;
+    padding-left: 1rem;
+    padding-right: 1rem;
+
+    &:hover,
+    &:focus{
+        padding-left: 1rem;
+        padding-right: 1rem;
+        color: $nav-link-hover-color;
+    }
+}
+
+.header-featured-btn {
+    @include media-breakpoint-down($nav-breakpoint) {
+        flex-grow: 2;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    a {
+        background: $secondary;
+        font-size: 1.3rem;
+        transition: all .2s;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        margin-left: 1rem;
+        padding: 1rem 1.4rem;
+        color: #fff;
+        text-decoration: none;
+
+        @include media-breakpoint-up(xxl) {
+            font-size: 1.4rem;
+        }
+
+        @include media-breakpoint-down($nav-breakpoint) {
+            font-size: 1rem;
+            margin-right: 0.7rem;
+        }
+
+        &:hover {
+            transform: scale(1.04);
+        }
+
+        @include media-breakpoint-up(xxl) {
+            padding: 1.2rem 3rem;
+        }
+
+        @include media-breakpoint-down($nav-breakpoint) {
+            padding: 1rem 1rem;
+        }
+    }
+}
+
 .tabbed-module {
     .nav {
         margin-bottom: 1rem;
@@ -285,8 +374,9 @@ header {
 
 .accordion-module {
     margin-bottom: $spacer;
-    .entryFooter{
-        margin-top:1rem;
+
+    .entryFooter {
+        margin-top: 1rem;
     }
 }
 
@@ -294,6 +384,7 @@ header {
     margin-left: -1rem;
     margin-right: -1rem;
 }
+
 .SubPageListSimple {
     .nav-module {
         margin-left: -($nav-link-padding-y*2);

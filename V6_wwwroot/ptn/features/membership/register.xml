@@ -108,10 +108,10 @@
 					<input bind="cModuleType" class="hidden">
 						<label>ModuleType</label>
 					</input>
-					<input bind="cAccountCreateFormName">
+					<input bind="cAccountCreateFormName" prefix="/features/membership/" suffix=".xml">
 						<label>Account Create Form Name</label>
 					</input>
-					<input bind="cAccountUpdateFormName">
+					<input bind="cAccountUpdateFormName" prefix="/features/membership/" suffix=".xml">
 						<label>Account Update Form Name</label>
 					</input>
 					<!-- end of hidden fields -->

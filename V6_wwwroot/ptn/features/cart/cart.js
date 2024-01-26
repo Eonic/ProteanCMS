@@ -1,6 +1,8 @@
 ﻿$(document).ready(function () {
     if ($("form#contact").exists()) {
 
+        $(".delivery-address").hide();
+
         if ($('#cDelContactAddress').val() == $('#cContactAddress').val()) {
             if ($('#cContactAddress').val() == '') {
                 //empty so hide delivery
@@ -17,12 +19,14 @@
         }
 
         //when is delivery clicked
-        $('input[name="cIsDelivery"]').click(function () {
-            // alert($(this).attr('value'));
-            if ($(this).attr('value') == 'true') {
+        $('input[name="cIsDelivery"]').change(function () {
+
+            if ($('input[name="cIsDelivery"]').is(":checked")) {
+                $(".delivery-address").show();
                 resetDelAddress();
-            }
-            else {
+            } 
+            if ($('input[name="cIsDelivery"]').is(":checked") == false) {
+                $(".delivery-address").hide();
                 if ($.isNumeric($(this).attr('value')) == true) {
 
                     blankoutFormFields($('#cDelContactName'), 'Collection');
@@ -38,8 +42,7 @@
                 } else {
                     addDeliveryAddress();
                 }
-
-            }
+            }            
         });
 
         //when form submitted
@@ -75,6 +78,16 @@
                 }
             }
         });
+        $(".pay-button").hide();
+        $("#confirmterms_Agree").change(function () {
+            if (this.checked) {
+                $(".pay-button").show();
+                enablePayPal();
+            } else {
+                $(".pay-button").hide();
+            }
+        });
+
     }
 
     if ($("form#PayForm").exists()) {
@@ -114,7 +127,72 @@
     $('.responsive-cart .cart-quantity').on('change', function () {
         $('#updateQty').click();
     });
+
+    initialiseProductSKUs();
 });
+
+
+/*Change Price on Selected SKU Option - this function uses 'Live' to cater for content inserted via ajax*/
+function initialiseProductSKUs() {
+
+    //    $('.skuOptions').each(function () {
+    //        var addButton = $(this).parents('form').find('.button[name="cartAdd"]');
+    //        var options = $(this).find('option').length;
+    //        if (options > 1 && !$('.ProductListGroup').exists()) {
+    //            addButton.hide();
+    //        }
+    //    });
+
+    $('.skuOptions').change(function () {
+        obj = this;
+        var skuElement = obj.value.split('_');
+        var addButton = $(this).parents('form').find('.button[name="cartAdd"]');
+
+        var priceId = '#price_' + skuElement[3];
+        var priceId2 = '#price_' + skuElement[3] + '_2';
+        var pictureId = '#picture_' + skuElement[0];
+        var rrp = skuElement[1];
+        var salePrice = skuElement[2];
+        var skuName = 'qty_' + skuElement[0];
+        //var itemId = '#cartButtons' + skuElement[3] + ', #cartButtons' + skuElement[3] + '_2';
+        var options = $(this).find('option').length;
+        var skuId = '#qty_' + skuElement[3];
+
+        var productGroup = $('.ProductListGroup').exists();
+
+        if (skuName != '') {
+            $('.qtybox').attr('name', skuName);
+            //.attr('id', skuId)
+
+        }
+
+        if (rrp != 'na') {
+            $(priceId + ' span.rrpPrice')
+                .html(rrp);
+        }
+
+        if (salePrice != '') {
+            $(priceId + ' span.price, ' + priceId + ' span.price')
+                .html(salePrice);
+        }
+
+        if ($('.product .picture').length > 1) {
+            $('.product .picture').addClass('hidden');
+            $(pictureId).parents('span.picture').removeClass('hidden');
+        }
+
+        // if Products Grouped template is used the Add to Cart button must not be hidden
+        //        if (!productGroup && options > 1) {
+        //            //alert('test');
+        //            if (!$(this).find('option:first').is(':selected')) {
+        //                addButton.show();
+        //            } else {
+        //                addButton.hide();
+        //            }
+        //        }
+
+    });
+}
 
 
 function resetDelAddress() {

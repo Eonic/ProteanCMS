@@ -1,16 +1,8 @@
 Option Strict Off
 Option Explicit On
-Imports System.Xml
-Imports System.Web.HttpUtility
 Imports System.Web.Configuration
-Imports System.Web.Mail
-Imports System.Reflection
-Imports VB = Microsoft.VisualBasic
-Imports System.Security.Cryptography
 Imports System.Text
-Imports System.Net.Mail
-Imports System.Diagnostics
-Imports System
+Imports Protean.stdTools
 
 Public Class PerfLog
 

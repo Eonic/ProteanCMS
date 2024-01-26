@@ -1,5 +1,7 @@
 ﻿$(document).ready(function () {
-
+    $(".ptn-edit .dropdown .dropdown-toggle").click(function () {
+        $(this).parents(".ptn-edit").addClass("active-admin-dd");
+    });
 
     $('div.module div.moduleDrag').closest('.module').draggable({
         cursor: 'move',

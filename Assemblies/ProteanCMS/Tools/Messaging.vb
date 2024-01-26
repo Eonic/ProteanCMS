@@ -1,17 +1,12 @@
 Imports System.Xml
-Imports System.Web.HttpUtility
-Imports System.Configuration
 Imports System.IO
-Imports System.Collections
-Imports System.Data
 Imports System.Data.SqlClient
-Imports System.Web.Mail
 Imports System.Net.Mail
-Imports VB = Microsoft.VisualBasic
 Imports System.Web.Configuration
 Imports System.Text.RegularExpressions
-Imports System
 Imports PreMailer.Net
+Imports Protean.Tools.Xml
+Imports Protean.stdTools
 
 Public Class Messaging
 

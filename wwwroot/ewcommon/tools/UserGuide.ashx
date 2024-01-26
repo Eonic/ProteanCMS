@@ -5,6 +5,8 @@ Imports System.Web
 Imports System.Xml
 Imports Protean.Cms
 Imports Protean.stdTools
+Imports Protean.Tools
+Imports Protean.Tools.Xml
 
 
 Public Class ewAjaxAdmin : Implements IHttpHandler, IRequiresSessionState
@@ -14,7 +16,7 @@ Public Class ewAjaxAdmin : Implements IHttpHandler, IRequiresSessionState
         Dim oEw As Protean.Cms = New Protean.Cms
 
         System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12
-        Dim oEwCom As Protean.proteancms.com.ewAdminProxySoapClient = New Protean.proteancms.com.ewAdminProxySoapClient
+        Dim oEwCom As Protean.AdminProxy.ewAdminProxySoapClient = New Protean.AdminProxy.ewAdminProxySoapClient()
         Dim sProcessInfo As String = ""
         Dim xReader As XmlReader
         Dim oTransform As Protean.XmlHelper.Transform

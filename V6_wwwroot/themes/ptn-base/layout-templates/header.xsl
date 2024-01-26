@@ -586,10 +586,10 @@
 		<xsl:param name="social-links" />
 		<xsl:param name="containerClass" />
 		<xsl:param name="cartClass" />
-		<header class="navbar navbar-expand-xl header-one-line {$cartClass}">
+		<header class="navbar navbar-expand-lg header-one-line {$cartClass}">
 			<xsl:if test="not($adminMode or /Page[@previewMode='true']) and $NavFix='true'">
 				<xsl:attribute name="class">
-					navbar navbar-expand-xl navbar-fixed-top header-one-line <xsl:value-of select="$cartClass"/>
+					navbar navbar-expand-lg navbar-fixed-top header-one-line <xsl:value-of select="$cartClass"/>
 				</xsl:attribute>
 			</xsl:if>
 			<div class="{$containerClass} header-inner">
@@ -707,7 +707,7 @@
 					</xsl:if>
 					<!--SEARCH (DESKTOP)-->
 					<xsl:if test="$search='on' and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
-						<div class="not-xs">
+						<div class="not-xs ">
 							<xsl:apply-templates select="/" mode="searchModal"/>
 						</div>
 					</xsl:if>
@@ -720,8 +720,8 @@
 						<xsl:apply-templates select="/" mode="cartSimple"/>
 					</xsl:if>
 				</div>
-				<div class="donate-header-btn">
-					<a href="/Donate">Donate</a>
+				<div class="header-featured-btn">
+					<a href="/Everything-DISC/Products">Buy Now</a>
 				</div>
 				<xsl:if test="not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
 					<button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

@@ -19,7 +19,7 @@ Public Class ewEnlargeImage : Implements IHttpHandler, IRequiresSessionState
         Dim isCrop As Boolean = True
         Dim newFilepath As String = ""
 
-        Dim oXsltExt As Protean.xsltExtensions = New Protean.xsltExtensions
+        Dim oXsltExt As Protean.xmlTools.xsltExtensions = New Protean.xmlTools.xsltExtensions
 
         Try
             If sPrefix = "" Then
