@@ -249,7 +249,7 @@ namespace Protean.Providers
 
                     // Called to get XML for the User Logon.
 
-                    XmlElement oFrmElmt;
+                    XmlElement oFrmElmt = null;
                     XmlElement oSelElmt;
                     string sValidResponse;
                     string cProcessInfo = "";
@@ -403,8 +403,14 @@ namespace Protean.Providers
                                 }
                                 else
                                 {
-                                    valid = false;
-                                    base.addNote(moXformElmt.ToString(), Protean.xForm.noteTypes.Alert, sValidResponse);
+
+                                    if (sValidResponse.Contains("msg-1021")) {
+                                        XmlNode SubmitNode = moXformElmt.SelectSingleNode("descendant-or-self::submit");
+                                        oFrmElmt = (XmlElement)SubmitNode.ParentNode;
+                                        oFrmElmt.RemoveChild(SubmitNode);
+                                        base.addSubmit(ref oFrmElmt, "ewSubmit", "Resend Validation Code", default, default, "fa-solid fa-right-to-bracket");
+                                    }
+                                    base.addNote(ref moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse);
                                 }
                             }
                             else
@@ -502,12 +508,12 @@ namespace Protean.Providers
                                     valid = true;
                                     foreach (XmlElement oElmt in oFrmElmt.SelectNodes("*"))
                                         oFrmElmt.RemoveChild(oElmt);
-                                    base.addNote(oFrmElmt.ToString(), Protean.xForm.noteTypes.Hint, sValidResponse, true, "msg-1037");
+                                    base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, sValidResponse, true, "msg-1037");
                                 }
                                 else
                                 {
                                     valid = false;
-                                    base.addNote(oFrmElmt.ToString(), Protean.xForm.noteTypes.Alert, sValidResponse, true, "msg-1037");
+                                    base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, sValidResponse, true, "msg-1037");
                                 }
                             }
                             else
@@ -718,9 +724,7 @@ namespace Protean.Providers
                                 }
                                 if (!string.IsNullOrEmpty(cResponse))
                                 {
-                                    oFrmElmt.InnerXml = "";
-                                    XmlNode oFrmNode = (XmlNode)oFrmElmt;
-                                    base.addNote(ref oFrmNode, Protean.xForm.noteTypes.Hint, cResponse, true);
+                                    base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, cResponse, true);
                                 }
                             }
                             else
@@ -834,7 +838,7 @@ namespace Protean.Providers
                                 }
                                 else
                                 {
-                                    base.addNote(oGrp.ToString(), Protean.xForm.noteTypes.Alert, "The password has been updated.");
+                                    base.addNote(ref oGrp, Protean.xForm.noteTypes.Alert, "The password has been updated.");
                                     oPI1.ParentNode.RemoveChild(oPI1);
                                     oPI2.ParentNode.RemoveChild(oPI2);
                                     oSB.ParentNode.RemoveChild(oSB);
@@ -975,13 +979,12 @@ namespace Protean.Providers
                                if (!oMembership.ReactivateAccount(nAccount, goRequest["cDirPassword"]))
                                 {
                                     oGrp.InnerXml = "";
-                                    XmlNode GrpNode = (XmlNode)oGrp;
-                                    base.addNote(ref GrpNode, Protean.xForm.noteTypes.Alert, "There was an problem updating your account");
+                                    base.addNote(ref oGrp, Protean.xForm.noteTypes.Alert, "There was an problem updating your account");
                                     base.valid = false;
                                 }
                                 else
                                 {
-                                    base.addNote(oGrp.ToString(), Protean.xForm.noteTypes.Alert, "Your password has been reset <a href=\"/" + myWeb.moConfig["LogonRedirectPath"] + "\">click here</a> to login");
+                                    base.addNote(ref oGrp, Protean.xForm.noteTypes.Alert, "Your password has been reset <a href=\"/" + myWeb.moConfig["LogonRedirectPath"] + "\">click here</a> to login");
                                     oPI1.ParentNode.RemoveChild(oPI1);
                                     oPI2.ParentNode.RemoveChild(oPI2);
                                     oSB.ParentNode.RemoveChild(oSB);
@@ -1089,7 +1092,7 @@ namespace Protean.Providers
                             }
                             else
                             {
-                                base.addNote(moXformElmt.ToString(), Protean.xForm.noteTypes.Alert, "xForm does not specify Schema Name");
+                                base.addNote(ref moXformElmt, Protean.xForm.noteTypes.Alert, "xForm does not specify Schema Name");
                             }
 
 
@@ -1252,7 +1255,7 @@ namespace Protean.Providers
                                             XmlElement oSubElmt = (XmlElement)moXformElmt.SelectSingleNode("descendant-or-self::group[parent::Content][1]");
                                             if (oSubElmt != null)
                                             {
-                                                base.addNote(oSubElmt.ToString(), Protean.xForm.noteTypes.Alert, "<span class=\"msg-1010\">Your details have been updated.</span>", true);
+                                                base.addNote(ref oSubElmt, Protean.xForm.noteTypes.Alert, "<span class=\"msg-1010\">Your details have been updated.</span>", true);
                                             }
                                         }
                                     }

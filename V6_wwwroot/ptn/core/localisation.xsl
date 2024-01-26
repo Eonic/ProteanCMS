@@ -324,6 +324,15 @@
       <xsl:otherwise>This user has been added</xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+	
+	
+  <!-- 1013 User account has been disabled -->
+  <xsl:template match="span[@class='msg-1021']" mode="term">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">Tha deckswab has been banished</xsl:when>
+      <xsl:otherwise>User account awaiting activation by email</xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 
   <!-- 1020 This user has been added -->
   <xsl:template match="span[@class='msg-1029']" mode="term">
@@ -2427,10 +2436,10 @@
   <xsl:template name="term3044">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">
-        <xsl:text>Shipping Cost</xsl:text>
+        <xsl:text>Delivery Cost</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Shipping Cost</xsl:text>
+        <xsl:text>Delivery Cost</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
