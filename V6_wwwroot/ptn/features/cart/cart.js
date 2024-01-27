@@ -1,4 +1,7 @@
 ﻿$(document).ready(function () {
+
+    $(".pay-button").hide();
+
     if ($("form#contact").exists()) {
 
         $(".delivery-address").hide();
@@ -131,6 +134,18 @@
     initialiseProductSKUs();
 });
 
+
+$("#confirmterms_Agree").change(function () {
+    if (this.checked) {
+        //$("#confirmterms_Agree").attr("disabled", true);
+        $(".dummy-pay-button").hide();
+        $(".pay-button").show();
+        enablePayPal();
+    } else {
+        $(".dummy-pay-button").show();
+        $(".pay-button").hide();
+    }
+});
 
 /*Change Price on Selected SKU Option - this function uses 'Live' to cater for content inserted via ajax*/
 function initialiseProductSKUs() {

@@ -1641,8 +1641,12 @@ namespace Protean
                         case "Logon":
                         case "LogonSubs": // offer the user the ability to logon / register
                             {
+                                bool bSkipLogon = false;
+                                if (moCartConfig["SkipLogon"] == "on") {
+                                    bSkipLogon = true;
+                                }
 
-                                if (mbEwMembership == true & (moCartConfig["SkipLogon"] != "on" | mcCartCmd == "LogonSubs"))
+                                if (mbEwMembership == true && (bSkipLogon == false || mcCartCmd == "LogonSubs"))
                                 {
 
                                     // logon xform !!! We disable this because it is being brought in allready by .Web
@@ -1662,6 +1666,9 @@ namespace Protean
                                         oRegXform.xFrmEditDirectoryItem(IntanceAppend: ref argIntanceAppend, (long)myWeb.mnUserId, "User", (long)Conversions.ToInteger("0" + moCartConfig["DefaultSubscriptionGroupId"]), "CartRegistration");
                                         if (oRegXform.valid)
                                         {
+
+
+
                                             string sReturn = moDBHelper.validateUser(myWeb.moRequest["cDirName"], myWeb.moRequest["cDirPassword"]);
                                             if (Information.IsNumeric(sReturn))
                                             {
@@ -7464,7 +7471,7 @@ namespace Protean
                                     oOptXform.addInput(ref oGrpElmt, "nShipOptKey", false, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cShipOptName"], "-"), oRow["cShipOptCarrier"])), "hidden");
                                     oOptXform.Instance.SelectSingleNode("nShipOptKey").InnerText = Conversions.ToString(oRow["nShipOptKey"]);
 
-                                    var DelInputElmt = oOptXform.addInput(ref oGrpElmt, "tblCartOrder/cShippingDesc", false, "Delivery Option", "readonly term4047");
+                                    var DelInputElmt = oOptXform.addInput(ref oGrpElmt, "tblCartOrder/cShippingDesc", false, "Delivery", "readonly term4047");
                                     XmlElement DelInputElmtLabel = (XmlElement)DelInputElmt.SelectSingleNode("label");
                                     DelInputElmtLabel.SetAttribute("name", Conversions.ToString(oRow["cShipOptName"]));
                                     DelInputElmtLabel.SetAttribute("carrier", Conversions.ToString(oRow["cShipOptCarrier"]));
@@ -7480,7 +7487,7 @@ namespace Protean
                         }
                         else
                         {
-                            oOptXform.addSelect1(ref oGrpElmt, "nShipOptKey", false, "Delivery Type", "radios multiline", Protean.xForm.ApperanceTypes.Full);
+                            oOptXform.addSelect1(ref oGrpElmt, "nShipOptKey", false, "Select Delivery", "radios multiline", Protean.xForm.ApperanceTypes.Full);
                             bFirstRow = true;
                             int nLastID = 0;
 

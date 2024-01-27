@@ -383,10 +383,13 @@
 								</div>
 							</div>
 						</div>
+
 						<div class="cart-btns-btm clearfix">
+							<form method="post" id="cart" class="ewXform">
 							<button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-link me-2 continue">
 								<xsl:call-template name="term3060" />
 							</button>
+								</form>
 							<xsl:if test="parent::Cart/@Process &gt; 3">
 								<a href="?cartCmd=Quit" class="btn btn-link text-danger continue">
 									<span class="empty-basket-icon">
@@ -812,10 +815,12 @@
 					</div>
 				</div>
 				<div class="cart-btns-btm clearfix hidden-xs">
+					<form method="post" id="cart" class="ewXform">
 					<button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-link continue">
 						<xsl:call-template name="term3060" />
 						<xsl:text> </xsl:text>
 					</button>
+						</form>
 				</div>
 			</div>
 			<xsl:if test="/Page/Cart/Order/Notes/PromotionalCode!=''">
@@ -1032,10 +1037,12 @@
 					</div>
 				</div>
 				<div class="cart-btns-btm">
+					<form method="post" id="cart" class="ewXform">
 					<button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-link continue">
 						<xsl:call-template name="term3060" />
 						<xsl:text> </xsl:text>
 					</button>
+						</form>
 				</div>
 			</div>
 		</div>
@@ -1438,18 +1445,21 @@
 		</xsl:if>
 	</xsl:template>
 
-	<xsl:template match="label[@for='confirmterms_Agree']">
-		Blah
-	</xsl:template>
-
 	<xsl:template match="label[parent::textarea[contains(@class,'readonly terms-and-condiditons')]]">
 
 	</xsl:template>
 
+	<xsl:template match="label[parent::item and ancestor::select[@ref='confirmterms']]" mode="xform-label">
+		I agree to the
+		<a class="" data-bs-toggle="modal" data-bs-target="#terms-modal">
+			terms and conditions
+		</a>
+	</xsl:template>
+
 	<xsl:template match="textarea[contains(@class,'readonly terms-and-condiditons')]" mode="xform_legend">
-		<button type="button" class="btn btn-link continue" data-bs-toggle="modal" data-bs-target="#terms-modal">
+		<!--<button type="button" class="btn btn-link continue" data-bs-toggle="modal" data-bs-target="#terms-modal">
 			View terms and conditions
-		</button>
+		</button>-->
 	</xsl:template>
 
 	<xsl:template match="textarea[contains(@class,'readonly terms-and-condiditons')]" mode="xform_control">
@@ -2222,41 +2232,6 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</div>
-
-
-			<xsl:choose>
-				<xsl:when test="group[div/tblCartContact/cContactType/node()='Delivery Address']">
-					<div class="card">
-						<div class="card-body">
-							<h3>Billing Address</h3>
-							<xsl:apply-templates select="group[div/tblCartContact/cContactType/node()='Billing Address']" mode="xform"/>
-						</div>
-					</div>
-					<xsl:if test="not($page/Cart/Order/@hideDeliveryAddress='True')">
-						<div class="card">
-							<div class="card-body">
-								<h3>Delivery Addresses</h3>
-								<xsl:apply-templates select="group[@class='collection-options']" mode="xform"/>
-								<xsl:apply-templates select="group[div/tblCartContact/cContactType/node()!='Billing Address']" mode="xform"/>
-								<div class="pull-right">
-									<xsl:apply-templates select="submit" mode="xform"/>
-								</div>
-							</div>
-						</div>
-					</xsl:if>
-
-				</xsl:when>
-				<xsl:otherwise>
-					<div class="col-md-12">
-						<xsl:apply-templates select="group[div/tblCartContact/cContactType/node()='Billing Address']" mode="xform"/>
-						<div class="pull-right">
-							<xsl:apply-templates select="submit" mode="xform"/>
-						</div>
-					</div>
-				</xsl:otherwise>
-			</xsl:choose>
-
-			>>>>>>> Stashed changes
 		</fieldset>
 	</xsl:template>
 
@@ -2534,7 +2509,7 @@
 							<xsl:with-param name="showImg" select="$showImg"/>
 						</xsl:apply-templates>
 					</div>
-				</xsl:for-each>				
+				</xsl:for-each>
 			</div>
 		</xsl:if>
 	</xsl:template>
@@ -2720,6 +2695,58 @@
 		<input type="hidden" name="opt_{ancestor::Content[1]/@id}_{$grpIdx}" value="" id="opt_{ancestor::Content[1]/@id}_{$grpIdx}_{position()}"/>
 	</xsl:template>
 
+
+	<xsl:template match="Content[model/submission/@id='optionsForm']" mode="xform">
+		<form method="{model/submission/@method}" action="" novalidate="novalidate">
+			<xsl:attribute name="class">
+				<xsl:text>xform needs-validation</xsl:text>
+				<xsl:if test="model/submission/@class!=''">
+					<xsl:text> </xsl:text>
+					<xsl:value-of select="model/submission/@class"/>
+				</xsl:if>
+			</xsl:attribute>
+			<xsl:if test="not(contains(model/submission/@action,'.asmx'))">
+				<xsl:attribute name="action">
+					<xsl:value-of select="model/submission/@action"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="model/submission/@id!=''">
+				<xsl:attribute name="id">
+					<xsl:value-of select="model/submission/@id"/>
+				</xsl:attribute>
+				<xsl:attribute name="name">
+					<xsl:value-of select="model/submission/@id"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="model/submission/@event!=''">
+				<xsl:attribute name="onsubmit">
+					<xsl:value-of select="model/submission/@event"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="descendant::upload">
+				<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
+			</xsl:if>
+
+			<xsl:apply-templates select="group | repeat | input | secret | select | select1 | range | textarea | upload | hint | help | alert | div" mode="xform"/>
+
+			<xsl:if test="count(submit) &gt; 0">
+				<p class="buttons">
+					<xsl:if test="descendant-or-self::*[contains(@class,'required')]">
+						<span class="required">
+							<span class="req">*</span>
+							<xsl:text> </xsl:text>
+							<xsl:call-template name="msg_required"/>
+						</span>
+					</xsl:if>
+					<xsl:apply-templates select="submit" mode="xform"/>
+
+				</p>
+			</xsl:if>
+			<button type="submit" name="submit" disabled="diabled" class="btn btn-custom dummy-pay-button" style="">
+				<i class="fa   fa-white"> </i> Complete Order
+			</button>
+		</form>
+	</xsl:template>
 
 
 </xsl:stylesheet>

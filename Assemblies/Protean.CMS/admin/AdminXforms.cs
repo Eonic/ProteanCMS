@@ -1038,9 +1038,8 @@ namespace Protean
                         {
 
                             oFrmElmt = base.addGroup(ref base.moXformElmt, "Config", "", "ConfigSettings");
-                            XmlNode argoNode = oFrmElmt;
-                            base.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, xFormPath + " could not be found. - ");
-                            oFrmElmt = (XmlElement)argoNode;
+                            base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, xFormPath + " could not be found. - ");
+                       
                         }
 
                         else
@@ -1112,7 +1111,7 @@ namespace Protean
                                // sectionMissing = true;
                                 oFrmElmt = base.moXformElmt;
                                 XmlNode argoNode1 = oFrmElmt;
-                                base.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, "This config section has not yet been setup, saving will implement these settings for the first time and then log you off the admin system.");
+                                base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "This config section has not yet been setup, saving will implement these settings for the first time and then log you off the admin system.");
                                 oFrmElmt = (XmlElement)argoNode1;
                             }
 
