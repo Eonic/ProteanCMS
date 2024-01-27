@@ -1438,7 +1438,9 @@
 		</xsl:if>
 	</xsl:template>
 
-
+	<xsl:template match="label[@for='confirmterms_Agree']">
+		Blah
+	</xsl:template>
 
 	<xsl:template match="label[parent::textarea[contains(@class,'readonly terms-and-condiditons')]]">
 
@@ -2532,43 +2534,7 @@
 							<xsl:with-param name="showImg" select="$showImg"/>
 						</xsl:apply-templates>
 					</div>
-				</xsl:for-each>
-				<xsl:if test="@shippingType &gt; 0 and @shippingDesc!='No Delivery Required-'">
-					<div class="shipping">
-						<strong>
-							<xsl:choose>
-								<xsl:when test="/Page/Contents/Content[@name='shippingCostLabel']!=''">
-									<xsl:value-of select="/Page/Contents/Content[@name='shippingCostLabel']"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<!--Shipping Cost-->
-									<xsl:call-template name="term3044" />
-									<xsl:text>:</xsl:text>
-								</xsl:otherwise>
-							</xsl:choose>
-							<xsl:text>&#160;</xsl:text>
-						</strong>
-						<xsl:choose>
-							<xsl:when test="/Page/Cart/Order/Shipping">
-								<xsl:value-of select="/Page/Cart/Order/Shipping/Name/node()"/>
-								<strong>&#160;-&#160;</strong>
-								<xsl:value-of select="/Page/Cart/Order/Shipping/Carrier/node()"/>
-								<strong>&#160;-&#160;</strong>
-								<xsl:value-of select="/Page/Cart/Order/Shipping/DeliveryTime/node()"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="/Page/Cart/Order/@shippingDesc"/>
-							</xsl:otherwise>
-						</xsl:choose>
-						<span class="amount">
-							<xsl:text>&#160;</xsl:text>
-							<xsl:apply-templates select="/Page" mode="formatPrice">
-								<xsl:with-param name="price" select="@shippingCost"/>
-								<xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
-							</xsl:apply-templates>
-						</span>
-					</div>
-				</xsl:if>
+				</xsl:for-each>				
 			</div>
 		</xsl:if>
 	</xsl:template>
