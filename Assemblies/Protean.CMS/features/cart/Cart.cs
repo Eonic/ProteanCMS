@@ -7958,7 +7958,8 @@ namespace Protean
 
                                 arrLoc = null;
 
-                                if (Conversions.ToBoolean(Operators.OrObject(Operators.ConditionalCompareObjectEqual(Interaction.IIf((oDr["cLocationNameShort"]) is DBNull, "", (oDr["cLocationNameShort"])), Strings.LCase(Strings.Trim(sTarget)), false), Operators.ConditionalCompareObjectEqual(Interaction.IIf((oDr["cLocationNameFull"]) is DBNull, "", (oDr["cLocationNameFull"])), Strings.LCase(Strings.Trim(sTarget)), false))))
+                               // if (Conversions.ToBoolean(Operators.OrObject(Operators.ConditionalCompareObjectEqual(Interaction.IIf((oDr["cLocationNameShort"]) is DBNull, "", (oDr["cLocationNameShort"])), Strings.LCase(Strings.Trim(sTarget)), false), Operators.ConditionalCompareObjectEqual(Interaction.IIf((oDr["cLocationNameFull"]) is DBNull, "", (oDr["cLocationNameFull"])), Strings.LCase(Strings.Trim(sTarget)), false))))
+                                if (oDr["cLocationNameShort"].ToString() == Strings.Trim(sTarget) || oDr["cLocationNameFull"].ToString() == Strings.Trim(sTarget))
                                 {
                                     nTargetId = Conversions.ToInteger(oDr["nLocationKey"]);
                                 }
@@ -7994,7 +7995,7 @@ namespace Protean
             {
                 string iterateCountryListRet = default;
                 myWeb.PerfMon.Log("Cart", "iterateCountryList");
-                int?[] arrTmp;
+                string[] arrTmp;
                 string sListReturn;
                 string cProcessInfo = "";
                 try
@@ -8003,15 +8004,17 @@ namespace Protean
 
                     if (oDict.ContainsKey(nParent))
                     {
-                        arrTmp = (int?[])oDict[nParent];
+                        arrTmp = (string[])oDict[nParent];
                         sListReturn = ",'" + SqlFmt(arrTmp[nIndex].ToString()) + "'"; // Adding this line here allows the top root location to be added
                         if (!(Information.IsDBNull(arrTmp[0]) | arrTmp[0] == null))
                         {
-                            if (arrTmp[0] != nParent)
-                                sListReturn = sListReturn + iterateCountryList(ref oDict, ref arrTmp[0], ref nIndex);
+                            if (Int32.Parse(arrTmp[0]) != nParent)
+                            {
+                                int? newParent = Int32.Parse(arrTmp[0]);
+                                sListReturn = sListReturn + iterateCountryList(ref oDict, ref newParent, ref nIndex);
+                            }
                         }
                     }
-
                     iterateCountryListRet = sListReturn;
                 }
 
