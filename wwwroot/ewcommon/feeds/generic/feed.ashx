@@ -2,7 +2,7 @@
 
 Imports System
 Imports System.Web
-Imports System.xml
+Imports System.Xml
 
 Public Class eonicGenericFeed : Implements IHttpHandler, IRequiresSessionState
 

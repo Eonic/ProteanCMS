@@ -336,6 +336,14 @@
 			</button>
 		</form>
 	</xsl:template>
+	<xsl:template match="/" mode="searchModal">
+		<button class="btn-clean search-btn" data-bs-toggle="modal" href="#SearchModal" role="button">
+			<i class="fa fa-search">
+				<xsl:text> </xsl:text>
+			</i>
+			<span class="visually-hidden">Open Search Modal</span>
+		</button>
+	</xsl:template>
 
 	<!-- ############################################ LOGIN ############################################### -->
 
@@ -373,6 +381,25 @@
 				<xsl:when test="/Page/User">My Account</xsl:when>
 				<xsl:otherwise>Log in</xsl:otherwise>
 			</xsl:choose>
+		</a>
+	</xsl:template>
+	<xsl:template match="/" mode="loginIcon">
+		<a class="nav-link login-btn not-xs">
+			<xsl:attribute name="href">
+				<xsl:choose>
+					<xsl:when test="/Page/User">/My-Account</xsl:when>
+					<xsl:otherwise>/Login</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>
+			<i class="fas fa-user">
+				<xsl:text> </xsl:text>
+			</i>
+			<span class="visually-hidden">
+				<xsl:choose>
+					<xsl:when test="/Page/User">My Account</xsl:when>
+					<xsl:otherwise>Log in</xsl:otherwise>
+				</xsl:choose>
+			</span>
 		</a>
 	</xsl:template>
 

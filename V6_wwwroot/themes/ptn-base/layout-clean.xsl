@@ -60,6 +60,13 @@
 						<xsl:with-param name="containerClass" select="$container"/>
 					</xsl:apply-templates>
 				</xsl:when>
+				<xsl:when test="$header-layout='header-one-line'">
+					<xsl:apply-templates select="." mode="header-one-line">
+						<xsl:with-param name="nav-collapse">false</xsl:with-param>
+						<xsl:with-param name="social-links">false</xsl:with-param>
+						<xsl:with-param name="containerClass" select="$container"/>
+					</xsl:apply-templates>
+				</xsl:when>
 				<xsl:otherwise>
 					<xsl:apply-templates select="." mode="header-menu-below">
 						<xsl:with-param name="nav-collapse">false</xsl:with-param>
@@ -119,6 +126,31 @@
 			</div>
 		</div>
 
+		<div class="modal fade" id="SearchModal" tabindex="-1" role="dialog" aria-labelledby="SearchTitle" aria-hidden="true">
+			<div class="modal-dialog modal-md" role="document">
+				<div class="modal-content">
+					<div class="modal-body">
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+						<div id="Search" class="search-wrapper">
+
+							<form method="post" action="/information/search" id="searchInput" class="input-group">
+								<label for="searchString" class="visually-hidden">Search</label>
+								<input type="text" class="form-control CTAsearch" name="searchString" id="searchString" value="" placeholder="Search" />
+								<input type="hidden" name="searchMode" value="REGEX" class="d-none" />
+								<input type="hidden" name="contentType" value="Product" class="d-none"/>
+								<input type="hidden" name="searchFormId" value="8923" class="d-none"/>
+								<button type="submit" class="btn btn-outline-primary" name="Search" value="Submit">
+									<i class="fa fa-search">
+										<xsl:text> </xsl:text>
+									</i>
+									<span class="visually-hidden">Search</span>
+								</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</xsl:template>
 
 

@@ -105,7 +105,9 @@
         }
     }
 }
-
+.active-admin-dd{
+    z-index:30!important;
+}
 .normalMode {
     .text-primary {
         color: $admin-header-color-link !important;
@@ -139,7 +141,7 @@
 
     .module > .editable > .ptn-edit {
         z-index: 20;
-        position:relative;
+        position: relative;
     }
 
     .ptn-edit.over-content {

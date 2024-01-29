@@ -2,11 +2,12 @@
 Option Explicit On
 
 Imports System.Xml
-Imports System.Reflection
 Imports Protean.Cms.dbHelper
 Imports System
 Imports Protean.Tools.Number
 Imports System.Data.SqlClient
+Imports Protean.Tools.Xml
+Imports Protean.stdTools
 
 Namespace Integration.Directory
 
@@ -389,10 +390,10 @@ Namespace Integration.Directory
                                         ' Set the style file
                                         ' TODO: AG Set a common integration
                                         Dim styleFile As String = ""
-                                        If IO.File.Exists(goServer.MapPath("/xsl/integrations/post.xsl")) Then
-                                            styleFile = goServer.MapPath("/xsl/integrations/post.xsl")
+                                        If IO.File.Exists(Protean.stdTools.goServer.MapPath("/xsl/integrations/post.xsl")) Then
+                                            styleFile = Protean.stdTools.goServer.MapPath("/xsl/integrations/post.xsl")
                                         Else
-                                            styleFile = goServer.MapPath("/ewcommon/xsl/integrations/post.xsl")
+                                            styleFile = Protean.stdTools.goServer.MapPath("/ewcommon/xsl/integrations/post.xsl")
 
                                         End If
 

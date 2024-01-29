@@ -6923,8 +6923,8 @@
                 <br/>
                 <br/>
               </xsl:if>
-              <xsl:if test="Payment">
-                <a href="/ewcommon/tools/pageAsPDF.ashx?ewCmd=Orders&amp;ewCmd2=Display&amp;id={$orderId}&amp;filename=LoftLive-Tickets-{$orderId}" class="btn btn-primary" target="_new">
+              <xsl:if test="Item/productDetail[@type='Ticket']">
+                <a href="/ptn/tools/pageAsPDF.ashx?ewCmd=Orders&amp;ewCmd2=Display&amp;id={$orderId}&amp;filename=Tickets-{$orderId}" class="btn btn-primary" target="_new">
                   <i class="fas fa-file-pdf">&#160;</i>&#160;Print Tickets
                 </a>
               </xsl:if>
@@ -7922,6 +7922,12 @@
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Select User Groups
           </a>
+			<xsl:text> </xsl:text>
+			<a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=ShippingGroup&amp;id={@id}&amp;name={@name}" class="btn btn-sm btn-outline-primary">
+				<i class="fa fa-user fa-white">
+					<xsl:text> </xsl:text>
+				</i><xsl:text> </xsl:text>Select Shipping Groups
+			</a>
           <xsl:text> </xsl:text>
           <a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=delete&amp;id={@id}" class="btn btn-sm btn-outline-danger">
             <i class="fas fa-trash-alt fa-white">

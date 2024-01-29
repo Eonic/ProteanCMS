@@ -1,4 +1,4 @@
-﻿################################################################################
+################################################################################
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
@@ -20,9 +20,8 @@
 /Assemblies/ProteanCMS/bin
 /Assemblies/ProteanCMS/obj
 /wwwroot/ewcommon/bin
-/wwwroot/bin
-/V6_wwwroot/bin
 
 /packages/System.Buffers.4.5.1
 /.vs/ProteanCMSInstaller/FileContentIndex
 /.vs/ProteanCMS-V6/FileContentIndex
+/wwwroot/bin

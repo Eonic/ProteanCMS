@@ -11,26 +11,10 @@
 Option Strict Off
 Option Explicit On
 
-Imports System
 Imports System.Xml
-Imports System.Web.HttpUtility
 Imports System.Web.Configuration
-Imports System.Configuration
-Imports System.IO
-Imports System.Collections
-Imports System.Data
-Imports System.Data.SqlClient
-Imports System.Text.RegularExpressions
-Imports System.Threading
-Imports Protean.Cms
-Imports Protean.Tools
-Imports Protean.Tools.Xml
-Imports Protean.Cms.Cart
-Imports System.Net.Mail
 Imports System.Reflection
-Imports System.Net
-Imports VB = Microsoft.VisualBasic
-Imports System.Linq
+Imports Protean.stdTools
 
 Namespace Providers
     Namespace Filter

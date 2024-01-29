@@ -152,7 +152,7 @@
   <xsl:template match="/" mode="cartBrief">
     <div id="cartBrief">
       <div class="cartinfo">
-        <a href="{$siteURL}{$currentPage/@url}?cartCmd=Cart" title="Click here to checkout" role="button">
+        <a href="{$siteURL}?cartCmd=Cart" title="Click here to checkout" role="button">
           <div class="cart-icon">
             <i class="fa fa-shopping-basket">
               <xsl:text> </xsl:text>

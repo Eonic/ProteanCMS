@@ -324,6 +324,15 @@
       <xsl:otherwise>This user has been added</xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+	
+	
+  <!-- 1013 User account has been disabled -->
+  <xsl:template match="span[@class='msg-1021']" mode="term">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">Tha deckswab has been banished</xsl:when>
+      <xsl:otherwise>User account awaiting activation by email</xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 
   <!-- 1020 This user has been added -->
   <xsl:template match="span[@class='msg-1029']" mode="term">
@@ -403,9 +412,33 @@
       <xsl:otherwise>This information must be valid</xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-  
 
-  <!-- 1021 This username already exists in <membership>. Please select another. -->
+	<xsl:template match="span[@class='msg-028']" mode="term">
+		<xsl:value-of select="span[@class='labelName']/node()"/>
+		<xsl:choose>
+			<xsl:when test="$lang='en-pr'">Please enter your email address and we will email you with your password.</xsl:when>
+			<xsl:otherwise>Please enter your email address and we will email with a link to reset your password.</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="*[@class='msg-1038']" mode="term">
+		<xsl:value-of select="span[@class='labelName']/node()"/>
+		<xsl:choose>
+			<xsl:when test="$lang='en-pr'">Please enter your email address and we will email you with your password.</xsl:when>
+			<xsl:otherwise>Please enter your email address and we will email with a link to reset your password.</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="*[@class='msg-1037']" mode="term">
+		<xsl:value-of select="span[@class='labelName']/node()"/>
+		<xsl:choose>
+			<xsl:when test="$lang='en-pr'">Your reset link has been emailed to you.</xsl:when>
+			<xsl:otherwise>Your reset link has been emailed to you !!</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+
+	<!-- 1021 This username already exists in <membership>. Please select another. -->
   <xsl:template name="term1021">
     <xsl:param name="p1"/>
     <xsl:choose>
@@ -2403,10 +2436,10 @@
   <xsl:template name="term3044">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">
-        <xsl:text>Shipping Cost</xsl:text>
+        <xsl:text>Delivery Cost</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Shipping Cost</xsl:text>
+        <xsl:text>Delivery Cost</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -2614,10 +2647,10 @@
   <xsl:template name="term3058">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">
-        <xsl:text>Add to basket</xsl:text>
+        <xsl:text>Buy Now</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Add to basket</xsl:text>
+        <xsl:text>Buy Now</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -2813,10 +2846,10 @@
   <xsl:template name="term3076">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">
-        <xsl:text>Terms and Conditions</xsl:text>
+        <xsl:text>terms and conditions</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Terms and Conditions</xsl:text>
+        <xsl:text>terms and conditions</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -2916,10 +2949,10 @@
   <xsl:template name="term3085">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">
-        <xsl:text>I agree to the Terms and Conditions</xsl:text>
+        <xsl:text>I agree to the terms and conditions</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>I agree to the Terms and Conditions</xsl:text>
+        <xsl:text>I agree to the terms and conditions</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -3013,6 +3046,17 @@
     </xsl:choose>
   </xsl:template>
 
+
+	<xsl:template name="term3094">
+		<xsl:choose>
+			<xsl:when test="$lang='en-pr'">
+				<xsl:text>Subscribe Now</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>Subscribe Now</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 
   <!-- ################################################################################################ -->
   <!-- ProteanCMS Membership Template phrases -->
@@ -3623,10 +3667,10 @@
   <xsl:template name="term4047">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">
-        <xsl:text>Select Delivery Option</xsl:text>
+        <xsl:text>Select Delivery</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Select Delivery Option</xsl:text>
+        <xsl:text>Select Delivery</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -3685,6 +3729,17 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+
+	<xsl:template name="term4053">
+		<xsl:choose>
+			<xsl:when test="$lang='en-pr'">
+				<xsl:text>Please Enter</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>Please Enter</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 
   <xsl:template name="term4060">
     <xsl:choose>
