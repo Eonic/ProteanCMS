@@ -8762,8 +8762,8 @@ namespace Protean
                                 if (nQuantity > 0L)
                                 {
                                     qtyAdded = (int)(qtyAdded + nQuantity);
-                                    bool bBlockCartAdd = false;
-                                    string sBlockCartAddMsg = "";
+                                   // bool bBlockCartAdd = false;
+                                    string sBlockCartAddMsg = string.Empty;
                                     if (moSubscription != null) {
                                         if (Strings.LCase(moCartConfig["SubsExclusiveOrder"]) == "on") {
 

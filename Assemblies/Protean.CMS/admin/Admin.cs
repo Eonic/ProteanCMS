@@ -673,8 +673,7 @@ namespace Protean
                         case "admin":
                             {
                                 mcEwCmd = "Content";
-                                goto ProcessFlow;
-                                break;
+                                goto ProcessFlow;                                
                             }
 
 
@@ -682,7 +681,6 @@ namespace Protean
                             {
 
                                 sAdminLayout = "adminDenied";
-
                                 oPageDetail.AppendChild(moDeniedAdminMenuElmt);
                                 break;
                             }
