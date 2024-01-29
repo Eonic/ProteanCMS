@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Net-Standard-Protean.Tools\\Net-Standard-Protean.Tools.csproj": {}
+    "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\Net-Standard-Protean.Tools\\Net-Standard-Protean.Tools.csproj": {}
   },
   "projects": {
-    "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Net-Standard-Protean.Tools\\Net-Standard-Protean.Tools.csproj": {
+    "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\Net-Standard-Protean.Tools\\Net-Standard-Protean.Tools.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Net-Standard-Protean.Tools\\Net-Standard-Protean.Tools.csproj",
+        "projectUniqueName": "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\Net-Standard-Protean.Tools\\Net-Standard-Protean.Tools.csproj",
         "projectName": "Net-Standard-Protean.Tools",
-        "projectPath": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Net-Standard-Protean.Tools\\Net-Standard-Protean.Tools.csproj",
-        "packagesPath": "C:\\Users\\trevors\\.nuget\\packages\\",
-        "outputPath": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Net-Standard-Protean.Tools\\obj\\",
+        "projectPath": "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\Net-Standard-Protean.Tools\\Net-Standard-Protean.Tools.csproj",
+        "packagesPath": "C:\\Users\\trevo\\.nuget\\packages\\",
+        "outputPath": "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\Net-Standard-Protean.Tools\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\trevors\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\trevo\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [

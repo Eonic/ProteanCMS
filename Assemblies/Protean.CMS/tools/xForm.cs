@@ -3253,7 +3253,14 @@ namespace Protean
             }
         }
 
-        public void addNote(ref XmlNode oNode, noteTypes nTypes, string sMessage, bool bInsertFirst = false, string sClass = "")
+        public void addNote(ref XmlElement oNode, noteTypes nTypes, string sMessage, bool bInsertFirst = false, string sClass = "")
+        {
+            valid = false;
+            XmlNode frmNode = (XmlNode)moXformElmt;
+            addNote(ref frmNode, nTypes, sMessage, bInsertFirst, sClass);
+        }
+
+            public void addNote(ref XmlNode oNode, noteTypes nTypes, string sMessage, bool bInsertFirst = false, string sClass = "")
         {
             if (sMessage is null)
                 sMessage = "";
@@ -3861,7 +3868,6 @@ namespace Protean
                                 long nNodeCount = 0L;
                                 if (oInstanceNodeSet.Count == 0)
                                 {
-
                                     XmlNode argoNode1 = moXformElmt;
                                     addNote(ref argoNode1, noteTypes.Alert, "The repeat with bind='" + oRptElmt.GetAttribute("bind") + "' could not find the node in the instance on xpath '" + sBindXpath + "'");
                                     moXformElmt = (XmlElement)argoNode1;

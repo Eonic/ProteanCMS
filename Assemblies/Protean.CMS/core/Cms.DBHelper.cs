@@ -8052,7 +8052,19 @@ namespace Protean
                                             // Check user status
                                             if ((Convert.ToInt32(oUserDetails["nStatus"]) != 1 && Convert.ToInt32(oUserDetails["nStatus"]) != -1))
                                             {
-                                                sReturn = "<span class=\"msg-1013\">User account has been disabled</span>";
+                                                XmlElement oUserXml = GetUserXML(nUserId);
+
+                                                if (oUserXml.SelectSingleNode("ActivationKey").InnerText !="")
+                                                {
+                                                   
+                                                    
+                                                    sReturn = "<span class=\"msg-1021\">User account awaiting activation by email</span>";
+                                                }
+                                                else {
+                                                    sReturn = "<span class=\"msg-1013\">User account has been disabled</span>";
+                                                }
+                                                
+                                                
                                             }
 
                                             break;

@@ -29,7 +29,7 @@
 			<label> </label>
 			<choices />
 			<item>
-				<label>I agree to the Terms and Conditions</label>
+				<label>I agree to the terms and conditions</label>
 				<value>Agree</value>
 			</item>
 			<value>No</value>
