@@ -1,41 +1,4 @@
-﻿/*############### STEPPER #################*/
-#MyWizard {
-    margin-bottom: 2rem;
-
-    .nav {
-        @extend .justify-content-center;
-        font-weight: 600;
-    }
-
-    .step {
-        opacity: 0.5;
-    }
-
-    .badge {
-        @extend .bg-dark;
-        @extend .rounded-pill;
-        margin-left: 20px;
-        margin-right: 6px;
-
-        &.complete {
-        }
-    }
-
-    .complete {
-        opacity: 0.5;
-    }
-
-    .active {
-        color: $primary;
-        opacity: 1;
-
-        .badge {
-            @extend .bg-primary;
-        }
-    }
-}
-
-/*############### CART MIXINS #################*/
+﻿/*############### CART MIXINS #################*/
 @mixin cart-style1 {
     .cart-thumbnail {
         float: left;
@@ -254,6 +217,7 @@
     }
 }
 
+//PAYMENT
 #cartFull .payment-tcs,
 #cartInvoice .confirmation-cart {
     #cartListing {
@@ -315,5 +279,42 @@
 
     .cart-item:last-child {
         padding-bottom: 0;
+    }
+}
+
+/*############### STEPPER #################*/
+#MyWizard {
+    margin-bottom: 2rem;
+
+    .nav {
+        @extend .justify-content-center;
+        font-weight: 600;
+    }
+
+    .step {
+        opacity: 0.5;
+    }
+
+    .badge {
+        @extend .bg-dark;
+        @extend .rounded-pill;
+        margin-left: 20px;
+        margin-right: 6px;
+
+        &.complete {
+        }
+    }
+
+    .complete {
+        opacity: 0.5;
+    }
+
+    .active {
+        color: $primary;
+        opacity: 1;
+
+        .badge {
+            @extend .bg-primary;
+        }
     }
 }
