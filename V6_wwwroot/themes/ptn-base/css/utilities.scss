@@ -1,7 +1,17 @@
 ﻿.hidden {
     display: none;
 }
+.not-xs {
+    @include media-breakpoint-down($nav-breakpoint) {
+        display: none;
+    }
+}
 
+.xs-only {
+    @include media-breakpoint-up($nav-breakpoint) {
+        display: none;
+    }
+}
 @mixin sr-only {
     position: absolute !important;
     clip: rect(1px, 1px, 1px, 1px);
@@ -9,6 +19,23 @@
     height: 1px;
     width: 1px;
     word-wrap: normal;
+}
+.skip {
+    position: absolute;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+.skip:focus {
+    left: 10px;
+    top: 10px;
+    z-index: 20;
+    width: auto;
+    height: auto;
+    overflow: visible;
 }
 
 @mixin clear-shadow() {
@@ -38,7 +65,7 @@
 }
 
 .align-btn-footer {
-    .lIinner {
+    .lIinner .media-inner {
         height: 100%;
         display: flex;
         flex-direction: column;
@@ -59,6 +86,11 @@
     overflow: hidden;
     @extend .btn;
     @extend .btn-primary;
+}
+
+a {
+    outline-offset: 5px;
+    outline-color: $link-color;
 }
 
 .link-underline {

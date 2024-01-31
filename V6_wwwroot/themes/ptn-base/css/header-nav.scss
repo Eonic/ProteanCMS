@@ -1,21 +1,7 @@
-﻿$nav-breakpoint: lg;
-
-.not-xs {
-    @include media-breakpoint-down($nav-breakpoint) {
-        display: none;
-    }
-}
-
-.xs-only {
-    @include media-breakpoint-up($nav-breakpoint) {
-        display: none;
-    }
-}
-
-// Header Layout Options
+﻿/*############### HEADER LAYOUT #################*/
+//Specific Layout Settings
 .header-menu-below {
     display: block !important;
-
 
     .main-nav ul.navbar-nav {
         @include media-breakpoint-up($nav-breakpoint) {
@@ -30,6 +16,7 @@
         justify-content: flex-end;
     }
 }
+
 //General Header Settings
 header {
     &.header-one-line {
@@ -42,8 +29,8 @@ header {
 
         .navbar-content {
             flex-wrap: nowrap;
-
         }
+
         .main-nav ul.navbar-nav {
             justify-content: center;
         }
@@ -96,11 +83,12 @@ header {
     color: $navbar-light-color;
     z-index: 20;
 }
-//Navigation
+
+/*############### NAVIGATION #################*/
 .main-nav {
     padding: 0;
-
-    @include media-breakpoint-up(lg) {
+    //DESKTOP MENU
+    @include media-breakpoint-up($nav-breakpoint) {
         font-size: $main-nav-size;
         padding: 0;
 
@@ -121,7 +109,7 @@ header {
             }
         }
     }
-
+    //DROPDOWN MENU
     .dropdown-menu {
         margin-top: 0;
         border-radius: 0;
@@ -155,6 +143,18 @@ header {
         }
     }
 
+    .dropdown-toggle {
+        &:after {
+            content: '\f078';
+            border: none;
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            font-size: 0.8rem;
+            vertical-align: middle;
+            margin-left: 0.4em;
+        }
+    }
+    //MOBILE MENU
     @include media-breakpoint-down(lg) {
         .offcanvas {
             overflow: scroll;
@@ -183,20 +183,8 @@ header {
             margin-left: 0.4rem;
         }
     }
-
-    .dropdown-toggle {
-        &:after {
-            content: '\f078';
-            border: none;
-            font-family: 'Font Awesome 5 Free';
-            font-weight: 900;
-            font-size: 0.8rem;
-            vertical-align: middle;
-            margin-left: 0.4em;
-        }
-    }
 }
-
+/*############### INFO NAV #################*/
 .info-nav {
     $info-nav-spacing: 0.7rem;
     margin: 0 ($header-spacing/2) - $info-nav-spacing;
@@ -211,6 +199,7 @@ header {
     }
 }
 
+/*############### SIGN IN #################*/
 .login-btn {
     white-space: nowrap;
 
@@ -219,6 +208,7 @@ header {
     }
 }
 
+/*############### SOCIAL LINKS #################*/
 .socialLinks.iconset-plain {
     $social-spacing-header: 0.5rem;
     margin: 0 ($header-spacing/2) - $social-spacing-header;
@@ -230,6 +220,7 @@ header {
     }
 }
 
+/*############### CART BRIEF #################*/
 #cartBrief {
     margin: 0 ($header-spacing/2);
 
@@ -261,6 +252,7 @@ header {
     }
 }
 
+/*############### SEARCH #################*/
 @mixin search-simple {
     position: relative;
 
@@ -319,13 +311,14 @@ header {
     padding-right: 1rem;
 
     &:hover,
-    &:focus{
+    &:focus {
         padding-left: 1rem;
         padding-right: 1rem;
         color: $nav-link-hover-color;
     }
 }
 
+/*############### FEATURED BUTTON #################*/
 .header-featured-btn {
     @include media-breakpoint-down($nav-breakpoint) {
         flex-grow: 2;
@@ -368,12 +361,14 @@ header {
     }
 }
 
+/*############### TABBED MODULE #################*/
 .tabbed-module {
     .nav {
         margin-bottom: 1rem;
     }
 }
 
+/*############### ACCORDION #################*/
 .accordion-module {
     margin-bottom: $spacer;
 
@@ -381,5 +376,3 @@ header {
         margin-top: 1rem;
     }
 }
-
-

@@ -185,6 +185,9 @@ img {
     @include faux-card;
 }
 
+figure {
+    margin: 0;
+}
 /*############### BACKGROUNDS #################*/
 .section-spacing {
     padding-top: $section-padding;
@@ -250,6 +253,7 @@ section.bg-video-wrapper {
         }
     }
 }
+
 .intro-banner {
     margin-bottom: $spacer;
 
@@ -428,7 +432,6 @@ div[class$="List"].module {
     }
 }
 
-
 .grid-item {
     margin-bottom: $grid-gutter-height;
 }
@@ -489,7 +492,6 @@ div[class$="List"].module {
     }
 }
 
-
 .price {
     font-weight: 700;
     color: $primary;
@@ -504,6 +506,7 @@ div[class$="List"].module {
 .linked-listItem {
     position: relative;
 }
+
 .NewsList .listItem .lIinner {
     padding: 0;
 
@@ -515,13 +518,18 @@ div[class$="List"].module {
     .media-inner {
         padding: 1rem;
     }
-
 }
+
 .NewsList .listItem.wide-item .lIinner {
     flex-direction: row;
 
     .list-image-link {
         width: 25%;
+        flex-shrink: 0;
+    }
+
+    .media-inner {
+        flex-grow: 100;
     }
 }
 
@@ -539,6 +547,7 @@ div[class$="List"].module {
         margin-bottom: 0.5rem;
     }
 }
+
 .LinkListSimple {
     margin-left: -1rem;
     margin-right: -1rem;
