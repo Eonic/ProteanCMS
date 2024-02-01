@@ -51,13 +51,13 @@
     <xsl:choose>
       <!-- WHEN RELATED SENT MESSAGE -->
       <xsl:when test="Content[@type='FormattedText']">
-        <div class="sentMessage">
+        <div class="alert alert-primary sent-message">
           <xsl:apply-templates select="Content[@type='FormattedText']/node()" mode="cleanXhtml" />
         </div>
       </xsl:when>
       <!-- WHEN SENT MESSAGE ON PAGE -->
       <xsl:when test="/Page/Contents/Content[@name = 'sentMessage' and (@type='FormattedText' or @type='Image')]">
-        <div class="sentMessage">
+        <div class="alert alert-primary sent-message">
           <xsl:apply-templates select="/Page/Contents/Content[@name = 'sentMessage' and (@type='FormattedText' or @type='Image')]" mode="displayBrief"/>
         </div>
       </xsl:when>

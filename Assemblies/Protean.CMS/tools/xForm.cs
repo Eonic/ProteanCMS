@@ -3489,10 +3489,8 @@ namespace Protean
                                 // Try to add the response
                                 try
                                 {
-
-                                    XmlNode argoNode = moXformElmt;
-                                    addNote(ref argoNode, noteTypes.Alert, sResponse, true, "alert-success");
-                                    moXformElmt = (XmlElement)argoNode;
+                                    XmlNode grpNode = moXformElmt.SelectSingleNode("descendant-or-self::group[1]");
+                                    addNote(ref grpNode, noteTypes.Alert, sResponse, true, "alert-success");                                   
                                 }
                                 catch (XmlException)
                                 {

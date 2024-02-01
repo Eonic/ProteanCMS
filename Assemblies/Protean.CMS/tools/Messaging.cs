@@ -406,6 +406,14 @@ namespace Protean
             {
                 cSeperator = ",";
             }
+            if (successMessage == "") {
+                successMessage = "Message Sent";
+            }
+            if (failureMessage == "")
+            {
+                failureMessage = "Message Send Failed";
+            }
+
             string styleFile;
             TextWriter sWriter = new StringWriter();
             var oXml = new XmlDocument();

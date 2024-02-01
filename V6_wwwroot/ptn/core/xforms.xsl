@@ -600,7 +600,7 @@
 					</xsl:choose>
 					<xsl:text>&#160;&#160;</xsl:text>
 					<span class="alert-msg">
-						<xsl:apply-templates select="node()" mode="cleanXhtml"/>
+						<xsl:apply-templates select="." mode="cleanXhtml"/>
 					</span>
 				</xsl:otherwise>
 			</xsl:choose>
