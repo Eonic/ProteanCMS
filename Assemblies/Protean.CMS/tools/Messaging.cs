@@ -1324,6 +1324,14 @@ namespace Protean
                 attachName = "attached";
             }
             // 
+            if (successMessage == "")
+            {
+                successMessage = "Message Sent";
+            }
+            if (failureMessage == "")
+            {
+                failureMessage = "Message Send Failed";
+            }
 
             try
             {
