@@ -1084,66 +1084,42 @@
     </form-->
 	</xsl:template>
 
-	<xsl:template match="input[@bind='cContactName']" mode="xform_control">
-		<xsl:variable name="label_low" select="translate(label,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
+	<xsl:template match="input[@bind='cContactName']" mode="xform_value_alt">
 		<xsl:variable name="inlineHint">
-			<xsl:choose>
-				<xsl:when test="hint[@class='inline']">
-					<xsl:value-of select="hint[@class='inline']/node()"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:call-template name="msg_required_inline"/>
-					<xsl:value-of select="$label_low"/>
-				</xsl:otherwise>
-			</xsl:choose>
+			<xsl:apply-templates select="." mode="getInlineHint"/>
 		</xsl:variable>
-		<xsl:variable name="ref">
-			<xsl:apply-templates select="." mode="getRefOrBind"/>
+					<xsl:choose>
+						<xsl:when test ="/Page/User">
+							<xsl:variable name="userName">
+								<xsl:value-of select="/Page/User/FirstName/node()"/>
+								<xsl:text> </xsl:text>
+								<xsl:value-of select="/Page/User/LastName/node()"/>
+							</xsl:variable>
+							<xsl:value-of select="$userName"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="$inlineHint"/>
+						</xsl:otherwise>
+					</xsl:choose>
+
+	</xsl:template>
+
+	<xsl:template match="input[@bind='cContactEmail']" mode="xform_value_alt">
+		<xsl:variable name="inlineHint">
+			<xsl:apply-templates select="." mode="getInlineHint"/>
 		</xsl:variable>
-		<input type="text" name="{$ref}" id="{$ref}">
-			<xsl:choose>
-				<xsl:when test="@class!=''">
-					<xsl:attribute name="class">
-						<xsl:value-of select="@class"/>
-						<xsl:text> form-control</xsl:text>
-					</xsl:attribute>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:attribute name="class">textbox form-control</xsl:attribute>
-				</xsl:otherwise>
-			</xsl:choose>
-			<xsl:choose>
-				<xsl:when test="value!=''">
-					<xsl:attribute name="value">
-						<xsl:value-of select="value"/>
-					</xsl:attribute>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:attribute name="value">
-						<xsl:choose>
-							<xsl:when test ="/Page/User">
-								<xsl:variable name="userName">
-									<xsl:value-of select="/Page/User/FirstName/node()"/>
-									<xsl:text> </xsl:text>
-									<xsl:value-of select="/Page/User/LastName/node()"/>
-								</xsl:variable>
-								<xsl:value-of select="$userName"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="$inlineHint"/>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:attribute>
-					<xsl:attribute name="onfocus">
-						<xsl:text>if (this.value=='</xsl:text>
-						<xsl:call-template name="escape-js">
-							<xsl:with-param name="string" select="$inlineHint"/>
-						</xsl:call-template>
-						<xsl:text>') {this.value=''}</xsl:text>
-					</xsl:attribute>
-				</xsl:otherwise>
-			</xsl:choose>
-		</input>
+		<xsl:choose>
+			<xsl:when test ="/Page/User">
+				<xsl:variable name="userName">
+					<xsl:value-of select="/Page/User/Email/node()"/>
+				</xsl:variable>
+				<xsl:value-of select="$userName"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$inlineHint"/>
+			</xsl:otherwise>
+		</xsl:choose>
+
 	</xsl:template>
 
 	<!-- -->
@@ -1223,64 +1199,6 @@
 			<xsl:text> </xsl:text>
 			<xsl:value-of select="Company/node()"/>
 		</p>
-	</xsl:template>
-
-
-	<xsl:template match="input[@bind='cContactEmail']" mode="xform_control">
-		<xsl:variable name="label_low" select="translate(label,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
-		<xsl:variable name="inlineHint">
-			<xsl:choose>
-				<xsl:when test="hint[@class='inline']">
-					<xsl:value-of select="hint[@class='inline']/node()"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:call-template name="msg_required_inline"/>
-					<xsl:value-of select="$label_low"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:variable name="ref">
-			<xsl:apply-templates select="." mode="getRefOrBind"/>
-		</xsl:variable>
-		<input type="text" name="{$ref}" id="{$ref}">
-			<xsl:choose>
-				<xsl:when test="@class!=''">
-					<xsl:attribute name="class">
-						<xsl:value-of select="@class"/>
-						<xsl:text> form-control</xsl:text>
-					</xsl:attribute>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:attribute name="class">textbox form-control</xsl:attribute>
-				</xsl:otherwise>
-			</xsl:choose>
-			<xsl:choose>
-				<xsl:when test="value!=''">
-					<xsl:attribute name="value">
-						<xsl:value-of select="value"/>
-					</xsl:attribute>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:attribute name="value">
-						<xsl:choose>
-							<xsl:when test ="/Page/User">
-								<xsl:value-of select="/Page/User/Email/node()"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="$inlineHint"/>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:attribute>
-					<xsl:attribute name="onfocus">
-						<xsl:text>if (this.value=='</xsl:text>
-						<xsl:call-template name="escape-js">
-							<xsl:with-param name="string" select="$inlineHint"/>
-						</xsl:call-template>
-						<xsl:text>') {this.value=''}</xsl:text>
-					</xsl:attribute>
-				</xsl:otherwise>
-			</xsl:choose>
-		</input>
 	</xsl:template>
 
 
