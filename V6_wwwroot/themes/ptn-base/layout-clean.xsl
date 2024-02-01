@@ -96,12 +96,85 @@
 						<xsl:value-of select="$home-class"/>
 					</xsl:attribute>
 				</xsl:if>
-				<div id="mainLayout" class="fullwidth activateAppearAnimation">
-					<div id="content" class="visually-hidden">&#160;</div>
-					<xsl:apply-templates select="." mode="mainLayout">
-						<xsl:with-param name="containerClass" select="$container"/>
-					</xsl:apply-templates>
-				</div>
+				<xsl:choose>
+					<!--~~~~~~~~~~~~~~ pages with side nav ~~~~~~~~~~~~~~ -->
+					<xsl:when test="((count($sectionPage[@name!='Info menu' and @name!='Footer']/MenuItem[not(DisplayName/@exclude='true')])&gt;0 and not($currentPage/DisplayName[@nonav='true']) and $currentPage/@name!='Home') and not($cartPage) or $currentPage[parent::MenuItem[@name='Information']/MenuItem] and (count($currentPage[child::MenuItem[not(DisplayName/@exclude='true')]])&gt;0 and not($currentPage/DisplayName[@nonav='true'])) and not($cartPage) or $currentPage[ancestor::MenuItem[@name='Info menu']/MenuItem] and not($currentPage[parent::MenuItem[@name='Info menu']/MenuItem]) and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)) and ($sub-nav='left' or $sub-nav='right')">
+						<div id="mainLayout" class="pagewidth activateAppearAnimation">
+							<div class="container">
+								<div class="row">
+									<div class="col-lg-{$SideSubWidth}" id="leftCol">
+										<xsl:if test="$SideSubWidthCustom!=''">
+											<xsl:attribute name="style">
+												<xsl:text>width:</xsl:text>
+												<xsl:value-of select="$SideSubWidthCustom" />
+												<xsl:text>%</xsl:text>
+											</xsl:attribute>
+										</xsl:if>
+										<button class="btn btn-primary hidden-lg hidden-xl hidden-xxl xs-menu-btn" type="button" data-bs-toggle="collapse" data-bs-target="#subMenuCollapse" aria-expanded="false" aria-controls="subMenuCollapse">
+											<xsl:apply-templates select="$sectionPage/@name" mode="cleanXhtml"/> Menu <i class="fas fa-caret-down"> </i>
+										</button>
+										<div class="collapse dont-collapse-md" id="subMenuCollapse">
+											<div id="subMenu">
+												<xsl:choose>
+													<xsl:when test="$currentPage[parent::MenuItem[@name='Info menu']/MenuItem] and (count($currentPage[child::MenuItem[not(DisplayName/@exclude='true')]])&gt;0) or $currentPage[ancestor::MenuItem[@name='Info menu']/MenuItem] and not($currentPage[parent::MenuItem[@name='Info menu']/MenuItem])">
+														<xsl:apply-templates select="Menu/MenuItem/MenuItem[@name='Info menu']/MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]" mode="submenu">
+															<xsl:with-param name="sectionHeading">true</xsl:with-param>
+															<xsl:with-param name="class">nav-link</xsl:with-param>
+														</xsl:apply-templates>
+													</xsl:when>
+													<xsl:otherwise>
+														<xsl:apply-templates select="$sectionPage" mode="submenu">
+															<xsl:with-param name="sectionHeading">true</xsl:with-param>
+															<xsl:with-param name="class">nav-link</xsl:with-param>
+														</xsl:apply-templates>
+													</xsl:otherwise>
+												</xsl:choose>
+											</div>
+										</div>
+										<xsl:if test="$adminMode or $page/Contents/Content[@position='LeftNav']">
+											<div id="LeftNav">
+												<xsl:apply-templates select="/Page" mode="addModule">
+													<xsl:with-param name="text">Add Module</xsl:with-param>
+													<xsl:with-param name="position">LeftNav</xsl:with-param>
+												</xsl:apply-templates>
+											</div>
+										</xsl:if>
+									</div>
+									<div class="col-lg-{12 - $SideSubWidth}" id="content">
+										<xsl:if test="$SideSubWidthCustom!=''">
+											<xsl:attribute name="style">
+												<xsl:text>width:</xsl:text>
+												<xsl:value-of select="100 - $SideSubWidthCustom" />
+												<xsl:text>%</xsl:text>
+											</xsl:attribute>
+										</xsl:if>
+										<!--<xsl:if test="$themeTitle='true' and not($page/ContentDetail)">
+											<div id="mainTitle">
+												<xsl:apply-templates select="/" mode="getMainTitle" />
+											</div>
+										</xsl:if>-->
+										<xsl:apply-templates select="." mode="mainLayout"/>
+									</div>
+									<div id="custom">
+										<xsl:apply-templates select="/Page" mode="addModule">
+											<xsl:with-param name="text">Add Module</xsl:with-param>
+											<xsl:with-param name="position">custom</xsl:with-param>
+										</xsl:apply-templates>
+									</div>
+								</div>
+							</div>
+						</div>
+					</xsl:when>
+					<!--~~~~~~~~~~~~~~ pages with no side nav ~~~~~~~~~~~~~~ -->
+					<xsl:otherwise>
+						<div id="mainLayout" class="fullwidth activateAppearAnimation">
+							<div id="content" class="visually-hidden">&#160;</div>
+							<xsl:apply-templates select="." mode="mainLayout">
+								<xsl:with-param name="containerClass" select="$container"/>
+							</xsl:apply-templates>
+						</div>
+					</xsl:otherwise>
+				</xsl:choose>
 			</div>
 		</div>
 		<xsl:apply-templates select="." mode="footer1">

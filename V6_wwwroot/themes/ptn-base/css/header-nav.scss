@@ -376,3 +376,67 @@ header {
         margin-top: 1rem;
     }
 }
+
+/*############### SUB MENUS #################*/
+
+#subMenu {
+    background:$light;
+    margin-bottom: $spacer;
+    text-align:left;
+
+    ul {
+        flex-direction: column;
+    }
+
+    h4 a {
+        text-decoration: none;
+        font-weight: 300;
+        padding: 1rem 1rem 0;
+        display: block;
+        font-size: 1.5rem;
+        color: $body-color;
+    }
+
+    .nav-pills .nav-link,
+    .nav-pills .show > .nav-link {
+        background: transparent;
+        //color: $body-color;
+        //font-size: 1.2rem;
+    }
+
+    .nav-pills .nav-link.active {
+        background: transparent;
+        color: $link-color;
+    }
+
+    ul ul {
+        padding-left: 1rem;
+
+        li a.nav-link {
+            font-size: 1rem;
+        }
+    }
+}
+#leftCol {
+    @include media-breakpoint-down($nav-breakpoint){
+        text-align:center;
+    }
+}
+button.xs-menu-btn {
+    float: none;
+    margin-bottom: 10px;
+
+    i {
+        font-size: 9px;
+        padding-left: 4px;
+        margin-right: -5px;
+    }
+}
+
+.collapse.dont-collapse-md {
+    @include media-breakpoint-up($nav-breakpoint) {
+        display: block;
+        height: auto !important;
+        visibility: visible;
+    }
+}

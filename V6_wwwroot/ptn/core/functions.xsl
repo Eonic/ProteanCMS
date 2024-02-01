@@ -4267,6 +4267,7 @@
 				<xsl:if test="count(child::MenuItem[not(DisplayName/@exclude='true')])&gt;0 and ($level2='true' or $level3='true')">
 					<xsl:text> dropdown-mobile-next </xsl:text>
 				</xsl:if>
+				<xsl:text> nav-item </xsl:text>
 			</xsl:attribute>
 			<xsl:apply-templates select="self::MenuItem" mode="menuLink">
 				<xsl:with-param name="class" select="$class"/>
