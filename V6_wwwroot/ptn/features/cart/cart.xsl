@@ -659,10 +659,16 @@
 			</xsl:if>
 			<div class="total">
 				<span>
-					<xsl:text>Total Payable:&#160;</xsl:text>
+					<xsl:choose>
+						<xsl:when test="@cmd='ShowInvoice'">
+							<xsl:text>Total Paid:&#160;</xsl:text>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:text>Total Payable:&#160;</xsl:text>
+						</xsl:otherwise>
+					</xsl:choose>
 				</span>
 				<span class="amount">
-
 					<xsl:apply-templates select="/Page" mode="formatPrice">
 						<xsl:with-param name="price" select="@total"/>
 						<xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
@@ -2412,25 +2418,34 @@
 			<div class="col-lg-4">
 				<div id="cartInvoice" class="card cart-receipt-card">
 					<div class="card-body">
-						<div class="confirmation-cart ">
-							<form method="post" id="cart">
-								<xsl:apply-templates select="." mode="orderItems">
-									<xsl:with-param name="editQty">false</xsl:with-param>
-									<xsl:with-param name="showImg">true</xsl:with-param>
-								</xsl:apply-templates>
-							</form>
-						</div>
-						<p>
 							<!--Invoice Date-->
-							<xsl:call-template name="term3022" />
-							<xsl:text>:&#160;</xsl:text>
-							<xsl:value-of select="@InvoiceDate"/>
-							<br/>
+						<div class="product-totals">
+							<span class="amount-label">
+								<xsl:call-template name="term3022" />:
+							</span>
+							<span class="amount">
+								<xsl:value-of select="@InvoiceDate"/>
+							</span>
+						</div>
 							<!--Invoice Reference-->
-							<xsl:call-template name="term3023" />
-							<xsl:text>:&#160;</xsl:text>
-							<xsl:value-of select="@InvoiceRef"/>
-						</p>
+						<div class="product-totals">
+							<span class="amount-label">
+								<xsl:call-template name="term3023" />:
+							</span>
+							<span class="amount">
+								<xsl:value-of select="@InvoiceRef"/>
+							</span>
+						</div>
+						<div class="confirmation-cart ">
+							<xsl:apply-templates select="." mode="orderItems">
+								<xsl:with-param name="editQty">false</xsl:with-param>
+								<xsl:with-param name="showImg">true</xsl:with-param>
+							</xsl:apply-templates>
+						</div>
+						<xsl:if test="not(@payableType!='')">
+							<xsl:apply-templates select="." mode="orderTotals"/>
+						</xsl:if>
+
 						<xsl:if test="@payableType='deposit' and (@payableAmount &gt; 0) ">
 							<p>
 								<!--Payment Received-->
