@@ -197,12 +197,16 @@
 										</xsl:if>-->
 										<xsl:apply-templates select="." mode="mainLayout"/>
 									</div>
-									<div id="custom">
-										<xsl:apply-templates select="/Page" mode="addModule">
-											<xsl:with-param name="text">Add Module</xsl:with-param>
-											<xsl:with-param name="position">custom</xsl:with-param>
-										</xsl:apply-templates>
-									</div>
+									<xsl:if test="not($cartPage) and $currentPage/@name!='Home' and not($page/ContentDetail) and ($sub-nav='left' or $sub-nav='right')">
+										<div class="container-fluid">
+											<div id="custom">
+												<xsl:apply-templates select="/Page" mode="addModule">
+													<xsl:with-param name="text">Add Module</xsl:with-param>
+													<xsl:with-param name="position">custom</xsl:with-param>
+												</xsl:apply-templates>
+											</div>
+										</div>
+									</xsl:if>
 								</div>
 							</div>
 						</div>
