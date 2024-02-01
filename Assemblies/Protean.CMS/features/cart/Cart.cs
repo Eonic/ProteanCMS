@@ -18,6 +18,7 @@ using Protean.Providers.Membership;
 using Protean.Providers.Messaging;
 using Protean.Providers.Payment;
 using static Protean.Cms.dbImport;
+using Lucene.Net.Analysis;
 
 namespace Protean
 {
@@ -2293,15 +2294,21 @@ namespace Protean
                         if (string.IsNullOrEmpty(cSubject))
                             cSubject = "Website Order";
 
-                        string CustomerEmailTemplatePath = Conversions.ToString(Interaction.IIf(!string.IsNullOrEmpty(moCartConfig["CustomerEmailTemplatePath"]), moCartConfig["CustomerEmailTemplatePath"], "/xsl/Cart/mailOrderCustomer.xsl"));
-                        string MerchantEmailTemplatePath = Conversions.ToString(Interaction.IIf(!string.IsNullOrEmpty(moCartConfig["MerchantEmailTemplatePath"]), moCartConfig["MerchantEmailTemplatePath"], "/xsl/Cart/mailOrderMerchant.xsl"));
+                        string CustomerEmailTemplatePath = "/xsl/Cart/mailOrderCustomer.xsl";
+                        string MerchantEmailTemplatePath = "/xsl/Cart/mailOrderMerchant.xsl";
                         if (myWeb.bs5)
-                        {
-                            CustomerEmailTemplatePath = "/ptn/features/cart/email/order-customer.xsl";
-                            MerchantEmailTemplatePath = "/ptn/features/cart/email/order-merchant.xsl";
+                        {                           
+                                CustomerEmailTemplatePath = "/features/cart/email/order-customer.xsl";                 
+                                MerchantEmailTemplatePath = "/features/cart/email/order-merchant.xsl";      
                         }
-
-
+                        if (!string.IsNullOrEmpty(moCartConfig["CustomerEmailTemplatePath"])) {
+                            CustomerEmailTemplatePath = moCartConfig["CustomerEmailTemplatePath"];
+                        }
+                        if (!string.IsNullOrEmpty(moCartConfig["MerchantEmailTemplatePath"]))
+                        {
+                            CustomerEmailTemplatePath = moCartConfig["MerchantEmailTemplatePath"];
+                        }
+                       
                         // send to customer
                         sMessageResponse = Conversions.ToString(emailCart(ref oCartElmt, CustomerEmailTemplatePath, moCartConfig["MerchantName"], moCartConfig["MerchantEmail"], oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText, cSubject, cAttachementTemplatePath: moCartConfig["CustomerAttachmentTemplatePath"], cCCEmail: ccCustomerEmail));
 

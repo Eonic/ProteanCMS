@@ -1073,17 +1073,13 @@ namespace Protean
                                 }
                                 moMessaging.Activities.AddToList(moMailConfig["OptInList"], name, email, values);
                             }
-
                             catch (Exception ex)
                             {
                                 cProcessInfo = ex.StackTrace;
                             }
                         }
-
                     }
-
                     return successMessage;
-
                 }
             }
 

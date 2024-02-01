@@ -52,15 +52,15 @@
 		</xsl:variable>
 		<xsl:choose>
 			<xsl:when test="$cartSiteUrl!=''">
-				1<xsl:value-of select="$cartSiteUrl"/>
+				<xsl:value-of select="$cartSiteUrl"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:choose>
 					<xsl:when test="$baseUrl!=''">
-						2<xsl:value-of select="$baseUrl"/>
+						<xsl:value-of select="$baseUrl"/>
 					</xsl:when>
 					<xsl:otherwise>
-						3<xsl:value-of select="/Page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+						<xsl:value-of select="/Page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
 						<xsl:if test="/Page/Request/ServerVariables/Item[@name='SERVER_PORT'] != '80' and  /Page/Request/ServerVariables/Item[@name='SERVER_PORT'] != '443'">
 							<xsl:text>:</xsl:text>
 							<xsl:value-of select="/Page/Request/ServerVariables/Item[@name='SERVER_PORT']"/>
