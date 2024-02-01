@@ -96,6 +96,32 @@
 						<xsl:value-of select="$home-class"/>
 					</xsl:attribute>
 				</xsl:if>
+				<div class="container">
+					<xsl:if test="((count($sectionPage[@name!='Info menu' and @name!='Footer']/MenuItem[not(DisplayName/@exclude='true')])&gt;0 and not($currentPage/DisplayName[@nonav='true']) and $currentPage/@name!='Home') and not($cartPage) or $currentPage[parent::MenuItem[@name='Information']/MenuItem] and (count($currentPage[child::MenuItem[not(DisplayName/@exclude='true')]])&gt;0 and not($currentPage/DisplayName[@nonav='true'])) and not($cartPage) or $currentPage[ancestor::MenuItem[@name='Info menu']/MenuItem] and not($currentPage[parent::MenuItem[@name='Info menu']/MenuItem]) and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)) and ($sub-nav='top')">
+
+						<button class="btn btn-primary hidden-lg hidden-xl hidden-xxl xs-menu-btn" type="button" data-bs-toggle="collapse" data-bs-target="#topMenuCollapse" aria-expanded="false" aria-controls="topMenuCollapse">
+							<xsl:apply-templates select="$sectionPage/@name" mode="cleanXhtml"/> Menu <i class="fas fa-caret-down"> </i>
+						</button>
+						<div class="collapse dont-collapse-md" id="topMenuCollapse">
+							<div id="topMenu">
+								<xsl:choose>
+									<xsl:when test="$currentPage[parent::MenuItem[@name='Info menu']/MenuItem] and (count($currentPage[child::MenuItem[not(DisplayName/@exclude='true')]])&gt;0) or $currentPage[ancestor::MenuItem[@name='Info menu']/MenuItem] and not($currentPage[parent::MenuItem[@name='Info menu']/MenuItem])">
+										<xsl:apply-templates select="Menu/MenuItem/MenuItem[@name='Info menu']/MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]" mode="submenu">
+
+											<xsl:with-param name="class">nav-link</xsl:with-param>
+										</xsl:apply-templates>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:apply-templates select="$sectionPage" mode="topmenu">
+											<xsl:with-param name="class">nav-link</xsl:with-param>
+											<xsl:with-param name="overviewLink">self</xsl:with-param>
+										</xsl:apply-templates>
+									</xsl:otherwise>
+								</xsl:choose>
+							</div>
+						</div>
+					</xsl:if>
+				</div>
 				<xsl:choose>
 					<!--~~~~~~~~~~~~~~ pages with side nav ~~~~~~~~~~~~~~ -->
 					<xsl:when test="((count($sectionPage[@name!='Info menu' and @name!='Footer']/MenuItem[not(DisplayName/@exclude='true')])&gt;0 and not($currentPage/DisplayName[@nonav='true']) and $currentPage/@name!='Home') and not($cartPage) or $currentPage[parent::MenuItem[@name='Information']/MenuItem] and (count($currentPage[child::MenuItem[not(DisplayName/@exclude='true')]])&gt;0 and not($currentPage/DisplayName[@nonav='true'])) and not($cartPage) or $currentPage[ancestor::MenuItem[@name='Info menu']/MenuItem] and not($currentPage[parent::MenuItem[@name='Info menu']/MenuItem]) and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)) and ($sub-nav='left' or $sub-nav='right')">
@@ -103,6 +129,13 @@
 							<div class="container">
 								<div class="row">
 									<div class="col-lg-{$SideSubWidth}" id="leftCol">
+										<xsl:attribute name="class">
+											<xsl:text>col-lg-</xsl:text>
+											<xsl:value-of select="$SideSubWidth"/>
+											<xsl:if test="$sub-nav='right'">
+												<xsl:text> order-2</xsl:text>
+											</xsl:if>
+										</xsl:attribute>
 										<xsl:if test="$SideSubWidthCustom!=''">
 											<xsl:attribute name="style">
 												<xsl:text>width:</xsl:text>
@@ -120,12 +153,14 @@
 														<xsl:apply-templates select="Menu/MenuItem/MenuItem[@name='Info menu']/MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]" mode="submenu">
 															<xsl:with-param name="sectionHeading">true</xsl:with-param>
 															<xsl:with-param name="class">nav-link</xsl:with-param>
+															<xsl:with-param name="level3">true</xsl:with-param>
 														</xsl:apply-templates>
 													</xsl:when>
 													<xsl:otherwise>
 														<xsl:apply-templates select="$sectionPage" mode="submenu">
 															<xsl:with-param name="sectionHeading">true</xsl:with-param>
 															<xsl:with-param name="class">nav-link</xsl:with-param>
+															<xsl:with-param name="level3">true</xsl:with-param>
 														</xsl:apply-templates>
 													</xsl:otherwise>
 												</xsl:choose>
@@ -141,6 +176,13 @@
 										</xsl:if>
 									</div>
 									<div class="col-lg-{12 - $SideSubWidth}" id="content">
+										<xsl:attribute name="class">
+											<xsl:text>col-lg-</xsl:text>
+											<xsl:value-of select="12 - $SideSubWidth"/>
+											<xsl:if test="$sub-nav='right'">
+												<xsl:text> order-1</xsl:text>
+											</xsl:if>
+										</xsl:attribute>
 										<xsl:if test="$SideSubWidthCustom!=''">
 											<xsl:attribute name="style">
 												<xsl:text>width:</xsl:text>

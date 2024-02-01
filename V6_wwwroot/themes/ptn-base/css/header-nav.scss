@@ -378,11 +378,25 @@ header {
 }
 
 /*############### SUB MENUS #################*/
+#topMenu {
+    margin-bottom: $spacer;
+
+
+    @include media-breakpoint-down($nav-breakpoint) {
+        border: 2px solid $primary;
+        border-radius: $border-radius;
+        padding: 0.3rem;
+
+        ul {
+            flex-direction: column;
+        }
+    }
+}
 
 #subMenu {
-    background:$light;
+    background: $light;
     margin-bottom: $spacer;
-    text-align:left;
+    text-align: left;
 
     ul {
         flex-direction: column;
@@ -417,11 +431,13 @@ header {
         }
     }
 }
+
 #leftCol {
-    @include media-breakpoint-down($nav-breakpoint){
-        text-align:center;
+    @include media-breakpoint-down($nav-breakpoint) {
+        text-align: center;
     }
 }
+
 button.xs-menu-btn {
     float: none;
     margin-bottom: 10px;

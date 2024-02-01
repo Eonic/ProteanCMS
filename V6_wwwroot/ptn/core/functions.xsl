@@ -4218,13 +4218,69 @@
 		</ul>
 	</xsl:template>
 
-
+	<xsl:template match="MenuItem" mode="topmenu">
+		<xsl:param name="class"/>
+		<xsl:param name="li-class"/>
+		<xsl:param name="level2"/>
+		<xsl:param name="level3"/>
+		<xsl:param name="overviewLink"/>
+		
+		<ul>
+			<xsl:attribute name="class">
+				<xsl:text>nav nav-pills</xsl:text>
+			</xsl:attribute>
+			<xsl:if test="$overviewLink='true'">
+				<li class="nav-item">
+					<a href="{@url}">
+						<xsl:attribute name="class">
+							<xsl:value-of select="$class"/>
+							<xsl:choose>
+								<xsl:when test="self::MenuItem[@id=/Page/@id]">
+									<xsl:text> active</xsl:text>
+								</xsl:when>
+								<xsl:when test="descendant::MenuItem[@id=/Page/@id] and ancestor::MenuItem">
+									<xsl:text> on</xsl:text>
+								</xsl:when>
+							</xsl:choose>
+						</xsl:attribute>
+						<xsl:text>Overview</xsl:text>
+					</a>
+				</li>
+			</xsl:if>
+			<xsl:if test="$overviewLink='self'">
+				<li class="nav-item">
+					<a href="{@url}">
+						<xsl:attribute name="class">
+							<xsl:value-of select="$class"/>
+							<xsl:choose>
+								<xsl:when test="self::MenuItem[@id=/Page/@id]">
+									<xsl:text> active</xsl:text>
+								</xsl:when>
+								<xsl:when test="descendant::MenuItem[@id=/Page/@id] and ancestor::MenuItem">
+									<xsl:text> on</xsl:text>
+								</xsl:when>
+							</xsl:choose>
+						</xsl:attribute>
+						<xsl:apply-templates select="." mode="getDisplayName"/>
+					</a>
+				</li>
+			</xsl:if>
+			<xsl:apply-templates select="MenuItem[not(DisplayName/@exclude='true')]" mode="submenuitem">
+				<xsl:with-param name="class" select="$class"/>
+				<xsl:with-param name="link-class" select="$li-class"/>
+				<xsl:with-param name="level2" select="$level2"/>
+				<xsl:with-param name="level3" select="$level3"/>
+			</xsl:apply-templates>
+		</ul>
+	</xsl:template>
 	<!--TNSS:	submenu
 				second and all subsequent levels of navigation nested  -->
 	<xsl:template match="MenuItem" mode="submenu">
 		<xsl:param name="sectionHeading"/>
 		<xsl:param name="class"/>
 		<xsl:param name="li-class"/>
+		<xsl:param name="level2"/>
+		<xsl:param name="level3"/>
 		<xsl:if test="$sectionHeading='true'">
 			<h4>
 				<xsl:apply-templates select="self::MenuItem" mode="menuLink" />
@@ -4237,6 +4293,8 @@
 			<xsl:apply-templates select="MenuItem[not(DisplayName/@exclude='true')]" mode="submenuitem">
 				<xsl:with-param name="class" select="$class"/>
 				<xsl:with-param name="link-class" select="$li-class"/>
+				<xsl:with-param name="level2" select="$level2"/>
+				<xsl:with-param name="level3" select="$level3"/>
 			</xsl:apply-templates>
 		</ul>
 	</xsl:template>
@@ -4267,7 +4325,7 @@
 				<xsl:if test="count(child::MenuItem[not(DisplayName/@exclude='true')])&gt;0 and ($level2='true' or $level3='true')">
 					<xsl:text> dropdown-mobile-next </xsl:text>
 				</xsl:if>
-				<xsl:text> nav-item </xsl:text>
+				<xsl:text> nav-item</xsl:text>
 			</xsl:attribute>
 			<xsl:apply-templates select="self::MenuItem" mode="menuLink">
 				<xsl:with-param name="class" select="$class"/>
