@@ -1330,7 +1330,7 @@ namespace Protean
             }
             if (failureMessage == "")
             {
-                failureMessage = "Message Send Failed";
+                failureMessage = "Message Failed";
             }
 
             try
