@@ -212,6 +212,7 @@ namespace Protean
                 }
                 else
                 {
+                    Array.Resize(ref args, 2);
                     args[1] = null;
                 }
 
