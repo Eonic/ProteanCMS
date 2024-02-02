@@ -3489,10 +3489,8 @@ namespace Protean
                                 // Try to add the response
                                 try
                                 {
-
-                                    XmlNode argoNode = moXformElmt;
-                                    addNote(ref argoNode, noteTypes.Alert, sResponse, true, "alert-success");
-                                    moXformElmt = (XmlElement)argoNode;
+                                    XmlNode grpNode = moXformElmt.SelectSingleNode("descendant-or-self::group[1]");
+                                    addNote(ref grpNode, noteTypes.Alert, sResponse, true, "alert-success");                                   
                                 }
                                 catch (XmlException)
                                 {
@@ -3868,9 +3866,7 @@ namespace Protean
                                 long nNodeCount = 0L;
                                 if (oInstanceNodeSet.Count == 0)
                                 {
-                                    XmlNode argoNode1 = moXformElmt;
-                                    addNote(ref argoNode1, noteTypes.Alert, "The repeat with bind='" + oRptElmt.GetAttribute("bind") + "' could not find the node in the instance on xpath '" + sBindXpath + "'");
-                                    moXformElmt = (XmlElement)argoNode1;
+                                    addNote(ref moXformElmt, noteTypes.Alert, "The repeat with bind='" + oRptElmt.GetAttribute("bind") + "' could not find the node in the instance on xpath '" + sBindXpath + "'");
                                 }
 
                                 else

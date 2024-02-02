@@ -600,7 +600,7 @@
 					</xsl:choose>
 					<xsl:text>&#160;&#160;</xsl:text>
 					<span class="alert-msg">
-						<xsl:apply-templates select="node()" mode="cleanXhtml"/>
+						<xsl:apply-templates select="." mode="cleanXhtml"/>
 					</span>
 				</xsl:otherwise>
 			</xsl:choose>
@@ -1235,8 +1235,13 @@
 				<xsl:value-of select="@data-fv-not-empty___message"/>
 			</div>
 		</xsl:if>
-		<xsl:if test="alert">
+		<xsl:if test="not(@data-fv-not-empty___message!='') and contains(@class,'required')">
 			<div class="invalid-feedback">
+				This is required
+			</div>
+		</xsl:if>
+		<xsl:if test="alert">
+			<div class="invalid-feedback-server">
 				<xsl:copy-of select="alert/node()"/>
 			</div>
 		</xsl:if>
@@ -2096,6 +2101,14 @@
 					<xsl:value-of select="@onChange"/>
 				</xsl:attribute>
 			</xsl:if>
+			<xsl:if test="@data-fv-not-empty='true' or contains(@class,'required')">
+				<xsl:attribute name="aria-required">
+					<xsl:text>true</xsl:text>
+				</xsl:attribute>
+				<xsl:attribute name="required">
+					<xsl:text>required</xsl:text>
+				</xsl:attribute>
+			</xsl:if>
 			<xsl:if test="not(contains(@class,'keep_empty'))">
 				<option value="">
 					<xsl:apply-templates select="." mode="getInlineHint"/>
@@ -2135,6 +2148,21 @@
 			</xsl:choose>
 
 		</select>
+		<xsl:if test="@data-fv-not-empty___message!='' and not(alert)">
+			<div class="invalid-feedback">
+				<xsl:value-of select="@data-fv-not-empty___message"/>
+			</div>
+		</xsl:if>
+		<xsl:if test="not(@data-fv-not-empty___message!='') and contains(@class,'required')">
+			<div class="invalid-feedback">
+				This is required
+			</div>
+		</xsl:if>
+		<xsl:if test="alert">
+			<div class="invalid-feedback-server">
+				<xsl:copy-of select="alert/node()"/>
+			</div>
+		</xsl:if>
 	</xsl:template>
 	<!-- -->
 	<!-- ## Standard Select1 for Radio Buttons ########################################################### -->

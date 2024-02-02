@@ -1,22 +1,33 @@
-//theme colours
+// NB this file is called before the bootstrap variables,
+// so bootstrap variables can't be called from this file.
+// Add a later variables file to call bootstrap variables.
+
+/*##################### COLOURS #######################*/
 //$body-bg: $white !default;
 $primary: #02809C;
 $secondary: #1b19be;
 $info: #3498db;
-//$light: $gray-100 !default;
-//$dark: $gray-900 !default;
+$light: #efefef;
+$dark: #111;
 //$link-color: #fa6677;
+$mid-gray: #111;
+$grey: darken($light,6%);
 
-$min-contrast-ratio: 3;
-$border-radius: .375rem !default;
-$img-border-radius: $border-radius;
-
-//form colours
+/*-- form colours --*/
 $success: #19be1b;
 $warning: #f39c12;
 $danger: #e74c3c;
 
-//text
+/*-- contrast --*/
+$min-contrast-ratio: 4.5;
+$color-contrast-dark: $dark !default;
+$color-contrast-light: #fff !default;
+
+/*################## BORDER RADIUS ####################*/
+$border-radius: .375rem !default;
+$img-border-radius: $border-radius;
+
+/*###################### TEXT #########################*/
 $body-color: #242424;
 $link-color: $primary !default;
 //$font-family-base: 'Lato', sans-serif;
@@ -24,32 +35,46 @@ $link-color: $primary !default;
 //$font-size-base: 1.1rem !default;
 $line-height-base: 1.3;
 
-//buttons
+/*################# BUTTONS & LINKS ###################*/
+$visited: #64acbc;
 //$btn-border-radius: 100px;
 //$btn-padding-x: 1.5rem;
+$content-btn-align: true;
+//$btn-border-radius: var(--#{$prefix}border-radius);
+//$btn-border-width: $input-btn-border-width;
 
-//header
+/*##################### HEADER #######################*/
 $header-menu: "header-menu-right";
+$header-spacing: 1.4rem;
+$header-icon-size: 1.3rem;
+$nav-breakpoint: lg;
 
-//buttons
-//$btn-border-radius: var(--#{$prefix}border-radius) !default;
-//$btn-border-width: $input-btn-border-width !default;
-
-//nav
+/*################### NAVIGATION #####################*/
 $navbar-light-color: $body-color;
 $nav-link-hover-color: $secondary;
 $navbar-light-hover-color: $nav-link-hover-color;
-//grid
+$main-nav-size: 1.2rem;
+
+/*###################### GRID ########################*/
 $spacer: 1.5rem;
 $grid-gutter-width:1.5rem;
 $grid-gutter-height: $grid-gutter-width;
+$top-padding: $grid-gutter-height;
+$section-padding: $grid-gutter-height * 1.3;
+$nav-padding-y: 8px;
+$nav-padding-x: 12px;
+$image-spacer: 1rem;
 
-//forms
+/*##################### FOOTER #######################*/
+$footer-bg: #fff;
+
+/*###################### FORMS #######################*/
 $input-border-color: #919191;
 $form-check-input-border: 1px solid $input-border-color;
-//$input-border-radius: var(--#{$prefix}border-radius) !default;
+//$input-border-radius: var(--#{$prefix}border-radius);
 
-//cards
-//$card-border-radius: var(--#{$prefix}border-radius) !default;
+/*##################### CARDS ########################*/
+//$card-border-radius: var(--#{$prefix}border-radius);
 
-
+/*###################### MISC ########################*/
+$slide-opacity: 0.7;

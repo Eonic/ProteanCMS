@@ -65,7 +65,8 @@ SWIPER
 .swiper-pagination-bullet-active {
     background-color: $primary;
 }
-//slide carousel
+
+/*############### SLIDE CAROUSEL #################*/
 .normalMode .module-SwiperCarousel {
     .swiper-slide .ptn-edit {
         position: absolute !important;
@@ -174,7 +175,8 @@ SWIPER
         padding: 0;
     }
 }
-//content carousel
+
+/*############### CONTENT CAROUSEL #################*/
 .swiper-button-prev,
 .swiper-button-next {
     &:focus-visible {
@@ -216,7 +218,7 @@ SWIPER
 }
 
 
-@media only screen and (min-width: 769px) {
+/*@media only screen and (min-width: 769px) {
     .swiper-slide:first-child {
         transition: transform 100ms;
     }
@@ -250,7 +252,7 @@ SWIPER
     .swiper[dir="rtl"] .swiper-slide.swiper-slide-next:nth-child(2) {
         transform: translateX(-55%);
     }
-}
+}*/
 
 .swiper-slide {
     align-items: start;
@@ -397,8 +399,8 @@ PRODUCT GALLERY
         display: none;
     }
 }
-/* Lightbox */
 
+/* Product Lightbox */
 .sp-lightbox {
     position: fixed;
     top: 0;
