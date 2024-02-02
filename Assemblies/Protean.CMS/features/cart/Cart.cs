@@ -3343,7 +3343,6 @@ namespace Protean
                         oCartElmt.SetAttribute("vatRate", moCartConfig["TaxRate"]);
                         oCartElmt.SetAttribute("total", "0.00"); // for nothing
                     }
-
                     else
                     {
                         // otherwise
@@ -3571,7 +3570,7 @@ namespace Protean
                             // Get Shipping Group from query if assigned to that product and add new node in order and use this node for displaying messages for x50 and t03 category.
                             if (myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure))
                             {
-                                if (nStatusId > 100) {
+                                //if (nStatusId > 100) {
 
                                 string sSqlShippingGroup = $"select csm.nShipOptKey,CPC.cCatName  from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey left join tblAudit A ON p.nAuditId= A.nAuditKey left join tblCartCatProductRelations cpr on p.nContentKey = cpr.nContentId left join tblCartProductCategories CPC ON cpr.nCatId= cpc.nCatKey Left JOIN tblCartShippingProductCategoryRelations cspcr ON cpr.nCatId= cspcr.nCatId LEFT join tblCartShippingMethods csm on csm.nShipOptKey=cspcr.nShipOptId where nCartOrderId={nCartIdUse.ToString()} and nCartItemKey={oRow["id"].ToString()} and cCatSchemaName = 'Shipping' and csm.nShipOptKey is not null and nItemId <>0 and cspcr.nRuleType=1 order by nShipOptCost asc";
                                 // oDsShippingOptionKey = moDBHelper.getDataSetForUpdate(sSqlShippingGroup, "Item", "Cart")
@@ -3595,7 +3594,7 @@ namespace Protean
                                         }
                                     }
                                 }
-                                }
+                              //  }
                             }
 
 
