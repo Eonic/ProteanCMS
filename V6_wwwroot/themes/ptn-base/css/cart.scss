@@ -1,54 +1,5 @@
-﻿.qty-product {
-    float: left;
-    margin-right: 10px;
-
-    .qty-label {
-        @extend .visually-hidden;
-    }
-
-    .input-group {
-        max-width: 120px;
-    }
-}
-
-#MyWizard {
-    margin-bottom: 2rem;
-
-    .nav {
-        @extend .justify-content-center;
-        font-weight: 600;
-    }
-
-    .step {
-        opacity: 0.5;
-    }
-
-    .badge {
-        @extend .bg-dark;
-        @extend .rounded-pill;
-        margin-left: 20px;
-        margin-right: 6px;
-
-        &.complete {
-        }
-    }
-
-    .complete {
-        opacity: 0.5;
-    }
-
-    .active {
-        color: $primary;
-        opacity: 1;
-
-        .badge {
-            @extend .bg-primary;
-        }
-    }
-}
-
+﻿/*############### CART MIXINS #################*/
 @mixin cart-style1 {
-
     .cart-thumbnail {
         float: left;
         margin-right: 1rem;
@@ -187,6 +138,7 @@
     }
 }
 
+/*############### CART #################*/
 #cartFull {
     @include cart-style1;
     margin-bottom: $spacer;
@@ -200,12 +152,26 @@
         margin-bottom: 0.5rem;
     }
 }
+//QUANTITY
+.qty-product {
+    float: left;
+    margin-right: 10px;
 
+    .qty-label {
+        @extend .visually-hidden;
+    }
+
+    .input-group {
+        max-width: 120px;
+    }
+}
+//BUTTONS
 .account-btns-top {
     text-align: center;
     margin-bottom: 1rem;
 }
 
+// ADDRESSES
 .delivery-address {
     margin-top: 2rem;
 
@@ -251,6 +217,7 @@
     }
 }
 
+//PAYMENT
 #cartFull .payment-tcs,
 #cartInvoice .confirmation-cart {
     #cartListing {
@@ -269,11 +236,13 @@
         font-size: 0.8rem;
     }
 }
-#cartFull .card-body{
-    *:last-child{
-        margin-bottom:0;
+
+#cartFull .card-body {
+    *:last-child {
+        margin-bottom: 0;
     }
 }
+
 .pay-PayPalExpress {
     background: #ffc520;
     border-color: #ffc520;
@@ -310,5 +279,42 @@
 
     .cart-item:last-child {
         padding-bottom: 0;
+    }
+}
+
+/*############### STEPPER #################*/
+#MyWizard {
+    margin-bottom: 2rem;
+
+    .nav {
+        @extend .justify-content-center;
+        font-weight: 600;
+    }
+
+    .step {
+        opacity: 0.5;
+    }
+
+    .badge {
+        @extend .bg-dark;
+        @extend .rounded-pill;
+        margin-left: 20px;
+        margin-right: 6px;
+
+        &.complete {
+        }
+    }
+
+    .complete {
+        opacity: 0.5;
+    }
+
+    .active {
+        color: $primary;
+        opacity: 1;
+
+        .badge {
+            @extend .bg-primary;
+        }
     }
 }

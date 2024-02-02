@@ -18,6 +18,7 @@ using Protean.Providers.Membership;
 using Protean.Providers.Messaging;
 using Protean.Providers.Payment;
 using static Protean.Cms.dbImport;
+using Lucene.Net.Analysis;
 
 namespace Protean
 {
@@ -2293,15 +2294,21 @@ namespace Protean
                         if (string.IsNullOrEmpty(cSubject))
                             cSubject = "Website Order";
 
-                        string CustomerEmailTemplatePath = Conversions.ToString(Interaction.IIf(!string.IsNullOrEmpty(moCartConfig["CustomerEmailTemplatePath"]), moCartConfig["CustomerEmailTemplatePath"], "/xsl/Cart/mailOrderCustomer.xsl"));
-                        string MerchantEmailTemplatePath = Conversions.ToString(Interaction.IIf(!string.IsNullOrEmpty(moCartConfig["MerchantEmailTemplatePath"]), moCartConfig["MerchantEmailTemplatePath"], "/xsl/Cart/mailOrderMerchant.xsl"));
+                        string CustomerEmailTemplatePath = "/xsl/Cart/mailOrderCustomer.xsl";
+                        string MerchantEmailTemplatePath = "/xsl/Cart/mailOrderMerchant.xsl";
                         if (myWeb.bs5)
-                        {
-                            CustomerEmailTemplatePath = "/ptn/features/cart/email/order-customer.xsl";
-                            MerchantEmailTemplatePath = "/ptn/features/cart/email/order-merchant.xsl";
+                        {                           
+                                CustomerEmailTemplatePath = "/features/cart/email/order-customer.xsl";                 
+                                MerchantEmailTemplatePath = "/features/cart/email/order-merchant.xsl";      
                         }
-
-
+                        if (!string.IsNullOrEmpty(moCartConfig["CustomerEmailTemplatePath"])) {
+                            CustomerEmailTemplatePath = moCartConfig["CustomerEmailTemplatePath"];
+                        }
+                        if (!string.IsNullOrEmpty(moCartConfig["MerchantEmailTemplatePath"]))
+                        {
+                            CustomerEmailTemplatePath = moCartConfig["MerchantEmailTemplatePath"];
+                        }
+                       
                         // send to customer
                         sMessageResponse = Conversions.ToString(emailCart(ref oCartElmt, CustomerEmailTemplatePath, moCartConfig["MerchantName"], moCartConfig["MerchantEmail"], oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText, cSubject, cAttachementTemplatePath: moCartConfig["CustomerAttachmentTemplatePath"], cCCEmail: ccCustomerEmail));
 
@@ -7958,7 +7965,8 @@ namespace Protean
 
                                 arrLoc = null;
 
-                                if (Conversions.ToBoolean(Operators.OrObject(Operators.ConditionalCompareObjectEqual(Interaction.IIf((oDr["cLocationNameShort"]) is DBNull, "", (oDr["cLocationNameShort"])), Strings.LCase(Strings.Trim(sTarget)), false), Operators.ConditionalCompareObjectEqual(Interaction.IIf((oDr["cLocationNameFull"]) is DBNull, "", (oDr["cLocationNameFull"])), Strings.LCase(Strings.Trim(sTarget)), false))))
+                               // if (Conversions.ToBoolean(Operators.OrObject(Operators.ConditionalCompareObjectEqual(Interaction.IIf((oDr["cLocationNameShort"]) is DBNull, "", (oDr["cLocationNameShort"])), Strings.LCase(Strings.Trim(sTarget)), false), Operators.ConditionalCompareObjectEqual(Interaction.IIf((oDr["cLocationNameFull"]) is DBNull, "", (oDr["cLocationNameFull"])), Strings.LCase(Strings.Trim(sTarget)), false))))
+                                if (oDr["cLocationNameShort"].ToString() == Strings.Trim(sTarget) || oDr["cLocationNameFull"].ToString() == Strings.Trim(sTarget))
                                 {
                                     nTargetId = Conversions.ToInteger(oDr["nLocationKey"]);
                                 }
@@ -7994,7 +8002,7 @@ namespace Protean
             {
                 string iterateCountryListRet = default;
                 myWeb.PerfMon.Log("Cart", "iterateCountryList");
-                int?[] arrTmp;
+                string[] arrTmp;
                 string sListReturn;
                 string cProcessInfo = "";
                 try
@@ -8003,15 +8011,17 @@ namespace Protean
 
                     if (oDict.ContainsKey(nParent))
                     {
-                        arrTmp = (int?[])oDict[nParent];
+                        arrTmp = (string[])oDict[nParent];
                         sListReturn = ",'" + SqlFmt(arrTmp[nIndex].ToString()) + "'"; // Adding this line here allows the top root location to be added
                         if (!(Information.IsDBNull(arrTmp[0]) | arrTmp[0] == null))
                         {
-                            if (arrTmp[0] != nParent)
-                                sListReturn = sListReturn + iterateCountryList(ref oDict, ref arrTmp[0], ref nIndex);
+                            if (Int32.Parse(arrTmp[0]) != nParent)
+                            {
+                                int? newParent = Int32.Parse(arrTmp[0]);
+                                sListReturn = sListReturn + iterateCountryList(ref oDict, ref newParent, ref nIndex);
+                            }
                         }
                     }
-
                     iterateCountryListRet = sListReturn;
                 }
 
