@@ -3864,11 +3864,11 @@ namespace Protean
                                             {
                                                 // logic to overide below...
                                                 // Add extra condition for checking shipping delievry method set by default
-                                                if (ShippingOptionKey != Conversions.ToDouble(moCartConfig["DefaultShippingMethod"]))
+                                                if (ShippingOptionKey != Convert.ToDouble(moCartConfig["DefaultShippingMethod"]))
                                                 {
                                                     if (oCartElmt.HasAttribute("shippingType") & oCartElmt.GetAttribute("shippingType") == "0")
                                                     {
-                                                        if (Operators.ConditionalCompareObjectEqual(oRowSO["nShipOptKey"], ShippingOptionKey, false))
+                                                        if (Convert.ToString(oRowSO["nShipOptKey"]) == Convert.ToString(ShippingOptionKey))
                                                         {
                                                             shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"]));
                                                             oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig["DefaultCountry"]);
@@ -3879,10 +3879,10 @@ namespace Protean
                                                             // oCartElmt.SetAttribute("cCatSchemaName", cCartType & "")
                                                         }
                                                     }
-                                                }
+                                                }   
                                                 else if (oCartElmt.HasAttribute("shippingType") & oCartElmt.GetAttribute("shippingType") == "0")
                                                 {
-                                                    if (Operators.ConditionalCompareObjectEqual(oRowSO["nShipOptKey"], moCartConfig["DefaultShippingMethod"], false))
+                                                    if (Convert.ToString(oRowSO["nShipOptKey"]) == moCartConfig["DefaultShippingMethod"])
                                                     {
                                                         shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"]));
                                                         oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig["DefaultCountry"]);
@@ -3894,7 +3894,7 @@ namespace Protean
                                                 }
                                                 // Add extra condition only when promocode is valid
                                                 // Set nondiscountedshippingcost to attribute when promocode is valid(include free shipping methods)
-                                                else if (Conversions.ToBoolean(Operators.AndObject(IsPromocodeValid == true, Operators.ConditionalCompareObjectNotEqual(oRowSO["NonDiscountedShippingCost"], "0", false))))
+                                                else if (IsPromocodeValid = true & Convert.ToString(oRowSO["NonDiscountedShippingCost"]) != "0" )
                                                 {
                                                     if (oCartElmt.GetAttribute("freeShippingMethods").Contains(oCartElmt.GetAttribute("shippingType")))
                                                     {
@@ -3911,7 +3911,7 @@ namespace Protean
                                                     }
                                                 }
                                             }
-                                            else if ((shipCost == -1 | Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"])) >= shipCost) & bCollection == false)
+                                            else if ((shipCost == -1 | Convert.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"])) < shipCost) & bCollection == false)
                                             {
                                                 shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"]));
                                                 oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig["DefaultCountry"]);
