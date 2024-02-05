@@ -207,6 +207,19 @@ header {
         color: $nav-link-hover-color;
     }
 }
+.logged-in-icon {
+    //color: $secondary;
+
+    &:after {
+        background: $secondary;
+        height: 2px;
+        width: 1.2rem;
+        display: block;
+        content: '';
+        position: relative;
+        bottom: -1px;
+    }
+}
 
 /*############### SOCIAL LINKS #################*/
 .socialLinks.iconset-plain {
