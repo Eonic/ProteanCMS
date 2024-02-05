@@ -17,7 +17,7 @@
 	<!--menu below header-->
 	<!--<xsl:variable name="header-layout">header-menu-right</xsl:variable>-->
 	<!--menu within header-->
-	<xsl:variable name="header-layout">header-menu-right</xsl:variable>
+	<xsl:variable name="header-layout">header-one-line</xsl:variable>
 	<xsl:variable name="font-import-base">Lato:300,400,700</xsl:variable>
 	<xsl:variable name="headings-font-import">Lato:300,400,700</xsl:variable>
 	<xsl:variable name="color-mode">default</xsl:variable>
@@ -25,7 +25,7 @@
 	<xsl:variable name="HomeNav">true</xsl:variable>
 	<xsl:variable name="NavFix">true</xsl:variable>
 	<xsl:variable name="nav-dropdown">true</xsl:variable>
-	<xsl:variable name="sub-nav">left</xsl:variable>
+	<xsl:variable name="sub-nav">right</xsl:variable>
 	<xsl:variable name="SideSubWidth">3</xsl:variable>
 	<xsl:variable name="SideSubWidthCustom"></xsl:variable>
 	<xsl:variable name="themeBreadcrumb">false</xsl:variable>
@@ -391,6 +391,10 @@
 					<xsl:when test="/Page/User">/My-Account</xsl:when>
 					<xsl:otherwise>/Login</xsl:otherwise>
 				</xsl:choose>
+			</xsl:attribute>
+			<xsl:attribute name="class">
+				<xsl:text>nav-link login-btn not-xs </xsl:text>
+				<xsl:if test="/Page/User"> logged-in-icon</xsl:if>
 			</xsl:attribute>
 			<i class="fas fa-user">
 				<xsl:text> </xsl:text>
