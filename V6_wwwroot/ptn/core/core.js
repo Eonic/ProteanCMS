@@ -492,6 +492,26 @@ $.fn.prepareXform = function () {
         });
     }
 
+    if ($(this).find('select.select-other').exists()) {
+      
+        $(this).find('select.select-other').each(function (i) {
+            var selectcontrol = $(this);
+            var otherTextInput = $("#" + $(this).data("target"));
+            var isInDropdown = false;
+            $(this).find("option").each(function () { 
+                if (this.value == otherTextInput.val()) {
+                    selectcontrol.value = otherTextInput.val()
+                }                
+            });
+            if (isInDropdown == false) {
+                selectcontrol.value = "Other";   
+            }
+            
+            alert(otherTextInput.val());
+
+        }); 
+    };
+
     if ($(this).find('.contentLocations').exists()) {
         $(this).find('.contentLocations').each(function (i) {
             var classString = $(this).attr('class').match(/([^\?]*)pickLimit\-(\d*)/);
@@ -566,6 +586,7 @@ $.fn.prepareXform = function () {
                 form.classList.add('was-validated')
             }, false)
         })
+
 
 
 };
