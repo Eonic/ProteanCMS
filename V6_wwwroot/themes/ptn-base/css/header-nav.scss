@@ -139,7 +139,7 @@ header {
         }
 
         ul {
-            display: none;
+            // display: none;
         }
     }
 
@@ -154,8 +154,81 @@ header {
             margin-left: 0.4em;
         }
     }
+
+    .dropdown.level2 {
+        .dropdown-menu {
+            ul.nav {
+                display: none;
+            }
+
+            a.active,
+            a.on,
+            a:hover,
+            a:focus {
+                color: #000;
+            }
+
+            @include media-breakpoint-up($nav-breakpoint) {
+                ul.nav {
+                    display: block;
+                }
+
+                a.active,
+                a.on,
+                a:hover,
+                a:focus {
+                    color: $primary;
+                }
+
+                a.on {
+                    color: $dropdown-link-color;
+                }
+            }
+        }
+
+        @include media-breakpoint-down($nav-breakpoint) {
+            ul.nav {
+                padding-left: 1rem;
+            }
+        }
+
+        @include media-breakpoint-up($nav-breakpoint) {
+            .dropdown-menu > li > a {
+                font-weight: 600;
+            }
+
+            position: static;
+
+            .dropdown-menu {
+                left: -200px;
+                right: -200px;
+                margin-top: 15px;
+
+                > li {
+                    float: left
+                }
+            }
+
+            .dropdown-menu > li:nth-child(2) {
+                float: none;
+                clear: both;
+
+                > a {
+                    color: $primary;
+                    border-bottom: 1px solid $primary;
+                    margin-bottom: 0.6rem;
+                    padding-bottom: 0.5rem;
+                    padding-left: 0;
+                    padding-right: 0;
+                    margin-left: 1.5rem;
+                    margin-right: 1.5rem;
+                    width: calc(100% - 3rem);
+                }
+            }
+        }
+    }
     //MOBILE MENU
-    @include media-breakpoint-down(lg) {
+    @include media-breakpoint-down($nav-breakpoint) {
         .offcanvas {
             overflow: scroll;
         }
@@ -181,6 +254,165 @@ header {
 
         .socialLinks.iconset-plain {
             margin-left: 0.4rem;
+        }
+        //FULL SCREEN MOBILE NAV
+        #navbarSupportedContent {
+            position: fixed;
+            background: #fff;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            overflow: scroll;
+            display: none;
+            z-index: 30;
+            padding: 2rem 1rem 0;
+            overflow-x: hidden;
+
+            .navbar-nav {
+                max-width: 22rem;
+                margin: 0 auto;
+                top: 0;
+            }
+
+            .menu-no-scroll {
+                //   overflow: hidden !important;
+            }
+
+            .dropdown-menu > li:not(.nav-item),
+            .nav-pills > li:not(.nav-item) {
+                max-width: 23rem;
+                margin: 0 auto;
+            }
+
+            .dropdown-menu > li:nth-child(2) a {
+                font-size: 1.3rem;
+            }
+
+            .dropdown-toggle:after {
+                content: '\f061';
+                color: $body-color;
+                border: 1px solid $body-color;
+                border-radius: 2px;
+                padding: 2px 5px;
+                float: right;
+                font-family: 'Font Awesome 5 Free';
+                font-weight: 900;
+                font-size: 0.8rem;
+            }
+
+            .dropdown-menu {
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                width: 100%;
+                height: 100%;
+                overflow-y: scroll;
+                transform: translateX(100%);
+                display: block !important;
+                overflow-x: hidden;
+                transition: all ease 0.2s;
+                padding-top: 0;
+            }
+
+            .dropdown-item {
+                font-size: 1.05rem;
+                padding-bottom: 0.6rem;
+            }
+
+            .btn-sm.btn-outline-primary {
+                width: 100%;
+                background: $primary;
+                color: #fff;
+            }
+
+            .search-wrapper {
+                position: relative;
+                margin: 20px auto;
+                max-width: 19rem;
+
+                .btn-outline-primary {
+                    position: absolute;
+                }
+
+                .CTAsearch {
+                    border: 2px solid #8d8d8d;
+                    padding: 0.7rem 1rem;
+                    border-radius: 100px !important;
+                    background: #fff;
+                }
+
+                .btn {
+                    color: #595959 !important;
+                }
+            }
+
+            .nav-close-btn {
+                right: 0px;
+                top: 0px;
+                z-index: 1010;
+            }
+
+            .emergency-xs-link {
+                color: $primary;
+                font-weight: 600;
+            }
+
+            .dropdown-mobile-next {
+                @include clearfix;
+
+                .dropdown-item {
+                    width: calc(100% - 40px);
+                    float: left;
+                }
+            }
+
+            .dropdown-mobile-btn {
+                padding: 0.3rem;
+                line-height: 1;
+                font-size: 0.8rem;
+                // margin: 0.9rem 6px 0 0;
+            }
+
+            .menu-back {
+                .nav-link {
+                    font-size: 1rem;
+                    //  padding-top:0;
+                }
+            }
+
+            .nav-pills {
+                transform: translateX(100%);
+                position: absolute;
+                display: block;
+                background: #fff;
+                width: 100%;
+                top: 0;
+                bottom: 0;
+                transition: all ease 0.3s;
+                padding: 0;
+                height: 400px;
+            }
+
+            .dropdown-active {
+                transform: translateX(0%);
+
+                .dropdown-active {
+                    //    transform: translateX(100%);
+                    top: 0;
+                    left: 0;
+
+                    .nav-pills {
+                        display: block !important;
+                        padding-bottom: 20px;
+                    }
+                }
+            }
         }
     }
 }
@@ -260,7 +492,7 @@ header {
     display: flex;
     align-items: center;
 
-    @include media-breakpoint-up(lg) {
+    @include media-breakpoint-up($nav-breakpoint) {
         display: none;
     }
 }
