@@ -7661,9 +7661,9 @@ namespace Protean
                                     if (nOptCount == 0)
                                     {
                                         oOptXform.valid = false;
-                                        XmlNode argoNode1 = oGrpElmt;
-                                        oOptXform.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, "There is no method of payment available for your account - please contact the site administrator.");
-                                        oGrpElmt = (XmlElement)argoNode1;
+                                        //XmlNode argoNode1 = oGrpElmt;
+                                        oOptXform.addNote(ref oGrpElmt, Protean.xForm.noteTypes.Alert, "There is no method of payment available for your account - please contact the site administrator.");
+                                        //oGrpElmt = (XmlElement)argoNode1;
                                     }
                                     else if (nOptCount == 1)
                                     {
@@ -7706,17 +7706,17 @@ namespace Protean
                             else
                             {
                                 oOptXform.valid = false;
-                                XmlNode argoNode = oGrpElmt;
-                                oOptXform.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, "There is no method of payment setup on this site - please contact the site administrator.");
-                                oGrpElmt = (XmlElement)argoNode;
+                                //XmlNode argoNode = oGrpElmt;
+                                oOptXform.addNote(ref oGrpElmt, Protean.xForm.noteTypes.Alert, "There is no method of payment setup on this site - please contact the site administrator.");
+                                //oGrpElmt = (XmlElement)argoNode;
                             }
                         }
                         else
                         {
                             oOptXform.valid = false;
-                            XmlNode argoNode2 = oGrpElmt;
-                            oOptXform.addNote(ref argoNode2, Protean.xForm.noteTypes.Alert, "There is no method of payment setup on this site - please contact the site administrator.");
-                            oGrpElmt = (XmlElement)argoNode2;
+                            //XmlNode argoNode2 = oGrpElmt;
+                            oOptXform.addNote(ref oGrpElmt, Protean.xForm.noteTypes.Alert, "There is no method of payment setup on this site - please contact the site administrator.");
+                            //oGrpElmt = (XmlElement)argoNode2;
                         }
 
                         string cTermsTitle = "Terms and Conditions";
@@ -10760,9 +10760,9 @@ namespace Protean
                             // going to need to do something about languages
                             XmlElement oOptionElmt;
                             oOptionElmt = oCForm.addOption(ref oInputElmt, oCurrencyElmt.SelectSingleNode("name").InnerText, oCurrencyElmt.GetAttribute("ref"));
-                            XmlNode argoNode = oOptionElmt;
-                            oCForm.addNote(ref argoNode, Protean.xForm.noteTypes.Hint, oCurrencyElmt.SelectSingleNode("description").InnerText);
-                            oOptionElmt = (XmlElement)argoNode;
+                            //XmlNode argoNode = oOptionElmt;
+                            oCForm.addNote(ref oOptionElmt, Protean.xForm.noteTypes.Hint, oCurrencyElmt.SelectSingleNode("description").InnerText);
+                            //oOptionElmt = (XmlElement)argoNode;
                         }
                         if (oCForm.isSubmitted())
                         {

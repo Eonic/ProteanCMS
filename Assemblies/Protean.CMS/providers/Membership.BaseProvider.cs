@@ -932,8 +932,8 @@ namespace Protean.Providers
                         if (nAccount == 0)
                         {
                             oGrp.InnerXml = "";
-                            XmlNode GrpNode = (XmlNode)oGrp;
-                            base.addNote(ref GrpNode, Protean.xForm.noteTypes.Alert, "This reset link has already been used");
+                            //XmlNode GrpNode = (XmlNode)oGrp;
+                            base.addNote(ref oGrp, Protean.xForm.noteTypes.Alert, "This reset link has already been used");
                             base.valid = false;
                         }
 
