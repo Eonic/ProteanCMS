@@ -31,8 +31,10 @@
 	<xsl:variable name="themeBreadcrumb">false</xsl:variable>
 	<xsl:variable name="themeTitle">true</xsl:variable>
 	<xsl:variable name="MatchHeightType" select="''"/>
-	<xsl:variable name="thWidth">500</xsl:variable>
-	<xsl:variable name="thHeight">350</xsl:variable>
+	<xsl:variable name="thWidth-xs">496</xsl:variable>
+	<xsl:variable name="thHeight-xs">496</xsl:variable>
+	<xsl:variable name="thWidth">496</xsl:variable>
+	<xsl:variable name="thHeight">496</xsl:variable>
 	<xsl:variable name="container">container</xsl:variable>
 	<xsl:variable name="siteAlert">false</xsl:variable>
 
@@ -146,6 +148,14 @@
 
 	<!-- ############################################ IMAGE SIZES ############################################### -->
 
+	<xsl:template match="Content | MenuItem" mode="getThWidth-xs">
+		<xsl:value-of select="$thWidth-xs"/>
+	</xsl:template>
+
+	<xsl:template match="Content | MenuItem" mode="getThHeight-xs">
+		<xsl:value-of select="$thHeight-xs"/>
+	</xsl:template>
+		
 	<xsl:template match="Content | MenuItem" mode="getThWidth">
 		<xsl:value-of select="$thWidth"/>
 	</xsl:template>
@@ -153,9 +163,6 @@
 	<xsl:template match="Content | MenuItem" mode="getThHeight">
 		<xsl:value-of select="$thHeight"/>
 	</xsl:template>
-
-	<xsl:template match="Content[@type='Testimonial']" mode="getThWidth">100</xsl:template>
-	<xsl:template match="Content[@type='Testimonial']" mode="getThHeight">100</xsl:template>
 
 	<xsl:template match="Content | MenuItem | Discount | Company" mode="getDisplayWidth">800</xsl:template>
 	<xsl:template match="Content | MenuItem | Discount | Company" mode="getDisplayHeight">600</xsl:template>
