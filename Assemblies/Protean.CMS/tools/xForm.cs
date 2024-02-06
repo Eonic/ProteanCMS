@@ -3256,8 +3256,8 @@ namespace Protean
         public void addNote(ref XmlElement oNode, noteTypes nTypes, string sMessage, bool bInsertFirst = false, string sClass = "")
         {
             valid = false;
-            //XmlNode frmNode = (XmlNode)moXformElmt;
-            addNote(ref moXformElmt, nTypes, sMessage, bInsertFirst, sClass);
+            XmlNode frmNode = (XmlNode)moXformElmt;
+            addNote(ref frmNode, nTypes, sMessage, bInsertFirst, sClass);
         }
 
             public void addNote(ref XmlNode oNode, noteTypes nTypes, string sMessage, bool bInsertFirst = false, string sClass = "")
