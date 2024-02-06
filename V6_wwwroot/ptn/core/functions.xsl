@@ -305,11 +305,11 @@
 	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-xs">575</xsl:template>
 	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-xs">575</xsl:template>
 
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-sm">768</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-sm">768</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-sm">575</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-sm">575</xsl:template>
 
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth">100</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight">100</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth">496</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight">496</xsl:template>
 
 	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-md">
 		<xsl:apply-templates select="." mode="getThWidth"/>
@@ -318,13 +318,26 @@
 		<xsl:apply-templates select="." mode="getThHeight"/>
 	</xsl:template>
 
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-lg">496</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-lg">496</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-lg">
+		<xsl:apply-templates select="." mode="getThWidth"/>
+	</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-lg">
+		<xsl:apply-templates select="." mode="getThHeight"/>
+	</xsl:template>
 
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-xl">496</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-xl">496</xsl:template>
-
-	<!-- ????????????? Why no xxl? ???????????????? -->
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-xl">
+		<xsl:apply-templates select="." mode="getThWidth"/>
+	</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-xl">
+		<xsl:apply-templates select="." mode="getThHeight"/>
+	</xsl:template>
+	
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-xxl">
+		<xsl:apply-templates select="." mode="getThWidth"/>
+	</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-xxl">
+		<xsl:apply-templates select="." mode="getThHeight"/>
+	</xsl:template>
 
 	<!-- Get Sub Page Thumbnail Dimensions -->
 	<xsl:template match="Content | MenuItem | Discount | Company" mode="getsubThWidth">100</xsl:template>
@@ -335,26 +348,41 @@
 	<xsl:template match="Content | MenuItem | Discount | Company" mode="getDisplayHeight">400</xsl:template>
 
 
-	
+
 
 	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-xs">575</xsl:template>
 	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayHeight-xs">575</xsl:template>
 
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-sm">767</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayHeight-sm">767</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-sm">575</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayHeight-sm">575</xsl:template>
 
 	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-md">
 		<xsl:apply-templates select="." mode="getDisplayWidth"/>
 	</xsl:template>
 	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayHeight-md">
-		<xsl:apply-templates select="." mode="getDisplayWidth"/>
+		<xsl:apply-templates select="." mode="getDisplayHeight"/>
 	</xsl:template>
 
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-lg">496</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayHeight-lg">496</xsl:template>
-	
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-xl">496</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayHeight-xl">496</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-lg">
+		<xsl:apply-templates select="." mode="getDisplayWidth"/>
+	</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayHeight-lg">
+		<xsl:apply-templates select="." mode="getDisplayHeight"/>
+	</xsl:template>
+
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-xl">
+		<xsl:apply-templates select="." mode="getDisplayWidth"/>
+	</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayHeight-xl">
+		<xsl:apply-templates select="." mode="getDisplayHeight"/>
+	</xsl:template>
+
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-xxl">
+		<xsl:apply-templates select="." mode="getDisplayWidth"/>
+	</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayHeight-xxl">
+		<xsl:apply-templates select="." mode="getDisplayHeight"/>
+	</xsl:template>
 
 	<!-- To fit 800x600 - fits nicely inside any screen ratio -->
 	<xsl:template match="Content | MenuItem | Discount | Company" mode="getFullSizeWidth">750</xsl:template>
@@ -6051,6 +6079,14 @@
 			<xsl:apply-templates select="." mode="getThHeight-xl"/>
 		</xsl:variable>
 
+		<xsl:variable name="max-width-xxl">
+			<xsl:apply-templates select="." mode="getThWidth-xxl"/>
+		</xsl:variable>
+
+		<xsl:variable name="max-height-xxl">
+			<xsl:apply-templates select="." mode="getThHeight-xxl"/>
+		</xsl:variable>
+
 		<xsl:if test="Images/img[@src and @src!='']">
 			<xsl:call-template  name="displayResponsiveImage">
 				<xsl:with-param name="crop" select="$crop"/>
@@ -6067,6 +6103,8 @@
 				<xsl:with-param name="max-height-lg" select="$max-height-lg" />
 				<xsl:with-param name="max-width-xl" select="$max-width-xl"/>
 				<xsl:with-param name="max-height-xl" select="$max-height-xl"/>
+				<xsl:with-param name="max-width-xxl" select="$max-width-xxl"/>
+				<xsl:with-param name="max-height-xxl" select="$max-height-xxl"/>
 				<xsl:with-param name="imageUrl" select="$src"/>
 				<xsl:with-param name="altText" select="$alt"/>
 				<xsl:with-param name="forceResize" select="$forceResize"/>
@@ -6091,6 +6129,8 @@
 		<xsl:param name="max-height-lg"/>
 		<xsl:param name="max-width-xl"/>
 		<xsl:param name="max-height-xl"/>
+		<xsl:param name="max-width-xxl"/>
+		<xsl:param name="max-height-xxl"/>
 		<xsl:param name="forceResize"/>
 		<xsl:param name="class"/>
 		<xsl:param name="style"/>
@@ -6432,6 +6472,58 @@
 							</xsl:call-template>
 						</xsl:variable>
 
+						<xsl:variable name="newSrc-xxl">
+							<xsl:call-template name="resize-image">
+								<xsl:with-param name="path" select="$src"/>
+								<xsl:with-param name="max-width" select="$max-width-xxl"/>
+								<xsl:with-param name="max-height" select="$max-height-xxl"/>
+								<xsl:with-param name="file-prefix">
+									<xsl:text>~th-xl-</xsl:text>
+									<xsl:value-of select="$max-width-xxl"/>
+									<xsl:text>x</xsl:text>
+									<xsl:value-of select="$max-height-xxl"/>
+									<xsl:text>/~th-</xsl:text>
+									<xsl:if test="$cropvar='true'">
+										<xsl:text>crop-</xsl:text>
+									</xsl:if>
+									<xsl:if test="not($no-stretch)">
+										<xsl:text>strch-</xsl:text>
+									</xsl:if>
+								</xsl:with-param>
+								<xsl:with-param name="file-suffix" select="''"/>
+								<xsl:with-param name="quality" select="100"/>
+								<xsl:with-param name="crop" select="$cropvar" />
+								<xsl:with-param name="no-stretch" select="$no-stretch" />
+								<xsl:with-param name="forceResize" select="$forceResize" />
+							</xsl:call-template>
+						</xsl:variable>
+
+						<xsl:variable name="newSrc-xxl-x2">
+							<xsl:call-template name="resize-image">
+								<xsl:with-param name="path" select="$src"/>
+								<xsl:with-param name="max-width" select="($max-width-xxl * 2)"/>
+								<xsl:with-param name="max-height" select="($max-height-xxl * 2)"/>
+								<xsl:with-param name="file-prefix">
+									<xsl:text>~th-xl-</xsl:text>
+									<xsl:value-of select="$max-width-xxl"/>
+									<xsl:text>x</xsl:text>
+									<xsl:value-of select="$max-height-xxl"/>
+									<xsl:text>-x2/~th-</xsl:text>
+									<xsl:if test="$cropvar='true'">
+										<xsl:text>crop-</xsl:text>
+									</xsl:if>
+									<xsl:if test="not($no-stretch)">
+										<xsl:text>strch-</xsl:text>
+									</xsl:if>
+								</xsl:with-param>
+								<xsl:with-param name="file-suffix" select="''"/>
+								<xsl:with-param name="quality" select="100"/>
+								<xsl:with-param name="crop" select="$cropvar" />
+								<xsl:with-param name="no-stretch" select="$no-stretch" />
+								<xsl:with-param name="forceResize" select="$forceResize" />
+							</xsl:call-template>
+						</xsl:variable>
+
 
 
 						<!--/xsl:if-->
@@ -6450,6 +6542,8 @@
 								<xsl:variable name="newSrc-lg-x2-webp" select="ew:CreateWebP($newSrc-lg-x2)"/>
 								<xsl:variable name="newSrc-xl-webp" select="ew:CreateWebP($newSrc-xl)"/>
 								<xsl:variable name="newSrc-xl-x2-webp" select="ew:CreateWebP($newSrc-xl-x2)"/>
+								<xsl:variable name="newSrc-xxl-webp" select="ew:CreateWebP($newSrc-xxl)"/>
+								<xsl:variable name="newSrc-xxl-x2-webp" select="ew:CreateWebP($newSrc-xxl-x2)"/>
 								<xsl:variable name="placeholder-webp" select="ew:CreateWebP($lazyplaceholder)"/>
 
 
@@ -6494,6 +6588,14 @@
 									<xsl:with-param name="class" select="$class"/>
 									<xsl:with-param name="style" select="$style"/>
 								</xsl:call-template>
+								<xsl:call-template name="sourceTag">
+									<xsl:with-param name="type" select="'image/webp'"/>
+									<xsl:with-param name="media" select="'(min-width: 1400px)'"/>
+									<xsl:with-param name="imageUrl" select="$newSrc-xxl-webp"/>
+									<xsl:with-param name="imageRetinaUrl" select="$newSrc-xxl-x2-webp"/>
+									<xsl:with-param name="class" select="$class"/>
+									<xsl:with-param name="style" select="$style"/>
+								</xsl:call-template>
 								<!--JPG/PNG/GIF Images-->
 								<xsl:call-template name="sourceTag">
 									<xsl:with-param name="type" select="$imageType"/>
@@ -6532,6 +6634,14 @@
 									<xsl:with-param name="media" select="'(min-width: 1200px)'"/>
 									<xsl:with-param name="imageUrl" select="$newSrc-xl"/>
 									<xsl:with-param name="imageRetinaUrl" select="$newSrc-xl-x2"/>
+									<xsl:with-param name="class" select="$class"/>
+									<xsl:with-param name="style" select="$style"/>
+								</xsl:call-template>
+								<xsl:call-template name="sourceTag">
+									<xsl:with-param name="type" select="$imageType"/>
+									<xsl:with-param name="media" select="'(min-width: 1400px)'"/>
+									<xsl:with-param name="imageUrl" select="$newSrc-xxl"/>
+									<xsl:with-param name="imageRetinaUrl" select="$newSrc-xxl-x2"/>
 									<xsl:with-param name="class" select="$class"/>
 									<xsl:with-param name="style" select="$style"/>
 								</xsl:call-template>
@@ -6744,7 +6854,7 @@
 								<xsl:with-param name="forceResize" select="$forceResize" />
 							</xsl:call-template>
 						</xsl:variable>
-						
+
 						<xsl:variable name="newSrc-xl">
 							<xsl:call-template name="resize-image">
 								<xsl:with-param name="path" select="$src"/>
@@ -6770,6 +6880,32 @@
 								<xsl:with-param name="forceResize" select="$forceResize" />
 							</xsl:call-template>
 						</xsl:variable>
+
+						<xsl:variable name="newSrc-xxl">
+							<xsl:call-template name="resize-image">
+								<xsl:with-param name="path" select="$src"/>
+								<xsl:with-param name="max-width" select="$max-width-xxl"/>
+								<xsl:with-param name="max-height" select="$max-height-xxl"/>
+								<xsl:with-param name="file-prefix">
+									<xsl:text>~th-xxl-</xsl:text>
+									<xsl:value-of select="$max-width-xxl"/>
+									<xsl:text>x</xsl:text>
+									<xsl:value-of select="$max-height-xxl"/>
+									<xsl:text>/~th-</xsl:text>
+									<xsl:if test="$cropvar='true'">
+										<xsl:text>crop-</xsl:text>
+									</xsl:if>
+									<xsl:if test="not($no-stretch)">
+										<xsl:text>strch-</xsl:text>
+									</xsl:if>
+								</xsl:with-param>
+								<xsl:with-param name="file-suffix" select="''"/>
+								<xsl:with-param name="quality" select="100"/>
+								<xsl:with-param name="crop" select="$cropvar" />
+								<xsl:with-param name="no-stretch" select="$no-stretch" />
+								<xsl:with-param name="forceResize" select="$forceResize" />
+							</xsl:call-template>
+						</xsl:variable>
 						<xsl:variable name="image">
 							<picture>
 
@@ -6778,6 +6914,7 @@
 								<xsl:variable name="newSrc-md-webp" select="ew:CreateWebP($newSrc-md)"/>
 								<xsl:variable name="newSrc-lg-webp" select="ew:CreateWebP($newSrc-lg)"/>
 								<xsl:variable name="newSrc-xl-webp" select="ew:CreateWebP($newSrc-xl)"/>
+								<xsl:variable name="newSrc-xxl-webp" select="ew:CreateWebP($newSrc-xxl)"/>
 								<xsl:variable name="placeholder-webp" select="ew:CreateWebP($lazyplaceholder)"/>
 
 
@@ -6817,6 +6954,13 @@
 									<xsl:with-param name="class" select="$class"/>
 									<xsl:with-param name="style" select="$style"/>
 								</xsl:call-template>
+								<xsl:call-template name="sourceTag">
+									<xsl:with-param name="type" select="'image/webp'"/>
+									<xsl:with-param name="media" select="'(min-width: 1400px)'"/>
+									<xsl:with-param name="imageUrl" select="$newSrc-xxl-webp"/>
+									<xsl:with-param name="class" select="$class"/>
+									<xsl:with-param name="style" select="$style"/>
+								</xsl:call-template>
 								<!--JPG/PNG/GIF Images-->
 								<xsl:call-template name="sourceTag">
 									<xsl:with-param name="type" select="$imageType"/>
@@ -6850,6 +6994,13 @@
 									<xsl:with-param name="type" select="$imageType"/>
 									<xsl:with-param name="media" select="'(min-width: 1200px)'"/>
 									<xsl:with-param name="imageUrl" select="$newSrc-xl"/>
+									<xsl:with-param name="class" select="$class"/>
+									<xsl:with-param name="style" select="$style"/>
+								</xsl:call-template>
+								<xsl:call-template name="sourceTag">
+									<xsl:with-param name="type" select="$imageType"/>
+									<xsl:with-param name="media" select="'(min-width: 1400px)'"/>
+									<xsl:with-param name="imageUrl" select="$newSrc-xxl"/>
 									<xsl:with-param name="class" select="$class"/>
 									<xsl:with-param name="style" select="$style"/>
 								</xsl:call-template>
@@ -8955,7 +9106,7 @@
 					<xsl:value-of select="$max-width"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:text>1200</xsl:text>
+					<xsl:text>1400</xsl:text>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
@@ -8965,7 +9116,7 @@
 					<xsl:value-of select="$max-height"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:text>1200</xsl:text>
+					<xsl:text>1400</xsl:text>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
