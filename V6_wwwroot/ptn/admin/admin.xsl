@@ -272,7 +272,7 @@
 		</span>
 		<div class="card">
 			<div class="card-header">
-				<h5>Log in</h5>
+				<h5>Sign in</h5>
 			</div>
 			<div class="card-body">
 				<xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
@@ -297,7 +297,7 @@
     </a>
 
     <button type="submit" name="{@submission}" value="{label/node()}" class="btn btn-primary float-end"  onclick="disableButton(this);">
-      Login<xsl:text> </xsl:text>
+      Sign In<xsl:text> </xsl:text>
 		&#160;<i class="fa-solid fa-right-to-bracket">&#160;</i>
 
     </button>
@@ -707,9 +707,9 @@
 				  <a id="myaccount" href="/?ewCmd=EditDirItem&amp;DirType=User&amp;id=1" class="btn  btn-sm btn-primary">
 					  <i class="fa fa-user">&#160;</i>&#160;Admin
 				  </a>
-			  <a id="logoff" href="/?ewCmd=LogOff" title="Click here to log off from your active session" class="btn btn-sm btn-danger">
-				  <i class="fa fa-power-off"> </i>
-				  <span> Log Off </span>
+			  <a id="logoff" href="/?ewCmd=LogOff" title="Click here to sign out from your active session" class="btn btn-sm btn-danger">
+				  <i class="fa fa-power-off">&#160;</i>&#160;
+				  <span>Sign out</span>
 			  </a>
           </div>
           <div class="col-md-9">
@@ -9251,7 +9251,7 @@
                 <strong>Page not found</strong> will be presented when a user types in or clicks on a page that does not or no longer exists.
               </p>
               <p>
-                <strong>Login Required</strong> will be presented when a user who is not logged in tries to access a page that has restricted permissions on it.
+                <strong>Sign in required</strong> will be presented when a user who is not logged in tries to access a page that has restricted permissions on it.
               </p>
               <p>
                 <strong>Access Denied</strong> will be presented when a user who is logged in tries to access a page that they do not have access to.
@@ -12131,7 +12131,7 @@
           <input type="hidden" name="txtPass" id="txtPass" value="{ew:EonicConfigValue('web','StatsPass')}"/>
         </form>
         <p>
-          <a href="JavaScript:GoToStats()">Log into your stats</a>
+          <a href="JavaScript:GoToStats()">Sign in to your stats</a>
         </p>
         <!--iframe id="pluginIframe" name="pluginIframe" width="100%" height="1000">
                 <p>Your browser does not support iframes.</p>

@@ -868,8 +868,8 @@ namespace Protean
                                                 // create a new note
                                                 XmlElement frmElmt = oAdXfm.moXformElmt;
                                                 XmlElement oFrmGrp2 = (XmlElement)oAdXfm.addGroup(ref frmElmt, "validateByEmail");
-                                                XmlNode oFrmGrp2Node = (XmlNode)oFrmGrp2;
-                                                oAdXfm.addNote(ref oFrmGrp2Node, Protean.xForm.noteTypes.Hint, "<span class=\"msg-1029\">Thanks for registering you have been sent an email with a link you must click to activate your account</span>", true);
+                                                //XmlNode oFrmGrp2Node = (XmlNode)oFrmGrp2;
+                                                oAdXfm.addNote(ref oFrmGrp2, Protean.xForm.noteTypes.Hint, "<span class=\"msg-1029\">Thanks for registering you have been sent an email with a link you must click to activate your account</span>", true);
 
                                                 // lets get the new userid from the instance
                                                 mnUserId = Conversions.ToLong(oAdXfm.Instance.SelectSingleNode("tblDirectory/nDirKey").InnerText);
