@@ -75,11 +75,12 @@
                   <img src="{$CMSLogo}" alt="{$CMSName}" class="cms-logo-dd"/>
                   <strong>Protean</strong>CMS
                 </span>
-                <a id="logoff" href="{$appPath}?ewCmd=LogOff" title="Click here to log off from your active session" >
+                <a id="logoff" href="{$appPath}?ewCmd=LogOff" title="Click here to sign out of your active session" >
                   <i class="fa fa-power-off">
                     <xsl:text> </xsl:text>
                   </i>
-                  <span>Log Off </span>
+					<xsl:text> </xsl:text>
+                  <span>Sign out</span>
                 </a>
               </div>
               <ul class="department-menu-dd">

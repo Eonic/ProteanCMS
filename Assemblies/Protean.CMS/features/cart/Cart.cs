@@ -2306,7 +2306,7 @@ namespace Protean
                         }
                         if (!string.IsNullOrEmpty(moCartConfig["MerchantEmailTemplatePath"]))
                         {
-                            CustomerEmailTemplatePath = moCartConfig["MerchantEmailTemplatePath"];
+                            MerchantEmailTemplatePath = moCartConfig["MerchantEmailTemplatePath"];
                         }
                        
                         // send to customer

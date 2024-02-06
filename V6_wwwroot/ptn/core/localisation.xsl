@@ -3409,10 +3409,10 @@
   <xsl:template name="term4028">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">
-        <xsl:text>Logon</xsl:text>
+        <xsl:text>Sign in</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Logon</xsl:text>
+        <xsl:text>Sign in</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
