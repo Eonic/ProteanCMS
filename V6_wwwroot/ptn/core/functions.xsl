@@ -302,41 +302,48 @@
 	<!-- IMAGE SIZE DEFAULTS -->
 	<!--https://getbootstrap.com/docs/5.0/layout/breakpoints/-->
 
+	<!-- set these 2 variables to the biggest of the images sizes used-->
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth">575</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight">575</xsl:template>
+
+	<!-- xs screens 0 - 575px -->
 	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-xs">575</xsl:template>
 	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-xs">575</xsl:template>
-
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-sm">575</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-sm">575</xsl:template>
-
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth">496</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight">496</xsl:template>
-
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-md">
+	
+	<!-- sm screens 576px - 767px -->
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-sm">
 		<xsl:apply-templates select="." mode="getThWidth"/>
 	</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-md">
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-sm">
 		<xsl:apply-templates select="." mode="getThHeight"/>
 	</xsl:template>
 
+	<!-- md screens 768px - 991px -->
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-md">496</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-md">496</xsl:template>
+
+	<!-- lg screens 992px - 1199px -->
 	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-lg">
-		<xsl:apply-templates select="." mode="getThWidth"/>
+		<xsl:apply-templates select="." mode="getThWidth-md"/>
 	</xsl:template>
 	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-lg">
-		<xsl:apply-templates select="." mode="getThHeight"/>
+		<xsl:apply-templates select="." mode="getThHeight-md"/>
 	</xsl:template>
 
+	<!-- xl screens 1200px - 1399px -->
 	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-xl">
-		<xsl:apply-templates select="." mode="getThWidth"/>
+		<xsl:apply-templates select="." mode="getThWidth-md"/>
 	</xsl:template>
 	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-xl">
-		<xsl:apply-templates select="." mode="getThHeight"/>
+		<xsl:apply-templates select="." mode="getThHeight-md"/>
 	</xsl:template>
 	
+	<!-- xxl screens 1200px upward -->
 	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-xxl">
-		<xsl:apply-templates select="." mode="getThWidth"/>
+		<xsl:apply-templates select="." mode="getThWidth-md"/>
 	</xsl:template>
 	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-xxl">
-		<xsl:apply-templates select="." mode="getThHeight"/>
+		<xsl:apply-templates select="." mode="getThHeight-md"/>
 	</xsl:template>
 
 	<!-- Get Sub Page Thumbnail Dimensions -->
@@ -6094,7 +6101,7 @@
 				<xsl:with-param name="width" select="$max-width"/>
 				<xsl:with-param name="height" select="$max-height"/>
 				<xsl:with-param name="max-width-xs" select="$max-width-xs"/>
-				<xsl:with-param name="max-height-xs" select="$max-width-xs"/>
+				<xsl:with-param name="max-height-xs" select="$max-height-xs"/>
 				<xsl:with-param name="max-width-sm" select="$max-width-sm"/>
 				<xsl:with-param name="max-height-sm" select="$max-height-sm"/>
 				<xsl:with-param name="max-width-md" select="$max-width-md"/>
