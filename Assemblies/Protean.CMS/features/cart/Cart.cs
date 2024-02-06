@@ -3572,7 +3572,7 @@ namespace Protean
 
                             if (myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure))
                             {
-                                //if (nStatusId > 100) {
+                                if (nStatusId > 100) {
 
                                 // Get Shipping Group from query if assigned to that product and add new node in order and use this node for displaying messages for x50 and t03 category.
                                 if ((moConfig["SelectShippingOptionForGroup"]) != "" && (moConfig["SelectShippingOptionForGroup"]).ToLower() == "on")
@@ -3593,7 +3593,7 @@ namespace Protean
                                         }
                                     }
                                 }
-                                //  }
+                                }
                             }
 
 
@@ -4465,8 +4465,14 @@ namespace Protean
 
                     // Fix for content items that are not Content/Content done for legacy sites such as insure your move 09/06/2015
                     string xPathStart = "Content/";
-                    if (oContentXml.FirstChild.Name != "Content")
+                    if (oContentXml.FirstChild != null)
                     {
+                        if (oContentXml.FirstChild.Name != "Content")
+                        {
+                            xPathStart = "";
+                        }
+                    }
+                    else {
                         xPathStart = "";
                     }
 
@@ -8372,8 +8378,16 @@ namespace Protean
                                     } // @ Where do we get this from?
                                     if (string.IsNullOrEmpty(cProductText))
                                     {
-                                        cProductText = oProdXml.SelectSingleNode("/Content/*[1]").InnerText;
+                                        if (oProdXml.SelectSingleNode("/Content/*[1]") != null)
+                                        {
+                                            cProductText = oProdXml.SelectSingleNode("/Content/*[1]").InnerText;
+                                        } 
+                                        else
+                                        {
+                                            cProductText = "Donation";
+                                        }
                                     }
+                                   
 
                                     if (nPrice == 0d)
                                     {

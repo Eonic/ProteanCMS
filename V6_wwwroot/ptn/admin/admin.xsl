@@ -9275,7 +9275,7 @@
                 <xsl:with-param name="pageTitle" select="'Page Not Found'"/>
               </xsl:call-template>
               <xsl:call-template name="SystemPageAdminRow">
-                <xsl:with-param name="pageTitle" select="'Login Required'"/>
+                <xsl:with-param name="pageTitle" select="'Sign In Required'"/>
               </xsl:call-template>
               <xsl:call-template name="SystemPageAdminRow">
                 <xsl:with-param name="pageTitle" select="'Access Denied'"/>

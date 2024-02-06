@@ -1743,8 +1743,8 @@
 		</xsl:variable>
 		<div class="controls">
 			<div class="input-group">
-				<input type="text" name="{$ref}" id="{$ref}" value="{value/node()}" class="input-small jqDOBPicker form-control" placeholder="{$inlineHint}"/>
-
+				<input type="text" name="{$ref}-alt" id="{$ref}-alt" value="{$displayDate}" class="jqDOBPicker input-small form-control" placeholder="{$inlineHint}"/>
+				<input type="text" name="{$ref}" id="{$ref}" value="{value/node()}" class="hidden "/>
 				<label for="{$ref}" class="input-group-addon btn btn-primary">
 					<i class="fas fa-calendar">
 						<xsl:text> </xsl:text>

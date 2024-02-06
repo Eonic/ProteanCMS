@@ -340,7 +340,7 @@ $.fn.prepareXform = function () {
         $.datepicker.setDefaults($.datepicker.regional['']);
 
         $(this).find('input.jqDOBPicker').each(function (i) {
-
+            var myDatePicker = $(this);
             $(this).datepicker({
                 closeAtTop: false,
                 closeText: 'x',
@@ -354,10 +354,11 @@ $.fn.prepareXform = function () {
                 changeYear: true,
                 yearRange: '-95:+0'
             });
+            $(this).nextAll('label').on("click", function () {
+                myDatePicker.datepicker("show");
+            });
         });
     };
-
-    //    var datePickerSettings = ;
 
     if ($(this).find('input.jqDatePicker').exists()) {
         $.datepicker.setDefaults($.datepicker.regional['']);
@@ -372,6 +373,9 @@ $.fn.prepareXform = function () {
                 altFormat: 'yy-mm-dd',
                 mandatory: $(this).hasClass('required')
             });
+        });
+        $(this).nextAll('label').on("click", function () {
+            myDatePicker.datepicker("show");
         });
     };
 
@@ -468,11 +472,11 @@ $.fn.prepareXform = function () {
     });
 
     $(this).find("[id$='passwordPolicy']").click(function (event) {
-        var width = 200, height = 400, left = (screen.width / 2) - (width / 2),
-            top = (screen.height / 2) - (height / 2);
-        window.open("/ewcommon/tools/passwordpolicydisplay.ashx", 'Password_policy', 'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top);
-        event.preventDefault();
-        return false;
+        $("#xFrmAlertModal #errorMessage").load("/ptn/tools/passwordpolicydisplay.ashx");
+        let xFrmAlertModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('xFrmAlertModal')) // Returns a Bootstrap modal instance
+        var iconClassName = document.getElementById("errorIcon").className;
+        $("#xFrmAlertModal #errorIcon").removeClass(iconClassName);
+        xFrmAlertModal.show();
     });
 
     if ($(this).find('input#onLoad').exists()) {
@@ -498,17 +502,41 @@ $.fn.prepareXform = function () {
             var selectcontrol = $(this);
             var otherTextInput = $("#" + $(this).data("target"));
             var isInDropdown = false;
-            $(this).find("option").each(function () { 
-                if (this.value == otherTextInput.val()) {
-                    selectcontrol.value = otherTextInput.val()
-                }                
-            });
-            if (isInDropdown == false) {
-                selectcontrol.value = "Other";   
-            }
-            
-            alert(otherTextInput.val());
+            otherTextInput.attr('readonly', 'readonly');
+            otherTextInput.hide();
+            otherTextInput.prev("label").hide();
 
+            $(this).find("option").each(function () {
+                if ($(this).val() == otherTextInput.val()) {
+
+                    $(this).attr('selected', 'selected');
+                    isInDropdown = true;
+                }
+                if (isInDropdown == false) {
+                    if ($(this).val() == "Other") {
+                        $(this).attr('selected', 'selected');
+                        otherTextInput.removeAttr('readonly');
+                        otherTextInput.show();
+                        otherTextInput.prev("label").show();
+                    }
+                }
+            });
+
+            selectcontrol.on('change', function () {
+                //alert($(this).find(":selected").val())
+                if ($(this).find(":selected").val() == "Other") {
+                    otherTextInput.removeAttr('readonly');
+                    otherTextInput.show();
+                    otherTextInput.prev("label").show();
+                    otherTextInput.val('');
+                }
+                else {
+                    otherTextInput.val(selectcontrol.find(":selected").val());
+                    otherTextInput.attr('readonly', 'readonly');
+                    otherTextInput.hide();
+                    otherTextInput.prev("label").hide();
+                }
+            });
         }); 
     };
 

@@ -185,7 +185,7 @@
 			<xsl:value-of select="substring-before(@type,' ')"/>
 		</xsl:variable>
 		<button class="btn btn-outline-secondary hidden-lg hidden-xl hidden-xxl order-address-btn" type="button" data-bs-toggle="collapse" data-bs-target="#cart-address-collapse" aria-expanded="false" aria-controls="cart-address-collapse">
-			<xsl:text>Address Details </xsl:text><i class="fas fa-caret-down"> </i>
+			<xsl:text>Address Details </xsl:text><i class="fas fa-caret-down">&#160;</i>
 		</button>
 		<div class="collapse dont-collapse-md" id="cart-address-collapse">
 			<div class="row">
@@ -581,22 +581,20 @@
 		</div>
 		<xsl:if test="@shippingType &gt; 0 and @shippingDesc!='No Delivery Required-'">
 			<div class="shipping">
-				<strong>
-					<xsl:choose>
-						<xsl:when test="/Page/Contents/Content[@name='shippingCostLabel']!=''">
-							<xsl:value-of select="/Page/Contents/Content[@name='shippingCostLabel']"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<!--Shipping Cost-->
-							<xsl:call-template name="term3044" />
-							<xsl:text>:</xsl:text>
-						</xsl:otherwise>
-					</xsl:choose>
+				<span class="shipping-title">
+					<xsl:call-template name="term3044" />
+					<xsl:text>:</xsl:text>					
+				</span>
+				<span class="amount">
 					<xsl:text>&#160;</xsl:text>
-					<br/>
-				</strong>
-				<span class="shipping-desc">
-					<xsl:choose>
+					<xsl:apply-templates select="/Page" mode="formatPrice">
+						<xsl:with-param name="price" select="@shippingCost"/>
+						<xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
+					</xsl:apply-templates>
+				</span>
+			</div>
+			<div class="shipping-desc">
+		<xsl:choose>
 						<xsl:when test="/Page/Cart/Order/Shipping">
 							<xsl:value-of select="/Page/Cart/Order/Shipping/Name/node()"/>
 							<strong>&#160;-&#160;</strong>
@@ -608,14 +606,7 @@
 							<xsl:value-of select="/Page/Cart/Order/@shippingDesc"/>
 						</xsl:otherwise>
 					</xsl:choose>
-				</span>
-				<span class="amount">
-					<xsl:text>&#160;</xsl:text>
-					<xsl:apply-templates select="/Page" mode="formatPrice">
-						<xsl:with-param name="price" select="@shippingCost"/>
-						<xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
-					</xsl:apply-templates>
-				</span>
+			&#160;
 			</div>
 		</xsl:if>
 		<div class="totals-row">
