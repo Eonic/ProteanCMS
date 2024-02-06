@@ -965,7 +965,7 @@ namespace Protean
                         expr.SetContext(nsMgr);
 
                         // Evaluate the constraint
-                        if (Conversions.ToBoolean(xPathNav2.Evaluate(expr) != null))
+                        if (Convert.ToBoolean(xPathNav2.Evaluate(expr)) == false)
                         {
                             // Constraint not met
                             bIsValid = false;
@@ -1079,9 +1079,9 @@ namespace Protean
                         }
                         else
                         {
-                            XmlNode argoNode2 = lastGroup;
-                            addNote(ref argoNode2, noteTypes.Alert, cValidationError);
-                            lastGroup = (XmlElement)argoNode2;
+                            //XmlNode argoNode2 = lastGroup;
+                            addNote(ref lastGroup, noteTypes.Alert, cValidationError);
+                            //lastGroup = (XmlElement)argoNode2;
                         }
                     }
 
@@ -1704,9 +1704,9 @@ namespace Protean
 
                     if (firstGroup is null)
                     {
-                        XmlNode argoNode1 = firstGroup;
-                        addNote(ref argoNode1, noteTypes.Alert, cValidationError);
-                        firstGroup = (XmlElement)argoNode1;
+                       // XmlNode argoNode1 = firstGroup;
+                        addNote(ref firstGroup, noteTypes.Alert, cValidationError);
+                        //firstGroup = (XmlElement)argoNode1;
                     }
 
                     valid = false;
@@ -1791,9 +1791,9 @@ namespace Protean
 
                 if (!string.IsNullOrEmpty(cValidationError))
                 {
-                    XmlNode argoNode1 = moXformElmt;
-                    addNote(ref argoNode1, noteTypes.Alert, cValidationError);
-                    moXformElmt = (XmlElement)argoNode1;
+                    //XmlNode argoNode1 = moXformElmt;
+                    addNote(ref moXformElmt, noteTypes.Alert, cValidationError);
+                    //moXformElmt = (XmlElement)argoNode1;
                     valid = false;
                 }
             }
@@ -3497,22 +3497,22 @@ namespace Protean
                                     try
                                     {
                                         sResponse = Tools.Xml.encodeAllHTML(sResponse);
-                                        XmlNode argoNode1 = moXformElmt;
-                                        addNote(ref argoNode1, noteTypes.Alert, sResponse);
-                                        moXformElmt = (XmlElement)argoNode1;
+                                        //XmlNode argoNode1 = moXformElmt;
+                                        addNote(ref moXformElmt, noteTypes.Alert, sResponse);
+                                        //moXformElmt = (XmlElement)argoNode1;
                                     }
                                     catch (Exception)
                                     {
-                                        XmlNode argoNode2 = moXformElmt;
-                                        addNote(ref argoNode2, noteTypes.Alert, "Response could not be added due to an Xml Error");
-                                        moXformElmt = (XmlElement)argoNode2;
+                                        //XmlNode argoNode2 = moXformElmt;
+                                        addNote(ref moXformElmt, noteTypes.Alert, "Response could not be added due to an Xml Error");
+                                        //moXformElmt = (XmlElement)argoNode2;
                                     }
                                 }
                                 catch (Exception)
                                 {
-                                    XmlNode argoNode3 = moXformElmt;
-                                    addNote(ref argoNode3, noteTypes.Alert, "Response could not be added.");
-                                    moXformElmt = (XmlElement)argoNode3;
+                                    //XmlNode argoNode3 = moXformElmt;
+                                    addNote(ref moXformElmt, noteTypes.Alert, "Response could not be added.");
+                                    //moXformElmt = (XmlElement)argoNode3;
                                 }
                             }
 

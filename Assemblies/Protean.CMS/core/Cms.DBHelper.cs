@@ -11333,7 +11333,7 @@ namespace Protean
 
                     string cSQL = "";
                     var oDs = new DataSet();
-                    XmlDataDocument oFullData;
+                    XmlDocument oFullData;
                     var oResults = moPageXml.CreateElement("RelatedResults");
                     string cXPath = string.Empty;
                     string cXPath2 = string.Empty;
@@ -11380,7 +11380,7 @@ namespace Protean
                         oDs.Tables["Structure"].Columns["nStructKey"].ColumnMapping = MappingType.Attribute;
 
                         // DS to XML
-                        var oStructure = new XmlDataDocument();
+                        var oStructure = new XmlDocument();
                         oStructure.PreserveWhitespace = false;
                         oStructure.InnerXml = oDs.GetXml().ToString().Replace("&lt;", "<").Replace("&gt;", ">");
 
@@ -11434,7 +11434,7 @@ namespace Protean
                     oDs.Tables["Content"].Columns["publishDate"].ColumnMapping = MappingType.Attribute;
                     oDs.Tables["Content"].Columns["content"].ColumnMapping = MappingType.SimpleContent;
 
-                    oFullData = new XmlDataDocument();
+                    oFullData = new XmlDocument();
                     oFullData.PreserveWhitespace = false;
                     oFullData.InnerXml = oDs.GetXml().ToString();
                     foreach (XmlNode oNode in oFullData.SelectNodes("SearchRelateable/Content"))
