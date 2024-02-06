@@ -2078,7 +2078,7 @@
 			<xsl:apply-templates select="." mode="xform_value"/>
 		</xsl:variable>
 
-		<select name="{$ref}" id="{$ref}">
+		<select name="{$ref}" id="{$ref}" data-target="{@data-target}">
 
 			<xsl:attribute name="class">
 				<xsl:text>form-select </xsl:text>

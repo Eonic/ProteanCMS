@@ -253,24 +253,103 @@ section.bg-video-wrapper {
         }
     }
 }
+/*############### BANNERS #################*/
+.image-banner {
+    padding: 0.3rem 0 $section-padding 0;
+    margin-bottom: 0;
+    @include card-contrast($banner-bg);
 
+    .breadcrumb {
+        color: color-contrast($banner-bg);
+        justify-content: left;
+
+        .breadcrumb-item.active {
+            color: color-contrast($banner-bg);
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            color: color-contrast($banner-bg);
+        }
+    }
+
+    .image-banner-inner {
+        border-radius: $border-radius;
+    }
+
+
+    @include media-breakpoint-down($nav-breakpoint) {
+        .banner-caption {
+            background: $banner-bg;
+            padding: 3vw;
+        }
+
+        .image-banner-inner {
+            background-size: contain;
+            background-position: center;
+            background-position: bottom center;
+            padding-bottom: 40%;
+            background-repeat: no-repeat;
+        }
+    }
+
+    @include media-breakpoint-up($nav-breakpoint) {
+        .image-banner-inner {
+            background-size: cover;
+            background-position: center;
+        }
+
+        .banner-caption {
+            max-width: 36%;
+            padding: 4vw 6.1% 10% 4vw;
+            background: url(/themes/ptn-base/images/heart-bg2.png) no-repeat right bottom;
+            background-size: 100%;
+            min-height: 500px;
+            max-width: 42%;
+
+            .breadcrumb li,
+            #mainTitle,
+            p {
+                background: $banner-bg;
+            }
+
+            p {
+                display: inline;
+            }
+        }
+    }
+}
 .intro-banner {
     margin-bottom: $spacer;
 
     .intro-banner-inner {
-        background: $mid-gray !important;
         padding: $card-spacer-y $card-spacer-x;
         text-align: center;
+        border-radius: $border-radius;
+        background: $no-banner-bg;
     }
 
     .breadcrumb {
         justify-content: center;
+
+        .breadcrumb-item.active {
+            color: color-contrast($no-banner-bg);
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            color: color-contrast($no-banner-bg);
+        }
+    }
+
+    a {
+        color: color-contrast($no-banner-bg);
+    }
+
+    h1 {
+        color: color-contrast($no-banner-bg);
     }
 }
-// CONTENT LISTS
 
-
-
+/*############### LIST ITEMS #################*/
 .date,
 .dtstamp {
     font-size: 0.75rem;
@@ -286,8 +365,6 @@ section.bg-video-wrapper {
 .entryFooter .tags {
     margin-bottom: $spacer;
 }
-
-/*############### LIST ITEMS #################*/
 @mixin boxed-listItem {
     $listItem-padding: 1rem;
     padding: $listItem-padding;

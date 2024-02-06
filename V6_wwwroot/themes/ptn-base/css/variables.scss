@@ -66,7 +66,7 @@ $nav-padding-x: 12px;
 $image-spacer: 1rem;
 
 /*##################### FOOTER #######################*/
-$footer-bg: #fff;
+$footer-bg: $dark;
 
 /*###################### FORMS #######################*/
 $input-border-color: #919191;
@@ -76,5 +76,7 @@ $form-check-input-border: 1px solid $input-border-color;
 /*##################### CARDS ########################*/
 //$card-border-radius: var(--#{$prefix}border-radius);
 
-/*###################### MISC ########################*/
+/*#################### BANNERS #######################*/
 $slide-opacity: 0.7;
+$no-banner-bg: $primary;
+$banner-bg: $primary;
