@@ -18,6 +18,7 @@ using Protean.Providers.Membership;
 using Protean.Providers.Messaging;
 using Protean.Providers.Payment;
 using static Protean.Cms.dbImport;
+using Lucene.Net.Analysis;
 
 namespace Protean
 {
@@ -2293,15 +2294,21 @@ namespace Protean
                         if (string.IsNullOrEmpty(cSubject))
                             cSubject = "Website Order";
 
-                        string CustomerEmailTemplatePath = Conversions.ToString(Interaction.IIf(!string.IsNullOrEmpty(moCartConfig["CustomerEmailTemplatePath"]), moCartConfig["CustomerEmailTemplatePath"], "/xsl/Cart/mailOrderCustomer.xsl"));
-                        string MerchantEmailTemplatePath = Conversions.ToString(Interaction.IIf(!string.IsNullOrEmpty(moCartConfig["MerchantEmailTemplatePath"]), moCartConfig["MerchantEmailTemplatePath"], "/xsl/Cart/mailOrderMerchant.xsl"));
+                        string CustomerEmailTemplatePath = "/xsl/Cart/mailOrderCustomer.xsl";
+                        string MerchantEmailTemplatePath = "/xsl/Cart/mailOrderMerchant.xsl";
                         if (myWeb.bs5)
-                        {
-                            CustomerEmailTemplatePath = "/ptn/features/cart/email/order-customer.xsl";
-                            MerchantEmailTemplatePath = "/ptn/features/cart/email/order-merchant.xsl";
+                        {                           
+                                CustomerEmailTemplatePath = "/features/cart/email/order-customer.xsl";                 
+                                MerchantEmailTemplatePath = "/features/cart/email/order-merchant.xsl";      
                         }
-
-
+                        if (!string.IsNullOrEmpty(moCartConfig["CustomerEmailTemplatePath"])) {
+                            CustomerEmailTemplatePath = moCartConfig["CustomerEmailTemplatePath"];
+                        }
+                        if (!string.IsNullOrEmpty(moCartConfig["MerchantEmailTemplatePath"]))
+                        {
+                            CustomerEmailTemplatePath = moCartConfig["MerchantEmailTemplatePath"];
+                        }
+                       
                         // send to customer
                         sMessageResponse = Conversions.ToString(emailCart(ref oCartElmt, CustomerEmailTemplatePath, moCartConfig["MerchantName"], moCartConfig["MerchantEmail"], oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText, cSubject, cAttachementTemplatePath: moCartConfig["CustomerAttachmentTemplatePath"], cCCEmail: ccCustomerEmail));
 
@@ -3336,7 +3343,6 @@ namespace Protean
                         oCartElmt.SetAttribute("vatRate", moCartConfig["TaxRate"]);
                         oCartElmt.SetAttribute("total", "0.00"); // for nothing
                     }
-
                     else
                     {
                         // otherwise
@@ -3564,7 +3570,7 @@ namespace Protean
                             // Get Shipping Group from query if assigned to that product and add new node in order and use this node for displaying messages for x50 and t03 category.
                             if (myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure))
                             {
-                                if (nStatusId > 100) {
+                                //if (nStatusId > 100) {
 
                                 string sSqlShippingGroup = $"select csm.nShipOptKey,CPC.cCatName  from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey left join tblAudit A ON p.nAuditId= A.nAuditKey left join tblCartCatProductRelations cpr on p.nContentKey = cpr.nContentId left join tblCartProductCategories CPC ON cpr.nCatId= cpc.nCatKey Left JOIN tblCartShippingProductCategoryRelations cspcr ON cpr.nCatId= cspcr.nCatId LEFT join tblCartShippingMethods csm on csm.nShipOptKey=cspcr.nShipOptId where nCartOrderId={nCartIdUse.ToString()} and nCartItemKey={oRow["id"].ToString()} and cCatSchemaName = 'Shipping' and csm.nShipOptKey is not null and nItemId <>0 and cspcr.nRuleType=1 order by nShipOptCost asc";
                                 // oDsShippingOptionKey = moDBHelper.getDataSetForUpdate(sSqlShippingGroup, "Item", "Cart")
@@ -3588,7 +3594,7 @@ namespace Protean
                                         }
                                     }
                                 }
-                                }
+                              //  }
                             }
 
 
@@ -3864,11 +3870,11 @@ namespace Protean
                                             {
                                                 // logic to overide below...
                                                 // Add extra condition for checking shipping delievry method set by default
-                                                if (ShippingOptionKey != Conversions.ToDouble(moCartConfig["DefaultShippingMethod"]))
+                                                if (ShippingOptionKey != Convert.ToDouble(moCartConfig["DefaultShippingMethod"]))
                                                 {
                                                     if (oCartElmt.HasAttribute("shippingType") & oCartElmt.GetAttribute("shippingType") == "0")
                                                     {
-                                                        if (Operators.ConditionalCompareObjectEqual(oRowSO["nShipOptKey"], ShippingOptionKey, false))
+                                                        if (Convert.ToString(oRowSO["nShipOptKey"]) == Convert.ToString(ShippingOptionKey))
                                                         {
                                                             shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"]));
                                                             oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig["DefaultCountry"]);
@@ -3879,10 +3885,10 @@ namespace Protean
                                                             // oCartElmt.SetAttribute("cCatSchemaName", cCartType & "")
                                                         }
                                                     }
-                                                }
+                                                }   
                                                 else if (oCartElmt.HasAttribute("shippingType") & oCartElmt.GetAttribute("shippingType") == "0")
                                                 {
-                                                    if (Operators.ConditionalCompareObjectEqual(oRowSO["nShipOptKey"], moCartConfig["DefaultShippingMethod"], false))
+                                                    if (Convert.ToString(oRowSO["nShipOptKey"]) == moCartConfig["DefaultShippingMethod"])
                                                     {
                                                         shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"]));
                                                         oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig["DefaultCountry"]);
@@ -3894,7 +3900,7 @@ namespace Protean
                                                 }
                                                 // Add extra condition only when promocode is valid
                                                 // Set nondiscountedshippingcost to attribute when promocode is valid(include free shipping methods)
-                                                else if (Conversions.ToBoolean(Operators.AndObject(IsPromocodeValid == true, Operators.ConditionalCompareObjectNotEqual(oRowSO["NonDiscountedShippingCost"], "0", false))))
+                                                else if (IsPromocodeValid = true & Convert.ToString(oRowSO["NonDiscountedShippingCost"]) != "0" )
                                                 {
                                                     if (oCartElmt.GetAttribute("freeShippingMethods").Contains(oCartElmt.GetAttribute("shippingType")))
                                                     {
@@ -3911,7 +3917,7 @@ namespace Protean
                                                     }
                                                 }
                                             }
-                                            else if ((shipCost == -1 | Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"])) >= shipCost) & bCollection == false)
+                                            else if ((shipCost == -1 | Convert.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"])) < shipCost) & bCollection == false)
                                             {
                                                 shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"]));
                                                 oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig["DefaultCountry"]);
@@ -7958,7 +7964,8 @@ namespace Protean
 
                                 arrLoc = null;
 
-                                if (Conversions.ToBoolean(Operators.OrObject(Operators.ConditionalCompareObjectEqual(Interaction.IIf((oDr["cLocationNameShort"]) is DBNull, "", (oDr["cLocationNameShort"])), Strings.LCase(Strings.Trim(sTarget)), false), Operators.ConditionalCompareObjectEqual(Interaction.IIf((oDr["cLocationNameFull"]) is DBNull, "", (oDr["cLocationNameFull"])), Strings.LCase(Strings.Trim(sTarget)), false))))
+                               // if (Conversions.ToBoolean(Operators.OrObject(Operators.ConditionalCompareObjectEqual(Interaction.IIf((oDr["cLocationNameShort"]) is DBNull, "", (oDr["cLocationNameShort"])), Strings.LCase(Strings.Trim(sTarget)), false), Operators.ConditionalCompareObjectEqual(Interaction.IIf((oDr["cLocationNameFull"]) is DBNull, "", (oDr["cLocationNameFull"])), Strings.LCase(Strings.Trim(sTarget)), false))))
+                                if (oDr["cLocationNameShort"].ToString() == Strings.Trim(sTarget) || oDr["cLocationNameFull"].ToString() == Strings.Trim(sTarget))
                                 {
                                     nTargetId = Conversions.ToInteger(oDr["nLocationKey"]);
                                 }
@@ -7994,7 +8001,7 @@ namespace Protean
             {
                 string iterateCountryListRet = default;
                 myWeb.PerfMon.Log("Cart", "iterateCountryList");
-                int?[] arrTmp;
+                string[] arrTmp;
                 string sListReturn;
                 string cProcessInfo = "";
                 try
@@ -8003,15 +8010,17 @@ namespace Protean
 
                     if (oDict.ContainsKey(nParent))
                     {
-                        arrTmp = (int?[])oDict[nParent];
+                        arrTmp = (string[])oDict[nParent];
                         sListReturn = ",'" + SqlFmt(arrTmp[nIndex].ToString()) + "'"; // Adding this line here allows the top root location to be added
                         if (!(Information.IsDBNull(arrTmp[0]) | arrTmp[0] == null))
                         {
-                            if (arrTmp[0] != nParent)
-                                sListReturn = sListReturn + iterateCountryList(ref oDict, ref arrTmp[0], ref nIndex);
+                            if (Int32.Parse(arrTmp[0]) != nParent)
+                            {
+                                int? newParent = Int32.Parse(arrTmp[0]);
+                                sListReturn = sListReturn + iterateCountryList(ref oDict, ref newParent, ref nIndex);
+                            }
                         }
                     }
-
                     iterateCountryListRet = sListReturn;
                 }
 

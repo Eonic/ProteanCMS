@@ -406,6 +406,14 @@ namespace Protean
             {
                 cSeperator = ",";
             }
+            if (successMessage == "") {
+                successMessage = "Message Sent";
+            }
+            if (failureMessage == "")
+            {
+                failureMessage = "Message Send Failed";
+            }
+
             string styleFile;
             TextWriter sWriter = new StringWriter();
             var oXml = new XmlDocument();
@@ -1065,17 +1073,13 @@ namespace Protean
                                 }
                                 moMessaging.Activities.AddToList(moMailConfig["OptInList"], name, email, values);
                             }
-
                             catch (Exception ex)
                             {
                                 cProcessInfo = ex.StackTrace;
                             }
                         }
-
                     }
-
                     return successMessage;
-
                 }
             }
 
@@ -1316,6 +1320,14 @@ namespace Protean
                 attachName = "attached";
             }
             // 
+            if (successMessage == "")
+            {
+                successMessage = "Message Sent";
+            }
+            if (failureMessage == "")
+            {
+                failureMessage = "Message Failed";
+            }
 
             try
             {

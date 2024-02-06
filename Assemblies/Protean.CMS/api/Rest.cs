@@ -10,6 +10,8 @@ using System.Web.Configuration;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using PayPal.Api;
 using Protean.Providers.Membership;
 
 namespace Protean
@@ -151,15 +153,15 @@ namespace Protean
                 }
                 // add paramDict to jObj
 
-                if (paramDictionary != null)
-                {
-                    if (jObj is null)
-                    {
-                        jObj = new Newtonsoft.Json.Linq.JObject();
-                    }
-                    foreach (KeyValuePair<string, string> kvp in paramDictionary)
-                        jObj.Add(new Newtonsoft.Json.Linq.JProperty(kvp.Key, kvp.Value));
-                }
+                //if (paramDictionary != null)
+                //{
+                //    if (jObj is null)
+                //    {
+                //        jObj = new Newtonsoft.Json.Linq.JObject();
+                //    }
+                //    foreach (KeyValuePair<string, string> kvp in paramDictionary)
+                //        jObj.Add(new Newtonsoft.Json.Linq.JProperty(kvp.Key, kvp.Value));
+                //}
 
                 Type calledType;
 
@@ -196,25 +198,26 @@ namespace Protean
 
                 var o = Activator.CreateInstance(calledType);
 
-                var args = new object[2];
+                var args = new object[1];
                 args[0] = this;
                 if (jObj != null)
                 {
+                    Array.Resize(ref args, 2);
                     args[1] = jObj;
                 }
-                // ElseIf Not paramDictionary Is Nothing Then
-                // Dim json As String = JsonConvert.SerializeObject(paramDictionary, Formatting.Indented)
-                // jObj = Newtonsoft.Json.Linq.JObject.Parse(json)
-                // args(1) = jObj
+                else if (paramDictionary != null) 
+                {
+                    Array.Resize(ref args, 2);
+                    args[1] = paramDictionary;
+                }
                 else
                 {
+                    Array.Resize(ref args, 2);
                     args[1] = null;
                 }
 
                 // check the response whatever is coming like with code 400, 200, based on the output- return in Json
-
                 string myResponse = Conversions.ToString(calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, null, o, args));
-                
                 this.moResponse.Write(myResponse);
             }
 
@@ -228,10 +231,12 @@ namespace Protean
                 // returnException(mcModuleName, "getPageHtml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
                 if (gbDebug)
                 {
+                    this.moResponse.StatusCode = 404;
                     this.moResponse.Write(JsonConvert.SerializeObject(ex));
                 }
                 else
                 {
+                    this.moResponse.StatusCode = 404;
                     this.moResponse.Write(ex.Message);
                 }
 

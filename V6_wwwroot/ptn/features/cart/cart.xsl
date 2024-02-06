@@ -166,12 +166,10 @@
 							</p>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:apply-templates select="Contact[@type='Delivery Address']" mode="cart">
-								<xsl:with-param name="parentURL" select="$parentURL"/>
-								<xsl:with-param name="cartType" select="'cart'"/>
-							</xsl:apply-templates>
+							
 						</xsl:otherwise>
 					</xsl:choose>
+					&#160;
 				</div>
 			</xsl:if>
 		</div>
@@ -219,68 +217,74 @@
 								<br/>
 							</xsl:if>
 						</p>
-						<xsl:if test="not(/Page/Cart/Order/@cmd='ShowInvoice') and not(/Page/Cart/Order/@cmd='MakePayment') and (ancestor::*[name()='Cart'])">
-							<xsl:if test="/Page/Cart/Order/@cmd!='MakePayment'">
-								<a href="{$parentURL}?pgid={/Page/@id}&amp;{$cartType}Cmd={$type}" class="btn  btn-sm btn-outline-primary address-edit-btn">
-									<i class="fa fa-pencil me-1">
-										<xsl:text> </xsl:text>
-									</i>
-									<xsl:call-template name="term4022"/>
-									<xsl:text> </xsl:text>
-								</a>
-							</xsl:if>
-						</xsl:if>
+						
 					</div>
+					<xsl:if test="not(/Page/Cart/Order/@cmd='ShowInvoice') and not(/Page/Cart/Order/@cmd='MakePayment') and (ancestor::*[name()='Cart'])">
+						<xsl:if test="/Page/Cart/Order/@cmd!='MakePayment'">
+							<a href="{$parentURL}?pgid={/Page/@id}&amp;{$cartType}Cmd={$type}" class="btn  btn-sm btn-outline-primary address-edit-btn">
+								<i class="fa fa-pencil me-1">
+									<xsl:text> </xsl:text>
+								</i>
+								<xsl:call-template name="term4022"/>
+								<xsl:text> </xsl:text>
+							</a>
+						</xsl:if>
+					</xsl:if>
 				</div>
 			</div>
 			<div class="col-lg-4">
-				<div class="card cart-address-card">
-					<div class="card-body">
+				<xsl:apply-templates select="." mode="contact-card"/>
+			</div>
+			<div class="col-lg-4">
+				<xsl:apply-templates select="parent::Order/Contact[@type='Delivery Address']" mode="contact-card"/>
+			</div>
+		</div>
+		
+	</xsl:template>
+	<xsl:template match="Contact" mode="contact-card">
+		<xsl:param name="parentURL"/>
+		<xsl:param name="cartType"/>
+		<xsl:variable name="secureURL">
+			<xsl:call-template name="getSecureURL"/>
+		</xsl:variable>
+		<xsl:variable name="type">
+			<xsl:value-of select="substring-before(@type,' ')"/>
+		</xsl:variable>
+		<div class="card cart-address-card">
+			<div class="card-body">
 
-						<h2 class="addressTitle">
-							<xsl:choose>
-								<xsl:when test="@type = 'Billing Address'">
-									<xsl:call-template name="term4033"/>
-								</xsl:when>
-								<xsl:when test="@type = 'Delivery Address'">
-									<xsl:call-template name="term4034"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="@type"/>
-								</xsl:otherwise>
-							</xsl:choose>
-							<xsl:text> </xsl:text>
-						</h2>
-						<p>
-							<xsl:value-of select="Street"/>
-							<br/>
-							<xsl:value-of select="City"/>
-							<br/>
-							<xsl:if test="State/node()!=''">
-								<xsl:value-of select="State"/>
-								<xsl:text> </xsl:text>
-								<br/>
-							</xsl:if>
-							<xsl:value-of select="PostalCode"/>
-							<br/>
-							<xsl:if test="Country/node()!=''">
-								<xsl:value-of select="Country"/>
-								<br/>
-							</xsl:if>
-						</p>
-						<xsl:if test="not(/Page/Cart/Order/@cmd='ShowInvoice') and not(/Page/Cart/Order/@cmd='MakePayment') and (ancestor::*[name()='Cart'])">
-							<xsl:if test="/Page/Cart/Order/@cmd!='MakePayment'">
-								<a href="{$parentURL}?pgid={/Page/@id}&amp;{$cartType}Cmd={$type}" class="btn btn-sm btn-outline-primary address-edit-btn">
-									<i class="fa fa-pencil me-1">
-										<xsl:text> </xsl:text>
-									</i>
-									<xsl:call-template name="term4022"/>
-									<xsl:text> </xsl:text>
-								</a>
-							</xsl:if>
-						</xsl:if>
-					</div>
-				</div>
+				<h2 class="addressTitle card-title">
+					<xsl:choose>
+						<xsl:when test="@type = 'Billing Address'">
+							<xsl:call-template name="term4033"/>
+						</xsl:when>
+						<xsl:when test="@type = 'Delivery Address'">
+							<xsl:call-template name="term4034"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="@type"/>
+						</xsl:otherwise>
+					</xsl:choose>
+					<xsl:text> </xsl:text>
+					
+				</h2>
+				<p>
+					<xsl:value-of select="Street"/>
+					<br/>
+					<xsl:value-of select="City"/>
+					<br/>
+					<xsl:if test="State/node()!=''">
+						<xsl:value-of select="State"/>
+						<xsl:text> </xsl:text>
+						<br/>
+					</xsl:if>
+					<xsl:value-of select="PostalCode"/>
+					<br/>
+					<xsl:if test="Country/node()!=''">
+						<xsl:value-of select="Country"/>
+						<br/>
+					</xsl:if>
+				</p>
 			</div>
 		</div>
 	</xsl:template>
@@ -659,10 +663,16 @@
 			</xsl:if>
 			<div class="total">
 				<span>
-					<xsl:text>Total Payable:&#160;</xsl:text>
+					<xsl:choose>
+						<xsl:when test="@cmd='ShowInvoice'">
+							<xsl:text>Total Paid:&#160;</xsl:text>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:text>Total Payable:&#160;</xsl:text>
+						</xsl:otherwise>
+					</xsl:choose>
 				</span>
 				<span class="amount">
-
 					<xsl:apply-templates select="/Page" mode="formatPrice">
 						<xsl:with-param name="price" select="@total"/>
 						<xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
@@ -1078,66 +1088,42 @@
     </form-->
 	</xsl:template>
 
-	<xsl:template match="input[@bind='cContactName']" mode="xform_control">
-		<xsl:variable name="label_low" select="translate(label,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
+	<xsl:template match="input[@bind='cContactName']" mode="xform_value_alt">
 		<xsl:variable name="inlineHint">
-			<xsl:choose>
-				<xsl:when test="hint[@class='inline']">
-					<xsl:value-of select="hint[@class='inline']/node()"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:call-template name="msg_required_inline"/>
-					<xsl:value-of select="$label_low"/>
-				</xsl:otherwise>
-			</xsl:choose>
+			<xsl:apply-templates select="." mode="getInlineHint"/>
 		</xsl:variable>
-		<xsl:variable name="ref">
-			<xsl:apply-templates select="." mode="getRefOrBind"/>
+					<xsl:choose>
+						<xsl:when test ="/Page/User">
+							<xsl:variable name="userName">
+								<xsl:value-of select="/Page/User/FirstName/node()"/>
+								<xsl:text> </xsl:text>
+								<xsl:value-of select="/Page/User/LastName/node()"/>
+							</xsl:variable>
+							<xsl:value-of select="$userName"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="$inlineHint"/>
+						</xsl:otherwise>
+					</xsl:choose>
+
+	</xsl:template>
+
+	<xsl:template match="input[@bind='cContactEmail']" mode="xform_value_alt">
+		<xsl:variable name="inlineHint">
+			<xsl:apply-templates select="." mode="getInlineHint"/>
 		</xsl:variable>
-		<input type="text" name="{$ref}" id="{$ref}">
-			<xsl:choose>
-				<xsl:when test="@class!=''">
-					<xsl:attribute name="class">
-						<xsl:value-of select="@class"/>
-						<xsl:text> form-control</xsl:text>
-					</xsl:attribute>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:attribute name="class">textbox form-control</xsl:attribute>
-				</xsl:otherwise>
-			</xsl:choose>
-			<xsl:choose>
-				<xsl:when test="value!=''">
-					<xsl:attribute name="value">
-						<xsl:value-of select="value"/>
-					</xsl:attribute>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:attribute name="value">
-						<xsl:choose>
-							<xsl:when test ="/Page/User">
-								<xsl:variable name="userName">
-									<xsl:value-of select="/Page/User/FirstName/node()"/>
-									<xsl:text> </xsl:text>
-									<xsl:value-of select="/Page/User/LastName/node()"/>
-								</xsl:variable>
-								<xsl:value-of select="$userName"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="$inlineHint"/>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:attribute>
-					<xsl:attribute name="onfocus">
-						<xsl:text>if (this.value=='</xsl:text>
-						<xsl:call-template name="escape-js">
-							<xsl:with-param name="string" select="$inlineHint"/>
-						</xsl:call-template>
-						<xsl:text>') {this.value=''}</xsl:text>
-					</xsl:attribute>
-				</xsl:otherwise>
-			</xsl:choose>
-		</input>
+		<xsl:choose>
+			<xsl:when test ="/Page/User">
+				<xsl:variable name="userName">
+					<xsl:value-of select="/Page/User/Email/node()"/>
+				</xsl:variable>
+				<xsl:value-of select="$userName"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$inlineHint"/>
+			</xsl:otherwise>
+		</xsl:choose>
+
 	</xsl:template>
 
 	<!-- -->
@@ -1217,64 +1203,6 @@
 			<xsl:text> </xsl:text>
 			<xsl:value-of select="Company/node()"/>
 		</p>
-	</xsl:template>
-
-
-	<xsl:template match="input[@bind='cContactEmail']" mode="xform_control">
-		<xsl:variable name="label_low" select="translate(label,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
-		<xsl:variable name="inlineHint">
-			<xsl:choose>
-				<xsl:when test="hint[@class='inline']">
-					<xsl:value-of select="hint[@class='inline']/node()"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:call-template name="msg_required_inline"/>
-					<xsl:value-of select="$label_low"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:variable name="ref">
-			<xsl:apply-templates select="." mode="getRefOrBind"/>
-		</xsl:variable>
-		<input type="text" name="{$ref}" id="{$ref}">
-			<xsl:choose>
-				<xsl:when test="@class!=''">
-					<xsl:attribute name="class">
-						<xsl:value-of select="@class"/>
-						<xsl:text> form-control</xsl:text>
-					</xsl:attribute>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:attribute name="class">textbox form-control</xsl:attribute>
-				</xsl:otherwise>
-			</xsl:choose>
-			<xsl:choose>
-				<xsl:when test="value!=''">
-					<xsl:attribute name="value">
-						<xsl:value-of select="value"/>
-					</xsl:attribute>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:attribute name="value">
-						<xsl:choose>
-							<xsl:when test ="/Page/User">
-								<xsl:value-of select="/Page/User/Email/node()"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="$inlineHint"/>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:attribute>
-					<xsl:attribute name="onfocus">
-						<xsl:text>if (this.value=='</xsl:text>
-						<xsl:call-template name="escape-js">
-							<xsl:with-param name="string" select="$inlineHint"/>
-						</xsl:call-template>
-						<xsl:text>') {this.value=''}</xsl:text>
-					</xsl:attribute>
-				</xsl:otherwise>
-			</xsl:choose>
-		</input>
 	</xsl:template>
 
 
@@ -1743,6 +1671,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:if>
+				&#160;
 			</div>
 			<xsl:if test="$editQty='true'">
 				<div class="delete">
@@ -1751,6 +1680,7 @@
 					</a>
 				</div>
 			</xsl:if>
+			&#160;
 		</div>
 		<xsl:if test="not(/Page/Cart/@displayPrice='false')">
 			<div class="cart-prices">
@@ -2412,25 +2342,34 @@
 			<div class="col-lg-4">
 				<div id="cartInvoice" class="card cart-receipt-card">
 					<div class="card-body">
-						<div class="confirmation-cart ">
-							<form method="post" id="cart">
-								<xsl:apply-templates select="." mode="orderItems">
-									<xsl:with-param name="editQty">false</xsl:with-param>
-									<xsl:with-param name="showImg">true</xsl:with-param>
-								</xsl:apply-templates>
-							</form>
-						</div>
-						<p>
 							<!--Invoice Date-->
-							<xsl:call-template name="term3022" />
-							<xsl:text>:&#160;</xsl:text>
-							<xsl:value-of select="@InvoiceDate"/>
-							<br/>
+						<div class="product-totals">
+							<span class="amount-label">
+								<xsl:call-template name="term3022" />:
+							</span>
+							<span class="amount">
+								<xsl:value-of select="@InvoiceDate"/>
+							</span>
+						</div>
 							<!--Invoice Reference-->
-							<xsl:call-template name="term3023" />
-							<xsl:text>:&#160;</xsl:text>
-							<xsl:value-of select="@InvoiceRef"/>
-						</p>
+						<div class="product-totals">
+							<span class="amount-label">
+								<xsl:call-template name="term3023" />:
+							</span>
+							<span class="amount">
+								<xsl:value-of select="@InvoiceRef"/>
+							</span>
+						</div>
+						<div class="confirmation-cart ">
+							<xsl:apply-templates select="." mode="orderItems">
+								<xsl:with-param name="editQty">false</xsl:with-param>
+								<xsl:with-param name="showImg">true</xsl:with-param>
+							</xsl:apply-templates>
+						</div>
+						<xsl:if test="not(@payableType!='')">
+							<xsl:apply-templates select="." mode="orderTotals"/>
+						</xsl:if>
+
 						<xsl:if test="@payableType='deposit' and (@payableAmount &gt; 0) ">
 							<p>
 								<!--Payment Received-->
@@ -2743,7 +2682,7 @@
 				</p>
 			</xsl:if>
 			<button type="submit" name="submit" disabled="diabled" class="btn btn-custom dummy-pay-button" style="">
-				<i class="fa   fa-white"> </i> Complete Order
+				<i class="fa fa-white">&#160;</i> Complete Order
 			</button>
 		</form>
 	</xsl:template>
