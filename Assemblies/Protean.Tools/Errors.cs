@@ -110,22 +110,10 @@ namespace Protean.Tools.Errors
             Link = cLink;
         }
 
-        //return json response
-
-        //public override string ToString()
-        //{
-        //    string jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(error);
-        //    return jsonString;
-        //}
-
-            public string GetResponse(Error error)
+        public string GetJsonError()
         {
-            
-                string jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(error);
-            return jsonString;
-           // return new HttpResponseMessage(HttpStatusCode.BadRequest) { Content = new StringContent(jsonString, System.Text.Encoding.UTF8, "application/json") };
-
-
+                string jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(this);
+                return jsonString;
         }
 
 
