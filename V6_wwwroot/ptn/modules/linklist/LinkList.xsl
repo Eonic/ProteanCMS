@@ -256,6 +256,11 @@
 				</xsl:if>
 				<xsl:if test="$linked='true' and $button='false'">
 					<a href="{$linkURL}" class="stretched-link">
+						<xsl:if test="Url[@target='New Window']">
+							<xsl:attribute name="target">
+								<xsl:text>_blank</xsl:text>
+							</xsl:attribute>
+						</xsl:if>
 						<span class="visually-hidden">
 							<xsl:value-of select="Name/node()"/>
 							<xsl:text> </xsl:text>
