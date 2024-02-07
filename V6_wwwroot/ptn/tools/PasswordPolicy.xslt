@@ -34,19 +34,19 @@
               </td>
             </tr>
           <tr>
-            <td>Required digits:</td>
+            <td>Minimum digits:</td>
             <td align="center">
               <xsl:value-of select="PasswordPolicy/Password/numsLength"/>
             </td>
           </tr>
           <tr class="odd">
-            <td>Required upper-case letters:</td>
+            <td>Minimum upper-case letters:</td>
             <td align="center">
               <xsl:value-of select="PasswordPolicy/Password/upperLength"/>
             </td>
           </tr>
           <tr>
-            <td>Required special characters:</td>
+            <td>Minimum special characters:</td>
             <td align="center">
               <xsl:value-of select="PasswordPolicy/Password/specialLength"/>
             </td>
