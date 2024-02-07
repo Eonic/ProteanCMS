@@ -3293,10 +3293,10 @@
   <xsl:template name="term4018">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">
-        <xsl:text>You are logged in as</xsl:text>
+        <xsl:text>You are signed in as</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>You are logged in as</xsl:text>
+        <xsl:text>You are signed in as</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -3304,10 +3304,10 @@
   <xsl:template name="term4019">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">
-        <xsl:text>Logout</xsl:text>
+        <xsl:text>Sign out</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Logout</xsl:text>
+        <xsl:text>Sign out</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -3316,10 +3316,10 @@
   <xsl:template name="term4020">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">
-        <xsl:text>Logged in as</xsl:text>
+        <xsl:text>Signed in as</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Logged in as</xsl:text>
+        <xsl:text>Signed in as</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
