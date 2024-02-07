@@ -6881,7 +6881,7 @@ namespace Protean
                 // Dim oDr As SqlDataReader
                 XmlElement oElmt;
                 XmlElement oElmt2;
-                XmlDataDocument oXml;
+                XmlDocument oXml = null;
 
                 string sContent;
 
@@ -6940,62 +6940,69 @@ namespace Protean
                         // DataSet Method
                         oDs = GetDataSet(sSql, Strings.LCase(cSchemaName), "directory");
                         ReturnNullsEmpty(ref oDs);
-
-                        oDs.Tables[0].Columns[0].ColumnMapping = MappingType.Attribute;
-
-                        oXml = new XmlDataDocument(oDs);
-                        oDs.EnforceConstraints = false;
-
-                        // Convert any text to xml
-                        switch (cSchemaName ?? "")
+                        if (oDs.Tables.Count > 0)
                         {
-                            case "User":
-                                {
-                                    foreach (XmlElement currentOElmt2 in oXml.SelectNodes("descendant-or-self::UserXml"))
+                            oDs.Tables[0].Columns[0].ColumnMapping = MappingType.Attribute;
+
+                            oXml = new XmlDataDocument(oDs);
+                            oDs.EnforceConstraints = false;
+
+                            // Convert any text to xml
+                            switch (cSchemaName ?? "")
+                            {
+                                case "User":
                                     {
-                                        oElmt2 = currentOElmt2;
-                                        sContent = oElmt2.InnerText;
-                                        if (!string.IsNullOrEmpty(sContent))
+                                        foreach (XmlElement currentOElmt2 in oXml.SelectNodes("descendant-or-self::UserXml"))
                                         {
-                                            oElmt2.InnerXml = sContent;
+                                            oElmt2 = currentOElmt2;
+                                            sContent = oElmt2.InnerText;
+                                            if (!string.IsNullOrEmpty(sContent))
+                                            {
+                                                oElmt2.InnerXml = sContent;
+                                            }
+                                            oElmt2.ParentNode.ReplaceChild(oElmt2.FirstChild, oElmt2);
                                         }
-                                        oElmt2.ParentNode.ReplaceChild(oElmt2.FirstChild, oElmt2);
+
+                                        break;
                                     }
 
-                                    break;
-                                }
-
-                            default:
-                                {
-                                    foreach (XmlElement currentOElmt21 in oXml.SelectNodes("descendant-or-self::Details"))
+                                default:
                                     {
-                                        oElmt2 = currentOElmt21;
-                                        sContent = oElmt2.InnerText;
-                                        if (!string.IsNullOrEmpty(sContent))
+                                        foreach (XmlElement currentOElmt21 in oXml.SelectNodes("descendant-or-self::Details"))
                                         {
-                                            oElmt2.InnerXml = sContent;
+                                            oElmt2 = currentOElmt21;
+                                            sContent = oElmt2.InnerText;
+                                            if (!string.IsNullOrEmpty(sContent))
+                                            {
+                                                oElmt2.InnerXml = sContent;
+                                            }
+                                            oElmt2.ParentNode.ReplaceChild(oElmt2.FirstChild, oElmt2);
                                         }
-                                        oElmt2.ParentNode.ReplaceChild(oElmt2.FirstChild, oElmt2);
-                                    }
 
-                                    break;
-                                }
+                                        break;
+                                    }
+                            }
+
+                            goSession["sDirListType"] = cSchemaName;
+                            goSession["oDirList"] = oXml;
                         }
-
-                        goSession["sDirListType"] = cSchemaName;
-                        goSession["oDirList"] = oXml;
                     }
                     else
                     {
                         oXml = (XmlDataDocument)goSession["sDirListType"];
                     }
                     oElmt = moPageXml.CreateElement("directory");
-
-                    if (oXml.FirstChild != null)
+                    if (oXml == null)
                     {
-                        oElmt.InnerXml = oXml.FirstChild.InnerXml;
+                        oXml = new XmlDocument();
+                        oXml.AppendChild(oElmt);
                     }
-
+                    else { 
+                        if (oXml.FirstChild != null)
+                        {
+                            oElmt.InnerXml = oXml.FirstChild.InnerXml;
+                        }
+                    }
                     // let get the details of the parent object
                     if (nParId != 0L)
                     {
@@ -7043,7 +7050,6 @@ namespace Protean
                                 oElmt.SetAttribute("displayName", "Departments");
                                 break;
                             }
-
                         default:
                             {
                                 oElmt.SetAttribute("displayName", cSchemaName + "s");
@@ -7053,13 +7059,11 @@ namespace Protean
 
                     return oElmt;
                 }
-
                 catch (Exception ex)
                 {
                     OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "getUsers", ex, cProcessInfo));
                     return null;
                 }
-
             }
 
             public XmlElement GetUserXML(long nUserId, bool bIncludeContacts = true)

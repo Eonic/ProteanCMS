@@ -592,7 +592,7 @@ namespace Protean
             testResponse = oTests.TestHtmlTidy();
             if (!testResponse.StartsWith("HTML Tidy is working"))
             {
-                AddResponse("<p><i class=\"fa fa-times text-danger\">&#160;</i>Tidy has failed.</p>");
+                AddResponse("<p><i class=\"fa fa-times text-danger\">&#160;</i>Tidy has failed.</p><p>" + testResponse + "</p>");
             }
             else
             {
@@ -600,6 +600,9 @@ namespace Protean
             }
             testCount = testCount + 1;
 
+            testResponse = oTests.TestWebP();
+            AddResponse("<p><i class=\"fa fa-check text-success\">&#160;</i>" + testResponse + "</p>");
+            testCount = testCount + 1;
 
             // 6 test the ability to update config settins
             // 7 test the ability to write to the index folder location

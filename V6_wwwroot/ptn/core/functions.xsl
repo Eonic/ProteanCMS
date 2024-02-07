@@ -6556,6 +6556,7 @@
 							<picture>
 
 								<xsl:variable name="newSrc-webp" select="ew:CreateWebP($newSrc)"/>
+								<xsl:variable name="newSrc-xs-webp" select="ew:CreateWebP($newSrc-xs)"/>
 								<xsl:variable name="newSrc-xs-x2-webp" select="ew:CreateWebP($newSrc-xs-x2)"/>
 								<xsl:variable name="newSrc-sm-webp" select="ew:CreateWebP($newSrc-sm)"/>
 								<xsl:variable name="newSrc-sm-x2-webp" select="ew:CreateWebP($newSrc-sm-x2)"/>
