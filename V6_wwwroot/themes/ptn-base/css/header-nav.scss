@@ -184,6 +184,10 @@ header {
                     color: $dropdown-link-color;
                 }
             }
+
+            @include media-breakpoint-down($nav-breakpoint) {
+                animation: none;
+            }
         }
 
         @include media-breakpoint-down($nav-breakpoint) {
