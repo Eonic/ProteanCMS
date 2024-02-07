@@ -309,7 +309,7 @@
 	<!-- xs screens 0 - 575px -->
 	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-xs">575</xsl:template>
 	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-xs">575</xsl:template>
-	
+
 	<!-- sm screens 576px - 767px -->
 	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-sm">
 		<xsl:apply-templates select="." mode="getThWidth"/>
@@ -337,7 +337,7 @@
 	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-xl">
 		<xsl:apply-templates select="." mode="getThHeight-md"/>
 	</xsl:template>
-	
+
 	<!-- xxl screens 1200px upward -->
 	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-xxl">
 		<xsl:apply-templates select="." mode="getThWidth-md"/>
@@ -4394,6 +4394,22 @@
 									</span>
 								</button>
 							</span>
+						</li>
+						<li class="xs-only mobile-menu-heading">
+							<a href="{@url}">
+								<xsl:attribute name="class">
+									<xsl:text>dropdown-item</xsl:text>
+									<xsl:choose>
+										<xsl:when test="self::MenuItem[@id=/Page/@id]">
+											<xsl:text> active</xsl:text>
+										</xsl:when>
+										<xsl:when test="descendant::MenuItem[@id=/Page/@id] and ancestor::MenuItem">
+											<xsl:text> on</xsl:text>
+										</xsl:when>
+									</xsl:choose>
+								</xsl:attribute>
+								<xsl:apply-templates select="." mode="getDisplayName"/>
+							</a>
 						</li>
 					</xsl:if>
 					<xsl:apply-templates select="MenuItem[not(DisplayName/@exclude='true')]" mode="submenuitem">

@@ -286,14 +286,19 @@ header {
                 //   overflow: hidden !important;
             }
 
-            .dropdown-menu > li:not(.nav-item),
-            .nav-pills > li:not(.nav-item) {
+            .dropdown-menu > li:not(.menu-back),
+            .nav-pills > li:not(.menu-back) {
                 max-width: 23rem;
                 margin: 0 auto;
             }
 
-            .dropdown-menu > li:nth-child(2) a {
+            .dropdown-menu li:nth-child(2) a {
                 font-size: 1.3rem;
+                width: 100%;
+            }
+
+            .nav-link {
+                color: $body-color;
             }
 
             .dropdown-toggle:after {
@@ -325,7 +330,7 @@ header {
             }
 
             .dropdown-item {
-                font-size: 1.05rem;
+                font-size: 1rem;
                 padding-bottom: 0.6rem;
             }
 
@@ -337,11 +342,13 @@ header {
 
             .search-wrapper {
                 position: relative;
-                margin: 20px auto;
-                max-width: 19rem;
+                margin: 5px auto 10px;
+                max-width: 20rem;
+                padding: 0;
 
                 .btn-outline-primary {
                     position: absolute;
+                    top: 5px;
                 }
 
                 .CTAsearch {
@@ -380,13 +387,21 @@ header {
                 padding: 0.3rem;
                 line-height: 1;
                 font-size: 0.8rem;
-                // margin: 0.9rem 6px 0 0;
+                margin-top: 0.4rem;
+
+                i {
+                    font-size: 0.8rem;
+                }
             }
 
             .menu-back {
                 .nav-link {
                     font-size: 1rem;
                     //  padding-top:0;
+                    span {
+                        display: flex;
+                        align-items: center;
+                    }
                 }
             }
 
