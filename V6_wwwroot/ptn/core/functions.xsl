@@ -4075,7 +4075,8 @@
 					<xsl:text> dropdown dropdown-hover-menu</xsl:text>
 				</xsl:attribute>
 			</xsl:if>
-			<a href="{@url}" id="mainNavDD{@id}" role="button">
+			<!--<a href="{@url}" id="mainNavDD{@id}" role="button">-->
+			<button href="{@url}" id="mainNavDD{@id}" role="button">
 				<xsl:attribute name="data-bs-toggle">dropdown</xsl:attribute>
 
 				<xsl:attribute name="class">
@@ -4105,7 +4106,7 @@
 					</span>
 				</xsl:if>
 				<xsl:apply-templates select="." mode="getDisplayName"/>
-			</a>
+			</button>
 			<xsl:if test="$mobileDD='true'">
 				<span class="mobile-dd-control">
 					<i class="fa fa-angle-down"> </i>
