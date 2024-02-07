@@ -13,14 +13,14 @@
         </style>
       </head>
       <body>
-        <h2>Password policy</h2>
+        <h3>Password policy</h3>
         <table border="1" cellpadding="1" cellspacing="0" class="table">       
-            <tr class="odd">
-              <td>Logon Retries</td>
+            <!--<tr class="odd">
+              <td>Sign in Retries</td>
               <td align="center">
                 <xsl:value-of select="PasswordPolicy/Password/retrys"/>
               </td>
-            </tr>
+            </tr>-->
             <tr>
               <td>Password minimum length:</td>
               <td align="center">
@@ -34,35 +34,35 @@
               </td>
             </tr>
           <tr>
-            <td>Required digits:</td>
+            <td>Minimum digits:</td>
             <td align="center">
               <xsl:value-of select="PasswordPolicy/Password/numsLength"/>
             </td>
           </tr>
           <tr class="odd">
-            <td>Required upper-case letters:</td>
+            <td>Minimum upper-case letters:</td>
             <td align="center">
               <xsl:value-of select="PasswordPolicy/Password/upperLength"/>
             </td>
           </tr>
           <tr>
-            <td>Required special characters:</td>
+            <td>Minimum special characters:</td>
             <td align="center">
               <xsl:value-of select="PasswordPolicy/Password/specialLength"/>
             </td>
           </tr>
           <tr class="odd">
-            <td>Allowable special characters:</td>
+            <td>Allowed special characters:</td>
             <td align="center">
               <xsl:value-of select="PasswordPolicy/Password/specialChars"/>
             </td>
           </tr>
-          <tr class="odd">
+          <!--<tr class="odd">
             <td>Allow repeat password after:</td>
             <td align="center">
               <xsl:value-of select="PasswordPolicy/Password/blockHistoricPassword"/> changes
             </td>
-          </tr>
+          </tr>-->
         </table>
       </body>
     </html>
