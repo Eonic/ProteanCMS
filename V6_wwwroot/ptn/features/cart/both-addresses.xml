@@ -129,11 +129,11 @@
 								<label>Town/City</label>
 								<value />
 							</input>
-							<input bind="cContactState" class="textbox required">
+							<input bind="cContactState" class="textbox">
 								<label>County</label>
 								<value />
 							</input>
-							<input bind="cContactZip" class="textbox required">
+							<input bind="cContactZip" class="textbox">
 								<label>Postcode</label>
 								<value />
 							</input>

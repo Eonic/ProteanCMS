@@ -12065,8 +12065,11 @@ namespace Protean
                 {
                     string cResult = "Success";
                     var oCartListElmt = moPageXml.CreateElement("Order");
-                    GetCart(ref oCartListElmt, nOrderId);
+                    //GetCart(ref oCartListElmt, nOrderId);
                     // Insert code into tblcartOrder
+
+                    oCartListElmt = (XmlElement)oldCartxml.DocumentElement.Clone();
+
                     var oInstance = new XmlDocument();
                     XmlElement oElmt;
                     XmlElement oeResponseElmt = (XmlElement)oCartListElmt.SelectSingleNode("/PaymentDetails/instance/Response");
@@ -12074,6 +12077,8 @@ namespace Protean
                     double Amount = Convert.ToDouble(oCartListElmt.GetAttribute("total"));
                     //int nItemID = 0; // ID of the cart item record
                     // Dim oDs As DataSet
+
+                    XmlElement oePaymentDetailsInstanceElmt = (XmlElement)oCartListElmt.SelectSingleNode("/PaymentDetails/instance");
 
                     oInstance.AppendChild(oInstance.CreateElement("instance"));
                     XmlNode argoNode = oInstance.DocumentElement;
@@ -12216,7 +12221,7 @@ namespace Protean
                     {
                         useSavedAddressesOnCart(billingAddId, deliveryAddId);
                     }
-                    ConfirmPayment(ref oCartListElmt, ref oeResponseElmt, cNewAuthNumber, cMethodName, Amount);
+                    ConfirmPayment(ref oCartListElmt, ref oePaymentDetailsInstanceElmt, cNewAuthNumber, cMethodName, Amount);
                     GetCart(ref oCartListElmt, mnCartId);
                     oCartListElmt.ToString().Replace(ReceiptId, cNewAuthNumber);
                     SaveCartXML(oCartListElmt, mnCartId);

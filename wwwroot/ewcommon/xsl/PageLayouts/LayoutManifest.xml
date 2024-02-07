@@ -85,7 +85,7 @@
       <Module type="ProductList" name="Product List">List of Products</Module>
       <Module type="ProductGallery" name="Product Gallery">Gallery of Products</Module>
       <Module type="ContentFilter" name="Content Filter">Content Filtering</Module>
-		
+
       <!-- Pants, needs more dev -->
       <!--<Module type="TagCloud" name="Tag Cloud">Tag Cloud</Module>-->
       <Module type="BookList" name="Book List">BookList</Module>

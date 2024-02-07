@@ -1,5 +1,4 @@
-﻿/*############### CARD MIXINS #################*/
-@mixin card-contrast($color) {
+﻿@mixin card-contrast($color) {
     color: color-contrast($color);
 
     h1, h2, h3, h4, h5, h6 {
@@ -49,7 +48,6 @@
     }
 }
 
-/*############### CARDS #################*/
 .Site {
     .card {
         margin-bottom: $grid-gutter-height;
@@ -74,8 +72,6 @@
 
     @include card-color-bg;
 }
-
-/*############### MISC #################*/
 .alert {
     margin-bottom: $grid-gutter-height;
 }

@@ -1,11 +1,5 @@
-﻿using DocumentFormat.OpenXml.EMMA;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections;
-using System.Net.Http;
-using System.Net;
-using System.Web;
 
 
 namespace Protean.Tools.Errors
