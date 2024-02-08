@@ -1,7 +1,7 @@
 ﻿.ptn-edit .open,
 #mainTable .ptn-edit,
 #pagefooter .ptn-edit {
-    .btn-primary {
+    a.btn-primary {
         box-shadow: none !important;
         transition:none;
     }
@@ -568,8 +568,7 @@
         }
     }
 
-    .module,
-    .nav-module {
+    .module {
         > .editable .options {
             .btn,
             .text-primary {

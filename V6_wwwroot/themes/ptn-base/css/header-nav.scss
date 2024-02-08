@@ -1,7 +1,21 @@
-﻿/*############### HEADER LAYOUT #################*/
-//Specific Layout Settings
+﻿$nav-breakpoint: lg;
+
+.not-xs {
+    @include media-breakpoint-down($nav-breakpoint) {
+        display: none;
+    }
+}
+
+.xs-only {
+    @include media-breakpoint-up($nav-breakpoint) {
+        display: none;
+    }
+}
+
+// Header Layout Options
 .header-menu-below {
     display: block !important;
+
 
     .main-nav ul.navbar-nav {
         @include media-breakpoint-up($nav-breakpoint) {
@@ -16,7 +30,6 @@
         justify-content: flex-end;
     }
 }
-
 //General Header Settings
 header {
     &.header-one-line {
@@ -29,8 +42,6 @@ header {
 
         .navbar-content {
             flex-wrap: nowrap;
-        }
-
         .main-nav ul.navbar-nav {
             justify-content: center;
         }
@@ -83,12 +94,11 @@ header {
     color: $navbar-light-color;
     z-index: 20;
 }
-
-/*############### NAVIGATION #################*/
+//Navigation
 .main-nav {
     padding: 0;
-    //DESKTOP MENU
-    @include media-breakpoint-up($nav-breakpoint) {
+
+    @include media-breakpoint-up(lg) {
         font-size: $main-nav-size;
         padding: 0;
 
@@ -109,7 +119,7 @@ header {
             }
         }
     }
-    //DROPDOWN MENU
+
     .dropdown-menu {
         margin-top: 0;
         border-radius: 0;
@@ -139,96 +149,11 @@ header {
         }
 
         ul {
-            // display: none;
+            display: none;
         }
     }
 
-    .dropdown-toggle {
-        &:after {
-            content: '\f078';
-            border: none;
-            font-family: 'Font Awesome 5 Free';
-            font-weight: 900;
-            font-size: 0.8rem;
-            vertical-align: middle;
-            margin-left: 0.4em;
-        }
-    }
-
-    .dropdown.level2 {
-        .dropdown-menu {
-            ul.nav {
-                display: none;
-            }
-
-            a.active,
-            a.on,
-            a:hover,
-            a:focus {
-                color: #000;
-            }
-
-            @include media-breakpoint-up($nav-breakpoint) {
-                ul.nav {
-                    display: block;
-                }
-
-                a.active,
-                a.on,
-                a:hover,
-                a:focus {
-                    color: $primary;
-                }
-
-                a.on {
-                    color: $dropdown-link-color;
-                }
-            }
-        }
-
-        @include media-breakpoint-down($nav-breakpoint) {
-            ul.nav {
-                padding-left: 1rem;
-            }
-        }
-
-        @include media-breakpoint-up($nav-breakpoint) {
-            .dropdown-menu > li > a {
-                font-weight: 600;
-            }
-
-            position: static;
-
-            .dropdown-menu {
-                left: -200px;
-                right: -200px;
-                margin-top: 15px;
-
-                > li {
-                    float: left
-                }
-            }
-
-            .dropdown-menu > li:nth-child(2) {
-                float: none;
-                clear: both;
-
-                > a {
-                    color: $primary;
-                    border-bottom: 1px solid $primary;
-                    margin-bottom: 0.6rem;
-                    padding-bottom: 0.5rem;
-                    padding-left: 0;
-                    padding-right: 0;
-                    margin-left: 1.5rem;
-                    margin-right: 1.5rem;
-                    width: calc(100% - 3rem);
-                }
-            }
-        }
-    }
-    //MOBILE MENU
-    @include media-breakpoint-down($nav-breakpoint) {
+    @include media-breakpoint-down(lg) {
         .offcanvas {
             overflow: scroll;
         }
@@ -255,168 +180,21 @@ header {
         .socialLinks.iconset-plain {
             margin-left: 0.4rem;
         }
-        //FULL SCREEN MOBILE NAV
-        #navbarSupportedContent {
-            position: fixed;
-            background: #fff;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            width: 100%;
-            height: 100%;
-            display: block;
-            overflow: scroll;
-            display: none;
-            z-index: 30;
-            padding: 2rem 1rem 0;
-            overflow-x: hidden;
+    }
 
-            .navbar-nav {
-                max-width: 22rem;
-                margin: 0 auto;
-                top: 0;
-            }
-
-            .menu-no-scroll {
-                //   overflow: hidden !important;
-            }
-
-            .dropdown-menu > li:not(.nav-item),
-            .nav-pills > li:not(.nav-item) {
-                max-width: 23rem;
-                margin: 0 auto;
-            }
-
-            .dropdown-menu > li:nth-child(2) a {
-                font-size: 1.3rem;
-            }
-
-            .dropdown-toggle:after {
-                content: '\f061';
-                color: $body-color;
-                border: 1px solid $body-color;
-                border-radius: 2px;
-                padding: 2px 5px;
-                float: right;
-                font-family: 'Font Awesome 5 Free';
-                font-weight: 900;
-                font-size: 0.8rem;
-            }
-
-            .dropdown-menu {
-                position: fixed;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                width: 100%;
-                height: 100%;
-                overflow-y: scroll;
-                transform: translateX(100%);
-                display: block !important;
-                overflow-x: hidden;
-                transition: all ease 0.2s;
-                padding-top: 0;
-            }
-
-            .dropdown-item {
-                font-size: 1.05rem;
-                padding-bottom: 0.6rem;
-            }
-
-            .btn-sm.btn-outline-primary {
-                width: 100%;
-                background: $primary;
-                color: #fff;
-            }
-
-            .search-wrapper {
-                position: relative;
-                margin: 20px auto;
-                max-width: 19rem;
-
-                .btn-outline-primary {
-                    position: absolute;
-                }
-
-                .CTAsearch {
-                    border: 2px solid #8d8d8d;
-                    padding: 0.7rem 1rem;
-                    border-radius: 100px !important;
-                    background: #fff;
-                }
-
-                .btn {
-                    color: #595959 !important;
-                }
-            }
-
-            .nav-close-btn {
-                right: 0px;
-                top: 0px;
-                z-index: 1010;
-            }
-
-            .emergency-xs-link {
-                color: $primary;
-                font-weight: 600;
-            }
-
-            .dropdown-mobile-next {
-                @include clearfix;
-
-                .dropdown-item {
-                    width: calc(100% - 40px);
-                    float: left;
-                }
-            }
-
-            .dropdown-mobile-btn {
-                padding: 0.3rem;
-                line-height: 1;
-                font-size: 0.8rem;
-                // margin: 0.9rem 6px 0 0;
-            }
-
-            .menu-back {
-                .nav-link {
-                    font-size: 1rem;
-                    //  padding-top:0;
-                }
-            }
-
-            .nav-pills {
-                transform: translateX(100%);
-                position: absolute;
-                display: block;
-                background: #fff;
-                width: 100%;
-                top: 0;
-                bottom: 0;
-                transition: all ease 0.3s;
-                padding: 0;
-                height: 400px;
-            }
-
-            .dropdown-active {
-                transform: translateX(0%);
-
-                .dropdown-active {
-                    //    transform: translateX(100%);
-                    top: 0;
-                    left: 0;
-
-                    .nav-pills {
-                        display: block !important;
-                        padding-bottom: 20px;
-                    }
-                }
-            }
+    .dropdown-toggle {
+        &:after {
+            content: '\f078';
+            border: none;
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            font-size: 0.8rem;
+            vertical-align: middle;
+            margin-left: 0.4em;
         }
     }
 }
-/*############### INFO NAV #################*/
+
 .info-nav {
     $info-nav-spacing: 0.7rem;
     margin: 0 ($header-spacing/2) - $info-nav-spacing;
@@ -431,7 +209,6 @@ header {
     }
 }
 
-/*############### SIGN IN #################*/
 .login-btn {
     white-space: nowrap;
 
@@ -439,21 +216,7 @@ header {
         color: $nav-link-hover-color;
     }
 }
-.logged-in-icon {
-    //color: $secondary;
 
-    &:after {
-        background: $secondary;
-        height: 2px;
-        width: 1.2rem;
-        display: block;
-        content: '';
-        position: relative;
-        bottom: -1px;
-    }
-}
-
-/*############### SOCIAL LINKS #################*/
 .socialLinks.iconset-plain {
     $social-spacing-header: 0.5rem;
     margin: 0 ($header-spacing/2) - $social-spacing-header;
@@ -465,7 +228,6 @@ header {
     }
 }
 
-/*############### CART BRIEF #################*/
 #cartBrief {
     margin: 0 ($header-spacing/2);
 
@@ -492,12 +254,11 @@ header {
     display: flex;
     align-items: center;
 
-    @include media-breakpoint-up($nav-breakpoint) {
+    @include media-breakpoint-up(lg) {
         display: none;
     }
 }
 
-/*############### SEARCH #################*/
 @mixin search-simple {
     position: relative;
 
@@ -556,14 +317,13 @@ header {
     padding-right: 1rem;
 
     &:hover,
-    &:focus {
+    &:focus{
         padding-left: 1rem;
         padding-right: 1rem;
         color: $nav-link-hover-color;
     }
 }
 
-/*############### FEATURED BUTTON #################*/
 .header-featured-btn {
     @include media-breakpoint-down($nav-breakpoint) {
         flex-grow: 2;
@@ -606,14 +366,12 @@ header {
     }
 }
 
-/*############### TABBED MODULE #################*/
 .tabbed-module {
     .nav {
         margin-bottom: 1rem;
     }
 }
 
-/*############### ACCORDION #################*/
 .accordion-module {
     margin-bottom: $spacer;
 
@@ -622,82 +380,14 @@ header {
     }
 }
 
-/*############### SUB MENUS #################*/
-#topMenu {
-    margin-bottom: $spacer;
-
-
-    @include media-breakpoint-down($nav-breakpoint) {
-        border: 2px solid $primary;
-        border-radius: $border-radius;
-        padding: 0.3rem;
-
-        ul {
-            flex-direction: column;
-        }
-    }
+.LinkListSimple {
+    margin-left: -1rem;
+    margin-right: -1rem;
 }
 
-#subMenu {
-    background: $light;
-    margin-bottom: $spacer;
-    text-align: left;
-
-    ul {
-        flex-direction: column;
-    }
-
-    h4 a {
-        text-decoration: none;
-        font-weight: 300;
-        padding: 1rem 1rem 0;
-        display: block;
-        font-size: 1.5rem;
-        color: $body-color;
-    }
-
-    .nav-pills .nav-link,
-    .nav-pills .show > .nav-link {
-        background: transparent;
-        //color: $body-color;
-        //font-size: 1.2rem;
-    }
-
-    .nav-pills .nav-link.active {
-        background: transparent;
-        color: $link-color;
-    }
-
-    ul ul {
-        padding-left: 1rem;
-
-        li a.nav-link {
-            font-size: 1rem;
-        }
-    }
-}
-
-#leftCol {
-    @include media-breakpoint-down($nav-breakpoint) {
-        text-align: center;
-    }
-}
-
-button.xs-menu-btn {
-    float: none;
-    margin-bottom: 10px;
-
-    i {
-        font-size: 9px;
-        padding-left: 4px;
-        margin-right: -5px;
-    }
-}
-
-.collapse.dont-collapse-md {
-    @include media-breakpoint-up($nav-breakpoint) {
-        display: block;
-        height: auto !important;
-        visibility: visible;
+.SubPageListSimple {
+    .nav-module {
+        margin-left: -($nav-link-padding-y*2);
+        margin-right: -($nav-link-padding-y*2);
     }
 }

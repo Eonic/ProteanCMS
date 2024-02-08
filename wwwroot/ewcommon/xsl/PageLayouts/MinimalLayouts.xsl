@@ -14680,11 +14680,11 @@
           <xsl:text>//player.vimeo.com/video/</xsl:text>
           <xsl:value-of select="$code"/>
           <!-- Turn all options off by default -->
-			<xsl:if test="Vimeo/@autoplay='true'">
+			<xsl:if test="@autoplay='true'">
 				<xsl:text>&amp;autoplay=1</xsl:text>
 			</xsl:if>
 				  <xsl:choose>
-			            <xsl:when test="Vimeo/@loop='true'">
+			            <xsl:when test="@loop='true'">
 				            <xsl:text>&amp;loop=1</xsl:text>
 			            </xsl:when>
 					  <xsl:otherwise>

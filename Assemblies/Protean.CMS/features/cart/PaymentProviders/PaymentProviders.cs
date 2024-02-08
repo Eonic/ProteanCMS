@@ -3726,9 +3726,9 @@ namespace Protean
                                 else
                                 {
                                     ccXform.valid = false;
-                                    //XmlNode argoNode = (XmlNode)ccXform.moXformElmt;
-                                    ccXform.addNote(ref ccXform.moXformElmt, Protean.xForm.noteTypes.Alert, sResponse);
-                                    //ccXform.moXformElmt = (XmlElement)argoNode;
+                                    XmlNode argoNode = (XmlNode)ccXform.moXformElmt;
+                                    ccXform.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, sResponse);
+                                    ccXform.moXformElmt = (XmlElement)argoNode;
                                     oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Secure Email Failed:"), sResponse), ") "), Constants.vbLf);
                                 }
                             }
@@ -5528,16 +5528,16 @@ namespace Protean
                         {
                             case TransactionMode.Test:
                                 {
-                                    //XmlNode argoNode = oFrmGroup;
-                                    oXform.addNote(ref oFrmGroup, Protean.xForm.noteTypes.Alert, "This payment method is in TEST mode, no actual payment will be collected");
-                                    //oFrmGroup = (XmlElement)argoNode;
+                                    XmlNode argoNode = oFrmGroup;
+                                    oXform.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, "This payment method is in TEST mode, no actual payment will be collected");
+                                    oFrmGroup = (XmlElement)argoNode;
                                     break;
                                 }
                             case TransactionMode.Fail:
                                 {
-                                   // XmlNode argoNode1 = oFrmGroup;
-                                    oXform.addNote(ref oFrmGroup, Protean.xForm.noteTypes.Alert, "This payment method is in FAIL mode, the transaction will always fail");
-                                    //oFrmGroup = (XmlElement)argoNode1;
+                                    XmlNode argoNode1 = oFrmGroup;
+                                    oXform.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, "This payment method is in FAIL mode, the transaction will always fail");
+                                    oFrmGroup = (XmlElement)argoNode1;
                                     break;
                                 }
                         }
@@ -5641,9 +5641,9 @@ namespace Protean
 
                         if (b3dSecure)
                         {
-                            //XmlNode argoNode2 = oFrmGroup;
-                            oXform.addNote(ref oFrmGroup, Protean.xForm.noteTypes.Hint, "<span class=\"note-trans-fraud\">You may get re-directed to your own bank for further authentication. This additional step helps protect you from online fraud.</span>");
-                            //oFrmGroup = (XmlElement)argoNode2;
+                            XmlNode argoNode2 = oFrmGroup;
+                            oXform.addNote(ref argoNode2, Protean.xForm.noteTypes.Hint, "<span class=\"note-trans-fraud\">You may get re-directed to your own bank for further authentication. This additional step helps protect you from online fraud.</span>");
+                            oFrmGroup = (XmlElement)argoNode2;
                         }
 
                         oXform.addSubmit(ref oFrmGroup, formName, "Make Payment", "SubmitPayment");
@@ -6560,16 +6560,16 @@ namespace Protean
                         {
                             case TransactionMode.Test:
                                 {
-                                    //XmlNode argoNode = (XmlNode)oGrpElmt;
-                                    oXform.addNote(ref oGrpElmt, Protean.xForm.noteTypes.Alert, "This payment method is in TEST mode, no actual payment will be collected");
-                                    //oGrpElmt = (XmlElement)argoNode;
+                                    XmlNode argoNode = (XmlNode)oGrpElmt;
+                                    oXform.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, "This payment method is in TEST mode, no actual payment will be collected");
+                                    oGrpElmt = (XmlElement)argoNode;
                                     break;
                                 }
                             case TransactionMode.Fail:
                                 {
-                                    //XmlNode argoNode1 = (XmlNode)oGrpElmt;
-                                    oXform.addNote(ref oGrpElmt, Protean.xForm.noteTypes.Alert, "This payment method is in FAIL mode, the transaction will always fail");
-                                    //oGrpElmt = (XmlElement)argoNode1;
+                                    XmlNode argoNode1 = (XmlNode)oGrpElmt;
+                                    oXform.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, "This payment method is in FAIL mode, the transaction will always fail");
+                                    oGrpElmt = (XmlElement)argoNode1;
                                     break;
                                 }
                         }
@@ -6603,9 +6603,9 @@ namespace Protean
                                     {
                                         oXform.valid = false;
                                         cRepeatPaymentError = cResult;
-                                        //XmlNode argoNode2 = (XmlNode)oGrpElmt;
-                                        oXform.addNote(ref oGrpElmt, Protean.xForm.noteTypes.Alert, cRepeatPaymentError, true);
-                                        //oGrpElmt = (XmlElement)argoNode2;
+                                        XmlNode argoNode2 = (XmlNode)oGrpElmt;
+                                        oXform.addNote(ref argoNode2, Protean.xForm.noteTypes.Alert, cRepeatPaymentError, true);
+                                        oGrpElmt = (XmlElement)argoNode2;
                                     }
                                 }
                                 else

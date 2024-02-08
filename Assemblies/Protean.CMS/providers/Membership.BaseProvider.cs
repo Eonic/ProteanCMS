@@ -403,7 +403,6 @@ namespace Protean.Providers
                                 }
                                 else
                                 {
-                                    base.addNote(ref moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse);
 
                                     if (sValidResponse.Contains("msg-1021")) {
                                         XmlNode SubmitNode = moXformElmt.SelectSingleNode("descendant-or-self::submit");
@@ -411,6 +410,7 @@ namespace Protean.Providers
                                         oFrmElmt.RemoveChild(SubmitNode);
                                         base.addSubmit(ref oFrmElmt, "ewSubmit", "Resend Validation Code", default, default, "fa-solid fa-right-to-bracket");
                                     }
+                                    base.addNote(ref moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse);
                                 }
                             }
                             else
@@ -551,9 +551,7 @@ namespace Protean.Providers
 
                         oFrmElmt = xFrmUserLogon();
 
-                        XmlNode grpNode = oFrmElmt.SelectSingleNode("group[1]");
-
-                        this.addNote(ref grpNode, noteTypes.Hint, "Your account is now activated please logon", true);
+                        this.addNote("UserDetails", noteTypes.Hint, "Your account is now activated please logon", true);
 
                         // Update the user Xform to say "Thank you for activating your account please logon, Pre-populating the username"
 
@@ -932,8 +930,8 @@ namespace Protean.Providers
                         if (nAccount == 0)
                         {
                             oGrp.InnerXml = "";
-                            //XmlNode GrpNode = (XmlNode)oGrp;
-                            base.addNote(ref oGrp, Protean.xForm.noteTypes.Alert, "This reset link has already been used");
+                            XmlNode GrpNode = (XmlNode)oGrp;
+                            base.addNote(ref GrpNode, Protean.xForm.noteTypes.Alert, "This reset link has already been used");
                             base.valid = false;
                         }
 

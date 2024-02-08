@@ -670,8 +670,8 @@ namespace Protean.Providers
 
                             }
 
-                            //XmlNode argoNode = (XmlNode)ccXform.moXformElmt;
-                            ccXform.addNote(ref ccXform.moXformElmt, Protean.xForm.noteTypes.Alert, err_msg);
+                            XmlNode argoNode = (XmlNode)ccXform.moXformElmt;
+                            ccXform.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, err_msg);
                         }
 
 
@@ -681,8 +681,8 @@ namespace Protean.Providers
                             if (ccXform.isSubmitted() & string.IsNullOrEmpty(ccXform.validationError))
                             {
                                 err_msg = "Unknown Error: Please call";
-                               // XmlNode argoNode1 = (XmlNode)ccXform.moXformElmt;
-                                ccXform.addNote(ref ccXform.moXformElmt, Protean.xForm.noteTypes.Alert, err_msg);
+                                XmlNode argoNode1 = (XmlNode)ccXform.moXformElmt;
+                                ccXform.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, err_msg);
                             }
                             else
                             {
