@@ -10,7 +10,7 @@
 				<cContentName/>
 				<cContentSchemaName>Module</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content contentType="CountdownClock" position="" moduleType="CountdownClock" targetDate="" targetTime="" box="" title="" link="" linkType="internal" imagePosition="below" GradientStart="#2970ad" GradientEnd="#0d4473" TextColor="#ffffff" resize="false" responsiveImg="true">
+					<Content contentType="CountdownClock" position="" moduleType="CountdownClock" targetDate="" targetTime="" box="" title="" link="" linkType="internal" imagePosition="below" Circle="#D9D9D9" CircleBorder="#3377FC" NumberColor="#3377FC" TextColor="#3377FC" NumberTextSize="20px" HeadingTextSize="16px" resize="false" responsiveImg="true">
 					</Content>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
@@ -37,9 +37,12 @@
 			<bind id="ntargetTime" nodeset="@targetTime" required="false()" type="string"/>
 			<bind id="panelImage" nodeset="@panelImage" required="false()" type="string" />
 			<bind id="imagePosition" nodeset="@imagePosition" required="false()" type="string" />
-		<bind id="GradientStart" nodeset="@GradientStart" required="false()" type="string"/>
-			<bind id="GradientEnd" nodeset="@GradientEnd" required="false()" type="string"/>
+			<bind id="Circle" nodeset="@Circle" required="false()" type="string"/>
+			<bind id="CircleBorder" nodeset="@CircleBorder" required="false()" type="string"/>
+			<bind id="NumberColor" nodeset="@NumberColor" required="false()" type="string"/>
 			<bind id="TextColor" nodeset="@TextColor" required="false()" type="string"/>
+			<bind id="NumberTextSize" nodeset="@NumberTextSize" required="false()" type="string"/>
+			<bind id="HeadingTextSize" nodeset="@HeadingTextSize" required="false()" type="string"/>
 		</bind>
 		<ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
 		<ewInclude filePath="/ewthemes/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
@@ -58,61 +61,66 @@
 				</input>
 				<ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='publish']"/>
 			</group>
-		<group class="row">
-					<label class="col-md-12">Formatted Box Styling</label>
-					<input bind="GradientStart" class="col-md-6 colorPicker">
-						<label>Gradient Start Colour</label>
-						<value></value>
-						<hint>Must be added as rgb, comma seperated, with no comma at the end, for example 0,0,0</hint>
-					</input>
-					<input bind="GradientEnd" class="col-md-6 colorPicker">
-						<label>Gradient End Colour</label>
-						<value></value>
-						<hint>Must be added as rgb, comma seperated, with no comma at the end, for example 0,0,0</hint>
-					</input>
-					<input bind="TextColor" class="col-md-6 colorPicker">
-						<label>Text Colour</label>
-						<value></value>
-						<hint data-placement="right">Choose a colour that has a high level of contrast to both of the gradient colours. Visit https://webaim.org/resources/contrastchecker/ to check the contrast meets accessibility guidelines</hint>
-					</input>
-					<input bind="HeadingTextSize" class="col-md-6" suffix="px">
-						<label>Heading Text Size</label>
-						<value></value>
-					</input>
-					<input bind="BodyTextSize" class="col-md-6" suffix="px">
-						<label>Body Text Size</label>
-						<value></value>
-					</input>					
-				</group>				
-				
-				<input bind="panelImage" class="pickImageFile label-border-top bs-only">
-					<label>Panel Image</label>
+			<group class="row">
+				<label class="col-md-12">Formatted Box Styling</label>
+				<input bind="Circle" class="col-md-6 colorPicker">
+					<label>Circle Colour</label>
+					<value></value>
+					<hint>Must be added as rgb, comma seperated, with no comma at the end, for example 0,0,0</hint>
+				</input>
+				<input bind="CircleBorder" class="col-md-6 colorPicker">
+					<label>Circle Border Colour</label>
+					<value></value>
+					<hint>Must be added as rgb, comma seperated, with no comma at the end, for example 0,0,0</hint>
+				</input>
+				<input bind="NumberColor" class="col-md-6 colorPicker">
+					<label>Number Colour</label>
+					<value></value>
+					<hint>Must be added as rgb, comma seperated, with no comma at the end, for example 0,0,0</hint>
+				</input>
+				<input bind="TextColor" class="col-md-6 colorPicker">
+					<label>Text Colour</label>
+					<value></value>
+					<hint data-placement="right">Choose a colour that has a high level of contrast to both of the gradient colours. Visit https://webaim.org/resources/contrastchecker/ to check the contrast meets accessibility guidelines</hint>
+				</input>
+				<input bind="NumberTextSize" class="col-md-6" suffix="px">
+					<label>Number Text Size</label>
 					<value></value>
 				</input>
-				<select1 bind="imagePosition" appearance="full">
-					<label class="bold-label">Place image above or below heading?</label>
-					<item>
-						<label>above</label>
-						<value>above</value>
-					</item>
-					<item>
-						<label>below</label>
-						<value>below</value>
-					</item>
-				</select1>			
+				<input bind="HeadingTextSize" class="col-md-6" suffix="px">
+					<label>Heading Text Size</label>
+					<value></value>
+				</input>
+			</group>
+
+			<input bind="panelImage" class="pickImageFile label-border-top bs-only">
+				<label>Panel Image</label>
+				<value></value>
+			</input>
+			<select1 bind="imagePosition" appearance="full">
+				<label class="bold-label">Place image above or below heading?</label>
+				<item>
+					<label>above</label>
+					<value>above</value>
+				</item>
+				<item>
+					<label>below</label>
+					<value>below</value>
+				</item>
+			</select1>
 		</group>
 		<group>
-			
-				<input bind="cModuleTitle" class="long">
-					<label>Title or Name</label>
-				</input>
-				<input bind="ntargetDate" class="calendar short">
-					<label>Target Date</label>
-				</input>
-				<input bind="ntargetTime" appearance="minimal" class="time">
-					<label>Target Time</label>
-				</input>				
-			
+
+			<input bind="cModuleTitle" class="long">
+				<label>Title or Name</label>
+			</input>
+			<input bind="ntargetDate" class="calendar short">
+				<label>Target Date</label>
+			</input>
+			<input bind="ntargetTime" appearance="minimal" class="time">
+				<label>Target Time</label>
+			</input>
+
 		</group>
 	</group>
 	<group ref="submit" class="contentSubmit">
