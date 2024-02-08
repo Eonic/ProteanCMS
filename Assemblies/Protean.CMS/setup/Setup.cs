@@ -1586,6 +1586,9 @@ namespace Protean
                 long infoId = myWeb.moDbHelper.insertStructure(gnTopLevel, "", "Info Menu", defaultPageXml, "Modules_1_column");
                 myWeb.moDbHelper.insertStructure(infoId, "", "Contact Us", defaultPageXml, "Modules_1_column");
 
+                //Create a placeholder for system pages
+                myWeb.moDbHelper.insertStructure(0, "", "System Pages", defaultPageXml, "Modules_1_column");
+
                 return true;
             }
             catch (Exception ex)

@@ -741,7 +741,12 @@ namespace Protean
                                 var rewriteXml = new XmlDocument();
                                 rewriteXml.Load(myWeb.goServer.MapPath("/RewriteRules.config"));
                                 var defaultXml = new XmlDocument();
-                                defaultXml.Load(myWeb.goServer.MapPath("/ewcommon/setup/rootfiles/RewriteRules_config.xml"));
+                                string commonPath = "/ewcommon";
+                                if (myWeb.bs5)
+                                {
+                                    commonPath = "/ptn";
+                                }
+                                defaultXml.Load(myWeb.goServer.MapPath($"{commonPath}/setup/rootfiles/RewriteRules_config.xml"));
                                 foreach (XmlElement oRule in rewriteXml.DocumentElement.SelectNodes("rule"))
                                 {
                                     string rulename = oRule.GetAttribute("name");
