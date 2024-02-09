@@ -109,18 +109,16 @@
 				</item>
 			</select1>
 		</group>
-		<group>
-
+		<group class="inline">
 			<input bind="cModuleTitle" class="long">
 				<label>Title or Name</label>
-			</input>
-			<input bind="ntargetDate" class="calendar short">
+			</input>				
+			<input bind="ntargetDate" class="calendar vshort">
 				<label>Target Date</label>
 			</input>
-			<input bind="ntargetTime" appearance="minimal" class="time">
+			<input bind="ntargetTime" appearance="minimal" class="time ">
 				<label>Target Time</label>
 			</input>
-
 		</group>
 	</group>
 	<group ref="submit" class="contentSubmit">
