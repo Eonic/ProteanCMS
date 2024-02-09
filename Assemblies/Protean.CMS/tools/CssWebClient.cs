@@ -114,7 +114,7 @@ namespace Protean
                    
                     cProcessInfo = origServiceUrl;
 
-                    httpHandlerRequest = WebRequest.Create(Serviceurl);
+                    httpHandlerRequest = WebRequest.Create(origServiceUrl);
 
                     HttpWebRequest serviceRequest = (HttpWebRequest)httpHandlerRequest;
 
