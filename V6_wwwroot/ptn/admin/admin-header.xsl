@@ -204,6 +204,7 @@
         <xsl:apply-templates select="MenuItem" mode="adminItem2">
           <xsl:with-param name="level">1</xsl:with-param>
         </xsl:apply-templates>
+	<xsl:text> </xsl:text>
         <!--<li>
           <xsl:apply-templates select="MenuItem" mode="previewLink">
             <xsl:with-param name="level">1</xsl:with-param>
