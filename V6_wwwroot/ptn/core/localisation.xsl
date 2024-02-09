@@ -437,6 +437,22 @@
 		</xsl:choose>
 	</xsl:template>
 
+	<xsl:template match="*[@class='msg-1039']" mode="term">
+		<xsl:value-of select="span[@class='labelName']/node()"/>
+		<xsl:choose>
+			<xsl:when test="$lang='en-pr'">Your account is now active, please sign in.</xsl:when>
+			<xsl:otherwise>Your account is now active, please sign in.</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="*[@class='msg-1040']" mode="term">
+		<xsl:value-of select="span[@class='labelName']/node()"/>
+		<xsl:choose>
+			<xsl:when test="$lang='en-pr'">Your account is now active, please sign in.</xsl:when>
+			<xsl:otherwise>This email address allready has an account please sign in.</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
 
 	<!-- 1021 This username already exists in <membership>. Please select another. -->
   <xsl:template name="term1021">

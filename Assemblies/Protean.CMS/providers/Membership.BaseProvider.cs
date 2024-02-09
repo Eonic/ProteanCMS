@@ -553,7 +553,7 @@ namespace Protean.Providers
 
                         XmlNode grpNode = oFrmElmt.SelectSingleNode("group[1]");
 
-                        this.addNote(ref grpNode, noteTypes.Hint, "Your account is now activated please logon", true);
+                        this.addNote(ref grpNode, noteTypes.Hint, "Your account is now activated please logon", true, "term-1039");
 
                         // Update the user Xform to say "Thank you for activating your account please logon, Pre-populating the username"
 

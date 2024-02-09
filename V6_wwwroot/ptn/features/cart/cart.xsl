@@ -769,7 +769,7 @@
 								Create a new account
 							</a>
 							<a data-bs-toggle="modal" data-bs-target="#cartLogonBox" role="button" class="btn btn-outline-primary btn-block">
-								Log in
+								Sign in
 							</a>
 							<xsl:choose>
 								<xsl:when test="Item/productDetail[@type='Subscription']">
@@ -795,7 +795,7 @@
 					<div class="modal-dialog" role="document">
 						<div class="modal-content">
 							<div class="modal-header">
-								<h4 class="modal-title">Log in</h4>
+								<h4 class="modal-title">Sign in</h4>
 								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
 									<xsl:text> </xsl:text>
 								</button>
@@ -1247,7 +1247,7 @@
 
 							<span class="badge">2</span>
 							<span class="step-text">
-								<xsl:text>Login / Register</xsl:text>
+								<xsl:text>Sign In / Register</xsl:text>
 							</span>
 							<span class="chevron">
 								<xsl:text> </xsl:text>
@@ -2534,18 +2534,12 @@
 				<xsl:text>_</xsl:text>
 				<xsl:choose>
 					<xsl:when test="Prices/Price[@currency = $page/Cart/@currency and @type = 'rrp']!=''">
-						<xsl:call-template name="formatPrice">
-							<xsl:with-param name="price" select="Prices/Price[@currency = $page/Cart/@currency and @type = 'rrp']"/>
-							<xsl:with-param name="currency" select="$page/Cart/@currencySymbol"/>
-						</xsl:call-template>
+						<xsl:value-of select="format-number(Prices/Price[@currency = $page/Cart/@currency and @type = 'rrp'],'###,###,##0.00')"/>
 					</xsl:when>
 					<xsl:otherwise>na</xsl:otherwise>
 				</xsl:choose>
 				<xsl:text>_</xsl:text>
-				<xsl:call-template name="formatPrice">
-					<xsl:with-param name="price" select="Prices/Price[@currency = $page/Cart/@currency and @type='sale']"/>
-					<xsl:with-param name="currency" select="$page/Cart/@currencySymbol"/>
-				</xsl:call-template>
+				<xsl:value-of select="format-number(Prices/Price[@currency = $page/Cart/@currency and @type = 'sale'],'###,###,##0.00')"/>
 				<xsl:text>_</xsl:text>
 				<xsl:value-of select="parent::Content/@id "/>
 			</xsl:attribute>
