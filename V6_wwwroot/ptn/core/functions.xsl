@@ -453,6 +453,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 				<xsl:apply-templates select="." mode="metacharset"/>
+				<xsl:apply-templates select="." mode="preload"/>
 				<xsl:if test="$GoogleOptimizeID!=''">
 					<script src="https://www.googleoptimize.com/optimize.js?id={$GoogleOptimizeID}">&#160;</script>
 				</xsl:if>
@@ -526,6 +527,8 @@
 				<xsl:apply-templates select="/Page/Contents/Content[@type='FeedControl']" mode="feedLinks"/>
 				<xsl:apply-templates select="//Content[@rss and @rss!='false']" mode="feedLinks"/>
 
+
+				
 				<!-- common css -->
 				<xsl:choose>
 					<xsl:when test="not(/Page/Contents/Content[@name='criticalPathCSS']) or $adminMode">
@@ -629,6 +632,8 @@
 	<xsl:template match="Page" mode="htmlattr"></xsl:template>
 
 	<xsl:template match="Page" mode="LayoutAdminJs"></xsl:template>
+
+	<xsl:template match="Page" mode="preload"></xsl:template>
 
 	<xsl:template match="Page" mode="headerOnlyJS">
 		<xsl:apply-templates select="/Page/Contents/Content" mode="headerOnlyContentJS"/>
