@@ -186,7 +186,8 @@ namespace Protean
                         Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders");
                         var assemblyInstance = Assembly.LoadFrom(this.goServer.MapPath(moPrvConfig.Providers[ProviderName].Parameters["path"]));
                         // Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(ProviderName).Type)
-                        classPath = moPrvConfig.Providers[ProviderName].Parameters["className"] + ".JSONActions";
+                        classPath = moPrvConfig.Providers[ProviderName].Parameters["className"] + "+JSONActions";
+                       // classPath = "JSONActions";
                         calledType = assemblyInstance.GetType(classPath, true);
                     }
                 }

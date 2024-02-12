@@ -20,7 +20,7 @@ namespace Protean
     public class Setup
     {
 
-        // This is the version of the new build before the update......
+        // This is the version of the last build before the automated db update......
         public string mnCurrentVersion = "4.1.0.45";
 
         // Session ProteanCMS Details

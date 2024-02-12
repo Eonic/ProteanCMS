@@ -6115,7 +6115,9 @@
 		<xsl:variable name="max-height-xxl">
 			<xsl:apply-templates select="." mode="getThHeight-xxl"/>
 		</xsl:variable>
-
+		<h2>!!!
+			<xsl:value-of select="$max-width-xl"/>
+		</h2>
 		<xsl:if test="Images/img[@src and @src!='']">
 			<xsl:call-template  name="displayResponsiveImage">
 				<xsl:with-param name="crop" select="$crop"/>

@@ -1681,8 +1681,8 @@ namespace Protean
                             }
                     }
 
-                    if (nArtId == default)
-                    {
+                   /// if (nArtId == default)
+                  ///  {
                         sSql = "select nStructKey, nStructParId, nVersionParId, cVersionLang from tblContentStructure where (cStructName like '" + SqlFmt(sPath) + "' or cStructName like '" + SqlFmt(Strings.Replace(sPath, " ", "")) + "' or cStructName like '" + SqlFmt(Strings.Replace(sPath, " ", "-")) + "')";
 
                         ods = GetDataSet(sSql, "Pages");
@@ -1742,10 +1742,10 @@ namespace Protean
                                 }
                             }
                         }
-                    }
+                 //   }
 
                     // Note : if sPath is empty the SQL call above WILL return pages, we don't want these, we want top level pgid
-                    if (!(nPageId > 1L & !string.IsNullOrEmpty(sPath)))
+                    if (!(nPageId > 1L && !string.IsNullOrEmpty(sPath)))
                     {
                         // page path cannot be found we have an error that we raise later
                         if (sFullPath != "System+Pages/Page+Not+Found")
