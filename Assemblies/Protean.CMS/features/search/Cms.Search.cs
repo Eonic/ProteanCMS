@@ -2329,7 +2329,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                         sSql += ") ";
                         sSql += "AND (( SELECT tblContentStructure.nStructKey FROM tblContentStructure INNER JOIN tblAudit ON tblContentStructure.nAuditId = tblAudit.nAuditKey";
                         sSql += " WHERE (tblContentStructure.nStructKey = CL.nStructId)";
-                        sSql += ")) != null";
+                        sSql += ")) is not null";
                         sSql += " order by " + cSqlOrderClause;
                     }
                     else
