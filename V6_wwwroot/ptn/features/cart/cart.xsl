@@ -371,9 +371,9 @@
 
 
 		<div class="cart-btns-btm clearfix">
-			<h1>Your Basket</h1>
 			<div class="row">
 				<div class="col-lg-8">
+					<h1>Your Basket</h1>
 					<xsl:apply-templates select="." mode="orderProcessTitle"/>
 					<xsl:apply-templates select="." mode="orderErrorReports"/>
 					<xsl:apply-templates select="." mode="orderAddresses"/>
@@ -464,11 +464,12 @@
 			
 		</div>-->
 
-		<h1>
-			<xsl:call-template name="term4031" />
-		</h1>
+		
 		<div class="row">
 			<div class="col-lg-8">
+				<h1>
+					<xsl:call-template name="term4031" />
+				</h1>
 				<xsl:apply-templates select="." mode="orderEditAddresses"/>
 			</div>
 			<div class="col-lg-4">
@@ -741,6 +742,7 @@
 
 		<div class="row">
 			<div class="col-lg-8">
+				<h1>Your Basket</h1>
 				<form method="post" id="cart" class="ewXform">
 					<xsl:apply-templates select="." mode="orderItems">
 						<xsl:with-param name="editQty">true</xsl:with-param>
@@ -1021,9 +1023,9 @@
 	<xsl:template match="Order[@cmd='ChoosePaymentShippingOption']" mode="orderProcess">
 		<xsl:apply-templates select="." mode="orderProcessTitle"/>
 		<xsl:apply-templates select="." mode="orderErrorReports"/>
-		<h1>Review Your Order</h1>
 		<div class="row">
 			<div class="col-lg-8">
+				<h1>Review Your Order</h1>
 				<div class="cartBox check-address">
 					<xsl:apply-templates select="." mode="orderAddresses"/>
 				</div>
@@ -2417,6 +2419,7 @@
 						</xsl:if>
 					</div>
 				</div>
+				<!--<button onclick="document.getElementById('bothAddresses').click()">Continue</button>-->
 			</div>
 		</div>
 		<div class="clearfix mb-1 optionButtons">
