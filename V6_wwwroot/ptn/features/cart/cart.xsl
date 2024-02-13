@@ -169,7 +169,7 @@
 
 						</xsl:otherwise>
 					</xsl:choose>
-					&#160;
+					<xsl:text> </xsl:text>
 				</div>
 			</xsl:if>
 		</div>
@@ -185,7 +185,10 @@
 			<xsl:value-of select="substring-before(@type,' ')"/>
 		</xsl:variable>
 		<button class="btn btn-outline-secondary hidden-lg hidden-xl hidden-xxl order-address-btn" type="button" data-bs-toggle="collapse" data-bs-target="#cart-address-collapse" aria-expanded="false" aria-controls="cart-address-collapse">
-			<xsl:text>Address Details </xsl:text><i class="fas fa-caret-down">&#160;</i>
+			<xsl:text>Address Details </xsl:text>
+			<i class="fas fa-caret-down">
+				<xsl:text> </xsl:text>
+			</i>
 		</button>
 		<div class="collapse dont-collapse-md" id="cart-address-collapse">
 			<div class="row">
@@ -368,9 +371,9 @@
 
 
 		<div class="cart-btns-btm clearfix">
-			<h1>Your Basket</h1>
 			<div class="row">
 				<div class="col-lg-8">
+					<h1>Your Basket</h1>
 					<xsl:apply-templates select="." mode="orderProcessTitle"/>
 					<xsl:apply-templates select="." mode="orderErrorReports"/>
 					<xsl:apply-templates select="." mode="orderAddresses"/>
@@ -461,14 +464,22 @@
 			
 		</div>-->
 
-		<h1>
-			<xsl:call-template name="term4031" />
-		</h1>
+		
 		<div class="row">
 			<div class="col-lg-8">
+				<h1>
+					<xsl:call-template name="term4031" />
+				</h1>
 				<xsl:apply-templates select="." mode="orderEditAddresses"/>
 			</div>
 			<div class="col-lg-4">
+				<xsl:if test="$page/User/@status='-1'">
+					<div class="card">
+						<div class="card-body">
+							Thank you for registering, please check your email to activate your account.
+						</div>
+					</div>
+				</xsl:if>
 				<div class="card">
 					<div class="card-body">
 						<xsl:for-each select="Item">
@@ -481,7 +492,6 @@
 								</xsl:apply-templates>
 							</div>
 						</xsl:for-each>
-						<hr/>
 						<xsl:apply-templates select="." mode="orderTotals"/>
 					</div>
 				</div>
@@ -583,10 +593,10 @@
 			<div class="shipping">
 				<span class="shipping-title">
 					<xsl:call-template name="term3044" />
-					<xsl:text>:</xsl:text>					
+					<xsl:text>:</xsl:text>
 				</span>
 				<span class="amount">
-					<xsl:text>&#160;</xsl:text>
+					<xsl:text> </xsl:text>
 					<xsl:apply-templates select="/Page" mode="formatPrice">
 						<xsl:with-param name="price" select="@shippingCost"/>
 						<xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
@@ -594,19 +604,19 @@
 				</span>
 			</div>
 			<div class="shipping-desc">
-		<xsl:choose>
-						<xsl:when test="/Page/Cart/Order/Shipping">
-							<xsl:value-of select="/Page/Cart/Order/Shipping/Name/node()"/>
-							<strong>&#160;-&#160;</strong>
-							<xsl:value-of select="/Page/Cart/Order/Shipping/Carrier/node()"/>
-							<strong>&#160;-&#160;</strong>
-							<xsl:value-of select="/Page/Cart/Order/Shipping/DeliveryTime/node()"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="/Page/Cart/Order/@shippingDesc"/>
-						</xsl:otherwise>
-					</xsl:choose>
-			&#160;
+				<xsl:choose>
+					<xsl:when test="/Page/Cart/Order/Shipping">
+						<xsl:value-of select="/Page/Cart/Order/Shipping/Name/node()"/>
+						<strong>&#160;-&#160;</strong>
+						<xsl:value-of select="/Page/Cart/Order/Shipping/Carrier/node()"/>
+						<strong>&#160;-&#160;</strong>
+						<xsl:value-of select="/Page/Cart/Order/Shipping/DeliveryTime/node()"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="/Page/Cart/Order/@shippingDesc"/>
+					</xsl:otherwise>
+				</xsl:choose>
+				<xsl:text> </xsl:text>
 			</div>
 		</xsl:if>
 		<div class="totals-row">
@@ -739,6 +749,7 @@
 
 		<div class="row">
 			<div class="col-lg-8">
+				<h1>Your Basket</h1>
 				<form method="post" id="cart" class="ewXform">
 					<xsl:apply-templates select="." mode="orderItems">
 						<xsl:with-param name="editQty">true</xsl:with-param>
@@ -1019,9 +1030,9 @@
 	<xsl:template match="Order[@cmd='ChoosePaymentShippingOption']" mode="orderProcess">
 		<xsl:apply-templates select="." mode="orderProcessTitle"/>
 		<xsl:apply-templates select="." mode="orderErrorReports"/>
-		<h1>Review Your Order</h1>
 		<div class="row">
 			<div class="col-lg-8">
+				<h1>Review Your Order</h1>
 				<div class="cartBox check-address">
 					<xsl:apply-templates select="." mode="orderAddresses"/>
 				</div>
@@ -1138,7 +1149,9 @@
 
 						<xsl:if test="not(@readonly) and not(@cartCmd='') and Notes/Notes/node()!=''">
 							<a href="{$parentURL}?cartCmd=Notes" class="btn btn-custom pull-right">
-								<i class="fa fa-pencil">&#160;</i>&#160;
+								<i class="fa fa-pencil">
+									<xsl:text> </xsl:text>
+								</i>&#160;
 								<xsl:attribute name="title">
 									<!--Click here to edit the notes on this order.-->
 									<xsl:call-template name="term3012" />
@@ -1669,7 +1682,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:if>
-				&#160;
+				<xsl:text> </xsl:text>
 			</div>
 			<xsl:if test="$editQty='true'">
 				<div class="delete">
@@ -1678,7 +1691,7 @@
 					</a>
 				</div>
 			</xsl:if>
-			&#160;
+			<xsl:text> </xsl:text>
 		</div>
 		<xsl:if test="not(/Page/Cart/@displayPrice='false')">
 			<div class="cart-prices">
@@ -1803,7 +1816,7 @@
 						<xsl:text>: </xsl:text>
 					</xsl:otherwise>
 				</xsl:choose>
-				<xsl:text>&#160;</xsl:text>
+				<xsl:text> </xsl:text>
 			</label>
 			<div class="input-group">
 				<button class="btn qty-minus" type="button" value="-" onClick="incrementQuantity('qty_{@id}','-')">
@@ -2413,6 +2426,7 @@
 						</xsl:if>
 					</div>
 				</div>
+				<button onclick="document.getElementById('bothAddresses').click()">Continue</button>
 			</div>
 		</div>
 		<div class="clearfix mb-1 optionButtons">
@@ -2674,7 +2688,9 @@
 				</p>
 			</xsl:if>
 			<button type="submit" name="submit" disabled="diabled" class="btn btn-custom dummy-pay-button" style="">
-				<i class="fa fa-white">&#160;</i> Complete Order
+				<i class="fa fa-white">
+					<xsl:text> </xsl:text>
+				</i> Complete Order
 			</button>
 		</form>
 	</xsl:template>

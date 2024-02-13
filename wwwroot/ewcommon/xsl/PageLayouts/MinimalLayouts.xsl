@@ -14651,7 +14651,7 @@
       </xsl:if>
       <iframe frameborder="0" class="embed-responsive-item" allowfullscreen="allowfullscreen" >
 		  <xsl:attribute name="allow">
-			  <xsl:if test="@autoplay='true'">
+			  <xsl:if test="Vimeo/@autoplay='true'">
 				  <xsl:text>autoplay; </xsl:text>
 			  </xsl:if>
 			  <xsl:text>fullscreen; picture-in-picture</xsl:text>			  

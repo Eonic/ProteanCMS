@@ -7089,7 +7089,7 @@ namespace Protean
                         // myWeb.moPageXml.DocumentElement.SetAttribute("adminMode", getPermissionLevel(nPermLevel))
                         // End If
                         // odr = getDataReader("SELECT * FROM tblDirectory where nDirKey = " & nUserId)
-                        using (var oDr = getDataReaderDisposable("SELECT * FROM tblDirectory where nDirKey = " + nUserId))  // Done by nita on 6/7/22
+                        using (var oDr = getDataReaderDisposable("SELECT * FROM tblDirectory inner join tblAudit on nAuditkey = nAuditId  where nDirKey = " + nUserId))  // Done by nita on 6/7/22
                         {
                             while (oDr.Read())
                             {
@@ -7097,6 +7097,8 @@ namespace Protean
                                 root.SetAttribute("id", nUserId.ToString());
                                 root.SetAttribute("name", Conversions.ToString(oDr["cDirName"]));
                                 root.SetAttribute("fRef", Conversions.ToString(oDr["cDirForiegnRef"]));
+
+                                root.SetAttribute("status", Conversions.ToString(oDr["nStatus"]));
                                 // root.SetAttribute("permission", getPermissionLevel(nPermLevel))
                                 if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDr["cDirXml"], "", false)))
                                 {
