@@ -7320,6 +7320,16 @@ namespace Protean
                             XmlElement argoBindParent19 = null;
                             base.addBind("bCollection", "tblCartShippingMethods/bCollection", oBindParent: ref argoBindParent19, "false()");
                         }
+                        // new column added
+                        // Set if you need this shipping option to override all other shipping options, if this option is valid for any item in the cart.
+
+                        if (moDbHelper.checkTableColumnExists("tblCartShippingMethods", "bOverrideForWholeOrder"))
+                        {
+                            oSelElmt = base.addSelect(ref oGrp2Elmt, "bOverrideForWholeOrder", true, "Override For Whole Order", "multiline", Protean.xForm.ApperanceTypes.Full);
+                            base.addOption(ref oSelElmt, "Override", "True");
+                            XmlElement argoBindParent19 = null;
+                            base.addBind("bCollection", "tblCartShippingMethods/bOverrideForWholeOrder", oBindParent: ref argoBindParent19, "false()");
+                        }
 
                         oSelElmt = base.addSelect1(ref oGrp2Elmt, "nStatus", true, "Status", "", Protean.xForm.ApperanceTypes.Minimal);
                         base.addOption(ref oSelElmt, "Active", 1.ToString());
