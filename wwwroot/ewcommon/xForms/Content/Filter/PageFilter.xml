@@ -7,7 +7,7 @@
 				<nContentPrimaryId/>
 				<nVersion/>
 				<cContentForiegnRef/>
-				<cContentName>PageFilter</cContentName>
+				<cContentName>Category</cContentName>
 				<cContentSchemaName>Filter</cContentSchemaName>
 				<cContentXmlBrief>
 					<Content type="Filter" filterType="PageFilter"  parentPageId="" className="PageFilter" providerName="default"/>
