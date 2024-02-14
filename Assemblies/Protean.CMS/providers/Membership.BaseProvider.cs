@@ -284,7 +284,7 @@ namespace Protean.Providers
 
                         base.submission("UserLogon", "", "post", "form_check(this)");
 
-                        oFrmElmt = base.addGroup(ref base.moXformElmt, "UserDetails", "", "Login to ProteanCMS");
+                        oFrmElmt = base.addGroup(ref base.moXformElmt, "UserDetails", "", "Sign in to ProteanCMS");
 
                         XmlElement userIpt = base.addInput(ref oFrmElmt, "cUserName", true, "Email");
                         base.addClientSideValidation(ref userIpt, true, "Please enter Email");
@@ -295,7 +295,7 @@ namespace Protean.Providers
                         base.addClientSideValidation(ref pwdIpt, true, "Please enter Password");
                         base.addBind("cPassword", "user/password", ref oBindParent, "true()");
 
-                        base.addSubmit(ref oFrmElmt, "ewSubmit", "Login",default, default, "fa-solid fa-right-to-bracket");
+                        base.addSubmit(ref oFrmElmt, "ewSubmit", "Sign In",default, default, "fa-solid fa-right-to-bracket");
 
                         base.Instance.InnerXml = "<user rememberMe=\"\"><username/><password/></user>";
                     Check:
@@ -708,7 +708,7 @@ namespace Protean.Providers
 
                                 if (nNumberOfUsers == 0)
                                 {
-                                    cResponse = "<span class=\"msg-1026\">There was a problem resetting this account, the username was not found. Please contact the website administrator</span>";
+                                    cResponse = "<span class=\"msg-1026\">There was a problem resetting this account, the account was not found.</span>";
                                 }
                                 else if (nNumberOfUsers > 1 & areEmailAddressesAllowed == true)
                                 {
@@ -726,6 +726,7 @@ namespace Protean.Providers
                                 }
                                 if (!string.IsNullOrEmpty(cResponse))
                                 {
+                                    oFrmElmt.ParentNode.RemoveChild(oFrmElmt);
                                     base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, cResponse, true);
                                 }
                             }
@@ -981,12 +982,12 @@ namespace Protean.Providers
                                if (!oMembership.ReactivateAccount(nAccount, goRequest["cDirPassword"]))
                                 {
                                     oGrp.InnerXml = "";
-                                    base.addNote(ref oGrp, Protean.xForm.noteTypes.Alert, "There was an problem updating your account");
+                                    base.addNote(ref oGrp, Protean.xForm.noteTypes.Alert, "<span class=\"msg-1022\">There was a problem activating your account</span>");
                                     base.valid = false;
                                 }
                                 else
                                 {
-                                    base.addNote(ref oGrp, Protean.xForm.noteTypes.Alert, "Your password has been reset <a href=\"/" + myWeb.moConfig["LogonRedirectPath"] + "\">click here</a> to login");
+                                    base.addNote(ref oGrp, Protean.xForm.noteTypes.Alert, "Your password has been reset <a href=\"/" + myWeb.moConfig["LogonRedirectPath"] + "\">click here</a> to sign in");
                                     oPI1.ParentNode.RemoveChild(oPI1);
                                     oPI2.ParentNode.RemoveChild(oPI2);
                                     oSB.ParentNode.RemoveChild(oSB);
