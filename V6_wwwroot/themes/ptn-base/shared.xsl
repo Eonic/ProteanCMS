@@ -22,7 +22,7 @@
 	<xsl:variable name="headings-font-import">Lato:300,400,700</xsl:variable>
 	<xsl:variable name="color-mode">default</xsl:variable>
 	<xsl:variable name="HomeInfo">false</xsl:variable>
-	<xsl:variable name="HomeNav">true</xsl:variable>
+	<xsl:variable name="HomeNav">false</xsl:variable>
 	<xsl:variable name="NavFix">true</xsl:variable>
 	<xsl:variable name="nav-dropdown">true</xsl:variable>
 	<xsl:variable name="sub-nav">right</xsl:variable>
@@ -409,7 +409,7 @@
 			<span class="visually-hidden">
 				<xsl:choose>
 					<xsl:when test="/Page/User">My Account</xsl:when>
-					<xsl:otherwise>Log in</xsl:otherwise>
+					<xsl:otherwise>Sign in</xsl:otherwise>
 				</xsl:choose>
 			</span>
 		</a>
@@ -437,7 +437,7 @@
 		<xsl:choose>
 			<xsl:when test="/Page/User">
 				<a href="/?ewCmd=LogOff" title="Logout" class="btn btn-default btn-sm principle" type="button">
-					<i class="fa fa-power-off"> </i> Logout
+					<i class="fa fa-power-off"> </i> Sign out
 				</a>
 				<div class="userName">
 					<xsl:text>Hello, </xsl:text>

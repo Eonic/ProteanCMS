@@ -493,6 +493,7 @@
 							</div>
 						</xsl:for-each>
 						<xsl:apply-templates select="." mode="orderTotals"/>
+						<!--<button onclick="document.getElementsByClassName('btn btn-custom principle').click()">Continue</button>-->
 					</div>
 				</div>
 
@@ -2426,7 +2427,7 @@
 						</xsl:if>
 					</div>
 				</div>
-				<button onclick="document.getElementById('bothAddresses').click()">Continue</button>
+				
 			</div>
 		</div>
 		<div class="clearfix mb-1 optionButtons">
