@@ -1681,8 +1681,8 @@ namespace Protean
                             }
                     }
 
-                    if (nArtId == default)
-                    {
+                   /// if (nArtId == default)
+                  ///  {
                         sSql = "select nStructKey, nStructParId, nVersionParId, cVersionLang from tblContentStructure where (cStructName like '" + SqlFmt(sPath) + "' or cStructName like '" + SqlFmt(Strings.Replace(sPath, " ", "")) + "' or cStructName like '" + SqlFmt(Strings.Replace(sPath, " ", "-")) + "')";
 
                         ods = GetDataSet(sSql, "Pages");
@@ -1742,10 +1742,10 @@ namespace Protean
                                 }
                             }
                         }
-                    }
+                 //   }
 
                     // Note : if sPath is empty the SQL call above WILL return pages, we don't want these, we want top level pgid
-                    if (!(nPageId > 1L & !string.IsNullOrEmpty(sPath)))
+                    if (!(nPageId > 1L && !string.IsNullOrEmpty(sPath)))
                     {
                         // page path cannot be found we have an error that we raise later
                         if (sFullPath != "System+Pages/Page+Not+Found")
@@ -7089,7 +7089,7 @@ namespace Protean
                         // myWeb.moPageXml.DocumentElement.SetAttribute("adminMode", getPermissionLevel(nPermLevel))
                         // End If
                         // odr = getDataReader("SELECT * FROM tblDirectory where nDirKey = " & nUserId)
-                        using (var oDr = getDataReaderDisposable("SELECT * FROM tblDirectory where nDirKey = " + nUserId))  // Done by nita on 6/7/22
+                        using (var oDr = getDataReaderDisposable("SELECT * FROM tblDirectory inner join tblAudit on nAuditkey = nAuditId  where nDirKey = " + nUserId))  // Done by nita on 6/7/22
                         {
                             while (oDr.Read())
                             {
@@ -7097,6 +7097,8 @@ namespace Protean
                                 root.SetAttribute("id", nUserId.ToString());
                                 root.SetAttribute("name", Conversions.ToString(oDr["cDirName"]));
                                 root.SetAttribute("fRef", Conversions.ToString(oDr["cDirForiegnRef"]));
+
+                                root.SetAttribute("status", Conversions.ToString(oDr["nStatus"]));
                                 // root.SetAttribute("permission", getPermissionLevel(nPermLevel))
                                 if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDr["cDirXml"], "", false)))
                                 {

@@ -473,6 +473,13 @@
 				<xsl:apply-templates select="." mode="orderEditAddresses"/>
 			</div>
 			<div class="col-lg-4">
+				<xsl:if test="$page/User/@status='-1'">
+					<div class="card">
+						<div class="card-body">
+							Thank you for registering, please check your email to activate your account.
+						</div>
+					</div>
+				</xsl:if>
 				<div class="card">
 					<div class="card-body">
 						<xsl:for-each select="Item">

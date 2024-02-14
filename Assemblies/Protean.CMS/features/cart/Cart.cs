@@ -19,6 +19,7 @@ using Protean.Providers.Messaging;
 using Protean.Providers.Payment;
 using static Protean.Cms.dbImport;
 using Lucene.Net.Analysis;
+using System.Web.UI.WebControls;
 
 namespace Protean
 {
@@ -1668,14 +1669,15 @@ namespace Protean
                                         oRegXform.xFrmEditDirectoryItem(IntanceAppend: ref argIntanceAppend, (long)myWeb.mnUserId, "User", (long)Conversions.ToInteger("0" + moCartConfig["DefaultSubscriptionGroupId"]), "CartRegistration");
                                         if (oRegXform.valid)
                                         {
-
-
-
                                             string sReturn = moDBHelper.validateUser(myWeb.moRequest["cDirName"], myWeb.moRequest["cDirPassword"]);
                                             if (Information.IsNumeric(sReturn))
                                             {
                                                 myWeb.mnUserId = (int)Conversions.ToLong(sReturn);
                                                 var oUserElmt = moDBHelper.GetUserXML((long)myWeb.mnUserId);
+
+                                                var oMembership = new Membership(ref myWeb);
+                                                oMembership.RegistrationActions();
+
                                                 moPageXml.DocumentElement.AppendChild(oUserElmt);
                                                 myWeb.moSession["nUserId"] = (object)myWeb.mnUserId;
                                                 mcCartCmd = "Notes";
@@ -3840,6 +3842,10 @@ namespace Protean
 
                             if ((nShipMethod == 0 && nCartStatus != 5) | IsPromocodeValid == true)
                             {
+                                // TS added to recalculate shipping cost !!!!!!
+                                shipCost = -1;
+
+
                                 if (!string.IsNullOrEmpty(oCartElmt.GetAttribute("bDiscountIsPercent")))
                                 {
                                     shipCost = -1;
@@ -3865,7 +3871,7 @@ namespace Protean
                                             {
                                                 bCollection = Conversions.ToBoolean(oRowSO["bCollection"]);
                                             }
-                                            if (!string.IsNullOrEmpty(moCartConfig["DefaultShippingMethod"]) & !string.IsNullOrEmpty(moCartConfig["DefaultShippingMethod"]))
+                                            if (!string.IsNullOrEmpty(moCartConfig["DefaultShippingMethod"]))
                                             {
                                                 // logic to overide below...
                                                 // Add extra condition for checking shipping delievry method set by default
@@ -3916,7 +3922,7 @@ namespace Protean
                                                     }
                                                 }
                                             }
-                                            else if ((shipCost == -1 | Convert.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"])) < shipCost) & bCollection == false)
+                                            else if ((shipCost == -1 || Convert.ToDouble("0" + oRowSO["nShipOptCost"].ToString()) < shipCost) & bCollection == false)
                                             {
                                                 shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"]));
                                                 oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig["DefaultCountry"]);

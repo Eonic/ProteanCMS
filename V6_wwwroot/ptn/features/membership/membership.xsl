@@ -661,6 +661,11 @@
     <!-- Membership Register Module -->
     <xsl:template match="Content[@type='Module' and (@moduleType='MembershipRegister')]" mode="displayBrief">
 		<xsl:choose>
+			<xsl:when test="$page/User/@status='-1'">
+				You must activate your account before you can update your details.
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:choose>
 	        <xsl:when test="$page/Request/QueryString/Item[@name='ewCmd']/node()!=''">
 				    <xsl:apply-templates select="/Page/Contents/Content[@name='UserLogon']" mode="xform"/>
 		    </xsl:when>
@@ -668,6 +673,10 @@
 	            <xsl:apply-templates select="." mode="xform"/>
 			</xsl:otherwise>
 	    </xsl:choose>
+			</xsl:otherwise>
+		</xsl:choose>
+		
+		
     </xsl:template>
 
     <xsl:template match="Content[@type='Module' and @moduleType='MembershipRegister']" mode="cleanXhtml">

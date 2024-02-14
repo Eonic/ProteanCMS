@@ -187,7 +187,15 @@ namespace Protean
                         var assemblyInstance = Assembly.LoadFrom(this.goServer.MapPath(moPrvConfig.Providers[ProviderName].Parameters["path"]));
                         // Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(ProviderName).Type)
                         classPath = moPrvConfig.Providers[ProviderName].Parameters["className"] + ".JSONActions";
-                        calledType = assemblyInstance.GetType(classPath, true);
+                        // classPath = "JSONActions";
+                        try
+                        { 
+                            calledType = assemblyInstance.GetType(classPath, true);
+                        }
+                        catch {
+                            classPath = moPrvConfig.Providers[ProviderName].Parameters["className"] + "+JSONActions";
+                            calledType = assemblyInstance.GetType(classPath, true);
+                        }                        
                     }
                 }
                 else
