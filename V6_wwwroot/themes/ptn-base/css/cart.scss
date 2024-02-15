@@ -1,4 +1,103 @@
-﻿/*############### CART MIXINS #################*/
+﻿.cartButtons .selectOptions {
+    float: left;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+.qty-product {
+    float: left;
+    margin-right: 10px;
+    margin-bottom: 10px;
+
+    .qty-label {
+        @extend .visually-hidden;
+    }
+
+    .input-group {
+        max-width: 120px;
+        flex-wrap: nowrap;
+        border-bottom: 2px solid $input-border-color;
+        text-align: center;
+    }
+
+    .btn {
+        background: $light !important;
+        border: 1px solid $light;
+        color: $body-color !important;
+        padding: 0 10px;
+        text-shadow: none;
+
+        &:hover {
+            box-shadow: none !important;
+        }
+    }
+}
+
+.cartButtons > form > .btn-custom {
+    padding: 9px 18px;
+    font-size: 1.2rem;
+}
+
+.cart-class {
+    > .container,
+    .row > .cart-btns-btm {
+        padding: 0 ($grid-gutter-width/2);
+
+        @include media-breakpoint-up(md) {
+            padding: 0 3vw;
+        }
+
+        > div > .row {
+            margin: 0 -3vw;
+
+            > div[class^='col-'] {
+                padding: 0 3vw;
+            }
+        }
+    }
+
+    legend {
+        border-bottom: 2px solid;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.3rem;
+    }
+
+    .col-lg-4 {
+        .cart-thumbnail {
+            display: none;
+        }
+
+        .qty-text {
+            font-size: 0.8rem;
+        }
+
+        .form-check-label {
+            font-size: 1rem;
+        }
+
+        .cart-btns-btm {
+            margin-top: -2rem;
+            text-align: center;
+        }
+
+        .card .cart-btns-btm {
+            margin-top: 1rem;
+            text-align: center;
+        }
+    }
+}
+
+.cartAddress {
+    .horizontal-form {
+        .checkbox-group {
+            @include media-breakpoint-up(lg) {
+                padding-left: calc(25% + 1rem);
+            }
+        }
+    }
+}
+/*############### CART MIXINS #################*/
 @mixin cart-style1 {
     .cart-thumbnail {
         float: left;
@@ -101,6 +200,27 @@
         }
     }
 
+    .product-totals, .totals-row, .vat-row, .shipping {
+        margin-bottom: 10px;
+
+        .amount {
+            float: right;
+            text-align: right;
+            padding-left: 2rem;
+            font-weight: 700;
+
+            .lineTotal {
+                font-size: 1.2rem;
+                font-weight: 600;
+                padding-left: 2rem;
+            }
+
+            .linePrice {
+                font-size: 0.9rem;
+            }
+        }
+    }
+
     .account-options-card {
         .aoc-inner {
             max-width: 400px;
@@ -109,7 +229,7 @@
         }
 
         .amount {
-            float: right;
+            //float: right;
             font-weight: 600;
         }
 
@@ -131,6 +251,12 @@
 
     .continue {
         font-size: 0.8rem;
+    }
+
+    .addressGrp {
+        .addnew, .delete, .setAsBilling {
+            margin-left: 10px;
+        }
     }
 
     .principle {
@@ -197,16 +323,33 @@
 
 .cart-address-card {
     height: calc(100% - 2rem);
+    border: 0;
 
     h2 {
         font-size: 1.5rem;
     }
+
+    .card-body {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .address-edit-btn {
+        float: none;
+    }
 }
 
 .address-edit-btn {
-    float: right;
-}
+    //float: right;
+    width:100%;
 
+}
+.order-address-btn{
+    border-width:2px;
+    width:100%;
+    font-weight:600;
+    border-radius:3px;
+}
 #optionsForm {
     legend {
         display: none;
@@ -243,12 +386,99 @@
     }
 }
 
+.cart-class > .container {
+    max-width: 100%;
+
+    .btn-custom {
+        background: $secondary;
+        color: #fff;
+        border: 0;
+        box-shadow: none;
+        font-weight: 700;
+    }
+
+    .btn-outline-primary {
+        border: 2px solid $secondary;
+        color: $secondary;
+        font-weight: 700;
+
+        &:hover {
+            background: $secondary;
+            color: #fff !important;
+        }
+    }
+
+    .col-lg-8 {
+        .shipping {
+            display: none;
+        }
+    }
+
+    .col-lg-4 .card-body {
+        font-size: 1rem;
+
+        .principle {
+            width: 100%;
+        }
+
+        .totals-row {
+            border-top: 2px solid;
+            font-size: 1.3rem;
+            padding-top: 0.3rem;
+            margin-top: 0.3rem;
+        }
+    }
+}
+
+#cartFull .col-lg-4 .card-body .cart-item {
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+    padding-right: 5rem;
+
+    .cart-prices {
+        position: absolute;
+        right: 0;
+        top:0.5rem;
+    }
+}
+
+.cart-class {
+    .card {
+        @extend .border-secondary;
+    }
+
+    .card-body, .card-header {
+        //background: $light;
+
+        legend {
+            font-weight: 700;
+        }
+    }
+
+    .textarea-group {
+        margin-bottom: 1rem !important;
+    }
+}
+
+.empty-basket-icon {
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 0.3rem;
+}
+
+.pay-button, .dummy-pay-button {
+    margin-top: 0.8rem;
+    width: 100%;
+    color: #fff;
+}
+
 .pay-PayPalExpress {
-    background: #ffc520;
-    border-color: #ffc520;
-    color: #253b80;
-    font-weight: 700;
-    font-style: italic;
+    background: #ffc520 !important;
+    border-color: #ffc520 !important;
+    color: #253b80 !important;
+    font-weight: 700 !important;
+    font-style: italic !important;
 
     &:before {
         content: '\f1ed';
@@ -268,9 +498,15 @@
     @extend .btn-link;
     display: block;
     padding-top: 13px;
+    background: transparent !important;
+    padding: 0;
+    color: $secondary !important;
+    font-size: 1rem;
 
     &:hover {
         background: none;
+        transform: scale() !important;
+        box-shadow: none !important;
     }
 }
 

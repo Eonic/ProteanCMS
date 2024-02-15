@@ -96,9 +96,66 @@
 						<xsl:value-of select="$home-class"/>
 					</xsl:attribute>
 				</xsl:if>
-				<div class="container">
-					<xsl:if test="((count($sectionPage[@name!='Info menu' and @name!='Footer']/MenuItem[not(DisplayName/@exclude='true')])&gt;0 and not($currentPage/DisplayName[@nonav='true']) and $currentPage/@name!='Home') and not($cartPage) or $currentPage[parent::MenuItem[@name='Information']/MenuItem] and (count($currentPage[child::MenuItem[not(DisplayName/@exclude='true')]])&gt;0 and not($currentPage/DisplayName[@nonav='true'])) and not($cartPage) or $currentPage[ancestor::MenuItem[@name='Info menu']/MenuItem] and not($currentPage[parent::MenuItem[@name='Info menu']/MenuItem]) and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)) and ($sub-nav='top')">
-
+				<div id="mainLayout" class="fullwidth activateAppearAnimation">
+					<xsl:if test="$currentPage/DisplayName/@banner='no-banner'">
+						<div id="content" class="visually-hidden">&#160;</div>
+					</xsl:if>
+					<xsl:if test="not($cartPage) and $currentPage/@name!='Home' and not($page/ContentDetail) and not($currentPage/DisplayName/@banner='no-banner')">
+						<xsl:choose>
+							<xsl:when test="$currentPage/DisplayName/@banner='img-banner'">
+								<div class="image-banner">
+									<div class="container-fluid">
+										<div class="image-banner-inner" id="banner" style="background-image:url({/Page/Contents/Content[@name='Banner']/img/@src})">
+											<xsl:apply-templates select="/Page" mode="inlinePopupSingle">
+												<xsl:with-param name="type">Image</xsl:with-param>
+												<xsl:with-param name="text">Add Banner Background</xsl:with-param>
+												<xsl:with-param name="name">Banner</xsl:with-param>
+												<xsl:with-param name="class">image-banner-inner</xsl:with-param>
+											</xsl:apply-templates>
+											<div class="banner-caption">
+												<nav aria-label="breadcrumb">
+													<ol class="breadcrumb">
+														<xsl:apply-templates select="Menu/MenuItem" mode="breadcrumb"/>
+													</ol>
+												</nav>
+												<div id="content" class="visually-hidden">&#160;</div>
+												<div id="mainTitle">
+													<xsl:apply-templates select="/" mode="getMainTitle" />
+												</div>
+												<xsl:if test="$currentPage/Description/node()">
+													<xsl:apply-templates select="$currentPage/Description/node()" mode="cleanXhtml"/>
+												</xsl:if>
+											</div>
+										</div>
+									</div>
+								</div>
+							</xsl:when>
+							<xsl:otherwise>
+								<div class="intro-banner">
+									<div class="container-fluid">
+										<div class="intro-banner-inner">
+											<div id="mainTitle">
+												<nav aria-label="breadcrumb">
+													<ol class="breadcrumb">
+														<xsl:apply-templates select="Menu/MenuItem" mode="breadcrumb"/>
+													</ol>
+													<div id="content" class="visually-hidden">&#160;</div>
+												</nav>
+												<xsl:apply-templates select="/" mode="getMainTitle" />
+												<xsl:if test="$currentPage/Description/node()">
+													<xsl:apply-templates select="$currentPage/Description/node()" mode="cleanXhtml"/>
+												</xsl:if>
+											</div>
+										</div>
+									</div>
+								</div>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:if>
+					<xsl:text> </xsl:text>
+				</div>
+				<xsl:if test="((count($sectionPage[@name!='Info menu' and @name!='Footer']/MenuItem[not(DisplayName/@exclude='true')])&gt;0 and not($currentPage/DisplayName[@nonav='true']) and $currentPage/@name!='Home') and not($cartPage) or $currentPage[parent::MenuItem[@name='Information']/MenuItem] and (count($currentPage[child::MenuItem[not(DisplayName/@exclude='true')]])&gt;0 and not($currentPage/DisplayName[@nonav='true'])) and not($cartPage) or $currentPage[ancestor::MenuItem[@name='Info menu']/MenuItem] and not($currentPage[parent::MenuItem[@name='Info menu']/MenuItem]) and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)) and ($sub-nav='top')">
+					<div class="container">
 						<button class="btn btn-primary hidden-lg hidden-xl hidden-xxl xs-menu-btn" type="button" data-bs-toggle="collapse" data-bs-target="#topMenuCollapse" aria-expanded="false" aria-controls="topMenuCollapse">
 							<xsl:apply-templates select="$sectionPage/@name" mode="cleanXhtml"/> Menu <i class="fas fa-caret-down"> </i>
 						</button>
@@ -120,8 +177,8 @@
 								</xsl:choose>
 							</div>
 						</div>
-					</xsl:if>
-				</div>
+					</div>
+				</xsl:if>
 				<xsl:choose>
 					<!--~~~~~~~~~~~~~~ pages with side nav ~~~~~~~~~~~~~~ -->
 					<xsl:when test="((count($sectionPage[@name!='Info menu' and @name!='Footer']/MenuItem[not(DisplayName/@exclude='true')])&gt;0 and not($currentPage/DisplayName[@nonav='true']) and $currentPage/@name!='Home') and not($cartPage) or $currentPage[parent::MenuItem[@name='Information']/MenuItem] and (count($currentPage[child::MenuItem[not(DisplayName/@exclude='true')]])&gt;0 and not($currentPage/DisplayName[@nonav='true'])) and not($cartPage) or $currentPage[ancestor::MenuItem[@name='Info menu']/MenuItem] and not($currentPage[parent::MenuItem[@name='Info menu']/MenuItem]) and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)) and ($sub-nav='left' or $sub-nav='right')">

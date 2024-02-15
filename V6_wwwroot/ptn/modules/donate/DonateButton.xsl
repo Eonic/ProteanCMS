@@ -8,14 +8,13 @@
             if ($(this).val() == 'Other') {
                  $("#donationAmount-x").removeAttr("disabled");				
 				 $("#donationAmount-x").show();
-				 $("#donationAmount-x").attr("id",'donationAmount');
-				 $("#donationAmount").attr("name",'donationAmount');
+				 $("#donationAmount-x").attr("name","donationAmount");
+				 $("#donationAmount-x").attr("id","donationAmount");
 				 
 			    $("#donationAmount").attr("disabled");
                 $("#donationAmount").hide();
 				 $("#donationAmount").attr("name","donationAmount-y");
-				 $("#donationAmount").attr("id","donationAmount-y");
-				 
+				 $("#donationAmount").attr("id","donationAmount-y");				 
                
             } else {
                 $("#txtOther").attr("disabled", "disabled");

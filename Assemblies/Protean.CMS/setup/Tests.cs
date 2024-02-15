@@ -1,6 +1,10 @@
-﻿using System;
+﻿using Imazen.WebP;
+using System;
+using System.Drawing;
+using System.IO;
 using System.Web.Configuration;
 using System.Xml;
+using Microsoft.VisualBasic;
 
 namespace Protean
 {
@@ -308,6 +312,39 @@ namespace Protean
             catch (Exception ex)
             {
                 return ex.Message + @"<br/>If server is 64 bit and failed to load tidy.dll reference and broke functionality. Get dll from below link with the version you want http://binaries.html-tidy.org/ Please fllow steps- Put tidyX86.dll, tidyX64.dll and tidy.dll in C:\Windows\System32 and it will start working.";
+            }
+        }
+
+        public string TestWebP()
+        {
+            try
+            {
+                string cVirtualPath = "/ptn/admin/skin/images/logosquare.png";
+                string webpFileName = Strings.Replace(cVirtualPath, ".png", ".webp");
+                string newFilepath = string.Empty;
+                var oEw = new Cms();
+                oEw.InitializeVariables();
+                try
+                {
+                    oEw.moFSHelper.DeleteFile(webpFileName);
+                }
+                catch {
+                };
+                short WebPQuality = 60;
+                using (var bitMap = new Bitmap(oEw.goServer.MapPath(cVirtualPath)))
+                        {
+                            using (var saveImageStream = File.Open(oEw.goServer.MapPath(webpFileName), FileMode.Create))
+                            {
+                                var encoder = new SimpleEncoder();
+                                encoder.Encode(bitMap, saveImageStream, WebPQuality);
+                                encoder = null;
+                            }
+                        }          
+                return "Protean Logo converted to WebP <img src='" + webpFileName + "'/>";
+            }
+            catch (Exception ex)
+            {
+                return ex.Message + "<br/>" + ex.StackTrace;
             }
         }
 

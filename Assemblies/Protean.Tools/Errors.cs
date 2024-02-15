@@ -1,5 +1,11 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.EMMA;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections;
+using System.Net.Http;
+using System.Net;
+using System.Web;
 
 
 namespace Protean.Tools.Errors
@@ -76,5 +82,40 @@ namespace Protean.Tools.Errors
                 cMessage += System.Environment.NewLine + "Other Settings: " + oOtherSettings.ToString();
             return cMessage;
         }
+    }
+
+    public class Error : ErrorEventArgs
+    {
+        public string Status { get; set; }
+        public string Message { get; set; }
+        public int Code { get; set; }
+        public string Detail { get; set; }
+        public string Source { get; set; }
+        public string Link { get; set; }
+
+        public Error(string Module, string Procedure, Exception ex, string Info, int importance = 0, Hashtable Settings = null, string cStatus="", int nCode=0, string cSouce = "", string cDetail = "", string cLink= "") : base(Module, Procedure, ex, Info, importance, Settings)
+        {
+            Status = cStatus;
+            if(ex!= null)
+            {
+                Source = ex.Source;
+                if (ex.InnerException != null)
+                {
+                    Detail = ex.InnerException.Message;
+                }
+                Message = ex.Message;
+            }
+
+            Code = nCode;
+            Link = cLink;
+        }
+
+        public string GetJsonError()
+        {
+                string jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(this);
+                return jsonString;
+        }
+
+
     }
 }

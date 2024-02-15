@@ -14,6 +14,10 @@ using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 using Protean.Providers.Membership;
 using System.Runtime.InteropServices.ComTypes;
+using static Protean.Cms.Admin;
+using System.Web.UI.WebControls;
+using System.Web;
+using System.Linq.Expressions;
 
 namespace Protean
 {
@@ -543,7 +547,108 @@ namespace Protean
                 }
             }
 
+
+            public void RegistrationActions() {
+                string cProcessInfo = "";
+                try
+                {
+                    switch (myWeb.moConfig["RegisterBehaviour"] ?? "")
+                    {
+                        case "validateByEmail":
+                            {
+                              
+                                // first wmyWebe set the user account to be pending
+                                myWeb.moDbHelper.setObjectStatus(Cms.dbHelper.objectTypes.Directory, Cms.dbHelper.Status.Pending, myWeb.mnUserId);
+                                var oMembership = new Membership(ref myWeb);
+                                oMembership.OnError += myWeb.OnComponentError;
+                                oMembership.AccountActivateLink((int)myWeb.mnUserId);
+                                myWeb.moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Register, (int)myWeb.mnUserId, myWeb.moSession.SessionID, DateTime.Now, 0, 0, "Send Activation"); // Auto logon
+                                break;
+                            }
+
+                        default:
+                            {
+                              if (myWeb.moSession != null)
+                                    myWeb.moSession["nUserId"] = (object)myWeb.mnUserId;
+
+                                myWeb.moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Register, (int)myWeb.mnUserId, myWeb.moSession.SessionID, DateTime.Now, 0, 0, "First Logon");
+                                break;
+                            }
+
+
+                    }
+
+                    // send registration confirmation
+                    string xsltPath = "/xsl/email/registration.xsl";
+                    if (myWeb.moConfig["cssFramework"] == "bs5")
+                    {
+                        xsltPath = "/features/membership/email/registration.xsl";
+                    }
+                    var fsHelper = new Protean.fsHelper();
+                    xsltPath = fsHelper.checkCommonFilePath(xsltPath);
+
+                    if (!string.IsNullOrEmpty(xsltPath))
+                    {
+                        var oUserElmt = myWeb.moDbHelper.GetUserXML(myWeb.mnUserId);
+
+                        var oElmtPwd = myWeb.moPageXml.CreateElement("Password");
+                        oElmtPwd.InnerText = myWeb.moRequest["cDirPassword"];
+                        oUserElmt.AppendChild(oElmtPwd);
+
+                        oUserElmt.SetAttribute("Url", myWeb.mcOriginalURL);
+
+                        XmlElement oUserEmail = (XmlElement)oUserElmt.SelectSingleNode("Email");
+                        string fromName = myWeb.moConfig["SiteAdminName"];
+                        string fromEmail = myWeb.moConfig["SiteAdminEmail"];
+                        string recipientEmail = "";
+                        if (oUserEmail != null)
+                            recipientEmail = oUserEmail.InnerText;
+                        string SubjectLine = "Your Registration Details";
+                        var oMsg = new Protean.Messaging(ref myWeb.msException);
+                        // send an email to the new registrant
+                        if (!string.IsNullOrEmpty(recipientEmail))
+                        {
+                            Cms.dbHelper argodbHelper = null;
+                            cProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, odbHelper: ref argodbHelper, "Message Sent", "Message Failed"));
+                        }
+
+                        // send an email to the webadmin
+                        if (string.IsNullOrEmpty(myWeb.moConfig["RegistrationAlertEmail"]))
+                        {
+                            recipientEmail = myWeb.moConfig["SiteAdminEmail"];
+                        }
+                        else
+                        {
+                            recipientEmail = myWeb.moConfig["RegistrationAlertEmail"];
+                        }
+
+                        string xsltPathAlert = "/xsl/email/registrationAlert.xsl";
+                        if (myWeb.moConfig["cssFramework"] == "bs5")
+                        {
+                            xsltPath = "/features/membership/email/registration-alert.xsl";
+                        }
+                        xsltPath = fsHelper.checkCommonFilePath(xsltPath);
+                        if (System.IO.File.Exists(myWeb.goServer.MapPath(myWeb.moConfig["ProjectPath"] + xsltPathAlert)))
+                        {
+                            Cms.dbHelper argodbHelper1 = null;
+                            cProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, myWeb.moConfig["ProjectPath"] + xsltPathAlert, "New User", recipientEmail, fromEmail, SubjectLine, odbHelper: ref argodbHelper1, "Message Sent", "Message Failed"));
+                        }
+                        oMsg = (Protean.Messaging)null;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "Logon", ex, ""));
+                }
+                finally
+                {
+
+                }
+            }
+
             #endregion
+
+
 
             #region Module Behaviour
 
@@ -851,110 +956,34 @@ namespace Protean
                                 // ok if the user is valid we then need to handle what happens next.
                                 if (Conversions.ToBoolean(oAdXfm.valid))
                                 {
-
+                                    myWeb.mnUserId = Conversions.ToInteger(oAdXfm.Instance.SelectSingleNode("tblDirectory/nDirKey").InnerText);
+                                    var oMembership = new Membership(ref myWeb);
+                                    oMembership.RegistrationActions();
                                     switch (myWeb.moConfig["RegisterBehaviour"] ?? "")
                                     {
-
                                         case "validateByEmail":
                                             {
                                                 // don't redirect because we want to reuse this form
                                                 bRedirect = false;
-
                                                 // say thanks for registering and update the form
-
                                                 // hide the current form
                                                 XmlElement oFrmGrp = (XmlElement)oAdXfm.moXformElmt.SelectSingleNode("group");
                                                 oFrmGrp.SetAttribute("class", "hidden");
                                                 // create a new note
                                                 XmlElement frmElmt = oAdXfm.moXformElmt;
                                                 XmlElement oFrmGrp2 = (XmlElement)oAdXfm.addGroup(ref frmElmt, "validateByEmail");
-                                                XmlNode oFrmGrp2Node = (XmlNode)oFrmGrp2;
-                                                oAdXfm.addNote(ref oFrmGrp2Node, Protean.xForm.noteTypes.Hint, "<span class=\"msg-1029\">Thanks for registering you have been sent an email with a link you must click to activate your account</span>", true);
-
-                                                // lets get the new userid from the instance
-                                                mnUserId = Conversions.ToLong(oAdXfm.Instance.SelectSingleNode("tblDirectory/nDirKey").InnerText);
-
-                                                // first we set the user account to be pending
-                                                moDbHelper.setObjectStatus(Cms.dbHelper.objectTypes.Directory, Cms.dbHelper.Status.Pending, mnUserId);
-
-                                                var oMembership = new Membership(ref myWeb);
-                                                oMembership.OnError += myWeb.OnComponentError;
-                                                oMembership.AccountActivateLink((int)mnUserId);
-
-                                                moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Register, (int)mnUserId, moSession.SessionID, DateTime.Now, 0, 0, "Send Activation"); // Auto logon
-                                                break;
+                                                //XmlNode oFrmGrp2Node = (XmlNode)oFrmGrp2;
+                                                oAdXfm.addNote(ref oFrmGrp2, Protean.xForm.noteTypes.Hint, "<span class=\"msg-1029\">Thanks for registering you have been sent an email with a link you must click to activate your account</span>", true);
+                                                 break;
                                             }
 
                                         default:
-                                            {
-                                                mnUserId = Conversions.ToLong(oAdXfm.Instance.SelectSingleNode("tblDirectory/nDirKey").InnerText);
-                                                if (moSession != null)
-                                                    moSession["nUserId"] = (object)mnUserId;
-
-                                                moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Register, (int)mnUserId, moSession.SessionID, DateTime.Now, 0, 0, "First Logon");
-
+                                            {                                                                                              
                                                 bLogon = true;
                                                 break;
                                             }
 
-                                    }
 
-                                    // send registration confirmation
-                                    string xsltPath = "/xsl/email/registration.xsl";
-                                    if (myWeb.moConfig["cssFramework"] == "bs5")
-                                    {
-                                        xsltPath = "/features/membership/email/registration.xsl";
-                                    }
-                                    var fsHelper = new Protean.fsHelper();
-                                    xsltPath = fsHelper.checkCommonFilePath(xsltPath);
-
-                                    if (!string.IsNullOrEmpty(xsltPath))
-                                    {
-                                        var oUserElmt = moDbHelper.GetUserXML(mnUserId);
-
-                                        var oElmtPwd = moPageXml.CreateElement("Password");
-                                        oElmtPwd.InnerText = moRequest["cDirPassword"];
-                                        oUserElmt.AppendChild(oElmtPwd);
-
-                                        oUserElmt.SetAttribute("Url", myWeb.mcOriginalURL);
-
-                                        XmlElement oUserEmail = (XmlElement)oUserElmt.SelectSingleNode("Email");
-                                        string fromName = moConfig["SiteAdminName"];
-                                        string fromEmail = moConfig["SiteAdminEmail"];
-                                        string recipientEmail = "";
-                                        if (oUserEmail != null)
-                                            recipientEmail = oUserEmail.InnerText;
-                                        string SubjectLine = "Your Registration Details";
-                                        var oMsg = new Protean.Messaging(ref myWeb.msException);
-                                        // send an email to the new registrant
-                                        if (!string.IsNullOrEmpty(recipientEmail))
-                                        {
-                                            Cms.dbHelper argodbHelper = null;
-                                            sProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, odbHelper: ref argodbHelper, "Message Sent", "Message Failed"));
-                                        }
-
-                                        // send an email to the webadmin
-                                        if (string.IsNullOrEmpty(moConfig["RegistrationAlertEmail"]))
-                                        {
-                                            recipientEmail = moConfig["SiteAdminEmail"];
-                                        }
-                                        else
-                                        {
-                                            recipientEmail = moConfig["RegistrationAlertEmail"];
-                                        }
-
-                                        string xsltPathAlert = "/xsl/email/registrationAlert.xsl";
-                                        if (myWeb.moConfig["cssFramework"] == "bs5")
-                                        {
-                                            xsltPath = "/features/membership/email/registration-alert.xsl";
-                                        }
-                                        xsltPath = fsHelper.checkCommonFilePath(xsltPath);
-                                        if (System.IO.File.Exists(goServer.MapPath(moConfig["ProjectPath"] + xsltPathAlert)))
-                                        {
-                                            Cms.dbHelper argodbHelper1 = null;
-                                            sProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, moConfig["ProjectPath"] + xsltPathAlert, "New User", recipientEmail, fromEmail, SubjectLine, odbHelper: ref argodbHelper1, "Message Sent", "Message Failed"));
-                                        }
-                                        oMsg = (Protean.Messaging)null;
                                     }
 
                                     // redirect to this page or alternative page.

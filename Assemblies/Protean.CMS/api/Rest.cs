@@ -187,7 +187,15 @@ namespace Protean
                         var assemblyInstance = Assembly.LoadFrom(this.goServer.MapPath(moPrvConfig.Providers[ProviderName].Parameters["path"]));
                         // Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(ProviderName).Type)
                         classPath = moPrvConfig.Providers[ProviderName].Parameters["className"] + ".JSONActions";
-                        calledType = assemblyInstance.GetType(classPath, true);
+                        // classPath = "JSONActions";
+                        try
+                        { 
+                            calledType = assemblyInstance.GetType(classPath, true);
+                        }
+                        catch {
+                            classPath = moPrvConfig.Providers[ProviderName].Parameters["className"] + "+JSONActions";
+                            calledType = assemblyInstance.GetType(classPath, true);
+                        }                        
                     }
                 }
                 else
@@ -223,7 +231,11 @@ namespace Protean
 
             catch (Exception ex)
             {
-                this.OnComponentError(this, new Tools.Errors.ErrorEventArgs(this.mcModuleName, "JSONRequest", ex, sProcessInfo));
+                this.moResponse.StatusCode = 400;
+                
+                this.OnComponentError(this, new Tools.Errors.Error(mcModuleName, "JSONRequest", ex, sProcessInfo,0,null, this.moResponse.Status,this.moResponse.StatusCode, "", "", ""));
+
+                //this.OnComponentError(this, new Tools.Errors.ErrorEventArgs(this.mcModuleName, "JSONRequest", ex, sProcessInfo));
                 // returnException(mcModuleName, "getPageHtml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
                 if (gbDebug)
                 {
@@ -271,8 +283,18 @@ namespace Protean
                     {
                         nUserId = myWeb.mnUserId;
                     }
+                    if (nUserId == 0)
+                    {
+                        if(myWeb.moSession!=null)
+                        {
+                            if (myWeb.moSession["nUserId"] != null)
+                            {
+                                nUserId = Convert.ToInt32(myWeb.moSession["nUserId"]);
+                            }
+                        }
+                    }
                     // HttpContext httpContext = HttpContext.Current;
-                    else if (myWeb.moCtx.Request.Headers != null)
+                    if (myWeb.moCtx.Request.Headers != null)
                     {
                         if (myWeb.moCtx.Request.Headers["Authorization"] != null)
                         {

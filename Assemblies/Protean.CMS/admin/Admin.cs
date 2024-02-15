@@ -487,9 +487,9 @@ namespace Protean
                                         {
                                             sAdminLayout = "AdminXForm";
                                             mnAdminUserId = 0;
-                                            XmlNode argoNode = (XmlNode)moAdXfm.moXformElmt;
-                                            moAdXfm.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, "You do not have administrative access to this site.");
-                                            moAdXfm.moXformElmt = (XmlElement)argoNode;
+                                            //XmlNode argoNode = (XmlNode)moAdXfm.moXformElmt;
+                                            moAdXfm.addNote(ref moAdXfm.moXformElmt, Protean.xForm.noteTypes.Alert, "You do not have administrative access to this site.");
+                                            //moAdXfm.moXformElmt = (XmlElement)argoNode;
                                         }
                                         else
                                         {
@@ -673,8 +673,7 @@ namespace Protean
                         case "admin":
                             {
                                 mcEwCmd = "Content";
-                                goto ProcessFlow;
-                                break;
+                                goto ProcessFlow;                                
                             }
 
 
@@ -682,7 +681,6 @@ namespace Protean
                             {
 
                                 sAdminLayout = "adminDenied";
-
                                 oPageDetail.AppendChild(moDeniedAdminMenuElmt);
                                 break;
                             }
@@ -743,7 +741,12 @@ namespace Protean
                                 var rewriteXml = new XmlDocument();
                                 rewriteXml.Load(myWeb.goServer.MapPath("/RewriteRules.config"));
                                 var defaultXml = new XmlDocument();
-                                defaultXml.Load(myWeb.goServer.MapPath("/ewcommon/setup/rootfiles/RewriteRules_config.xml"));
+                                string commonPath = "/ewcommon";
+                                if (myWeb.bs5)
+                                {
+                                    commonPath = "/ptn";
+                                }
+                                defaultXml.Load(myWeb.goServer.MapPath($"{commonPath}/setup/rootfiles/RewriteRules_config.xml"));
                                 foreach (XmlElement oRule in rewriteXml.DocumentElement.SelectNodes("rule"))
                                 {
                                     string rulename = oRule.GetAttribute("name");
@@ -4010,9 +4013,9 @@ namespace Protean
                             else
                             {
                                 moAdXfm.valid = false;
-                                XmlNode argoNode = (XmlNode)moAdXfm.moXformElmt;
-                                moAdXfm.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, oConvert.Message);
-                                moAdXfm.moXformElmt = (XmlElement)argoNode;
+                                //XmlNode argoNode = (XmlNode)moAdXfm.moXformElmt;
+                                moAdXfm.addNote(ref moAdXfm.moXformElmt, Protean.xForm.noteTypes.Alert, oConvert.Message);
+                                //moAdXfm.moXformElmt = (XmlElement)argoNode;
                                 sProcessInfo = oConvert.Message;
                             }
 
@@ -4143,17 +4146,17 @@ namespace Protean
                             {
                                 moAdXfm.valid = false;
                                 sErrorMsg = "No Content Returned";
-                                XmlNode argoNode1 = (XmlNode)moAdXfm.moXformElmt;
-                                moAdXfm.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, sErrorMsg);
-                                moAdXfm.moXformElmt = (XmlElement)argoNode1;
+                               // XmlNode argoNode1 = (XmlNode)moAdXfm.moXformElmt;
+                                moAdXfm.addNote(ref moAdXfm.moXformElmt, Protean.xForm.noteTypes.Alert, sErrorMsg);
+                               // moAdXfm.moXformElmt = (XmlElement)argoNode1;
                             }
                         }
                         else
                         {
 
-                            XmlNode argoNode2 = (XmlNode)moAdXfm.moXformElmt;
-                            moAdXfm.addNote(ref argoNode2, Protean.xForm.noteTypes.Alert, sErrorMsg);
-                            moAdXfm.moXformElmt = (XmlElement)argoNode2;
+                            //XmlNode argoNode2 = (XmlNode)moAdXfm.moXformElmt;
+                            moAdXfm.addNote(ref moAdXfm.moXformElmt, Protean.xForm.noteTypes.Alert, sErrorMsg);
+                            //moAdXfm.moXformElmt = (XmlElement)argoNode2;
 
                         }
 

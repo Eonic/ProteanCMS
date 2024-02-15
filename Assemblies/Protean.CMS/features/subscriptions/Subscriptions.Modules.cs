@@ -62,8 +62,8 @@ namespace Protean
 
                                         if (bPaymentMethodUpdated)
                                         {
-                                            XmlNode argoNode = (XmlNode)oSubForm.moXformElmt;
-                                            oSubForm.addNote(ref argoNode, Protean.xForm.noteTypes.Help, "Thank you, your payment method has been updated", true, "term4060");
+                                            //XmlNode argoNode = (XmlNode)oSubForm.moXformElmt;
+                                            oSubForm.addNote(ref oSubForm.moXformElmt, Protean.xForm.noteTypes.Help, "Thank you, your payment method has been updated", true, "term4060");
                                         }
 
                                         SelectedPaymentMethod = myWeb.moRequest["ewSubmit"];
@@ -88,8 +88,8 @@ namespace Protean
                                                 if (dRenewalDate < DateTime.Now)
                                                 {
                                                     oSubForm.valid = false;
-                                                    XmlNode argoNode1 = (XmlNode)oSubForm.moXformElmt;
-                                                    oSubForm.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, "Your subscription has gone beyond the date it can be renewed you must get a new subscription.", true, "term4060");
+                                                    //XmlNode argoNode1 = (XmlNode)oSubForm.moXformElmt;
+                                                    oSubForm.addNote(ref oSubForm.moXformElmt, Protean.xForm.noteTypes.Alert, "Your subscription has gone beyond the date it can be renewed you must get a new subscription.", true, "term4060");
 
                                                 }
                                             }
