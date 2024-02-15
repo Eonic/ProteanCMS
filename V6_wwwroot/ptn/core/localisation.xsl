@@ -334,6 +334,14 @@
     </xsl:choose>
   </xsl:template>
 
+	<!-- 1013 User account has been disabled -->
+	<xsl:template match="span[@class='msg-1022']" mode="term">
+		<xsl:choose>
+			<xsl:when test="$lang='en-pr'">Tha deckswab has been banished</xsl:when>
+			<xsl:otherwise>There was a problem activating your account</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
   <!-- 1020 This user has been added -->
   <xsl:template match="span[@class='msg-1029']" mode="term">
     <xsl:choose>

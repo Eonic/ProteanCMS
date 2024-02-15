@@ -49,20 +49,21 @@
       </tr>
 		<xsl:if test="ActivationKey/node()!=''">
 		<tr>
-
 			<td colspan="2" align="center">
-				<font face="verdana" size="2">
-					<xsl:variable name="secureLink">
-						<xsl:value-of select="$siteURL"/>
-						<xsl:value-of select="@Url"/>
-						<xsl:text>?ewCmd=ActivateAccount</xsl:text>						
-						<xsl:text>&amp;key=</xsl:text>
-						<xsl:value-of select="ActivationKey/node()"/>
-					</xsl:variable>
-					<span class="emailBtn">
-					<a href="{$secureLink}"  title="Activate Account">Click to Activate Account</a>
-					</span>
-				</font>
+				<table cellspacing="0" cellpadding="0">
+					<tr>
+						<td class="button" bgcolor="{$mainColour}">
+							<xsl:variable name="secureLink">
+								<xsl:value-of select="$siteURL"/>
+								<xsl:value-of select="@Url"/>
+								<xsl:text>?ewCmd=ActivateAccount</xsl:text>
+								<xsl:text>&amp;key=</xsl:text>
+								<xsl:value-of select="ActivationKey/node()"/>
+							</xsl:variable>
+							<a href="{$secureLink}" title="Activate Account">Click to Activate Account</a>
+						</td>
+					</tr>
+				</table>				
 			</td>
 		</tr>
 		</xsl:if>     

@@ -63,7 +63,7 @@
 		  </a>
 	  </xsl:if>
   </xsl:template>
-  <!-- -->
+	<!-- -->
   <!-- -->	
    <xsl:template match="Page[@layout='Logon_Register']" mode="Layout">
     <div id="template_Logon_Register">
@@ -442,7 +442,7 @@
       </div>
       <input name="ewmLogon/@ewCmd" class="hidden" value="membershipLogon"/>
       <button type="submit" name="submit" value="Login" class="btn btn-primary" onclick="disableButton(this);">
-        Log in
+        Sign in
       </button>
       <xsl:if test="alert">
         <xsl:apply-templates select="alert" mode="xform"/>
@@ -655,13 +655,14 @@
         <xsl:otherwise>
           <xsl:apply-templates select="/Page/User" mode="displayUserDetails" />
         </xsl:otherwise>
-      </xsl:choose>  
+      </xsl:choose>
+		<xsl:text> </xsl:text>
     </xsl:template>
 
     <!-- Membership Register Module -->
     <xsl:template match="Content[@type='Module' and (@moduleType='MembershipRegister')]" mode="displayBrief">
 		<xsl:choose>
-			<xsl:when test="$page/User/@status='-1'">
+			<xsl:when test="$page/User/@status!='1'">
 				You must activate your account before you can update your details.
 			</xsl:when>
 			<xsl:otherwise>
