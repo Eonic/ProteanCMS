@@ -1,7 +1,6 @@
 ﻿.cartButtons .selectOptions {
     float: left;
     margin-right: 10px;
-    margin-top: 10px;
 }
 
 .qty-product {
@@ -16,7 +15,6 @@
     .input-group {
         max-width: 120px;
         flex-wrap: nowrap;
-        border-bottom: 2px solid $input-border-color;
         text-align: center;
     }
 
@@ -39,6 +37,7 @@
 }
 
 .cart-class {
+    #mainLayout > .container,
     > .container,
     .row > .cart-btns-btm {
         padding: 0 ($grid-gutter-width/2);
@@ -77,7 +76,7 @@
         }
 
         .cart-btns-btm {
-            margin-top: -2rem;
+          //  margin-top: -2rem;
             text-align: center;
         }
 
@@ -223,7 +222,7 @@
 
     .account-options-card {
         .aoc-inner {
-            max-width: 400px;
+            max-width: 500px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -260,7 +259,7 @@
     }
 
     .principle {
-        float: right;
+        //float: right;
     }
 }
 
@@ -385,8 +384,8 @@
         margin-bottom: 0;
     }
 }
-
-.cart-class > .container {
+.cart-class > .container,
+.cart-class #mainLayout > .container {
     max-width: 100%;
 
     .btn-custom {
@@ -421,7 +420,7 @@
             width: 100%;
         }
 
-        .totals-row {
+        .totals-row .total{
             border-top: 2px solid;
             font-size: 1.3rem;
             padding-top: 0.3rem;

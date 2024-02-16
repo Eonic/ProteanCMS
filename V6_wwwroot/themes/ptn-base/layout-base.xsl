@@ -27,6 +27,9 @@
 		<xsl:variable name="home-class">
 			<xsl:if test="$currentPage[@id='1']">home-class</xsl:if>
 		</xsl:variable>
+		<xsl:variable name="cart-class">
+			<xsl:if test="$cartPage"> cart-class </xsl:if>
+		</xsl:variable>
 		<div id="mainTable" class="Site activateAppearAnimation {$nav-padding}">
 			<xsl:if test="$cartPage">
 				<xsl:attribute name="class">Site activateAppearAnimation nav-no-padding</xsl:attribute>
@@ -64,7 +67,8 @@
 					<xsl:apply-templates select="." mode="header-one-line">
 						<xsl:with-param name="nav-collapse">false</xsl:with-param>
 						<xsl:with-param name="social-links">false</xsl:with-param>
-						<xsl:with-param name="containerClass" select="$container"/>
+						<xsl:with-param name="containerClass">container-fluid</xsl:with-param>
+						<xsl:with-param name="cartClass" select="$cart-class"/>
 					</xsl:apply-templates>
 				</xsl:when>
 				<xsl:otherwise>
@@ -85,7 +89,7 @@
 			</xsl:if>
 
 			<!--~~~~~~~~~~~~~~ MAIN CONTENT ~~~~~~~~~~~~~~ -->
-			<div class="container-wrapper {$detail-heading} {$nav-padding} {$home-class}">
+			<div class="container-wrapper {$detail-heading} {$nav-padding} {$home-class} {$cart-class}">
 				<xsl:if test="not($adminMode or /Page[@previewMode='true']) and $NavFix='true'">
 					<xsl:attribute name="class">
 						<xsl:text>container-wrapper fixed-nav-content </xsl:text>
@@ -94,6 +98,8 @@
 						<xsl:value-of select="$detail-heading"/>
 						<xsl:text> </xsl:text>
 						<xsl:value-of select="$home-class"/>
+						<xsl:value-of select="$cart-class"/>
+						<xsl:if test="not($cartPage) and $currentPage/@name!='Home'"> mt-0</xsl:if>
 					</xsl:attribute>
 				</xsl:if>
 				<div id="mainLayout" class="fullwidth activateAppearAnimation">
@@ -153,36 +159,34 @@
 						</xsl:choose>
 					</xsl:if>
 					<xsl:text> </xsl:text>
-				</div>
-				<xsl:if test="((count($sectionPage[@name!='Info menu' and @name!='Footer']/MenuItem[not(DisplayName/@exclude='true')])&gt;0 and not($currentPage/DisplayName[@nonav='true']) and $currentPage/@name!='Home') and not($cartPage) or $currentPage[parent::MenuItem[@name='Information']/MenuItem] and (count($currentPage[child::MenuItem[not(DisplayName/@exclude='true')]])&gt;0 and not($currentPage/DisplayName[@nonav='true'])) and not($cartPage) or $currentPage[ancestor::MenuItem[@name='Info menu']/MenuItem] and not($currentPage[parent::MenuItem[@name='Info menu']/MenuItem]) and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)) and ($sub-nav='top')">
-					<div class="container">
-						<button class="btn btn-primary hidden-lg hidden-xl hidden-xxl xs-menu-btn" type="button" data-bs-toggle="collapse" data-bs-target="#topMenuCollapse" aria-expanded="false" aria-controls="topMenuCollapse">
-							<xsl:apply-templates select="$sectionPage/@name" mode="cleanXhtml"/> Menu <i class="fas fa-caret-down"> </i>
-						</button>
-						<div class="collapse dont-collapse-md" id="topMenuCollapse">
-							<div id="topMenu">
-								<xsl:choose>
-									<xsl:when test="$currentPage[parent::MenuItem[@name='Info menu']/MenuItem] and (count($currentPage[child::MenuItem[not(DisplayName/@exclude='true')]])&gt;0) or $currentPage[ancestor::MenuItem[@name='Info menu']/MenuItem] and not($currentPage[parent::MenuItem[@name='Info menu']/MenuItem])">
-										<xsl:apply-templates select="Menu/MenuItem/MenuItem[@name='Info menu']/MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]" mode="submenu">
+					<xsl:if test="((count($sectionPage[@name!='Info menu' and @name!='Footer']/MenuItem[not(DisplayName/@exclude='true')])&gt;0 and not($currentPage/DisplayName[@nonav='true']) and $currentPage/@name!='Home') and not($cartPage) or $currentPage[parent::MenuItem[@name='Information']/MenuItem] and (count($currentPage[child::MenuItem[not(DisplayName/@exclude='true')]])&gt;0 and not($currentPage/DisplayName[@nonav='true'])) and not($cartPage) or $currentPage[ancestor::MenuItem[@name='Info menu']/MenuItem] and not($currentPage[parent::MenuItem[@name='Info menu']/MenuItem]) and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)) and ($sub-nav='top')">
+						<div class="container">
+							<button class="btn btn-primary hidden-lg hidden-xl hidden-xxl xs-menu-btn" type="button" data-bs-toggle="collapse" data-bs-target="#topMenuCollapse" aria-expanded="false" aria-controls="topMenuCollapse">
+								<xsl:apply-templates select="$sectionPage/@name" mode="cleanXhtml"/> Menu <i class="fas fa-caret-down"> </i>
+							</button>
+							<div class="collapse dont-collapse-md" id="topMenuCollapse">
+								<div id="topMenu">
+									<xsl:choose>
+										<xsl:when test="$currentPage[parent::MenuItem[@name='Info menu']/MenuItem] and (count($currentPage[child::MenuItem[not(DisplayName/@exclude='true')]])&gt;0) or $currentPage[ancestor::MenuItem[@name='Info menu']/MenuItem] and not($currentPage[parent::MenuItem[@name='Info menu']/MenuItem])">
+											<xsl:apply-templates select="Menu/MenuItem/MenuItem[@name='Info menu']/MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]" mode="submenu">
 
-											<xsl:with-param name="class">nav-link</xsl:with-param>
-										</xsl:apply-templates>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:apply-templates select="$sectionPage" mode="topmenu">
-											<xsl:with-param name="class">nav-link</xsl:with-param>
-											<xsl:with-param name="overviewLink">self</xsl:with-param>
-										</xsl:apply-templates>
-									</xsl:otherwise>
-								</xsl:choose>
+												<xsl:with-param name="class">nav-link</xsl:with-param>
+											</xsl:apply-templates>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:apply-templates select="$sectionPage" mode="topmenu">
+												<xsl:with-param name="class">nav-link</xsl:with-param>
+												<xsl:with-param name="overviewLink">self</xsl:with-param>
+											</xsl:apply-templates>
+										</xsl:otherwise>
+									</xsl:choose>
+								</div>
 							</div>
 						</div>
-					</div>
-				</xsl:if>
-				<xsl:choose>
-					<!--~~~~~~~~~~~~~~ pages with side nav ~~~~~~~~~~~~~~ -->
-					<xsl:when test="((count($sectionPage[@name!='Info menu' and @name!='Footer']/MenuItem[not(DisplayName/@exclude='true')])&gt;0 and not($currentPage/DisplayName[@nonav='true']) and $currentPage/@name!='Home') and not($cartPage) or $currentPage[parent::MenuItem[@name='Information']/MenuItem] and (count($currentPage[child::MenuItem[not(DisplayName/@exclude='true')]])&gt;0 and not($currentPage/DisplayName[@nonav='true'])) and not($cartPage) or $currentPage[ancestor::MenuItem[@name='Info menu']/MenuItem] and not($currentPage[parent::MenuItem[@name='Info menu']/MenuItem]) and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)) and ($sub-nav='left' or $sub-nav='right')">
-						<div id="mainLayout" class="pagewidth activateAppearAnimation">
+					</xsl:if>
+					<xsl:choose>
+						<!--~~~~~~~~~~~~~~ pages with side nav ~~~~~~~~~~~~~~ -->
+						<xsl:when test="((count($sectionPage[@name!='Info menu' and @name!='Footer']/MenuItem[not(DisplayName/@exclude='true')])&gt;0 and not($currentPage/DisplayName[@nonav='true']) and $currentPage/@name!='Home') and not($cartPage) or $currentPage[parent::MenuItem[@name='Information']/MenuItem] and (count($currentPage[child::MenuItem[not(DisplayName/@exclude='true')]])&gt;0 and not($currentPage/DisplayName[@nonav='true'])) and not($cartPage) or $currentPage[ancestor::MenuItem[@name='Info menu']/MenuItem] and not($currentPage[parent::MenuItem[@name='Info menu']/MenuItem]) and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)) and ($sub-nav='left' or $sub-nav='right')">
 							<div class="container">
 								<div class="row">
 									<div class="col-lg-{$SideSubWidth}" id="leftCol">
@@ -266,18 +270,16 @@
 									</xsl:if>
 								</div>
 							</div>
-						</div>
-					</xsl:when>
-					<!--~~~~~~~~~~~~~~ pages with no side nav ~~~~~~~~~~~~~~ -->
-					<xsl:otherwise>
-						<div id="mainLayout" class="fullwidth activateAppearAnimation">
+						</xsl:when>
+						<!--~~~~~~~~~~~~~~ pages with no side nav ~~~~~~~~~~~~~~ -->
+						<xsl:otherwise>
 							<div id="content" class="visually-hidden">&#160;</div>
 							<xsl:apply-templates select="." mode="mainLayout">
 								<xsl:with-param name="containerClass" select="$container"/>
 							</xsl:apply-templates>
-						</div>
-					</xsl:otherwise>
-				</xsl:choose>
+						</xsl:otherwise>
+					</xsl:choose>
+				</div>
 			</div>
 		</div>
 		<xsl:apply-templates select="." mode="footer1">

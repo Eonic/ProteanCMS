@@ -427,21 +427,21 @@
 					<xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
 				</div>
 			</xsl:if>
-			<div class="entryFooter">
-				<xsl:if test="Content[@type='Tag']">
+			<xsl:if test="Content[@type='Tag']">
+				<div class="entryFooter">
 					<div class="tags">
 						<xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
 						<xsl:text> </xsl:text>
 					</div>
-				</xsl:if>
-			</div>
+				</div>
+			</xsl:if>
 
 			<!--RELATED CONTENT-->
 			<xsl:if test="Content">
 				<!-- Reviews  -->
-				<xsl:if test="Content[@type='Review']">
+				<!--<xsl:if test="Content[@type='Review']">
 					<xsl:apply-templates select="." mode="relatedReviews"/>
-				</xsl:if>
+				</xsl:if>-->
 				<!-- Products  -->
 				<xsl:if test="Content[@type='Product']">
 					<div class="relatedcontent">

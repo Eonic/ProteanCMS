@@ -63,6 +63,11 @@ header {
             margin-top: -0.5rem;
         }
     }
+    &.cart-class {
+        .navbar-content {
+            flex-grow: 2;
+        }
+    }
 
     .navbar-toggler {
         border: 0;
