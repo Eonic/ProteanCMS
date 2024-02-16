@@ -2852,9 +2852,10 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                     keywords = Regex.Replace(keywords, @"\s\s+", " ");
 
                     // Tidy up 3: escape special characters
-                    if (escapeLuceneChars)
+                    if (escapeLuceneChars) {
                         keywords = Regex.Replace(keywords, @"[\\\+\-\!\(\)\{\}\[\]\^\~\*\?\:]", @"\$0");
-
+                        keywords = keywords.Replace("\\\\-", "\\-");
+                    }
                     return keywords;
                 }
                 catch (Exception)

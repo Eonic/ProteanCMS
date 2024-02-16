@@ -3008,13 +3008,18 @@ namespace Protean
                 oOptElmt = moPageXML.CreateElement("item");
                 // If sLabel <> "" Then
                 oLabelElmt = moPageXML.CreateElement("label");
+                // if (sLabel.Contains("&")) {
+                //      sLabel = sLabel;
+                //  }
                 if (bXmlLabel)
                 {
                     oLabelElmt.InnerXml = Protean.Tools.Xml.convertEntitiesToCodes(sLabel) + " ";
                 }
                 else
                 {
-                    oLabelElmt.InnerText = Protean.Tools.Xml.convertEntitiesToCodes(sLabel) + " ";
+                    oLabelElmt.InnerText = sLabel + " ";
+                   // removed as setting InnerText allready converts entitites.
+                   // oLabelElmt.InnerText = Protean.Tools.Xml.convertEntitiesToCodes(sLabel) + " ";
                 }
                 oOptElmt.AppendChild(oLabelElmt);
                 // End If
@@ -3074,7 +3079,7 @@ namespace Protean
                 while (oDr.Read())
                     // update audit
                     // NB Change! Needs auth :S
-                    addOption(ref oSelectNode, Strings.Replace(oDr[nameOrdinal].ToString(), "&amp;", "&"), oDr[valueOrdinal].ToString());
+                    addOption(ref oSelectNode, Strings.Replace(oDr[nameOrdinal].ToString(), "&amp;", "&"), Strings.Replace(oDr[valueOrdinal].ToString(), "&amp;", "&"));
                 oDr.Close();
                 oDr = null;
             }
