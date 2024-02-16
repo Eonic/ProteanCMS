@@ -1681,8 +1681,8 @@ namespace Protean
                             }
                     }
 
-                    if (nArtId == default)
-                    {
+                   /// if (nArtId == default)
+                  ///  {
                         sSql = "select nStructKey, nStructParId, nVersionParId, cVersionLang from tblContentStructure where (cStructName like '" + SqlFmt(sPath) + "' or cStructName like '" + SqlFmt(Strings.Replace(sPath, " ", "")) + "' or cStructName like '" + SqlFmt(Strings.Replace(sPath, " ", "-")) + "')";
 
                         ods = GetDataSet(sSql, "Pages");
@@ -1742,10 +1742,10 @@ namespace Protean
                                 }
                             }
                         }
-                    }
+                 //   }
 
                     // Note : if sPath is empty the SQL call above WILL return pages, we don't want these, we want top level pgid
-                    if (!(nPageId > 1L & !string.IsNullOrEmpty(sPath)))
+                    if (!(nPageId > 1L && !string.IsNullOrEmpty(sPath)))
                     {
                         // page path cannot be found we have an error that we raise later
                         if (sFullPath != "System+Pages/Page+Not+Found")
@@ -6881,7 +6881,7 @@ namespace Protean
                 // Dim oDr As SqlDataReader
                 XmlElement oElmt;
                 XmlElement oElmt2;
-                XmlDataDocument oXml;
+                XmlDocument oXml = null;
 
                 string sContent;
 
@@ -6940,62 +6940,69 @@ namespace Protean
                         // DataSet Method
                         oDs = GetDataSet(sSql, Strings.LCase(cSchemaName), "directory");
                         ReturnNullsEmpty(ref oDs);
-
-                        oDs.Tables[0].Columns[0].ColumnMapping = MappingType.Attribute;
-
-                        oXml = new XmlDataDocument(oDs);
-                        oDs.EnforceConstraints = false;
-
-                        // Convert any text to xml
-                        switch (cSchemaName ?? "")
+                        if (oDs.Tables.Count > 0)
                         {
-                            case "User":
-                                {
-                                    foreach (XmlElement currentOElmt2 in oXml.SelectNodes("descendant-or-self::UserXml"))
+                            oDs.Tables[0].Columns[0].ColumnMapping = MappingType.Attribute;
+
+                            oXml = new XmlDataDocument(oDs);
+                            oDs.EnforceConstraints = false;
+
+                            // Convert any text to xml
+                            switch (cSchemaName ?? "")
+                            {
+                                case "User":
                                     {
-                                        oElmt2 = currentOElmt2;
-                                        sContent = oElmt2.InnerText;
-                                        if (!string.IsNullOrEmpty(sContent))
+                                        foreach (XmlElement currentOElmt2 in oXml.SelectNodes("descendant-or-self::UserXml"))
                                         {
-                                            oElmt2.InnerXml = sContent;
+                                            oElmt2 = currentOElmt2;
+                                            sContent = oElmt2.InnerText;
+                                            if (!string.IsNullOrEmpty(sContent))
+                                            {
+                                                oElmt2.InnerXml = sContent;
+                                            }
+                                            oElmt2.ParentNode.ReplaceChild(oElmt2.FirstChild, oElmt2);
                                         }
-                                        oElmt2.ParentNode.ReplaceChild(oElmt2.FirstChild, oElmt2);
+
+                                        break;
                                     }
 
-                                    break;
-                                }
-
-                            default:
-                                {
-                                    foreach (XmlElement currentOElmt21 in oXml.SelectNodes("descendant-or-self::Details"))
+                                default:
                                     {
-                                        oElmt2 = currentOElmt21;
-                                        sContent = oElmt2.InnerText;
-                                        if (!string.IsNullOrEmpty(sContent))
+                                        foreach (XmlElement currentOElmt21 in oXml.SelectNodes("descendant-or-self::Details"))
                                         {
-                                            oElmt2.InnerXml = sContent;
+                                            oElmt2 = currentOElmt21;
+                                            sContent = oElmt2.InnerText;
+                                            if (!string.IsNullOrEmpty(sContent))
+                                            {
+                                                oElmt2.InnerXml = sContent;
+                                            }
+                                            oElmt2.ParentNode.ReplaceChild(oElmt2.FirstChild, oElmt2);
                                         }
-                                        oElmt2.ParentNode.ReplaceChild(oElmt2.FirstChild, oElmt2);
-                                    }
 
-                                    break;
-                                }
+                                        break;
+                                    }
+                            }
+
+                            goSession["sDirListType"] = cSchemaName;
+                            goSession["oDirList"] = oXml;
                         }
-
-                        goSession["sDirListType"] = cSchemaName;
-                        goSession["oDirList"] = oXml;
                     }
                     else
                     {
                         oXml = (XmlDataDocument)goSession["sDirListType"];
                     }
                     oElmt = moPageXml.CreateElement("directory");
-
-                    if (oXml.FirstChild != null)
+                    if (oXml == null)
                     {
-                        oElmt.InnerXml = oXml.FirstChild.InnerXml;
+                        oXml = new XmlDocument();
+                        oXml.AppendChild(oElmt);
                     }
-
+                    else { 
+                        if (oXml.FirstChild != null)
+                        {
+                            oElmt.InnerXml = oXml.FirstChild.InnerXml;
+                        }
+                    }
                     // let get the details of the parent object
                     if (nParId != 0L)
                     {
@@ -7043,7 +7050,6 @@ namespace Protean
                                 oElmt.SetAttribute("displayName", "Departments");
                                 break;
                             }
-
                         default:
                             {
                                 oElmt.SetAttribute("displayName", cSchemaName + "s");
@@ -7053,13 +7059,11 @@ namespace Protean
 
                     return oElmt;
                 }
-
                 catch (Exception ex)
                 {
                     OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "getUsers", ex, cProcessInfo));
                     return null;
                 }
-
             }
 
             public XmlElement GetUserXML(long nUserId, bool bIncludeContacts = true)
@@ -7085,7 +7089,7 @@ namespace Protean
                         // myWeb.moPageXml.DocumentElement.SetAttribute("adminMode", getPermissionLevel(nPermLevel))
                         // End If
                         // odr = getDataReader("SELECT * FROM tblDirectory where nDirKey = " & nUserId)
-                        using (var oDr = getDataReaderDisposable("SELECT * FROM tblDirectory where nDirKey = " + nUserId))  // Done by nita on 6/7/22
+                        using (var oDr = getDataReaderDisposable("SELECT * FROM tblDirectory inner join tblAudit on nAuditkey = nAuditId  where nDirKey = " + nUserId))  // Done by nita on 6/7/22
                         {
                             while (oDr.Read())
                             {
@@ -7093,6 +7097,8 @@ namespace Protean
                                 root.SetAttribute("id", nUserId.ToString());
                                 root.SetAttribute("name", Conversions.ToString(oDr["cDirName"]));
                                 root.SetAttribute("fRef", Conversions.ToString(oDr["cDirForiegnRef"]));
+
+                                root.SetAttribute("status", Conversions.ToString(oDr["nStatus"]));
                                 // root.SetAttribute("permission", getPermissionLevel(nPermLevel))
                                 if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDr["cDirXml"], "", false)))
                                 {

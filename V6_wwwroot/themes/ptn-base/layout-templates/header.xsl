@@ -74,7 +74,9 @@
 
 					<xsl:if test="not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
 						<button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-							<span class="navbar-toggler-icon"> </span>
+							<span class="navbar-toggler-icon">
+								<xsl:text> </xsl:text>
+							</span>
 						</button>
 					</xsl:if>
 				</div>
@@ -137,6 +139,7 @@
 											</xsl:apply-templates>
 										</li>
 									</xsl:for-each>
+									<xsl:text> </xsl:text>
 								</ul>
 							</xsl:if>
 							<!--LOGON BUTTON (MOBILE)-->
@@ -169,9 +172,9 @@
 		<xsl:param name="cart-style" />
 		<xsl:param name="social-links" />
 		<xsl:param name="containerClass" />
-		<header class="navbar navbar-expand-lg">
+		<header class="navbar navbar-expand-lg header-menu-right">
 			<xsl:if test="not($adminMode or /Page[@previewMode='true']) and $NavFix='true'">
-				<xsl:attribute name="class">navbar navbar-expand-lg navbar-fixed-top</xsl:attribute>
+				<xsl:attribute name="class">navbar navbar-expand-lg navbar-fixed-top header-menu-right</xsl:attribute>
 			</xsl:if>
 			<!--LOGO-->
 			<div class="{$containerClass} header-inner">
@@ -237,7 +240,9 @@
 						<nav class="navbar main-nav" aria-label="Main Navigation">
 							<xsl:if test="not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
 								<button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-									<span class="navbar-toggler-icon"> </span>
+									<span class="navbar-toggler-icon">
+										<xsl:text> </xsl:text>
+									</span>
 								</button>
 							</xsl:if>
 							<div class="offcanvas offcanvas-end" id="navbarSupportedContent">
@@ -293,6 +298,7 @@
 												</xsl:apply-templates>
 											</li>
 										</xsl:for-each>
+										<xsl:text> </xsl:text>
 									</ul>
 								</xsl:if>
 								<!--LOGON BUTTON (MOBILE)-->
@@ -326,9 +332,10 @@
 		<xsl:param name="cart-style" />
 		<xsl:param name="social-links" />
 		<xsl:param name="containerClass" />
-		<header class="navbar navbar-expand-lg header-info-above">
+		<xsl:param name="cartClass" />
+		<header class="navbar navbar-expand-xl header-info-above {$cartClass}">
 			<xsl:if test="not($adminMode or /Page[@previewMode='true']) and $NavFix='true'">
-				<xsl:attribute name="class">navbar navbar-expand-lg navbar-fixed-top header-info-above</xsl:attribute>
+				<xsl:attribute name="class">navbar navbar-expand-lg navbar-fixed-top header-info-above <xsl:value-of select="$cartClass"/></xsl:attribute>
 			</xsl:if>
 			<div class="header-above">
 				<div class="{$containerClass}">
@@ -401,7 +408,7 @@
 						<nav class="navbar main-nav" aria-label="Main Navigation">
 							<xsl:if test="not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
 								<button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-									<span class="navbar-toggler-icon"> </span>
+									<span class="navbar-toggler-icon"><xsl:text> </xsl:text></span>
 								</button>
 							</xsl:if>
 							<div class="offcanvas offcanvas-end" id="navbarSupportedContent">
@@ -457,6 +464,7 @@
 												</xsl:apply-templates>
 											</li>
 										</xsl:for-each>
+										<xsl:text> </xsl:text>
 									</ul>
 								</xsl:if>
 								<!--LOGON BUTTON (MOBILE)-->
@@ -510,7 +518,9 @@
 				<!--NAV TOGGLE (MOBILE)-->
 				<xsl:if test="not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
 					<button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-						<span class="navbar-toggler-icon"> </span>
+						<span class="navbar-toggler-icon">
+							<xsl:text> </xsl:text>
+						</span>
 					</button>
 				</xsl:if>
 				<div class="collapse navbar-collapse" id="navbarSupportedContent">

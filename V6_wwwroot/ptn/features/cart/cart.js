@@ -182,12 +182,12 @@ function initialiseProductSKUs() {
         }
 
         if (rrp != 'na') {
-            $(priceId + ' span.rrpPrice')
+            $(priceId + " span.rrpPrice span[itemprop='price'],")
                 .html(rrp);
         }
 
         if (salePrice != '') {
-            $(priceId + ' span.price, ' + priceId + ' span.price')
+            $(priceId + " span.price span[itemprop='price'], " + priceId + " span.price span[itemprop='price'],")
                 .html(salePrice);
         }
 

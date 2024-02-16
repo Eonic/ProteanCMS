@@ -104,6 +104,13 @@ namespace Protean
                                         return error == SslPolicyErrors.None;
                                     }
                                 };
+                            System.Net.ServicePointManager.ServerCertificateValidationCallback +=
+delegate (object sender, System.Security.Cryptography.X509Certificates.X509Certificate certificate,
+                        System.Security.Cryptography.X509Certificates.X509Chain chain,
+                        System.Net.Security.SslPolicyErrors sslPolicyErrors)
+{
+    return true; // **** Always accept
+};
                             // ServicePointManager.ServerCertificateValidationCallback = new Func<object, System.Security.Cryptography.X509Certificates.X509Certificate, System.Security.Cryptography.X509Certificates.X509Chain, SslPolicyErrors, bool>((se, cert, chain, sslerror) => true);
                         }
                         else

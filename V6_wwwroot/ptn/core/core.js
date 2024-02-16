@@ -340,7 +340,7 @@ $.fn.prepareXform = function () {
         $.datepicker.setDefaults($.datepicker.regional['']);
 
         $(this).find('input.jqDOBPicker').each(function (i) {
-
+            var myDatePicker = $(this);
             $(this).datepicker({
                 closeAtTop: false,
                 closeText: 'x',
@@ -353,6 +353,9 @@ $.fn.prepareXform = function () {
                 changeMonth: true,
                 changeYear: true,
                 yearRange: '-95:+0'
+            });
+            $(this).nextAll('label').on("click", function () {
+                myDatePicker.datepicker("show");
             });
         });
     };
@@ -372,6 +375,9 @@ $.fn.prepareXform = function () {
                 altFormat: 'yy-mm-dd',
                 mandatory: $(this).hasClass('required')
             });
+        });
+        $(this).nextAll('label').on("click", function () {
+            myDatePicker.datepicker("show");
         });
     };
 
@@ -468,11 +474,11 @@ $.fn.prepareXform = function () {
     });
 
     $(this).find("[id$='passwordPolicy']").click(function (event) {
-        var width = 200, height = 400, left = (screen.width / 2) - (width / 2),
-            top = (screen.height / 2) - (height / 2);
-        window.open("/ewcommon/tools/passwordpolicydisplay.ashx", 'Password_policy', 'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top);
-        event.preventDefault();
-        return false;
+        $("#xFrmAlertModal #errorMessage").load("/ptn/tools/passwordpolicydisplay.ashx");
+        let xFrmAlertModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('xFrmAlertModal')) // Returns a Bootstrap modal instance
+        var iconClassName = document.getElementById("errorIcon").className;
+        $("#xFrmAlertModal #errorIcon").removeClass(iconClassName);
+        xFrmAlertModal.show();
     });
 
     if ($(this).find('input#onLoad').exists()) {
@@ -491,6 +497,50 @@ $.fn.prepareXform = function () {
             });
         });
     }
+
+    if ($(this).find('select.select-other').exists()) {
+      
+        $(this).find('select.select-other').each(function (i) {
+            var selectcontrol = $(this);
+            var otherTextInput = $("#" + $(this).data("target"));
+            var isInDropdown = false;
+            otherTextInput.attr('readonly', 'readonly');
+            otherTextInput.hide();
+            otherTextInput.prev("label").hide();
+
+            $(this).find("option").each(function () {
+                if ($(this).val() == otherTextInput.val()) {
+
+                    $(this).attr('selected', 'selected');
+                    isInDropdown = true;
+                }
+                if (isInDropdown == false) {
+                    if ($(this).val() == "Other") {
+                        $(this).attr('selected', 'selected');
+                        otherTextInput.removeAttr('readonly');
+                        otherTextInput.show();
+                        otherTextInput.prev("label").show();
+                    }
+                }
+            });
+
+            selectcontrol.on('change', function () {
+                //alert($(this).find(":selected").val())
+                if ($(this).find(":selected").val() == "Other") {
+                    otherTextInput.removeAttr('readonly');
+                    otherTextInput.show();
+                    otherTextInput.prev("label").show();
+                    otherTextInput.val('');
+                }
+                else {
+                    otherTextInput.val(selectcontrol.find(":selected").val());
+                    otherTextInput.attr('readonly', 'readonly');
+                    otherTextInput.hide();
+                    otherTextInput.prev("label").hide();
+                }
+            });
+        }); 
+    };
 
     if ($(this).find('.contentLocations').exists()) {
         $(this).find('.contentLocations').each(function (i) {
@@ -552,7 +602,26 @@ $.fn.prepareXform = function () {
         });
     };
 
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        const forms = document.querySelectorAll('.needs-validation')
+
+        // Loop over them and prevent submission
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+
+                form.classList.add('was-validated')
+            }, false)
+        })
+
+
+
 };
+
+
 
 /*  USED IN ALL EW:xFORMS - For when an Radio Button Toggles a switch /case */
 function showDependant(dependant, allDependants) {

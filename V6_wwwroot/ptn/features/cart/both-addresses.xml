@@ -180,7 +180,7 @@
 				</group>
 			</group>
 		</group>
-		<submit submission="contact" ref="cartBillAddress" class="principle">
+		<submit submission="contact" ref="cartBillAddress" class="principle" id="bothAddresses">
 			<label>Continue To Payment</label>
 		</submit>
 	</group>

@@ -178,11 +178,6 @@ Partial Public Class Cms
                             DiscountApplyDate = oCartXML.Attributes("InvoiceDateTime").Value
                         End If
 
-
-
-
-
-
                         cCartItemIds = cCartItemIds.Remove(cCartItemIds.Length - 1)
                         If myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountRules", "bAllProductExcludeGroups") Then
                             '' call stored procedure else existing code.
