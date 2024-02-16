@@ -2671,10 +2671,10 @@
   <xsl:template name="term3058">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">
-        <xsl:text>Buy Now</xsl:text>
+        <xsl:text>Add to basket</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Buy Now</xsl:text>
+        <xsl:text>Add to basket</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
