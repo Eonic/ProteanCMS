@@ -3779,7 +3779,14 @@ namespace Protean
 
                             if (!string.IsNullOrEmpty(cContentName) & base.Instance.FirstChild != null)
                             {
-                                base.Instance.SelectSingleNode("tblContent/cContentName").InnerText = cContentName;
+                                if (base.Instance.SelectSingleNode("tblContent/cContentSchemaName") != null)
+                                {
+                                    if (base.Instance.SelectSingleNode("tblContent/cContentSchemaName").InnerText.ToLower() != "filter")
+                                    {
+                                        base.Instance.SelectSingleNode("tblContent/cContentName").InnerText = cContentName;
+                                    }
+                                }
+
                                 base.Instance.SelectSingleNode("tblContent/dPublishDate").InnerText = XmlDate(DateTime.Now);
                             }
 
