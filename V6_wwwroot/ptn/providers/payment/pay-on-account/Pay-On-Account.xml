@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Content type="xform" name="EditContent">
+<Content type="xform" name="PayForm">
 	<model>
 		<instance>
 			<provider name="PayOnAccount" validGroups="all" validCurrencies="GBP">
@@ -7,14 +7,14 @@
 				<AccountXform value="/ptn/providers/payment/pay-on-acocunt/pay-on-account.xml"/>
 			</provider>
 		</instance>
-		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+		<submission id="PayForm" action="" method="post" event="return form_check(this)"/>
 		<bind nodeset="provider">
 			<bind id="description" nodeset="description/@value" required="true()" type="string"/>
 			<bind id="accountXform" nodeset="AccountXform/@value" required="false()" type="string"/>
 			<bind id="validGroups" nodeset="@validGroups" required="false()" type="string"/>
 		</bind>
 	</model>
-	<group ref="EditContent">
+	<group ref="PayForm">
 		<label>Pay On Account Settings</label>
 		<input bind="validGroups" class="long">
 			<label>Valid Groups</label>

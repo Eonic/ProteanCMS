@@ -924,19 +924,23 @@ namespace Protean
                                 // No data - error message
                                 bIsValid = false;
                                 bIsThisBindValid = false;
-                                string validationMsg = "";
                                 string sRef = oBindElmt.GetAttribute("id");
-                                if (moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/label") != null)
-                                    
-                                {
-                                    validationMsg = moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/label").InnerText;
-                                    if (validationMsg == "")
+                                string validationMsg = "";
+                                if (moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/@validationMsg") != null) {
+                                    validationMsg = moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/@validationMsg").InnerText;
+                                }
+                                if (validationMsg != "") {
+                                    if (moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/label") != null)                                    
                                     {
-                                        string innerHtml = moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/label").InnerXml;
-                                        validationMsg = $"<span class=\"term4053\">Please Enter</span>&#160;{innerHtml}";
-                                    }
-                                    else {
-                                        validationMsg = $"<span class=\"term4053\">Please Enter</span>&#160;{validationMsg}";
+                                        validationMsg = moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/label").InnerText;
+                                        if (validationMsg == "")
+                                        {
+                                            string innerHtml = moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/label").InnerXml;
+                                            validationMsg = $"<span class=\"term4053\">Please Enter</span>&#160;{innerHtml}";
+                                        }
+                                        else {
+                                            validationMsg = $"<span class=\"term4053\">Please Enter</span>&#160;{validationMsg}";
+                                        }
                                     }
                                 }
                                 if (addNoteFromBind(oBindElmt, noteTypes.Alert, BindAttributes.Required, "<span class=\"msg-1007\">" + validationMsg + " </span>") == false)
