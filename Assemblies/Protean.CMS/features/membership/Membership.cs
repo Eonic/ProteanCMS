@@ -623,9 +623,9 @@ namespace Protean
                         }
 
                         string xsltPathAlert = "/xsl/email/registrationAlert.xsl";
-                        if (myWeb.moConfig["cssFramework"] == "bs5")
+                        if (myWeb.bs5)
                         {
-                            xsltPath = "/features/membership/email/registration-alert.xsl";
+                            xsltPathAlert = "/features/membership/email/registration-alert.xsl";
                         }
                         xsltPath = fsHelper.checkCommonFilePath(xsltPath);
                         if (System.IO.File.Exists(myWeb.goServer.MapPath(myWeb.moConfig["ProjectPath"] + xsltPathAlert)))
