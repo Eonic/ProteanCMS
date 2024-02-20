@@ -4824,7 +4824,7 @@ namespace Protean
                 string sSql;
                 DataSet oDs;
                 var oProd = moPageXml.CreateNode(XmlNodeType.Document, "", "product");
-                XmlNode oStock;
+                XmlNode oStock = null;
                 var nStockLevel = default(int);
                 string cProcessInfo = "";
                 try
@@ -4839,13 +4839,14 @@ namespace Protean
 
                             foreach (DataRow oRow in oDs.Tables["Item"].Rows)
                             {
-
-                                oProd.InnerXml = Conversions.ToString(oRow["cContentXmlDetail"]);
-
-                                oStock = oProd.SelectSingleNode("//Stock/Location[@name='Default']");
-                                if (oStock is null)
-                                {
-                                    oStock = oProd.SelectSingleNode("//Stock");
+                                //if this is empty it is not a real product like a donation therefore stock control is not relevent.
+                                if (Conversions.ToString(oRow["cContentXmlDetail"]) != "") { 
+                                    oProd.InnerXml = Conversions.ToString(oRow["cContentXmlDetail"]);                                
+                                    oStock = oProd.SelectSingleNode("//Stock/Location[@name='Default']");
+                                    if (oStock is null)
+                                    {
+                                        oStock = oProd.SelectSingleNode("//Stock");
+                                    }
                                 }
 
                                 // Ignore empty nodes

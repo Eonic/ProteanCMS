@@ -76,6 +76,7 @@ namespace Protean
                     {
                         // Dim msieCfg As New JavaScriptEngineSwitcher.Msie.MsieSettings()
                         // msieCfg.EngineMode = JavaScriptEngineSwitcher.Msie.JsEngineMode.ChakraIeJsRt
+                      
                         JavaScriptEngineSwitcher.Core.JsEngineSwitcher engineSwitcher = (JavaScriptEngineSwitcher.Core.JsEngineSwitcher)JavaScriptEngineSwitcher.Core.JsEngineSwitcher.Current;
                         // engineSwitcher.EngineFactories.Add(New JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngineFactory())
                         // engineSwitcher.EngineFactories.Add(New JavaScriptEngineSwitcher.Msie.MsieJsEngineFactory(msieCfg))
