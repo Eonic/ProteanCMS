@@ -269,9 +269,12 @@ namespace Protean
 
                 try
                 {
-                    if (myWeb.moSession["nUserId"] != null)
+                    if (myWeb.moSession != null)
                     {
-                        nUserId = Convert.ToInt16 (myWeb.moSession["nUserId"]);
+                        if (myWeb.moSession["nUserId"] != null)
+                        {
+                            nUserId = Convert.ToInt32(myWeb.moSession["nUserId"]);
+                        }
                     }
 
                     if (myWeb.mnUserId != 0)
