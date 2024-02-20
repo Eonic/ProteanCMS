@@ -61,8 +61,11 @@ namespace Protean.Providers
                     {
                         cFilterTarget = oContentNode.Attributes["filterTarget"].Value;
                     }
-                    oMaxPriceLimit.Value = Convert.ToString(FilterConfig.Attributes["maxPriceLimit"].Value);
 
+                    if (FilterConfig.Attributes["maxPriceLimit"] != null)
+                    {
+                        oMaxPriceLimit.Value = Convert.ToString(FilterConfig.Attributes["maxPriceLimit"].Value);
+                    }
                     if (FilterConfig.Attributes["name"] != null)
                     {
                         sCotrolDisplayName = Convert.ToString(FilterConfig.Attributes["name"].Value);
