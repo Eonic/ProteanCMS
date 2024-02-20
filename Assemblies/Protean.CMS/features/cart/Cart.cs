@@ -8027,9 +8027,9 @@ namespace Protean
                         sListReturn = ",'" + SqlFmt(arrTmp[nIndex].ToString()) + "'"; // Adding this line here allows the top root location to be added
                         if (!(Information.IsDBNull(arrTmp[0]) | arrTmp[0] == null))
                         {
-                            if (Int32.Parse(arrTmp[0]) != nParent)
+                            if (Int32.Parse("0" + arrTmp[0]) != nParent)
                             {
-                                int? newParent = Int32.Parse(arrTmp[0]);
+                                int? newParent = Int32.Parse("0" + arrTmp[0]);
                                 sListReturn = sListReturn + iterateCountryList(ref oDict, ref newParent, ref nIndex);
                             }
                         }
