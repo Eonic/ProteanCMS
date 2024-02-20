@@ -41,6 +41,30 @@
       <xsl:text>Video background</xsl:text>
     </option>
   </xsl:template>
+<!-- ############################################ HEADING BANNER STYLES ############################################### -->
+
+	<xsl:template match="*" mode="bannerStyles1">
+		<xsl:param name="value" />
+		<option value="img-banner">
+			<xsl:if test="$value='img-banner'">
+				<xsl:attribute name="selected">selected</xsl:attribute>
+			</xsl:if>
+			<xsl:text>Image Banner</xsl:text>
+		</option>
+		<option value="basic-banner">
+			<xsl:if test="$value='basic-banner'">
+				<xsl:attribute name="selected">selected</xsl:attribute>
+			</xsl:if>
+			<xsl:text>Basic Banner</xsl:text>
+		</option>
+		<option value="no-banner">
+			<xsl:if test="$value='no-banner'">
+				<xsl:attribute name="selected">selected</xsl:attribute>
+			</xsl:if>
+			<xsl:text>No Banner</xsl:text>
+		</option>
+	</xsl:template>	
+	
   <!-- ############################################ TinyMCE styles ############################################### -->
   <!-- Example Follows www.tinymce.com/tryit/custom_formats.php -->
 
