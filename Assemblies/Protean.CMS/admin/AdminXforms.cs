@@ -1855,7 +1855,7 @@ namespace Protean
                         if (string.IsNullOrEmpty(cParId))
                         {
                             XmlElement xmlBase = base.Instance;
-                            Xml.NodeState(ref xmlBase, "tblContentStructure/nStructParId", (base.goRequest["parId"] == null ? "" : Convert.ToString(base.goRequest["parId"])));
+                            Xml.NodeState(ref xmlBase, "tblContentStructure/nStructParId", (base.goRequest["parId"] == null? "": Convert.ToString(base.goRequest["parId"])));
                         }
                         else
                         {
@@ -2810,14 +2810,14 @@ namespace Protean
                                 int argnReturnId = 0;
                                 string argzcReturnSchema = "";
                                 string argAlternateFormName = "";
-                                xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId, zcReturnSchema: ref argzcReturnSchema, AlternateFormName: ref argAlternateFormName);
+                                xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"],false, nReturnId: ref argnReturnId, zcReturnSchema: ref argzcReturnSchema, AlternateFormName: ref argAlternateFormName);
                             }
                             else
                             {
                                 int argnReturnId1 = 0;
                                 string argzcReturnSchema1 = "";
                                 string argAlternateFormName1 = "";
-                                xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId1, zcReturnSchema: ref argzcReturnSchema1, AlternateFormName: ref argAlternateFormName1);
+                                xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"],false, nReturnId: ref argnReturnId1, zcReturnSchema: ref argzcReturnSchema1, AlternateFormName: ref argAlternateFormName1);
                             }
 
 
@@ -2854,7 +2854,7 @@ namespace Protean
                                         int argnReturnId2 = 0;
                                         string argzcReturnSchema2 = "";
                                         string argAlternateFormName2 = "";
-                                        xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId2, zcReturnSchema: ref argzcReturnSchema2, AlternateFormName: ref argAlternateFormName2);
+                                        xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"],false, nReturnId: ref argnReturnId2, zcReturnSchema: ref argzcReturnSchema2, AlternateFormName: ref argAlternateFormName2);
                                     }
 
                                     else
@@ -2862,7 +2862,7 @@ namespace Protean
                                         int argnReturnId3 = 0;
                                         string argzcReturnSchema3 = "";
                                         string argAlternateFormName3 = "";
-                                        xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId3, zcReturnSchema: ref argzcReturnSchema3, AlternateFormName: ref argAlternateFormName3);
+                                        xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"],false, nReturnId: ref argnReturnId3, zcReturnSchema: ref argzcReturnSchema3, AlternateFormName: ref argAlternateFormName3);
                                     }
                                 }
                             }
@@ -5471,7 +5471,7 @@ namespace Protean
                 //}
 
                 [Obsolete("Don't use this routine any more. Use the new one in Membership Provider ", false)]
-                public virtual XmlElement xFrmEditDirectoryItem(ref XmlElement InstanceAppend, long id = 0L, string cDirectorySchemaName = "User", long parId = 0L, string cXformName = "", string FormXML = "")
+                public virtual XmlElement xFrmEditDirectoryItem(ref XmlElement InstanceAppend,long id = 0L, string cDirectorySchemaName = "User", long parId = 0L, string cXformName = "", string FormXML = "")
                 {
                     string cProcessInfo = "";
 
@@ -6615,7 +6615,7 @@ namespace Protean
                         // Rights Alert - to give a user an idea that Rights exists on this page, we'll highlight
                         // this on the Rights page in an alert
                         //If moDbHelper.GetDataValue("SELECT COUNT(*) As pCount FROM tblDirectoryPermission WHERE nAccessLevel > 2 AND nStructId=" & id, , , 0) > 0 Then
-                        if (Convert.ToInt32(moDbHelper.GetDataValue("SELECT COUNT(*) As pCount FROM tblDirectoryPermission WHERE nAccessLevel > 2 AND nStructId=" + id)) > 0)
+                        if (Convert.ToInt32(moDbHelper.GetDataValue("SELECT COUNT(*) As pCount FROM tblDirectoryPermission WHERE nAccessLevel > 2 AND nStructId=" +id)) > 0)
                         {
 
                             //XmlNode argoNode3 = oFrmElmt;
