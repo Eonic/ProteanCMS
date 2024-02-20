@@ -659,9 +659,9 @@ namespace Protean
                         // MyBase.addInput(oFrmElmt, "ewDatabaseServer", True, "DB Server")
                         // MyBase.addBind("ewDatabaseServer", "web/add[@key='DatabaseServer']/@value", "true()")
 
-                        XmlNode argoNode = oFrmElmt;
-                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, "Any Changes you make to this form risk making this site completely non-functional. Please be sure you know what you are doing before making any changes, or call your web developer for support");
-                        oFrmElmt = (XmlElement)argoNode;
+                        //XmlNode argoNode = oFrmElmt;
+                        base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Any Changes you make to this form risk making this site completely non-functional. Please be sure you know what you are doing before making any changes, or call your web developer for support");
+                        //oFrmElmt = (XmlElement)argoNode;
 
                         base.addInput(ref oFrmElmt, "ewDatabaseName", true, "DB Name");
                         XmlElement argoBindParent = null;
@@ -897,9 +897,9 @@ namespace Protean
                         {
 
                             oFrmElmt = base.addGroup(ref base.moXformElmt, "Config", "", "ConfigSettings");
-                            XmlNode argoNode = oFrmElmt;
-                            base.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, xFormPath + " could not be found. - ");
-                            oFrmElmt = (XmlElement)argoNode;
+                            //XmlNode argoNode = oFrmElmt;
+                            base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, xFormPath + " could not be found. - ");
+                            //oFrmElmt = (XmlElement)argoNode;
                         }
 
                         else
@@ -929,9 +929,9 @@ namespace Protean
                                 // no current settings create them
                                 sectionMissing = true;
                                 oFrmElmt = base.moXformElmt;
-                                XmlNode argoNode1 = oFrmElmt;
-                                base.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, "This config section has not yet been setup, saving will implement these settings for the first time and then log you off the admin system.");
-                                oFrmElmt = (XmlElement)argoNode1;
+                                //XmlNode argoNode1 = oFrmElmt;
+                                base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "This config section has not yet been setup, saving will implement these settings for the first time and then log you off the admin system.");
+                                //oFrmElmt = (XmlElement)argoNode1;
                             }
                             XmlElement oElmt;
                             string Key;
@@ -992,9 +992,9 @@ namespace Protean
                                         oCgfSect.SectionInformation.RestartOnExternalChanges = false;
                                         oCgfSect.SectionInformation.SetRawXml(base.Instance.InnerXml);
                                         oCfg.Save();
-                                        XmlNode argoNode2 = (XmlNode)this.moXformElmt;
-                                        base.addNote(ref argoNode2, Protean.xForm.noteTypes.Alert, "Settings Saved");
-                                        this.moXformElmt = (XmlElement)argoNode2;
+                                        //XmlNode argoNode2 = (XmlNode)this.moXformElmt;
+                                        base.addNote(ref this.moXformElmt, Protean.xForm.noteTypes.Alert, "Settings Saved");
+                                        //this.moXformElmt = (XmlElement)argoNode2;
                                     }
 
                                 }
@@ -1039,7 +1039,7 @@ namespace Protean
 
                             oFrmElmt = base.addGroup(ref base.moXformElmt, "Config", "", "ConfigSettings");
                             base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, xFormPath + " could not be found. - ");
-                       
+
                         }
 
                         else
@@ -1062,7 +1062,7 @@ namespace Protean
                             string oCgfSectPath = "rewriteMaps/rewriteMap[@name='" + ConfigType + "']";
                             // Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection(oCgfSectName)
                             cProcessInfo = "Getting Section Name:" + oCgfSectPath;
-                           // bool sectionMissing = false;
+                            // bool sectionMissing = false;
 
                             // Get the current settings
                             if (rewriteXml.SelectSingleNode(oCgfSectPath) != null)
@@ -1084,7 +1084,7 @@ namespace Protean
                                     {
                                         string xmlstring = "<rewriteMap name='" + ConfigType + "'>";
                                         string xmlstringend = "</rewriteMap>";
-                                       // int count = 0;
+                                        // int count = 0;
 
                                         for (int i = 0, loopTo = PerPageCount - 1; i <= loopTo; i++)
                                             xmlstring = xmlstring + props.ChildNodes[i].OuterXml;
@@ -1108,11 +1108,11 @@ namespace Protean
                             else
                             {
                                 // no current settings create them
-                               // sectionMissing = true;
+                                // sectionMissing = true;
                                 oFrmElmt = base.moXformElmt;
-                                XmlNode argoNode1 = oFrmElmt;
+                                //XmlNode argoNode1 = oFrmElmt;
                                 base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "This config section has not yet been setup, saving will implement these settings for the first time and then log you off the admin system.");
-                                oFrmElmt = (XmlElement)argoNode1;
+                                //oFrmElmt = (XmlElement)argoNode1;
                             }
 
 
@@ -1134,9 +1134,9 @@ namespace Protean
                                         base.valid = false;
                                         XmlElement argoContextNode = (XmlElement)this.moXformElmt.SelectSingleNode("group[1]");
                                         var alertGrp = base.addGroup(ref argoContextNode, "alert", oInsertBeforeNode: (XmlElement)this.moXformElmt.SelectSingleNode("group[1]/group[1]"));
-                                        XmlNode argoNode2 = (XmlNode)alertGrp;
-                                        base.addNote(ref argoNode2, Protean.xForm.noteTypes.Alert, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("<strong>", newURL), "</strong> cannot match an old URL")));
-                                        alertGrp = (XmlElement)argoNode2;
+                                        //XmlNode argoNode2 = (XmlNode)alertGrp;
+                                        base.addNote(ref alertGrp, Protean.xForm.noteTypes.Alert, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("<strong>", newURL), "</strong> cannot match an old URL")));
+                                        //alertGrp = (XmlElement)argoNode2;
                                     }
                                 }
 
@@ -1244,9 +1244,9 @@ namespace Protean
 
                                     XmlElement argoContextNode1 = (XmlElement)this.moXformElmt.SelectSingleNode("group[1]");
                                     var alertGrp = base.addGroup(ref argoContextNode1, "alert", oInsertBeforeNode: (XmlElement)this.moXformElmt.SelectSingleNode("group[1]/group[1]"));
-                                    XmlNode argoNode3 = (XmlNode)alertGrp;
-                                    base.addNote(ref argoNode3, Protean.xForm.noteTypes.Alert, "Settings Saved");
-                                    alertGrp = (XmlElement)argoNode3;
+                                    //XmlNode argoNode3 = (XmlNode)alertGrp;
+                                    base.addNote(ref alertGrp, Protean.xForm.noteTypes.Alert, "Settings Saved");
+                                    //alertGrp = (XmlElement)argoNode3;
                                     this.goSession["oTempInstance"] = (object)null;
                                 }
                             }
@@ -1302,9 +1302,9 @@ namespace Protean
                         {
 
                             oFrmElmt = base.addGroup(ref base.moXformElmt, "Config", "", "ConfigSettings");
-                            XmlNode argoNode = oFrmElmt;
-                            base.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, xFormPath + " could not be found. - ");
-                            oFrmElmt = (XmlElement)argoNode;
+                            //XmlNode argoNode = oFrmElmt;
+                            base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, xFormPath + " could not be found. - ");
+                            //oFrmElmt = (XmlElement)argoNode;
                         }
 
                         else
@@ -1445,22 +1445,22 @@ namespace Protean
                                             newXml.Save(this.goServer.MapPath(themePath + currentTheme + "/themeManifest.xml"));
                                         }
 
-                                        XmlNode argoNode1 = (XmlNode)this.moXformElmt;
-                                        base.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, "New Preset Saved");
-                                        this.moXformElmt = (XmlElement)argoNode1;
+                                        // XmlNode argoNode1 = (XmlNode)this.moXformElmt;
+                                        base.addNote(ref this.moXformElmt, Protean.xForm.noteTypes.Alert, "New Preset Saved");
+                                        // this.moXformElmt = (XmlElement)argoNode1;
                                     }
                                     else
                                     {
-                                        XmlNode argoNode2 = (XmlNode)this.moXformElmt;
-                                        base.addNote(ref argoNode2, Protean.xForm.noteTypes.Alert, "Settings Saved");
-                                        this.moXformElmt = (XmlElement)argoNode2;
+                                        //XmlNode argoNode2 = (XmlNode)this.moXformElmt;
+                                        base.addNote(ref this.moXformElmt, Protean.xForm.noteTypes.Alert, "Settings Saved");
+                                        //this.moXformElmt = (XmlElement)argoNode2;
                                     }
                                 }
                                 else
                                 {
-                                    XmlNode argoNode3 = (XmlNode)this.moXformElmt;
-                                    base.addNote(ref argoNode3, Protean.xForm.noteTypes.Alert, "Form Invalid:" + base.validationError);
-                                    this.moXformElmt = (XmlElement)argoNode3;
+                                    //XmlNode argoNode3 = (XmlNode)this.moXformElmt;
+                                    base.addNote(ref this.moXformElmt, Protean.xForm.noteTypes.Alert, "Form Invalid:" + base.validationError);
+                                    //this.moXformElmt = (XmlElement)argoNode3;
 
                                 }
                             }
@@ -1501,15 +1501,15 @@ namespace Protean
                         var rootdir = new DirectoryInfo(this.goServer.MapPath("/ewThemes"));
                         if (!rootdir.Exists)
                         {
-                            XmlNode argoNode = oFrmElmt;
-                            base.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, "This site is not configured to allow new themes to be selected.");
-                            oFrmElmt = (XmlElement)argoNode;
+                            //XmlNode argoNode = oFrmElmt;
+                            base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "This site is not configured to allow new themes to be selected.");
+                            //oFrmElmt = (XmlElement)argoNode;
                         }
                         else
                         {
-                            XmlNode argoNode1 = oFrmElmt;
-                            base.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, "Any Changes you make to this form risk making this site non-functional. Please be sure you know what you are doing before making any changes.");
-                            oFrmElmt = (XmlElement)argoNode1;
+                            //XmlNode argoNode1 = oFrmElmt;
+                            base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Any Changes you make to this form risk making this site non-functional. Please be sure you know what you are doing before making any changes.");
+                            //oFrmElmt = (XmlElement)argoNode1;
 
                             oSelElmt = base.addSelect1(ref oFrmElmt, "ewSiteTheme", true, "Site Theme", "PickByImage", Protean.xForm.ApperanceTypes.Full);
                             EnumberateThemeOptions(ref oSelElmt, "/ewThemes", ".xsl", "", true);
@@ -1588,9 +1588,9 @@ namespace Protean
                                     oThemeCgfSect.SectionInformation.SetRawXml(base.Instance.SelectSingleNode("theme").OuterXml);
 
                                     oCfg.Save();
-                                    XmlNode argoNode2 = (XmlNode)this.moXformElmt;
-                                    base.addNote(ref argoNode2, Protean.xForm.noteTypes.Alert, "Settings Saved");
-                                    this.moXformElmt = (XmlElement)argoNode2;
+                                    //XmlNode argoNode2 = (XmlNode)this.moXformElmt;
+                                    base.addNote(ref this.moXformElmt, Protean.xForm.noteTypes.Alert, "Settings Saved");
+                                    //this.moXformElmt = (XmlElement)argoNode2;
                                 }
                             }
 
@@ -1855,7 +1855,7 @@ namespace Protean
                         if (string.IsNullOrEmpty(cParId))
                         {
                             XmlElement xmlBase = base.Instance;
-                            Xml.NodeState(ref xmlBase, "tblContentStructure/nStructParId", (base.goRequest["parId"] == null? "": Convert.ToString(base.goRequest["parId"])));
+                            Xml.NodeState(ref xmlBase, "tblContentStructure/nStructParId", (base.goRequest["parId"] == null ? "" : Convert.ToString(base.goRequest["parId"])));
                         }
                         else
                         {
@@ -2111,9 +2111,9 @@ namespace Protean
                         XmlElement argoBindParent10 = null;
                         base.addBind("cDescription", "tblContentStructure/cDescription", oBindParent: ref argoBindParent10, "false()");
 
-                        XmlNode argoNode = oFrmElmt;
-                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Hint, "This page will be copied without any permissions and will inherit the permissions from the new locations ancestors");
-                        oFrmElmt = (XmlElement)argoNode;
+                        //XmlNode argoNode = oFrmElmt;
+                        base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, "This page will be copied without any permissions and will inherit the permissions from the new locations ancestors");
+                        //oFrmElmt = (XmlElement)argoNode;
                         base.addSubmit(ref oFrmElmt, "", "Save Page");
 
 
@@ -2156,9 +2156,9 @@ namespace Protean
                                     if ((this.goRequest["cStructName"] ?? "") == (aReservedDirs[i] ?? ""))
                                     {
                                         base.valid = false;
-                                        XmlNode argoNode1 = oFrmElmt;
-                                        base.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, "<strong>" + aReservedDirs[i] + "</strong> is a reserved directory name, please use another.");
-                                        oFrmElmt = (XmlElement)argoNode1;
+                                        //XmlNode argoNode1 = oFrmElmt;
+                                        base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "<strong>" + aReservedDirs[i] + "</strong> is a reserved directory name, please use another.");
+                                        // oFrmElmt = (XmlElement)argoNode1;
                                     }
                                 }
 
@@ -2309,9 +2309,9 @@ namespace Protean
 
                         var oGrp5 = base.addGroup(ref base.moXformElmt, "", "", "");
 
-                        XmlNode argoNode = (XmlNode)oGrp5;
-                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Hint, "This page will be copied without any permissions and will inherit the permissions from the new locations ancestors");
-                        oGrp5 = (XmlElement)argoNode;
+                        //XmlNode argoNode = (XmlNode)oGrp5;
+                        base.addNote(ref oGrp5, Protean.xForm.noteTypes.Hint, "This page will be copied without any permissions and will inherit the permissions from the new locations ancestors");
+                        //oGrp5 = (XmlElement)argoNode;
                         base.addSubmit(ref oGrp5, "", "Save Page");
 
 
@@ -2363,9 +2363,9 @@ namespace Protean
                                     if ((this.goRequest["cStructName"] ?? "") == (aReservedDirs[i] ?? ""))
                                     {
                                         base.valid = false;
-                                        XmlNode argoNode1 = oFrmElmt;
-                                        base.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, "<strong>" + aReservedDirs[i] + "</strong> is a reserved directory name, please use another.");
-                                        oFrmElmt = (XmlElement)argoNode1;
+                                        //XmlNode argoNode1 = oFrmElmt;
+                                        base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "<strong>" + aReservedDirs[i] + "</strong> is a reserved directory name, please use another.");
+                                        //oFrmElmt = (XmlElement)argoNode1;
                                     }
                                 }
 
@@ -2500,9 +2500,9 @@ namespace Protean
                         }
                         catch (Exception ex)
                         {
-                            XmlNode argoNode = oFrmElmt;
-                            base.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, "/" + Cms.gcProjectPath + "ewcommon/xsl/pageLayouts/LayoutManifest.xml could not be found. - " + ex.Message);
-                            oFrmElmt = (XmlElement)argoNode;
+                            //XmlNode argoNode = oFrmElmt;
+                            base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "/" + Cms.gcProjectPath + "ewcommon/xsl/pageLayouts/LayoutManifest.xml could not be found. - " + ex.Message);
+                            //oFrmElmt = (XmlElement)argoNode;
                         }
 
 
@@ -2541,9 +2541,9 @@ namespace Protean
                             }
                             catch (Exception ex)
                             {
-                                XmlNode argoNode1 = oFrmElmt;
-                                base.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, "/" + Cms.gcProjectPath + "ewcommon/xsl/cart/LayoutManifest.xml could not be found. - " + ex.Message);
-                                oFrmElmt = (XmlElement)argoNode1;
+                                //XmlNode argoNode1 = oFrmElmt;
+                                base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "/" + Cms.gcProjectPath + "ewcommon/xsl/cart/LayoutManifest.xml could not be found. - " + ex.Message);
+                                //oFrmElmt = (XmlElement)argoNode1;
                             }
 
                             foreach (XmlElement currentOChoices2 in oXformDoc.SelectNodes("/PageLayouts/LayoutGroup"))
@@ -2581,9 +2581,9 @@ namespace Protean
                             }
                             catch (Exception ex)
                             {
-                                XmlNode argoNode2 = oFrmElmt;
-                                base.addNote(ref argoNode2, Protean.xForm.noteTypes.Alert, "/" + Cms.gcProjectPath + "ewcommon/xsl/membership/LayoutManifest.xml could not be found. - " + ex.Message);
-                                oFrmElmt = (XmlElement)argoNode2;
+                                //XmlNode argoNode2 = oFrmElmt;
+                                base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "/" + Cms.gcProjectPath + "ewcommon/xsl/membership/LayoutManifest.xml could not be found. - " + ex.Message);
+                                //oFrmElmt = (XmlElement)argoNode2;
                             }
 
                             foreach (XmlElement currentOChoices3 in oXformDoc.SelectNodes("/PageLayouts/LayoutGroup"))
@@ -2618,9 +2618,9 @@ namespace Protean
                         }
                         else
                         {
-                            XmlNode argoNode3 = oFrmElmt;
-                            base.addNote(ref argoNode3, Protean.xForm.noteTypes.Alert, "No page identified");
-                            oFrmElmt = (XmlElement)argoNode3;
+                            //XmlNode argoNode3 = oFrmElmt;
+                            base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "No page identified");
+                            //oFrmElmt = (XmlElement)argoNode3;
                         }
 
                         if (base.isSubmitted() | !string.IsNullOrEmpty(this.goRequest.Form["ewsubmit.x"]) | !string.IsNullOrEmpty(this.goRequest.Form["cStructLayout"]))
@@ -2722,9 +2722,9 @@ namespace Protean
                         }
                         catch (Exception ex)
                         {
-                            XmlNode argoNode = oFrmElmt;
-                            base.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, "/" + Cms.gcProjectPath + "ewcommon/xsl/mailer/LayoutManifest.xml could not be found. - " + ex.Message);
-                            oFrmElmt = (XmlElement)argoNode;
+                            //XmlNode argoNode = oFrmElmt;
+                            base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "/" + Cms.gcProjectPath + "ewcommon/xsl/mailer/LayoutManifest.xml could not be found. - " + ex.Message);
+                            //oFrmElmt = (XmlElement)argoNode;
                         }
 
                         foreach (XmlElement currentOChoices1 in oXformDoc.SelectNodes("/PageLayouts/LayoutGroup"))
@@ -2761,9 +2761,9 @@ namespace Protean
                         }
                         else
                         {
-                            XmlNode argoNode1 = oFrmElmt;
-                            base.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, "No page identified");
-                            oFrmElmt = (XmlElement)argoNode1;
+                            //XmlNode argoNode1 = oFrmElmt;
+                            base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "No page identified");
+                            //oFrmElmt = (XmlElement)argoNode1;
                         }
 
                         if (base.isSubmitted() | !string.IsNullOrEmpty(this.goRequest.Form["ewsubmit.x"]) | !string.IsNullOrEmpty(this.goRequest.Form["cStructLayout"]))
@@ -2810,14 +2810,14 @@ namespace Protean
                                 int argnReturnId = 0;
                                 string argzcReturnSchema = "";
                                 string argAlternateFormName = "";
-                                xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"],false, nReturnId: ref argnReturnId, zcReturnSchema: ref argzcReturnSchema, AlternateFormName: ref argAlternateFormName);
+                                xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId, zcReturnSchema: ref argzcReturnSchema, AlternateFormName: ref argAlternateFormName);
                             }
                             else
                             {
                                 int argnReturnId1 = 0;
                                 string argzcReturnSchema1 = "";
                                 string argAlternateFormName1 = "";
-                                xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"],false, nReturnId: ref argnReturnId1, zcReturnSchema: ref argzcReturnSchema1, AlternateFormName: ref argAlternateFormName1);
+                                xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId1, zcReturnSchema: ref argzcReturnSchema1, AlternateFormName: ref argAlternateFormName1);
                             }
 
 
@@ -2854,7 +2854,7 @@ namespace Protean
                                         int argnReturnId2 = 0;
                                         string argzcReturnSchema2 = "";
                                         string argAlternateFormName2 = "";
-                                        xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"],false, nReturnId: ref argnReturnId2, zcReturnSchema: ref argzcReturnSchema2, AlternateFormName: ref argAlternateFormName2);
+                                        xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId2, zcReturnSchema: ref argzcReturnSchema2, AlternateFormName: ref argAlternateFormName2);
                                     }
 
                                     else
@@ -2862,7 +2862,7 @@ namespace Protean
                                         int argnReturnId3 = 0;
                                         string argzcReturnSchema3 = "";
                                         string argAlternateFormName3 = "";
-                                        xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"],false, nReturnId: ref argnReturnId3, zcReturnSchema: ref argzcReturnSchema3, AlternateFormName: ref argAlternateFormName3);
+                                        xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId3, zcReturnSchema: ref argzcReturnSchema3, AlternateFormName: ref argAlternateFormName3);
                                     }
                                 }
                             }
@@ -3501,10 +3501,10 @@ namespace Protean
                     int unusedReturnId = 0;
                     string unusedReturnSchema = "";
                     string unusedAlternateFormName = "";
-                    return xFrmEditContent(id, cContentSchemaName, pgid, cContentName, bCopy,ref unusedReturnId,ref unusedReturnSchema,ref unusedAlternateFormName);
+                    return xFrmEditContent(id, cContentSchemaName, pgid, cContentName, bCopy, ref unusedReturnId, ref unusedReturnSchema, ref unusedAlternateFormName);
                 }
 
-                public virtual XmlElement xFrmEditContent(long id , string cContentSchemaName , long pgid , string cContentName , bool bCopy , ref int nReturnId , ref string zcReturnSchema , ref string AlternateFormName , long nVersionId = 0L)
+                public virtual XmlElement xFrmEditContent(long id, string cContentSchemaName, long pgid, string cContentName, bool bCopy, ref int nReturnId, ref string zcReturnSchema, ref string AlternateFormName, long nVersionId = 0L)
                 {
                     XmlElement oFrmElmt;
                     // Dim oGrp1Elmt As XmlElement
@@ -3584,7 +3584,8 @@ namespace Protean
 
                             // Add ProductCategories
                             string sProductTypes = "Product,SKU";
-                            if (myWeb.Features.ContainsKey("Subscriptions")) {
+                            if (myWeb.Features.ContainsKey("Subscriptions"))
+                            {
                                 sProductTypes = sProductTypes + ",Subscription";
                             }
                             if (!string.IsNullOrEmpty(this.myWeb.moConfig["ProductTypes"]))
@@ -4481,14 +4482,14 @@ namespace Protean
                         base.submission("DeleteContent", "", "post");
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "DeleteItem", "", "Delete Content");
 
-                        XmlNode argoNode = oFrmElmt;
-                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, "Are you sure you want to delete this item - \"" + encodeAllHTML(sContentName) + "\"", false, "alert-danger");
-                        oFrmElmt = (XmlElement)argoNode;
+                        //XmlNode argoNode = oFrmElmt;
+                        base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Are you sure you want to delete this item - \"" + encodeAllHTML(sContentName) + "\"", false, "alert-danger");
+                        //oFrmElmt = (XmlElement)argoNode;
                         if (sContentSchemaName == "xFormQuiz")
                         {
-                            XmlNode argoNode1 = oFrmElmt;
-                            base.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, "By deleting the Exam you will also delete all the user results from the database \"ARE YOU SURE\" !", false, "alert-danger");
-                            oFrmElmt = (XmlElement)argoNode1;
+                            //XmlNode argoNode1 = oFrmElmt;
+                            base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "By deleting the Exam you will also delete all the user results from the database \"ARE YOU SURE\" !", false, "alert-danger");
+                            //oFrmElmt = (XmlElement)argoNode1;
 
                         }
                         base.addSubmit(ref oFrmElmt, "", "Delete " + sContentSchemaName, sClass: "principle btn-danger", sIcon: "fa-trash-o");
@@ -4546,23 +4547,23 @@ namespace Protean
 
                         base.submission("DeleteContent", "", "post");
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "DeleteItem", "", "Delete Content");
-                        XmlNode argoNode = oFrmElmt;
-                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, "Are you sure you want to delete below items ?", false, "alert-danger");
-                        oFrmElmt = (XmlElement)argoNode;
+                        //XmlNode argoNode = oFrmElmt;
+                        base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Are you sure you want to delete below items ?", false, "alert-danger");
+                        //oFrmElmt = (XmlElement)argoNode;
                         for (int i = 0, loopTo = Information.UBound(artid); i <= loopTo; i++)
                         {
                             sContentName = moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Content, Conversions.ToLong(artid[i]));
                             sContentSchemaName = moDbHelper.getContentType(Conversions.ToInteger(artid[i]));
                             bulkContentName = encodeAllHTML(sContentName);
-                            XmlNode argoNode1 = oFrmElmt;
-                            base.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, bulkContentName, false, "item-deleted");
-                            oFrmElmt = (XmlElement)argoNode1;
+                            //XmlNode argoNode1 = oFrmElmt;
+                            base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, bulkContentName, false, "item-deleted");
+                            // oFrmElmt = (XmlElement)argoNode1;
                             oFrmElmt.LastChild.InnerXml = moDbHelper.getContentBrief(Conversions.ToInteger(artid[i]));
                             if (sContentSchemaName == "xFormQuiz")
                             {
-                                XmlNode argoNode2 = oFrmElmt;
-                                base.addNote(ref argoNode2, Protean.xForm.noteTypes.Alert, "By deleting the Exam you will also delete all the user results from the database \"ARE YOU SURE\" !", false, "alert-danger");
-                                oFrmElmt = (XmlElement)argoNode2;
+                                //XmlNode argoNode2 = oFrmElmt;
+                                base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "By deleting the Exam you will also delete all the user results from the database \"ARE YOU SURE\" !", false, "alert-danger");
+                                //oFrmElmt = (XmlElement)argoNode2;
                             }
                             bulkContentSchemaName = encodeAllHTML(sContentSchemaName) + " , ";
                         }
@@ -4632,15 +4633,15 @@ namespace Protean
                         oinputElmt = (XmlElement)argoNode;
                         if (string.IsNullOrEmpty(cPath) | cPath == @"\" | cPath == "/")
                         {
-                            XmlNode argoNode1 = oFrmElmt;
-                            base.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, "You cannot delete the root folder", false, "alert-danger");
-                            oFrmElmt = (XmlElement)argoNode1;
+                            //XmlNode argoNode1 = oFrmElmt;
+                            base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "You cannot delete the root folder", false, "alert-danger");
+                            //oFrmElmt = (XmlElement)argoNode1;
                         }
                         else
                         {
-                            XmlNode argoNode2 = oFrmElmt;
-                            base.addNote(ref argoNode2, Protean.xForm.noteTypes.Alert, "Are you sure you want to delete this folder? - \"" + cPath + "\"", false, "alert-danger");
-                            oFrmElmt = (XmlElement)argoNode2;
+                            //XmlNode argoNode2 = oFrmElmt;
+                            base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Are you sure you want to delete this folder? - \"" + cPath + "\"", false, "alert-danger");
+                            //oFrmElmt = (XmlElement)argoNode2;
                             base.addSubmit(ref oFrmElmt, "", "Delete folder");
                         }
 
@@ -4666,9 +4667,9 @@ namespace Protean
                                 if (sValidResponse != "1")
                                 {
                                     base.valid = false;
-                                    XmlNode argoNode3 = oFrmElmt;
-                                    base.addNote(ref argoNode3, Protean.xForm.noteTypes.Alert, sValidResponse);
-                                    oFrmElmt = (XmlElement)argoNode3;
+                                    //XmlNode argoNode3 = oFrmElmt;
+                                    base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, sValidResponse);
+                                    //oFrmElmt = (XmlElement)argoNode3;
                                     base.addValues();
                                 }
                             }
@@ -4708,9 +4709,9 @@ namespace Protean
                         base.submission("DeleteFile", "", "post");
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "folderItem", "", "Delete File");
 
-                        XmlNode argoNode = oFrmElmt;
-                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Hint, "This file is used in these content Items");
-                        oFrmElmt = (XmlElement)argoNode;
+                        //XmlNode argoNode = oFrmElmt;
+                        base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, "This file is used in these content Items");
+                        //oFrmElmt = (XmlElement)argoNode;
                         // search for file in content and pages
                         var oFsh = new Protean.fsHelper();
                         oFsh.initialiseVariables(nType);
@@ -4723,22 +4724,22 @@ namespace Protean
                                 string contentFound = "<p>This file is used in these content Items</p><ul>";
                                 while (oDr.Read())
                                     contentFound = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(contentFound + "<li><a href=\"?artid=", oDr["nContentKey"]), "\" target=\"_new\">"), oDr["cContentSchemaName"]), " - "), oDr["cContentName"]), "</a></li>"));
-                                XmlNode argoNode1 = oFrmElmt;
-                                base.addNote(ref argoNode1, Protean.xForm.noteTypes.Hint, contentFound + "</ul>");
-                                oFrmElmt = (XmlElement)argoNode1;
+                                //XmlNode argoNode1 = oFrmElmt;
+                                base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, contentFound + "</ul>");
+                                //oFrmElmt = (XmlElement)argoNode1;
                             }
 
                             else
                             {
-                                XmlNode argoNode2 = oFrmElmt;
-                                base.addNote(ref argoNode2, Protean.xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet");
-                                oFrmElmt = (XmlElement)argoNode2;
+                                //XmlNode argoNode2 = oFrmElmt;
+                                base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet");
+                                //oFrmElmt = (XmlElement)argoNode2;
                             }
                         }
 
-                        XmlNode argoNode3 = oFrmElmt;
-                        base.addNote(ref argoNode3, Protean.xForm.noteTypes.Alert, "Are you sure you want to delete this file? - \"" + cPath + @"\" + cName + "\"", false, "alert-danger");
-                        oFrmElmt = (XmlElement)argoNode3;
+                        //XmlNode argoNode3 = oFrmElmt;
+                        base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Are you sure you want to delete this file? - \"" + cPath + @"\" + cName + "\"", false, "alert-danger");
+                        //oFrmElmt = (XmlElement)argoNode3;
 
                         base.addSubmit(ref oFrmElmt, "", "Delete file");
 
@@ -4758,9 +4759,9 @@ namespace Protean
                                 if (sValidResponse != "1")
                                 {
                                     base.valid = false;
-                                    XmlNode argoNode4 = oFrmElmt;
-                                    base.addNote(ref argoNode4, Protean.xForm.noteTypes.Alert, sValidResponse);
-                                    oFrmElmt = (XmlElement)argoNode4;
+                                    //XmlNode argoNode4 = oFrmElmt;
+                                    base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, sValidResponse);
+                                    //oFrmElmt = (XmlElement)argoNode4;
                                     base.addValues();
                                 }
                             }
@@ -4818,9 +4819,9 @@ namespace Protean
                         {
                             if (oDr is null)
                             {
-                                XmlNode argoNode = oFrmElmt;
-                                base.addNote(ref argoNode, Protean.xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet");
-                                oFrmElmt = (XmlElement)argoNode;
+                                //XmlNode argoNode = oFrmElmt;
+                                base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet");
+                                //oFrmElmt = (XmlElement)argoNode;
                             }
 
                             else if (oDr.HasRows)
@@ -4832,9 +4833,9 @@ namespace Protean
                                     contentFound = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(contentFound + "<li><a href=\"?artid=", oDr["nContentKey"]), "\" target=\"_new\">"), oDr["cContentSchemaName"]), " - "), oDr["cContentName"]), "</a></li>"));
                                     artIds = Conversions.ToString(Operators.ConcatenateObject(oDr["nContentKey"], ","));
                                 }
-                                XmlNode argoNode1 = oFrmElmt;
-                                base.addNote(ref argoNode1, Protean.xForm.noteTypes.Hint, contentFound + "</ul>");
-                                oFrmElmt = (XmlElement)argoNode1;
+                                //XmlNode argoNode1 = oFrmElmt;
+                                base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, contentFound + "</ul>");
+                                //oFrmElmt = (XmlElement)argoNode1;
 
                                 var oSelUpd = base.addSelect1(ref oFrmElmt, "UpdatePaths", false, "Update Paths", "", Protean.xForm.ApperanceTypes.Full);
                                 base.addOption(ref oSelUpd, "Yes", artIds.TrimEnd(','));
@@ -4842,18 +4843,18 @@ namespace Protean
                             }
                             else
                             {
-                                XmlNode argoNode2 = oFrmElmt;
-                                base.addNote(ref argoNode2, Protean.xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet");
-                                oFrmElmt = (XmlElement)argoNode2;
+                                //XmlNode argoNode2 = oFrmElmt;
+                                base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet");
+                                //oFrmElmt = (XmlElement)argoNode2;
                             }
                         }
 
                         var oSelElmt = base.addSelect1(ref oFrmElmt, "destPath", false, "Move To");
                         base.addOptionsFoldersFromDirectory(ref oSelElmt, "/" + oFsh.mcRoot);
 
-                        XmlNode argoNode3 = oFrmElmt;
-                        base.addNote(ref argoNode3, Protean.xForm.noteTypes.Alert, "Are you sure you want to move this file? - \"" + cPath + @"\" + cName + "\"", false, "alert-danger");
-                        oFrmElmt = (XmlElement)argoNode3;
+                        //XmlNode argoNode3 = oFrmElmt;
+                        base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Are you sure you want to move this file? - \"" + cPath + @"\" + cName + "\"", false, "alert-danger");
+                        //oFrmElmt = (XmlElement)argoNode3;
 
 
 
@@ -4886,9 +4887,9 @@ namespace Protean
                                 else
                                 {
                                     base.valid = false;
-                                    XmlNode argoNode4 = oFrmElmt;
-                                    base.addNote(ref argoNode4, Protean.xForm.noteTypes.Alert, "File move error");
-                                    oFrmElmt = (XmlElement)argoNode4;
+                                    //XmlNode argoNode4 = oFrmElmt;
+                                    base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "File move error");
+                                    //oFrmElmt = (XmlElement)argoNode4;
                                     base.addValues();
 
                                 }
@@ -4936,9 +4937,9 @@ namespace Protean
                         base.submission("DeleteContent", "", "post");
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "DeletePg", "", "Delete Page");
 
-                        XmlNode argoNode = oFrmElmt;
-                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, "<h4>Are you sure you want to delete this page - \"" + encodeAllHTML(sContentName) + "\"</h4><br/><br/>By deleting this page you will also delete <strong>ALL</strong> the child pages beneath <strong>ARE YOU SURE</strong> !", false, "alert-danger");
-                        oFrmElmt = (XmlElement)argoNode;
+                        //XmlNode argoNode = oFrmElmt;
+                        base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "<h4>Are you sure you want to delete this page - \"" + encodeAllHTML(sContentName) + "\"</h4><br/><br/>By deleting this page you will also delete <strong>ALL</strong> the child pages beneath <strong>ARE YOU SURE</strong> !", false, "alert-danger");
+                        //oFrmElmt = (XmlElement)argoNode;
 
                         base.addSubmit(ref oFrmElmt, "", "Delete Page" + sContentSchemaName, sClass: "btn-danger principle", sIcon: "fa-trash");
 
@@ -5025,9 +5026,9 @@ namespace Protean
                                 else
                                 {
                                     this.valid = false;
-                                    XmlNode argoNode = (XmlNode)this.moXformElmt;
-                                    base.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, sValidResponse);
-                                    this.moXformElmt = (XmlElement)argoNode;
+                                    //XmlNode argoNode = (XmlNode)this.moXformElmt;
+                                    base.addNote(ref this.moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse);
+                                    //this.moXformElmt = (XmlElement)argoNode;
                                 }
                             }
                             else
@@ -5101,9 +5102,9 @@ namespace Protean
                                 else
                                 {
                                     this.valid = false;
-                                    XmlNode argoNode = (XmlNode)this.moXformElmt;
-                                    base.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, sValidResponse);
-                                    this.moXformElmt = (XmlElement)argoNode;
+                                    //XmlNode argoNode = (XmlNode)this.moXformElmt;
+                                    base.addNote(ref this.moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse);
+                                    // this.moXformElmt = (XmlElement)argoNode;
                                 }
                             }
                             else
@@ -5269,9 +5270,9 @@ namespace Protean
                                 else
                                 {
                                     this.valid = false;
-                                    XmlNode argoNode = (XmlNode)this.moXformElmt;
-                                    base.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, sValidResponse);
-                                    this.moXformElmt = (XmlElement)argoNode;
+                                    //XmlNode argoNode = (XmlNode)this.moXformElmt;
+                                    base.addNote(ref this.moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse);
+                                    //this.moXformElmt = (XmlElement)argoNode;
                                 }
                             }
                             else
@@ -5423,9 +5424,9 @@ namespace Protean
                                 else
                                 {
                                     this.valid = false;
-                                    XmlNode argoNode = (XmlNode)this.moXformElmt;
-                                    base.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, sValidResponse);
-                                    this.moXformElmt = (XmlElement)argoNode;
+                                    //XmlNode argoNode = (XmlNode)this.moXformElmt;
+                                    base.addNote(ref this.moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse);
+                                    // this.moXformElmt = (XmlElement)argoNode;
                                 }
                             }
                             else
@@ -5470,7 +5471,7 @@ namespace Protean
                 //}
 
                 [Obsolete("Don't use this routine any more. Use the new one in Membership Provider ", false)]
-                public virtual XmlElement xFrmEditDirectoryItem(ref XmlElement InstanceAppend,long id = 0L, string cDirectorySchemaName = "User", long parId = 0L, string cXformName = "", string FormXML = "")
+                public virtual XmlElement xFrmEditDirectoryItem(ref XmlElement InstanceAppend, long id = 0L, string cDirectorySchemaName = "User", long parId = 0L, string cXformName = "", string FormXML = "")
                 {
                     string cProcessInfo = "";
 
@@ -5571,9 +5572,9 @@ namespace Protean
                         base.submission("EditInput", "", "post");
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "MoveDirMembers", "", "Copy " + sType + " Members");
 
-                        XmlNode argoNode = oFrmElmt;
-                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, "Are you sure you want to copy this " + sType + " Members " + encodeAllHTML(oElmt.GetAttribute("name")), false, "alert-danger");
-                        oFrmElmt = (XmlElement)argoNode;
+                        //XmlNode argoNode = oFrmElmt;
+                        base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Are you sure you want to copy this " + sType + " Members " + encodeAllHTML(oElmt.GetAttribute("name")), false, "alert-danger");
+                        //oFrmElmt = (XmlElement)argoNode;
 
                         // Lets get all other groups
                         oElmt3 = base.addSelect1(ref oFrmElmt, sType + "CopyTo", false, "Copy " + sType + " Members To", "scroll_10", Protean.xForm.ApperanceTypes.Minimal);
@@ -5638,7 +5639,7 @@ namespace Protean
                     string cProcessInfo = "";
                     //string cCurrentPassword = "";
                     //string cCodeUsed = "";
-                   // bool addNewitemToParId = false;
+                    // bool addNewitemToParId = false;
                     string cDirectorySchemaName = "role";
                     string cXformName = "";
                     XmlElement oElmt;
@@ -5899,9 +5900,9 @@ namespace Protean
                         base.submission("EditInput", "", "post");
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "DeleteDir", "", "Delete " + sType);
 
-                        XmlNode argoNode = oFrmElmt;
-                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, "Are you sure you want to delete this " + sType + " " + encodeAllHTML(oElmt.GetAttribute("name")), false, "alert-danger");
-                        oFrmElmt = (XmlElement)argoNode;
+                        //XmlNode argoNode = oFrmElmt;
+                        base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Are you sure you want to delete this " + sType + " " + encodeAllHTML(oElmt.GetAttribute("name")), false, "alert-danger");
+                        //oFrmElmt = (XmlElement)argoNode;
 
                         switch (sType ?? "")
                         {
@@ -5938,9 +5939,9 @@ namespace Protean
 
                             case "Department":
                                 {
-                                    XmlNode argoNode1 = oFrmElmt;
-                                    base.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, "What do you want to do with this " + sType + "s users?", false, "alert-danger");
-                                    oFrmElmt = (XmlElement)argoNode1;
+                                    //XmlNode argoNode1 = oFrmElmt;
+                                    base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "What do you want to do with this " + sType + "s users?", false, "alert-danger");
+                                    //oFrmElmt = (XmlElement)argoNode1;
 
                                     oElmt2 = base.addSelect1(ref oFrmElmt, "Options", false, "Users", "", Protean.xForm.ApperanceTypes.Full);
                                     base.addOption(ref oElmt2, "Just remove the Department relationship from the Users", "Remove");
@@ -5963,9 +5964,9 @@ namespace Protean
                             case "Company":
                                 {
 
-                                    XmlNode argoNode2 = oFrmElmt;
-                                    base.addNote(ref argoNode2, Protean.xForm.noteTypes.Alert, "What do you want to do with this " + sType + "s users?", false, "alert-danger");
-                                    oFrmElmt = (XmlElement)argoNode2;
+                                    //XmlNode argoNode2 = oFrmElmt;
+                                    base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "What do you want to do with this " + sType + "s users?", false, "alert-danger");
+                                    //oFrmElmt = (XmlElement)argoNode2;
 
                                     oElmt2 = base.addSelect1(ref oFrmElmt, "Options", false, "Users / Departments", "", Protean.xForm.ApperanceTypes.Full);
                                     base.addOption(ref oElmt2, "Delete All Users/Departments", "Delete");
@@ -6287,9 +6288,9 @@ namespace Protean
                         base.submission("EditInput", "", "post");
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "DeleteDM", "", "Delete Delivery Method");
 
-                        XmlNode argoNode = oFrmElmt;
-                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, "Are you sure you want to delete this Delivery Method: " + oElmt.GetAttribute("name"));
-                        oFrmElmt = (XmlElement)argoNode;
+                        //XmlNode argoNode = oFrmElmt;
+                        base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Are you sure you want to delete this Delivery Method: " + oElmt.GetAttribute("name"));
+                        //oFrmElmt = (XmlElement)argoNode;
 
 
                         base.addSubmit(ref oFrmElmt, "", "Delete Delivery Method");
@@ -6360,9 +6361,9 @@ namespace Protean
                         base.submission("EditInput", "", "post");
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "DeleteDM", "", "Delete Delivery Method");
 
-                        XmlNode argoNode = oFrmElmt;
-                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, "Are you sure you want to delete this Carrier: " + oElmt.GetAttribute("name"));
-                        oFrmElmt = (XmlElement)argoNode;
+                        //XmlNode argoNode = oFrmElmt;
+                        base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Are you sure you want to delete this Carrier: " + oElmt.GetAttribute("name"));
+                        //oFrmElmt = (XmlElement)argoNode;
 
 
                         base.addSubmit(ref oFrmElmt, "", "Delete Carrier");
@@ -6433,9 +6434,9 @@ namespace Protean
                         base.submission("EditInput", "", "post");
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "DeleteDM", "", "Delete Shipping Location");
 
-                        XmlNode argoNode = oFrmElmt;
-                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, "Are you sure you want to delete this Shipping Location: " + oElmt.GetAttribute("name") + " and all of its children?");
-                        oFrmElmt = (XmlElement)argoNode;
+                        //XmlNode argoNode = oFrmElmt;
+                        base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Are you sure you want to delete this Shipping Location: " + oElmt.GetAttribute("name") + " and all of its children?");
+                        //oFrmElmt = (XmlElement)argoNode;
 
                         base.addSubmit(ref oFrmElmt, "", "Delete Shipping Location");
 
@@ -6522,9 +6523,9 @@ namespace Protean
                         base.addSubmit(ref oFrmGrp2, "RemoveSelected", "Remove Selected", "", "PermissionButton btn-remove", "fa-arrow-left");
                         base.addSubmit(ref oFrmGrp2, "RemoveAll", "Clear All Permissions - Open", "", "PermissionButton btn-clear-all", "fa-times");
 
-                        XmlNode argoNode = oFrmGrp2;
-                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Hint, "Allowing one group impicitly denies all others, only use deny permissions to further filter members of allowed groups");
-                        oFrmGrp2 = (XmlElement)argoNode;
+                        //XmlNode argoNode = oFrmGrp2;
+                        base.addNote(ref oFrmGrp2, Protean.xForm.noteTypes.Hint, "Allowing one group impicitly denies all others, only use deny permissions to further filter members of allowed groups");
+                        //oFrmGrp2 = (XmlElement)argoNode;
 
                         // Process any submissions
                         switch (base.getSubmitted() ?? "")
@@ -6578,9 +6579,9 @@ namespace Protean
                         }
 
 
-                        XmlNode argoNode1 = oFrmGrp1;
-                        base.addNote(ref argoNode1, Protean.xForm.noteTypes.Hint, "You can select multiple items by holding down CRTL whilse clicking the names");
-                        oFrmGrp1 = (XmlElement)argoNode1;
+                        // XmlNode argoNode1 = oFrmGrp1;
+                        base.addNote(ref oFrmGrp1, Protean.xForm.noteTypes.Hint, "You can select multiple items by holding down CRTL whilse clicking the names");
+                        // oFrmGrp1 = (XmlElement)argoNode1;
 
 
                         // Populate the allow and denied boxes.
@@ -6598,9 +6599,9 @@ namespace Protean
                         oElmt4 = base.addSelect(ref oFrmGrp3, "Items", false, "Denied", "scroll_10", Protean.xForm.ApperanceTypes.Minimal);
                         sSql = "SELECT p.nDirId as value, '['+ d.cDirSchema + '] ' + d.cDirName as name from tblDirectoryPermission p " + "inner join tblDirectory d on d.nDirKey = p.nDirId " + "where p.nStructId=" + id + " and p.nAccessLevel = 0" + " order by d.cDirSchema";
 
-                        XmlNode argoNode2 = oFrmGrp3;
-                        base.addNote(ref argoNode2, Protean.xForm.noteTypes.Hint, "Please note: Permissions can also be inherited from pages above");
-                        oFrmGrp3 = (XmlElement)argoNode2;
+                        //XmlNode argoNode2 = oFrmGrp3;
+                        base.addNote(ref oFrmGrp3, Protean.xForm.noteTypes.Hint, "Please note: Permissions can also be inherited from pages above");
+                        //oFrmGrp3 = (XmlElement)argoNode2;
                         using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
                         {
                             var argoDr2 = oDr;
@@ -6614,12 +6615,12 @@ namespace Protean
                         // Rights Alert - to give a user an idea that Rights exists on this page, we'll highlight
                         // this on the Rights page in an alert
                         //If moDbHelper.GetDataValue("SELECT COUNT(*) As pCount FROM tblDirectoryPermission WHERE nAccessLevel > 2 AND nStructId=" & id, , , 0) > 0 Then
-                        if (Convert.ToInt32(moDbHelper.GetDataValue("SELECT COUNT(*) As pCount FROM tblDirectoryPermission WHERE nAccessLevel > 2 AND nStructId=" +id)) > 0)
+                        if (Convert.ToInt32(moDbHelper.GetDataValue("SELECT COUNT(*) As pCount FROM tblDirectoryPermission WHERE nAccessLevel > 2 AND nStructId=" + id)) > 0)
                         {
 
-                            XmlNode argoNode3 = oFrmElmt;
-                            base.addNote(ref argoNode3, Protean.xForm.noteTypes.Alert, "Note: there are also Rights being applied to this page.  You can view these by clicking the Rights button above.");
-                            oFrmElmt = (XmlElement)argoNode3;
+                            //XmlNode argoNode3 = oFrmElmt;
+                            base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Note: there are also Rights being applied to this page.  You can view these by clicking the Rights button above.");
+                            //oFrmElmt = (XmlElement)argoNode3;
 
                         }
 
@@ -6672,9 +6673,9 @@ namespace Protean
                         base.submission("EditInputPageRights", "", "post");
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "EditPermissions", "3col", "Rights for Page - " + moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.ContentStructure, id));
                         oFrmGrp1 = base.addGroup(ref oFrmElmt, "AllObjects", "", "Select the items you want to have access to this page");
-                        XmlNode argoNode = oFrmGrp1;
-                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Hint, "You can select multiple items by holding down CTRL while clicking the names");
-                        oFrmGrp1 = (XmlElement)argoNode;
+                        //XmlNode argoNode = oFrmGrp1;
+                        base.addNote(ref oFrmGrp1, Protean.xForm.noteTypes.Hint, "You can select multiple items by holding down CTRL while clicking the names");
+                        // oFrmGrp1 = (XmlElement)argoNode;
 
 
                         // Add the buttons and radios
@@ -6753,9 +6754,9 @@ namespace Protean
 
                         // Add the right hand selected lists.
                         oFrmGrp3 = base.addGroup(ref oFrmElmt, "PermittedObjects", "", "All items with permissions to access page");
-                        XmlNode argoNode1 = oFrmGrp3;
-                        base.addNote(ref argoNode1, Protean.xForm.noteTypes.Hint, "Please note: Permissions can also be inherited from pages above");
-                        oFrmGrp3 = (XmlElement)argoNode1;
+                        //XmlNode argoNode1 = oFrmGrp3;
+                        base.addNote(ref oFrmGrp3, Protean.xForm.noteTypes.Hint, "Please note: Permissions can also be inherited from pages above");
+                        //oFrmGrp3 = (XmlElement)argoNode1;
 
 
                         foreach (string cSchema in aDirectorySchemas)
@@ -6783,9 +6784,9 @@ namespace Protean
                         if (Conversions.ToBoolean(Operators.ConditionalCompareObjectGreater(moDbHelper.GetDataValue("SELECT COUNT(*) As pCount FROM tblDirectoryPermission WHERE nAccessLevel IN (0,2) AND nStructId=" + id, CommandType.Text, null, (object)0), 0, false)))
                         {
 
-                            XmlNode argoNode2 = oFrmElmt;
-                            base.addNote(ref argoNode2, Protean.xForm.noteTypes.Alert, "Note: there are also Permissions being applied to this page.  You can view these by clicking the Permissions button above.");
-                            oFrmElmt = (XmlElement)argoNode2;
+                            // XmlNode argoNode2 = oFrmElmt;
+                            base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Note: there are also Permissions being applied to this page.  You can view these by clicking the Permissions button above.");
+                            //oFrmElmt = (XmlElement)argoNode2;
 
                         }
 
@@ -6826,9 +6827,9 @@ namespace Protean
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "EditUserMemberships", "3col", "Memberships for User - ");
 
                         oFrmGrp1 = base.addGroup(ref oFrmElmt, "AllObjects", "", "Select the groups you want this user to belong too");
-                        XmlNode argoNode = oFrmGrp1;
-                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Hint, "You can select multiple items by holding down CRTL whilse clicking the names");
-                        oFrmGrp1 = (XmlElement)argoNode;
+                        // XmlNode argoNode = oFrmGrp1;
+                        base.addNote(ref oFrmGrp1, Protean.xForm.noteTypes.Hint, "You can select multiple items by holding down CRTL whilse clicking the names");
+                        // oFrmGrp1 = (XmlElement)argoNode;
 
                         // add the buttons so we can test for submission
                         oFrmGrp2 = base.addGroup(ref oFrmElmt, "EditPermissions", "PermissionButtons", "Buttons");
@@ -6887,9 +6888,9 @@ namespace Protean
 
 
                         oFrmGrp3 = base.addGroup(ref oFrmElmt, "PermittedObjects", "", "User is Member of...");
-                        XmlNode argoNode1 = oFrmGrp3;
-                        base.addNote(ref argoNode1, Protean.xForm.noteTypes.Hint, "Please note: Permissions can also be inherited from pages above");
-                        oFrmGrp3 = (XmlElement)argoNode1;
+                        //XmlNode argoNode1 = oFrmGrp3;
+                        base.addNote(ref oFrmGrp3, Protean.xForm.noteTypes.Hint, "Please note: Permissions can also be inherited from pages above");
+                        //oFrmGrp3 = (XmlElement)argoNode1;
 
                         oElmt4 = base.addSelect(ref oFrmGrp3, "Items", false, "Allowed", "scroll_30", Protean.xForm.ApperanceTypes.Minimal);
 
@@ -6969,15 +6970,15 @@ namespace Protean
 
                         // Create the groups
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "EditUserMemberships", "3col", "Memberships for " + rootType + " - " + moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Directory, DirId));
-                        XmlNode argoNode = oFrmElmt;
-                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Hint, "You can select multiple items by holding down CTRL whilst clicking the names");
-                        oFrmElmt = (XmlElement)argoNode;
+                        //XmlNode argoNode = oFrmElmt;
+                        base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, "You can select multiple items by holding down CTRL whilst clicking the names");
+                        //oFrmElmt = (XmlElement)argoNode;
 
                         // Create a group for all directory items
                         oFrmAll = base.addGroup(ref oFrmElmt, "AllObjects", "", "Add " + aChildDesc + " to " + rootType);
-                        XmlNode argoNode1 = oFrmAll;
-                        base.addNote(ref argoNode1, Protean.xForm.noteTypes.Hint, "Select the " + aChildDesc + " you would like to belong to this " + Strings.LCase(rootType));
-                        oFrmAll = (XmlElement)argoNode1;
+                        //XmlNode argoNode1 = oFrmAll;
+                        base.addNote(ref oFrmAll, Protean.xForm.noteTypes.Hint, "Select the " + aChildDesc + " you would like to belong to this " + Strings.LCase(rootType));
+                        //oFrmAll = (XmlElement)argoNode1;
 
                         // Create a middle column
                         oFrmButtons = base.addGroup(ref oFrmElmt, "SubmissionButtons", "PermissionButtons", "Actions");
@@ -7335,7 +7336,7 @@ namespace Protean
                             oSelElmt = base.addSelect(ref oGrp2Elmt, "bOverrideForWholeOrder", true, "Override For Whole Order", "multiline", Protean.xForm.ApperanceTypes.Full);
                             base.addOption(ref oSelElmt, "Override", "True");
                             XmlElement argoBindParent19 = null;
-                            base.addBind("bCollection", "tblCartShippingMethods/bOverrideForWholeOrder", oBindParent: ref argoBindParent19, "false()");
+                            base.addBind("bOverrideForWholeOrder", "tblCartShippingMethods/bOverrideForWholeOrder", oBindParent: ref argoBindParent19, "false()");
                         }
 
                         oSelElmt = base.addSelect1(ref oGrp2Elmt, "nStatus", true, "Status", "", Protean.xForm.ApperanceTypes.Minimal);
@@ -7433,9 +7434,9 @@ namespace Protean
                         base.addTextArea(ref oGrp2Elmt, "cCarrierTrackingInstructions", true, "Tracking Instructions", ref argsClass, nRows: ref argnRows, nCols: ref argnCols);
                         XmlElement argoBindParent4 = null;
                         base.addBind("cCarrierTrackingInstructions", "tblCartCarrier/cCarrierTrackingInstructions", oBindParent: ref argoBindParent4, "true()");
-                        XmlNode argoNode = oGrp2Elmt;
-                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Help, "{@code} will be replaced with the code entered at the time of sending");
-                        oGrp2Elmt = (XmlElement)argoNode;
+                        //XmlNode argoNode = oGrp2Elmt;
+                        base.addNote(ref oGrp2Elmt, Protean.xForm.noteTypes.Help, "{@code} will be replaced with the code entered at the time of sending");
+                        //oGrp2Elmt = (XmlElement)argoNode;
 
                         base.addSubmit(ref oGrp2Elmt, "ewSubmit", "Save Method");
 
@@ -7571,9 +7572,9 @@ namespace Protean
                         base.submission("DeleteProvider", "", "post");
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "folderItem", "", "Delete Payment Provider");
 
-                        XmlNode argoNode = oFrmElmt;
-                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, "Are you sure you want to delete this payment provider? - \"" + encodeAllHTML(cProviderType) + "\"");
-                        oFrmElmt = (XmlElement)argoNode;
+                        //XmlNode argoNode = oFrmElmt;
+                        base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Are you sure you want to delete this payment provider? - \"" + encodeAllHTML(cProviderType) + "\"");
+                        //oFrmElmt = (XmlElement)argoNode;
 
                         base.addSubmit(ref oFrmElmt, "", "Delete Provider");
 
@@ -8086,9 +8087,9 @@ namespace Protean
                                     IsRefund = Conversions.ToString(oPaymentProv.Activities.RefundPayment(providerPaymentReference, refundAmount));
                                     if (IsRefund.StartsWith("Error"))
                                     {
-                                        XmlNode argoNode = oFrmElmt;
-                                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, "Refund Failed:" + IsRefund);
-                                        oFrmElmt = (XmlElement)argoNode;
+                                        // XmlNode argoNode = oFrmElmt;
+                                        base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Refund Failed:" + IsRefund);
+                                        // oFrmElmt = (XmlElement)argoNode;
                                         // myWeb.msRedirectOnEnd = "/?ewCmd=Orders&ewCmd2=Display&id=" + nOrderId
                                         base.valid = false;
                                     }
@@ -8566,9 +8567,9 @@ namespace Protean
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "EditRelations", "3col", "Product Group Relations for Discount");
 
                         oFrmGrp1 = base.addGroup(ref oFrmElmt, "AllObjects", "", "Select the product groups you want to have access to this discount");
-                        XmlNode argoNode = oFrmGrp1;
-                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Hint, "You can select multiple items by holding down CRTL whilse clicking the names");
-                        oFrmGrp1 = (XmlElement)argoNode;
+                        //XmlNode argoNode = oFrmGrp1;
+                        base.addNote(ref oFrmGrp1, Protean.xForm.noteTypes.Hint, "You can select multiple items by holding down CRTL whilse clicking the names");
+                        //oFrmGrp1 = (XmlElement)argoNode;
 
                         // add the buttons so we can test for submission
                         oFrmGrp2 = base.addGroup(ref oFrmElmt, "EditRelations", "RelationButtons", "Buttons");
@@ -8600,9 +8601,9 @@ namespace Protean
 
 
                         oFrmGrp3 = base.addGroup(ref oFrmElmt, "RelatedObjects", "", "All items with permissions to access page");
-                        XmlNode argoNode1 = oFrmGrp3;
-                        base.addNote(ref argoNode1, Protean.xForm.noteTypes.Hint, "Please note: Permissions can also be inherited from pages above");
-                        oFrmGrp3 = (XmlElement)argoNode1;
+                        //XmlNode argoNode1 = oFrmGrp3;
+                        base.addNote(ref oFrmGrp3, Protean.xForm.noteTypes.Hint, "Please note: Permissions can also be inherited from pages above");
+                        //oFrmGrp3 = (XmlElement)argoNode1;
 
                         oElmt4 = base.addSelect(ref oFrmGrp3, "Items", false, "Related", "scroll_10", Protean.xForm.ApperanceTypes.Minimal);
 
@@ -8655,9 +8656,9 @@ namespace Protean
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "EditDirs", "3col", "User Group Relations for Discount " + dname);
 
                         oFrmGrp1 = base.addGroup(ref oFrmElmt, "AllObjects", "", "Select the user groups you want to have access to this discount");
-                        XmlNode argoNode = oFrmGrp1;
-                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Hint, "You can select multiple items by holding down CRTL whilse clicking the names");
-                        oFrmGrp1 = (XmlElement)argoNode;
+                        //XmlNode argoNode = oFrmGrp1;
+                        base.addNote(ref oFrmGrp1, Protean.xForm.noteTypes.Hint, "You can select multiple items by holding down CRTL whilse clicking the names");
+                        //oFrmGrp1 = (XmlElement)argoNode;
 
                         // add the buttons so we can test for submission
                         oFrmGrp2 = base.addGroup(ref oFrmElmt, "EditDirs", "DirButtons", "Buttons");
@@ -8706,9 +8707,9 @@ namespace Protean
 
 
                         oFrmGrp3 = base.addGroup(ref oFrmElmt, "RelatedObjects", "", "All items with permissions to access page");
-                        XmlNode argoNode1 = oFrmGrp3;
-                        base.addNote(ref argoNode1, Protean.xForm.noteTypes.Hint, "Please note: Permissions can also be inherited from pages above");
-                        oFrmGrp3 = (XmlElement)argoNode1;
+                        //XmlNode argoNode1 = oFrmGrp3;
+                        base.addNote(ref oFrmGrp3, Protean.xForm.noteTypes.Hint, "Please note: Permissions can also be inherited from pages above");
+                        //oFrmGrp3 = (XmlElement)argoNode1;
 
                         oElmt4 = base.addSelect(ref oFrmGrp3, "Items", false, "Related", "scroll_10", Protean.xForm.ApperanceTypes.Minimal);
 
@@ -8776,9 +8777,9 @@ namespace Protean
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "EditDirs", "3col", "User Group Relations for Shipping Method " + dname);
 
                         oFrmGrp1 = base.addGroup(ref oFrmElmt, "AllObjects", "", "Select the user groups you want to have access to this shipping method");
-                        XmlNode argoNode = oFrmGrp1;
-                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Hint, "You can select multiple items by holding down CRTL whilse clicking the names");
-                        oFrmGrp1 = (XmlElement)argoNode;
+                        //XmlNode argoNode = oFrmGrp1;
+                        base.addNote(ref oFrmGrp1, Protean.xForm.noteTypes.Hint, "You can select multiple items by holding down CRTL whilse clicking the names");
+                        //oFrmGrp1 = (XmlElement)argoNode;
 
                         // add the buttons so we can test for submission
                         oFrmGrp2 = base.addGroup(ref oFrmElmt, "EditDirs", "DirButtons", "Buttons");
@@ -8852,9 +8853,9 @@ namespace Protean
 
 
                         oFrmGrp3 = base.addGroup(ref oFrmElmt, "RelatedObjects", "", "All Groups with permissions for Shipping Method");
-                        XmlNode argoNode1 = oFrmGrp3;
-                        base.addNote(ref argoNode1, Protean.xForm.noteTypes.Hint, "Please note: Permissions can also be inherited from pages above");
-                        oFrmGrp3 = (XmlElement)argoNode1;
+                        //XmlNode argoNode1 = oFrmGrp3;
+                        base.addNote(ref oFrmGrp3, Protean.xForm.noteTypes.Hint, "Please note: Permissions can also be inherited from pages above");
+                        //oFrmGrp3 = (XmlElement)argoNode1;
 
                         oElmt4 = base.addSelect(ref oFrmGrp3, "Items", false, "Allowed", "scroll_10", Protean.xForm.ApperanceTypes.Minimal);
 
@@ -8924,9 +8925,9 @@ namespace Protean
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "EditDirs", "3col", "Shipping Group Relations for Shipping Method " + dname);
 
                         oFrmGrp1 = base.addGroup(ref oFrmElmt, "AllObjects", "", "Select the shipping groups you want to have access to this shipping method");
-                        XmlNode argoNode = oFrmGrp1;
-                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Hint, "You can select multiple items by holding down CRTL whilse clicking the names");
-                        oFrmGrp1 = (XmlElement)argoNode;
+                        //XmlNode argoNode = oFrmGrp1;
+                        base.addNote(ref oFrmGrp1, Protean.xForm.noteTypes.Hint, "You can select multiple items by holding down CRTL whilse clicking the names");
+                        //oFrmGrp1 = (XmlElement)argoNode;
 
                         // add the buttons so we can test for submission
                         oFrmGrp2 = base.addGroup(ref oFrmElmt, "EditDirs", "DirButtons", "Buttons");
@@ -9137,9 +9138,9 @@ namespace Protean
                                 this.valid = true;
                                 if (!bResult)
                                 {
-                                    XmlNode argoNode = oFrmElmt;
-                                    base.addNote(ref argoNode, Protean.xForm.noteTypes.Hint, "Cannot remove the only Primary Relationship", true);
-                                    oFrmElmt = (XmlElement)argoNode;
+                                    //XmlNode argoNode = oFrmElmt;
+                                    base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, "Cannot remove the only Primary Relationship", true);
+                                    //oFrmElmt = (XmlElement)argoNode;
                                     this.valid = false;
                                 }
                             }
@@ -9377,23 +9378,23 @@ namespace Protean
                                 {
                                     if (!IsEmail(oEmailElmt.InnerText))
                                     {
-                                        XmlNode argoNode = oElmt;
-                                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, "Incorrect Email Address Supplied");
-                                        oElmt = (XmlElement)argoNode;
+                                        //XmlNode argoNode = oElmt;
+                                        base.addNote(ref oElmt, Protean.xForm.noteTypes.Alert, "Incorrect Email Address Supplied");
+                                        //oElmt = (XmlElement)argoNode;
                                     }
                                     else if (moDbHelper.AddInvalidEmail(oEmailElmt.InnerText))
                                     {
-                                        XmlNode argoNode1 = oElmt;
-                                        base.addNote(ref argoNode1, Protean.xForm.noteTypes.Hint, oEmailElmt.InnerText + " Added");
-                                        oElmt = (XmlElement)argoNode1;
+                                        //XmlNode argoNode1 = oElmt;
+                                        base.addNote(ref oElmt, Protean.xForm.noteTypes.Hint, oEmailElmt.InnerText + " Added");
+                                        //oElmt = (XmlElement)argoNode1;
                                         base.addOption(ref oSelElmt, oEmailElmt.InnerText, oEmailElmt.InnerText);
                                         oEmailElmt.InnerText = "";
                                     }
                                     else
                                     {
-                                        XmlNode argoNode2 = oElmt;
-                                        base.addNote(ref argoNode2, Protean.xForm.noteTypes.Hint, oEmailElmt.InnerText + "Already Exists");
-                                        oElmt = (XmlElement)argoNode2;
+                                        //XmlNode argoNode2 = oElmt;
+                                        base.addNote(ref oElmt, Protean.xForm.noteTypes.Hint, oEmailElmt.InnerText + "Already Exists");
+                                        //oElmt = (XmlElement)argoNode2;
                                         oEmailElmt.InnerText = "";
                                     }
                                 }
@@ -9401,9 +9402,9 @@ namespace Protean
                                 if (!string.IsNullOrEmpty(oRemoveElmt.InnerText))
                                 {
                                     moDbHelper.RemoveInvalidEmail(oRemoveElmt.InnerText);
-                                    XmlNode argoNode3 = (XmlNode)oSelElmt;
-                                    base.addNote(ref argoNode3, Protean.xForm.noteTypes.Hint, oRemoveElmt.InnerText + " Removed");
-                                    oSelElmt = (XmlElement)argoNode3;
+                                    //XmlNode argoNode3 = (XmlNode)oSelElmt;
+                                    base.addNote(ref oSelElmt, Protean.xForm.noteTypes.Hint, oRemoveElmt.InnerText + " Removed");
+                                    //oSelElmt = (XmlElement)argoNode3;
                                     oRemoveElmt.InnerText = "";
                                 }
 
@@ -9726,8 +9727,8 @@ namespace Protean
 
                         this.moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = base.Instance.InnerXml;
                         //int i = 1;
-                       // bool bDone = false;
-                       /// string cItems = "";
+                        // bool bDone = false;
+                        /// string cItems = "";
                         long initialSubContentId = Conversions.ToLong("0" + base.Instance.SelectSingleNode("tblSubscription/nSubContentId").InnerText);
 
 
@@ -9875,9 +9876,9 @@ namespace Protean
                         base.addOption(ref oSelElmt, "Email Renewal Invoice", "yes");
                         base.addValue(ref oSelElmt, "yes");
 
-                        XmlNode argoNode = oFrmElmt;
-                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Hint, "Renew Subscription", true, "renew-sub");
-                        oFrmElmt = (XmlElement)argoNode;
+                        //XmlNode argoNode = oFrmElmt;
+                        base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, "Renew Subscription", true, "renew-sub");
+                        // oFrmElmt = (XmlElement)argoNode;
 
                         base.addSubmit(ref oFrmElmt, "Back", "Back", "Back", "btn-default", "fa-chevron-left");
                         base.addSubmit(ref oFrmElmt, "Confirm", "Confirm Renewal", "Confirm", "btn-success principle", "fa-repeat");
@@ -9885,7 +9886,7 @@ namespace Protean
                         if (this.isSubmitted())
                         {
                             if (base.getSubmitted() == "Back")
-                            {                               
+                            {
                                 this.myWeb.msRedirectOnEnd = "/?ewCmd=RenewSubscription";
                                 return base.moXformElmt;
                             }
@@ -9906,9 +9907,9 @@ namespace Protean
                                 }
                                 else
                                 {
-                                    XmlNode argoNode1 = oFrmElmt;
-                                    base.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, RenewResponse);
-                                    oFrmElmt = (XmlElement)argoNode1;
+                                    //XmlNode argoNode1 = oFrmElmt;
+                                    base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, RenewResponse);
+                                    //oFrmElmt = (XmlElement)argoNode1;
                                     base.valid = false;
                                 }
 
@@ -9952,9 +9953,9 @@ namespace Protean
                         base.addOption(ref oSelElmt, "Email Renewal Invoice", "yes");
                         base.addValue(ref oSelElmt, "yes");
 
-                        XmlNode argoNode = oFrmElmt;
-                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Hint, "Resend Subscription", true, "resend-sub");
-                        oFrmElmt = (XmlElement)argoNode;
+                        // XmlNode argoNode = oFrmElmt;
+                        base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, "Resend Subscription", true, "resend-sub");
+                        // oFrmElmt = (XmlElement)argoNode;
 
                         base.addSubmit(ref oFrmElmt, "Back", "Back", "Back", "btn-default", "fa-chevron-left");
                         base.addSubmit(ref oFrmElmt, "Confirm", "Confirm Refresh and Resend", "Confirm", "btn-success principle", "fa-repeat");
@@ -9962,7 +9963,7 @@ namespace Protean
                         if (this.isSubmitted())
                         {
                             if (base.getSubmitted() == "Back")
-                            {                                
+                            {
                                 this.myWeb.msRedirectOnEnd = "/?ewCmd=ResendSubscription";
                                 return base.moXformElmt;
                             }
@@ -9979,9 +9980,9 @@ namespace Protean
                                 }
                                 else
                                 {
-                                    XmlNode argoNode1 = oFrmElmt;
-                                    base.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, "Renewal Resend Failed");
-                                    oFrmElmt = (XmlElement)argoNode1;
+                                    //XmlNode argoNode1 = oFrmElmt;
+                                    base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Renewal Resend Failed");
+                                    //oFrmElmt = (XmlElement)argoNode1;
                                     base.valid = false;
                                 }
 
@@ -10021,9 +10022,9 @@ namespace Protean
                         base.addOption(ref oSelElmt, "Email Cancelation Notice", "yes");
                         base.addValue(ref oSelElmt, "yes");
 
-                        XmlNode argoNode = oFrmElmt;
-                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Hint, "Are you sure you wish to cancel this subscription", true);
-                        oFrmElmt = (XmlElement)argoNode;
+                        //XmlNode argoNode = oFrmElmt;
+                        base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, "Are you sure you wish to cancel this subscription", true);
+                        //oFrmElmt = (XmlElement)argoNode;
 
                         base.addSubmit(ref oFrmElmt, "Back", "Back", "Back", "btn-default", "fa-chevron-left");
                         base.addSubmit(ref oFrmElmt, "Cancel", "Cancel Subscription", "Cancel", "btn-warning principle", "fa-stop");
@@ -10075,9 +10076,9 @@ namespace Protean
 
                         base.addInput(ref oFrmElmt, "cStatedReason", false, "Reason for expiry");
 
-                        XmlNode argoNode = oFrmElmt;
-                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Hint, "Are you sure you wish this subscription to expire", true);
-                        oFrmElmt = (XmlElement)argoNode;
+                        //XmlNode argoNode = oFrmElmt;
+                        base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, "Are you sure you wish this subscription to expire", true);
+                        //oFrmElmt = (XmlElement)argoNode;
 
                         base.addSubmit(ref oFrmElmt, "Back", "Back", "Back", "btn-default", "fa-chevron-left");
                         base.addSubmit(ref oFrmElmt, "Expire", "Expire Subscription", "Expire", "btn-warning principle", "fa-stop");
@@ -10123,9 +10124,9 @@ namespace Protean
 
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "CartSettings", "", "Cart Settings");
 
-                        XmlNode argoNode = oFrmElmt;
-                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, "Any Changes you make to this form risk making this site completely non-functional. Please be sure you know what you are doing before making any changes, or call your web developer for support.");
-                        oFrmElmt = (XmlElement)argoNode;
+                        //XmlNode argoNode = oFrmElmt;
+                        base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Any Changes you make to this form risk making this site completely non-functional. Please be sure you know what you are doing before making any changes, or call your web developer for support.");
+                        //oFrmElmt = (XmlElement)argoNode;
 
                         base.addInput(ref oFrmElmt, "ewSiteURL", true, "Site URL");
                         XmlElement argoBindParent = null;
@@ -11162,7 +11163,7 @@ namespace Protean
                                 {
                                     if (!string.IsNullOrEmpty(oCodes[i]))
                                     {
-                                        if (Convert.ToInt32(myWeb.moDbHelper.GetDataValue("SELECT nCodeKey FROM tblCodes WHERE cCode ='" +oCodes[i] + "'")) > 0)
+                                        if (Convert.ToInt32(myWeb.moDbHelper.GetDataValue("SELECT nCodeKey FROM tblCodes WHERE cCode ='" + oCodes[i] + "'")) > 0)
                                         {
                                             nSkipped += 1;
                                         }
@@ -11341,16 +11342,16 @@ namespace Protean
                                     if ((sValidResponse ?? "") == (fUpld.FileName ?? ""))
                                     {
                                         this.valid = true;
-                                        XmlNode argoNode = (XmlNode)this.moXformElmt;
-                                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, sValidResponse + " - File Imported");
-                                        this.moXformElmt = (XmlElement)argoNode;
+                                        //XmlNode argoNode = (XmlNode)this.moXformElmt;
+                                        base.addNote(ref this.moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse + " - File Imported");
+                                        //this.moXformElmt = (XmlElement)argoNode;
                                     }
                                     else
                                     {
                                         this.valid = false;
-                                        XmlNode argoNode1 = (XmlNode)this.moXformElmt;
-                                        base.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, sValidResponse);
-                                        this.moXformElmt = (XmlElement)argoNode1;
+                                        //XmlNode argoNode1 = (XmlNode)this.moXformElmt;
+                                        base.addNote(ref this.moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse);
+                                        //this.moXformElmt = (XmlElement)argoNode1;
                                     }
                                 }
                                 else
@@ -11368,9 +11369,9 @@ namespace Protean
 
                             base.submission("Import File Error", "", "post", "form_check(this)");
                             oFrmElmt = base.addGroup(ref base.moXformElmt, "Import File", "", "Error");
-                            XmlNode argoNode2 = oFrmElmt;
-                            base.addNote(ref argoNode2, Protean.xForm.noteTypes.Alert, "There are no imports configured for this site.");
-                            oFrmElmt = (XmlElement)argoNode2;
+                            //XmlNode argoNode2 = oFrmElmt;
+                            base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "There are no imports configured for this site.");
+                            //oFrmElmt = (XmlElement)argoNode2;
                             return base.moXformElmt;
                         }
                     }
@@ -11402,9 +11403,9 @@ namespace Protean
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "folderItem", "", "Start Index");
                         base.Instance.InnerXml = idx.GetIndexInfo();
 
-                        XmlNode argoNode = oFrmElmt;
-                        base.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, "Starting off the indexing process can take up to an hour for larger sites");
-                        oFrmElmt = (XmlElement)argoNode;
+                        //XmlNode argoNode = oFrmElmt;
+                        base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Starting off the indexing process can take up to an hour for larger sites");
+                        //oFrmElmt = (XmlElement)argoNode;
 
                         base.addSubmit(ref oFrmElmt, "", "Start Index", sClass: "principle pleaseWait");
 
@@ -11415,7 +11416,7 @@ namespace Protean
                             if (base.valid)
                             {
                                 bool bResult = true;
-                                idx.DoIndex( ref bResult,0);
+                                idx.DoIndex(ref bResult, 0);
 
                                 string cSubResponse = idx.cExError;
                                 if (string.IsNullOrEmpty(cSubResponse))
@@ -11431,9 +11432,9 @@ namespace Protean
                                 cSubResponse += Constants.vbCrLf + "Documents: " + idx.nDocumentsIndexed;
                                 cSubResponse += Constants.vbCrLf + "Contents: " + idx.nContentsIndexed;
 
-                                XmlNode argoNode1 = oFrmElmt;
-                                base.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, cSubResponse);
-                                oFrmElmt = (XmlElement)argoNode1;
+                                //XmlNode argoNode1 = oFrmElmt;
+                                base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, cSubResponse);
+                                //oFrmElmt = (XmlElement)argoNode1;
                             }
 
                             // fire this off in its own thread.
@@ -12631,9 +12632,9 @@ namespace Protean
                                 this.myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.Email, this.mnUserId, 0L, 0L, (long)nOrderId, "Payment Reminder Sent - " + DateTime.Now.ToString());
 
                                 var oFrmElmt = base.moXformElmt;
-                                XmlNode argoNode = (XmlNode)oFrmElmt;
-                                base.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, "Message Sent.");
-                                oFrmElmt = (XmlElement)argoNode;
+                                //XmlNode argoNode = (XmlNode)oFrmElmt;
+                                base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Message Sent.");
+                                //oFrmElmt = (XmlElement)argoNode;
 
                             }
                         }
@@ -12919,9 +12920,9 @@ namespace Protean
                         this.NewFrm("EditSelect");
                         this.submission("EditInput", "", "post");
                         oFrmElmt = this.addGroup(ref this.moXformElmt, "EditGroup", "", "Delete Element");
-                        XmlNode argoNode = oFrmElmt;
-                        this.addNote(ref argoNode, Protean.xForm.noteTypes.Alert, "Are you sure you want to delete this element - \"" + oNode.SelectSingleNode("label").InnerText + "\"");
-                        oFrmElmt = (XmlElement)argoNode;
+                        //XmlNode argoNode = oFrmElmt;
+                        this.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Are you sure you want to delete this element - \"" + oNode.SelectSingleNode("label").InnerText + "\"");
+                        //oFrmElmt = (XmlElement)argoNode;
                         this.addSubmit(ref oFrmElmt, "", "Delete Element");
                         this.LoadInstanceFromInnerXml("<delete/>");
 

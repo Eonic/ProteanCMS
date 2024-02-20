@@ -2960,9 +2960,9 @@ namespace Protean
 
                     oFrmElmt = base.addGroup(ref base.moXformElmt, "WebSettings", "", "Enter your MS SQL connection details");
 
-                    XmlNode argoNode = oFrmElmt;
-                    base.addNote(ref argoNode, Protean.xForm.noteTypes.Hint, "Please enter your database connection details.");
-                    oFrmElmt = (XmlElement)argoNode;
+                    //XmlNode argoNode = oFrmElmt;
+                    base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, "Please enter your database connection details.");
+                    //oFrmElmt = (XmlElement)argoNode;
 
                     // If goConfig("DatabaseServer") = "" Then
 
@@ -3050,18 +3050,18 @@ namespace Protean
                                 else
                                 {
                                     base.valid = false;
-                                    XmlNode argoNode1 = oFrmElmt;
-                                    base.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, "These database connection details could not connect.");
-                                    oFrmElmt = (XmlElement)argoNode1;
+                                    //XmlNode argoNode1 = oFrmElmt;
+                                    base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "These database connection details could not connect.");
+                                    //oFrmElmt = (XmlElement)argoNode1;
                                 }
                             }
 
                             else
                             {
                                 base.valid = false;
-                                XmlNode argoNode2 = oFrmElmt;
-                                base.addNote(ref argoNode2, Protean.xForm.noteTypes.Alert, "These database connection details could not connect.");
-                                oFrmElmt = (XmlElement)argoNode2;
+                                //XmlNode argoNode2 = oFrmElmt;
+                                base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "These database connection details could not connect.");
+                                //oFrmElmt = (XmlElement)argoNode2;
                             }
 
                             if (base.valid)
@@ -3148,9 +3148,9 @@ namespace Protean
 
                     oFrmElmt = base.addGroup(ref base.moXformElmt, "BackupDatabase", "", "Backup Database");
 
-                    XmlNode argoNode = oFrmElmt;
-                    base.addNote(ref argoNode, Protean.xForm.noteTypes.Hint, "Please enter your database connection details.");
-                    oFrmElmt = (XmlElement)argoNode;
+                    //XmlNode argoNode = oFrmElmt;
+                    base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, "Please enter your database connection details.");
+                    //oFrmElmt = (XmlElement)argoNode;
 
                     base.addInput(ref oFrmElmt, "ewDatabaseName", true, "Database Name");
                     XmlElement argoBindParent = null;
@@ -3175,9 +3175,9 @@ namespace Protean
                         }
                         else
                         {
-                            XmlNode argoNode1 = oFrmElmt;
-                            base.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, "Admin credentials need to be configured correctly in the web.config", true);
-                            oFrmElmt = (XmlElement)argoNode1;
+                            //XmlNode argoNode1 = oFrmElmt;
+                            base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Admin credentials need to be configured correctly in the web.config", true);
+                            //oFrmElmt = (XmlElement)argoNode1;
                         }
                     }
 
@@ -3241,9 +3241,9 @@ namespace Protean
 
                     oFrmElmt = base.addGroup(ref base.moXformElmt, "RestoreDatabase", "", "Restore Database");
 
-                    XmlNode argoNode = oFrmElmt;
-                    base.addNote(ref argoNode, Protean.xForm.noteTypes.Hint, "Please select the database to restore.");
-                    oFrmElmt = (XmlElement)argoNode;
+                    //XmlNode argoNode = oFrmElmt;
+                    base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, "Please select the database to restore.");
+                    //oFrmElmt = (XmlElement)argoNode;
 
                     base.addInput(ref oFrmElmt, "ewDatabaseName", true, "Database Name to be Overwritten");
                     XmlElement argoBindParent = null;
@@ -3278,9 +3278,9 @@ namespace Protean
                             if (fUpld.ContentLength == 0 & string.IsNullOrEmpty(this.goRequest["ewDatabaseFilename"]))
                             {
                                 base.valid = false;
-                                XmlNode argoNode1 = oFrmElmt;
-                                base.addNote(ref argoNode1, Protean.xForm.noteTypes.Alert, "Please Specify a file to restore");
-                                oFrmElmt = (XmlElement)argoNode1;
+                                //XmlNode argoNode1 = oFrmElmt;
+                                base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Please Specify a file to restore");
+                                //oFrmElmt = (XmlElement)argoNode1;
                             }
 
                             if (base.valid)
@@ -3315,9 +3315,9 @@ namespace Protean
 
                     else
                     {
-                        XmlNode argoNode2 = oFrmElmt;
-                        base.addNote(ref argoNode2, Protean.xForm.noteTypes.Alert, "Admin credentials need to be configured correctly in the web.config", true);
-                        oFrmElmt = (XmlElement)argoNode2;
+                        //XmlNode argoNode2 = oFrmElmt;
+                        base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Admin credentials need to be configured correctly in the web.config", true);
+                        //oFrmElmt = (XmlElement)argoNode2;
                     }
 
                     base.addValues();
@@ -3352,9 +3352,9 @@ namespace Protean
 
                     oFrmElmt = base.addGroup(ref base.moXformElmt, "NewDatabase", "", "New Database");
 
-                    XmlNode argoNode = oFrmElmt;
-                    base.addNote(ref argoNode, Protean.xForm.noteTypes.Hint, "Create the ProteanCMS Database Tables");
-                    oFrmElmt = (XmlElement)argoNode;
+                    //XmlNode argoNode = oFrmElmt;
+                    base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, "Create the ProteanCMS Database Tables");
+                    //oFrmElmt = (XmlElement)argoNode;
 
                     base.addInput(ref oFrmElmt, "ewDatabaseName", true, "Database Name");
                     XmlElement argoBindParent = null;
