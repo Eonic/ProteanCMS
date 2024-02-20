@@ -1324,7 +1324,14 @@ namespace Protean
                 attachName = "attached";
             }
             // 
-
+            if (successMessage == "")
+            {
+                successMessage = "Message Sent";
+            }
+            if (failureMessage == "")
+            {
+                failureMessage = "Message Failed";
+            }
             try
             {
                 // PerfMon.Log("Messaging", "emailerWithXmlAttachment - Get Xml")
