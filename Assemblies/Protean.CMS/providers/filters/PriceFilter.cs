@@ -93,6 +93,10 @@ namespace Protean.Providers
                         {
                             oMaxPriceLimit.Value = Convert.ToString(FilterConfig.Attributes["maxPriceLimit"].Value);
                         }
+                        else
+                        {
+                            oMaxPriceLimit.Value = Convert.ToString(FilterConfig.GetAttribute("toPrice"));
+                        }
                     }
                     else
                     {
