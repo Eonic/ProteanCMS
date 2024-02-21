@@ -26,3 +26,5 @@
 /.vs/ProteanCMS-V6/FileContentIndex
 /wwwroot/bin
 /V6_wwwroot/images
+/Assemblies/Protean.CMS/bin/Debug/ru-ru/JavaScriptEngineSwitcher.Core.resources.dll
+/Assemblies/Protean.CMS/bin/Debug/JavaScriptEngineSwitcher.Core.xml
