@@ -90,7 +90,7 @@ $('.btnClear').on('click', function (event) {
 
 
 $(document).on("click", ".btn-update", function (event) {
-    debugger;
+   
     $(".modalLable").addClass("hidden");
     $(this).addClass("hidden")
     var parentDiv = $(this).closest('.parentDivOfRedirect');
@@ -116,7 +116,7 @@ $(document).on("click", ".btn-update", function (event) {
             .then(function (response) {
 
                 if (response.data == "True") {
-                    debugger;
+                   
                     RedirectPage.addNewUrl(oldUrl, NewUrl);
                     RedirectPage.urlList[index].attributes[0].nodeValue = oldUrl;
                     RedirectPage.urlList[index].attributes[1].nodeValue = NewUrl;
@@ -225,7 +225,7 @@ $(document).on("click", ".btn-updateNewUrl", function (event) {
             .then(function (response) {
 
                 if (response.data == "True") {
-                    if (confirm("Old url is already exist. Do you want to replace it?")) {
+                    if (confirm("Another rewrite map is pointing to the Old URL. Do you want to update the destination to the New URL?")) {
                         RedirectPage.addNewUrl(oldUrl, NewUrl);
                     }
                     else {
@@ -532,6 +532,10 @@ if (rediectElement) {
                 var that = this;
                 var oldUrl = $("#OldUrlmodal").val();
                 var NewUrl = $("#NewUrlModal").val();
+                if (oldUrl == NewUrl) {
+                    alert("Old url and new url should not be same.")
+                    return false;
+                }
                 $("#loadSpin").modal("show");
                 that.loading = true;
                 that.show = true;
@@ -544,7 +548,7 @@ if (rediectElement) {
 
                             if (response.data == "True") {
                                 
-                                if (confirm("Old url is already exist. Do you want to replace it?")) {
+                                if (confirm("Another rewrite map is pointing to the Old URL. Do you want to update the destination to the New URL??")) {
 
                                     that.addNewUrl(oldUrl, NewUrl);
 
