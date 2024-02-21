@@ -621,7 +621,8 @@
 					<xsl:if test="not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
 						<nav class="navbar main-nav" aria-label="Main Navigation">
 
-							<div class="offcanvas offcanvas-end" id="navbarSupportedContent">
+							<!--<div class="offcanvas offcanvas-end" id="navbarSupportedContent">-->
+							<div class="navbar-collapse mainnav-collapse" id="navbarSupportedContent">
 								<button type="button" class="nav-close-btn text-reset float-end xs-only" data-bs-dismiss="offcanvas" aria-label="Close">
 									<i class="fa fa-times">
 										<xsl:text> </xsl:text>
@@ -657,6 +658,8 @@
 											<xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenudropdown">
 												<xsl:with-param name="overviewLink">self</xsl:with-param>
 												<xsl:with-param name="level2">true</xsl:with-param>
+												<xsl:with-param name="level3">true</xsl:with-param>
+												<xsl:with-param name="menu-back">true</xsl:with-param>
 											</xsl:apply-templates>
 										</xsl:when>
 										<xsl:when test="$nav-dropdown='hover'">
@@ -734,7 +737,12 @@
 					<a href="/Everything-DISC/Products">Buy Now</a>
 				</div>
 				<xsl:if test="not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
-					<button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+					<!--<button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon">
+							<xsl:text> </xsl:text>
+						</span>
+					</button>-->
+					<button class="navbar-toggler mainnav-toggler" type="button"  data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 						<span class="navbar-toggler-icon">
 							<xsl:text> </xsl:text>
 						</span>
