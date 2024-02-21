@@ -1,0 +1,286 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BundleTransformer.SassAndScss</name>
+    </assembly>
+    <members>
+        <member name="T:BundleTransformer.SassAndScss.Configuration.ConfigurationContextExtensions">
+            <summary>
+            Configuration context extensions
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.SassAndScss.Configuration.ConfigurationContextExtensions._sassAndScssConfig">
+            <summary>
+            Configuration settings of Sass and SCSS translator
+            </summary>
+        </member>
+        <member name="M:BundleTransformer.SassAndScss.Configuration.ConfigurationContextExtensions.GetSassAndScssSettings(BundleTransformer.Core.Configuration.IConfigurationContext)">
+            <summary>
+            Gets a Sass and SCSS translator configuration settings
+            </summary>
+            <param name="context">Configuration context</param>
+            <returns>Configuration settings of Sass and SCSS translator</returns>
+        </member>
+        <member name="T:BundleTransformer.SassAndScss.Configuration.IncludedPathRegistration">
+            <summary>
+            Included path registration
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.SassAndScss.Configuration.IncludedPathRegistration.Path">
+            <summary>
+            Gets or sets a path
+            </summary>
+        </member>
+        <member name="T:BundleTransformer.SassAndScss.Configuration.IncludedPathRegistrationCollection">
+            <summary>
+            Collection of registered included paths
+            </summary>
+        </member>
+        <member name="M:BundleTransformer.SassAndScss.Configuration.IncludedPathRegistrationCollection.CreateNewElement">
+            <summary>
+            Creates a new included path registration
+            </summary>
+            <returns>Included path registration</returns>
+        </member>
+        <member name="M:BundleTransformer.SassAndScss.Configuration.IncludedPathRegistrationCollection.GetElementKey(System.Configuration.ConfigurationElement)">
+            <summary>
+            Gets a key of the specified included path registration
+            </summary>
+            <param name="element">Included path registration</param>
+            <returns>Key</returns>
+        </member>
+        <member name="P:BundleTransformer.SassAndScss.Configuration.IncludedPathRegistrationCollection.Item(System.String)">
+            <summary>
+            Gets a included path registration by path
+            </summary>
+            <param name="path">Path</param>
+            <returns>Included path registration</returns>
+        </member>
+        <member name="T:BundleTransformer.SassAndScss.Configuration.SassAndScssSettings">
+            <summary>
+            Configuration settings of Sass and SCSS translator
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.SassAndScss.Configuration.SassAndScssSettings.UseNativeMinification">
+            <summary>
+            Gets or sets a flag for whether to allow the use of native minification
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.SassAndScss.Configuration.SassAndScssSettings.IncludePaths">
+            <summary>
+            Gets a list of include paths
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.SassAndScss.Configuration.SassAndScssSettings.IndentType">
+            <summary>
+            Gets or sets a indent type
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.SassAndScss.Configuration.SassAndScssSettings.IndentWidth">
+            <summary>
+            Gets or sets a number of spaces or tabs to be used for indentation
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.SassAndScss.Configuration.SassAndScssSettings.LineFeedType">
+            <summary>
+            Gets or sets a line feed type
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.SassAndScss.Configuration.SassAndScssSettings.Precision">
+            <summary>
+            Gets or sets a precision for fractional numbers
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.SassAndScss.Configuration.SassAndScssSettings.SourceComments">
+            <summary>
+            Gets or sets a flag for whether to emit comments in the generated CSS
+            indicating the corresponding source line
+            </summary>
+        </member>
+        <member name="T:BundleTransformer.SassAndScss.Constants.AssetTypeCode">
+            <summary>
+            Asset type code constants
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.SassAndScss.Constants.AssetTypeCode.Sass">
+            <summary>
+            Sass asset
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.SassAndScss.Constants.AssetTypeCode.Scss">
+            <summary>
+            SCSS asset
+            </summary>
+        </member>
+        <member name="T:BundleTransformer.SassAndScss.Constants.TranslatorName">
+            <summary>
+            Translator names constants
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.SassAndScss.Constants.TranslatorName.SassAndScssTranslator">
+            <summary>
+            Name (key) of Sass and SCSS translator
+            </summary>
+        </member>
+        <member name="T:BundleTransformer.SassAndScss.HttpHandlers.SassAndScssAssetHandler">
+            <summary>
+            Debugging HTTP handler that responsible for text output
+            of translated Sass or SCSS asset
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.SassAndScss.HttpHandlers.SassAndScssAssetHandler.IsStaticAsset">
+            <summary>
+            Gets a value indicating whether asset is static
+            </summary>
+        </member>
+        <member name="M:BundleTransformer.SassAndScss.HttpHandlers.SassAndScssAssetHandler.#ctor">
+            <summary>
+            Constructs a instance of the debugging Sass and SCSS HTTP handler
+            </summary>
+        </member>
+        <member name="M:BundleTransformer.SassAndScss.HttpHandlers.SassAndScssAssetHandler.#ctor(System.Web.Caching.Cache,BundleTransformer.Core.FileSystem.IVirtualFileSystemWrapper,BundleTransformer.Core.Configuration.AssetHandlerSettings)">
+            <summary>
+            Constructs a instance of the debugging Sass and SCSS HTTP handler
+            </summary>
+            <param name="cache">Server cache</param>
+            <param name="virtualFileSystemWrapper">Virtual file system wrapper</param>
+            <param name="assetHandlerConfig">Configuration settings of the debugging HTTP handler</param>
+        </member>
+        <member name="M:BundleTransformer.SassAndScss.HttpHandlers.SassAndScssAssetHandler.TranslateAsset(BundleTransformer.Core.Assets.IAsset,BundleTransformer.Core.Transformers.ITransformer,System.Boolean)">
+            <summary>
+            Translates a code of asset written on Sass or SCSS to CSS code
+            </summary>
+            <param name="asset">Asset</param>
+            <param name="transformer">Transformer</param>
+            <param name="isDebugMode">Flag that web application is in debug mode</param>
+            <returns>Translated asset</returns>
+        </member>
+        <member name="T:BundleTransformer.SassAndScss.IndentType">
+            <summary>
+            Indent types
+            </summary>
+        </member>
+        <member name="T:BundleTransformer.SassAndScss.Internal.VirtualFileManager">
+            <summary>
+            Virtual file manager
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.SassAndScss.Internal.VirtualFileManager._virtualFileSystemWrapper">
+            <summary>
+            Virtual file system wrapper
+            </summary>
+        </member>
+        <member name="M:BundleTransformer.SassAndScss.Internal.VirtualFileManager.#ctor(BundleTransformer.Core.FileSystem.IVirtualFileSystemWrapper)">
+            <summary>
+            Constructs an instance of virtual file manager
+            </summary>
+            <param name="virtualFileSystemWrapper">Virtual file system wrapper</param>
+        </member>
+        <member name="M:BundleTransformer.SassAndScss.Internal.VirtualFileManager.IsAppRelativePath(System.String)">
+            <summary>
+            Determines whether the beginning of specified path matches the '~/'
+            </summary>
+            <param name="path">The path</param>
+            <returns>true if path starts with the '~/'; otherwise, false</returns>
+        </member>
+        <member name="T:BundleTransformer.SassAndScss.LineFeedType">
+            <summary>
+            Line feed types
+            </summary>
+        </member>
+        <member name="T:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator">
+            <summary>
+            Translator that responsible for translation of Sass or SCSS code to CSS code
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.OUTPUT_CODE_TYPE">
+            <summary>
+            Name of output code type
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator._initializationSynchronizer">
+            <summary>
+            Synchronizer of Sass compiler's initialization
+            </summary>
+        </member>
+        <member name="F:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator._initialized">
+            <summary>
+            Flag that indicates if the Sass compiler is initialized
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.IncludePaths">
+            <summary>
+            Gets or sets a list of include paths
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.IndentType">
+            <summary>
+            Gets or sets a indent type
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.IndentWidth">
+            <summary>
+            Gets or sets a number of spaces or tabs to be used for indentation
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.LineFeedType">
+            <summary>
+            Gets or sets a line feed type
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.Precision">
+            <summary>
+            Gets or sets a precision for fractional numbers
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.SourceComments">
+            <summary>
+            Gets or sets a flag for whether to emit comments in the generated CSS
+            indicating the corresponding source line
+            </summary>
+        </member>
+        <member name="M:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.#ctor">
+            <summary>
+            Constructs an instance of Sass and SCSS translator
+            </summary>
+        </member>
+        <member name="M:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.#ctor(BundleTransformer.SassAndScss.Configuration.SassAndScssSettings)">
+            <summary>
+            Constructs an instance of Sass and SCSS translator
+            </summary>
+            <param name="sassAndScssConfig">Configuration settings of Sass and SCSS translator</param>
+        </member>
+        <member name="M:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.SetVirtualFileSystemWrapper(BundleTransformer.Core.FileSystem.IVirtualFileSystemWrapper)">
+            <summary>
+            Sets a virtual file system wrapper
+            </summary>
+            <param name="virtualFileSystemWrapper">Virtual file system wrapper</param>
+        </member>
+        <member name="M:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.Initialize">
+            <summary>
+            Initializes a Sass compiler
+            </summary>
+        </member>
+        <member name="M:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.Translate(BundleTransformer.Core.Assets.IAsset)">
+            <summary>
+            Translates a code of asset written on Sass or SCSS to CSS code
+            </summary>
+            <param name="asset">Asset with code written on Sass or SCSS</param>
+            <returns>Asset with translated code</returns>
+        </member>
+        <member name="M:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.Translate(System.Collections.Generic.IList{BundleTransformer.Core.Assets.IAsset})">
+            <summary>
+            Translates a code of assets written on Sass or SCSS to CSS code
+            </summary>
+            <param name="assets">Set of assets with code written on Sass or SCSS</param>
+            <returns>Set of assets with translated code</returns>
+        </member>
+        <member name="M:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.CreateCompilationOptions(System.Boolean)">
+            <summary>
+            Creates a compilation options
+            </summary>
+            <param name="enableNativeMinification">Flag that indicating to use of native minification</param>
+            <returns>Compilation options</returns>
+        </member>
+    </members>
+</doc>

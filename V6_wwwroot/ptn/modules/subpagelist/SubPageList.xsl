@@ -26,6 +26,17 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
+
+		<xsl:variable name="showImg">
+			<xsl:choose>
+				<xsl:when test="@showImg='false'">
+					<xsl:text>false</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>true</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<xsl:variable name="totalCount">
 			<xsl:choose>
 				<xsl:when test="@display='related'">
@@ -65,6 +76,7 @@
 						<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
 							<xsl:with-param name="sortBy" select="@sortBy"/>
 							<xsl:with-param name="crop" select="$cropSetting"/>
+							<xsl:with-param name="showImg" select="$showImg"/>
 							<xsl:with-param name="showHidden" select="@showHidden"/>
 							<xsl:with-param name="fixedThumb" select="@fixedThumb"/>
 							<xsl:with-param name="button" select="@button"/>
@@ -114,6 +126,7 @@
 	<xsl:template match="MenuItem" mode="displayBrief">
 		<xsl:param name="sortBy"/>
 		<xsl:param name="crop"/>
+		<xsl:param name="showImg"/>
 		<xsl:param name="showHidden"/>
 		<xsl:param name="fixedThumb"/>
 		<xsl:param name="button"/>
@@ -167,7 +180,7 @@
 							<xsl:apply-templates select="." mode="menuLink"/>
 						</h3>
 					</xsl:if>
-					<xsl:if test="Images/img[@src!='']">
+					<xsl:if test="Images/img[@src!=''] and not($showImg='false')">
 						<a href="{$url}" title="{$pageName}">
 							<xsl:attribute name="title">
 								<xsl:apply-templates select="." mode="getTitleAttr"/>

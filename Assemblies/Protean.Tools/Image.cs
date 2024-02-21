@@ -225,10 +225,10 @@ namespace Protean.Tools
         public string CreateThumbnail(string VirtualPath, string VirtualThumbnailPath)
         {
             // saves the file to designated location
-            int nCompression = 50;
+            //int nCompression = 50;
             try
             {
-                string thumbnailVirtualPath = "";
+                //string thumbnailVirtualPath = "";
                 var fi = new FileInfo(cLocation);
                 string thumbnailPath = cLocation.Remove(cLocation.Length - fi.Name.Length) + VirtualThumbnailPath.Replace("/","") + @"\";
                 var thfi = new FileInfo(thumbnailPath + fi.Name.Replace(".gif",".png"));
@@ -244,11 +244,8 @@ namespace Protean.Tools
 
                 }
                 thfi = null;
-
                 return VirtualThumbnailPath + "/" + fi.Name.Replace(".gif", ".png");
             }
-
-
             catch (Exception ex)
             {
                 OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Save", ex, ""));
@@ -609,70 +606,89 @@ namespace Protean.Tools
             string cProcessInfo = "";
             try
             {
-
-                if (!string.IsNullOrEmpty(serverPath))
+                if (theImg != null)
                 {
-                    if (Directory.Exists(serverPath) == false)
+                    if (!string.IsNullOrEmpty(serverPath))
                     {
-                        Directory.CreateDirectory(serverPath);
-                    }
-                }
-
-                if (szFileName.EndsWith(".gif"))
-                {
-
-                    // Save to memory using the Png format
-                    //  MemoryStream ms = new MemoryStream();
-                    //   theImg.Save(ms, ImageFormat.Png);
-                    //   theImg = new Bitmap(ms);             
-                    //    theImg.Save(Strings.Replace(szFileName, ".gif", ".png"));
-                    //    var imgFile = new FileInfo(Strings.Replace(szFileName, ".gif", ".png"));
-
-                    theImg.Save(Strings.Replace(szFileName, ".gif", ".png"));
-                    
-                    var imgFile = new FileInfo(szFileName);
-
-                    if (compression == 100L)
-                    {
-                        CompressImage(imgFile, true);
-                    }
-                    else
-                    {
-                        CompressImage(imgFile, false);
-                    }
-                }
-
-                else if (szFileName.EndsWith(".png"))
-                {
-                    theImg.Save(szFileName, ImageFormat.Png);
-
-                    var imgFile = new FileInfo(szFileName);
-                    if (compression == 100L)
-                    {
-                        CompressImage(imgFile, true);
-                    }
-                    else
-                    {
-                        CompressImage(imgFile, false);
-                    }
-                }
-
-                else
-                {
-                    var eps = new EncoderParameters(1);
-                    eps.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 100L);
-                    string cEncoder = "image/jpeg";
-                    var ici = GetEncoderInfo(cEncoder);
-
-                    if (File.Exists(szFileName)) {
-                        File.Delete(szFileName);
-                    }
-
-                    try
-                    {
-                        if (theImg != null)
+                        if (Directory.Exists(serverPath) == false)
                         {
-                            // TS Added to avoid GDI+ Errors
+                            Directory.CreateDirectory(serverPath);
+                        }
+                    }
+
+                    if (szFileName.EndsWith(".gif"))
+                    {
+
+                        // Save to memory using the Png format
+                        //  MemoryStream ms = new MemoryStream();
+                        //   theImg.Save(ms, ImageFormat.Png);
+                        //   theImg = new Bitmap(ms);             
+                        //    theImg.Save(Strings.Replace(szFileName, ".gif", ".png"));
+                        //    var imgFile = new FileInfo(Strings.Replace(szFileName, ".gif", ".png"));
+
+                        theImg.Save(Strings.Replace(szFileName, ".gif", ".png"));
+
+                        var imgFile = new FileInfo(szFileName);
+
+                        if (compression == 100L)
+                        {
+                            CompressImage(imgFile, true);
+                        }
+                        else
+                        {
+                            CompressImage(imgFile, false);
+                        }
+                    }
+
+                    else if (szFileName.EndsWith(".png"))
+                    {
+                        theImg.Save(szFileName, ImageFormat.Png);
+
+                        var imgFile = new FileInfo(szFileName);
+                        if (compression == 100L)
+                        {
+                            CompressImage(imgFile, true);
+                        }
+                        else
+                        {
+                            CompressImage(imgFile, false);
+                        }
+                    }
+
+                    else
+                    {
+                        var eps = new EncoderParameters(1);
+                        eps.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 100L);
+                        string cEncoder = "image/jpeg";
+                        var ici = GetEncoderInfo(cEncoder);
+
+                        if (File.Exists(szFileName))
+                        {
+                            File.Delete(szFileName);
+                        }
+
+                        try
+                        {
+                            if (theImg != null)
+                            {
+                                // TS Added to avoid GDI+ Errors
+
+                                var newImg = new Bitmap(theImg);
+                                theImg.Dispose();
+                                theImg = default;
+                                newImg.Save(szFileName, ici, eps);
+                                newImg.Dispose();
+
+                                // theImg.Save(szFileName, ici, eps);
+
+
+                            }
+                        }
+
+                        catch (Exception)
+                        {
+
+                            File.Delete(szFileName);
 
                             var newImg = new Bitmap(theImg);
                             theImg.Dispose();
@@ -680,39 +696,26 @@ namespace Protean.Tools
                             newImg.Save(szFileName, ici, eps);
                             newImg.Dispose();
 
-                           // theImg.Save(szFileName, ici, eps);
-
-
                         }
-                    }
 
-                    catch (Exception)
-                    {
+                        var imgFile = new FileInfo(szFileName);
+                        if (compression == 100)
+                        {
+                            CompressImage(imgFile, true);
+                        }
+                        else
+                        {
+                            CompressImage(imgFile, false);
+                        }
+                        imgFile.Refresh();
 
-                        File.Delete(szFileName);
-
-                        var newImg = new Bitmap(theImg);
-                        theImg.Dispose();
-                        theImg = default;
-                        newImg.Save(szFileName, ici, eps);
-                        newImg.Dispose();
-
-                    }
-
-                    var imgFile = new FileInfo(szFileName);
-                    if (compression == 100L)
-                    {
-                        CompressImage(imgFile, true);
-                    }
-                    else
-                    {
-                        CompressImage(imgFile, false);
-                    }
-                    imgFile.Refresh();
-
+                    }//cProcessInfo = cProcessInfo;
+                    return true;
                 }
-                //cProcessInfo = cProcessInfo;
-                return true;
+                else {
+                    return false;
+                }
+                
             }
             catch (Exception ex)
             {
@@ -1101,11 +1104,11 @@ namespace Protean.Tools
                     oImg = bmPhoto;
                 }
                 Save(cLocation);
-                return oImg;
                 grPhoto.Dispose();
+                return oImg;                
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
                 return imgPhoto;
             }
@@ -1198,11 +1201,12 @@ namespace Protean.Tools
                 }
                 else
                     oImg = bmPhoto;
+                grPhoto.Dispose();
                 // Save(cLocation)
                 return oImg;
-                grPhoto.Dispose();
+                
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return oImg;
             }
@@ -1303,18 +1307,19 @@ namespace Protean.Tools
                     oImg = bmPhoto;
                 }
                 // Save(cLocation)
-                return oImg;
                 grPhoto.Dispose();
+                return oImg;
+                
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
                 return oImg;
             }
 
         }
 
-        private string[] _RandomFontFamily_ff = default;
+        //private string[] _RandomFontFamily_ff = default;
 
         #endregion
 
@@ -1431,7 +1436,7 @@ namespace Protean.Tools
                         _fontFamilyName = value;
                         font1.Dispose();
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         _fontFamilyName = System.Drawing.FontFamily.GenericSerif.Name;
                     }

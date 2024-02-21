@@ -1,0 +1,385 @@
+﻿.qty-product {
+    float: left;
+    margin-right: 10px;
+    margin-bottom: 10px;
+
+    .qty-label {
+        @extend .visually-hidden;
+    }
+
+    .input-group {
+        max-width: 120px;
+        flex-wrap: nowrap;
+        border-bottom: 2px solid $input-border-color;
+        text-align: center;
+    }
+
+    .btn {
+        background: $light !important;
+        border: 1px solid $light;
+        color: $body-color !important;
+        padding: 0 10px;
+        text-shadow: none;
+
+        &:hover {
+            box-shadow: none !important;
+        }
+    }
+}
+.cartButtons > form > .btn-custom {
+    padding: 9px 18px;
+    font-size: 1.2rem;
+}
+
+#MyWizard {
+    margin-bottom: 2rem;
+
+    .nav {
+        @extend .justify-content-center;
+        font-weight: 600;
+    }
+
+    .step {
+        opacity: 0.5;
+    }
+
+    .badge {
+        @extend .bg-dark;
+        @extend .rounded-pill;
+        margin-left: 20px;
+        margin-right: 6px;
+
+        &.complete {
+        }
+    }
+
+    .complete {
+        opacity: 0.5;
+    }
+
+    .active {
+        color: $primary;
+        opacity: 1;
+
+        .badge {
+            @extend .bg-primary;
+        }
+    }
+}
+
+@mixin cart-style1 {
+
+    .cart-thumbnail {
+        float: left;
+        margin-right: 1rem;
+    }
+
+    .ref {
+        //  display: none;
+    }
+
+    .lineTotal {
+        //  display: none;
+    }
+
+    .responsive-cart {
+        padding-bottom: 2rem;
+    }
+
+    .cart-item {
+        border-top: 1px solid darken($light,10%);
+        padding: 1rem 0;
+
+        &:first-child {
+            border-top: 0;
+            padding-top: 0;
+        }
+
+        .cart-thumbnail img {
+            border-radius: $img-border-radius;
+        }
+
+        @include media-breakpoint-up(lg) {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            &:after {
+                display: none;
+            }
+        }
+
+        .description {
+            @include media-breakpoint-up(lg) {
+                display: flex;
+                align-items: center;
+                flex-grow: 2;
+            }
+        }
+
+        .cart-desc {
+            flex-grow: 2;
+
+            a {
+                font-size: 1.1rem;
+                //font-weight: 600;
+                color: $body-color;
+                text-decoration: none;
+            }
+        }
+
+        .ref {
+            font-size: 0.8rem;
+        }
+
+        .quantity {
+            margin-top: 5px;
+
+            .quantity-input {
+                margin-bottom: 3px;
+
+                label {
+                    @extend .visually-hidden;
+                }
+
+                select {
+                    padding: 3px 5px;
+                }
+            }
+
+            .delete {
+                font-size: 0.9rem;
+                font-weight: 600;
+            }
+        }
+
+        .cart-prices {
+            float: right;
+            text-align: right;
+            padding-left: 2rem;
+
+            .lineTotal {
+                font-size: 1.2rem;
+                font-weight: 600;
+                padding-left: 2rem;
+            }
+
+            .linePrice {
+                font-size: 0.9rem;
+            }
+        }
+    }
+
+    .account-options-card {
+        .aoc-inner {
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .amount {
+            float: right;
+            font-weight: 600;
+        }
+
+        .totals-row {
+            padding-bottom: 0.4rem;
+        }
+
+        .btn-block {
+            display: block;
+            margin-top: 0.5rem;
+        }
+
+        .without-account-btn {
+            padding-top: 0.7rem;
+            display: block;
+            text-align: center;
+        }
+    }
+
+    .continue {
+        font-size: 0.8rem;
+    }
+
+    .principle {
+        float: right;
+    }
+}
+
+#cartFull {
+    @include cart-style1;
+    margin-bottom: $spacer;
+
+    h1 {
+        padding-bottom: 0.8rem;
+    }
+
+    #deliveryAddress .btn,
+    #billingAddress .btn {
+        margin-bottom: 0.5rem;
+    }
+}
+
+.account-btns-top {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.delivery-address {
+    margin-top: 2rem;
+
+    legend {
+        float: none;
+    }
+}
+
+#order-addresses {
+    @include media-breakpoint-up(lg) {
+        flex-wrap: nowrap;
+        align-items: stretch;
+
+        > * {
+            flex-shrink: 1;
+
+            > * {
+                height: calc(100% - 2rem);
+            }
+        }
+    }
+}
+
+.cart-address-card {
+    height: calc(100% - 2rem);
+
+    h2 {
+        font-size: 1.5rem;
+    }
+}
+
+.address-edit-btn {
+    float: right;
+}
+
+#optionsForm {
+    legend {
+        display: none;
+    }
+
+    .btn {
+        margin-right: 1rem;
+    }
+}
+
+#cartFull .payment-tcs,
+#cartInvoice .confirmation-cart {
+    #cartListing {
+        border-bottom: 1px solid darken($light,10%);
+        padding-bottom: 0;
+        margin-bottom: 1rem;
+    }
+
+    .cart-item .cart-desc a,
+    .cart-prices .lineTotal {
+        font-size: 1rem;
+    }
+
+    .qty-text,
+    .cart-prices .linePrice {
+        font-size: 0.8rem;
+    }
+}
+
+#cartFull .card-body {
+    *:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.cart-class > .container {
+    max-width: 100%;
+
+    .btn-custom {
+        background: $secondary;
+        color: #fff;
+        border: 0;
+        box-shadow: none;
+        font-weight: 700;
+    }
+
+    .btn-outline-primary {
+        border: 2px solid $secondary;
+        color: $secondary;
+        font-weight: 700;
+
+        &:hover {
+            background: $secondary;
+            color: #fff !important;
+        }
+    }
+}
+
+.cart-class {
+    .card-body, .card-header {
+        background: $light;
+
+        legend {
+            font-weight: 700;
+        }
+    }
+
+    .textarea-group{
+        margin-bottom:1rem!important;
+    }
+}
+
+.pay-button, .dummy-pay-button {
+    margin-top: 0.8rem;
+    width: 100%;
+    color: #fff;
+}
+
+.pay-PayPalExpress {
+    background: #ffc520 !important;
+    border-color: #ffc520 !important;
+    color: #253b80 !important;
+    font-weight: 700 !important;
+    font-style: italic !important;
+
+    &:before {
+        content: '\f1ed';
+        font-family: 'Font Awesome 5 Brands';
+        font-weight: 900;
+        padding-right: 0.3rem;
+    }
+
+    &:hover {
+        background: darken(#ffc520,8%);
+        border-color: darken(#ffc520,8%);
+        color: #253b80;
+    }
+}
+
+.pay-PayOnAccount {
+    @extend .btn-link;
+    display: block;
+    padding-top: 13px;
+    background: transparent !important;
+    padding: 0;
+    color: $secondary !important;
+    font-size: 1rem;
+
+    &:hover {
+        background: none;
+        transform: scale() !important;
+        box-shadow: none !important;
+    }
+}
+
+.cart-card #cartListing {
+    padding-bottom: 0;
+
+    .cart-item:last-child {
+        padding-bottom: 0;
+    }
+}

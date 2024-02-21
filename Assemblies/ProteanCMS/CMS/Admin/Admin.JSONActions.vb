@@ -8,6 +8,7 @@ Imports System.Configuration
 Imports Alphaleonis.Win32.Filesystem
 Imports System.Drawing.Imaging
 Imports System.Data.SqlClient
+Imports Protean.stdTools
 
 Partial Public Class Cms
 
@@ -250,12 +251,14 @@ Partial Public Class Cms
                 Dim JsonResult As String = ""
                 Dim redirectType As String = ""
                 Dim oldUrl As String = ""
+
                 If inputJson("redirectType") IsNot Nothing Then
                     redirectType = inputJson("redirectType").ToObject(Of String)()
                 End If
                 If inputJson("oldUrl") IsNot Nothing Then
                     oldUrl = inputJson("oldUrl").ToObject(Of String)()
                 End If
+
                 Try
                     If myApi.mbAdminMode Then
                         JsonResult = moAdminRedirect.IsUrlPresent(redirectType, oldUrl)

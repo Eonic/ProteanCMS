@@ -7,6 +7,8 @@ Imports System.Data.SqlClient
 Imports System.Reflection
 Imports System.Collections.Generic
 
+Imports Protean.stdTools
+
 
 Partial Public Class Cms
     Partial Public Class Membership
@@ -532,229 +534,238 @@ Partial Public Class Cms
                     Dim oMembershipProv As New Providers.Membership.BaseProvider(myWeb, myWeb.moConfig("MembershipProvider"))
                     Dim adXfm As Object = oMembershipProv.AdminXforms
                     Dim bRedirect As Boolean = True
+                    If moRequest("ewCmd") = "ActivateAccount" Then
+
+                        ' We should move activate account features here. Currently in membership process.
+
+                    Else
 
 
-                    ' OAuth Functionality
 
-                    If Not moRequest("oAuthResp") <> "" Then
-                        If moRequest("oAuthReg") <> "" And myWeb.msRedirectOnEnd = "" Then
-                            Dim sRedirectPath = ""
-                            Dim appId = ""
-                            Dim redirectURI = "https://" & moRequest.ServerVariables("SERVER_NAME") & myWeb.mcPageURL & "?oAuthResp=" & moRequest("oAuthReg")
-                            Select Case moRequest("oAuthReg")
+                        ' OAuth Functionality
+
+                        If Not moRequest("oAuthResp") <> "" Then
+                            If moRequest("oAuthReg") <> "" And myWeb.msRedirectOnEnd = "" Then
+                                Dim sRedirectPath = ""
+                                Dim appId = ""
+                                Dim redirectURI = "https://" & moRequest.ServerVariables("SERVER_NAME") & myWeb.mcPageURL & "?oAuthResp=" & moRequest("oAuthReg")
+                                Select Case moRequest("oAuthReg")
+                                    Case "facebook"
+                                        sRedirectPath = "https://www.facebook.com/v2.8/dialog/oauth?"
+                                        appId = moConfig("OauthFacebookId")
+                                        sRedirectPath = sRedirectPath & "client_id=" & appId & "&redirect_uri=" & redirectURI
+                                    Case "twitter"
+                                        Dim twApi As New Integration.Directory.Twitter(myWeb)
+                                        twApi.twitterConsumerKey = moConfig("OauthTwitterId")
+                                        twApi.twitterConsumerSecret = moConfig("OauthTwitterKey")
+                                        sRedirectPath = twApi.GetRequestToken()
+                                End Select
+                                myWeb.msRedirectOnEnd = sRedirectPath
+                            Else
+
+                            End If
+                        Else
+                            Select Case moRequest("oAuthResp")
                                 Case "facebook"
-                                    sRedirectPath = "https://www.facebook.com/v2.8/dialog/oauth?"
-                                    appId = moConfig("OauthFacebookId")
-                                    sRedirectPath = sRedirectPath & "client_id=" & appId & "&redirect_uri=" & redirectURI
-                                Case "twitter"
-                                    Dim twApi As New Integration.Directory.Twitter(myWeb)
-                                    twApi.twitterConsumerKey = moConfig("OauthTwitterId")
-                                    twApi.twitterConsumerSecret = moConfig("OauthTwitterKey")
-                                    sRedirectPath = twApi.GetRequestToken()
-                            End Select
-                            myWeb.msRedirectOnEnd = sRedirectPath
-                        Else
+                                    Dim redirectURI = "http://" & moRequest.ServerVariables("SERVER_NAME") & myWeb.mcPageURL & "?oAuthResp=facebook"
+                                    sProcessInfo = "Facebook Response"
+                                    Dim fbClient As New Protean.Integration.Directory.Facebook(myWeb, moConfig("OauthFacebookId"), moConfig("OauthFacebookKey"))
+                                    Dim fbUsers As List(Of Protean.Integration.Directory.Facebook.User)
+                                    fbUsers = fbClient.GetFacebookUserData(moRequest("code"), redirectURI)
+                                    sProcessInfo = fbUsers(0).first_name & " " & fbUsers(0).last_name
 
-                        End If
-                    Else
-                        Select Case moRequest("oAuthResp")
-                            Case "facebook"
-                                Dim redirectURI = "http://" & moRequest.ServerVariables("SERVER_NAME") & myWeb.mcPageURL & "?oAuthResp=facebook"
-                                sProcessInfo = "Facebook Response"
-                                Dim fbClient As New Protean.Integration.Directory.Facebook(myWeb, moConfig("OauthFacebookId"), moConfig("OauthFacebookKey"))
-                                Dim fbUsers As List(Of Protean.Integration.Directory.Facebook.User)
-                                fbUsers = fbClient.GetFacebookUserData(moRequest("code"), redirectURI)
-                                sProcessInfo = fbUsers(0).first_name & " " & fbUsers(0).last_name
+                                    mnUserId = fbClient.CreateUser(fbUsers(0))
 
-                                mnUserId = fbClient.CreateUser(fbUsers(0))
-
-                                If Not moSession Is Nothing Then moSession("nUserId") = mnUserId
-                                moDbHelper.CommitLogToDB(dbHelper.ActivityType.Register, mnUserId, moSession.SessionID, Now, 0, 0, "First Logon")
-
-                                bLogon = True
-
-                            Case "twitter"
-                                sProcessInfo = "Twitter Response"
-                                Dim twApi As New Integration.Directory.Twitter(myWeb)
-                                twApi.twitterConsumerKey = moConfig("OauthTwitterId")
-                                twApi.twitterConsumerSecret = moConfig("OauthTwitterKey")
-                                'Get twitter user
-                                'Dim twUsers As List(Of Protean.Integration.Directory.Twitter.User)   'Never used
-
-
-                        End Select
-                        If mnUserId > 0 Then
-
-
-
-                        End If
-
-
-                    End If
-
-                    ' If not in admin mode then base our choice on whether the user is logged in. 
-                    ' If in Admin Mode, then present it as WYSIWYG
-                    If (Not (myWeb.mbAdminMode) And myWeb.mnUserId > 0) Then
-
-                        Dim oContentForm As XmlElement = myWeb.moPageXml.SelectSingleNode("descendant-or-self::Content[@type='xform' and @name='UserMyAccount']")
-                        If oContentForm Is Nothing Then
-                            oXfmElmt = adXfm.xFrmEditDirectoryItem(myWeb.mnUserId, "User", , AccountUpdateForm)
-                        Else
-                            oXfmElmt = adXfm.xFrmEditDirectoryItem(myWeb.mnUserId, "User", , AccountUpdateForm, oContentForm.OuterXml)
-                            If Not myWeb.mbAdminMode Then oContentForm.ParentNode.RemoveChild(oContentForm)
-                        End If
-                        oContentNode.InnerXml = oXfmElmt.InnerXml
-
-                    Else
-
-                        Dim oContentForm As XmlElement = moPageXml.SelectSingleNode("descendant-or-self::Content[@type='xform' and @name='UserRegister']")
-                        If oContentForm Is Nothing Then
-                            oXfmElmt = adXfm.xFrmEditDirectoryItem(mnUserId, "User", , AccountCreateForm)
-                        Else
-                            oXfmElmt = adXfm.xFrmEditDirectoryItem(mnUserId, "User", , AccountCreateForm, oContentForm.OuterXml)
-                            If Not mbAdminMode Then oContentForm.ParentNode.RemoveChild(oContentForm)
-                        End If
-
-                        If myWeb.moConfig("SecureMembershipAddress") <> "" And myWeb.mbAdminMode = False Then
-                            Dim oSubElmt As XmlElement = adXfm.moXformElmt.SelectSingleNode("descendant::submission")
-                            oSubElmt.SetAttribute("action", myWeb.moConfig("SecureMembershipAddress") & myWeb.mcPagePath)
-                        End If
-
-                        ' ok if the user is valid we then need to handle what happens next.
-                        If adXfm.valid Then
-
-                            Select Case myWeb.moConfig("RegisterBehaviour")
-
-                                Case "validateByEmail"
-                                    'don't redirect because we want to reuse this form
-                                    bRedirect = False
-
-                                    'say thanks for registering and update the form
-
-                                    'hide the current form
-                                    Dim oFrmGrp As XmlElement = adXfm.moXformElmt.SelectSingleNode("group")
-                                    oFrmGrp.SetAttribute("class", "hidden")
-                                    'create a new note
-                                    Dim oFrmGrp2 As XmlElement = adXfm.addGroup(adXfm.moXformElmt, "validateByEmail")
-                                    adXfm.addNote(oFrmGrp2, xForm.noteTypes.Hint, "<span class=""msg-1029"">Thanks for registering you have been sent an email with a link you must click to activate your account</span>", True)
-
-                                    'lets get the new userid from the instance
-                                    mnUserId = adXfm.instance.SelectSingleNode("tblDirectory/nDirKey").InnerText
-
-                                    'first we set the user account to be pending
-                                    moDbHelper.setObjectStatus(dbHelper.objectTypes.Directory, dbHelper.Status.Pending, mnUserId)
-
-                                    Dim oMembership As New Protean.Cms.Membership(myWeb)
-                                    AddHandler oMembership.OnError, AddressOf myWeb.OnComponentError
-                                    oMembership.AccountActivateLink(mnUserId)
-
-                                    moDbHelper.CommitLogToDB(dbHelper.ActivityType.Register, mnUserId, moSession.SessionID, Now, 0, 0, "Send Activation")
-
-
-                                Case Else ' Auto logon
-                                    mnUserId = adXfm.instance.SelectSingleNode("tblDirectory/nDirKey").InnerText
                                     If Not moSession Is Nothing Then moSession("nUserId") = mnUserId
-
                                     moDbHelper.CommitLogToDB(dbHelper.ActivityType.Register, mnUserId, moSession.SessionID, Now, 0, 0, "First Logon")
 
                                     bLogon = True
 
-                            End Select
+                                Case "twitter"
+                                    sProcessInfo = "Twitter Response"
+                                    Dim twApi As New Integration.Directory.Twitter(myWeb)
+                                    twApi.twitterConsumerKey = moConfig("OauthTwitterId")
+                                    twApi.twitterConsumerSecret = moConfig("OauthTwitterKey")
+                                    'Get twitter user
+                                    'Dim twUsers As List(Of Protean.Integration.Directory.Twitter.User)   'Never used
 
-                            'send registration confirmation
-                            Dim xsltPath As String = "/xsl/email/registration.xsl"
-                            If myWeb.moConfig("cssFramework") = "bs5" Then
-                                xsltPath = "/xsl/registration.xsl"
+
+                            End Select
+                            If mnUserId > 0 Then
+
+
+
                             End If
 
-                            If IO.File.Exists(goServer.MapPath(xsltPath)) Then
-                                Dim oUserElmt As XmlElement = moDbHelper.GetUserXML(mnUserId)
 
-                                Dim oElmtPwd As XmlElement = moPageXml.CreateElement("Password")
-                                oElmtPwd.InnerText = moRequest("cDirPassword")
-                                oUserElmt.AppendChild(oElmtPwd)
+                        End If
 
-                                oUserElmt.SetAttribute("Url", myWeb.mcOriginalURL)
+                        ' If not in admin mode then base our choice on whether the user is logged in. 
+                        ' If in Admin Mode, then present it as WYSIWYG
+                        If (Not (myWeb.mbAdminMode) And myWeb.mnUserId > 0) Then
 
-                                Dim oUserEmail As XmlElement = oUserElmt.SelectSingleNode("Email")
-                                Dim fromName As String = moConfig("SiteAdminName")
-                                Dim fromEmail As String = moConfig("SiteAdminEmail")
-                                Dim recipientEmail As String = ""
-                                If Not oUserEmail Is Nothing Then recipientEmail = oUserEmail.InnerText
-                                Dim SubjectLine As String = "Your Registration Details"
-                                Dim oMsg As Messaging = New Messaging(myWeb.msException)
-                                'send an email to the new registrant
-                                If Not recipientEmail = "" Then sProcessInfo = oMsg.emailer(oUserElmt, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed")
+                            Dim oContentForm As XmlElement = myWeb.moPageXml.SelectSingleNode("descendant-or-self::Content[@type='xform' and @name='UserMyAccount']")
+                            If oContentForm Is Nothing Then
+                                oXfmElmt = adXfm.xFrmEditDirectoryItem(myWeb.mnUserId, "User", , AccountUpdateForm)
+                            Else
+                                oXfmElmt = adXfm.xFrmEditDirectoryItem(myWeb.mnUserId, "User", , AccountUpdateForm, oContentForm.OuterXml)
+                                If Not myWeb.mbAdminMode Then oContentForm.ParentNode.RemoveChild(oContentForm)
+                            End If
+                            oContentNode.InnerXml = oXfmElmt.InnerXml
 
-                                'send an email to the webadmin
-                                If moConfig("RegistrationAlertEmail") = "" Then
-                                    recipientEmail = moConfig("SiteAdminEmail")
-                                Else
-                                    recipientEmail = moConfig("RegistrationAlertEmail")
-                                End If
+                        Else
 
-                                Dim xsltPathAlert As String = "/xsl/email/registrationAlert.xsl"
+                            Dim oContentForm As XmlElement = moPageXml.SelectSingleNode("descendant-or-self::Content[@type='xform' and @name='UserRegister']")
+                            If oContentForm Is Nothing Then
+                                oXfmElmt = adXfm.xFrmEditDirectoryItem(mnUserId, "User", , AccountCreateForm)
+                            Else
+                                oXfmElmt = adXfm.xFrmEditDirectoryItem(mnUserId, "User", , AccountCreateForm, oContentForm.OuterXml)
+                                If Not mbAdminMode Then oContentForm.ParentNode.RemoveChild(oContentForm)
+                            End If
+
+                            If myWeb.moConfig("SecureMembershipAddress") <> "" And myWeb.mbAdminMode = False Then
+                                Dim oSubElmt As XmlElement = adXfm.moXformElmt.SelectSingleNode("descendant::submission")
+                                oSubElmt.SetAttribute("action", myWeb.moConfig("SecureMembershipAddress") & myWeb.mcPagePath)
+                            End If
+
+                            ' ok if the user is valid we then need to handle what happens next.
+                            If adXfm.valid Then
+
+                                Select Case myWeb.moConfig("RegisterBehaviour")
+
+                                    Case "validateByEmail"
+                                        'don't redirect because we want to reuse this form
+                                        bRedirect = False
+
+                                        'say thanks for registering and update the form
+
+                                        'hide the current form
+                                        Dim oFrmGrp As XmlElement = adXfm.moXformElmt.SelectSingleNode("group")
+                                        oFrmGrp.SetAttribute("class", "hidden")
+                                        'create a new note
+                                        Dim oFrmGrp2 As XmlElement = adXfm.addGroup(adXfm.moXformElmt, "validateByEmail")
+                                        adXfm.addNote(oFrmGrp2, xForm.noteTypes.Hint, "<span class=""msg-1029"">Thank you for registering. You have been emailed to confirm and activate your account</span>", True)
+
+                                        'lets get the new userid from the instance
+                                        mnUserId = adXfm.instance.SelectSingleNode("tblDirectory/nDirKey").InnerText
+
+                                        'first we set the user account to be pending
+                                        moDbHelper.setObjectStatus(dbHelper.objectTypes.Directory, dbHelper.Status.Pending, mnUserId)
+
+                                        Dim oMembership As New Protean.Cms.Membership(myWeb)
+                                        AddHandler oMembership.OnError, AddressOf myWeb.OnComponentError
+                                        oMembership.AccountActivateLink(mnUserId)
+
+                                        moDbHelper.CommitLogToDB(dbHelper.ActivityType.Register, mnUserId, moSession.SessionID, Now, 0, 0, "Send Activation")
+
+
+                                    Case Else ' Auto logon
+                                        mnUserId = adXfm.instance.SelectSingleNode("tblDirectory/nDirKey").InnerText
+                                        If Not moSession Is Nothing Then moSession("nUserId") = mnUserId
+
+                                        moDbHelper.CommitLogToDB(dbHelper.ActivityType.Register, mnUserId, moSession.SessionID, Now, 0, 0, "First Logon")
+
+                                        bLogon = True
+
+                                End Select
+
+                                'send registration confirmation
+                                Dim xsltPath As String = "/xsl/email/registration.xsl"
                                 If myWeb.moConfig("cssFramework") = "bs5" Then
-                                    xsltPath = "/email/registrationAlert.xsl"
+                                    xsltPath = "/features/membership/email/registration.xsl"
                                 End If
+                                Dim fsHelper As New Protean.fsHelper
+                                xsltPath = fsHelper.checkCommonFilePath(xsltPath)
 
-                                If IO.File.Exists(goServer.MapPath(moConfig("ProjectPath") & xsltPathAlert)) Then
-                                    sProcessInfo = oMsg.emailer(oUserElmt, moConfig("ProjectPath") & xsltPathAlert, "New User", recipientEmail, fromEmail, SubjectLine, "Message Sent", "Message Failed")
-                                End If
-                                oMsg = Nothing
+                                If xsltPath <> "" Then
+                                    Dim oUserElmt As XmlElement = moDbHelper.GetUserXML(mnUserId)
+
+                                    Dim oElmtPwd As XmlElement = moPageXml.CreateElement("Password")
+                                    oElmtPwd.InnerText = moRequest("cDirPassword")
+                                    oUserElmt.AppendChild(oElmtPwd)
+
+                                    oUserElmt.SetAttribute("Url", myWeb.mcOriginalURL)
+
+                                    Dim oUserEmail As XmlElement = oUserElmt.SelectSingleNode("Email")
+                                    Dim fromName As String = moConfig("SiteAdminName")
+                                    Dim fromEmail As String = moConfig("SiteAdminEmail")
+                                    Dim recipientEmail As String = ""
+                                    If Not oUserEmail Is Nothing Then recipientEmail = oUserEmail.InnerText
+                                    Dim SubjectLine As String = "Your Registration Details"
+                                    Dim oMsg As Messaging = New Messaging(myWeb.msException)
+                                    'send an email to the new registrant
+                                    If Not recipientEmail = "" Then sProcessInfo = oMsg.emailer(oUserElmt, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed")
+
+                                    'send an email to the webadmin
+                                    If moConfig("RegistrationAlertEmail") = "" Then
+                                        recipientEmail = moConfig("SiteAdminEmail")
+                                    Else
+                                        recipientEmail = moConfig("RegistrationAlertEmail")
+                                    End If
+
+                                    Dim xsltPathAlert As String = "/xsl/email/registrationAlert.xsl"
+                                    If myWeb.moConfig("cssFramework") = "bs5" Then
+                                        xsltPath = "/features/membership/email/registration-alert.xsl"
+                                    End If
+                                    xsltPath = fsHelper.checkCommonFilePath(xsltPath)
+                                    If IO.File.Exists(goServer.MapPath(moConfig("ProjectPath") & xsltPathAlert)) Then
+                                        sProcessInfo = oMsg.emailer(oUserElmt, moConfig("ProjectPath") & xsltPathAlert, "New User", recipientEmail, fromEmail, SubjectLine, "Message Sent", "Message Failed")
+                                    End If
+                                    oMsg = Nothing
                                 End If
 
                                 'redirect to this page or alternative page.
                                 If bRedirect Then
-                                myWeb.msRedirectOnEnd = myWeb.mcOriginalURL
+                                    myWeb.msRedirectOnEnd = myWeb.mcOriginalURL
+                                Else
+                                    oContentNode.InnerXml = oXfmElmt.InnerXml
+                                End If
                             Else
                                 oContentNode.InnerXml = oXfmElmt.InnerXml
                             End If
-                        Else
-                            oContentNode.InnerXml = oXfmElmt.InnerXml
                         End If
-                    End If
 
-                    If bLogon Then
-                        'Now we want to reload as permissions have changed
+                        If bLogon Then
+                            'Now we want to reload as permissions have changed
 
-                        If Not moSession Is Nothing Then
-                            If Not moSession("cLogonCmd") Is Nothing Then
-                                cLogonCmd = Split(moSession("cLogonCmd"), "=")(0)
-                                If myWeb.mcOriginalURL.Contains(cLogonCmd & "=") Then
-                                    cLogonCmd = ""
-                                Else
-                                    If myWeb.mcOriginalURL.Contains("=") Then
-                                        cLogonCmd = "&" & moSession("cLogonCmd")
+                            If Not moSession Is Nothing Then
+                                If Not moSession("cLogonCmd") Is Nothing Then
+                                    cLogonCmd = Split(moSession("cLogonCmd"), "=")(0)
+                                    If myWeb.mcOriginalURL.Contains(cLogonCmd & "=") Then
+                                        cLogonCmd = ""
                                     Else
-                                        cLogonCmd = "?" & moSession("cLogonCmd")
+                                        If myWeb.mcOriginalURL.Contains("=") Then
+                                            cLogonCmd = "&" & moSession("cLogonCmd")
+                                        Else
+                                            cLogonCmd = "?" & moSession("cLogonCmd")
+                                        End If
                                     End If
                                 End If
                             End If
-                        End If
 
-                        moSession("RedirectReason") = "registration"
-                        myWeb.bRedirectStarted = True ' This acts as a local suppressant allowing for the sessio to pass through to the redirected page
+                            moSession("RedirectReason") = "registration"
+                            myWeb.bRedirectStarted = True ' This acts as a local suppressant allowing for the sessio to pass through to the redirected page
 
-                        Dim redirectId As String = myWeb.moConfig("RegisterRedirectPageId")
+                            Dim redirectId As String = myWeb.moConfig("RegisterRedirectPageId")
 
-                        If oContentNode.GetAttribute("redirectPathId") <> "" Then
-                            redirectId = oContentNode.GetAttribute("redirectPathId")
-                        End If
+                            If oContentNode.GetAttribute("redirectPathId") <> "" Then
+                                redirectId = oContentNode.GetAttribute("redirectPathId")
+                            End If
 
-                        If redirectId <> "" Then
-                            'refresh the site strucutre with new userId
-                            myWeb.mnUserId = mnUserId
-                            myWeb.GetStructureXML("Site")
-                            Dim oElmt As XmlElement = myWeb.moPageXml.SelectSingleNode("/Page/Menu/descendant-or-self::MenuItem[@id = '" & redirectId & "']")
-                            Dim redirectPath As String = myWeb.mcOriginalURL
-                            If oElmt Is Nothing Then
-                                myWeb.msRedirectOnEnd = redirectPath
-                                bRedirect = True
-                            Else
-                                redirectPath = oElmt.GetAttribute("url")
-                                myWeb.msRedirectOnEnd = redirectPath
-                                bRedirect = False
+                            If redirectId <> "" Then
+                                'refresh the site strucutre with new userId
+                                myWeb.mnUserId = mnUserId
+                                myWeb.GetStructureXML("Site")
+                                Dim oElmt As XmlElement = myWeb.moPageXml.SelectSingleNode("/Page/Menu/descendant-or-self::MenuItem[@id = '" & redirectId & "']")
+                                Dim redirectPath As String = myWeb.mcOriginalURL
+                                If oElmt Is Nothing Then
+                                    myWeb.msRedirectOnEnd = redirectPath
+                                    bRedirect = True
+                                Else
+                                    redirectPath = oElmt.GetAttribute("url")
+                                    myWeb.msRedirectOnEnd = redirectPath
+                                    bRedirect = False
+                                End If
                             End If
                         End If
                     End If
@@ -1038,7 +1049,7 @@ Partial Public Class Cms
                                     Try
                                         oElmt2.InnerXml = sContent
                                     Catch
-                                        oElmt2.InnerXml = Protean.tidyXhtmlFrag(sContent)
+                                        oElmt2.InnerXml = Tools.Text.tidyXhtmlFrag(sContent)
                                     End Try
                                 End If
                             Next

@@ -4,6 +4,7 @@ Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Text.RegularExpressions
 Imports System
+Imports Protean.Tools.Xml
 
 
 Partial Public Class Cms

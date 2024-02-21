@@ -21,17 +21,14 @@ Imports System.Collections
 Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Text.RegularExpressions
-Imports System.Threading
 Imports System.Collections.Specialized
 Imports Protean.Tools
 Imports Protean.Tools.Xml
 Imports Protean.Tools.Text
 Imports System
-Imports System.Linq
 Imports System.Collections.Generic
 Imports System.Reflection
-Imports Protean.proteancms.com
-Imports System.Windows.Controls.Primitives
+Imports Protean.stdTools
 
 Partial Public Class Cms
     Partial Public Class Admin
@@ -2401,6 +2398,7 @@ Partial Public Class Cms
                             Dim fld As DirectoryInfo
                             For Each fld In rootFolder.GetDirectories
                                 EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "modules\" & fld.Name, "manifest.xml")
+                                ' EnumberateManifest(ManifestDoc, "/" & gcProjectPath & "modules\" & fld.Name, "manifest.xml")
 
                             Next
                             If myWeb.moConfig("ClientCommonFolder") <> "" Then
@@ -2485,7 +2483,7 @@ Partial Public Class Cms
                                 ' If formPath.contains("/") Then
                                 '  formPath = formPath.Split("/")(1)
                                 'End If
-                                oContentType.SetAttribute("formPath", filepath & "/" & formPath)
+                                oContentType.SetAttribute("formPath", filepath.Replace("/ptn", "") & "/" & formPath)
                             Next
                             For Each oModuleType In ManifestDoc.SelectNodes("/PageLayouts/ModuleTypes/ModuleGroup/Module")
                                 Dim formPath = oModuleType.GetAttribute("formPath")
@@ -2507,7 +2505,7 @@ Partial Public Class Cms
                                 '  If formPath.contains("/") Then
                                 '  formPath = formPath.Split("/")(1)
                                 'End If
-                                oContentType.SetAttribute("formPath", filepath & "/" & formPath)
+                                oContentType.SetAttribute("formPath", filepath.Replace("/ptn", "") & "/" & formPath)
 
                                 Dim contentTypeGroupName As String = oContentType.SelectSingleNode("parent::ContentTypeGroup/@name").InnerText()
                                 Dim contentTypeGroup As XmlElement = ManifestDoc.SelectSingleNode("/PageLayouts/ContentTypes/ContentTypeGroup[@name='" & contentTypeGroupName & "']")
@@ -2909,17 +2907,22 @@ Partial Public Class Cms
 
                     If AlternateFormName <> "" Then cXformPath = AlternateFormName
 
-                    If cModuleType <> "" Then
-                        If goConfig("cssFramework") = "bs5" Then
-                            cXformPath = GetModuleFormPath(cModuleType)
-                        Else
-                            If Not cXformPath.EndsWith("/" & cModuleType) Then
-                                cXformPath = cXformPath & "/" & cModuleType
-                            End If
+                    'Quick fix for V4 sites
+                    If cModuleType = "BasicContentTypes" Then
+                        cModuleType = ""
+                    End If
 
-                        End If
-                    Else
-                        If goConfig("cssFramework") = "bs5" Then
+                    If cModuleType <> "" Then
+                            If goConfig("cssFramework") = "bs5" Then
+                                cXformPath = GetModuleFormPath(cModuleType)
+                            Else
+                                If Not cXformPath.EndsWith("/" & cModuleType) Then
+                                    cXformPath = cXformPath & "/" & cModuleType
+                                End If
+
+                            End If
+                        Else
+                            If goConfig("cssFramework") = "bs5" Then
                             cXformPath = GetContentFormPath(cContentSchemaName)
                         End If
                     End If
@@ -3702,7 +3705,7 @@ Partial Public Class Cms
                     MyBase.submission("DeleteFolder", "", "post")
                     oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "folderItem", "", "Delete Content")
                     oinputElmt = MyBase.addInput(oFrmElmt, "cFolderName", False, "FolderName", "hidden")
-                    xmlTools.addNewTextNode("value", oinputElmt, cPath)
+                    addNewTextNode("value", oinputElmt, cPath)
                     If cPath = "" Or cPath = "\" Or cPath = "/" Then
                         MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "You cannot delete the root folder", , "alert-danger")
                     Else
@@ -5680,7 +5683,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    Protean.returnException(myWeb.msException, mcModuleName, "xFrmDirMemberships", ex, "", cProcessInfo, Protean.gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmDirMemberships", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -5971,8 +5974,12 @@ Partial Public Class Cms
                     'Replace Spaces with hypens
                     cProviderType = Replace(cProviderType, " ", "-")
                     Dim formPath = "/xforms/PaymentProvider/"
-                    If bs5 Then formPath = "/features/cart/PaymentProvider/"
-                    If Not MyBase.load(formPath & cProviderType & ".xml", myWeb.maCommonFolders) Then
+                    Dim filename = formPath & cProviderType & ".xml"
+                    If bs5 Then
+                        formPath = "/providers/payment/"
+                        filename = formPath & cProviderType & "/config.xml"
+                    End If
+                    If Not MyBase.load(filename, myWeb.maCommonFolders) Then
                         'show xform load error message
 
                     Else
@@ -6733,13 +6740,15 @@ Partial Public Class Cms
                     Dim oSchemaSelect As XmlElement = MyBase.addSelect1(oGrp1Elmt, "cCatSchemaName", True, "Group Type",, ApperanceTypes.Full)
                     MyBase.addOption(oSchemaSelect, SchemaName, SchemaName)
                     Dim aOptions() As String = Nothing
+                    Dim ProductCategoryTypes = "Shipping"
                     If Not myWeb.moCart.moCartConfig("ProductCategoryTypes") Is Nothing Then
-                        aOptions = myWeb.moCart.moCartConfig("ProductCategoryTypes").Split(",")
-                        If aOptions.Length > 0 Then
-                            For i As Integer = 0 To aOptions.Length - 1
-                                MyBase.addOption(oSchemaSelect, aOptions(i), aOptions(i))
-                            Next
-                        End If
+                        ProductCategoryTypes = myWeb.moCart.moCartConfig("ProductCategoryTypes")
+                    End If
+                    aOptions = ProductCategoryTypes.Split(",")
+                    If aOptions.Length > 0 Then
+                        For i As Integer = 0 To aOptions.Length - 1
+                            MyBase.addOption(oSchemaSelect, aOptions(i), aOptions(i))
+                        Next
                     End If
                     MyBase.addBind("cCatSchemaName", "tblCartProductCategories/cCatSchemaName")
 
@@ -9952,7 +9961,7 @@ Partial Public Class Cms
                         Try
 
                             Dim pattern As String = "^.*\s" & propertyName & "-([\S]*)\s.*$"
-                            Return "" & SimpleRegexFind(" " & ClassName() & " ", pattern, 1)
+                            Return "" & Protean.Tools.Text.SimpleRegexFind(" " & ClassName() & " ", pattern, 1)
 
                         Catch ex As Exception
                             '   returnException(myWeb.msException, mcModuleName, "getPropertyFromClass", ex, "", "", gbDebug)

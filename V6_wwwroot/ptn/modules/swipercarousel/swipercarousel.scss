@@ -1,0 +1,89 @@
+/*############### SLIDE CAROUSEL #################*/
+.normalMode .module-SwiperCarousel {
+    .swiper-slide .ptn-edit {
+        position: absolute !important;
+        top: 0px;
+        right: 0;
+    }
+
+    .ptn-edit {
+        z-index: 10;
+    }
+
+    .over-content {
+        margin: 0;
+    }
+}
+
+.module-SwiperCarousel {
+    //slides
+    .swiper-slide-padding {
+        padding: 50px 50px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+    }
+
+    .swiper-slide > a {
+        text-decoration: none;
+
+        .swiper-caption.plain-slide,
+        .swiper-caption.nobg-slide {
+            color: #fff;
+        }
+    }
+
+    .swiper-caption {
+        &.plain-slide,
+        &.nobg-slide {
+            color: #fff;
+            text-shadow: 1px 1px #000;
+        }
+
+        .swiper-btn-left {
+            float: left;
+        }
+
+        .swiper-btn-centre {
+            margin: 0 auto;
+            display: block;
+        }
+
+        .swiper-btn-right {
+            float: right;
+        }
+    }
+
+    [class*="bg-"] {
+        padding: 15px 20px;
+        //color: color-contrast(#fff);
+
+        *:first-child {
+            margin-top: 0;
+        }
+
+        *:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    
+    //controls
+    .swiper-button-prev:after, .swiper-button-next:after {
+        font-size: 30px;
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        color: #fff;
+    }
+
+    .swiper-pagination-bullet-active {
+        background-color: #fff;
+    }
+    //general
+    .swiper-container {
+        padding: 0;
+    }
+}

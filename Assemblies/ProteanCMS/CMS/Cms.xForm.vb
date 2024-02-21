@@ -1,6 +1,8 @@
 ﻿Imports System
 Imports System.Xml
 
+Imports Protean.stdTools
+
 Partial Public Class Cms
     Public Class xForm
         Inherits Protean.xForm

@@ -27,6 +27,8 @@ Imports Lucene.Net.Support
 Imports System.ServiceModel.Channels
 Imports ICSharpCode.SharpZipLib.Zip.ExtendedUnixData
 Imports Protean.proteancms.com
+Imports Protean.Tools.Xml
+Imports Protean.stdTools
 
 Partial Public Class Cms
     Public Class Admin
@@ -246,6 +248,7 @@ Partial Public Class Cms
                     If LCase(myWeb.moRequest("ewCmd")) = "logoff" Then
                         myWeb.moSession("ewCmd") = ""
                     End If
+                    myWeb.moSession("tempInstance") = Nothing
                     myWeb.moSession("ewAuth") = ""
                     myWeb.mnUserId = 0
                     mcEwCmd = ""
@@ -415,6 +418,7 @@ ProcessFlow:
                                 End If
                             Else
                                 sAdminLayout = "Logon"
+                                myWeb.moSession("tempInstance") = Nothing
                             End If
                         Else
                             If myWeb.mnPageId > 0 Then
@@ -477,6 +481,7 @@ ProcessFlow:
                         Dim statusElmt As XmlElement = moPageXML.CreateElement("Status")
                         statusElmt.InnerXml = myWeb.GetStatus().OuterXml
                         oPageDetail.AppendChild(statusElmt)
+                        myWeb.moSession("tempInstance") = Nothing
 
                     Case ("MemberActivity")
                         MemberActivityProcess(oPageDetail, sAdminLayout)
@@ -838,15 +843,18 @@ ProcessFlow:
 
                                         ' myWeb.GetContentXMLByTypeAndOffset(moPageXML.DocumentElement, ContentType & cSort, FilterSQL, "", oPageDetail)
                                         Dim contentsNode As XmlElement = moPageXML.SelectSingleNode("/Page/Contents")
-                                        Dim itemCount As Integer = contentsNode.SelectNodes("Content").Count
-                                        contentsNode.SetAttribute("count", itemCount)
-                                        If Not IsNothing(contentsNode) Then
-                                            myWeb.moDbHelper.addBulkRelatedContent(contentsNode)
+                                        If Not contentsNode Is Nothing Then
+                                            Dim itemCount As Integer = contentsNode.SelectNodes("Content").Count
+                                            contentsNode.SetAttribute("count", itemCount)
+                                            If Not IsNothing(contentsNode) Then
+                                                myWeb.moDbHelper.addBulkRelatedContent(contentsNode)
+                                            End If
                                         End If
                                         myWeb.moSession("FilterValue") = FilterValue
+
                                     End If
 
-                                Case "User"
+                                        Case "User"
                                     If myWeb.moDbHelper.checkUserRole("Administrator") Then
                                         myWeb.GetContentXMLByType(moPageXML.DocumentElement, ContentType)
                                     Else

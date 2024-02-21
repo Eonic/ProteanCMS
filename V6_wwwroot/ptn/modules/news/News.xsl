@@ -3,7 +3,7 @@
 	<!-- ############## News Articles ##############   -->
 
 	<!-- wrapping code is generic from layout.xsl with mode displayBrief, override here to customise-->
-	
+
 	<xsl:template match="Content[@type='Module' and @moduleType='NewsList']" mode="themeModuleExtras">
 		<!-- this is empty because we want this on individual listing panels not the containing module-->
 	</xsl:template>
@@ -19,6 +19,7 @@
 		<xsl:param name="class"/>
 		<xsl:param name="parentId"/>
 		<xsl:param name="linked"/>
+		<xsl:param name="itemLayout"/>
 		<xsl:variable name="parentURL">
 			<xsl:apply-templates select="." mode="getHref"/>
 		</xsl:variable>
@@ -26,6 +27,9 @@
 			<xsl:text>listItem newsarticle </xsl:text>
 			<xsl:if test="$linked='true'">
 				<xsl:text> linked-listItem </xsl:text>
+			</xsl:if>
+			<xsl:if test="$itemLayout='wide'">
+				<xsl:text> wide-item </xsl:text>
 			</xsl:if>
 			<xsl:value-of select="$class"/>
 			<xsl:text> </xsl:text>
@@ -57,51 +61,53 @@
 					<a href="{$parentURL}" title="Read more about {Headline/node()}" class="list-image-link">
 						<xsl:apply-templates select="." mode="displayThumbnail">
 							<xsl:with-param name="crop" select="$cropSetting" />
-							<xsl:with-param name="class">list-image</xsl:with-param>
+							<xsl:with-param name="class">list-image img-fluid</xsl:with-param>
 						</xsl:apply-templates>
 					</a>
 				</xsl:if>
-				<h3 class="title">
-					<a href="{$parentURL}" title="Read more about {Headline/node()}">
-						<xsl:apply-templates select="." mode="getDisplayName"/>
-					</a>
-				</h3>
+				<div class="media-inner">
+					<h3 class="title">
+						<a href="{$parentURL}" title="Read more about {Headline/node()}">
+							<xsl:apply-templates select="." mode="getDisplayName"/>
+						</a>
+					</h3>
 
-				<span class="news-brief-info">
-					<xsl:apply-templates select="Content[@type='Contact' and @rtype='Author'][1]" mode="displayAuthorBrief"/>
-					<xsl:if test="@publish!=''">
-						<p class="date" itemprop="datePublished">
-							<xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
-							<xsl:call-template name="DisplayDate">
-								<xsl:with-param name="date" select="@publish"/>
-							</xsl:call-template>
-						</p>
-					</xsl:if>
-					<xsl:if test="@update!=''">
-						<p class="hidden" itemprop="dateModified">
-							<xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
-							<xsl:call-template name="DisplayDate">
-								<xsl:with-param name="date" select="@update"/>
-							</xsl:call-template>
-						</p>
-					</xsl:if>
-				</span>
+					<span class="news-brief-info">
+						<xsl:apply-templates select="Content[@type='Contact' and @rtype='Author'][1]" mode="displayAuthorBrief"/>
+						<xsl:if test="@publish!=''">
+							<p class="date" itemprop="datePublished">
+								<xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
+								<xsl:call-template name="DisplayDate">
+									<xsl:with-param name="date" select="@publish"/>
+								</xsl:call-template>
+							</p>
+						</xsl:if>
+						<xsl:if test="@update!=''">
+							<p class="hidden" itemprop="dateModified">
+								<xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
+								<xsl:call-template name="DisplayDate">
+									<xsl:with-param name="date" select="@update"/>
+								</xsl:call-template>
+							</p>
+						</xsl:if>
+					</span>
 
-				<xsl:if test="Strapline/node()!=''">
-					<div class="summary" itemprop="description">
-						<xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>
+					<xsl:if test="Strapline/node()!=''">
+						<div class="summary" itemprop="description">
+							<xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>
+						</div>
+					</xsl:if>
+					<div class="entryFooter">
+						<xsl:apply-templates select="." mode="displayTags"/>
+						<xsl:apply-templates select="." mode="moreLink">
+							<xsl:with-param name="link" select="$parentURL"/>
+							<xsl:with-param name="stretchLink" select="$linked"/>
+							<xsl:with-param name="altText">
+								<xsl:value-of select="Headline/node()"/>
+							</xsl:with-param>
+						</xsl:apply-templates>
+						<xsl:text> </xsl:text>
 					</div>
-				</xsl:if>
-				<div class="entryFooter">
-					<xsl:apply-templates select="." mode="displayTags"/>
-					<xsl:apply-templates select="." mode="moreLink">
-						<xsl:with-param name="link" select="$parentURL"/>
-						<xsl:with-param name="stretchLink" select="$linked"/>
-						<xsl:with-param name="altText">
-							<xsl:value-of select="Headline/node()"/>
-						</xsl:with-param>
-					</xsl:apply-templates>
-					<xsl:text> </xsl:text>
 				</div>
 			</div>
 		</div>
@@ -295,8 +301,8 @@
 		</xsl:if>]
 		}
 	</xsl:template>
-	
-		<xsl:template match="Content[@moduleType='FAQList']" mode="JSONLD">
+
+	<xsl:template match="Content[@moduleType='FAQList']" mode="JSONLD">
 		{
 		"@context": "https://schema.org",
 		"@type": "FAQPage",

@@ -1042,9 +1042,9 @@ Public Class XmlHelper
                 End If
 
                 Dim cWorkingDirectory As String = goServer.MapPath(compiledFolder)
-                    sProcessInfo = "clearing " & cWorkingDirectory
-                    Dim di As New IO.DirectoryInfo(cWorkingDirectory)
-                    Dim fi As IO.FileInfo
+                sProcessInfo = "clearing " & cWorkingDirectory
+                Dim di As New IO.DirectoryInfo(cWorkingDirectory)
+                Dim fi As IO.FileInfo
 
                 For Each fi In di.EnumerateFiles
                     Try

@@ -515,7 +515,7 @@
         </table>
         <div class="panel-footer">
           <span class="pull-right">
-            <xsl:apply-templates select="/" mode="addtoCartButtons"/>
+            <xsl:apply-templates select="." mode="addtoCartButtons"/>
           </span>
         </div>
 			  </xsl:if>

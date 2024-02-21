@@ -53,6 +53,7 @@
 
   <!-- NORMAL PAGE META TAGS -->
   <xsl:template match="Page" mode="metadata">
+	<xsl:variable name="pgid" select="@id"/>
     <meta name="pgid" content="{@id}"/>
     <meta name="status" content="{Contents/Content/@status}"/>
     <meta name="contenttype" content="page"/>
@@ -61,19 +62,7 @@
         <xsl:apply-templates select="." mode="pagetitle"/>
       </xsl:attribute>
     </meta>
-    <meta name="abstract">
-      <xsl:attribute name="content">
-        <xsl:variable name="content">
-          <xsl:for-each select="/Page/Contents/Content[@moduleType='FormattedText' and @parId!='1']">
-            <xsl:apply-templates select="*" mode="getValues"/>
-          </xsl:for-each>
-        </xsl:variable>
-        <xsl:call-template name="truncateString">
-          <xsl:with-param name="string" select="$content"/>
-          <xsl:with-param name="length" select="'500'"/>
-        </xsl:call-template>
-      </xsl:attribute>
-    </meta>
+
     <meta name="publishDate" content="{/Page/Menu/MenuItem/descendant-or-self::MenuItem[@id=/Page/@id]/@publish}"/>
     <xsl:if test="Contents/Content[@name='MetaDescription' or @name='metaDescription']">
       <meta name="description" content="{Contents/Content[@name='MetaDescription' or @name='metaDescription']}{Content[@name='MetaDescription-Specific']}"/>
@@ -81,9 +70,27 @@
     <xsl:if test="Contents/Content[@name='MetaKeywords' or @name='metaKeywords']">
       <meta name="keywords" content="{Contents/Content[@name='MetaKeywords' or @name='metaKeywords']}{Contents/Content[@name='MetaKeywords-Specific']}"/>
     </xsl:if>
-    <xsl:if test="Contents/Content[@name='MetaAbstract' or @name='metaAbstract']">
-      <meta name="abstract" content="{Contents/Content[@name='MetaAbstract' or @name='metaAbstract']}"/>
-    </xsl:if>
+	  <xsl:choose>
+		  <xsl:when test="Contents/Content[@name='MetaAbstract' or @name='metaAbstract']">
+			  <meta name="abstract" content="{Contents/Content[@name='MetaAbstract' or @name='metaAbstract']}"/>
+		  </xsl:when>
+		  <xsl:otherwise>
+			  <meta name="abstract">
+				  <xsl:attribute name="content">
+					  <xsl:variable name="content">
+						  <xsl:for-each select="/Page/Contents/Content[@moduleType='FormattedText' and @parId=$pgid]">
+							  <xsl:apply-templates select="*" mode="getValues"/>
+						  </xsl:for-each>
+					  </xsl:variable>
+					  <xsl:call-template name="truncateString">
+						  <xsl:with-param name="string" select="$content"/>
+						  <xsl:with-param name="length" select="'500'"/>
+					  </xsl:call-template>
+				  </xsl:attribute>
+			  </meta>
+		  </xsl:otherwise>
+	  </xsl:choose>
+
   </xsl:template>
 
   <!-- DETAIL PAGE -->

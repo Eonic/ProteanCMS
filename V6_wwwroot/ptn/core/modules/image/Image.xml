@@ -34,6 +34,7 @@
 			<bind id="cPosition" nodeset="@position" required="true()" type="string"/>
 			<bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
 			<bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
+			<bind id="caption" nodeset="@caption" required="false()" type="string"/>
 			<bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
 			<bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
 			<bind id="cResizeImage" nodeset="@resize" required="false()" type="string"/>
@@ -66,6 +67,9 @@
 				<group>
 					<input bind="cModuleTitle" class="long">
 						<label>Title or Name</label>
+					</input>
+					<input bind="caption" class="long">
+						<label>Caption</label>
 					</input>
 					<input bind="cContentImage" class="short pickImage">
 						<label>Image</label>

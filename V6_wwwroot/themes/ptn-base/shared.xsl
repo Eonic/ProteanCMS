@@ -17,21 +17,24 @@
 	<!--menu below header-->
 	<!--<xsl:variable name="header-layout">header-menu-right</xsl:variable>-->
 	<!--menu within header-->
-	<xsl:variable name="header-layout">header-menu-below</xsl:variable>
+	<xsl:variable name="header-layout">header-one-line</xsl:variable>
 	<xsl:variable name="font-import-base">Lato:300,400,700</xsl:variable>
 	<xsl:variable name="headings-font-import">Lato:300,400,700</xsl:variable>
 	<xsl:variable name="color-mode">default</xsl:variable>
 	<xsl:variable name="HomeInfo">false</xsl:variable>
-	<xsl:variable name="HomeNav">true</xsl:variable>
+	<xsl:variable name="HomeNav">false</xsl:variable>
 	<xsl:variable name="NavFix">true</xsl:variable>
 	<xsl:variable name="nav-dropdown">true</xsl:variable>
+	<xsl:variable name="sub-nav">right</xsl:variable>
 	<xsl:variable name="SideSubWidth">3</xsl:variable>
 	<xsl:variable name="SideSubWidthCustom"></xsl:variable>
 	<xsl:variable name="themeBreadcrumb">false</xsl:variable>
 	<xsl:variable name="themeTitle">true</xsl:variable>
 	<xsl:variable name="MatchHeightType" select="''"/>
-	<xsl:variable name="thWidth">500</xsl:variable>
-	<xsl:variable name="thHeight">350</xsl:variable>
+	<xsl:variable name="thWidth-xs">496</xsl:variable>
+	<xsl:variable name="thHeight-xs">496</xsl:variable>
+	<xsl:variable name="thWidth">496</xsl:variable>
+	<xsl:variable name="thHeight">496</xsl:variable>
 	<xsl:variable name="container">container</xsl:variable>
 	<xsl:variable name="siteAlert">false</xsl:variable>
 
@@ -145,6 +148,14 @@
 
 	<!-- ############################################ IMAGE SIZES ############################################### -->
 
+	<xsl:template match="Content | MenuItem" mode="getThWidth-xs">
+		<xsl:value-of select="$thWidth-xs"/>
+	</xsl:template>
+
+	<xsl:template match="Content | MenuItem" mode="getThHeight-xs">
+		<xsl:value-of select="$thHeight-xs"/>
+	</xsl:template>
+		
 	<xsl:template match="Content | MenuItem" mode="getThWidth">
 		<xsl:value-of select="$thWidth"/>
 	</xsl:template>
@@ -152,9 +163,6 @@
 	<xsl:template match="Content | MenuItem" mode="getThHeight">
 		<xsl:value-of select="$thHeight"/>
 	</xsl:template>
-
-	<xsl:template match="Content[@type='Testimonial']" mode="getThWidth">100</xsl:template>
-	<xsl:template match="Content[@type='Testimonial']" mode="getThHeight">100</xsl:template>
 
 	<xsl:template match="Content | MenuItem | Discount | Company" mode="getDisplayWidth">800</xsl:template>
 	<xsl:template match="Content | MenuItem | Discount | Company" mode="getDisplayHeight">600</xsl:template>
@@ -336,6 +344,14 @@
 			</button>
 		</form>
 	</xsl:template>
+	<xsl:template match="/" mode="searchModal">
+		<button class="btn-clean search-btn" data-bs-toggle="modal" href="#SearchModal" role="button">
+			<i class="fa fa-search">
+				<xsl:text> </xsl:text>
+			</i>
+			<span class="visually-hidden">Open Search Modal</span>
+		</button>
+	</xsl:template>
 
 	<!-- ############################################ LOGIN ############################################### -->
 
@@ -375,6 +391,29 @@
 			</xsl:choose>
 		</a>
 	</xsl:template>
+	<xsl:template match="/" mode="loginIcon">
+		<a class="nav-link login-btn not-xs">
+			<xsl:attribute name="href">
+				<xsl:choose>
+					<xsl:when test="/Page/User">/My-Account</xsl:when>
+					<xsl:otherwise>/Login</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>
+			<xsl:attribute name="class">
+				<xsl:text>nav-link login-btn not-xs </xsl:text>
+				<xsl:if test="/Page/User"> logged-in-icon</xsl:if>
+			</xsl:attribute>
+			<i class="fas fa-user">
+				<xsl:text> </xsl:text>
+			</i>
+			<span class="visually-hidden">
+				<xsl:choose>
+					<xsl:when test="/Page/User">My Account</xsl:when>
+					<xsl:otherwise>Sign in</xsl:otherwise>
+				</xsl:choose>
+			</span>
+		</a>
+	</xsl:template>
 
 	<!-- ########################################## MEMBERSHIP TEMPLATES ############################################ -->
 	<!-- Template to display username when logged in -->
@@ -398,7 +437,7 @@
 		<xsl:choose>
 			<xsl:when test="/Page/User">
 				<a href="/?ewCmd=LogOff" title="Logout" class="btn btn-default btn-sm principle" type="button">
-					<i class="fa fa-power-off"> </i> Logout
+					<i class="fa fa-power-off"> </i> Sign out
 				</a>
 				<div class="userName">
 					<xsl:text>Hello, </xsl:text>

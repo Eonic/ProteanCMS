@@ -63,7 +63,7 @@
 		  </a>
 	  </xsl:if>
   </xsl:template>
-  <!-- -->
+	<!-- -->
   <!-- -->	
    <xsl:template match="Page[@layout='Logon_Register']" mode="Layout">
     <div id="template_Logon_Register">
@@ -189,37 +189,26 @@
   </xsl:template>
 
 	<xsl:template match="Page[@layout='Password_Change']" mode="Layout">
-		<div id="template_Logon_Register">
-			<xsl:apply-templates select="/" mode="layoutHeader"/>
-			<div id="body">
+		<div id="template_Logon_Register" class="template">
+			<section class="wrapper-sm">
+				<div class="container content">
 				<xsl:apply-templates select="/Page/Contents/Content[@type='xform' and (@name='ResetPassword')]" mode="xform"/>
-        <xsl:text> </xsl:text>
-			</div>
-			<!-- Terminus class fix to floating columns -->
-			<div class="terminus">&#160;</div>
-			<xsl:apply-templates select="/" mode="layoutFooter"/>
+					<xsl:text> </xsl:text>
+				</div>
+			</section>
 		</div>
 	</xsl:template>	
 	
   <xsl:template match="Page[@layout='Account_Reset']" mode="Layout">
-    <div id="template_Logon_Register">
-      <xsl:apply-templates select="/" mode="layoutHeader"/>
-      <div id="column1">
-        <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='ConfirmPassword']" mode="xform"/>
-        <xsl:text> </xsl:text>
-      </div>
-      <div id="column2">
-        <xsl:apply-templates select="/Page" mode="inlinePopupSingle">
-          <xsl:with-param name="type">FormattedText</xsl:with-param>
-          <xsl:with-param name="text">Add Column 2</xsl:with-param>
-          <xsl:with-param name="name">column2</xsl:with-param>
-        </xsl:apply-templates>
-        <xsl:apply-templates select="/Page/Contents/Content[@name='column2']" mode="displayContent"/>
-        <xsl:text> </xsl:text>
-      </div>
-      <!-- Terminus class fix to floating columns -->
-      <div class="terminus">&#160;</div>
-      <xsl:apply-templates select="/" mode="layoutFooter"/>
+    <div id="template_Logon_Register" class="template">
+		<div>
+		<section class="wrapper-sm">
+	        <div class="container content">
+                <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='ConfirmPassword']" mode="xform"/>
+                <xsl:text> </xsl:text>
+              </div>
+		</section>
+			</div>
     </div>
   </xsl:template>
 
@@ -432,7 +421,7 @@
   
   <!-- Overide for Login so title isn't a link, that way we use the footer link for password reminder. -->
   <xsl:template match="Content[@type='Module' and @moduleType='MembershipLogon']" mode="moduleLink">
-        <xsl:apply-templates select="." mode="moduleTitle"/>
+	<xsl:apply-templates select="." mode="moduleTitle"/>
   </xsl:template>
 
   <xsl:template match="Content[@type='xform' and @name='UserLogon']" mode="loginBrief">
@@ -453,7 +442,7 @@
       </div>
       <input name="ewmLogon/@ewCmd" class="hidden" value="membershipLogon"/>
       <button type="submit" name="submit" value="Login" class="btn btn-primary" onclick="disableButton(this);">
-        Log in
+        Sign in
       </button>
       <xsl:if test="alert">
         <xsl:apply-templates select="alert" mode="xform"/>
@@ -666,12 +655,29 @@
         <xsl:otherwise>
           <xsl:apply-templates select="/Page/User" mode="displayUserDetails" />
         </xsl:otherwise>
-      </xsl:choose>  
+      </xsl:choose>
+		<xsl:text> </xsl:text>
     </xsl:template>
 
     <!-- Membership Register Module -->
     <xsl:template match="Content[@type='Module' and (@moduleType='MembershipRegister')]" mode="displayBrief">
-        <xsl:apply-templates select="." mode="xform"/>
+		<xsl:choose>
+			<xsl:when test="$page/User/@status!='1'">
+				You must activate your account before you can update your details.
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:choose>
+	        <xsl:when test="$page/Request/QueryString/Item[@name='ewCmd']/node()!=''">
+				    <xsl:apply-templates select="/Page/Contents/Content[@name='UserLogon']" mode="xform"/>
+		    </xsl:when>
+		    <xsl:otherwise>
+	            <xsl:apply-templates select="." mode="xform"/>
+			</xsl:otherwise>
+	    </xsl:choose>
+			</xsl:otherwise>
+		</xsl:choose>
+		
+		
     </xsl:template>
 
     <xsl:template match="Content[@type='Module' and @moduleType='MembershipRegister']" mode="cleanXhtml">

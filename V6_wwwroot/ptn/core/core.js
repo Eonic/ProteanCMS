@@ -269,14 +269,21 @@ function disableButton(oBtn, disableMessage) {
 
 }
 
-//bootstrap validation alert
 function displayErrorMessage() {
-    if (document.getElementById("xFrmAlertModal") != null) {
+    if ($('#xFrmAlertModal').exists()) {
         var iconClassName = document.getElementById("errorIcon").className;
-        $('#xFrmAlertModal #errorMessage').text(arguments[0]);
-        $("#xFrmAlertModal #errorIcon").removeClass(iconClassName);
-        $("#xFrmAlertModal #errorIcon").addClass(arguments[1]);
-        var xFrmAlertModal = new bootstrap.Modal(document.getElementById('xFrmAlertModal'))
+        if ($('#xFrmAlertModal #errorMessage').html() == "&nbsp;") {
+            $('#xFrmAlertModal #errorMessage').html('');
+            $('#xFrmAlertModal #errorMessage').html(arguments[0]);
+            $("#xFrmAlertModal #errorIcon").removeClass(iconClassName);
+            $("#xFrmAlertModal #errorIcon").addClass(arguments[1]);
+        }
+        else {
+            var NewAlert = '<br/><i class="' + iconClassName + '">&nbsp;</i>&nbsp; <span>' + arguments[0] + '</span>';
+            $("#xFrmAlertModal .modal-body").append(NewAlert);
+        }
+       
+        let xFrmAlertModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('xFrmAlertModal')) // Returns a Bootstrap modal instance
         xFrmAlertModal.show();
     } else { alert(arguments[0]); }
 }
@@ -324,50 +331,55 @@ $.fn.prepareXform = function () {
 
     //---------------------- Datepicker ----------------------------
 
-   // $(this).find('input.hasDatepicker').datepicker('destroy');
-   // $(this).find('input.hasDatepicker').removeClass('hasDatepicker');
+   $(this).find('input.hasDatepicker').datepicker('destroy');
+   $(this).find('input.hasDatepicker').removeClass('hasDatepicker');
 
 
     //---------------------- DOBpicker ----------------------------
-    //if ($(this).find('input.jqDOBPicker').exists()) {
-    //    $.datepicker.setDefaults($.datepicker.regional['']);
+    if ($(this).find('input.jqDOBPicker').exists()) {
+        $.datepicker.setDefaults($.datepicker.regional['']);
 
-    //    $(this).find('input.jqDOBPicker').each(function (i) {
+        $(this).find('input.jqDOBPicker').each(function (i) {
+            var myDatePicker = $(this);
+            $(this).datepicker({
+                closeAtTop: false,
+                closeText: 'x',
+                showButtonPanel: true,
+                showOn: "focus",
+                dateFormat: 'd M yy',
+                altField: '#' + $(this).attr('id').replace('-alt', ''),
+                altFormat: 'yy-mm-dd',
+                mandatory: $(this).hasClass('required'),
+                changeMonth: true,
+                changeYear: true,
+                yearRange: '-95:+0'
+            });
+            $(this).nextAll('label').on("click", function () {
+                myDatePicker.datepicker("show");
+            });
+        });
+    };
 
-    //        $(this).datepicker({
-    //            closeAtTop: false,
+    //    var datePickerSettings = ;
 
-    //            closeText: 'x',
-    //            showButtonPanel: true,
-    //            showOn: "focus",
-    //            dateFormat: 'd M yy',
-    //            altField: '#' + $(this).attr('id').replace('-alt', ''),
-    //            altFormat: 'yy-mm-dd',
-    //            mandatory: $(this).hasClass('required'),
-    //            changeMonth: true,
-    //            changeYear: true,
-    //            yearRange: '-95:+0'
-    //        });
-    //    });
-    //};
-
-    ////    var datePickerSettings = ;
-
-    //if ($(this).find('input.jqDatePicker').exists()) {
-    //    $.datepicker.setDefaults($.datepicker.regional['']);
-    //    $(this).find('input.jqDatePicker').each(function (i) {
-    //        $(this).datepicker({
-    //            closeAtTop: false,
-    //            closeText: 'x',
-    //            showButtonPanel: true,
-    //            showOn: "focus",
-    //            dateFormat: 'd M yy',
-    //            altField: '#' + $(this).attr('id').replace('-alt', ''),
-    //            altFormat: 'yy-mm-dd',
-    //            mandatory: $(this).hasClass('required')
-    //        });
-    //    });
-    //};
+    if ($(this).find('input.jqDatePicker').exists()) {
+        $.datepicker.setDefaults($.datepicker.regional['']);
+        $(this).find('input.jqDatePicker').each(function (i) {
+            $(this).datepicker({
+               closeAtTop: false,
+                closeText: 'x',
+                showButtonPanel: true,
+                showOn: "focus",
+                dateFormat: 'd M yy',
+                altField: '#' + $(this).attr('id').replace('-alt', ''),
+                altFormat: 'yy-mm-dd',
+                mandatory: $(this).hasClass('required')
+            });
+        });
+        $(this).nextAll('label').on("click", function () {
+            myDatePicker.datepicker("show");
+        });
+    };
 
     if ($(this).find('.btn-file').exists()) {
 
@@ -462,11 +474,11 @@ $.fn.prepareXform = function () {
     });
 
     $(this).find("[id$='passwordPolicy']").click(function (event) {
-        var width = 200, height = 400, left = (screen.width / 2) - (width / 2),
-            top = (screen.height / 2) - (height / 2);
-        window.open("/ewcommon/tools/passwordpolicydisplay.ashx", 'Password_policy', 'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top);
-        event.preventDefault();
-        return false;
+        $("#xFrmAlertModal #errorMessage").load("/ptn/tools/passwordpolicydisplay.ashx");
+        let xFrmAlertModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('xFrmAlertModal')) // Returns a Bootstrap modal instance
+        var iconClassName = document.getElementById("errorIcon").className;
+        $("#xFrmAlertModal #errorIcon").removeClass(iconClassName);
+        xFrmAlertModal.show();
     });
 
     if ($(this).find('input#onLoad').exists()) {
@@ -485,6 +497,50 @@ $.fn.prepareXform = function () {
             });
         });
     }
+
+    if ($(this).find('select.select-other').exists()) {
+      
+        $(this).find('select.select-other').each(function (i) {
+            var selectcontrol = $(this);
+            var otherTextInput = $("#" + $(this).data("target"));
+            var isInDropdown = false;
+            otherTextInput.attr('readonly', 'readonly');
+            otherTextInput.hide();
+            otherTextInput.prev("label").hide();
+
+            $(this).find("option").each(function () {
+                if ($(this).val() == otherTextInput.val()) {
+
+                    $(this).attr('selected', 'selected');
+                    isInDropdown = true;
+                }
+                if (isInDropdown == false) {
+                    if ($(this).val() == "Other") {
+                        $(this).attr('selected', 'selected');
+                        otherTextInput.removeAttr('readonly');
+                        otherTextInput.show();
+                        otherTextInput.prev("label").show();
+                    }
+                }
+            });
+
+            selectcontrol.on('change', function () {
+                //alert($(this).find(":selected").val())
+                if ($(this).find(":selected").val() == "Other") {
+                    otherTextInput.removeAttr('readonly');
+                    otherTextInput.show();
+                    otherTextInput.prev("label").show();
+                    otherTextInput.val('');
+                }
+                else {
+                    otherTextInput.val(selectcontrol.find(":selected").val());
+                    otherTextInput.attr('readonly', 'readonly');
+                    otherTextInput.hide();
+                    otherTextInput.prev("label").hide();
+                }
+            });
+        }); 
+    };
 
     if ($(this).find('.contentLocations').exists()) {
         $(this).find('.contentLocations').each(function (i) {
@@ -546,7 +602,26 @@ $.fn.prepareXform = function () {
         });
     };
 
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        const forms = document.querySelectorAll('.needs-validation')
+
+        // Loop over them and prevent submission
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+
+                form.classList.add('was-validated')
+            }, false)
+        })
+
+
+
 };
+
+
 
 /*  USED IN ALL EW:xFORMS - For when an Radio Button Toggles a switch /case */
 function showDependant(dependant, allDependants) {

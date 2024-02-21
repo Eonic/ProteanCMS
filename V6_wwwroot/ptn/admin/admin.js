@@ -32,6 +32,7 @@ var IsParentPageAPI = '/ewapi/Cms.Admin/IsParentPage';
 var checkiFrameLoaded;
 
 $(document).ready(function () {
+    
     $(".all-breadcrumb").click(function () {
         $(".admin-breadcrumb").addClass("breadcrumb-height");
         $(".all-breadcrumb").hide();

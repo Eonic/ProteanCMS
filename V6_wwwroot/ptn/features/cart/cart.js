@@ -1,5 +1,10 @@
 ﻿$(document).ready(function () {
+
+    $(".pay-button").hide();
+
     if ($("form#contact").exists()) {
+
+        $(".delivery-address").hide();
 
         if ($('#cDelContactAddress').val() == $('#cContactAddress').val()) {
             if ($('#cContactAddress').val() == '') {
@@ -17,12 +22,14 @@
         }
 
         //when is delivery clicked
-        $('input[name="cIsDelivery"]').click(function () {
-            // alert($(this).attr('value'));
-            if ($(this).attr('value') == 'true') {
+        $('input[name="cIsDelivery"]').change(function () {
+
+            if ($('input[name="cIsDelivery"]').is(":checked")) {
+                $(".delivery-address").show();
                 resetDelAddress();
-            }
-            else {
+            } 
+            if ($('input[name="cIsDelivery"]').is(":checked") == false) {
+                $(".delivery-address").hide();
                 if ($.isNumeric($(this).attr('value')) == true) {
 
                     blankoutFormFields($('#cDelContactName'), 'Collection');
@@ -38,8 +45,7 @@
                 } else {
                     addDeliveryAddress();
                 }
-
-            }
+            }            
         });
 
         //when form submitted
@@ -75,6 +81,16 @@
                 }
             }
         });
+        $(".pay-button").hide();
+        $("#confirmterms_Agree").change(function () {
+            if (this.checked) {
+                $(".pay-button").show();
+                enablePayPal();
+            } else {
+                $(".pay-button").hide();
+            }
+        });
+
     }
 
     if ($("form#PayForm").exists()) {
@@ -114,7 +130,84 @@
     $('.responsive-cart .cart-quantity').on('change', function () {
         $('#updateQty').click();
     });
+
+    initialiseProductSKUs();
 });
+
+
+$("#confirmterms_Agree").change(function () {
+    if (this.checked) {
+        //$("#confirmterms_Agree").attr("disabled", true);
+        $(".dummy-pay-button").hide();
+        $(".pay-button").show();
+        enablePayPal();
+    } else {
+        $(".dummy-pay-button").show();
+        $(".pay-button").hide();
+    }
+});
+
+/*Change Price on Selected SKU Option - this function uses 'Live' to cater for content inserted via ajax*/
+function initialiseProductSKUs() {
+
+    //    $('.skuOptions').each(function () {
+    //        var addButton = $(this).parents('form').find('.button[name="cartAdd"]');
+    //        var options = $(this).find('option').length;
+    //        if (options > 1 && !$('.ProductListGroup').exists()) {
+    //            addButton.hide();
+    //        }
+    //    });
+
+    $('.skuOptions').change(function () {
+        obj = this;
+        var skuElement = obj.value.split('_');
+        var addButton = $(this).parents('form').find('.button[name="cartAdd"]');
+
+        var priceId = '#price_' + skuElement[3];
+        var priceId2 = '#price_' + skuElement[3] + '_2';
+        var pictureId = '#picture_' + skuElement[0];
+        var rrp = skuElement[1];
+        var salePrice = skuElement[2];
+        var skuName = 'qty_' + skuElement[0];
+        //var itemId = '#cartButtons' + skuElement[3] + ', #cartButtons' + skuElement[3] + '_2';
+        var options = $(this).find('option').length;
+        var skuId = '#qty_' + skuElement[3];
+
+        var productGroup = $('.ProductListGroup').exists();
+
+        if (skuName != '') {
+            $('.qtybox').attr('name', skuName);
+            //.attr('id', skuId)
+
+        }
+
+        if (rrp != 'na') {
+            $(priceId + " span.rrpPrice span[itemprop='price'],")
+                .html(rrp);
+        }
+
+        if (salePrice != '') {
+            $(priceId + " span.price span[itemprop='price'], " + priceId + " span.price span[itemprop='price'],")
+                .html(salePrice);
+        }
+
+        if ($('.product .picture').length > 1) {
+            $('.product .picture').addClass('hidden');
+            $(pictureId).parents('span.picture').removeClass('hidden');
+        }
+
+        // if Products Grouped template is used the Add to Cart button must not be hidden
+        //        if (!productGroup && options > 1) {
+        //            //alert('test');
+        //            if (!$(this).find('option:first').is(':selected')) {
+        //                addButton.show();
+        //            } else {
+        //                addButton.hide();
+        //            }
+        //        }
+
+    });
+}
 
 
 function resetDelAddress() {
@@ -160,14 +253,10 @@ function addDeliveryAddress() {
     blankoutFormFields($('#cDelContactCity'), $('#cContactCity').val());
     blankoutFormFields($('#cDelContactState'), $('#cContactState').val());
     blankoutFormFields($('#cDelContactZip'), $('#cContactZip').val());
+  
     blankoutFormFields($('#cDelContactCountry'), $('#cContactCountry').val());
     blankoutFormFields($('#cDelContactTel'), $('#cContactTel').val());
     blankoutFormFields($('#cDelContactFax'), $('#cContactFax').val());
-
-    var foo = [];
-    $('#cDelContactCountry option:selected').each(function (i, selected) {
-        foo[i] = $(selected).text();
-    });
 
     $(".column2 .group label").each(function () {
         if ($(this).attr('for') != 'cIsDelivery_1') {
@@ -178,7 +267,8 @@ function addDeliveryAddress() {
 }
 
 function blankoutFormFields(oInput, val) {
-    oInput.attr('value', val);
+    $(oInput).val(val);
+    //oInput.attr('value', val);
     oInput.attr('readonly', 'readonly');
     oInput.addClass('greyed');
 }

@@ -169,6 +169,7 @@ Public Module stdTools
                                     oSmtp.Credentials = New System.Net.NetworkCredential(oConfig("MailServerUsername"), oConfig("MailServerPassword"))
                                 End If
                                 If LCase(oConfig("MailServerSSL")) = "on" Then
+                                    System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12
                                     oSmtp.EnableSsl = True
                                 End If
                                 If LCase(oConfig("MailServerSSL")) = "off" Then

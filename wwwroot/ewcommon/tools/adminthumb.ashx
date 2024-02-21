@@ -23,7 +23,7 @@ Public Class ewEnlargeImage : Implements IHttpHandler, IRequiresSessionState
         Dim oPcms As Protean.Cms
         oPcms = New Protean.Cms
         oPcms.mbAdminMode = True
-        Dim oXsltExt As Protean.xsltExtensions = New Protean.xsltExtensions(oPcms)
+        Dim oXsltExt As Protean.xmlTools.xsltExtensions = New Protean.xmlTools.xsltExtensions(oPcms)
         Dim xFilePath As System.IO.FileInfo
         Try
 

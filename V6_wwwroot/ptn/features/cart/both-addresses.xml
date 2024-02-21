@@ -90,8 +90,7 @@
 			<bind id="cDelContactCity" nodeset="cContactCity" required="true()" type="string" />
 			<bind id="cDelContactState" nodeset="cContactState" required="false()" type="string" />
 			<bind id="cDelContactZip" nodeset="cContactZip" required="true()" type="string" />
-			<bind id="cDelContactCountry" nodeset="cContactCountry" required="true()" type="string" />
-			
+			<bind id="cDelContactCountry" nodeset="cContactCountry" required="true()" type="string" />			
 		</bind>
 		<bind id="cIsDelivery" nodeset="cIsDelivery" required="false()" type="string" />
 	</model>
@@ -103,33 +102,25 @@
 					<label>cartCmd</label>
 				</input>
 
-				<group class="col-lg-6">
-					<group class="card cart-address-card">
-						<group class="card-body">
-							<label>Contact Details</label>
-							<input bind="cContactName" class="textbox required">
-								<label>Name</label>
-								<value />
-							</input>
-							<input bind="cContactTel" id="cContactTel" class="textbox required">
-								<label>Tel</label>
-								<value />
-							</input>
+					<group class="horizontal-form">
+							<label>Contact</label>
+						<input bind="cContactName" class="textbox required">
+							<label>Your Name</label>
+							<value />
+						</input>
 							<input bind="cContactEmail" class="textbox required">
 								<label>Email</label>
 								<value />
 							</input>
-						</group>
+						
 					</group>
-				</group>
-				<group class="col-lg-6">
-					<group class="card cart-address-card">
-						<group class="card-body">
+					<group class="horizontal-form">
 							<label>Billing address</label>
 							<input bind="cContactType" class="hidden">
 								<label>Type</label>
 								<value>Billing Address</value>
 							</input>
+
 							<input bind="cContactAddress" class="textbox required">
 								<label>Address Line 1</label>
 								<value />
@@ -138,31 +129,35 @@
 								<label>Town/City</label>
 								<value />
 							</input>
-							<input bind="cContactState" class="textbox">
+							<input bind="cContactState" class="textbox required">
 								<label>County</label>
 								<value />
 							</input>
-							<input bind="cContactZip" class="textbox">
+							<input bind="cContactZip" class="textbox required">
 								<label>Postcode</label>
 								<value />
 							</input>
 							<select1 bind="cContactCountry" class="dropdown country required" appearance="minimal">
 								<label>Country</label>
 							</select1>
+							<input bind="cContactTel" id="cContactTel" class="textbox required">
+								<label>Tel</label>
+								<value />
+							</input>
 							<select bind="cIsDelivery" appearance="full">
 								<item>
 									<label>Deliver to different address</label>
 									<value>true</value>
 								</item>
 							</select>
-							<group ref="address" class="delivery-address">
+					</group>
+					<group ref="address" class="delivery-address horizontal-form">
 								<label>Delivery Address</label>
 								
 								<input bind="cDelContactType" class="hidden">
 									<label>Type</label>
 									<value>Delivery Address</value>
 								</input>
-								<group class="">
 									<input bind="cDelContactAddress" class="textbox required">
 										<label>Address Line 1</label>
 										<value />
@@ -182,15 +177,11 @@
 									<select1 bind="cDelContactCountry" class="dropdown country required" appearance="minimal">
 										<label>Country</label>
 									</select1>
-								</group>
-							</group>
-						</group>
-					</group>
 				</group>
 			</group>
 		</group>
-		<submit submission="SubmitAdd" ref="cartBillAddress" class="principle">
-			<label>Continue</label>
+		<submit submission="contact" ref="cartBillAddress" class="principle" id="bothAddresses">
+			<label>Continue To Payment</label>
 		</submit>
 	</group>
 

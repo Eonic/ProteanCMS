@@ -110,6 +110,7 @@
       <xsl:apply-templates select="." mode="emailBody"/>
     </html>
   </xsl:template>
+	
   <xsl:template match="*" mode="pageTitle">
     <xsl:apply-templates select="." mode="subject"/>
   </xsl:template>

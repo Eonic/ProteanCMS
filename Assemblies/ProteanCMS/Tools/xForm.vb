@@ -10,6 +10,8 @@ Imports System.Web.Configuration
 Imports System.Configuration
 Imports System
 Imports System.Web.UI
+Imports Protean.Tools.Xml
+Imports Protean.stdTools
 
 
 Public Class xForm
@@ -184,7 +186,7 @@ Public Class xForm
         processRepeats(moXformElmt)
     End Sub
 
-    Sub LoadInstance(ByVal oElmt As XmlElement)
+    Sub LoadInstance(ByVal oElmt As XmlElement, Optional resetInitial As Boolean = False)
         Dim cProcessInfo As String = ""
 
         Try
@@ -195,7 +197,7 @@ Public Class xForm
                 oInstance.InnerXml = oElmt.InnerXml
             End If
 
-            If oInitialInstance Is Nothing Then
+            If oInitialInstance Is Nothing Or resetInitial = True Then
                 oInitialInstance = oInstance.Clone()
             End If
 
@@ -376,7 +378,28 @@ Public Class xForm
 
                 ' Not used at the moment - intended for repeats where the instance needs to be loaded pre load PreLoadInstance()
                 ' processRepeats(moXformElmt)
+                If bProcessRepeats And Not goSession Is Nothing Then
 
+                    If goSession("tempInstance") Is Nothing Then
+                        Instance = model.SelectSingleNode("descendant-or-self::instance")
+                    Else
+                        Instance = goSession("tempInstance")
+                    End If
+
+                    If isTriggered Then
+                        'we have clicked a trigger so we must update the instance
+                        updateInstanceFromRequest()
+                        'lets save the instance
+                        goSession("tempInstance") = Instance
+                    Else
+                        'This has moved into validate as we must ensure valid form prior to removal
+                        'goSession("tempInstance") = Nothing
+
+                    End If
+
+                Else
+                    oInstance = model.SelectSingleNode("descendant-or-self::instance")
+                End If
 
                 'XformInclude Features....
                 Dim oInc As XmlElement
@@ -1118,7 +1141,7 @@ Public Class xForm
                                                         Try
                                                             oElmtTemp.InnerXml = (Protean.Tools.Xml.convertEntitiesToCodes(submittedValue) & "").Trim
                                                         Catch
-                                                            oElmtTemp.InnerXml = tidyXhtmlFrag((Protean.Tools.Xml.convertEntitiesToCodes(submittedValue) & "").Trim)
+                                                            oElmtTemp.InnerXml = Tools.Text.tidyXhtmlFrag((Protean.Tools.Xml.convertEntitiesToCodes(submittedValue) & "").Trim)
                                                         End Try
                                                         oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.ReplaceChild(oElmtTemp.FirstChild.Clone, oInstance.SelectSingleNode(sXpath, nsMgr))
                                                     End If
@@ -2730,7 +2753,7 @@ Public Class xForm
 
         Dim cProcessInfo As String = ""
         Try
-            isSubmitted = False
+            Dim bSubmitted As Boolean = False
             If moXformElmt Is Nothing Then
                 cProcessInfo = "xFormElement not set"
             Else
@@ -2738,21 +2761,22 @@ Public Class xForm
                     'ok get the ref or the bind name of the button
                     oElmt = oNode
                     If oElmt.GetAttribute("submission") <> "" And goRequest.Form(oElmt.GetAttribute("submission")) <> "" Then
-                        isSubmitted = True
+                        bSubmitted = True
                         SubmittedRef = oElmt.GetAttribute("submission")
                     ElseIf goRequest(oElmt.GetAttribute("ref")) <> "" Then
-                        isSubmitted = True
+                        bSubmitted = True
                         SubmittedRef = oElmt.GetAttribute("ref")
                     ElseIf goRequest(oElmt.GetAttribute("bind")) <> "" And goRequest(oElmt.GetAttribute("bind")) <> goRequest("ewCmd") Then
-                        isSubmitted = True
+                        bSubmitted = True
                         SubmittedRef = oElmt.GetAttribute("bind")
                     ElseIf goRequest("ewSubmitClone_" & oElmt.GetAttribute("ref")) <> "" Then
-                        isSubmitted = True
+                        bSubmitted = True
                         SubmittedRef = oElmt.GetAttribute("ref")
                     End If
                 Next
             End If
 
+            Return bSubmitted
 
         Catch ex As Exception
             returnException(msException, mcModuleName, "getSubmitted", ex, "", cProcessInfo, gbDebug)
@@ -2948,7 +2972,6 @@ Public Class xForm
                 For Each oRptElmt In xFormElmt.SelectNodes("descendant-or-self::repeat[not(contains(@class,'relatedContent') or contains(@class,'repeated'))]")
                     isInserted = False
                     If oRptElmt.GetAttribute("bind") <> "" Then
-
                         'get the bind elements
                         For Each oBindNode In model.SelectNodes("descendant-or-self::bind[not(ancestor::instance) and @id='" & oRptElmt.GetAttribute("bind") & "']")
                             'build the bind xpath
@@ -2964,6 +2987,13 @@ Public Class xForm
                                 Dim oInitialNode As XmlElement = oInitialInstance.SelectSingleNode(sBindXpath & "[position() = 1]", nsMgr)
                                 Dim oFirstNode As XmlElement = oInstance.SelectSingleNode(sBindXpath & "[position() = 1]", nsMgr)
                                 Dim oNewNode As XmlElement = oInitialNode.CloneNode(True)
+                                'strip values from new node
+                                For Each oEachNode As XmlNode In oNewNode.SelectNodes("descendant-or-self::*")
+                                    If oEachNode.SelectNodes("*").Count = 0 Then
+                                        oEachNode.InnerText = ""
+                                    End If
+                                Next
+
                                 oFirstNode.ParentNode.InsertAfter(oNewNode, oInstance.SelectSingleNode(sBindXpath & "[last()]", nsMgr))
                                 isTriggered = True
                                 isInserted = True

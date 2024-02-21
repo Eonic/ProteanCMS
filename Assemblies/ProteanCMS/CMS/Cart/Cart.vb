@@ -17,6 +17,7 @@ Imports System.Windows
 Imports Microsoft.Ajax.Utilities
 Imports Protean.Cms
 Imports System.Configuration
+Imports Protean.stdTools
 
 
 Partial Public Class Cms
@@ -1054,7 +1055,7 @@ Partial Public Class Cms
 
         End Sub
 
-        Public Function CreateCartElement(oCartXML As XmlDocument)
+        Public Function CreateCartElement(oCartXML As XmlDocument) As XmlElement
             Dim oContentElmt As XmlElement
             Dim oElmt As XmlElement
 
@@ -1430,10 +1431,21 @@ processFlow:
                         Else
                             Dim oOptionXform As xForm = optionsXform(oElmt)
                             If oOptionXform.valid Then
-                                mnProcessId = 5
-                                mcCartCmd = "EnterPaymentDetails"
-                                '   execute next step unless form filled out wrong / not in db
-                                GoTo processFlow
+                                If myWeb.moSession("paymentRecieved") = mnCartId Then
+                                    myWeb.moSession("paymentRecieved") = Nothing
+                                    mnProcessId = Cart.cartProcess.Complete
+                                    mcCartCmd = "ShowInvoice"
+                                    GoTo processFlow
+                                Else
+                                    mnProcessId = 5
+                                    mcCartCmd = "EnterPaymentDetails"
+                                    '   execute next step unless form filled out wrong / not in db
+                                    GoTo processFlow
+                                End If
+
+
+
+
                             Else
                                 Dim oContentsElmt As XmlElement = moPageXml.SelectSingleNode("/Page/Contents")
                                 If oContentsElmt Is Nothing Then
@@ -1486,7 +1498,6 @@ processFlow:
                         End If
 
                         ' Add the date and reference to the cart
-
                         addDateAndRef(oElmt)
 
                         If mcPaymentMethod = "No Charge" Then
@@ -1754,6 +1765,8 @@ processFlow:
             End Try
 
         End Sub
+
+
 
         Overridable Function GetPaymentProvider() As PaymentProviders
 
@@ -2879,7 +2892,7 @@ processFlow:
                         ' check if shipping group exists or not and then we set bydefault delivery option on cart
                         ' Get Shipping Group from query if assigned to that product and add new node in order and use this node for displaying messages for x50 and t03 category.
                         If myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure) Then
-                            Dim sSqlShippingGroup As String = "select csm.nShipOptKey,CPC.cCatName  from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey left join tblAudit A ON p.nAuditId= A.nAuditKey left join tblCartCatProductRelations cpr on p.nContentKey = cpr.nContentId left join tblCartProductCategories CPC ON cpr.nCatId= cpc.nCatKey Left JOIN tblCartShippingProductCategoryRelations cspcr ON cpr.nCatId= cspcr.nCatId LEFT join tblCartShippingMethods csm on csm.nShipOptKey=cspcr.nShipOptId where nCartOrderId=" & nCartIdUse & " and nCartItemKey=" & oRow("id") & " and cCatSchemaName = 'Shipping' and nItemId <>0 and cspcr.nRuleType=1 order by nShipOptCost asc"
+                            Dim sSqlShippingGroup As String = "select csm.nShipOptKey,CPC.cCatName  from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey left join tblAudit A ON p.nAuditId= A.nAuditKey left join tblCartCatProductRelations cpr on p.nContentKey = cpr.nContentId left join tblCartProductCategories CPC ON cpr.nCatId= cpc.nCatKey Left JOIN tblCartShippingProductCategoryRelations cspcr ON cpr.nCatId= cspcr.nCatId LEFT join tblCartShippingMethods csm on csm.nShipOptKey=cspcr.nShipOptId where nCartOrderId=" & nCartIdUse & " and nCartItemKey=" & oRow("id") & " and cCatSchemaName = 'Shipping' and csm.nShipOptKey is not null and nItemId <>0 and cspcr.nRuleType=1 order by nShipOptCost asc"
                             'oDsShippingOptionKey = moDBHelper.getDataSetForUpdate(sSqlShippingGroup, "Item", "Cart")
                             'If oDsShippingOptionKey.Tables(0).Rows.Count > 0 Then
                             '    ShippingOptionKey = Convert.ToInt64(oDsShippingOptionKey.Tables(0).Rows(0).ItemArray(0))
@@ -3094,6 +3107,7 @@ processFlow:
                             If oCartElmt.GetAttribute("bDiscountIsPercent") <> "" Then
                                 shipCost = -1
                             End If
+                            shipCost = -1
 
                             'Default Shipping Country.
                             Dim cDestinationCountry As String = moCartConfig("DefaultCountry")
@@ -3513,7 +3527,7 @@ processFlow:
                 oDs = moDBHelper.GetDataSet(sSql, "Shipping", "Cart")
                 oXml.LoadXml(oDs.GetXml)
                 oDs.EnforceConstraints = False
-                oShippingXml = moPageXml.CreateElement("Cart")
+                oShippingXml = oCartXml.OwnerDocument.CreateElement("Cart")
                 oShippingXml.InnerXml = oXml.InnerXml
                 oCartXml.AppendChild(oShippingXml.FirstChild.FirstChild)
 
@@ -3749,7 +3763,7 @@ processFlow:
                 If IsNumeric(cItemQuantity) Then
 
                     'Check minimum value
-                    If CLng(cItemQuantity) < CLng(getNodeValueByType(oProd, "//Quantities/Minimum", dataType.TypeNumber, 0)) Then
+                    If CLng(cItemQuantity) < CLng(getNodeValueByType(oProd, "//Quantities/Minimum", XmlDataType.TypeNumber, 0)) Then
                         ' Minimum has not been matched
 
                         ' Check for existence of error node
@@ -3765,13 +3779,13 @@ processFlow:
                         End If
 
                         ' Add product specific msg
-                        oMsg = addElement(oError, "msg", "<strong>" & getNodeValueByType(oProd, "/Content/Name", dataType.TypeString, "A product below ") & "</strong> requires a quantity equal to or above <em>" & getNodeValueByType(oProd, "//Quantities/Minimum", dataType.TypeNumber, "an undetermined value (please call for assistance).") & "</em>", True)
+                        oMsg = addElement(oError, "msg", "<strong>" & getNodeValueByType(oProd, "/Content/Name", XmlDataType.TypeString, "A product below ") & "</strong> requires a quantity equal to or above <em>" & getNodeValueByType(oProd, "//Quantities/Minimum", XmlDataType.TypeNumber, "an undetermined value (please call for assistance).") & "</em>", True)
                         oMsg.SetAttribute("type", "quantity_min_detail")
 
                     End If
 
                     'Check maximum value
-                    If CLng(cItemQuantity) > CLng(getNodeValueByType(oProd, "//Quantities/Maximum", dataType.TypeNumber, Integer.MaxValue)) Then
+                    If CLng(cItemQuantity) > CLng(getNodeValueByType(oProd, "//Quantities/Maximum", XmlDataType.TypeNumber, Integer.MaxValue)) Then
                         ' Maximum has not been matched
 
                         ' Check for existence of error node
@@ -3787,14 +3801,14 @@ processFlow:
                         End If
 
                         ' Add product specific msg
-                        oMsg = addElement(oError, "msg", "<strong>" & getNodeValueByType(oProd, "/Content/Name", dataType.TypeString, "A product below ") & "</strong> requires a quantity equal to or below <em>" & getNodeValueByType(oProd, "//Quantities/Maximum", dataType.TypeNumber, "an undetermined value (please call for assistance).") & "</em>", True)
+                        oMsg = addElement(oError, "msg", "<strong>" & getNodeValueByType(oProd, "/Content/Name", XmlDataType.TypeString, "A product below ") & "</strong> requires a quantity equal to or below <em>" & getNodeValueByType(oProd, "//Quantities/Maximum", XmlDataType.TypeNumber, "an undetermined value (please call for assistance).") & "</em>", True)
                         oMsg.SetAttribute("type", "quantity_max_detail")
 
                     End If
 
                     'Check bulkunit value
-                    Dim cBulkUnit As Integer = getNodeValueByType(oProd, "//Quantities/BulkUnit", dataType.TypeNumber, 0)
-                    If (CLng(cItemQuantity) Mod CLng(getNodeValueByType(oProd, "//Quantities/BulkUnit", dataType.TypeNumber, 1))) <> 0 Then
+                    Dim cBulkUnit As Integer = getNodeValueByType(oProd, "//Quantities/BulkUnit", XmlDataType.TypeNumber, 0)
+                    If (CLng(cItemQuantity) Mod CLng(getNodeValueByType(oProd, "//Quantities/BulkUnit", XmlDataType.TypeNumber, 1))) <> 0 Then
                         ' Bulk Unit has not been matched
                         ' Check for existence of error node
                         If oError Is Nothing Then
@@ -3809,7 +3823,7 @@ processFlow:
                         End If
 
                         ' Add product specific msg
-                        oMsg = addElement(oError, "msg", "<strong>" & getNodeValueByType(oProd, "/Content/Name", dataType.TypeString, "A product below ") & "</strong> can only be bought in lots of <em>" & getNodeValueByType(oProd, "//Quantities/BulkUnit", dataType.TypeNumber, "an undetermined value (please call for assistance).") & "</em>", True)
+                        oMsg = addElement(oError, "msg", "<strong>" & getNodeValueByType(oProd, "/Content/Name", XmlDataType.TypeString, "A product below ") & "</strong> can only be bought in lots of <em>" & getNodeValueByType(oProd, "//Quantities/BulkUnit", XmlDataType.TypeNumber, "an undetermined value (please call for assistance).") & "</em>", True)
                         oMsg.SetAttribute("type", "quantity_mod_detail")
                     End If
                 End If
@@ -6631,6 +6645,30 @@ processFlow:
 
         End Sub
 
+        Public Sub AppendSellerNotes(ByVal Notes As String, Optional ByVal Detail As String = "")
+            Dim sSql As String = ""
+            Dim oDs As DataSet
+            Dim oRow As DataRow
+            Dim cProcessInfo As String = "SetClientNotes"
+            Try
+                If mnCartId > 0 Then
+                    'Update Seller Notes:
+                    sSql = "select * from tblCartOrder where nCartOrderKey = " & mnCartId
+                    oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
+                    For Each oRow In oDs.Tables("Order").Rows
+                        oRow("cSellerNotes") = Notes
+                        oRow("cSellerNotes") = oRow("cSellerNotes") + "\n" + DateTime.Today.ToString() + " " + DateTime.Now.TimeOfDay.ToString() + ": changed to: (" + getProcessName(mnProcessId) + ") " + "\n" + "comment: " + Notes + "\n" + "Full Response:' " + "" + "'"
+
+                    Next
+                    myWeb.moDbHelper.updateDataset(oDs, "Order")
+                End If
+
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, gbDebug)
+            End Try
+
+        End Sub
+
         Public Function AddItem(ByVal nProductId As Long, ByVal nQuantity As Long, ByVal oProdOptions As Array, Optional ByVal cProductText As String = "", Optional ByVal nPrice As Double = 0, Optional ProductXml As String = "", Optional UniqueProduct As Boolean = False, Optional overideUrl As String = "", Optional bDepositOnly As Boolean = False, Optional cProductOption As String = "", Optional dProductOptionPrice As Double = 0) As Boolean
             myWeb.PerfMon.Log("Cart", "AddItem")
             Dim cSQL As String = "Select * From tblCartItem WHERE nCartOrderID = " & mnCartId & " AND nItemiD =" & nProductId
@@ -7615,34 +7653,50 @@ processFlow:
             Dim oElmt2 As XmlElement
             Dim cProcessInfo As String = ""
             Dim oPaymentCfg As XmlNode
-            Dim Folder As String = "/ewcommon/xforms/PaymentProvider/"
+            Dim ptnFolder As String = "/ewcommon/xforms/PaymentProvider/"
+            Dim localFolder As String = "/xforms/PaymentProvider/"
             Dim fi As FileInfo
             Dim ProviderName As String
-            If bs5 Then Folder = "/ptn/features/cart/PaymentProvider/"
+            If bs5 Then
+                ptnFolder = "/ptn/providers/payment/"
+                localFolder = "/providers/payment/"
+            End If
             Try
 
                 oPaymentCfg = WebConfigurationManager.GetWebApplicationSection("protean/payment")
-
                 oElmt = moPageXml.CreateElement("List")
 
-                Dim dir As New DirectoryInfo(moServer.MapPath(Folder))
-                Dim files As FileInfo() = dir.GetFiles()
 
-                For Each fi In files
-                    If fi.Extension = ".xml" Then
-                        ProviderName = Replace(fi.Name, fi.Extension, "")
-                        oElmt2 = addNewTextNode("Provider", oElmt, Replace(ProviderName, "-", " "))
-                        If Not oPaymentCfg.SelectSingleNode("/payment/provider[@name='" & Replace(ProviderName, "-", "") & "']") Is Nothing Then
-                            oElmt2.SetAttribute("active", "true")
-                        End If
+                If bs5 Then
+                    Dim dir As New DirectoryInfo(moServer.MapPath(ptnFolder))
+                    If dir.Exists Then
+                        Dim dirs As DirectoryInfo()
+                        Dim dir2 As DirectoryInfo
+                        dirs = dir.GetDirectories()
+                        For Each dir2 In dirs
+                            ProviderName = dir2.Name
+                            oElmt2 = addNewTextNode("Provider", oElmt, Replace(ProviderName, "-", " "))
+                            If Not oPaymentCfg.SelectSingleNode("/payment/provider[@name='" & Replace(ProviderName, "-", "") & "']") Is Nothing Then
+                                oElmt2.SetAttribute("active", "true")
+                            End If
+                        Next
                     End If
-                Next
-
-
-                dir = New DirectoryInfo(moServer.MapPath("/xforms/PaymentProvider/"))
-                If dir.Exists Then
-                    files = dir.GetFiles()
-
+                    dir = New DirectoryInfo(moServer.MapPath(localFolder))
+                    If Dir.Exists Then
+                        Dim dirs As DirectoryInfo()
+                        Dim dir2 As DirectoryInfo
+                        dirs = Dir.GetDirectories()
+                        For Each dir2 In dirs
+                            ProviderName = dir2.Name
+                            oElmt2 = addNewTextNode("Provider", oElmt, Replace(ProviderName, "-", " "))
+                            If Not oPaymentCfg.SelectSingleNode("/payment/provider[@name='" & Replace(ProviderName, "-", "") & "']") Is Nothing Then
+                                oElmt2.SetAttribute("active", "true")
+                            End If
+                        Next
+                    End If
+                Else
+                    Dim dir As New DirectoryInfo(moServer.MapPath(ptnFolder))
+                    Dim files As FileInfo() = dir.GetFiles()
                     For Each fi In files
                         If fi.Extension = ".xml" Then
                             ProviderName = Replace(fi.Name, fi.Extension, "")
@@ -7652,7 +7706,21 @@ processFlow:
                             End If
                         End If
                     Next
+                    dir = New DirectoryInfo(moServer.MapPath(localFolder))
+                    If dir.Exists Then
+                        files = dir.GetFiles()
+                        For Each fi In files
+                            If fi.Extension = ".xml" Then
+                                ProviderName = Replace(fi.Name, fi.Extension, "")
+                                oElmt2 = addNewTextNode("Provider", oElmt, Replace(ProviderName, "-", " "))
+                                If Not oPaymentCfg.SelectSingleNode("/payment/provider[@name='" & Replace(ProviderName, "-", "") & "']") Is Nothing Then
+                                    oElmt2.SetAttribute("active", "true")
+                                End If
+                            End If
+                        Next
+                    End If
                 End If
+
 
 
                 oContentsXML.AppendChild(oElmt)
@@ -8253,7 +8321,12 @@ SaveNotes:      ' this is so we can skip the appending of new node
                                         cSellerNotesHtml = cSellerNotesHtml + "<li>" + Protean.Tools.Xml.convertEntitiesToCodes(aSellerNotes(snCount)) + "</li>"
                                     Next
                                     Dim sellerNode As XmlElement = addNewTextNode("SellerNotes", oContent.FirstChild, "")
-                                    sellerNode.InnerXml = cSellerNotesHtml + "</ul>"
+                                    Try
+                                        sellerNode.InnerXml = cSellerNotesHtml + "</ul>"
+                                    Catch ex As Exception
+                                        sellerNode.InnerXml = Protean.Tools.Text.tidyXhtmlFrag(cSellerNotesHtml + "</ul>")
+                                    End Try
+
 
                                     'Add the Delivery Details
                                     'Add Delivery Details

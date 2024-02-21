@@ -4,6 +4,7 @@ Imports System.Xml
 Imports System.Data.SqlClient
 Imports Protean.Tools
 Imports System
+Imports Protean.stdTools
 
 Partial Public Class Cms
 

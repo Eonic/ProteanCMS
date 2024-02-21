@@ -1,0 +1,11 @@
+﻿
+div.inline-module {
+    width: 150px;
+    background-color: #ccc;
+    margin: 10px;
+    padding:20px;
+    color:#000;
+}
+div.inline-module::after {
+    content: "Module Placeholder edit in source code";
+}

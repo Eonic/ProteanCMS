@@ -86,10 +86,11 @@
 							<input bind="cLastName" class="required">
 								<label>Last Name</label>
 							</input>
+							<!--
 							<input bind="xml">
 								<label>XML (Advanced)</label>
 							</input>
-
+-->
 						</group>
 					</group>
 

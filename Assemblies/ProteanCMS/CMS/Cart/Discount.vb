@@ -7,6 +7,7 @@ Imports System.Data
 Imports System.Data.SqlClient
 Imports System
 Imports Microsoft.Ajax.Utilities
+Imports Protean.stdTools
 
 Partial Public Class Cms
     Partial Public Class Cart
@@ -176,11 +177,6 @@ Partial Public Class Cms
                         If Not (oCartXML.Attributes("InvoiceDateTime") Is Nothing) Then
                             DiscountApplyDate = oCartXML.Attributes("InvoiceDateTime").Value
                         End If
-
-
-
-
-
 
                         cCartItemIds = cCartItemIds.Remove(cCartItemIds.Length - 1)
                         If myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountRules", "bAllProductExcludeGroups") Then

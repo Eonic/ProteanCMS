@@ -15,7 +15,7 @@ Public Class ewAjaxAdmin : Implements IHttpHandler, IRequiresSessionState
         moPolicy = WebConfigurationManager.GetWebApplicationSection("protean/PasswordPolicy")
 
 
-        Dim styleFile As String = CStr(context.Server.MapPath("/ewcommon/xsl/tools/PasswordPolicy.xslt"))
+        Dim styleFile As String = CStr(context.Server.MapPath("/ptn/tools/PasswordPolicy.xslt"))
         Dim oTransform As New Protean.XmlHelper.Transform()
         oTransform.XSLFile = styleFile
         oTransform.Compiled = false

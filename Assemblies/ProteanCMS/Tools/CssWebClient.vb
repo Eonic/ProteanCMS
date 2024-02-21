@@ -15,6 +15,7 @@ Imports System.Collections.Generic
 Imports System.Web.Configuration
 Imports System.Web.Caching
 Imports System.Net.Security
+Imports Protean.stdTools
 
 Public Class CssWebClient
 

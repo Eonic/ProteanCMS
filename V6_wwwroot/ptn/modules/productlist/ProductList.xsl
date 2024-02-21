@@ -313,7 +313,7 @@
 							<xsl:when test="Content[@type='LibraryImage']">
 								<div id="productScroller">
 									<!--<div class="swiper swiper1" thumbs-swiper=".swiper2" space-between="10" navigation="true">-->
-									<div class="swiper" navigation="true">
+									<div class="swiper" navigation="true" data-id="{@id}"  data-autoplay="" data-autoplayspeed="0"  data-xscol="1" data-smcol="1" data-mdcol="1" data-lgcol="1" data-xlcol="1" data-xxlcol="1">
 
 										<div class="swiper-wrapper">
 											<div class="swiper-slide">
@@ -346,8 +346,13 @@
 											</div>
 											<xsl:apply-templates select="Content[@type='LibraryImage']" mode="scrollerImage"/>
 										</div>
-										<div class="swiper-button-prev"></div>
-										<div class="swiper-button-next"></div>
+										<div class="swiper-pagination">&#160;</div>
+										<div class="swiper-button-prev" id="swiper-button-prev-{@id}">
+											<xsl:text> </xsl:text>
+										</div>
+										<div class="swiper-button-next" id="swiper-button-next-{@id}">
+											<xsl:text> </xsl:text>
+										</div>
 									</div>
 									<!--<div class="swiper swiper2" space-between="10" slides-per-view="4" free-mode="true" watch-slides-progress="true">
 										<div class="swiper-wrapper">
@@ -422,21 +427,21 @@
 					<xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
 				</div>
 			</xsl:if>
-			<div class="entryFooter">
-				<xsl:if test="Content[@type='Tag']">
+			<xsl:if test="Content[@type='Tag']">
+				<div class="entryFooter">
 					<div class="tags">
 						<xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
 						<xsl:text> </xsl:text>
 					</div>
-				</xsl:if>
-			</div>
+				</div>
+			</xsl:if>
 
 			<!--RELATED CONTENT-->
 			<xsl:if test="Content">
 				<!-- Reviews  -->
-				<xsl:if test="Content[@type='Review']">
+				<!--<xsl:if test="Content[@type='Review']">
 					<xsl:apply-templates select="." mode="relatedReviews"/>
-				</xsl:if>
+				</xsl:if>-->
 				<!-- Products  -->
 				<xsl:if test="Content[@type='Product']">
 					<div class="relatedcontent">
@@ -511,29 +516,31 @@
 		<xsl:variable name="newSrc">
 			<xsl:call-template name="resize-image">
 				<xsl:with-param name="path" select="$src"/>
-				<xsl:with-param name="max-width" select="500"/>
-				<xsl:with-param name="max-height" select="150"/>
+				<xsl:with-param name="max-width" select="757"/>
+				<xsl:with-param name="max-height" select="946"/>
 				<xsl:with-param name="file-prefix">
 					<xsl:text>~dis-</xsl:text>
-					<xsl:value-of select="500"/>
+					<xsl:value-of select="757"/>
 					<xsl:text>x</xsl:text>
-					<xsl:value-of select="150"/>
+					<xsl:value-of select="946"/>
 					<xsl:text>/~dis-</xsl:text>
 				</xsl:with-param>
 				<xsl:with-param name="file-suffix" select="''"/>
 				<xsl:with-param name="quality" select="100"/>
+				<xsl:with-param name="crop" select="true()"/>
+				<xsl:with-param name="no-stretch" select="false()"/>
 			</xsl:call-template>
 		</xsl:variable>
 		<xsl:variable name="largeSrc">
 			<xsl:call-template name="resize-image">
 				<xsl:with-param name="path" select="$src"/>
-				<xsl:with-param name="max-width" select="500"/>
-				<xsl:with-param name="max-height" select="500"/>
+				<xsl:with-param name="max-width" select="757"/>
+				<xsl:with-param name="max-height" select="946"/>
 				<xsl:with-param name="file-prefix">
 					<xsl:text>~lg-</xsl:text>
-					<xsl:value-of select="500"/>
+					<xsl:value-of select="757"/>
 					<xsl:text>x</xsl:text>
-					<xsl:value-of select="500"/>
+					<xsl:value-of select="946"/>
 					<xsl:text>/~lg-</xsl:text>
 				</xsl:with-param>
 				<xsl:with-param name="file-suffix" select="''"/>

@@ -31,6 +31,7 @@ Imports System.Net.Mail
 Imports System.Reflection
 Imports System.Net
 Imports VB = Microsoft.VisualBasic
+Imports Protean.stdTools
 
 Namespace Providers
     Namespace Membership
@@ -89,7 +90,7 @@ Namespace Providers
                         Dim ourProvider As Object = moPrvConfig.Providers(ProviderName)
                         Dim assemblyInstance As [Assembly]
                         If ourProvider.parameters("path") <> "" Then
-                            assemblyInstance = [Assembly].LoadFrom(goServer.MapPath(ourProvider.parameters("path")))
+                            assemblyInstance = [Assembly].LoadFrom(Protean.stdTools.goServer.MapPath(ourProvider.parameters("path")))
                         Else
                             assemblyInstance = [Assembly].Load(ourProvider.Type)
                         End If
@@ -167,9 +168,13 @@ Namespace Providers
 
                         If mbAdminMode And myWeb.mnUserId = 0 Then GoTo BuildForm
                         If myWeb.moConfig("RememberMeMode") = "KeepCookieAfterLogoff" Or myWeb.moConfig("RememberMeMode") = "ClearCookieAfterLogoff" Then bRememberMe = True
+                        Dim formPath As String = "/xforms/directory/" & FormName & ".xml"
+                        If myWeb.moConfig("cssFramework") = "bs5" Then
+                            formPath = "/features/membership/" & FormName & ".xml"
+                        End If
 
                         'maCommonFolders is an array of folder locations used to look locally, then in wellardscommon and finally eoniccommon.
-                        If Not MyBase.load("/xforms/directory/" & FormName & ".xml", myWeb.maCommonFolders) Then
+                        If Not MyBase.load(formPath, myWeb.maCommonFolders) Then
                             'If this does not load manually then build a form to do it.
                             GoTo BuildForm
                         Else
@@ -782,7 +787,10 @@ Check:
                         If FormXML = "" Then
                             Dim formPath As String = "/xforms/directory/" & cXformName & ".xml"
                             If myWeb.moConfig("cssFramework") = "bs5" Then
-                                formPath = "/admin" & formPath
+                                formPath = "/features/membership/" & cXformName & ".xml"
+                            End If
+                            If Not IntanceAppend Is Nothing Then
+                                MyBase.bProcessRepeats = False
                             End If
                             If Not MyBase.load(formPath, myWeb.maCommonFolders) Then
                                 ' load a default content xform if no alternative.
@@ -799,10 +807,19 @@ Check:
                         End If
 
                         If Not IntanceAppend Is Nothing Then
-                            'this enables an overload to add additional Xml for updating.
-                            Dim importedNode As XmlNode = Instance.OwnerDocument.ImportNode(IntanceAppend, True)
-                            Instance.AppendChild(importedNode)
-
+                            If goSession("tempInstance") IsNot Nothing Then
+                                MyBase.Instance = goSession("tempInstance")
+                                MyBase.bProcessRepeats = True
+                                MyBase.LoadInstance(MyBase.Instance, True)
+                                goSession("tempInstance") = MyBase.Instance
+                            Else
+                                'this enables an overload to add additional Xml for updating.
+                                Dim importedNode As XmlNode = Instance.OwnerDocument.ImportNode(IntanceAppend, True)
+                                MyBase.Instance.AppendChild(importedNode)
+                                MyBase.bProcessRepeats = True
+                                MyBase.LoadInstance(MyBase.Instance, True)
+                                goSession("tempInstance") = MyBase.Instance
+                            End If
                         End If
 
                         cDirectorySchemaName = MyBase.Instance.SelectSingleNode("tblDirectory/cDirSchema").InnerText
@@ -1888,7 +1905,7 @@ Check:
                                         'send registration confirmation
                                         Dim xsltPath As String = "/xsl/email/registration.xsl"
 
-                                        If IO.File.Exists(goServer.MapPath(xsltPath)) Then
+                                        If IO.File.Exists(Protean.stdTools.goServer.MapPath(xsltPath)) Then
                                             Dim oUserElmt As XmlElement = myWeb.moDbHelper.GetUserXML(mnUserId)
                                             If clearUserId Then mnUserId = 0 ' clear user Id so we don't stay logged on
                                             Dim oElmtPwd As XmlElement = myWeb.moPageXml.CreateElement("Password")
@@ -1906,7 +1923,7 @@ Check:
                                             If Not recipientEmail = "" Then sProcessInfo = oMsg.emailer(oUserElmt, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed")
                                             'send an email to the webadmin
                                             recipientEmail = moConfig("SiteAdminEmail")
-                                            If IO.File.Exists(goServer.MapPath(moConfig("ProjectPath") & "/xsl/email/registrationAlert.xsl")) Then
+                                            If IO.File.Exists(Protean.stdTools.goServer.MapPath(moConfig("ProjectPath") & "/xsl/email/registrationAlert.xsl")) Then
                                                 sProcessInfo = oMsg.emailer(oUserElmt, moConfig("ProjectPath") & "/xsl/email/registrationAlert.xsl", "New User", recipientEmail, fromEmail, SubjectLine, "Message Sent", "Message Failed")
                                             End If
                                             oMsg = Nothing
@@ -1973,7 +1990,7 @@ Check:
                                             ' Clear the cache.
                                             Dim cSql As String = "DELETE dbo.tblXmlCache " _
                                                     & " WHERE cCacheSessionID = '" & moSession.SessionID & "' " _
-                                                    & "         AND nCacheDirId = " & Protean.SqlFmt(mnUserId)
+                                                    & "         AND nCacheDirId = " & SqlFmt(mnUserId)
                                             myWeb.moDbHelper.ExeProcessSqlorIgnore(cSql)
 
                                             ' Check if the redirect is another page or just redirect to the current url

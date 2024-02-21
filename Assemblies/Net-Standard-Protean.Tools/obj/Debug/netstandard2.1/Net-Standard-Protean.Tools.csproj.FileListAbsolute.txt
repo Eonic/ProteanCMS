@@ -1,0 +1,6 @@
+D:\HostingSpaces\ProteanCMS\Assemblies\Net-Standard-Protean.Tools\obj\Debug\netstandard2.1\Net-Standard-Protean.Tools.csproj.AssemblyReference.cache
+D:\HostingSpaces\ProteanCMS\Assemblies\Net-Standard-Protean.Tools\obj\Debug\netstandard2.1\Net-Standard-Protean.Tools.GeneratedMSBuildEditorConfig.editorconfig
+D:\HostingSpaces\ProteanCMS\Assemblies\Net-Standard-Protean.Tools\obj\Debug\netstandard2.1\Net-Standard-Protean.Tools.csproj.CoreCompileInputs.cache
+C:\HostingSpaces\ProteanCMS\Assemblies\Net-Standard-Protean.Tools\obj\Debug\netstandard2.1\Net-Standard-Protean.Tools.csproj.AssemblyReference.cache
+C:\HostingSpaces\ProteanCMS\Assemblies\Net-Standard-Protean.Tools\obj\Debug\netstandard2.1\Net-Standard-Protean.Tools.GeneratedMSBuildEditorConfig.editorconfig
+C:\HostingSpaces\ProteanCMS\Assemblies\Net-Standard-Protean.Tools\obj\Debug\netstandard2.1\Net-Standard-Protean.Tools.csproj.CoreCompileInputs.cache

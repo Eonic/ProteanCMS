@@ -89,7 +89,7 @@
         <bind id="cContentName" nodeset="Name" required="true()" type="string"/>
         <bind id="cContentSKU" nodeset="StockCode" required="true()" type="string"/>
         <bind id="dEventDate" nodeset="StartDate" required="false()" type="string"/>
-        <bind id="dEventEndDate" nodeset="EndDate" required="false()" type="string" constraint="translate(//cContentXmlDetail/Content/EndDate,'-','') &gt;= translate(//cContentXmlDetail/Content/StartDate,'-','')">
+        <bind id="dEventEndDate" nodeset="EndDate" required="false()" type="string">
           <alert>End date must be the same day or later than the Start date</alert>
         </bind>
         <!--<bind id="cContentTimes" nodeset="Times" required="false()" type="string"/>-->
@@ -108,9 +108,10 @@
         <bind id="cContentName" nodeset="Name" required="true()" type="string"/>
         <bind id="cContentSKU" nodeset="StockCode" required="true()" type="string"/>
         <bind id="dEventDate" nodeset="StartDate" required="true()" type="string"/>
-        <bind id="dEventEndDate" nodeset="EndDate" required="false()" type="string" constraint="translate(//cContentXmlDetail/Content/EndDate,'-','') &gt;= translate(//cContentXmlDetail/Content/StartDate,'-','')">
+		  <bind id="dEventEndDate" nodeset="EndDate" required="false()" type="string" />
+      <!--  <bind id="dEventEndDate" nodeset="EndDate" required="false()" type="string" constraint="translate(//cContentXmlDetail/Content/EndDate,'-','') &gt;= translate(//cContentXmlDetail/Content/StartDate,'-','')">
           <alert>End date must be the same day or later than the Start date</alert>
-        </bind>
+        </bind>-->
         <!--<bind id="cContentTimes" nodeset="Times" required="false()" type="string"/>-->
         <bind nodeset="Times">
           <bind id="cContentSTime" nodeset="@start" required="false()" type="string"/>

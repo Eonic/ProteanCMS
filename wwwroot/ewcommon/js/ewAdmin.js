@@ -1860,8 +1860,8 @@ if (editPageElement) {
 
 
 $(document).ready(function () {
-    var cLocation = $(".admin-breadcrumb-inner ul li").last().text();
-    $("#cLocation").val(cLocation);
+   // var cLocation = $(".admin-breadcrumb-inner ul li").last().text();
+    //$("#cLocation").val(cLocation);
     function scrollToAnchor(aid) {
         var aTag = $("li[id='" + aid + "']");
         $('#MenuTree').animate({ scrollTop: aTag.position().top }, 'slow');
@@ -1870,7 +1870,7 @@ $(document).ready(function () {
         if ($("#MenuTree li.active").prop("id") != undefined) {
             scrollToAnchor($("#MenuTree li.active").prop("id"));
         }
-    }
+    }   
 });
 
 $(document).on("change", "#cContentPath", function (event) {
@@ -2170,3 +2170,13 @@ function SaveFileName(isOverwrite) {
         }
     });
 }
+
+$(document).on("change", "#cListId", function (event) {
+
+    debugger;
+    var listid = $('#cListId :selected').text();
+    if (listid != "") {
+        $("#cListName").val(listid);
+    }
+
+});

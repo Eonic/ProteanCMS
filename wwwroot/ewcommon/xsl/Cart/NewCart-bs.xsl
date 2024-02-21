@@ -2104,7 +2104,7 @@
 
       <div class="totals-row">
         <xsl:if test="@shippingType &gt; 0">
-          <div class="shipping">
+          <div class="shipping">			  
             <strong>
               <xsl:choose>
                 <xsl:when test="/Page/Contents/Content[@name='shippingCostLabel']!=''">

@@ -8,3 +8,148 @@
 @import "formattedtext/formattedtext";
 @import "image/image";
 @import "emailform/emailform";
+
+
+/*############### HIDING MODULES #################*/
+.hidden-xs{
+    @include media-breakpoint-only(xs){
+        display:none !important;
+    }
+}
+.hidden-sm {
+    @include media-breakpoint-only(sm) {
+        display: none !important;
+    }
+}
+.hidden-md {
+    @include media-breakpoint-only(md) {
+        display: none !important;
+    }
+}
+.hidden-lg {
+    @include media-breakpoint-only(lg) {
+        display: none !important;
+    }
+}
+.hidden-xl {
+    @include media-breakpoint-only(xl) {
+        display: none !important;
+    }
+}
+.hidden-xxl {
+    @include media-breakpoint-only(xxl) {
+        display: none !important;
+    }
+}
+
+/*############### SWIPER #################*/
+.swiper-container {
+    position: relative;
+}
+
+.content-carousel {
+    .swiper {
+        height: 100%;
+
+        .lIinner {
+            width: 100%;
+        }
+    }
+}
+
+.swiper-container {
+    padding: 0 2rem;
+
+    @include media-breakpoint-up(sm) {
+        padding: 0;
+    }
+}
+
+.swiper-slide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.swiper-slide-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+}
+/*############### CONTENT CAROUSEL #################*/
+.swiper-button-prev,
+.swiper-button-next {
+    &:focus-visible {
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(225, 255, 225, 0.4);
+        border-radius: 100px;
+    }
+
+    &:after {
+        font-size: 30px;
+        // remove for default arrow:
+        content: '\f053';
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        text-shadow: 1px 1px 2px #000;
+    }
+}
+
+.swiper-button-next {
+    &:after {
+        content: '\f054';
+    }
+}
+
+.content-carousel .swiper-button-prev {
+    left: 0px;
+
+    @include media-breakpoint-up(sm) {
+        left: -40px;
+    }
+}
+
+.content-carousel .swiper-button-next {
+    right: 0px;
+
+    @include media-breakpoint-up(sm) {
+        right: -40px;
+    }
+}
+
+.swiper-slide {
+    align-items: start;
+    height: auto !important
+}
+
+.swiper-wrapper > .swiper-slide {
+    padding-right: 2rem;
+}
+
+.swiper-loaded .swiper-wrapper > .swiper-slide {
+    padding-right: 0;
+}
+
+#productScroller {
+    .swiper {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+
+        .swiper-wrapper .swiper-slide {
+            padding-right: 0;
+        }
+
+        .swiper-button-prev,
+        .swiper-button-next {
+            color: #fff;
+        }
+    }
+
+    margin-bottom: 2rem;
+}

@@ -8,47 +8,48 @@
 	</xsl:template>
 
 	<xsl:template match="select[@appearance='full' and @class='relatedDocs']" mode="xform_control">
-
 		<xsl:variable name="ref">
 			<xsl:apply-templates select="." mode="getRefOrBind"/>
 		</xsl:variable>
 		<xsl:if test="contains(@class,'selectAll')">
-			<span>
+			<div>
 				<xsl:attribute name="class">
-					<xsl:text>radiocheckbox</xsl:text>
+					<xsl:text>form-check</xsl:text>
 					<xsl:if test="contains(@class,'multiline')">
 						<xsl:text> multiline</xsl:text>
 					</xsl:if>
 				</xsl:attribute>
-
+				<input type="checkbox" name="{@ref}_selectAll" id="{@ref}_selectAll" class="selectAll form-check-input"/>
+		
 				<label for="{@ref}_selectAll">
-					<input type="checkbox" name="{@ref}_selectAll" id="{@ref}_selectAll" class="selectAll"/>  Select All
+					Select All
 				</label>
-			</span>
+			</div>
 		</xsl:if>
-
 		<xsl:for-each select="ancestor::Content/Content[@type='Document']">
-			<span class="radiocheckbox">
-
-				<label for="{@id}_attachementContentIds">
-					<input type="checkbox" checked="checked" name="{$ref}" id="{@id}_attachementContentIds" class="selectAll" value="{@id}" />
+			<div class="form-check">
+				<input class="selectAll form-check-input"  type="checkbox" checked="checked" name="{$ref}" id="{@id}_attachementContentIds" value="{@id}" />
+				
+				<label for="{@id}_attachementContentIds" class="form-check-label">
+					<!--<xsl:choose>
+						<xsl:when test="contains(Path,'.pdf')">
+						<i class="fa-regular fa-file-pdf">&#160;</i>&#160;
+					</xsl:when>
+						<xsl:when test="contains(Path,'.doc')">
+						<i class="fa-regular fa-file-word">&#160;</i>&#160;
+					</xsl:when>
+						<xsl:when test="contains(Path,'.docx')">
+							<i class="fa-regular fa-file-word">&#160;</i>&#160;
+						</xsl:when>
+						<xsl:otherwise>
+							<i class="fa-regular fa-file">&#160;</i>&#160;
+						</xsl:otherwise>
+					</xsl:choose>
+					-->
 					<xsl:value-of select="@name"/>
 				</label>
-				<div class="terminus">&#160;</div>
-			</span>
+			</div>
 		</xsl:for-each>
-
-		<xsl:for-each select="ancestor::Content[@type='Company']/Content[@type='Application']">
-			<span class="radiocheckbox">
-
-				<label for="{@id}_attachementContentIds">
-					<input type="checkbox" name="{$ref}" id="{@id}_attachementContentIds" class="selectAll" value="{@id}"/>
-					<xsl:value-of select="@name"/>
-				</label>
-				<div class="terminus">&#160;</div>
-			</span>
-		</xsl:for-each>
-
 
 
 	</xsl:template>

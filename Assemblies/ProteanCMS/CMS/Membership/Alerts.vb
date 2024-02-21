@@ -2,6 +2,8 @@ Imports System.Xml
 Imports System.Data.SqlClient
 Imports System
 
+Imports Protean.stdTools
+
 Partial Public Class Cms
     Partial Class Membership
         Public Class Alerts
