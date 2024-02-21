@@ -4,7 +4,7 @@
 		<instance>
 			<Query name="Purchasers-Last-2-Years" storedProcedure="spPurchasersLast2Years" logActivity="true" output="csv" filePrefix="" fileUID="log"/>
 		</instance>
-		<submission id="ewSubmitOptOuts" action="/ewcommon/tools/export.ashx?ewcmd=Reports&amp;ewCmd2=Purchasers-Last-2-Years" method="post" event="return form_check(this)"/>
+		<submission id="ewSubmitOptOuts" action="/ptn/tools/export.ashx?ewcmd=Reports&amp;ewCmd2=Purchasers-Last-2-Years" method="post" event="return form_check(this)"/>
 		<bind nodeset="Query">
 			<bind id="format" nodeset="@output" required="true()" type="string"/>
 		</bind>
