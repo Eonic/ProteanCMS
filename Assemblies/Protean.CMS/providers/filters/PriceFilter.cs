@@ -136,10 +136,9 @@ namespace Protean.Providers
 
                         oSliderMaxPrice.Value = nMaxPRiceProduct.ToString();
                         // oMaxPrice.Value = FilterConfig.GetAttribute("toPrice")
-
-
+                      
                         oStep.Value = FilterConfig.GetAttribute("step");
-                        oMinPrice.Value= Convert.ToString(nMinPriceProduct);
+                        //oMinPrice.Value= Convert.ToString(nMinPriceProduct);
                         oXml.Attributes.Append(oMinPrice);
                         oXml.Attributes.Append(oMaxPrice);
                         oXml.Attributes.Append(oMaxPriceLimit);
