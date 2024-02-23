@@ -14668,7 +14668,7 @@
 				            <xsl:text>&amp;loop=1</xsl:text>
 			            </xsl:when>
 					  <xsl:otherwise>
-				            <xsl:text>&amp;loop=0</xsl:text>
+				            <xsl:text>&amp;background=1&amp;loop=0</xsl:text>
 				    </xsl:otherwise>
 				  </xsl:choose>
           <xsl:text>&amp;background=0&amp;badge=0&amp;portrait=0&amp;autopause=0&amp;player id=0&amp;app_id=58479</xsl:text>

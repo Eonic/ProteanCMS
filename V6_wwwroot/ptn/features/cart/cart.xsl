@@ -870,6 +870,16 @@
 		</div>
 	</xsl:template>
 
+	<xsl:template match="Cart[Order[@cmd='Logon']]" mode="cartJS">
+		<script type="text/javascript">
+			$(function () {
+			if ($('#cartLogonBox .alert').exists()){
+				$('#cartLogonBox').modal('show');
+			}
+			});
+		</script>
+	</xsl:template>
+
 	<xsl:template match="Order[@cmd='Logon']" mode="orderProcessSkipButton">
 		<!-- Overriden in Payment Provider-->
 	</xsl:template>
