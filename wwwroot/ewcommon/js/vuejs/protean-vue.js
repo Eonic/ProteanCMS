@@ -553,7 +553,7 @@ if (rediectElement) {
                     var inputJson = { redirectType: type, oldUrl: oldUrl, NewUrl: NewUrl };
                     axios.post(IsUrlPResentAPI, inputJson)
                         .then(function (response) {
-                            debugger;
+                           
                             if (response.data == "True") {
 
                                 if (confirm("Another rewrite map is pointing to the Old URL. Do you want to update the destination to the New URL??")) {
