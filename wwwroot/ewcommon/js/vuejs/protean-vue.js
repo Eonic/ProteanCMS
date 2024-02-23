@@ -644,7 +644,6 @@ if (rediectElement) {
                 var inputJson = { redirectType: type, searchObj: searchObj };
                 axios.post(getTotalNumberOfSearchUrls, inputJson)
                     .then(function (response) {
-
                         if (response.data != "" || response.data == 0) {
                             $("#totalUrlCount").val(response.data);
                             var totalCountOfLoadlist = that.urlList.length + that.newAddedUrlList.length;
