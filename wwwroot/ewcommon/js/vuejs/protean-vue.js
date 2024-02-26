@@ -553,7 +553,7 @@ if (rediectElement) {
                     var inputJson = { redirectType: type, oldUrl: oldUrl, NewUrl: NewUrl };
                     axios.post(IsUrlPResentAPI, inputJson)
                         .then(function (response) {
-                            debugger;
+                           
                             if (response.data == "True") {
 
                                 if (confirm("Another rewrite map is pointing to the Old URL. Do you want to update the destination to the New URL??")) {
@@ -652,7 +652,6 @@ if (rediectElement) {
                 var inputJson = { redirectType: type, searchObj: searchObj };
                 axios.post(getTotalNumberOfSearchUrls, inputJson)
                     .then(function (response) {
-
                         if (response.data != "" || response.data == 0) {
                             $("#totalUrlCount").val(response.data);
                             var totalCountOfLoadlist = that.urlList.length + that.newAddedUrlList.length;
