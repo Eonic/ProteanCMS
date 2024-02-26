@@ -26,34 +26,34 @@ Public Class eonicWebExportAsFile : Implements IHttpHandler, IRequiresSessionSta
             Case "txt"
                 contentType = "text/plain"
                 If reportXsl <> "" Then
-                    siteXSL = ofs.checkCommonFilePath("/xsl/reports/" & reportXsl & ".xsl")
+                    siteXSL = ofs.checkCommonFilePath("/admin/reports/" & reportXsl & ".xsl")
                 Else
-                    siteXSL = ofs.checkCommonFilePath("/xsl/tools/txt.xsl")
+                    siteXSL = ofs.checkCommonFilePath("/admin/reports/txt.xsl")
                 End If
                 fileExtension = "txt"
             Case "csv"
                 'contentType = "text/csv"
                 contentType = "text/plain"
                 If reportXsl <> "" Then
-                    siteXSL = ofs.checkCommonFilePath("/xsl/reports/" & reportXsl & ".xsl")
+                    siteXSL = ofs.checkCommonFilePath("/admin/reports/" & reportXsl & ".xsl")
                 Else
-                    siteXSL = ofs.checkCommonFilePath("/xsl/tools/csv.xsl")
+                    siteXSL = ofs.checkCommonFilePath("/admin/reports/csv.xsl")
                 End If
                 fileExtension = "csv"
             Case "xml"
                 contentType = "text/xml"
                 If reportXsl <> "" Then
-                    siteXSL = ofs.checkCommonFilePath("/xsl/reports/" & reportXsl & ".xsl")
+                    siteXSL = ofs.checkCommonFilePath("/admin/reports/" & reportXsl & ".xsl")
                 Else
-                    siteXSL = ofs.checkCommonFilePath("/xsl/tools/xml.xsl")
+                    siteXSL = ofs.checkCommonFilePath("/admin/reports/xml.xsl")
                 End If
                 fileExtension = "xml"
             Case Else
                 contentType = "application/vnd.ms-excel"
                 If reportXsl <> "" Then
-                    siteXSL = ofs.checkCommonFilePath("/xsl/reports/" & reportXsl & ".xsl")
+                    siteXSL = ofs.checkCommonFilePath("/admin/reports/" & reportXsl & ".xsl")
                 Else
-                    siteXSL = ofs.checkCommonFilePath("/xsl/reports/formats/Report-Excel-2000.xsl")
+                    siteXSL = ofs.checkCommonFilePath("/admin/reports/formats/Report-Excel-2000.xsl")
 
                 End If
                 fileExtension = "xlsx"

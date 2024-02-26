@@ -304,6 +304,8 @@ header {
 
             .nav-link {
                 color: $body-color;
+                width: 100%;
+                text-align: left;
             }
 
             .dropdown-toggle:after {

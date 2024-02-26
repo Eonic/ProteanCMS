@@ -387,22 +387,21 @@
 .cart-class > .container,
 .cart-class #mainLayout > .container {
     max-width: 100%;
-
-    .btn-custom {
+    /*.btn-custom {
         background: $secondary;
         color: #fff;
         border: 0;
         box-shadow: none;
         font-weight: 700;
-    }
+    }*/
 
     .btn-outline-primary {
-        border: 2px solid $secondary;
-        color: $secondary;
+        border: 2px solid $primary;
+        color: $primary;
         font-weight: 700;
 
         &:hover {
-            background: $secondary;
+            background: $primary;
             color: #fff !important;
         }
     }
@@ -420,7 +419,7 @@
             width: 100%;
         }
 
-        .totals-row .total{
+        .totals-row .total {
             border-top: 2px solid;
             font-size: 1.3rem;
             padding-top: 0.3rem;
