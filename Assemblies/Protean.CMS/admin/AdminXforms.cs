@@ -50,6 +50,7 @@ namespace Protean
                 public bool mbAdminMode = false;
                 public System.Web.HttpRequest moRequest;
                 public Tools.Security.Impersonate moImp = null;
+                public string ReportExportPath = "/ewcommon/tools/export.ashx?ewCmd=CartDownload";
 
                 // Error Handling hasn't been formally set up for AdminXforms so this is just for method invocation found in xfrmEditContent
                 public new event OnErrorEventHandler OnError;
@@ -74,6 +75,9 @@ namespace Protean
                         moRequest = this.myWeb.moRequest;
 
                         base.cLanguage = this.myWeb.mcPageLanguage;
+                        if (myWeb.bs5) {
+                            ReportExportPath = "/ptn/tools/export.ashx?ewCmd=CartDownload";
+                        }
                     }
 
                     catch (Exception ex)
@@ -10491,8 +10495,10 @@ namespace Protean
                         //bool bCascade = false;
                         //string cProcessInfo = "";
 
+                        
+
                         base.NewFrm("CartActivity");
-                        base.submission("SeeReport", "/ewcommon/tools/export.ashx?ewCmd=CartDownload", "get", "");
+                        base.submission("SeeReport", ReportExportPath, "get", "");
 
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "Content", "");
 
