@@ -10,8 +10,6 @@ using System.Web.Configuration;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using PayPal.Api;
 using Protean.Providers.Membership;
 
 namespace Protean
@@ -213,7 +211,7 @@ namespace Protean
                     Array.Resize(ref args, 2);
                     args[1] = jObj;
                 }
-                else if (paramDictionary != null) 
+                else if (paramDictionary != null)
                 {
                     Array.Resize(ref args, 2);
                     args[1] = paramDictionary;
@@ -225,15 +223,16 @@ namespace Protean
                 }
 
                 // check the response whatever is coming like with code 400, 200, based on the output- return in Json
+
                 string myResponse = Conversions.ToString(calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, null, o, args));
+
                 this.moResponse.Write(myResponse);
             }
 
             catch (Exception ex)
             {
                 this.moResponse.StatusCode = 400;
-                
-                this.OnComponentError(this, new Tools.Errors.Error(mcModuleName, "JSONRequest", ex, sProcessInfo,0,null, this.moResponse.Status,this.moResponse.StatusCode, "", "", ""));
+                this.OnComponentError(this, new Tools.Errors.Error(mcModuleName, "JSONRequest", ex, sProcessInfo, 0, null, this.moResponse.Status, this.moResponse.StatusCode, "", "", ""));
 
                 //this.OnComponentError(this, new Tools.Errors.ErrorEventArgs(this.mcModuleName, "JSONRequest", ex, sProcessInfo));
                 // returnException(mcModuleName, "getPageHtml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
@@ -278,23 +277,20 @@ namespace Protean
 
                 try
                 {
+                    if (myWeb.moSession != null)
+                    {
+                        if (myWeb.moSession["nUserId"] != null)
+                        {
+                            nUserId = Convert.ToInt32(myWeb.moSession["nUserId"]);
+                        }
+                    }
 
                     if (myWeb.mnUserId != 0)
                     {
                         nUserId = myWeb.mnUserId;
                     }
-                    if (nUserId == 0)
-                    {
-                        if(myWeb.moSession!=null)
-                        {
-                            if (myWeb.moSession["nUserId"] != null)
-                            {
-                                nUserId = Convert.ToInt32(myWeb.moSession["nUserId"]);
-                            }
-                        }
-                    }
                     // HttpContext httpContext = HttpContext.Current;
-                    if (myWeb.moCtx.Request.Headers != null)
+                    else if (myWeb.moCtx.Request.Headers != null)
                     {
                         if (myWeb.moCtx.Request.Headers["Authorization"] != null)
                         {

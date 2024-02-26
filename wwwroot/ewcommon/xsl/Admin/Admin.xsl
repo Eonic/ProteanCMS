@@ -14034,6 +14034,7 @@
 						<div class="form-group input-containing col-md-5">
 							<div class="control-wrapper input-wrapper appearance-">
 								<input type="text" v-bind:id="'NewUrl_'+index" class="col-md-5 textbox form-control redirecttext" v-bind:value="urls.attributes.value.nodeValue" />
+                <input type="hidden"  class="col-md-5 textbox form-control hiddenNewUrlText" v-bind:value="urls.attributes.value.nodeValue" />
 							</div>
 						</div>
 						<div class="form-group trigger-group col-md-1">

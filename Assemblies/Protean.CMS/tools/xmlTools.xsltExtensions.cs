@@ -2890,6 +2890,11 @@ namespace Protean
                 string sReturnString = "";
                 string sReturnError = "";
                 bool bReset = false;
+                string cProjectPath = string.Empty;
+                if(myWeb.moConfig["ProjectPath"]!=null)
+                {
+                    cProjectPath = myWeb.moConfig["ProjectPath"];
+                }
                 object AppVariableName = Strings.LCase("css" + TargetPath.Replace("~", ""));
                 do
                 {
@@ -2928,13 +2933,13 @@ namespace Protean
                             if (bAppVarExists == false)
                             {
                                 // check if the file exists.
-                                if (Conversions.ToBoolean(VirtualFileExists("/" + myWeb.moConfig["ProjectPath"] + "css" + TargetPath.Replace("~", "") + "/style.css")))
+                                if (Conversions.ToBoolean(VirtualFileExists("/" + cProjectPath + "css" + TargetPath.Replace("~", "") + "/style.css")))
                                 {
                                     // regenerate the application variable from the files in the folder
                                     // we do not want to recreate all css everytime the application pool is reset anymore.
                                     string sReturnStringNew = "";
-                                    foreach (var myFile in Directory.GetFiles(goServer.MapPath("/" + myWeb.moConfig["ProjectPath"] + "css" + TargetPath.Replace("~", "")), "*.css"))
-                                        sReturnStringNew = sReturnStringNew + "/" + myWeb.moConfig["ProjectPath"] + "css" + TargetPath.Replace("~", "") + "/" + Path.GetFileName(myFile) + ",";
+                                    foreach (var myFile in Directory.GetFiles(goServer.MapPath("/" + cProjectPath + "css" + TargetPath.Replace("~", "")), "*.css"))
+                                        sReturnStringNew = sReturnStringNew + "/" + cProjectPath + "css" + TargetPath.Replace("~", "") + "/" + Path.GetFileName(myFile) + ",";
                                     myWeb.moCtx.Application.Set(AppVariableName.ToString(), sReturnStringNew.Trim(','));
                                     bAppVarExists = true;
                                 }
@@ -2947,7 +2952,7 @@ namespace Protean
 
                                 sReturnString =Convert.ToString(myWeb.moCtx.Application.Get(AppVariableName.ToString()));
 
-                                if (!sReturnString.StartsWith("/" + myWeb.moConfig["ProjectPath"] + "css" + TargetPath.TrimStart('~')))
+                                if (!sReturnString.StartsWith("/" + cProjectPath + "css" + TargetPath.TrimStart('~')))
                                 {
                                     myWeb.bPageCache = false;
                                 }
@@ -3014,17 +3019,17 @@ namespace Protean
                                 if (scriptFile.Contains("ERROR:"))
                                 {
                                     myWeb.bPageCache = false;
-                                    scriptFile = "/" + myWeb.moConfig["ProjectPath"] + "css" + string.Format("{0}/style.css", TargetPath);
+                                    scriptFile = "/" + cProjectPath + "css" + string.Format("{0}/style.css", TargetPath);
                                 }  // we can try adding addional error handling here if we have exact code returned from issue
 
                                 if (scriptFile.StartsWith(TargetPath.TrimStart('~'), StringComparison.InvariantCultureIgnoreCase))
                                 {
-                                    sReturnString = "/" + myWeb.moConfig["ProjectPath"] + "css" + scriptFile;
+                                    sReturnString = "/" + cProjectPath + "css" + scriptFile;
                                 }
                                 else
                                 {
                                     myWeb.bPageCache = false;
-                                    sReturnString = "/" + myWeb.moConfig["ProjectPath"] + "css" + scriptFile;
+                                    sReturnString = "/" + cProjectPath + "css" + scriptFile;
                                 }
 
 
@@ -3037,15 +3042,15 @@ namespace Protean
                                     // fsh.DeleteFile(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "css" & TargetFile.TrimStart("~") & "/" & String.Format("style{0}.css", i)))
                                     // TS commented out as modified save file to overwrite by using WriteAllBytes
                                     string strStyle = string.Format("style{0}.css", i);
-                                    scriptFile = "/" + myWeb.moConfig["ProjectPath"] + "css" + fsh.SaveFile(ref strStyle, TargetPath, info);
+                                    scriptFile = "/" + cProjectPath + "css" + fsh.SaveFile(ref strStyle, TargetPath, info);
 
-                                    if (scriptFile.StartsWith("/" + myWeb.moConfig["ProjectPath"] + "css" + "ERROR: "))
+                                    if (scriptFile.StartsWith("/" + cProjectPath + "css" + "ERROR: "))
                                     {
                                         myWeb.bPageCache = false;
 
                                     }
 
-                                    if (scriptFile.StartsWith("/" + myWeb.moConfig["ProjectPath"] + "css" + TargetPath.TrimStart('~')))
+                                    if (scriptFile.StartsWith("/" + cProjectPath + "css" + TargetPath.TrimStart('~')))
                                     {
                                         // file has been saved successfully.
                                         sReturnString += "," + scriptFile;
@@ -3059,10 +3064,10 @@ namespace Protean
 
                                 }
 
-                                if (sReturnString.StartsWith("/" + myWeb.moConfig["ProjectPath"] + "css"))
+                                if (sReturnString.StartsWith("/" + cProjectPath + "css"))
                                 {
                                     // check the file exists before we set the application variable...
-                                    if (Conversions.ToBoolean(VirtualFileExists("/" + myWeb.moConfig["ProjectPath"] + "css" + TargetPath.Replace("~", "") + "/style.css")))
+                                    if (Conversions.ToBoolean(VirtualFileExists("/" + cProjectPath + "css" + TargetPath.Replace("~", "") + "/style.css")))
                                     {
                                         myWeb.moCtx.Application.Set(AppVariableName.ToString(), sReturnString);
                                     }
@@ -3093,7 +3098,7 @@ namespace Protean
                     catch (IOException)    // New changes on 9/12/21'
                     {
                         myWeb.bPageCache = false;
-                        sReturnString = "/" + myWeb.moConfig["ProjectPath"] + "css" + string.Format("{0}/style.css", TargetPath);
+                        sReturnString = "/" + cProjectPath + "css" + string.Format("{0}/style.css", TargetPath);
                         // Return ioex.StackTrace
                         return sReturnString;
                     }
@@ -3106,7 +3111,7 @@ namespace Protean
                         AddExceptionToEventLog(ex, sReturnString);
 
                         // regardless we should return the filename.
-                        sReturnString = "/" + myWeb.moConfig["ProjectPath"] + "css" + string.Format("{0}/style.css", TargetPath);
+                        sReturnString = "/" + cProjectPath + "css" + string.Format("{0}/style.css", TargetPath);
 
                         myWeb.bPageCache = false; // This is not working 100% - can we understand why?????B
 

@@ -4848,7 +4848,22 @@ namespace Protean
                     sPrimarySql = " CL.bPrimary = 1 ";
                 }
 
-
+                if (oContentsNode != null)
+                {
+                    if (oContentsNode.Attributes["contentType"] != null)
+                    {
+                        cFilterTarget = oContentsNode.Attributes["contentType"].Value;
+                    }
+                    if (oContentsNode.Attributes["filterTarget"] != null)
+                    {
+                        cFilterTarget = oContentsNode.Attributes["filterTarget"].Value;
+                    }
+                }
+                object sFilterTargetSql = "";
+                if (!string.IsNullOrEmpty(cFilterTarget))
+                {
+                    cFilterTarget = " and c.cContentSchemaName ='" + cFilterTarget + "' ";
+                }
 
                 if (gbMembership == true & bIgnorePermissionsCheck == false)
                 {
@@ -4889,25 +4904,10 @@ namespace Protean
                         nAuthGroup = gnAuthUsers;
                     }
 
-                    if (oContentsNode != null)
-                    {
-                        if (oContentsNode.Attributes["contentType"] != null)
-                        {
-                            cFilterTarget = oContentsNode.Attributes["contentType"].Value;
-                        }
-                        if (oContentsNode.Attributes["filterTarget"] != null)
-                        {
-                            cFilterTarget = oContentsNode.Attributes["filterTarget"].Value;
-                        }
-                    }
-                    object sFilterTargetSql = "";
-                    if (!string.IsNullOrEmpty(cFilterTarget))
-                    {
-                        cFilterTarget = " c.cContentSchemaName ='" + cFilterTarget + "' and ";
-                    }
+                   
 
                     // Check the page is not denied
-                    sMembershipSql = cFilterTarget + "NOT(dbo.fxn_checkPermission(CL.nStructId," + nAuthUserId + "," + nAuthGroup + ") LIKE '%DENIED%')";
+                    sMembershipSql = "NOT(dbo.fxn_checkPermission(CL.nStructId," + nAuthUserId + "," + nAuthGroup + ") LIKE '%DENIED%')";
 
 
 
@@ -4935,6 +4935,12 @@ namespace Protean
 
 
                 string combinedWhereSQL = sPrimarySql + sMembershipSql + sFilterSql + sWhereSql;
+
+                if (!string.IsNullOrEmpty(cFilterTarget))
+                {
+                    combinedWhereSQL = combinedWhereSQL + cFilterTarget;
+                }
+
                 if (Strings.Trim(combinedWhereSQL).StartsWith("and"))
                 {
                     combinedWhereSQL = combinedWhereSQL.Substring(4);

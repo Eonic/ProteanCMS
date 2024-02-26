@@ -1,19 +1,11 @@
-﻿.hidden {
-    display: none;
+﻿@mixin clear-shadow() {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    -webkit-text-shadow: none;
+    -moz-text-shadow: none;
+    text-shadow: none;
 }
-
-.not-xs {
-    @include media-breakpoint-down($nav-breakpoint) {
-        display: none;
-    }
-}
-
-.xs-only {
-    @include media-breakpoint-up($nav-breakpoint) {
-        display: none;
-    }
-}
-
 @mixin sr-only {
     position: absolute !important;
     clip: rect(1px, 1px, 1px, 1px);
@@ -22,223 +14,11 @@
     width: 1px;
     word-wrap: normal;
 }
-
-.skip {
-    position: absolute;
-    left: -10000px;
-    top: auto;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-}
-
-.skip:focus {
-    left: 10px;
-    top: 10px;
-    z-index: 20;
-    width: auto;
-    height: auto;
-    overflow: visible;
-}
-
-@mixin clear-shadow() {
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
-    -webkit-text-shadow: none;
-    -moz-text-shadow: none;
-    text-shadow: none;
-}
-
 @mixin remove-gradient() {
     background: none;
     filter: progid:DXImageTransform.Microsoft.gradient(enabled = false) !important;
 }
 
-.module-centred {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.module-with-icon div.center-block {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.align-btn-footer {
-    .lIinner .media-inner {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-
-        .entryFooter {
-            margin-top: auto;
-        }
-    }
-}
-
-/*############### BUTTONS AND LINKS #################*/
-.skip {
-    position: absolute;
-    left: -10000px;
-    top: auto;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    @extend .btn;
-    @extend .btn-primary;
-}
-
-a {
-    outline-offset: 5px;
-    outline-color: $link-color;
-}
-
-.link-underline {
-    text-decoration: underline;
-    text-underline-offset: 4px;
-    text-decoration-color: $secondary;
-
-    &:hover {
-        color: $secondary;
-    }
-
-    &:visited {
-        color: $visited;
-        text-decoration-color: #c2a5c9;
-    }
-}
-
-.btn-link {
-    padding: 0;
-    text-underline-offset: 4px;
-
-    &:hover,
-    &:focus {
-        background: none;
-        color: $link-hover-color;
-    }
-}
-
-.btn-clean {
-    padding: 0;
-    background: none;
-    border: 0;
-    box-shadow: none;
-    color: $link-color;
-
-    &:hover,
-    &:focus {
-        padding: 0;
-        background: none;
-        border: 0;
-        box-shadow: none;
-        color: $link-color;
-    }
-}
-
-@mixin btn-clean($color: $link-color, $hover: $link-hover-color) {
-    background: none;
-    border: none;
-    padding: 0;
-    border-radius: 0;
-    color: $color;
-
-    &:hover,
-    &:focus {
-        color: $hover;
-        background: none;
-        border: none;
-        outline: none;
-    }
-}
-
-.light-flex {
-    display: flex;
-}
-
-
-/*############### BACKGROUNDS #################*/
-@mixin bg-contrast($background, $dark-contrast: $color-contrast-dark, $light-contrast: $color-contrast-light,$opacity: $slide-opacity ) {
-    color: color-contrast($background, $dark-contrast, $light-contrast);
-
-    @if $opacity < 1 {
-        background: rgba($background, $opacity);
-    }
-    @else {
-        background: $background;
-        //color:color-yiq($background);
-    }
-}
-
-.bg-dark-o {
-    @include bg-contrast($dark);
-}
-
-.bg-light-o {
-    @include bg-contrast($light);
-}
-
-.bg-primary-o {
-    @include bg-contrast($primary);
-}
-
-.bg-secondary-o {
-    @include bg-contrast($secondary);
-}
-
-.bg-info-o {
-    @include bg-contrast($info);
-}
-
-.bg-success-o {
-    @include bg-contrast($success);
-}
-
-.bg-warning-o {
-    @include bg-contrast($warning);
-}
-
-.bg-danger-o {
-    @include bg-contrast($danger);
-}
-
-@-webkit-keyframes fadeInDownSmall {
-    from {
-        opacity: 0;
-        -webkit-transform: translate3d(0, -10%, 0);
-        transform: translate3d(0, -10%, 0);
-    }
-
-    to {
-        opacity: 1;
-        -webkit-transform: translate3d(0, 0, 0);
-        transform: translate3d(0, 0, 0);
-    }
-}
-
-@keyframes fadeInDownSmall {
-    from {
-        opacity: 0;
-        -webkit-transform: translate3d(0, -10%, 0);
-        transform: translate3d(0, -10%, 0);
-    }
-
-    to {
-        opacity: 1;
-        -webkit-transform: translate3d(0, 0, 0);
-        transform: translate3d(0, 0, 0);
-    }
-}
-
-.animate__fadeInDownSmall {
-    -webkit-animation-name: fadeInDownSmall;
-    animation-name: fadeInDownSmall;
-}
-
-/*############### LIST ITEMS #################*/
 @mixin box-content($background: $body-bg, $color: contrast($background,#fff,$text-color), $link: $link-color, $hover: darken($link-color,$link-hover-percentage) ) {
     background: $background;
     padding: $box-padding-vertical $box-padding-horizontal;
@@ -315,7 +95,7 @@ a {
         }
     }
 }
-// TESTIMONIALS
+
 @mixin quote-clean {
     blockquote {
         padding: 0;
@@ -440,6 +220,8 @@ a {
                 color: fade($color,70%);
             }
         }
+
+
 
         .entryFooter .morelink {
             position: static;

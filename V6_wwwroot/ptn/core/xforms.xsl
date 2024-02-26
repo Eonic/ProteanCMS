@@ -2149,19 +2149,19 @@
 
 		</select>
 		<xsl:if test="@data-fv-not-empty___message!='' and not(alert)">
-			<div class="invalid-feedback">
-				<xsl:value-of select="@data-fv-not-empty___message"/>
-			</div>
-		</xsl:if>
-		<xsl:if test="not(@data-fv-not-empty___message!='') and contains(@class,'required')">
-			<div class="invalid-feedback">
-				This is required
-			</div>
-		</xsl:if>
-		<xsl:if test="alert">
-			<div class="invalid-feedback-server">
-				<xsl:copy-of select="alert/node()"/>
-			</div>
+				<div class="invalid-feedback">
+					<xsl:value-of select="@data-fv-not-empty___message"/>
+				</div>
+			</xsl:if>
+			<xsl:if test="not(@data-fv-not-empty___message!='') and contains(@class,'required')">
+				<div class="invalid-feedback">
+					This is required
+				</div>
+			</xsl:if>
+			<xsl:if test="alert">
+				<div class="invalid-feedback-server">
+					<xsl:copy-of select="alert/node()"/>
+				</div>
 		</xsl:if>
 	</xsl:template>
 	<!-- -->

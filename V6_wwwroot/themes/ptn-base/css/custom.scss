@@ -322,6 +322,7 @@ section.bg-video-wrapper {
         }
     }
 }
+
 .intro-banner {
     margin-bottom: $spacer;
 
@@ -369,6 +370,7 @@ section.bg-video-wrapper {
 .entryFooter .tags {
     margin-bottom: $spacer;
 }
+
 @mixin boxed-listItem {
     $listItem-padding: 1rem;
     padding: $listItem-padding;

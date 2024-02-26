@@ -3574,28 +3574,31 @@ namespace Protean
 
                             if (myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure))
                             {
-                                if (nStatusId > 100) {
+                                //if (nStatusId > 100) {
 
-                                // Get Shipping Group from query if assigned to that product and add new node in order and use this node for displaying messages for x50 and t03 category.
-                                if ((moConfig["SelectShippingOptionForGroup"]) != "" && (moConfig["SelectShippingOptionForGroup"]).ToLower() == "on")
-                                {
-                                    string sSqlShippingGroup = $"select csm.nShipOptKey,CPC.cCatName  from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey left join tblAudit A ON p.nAuditId= A.nAuditKey left join tblCartCatProductRelations cpr on p.nContentKey = cpr.nContentId left join tblCartProductCategories CPC ON cpr.nCatId= cpc.nCatKey Left JOIN tblCartShippingProductCategoryRelations cspcr ON cpr.nCatId= cspcr.nCatId LEFT join tblCartShippingMethods csm on csm.nShipOptKey=cspcr.nShipOptId where nCartOrderId={nCartIdUse.ToString()} and nCartItemKey={oRow["id"].ToString()} and cCatSchemaName = 'Shipping' and csm.nShipOptKey is not null and nItemId <>0 and cspcr.nRuleType=1 order by nShipOptCost asc";
+                                //// Get Shipping Group from query if assigned to that product and add new node in order and use this node for displaying messages for x50 and t03 category.
+                                //if (moConfig["SelectShippingOptionForGroup"] != null)
+                                //{
+                                //    if ((moConfig["SelectShippingOptionForGroup"]) != "" && (moConfig["SelectShippingOptionForGroup"]).ToLower() == "on")
+                                //    {
+                                //        string sSqlShippingGroup = $"select csm.nShipOptKey,CPC.cCatName  from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey left join tblAudit A ON p.nAuditId= A.nAuditKey left join tblCartCatProductRelations cpr on p.nContentKey = cpr.nContentId left join tblCartProductCategories CPC ON cpr.nCatId= cpc.nCatKey Left JOIN tblCartShippingProductCategoryRelations cspcr ON cpr.nCatId= cspcr.nCatId LEFT join tblCartShippingMethods csm on csm.nShipOptKey=cspcr.nShipOptId where nCartOrderId={nCartIdUse.ToString()} and nCartItemKey={oRow["id"].ToString()} and cCatSchemaName = 'Shipping' and csm.nShipOptKey is not null and nItemId <>0 and cspcr.nRuleType=1 order by nShipOptCost asc";
 
-                                    using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sSqlShippingGroup))
-                                    {
-                                        if (oDr != null)
-                                        {
-                                            while (oDr.Read())
-                                            {
-                                                ShippingOptionKey = Convert.ToInt64(oDr["nShipOptKey"]);
-                                                oRow["nShippingGroup"] = oDr["cCatName"];
-                                                oRow["nshippingType"] = ShippingOptionKey;
-                                                updateGCgetValidShippingOptionsDS(ShippingOptionKey.ToString());
-                                            }
-                                        }
-                                    }
-                                }
-                                }
+                                //        using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sSqlShippingGroup))
+                                //        {
+                                //            if (oDr != null)
+                                //            {
+                                //                while (oDr.Read())
+                                //                {
+                                //                    ShippingOptionKey = Convert.ToInt64(oDr["nShipOptKey"]);
+                                //                    oRow["nShippingGroup"] = oDr["cCatName"];
+                                //                    oRow["nshippingType"] = ShippingOptionKey;
+                                //                    updateGCgetValidShippingOptionsDS(ShippingOptionKey.ToString());
+                                //                }
+                                //            }
+                                //        }
+                                //    }
+                                //}
+                                //}
                             }
 
 
@@ -3614,7 +3617,6 @@ namespace Protean
                                     // End If
                                 }
                             }
-
                             catch (Exception)
                             {
                             }
@@ -3870,6 +3872,10 @@ namespace Protean
                                             if (!(oRowSO["bCollection"] is DBNull))
                                             {
                                                 bCollection = Conversions.ToBoolean(oRowSO["bCollection"]);
+                                            }
+                                            if (Convert.ToString(oRowSO["nShippingGroup"]) != "")
+                                            {
+                                                ShippingOptionKey = Convert.ToInt64(oRowSO["nShipOptKey"]);
                                             }
                                             if (!string.IsNullOrEmpty(moCartConfig["DefaultShippingMethod"]))
                                             {
@@ -12083,8 +12089,11 @@ namespace Protean
                 {
                     string cResult = "Success";
                     var oCartListElmt = moPageXml.CreateElement("Order");
-                    GetCart(ref oCartListElmt, nOrderId);
+                    //GetCart(ref oCartListElmt, nOrderId);
                     // Insert code into tblcartOrder
+
+                    oCartListElmt = (XmlElement)oldCartxml.DocumentElement.Clone();
+
                     var oInstance = new XmlDocument();
                     XmlElement oElmt;
                     XmlElement oeResponseElmt = (XmlElement)oCartListElmt.SelectSingleNode("/PaymentDetails/instance/Response");
@@ -12092,6 +12101,8 @@ namespace Protean
                     double Amount = Convert.ToDouble(oCartListElmt.GetAttribute("total"));
                     //int nItemID = 0; // ID of the cart item record
                     // Dim oDs As DataSet
+
+                    XmlElement oePaymentDetailsInstanceElmt = (XmlElement)oCartListElmt.SelectSingleNode("/PaymentDetails/instance");
 
                     oInstance.AppendChild(oInstance.CreateElement("instance"));
                     XmlNode argoNode = oInstance.DocumentElement;
@@ -12234,7 +12245,7 @@ namespace Protean
                     {
                         useSavedAddressesOnCart(billingAddId, deliveryAddId);
                     }
-                    ConfirmPayment(ref oCartListElmt, ref oeResponseElmt, cNewAuthNumber, cMethodName, Amount);
+                    ConfirmPayment(ref oCartListElmt, ref oePaymentDetailsInstanceElmt, cNewAuthNumber, cMethodName, Amount);
                     GetCart(ref oCartListElmt, mnCartId);
                     oCartListElmt.ToString().Replace(ReceiptId, cNewAuthNumber);
                     SaveCartXML(oCartListElmt, mnCartId);

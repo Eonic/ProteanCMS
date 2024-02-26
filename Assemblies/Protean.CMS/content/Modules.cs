@@ -641,7 +641,7 @@ where cl.nStructId = " + myWeb.mnPageId));
                             {
                                 myWeb.moSession["FilterWhereCondition"] = whereSQL;
                             XmlElement argoPageDetail = null;int nCount = 0;
-                            myWeb.GetPageContentFromSelect(whereSQL,ref nCount, oContentsNode: ref oContentNode, oPageDetail: ref argoPageDetail, cShowSpecificContentTypes: cFilterTarget);
+                            myWeb.GetPageContentFromSelect(whereSQL,ref nCount, oContentsNode: ref oContentNode, oPageDetail: ref argoPageDetail, cShowSpecificContentTypes: cFilterTarget, bIgnorePermissionsCheck:true);
 
 
                                 if (oContentNode.SelectNodes("Content[@type='Product']").Count == 0)

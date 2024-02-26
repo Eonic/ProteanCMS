@@ -1,11 +1,5 @@
-﻿using DocumentFormat.OpenXml.EMMA;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections;
-using System.Net.Http;
-using System.Net;
-using System.Web;
 
 
 namespace Protean.Tools.Errors
@@ -93,7 +87,7 @@ namespace Protean.Tools.Errors
         public string Source { get; set; }
         public string Link { get; set; }
 
-        public Error(string Module, string Procedure, Exception ex, string Info, int importance = 0, Hashtable Settings = null, string cStatus="", int nCode=0, string cSouce = "", string cDetail = "", string cLink= "") : base(Module, Procedure, ex, Info, importance, Settings)
+        public Error(string Module, string Procedure, Exception ex, string Info, int importance = 0, Hashtable Settings = null, string cStatus="", int nCode=0, string cSource = "", string cDetail = "", string cLink= "") : base(Module, Procedure, ex, Info, importance, Settings)
         {
             Status = cStatus;
             if(ex!= null)
@@ -105,6 +99,11 @@ namespace Protean.Tools.Errors
                 }
                 Message = ex.Message;
             }
+            else
+            {
+                Message = Info;
+            }
+
 
             Code = nCode;
             Link = cLink;

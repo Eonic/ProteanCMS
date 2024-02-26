@@ -5535,7 +5535,7 @@ namespace Protean
                                 }
                             case TransactionMode.Fail:
                                 {
-                                   // XmlNode argoNode1 = oFrmGroup;
+                                    //XmlNode argoNode1 = oFrmGroup;
                                     oXform.addNote(ref oFrmGroup, Protean.xForm.noteTypes.Alert, "This payment method is in FAIL mode, the transaction will always fail");
                                     //oFrmGroup = (XmlElement)argoNode1;
                                     break;

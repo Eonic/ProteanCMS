@@ -2962,7 +2962,7 @@ namespace Protean
 
                     //XmlNode argoNode = oFrmElmt;
                     base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, "Please enter your database connection details.");
-                   // oFrmElmt = (XmlElement)argoNode;
+                    //oFrmElmt = (XmlElement)argoNode;
 
                     // If goConfig("DatabaseServer") = "" Then
 
@@ -3050,7 +3050,7 @@ namespace Protean
                                 else
                                 {
                                     base.valid = false;
-                                   // XmlNode argoNode1 = oFrmElmt;
+                                    //XmlNode argoNode1 = oFrmElmt;
                                     base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "These database connection details could not connect.");
                                     //oFrmElmt = (XmlElement)argoNode1;
                                 }

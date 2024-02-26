@@ -406,14 +406,14 @@ namespace Protean
             {
                 cSeperator = ",";
             }
-            if (successMessage == "") {
+            if (successMessage == "")
+            {
                 successMessage = "Message Sent";
             }
             if (failureMessage == "")
             {
                 failureMessage = "Message Send Failed";
             }
-
             string styleFile;
             TextWriter sWriter = new StringWriter();
             var oXml = new XmlDocument();
@@ -1073,13 +1073,17 @@ namespace Protean
                                 }
                                 moMessaging.Activities.AddToList(moMailConfig["OptInList"], name, email, values);
                             }
+
                             catch (Exception ex)
                             {
                                 cProcessInfo = ex.StackTrace;
                             }
                         }
+
                     }
+
                     return successMessage;
+
                 }
             }
 
@@ -1328,7 +1332,6 @@ namespace Protean
             {
                 failureMessage = "Message Failed";
             }
-
             try
             {
                 // PerfMon.Log("Messaging", "emailerWithXmlAttachment - Get Xml")
