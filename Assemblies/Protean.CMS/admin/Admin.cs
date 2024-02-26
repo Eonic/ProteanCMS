@@ -673,7 +673,7 @@ namespace Protean
                         case "admin":
                             {
                                 mcEwCmd = "Content";
-                                goto ProcessFlow;                                
+                                goto ProcessFlow;
                             }
 
 
@@ -4019,7 +4019,7 @@ namespace Protean
                                 sProcessInfo = oConvert.Message;
                             }
 
-                          //  oImportXml.LoadXml(Conversions.ToString(oConvert.Output.OuterXml));
+                            //  oImportXml.LoadXml(Conversions.ToString(oConvert.Output.OuterXml));
                         }
                         else if (cFilePath.EndsWith(".xml"))
                         {
@@ -5055,7 +5055,8 @@ namespace Protean
                                     myWeb.mcOutputFileName = "DeliveryNote.pdf";
 
                                     string DeliveryNoteXslPath = @"\xsl\docs\deliverynote.xsl";
-                                    if (myWeb.bs5) {
+                                    if (myWeb.bs5)
+                                    {
                                         DeliveryNoteXslPath = @"\features\cart\docs\delivery-note.xsl";
                                     }
 
@@ -5223,7 +5224,7 @@ namespace Protean
                         var oCart = new Cms.Cart(ref myWeb);
                         oPageDetail.AppendChild(moAdXfm.xFrmCartActivityDrillDown());
                         if (moAdXfm.valid)
-                        {                           
+                        {
                             string OrderSatus = Convert.ToString(moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus").InnerText);
                             if (OrderSatus.Contains(","))
                             {
@@ -5244,7 +5245,7 @@ namespace Protean
                         var oCart = new Cms.Cart(ref myWeb);
                         oPageDetail.AppendChild(moAdXfm.xFrmCartActivityPeriod());
                         if (moAdXfm.valid)
-                        {                           
+                        {
                             oPageDetail.AppendChild(oCart.CartReportsPeriod(moAdXfm.Instance.FirstChild.SelectSingleNode("cGroup").InnerText, Convert.ToInt32(moAdXfm.Instance.FirstChild.SelectSingleNode("nYear").InnerText), Convert.ToInt32(moAdXfm.Instance.FirstChild.SelectSingleNode("nMonth").InnerText), Convert.ToInt32(moAdXfm.Instance.FirstChild.SelectSingleNode("nWeek").InnerText), moAdXfm.Instance.FirstChild.SelectSingleNode("cCurrencySymbol").InnerText, moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus").InnerText, Convert.ToString(moAdXfm.Instance.FirstChild.SelectSingleNode("cOrderType").InnerText)));
                         }
                         sAdminLayout = "CartActivityPeriod";
@@ -5784,7 +5785,7 @@ namespace Protean
                 //long contentId = 0L;
                 string indexId = null;
                 string sSql;
-                string SchemaNameForUpdate;
+               
                 DataSet indexesDataset;
 
                 try
@@ -5808,62 +5809,21 @@ namespace Protean
 
                             }
                         case "updateAllRules":
-                            {
-                                if (myWeb.moRequest["SchemaName"] != default)
-                                {
-                                    SchemaNameForUpdate = myWeb.moRequest["SchemaName"];
-                                    sSql = "spScheduleToUpdateIndexTable";
-                                    var arrParms = new Hashtable();
-                                    arrParms.Add("SchemaName", SchemaNameForUpdate);
-                                    myWeb.moDbHelper.ExeProcessSql(sSql, CommandType.StoredProcedure, arrParms);
-                                    myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.SessionContinuation, (long)myWeb.mnUserId, 0L, 0L, 0L, "ReIndexing", true);
-                                    if (moAdXfm.valid == false & myWeb.moRequest["ewCmd2"] == "update")
-                                    {
-                                        oPageDetail.InnerXml = "";
-                                        indexId = null;
-                                        goto default;
-                                    }
-                                }
-                                goto default;
-
-                            }
                         case "update":
+
                             {
-                                if (myWeb.moRequest["SchemaName"] != default)
+                                sSql = "spScheduleToUpdateIndexTable";
+                                var arrParms = new Hashtable();
+                                arrParms.Add("IndexId", indexId);
+                                myWeb.moDbHelper.ExeProcessSql(sSql, CommandType.StoredProcedure, arrParms);
+                                myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.SessionContinuation, (long)myWeb.mnUserId, 0L, 0L, 0L, "ReIndexing", true);
+                                if (moAdXfm.valid == false & myWeb.moRequest["ewCmd2"] == "update")
                                 {
-                                    SchemaNameForUpdate = myWeb.moRequest["SchemaName"];
-                                    if (!string.IsNullOrEmpty(moConfig["FilterIndexITBCust"]))
-                                    {
-                                        sSql = "spUpdateFilterIndex";
-                                        var arrParms = new Hashtable();
-                                        arrParms.Add("SchemaName", SchemaNameForUpdate);
-                                        arrParms.Add("IndexId", indexId);
-                                        myWeb.moDbHelper.ExeProcessSql(sSql, CommandType.StoredProcedure, arrParms);
-                                        myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.SessionContinuation, (long)myWeb.mnUserId, 0L, 0L, 0L, "ReIndexing", true);
-                                        if (moAdXfm.valid == false & myWeb.moRequest["ewCmd2"] == "update")
-                                        {
-                                            oPageDetail.InnerXml = "";
-                                            indexId = null;
-                                            goto default;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        sSql = "spScheduleToUpdateIndexTable";
-                                        var arrParms = new Hashtable();
-                                        arrParms.Add("SchemaName", SchemaNameForUpdate);
-                                        myWeb.moDbHelper.ExeProcessSql(sSql, CommandType.StoredProcedure, arrParms);
-                                        myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.SessionContinuation, (long)myWeb.mnUserId, 0L, 0L, 0L, "ReIndexing", true);
-                                        if (moAdXfm.valid == false & myWeb.moRequest["ewCmd2"] == "update")
-                                        {
-                                            oPageDetail.InnerXml = "";
-                                            indexId = null;
-                                            goto default;
-                                        }
-                                    }
+                                    oPageDetail.InnerXml = "";
+                                    indexId = null;
+
                                 }
                                 goto default;
-
                             }
                         default:
                             {
