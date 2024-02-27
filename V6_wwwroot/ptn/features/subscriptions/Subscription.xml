@@ -10,7 +10,7 @@
 				<cContentName/>
 				<cContentSchemaName>Subscription</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content>
+					<Content overridePrice="false">
 						<Name/>
 						<StockCode/>
 						<Type>Fixed Length</Type>
@@ -50,7 +50,7 @@
 					</Content>
 				</cContentXmlBrief>
 				<cContentXmlDetail>
-					<Content action="Protean.Cms+Cart+Subscriptions+Modules.Subscribe" >
+					<Content action="Protean.Cms+Cart+Subscriptions+Modules.Subscribe" overridePrice="false">
 						<Name/>
 						<StockCode/>
 						<Type>Fixed Length</Type>
@@ -122,7 +122,9 @@
 					</bind>
 				</bind>
 				<bind id="cContentPrice" nodeset="Prices/Price[@type='sale']" required="true()" type="format:^[-+]?[0-9]*\.?[0-9]+$"/>
+				<bind id="cVariablePrice" nodeset="@overridePrice" required="false()" type="string"/>
 				<bind nodeset="Prices/Price[@type='sale']">
+					
 					<bind id="cContentSetupSuffix" nodeset="@suffix" required="false()" type="string"/>
 				</bind>
 				<bind id="cContentThumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
@@ -161,6 +163,7 @@
 					</bind>
 				</bind>
 				<bind id="cContentPrice" nodeset="Prices/Price[@type='sale']" required="true()" type="format:^[-+]?[0-9]*\.?[0-9]+$"/>
+				<bind id="cVariablePrice" nodeset="@overridePrice" required="false()" type="string"/>
 				<bind nodeset="Prices/Price[@type='sale']">
 					<bind id="cContentSetupSuffix" nodeset="@suffix" required="false()" type="string"/>
 				</bind>
@@ -268,17 +271,30 @@
 					</group>
 					
 					<group class="row">
-						<group class="col-lg-6">
+						<group class="col-lg-4">
 							<input bind="cContentSubscriptionPrice" class="short required">
 								<label>Repeating payment amount</label>
 								<help class="inline">Numeric only (e.g. 0.00)</help>
 							</input>
 						</group>
 
-						<group class="col-lg-6">
+						<group class="col-lg-4">
 							<input bind="cContentRepeatSuffix" class="short">
 								<label>Repeat label</label>
 							</input>
+						</group>
+						<group class="col-lg-4">
+							"<select1 bind="cVariablePrice" appearance="full" class="required vshort inline-items">
+								<label>Amount type</label>
+								<item>
+									<label>Fixed Price</label>
+									<value>false</value>
+								</item>
+								<item>
+									<label>User Specified</label>
+									<value>true</value>
+								</item>
+							</select1>
 						</group>
 					</group>
 					<group class="row">

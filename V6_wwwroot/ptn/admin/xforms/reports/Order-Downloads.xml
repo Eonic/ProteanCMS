@@ -11,7 +11,7 @@
 			</Query>
 
 		</instance>
-		<submission id="OrderDownloadSubmission" action="/ewcommon/tools/export.ashx?ewcmd=Reports&amp;ewCmd2=Order-Downloads&amp;reportXsl=Order-Downloads" method="post" event="return form_check(this)"/>
+		<submission id="OrderDownloadSubmission" action="/ptn/tools/export.ashx?ewcmd=Reports&amp;ewCmd2=Order-Downloads&amp;reportXsl=Order-Downloads" method="post" event="return form_check(this)"/>
 		<bind nodeset="Query">
 			<bind id="cartStage" nodeset="param[@name='nOrderStage']/@value" required="false()" type="string"/>
 			<bind id="cOrderType" nodeset="param[@name='cOrderType']/@value" required="false()" type="string"/>

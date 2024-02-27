@@ -273,7 +273,6 @@
 						</xsl:when>
 						<!--~~~~~~~~~~~~~~ pages with no side nav ~~~~~~~~~~~~~~ -->
 						<xsl:otherwise>
-							<div id="content" class="visually-hidden">&#160;</div>
 							<xsl:apply-templates select="." mode="mainLayout">
 								<xsl:with-param name="containerClass" select="$container"/>
 							</xsl:apply-templates>
