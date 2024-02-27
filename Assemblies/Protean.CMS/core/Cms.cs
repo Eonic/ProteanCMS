@@ -4953,7 +4953,7 @@ namespace Protean
                 {
                     // Quick call to get the total number of records
                     string cSQL = "SET ARITHABORT ON ";
-                    cSQL += "Select COUNT(distinct c.nContentKey) FROM tblContent AS c INNER JOIN ";
+                    cSQL += "Select COUNT(distinct c.nContentKey) FROM tblContent AS c with(NOLOCK) INNER JOIN ";
                     cSQL += "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN ";
                     cSQL += "tblContentLocation AS CL ON c.nContentKey = CL.nContentId ";
                     // ' Add the extra joins if specified.
