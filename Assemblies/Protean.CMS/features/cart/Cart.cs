@@ -5497,26 +5497,38 @@ namespace Protean
                             var delBillingElmt = oXform.addOption(ref newElmt, "Deliver to Billing Address", "false");
 
                             bool bCollection = false;
+                            bool bOverrideCollection = false;
                             // Get the collection delivery options
                             // Dim oDrCollectionOptions As SqlDataReader = moDBHelper.getDataReader("select * from tblCartShippingMethods where bCollection = 1")
-                            using (var oDrCollectionOptions = moDBHelper.getDataReaderDisposable("select * from tblCartShippingMethods where bCollection = 1"))  // Done by nita on 6/7/22
+                            // Add one key in config for running functionality of bCollection - OverrideCollection
+                            if (moConfig["OverrideCollection"] != null)
                             {
-                                while (oDrCollectionOptions.Read())
+                                if ((moConfig["OverrideCollection"]) != "" && (moConfig["OverrideCollection"]).ToLower() == "true")
                                 {
-                                    string OptLabel = "<span class=\"opt-name\">" + oDrCollectionOptions["cShipOptName"].ToString() + "</span>";
-                                    OptLabel = OptLabel + "<span class=\"opt-carrier\">" + oDrCollectionOptions["cShipOptCarrier"].ToString() + "</span>";
-                                    oXform.addOption(ref newElmt, OptLabel, oDrCollectionOptions["nShipOptKey"].ToString(), true);
-                                    bCollection = true;
+                                    bOverrideCollection = true;
                                 }
-                                // Only change this if collection shipping options exist.
-                                if (bCollection)
+                            }
+                            if (bOverrideCollection == false)
+                            {
+                                using (var oDrCollectionOptions = moDBHelper.getDataReaderDisposable("select * from tblCartShippingMethods where bCollection = 1"))  // Done by nita on 6/7/22
                                 {
-                                    oIsDeliverySelect.ParentNode.ReplaceChild(newElmt, oIsDeliverySelect);
-                                }
-                                else
-                                {
-                                    // this was all for nuffin
-                                    newElmt = null;
+                                    while (oDrCollectionOptions.Read())
+                                    {
+                                        string OptLabel = "<span class=\"opt-name\">" + oDrCollectionOptions["cShipOptName"].ToString() + "</span>";
+                                        OptLabel = OptLabel + "<span class=\"opt-carrier\">" + oDrCollectionOptions["cShipOptCarrier"].ToString() + "</span>";
+                                        oXform.addOption(ref newElmt, OptLabel, oDrCollectionOptions["nShipOptKey"].ToString(), true);
+                                        bCollection = true;
+                                    }
+                                    // Only change this if collection shipping options exist.
+                                    if (bCollection)
+                                    {
+                                        oIsDeliverySelect.ParentNode.ReplaceChild(newElmt, oIsDeliverySelect);
+                                    }
+                                    else
+                                    {
+                                        // this was all for nuffin
+                                        newElmt = null;
+                                    }
                                 }
                             }
                         }
