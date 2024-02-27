@@ -7323,7 +7323,7 @@ namespace Protean
 
                         if (moDbHelper.checkTableColumnExists("tblCartShippingMethods", "bCollection"))
                         {
-                            oSelElmt = base.addSelect(ref oGrp2Elmt, "bCollection", true, "Collection Option", "multiline", Protean.xForm.ApperanceTypes.Full);
+                            oSelElmt = base.addSelect(ref oGrp2Elmt, "bCollection", true, "Collection or Virtual Option", "multiline", Protean.xForm.ApperanceTypes.Full);
                             base.addOption(ref oSelElmt, "Collection", "True");
                             XmlElement argoBindParent19 = null;
                             base.addBind("bCollection", "tblCartShippingMethods/bCollection", oBindParent: ref argoBindParent19, "false()");
