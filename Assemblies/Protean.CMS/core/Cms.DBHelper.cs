@@ -5204,7 +5204,13 @@ namespace Protean
                             using (var oDr = getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                             {
                                 while (oDr.Read())
-                                    nParentid = Conversions.ToLong(oDr[getParIdFname(objectType)]);
+                                {
+                                    if (!(oDr[getParIdFname(objectType)] is DBNull))
+                                    {
+                                        nParentid = Convert.ToInt64(oDr[getParIdFname(objectType)]);
+                                    }
+                                }
+                                    
                             }
 
                             // Get Siblings
