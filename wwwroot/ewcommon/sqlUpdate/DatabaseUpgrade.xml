@@ -558,7 +558,8 @@
         <Action Order="5" Type="File" ObjectType="Procedure" ObjectName="/v5/6.0.68.0/spUpdateFilterIndex.sql"/>
         <Action Order="6"   Type="Drop" ObjectType="Procedure" ObjectName="spScheduleToUpdateIndexTable"/>
         <Action Order="7" Type="File" ObjectType="Procedure" ObjectName="/v5/6.0.68.0/spScheduleToUpdateIndexTable.sql"/>
-
+				<Action Order="8" Type="Drop" ObjectType="Procedure" ObjectName="Altertblcartshippingmethods"/>
+				<Action Order="9" Type="File" ObjectType="Procedure" ObjectName="/v5/6.0.68.0/Altertblcartshippingmethods.sql"/>
       </Sub3>
 		</Sub2>
     </Sub1>

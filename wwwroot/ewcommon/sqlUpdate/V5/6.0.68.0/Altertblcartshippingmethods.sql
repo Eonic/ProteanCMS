@@ -1,0 +1,2 @@
+ALTER TABLE tblCartShippingMethods
+ADD bOverrideForWholeOrder bit;
