@@ -126,39 +126,10 @@
       </bind>
     </bind>
   </model>
-  <group ref="EditContent" class="2col">
+  <group ref="EditContent">
     <label>Edit Ticket</label>
-    <group class="ContentColumn1">
+	  <group class="tabs">
       <group ref="Settings" class="leftSettings">
-        <input bind="nContentKey" class="hidden">
-          <label>ContentId</label>
-        </input>
-        <label>Settings</label>
-        <!--<input bind="cContentForiegnRef" class="short">
-					<label>Foriegn Reference</label>
-				</input>-->
-        <input bind="dPublishDate" class="calendar short">
-          <label>Publish Date</label>
-        </input>
-        <input bind="dExpireDate" class="calendar short">
-          <label>Expire Date</label>
-        </input>
-        <select1 bind="nStatus" appearance="full" class="required vshort">
-          <label>Status</label>
-          <item>
-            <label>Live</label>
-            <value>1</value>
-          </item>
-          <item>
-            <label>Hidden</label>
-            <value>0</value>
-          </item>
-        </select1>
-        <!--<input bind="cDescription" class="short">
-					<label>Change Notes</label>
-				</input>-->
-      </group>
-
       <group class="Content">
         <label>Images</label>
         <input bind="cContentDetail" class="short pickImage">
@@ -239,8 +210,63 @@
       </group>
 
     </group>
-  </group>
+		  <group>
+			  <label>
+				  <i class="fas fa-cog"> </i>
+				  <span class="space"> </span>
+				  <span>Advanced Settings</span>
+			  </label>
+			  <group>
+				  <label>Settings</label>
+				  <input bind="nContentKey" class="hidden">
+					  <label>ContentId</label>
+				  </input>
+				  <input bind="dPublishDate" class="calendar short">
+					  <label>Publish date</label>
+				  </input>
+				  <select1 bind="nStatus" appearance="full" class="vshort">
+					  <label>Status</label>
+					  <item>
+						  <label>Live</label>
+						  <value>1</value>
+					  </item>
+					  <item>
+						  <label>Hidden</label>
+						  <value>0</value>
+					  </item>
+				  </select1>
+				  <input bind="cDescription" class="short">
+					  <label>Change Notes</label>
+				  </input>
+				  <input bind="cMetaTitle" class="short">
+					  <label>Meta Title</label>
+					  <help>Google typically displays the first 50–60 characters of a title tag. If you keep your titles under 60 characters, our research suggests that you can expect about 90% of your titles to display properly. There's no exact character limit, because characters can vary in width and Google's display titles max out (currently) at 600 pixels.</help>
+				  </input>
+				  <input bind="cMetaDescripton" class="short">
+					  <label>Meta Description</label>
+					  <help>Meta descriptions can be any length, but Google generally truncates snippets to ~155–160 characters. It's best to keep meta descriptions long enough that they're sufficiently descriptive, so we recommend descriptions between 50–160 characters. Keep in mind that the "optimal" length will vary depending on the situation, and your primary goal should be to provide value and drive clicks.</help>
+				  </input>
 
+				  <group class="form-section-wrapper">
+					  <!-- label>Event Terms</label-->
+					  <input bind="cContentSpecificationDocument" class="short pickDocument">
+						  <label>Event Terms / Specification document</label>
+					  </input>
+				  </group>
+				  <group>
+					  <input bind="cEventBookingURL" class="long">
+						  <label>External Booking URL</label>
+					  </input>
+				  </group>
+
+			  </group>
+
+
+		  </group>
+
+
+	  </group>
+    </group>
   <group ref="submit" class="contentSubmit">
     <submit submission="" ref="ewSubmit" class="principle">
       <label>Save Ticket</label>
