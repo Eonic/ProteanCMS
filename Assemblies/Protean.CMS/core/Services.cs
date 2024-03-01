@@ -228,21 +228,16 @@ namespace Protean
             //string cProcessInfo = "emailerXMLAttach";
             try
             {
-
                 var myWeb = new Cms(moCtx);
                 var oMsg = new Messaging(ref myWeb.msException);
                 Cms.dbHelper odbhelper = null;
                 sMessage = Conversions.ToString(oMsg.emailerWithXmlAttachment(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, attachmentFromXSLPath, attachmentFromXSLType, attachmentName,ref odbhelper, "Message Sent", "Message Failed", recipientEmail, ccRecipient, bccRecipient, cSeperator));
-
-
                 return sMessage;
             }
-
             catch (Exception ex)
             {
                 return ex.Message + " - " + ex.GetBaseException().Message;
             }
-
         }
 
         [WebMethod(Description = "Sends Email To Multiple Recipients")]
