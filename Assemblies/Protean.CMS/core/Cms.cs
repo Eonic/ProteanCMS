@@ -7971,26 +7971,25 @@ namespace Protean
                                     int nStart = 0;
                                     int nRows = 500;
                                     nRows = Conversions.ToInteger("0" + ContentModule.GetAttribute("stepCount"));
-
-                                    string sFilterSql = GetStandardFilterSQLForContent();
-                                    sFilterSql = sFilterSql + " and nstructid=" + this.mnPageId;
-                                    if (ContentModule.HasAttribute("TotalCount") == false)
-                                    {
-                                        ContentModule.SetAttribute("TotalCount", 0.ToString());
+                                    if (Conversions.ToInteger("0" + ContentModule.GetAttribute("firstPageCount")) > 0) {
+                                        nRows = 0;// Conversions.ToInteger("0" + ContentModule.GetAttribute("firstPageCount"));
                                     }
-                                    var argoPageElmt1 = moPageXml.DocumentElement;
-                                    XmlElement oPagedetail = null;
-                                    this.GetContentXMLByTypeAndOffset(ref argoPageElmt1, SingleContentType + cSort, (long)nStart, (long)nRows, ref oPagedetail, oContentModule: ref ContentModule, sFilterSql, bShowContentDetails: false);
-
+                                    if (nRows > 0) { 
+                                        string sFilterSql = GetStandardFilterSQLForContent();
+                                        sFilterSql = sFilterSql + " and nstructid=" + this.mnPageId;
+                                        if (ContentModule.HasAttribute("TotalCount") == false)
+                                        {
+                                            ContentModule.SetAttribute("TotalCount", 0.ToString());
+                                        }
+                                        var argoPageElmt1 = moPageXml.DocumentElement;
+                                        XmlElement oPagedetail = null;
+                                        this.GetContentXMLByTypeAndOffset(ref argoPageElmt1, SingleContentType + cSort, (long)nStart, (long)nRows, ref oPagedetail, oContentModule: ref ContentModule, sFilterSql, bShowContentDetails: false);
+                                    }
                                 }
-
                             }
                         }
-
                     }
                 }
-
-
                 else
                 {
                     // if we are on a system page we only want the content on that page not parents.
