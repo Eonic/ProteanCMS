@@ -207,7 +207,9 @@ namespace Protean.Tools
 
             try
             {
-                shtml = Strings.Replace(shtml, "<!DOCTYPE html public shared \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">", "");
+                string regexOfDoctype = "<!DOCTYPE((.|\n|\r)*?)\">";
+                shtml = Regex.Replace(shtml, regexOfDoctype, string.Empty, RegexOptions.IgnoreCase);
+                //shtml = Strings.Replace(shtml, "<!DOCTYPE html public shared \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">", "");
                 shtml = Strings.Replace(shtml, " Xmlns = \"http://www.w3.org/1999/xhtml\"", "");
                 shtml = Strings.Replace(shtml, " Xmlns=\"http://www.w3.org/1999/xhtml\"", "");
                 shtml = Strings.Replace(shtml, " Xml:lang=\"\"", "");
