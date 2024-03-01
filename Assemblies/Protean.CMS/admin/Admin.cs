@@ -3165,7 +3165,7 @@ namespace Protean
                                 }
                                 else
                                 {
-                                    string sProductTypes = "Product,SKU,Ticket";
+                                    string sProductTypes = myWeb.defaultProductTypes;
                                     if (myWeb.Features.ContainsKey("Subscriptions"))
                                     {
                                         sProductTypes = sProductTypes + ",Subscription";

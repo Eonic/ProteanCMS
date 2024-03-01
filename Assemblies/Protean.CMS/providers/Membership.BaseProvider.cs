@@ -371,9 +371,7 @@ namespace Protean.Providers
                                         {
                                             goSession["cCurrency"] = UserXml.GetAttribute("defaultCurrency");
                                         }
-
                                     }
-
                                     // Set the remember me cookie
                                     if (bRememberMe)
                                     {

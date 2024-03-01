@@ -125,28 +125,19 @@
         <bind id="cContentStock" nodeset="Stock" required="false()" type="string"/>
       </bind>
     </bind>
+	  <bind nodeset="ProductGroups">
+		  <bind id="nProductGroups" nodeset="@ids" required="false()" type="string"/>
+	  </bind>
   </model>
   <group ref="EditContent">
     <label>Edit Ticket</label>
 	  <group class="tabs">
-      <group ref="Settings" class="leftSettings">
-      <group class="Content">
-        <label>Images</label>
-        <input bind="cContentDetail" class="short pickImage">
-          <label>Main ticket image</label>
-          <help class="inline">
-            <p>The main image is automatically resized for other smaller images such as thumbnails.</p>
-            <p>However if you would like a different image for the thumbnail or main product page, they can be specified below.</p>
-          </help>
-        </input>
-        <input bind="cContentThumbnail" class="short pickImage">
-          <label>Alternative thumbnail</label>
-        </input>
-      </group>
-
-    </group>
-
-    <group class="ContentColumn2">
+    <group>
+		<label>
+			<i class="fas fa-pen"> </i>
+			<span class="space"> </span>
+			<span>Content</span>
+		</label>
       <group ref="Content" class="Content required">
         <label>Ticket Details</label>
 
@@ -159,12 +150,12 @@
             </p>
           </help>-->
         </input>
-        <group class="inline">
-          <input bind="cContentSKU" class="short required">
+        <group class="row">
+          <input bind="cContentSKU" class="short required col-lg-6">
             <label>Stock code (SKU)</label>
             <help class="inline">Unique stock code, matching your back-office system if you have one.</help>
           </input>
-          <input bind="cContentStock" class="short">
+          <input bind="cContentStock" class="short col-lg-6">
             <label>Stock level</label>
             <help class="inline">If stock control is enabled, this value will reduce as a quantity is successfully sold.</help>
           </input>
@@ -172,32 +163,32 @@
 
       </group>
 
-      <group class="inline">
+      <group class="row">
         <label>Ticket Date and Times</label>
-        <input bind="dEventDate" class="calendar form-inline">
+        <input bind="dEventDate" class="calendar form-inline col-lg-6">
           <label>Start Date</label>
         </input>
-        <input bind="dEventEndDate" class="calendar form-inline ">
+        <input bind="dEventEndDate" class="calendar form-inline  col-lg-6">
           <label>End date</label>
         </input>
-        <input bind="cContentSTime" class="time form-inline ">
+        <input bind="cContentSTime" class="time form-inline col-lg-6">
           <label>Start time</label>
         </input>
-        <input bind="cContentETime" class="time form-inline ">
+        <input bind="cContentETime" class="time form-inline col-lg-6">
           <label>End time</label>
         </input>
       </group>
 
 
-      <group class="inline">
+      <group class="row">
         <label>Prices</label>
-        <input bind="cContentPrice" class="short required">
+        <input bind="cContentPrice" class="short required  col-lg-6">
           <label>Purchase price</label>
           <help class="inline">
             <p>The price a customer can purchase the ticket for.</p>
           </help>
         </input>
-        <input bind="cContentPriceRRP" class="short">
+        <input bind="cContentPriceRRP" class="short  col-lg-6">
           <label>RRP</label>
           <help class="inline">
             <p>Optional. If an RRP is specified, it will display to the user;</p>
@@ -207,9 +198,31 @@
             <p>If ecommerce, the user will still pay the 'purchase price'.</p>
           </help>
         </input>
+		  <select bind="nProductGroups" class="ewQuery list-vertical" query="ProductGroups" appearance="full">
+			<label>Product Groups</label>
+		</select>
       </group>
 
     </group>
+		  <group>
+			  <label>
+				  <i class="fas fa-image"> </i>
+				  <span class="space"> </span>
+				  <span>Images</span>
+			  </label>
+			  <group>
+			  <input bind="cContentDetail" class="short pickImage">
+				  <label>Main ticket image</label>
+				  <help class="inline">
+					  <p>The main image is automatically resized for other smaller images such as thumbnails.</p>
+					  <p>However if you would like a different image for the thumbnail or main product page, they can be specified below.</p>
+				  </help>
+			  </input>
+			  <input bind="cContentThumbnail" class="short pickImage">
+				  <label>Alternative thumbnail</label>
+			  </input>
+			  </group>
+		  </group>
 		  <group>
 			  <label>
 				  <i class="fas fa-cog"> </i>

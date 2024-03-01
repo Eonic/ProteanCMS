@@ -176,6 +176,8 @@ namespace Protean
 
         private Protean.ExternalSynchronisation _oSync;
 
+        public string defaultProductTypes = "Product,SKU,Ticket";
+
         public virtual Protean.ExternalSynchronisation oSync
         {
             [MethodImpl(MethodImplOptions.Synchronized)]
@@ -3007,7 +3009,7 @@ namespace Protean
 
                     string ProductTypes = this.moConfig["ProductTypes"];
                     if (string.IsNullOrEmpty(ProductTypes))
-                        ProductTypes = "Product,SKU";
+                        ProductTypes = defaultProductTypes;
 
                     if (this.moConfig["Cart"] == "on")
                     {
@@ -9176,7 +9178,7 @@ namespace Protean
                             // Add single item shipping costs for JSON-LD
                             string ProductTypes = this.moConfig["ProductTypes"];
                             if (string.IsNullOrEmpty(ProductTypes))
-                                ProductTypes = "Product,SKU";
+                                ProductTypes = defaultProductTypes;
                             if (ProductTypes.Contains(contentElmt.GetAttribute("type")) & moCart != null)
                             {
                                 try
