@@ -114,6 +114,9 @@
       <HintPath>..\..\packages\Magick.NET.Core.13.6.0\lib\netstandard21\Magick.NET.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\EonicClients\WannerInternational2022\Wanner2021\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.13.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -122,6 +125,14 @@
     </Reference>
     <Reference Include="Select.HtmlToPdf, Version=23.1.0.0, Culture=neutral, PublicKeyToken=e0ae9f6e27a97018, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Select.HtmlToPdf.23.1.0\lib\net40\Select.HtmlToPdf.dll</HintPath>
+    </Reference>
+    <Reference Include="SoundInTheory.DynamicImage, Version=3.1.1.1, Culture=neutral, PublicKeyToken=fa44558110383067, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NonNuget\SoundInTheory.DynamicImage.dll</HintPath>
+    </Reference>
+    <Reference Include="SoundInTheory.DynamicImage.Extensions.Pdf, Version=1.0.0.4, Culture=neutral, PublicKeyToken=fa44558110383067, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NonNuget\SoundInTheory.DynamicImage.Extensions.Pdf.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel" />
@@ -153,9 +164,13 @@
     <Reference Include="Tinify">
       <HintPath>..\NonNuget\Tinify.dll</HintPath>
     </Reference>
+    <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\..\..\EonicClients\WannerInternational2022\Wanner2021\packages\WebActivatorEx.2.0.2\lib\net40\WebActivatorEx.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\DynamicImage.cs" />
     <Compile Include="Calendar.cs" />
     <Compile Include="Conversion.cs" />
     <Compile Include="Counter.cs" />

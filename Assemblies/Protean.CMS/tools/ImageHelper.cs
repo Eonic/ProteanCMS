@@ -74,51 +74,47 @@ namespace Protean
     }
 
 
-    public class ImageHelper : Tools.Image
-    {
+    //public class ImageHelper : Tools.Image
+    //{
 
-        public ImageHelper(string Location) : base(Location)
-        {
-        }
+    //    public ImageHelper(string Location) : base(Location)
+    //    {
+    //    }
 
-        // For the PDF Thumbnail functionality to work you need to copy (GhostScript) gsdll.dll into Windows/System32
+    //    // For the PDF Thumbnail functionality to work you need to copy (GhostScript) gsdll.dll into Windows/System32
 
-        public class PDFThumbNail
-        {
-            public string FilePath;
-            public string newImageFilepath;
-            public short maxWidth;
-            public System.Web.HttpServerUtility goServer;
-        }
+    //    public class PDFThumbNail
+    //    {
+    //        public string FilePath;
+    //        public string newImageFilepath;
+    //        public short maxWidth;
+    //        public System.Web.HttpServerUtility goServer;
+    //    }
 
-        public void GeneratePDFThumbNail(PDFThumbNail PDFThumbNail)
-        {
-            try
-            {
-                string cCheckServerPath = PDFThumbNail.newImageFilepath.Substring(0, PDFThumbNail.newImageFilepath.LastIndexOf("/") + 1);
-                cCheckServerPath = goServer.MapPath(cCheckServerPath);
-                if (Directory.Exists(cCheckServerPath) == false)
-                {
-                    Directory.CreateDirectory(cCheckServerPath);
-                }
+    //    public void GeneratePDFThumbNail(PDFThumbNail PDFThumbNail)
+    //    {
+    //        try
+    //        {
+    //            string cCheckServerPath = PDFThumbNail.newImageFilepath.Substring(0, PDFThumbNail.newImageFilepath.LastIndexOf("/") + 1);
+    //            cCheckServerPath = goServer.MapPath(cCheckServerPath);
+    //            if (Directory.Exists(cCheckServerPath) == false)
+    //            {
+    //                Directory.CreateDirectory(cCheckServerPath);
+    //            }
 
-                var LayerBuilder = new SoundInTheory.DynamicImage.Fluent.PdfLayerBuilder().SourceFileName(PDFThumbNail.goServer.MapPath(PDFThumbNail.FilePath)).PageNumber(1).WithFilter(SoundInTheory.DynamicImage.Fluent.FilterBuilder.Resize.ToWidth(500)).WithFilter(SoundInTheory.DynamicImage.Fluent.FilterBuilder.Resize.ToWidth(PDFThumbNail.maxWidth)).WithFilter(SoundInTheory.DynamicImage.Fluent.FilterBuilder.Border.Width(1).Fill(SoundInTheory.DynamicImage.Colors.Black));
-
-
-                var imgComp = new SoundInTheory.DynamicImage.Fluent.CompositionBuilder().WithLayer(LayerBuilder);
-                imgComp.ImageFormat(SoundInTheory.DynamicImage.DynamicImageFormat.Png);
-                imgComp.SaveTo(PDFThumbNail.goServer.MapPath(PDFThumbNail.newImageFilepath));
-                imgComp = null;
-                LayerBuilder = null;
-            }
-
-            catch (Exception ex)
-            {
-                Information.Err().Raise(8032, "PDFThumbNail", ex.Message);
-            }
+    //            var LayerBuilder = new SoundInTheory.DynamicImage.Fluent.PdfLayerBuilder().SourceFileName(PDFThumbNail.goServer.MapPath(PDFThumbNail.FilePath)).PageNumber(1).WithFilter(SoundInTheory.DynamicImage.Fluent.FilterBuilder.Resize.ToWidth(500)).WithFilter(SoundInTheory.DynamicImage.Fluent.FilterBuilder.Resize.ToWidth(PDFThumbNail.maxWidth)).WithFilter(SoundInTheory.DynamicImage.Fluent.FilterBuilder.Border.Width(1).Fill(SoundInTheory.DynamicImage.Colors.Black));
 
 
-        }
-
-    }
+    //            var imgComp = new SoundInTheory.DynamicImage.Fluent.CompositionBuilder().WithLayer(LayerBuilder);
+    //            imgComp.ImageFormat(SoundInTheory.DynamicImage.DynamicImageFormat.Png);
+    //            imgComp.SaveTo(PDFThumbNail.goServer.MapPath(PDFThumbNail.newImageFilepath));
+    //            imgComp = null;
+    //            LayerBuilder = null;
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            Information.Err().Raise(8032, "PDFThumbNail", ex.Message);
+    //        }
+    //    }
+    //}
 }

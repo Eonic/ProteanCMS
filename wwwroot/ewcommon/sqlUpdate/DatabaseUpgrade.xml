@@ -553,7 +553,13 @@
 				<Action Order="1" Type="File" ObjectType="" ObjectName="/v5/6.0.68.0/spGetPriceRange.sql"/>
 				<Action Order="2" Type="Drop" ObjectType="Procedure" ObjectName="spGetValidShippingOptions"/>
 				<Action Order="3" Type="File" ObjectType="" ObjectName="/v5/6.0.68.0/spGetValidShippingOptions.sql"/>
-			</Sub3>
+       
+        <Action Order="4"   Type="Drop" ObjectType="Procedure" ObjectName="spUpdateFilterIndex"/>
+        <Action Order="5" Type="File" ObjectType="Procedure" ObjectName="/v5/6.0.68.0/spUpdateFilterIndex.sql"/>
+        <Action Order="6"   Type="Drop" ObjectType="Procedure" ObjectName="spScheduleToUpdateIndexTable"/>
+        <Action Order="7" Type="File" ObjectType="Procedure" ObjectName="/v5/6.0.68.0/spScheduleToUpdateIndexTable.sql"/>
+
+      </Sub3>
 		</Sub2>
     </Sub1>
   </Version>

@@ -210,6 +210,7 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ProteanCMS.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ProteanCMS.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\AdvancedStringBuilder.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\AlphaFS.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\AngleSharp.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Antlr3.Runtime.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\BundleTransformer.Core.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\BundleTransformer.Less.dll
@@ -251,6 +252,7 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Protean.Tools.dll.c
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\AdvancedStringBuilder.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\AlphaFS.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\AlphaFS.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\AngleSharp.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Antlr3.Runtime.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\BundleTransformer.Core.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\BundleTransformer.Less.xml
