@@ -1559,18 +1559,20 @@ namespace Protean
                                 case "pdf":
                                     {
 
-                                        var ihelp = new ImageHelper("");
+                                        var ihelp = new Tools.Image("");
 
                                         System.Threading.ThreadPool.SetMaxThreads(10, 10);
                                         var doneEvents = new System.Threading.ManualResetEvent[2];
 
-                                        var newThumbnail = new ImageHelper.PDFThumbNail();
+                                        var newThumbnail = new Tools.Image.PDFThumbNail();
                                         newThumbnail.FilePath = cVirtualPath;
                                         newThumbnail.newImageFilepath = newFilepath;
                                         newThumbnail.goServer = goServer;
                                         newThumbnail.maxWidth = (short)maxWidth;
+                                        ihelp.GeneratePDFThumbNail(newThumbnail);
 
-                                        System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback((_) => ihelp.GeneratePDFThumbNail(newThumbnail)));
+
+                                       // System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback((_) => ihelp.GeneratePDFThumbNail(newThumbnail)));
                                         newThumbnail = null;
                                         ihelp.Close();
                                         ihelp = null;
@@ -1627,7 +1629,6 @@ namespace Protean
                     {
                         return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" + ex.Message;
                     }
-
                 }
             }
             public string CreateWebP(string cVirtualPath, bool forceCheck)
@@ -1796,12 +1797,12 @@ namespace Protean
                                 case "pdf":
                                     {
 
-                                        var ihelp = new ImageHelper("");
+                                        var ihelp = new Tools.Image("");
 
                                         System.Threading.ThreadPool.SetMaxThreads(10, 10);
                                         var doneEvents = new System.Threading.ManualResetEvent[2];
 
-                                        var newThumbnail = new ImageHelper.PDFThumbNail();
+                                        var newThumbnail = new Tools.Image.PDFThumbNail();
                                         newThumbnail.FilePath = cVirtualPath;
                                         newThumbnail.newImageFilepath = newFilepath;
                                         newThumbnail.goServer = goServer;

@@ -955,9 +955,6 @@ function initialiseGetVimeoDataButton() {
         jsonURL = "https://vimeo.com/api/v2/video/" + id + ".json";
         
         $.getJSON(jsonURL, function (result) {
-
-            alert(JSON.stringify(result));
-
             $("#cVimeoDuration").val(result[0].duration);
             $("#cVimeoByline").val(result[0].description);
             $("#cVimeoThumbnail").val(result[0].thumbnail_medium);
