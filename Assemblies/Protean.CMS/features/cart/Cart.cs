@@ -1253,7 +1253,7 @@ namespace Protean
 
             }
 
-            public object CreateCartElement(XmlDocument oCartXML)
+            public XmlElement CreateCartElement(XmlDocument oCartXML)
             {
                 XmlElement oContentElmt;
                 XmlElement oElmt;
