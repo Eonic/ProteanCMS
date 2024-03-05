@@ -124,13 +124,13 @@ $(document).on("click", ".btn-update", function (event) {
             .then(function (response) {
 
                 if (response.data == "True") {
-
+                   
                     RedirectPage.addNewUrl(oldUrl, NewUrl);
                     RedirectPage.urlList[index].attributes[0].nodeValue = oldUrl;
                     RedirectPage.urlList[index].attributes[1].nodeValue = NewUrl;
                     var flag = "saveURL";
                     RedirectPage.reloadPermanentList(flag);
-
+                    
                 }
                 else {
                     RedirectPage.saveUrl(oldUrl, NewUrl, hiddenOldUrl, index);
@@ -211,7 +211,7 @@ $(document).on("focus", ".addUrlText", function (event) {
 });
 
 $(document).on("click", ".btn-updateNewUrl", function (event) {
-    debugger;
+
     $(".modalLable").addClass("hidden");
     $(this).addClass("hidden")
     var parentDiv = $(this).closest('.ListOfNewAddedUrls');
@@ -231,7 +231,7 @@ $(document).on("click", ".btn-updateNewUrl", function (event) {
         var inputJson = { redirectType: type, oldUrl: oldUrl };
         axios.post(IsUrlPResentAPI, inputJson)
             .then(function (response) {
-                debugger;
+
                 if (response.data == "True") {
                     if (confirm("Another rewrite map is pointing to the Old URL. Do you want to update the destination to the New URL?")) {
                         RedirectPage.addNewUrl(oldUrl, NewUrl);

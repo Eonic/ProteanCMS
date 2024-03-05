@@ -3587,7 +3587,7 @@ namespace Protean
                             moDbHelper.getLocationsByContentId(id, ref argContentNode);
 
                             // Add ProductCategories
-                            string sProductTypes = "Product,SKU";
+                            string sProductTypes = "Product,SKU,Ticket";
                             if (myWeb.Features.ContainsKey("Subscriptions"))
                             {
                                 sProductTypes = sProductTypes + ",Subscription";

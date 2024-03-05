@@ -2292,7 +2292,7 @@ namespace Protean
 
                         string cContentTypes = moConfig["ProductTypes"];
                         if (string.IsNullOrEmpty(cContentTypes))
-                            cContentTypes = "Product,SKU";
+                            cContentTypes = myWeb.defaultProductTypes;
                         string cUserGroupIds = getUserGroupIDs();
 
                         // Get the content types that are products with discounts on this site.
