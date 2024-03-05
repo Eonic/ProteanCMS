@@ -4378,12 +4378,13 @@ namespace Protean
                     this.moDbHelper.getContentFromModuleGrabber(ref ocNode);
                 }
 
-                foreach (XmlElement currentOcNode4 in moPageXml.SelectNodes("/Page/Contents/Content[@display='group']"))
-                {
-                    ocNode = currentOcNode4;
-                    this.moDbHelper.getContentFromProductGroup(ref ocNode);
+                if (!gcBlockContentType.Contains("Product")) { 
+                    foreach (XmlElement currentOcNode4 in moPageXml.SelectNodes("/Page/Contents/Content[@display='group']"))
+                    {
+                        ocNode = currentOcNode4;
+                        this.moDbHelper.getContentFromProductGroup(ref ocNode);
+                    }
                 }
-
                 // Content Type : ContentGrabber
                 foreach (XmlElement currentOcNode5 in moPageXml.SelectNodes("/Page/Contents/Content[@type='ContentGrabber']"))
                 {
