@@ -151,15 +151,15 @@ namespace Protean
                 }
                 // add paramDict to jObj
 
-                //if (paramDictionary != null)
-                //{
-                //    if (jObj is null)
-                //    {
-                //        jObj = new Newtonsoft.Json.Linq.JObject();
-                //    }
-                //    foreach (KeyValuePair<string, string> kvp in paramDictionary)
-                //        jObj.Add(new Newtonsoft.Json.Linq.JProperty(kvp.Key, kvp.Value));
-                //}
+                if (paramDictionary != null)
+                {
+                    if (jObj is null)
+                    {
+                        jObj = new Newtonsoft.Json.Linq.JObject();
+                    }
+                    foreach (KeyValuePair<string, string> kvp in paramDictionary)
+                        jObj.Add(new Newtonsoft.Json.Linq.JProperty(kvp.Key, kvp.Value));
+                }
 
                 Type calledType;
 
