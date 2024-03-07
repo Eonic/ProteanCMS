@@ -3174,11 +3174,9 @@ namespace Protean
                                     {
                                         sProductTypes = moConfig["ProductTypes"];
                                     }
-
                                     oPageDetail.AppendChild(moAdXfm.xFrmFindRelated(myWeb.moRequest.QueryString["GroupId"], sProductTypes, ref oPageDetail, myWeb.moRequest.QueryString["GroupId"], true, "tblCartCatProductRelations", "nContentId", "nCatId"));
                                     sAdminLayout = "RelatedSearch";
                                 }
-
                                 break;
                             }
                         case "RemoveProductGroupsProduct":
