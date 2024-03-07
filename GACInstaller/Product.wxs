@@ -188,30 +188,22 @@
                 </Component>
                 <Component Id='com_Microsoft_System_FTPClient' Guid='c38cb617-7973-4460-8e3a-83f0f78808fb' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                   <File Id='com_Microsoft_System_FTPClient' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Net.FTPClient.dll' Source='..\packages\System.Net.FtpClient.1.0.5824.34026\lib\net40\System.Net.FTPClient.dll' Assembly='.net' KeyPath='yes' />
-                </Component>
-                
+                </Component>                
                 <Component Id='com_TidyHTML5Managed' Guid='774855ea-70a6-42b3-8b53-edc03c61bb7c' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                   <File Id='com_TidyHTML5Managed' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='TidyHTML5Managed.dll' Source='..\Assemblies\NonNuget\TidyHTML5Managed.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
-              
-
-                
-                <Component Id='com_MagickNETQ8x64' Guid='64c1d4d3-1fda-4e48-a2cd-ced361f8e8d9' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                  <File Id='_MagickNETQ8x64' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Magick.NET-Q8-x64.dll' Source='..\packages\Magick.NET-Q8-x64.13.6.0\lib\netstandard20\Magick.NET-Q8-x64.dll' Assembly='.net' KeyPath='yes' />
-                </Component>
-              
                 <Component Id='com_MagickNETCore' Guid='ef1e2c1c-123c-46f1-be4b-4baf7df7ebc2' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                   <File Id='_MagickNETCore' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Magick.NET.Core.dll' Source='..\packages\Magick.NET.Core.13.6.0\lib\netstandard20\Magick.NET.Core.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
-              
+                <Component Id='com_MagickNETQ8x64' Guid='30b11aa1-f675-453a-b5b1-e8b44ee79450' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+                  <File Id='_MagickNETQ8x64' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Magick.NET-Q8-x64.dll' Source='..\packages\Magick.NET-Q8-x64.13.6.0\lib\netstandard20\Magick.NET-Q8-x64.dll' Assembly='.net' KeyPath='yes' />
+                </Component>
                 <Component Id='com_Facebook' Guid='05e7d0c7-5f82-4eab-a281-1b768643c2cf' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                   <File Id='_Facebook' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Facebook.dll' Source='..\packages\Facebook.7.0.6\lib\net45\Facebook.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
-
                 <Component Id='com_MicrosoftOwin' Guid='e7736bb5-b908-41b6-ab58-faeeff276b01' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                   <File Id='_MicrosoftOwin' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Microsoft.Owin.dll' Source='..\packages\Microsoft.Owin.4.2.2\lib\net45\Microsoft.Owin.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
-
                 <Component Id='com_MicrosoftOwinSecurity' Guid='f1f5f295-002a-4f69-bc86-4c753a905030' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                   <File Id='_MicrosoftOwinSecurity' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Microsoft.Owin.Security.dll' Source='..\packages\Microsoft.Owin.Security.4.0.1\lib\net45\Microsoft.Owin.Security.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
