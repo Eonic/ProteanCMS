@@ -3584,15 +3584,11 @@ namespace Protean
                     }
                 }
             }
-
-
             catch (Exception ex)
             {
                 returnException(ref msException, mcModuleName, "getSubmitted", ex, "", cProcessInfo, gbDebug);
             }
-
             return isSubmittedRet;
-
         }
 
         // Steps through all of the submit buttons to see if they have been pressed

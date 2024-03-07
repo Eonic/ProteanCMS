@@ -2409,12 +2409,9 @@ namespace Protean
                             this.moSession.Remove("RedirectReason");
                         }
                     }
-
                     GetPageXMLRet = moPageXml;
-
                 }
             }
-
             catch (Exception ex)
             {
                 // returnException(msException, mcModuleName, "getPageXML", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
@@ -3776,8 +3773,8 @@ namespace Protean
                     moCart.InitializeVariables();
                     moCart.apply();
                     // get any discount information for this page
-                    var argoRootElmt = moPageXml.DocumentElement;
-                    moDiscount.getAvailableDiscounts(ref argoRootElmt);
+                    XmlElement RootElmt = moPageXml.DocumentElement;
+                    moDiscount.getAvailableDiscounts(ref RootElmt);
                     sProcessInfo = "End Cart";
                 }
             }
