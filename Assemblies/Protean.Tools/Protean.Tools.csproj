@@ -25,15 +25,15 @@
     <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
     <UpdateAssemblyFileVersion>True</UpdateAssemblyFileVersion>
     <UpdateAssemblyInfoVersion>True</UpdateAssemblyInfoVersion>
-    <AssemblyVersionSettings>None.None.None.Increment</AssemblyVersionSettings>
+    <AssemblyVersionSettings>None.None.None.None</AssemblyVersionSettings>
     <UpdatePackageVersion>False</UpdatePackageVersion>
     <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
     <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
-    <AssemblyFileVersionSettings>None.None.None.Increment</AssemblyFileVersionSettings>
+    <AssemblyFileVersionSettings>None.None.None.None</AssemblyFileVersionSettings>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
-    <AssemblyInfoVersionSettings>None.None.None.Increment</AssemblyInfoVersionSettings>
+    <AssemblyInfoVersionSettings>None.None.None.None</AssemblyInfoVersionSettings>
     <_MigrateToProjectGuid>2bc0d1d1-6762-4d89-85dc-171cf3aeb636</_MigrateToProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
