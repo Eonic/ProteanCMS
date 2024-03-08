@@ -39,7 +39,7 @@ Public Class CustomActions
     Public Shared MagickNETCoreAssemblyVersion As String = "13.6.0.0"
     Public Shared MagickNETAssemblyVersion As String = "13.6.0.0"
     Public Shared GoogleProtoBufAssemblyVersion As String = "3.20.1.0"
-    Public Shared SharpZipLibAssemblyVersion As String = "1.4.1.13"
+    Public Shared SharpZipLibAssemblyVersion As String = "1.4.2.13"
     Public Shared SystemBuffersVersion As String = "4.0.3.0"
     Public Shared DocumentFormatOpenXmlVersion As String = "2.9.1.0"
     Public Shared installFolder As String = "C:\Program Files\Eonic Digital LLP\ProteanCMS into GAC " & ewAssemblyVersion.Trim("0").Trim(".") & " (64bit)"
