@@ -34,7 +34,7 @@ namespace Protean
             }
             #endregion
 
-            private string mcCartSchemaName = "quote";
+            //private string mcCartSchemaName = "quote";
             private bool bListAllQuotes = false;
             public System.Collections.Specialized.NameValueCollection moQuoteConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/quote");
             private string cOrderNoPrefix = "";

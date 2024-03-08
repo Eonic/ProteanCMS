@@ -23,7 +23,7 @@ namespace Protean
 
             private Cms myWeb;
 
-            public event OnErrorEventHandler OnError;
+            //public event OnErrorEventHandler OnError;
 
             public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
             public event OnErrorWithWebEventHandler OnErrorWithWeb;

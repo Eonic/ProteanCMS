@@ -114,7 +114,7 @@ namespace Protean.Providers
                 private const string mcModuleName = "Providers.Payment.PayPalPro.Activities";
                 private Cms myWeb;
                 protected XmlNode moPaymentCfg;
-                private TransactionMode nTransactionMode;
+                //private TransactionMode nTransactionMode;
 
                 public enum TransactionMode
                 {

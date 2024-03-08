@@ -130,7 +130,7 @@ namespace Protean
         public int sessionRootPageId = 0;
 
         public static bool gbCompiledTransform = false;
-        private static System.Xml.Xsl.XslCompiledTransform moCompliedStyle;
+        //private static System.Xml.Xsl.XslCompiledTransform moCompliedStyle;
         public long gnPageNotFoundId = 0L;
         private long gnPageAccessDeniedId = 0L;
         private long gnPageLoginRequiredId = 0L;
@@ -237,7 +237,7 @@ namespace Protean
         private string mcSessionReferrer = null;
 
 
-        private PerformanceCounter _workingSetPrivateMemoryCounter;
+       // private PerformanceCounter _workingSetPrivateMemoryCounter;
         public string mcOutputFileName = "FileName.pdf";
 
         private const string NotFoundPagePath = "/System-Pages/Page-Not-Found";

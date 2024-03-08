@@ -68,7 +68,7 @@ namespace Protean
 
             public int mnCartId; // Unique Id refering to this session cart
             public string mcSessionId; // Session ID - Unique for each client browser
-            private string mcRefSessionId; // Referrer Site Session ID - The session ID from the referrer site, if passed.
+           // private string mcRefSessionId; // Referrer Site Session ID - The session ID from the referrer site, if passed.
             public int mnEwUserId; // User Id for Membership integration
             public string mmcOrderType; // The order type associated with the current cart
             public string mcItemOrderType; // The order type associated with the current page (if provided)

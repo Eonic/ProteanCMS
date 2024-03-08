@@ -5610,13 +5610,14 @@ namespace Protean
                             votesDataset.Tables[0].Columns[2].ColumnMapping = MappingType.Attribute;
                         }
 
-                        var votesReport = new XmlDataDocument(votesDataset);
+                       // var votesReport = new XmlDataDocument(votesDataset);
+                        XmlDocument votesReport = new XmlDocument();
+                        votesReport.LoadXml(votesDataset.GetXml());
+
                         votesDataset.EnforceConstraints = false;
 
                         if (votesReport.FirstChild != null)
                         {
-
-
                             var reportElement = moPageXML.CreateElement("Content");
                             reportElement.SetAttribute("name", reportName);
                             reportElement.SetAttribute("type", "Report");
@@ -5637,7 +5638,6 @@ namespace Protean
 
                             reportElement.InnerXml = votesReport.InnerXml;
                             oPageDetail.AppendChild(reportElement);
-
                         }
 
                     }
