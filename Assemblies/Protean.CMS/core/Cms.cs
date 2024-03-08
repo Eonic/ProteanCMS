@@ -130,7 +130,7 @@ namespace Protean
         public int sessionRootPageId = 0;
 
         public static bool gbCompiledTransform = false;
-        private static System.Xml.Xsl.XslCompiledTransform moCompliedStyle;
+        //private static System.Xml.Xsl.XslCompiledTransform moCompliedStyle;
         public long gnPageNotFoundId = 0L;
         private long gnPageAccessDeniedId = 0L;
         private long gnPageLoginRequiredId = 0L;
@@ -237,7 +237,7 @@ namespace Protean
         private string mcSessionReferrer = null;
 
 
-        private PerformanceCounter _workingSetPrivateMemoryCounter;
+       // private PerformanceCounter _workingSetPrivateMemoryCounter;
         public string mcOutputFileName = "FileName.pdf";
 
         private const string NotFoundPagePath = "/System-Pages/Page-Not-Found";
@@ -2409,12 +2409,9 @@ namespace Protean
                             this.moSession.Remove("RedirectReason");
                         }
                     }
-
                     GetPageXMLRet = moPageXml;
-
                 }
             }
-
             catch (Exception ex)
             {
                 // returnException(msException, mcModuleName, "getPageXML", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
@@ -3776,8 +3773,8 @@ namespace Protean
                     moCart.InitializeVariables();
                     moCart.apply();
                     // get any discount information for this page
-                    var argoRootElmt = moPageXml.DocumentElement;
-                    moDiscount.getAvailableDiscounts(ref argoRootElmt);
+                    XmlElement RootElmt = moPageXml.DocumentElement;
+                    moDiscount.getAvailableDiscounts(ref RootElmt);
                     sProcessInfo = "End Cart";
                 }
             }
@@ -4378,12 +4375,13 @@ namespace Protean
                     this.moDbHelper.getContentFromModuleGrabber(ref ocNode);
                 }
 
-                foreach (XmlElement currentOcNode4 in moPageXml.SelectNodes("/Page/Contents/Content[@display='group']"))
-                {
-                    ocNode = currentOcNode4;
-                    this.moDbHelper.getContentFromProductGroup(ref ocNode);
+                if (!gcBlockContentType.Contains("Product")) { 
+                    foreach (XmlElement currentOcNode4 in moPageXml.SelectNodes("/Page/Contents/Content[@display='group']"))
+                    {
+                        ocNode = currentOcNode4;
+                        this.moDbHelper.getContentFromProductGroup(ref ocNode);
+                    }
                 }
-
                 // Content Type : ContentGrabber
                 foreach (XmlElement currentOcNode5 in moPageXml.SelectNodes("/Page/Contents/Content[@type='ContentGrabber']"))
                 {

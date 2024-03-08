@@ -87,7 +87,7 @@ namespace Protean
         private string msRedirectOnEnd = "";
         private bool mbSchemaExists = false;
         private bool ConnValid = false;
-        private bool mbDBExists = false;
+        //private bool mbDBExists = false;
         private bool isAlt = false;
 
         #region ErrorHandling
@@ -211,13 +211,13 @@ namespace Protean
                         if (myWeb.moDbHelper.checkDBObjectExists("tblContent", Tools.Database.objectTypes.Table))
                         {
                             mbSchemaExists = true;
-                            mbDBExists = true;
+                            //mbDBExists = true;
                         }
                         else
                         {
                             if (myWeb.moDbHelper.checkDBObjectExists(goConfig["DatabaseName"], Tools.Database.objectTypes.Database))
                             {
-                                mbDBExists = true;
+                                //mbDBExists = true;
                             }
                             mnUserId = 1;
                         }

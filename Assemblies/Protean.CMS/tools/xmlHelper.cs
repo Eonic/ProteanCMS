@@ -35,7 +35,7 @@ namespace Protean
 
         public class Transform
         {
-
+#pragma warning disable 618
             public Cms myWeb;
             private string msXslFile = "";
             private string msXslLastFile = "";
@@ -924,7 +924,7 @@ namespace Protean
                     return null;
                 }
             }
-
+            #pragma warning restore 618
 
         }
 
