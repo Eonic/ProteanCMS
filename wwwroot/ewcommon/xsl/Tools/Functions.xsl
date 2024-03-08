@@ -10786,7 +10786,7 @@
       </xsl:when>
       <xsl:otherwise>
         <!-- if no contnet, need a space for the compiling of the XSL. -->
-        <xsl:text>&#160;</xsl:text>
+        <xsl:text> </xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -10919,7 +10919,7 @@
           </xsl:when>
           <xsl:otherwise>
             <!-- if no contnet, need a space for the compiling of the XSL. -->
-            <xsl:text>&#160;</xsl:text>
+            <xsl:text> </xsl:text>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:otherwise>
