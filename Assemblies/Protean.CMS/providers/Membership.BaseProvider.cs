@@ -98,7 +98,7 @@ namespace Protean.Providers
             protected XmlNode moPaymentCfg;
             //public event OnErrorEventHandler OnError;
             public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
-            //public event OnErrorWithWebEventHandler OnErrorWithWeb;
+            public event OnErrorWithWebEventHandler OnErrorWithWeb;
             public delegate void OnErrorWithWebEventHandler(ref Cms myweb, object sender, Tools.Errors.ErrorEventArgs e);
           
             public IMembershipProvider Get(ref Cms myWeb, string ProviderName)
