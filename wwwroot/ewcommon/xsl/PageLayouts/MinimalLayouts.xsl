@@ -628,29 +628,7 @@
           </xsl:if>
           <div class="terminus">&#160;</div>
           <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and not(@imagePosition='above')">
-            <div class="panel-image">
-              <!--<img src="{@panelImage}" alt="{@title}" class="img-responsive" />-->
-				<div class="cta-img">					
-						<xsl:call-template  name="displayResponsiveImage">
-									<xsl:with-param name="crop" select="true()"/>
-									<xsl:with-param name="width" select="'1140'"/>
-									<xsl:with-param name="height" select="'325'"/>
-									<xsl:with-param name="max-width-xxs" select="'335'"/>
-									<xsl:with-param name="max-height-xxs" select="'180'"/>
-									<xsl:with-param name="max-width-xs" select="'335'"/>
-									<xsl:with-param name="max-height-xs" select="'180'"/>
-									<xsl:with-param name="max-width-sm" select="'345'"/>
-									<xsl:with-param name="max-height-sm" select="'187'"/>
-									<xsl:with-param name="max-width-md" select="'1140'"/>
-									<xsl:with-param name="max-height-md" select="'325'"/>
-									<xsl:with-param name="max-width-lg" select="'1140'"/>
-									<xsl:with-param name="max-height-lg" select="'325'" />
-									<xsl:with-param name="imageUrl" select="@panelImage"/>
-									<xsl:with-param name="class" select="'img-responsive'"/>
-								</xsl:call-template>
-					
-				</div>
-            </div>
+			  <xsl:apply-templates select="." mode="displayModulePanelImage"/>
           </xsl:if>
           <xsl:apply-templates select="." mode="displayBrief"/>
           <xsl:if test="(@linkText!='' and @link!='') or @linkType='form'">
@@ -683,6 +661,32 @@
     </xsl:choose>
   </xsl:template>
 
+
+	<xsl:template match="Content[@type='Module']" mode="displayModulePanelImage">
+		<div class="panel-image">
+			<!--<img src="{@panelImage}" alt="{@title}" class="img-responsive" />-->
+			<div class="cta-img">
+				<xsl:call-template  name="displayResponsiveImage">
+					<xsl:with-param name="crop" select="true()"/>
+					<xsl:with-param name="width" select="'1132'"/>
+					<xsl:with-param name="height" select="'322'"/>
+					<xsl:with-param name="max-width-xxs" select="'335'"/>
+					<xsl:with-param name="max-height-xxs" select="'180'"/>
+					<xsl:with-param name="max-width-xs" select="'335'"/>
+					<xsl:with-param name="max-height-xs" select="'180'"/>
+					<xsl:with-param name="max-width-sm" select="'345'"/>
+					<xsl:with-param name="max-height-sm" select="'187'"/>
+					<xsl:with-param name="max-width-md" select="'455'"/>
+					<xsl:with-param name="max-height-md" select="'250'"/>
+					<xsl:with-param name="max-width-lg" select="'555'"/>
+					<xsl:with-param name="max-height-lg" select="'322'" />
+					<xsl:with-param name="imageUrl" select="@panelImage"/>
+					<xsl:with-param name="class" select="'img-responsive'"/>
+				</xsl:call-template>				
+			</div>
+		</div>
+	</xsl:template>	
+	
   <xsl:template match="Content" mode="hideScreens">
     <xsl:if test="not($adminMode)">
       <xsl:if test="contains(@screens,'lg')">
