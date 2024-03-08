@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
 <?define version  = "6.1.0"?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi' xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-    <Product Id='*' Name='ProteanCMS into GAC $(var.version) (64bit)' Language='1033' Version='$(var.version)' Manufacturer='Eonic Digital LLP' UpgradeCode='{577597F8-BE6F-46B4-8A9D-46E8A5360918}' Codepage='1252'>
+    <Product Id='*' Name='ProteanCMS GAC Installer $(var.version)' Language='1033' Version='$(var.version)' Manufacturer='Eonic Digital LLP' UpgradeCode='{577597F8-BE6F-46B4-8A9D-46E8A5360918}' Codepage='1252'>
         <Package AdminImage='no' Comments='ProteanCMS GAC Installer' Compressed='yes' Description='ProteanCMS GAC Installer (64bit)' InstallerVersion='300' InstallScope='perMachine' Languages='1033' Manufacturer='Eonic Digital LLP' Platform='x64' ReadOnly='no' ShortNames='no' />
         <Media Id='1' Cabinet='product.cab' EmbedCab='yes' DiskPrompt='CD-ROM #1' />
-        <Property Id='DiskPrompt' Value='ProteanCMS into GAC $(var.version) \n(64bit) Installation' />
+        <Property Id='DiskPrompt' Value='ProteanCMS GAC Installer $(var.version) \n(64bit) Installation' />
         <Property Id='ARPCOMMENTS' Value='ProteanCMS GAC Installer' />
         <Property Id='ARPCONTACT' Value='Trevor Spink' />
         <Property Id='ARPHELPLINK' Value='https://www.proteancms.com' />
@@ -544,7 +544,7 @@
             <Property Id='SFF_UpFldrBtn' Value='UpFldrBtn' />
             <Property Id='SFF_NewFldrBtn' Value='NewFldrBtn' />
             <TextStyle Id='VSI_MS_Sans_Serif13.0_0_0' FaceName='MS Sans Serif' Size='9' Red='0' Green='0' Blue='0' />
-            <TextStyle Id='VSI_MS_Sans_Serif16.0_1_0' FaceName='MS Sans Serif' Size='12' Red='0' Green='0' Blue='0' Bold='yes' />
+            <TextStyle Id='VSI_MS_Sans_Serif16.0_1_0' FaceName='MS Sans Serif' Size='12' Red='255' Green='255' Blue='255' Bold='yes' />
             <TextStyle Id='VSI_MS_Shell_Dlg13.0_0_0' FaceName='MS Shell Dlg' Size='9' Red='0' Green='0' Blue='0' />
             <Dialog Id='Cancel' X='50' Y='50' Width='271' Height='78' Title='[ProductName]' NoMinimize='yes'>
                 <Control Id='NoButton' Type='PushButton' X='198' Y='48' Width='65' Height='21' Text='{\VSI_MS_Sans_Serif13.0_0_0}&amp;No' TabSkip='no' Default='yes' Cancel='yes'>
@@ -781,7 +781,7 @@
                     <Condition Action='show'><![CDATA[REMOVE<>""]]></Condition>
                     <Condition Action='hide'><![CDATA[REMOVE=""]]></Condition>
                 </Control>
-                <Control Id='InstalledBannerText' Type='Text' X='9' Y='9' Width='190' Height='33' Text='{\VSI_MS_Sans_Serif16.0_1_0}Installing [ProductName]' TabSkip='yes' Transparent='yes' NoPrefix='yes'>
+                <Control Id='InstalledBannerText' Type='Text' X='9' Y='9' Width='190' Height='33' Text='{\VSI_MS_Sans_Serif16.0_1_0}Installing into GAC' TabSkip='yes' Transparent='yes' NoPrefix='yes'>
                     <Condition Action='show'><![CDATA[REMOVE=""]]></Condition>
                     <Condition Action='hide'><![CDATA[REMOVE<>""]]></Condition>
                 </Control>
