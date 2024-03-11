@@ -29,7 +29,24 @@ namespace Protean
                     public Modules()
                     {
 
+
                         // do nowt
+
+                    }
+
+                    public void VariableSubscription(ref Cms myWeb, ref XmlElement contentNode)
+                    {
+                        try {
+                            if (stdTools.ButtonSubmitted(ref myWeb.moRequest, "variableSubAdd"))
+                            {
+                                
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            stdTools.returnException(ref myWeb.msException, mcModuleName, "VariableSubscription", ex, "", "", gbDebug);
+                            // Return Nothing
+                        }
 
                     }
 
