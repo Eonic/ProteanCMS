@@ -1516,7 +1516,17 @@
 				</div>
 			</xsl:when>
 		</xsl:choose>
-
+		<xsl:variable name="editQtyLocal">
+			<xsl:choose>
+				<xsl:when test="productDetail/@type='Subscription'">
+					<xsl:value-of select="false()"/>
+				</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$editQty"/>
+			</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
 		<div class="cart-desc">
 			<a href="{$siteURL}{@url}" title="">
 				<xsl:apply-templates select="." mode="CartProductName"/>
@@ -1529,7 +1539,7 @@
 					</xsl:for-each>
 				</div>
 			</xsl:if>
-			<xsl:if test="$editQty!='true'">
+			<xsl:if test="$editQtyLocal!='true'">
 				<div class="qty-text">
 					<span>Qty: </span>
 					<xsl:value-of select="@quantity"/>
@@ -1610,7 +1620,7 @@
 
 		<div class="quantity">
 			<div class="quantity-input">
-				<xsl:if test="$editQty='true'">
+				<xsl:if test="$editQtyLocal='true'">
 					<xsl:choose>
 						<xsl:when test="@quantity&lt;'10'">
 							<label>Qty:</label>
