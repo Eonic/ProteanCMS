@@ -34,7 +34,7 @@ namespace Protean
             public event OnErrorEventHandler OnError;
 
             public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
-            //public event OnErrorWithWebEventHandler OnErrorWithWeb;
+            public event OnErrorWithWebEventHandler OnErrorWithWeb;
 
             public delegate void OnErrorWithWebEventHandler(ref Cms myweb, object sender, Tools.Errors.ErrorEventArgs e);
             private const string mcModuleName = "Eonic.EonicWeb.Membership.Membership";
