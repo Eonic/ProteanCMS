@@ -49,7 +49,7 @@ libraries\Newtonsoft.Json.dll
 ..\packages\Owin.1.0\lib\net40\Owin.dll
 ..\Assemblies\NonNuget\PreMailer.Net.dll
 ..\Assemblies\Protean.AppStart\bin\Release\Protean.AppStart.dll
-..\Assemblies\NonNuget\QRcoder.dll
+..\packages\QRcoder.1.4.3\lib\net40\QRcoder.dll
 ..\Assemblies\NonNuget\System.Text.Encoding.CodePages.dll
 ..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll
 ..\Providers\ReplaceProvider\bin\Release\ReplaceProvider.dll

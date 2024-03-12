@@ -120,12 +120,6 @@
 				<Component Id='com_Microsoft_ClearScript_V8' Guid='f6470464-1c1a-471a-8307-ff1debf2515d' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_Microsoft_ClearScript_V8' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='ClearScript.V8.dll' Source='..\packages\Microsoft.ClearScript.V8.7.4.4\lib\net471\ClearScript.V8.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
-				<!--
-				<Component Id='com_Microsoft_ClearScript_V8_WinX64' Guid='af52af85-0ca4-459a-b7e5-dc3088aa17b6' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_Microsoft_ClearScript_V8_WinX64' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='ClearScriptV8.win-x64.dll' Source='..\packages\Microsoft.ClearScript.V8.Native.win-x64.7.2.4\runtimes\win-x64\native\ClearScriptV8.win-x64.dll' Assembly='.net' KeyPath='yes' />
-				</Component>
-                -->
-
 				
 				<!-- Bundle Transformer-->
 				
@@ -238,7 +232,7 @@
 
 
 				<Component Id='com_QRcoder' Guid='bbd81acb-8106-49a6-a2e5-2bb767a63bfa' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_QRcoder' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='QRcoder.dll' Source='..\Assemblies\NonNuget\QRcoder.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_QRcoder' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='QRcoder.dll' Source='..\packages\QRcoder.1.4.3\lib\net40\QRcoder.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 
 				<Component Id='com_SystemBuffers' Guid='87bfe201-a4ce-4cd8-85c3-118972fd8e9b' Permanent='no' SharedDllRefCount='no' Transitive='no'>
