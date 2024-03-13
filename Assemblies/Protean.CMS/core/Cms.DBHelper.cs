@@ -4643,7 +4643,9 @@ namespace Protean
                     oDs.Tables[0].Columns["position"].ColumnMapping = MappingType.Attribute;
 
                     oDs.EnforceConstraints = false;
-                    var oXml = new XmlDataDocument(oDs);
+                    //var oXml = new XmlDataDocument(oDs);
+                    XmlDocument oXml = new XmlDocument();
+                    oXml.LoadXml(oDs.GetXml());
 
                     oDs = null;
                     if (ContentNode is null)
