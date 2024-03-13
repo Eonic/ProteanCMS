@@ -5697,7 +5697,7 @@
                   </xsl:otherwise>
                 </xsl:choose>
               </xsl:if>
-              <a href="/ewcommon/tools/excel.ashx?{/Page/Request/ServerVariables/Item[@name='QUERY_STRING']/node()}" class="btn btn-sm btn-primary" target="_new">
+              <a href="/ptn/tools/excel.ashx?{/Page/Request/ServerVariables/Item[@name='QUERY_STRING']/node()}" class="btn btn-sm btn-primary" target="_new">
                 <i class="far fa-file-excel">
                   <xsl:text> </xsl:text>
                 </i>
@@ -8066,10 +8066,10 @@
         <div class="btn-group headerButtons">
           <xsl:choose>
             <xsl:when test="/Page/Request/Form/Item[@name='startDate']">
-              <a href="/ewcommon/tools/excel.ashx?{/Page/Request/ServerVariables/Item[@name='QUERY_STRING']/node()}&amp;startDate={/Page/Request/Form/Item[@name='startDate']}" class="excel adminButton" target="_new">Excel Download</a>
+              <a href="/ptn/tools/excel.ashx?{/Page/Request/ServerVariables/Item[@name='QUERY_STRING']/node()}&amp;startDate={/Page/Request/Form/Item[@name='startDate']}" class="excel adminButton" target="_new">Excel Download</a>
             </xsl:when>
             <xsl:otherwise>
-              <a href="/ewcommon/tools/excel.ashx?{/Page/Request/ServerVariables/Item[@name='QUERY_STRING']/node()}" class="excel adminButton" target="_new">Excel Download</a>
+              <a href="/ptn/tools/excel.ashx?{/Page/Request/ServerVariables/Item[@name='QUERY_STRING']/node()}" class="excel adminButton" target="_new">Excel Download</a>
             </xsl:otherwise>
           </xsl:choose>
         </div>
@@ -11370,7 +11370,7 @@
     <div class="card">
       <div class="card-header">
         <div class="btn-group float-end">
-          <a href="/ewcommon/tools/excel.ashx?{/Page/Request/ServerVariables/Item[@name='QUERY_STRING']/node()}" class="btn btn-primary btn-xs float-end" target="_new">
+          <a href="/ptn/tools/excel.ashx?{/Page/Request/ServerVariables/Item[@name='QUERY_STRING']/node()}" class="btn btn-primary btn-xs float-end" target="_new">
             <i class="fa icon-file-excel">&#160;</i>&#160;Excel Download
           </a>
         </div>
