@@ -10,7 +10,7 @@
 				<cContentName/>
 				<cContentSchemaName>Module</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content contentType="CountdownClock" position="" moduleType="CountdownClock" targetDate="" targetTime="" box="" title="" link="" linkType="internal" linkText="Read more" linkBox="" imagePosition="below" Circle="#D9D9D9" CircleBorder="#3377FC" NumberColor="#3377FC" TextColor="#3377FC" NumberTextSize="20px" HeadingTextSize="16px" resize="false" responsiveImg="true">
+					<Content contentType="CountdownClock" position="" moduleType="CountdownClock" targetDate="" targetTime="" box="" title="" link="" linkType="internal" linkText="Shop Now" linkBox="" imagePosition="below" Circle="#D9D9D9" CircleBorder="#3377FC" NumberColor="#3377FC" TextColor="#3377FC" NumberTextSize="20px" HeadingTextSize="16px" resize="false" responsiveImg="true">
 					</Content>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
