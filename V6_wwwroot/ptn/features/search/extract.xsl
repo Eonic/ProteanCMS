@@ -105,17 +105,7 @@
       </xsl:attribute>
     </meta>
     <meta name="abstract">
-      <xsl:attribute name="content">
-        <xsl:variable name="content">
-          <xsl:for-each select="ContentDetail/Content">
-            <xsl:apply-templates select="*" mode="getValues"/>
-          </xsl:for-each>
-        </xsl:variable>
-        <xsl:call-template name="truncateString">
-          <xsl:with-param name="string" select="$content"/>
-          <xsl:with-param name="length" select="'500'"/>
-        </xsl:call-template>
-      </xsl:attribute>
+		<xsl:apply-templates select="//ContentDetail/Content" mode="metaabstract"/>
     </meta>
 
     <xsl:if test="not(//ContentDetail/Content[@parId=/Page/@id])">
@@ -126,6 +116,19 @@
     </xsl:if>
   </xsl:template>
 
+	<xsl:template match="Content" mode="metaabstract">
+		<xsl:variable name="content">
+			<xsl:for-each select="ContentDetail/Content">
+				<xsl:apply-templates select="*" mode="getValues"/>
+			</xsl:for-each>
+		</xsl:variable>
+		<xsl:call-template name="truncateString">
+			<xsl:with-param name="string" select="$content"/>
+			<xsl:with-param name="length" select="'500'"/>
+		</xsl:call-template>
+	</xsl:template>
+	
+	
   <xsl:template match="*" mode="getValues">
     <xsl:value-of select="."/>
     <xsl:text> </xsl:text>

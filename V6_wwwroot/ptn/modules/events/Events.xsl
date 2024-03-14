@@ -514,9 +514,7 @@
           <div class="terminus">&#160;</div>
         </table>
         <div class="panel-footer">
-          <span class="pull-right">
             <xsl:apply-templates select="." mode="addtoCartButtons"/>
-          </span>
         </div>
 			  </xsl:if>
       </div>
@@ -577,21 +575,22 @@
       </xsl:choose>
     </xsl:variable>
     <div class="input-group qty">
-      <span class="input-group-btn">
-        <button class=" qtyButton increaseQty btn btn-default" type="button" value="+" onClick="incrementQuantity('qty_{@id}','+')">
-          <i class="fa fa-plus">
-            <xsl:text> </xsl:text>
-          </i>
-        </button>
-      </span>
+		<span class="input-group-btn">
+			<button class="qtyButton decreaseQty btn btn-default" type="button" value="-" onClick="incrementQuantity('qty_{@id}','-')">
+				<i class="fa fa-minus">
+					<xsl:text> </xsl:text>
+				</i>
+			</button>
+		</span>
       <input type="text" name="qty_{@id}" id="qty_{$id}" value="0" size="1" class="form-control"/>
-      <span class="input-group-btn">
-        <button class="qtyButton decreaseQty btn btn-default" type="button" value="-" onClick="incrementQuantity('qty_{@id}','-')">
-          <i class="fa fa-minus">
-            <xsl:text> </xsl:text>
-          </i>
-        </button>
-      </span>
+		<span class="input-group-btn">
+			<button class=" qtyButton increaseQty btn btn-default" type="button" value="+" onClick="incrementQuantity('qty_{@id}','+')">
+				<i class="fa fa-plus">
+					<xsl:text> </xsl:text>
+				</i>
+			</button>
+		</span>
+		
     </div>
   </xsl:template>
 

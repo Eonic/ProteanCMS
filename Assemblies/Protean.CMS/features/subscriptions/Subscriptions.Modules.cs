@@ -39,6 +39,9 @@ namespace Protean
                         try {
                             if (stdTools.ButtonSubmitted(ref myWeb.moRequest, "variableSubAdd"))
                             {
+
+                                myWeb.moSession.Add("overridePriceSession", "true");
+
                                 string SubContentId = contentNode.GetAttribute("id");
                                 string SubName = contentNode.SelectSingleNode("Name").InnerText;
                                 double subValue = Convert.ToDouble("0" + myWeb.moRequest[$"select_price_{SubContentId}"]);

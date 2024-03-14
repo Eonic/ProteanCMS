@@ -14649,8 +14649,9 @@
 
   <!-- Vimeo video -->
   <xsl:template match="Content[@moduleType='Video' and @videoType='Vimeo']" mode="displayBrief">
-    <xsl:variable name="code">
-      <xsl:variable name="raw" select="Vimeo/@code"/>
+    
+   <xsl:variable name="raw" select="Vimeo/@code"/>
+   <xsl:variable name="code">
       <xsl:choose>
         <xsl:when test="contains($raw, 'vimeo.com/video/')">
           <xsl:value-of select="substring(substring-after($raw, 'vimeo.com/video/'), 1, 9)"/>

@@ -3437,7 +3437,7 @@ namespace Protean
 
                                         var oProd = moPageXml.CreateElement("product");
                                         oProd.InnerXml = Conversions.ToString(oRow["productDetail"]);
-                                        if (oProd.SelectSingleNode("Content[@overridePrice='true']") is null)
+                                        if (oProd.SelectSingleNode("Content[@overridePrice='true']") is null && oProd.SelectSingleNode("Content[contains(@action,'VariableSubscription')]") is null)
                                         {
                                             oCheckPrice = getContentPricesNode(oProd, Conversions.ToString(Operators.ConcatenateObject(oRow["unit"], "")), Conversions.ToLong(oRow["quantity"]));
                                             cProcessInfo = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Error getting price for unit:", oRow["unit"]), " and Quantity:"), oRow["quantity"]), " and Currency "), mcCurrencyRef), " Check that a price is available for this quantity and a group for this current user."));

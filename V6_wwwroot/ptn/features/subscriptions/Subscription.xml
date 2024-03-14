@@ -182,6 +182,10 @@
 
 		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
 		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+		
+		<bind nodeset="ProductGroups">
+			<bind id="nProductGroups" nodeset="@ids" required="false()" type="string"/>
+		</bind>
 	</model>
 
 	<group ref="EditContent">
@@ -332,6 +336,9 @@
 							<value>false</value>
 						</item>
 					</select1>
+					<select bind="nProductGroups" class="ewQuery list-vertical" query="ProductGroups" appearance="full">
+						<label>Product Groups</label>
+					</select>
 				</group>
 				<group ref="mainContent" class="Content">
 					<label>Subscription Descriptions</label>

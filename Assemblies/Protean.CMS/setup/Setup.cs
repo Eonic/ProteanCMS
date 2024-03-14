@@ -154,7 +154,7 @@ namespace Protean
 
                 myWeb = new Cms(moCtx);
                 // myWeb.InitializeVariables()
-
+                myWeb.Open();
                 sProcessInfo = "set session variables";
                 mcModuleName = "ProteanCMS.Setup";
                 // msException = ""
