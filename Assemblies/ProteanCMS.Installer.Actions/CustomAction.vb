@@ -515,6 +515,8 @@ Public Class CustomActions
             oCgfRuntimeSect64.SectionInformation.SetRawXml(oSectXml.OuterXml)
             config64.Save()
 
+            FileSystem.FileCopy("C:\Windows\SysWOW64\ClearScriptV8.win-x64.dll", "C:\Windows\System32\ClearScriptV8.win-x64.dll")
+
             'Add the AssetHandler for .Less
             Dim sm As New Microsoft.Web.Administration.ServerManager
 

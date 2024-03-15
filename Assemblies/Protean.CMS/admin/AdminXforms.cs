@@ -7700,6 +7700,7 @@ namespace Protean
                                     base.addOption(ref oSelElmt, "Completed", 6.ToString(), false, "Completed");
                                     base.addOption(ref oSelElmt, "Refunded", 7.ToString(), false, "Refunded");
                                     base.addOption(ref oSelElmt, shippedStatus, 9.ToString(), false, "Shipped");
+                                  //  base.addOption(ref oSelElmt, "Processed", 9.ToString(), false, "Shipped");
                                     base.addOption(ref oSelElmt, "Delete", 12.ToString());
                                     break;
                                 }
@@ -7763,6 +7764,7 @@ namespace Protean
                             var oCase1 = base.addCase(ref oSwitch, "Completed");
                             var oCase2 = base.addCase(ref oSwitch, "Refunded");
                             var oCase3 = base.addCase(ref oSwitch, "Shipped");
+                            //var oCase4 = base.addCase(ref oSwitch, "Processed");
 
                             // Turn of validation when switching back to completed
                             string validationOn = "true()";

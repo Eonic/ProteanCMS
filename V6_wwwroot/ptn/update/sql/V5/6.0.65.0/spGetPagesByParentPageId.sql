@@ -1,5 +1,5 @@
  
-CREATE PROCEDURE [spGetPagesByParentPageId]  
+CREATE PROCEDURE [dbo].[spGetPagesByParentPageId]  
 @PageId as Int=null   ,                  
 @whereSql varchar(max) ,                
 @FilterTarget nvarchar(10)                
