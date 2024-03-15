@@ -2716,7 +2716,7 @@
 						</xsl:attribute>
 					</xsl:if>
 				</xsl:if>
-			</input>
+			</input>		
 			<label for="{$ref}_{position()}" class="form-check-label {translate(value/node(),'/ ','')}">
 				<span class="visually-hidden">&#160;</span>
 				<xsl:value-of select="label/node()"/>

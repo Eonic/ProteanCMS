@@ -3099,7 +3099,7 @@
 					<xsl:attribute name="class">
 						<xsl:text> form-check-label</xsl:text>
 					</xsl:attribute>
-				</xsl:if>
+				</xsl:if>test
 				<xsl:apply-templates select="label" mode="xform-label"/>
 				<!-- needed to stop self closing -->
 				<xsl:text> </xsl:text>

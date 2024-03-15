@@ -198,7 +198,7 @@
             <p>If ecommerce, the user will still pay the 'purchase price'.</p>
           </help>
         </input>
-		  <select bind="nProductGroups" class="ewQuery list-vertical" query="ProductGroups" appearance="full">
+		  <select bind="nProductGroups" class="ewQuery list-vertical checkboxes" query="ProductGroups" appearance="full">
 			<label>Product Groups</label>
 		</select>
       </group>
