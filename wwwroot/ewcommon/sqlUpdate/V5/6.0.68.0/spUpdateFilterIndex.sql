@@ -1,5 +1,5 @@
 -- spUpdateFilterIndex  'SKU',3        
-CREATE PROCEDURE spUpdateFilterIndex @SchemaName VARCHAR(50)
+CREATE PROCEDURE [dbo].[spUpdateFilterIndex] @SchemaName VARCHAR(50)
 	,@IndexId INT
 AS
 BEGIN

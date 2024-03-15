@@ -1,4 +1,4 @@
-Create PROCEDURE [spScheduleToUpdateIndexTable] --'' -- 2     
+Create PROCEDURE [dbo].[spScheduleToUpdateIndexTable] --'' -- 2     
 @IndexId int        
 AS        
 BEGIN  

@@ -29,7 +29,45 @@ namespace Protean
                     public Modules()
                     {
 
+
                         // do nowt
+
+                    }
+
+                    public void VariableSubscription(ref Cms myWeb, ref XmlElement contentNode)
+                    {
+                        try {
+                            if (stdTools.ButtonSubmitted(ref myWeb.moRequest, "variableSubAdd"))
+                            {
+
+                                myWeb.moSession.Add("overridePriceSession", "true");
+
+                                string SubContentId = contentNode.GetAttribute("id");
+                                string SubName = contentNode.SelectSingleNode("Name").InnerText;
+                                double subValue = Convert.ToDouble("0" + myWeb.moRequest[$"select_price_{SubContentId}"]);
+
+                                contentNode.SetAttribute("type", "Subscription");
+                                contentNode.SelectSingleNode("SubscriptionPrices/Price[@type='sale']").InnerText = subValue.ToString();
+                                contentNode.SelectSingleNode("Prices/Price[@type='sale']").InnerText = subValue.ToString();
+
+                                // Add subscription to cart
+                                myWeb.InitialiseCart();
+                                XmlElement xmlCart = myWeb.moCart.CreateCartElement(myWeb.moPageXml);
+                                myWeb.moCart.CreateNewCart(ref xmlCart);
+                                myWeb.moCart.AddItem(Convert.ToInt64(SubContentId), 1, default, SubName, subValue, contentNode.OuterXml);
+                                myWeb.moCart.PersistVariables();
+                                string cardCmd = "Quote";
+                                myWeb.moCart.updateCart(ref cardCmd);
+                                myWeb.moCart.GetCart(ref xmlCart);
+                                myWeb.moCart.AddCartToPage(myWeb.moPageXml, xmlCart);
+                                myWeb.msRedirectOnEnd = "/?cartCmd=Logon";
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            stdTools.returnException(ref myWeb.msException, mcModuleName, "VariableSubscription", ex, "", "", gbDebug);
+                            // Return Nothing
+                        }
 
                     }
 

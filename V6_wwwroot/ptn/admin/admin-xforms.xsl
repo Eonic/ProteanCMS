@@ -3080,6 +3080,19 @@
 								<xsl:attribute name="checked">checked</xsl:attribute>
 							</xsl:if>
 						</xsl:if>
+						<xsl:if test="$type='checkbox'">
+							<!-- Run through CSL to see if this should be checked -->
+							<xsl:variable name="valueMatch">
+								<xsl:call-template name="checkValueMatch">
+									<xsl:with-param name="CSLValue" select="$selectedValue"/>
+									<xsl:with-param name="value" select="$value"/>
+									<xsl:with-param name="seperator" select="','"/>
+								</xsl:call-template>
+							</xsl:variable>
+							<xsl:if test="$valueMatch='true'">
+								<xsl:attribute name="checked">checked</xsl:attribute>
+							</xsl:if>
+						</xsl:if>
 					</xsl:otherwise>
 				</xsl:choose>
 				<xsl:if test="ancestor::select1/item[1]/value/node() = $value">

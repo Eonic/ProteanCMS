@@ -821,19 +821,9 @@
             Sass compiler
             </summary>
         </member>
-        <member name="F:DartSassHost.SassCompiler.ES7_POLYFILLS_FILE_NAME">
+        <member name="F:DartSassHost.SassCompiler.SASS_BUNDLE_FILE_NAME">
             <summary>
-            Name of file, which contains a ECMAScript 7+ polyfills
-            </summary>
-        </member>
-        <member name="F:DartSassHost.SassCompiler.SASS_LIBRARY_FILE_NAME">
-            <summary>
-            Name of file, which contains a Sass library
-            </summary>
-        </member>
-        <member name="F:DartSassHost.SassCompiler.SASS_HELPER_FILE_NAME">
-            <summary>
-            Name of file, which contains a Sass helper
+            Name of file, which contains a Sass bundle
             </summary>
         </member>
         <member name="F:DartSassHost.SassCompiler.CURRENT_OS_PLATFORM_NAME">

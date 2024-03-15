@@ -10,8 +10,8 @@ Imports System.Web.Management
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.1.0.0"
-    Public Shared ptnAppStartAssemblyVersion As String = "6.0.0.0"
+    Public Shared ewAssemblyVersion As String = "6.1.2.0"
+    Public Shared ptnAppStartAssemblyVersion As String = "6.1.0.0"
     Public Shared bundleAssemblyVersion As String = "1.10.0.0"
     Public Shared bundleLessAssemblyVersion As String = "1.12.44.0"
     Public Shared bundleSassAssemblyVersion As String = "1.12.36.0"
@@ -466,6 +466,8 @@ Public Class CustomActions
             'Protean
             UpdateDependantAssembly(oSectXml, "ProteanCMS", "0e5e11efc3341916", ewAssemblyVersion, "5.0.0.0")
             UpdateDependantAssembly(oSectXml, "Protean.Tools", "2030ce1af675e93f", ewAssemblyVersion, "5.0.0.0")
+            UpdateDependantAssembly(oSectXml, "Protean.AppStart", "0e5e11efc3341916", ptnAppStartAssemblyVersion)
+
             '' UpdateDependantAssembly(oSectXml, "Protean.Tools.Csharp", "0e5e11efc3341916", ewAssemblyVersion, "5.0.0.0")
             UpdateDependantAssembly(oSectXml, "Protean.Providers.Messaging.CampaignMonitor", "0e5e11efc3341916", ewAssemblyVersion, "5.0.0.0")
 
@@ -512,6 +514,8 @@ Public Class CustomActions
 
             oCgfRuntimeSect64.SectionInformation.SetRawXml(oSectXml.OuterXml)
             config64.Save()
+
+            FileSystem.FileCopy("C:\Windows\SysWOW64\ClearScriptV8.win-x64.dll", "C:\Windows\System32\ClearScriptV8.win-x64.dll")
 
             'Add the AssetHandler for .Less
             Dim sm As New Microsoft.Web.Administration.ServerManager

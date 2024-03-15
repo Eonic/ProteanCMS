@@ -45,3 +45,4 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Release\Protean.AppS
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Release\Protean.AppStart.csproj.AssemblyReference.cache
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Release\Protean.AppStart.csproj.AssemblyReference.cache
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Release\Protean..1C248B77.Up2Date
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Release\Protean.AppStart.dll.config

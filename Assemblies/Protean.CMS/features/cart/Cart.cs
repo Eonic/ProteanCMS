@@ -702,6 +702,7 @@ namespace Protean
                                 }
                             }
                         }
+                        string newCartId = (String)myWeb.moSession["CartId"];
 
                         if (myWeb.moSession["CartId"] is null)
                         {
@@ -3436,7 +3437,7 @@ namespace Protean
 
                                         var oProd = moPageXml.CreateElement("product");
                                         oProd.InnerXml = Conversions.ToString(oRow["productDetail"]);
-                                        if (oProd.SelectSingleNode("Content[@overridePrice='true']") is null)
+                                        if (oProd.SelectSingleNode("Content[@overridePrice='true']") is null && oProd.SelectSingleNode("Content[contains(@action,'VariableSubscription')]") is null)
                                         {
                                             oCheckPrice = getContentPricesNode(oProd, Conversions.ToString(Operators.ConcatenateObject(oRow["unit"], "")), Conversions.ToLong(oRow["quantity"]));
                                             cProcessInfo = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Error getting price for unit:", oRow["unit"]), " and Quantity:"), oRow["quantity"]), " and Currency "), mcCurrencyRef), " Check that a price is available for this quantity and a group for this current user."));
@@ -3873,9 +3874,11 @@ namespace Protean
                                             {
                                                 bCollection = Conversions.ToBoolean(oRowSO["bCollection"]);
                                             }
-                                            if (Convert.ToString(oRowSO["nShippingGroup"]) != "")
-                                            {
-                                                ShippingOptionKey = Convert.ToInt64(oRowSO["nShipOptKey"]);
+                                            if (oRowSO.Table.Columns.Contains("nShippingGroup")) {
+                                                if (Convert.ToString(oRowSO["nShippingGroup"]) != "")
+                                                {
+                                                    ShippingOptionKey = Convert.ToInt64(oRowSO["nShipOptKey"]);
+                                                }
                                             }
                                             if (!string.IsNullOrEmpty(moCartConfig["DefaultShippingMethod"]))
                                             {
@@ -8734,8 +8737,6 @@ namespace Protean
                 // this function checks for an identical item in the database.
                 // If there is, the quantity is increased accordingly.
                 // If not, a new item is added to the table
-
-
                 string cProcessInfo = "Checking Submitted Products and Options"; // Object for product keys/quantittie
                                                                                  // Object for options
                 string strAddedProducts = "Start:"; // string of products added
@@ -8751,10 +8752,8 @@ namespace Protean
                 string cSql;
                 DataSet oDs;
                 int qtyAdded = 0;
-
                 try
                 {
-
                     if (Strings.LCase(moCartConfig["ClearOnAdd"]) == "on")
                     {
                         cSql = "select nCartItemKey from tblCartItem where nCartOrderId = " + mnCartId;
@@ -8765,9 +8764,6 @@ namespace Protean
                                 moDBHelper.DeleteObject(Cms.dbHelper.objectTypes.CartItem, Conversions.ToLong(oRow["nCartItemKey"]));
                         }
                     }
-
-
-
                     if ((Strings.LCase(mmcOrderType) ?? "") == (Strings.LCase(mcItemOrderType) ?? "")) // test for order?
                     {
                         foreach (string oItem1 in myWeb.moRequest.Form) // Loop for getting products/quants
@@ -8847,20 +8843,12 @@ namespace Protean
                                                     break;
 
                                             }
-
                                             // if contentType = sub
-
                                             // if cart contains product then block
                                             sBlockCartAddMsg = "You cannot purchase a subscription and a product as part of the same order. Please complete origional purchase then start again.";
-
                                             // else
-
-
-
-
                                         }
                                     }
-
                                     if (!(Strings.InStr(strAddedProducts, "'" + nProductKey + "'") > 0)) // double check we havent added this product (dont really need but good just in case)
                                     {
                                         foreach (string oItem2 in myWeb.moRequest.Form) // loop through again checking for options
