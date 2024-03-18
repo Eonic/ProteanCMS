@@ -1875,8 +1875,17 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-  
 
+	<xsl:template name="term2118">
+		<xsl:choose>
+			<xsl:when test="$lang='en-pr'">
+				<xsl:text>Get 'em</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>Book Tickets</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 
 
 

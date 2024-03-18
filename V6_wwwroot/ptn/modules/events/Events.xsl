@@ -210,8 +210,20 @@
           </xsl:if>
           <div class="entryFooter">
 	  <xsl:apply-templates select="." mode="displayTags"/>
+			  <xsl:variable name="linkText">
+				   <xsl:choose>
+				        <xsl:when test="Content[@type='Ticket']">
+							<xsl:call-template name="term2118" />
+					    </xsl:when>
+					   <xsl:otherwise>
+						   <xsl:call-template name="term2042" />
+					   </xsl:otherwise>
+			  </xsl:choose>
+			  </xsl:variable>
+			 
             <xsl:apply-templates select="." mode="moreLink">
-              <xsl:with-param name="link" select="$parentURL"/>
+				<xsl:with-param name="link" select="$parentURL"/>
+			  <xsl:with-param name="linkText" select="$linkText"/>
               <xsl:with-param name="altText">
                 <xsl:value-of select="Headline/node()"/>
               </xsl:with-param>
