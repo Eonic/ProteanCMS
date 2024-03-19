@@ -30,6 +30,7 @@
 		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
 		<bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
 		<bind nodeset="tblContent/cContentXmlBrief/Content">
+			<bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
 			<bind id="cPosition" nodeset="@position" required="true()" type="string"/>
 			<bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
 			<bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>

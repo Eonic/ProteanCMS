@@ -17,6 +17,7 @@ using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
 using Protean.Providers.Membership;
+using Lucene.Net.Support;
 
 namespace Protean
 {
@@ -8372,7 +8373,12 @@ namespace Protean
 
                             oDs.EnforceConstraints = false;
                             // convert to Xml Dom
-                            var oXml = new XmlDataDocument(oDs);
+                            //var oXml = new XmlDataDocument(oDs);
+                            XmlDocument oXml = new XmlDocument();
+                            if (oDs.Tables[0].Rows.Count>0)
+                            {
+                                oXml.LoadXml(oDs.GetXml());
+                            }                            
                             oXml.PreserveWhitespace = false;
 
                             foreach (XmlElement oReplaceContent in oXml.SelectNodes("/Contents/Content"))
@@ -8508,7 +8514,12 @@ namespace Protean
 
                             oDs.EnforceConstraints = false;
                             // convert to Xml Dom
-                            var oXml = new XmlDataDocument(oDs);
+                            //var oXml = new XmlDataDocument(oDs);
+                            XmlDocument oXml = new XmlDocument();
+                            if (oDs.Tables[0].Rows.Count>0)
+                            {
+                                oXml.LoadXml(oDs.GetXml());
+                            }                           
                             oXml.PreserveWhitespace = false;
 
 
