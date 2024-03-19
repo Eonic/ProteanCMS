@@ -392,7 +392,14 @@ namespace Protean
                 {
                     try
                     {
-                        return Conversions.ToString(moCtx.Session["lastUploadedFilePath"]);
+                        if (moCtx.Session["lastUploadedFilePath"] != null)
+                        {
+                            return Conversions.ToString(moCtx.Session["lastUploadedFilePath"]);
+                        }
+                        else {
+                            return "No Filepath Stored";
+                        }
+
                     }
                     catch
                     {
