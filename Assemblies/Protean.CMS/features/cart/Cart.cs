@@ -10359,11 +10359,12 @@ namespace Protean
                                         XmlElement oCartElmt = (XmlElement)oContent.FirstChild;
 
                                         // check for invoice date etc.
-                                        if (Conversions.ToLong("0" + oCartElmt.GetAttribute("statusId")) >= 6L & (string.IsNullOrEmpty(oCartElmt.GetAttribute("InvoiceDate")) | !oCartElmt.GetAttribute("InvoiceDateTime").Contains("T")))
+                                        if (Conversions.ToLong("0" + oContent.GetAttribute("statusId")) >= 6L & (string.IsNullOrEmpty(oCartElmt.GetAttribute("InvoiceDate")) | !oCartElmt.GetAttribute("InvoiceDateTime").Contains("T")))
                                         {
                                             // fix for any items that have lost the invoice date and ref.
                                             // also fix when datetime no stored in XML format.
                                             long cartId = Conversions.ToLong(oDR["nCartOrderKey"]);
+                                            oCartElmt.SetAttribute("statusId", oContent.GetAttribute("statusId"));
                                             string insertDate = moDBHelper.ExeProcessSqlScalar("SELECT a.dInsertDate FROM tblCartOrder inner join tblAudit a on nAuditId = nAuditKey where nCartOrderKey = " + cartId);
                                             addDateAndRef(ref oCartElmt, Conversions.ToDate(insertDate), cartId);
                                             SaveCartXML(oCartElmt, cartId);
