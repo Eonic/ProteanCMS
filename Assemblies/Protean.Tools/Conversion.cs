@@ -279,7 +279,7 @@ namespace Protean.Tools
             DataTable oWorksheets;
             string cWorksheetname = "";
 
-            XmlDataDocument oXml;
+            XmlDocument oXml = new XmlDocument();
             var oOutputXml = new XmlDocument();
             XmlElement oOutputRoot;
             XmlElement oOutputWorksheet = null;
@@ -348,7 +348,11 @@ namespace Protean.Tools
 
                                 oExcelDataset.EnforceConstraints = false;
 
-                                oXml = new XmlDataDocument(oExcelDataset);
+                                // oXml = new XmlDataDocument(oExcelDataset);
+                                if (oExcelDataset.Tables[0].Rows.Count>0)
+                                {
+                                    oXml.LoadXml(oExcelDataset.GetXml());
+                                }                                
 
                                 oOutputWorksheet.AppendChild(oXml.FirstChild);
 

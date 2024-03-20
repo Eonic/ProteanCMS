@@ -8,7 +8,7 @@ namespace Protean
     public class FileDoc
     {
         private string cPath = "";
-        private string mcModuleName = "FileDoc";
+        //private string mcModuleName = "FileDoc";
 
         public FileDoc(string thePath)
         {
