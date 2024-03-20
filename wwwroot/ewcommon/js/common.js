@@ -596,7 +596,7 @@ $.fn.prepareXform = function () {
 
     /*----------------------Colourpicker----------------------------*/
 
-    if ($(this).find('input.colorPicker').exists()) {
+    if ($(this).find('input.colorPicker').exists()) {        
         $(this).find('input.colorPicker').ColorPickerSliders({
             hsvpanel: true,
             previewformat: 'hex',
@@ -777,9 +777,23 @@ function showDependant(dependant, allDependants) {
         // Make all now hidden fields inactive so values are lost when submitted.
         $("." + allDependants).find(":input").not(':submit').each(function () {
             var fieldName = $(this).attr('name');
-            var tempFieldName = fieldName + '~inactive';
-            //    alert("hide as " + tempFieldName);
-            $(this).attr('name', tempFieldName);
+            var fieldId = $(this).attr('id');
+
+            // If condition added to check name or id have '~inactive' then revert it to original name and id. So it will not append '~inactive' multiple times.
+            if (fieldName != undefined && fieldName.indexOf("~inactive") != -1) {
+                fieldName = fieldName.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
+                $(this).attr('name', fieldName);
+                
+                if (fieldId!=undefined) {
+                    var tempFieldId = fieldId.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
+                    $(this).attr('id', tempFieldId);
+                }               
+
+            } else {
+                var tempFieldName = fieldName + '~inactive';
+                //    alert("hide as " + tempFieldName);
+                $(this).attr('name', tempFieldName);
+            }           
             //   $(this).attr('id', $(this).attr('id') + '~inactive');
         });
 
