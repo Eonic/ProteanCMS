@@ -540,7 +540,6 @@ namespace Protean
                 {
                     if (mbCompiled)
                     {
-
                         var resolver = new XmlUrlResolver();
                         resolver.Credentials = System.Net.CredentialCache.DefaultCredentials;
 
