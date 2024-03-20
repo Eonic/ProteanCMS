@@ -83,7 +83,7 @@ namespace Protean
             string cConStr;
             var oDBh = new dbHelper(ref myWeb);
             DataSet oDS;
-            var oMXML = new XmlDataDocument();
+            XmlDocument oMXML = new XmlDocument();
             var oElmt = oMXML.CreateElement("NoData");
             System.Collections.Specialized.NameValueCollection oSchedulerConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/scheduler");
 
@@ -111,7 +111,11 @@ namespace Protean
 
                     oDS = oDBh.GetDataSet("EXEC spGetSchedulerSummary @date=" + Tools.Database.SqlDate(DateTime.Now.AddDays(-1), true), "Scan", "Monitor");
                     oDBh.ReturnNullsEmpty(ref oDS);
-                    oMXML = new XmlDataDocument(oDS);
+                    //oMXML = new XmlDataDocument(oDS);
+                    if (oDS.Tables[0].Rows.Count>0)
+                    {
+                        oMXML.LoadXml(oDS.GetXml());
+                    }                    
                     if (oMXML != null && oMXML.DocumentElement != null)
                     {
                         oElmt = oMXML.DocumentElement;

@@ -17,6 +17,7 @@ using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
 using Protean.Providers.Membership;
+using Lucene.Net.Support;
 
 namespace Protean
 {
@@ -8372,7 +8373,12 @@ namespace Protean
 
                             oDs.EnforceConstraints = false;
                             // convert to Xml Dom
-                            var oXml = new XmlDataDocument(oDs);
+                            //var oXml = new XmlDataDocument(oDs);
+                            XmlDocument oXml = new XmlDocument();
+                            if (oDs.Tables[0].Rows.Count>0)
+                            {
+                                oXml.LoadXml(oDs.GetXml());
+                            }                            
                             oXml.PreserveWhitespace = false;
 
                             foreach (XmlElement oReplaceContent in oXml.SelectNodes("/Contents/Content"))
@@ -8508,7 +8514,12 @@ namespace Protean
 
                             oDs.EnforceConstraints = false;
                             // convert to Xml Dom
-                            var oXml = new XmlDataDocument(oDs);
+                            //var oXml = new XmlDataDocument(oDs);
+                            XmlDocument oXml = new XmlDocument();
+                            if (oDs.Tables[0].Rows.Count>0)
+                            {
+                                oXml.LoadXml(oDs.GetXml());
+                            }                           
                             oXml.PreserveWhitespace = false;
 
 
@@ -9633,7 +9644,7 @@ namespace Protean
                                 var abyBuffer = new byte[(int)(oFileStream.Length - 1L) + 1];
                                 oFileStream.Read(abyBuffer, 0, abyBuffer.Length);
 
-                                var objCrc32 = new ICSharpCode.SharpZipLib.Checksum.Crc32();
+                                var objCrc32 = new ICSharpCode.SharpZipLib.Checksums.Crc32();
                                 objCrc32.Reset();
                                 objCrc32.Update(abyBuffer);
                                 oZipEntry.Crc = objCrc32.Value;

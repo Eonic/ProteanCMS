@@ -4,6 +4,7 @@ using System.Data;
 using System.Runtime.InteropServices;
 using System.Web.Configuration;
 using System.Xml;
+using Lucene.Net.Support;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
@@ -459,8 +460,13 @@ namespace Protean
 
                                         // cart contacts
 
-                                        XmlDataDocument oXml;
-                                        oXml = new XmlDataDocument(oDsCart);
+                                        //XmlDataDocument oXml;
+                                        //oXml = new XmlDataDocument(oDsCart);
+                                        XmlDocument oXml = new XmlDocument();
+                                        if (oDsCart.Tables[0].Rows.Count>0)
+                                        {
+                                            oXml.LoadXml(oDsCart.GetXml());
+                                        }                                       
                                         oDsCart.EnforceConstraints = false;
 
                                         oCartXML.InnerXml = oXml.FirstChild.InnerXml;

@@ -96,7 +96,7 @@ namespace Protean.Providers
         {
             private const string mcModuleName = "Protean.Providers.Membership.ReturnProvider";
             protected XmlNode moPaymentCfg;
-            //public event OnErrorEventHandler OnError;
+            public event OnErrorEventHandler OnError;
             public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
             public event OnErrorWithWebEventHandler OnErrorWithWeb;
             public delegate void OnErrorWithWebEventHandler(ref Cms myweb, object sender, Tools.Errors.ErrorEventArgs e);
@@ -437,7 +437,7 @@ namespace Protean.Providers
                     XmlElement oFrmElmt;
                     string sValidResponse;
                     string cProcessInfo = "";
-                    bool getRecordByEmail;
+                    //bool getRecordByEmail;
                     try
                     {
 
@@ -445,14 +445,15 @@ namespace Protean.Providers
                         if (myWeb.moConfig["EmailUsernames"] != null)
                         {
                             if ((myWeb.moConfig["EmailUsernames"].ToLower()) == "on") {
-                                getRecordByEmail = true;
+                                //getRecordByEmail = true;
                             }
-                            else {getRecordByEmail = false; }
-                                
+                            else {
+                                //getRecordByEmail = false;
+                                }                                
                         }
                         else
                         {
-                            getRecordByEmail = false;
+                            //getRecordByEmail = false;
                         }
 
                         base.NewFrm("PasswordReminder");
