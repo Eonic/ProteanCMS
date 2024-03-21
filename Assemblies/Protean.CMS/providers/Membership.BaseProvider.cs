@@ -304,7 +304,7 @@ namespace Protean.Providers
                         // Set the action URL
 
                         // Is the membership email address secure.
-                        if (myWeb.moConfig["SecureMembershipAddress"] != "")
+                        if (myWeb.moConfig["SecureMembershipAddress"] != "" & myWeb.moConfig["SecureMembershipAddress"] != null)
                         {
                             XmlElement oSubElmt = (XmlElement)base.moXformElmt.SelectSingleNode("descendant::submission");
                             oSubElmt.SetAttribute("action", myWeb.moConfig["SecureMembershipAddress"] + myWeb.moConfig["ProjectPath"] + "/" + myWeb.mcPagePath);
@@ -1130,7 +1130,7 @@ namespace Protean.Providers
                                 }
 
                                 // Is the membership email address secure.
-                                if (myWeb.moConfig["SecureMembershipAddress"] != "" & myWeb.mbAdminMode == false)
+                                if ((myWeb.moConfig["SecureMembershipAddress"] != "" & myWeb.moConfig["SecureMembershipAddress"] != null) & myWeb.mbAdminMode == false)
                                 {
                                     XmlElement oSubElmt = (XmlElement)base.moXformElmt.SelectSingleNode("descendant::submission");
                                     if (myWeb.mcPagePath is null)
