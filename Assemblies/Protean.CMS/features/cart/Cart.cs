@@ -9992,8 +9992,7 @@ namespace Protean
                         oTransform.ProcessTimed(oXMLReaderInstance, ref icXmlWriter);
                         OrderDoc = null;
 
-                        string foNetXml = icXmlWriter.ToString();
-
+                        string foNetXml = oTW.ToString();
                         string FileName = "Attachment.pdf";
 
                         var FoDoc = new XmlDocument();
