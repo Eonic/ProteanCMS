@@ -24,6 +24,7 @@ using static Protean.Tools.Xml;
 using System.Reflection.Emit;
 using Protean.Providers.Membership;
 using Protean.Providers.Messaging;
+using Lucene.Net.Support;
 
 namespace Protean
 {
@@ -4614,8 +4615,11 @@ namespace Protean
                     }
                     Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
                     IMessagingProvider moMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
-                    moMessaging.AdminProcess.MailingListAdminMenu(ref oMenuRoot);
-                    moMessaging = null;
+                    if (moMessaging != null) { 
+                        moMessaging.AdminProcess.MailingListAdminMenu(ref oMenuRoot);
+                        moMessaging = null;
+                    };
+                    
 
                     // If this is a cloned page, then remove certain options under By Page
                     if (Cms.gbClone && moPageXML.DocumentElement.SelectSingleNode("//MenuItem[@id = /Page/@id and (@clone > 0 or (@cloneparent='" + myWeb.mnCloneContextPageId + "' and @cloneparent > 0 ))]") != null)
@@ -5612,7 +5616,10 @@ namespace Protean
 
                        // var votesReport = new XmlDataDocument(votesDataset);
                         XmlDocument votesReport = new XmlDocument();
-                        votesReport.LoadXml(votesDataset.GetXml());
+                        if(votesDataset.Tables[0].Rows.Count > 0)
+                        {
+                            votesReport.LoadXml(votesDataset.GetXml());
+                        }                        
 
                         votesDataset.EnforceConstraints = false;
 
@@ -6852,7 +6859,7 @@ from tblContentIndexDef";
 
                     string cSQL = "";
                     DataSet oDS;
-                    XmlDataDocument oXml;
+                    XmlDocument oXml = new XmlDocument();
                     string sContent = "";
                     int nId;
 
@@ -6905,8 +6912,11 @@ from tblContentIndexDef";
 
                                     myWeb.moDbHelper.ReturnNullsEmpty(ref oDS);
                                     oDS.EnforceConstraints = false;
-                                    oXml = new XmlDataDocument(oDS);
-
+                                    //oXml = new XmlDataDocument(oDS);
+                                    if(oDS.Tables[0].Rows.Count > 0)
+                                    {
+                                        oXml.LoadXml(oDS.GetXml());
+                                    }                                   
                                     // Convert any text to xml
                                     foreach (XmlElement oElmt in oXml.SelectNodes("descendant-or-self::UserXml"))
                                     {

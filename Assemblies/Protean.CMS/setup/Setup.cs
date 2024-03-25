@@ -3558,7 +3558,7 @@ namespace Protean
         private Protean.XmlHelper.Transform oTransform = new Protean.XmlHelper.Transform();
 
         private string cUpdateType = "";
-        private string cUpdateSchema = "";
+        private string cUpdateSchema = string.Empty;
         private string cUpdateTableName = "";
         private string cUpdateKeyColumnName = "";
         private string cUpdateSchemaColumnName = "";

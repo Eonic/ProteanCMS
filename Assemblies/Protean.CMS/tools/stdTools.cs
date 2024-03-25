@@ -283,7 +283,12 @@ namespace Protean
                                         oDs.Tables[0].Columns["content"].ColumnMapping = MappingType.SimpleContent;
                                         oDs.EnforceConstraints = false;
                                         // convert to Xml Dom
-                                        var oXml = new XmlDataDocument(oDs);
+                                        // oXml = new XmlDataDocument(oDs);
+                                        XmlDocument oXml = new XmlDocument();
+                                        if (oDs.Tables[0].Rows.Count>0)
+                                        {
+                                            oXml.LoadXml(oDs.GetXml());
+                                        }                                       
                                         oXml.PreserveWhitespace = false;
                                         if (oXml.DocumentElement != null)
                                         {
