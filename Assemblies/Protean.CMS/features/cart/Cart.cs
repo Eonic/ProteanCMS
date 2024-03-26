@@ -7758,7 +7758,7 @@ namespace Protean
                         // Adjust the group title
                         if (bAdjustTitle)
                         {
-                            string cGroupTitle = "Select Delivery and Payment Option'";
+                            string cGroupTitle = "Select Delivery and Payment Option";
                             if (bHideDelivery & bHidePayment)
                                 cGroupTitle = "Terms and Conditions";
                             if (bHideDelivery & !bHidePayment)
