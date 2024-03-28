@@ -17,8 +17,8 @@ Public Class CustomActions
     Public Shared bundleSassAssemblyVersion As String = "1.12.36.0"
     Public Shared LibSassHostAssemblyVersion As String = "1.3.3.0"
     Public Shared DartSassHostAssemblyVersion As String = "1.0.11.0"
-    Public Shared jsSwitcherAssemblyVersion As String = "3.24.0.0"
-    Public Shared jsSwitcherV8AssemblyVersion As String = "3.23.2.0"
+    Public Shared jsSwitcherAssemblyVersion As String = "3.24.1.0"
+    Public Shared jsSwitcherV8AssemblyVersion As String = "3.24.1.0"
     Public Shared jsSwitcherV8NativeWinx64AssemblyVersion As String = "3.23.2.0"
     Public Shared WebGreaseAssemblyVersion As String = "1.6.5135.21930"
     Public Shared AdvancedStringBuilderVersion As String = "0.1.1.0"
@@ -42,6 +42,13 @@ Public Class CustomActions
     Public Shared SharpZipLibAssemblyVersion As String = "1.4.2.13"
     Public Shared SystemBuffersVersion As String = "4.0.3.0"
     Public Shared DocumentFormatOpenXmlVersion As String = "2.9.1.0"
+
+    Public Shared AngleSharpVersion As String = "1.1.2.0"
+    Public Shared PreMailerVersion As String = "2.9.1.0"
+
+
+    Public Shared MicrosoftWebInfrastructureVersion As String = "2.0.0.0"
+
     Public Shared installFolder As String = "C:\Program Files\Eonic Digital LLP\ProteanCMS into GAC " & ewAssemblyVersion.Trim("0").Trim(".") & " (64bit)"
 
     <CustomAction()>
@@ -227,6 +234,9 @@ Public Class CustomActions
                     UpdateAssemblyRef(oAssembliesSect, "Magick.NET.Core, Version=" & MagickNETCoreAssemblyVersion & ", Culture=neutral, PublicKeyToken=2004825badfa91ec")
                     UpdateAssemblyRef(oAssembliesSect, "Magick.NET-Q8-x64, Version=" & MagickNETAssemblyVersion & ", Culture=neutral, PublicKeyToken=2004825badfa91ec")
                     UpdateAssemblyRef(oAssembliesSect, "System.Buffers, Version=" & SystemBuffersVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+
+                    UpdateAssemblyRef(oAssembliesSect, "Microsoft.Web.Infrastructure, Version=" & MicrosoftWebInfrastructureVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+
 
                     ' UpdateAssemblyRef(oAssembliesSect, "DocumentFormat.OpenXml, Version=" & DocumentFormatOpenXmlVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
 
