@@ -14604,9 +14604,9 @@ namespace Protean
             }
 
 
-            public void ImportSingleObject(ref ImportStateObj importStateObj)
+            public void ImportSingleObject(object importStateObjObj)
             {
-               // ImportStateObj importStateObj = new ImportStateObj();
+               ImportStateObj importStateObj = (ImportStateObj)importStateObjObj;
                 string cTableName = "";
                 string cTableKey = "";
                 string cTableFRef = "";
