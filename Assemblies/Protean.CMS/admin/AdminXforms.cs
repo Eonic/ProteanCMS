@@ -3667,7 +3667,7 @@ namespace Protean
                         {
                             if (cXformPath.StartsWith("/"))
                             {
-                                cXformPath = cXformPath;
+                                //cXformPath = cXformPath;
                             }
                             else
                             {
@@ -9727,7 +9727,7 @@ namespace Protean
                             }
                             else
                             {
-                                base.LoadInstance(this.myWeb.moSession["tempInstance"].ToString());
+                                base.LoadInstance((XmlElement)this.myWeb.moSession["tempInstance"]);
                             }
                         }
 
@@ -9743,7 +9743,7 @@ namespace Protean
                         {
                             base.updateInstanceFromRequest();
 
-                            long ContentId = Conversions.ToLong(base.Instance.SelectSingleNode("tblSubscription/nSubContentId").InnerText);
+                            long ContentId = Conversions.ToLong("0" + base.Instance.SelectSingleNode("tblSubscription/nSubContentId").InnerText);
                             var ContentXml = this.myWeb.moPageXml.CreateElement("Content");
                             ContentXml.InnerXml = moDbHelper.getContentBrief((int)ContentId);
 

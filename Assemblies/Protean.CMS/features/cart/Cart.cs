@@ -7758,7 +7758,7 @@ namespace Protean
                         // Adjust the group title
                         if (bAdjustTitle)
                         {
-                            string cGroupTitle = "Select Delivery and Payment Option'";
+                            string cGroupTitle = "Select Delivery and Payment Option";
                             if (bHideDelivery & bHidePayment)
                                 cGroupTitle = "Terms and Conditions";
                             if (bHideDelivery & !bHidePayment)
@@ -9992,8 +9992,7 @@ namespace Protean
                         oTransform.ProcessTimed(oXMLReaderInstance, ref icXmlWriter);
                         OrderDoc = null;
 
-                        string foNetXml = icXmlWriter.ToString();
-
+                        string foNetXml = oTW.ToString();
                         string FileName = "Attachment.pdf";
 
                         var FoDoc = new XmlDocument();

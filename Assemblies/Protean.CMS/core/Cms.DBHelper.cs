@@ -27,6 +27,7 @@ using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Membership;
 using Protean.Providers.Messaging;
+using static Protean.Cms.dbImport;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
 
@@ -9491,7 +9492,7 @@ namespace Protean
                             if (completeCount > startNo)
                             {
 
-                                var stateObj = new dbImport.ImportStateObj();
+                                ImportStateObj stateObj = new dbImport.ImportStateObj();
                                 stateObj.oInstance = oInstance;
                                 stateObj.LogId = logId;
                                 stateObj.FeedRef = FeedRef;
@@ -14603,9 +14604,9 @@ namespace Protean
             }
 
 
-            public void ImportSingleObject(object ImportStateObj)
+            public void ImportSingleObject(object importStateObjObj)
             {
-                ImportStateObj importStateObj = new ImportStateObj();
+               ImportStateObj importStateObj = (ImportStateObj)importStateObjObj;
                 string cTableName = "";
                 string cTableKey = "";
                 string cTableFRef = "";
@@ -14977,6 +14978,7 @@ namespace Protean
                 {
                     modbhelper.logActivity(dbHelper.ActivityType.ValidationError, 0L, 0L, ErrorId, Strings.Right(ex.Message + " - " + ex.StackTrace, 700), fRef);
                     OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ImportSingleObject", ex, ""));
+                
                 }
                 finally
                 {

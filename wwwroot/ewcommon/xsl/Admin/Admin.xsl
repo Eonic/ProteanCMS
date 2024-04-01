@@ -12234,9 +12234,10 @@
 	<!-- -->
 	<xsl:template match="Page[@layout='VersionControlProcess']" mode="Admin">
 		<div class="row" id="tpltListReports">
-			<div class="col-md-9">
+			<div class="col-md-12">
 				<xsl:apply-templates select="ContentDetail/Content/GenericReport" mode="reportDetail"/>
 			</div>
+			<!--
 			<div class="col-md-3">
 				<div class="panel">
 					<div class="panel-body">
@@ -12247,6 +12248,7 @@
 					</div>
 				</div>
 			</div>
+			-->
 		</div>
 	</xsl:template>
 	<!-- -->

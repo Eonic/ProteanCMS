@@ -109,10 +109,10 @@
 				<!-- Javascript Engine Switcher-->
 				
                 <Component Id='com_63BDF556_ADF6_DC60_A6AE_DFCEBB6C3699' Guid='BDF81526-8DFD-4FFE-8A0F-C671951D7029' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                    <File Id='_63BDF556_ADF6_DC60_A6AE_DFCEBB6C3699' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='JavaScriptEngineSwitcher.Core.dll' Source='..\packages\JavaScriptEngineSwitcher.Core.3.24.0\lib\net45\JavaScriptEngineSwitcher.Core.dll' Assembly='.net' KeyPath='yes' />
+                    <File Id='_63BDF556_ADF6_DC60_A6AE_DFCEBB6C3699' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='JavaScriptEngineSwitcher.Core.dll' Source='..\packages\JavaScriptEngineSwitcher.Core.3.24.1\lib\net45\JavaScriptEngineSwitcher.Core.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
                 <Component Id='com_JavaScriptEngineSwitcher_V8' Guid='0cef3571-45f5-421d-8d24-f0ce966f8526' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                  <File Id='_JavaScriptEngineSwitcher_V8' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='JavaScriptEngineSwitcher.V8.dll' Source='..\packages\JavaScriptEngineSwitcher.V8.3.23.2\lib\net45\JavaScriptEngineSwitcher.V8.dll' Assembly='.net' KeyPath='yes' />
+                  <File Id='_JavaScriptEngineSwitcher_V8' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='JavaScriptEngineSwitcher.V8.dll' Source='..\packages\JavaScriptEngineSwitcher.V8.3.24.1\lib\net45\JavaScriptEngineSwitcher.V8.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
 				<Component Id='com_Microsoft_ClearScript_Core' Guid='e5ed7dfd-948b-49a5-a535-d49164a7c0c8' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_Microsoft_ClearScript_Core' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='ClearScript.Core.dll' Source='..\packages\Microsoft.ClearScript.Core.7.4.4\lib\net471\ClearScript.Core.dll' Assembly='.net' KeyPath='yes' />
@@ -169,7 +169,7 @@
                 </Component>
 
                 <Component Id='com_F747D995_D111_D27A_EAF9_4647B1AC33A1' Guid='C0E9F958-0B2A-4EF7-BA96-31C7C5DC7F0A' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                  <File Id='_F747D995_D111_D27A_EAF9_4647B1AC33A1' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Microsoft.Web.Infrastructure.dll' Source='..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll' Assembly='.net' KeyPath='yes' />
+                  <File Id='_F747D995_D111_D27A_EAF9_4647B1AC33A1' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Microsoft.Web.Infrastructure.dll' Source='..\packages\Microsoft.Web.Infrastructure.2.0.0\lib\net40\Microsoft.Web.Infrastructure.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
                 <Component Id='com_B10633E9_8F94_9D1E_0AAD_BFBDC164608E' Guid='E5BA9EB1-1E8A-4DBE-BD60-EE290183DB5B' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                     <File Id='_B10633E9_8F94_9D1E_0AAD_BFBDC164608E' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Lucene.Net.dll' Source='..\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll' Assembly='.net' KeyPath='yes' />
@@ -223,14 +223,17 @@
                 <File Id='_AngleSharp' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='AngleSharp.dll' Source='..\Assemblies\NonNuget\AngleSharp.dll' Assembly='.net' KeyPath='yes' />
               </Component>
               <Component Id='com_PreMailerNet' Guid='bc7a3deb-4135-44f4-ad2e-2099d2b18b64' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                <File Id='_PreMailerNet' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='PreMailer.Net.dll' Source='..\Assemblies\NonNuget\PreMailer.Net.dll' Assembly='.net' KeyPath='yes' />
+                <File Id='_PreMailerNet' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='PreMailer.Net.dll' Source='..\packages\PreMailer.Net.2.5.0\lib\net461\PreMailer.Net.dll' Assembly='.net' KeyPath='yes' />
               </Component>
 
               <Component Id='com_ImazenWebP' Guid='094ef4cf-5781-4c08-bb15-0614b7e06b93' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                 <File Id='_ImazenWebP' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Imazen.WebP.dll' Source='..\Assemblies\NonNuget\Imazen.WebP.dll' Assembly='.net' KeyPath='yes' />
               </Component>
 
-
+				<Component Id='com_System_Text_Encodings_Web' Guid='a5b84f31-01e5-4904-af1e-d85a310cf875' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+					<File Id='_System_Text_Encoding_Web' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Encoding.CodePages.dll' Source='..\Assemblies\NonNuget\System.Text.Encoding.CodePages.dll' Assembly='.net' KeyPath='yes' />
+				</Component>
+				
 				<Component Id='com_QRcoder' Guid='bbd81acb-8106-49a6-a2e5-2bb767a63bfa' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_QRcoder' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='QRcoder.dll' Source='..\packages\QRcoder.1.4.3\lib\net40\QRcoder.dll' Assembly='.net' KeyPath='yes' />
 				</Component>

@@ -4615,8 +4615,11 @@ namespace Protean
                     }
                     Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
                     IMessagingProvider moMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
-                    moMessaging.AdminProcess.MailingListAdminMenu(ref oMenuRoot);
-                    moMessaging = null;
+                    if (moMessaging != null) { 
+                        moMessaging.AdminProcess.MailingListAdminMenu(ref oMenuRoot);
+                        moMessaging = null;
+                    };
+                    
 
                     // If this is a cloned page, then remove certain options under By Page
                     if (Cms.gbClone && moPageXML.DocumentElement.SelectSingleNode("//MenuItem[@id = /Page/@id and (@clone > 0 or (@cloneparent='" + myWeb.mnCloneContextPageId + "' and @cloneparent > 0 ))]") != null)
