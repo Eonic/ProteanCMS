@@ -2837,9 +2837,9 @@ namespace Protean.Providers
                                 if (Text.IsEmail(cDecrypted))
                                 {
 
-                                    // Authentication is by way of e-mail address
+                                    // Authentication is by way of email address
                                     cProcessInfo = "Email authenctication: Retrieving user for email: " + cDecrypted;
-                                    // Get the user id based on the e-mail address
+                                    // Get the user id based on the email address
                                     nReturnId = moDbHelper.GetUserIDFromEmail(cDecrypted);
 
                                     if (nReturnId > 0)
@@ -2864,7 +2864,7 @@ namespace Protean.Providers
 
                                     // Authentication is by way of user ID
                                     cProcessInfo = "User ID Authentication: " + cDecrypted;
-                                    // Get the user id based on the e-mail address
+                                    // Get the user id based on the email address
                                     bCheck = moDbHelper.IsValidUser(Conversions.ToInteger(cDecrypted));
                                     if (bCheck)
                                         mnUserId = Conversions.ToInteger(cDecrypted);

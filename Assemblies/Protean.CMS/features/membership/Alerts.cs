@@ -194,7 +194,7 @@ namespace Protean
                         // Note on the error handling / exception catching.
                         // ================================================
                         // The excessive layers of exception handling here are designed to 
-                        // carry on trying with the next users if the e-mailing goes tits up.
+                        // carry on trying with the next users if the emailing goes tits up.
                         // What we need to do is hit the point where the Alert is logged, or else  
                         // we risk sending users repeated content.
 
@@ -280,7 +280,7 @@ namespace Protean
                                 cStatus = "Not All Sent";
 
                             // Add a response.
-                            string cMessage = "Alert sending was incomplete due to problems sending e-mail (" + nEmailSuccess + " out of " + nEmailCount + " email(s) were sent successfully).";
+                            string cMessage = "Alert sending was incomplete due to problems sending email (" + nEmailSuccess + " out of " + nEmailCount + " email(s) were sent successfully).";
                             var argoParent = oResponseXML.DocumentElement;
                             Tools.Xml.addElement(ref argoParent, "Message", cMessage, bPrepend: true);
 

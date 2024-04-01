@@ -7666,13 +7666,13 @@ namespace Protean
                         {
                             sendEmailOnShipped = true;
                             if (this.goRequest["nStatus"] != "9")
-                                shippedStatus += " (Confirmation e-mail will be sent to customer)";
+                                shippedStatus += " (Confirmation email will be sent to customer)";
                         }
 
                         string completedMsg = "";
                         if (moCartConfig["SendRecieptsFromAdmin"] != "off")
                         {
-                            completedMsg = " - Payment Recieved (resends receipt)";
+                            completedMsg = " - Payment Recieved (Resends receipt email)";
                         }
 
                         // update the status if we have submitted it allready
@@ -7697,16 +7697,16 @@ namespace Protean
                             case 6L: // Completed
                                 {
                                     base.addOption(ref oSelElmt, "Awaiting Payment", 13.ToString(), false, "Awaiting_Payment");
-                                    base.addOption(ref oSelElmt, "Completed", 6.ToString(), false, "Completed");
+                                    base.addOption(ref oSelElmt, "New Sale", 6.ToString(), false, "New Sale");
                                     base.addOption(ref oSelElmt, "Refunded", 7.ToString(), false, "Refunded");
                                     base.addOption(ref oSelElmt, shippedStatus, 9.ToString(), false, "Shipped");
-                                  //  base.addOption(ref oSelElmt, "Processed", 9.ToString(), false, "Shipped");
+                                    base.addOption(ref oSelElmt, "Shipped (No email)", 9.ToString() + ".1", false, "No email");
                                     base.addOption(ref oSelElmt, "Delete", 12.ToString());
                                     break;
                                 }
                             case 7L: // Refunded
                                 {
-                                    base.addOption(ref oSelElmt, "Completed" + completedMsg, 6.ToString());
+                                    base.addOption(ref oSelElmt, "New Sale" + completedMsg, 6.ToString());
                                     base.addOption(ref oSelElmt, "Refunded", 7.ToString());
                                     base.addOption(ref oSelElmt, "Delete", 12.ToString());
                                     break;
@@ -7719,7 +7719,7 @@ namespace Protean
                                 }
                             case 9L: // Shipped
                                 {
-                                    base.addOption(ref oSelElmt, "Completed" + completedMsg, 6.ToString());
+                                    base.addOption(ref oSelElmt, "New Sale" + completedMsg, 6.ToString());
                                     base.addOption(ref oSelElmt, "Refunded", 7.ToString());
                                     base.addOption(ref oSelElmt, shippedStatus, 9.ToString());
                                     break;
@@ -7727,7 +7727,7 @@ namespace Protean
                             case 10L: // Deposit Paid
                                 {
                                     base.addOption(ref oSelElmt, "Deposit Paid", 10.ToString());
-                                    base.addOption(ref oSelElmt, "Completed" + completedMsg, 6.ToString());
+                                    base.addOption(ref oSelElmt, "New Sale" + completedMsg, 6.ToString());
                                     base.addOption(ref oSelElmt, shippedStatus, 9.ToString());
                                     base.addOption(ref oSelElmt, "Delete", 12.ToString());
                                     break;
@@ -7735,7 +7735,7 @@ namespace Protean
                             case 13L: // Awaiting Payment
                                 {
                                     base.addOption(ref oSelElmt, "Awaiting Payment", 13.ToString());
-                                    base.addOption(ref oSelElmt, "Completed" + completedMsg, 6.ToString());
+                                    base.addOption(ref oSelElmt, "New Sale" + completedMsg, 6.ToString());
                                     base.addOption(ref oSelElmt, "Refunded", 7.ToString());
                                     base.addOption(ref oSelElmt, shippedStatus, 9.ToString());
                                     base.addOption(ref oSelElmt, "Delete", 12.ToString());
@@ -7744,7 +7744,7 @@ namespace Protean
                             case 17L: // In Progress
                                 {
                                     base.addOption(ref oSelElmt, "Awaiting Payment", 13.ToString(), false, "Awaiting_Payment");
-                                    base.addOption(ref oSelElmt, "Completed", 6.ToString(), false, "Completed");
+                                    base.addOption(ref oSelElmt, "New Sale", 6.ToString(), false, "New Sale");
                                     base.addOption(ref oSelElmt, "Refunded", 7.ToString(), false, "Refunded");
                                     base.addOption(ref oSelElmt, shippedStatus, 9.ToString(), false, "Shipped");
                                     base.addOption(ref oSelElmt, "Delete", 12.ToString());
@@ -7761,7 +7761,7 @@ namespace Protean
                             XmlElement argoInsertBeforeNode = null;
                             var oSwitch = base.addSwitch(ref oGrp1Elmt, "", oInsertBeforeNode: ref argoInsertBeforeNode);
                             var oCase = base.addCase(ref oSwitch, "Awaiting_Payment");
-                            var oCase1 = base.addCase(ref oSwitch, "Completed");
+                            var oCase1 = base.addCase(ref oSwitch, "New Sale");
                             var oCase2 = base.addCase(ref oSwitch, "Refunded");
                             var oCase3 = base.addCase(ref oSwitch, "Shipped");
                             //var oCase4 = base.addCase(ref oSwitch, "Processed");
@@ -7888,7 +7888,7 @@ namespace Protean
                                     }
                                 case "6":
                                     {
-                                        sStatusDesc = "Completed";
+                                        sStatusDesc = "New Sale";
                                         break;
                                     }
                                 case "7":
@@ -7904,6 +7904,12 @@ namespace Protean
                                 case "9":
                                     {
                                         sStatusDesc = "Shipped";
+                                        break;
+                                    }
+                                case "9.1":
+                                    {
+                                        sStatusDesc = "Shipped";
+                                        sendEmailOnShipped = false;
                                         break;
                                     }
                                 case "10":
@@ -8001,12 +8007,9 @@ namespace Protean
                                 }
                             }
                         }
-
                         base.addValues();
-
                         return base.moXformElmt;
                     }
-
                     catch (Exception ex)
                     {
                         stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmUpdateOrder", ex, "", cProcessInfo, gbDebug);

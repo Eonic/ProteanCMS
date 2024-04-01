@@ -8274,7 +8274,7 @@ namespace Protean
                     cEmail = Strings.Trim(cEmail);
                     if (Tools.Text.IsEmail(cEmail))
                     {
-                        // This assumes that e-mail addresses are unique, but in case they're not we'll select
+                        // This assumes that email addresses are unique, but in case they're not we'll select
                         // the first active user that has been most recently updated
                         cSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT TOP 1 nDirKey " + "FROM tblDirectory  " + "INNER JOIN tblAudit ON nauditid = nauditkey  " + "WHERE cDirXml LIKE ('%<Email>' + @email + '</Email>%') " + "AND cDirSchema='User'  ", Interaction.IIf(bIncludeInactive, " ", "AND nStatus<>0 ")), "ORDER BY ABS(nStatus) DESC, dUpdateDate DESC "));
 
