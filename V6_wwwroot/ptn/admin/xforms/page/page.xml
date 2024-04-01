@@ -60,6 +60,7 @@
 				<bind id="cIcon" nodeset="@icon" required="false()" type="string"/>
 				<bind id="uploadIcon" nodeset="@uploadIcon" required="false()" type="string" />
 				<bind id="bParalaxLoad" nodeset="@paralaxLoad" required="false()" type="string" />
+				<bind id="featuredLink" nodeset="@featuredLink" required="false()" type="string" />
 				<bind id="banner" nodeset="@banner" required="false()" type="string"/>
 			</bind>
 			<bind id="cStructDescription" nodeset="Description" required="false()" type="string"/>
@@ -288,6 +289,20 @@
 						</item>
 						<help class="inline">
 							<p>If Yes, this page will load in beneath its parent page and clicking the link will scroll to the start.</p>
+						</help>
+					</select1>
+					<select1 bind="featuredLink" appearance="full" class="inline-items">
+						<label class="form-label">Featured Link</label>
+						<item>
+							<label>Yes</label>
+							<value>true</value>
+						</item>
+						<item>
+							<label>No</label>
+							<value>false</value>
+						</item>
+						<help class="inline">
+							<p>If your site layout supports this, a featured link will be highlighted in the menu or styled as a button</p>
 						</help>
 					</select1>
 					<select bind="Screens" appearance="full" class="multiline bs-only">

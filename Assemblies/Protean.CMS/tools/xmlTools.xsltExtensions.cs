@@ -2342,7 +2342,7 @@ namespace Protean
                             {
                                 // Returns all of a specified type in the directory to specify the type use attribute "query2"
 
-                                sql = "select nCodeKey as value, cCodeName as name from tblCodes where nCodeParentId is NULL";
+                                sql = "select nCodeKey as value, cCodeName as name from tblCodes where nCodeParentId is NULL or nCodeParentId = 0";
                                 using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sql))  // Done by nita on 6/7/22
                                 {
                                     SqlDataReader sqloDr = (SqlDataReader)oDr;
