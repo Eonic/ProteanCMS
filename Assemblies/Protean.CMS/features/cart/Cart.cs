@@ -2665,7 +2665,7 @@ namespace Protean
                                 case "Invoice":
                                     {
                                         ListId = moMailConfig["InvoiceList"];
-                                        xsltPath = moMailConfig["Pure360InvoiceList"];
+                                        xsltPath = moMailConfig["GetDictionaryForInvoiceListXsl"];
                                         if (!string.IsNullOrEmpty(moMailConfig["QuoteList"]))
                                         {
                                             // if we have invoiced the customer we don't want to send them quote reminders
@@ -2680,7 +2680,7 @@ namespace Protean
                                 case "Quote":
                                     {
                                         ListId = moMailConfig["QuoteList"];
-                                        xsltPath = moMailConfig["Pure360QuoteList"];
+                                        xsltPath = moMailConfig["GetDictionaryForQuoteListXsl"];
                                         break;
                                     }
                                 case "Deposit":
@@ -2704,11 +2704,11 @@ namespace Protean
 
                                 if (!string.IsNullOrEmpty(xsltPath))
                                 {
-                                    valDict = GetDisctionaryForCampaigning(xsltPath, ref oCartElmt, valDict);
+                                    valDict = GetDictionaryForCampaign(xsltPath, ref oCartElmt, valDict);
                                 }
                                 else
                                 {
-                                    valDict.Add("Email", Email);
+                                    valDict.Add("email", Email);
                                     valDict.Add("FirstName", firstName);
                                     valDict.Add("LastName", lastName);
                                 }
@@ -2728,7 +2728,7 @@ namespace Protean
 
             }
 
-            private Dictionary<string, string> GetDisctionaryForCampaigning(string xsltPath, ref XmlElement oCartElmt, Dictionary<string, string> valDict = null)
+            private Dictionary<string, string> GetDictionaryForCampaign(string xsltPath, ref XmlElement oCartElmt, Dictionary<string, string> valDict = null)
             {
                 string styleFile;
                 string messageHtml = "";
@@ -12250,7 +12250,7 @@ namespace Protean
                     GetCart(ref oCartListElmt, mnCartId);
                     oCartListElmt.ToString().Replace(ReceiptId, cNewAuthNumber);
                     SaveCartXML(oCartListElmt, mnCartId);
-                    return cResult;
+                    return mnCartId.ToString();
                 }
                 catch (Exception ex)
                 {
