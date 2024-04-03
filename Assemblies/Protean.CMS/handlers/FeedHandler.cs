@@ -13,6 +13,7 @@ using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 using Protean.Tools;
 using Protean.Tools.Integration.Twitter;
+using static Protean.Cms.dbImport;
 
 namespace Protean
 {
@@ -238,7 +239,7 @@ namespace Protean
 
                     string cDeleteTempTableName = "tmp-" + cFeedURL.Substring(cFeedURL.LastIndexOf("/") + 1).Replace(".xml", "").Replace(".ashx", "");
                     var eventsDoneEvt = new System.Threading.ManualResetEvent(false);
-                    var Tasks = new Cms.dbImport(oDBH.oConn.ConnectionString, 0);
+                    Cms.dbImport Tasks = new Cms.dbImport(oDBH.oConn.ConnectionString, 0);
                     int workerThreads = 0;
                     int portThreads = 0;
                     System.Threading.ThreadPool.GetMaxThreads(out workerThreads, out portThreads);
@@ -326,7 +327,7 @@ namespace Protean
                                                 xDoc.LoadXml(sDoc);
                                                 foreach (XmlElement oInstance in xDoc.DocumentElement.SelectNodes("descendant-or-self::instance"))
                                                 {
-                                                    var stateObj = new Cms.dbImport.ImportStateObj();
+                                                    ImportStateObj stateObj = new Cms.dbImport.ImportStateObj();
                                                     stateObj.oInstance = oInstance;
                                                     stateObj.LogId = logId;
                                                     stateObj.FeedRef = cFeedURL;
@@ -344,7 +345,6 @@ namespace Protean
                                                     // cProcessInfo = "Is Last"
                                                     // eventsDoneEvt.Set()
                                                     // End If
-
                                                     System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(Tasks.ImportSingleObject), stateObj);
                                                     stateObj = default;
                                                     completeCount = completeCount + 1L;

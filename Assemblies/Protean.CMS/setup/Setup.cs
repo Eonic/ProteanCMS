@@ -87,7 +87,7 @@ namespace Protean
         private string msRedirectOnEnd = "";
         private bool mbSchemaExists = false;
         private bool ConnValid = false;
-        private bool mbDBExists = false;
+        //private bool mbDBExists = false;
         private bool isAlt = false;
 
         #region ErrorHandling
@@ -154,7 +154,7 @@ namespace Protean
 
                 myWeb = new Cms(moCtx);
                 // myWeb.InitializeVariables()
-
+                myWeb.Open();
                 sProcessInfo = "set session variables";
                 mcModuleName = "ProteanCMS.Setup";
                 // msException = ""
@@ -211,13 +211,13 @@ namespace Protean
                         if (myWeb.moDbHelper.checkDBObjectExists("tblContent", Tools.Database.objectTypes.Table))
                         {
                             mbSchemaExists = true;
-                            mbDBExists = true;
+                            //mbDBExists = true;
                         }
                         else
                         {
                             if (myWeb.moDbHelper.checkDBObjectExists(goConfig["DatabaseName"], Tools.Database.objectTypes.Database))
                             {
-                                mbDBExists = true;
+                                //mbDBExists = true;
                             }
                             mnUserId = 1;
                         }
@@ -2962,7 +2962,7 @@ namespace Protean
 
                     //XmlNode argoNode = oFrmElmt;
                     base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, "Please enter your database connection details.");
-                   // oFrmElmt = (XmlElement)argoNode;
+                    //oFrmElmt = (XmlElement)argoNode;
 
                     // If goConfig("DatabaseServer") = "" Then
 
@@ -3050,7 +3050,7 @@ namespace Protean
                                 else
                                 {
                                     base.valid = false;
-                                   // XmlNode argoNode1 = oFrmElmt;
+                                    //XmlNode argoNode1 = oFrmElmt;
                                     base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "These database connection details could not connect.");
                                     //oFrmElmt = (XmlElement)argoNode1;
                                 }
@@ -3558,7 +3558,7 @@ namespace Protean
         private Protean.XmlHelper.Transform oTransform = new Protean.XmlHelper.Transform();
 
         private string cUpdateType = "";
-        private string cUpdateSchema = "";
+        private string cUpdateSchema = string.Empty;
         private string cUpdateTableName = "";
         private string cUpdateKeyColumnName = "";
         private string cUpdateSchemaColumnName = "";

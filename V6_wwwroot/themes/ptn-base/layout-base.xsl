@@ -103,7 +103,7 @@
 					</xsl:attribute>
 				</xsl:if>
 				<div id="mainLayout" class="fullwidth activateAppearAnimation">
-					<xsl:if test="$currentPage/DisplayName/@banner='no-banner'">
+					<xsl:if test="$currentPage/DisplayName/@banner='no-banner' or $cartPage or $page/ContentDetail and ($sub-nav='left' or $sub-nav='top')">
 						<div id="content" class="visually-hidden">&#160;</div>
 					</xsl:if>
 					<xsl:if test="not($cartPage) and $currentPage/@name!='Home' and not($page/ContentDetail) and not($currentPage/DisplayName/@banner='no-banner')">
@@ -183,6 +183,7 @@
 								</div>
 							</div>
 						</div>
+						<div id="content" class="visually-hidden">&#160;</div>
 					</xsl:if>
 					<xsl:choose>
 						<!--~~~~~~~~~~~~~~ pages with side nav ~~~~~~~~~~~~~~ -->
@@ -227,6 +228,9 @@
 												</xsl:choose>
 											</div>
 										</div>
+										<xsl:if test="$sub-nav='left'">
+											<div id="content" class="visually-hidden">&#160;</div>
+										</xsl:if>
 										<xsl:if test="$adminMode or $page/Contents/Content[@position='LeftNav']">
 											<div id="LeftNav">
 												<xsl:apply-templates select="/Page" mode="addModule">
@@ -273,7 +277,6 @@
 						</xsl:when>
 						<!--~~~~~~~~~~~~~~ pages with no side nav ~~~~~~~~~~~~~~ -->
 						<xsl:otherwise>
-							<div id="content" class="visually-hidden">&#160;</div>
 							<xsl:apply-templates select="." mode="mainLayout">
 								<xsl:with-param name="containerClass" select="$container"/>
 							</xsl:apply-templates>

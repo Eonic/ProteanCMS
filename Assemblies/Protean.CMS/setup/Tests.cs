@@ -159,38 +159,36 @@ namespace Protean
         }
 
         public string TestImpersonation()
-        {
+        { 
+            var oEw = new Cms();
+            oEw.InitializeVariables();
             try
             {
-
-                var oEw = new Cms();
-                oEw.InitializeVariables();
-
+                string returnValue = "";
                 Tools.Security.Impersonate oImp = null;
                 if (oEw.moConfig["AdminAcct"] != "")
                 {
                     oImp = new Tools.Security.Impersonate();
                     if (oImp.ImpersonateValidUser(oEw.moConfig["AdminAcct"], oEw.moConfig["AdminDomain"], oEw.moConfig["AdminPassword"], cInGroup: oEw.moConfig["AdminGroup"]))
                     {
-                        return "Impersonation Success";
+                        returnValue = "Impersonation Success";
                     }
                     else
                     {
-                        return "Error Impersonation Failed";
+                        returnValue =  "Error Impersonation Failed";
                     }
                 }
                 else
                 {
-                    return "Impersonation Disabled";
+                    returnValue = "Impersonation Disabled";
                 }
-
                 if (oEw.moConfig["AdminAcct"] != "")
                 {
                     oImp.UndoImpersonation();
                     oImp = null;
                 }
+                return returnValue;
             }
-
             catch (Exception ex)
             {
                 return ex.Message;

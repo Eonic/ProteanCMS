@@ -62,7 +62,10 @@ namespace Protean.Providers
                         cFilterTarget = oContentNode.Attributes["filterTarget"].Value;
                     }
 
-
+                    if (FilterConfig.Attributes["maxPriceLimit"] != null)
+                    {
+                        oMaxPriceLimit.Value = Convert.ToString(FilterConfig.Attributes["maxPriceLimit"].Value);
+                    }
                     if (FilterConfig.Attributes["name"] != null)
                     {
                         sCotrolDisplayName = Convert.ToString(FilterConfig.Attributes["name"].Value);
@@ -83,8 +86,24 @@ namespace Protean.Providers
                     {
                         nPageId = aWeb.mnPageId.ToString();
                     }
+
+                    if (oMaxPriceLimit.Value != null)
+                    {
+                        if (oMaxPriceLimit.Value != string.Empty)
+                        {
+                            oMaxPriceLimit.Value = Convert.ToString(FilterConfig.Attributes["maxPriceLimit"].Value);
+                        }
+                        else
+                        {
+                            oMaxPriceLimit.Value = Convert.ToString(FilterConfig.GetAttribute("toPrice"));
+                        }
+                    }
+                    else
+                    {
+                        oMaxPriceLimit.Value = FilterConfig.GetAttribute("toPrice");
+                    }
                     arrParams.Add("MinPrice", FilterConfig.GetAttribute("fromPrice"));
-                    arrParams.Add("MaxPrice", FilterConfig.GetAttribute("toPrice"));
+                    arrParams.Add("MaxPrice", oMaxPriceLimit.Value);//FilterConfig.GetAttribute("toPrice"));
                     arrParams.Add("Step", FilterConfig.GetAttribute("step"));
                     arrParams.Add("PageId", nPageId);
                     arrParams.Add("whereSql", cWhereSql);
@@ -99,6 +118,7 @@ namespace Protean.Providers
                                 if (cnt == 1)
                                 {
                                     nMinPriceProduct = Conversions.ToInteger(oDr["MinProductPrice"]);
+                                    
                                 }
                                 nMaxPRiceProduct = Conversions.ToInteger(oDr["MaxProductPrice"]);
                                 sProductCount = Convert.ToString(oDr["ContentCount"]);
@@ -106,14 +126,19 @@ namespace Protean.Providers
                             }
 
                         }
-                        oSliderMinPrice.Value = FilterConfig.GetAttribute("fromPrice");
-                        oMaxPriceLimit.Value = FilterConfig.GetAttribute("toPrice");
+
+
+                        oSliderMinPrice.Value = Convert.ToString(nMinPriceProduct);// FilterConfig.GetAttribute("fromPrice");
+
+                       
+
+                       
 
                         oSliderMaxPrice.Value = nMaxPRiceProduct.ToString();
                         // oMaxPrice.Value = FilterConfig.GetAttribute("toPrice")
-
-
+                      
                         oStep.Value = FilterConfig.GetAttribute("step");
+                        //oMinPrice.Value= Convert.ToString(nMinPriceProduct);
                         oXml.Attributes.Append(oMinPrice);
                         oXml.Attributes.Append(oMaxPrice);
                         oXml.Attributes.Append(oMaxPriceLimit);

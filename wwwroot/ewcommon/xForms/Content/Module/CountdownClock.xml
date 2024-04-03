@@ -10,7 +10,7 @@
 				<cContentName/>
 				<cContentSchemaName>Module</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content contentType="CountdownClock" position="" moduleType="CountdownClock" targetDate="" targetTime="" box="" title="" link="" linkType="internal" imagePosition="below" GradientStart="#2970ad" GradientEnd="#0d4473" TextColor="#ffffff" resize="false" responsiveImg="true">
+					<Content contentType="CountdownClock" position="" moduleType="CountdownClock" targetDate="" targetTime="" box="" title="" link="" linkType="internal" linkText="Shop Now" linkBox="" imagePosition="below" Circle="#D9D9D9" CircleBorder="#3377FC" NumberColor="#3377FC" TextColor="#3377FC" NumberTextSize="20px" HeadingTextSize="16px" resize="false" responsiveImg="true">
 					</Content>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
@@ -30,16 +30,24 @@
 		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
 		<bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
 		<bind nodeset="tblContent/cContentXmlBrief/Content">
+			<bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
 			<bind id="cPosition" nodeset="@position" required="true()" type="string"/>
 			<bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
 			<bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
 			<bind id="ntargetDate" nodeset="@targetDate" required="false()" type="string"/>
 			<bind id="ntargetTime" nodeset="@targetTime" required="false()" type="string"/>
 			<bind id="panelImage" nodeset="@panelImage" required="false()" type="string" />
+			<bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
+			<bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
+			<bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+			<bind id="bLinkBox" nodeset="@linkBox" required="false()" type="string"/>
 			<bind id="imagePosition" nodeset="@imagePosition" required="false()" type="string" />
-		<bind id="GradientStart" nodeset="@GradientStart" required="false()" type="string"/>
-			<bind id="GradientEnd" nodeset="@GradientEnd" required="false()" type="string"/>
+			<bind id="Circle" nodeset="@Circle" required="false()" type="string"/>
+			<bind id="CircleBorder" nodeset="@CircleBorder" required="false()" type="string"/>
+			<bind id="NumberColor" nodeset="@NumberColor" required="false()" type="string"/>
 			<bind id="TextColor" nodeset="@TextColor" required="false()" type="string"/>
+			<bind id="NumberTextSize" nodeset="@NumberTextSize" required="false()" type="string"/>
+			<bind id="HeadingTextSize" nodeset="@HeadingTextSize" required="false()" type="string"/>
 		</bind>
 		<ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
 		<ewInclude filePath="/ewthemes/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
@@ -58,62 +66,122 @@
 				</input>
 				<ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='publish']"/>
 			</group>
-		<group class="row">
-					<label class="col-md-12">Formatted Box Styling</label>
-					<input bind="GradientStart" class="col-md-6 colorPicker">
-						<label>Gradient Start Colour</label>
-						<value></value>
-						<hint>Must be added as rgb, comma seperated, with no comma at the end, for example 0,0,0</hint>
-					</input>
-					<input bind="GradientEnd" class="col-md-6 colorPicker">
-						<label>Gradient End Colour</label>
-						<value></value>
-						<hint>Must be added as rgb, comma seperated, with no comma at the end, for example 0,0,0</hint>
-					</input>
-					<input bind="TextColor" class="col-md-6 colorPicker">
-						<label>Text Colour</label>
-						<value></value>
-						<hint data-placement="right">Choose a colour that has a high level of contrast to both of the gradient colours. Visit https://webaim.org/resources/contrastchecker/ to check the contrast meets accessibility guidelines</hint>
-					</input>
-					<input bind="HeadingTextSize" class="col-md-6" suffix="px">
-						<label>Heading Text Size</label>
-						<value></value>
-					</input>
-					<input bind="BodyTextSize" class="col-md-6" suffix="px">
-						<label>Body Text Size</label>
-						<value></value>
-					</input>					
-				</group>				
-				
-				<input bind="panelImage" class="pickImageFile label-border-top bs-only">
-					<label>Panel Image</label>
+			<group class="row">
+				<label class="col-md-12">Formatted Box Styling</label>
+				<input bind="Circle" class="col-md-6 colorPicker">
+					<label>Circle Colour</label>
+					<value></value>
+					<hint>Must be added as rgb, comma seperated, with no comma at the end, for example 0,0,0</hint>
+				</input>
+				<input bind="CircleBorder" class="col-md-6 colorPicker">
+					<label>Circle Border Colour</label>
+					<value></value>
+					<hint>Must be added as rgb, comma seperated, with no comma at the end, for example 0,0,0</hint>
+				</input>
+				<input bind="NumberColor" class="col-md-6 colorPicker">
+					<label>Number Colour</label>
+					<value></value>
+					<hint>Must be added as rgb, comma seperated, with no comma at the end, for example 0,0,0</hint>
+				</input>
+				<input bind="TextColor" class="col-md-6 colorPicker">
+					<label>Text Colour</label>
+					<value></value>
+					<hint data-placement="right">Choose a colour that has a high level of contrast to both of the gradient colours. Visit https://webaim.org/resources/contrastchecker/ to check the contrast meets accessibility guidelines</hint>
+				</input>
+				<input bind="NumberTextSize" class="col-md-6" suffix="px">
+					<label>Number Text Size</label>
 					<value></value>
 				</input>
-				<select1 bind="imagePosition" appearance="full">
-					<label class="bold-label">Place image above or below heading?</label>
-					<item>
-						<label>above</label>
-						<value>above</value>
-					</item>
-					<item>
-						<label>below</label>
-						<value>below</value>
-					</item>
-				</select1>			
+				<input bind="HeadingTextSize" class="col-md-6" suffix="px">
+					<label>Heading Text Size</label>
+					<value></value>
+				</input>
+			</group>
+
+			<input bind="panelImage" class="pickImageFile label-border-top bs-only">
+				<label>Panel Image</label>
+				<value></value>
+			</input>
+			<select1 bind="imagePosition" appearance="full">
+				<label class="bold-label">Place image above or below heading?</label>
+				<item>
+					<label>above</label>
+					<value>above</value>
+				</item>
+				<item>
+					<label>below</label>
+					<value>below</value>
+				</item>
+			</select1>
 		</group>
 		<group>
-			
+			<group class="inline">
 				<input bind="cModuleTitle" class="long">
 					<label>Title or Name</label>
 				</input>
-				<input bind="ntargetDate" class="calendar short">
+				<input bind="ntargetDate" class="calendar vshort">
 					<label>Target Date</label>
 				</input>
-				<input bind="ntargetTime" appearance="minimal" class="time">
+				<input bind="ntargetTime" appearance="minimal" class="time ">
 					<label>Target Time</label>
-				</input>				
-			
+				</input>
+			</group>
+			<group>
+				<label>Module Links</label>
+				<select1 bind="cLinkType" appearance="full">
+					<label class="label-heading">Type of link</label>
+					<item>
+						<label>Internal (Going to a page on this site)</label>
+						<value>internal</value>
+						<toggle case="cLinkType_1" event="DOMActivate"/>
+					</item>
+					<item>
+						<label>External (Going to another site)</label>
+						<value>external</value>
+						<toggle case="cLinkType_2" event="DOMActivate"/>
+					</item>
+					<item>
+						<label>Modal</label>
+						<value>modalLink</value>
+						<toggle case="cLinkType_3" event="DOMActivate"/>
+					</item>
+				</select1>
+				<switch class="disable">
+					<case id="cLinkType_1">
+						<select1 bind="cModuleLink" class="siteTree">
+							<label>Link to page</label>
+						</select1>
+					</case>
+					<case id="cLinkType_2">
+						<input bind="cModuleLink" class="short">
+							<label>Link to URL</label>
+						</input>
+					</case>
+					<case id="cLinkType_3">
+						<input bind="cModuleLink" class="short">
+							<label>Modal Name</label>
+						</input>
+					</case>
+				</switch>
+				<input bind="cModuleLinkText" class="long">
+					<label>Module footer link text</label>
+				</input>
+				<select bind="bLinkBox" appearance="full" class="multiline bs-only">
+					<item>
+						<label>Link entire box</label>
+						<value>true</value>
+					</item>
+					<help class="inline">This will make the whole of the box clickable, rather than just the button at the bottom. This is better for touchscreen devices, but don't use this if you have hyperlinks in the text.</help>
+				</select>
+				<select bind="mobileview" appearance="full" class="multiline bs-only">
+					<item>
+						<label>Display 'Read More' for mobile view</label>
+						<value>true</value>
+					</item>
+				</select>
+			</group>
 		</group>
+		
 	</group>
 	<group ref="submit" class="contentSubmit">
 		<submit submission="" ref="ewSubmit" class="principle">

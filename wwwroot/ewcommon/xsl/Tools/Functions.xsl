@@ -7924,6 +7924,9 @@
 						<xsl:variable name="imageSize" select="ew:ImageSize($newSrc)"/>
 
 						<xsl:variable name="image">
+							(<xsl:value-of select="$max-width"/>
+							<xsl:text>x</xsl:text>
+							<xsl:value-of select="$max-height"/>)
 							<img itemprop="image">
 								<!-- SRC -->
 								<xsl:choose>
@@ -7998,11 +8001,12 @@
 						</xsl:variable>
 						<xsl:copy-of select="ms:node-set($image)/*" />
 					</xsl:if>
+					
 				</xsl:otherwise>
 			</xsl:choose>
 
 		</xsl:if>
-	</xsl:template>
+ </xsl:template>
   
     
   <xsl:template name="sourceTag">
@@ -10786,7 +10790,7 @@
       </xsl:when>
       <xsl:otherwise>
         <!-- if no contnet, need a space for the compiling of the XSL. -->
-        <xsl:text>&#160;</xsl:text>
+        <xsl:text> </xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -10919,7 +10923,7 @@
           </xsl:when>
           <xsl:otherwise>
             <!-- if no contnet, need a space for the compiling of the XSL. -->
-            <xsl:text>&#160;</xsl:text>
+            <xsl:text> </xsl:text>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:otherwise>

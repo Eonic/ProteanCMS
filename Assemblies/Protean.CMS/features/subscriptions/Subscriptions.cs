@@ -2723,7 +2723,7 @@ namespace Protean
                     public System.Web.HttpRequest moRequest;
 
                     // Error Handling hasn't been formally set up for AdminXforms so this is just for method invocation found in xfrmEditContent
-                    public new event OnErrorEventHandler OnError;
+                    //public new event OnErrorEventHandler OnError;
 
                     public new delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs err);
 

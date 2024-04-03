@@ -406,14 +406,14 @@ namespace Protean
             {
                 cSeperator = ",";
             }
-            if (successMessage == "") {
+            if (successMessage == "")
+            {
                 successMessage = "Message Sent";
             }
             if (failureMessage == "")
             {
                 failureMessage = "Message Send Failed";
             }
-
             string styleFile;
             TextWriter sWriter = new StringWriter();
             var oXml = new XmlDocument();
@@ -587,7 +587,7 @@ namespace Protean
                     }
                 }
 
-                // All throught the process check if the e-mail address is actually valid.
+                // All throught the process check if the email address is actually valid.
                 string cEmailOverride;
                 cEmailOverride = goConfig["EmailOverride"];
                 if (!string.IsNullOrEmpty(cEmailOverride))
@@ -723,28 +723,28 @@ namespace Protean
                     }
                 }
 
-                // Check if we need to send the e-mail
+                // Check if we need to send the email
                 if (string.IsNullOrEmpty(goConfig["MailServer"]))
                 {
                     return "Mailserver Not Specified.";
                 }
                 else if (nTotalAddressesAttempted == nTotalAddressesSkipped)
                 {
-                    // If all the e-mails failed validation then don't bother sending them
+                    // If all the emails failed validation then don't bother sending them
                     switch (nTotalAddressesAttempted)
                     {
                         case 0:
                             {
-                                return failureMessage + ": No e-mail addresses were provided";
+                                return failureMessage + ": No email addresses were provided";
                             }
                         case 1:
                             {
-                                return failureMessage + ": E-mail address provided is invalid";
+                                return failureMessage + ": Email address provided is invalid";
                             }
 
                         default:
                             {
-                                return failureMessage + ": E-mail addresses provided are invalid";
+                                return failureMessage + ": Email addresses provided are invalid";
                             }
                     }
                 }
@@ -1032,10 +1032,10 @@ namespace Protean
                         }
                     }
 
-                    // Check if any e-mails were skipped.
+                    // Check if any emails were skipped.
                     if (nTotalAddressesSkipped > 0)
                     {
-                        successMessage += " (" + nTotalAddressesSkipped + " out of " + nTotalAddressesAttempted + " e-mails were not sent, because the e-mail addresses were invalid. ";
+                        successMessage += " (" + nTotalAddressesSkipped + " out of " + nTotalAddressesAttempted + " emails were not sent, because the email addresses were invalid. ";
                         if (gbDebug)
                             successMessage += "Skipped: " + cAddressesSkipped.TrimStart(',');
                         successMessage += ")";
@@ -1073,13 +1073,17 @@ namespace Protean
                                 }
                                 moMessaging.Activities.AddToList(moMailConfig["OptInList"], name, email, values);
                             }
+
                             catch (Exception ex)
                             {
                                 cProcessInfo = ex.StackTrace;
                             }
                         }
+
                     }
+
                     return successMessage;
+
                 }
             }
 
@@ -1269,7 +1273,7 @@ namespace Protean
                             }
                             else
                             {
-                                cEmailResult = failureMessage + ": E-mail address provided is invalid";
+                                cEmailResult = failureMessage + ": Email address provided is invalid";
                             }
 
                             // Append to Final Message
@@ -1328,7 +1332,6 @@ namespace Protean
             {
                 failureMessage = "Message Failed";
             }
-
             try
             {
                 // PerfMon.Log("Messaging", "emailerWithXmlAttachment - Get Xml")

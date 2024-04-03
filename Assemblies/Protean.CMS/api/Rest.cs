@@ -7,11 +7,10 @@ using System.Text;
 
 
 using System.Web.Configuration;
+using AngleSharp.Io;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using PayPal.Api;
 using Protean.Providers.Membership;
 
 namespace Protean
@@ -98,6 +97,7 @@ namespace Protean
 
             this.PerfMon.Log("API", "Request");
             string sProcessInfo = "";
+            string myResponse = "";
             try
             {
 
@@ -153,17 +153,17 @@ namespace Protean
                 }
                 // add paramDict to jObj
 
-                //if (paramDictionary != null)
-                //{
-                //    if (jObj is null)
-                //    {
-                //        jObj = new Newtonsoft.Json.Linq.JObject();
-                //    }
-                //    foreach (KeyValuePair<string, string> kvp in paramDictionary)
-                //        jObj.Add(new Newtonsoft.Json.Linq.JProperty(kvp.Key, kvp.Value));
-                //}
+                if (paramDictionary != null)
+                {
+                    if (jObj is null)
+                    {
+                        jObj = new Newtonsoft.Json.Linq.JObject();
+                    }
+                    foreach (KeyValuePair<string, string> kvp in paramDictionary)
+                        jObj.Add(new Newtonsoft.Json.Linq.JProperty(kvp.Key, kvp.Value));
+                }
 
-                Type calledType;
+                Type calledType = null;
 
 
                 if (Strings.LCase(ProviderName) == "cms.cart" | Strings.LCase(ProviderName) == "cms.content" | Strings.LCase(ProviderName) == "cms.admin")
@@ -176,10 +176,25 @@ namespace Protean
                     {
                         string[] pnArr = ProviderName.Split('.');
                         Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/" + Strings.LCase(pnArr[0]) + "Providers");
-                        // Dim assemblyInstance As [Assembly] = [Assembly].LoadFrom(goServer.MapPath(moPrvConfig.Providers(pnArr(1)).Parameters("path")))
-                        var assemblyInstance = Assembly.Load(moPrvConfig.Providers[pnArr[1]].Type);
-                        classPath = "Protean.Providers." + pnArr[0] + "." + pnArr[1] + "Extras.JSONActions";
-                        calledType = assemblyInstance.GetType(classPath, true);
+
+                        if (moPrvConfig != null)
+                        {
+                            // Dim assemblyInstance As [Assembly] = [Assembly].LoadFrom(goServer.MapPath(moPrvConfig.Providers(pnArr(1)).Parameters("path")))
+                            var assemblyInstance = Assembly.Load(moPrvConfig.Providers[pnArr[1]].Type);
+                            classPath = "Protean.Providers." + pnArr[0] + "." + pnArr[1] + "Extras.JSONActions";
+                            calledType = assemblyInstance.GetType(classPath, true);
+
+                        }
+                        else {
+                            if (!gbDebug)
+                            {
+                                this.moResponse.StatusCode = 400;
+                            }
+
+                            this.moResponse.StatusCode = 200;
+                            myResponse = "Config Section - protean/" + Strings.LCase(pnArr[0]) + "Providers Not Found";
+                        }
+
                     }
                     else
                     {
@@ -203,56 +218,71 @@ namespace Protean
                     // case for methods within ProteanCMS Core DLL
                     calledType = Type.GetType("Protean." + Strings.Replace(classPath, ".", "+"), true);
                 }
-
-                var o = Activator.CreateInstance(calledType);
-
-                var args = new object[1];
-                args[0] = this;
-                if (jObj != null)
+                if (calledType != null)
                 {
-                    Array.Resize(ref args, 2);
-                    args[1] = jObj;
-                }
-                else if (paramDictionary != null) 
-                {
-                    Array.Resize(ref args, 2);
-                    args[1] = paramDictionary;
-                }
-                else
-                {
-                    Array.Resize(ref args, 2);
-                    args[1] = null;
+                    var o = Activator.CreateInstance(calledType);
+
+                    var args = new object[1];
+                    args[0] = this;
+                    if (jObj != null)
+                    {
+                        Array.Resize(ref args, 2);
+                        args[1] = jObj;
+                    }
+                    else if (paramDictionary != null)
+                    {
+                        Array.Resize(ref args, 2);
+                        args[1] = paramDictionary;
+                    }
+                    else
+                    {
+                        Array.Resize(ref args, 2);
+                        args[1] = null;
+                    }
+
+                    // check the response whatever is coming like with code 400, 200, based on the output- return in Json
+
+                    myResponse = Conversions.ToString(calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, null, o, args));
+
                 }
 
-                // check the response whatever is coming like with code 400, 200, based on the output- return in Json
-                string myResponse = Conversions.ToString(calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, null, o, args));
-                this.moResponse.Write(myResponse);
+
+
             }
 
             catch (Exception ex)
             {
-                this.moResponse.StatusCode = 400;
-                
-                this.OnComponentError(this, new Tools.Errors.Error(mcModuleName, "JSONRequest", ex, sProcessInfo,0,null, this.moResponse.Status,this.moResponse.StatusCode, "", "", ""));
+                if (!gbDebug)
+                {
+                    this.moResponse.StatusCode = 400;
+                }
+                else {
+                    //useful as Azure Web Apps does not return useful error messages
+                    this.moResponse.StatusCode = 200;
+                }
+                this.OnComponentError(this, new Tools.Errors.Error(mcModuleName, "JSONRequest", ex, sProcessInfo, 0, null, this.moResponse.Status, this.moResponse.StatusCode, "", "", ""));
 
                 //this.OnComponentError(this, new Tools.Errors.ErrorEventArgs(this.mcModuleName, "JSONRequest", ex, sProcessInfo));
                 // returnException(mcModuleName, "getPageHtml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
                 if (gbDebug)
-                {
-                    this.moResponse.StatusCode = 404;
-                    this.moResponse.Write(JsonConvert.SerializeObject(ex));
+                {                 
+                    myResponse = JsonConvert.SerializeObject(ex);
                 }
                 else
                 {
-                    this.moResponse.StatusCode = 404;
-                    this.moResponse.Write(ex.Message);
+                    myResponse = ex.Message;
                 }
-
-                //Finalize();
             }
             finally
-            {
-
+            {                
+                this.moResponse.Write(myResponse);
+                if (gbDebug)
+                {
+                    Protean.Cms myWeb = new Cms();
+                    myWeb.InitializeVariables();
+                    myWeb.Open();
+                    myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.Custom1, 0, 0, 0, myResponse);
+                }
             }
             this.PerfMon.Write();
         }
@@ -278,23 +308,20 @@ namespace Protean
 
                 try
                 {
+                    if (myWeb.moSession != null)
+                    {
+                        if (myWeb.moSession["nUserId"] != null)
+                        {
+                            nUserId = Convert.ToInt32(myWeb.moSession["nUserId"]);
+                        }
+                    }
 
                     if (myWeb.mnUserId != 0)
                     {
                         nUserId = myWeb.mnUserId;
                     }
-                    if (nUserId == 0)
-                    {
-                        if(myWeb.moSession!=null)
-                        {
-                            if (myWeb.moSession["nUserId"] != null)
-                            {
-                                nUserId = Convert.ToInt32(myWeb.moSession["nUserId"]);
-                            }
-                        }
-                    }
                     // HttpContext httpContext = HttpContext.Current;
-                    if (myWeb.moCtx.Request.Headers != null)
+                    else if (myWeb.moCtx.Request.Headers != null)
                     {
                         if (myWeb.moCtx.Request.Headers["Authorization"] != null)
                         {

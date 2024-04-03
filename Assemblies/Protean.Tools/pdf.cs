@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
 using SelectPdf;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace Protean.Tools
 {
@@ -16,7 +17,7 @@ namespace Protean.Tools
         public delegate void ErrorEventHandler(object sender, Protean.Tools.Errors.ErrorEventArgs e);
         private const string mcModuleName = "Protean.Tools.PDF";
 
-        public MemoryStream GetPDFstream(XmlElement xPageXml, string XsltPath, string FontPath)
+        public MemoryStream GetPDFstream(XmlElement xPageXml, string XsltPath, string cFontPath,string cPageSize="")
         {
             {
                 try
@@ -34,10 +35,29 @@ namespace Protean.Tools
                     {  //PDF code
                         HtmlToPdf converter = new HtmlToPdf();
                         PdfDocument pdfDoc = converter.ConvertHtmlString(pdfDocumentXml, "");
-                        PdfCustomPageSize pageSize = PdfCustomPageSize.A4;
+                        //PdfCustomPageSize pageSize = PdfCustomPageSize.A4;
+                       
+                        if (cPageSize != string.Empty)
+                        {
+                            if (cPageSize.ToLower() == "a4")
+                            {
+                                PdfCustomPageSize pageSize = PdfCustomPageSize.A4;
+                            }
+                            else if (cPageSize.ToLower() == "a5")
+                            {
+                                PdfCustomPageSize pageSize = PdfCustomPageSize.A5;
+                            }
+                            else
+                            {
+                                PdfCustomPageSize pageSize = PdfCustomPageSize.A4;
+                            }
+                        }
+                        else
+                        {
+                            PdfCustomPageSize pageSize = PdfCustomPageSize.A4;
+                        }
                         pdfDoc.Save(ofileStream);
                         byte[] oStreamByteArray = ofileStream.ToArray();
-
                         converter = null;
                         pdfDoc.Close();
                         pdfDoc = null;
@@ -61,7 +81,7 @@ namespace Protean.Tools
                         // rendererOpts.Kerning = True
                         // rendererOpts.EnableCopy = True
 
-                        DirectoryInfo dir = new DirectoryInfo(FontPath);
+                        DirectoryInfo dir = new DirectoryInfo(cFontPath);
                         DirectoryInfo[] subDirs = dir.GetDirectories();
                         FileInfo[] files = dir.GetFiles();
                         // FileInfo fi = default(FileInfo);

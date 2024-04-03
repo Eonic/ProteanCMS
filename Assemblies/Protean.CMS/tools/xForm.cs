@@ -1708,7 +1708,7 @@ namespace Protean
 
                     if (firstGroup is null)
                     {
-                       // XmlNode argoNode1 = firstGroup;
+                        //XmlNode argoNode1 = firstGroup;
                         addNote(ref firstGroup, noteTypes.Alert, cValidationError);
                         //firstGroup = (XmlElement)argoNode1;
                     }
@@ -3499,7 +3499,8 @@ namespace Protean
                                 try
                                 {
                                     XmlNode grpNode = moXformElmt.SelectSingleNode("descendant-or-self::group[1]");
-                                    addNote(ref grpNode, noteTypes.Alert, sResponse, true, "alert-success");                                   
+                                    addNote(ref grpNode, noteTypes.Alert, sResponse, true, "alert-success");
+
                                 }
                                 catch (XmlException)
                                 {
@@ -3583,15 +3584,11 @@ namespace Protean
                     }
                 }
             }
-
-
             catch (Exception ex)
             {
                 returnException(ref msException, mcModuleName, "getSubmitted", ex, "", cProcessInfo, gbDebug);
             }
-
             return isSubmittedRet;
-
         }
 
         // Steps through all of the submit buttons to see if they have been pressed
@@ -3874,10 +3871,9 @@ namespace Protean
                                 nNodePosition = 0L;
                                 long nNodeCount = 0L;
                                 if (oInstanceNodeSet.Count == 0)
-                                {
-                                    addNote(ref moXformElmt, noteTypes.Alert, "The repeat with bind='" + oRptElmt.GetAttribute("bind") + "' could not find the node in the instance on xpath '" + sBindXpath + "'");
+                                {                                   
+                                    addNote(ref moXformElmt, noteTypes.Alert, "The repeat with bind='" + oRptElmt.GetAttribute("bind") + "' could not find the node in the instance on xpath '" + sBindXpath + "'");                                    
                                 }
-
                                 else
                                 {
                                     object oInstanceNodeSetCount = 0;

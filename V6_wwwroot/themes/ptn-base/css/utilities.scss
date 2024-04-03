@@ -1,6 +1,7 @@
 ﻿.hidden {
     display: none;
 }
+
 .not-xs {
     @include media-breakpoint-down($nav-breakpoint) {
         display: none;
@@ -12,6 +13,7 @@
         display: none;
     }
 }
+
 @mixin sr-only {
     position: absolute !important;
     clip: rect(1px, 1px, 1px, 1px);
@@ -20,6 +22,7 @@
     width: 1px;
     word-wrap: normal;
 }
+
 .skip {
     position: absolute;
     left: -10000px;

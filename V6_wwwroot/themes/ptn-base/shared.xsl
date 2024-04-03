@@ -25,7 +25,6 @@
 	<xsl:variable name="HomeNav">false</xsl:variable>
 	<xsl:variable name="NavFix">true</xsl:variable>
 	<xsl:variable name="nav-dropdown">true</xsl:variable>
-	<xsl:variable name="sub-nav">right</xsl:variable>
 	<xsl:variable name="SideSubWidth">3</xsl:variable>
 	<xsl:variable name="SideSubWidthCustom"></xsl:variable>
 	<xsl:variable name="themeBreadcrumb">false</xsl:variable>
@@ -398,10 +397,6 @@
 					<xsl:when test="/Page/User">/My-Account</xsl:when>
 					<xsl:otherwise>/Login</xsl:otherwise>
 				</xsl:choose>
-			</xsl:attribute>
-			<xsl:attribute name="class">
-				<xsl:text>nav-link login-btn not-xs </xsl:text>
-				<xsl:if test="/Page/User"> logged-in-icon</xsl:if>
 			</xsl:attribute>
 			<i class="fas fa-user">
 				<xsl:text> </xsl:text>

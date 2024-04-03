@@ -5,7 +5,9 @@ VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "ProteanCMS.Installer", "GACInstaller\ProteanCMS.Installer.wixproj", "{CB4BD400-FB8D-4B71-858F-AE4DD4E53489}"
 	ProjectSection(ProjectDependencies) = postProject
+		{0E651D1D-2D1E-0FC9-2636-FE58F78936C0} = {0E651D1D-2D1E-0FC9-2636-FE58F78936C0}
 		{12AF6171-9AAB-4C4D-A83B-85FE18A334C1} = {12AF6171-9AAB-4C4D-A83B-85FE18A334C1}
+		{B8C13866-2804-4975-83A4-4F76296248F5} = {B8C13866-2804-4975-83A4-4F76296248F5}
 		{E56FC8F2-7906-4182-BA6A-3FF427EA13C5} = {E56FC8F2-7906-4182-BA6A-3FF427EA13C5}
 	EndProjectSection
 EndProject
@@ -172,8 +174,8 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {8F245494-C013-432B-BC6E-FE6BA5C38156}
-		BuildVersion_IncrementBeforeBuild = False
 		BuildVersion_StartDate = 2000/1/1
+		BuildVersion_IncrementBeforeBuild = False
+		SolutionGuid = {8F245494-C013-432B-BC6E-FE6BA5C38156}
 	EndGlobalSection
 EndGlobal

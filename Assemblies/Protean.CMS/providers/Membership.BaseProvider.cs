@@ -304,7 +304,7 @@ namespace Protean.Providers
                         // Set the action URL
 
                         // Is the membership email address secure.
-                        if (myWeb.moConfig["SecureMembershipAddress"] != "")
+                        if (myWeb.moConfig["SecureMembershipAddress"] != "" & myWeb.moConfig["SecureMembershipAddress"] != null)
                         {
                             XmlElement oSubElmt = (XmlElement)base.moXformElmt.SelectSingleNode("descendant::submission");
                             oSubElmt.SetAttribute("action", myWeb.moConfig["SecureMembershipAddress"] + myWeb.moConfig["ProjectPath"] + "/" + myWeb.mcPagePath);
@@ -371,9 +371,7 @@ namespace Protean.Providers
                                         {
                                             goSession["cCurrency"] = UserXml.GetAttribute("defaultCurrency");
                                         }
-
                                     }
-
                                     // Set the remember me cookie
                                     if (bRememberMe)
                                     {
@@ -439,7 +437,7 @@ namespace Protean.Providers
                     XmlElement oFrmElmt;
                     string sValidResponse;
                     string cProcessInfo = "";
-                    bool getRecordByEmail;
+                    //bool getRecordByEmail;
                     try
                     {
 
@@ -447,14 +445,15 @@ namespace Protean.Providers
                         if (myWeb.moConfig["EmailUsernames"] != null)
                         {
                             if ((myWeb.moConfig["EmailUsernames"].ToLower()) == "on") {
-                                getRecordByEmail = true;
+                                //getRecordByEmail = true;
                             }
-                            else {getRecordByEmail = false; }
-                                
+                            else {
+                                //getRecordByEmail = false;
+                                }                                
                         }
                         else
                         {
-                            getRecordByEmail = false;
+                            //getRecordByEmail = false;
                         }
 
                         base.NewFrm("PasswordReminder");
@@ -1131,7 +1130,7 @@ namespace Protean.Providers
                                 }
 
                                 // Is the membership email address secure.
-                                if (myWeb.moConfig["SecureMembershipAddress"] != "" & myWeb.mbAdminMode == false)
+                                if ((myWeb.moConfig["SecureMembershipAddress"] != "" & myWeb.moConfig["SecureMembershipAddress"] != null) & myWeb.mbAdminMode == false)
                                 {
                                     XmlElement oSubElmt = (XmlElement)base.moXformElmt.SelectSingleNode("descendant::submission");
                                     if (myWeb.mcPagePath is null)
@@ -2838,9 +2837,9 @@ namespace Protean.Providers
                                 if (Text.IsEmail(cDecrypted))
                                 {
 
-                                    // Authentication is by way of e-mail address
+                                    // Authentication is by way of email address
                                     cProcessInfo = "Email authenctication: Retrieving user for email: " + cDecrypted;
-                                    // Get the user id based on the e-mail address
+                                    // Get the user id based on the email address
                                     nReturnId = moDbHelper.GetUserIDFromEmail(cDecrypted);
 
                                     if (nReturnId > 0)
@@ -2865,7 +2864,7 @@ namespace Protean.Providers
 
                                     // Authentication is by way of user ID
                                     cProcessInfo = "User ID Authentication: " + cDecrypted;
-                                    // Get the user id based on the e-mail address
+                                    // Get the user id based on the email address
                                     bCheck = moDbHelper.IsValidUser(Conversions.ToInteger(cDecrypted));
                                     if (bCheck)
                                         mnUserId = Conversions.ToInteger(cDecrypted);

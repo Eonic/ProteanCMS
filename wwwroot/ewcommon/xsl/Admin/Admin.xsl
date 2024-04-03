@@ -12234,9 +12234,10 @@
 	<!-- -->
 	<xsl:template match="Page[@layout='VersionControlProcess']" mode="Admin">
 		<div class="row" id="tpltListReports">
-			<div class="col-md-9">
+			<div class="col-md-12">
 				<xsl:apply-templates select="ContentDetail/Content/GenericReport" mode="reportDetail"/>
 			</div>
+			<!--
 			<div class="col-md-3">
 				<div class="panel">
 					<div class="panel-body">
@@ -12247,6 +12248,7 @@
 					</div>
 				</div>
 			</div>
+			-->
 		</div>
 	</xsl:template>
 	<!-- -->
@@ -14034,6 +14036,7 @@
 						<div class="form-group input-containing col-md-5">
 							<div class="control-wrapper input-wrapper appearance-">
 								<input type="text" v-bind:id="'NewUrl_'+index" class="col-md-5 textbox form-control redirecttext" v-bind:value="urls.attributes.value.nodeValue" />
+                <input type="hidden"  class="col-md-5 textbox form-control hiddenNewUrlText" v-bind:value="urls.attributes.value.nodeValue" />
 							</div>
 						</div>
 						<div class="form-group trigger-group col-md-1">

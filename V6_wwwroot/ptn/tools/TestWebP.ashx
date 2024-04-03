@@ -34,7 +34,7 @@ public class Handler : IHttpHandler {
                             var encoder = new Imazen.WebP.SimpleEncoder();
                             encoder.Encode(bitMap, saveImageStream, WebPQuality);
                             encoder = null;
-                            context.Response.Write("Protean Logo xx converted to WebP <img src='" + webpFileName + "'/>");                            
+                            context.Response.Write("Protean Logo converted to WebP <img src='" + webpFileName + "'/>");                            
                         }          
 
 

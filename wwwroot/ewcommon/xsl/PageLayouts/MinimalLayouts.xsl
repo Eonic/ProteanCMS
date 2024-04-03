@@ -628,9 +628,7 @@
           </xsl:if>
           <div class="terminus">&#160;</div>
           <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and not(@imagePosition='above')">
-            <div class="panel-image">
-              <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
-            </div>
+			  <xsl:apply-templates select="." mode="displayModulePanelImage"/>
           </xsl:if>
           <xsl:apply-templates select="." mode="displayBrief"/>
           <xsl:if test="(@linkText!='' and @link!='') or @linkType='form'">
@@ -663,6 +661,32 @@
     </xsl:choose>
   </xsl:template>
 
+
+	<xsl:template match="Content[@type='Module']" mode="displayModulePanelImage">
+		<div class="panel-image">
+			<!--<img src="{@panelImage}" alt="{@title}" class="img-responsive" />-->
+			<div class="cta-img">
+				<xsl:call-template  name="displayResponsiveImage">
+					<xsl:with-param name="crop" select="true()"/>
+					<xsl:with-param name="width" select="'1132'"/>
+					<xsl:with-param name="height" select="'322'"/>
+					<xsl:with-param name="max-width-xxs" select="'335'"/>
+					<xsl:with-param name="max-height-xxs" select="'180'"/>
+					<xsl:with-param name="max-width-xs" select="'335'"/>
+					<xsl:with-param name="max-height-xs" select="'180'"/>
+					<xsl:with-param name="max-width-sm" select="'345'"/>
+					<xsl:with-param name="max-height-sm" select="'187'"/>
+					<xsl:with-param name="max-width-md" select="'455'"/>
+					<xsl:with-param name="max-height-md" select="'250'"/>
+					<xsl:with-param name="max-width-lg" select="'555'"/>
+					<xsl:with-param name="max-height-lg" select="'322'" />
+					<xsl:with-param name="imageUrl" select="@panelImage"/>
+					<xsl:with-param name="class" select="'img-responsive'"/>
+				</xsl:call-template>				
+			</div>
+		</div>
+	</xsl:template>	
+	
   <xsl:template match="Content" mode="hideScreens">
     <xsl:if test="not($adminMode)">
       <xsl:if test="contains(@screens,'lg')">
@@ -14625,8 +14649,9 @@
 
   <!-- Vimeo video -->
   <xsl:template match="Content[@moduleType='Video' and @videoType='Vimeo']" mode="displayBrief">
-    <xsl:variable name="code">
-      <xsl:variable name="raw" select="Vimeo/@code"/>
+    
+   <xsl:variable name="raw" select="Vimeo/@code"/>
+   <xsl:variable name="code">
       <xsl:choose>
         <xsl:when test="contains($raw, 'vimeo.com/video/')">
           <xsl:value-of select="substring(substring-after($raw, 'vimeo.com/video/'), 1, 9)"/>
@@ -14639,6 +14664,16 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
+	  <xsl:variable name="codeOnly">
+		  <xsl:choose>
+		      <xsl:when test="contains($code, '?')">
+		          <xsl:value-of select="substring(substring-before($raw, '?'), 1, 9)"/>
+	          </xsl:when>
+	          <xsl:otherwise>
+		          <xsl:value-of select="$code"/>
+	          </xsl:otherwise>
+	      </xsl:choose>
+	  </xsl:variable>
     <div id="Video{@id}" class="Video">
       <xsl:if test="@size!='Manual'">
         <xsl:attribute name="class">
@@ -14658,9 +14693,11 @@
 		  </xsl:attribute>
 			  <xsl:attribute name="src">
           <xsl:text>//player.vimeo.com/video/</xsl:text>
-          <xsl:value-of select="$code"/>
+          <xsl:value-of select="$codeOnly"/>
           <!-- Turn all options off by default -->
-			<xsl:if test="Vimeo/@autoplay='true'">
+				  <xsl:text>?background=0&amp;badge=0&amp;portrait=0&amp;autopause=0&amp;player id=0&amp;app_id=58479</xsl:text>
+
+				  <xsl:if test="Vimeo/@autoplay='true'">
 				<xsl:text>&amp;autoplay=1</xsl:text>
 			</xsl:if>
 				  <xsl:choose>
@@ -14671,8 +14708,7 @@
 				            <xsl:text>&amp;loop=0</xsl:text>
 				    </xsl:otherwise>
 				  </xsl:choose>
-          <xsl:text>&amp;background=0&amp;badge=0&amp;portrait=0&amp;autopause=0&amp;player id=0&amp;app_id=58479</xsl:text>
-        </xsl:attribute>
+                  </xsl:attribute>
         <xsl:choose>
           <xsl:when test="@size='Manual'">
             <xsl:if test="@width!=''">

@@ -7,10 +7,10 @@
 				<nContentPrimaryId/>
 				<nVersion/>
 				<cContentForiegnRef/>
-				<cContentName>PriceFilter</cContentName>
+				<cContentName>Price</cContentName>
 				<cContentSchemaName>Filter</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content type="Filter" filterType="PriceFilter"  fromPrice="" toPrice="" step="" className="PriceFilter" providerName="default"/>
+					<Content type="Filter" filterType="PriceFilter"  fromPrice="" toPrice="" step="" maxPriceLimit="" className="PriceFilter" providerName="default"/>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
 				<nAuditId/>
@@ -37,6 +37,7 @@
 		
 		<bind id="nFromPrice" nodeset="tblContent/cContentXmlBrief/Content/@fromPrice" required="false()" type="string"/>
 		<bind id="nToPrice" nodeset="tblContent/cContentXmlBrief/Content/@toPrice" required="false()" type="string"/>
+		<bind id="nMaxPriceLimit" nodeset="tblContent/cContentXmlBrief/Content/@maxPriceLimit" required="false()" type="string"/>
 		<bind id="nStep" nodeset="tblContent/cContentXmlBrief/Content/@step" required="false()" type="string"/>
 	</model>
 	<group ref="EditContent" class="2col">
@@ -81,6 +82,9 @@
 				</input>
 				<input bind="nStep" type="text" >
 					<label>Step</label>
+				</input>
+				<input bind="nMaxPriceLimit" type="text" >
+					<label>Max Price Limit</label>
 				</input>
 			</group>
 		</group>

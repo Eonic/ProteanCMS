@@ -90,23 +90,31 @@ $('.btnClear').on('click', function (event) {
 
 
 $(document).on("click", ".btn-update", function (event) {
-    debugger;
+   
     $(".modalLable").addClass("hidden");
     $(this).addClass("hidden")
     var parentDiv = $(this).closest('.parentDivOfRedirect');
-    var savedlbl = $(parentDiv).find('.tempLableSave');
 
-    $(savedlbl).removeClass("hidden");
     var oldUrl = "";
     var NewUrl = "";
 
     var parentDiv = $(this).closest('.parentDivOfRedirect');
+    hiddenOldUrl = $(parentDiv).find('input[type="hidden"]').val();
+    var hiddenNewUrl = parentDiv[0].children[0].children[1].children[0].children[1].value
     var input = $(parentDiv).find('input[type="text"]');
     oldUrl = $(input[0]).val();
     NewUrl = $(input[1]).val();
     var index = $(input[0]).attr("id").split('_').pop();
+    if (oldUrl == NewUrl) {
+        alert("Old url and new url should not be same.");
+        $(input[1]).val(hiddenNewUrl);
 
-    hiddenOldUrl = $(parentDiv).find('input[type="hidden"]').val();
+        return false;
+    }
+    var savedlbl = $(parentDiv).find('.tempLableSave');
+
+    $(savedlbl).removeClass("hidden");
+    // hiddenOldUrl = $(parentDiv).find('input[type="hidden"]').val();
     RedirectPage.loading = true;
     RedirectPage.show = true;
     type = RedirectPage.redirectType();
@@ -116,7 +124,7 @@ $(document).on("click", ".btn-update", function (event) {
             .then(function (response) {
 
                 if (response.data == "True") {
-                    debugger;
+                   
                     RedirectPage.addNewUrl(oldUrl, NewUrl);
                     RedirectPage.urlList[index].attributes[0].nodeValue = oldUrl;
                     RedirectPage.urlList[index].attributes[1].nodeValue = NewUrl;
@@ -225,7 +233,7 @@ $(document).on("click", ".btn-updateNewUrl", function (event) {
             .then(function (response) {
 
                 if (response.data == "True") {
-                    if (confirm("Old url is already exist. Do you want to replace it?")) {
+                    if (confirm("Another rewrite map is pointing to the Old URL. Do you want to update the destination to the New URL?")) {
                         RedirectPage.addNewUrl(oldUrl, NewUrl);
                     }
                     else {
@@ -527,11 +535,15 @@ if (rediectElement) {
                 }
             },
             SaveNewUrl: function () {
-                
+
                 $(".modalLable").addClass("hidden");
                 var that = this;
                 var oldUrl = $("#OldUrlmodal").val();
                 var NewUrl = $("#NewUrlModal").val();
+                if (oldUrl == NewUrl) {
+                    alert("Old url and new url should not be same.")
+                    return false;
+                }
                 $("#loadSpin").modal("show");
                 that.loading = true;
                 that.show = true;
@@ -541,10 +553,10 @@ if (rediectElement) {
                     var inputJson = { redirectType: type, oldUrl: oldUrl, NewUrl: NewUrl };
                     axios.post(IsUrlPResentAPI, inputJson)
                         .then(function (response) {
-
+                           
                             if (response.data == "True") {
-                                
-                                if (confirm("Old url is already exist. Do you want to replace it?")) {
+
+                                if (confirm("Another rewrite map is pointing to the Old URL. Do you want to update the destination to the New URL??")) {
 
                                     that.addNewUrl(oldUrl, NewUrl);
 
@@ -640,7 +652,6 @@ if (rediectElement) {
                 var inputJson = { redirectType: type, searchObj: searchObj };
                 axios.post(getTotalNumberOfSearchUrls, inputJson)
                     .then(function (response) {
-
                         if (response.data != "" || response.data == 0) {
                             $("#totalUrlCount").val(response.data);
                             var totalCountOfLoadlist = that.urlList.length + that.newAddedUrlList.length;
@@ -667,11 +678,11 @@ if (rediectElement) {
 }
 $(".endLable").addClass("hidden");
 $('.scolling-pane').on('scroll', function () {
-    
+
     var searchObj = $("#SearchURLText").val();
-   
-    if ($(this).scrollTop() + $(this).innerHeight() >= ($(this)[0].scrollHeight-1)) {
-      
+
+    if ($(this).scrollTop() + $(this).innerHeight() >= ($(this)[0].scrollHeight - 1)) {
+
         var totalCount = $("#totalUrlCount").val();
         var loadCount = $(".parentDivOfRedirect").length;
         if (totalCount != loadCount) {
@@ -696,7 +707,7 @@ $('.scolling-pane').on('scroll', function () {
 
 
 $(document).on("click", ".btnSaveProduct", function (event) {
-   
+
     var newContentPath = $("#cContentPath").val();
     editProduct.UrlPathOnChange(newContentPath);
 

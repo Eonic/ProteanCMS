@@ -5697,7 +5697,7 @@
                   </xsl:otherwise>
                 </xsl:choose>
               </xsl:if>
-              <a href="/ewcommon/tools/excel.ashx?{/Page/Request/ServerVariables/Item[@name='QUERY_STRING']/node()}" class="btn btn-sm btn-primary" target="_new">
+              <a href="/ptn/tools/excel.ashx?{/Page/Request/ServerVariables/Item[@name='QUERY_STRING']/node()}" class="btn btn-sm btn-primary" target="_new">
                 <i class="far fa-file-excel">
                   <xsl:text> </xsl:text>
                 </i>
@@ -6565,7 +6565,7 @@
           <xsl:when test="@statusId='3'">Delivery Address Added</xsl:when>
           <xsl:when test="@statusId='4'">Confirmed</xsl:when>
           <xsl:when test="@statusId='5'">Pass for Payment</xsl:when>
-          <xsl:when test="@statusId='6'">Completed</xsl:when>
+          <xsl:when test="@statusId='6'">New Sale</xsl:when>
           <xsl:when test="@statusId='7'">Refunded</xsl:when>
           <xsl:when test="@statusId='8'">Failed</xsl:when>
           <xsl:when test="@statusId='9'">Shipped</xsl:when>
@@ -6697,7 +6697,7 @@
                       <xsl:when test="@statusId='3'">Delivery Address Added</xsl:when>
                       <xsl:when test="@statusId='4'">Confirmed</xsl:when>
                       <xsl:when test="@statusId='5'">Pass for Payment</xsl:when>
-                      <xsl:when test="@statusId='6'">Completed</xsl:when>
+                      <xsl:when test="@statusId='6'">New Sale</xsl:when>
                       <xsl:when test="@statusId='7'">Refunded</xsl:when>
                       <xsl:when test="@statusId='8'">Failed</xsl:when>
                       <xsl:when test="@statusId='9'">Shipped</xsl:when>
@@ -6790,8 +6790,8 @@
               <xsl:when test="$statusId='6'">
                 <i class="fa fa-check">
                   <xsl:text> </xsl:text>
-                </i><xsl:text> </xsl:text>Completed
-              </xsl:when>
+                </i><xsl:text> </xsl:text>New Sale
+			  </xsl:when>
               <xsl:when test="$statusId='7'">Refunded</xsl:when>
               <xsl:when test="$statusId='8'">Failed</xsl:when>
               <xsl:when test="$statusId='9'">
@@ -7534,7 +7534,7 @@
           <xsl:when test="$statusId='3'">Delivery Address Added</xsl:when>
           <xsl:when test="$statusId='4'">Confirmed</xsl:when>
           <xsl:when test="$statusId='5'">Pass for Payment</xsl:when>
-          <xsl:when test="$statusId='6'">Completed</xsl:when>
+          <xsl:when test="$statusId='6'">New Sale</xsl:when>
           <xsl:when test="$statusId='7'">Refunded</xsl:when>
           <xsl:when test="$statusId='8'">Failed</xsl:when>
           <xsl:when test="$statusId='9'">Shipped</xsl:when>
@@ -7951,8 +7951,8 @@
               <xsl:text> </xsl:text>
             </i>
             <h4>Hint</h4>
-            Carriers are the shipping companies that you use, when you ship a completed order you can select one of these and send information of a tracking link to your customer.
-          </div>
+			  Carriers are the shipping companies that you use, when you ship a new sale order you can select one of these and send information of a tracking link to your customer.
+		  </div>
         </div>
         <div class="col-md-9" id="column2">
           <div class="card card-default" >
@@ -8066,10 +8066,10 @@
         <div class="btn-group headerButtons">
           <xsl:choose>
             <xsl:when test="/Page/Request/Form/Item[@name='startDate']">
-              <a href="/ewcommon/tools/excel.ashx?{/Page/Request/ServerVariables/Item[@name='QUERY_STRING']/node()}&amp;startDate={/Page/Request/Form/Item[@name='startDate']}" class="excel adminButton" target="_new">Excel Download</a>
+              <a href="/ptn/tools/excel.ashx?{/Page/Request/ServerVariables/Item[@name='QUERY_STRING']/node()}&amp;startDate={/Page/Request/Form/Item[@name='startDate']}" class="excel adminButton" target="_new">Excel Download</a>
             </xsl:when>
             <xsl:otherwise>
-              <a href="/ewcommon/tools/excel.ashx?{/Page/Request/ServerVariables/Item[@name='QUERY_STRING']/node()}" class="excel adminButton" target="_new">Excel Download</a>
+              <a href="/ptn/tools/excel.ashx?{/Page/Request/ServerVariables/Item[@name='QUERY_STRING']/node()}" class="excel adminButton" target="_new">Excel Download</a>
             </xsl:otherwise>
           </xsl:choose>
         </div>
@@ -11370,7 +11370,7 @@
     <div class="card">
       <div class="card-header">
         <div class="btn-group float-end">
-          <a href="/ewcommon/tools/excel.ashx?{/Page/Request/ServerVariables/Item[@name='QUERY_STRING']/node()}" class="btn btn-primary btn-xs float-end" target="_new">
+          <a href="/ptn/tools/excel.ashx?{/Page/Request/ServerVariables/Item[@name='QUERY_STRING']/node()}" class="btn btn-primary btn-xs float-end" target="_new">
             <i class="fa icon-file-excel">&#160;</i>&#160;Excel Download
           </a>
         </div>

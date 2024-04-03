@@ -178,6 +178,29 @@
 						<input bind="cContentEventName" class="required long">
 							<label>Event name</label>
 						</input>
+						<group class="row">
+							<input bind="dEventDate" class="calendar required col-lg-6">
+								<label>Start date</label>
+							</input>
+							<input bind="dEventEndDate" class="calendar col-lg-6">
+								<label>End date</label>
+								<help class="inline">
+									<p>
+										<strong>Optional.</strong> If specified this content will expire on this date.
+									</p>
+								</help>
+							</input>
+							<group class="col-lg-6">
+								<input bind="cContentSTime" class="time">
+									<label>Start time</label>
+								</input>
+							</group>
+							<group class="col-lg-6">
+								<input bind="cContentETime" class="time">
+									<label>End time</label>
+								</input>
+							</group>
+						</group>
 						<group>
 							<!-- label>Details</label -->
 							<input bind="cTeaserSlug" class="long">
@@ -192,29 +215,7 @@
 						</group>
 
 					</group>
-					<group class="row">
-						<input bind="dEventDate" class="calendar required col-lg-6">
-							<label>Start date</label>
-						</input>
-						<input bind="dEventEndDate" class="calendar col-lg-6">
-							<label>End date</label>
-							<help class="inline">
-								<p>
-									<strong>Optional.</strong> If specified this content will expire on this date.
-								</p>
-							</help>
-						</input>
-						<group class="col-lg-6">
-							<input bind="cContentSTime" class="time">
-								<label>Start time</label>
-							</input>
-						</group>
-						<group class="col-lg-6">
-							<input bind="cContentETime" class="time">
-								<label>End time</label>
-							</input>
-						</group>
-					</group>
+
 					<group class="row">
 						<select1 bind="cEventStatus" appearance="full" class="vshort col-lg-6">
 							<label>Event Status</label>

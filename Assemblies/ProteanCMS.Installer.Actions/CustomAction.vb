@@ -10,16 +10,18 @@ Imports System.Web.Management
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.0.69.0"
-    Public Shared ptnAppStartAssemblyVersion As String = "6.0.0.0"
+    Public Shared ewAssemblyVersion As String = "6.1.3.0"
+    Public Shared ptnAppStartAssemblyVersion As String = "6.1.0.0"
     Public Shared bundleAssemblyVersion As String = "1.10.0.0"
     Public Shared bundleLessAssemblyVersion As String = "1.12.44.0"
     Public Shared bundleSassAssemblyVersion As String = "1.12.36.0"
     Public Shared LibSassHostAssemblyVersion As String = "1.3.3.0"
-    Public Shared jsSwitcherAssemblyVersion As String = "3.3.0.0"
-    Public Shared jsSwitcherV8AssemblyVersion As String = "3.17.4.0"
-    Public Shared jsSwitcherV8NativeWinx64AssemblyVersion As String = "3.17.4.0"
+    Public Shared DartSassHostAssemblyVersion As String = "1.0.11.0"
+    Public Shared jsSwitcherAssemblyVersion As String = "3.24.1.0"
+    Public Shared jsSwitcherV8AssemblyVersion As String = "3.24.1.0"
+    Public Shared jsSwitcherV8NativeWinx64AssemblyVersion As String = "3.23.2.0"
     Public Shared WebGreaseAssemblyVersion As String = "1.6.5135.21930"
+    Public Shared AdvancedStringBuilderVersion As String = "0.1.1.0"
     Public Shared JsonAssemblyVersion As String = "13.0.2.27524" '"8.0.1.19229""
     Public Shared YUIAssemblyVersion As String = "1.9.23.0"
     Public Shared MicrosoftAjaxAssemblyVersion As String = "1.10.0.0"
@@ -32,14 +34,20 @@ Public Class CustomActions
     Public Shared CreateSendAssemblyVersion As String = "4.2.2.0"
     Public Shared TidyHTML5ManagedAssemblyVersion As String = "1.1.5.0"
     Public Shared ClearScriptAssemblyVersion As String = "5.5.6.0"
-    Public Shared MicrosoftClearScriptV8AssemblyVersion As String = "7.2.4.0"
+    Public Shared MicrosoftClearScriptV8AssemblyVersion As String = "7.4.4.0"
     Public Shared AlphaFSAssemblyVersion As String = "2.2.0.0"
-    Public Shared MagickNETAssemblyVersion As String = "13.4.0.0"
-    Public Shared MagickNETCoreAssemblyVersion As String = "13.4.0.0"
-
+    Public Shared MagickNETCoreAssemblyVersion As String = "13.6.0.0"
+    Public Shared MagickNETAssemblyVersion As String = "13.6.0.0"
     Public Shared GoogleProtoBufAssemblyVersion As String = "3.20.1.0"
-    Public Shared SharpZipLibAssemblyVersion As String = "1.4.1.12"
+    Public Shared SharpZipLibAssemblyVersion As String = "1.4.2.13"
     Public Shared SystemBuffersVersion As String = "4.0.3.0"
+    Public Shared DocumentFormatOpenXmlVersion As String = "2.9.1.0"
+
+    Public Shared MicrosoftWebInfrastructureVersion As String = "2.0.0.0"
+
+    Public Shared AngleSharpVersion As String = "1.1.2.0"
+    Public Shared PreMailerVersion As String = "2.5.0.0"
+
     Public Shared installFolder As String = "C:\Program Files\Eonic Digital LLP\ProteanCMS into GAC " & ewAssemblyVersion.Trim("0").Trim(".") & " (64bit)"
 
     <CustomAction()>
@@ -121,7 +129,6 @@ Public Class CustomActions
                 UpdateConfigSection(oCgfSect, "protean", "versioncontrol", "System.Configuration.NameValueFileSectionHandler, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", False)
                 UpdateConfigSection(oCgfSect, "protean", "theme", "System.Configuration.NameValueFileSectionHandler, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", False)
                 UpdateConfigSection(oCgfSect, "protean", "lms", "System.Configuration.NameValueFileSectionHandler, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", False)
-                ', Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916
                 UpdateConfigSection(oCgfSect, "protean", "messagingProviders", "Protean.ProviderSectionHandler, ProteanCMS", False)
                 UpdateConfigSection(oCgfSect, "protean", "paymentProviders", "Protean.ProviderSectionHandler, ProteanCMS", False)
                 UpdateConfigSection(oCgfSect, "protean", "membershipProviders", "Protean.ProviderSectionHandler, ProteanCMS", False)
@@ -193,7 +200,7 @@ Public Class CustomActions
                 'Update the Assemblies
                 Dim oAssembliesSect As XmlElement = webConfig.SelectSingleNode("/configuration/system.web/compilation/assemblies")
                 If oAssembliesSect Is Nothing Then
-                    errstr = "Oh CRAP ! Missed again"
+                    errstr = "Oh dear! Missed again"
                 Else
                     '  Don't want a global assembly ref for ProteanCMS makes impossible to overload.
                     '  UpdateAssemblyRef(oAssembliesSect, "ProteanCMS, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
@@ -201,8 +208,8 @@ Public Class CustomActions
                     UpdateAssemblyRef(oAssembliesSect, "BundleTransformer.Less, Version=" & bundleLessAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
                     UpdateAssemblyRef(oAssembliesSect, "BundleTransformer.SassAndScss, Version=" & bundleSassAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
                     UpdateAssemblyRef(oAssembliesSect, "LibSassHost, Version=" & LibSassHostAssemblyVersion & ", Culture=neutral, PublicKeyToken=3e24e88796a38e46")
+                    UpdateAssemblyRef(oAssembliesSect, "DartSassHost, Version=" & DartSassHostAssemblyVersion & ", Culture=neutral, PublicKeyToken=83ed06f2bd4ecb43")
                     ' Not required for runtimes   UpdateAssemblyRef(oAssembliesSect, "LibSassHost.Native.win-x64, Version=" & LibSassHostAssemblyVersion & ", Culture=neutral, PublicKeyToken=3e24e88796a38e46")
-
                     UpdateAssemblyRef(oAssembliesSect, "BundleTransformer.MicrosoftAjax, Version=" & MicrosoftAjaxAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
                     UpdateAssemblyRef(oAssembliesSect, "AjaxMin, Version=" & AjaxMinAssemblyVersion & ", Culture=neutral, PublicKeyToken=21ef50ce11b5d80f")
                     UpdateAssemblyRef(oAssembliesSect, "JavaScriptEngineSwitcher.Core, Version=" & jsSwitcherAssemblyVersion & ", Culture=neutral, PublicKeyToken=C608B2A8CC9E4472")
@@ -212,26 +219,29 @@ Public Class CustomActions
                     ' Not required for runtimes      UpdateAssemblyRef(oAssembliesSect, "JavaScriptEngineSwitcher.V8.Native.win-x64, Version=" & jsSwitcherV8NativeWinx64AssemblyVersion & ", Culture=neutral, PublicKeyToken=C608B2A8CC9E4472")
                     UpdateAssemblyRef(oAssembliesSect, "ClearScript.Core, Version=" & MicrosoftClearScriptV8AssemblyVersion & ", Culture=neutral, PublicKeyToken=31bf3856ad364e35")
                     UpdateAssemblyRef(oAssembliesSect, "ClearScript.V8, Version=" & MicrosoftClearScriptV8AssemblyVersion & ", Culture=neutral, PublicKeyToken=31bf3856ad364e35")
-
                     ' UpdateAssemblyRef(oAssembliesSect, "MsieJavaScriptEngine, Version=" & MSIEJsEngineAssemblyVersion & ", Culture=neutral, PublicKeyToken=A3A2846A37AC0D3E")
                     ' UpdateAssemblyRef(oAssembliesSect, "EcmaScript.NET, Version=" & ECMAAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
-
                     UpdateAssemblyRef(oAssembliesSect, "WebGrease, Version=" & WebGreaseAssemblyVersion & ", Culture=neutral, PublicKeyToken=31BF3856AD364E35")
+                    UpdateAssemblyRef(oAssembliesSect, "AdvancedStringBuilder, Version=" & AdvancedStringBuilderVersion & ", Culture=neutral, PublicKeyToken=e818a2fc08933ddb")
                     UpdateAssemblyRef(oAssembliesSect, "Newtonsoft.Json, Version=" & JsonAssemblyVersion & ", Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed")
                     UpdateAssemblyRef(oAssembliesSect, "System.Net.FtpClient, Version=" & SystemNetFTPClientAssemblyVersion & ", Culture=neutral, PublicKeyToken=fa4be07daa57c2b7")
                     UpdateAssemblyRef(oAssembliesSect, "TidyHTML5Managed, Version=" & TidyHTML5ManagedAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
                     UpdateAssemblyRef(oAssembliesSect, "Protean.AppStart, Version=" & ptnAppStartAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
-
                     UpdateAssemblyRef(oAssembliesSect, "TidyHTML5Managed, Version=" & TidyHTML5ManagedAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
-
-
                     UpdateAssemblyRef(oAssembliesSect, "ICSharpCode.SharpZipLib, Version=" & SharpZipLibAssemblyVersion & ", Culture=neutral, PublicKeyToken=1b03e6acf1164f73")
                     UpdateAssemblyRef(oAssembliesSect, "Google.Protobuf, Version=" & GoogleProtoBufAssemblyVersion & ", Culture=neutral, PublicKeyToken=a7d26565bac4d604")
-
                     UpdateAssemblyRef(oAssembliesSect, "Magick.NET.Core, Version=" & MagickNETCoreAssemblyVersion & ", Culture=neutral, PublicKeyToken=2004825badfa91ec")
-                    UpdateAssemblyRef(oAssembliesSect, "Magick.NET-Q8-AnyCPU, Version=" & MagickNETAssemblyVersion & ", Culture=neutral, PublicKeyToken=2004825badfa91ec")
-
+                    UpdateAssemblyRef(oAssembliesSect, "Magick.NET-Q8-x64, Version=" & MagickNETAssemblyVersion & ", Culture=neutral, PublicKeyToken=2004825badfa91ec")
                     UpdateAssemblyRef(oAssembliesSect, "System.Buffers, Version=" & SystemBuffersVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+
+                    UpdateAssemblyRef(oAssembliesSect, "Microsoft.Web.Infrastructure, Version=" & MicrosoftWebInfrastructureVersion & ", Culture=neutral, PublicKeyToken=31bf3856ad364e35")
+
+                    UpdateAssemblyRef(oAssembliesSect, "AngleSharp, Version=" & AngleSharpVersion & ", Culture=neutral, PublicKeyToken=e83494dcdc6d31ea")
+                    UpdateAssemblyRef(oAssembliesSect, "PreMailer.Net, Version=" & PreMailerVersion & ", Culture=neutral, PublicKeyToken=23e3f43e29cae17f")
+
+
+                    ' UpdateAssemblyRef(oAssembliesSect, "DocumentFormat.OpenXml, Version=" & DocumentFormatOpenXmlVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+
 
                     'TS: These are not required and forces the CMS to load so cannot be overiden by newer version
                     '  UpdateAssemblyRef(oAssembliesSect, "ProteanCms, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
@@ -468,6 +478,8 @@ Public Class CustomActions
             'Protean
             UpdateDependantAssembly(oSectXml, "ProteanCMS", "0e5e11efc3341916", ewAssemblyVersion, "5.0.0.0")
             UpdateDependantAssembly(oSectXml, "Protean.Tools", "2030ce1af675e93f", ewAssemblyVersion, "5.0.0.0")
+            UpdateDependantAssembly(oSectXml, "Protean.AppStart", "0e5e11efc3341916", ptnAppStartAssemblyVersion)
+
             '' UpdateDependantAssembly(oSectXml, "Protean.Tools.Csharp", "0e5e11efc3341916", ewAssemblyVersion, "5.0.0.0")
             UpdateDependantAssembly(oSectXml, "Protean.Providers.Messaging.CampaignMonitor", "0e5e11efc3341916", ewAssemblyVersion, "5.0.0.0")
 
@@ -476,6 +488,7 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "BundleTransformer.Less", "973C344C93AAC60D", bundleLessAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "BundleTransformer.SassAndScss", "973C344C93AAC60D", bundleSassAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "LibSassHost", "3e24e88796a38e46", LibSassHostAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "DartSassHost", "83ed06f2bd4ecb43", DartSassHostAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "LibSassHost.Native.win-x64", "3e24e88796a38e46", LibSassHostAssemblyVersion)
 
             'JavascriptEngineSwitcher
@@ -489,9 +502,10 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "ClearScript.Core", "31bf3856ad364e35", MicrosoftClearScriptV8AssemblyVersion)
             UpdateDependantAssembly(oSectXml, "ClearScript.V8", "31bf3856ad364e35", MicrosoftClearScriptV8AssemblyVersion)
 
-
             UpdateDependantAssembly(oSectXml, "Newtonsoft.Json", "30AD4FE6B2A6AEED", JsonAssemblyVersion, "10.0.0.0", "13.0.2.0")
+
             UpdateDependantAssembly(oSectXml, "WebGrease", "31bf3856ad364e35", WebGreaseAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "AdvancedStringBuilder", "e818a2fc08933ddb", AdvancedStringBuilderVersion)
             UpdateDependantAssembly(oSectXml, "SoundInTheory.DynamicImage.Extensions.Pdf", "fa44558110383067", DynamicImagePDFAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "System.Net.FTPClient", "fa4be07daa57c2b7", SystemNetFTPClientAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "createsend-dotnet", "0e5e11efc3341916", CreateSendAssemblyVersion)
@@ -500,8 +514,13 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "System.Text.Encoding.CodePages", "b03f5f7f11d50a3a", SystemTextEncodingCodePagesAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "AlphaFS", "4d31a58f7d7ad5c9", AlphaFSAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "Magick.NET.Core", "2004825badfa91ec", MagickNETCoreAssemblyVersion)
-            UpdateDependantAssembly(oSectXml, "Magick.NET-Q8-AnyCPU", "2004825badfa91ec", MagickNETAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "Magick.NET-Q8-x64", "2004825badfa91ec", MagickNETAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "System.Buffers", "cc7b13ffcd2ddd51", SystemBuffersVersion)
+            UpdateDependantAssembly(oSectXml, "ICSharpCode.SharpZipLib", "1b03e6acf1164f73", SharpZipLibAssemblyVersion)
+
+            UpdateDependantAssembly(oSectXml, "AngleSharp", "e83494dcdc6d31ea", AngleSharpVersion)
+            UpdateDependantAssembly(oSectXml, "PreMailer.Net", "23e3f43e29cae17f", PreMailerVersion)
+            UpdateDependantAssembly(oSectXml, "Microsoft.Web.Infrastructure", "31bf3856ad364e35", MicrosoftWebInfrastructureVersion)
 
             Dim BindingElmt As XmlElement = oSectXml.DocumentElement.SelectSingleNode("assemblyBinding")
             BindingElmt.SetAttribute("xmlns", "urn:schemas-microsoft-com:asm.v1")
@@ -511,73 +530,77 @@ Public Class CustomActions
 
             oCgfRuntimeSect64.SectionInformation.SetRawXml(oSectXml.OuterXml)
             config64.Save()
-
-            'Add the AssetHandler for .Less
-            Dim sm As New Microsoft.Web.Administration.ServerManager
-
-            '    Dim appHostConfig As Microsoft.Web.Administration.Configuration = sm.GetApplicationHostConfiguration()
-            'get default config section
-            Dim webDefaultLocationConfig As Microsoft.Web.Administration.Configuration = sm.GetWebConfiguration("")
-
-            If Not webDefaultLocationConfig Is Nothing Then
-
-                'Dim handlerSection As Microsoft.Web.Administration.ConfigurationElement = webDefaultLocationConfig.GetSection("system.webServer/handlers")
-
-                'If handlerSection Is Nothing Then
-
-                '    Dim handlerCollection As Microsoft.Web.Administration.ConfigurationElementCollection = handlerSection.GetCollection()
-
-                '    Dim handlerElmt As Microsoft.Web.Administration.ConfigurationElement
-                '    Dim lessHandlerElmt As Microsoft.Web.Administration.ConfigurationElement = Nothing
-
-                '    For Each handlerElmt In handlerCollection
-                '        If handlerElmt.GetAttribute("name").Value = "LessAssetHandler" Then
-                '            lessHandlerElmt = handlerElmt
-                '        End If
-                '    Next
-                '    If lessHandlerElmt Is Nothing Then
-                '        lessHandlerElmt = handlerCollection.CreateElement("add")
-                '        lessHandlerElmt.SetAttributeValue("name", "LessAssetHandler")
-                '        lessHandlerElmt.SetAttributeValue("path", "*.less")
-                '        lessHandlerElmt.SetAttributeValue("verb", "GET")
-                '        lessHandlerElmt.SetAttributeValue("resourceType", "Unspecified")
-                '        lessHandlerElmt.SetAttributeValue("requireAccess", "Script")
-                '        lessHandlerElmt.SetAttributeValue("preCondition", "integratedMode")
-                '        handlerCollection.AddAt(0, lessHandlerElmt)
-                '    End If
-
-                '    lessHandlerElmt.SetAttributeValue("type", "BundleTransformer.Less.HttpHandlers.LessAssetHandler, BundleTransformer.Less, Version=" & bundleLessAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
-
-                '    sm.CommitChanges()
-                '    sm = Nothing
-                'Else
-                '    Try
-                '        System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS/setting-up-less?error=system.webServer/handlers-is-missing")
-                '    Catch ex As Exception
-                '        'do nuffing
-                '    End Try
-                'End If
-
-            Else
-                Try
-                    System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS/setting-up-less?error=cannot-get-appHostConfig")
-                Catch ex As Exception
-                    'do nuffing
-                End Try
-            End If
             Try
-                System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS")
+                FileSystem.FileCopy("C:\Windows\SysWOW64\ClearScriptV8.win-x64.dll", "C:\Windows\System32\ClearScriptV8.win-x64.dll")
             Catch ex As Exception
                 'do nuffing
             End Try
-            'MyBase.Install(savedState)
-            My.Computer.FileSystem.WriteAllText("c:\\ProteanInstallLog.txt", errstr, True)
-            Return ActionResult.Success
+            'Add the AssetHandler for .Less
+            Dim sm As New Microsoft.Web.Administration.ServerManager
+
+                '    Dim appHostConfig As Microsoft.Web.Administration.Configuration = sm.GetApplicationHostConfiguration()
+                'get default config section
+                Dim webDefaultLocationConfig As Microsoft.Web.Administration.Configuration = sm.GetWebConfiguration("")
+
+                If Not webDefaultLocationConfig Is Nothing Then
+
+                    'Dim handlerSection As Microsoft.Web.Administration.ConfigurationElement = webDefaultLocationConfig.GetSection("system.webServer/handlers")
+
+                    'If handlerSection Is Nothing Then
+
+                    '    Dim handlerCollection As Microsoft.Web.Administration.ConfigurationElementCollection = handlerSection.GetCollection()
+
+                    '    Dim handlerElmt As Microsoft.Web.Administration.ConfigurationElement
+                    '    Dim lessHandlerElmt As Microsoft.Web.Administration.ConfigurationElement = Nothing
+
+                    '    For Each handlerElmt In handlerCollection
+                    '        If handlerElmt.GetAttribute("name").Value = "LessAssetHandler" Then
+                    '            lessHandlerElmt = handlerElmt
+                    '        End If
+                    '    Next
+                    '    If lessHandlerElmt Is Nothing Then
+                    '        lessHandlerElmt = handlerCollection.CreateElement("add")
+                    '        lessHandlerElmt.SetAttributeValue("name", "LessAssetHandler")
+                    '        lessHandlerElmt.SetAttributeValue("path", "*.less")
+                    '        lessHandlerElmt.SetAttributeValue("verb", "GET")
+                    '        lessHandlerElmt.SetAttributeValue("resourceType", "Unspecified")
+                    '        lessHandlerElmt.SetAttributeValue("requireAccess", "Script")
+                    '        lessHandlerElmt.SetAttributeValue("preCondition", "integratedMode")
+                    '        handlerCollection.AddAt(0, lessHandlerElmt)
+                    '    End If
+
+                    '    lessHandlerElmt.SetAttributeValue("type", "BundleTransformer.Less.HttpHandlers.LessAssetHandler, BundleTransformer.Less, Version=" & bundleLessAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
+
+                    '    sm.CommitChanges()
+                    '    sm = Nothing
+                    'Else
+                    '    Try
+                    '        System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS/setting-up-less?error=system.webServer/handlers-is-missing")
+                    '    Catch ex As Exception
+                    '        'do nuffing
+                    '    End Try
+                    'End If
+
+                Else
+                    Try
+                        System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS/setting-up-less?error=cannot-get-appHostConfig")
+                    Catch ex As Exception
+                        'do nuffing
+                    End Try
+                End If
+                Try
+                    System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS")
+                Catch ex As Exception
+                    'do nuffing
+                End Try
+                'MyBase.Install(savedState)
+                My.Computer.FileSystem.WriteAllText("c:\\ProteanInstallLog.txt", errstr, True)
+                Return ActionResult.Success
 
 
-        Catch ex As Exception
+            Catch ex As Exception
 
-            Dim errorstr As String = ex.Message & ex.StackTrace
+                Dim errorstr As String = ex.Message & ex.StackTrace
 
             If Not ex.InnerException Is Nothing Then
                 errorstr = errorstr + ex.InnerException.Message & ex.InnerException.StackTrace

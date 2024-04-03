@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Runtime.Remoting.Messaging;
+using System.Text;
 using System.Web;
 
 using System.Xml;
@@ -35,7 +37,7 @@ namespace Protean
 
         public class Transform
         {
-
+#pragma warning disable 618
             public Cms myWeb;
             private string msXslFile = "";
             private string msXslLastFile = "";
@@ -500,28 +502,21 @@ namespace Protean
 
             public void Process(XmlReader xReader,ref XmlWriter xWriter)
             {
-
                 string sProcessInfo = "Processing:" + msXslFile;
-
                 try
                 {
-                    // If msException = "" Then
                     var resolver = new XmlUrlResolver();
                     resolver.Credentials = System.Net.CredentialCache.DefaultCredentials;
                     if (oCStyle is null)
                     {
-                        oStyle.Transform((IXPathNavigable)xReader, xsltArgs, xWriter);
+                        XPathDocument xpathDoc = new XPathDocument(xReader);
+                        oStyle.Transform(xpathDoc, xsltArgs, xWriter);
                     }
                     else
                     {
                         oCStyle.Transform(xReader, xsltArgs, xWriter);
                     }
                 }
-                // ' oCStyle.Transform(xReader, xsltArgs, xWriter) ', resolver)
-                // Else
-                // xWriter.Write(msException)
-                // End If
-
                 catch (Exception ex)
                 {
                     transformException = ex;
@@ -529,8 +524,8 @@ namespace Protean
                     // oResponse.Write(msException)
                     bError = true;
                 }
-
             }
+
             public void Process(XmlDocument oXml, HttpResponse oResponse)
             {
                 if (!CanProcess)
@@ -540,7 +535,6 @@ namespace Protean
                 {
                     if (mbCompiled)
                     {
-
                         var resolver = new XmlUrlResolver();
                         resolver.Credentials = System.Net.CredentialCache.DefaultCredentials;
 
@@ -924,7 +918,7 @@ namespace Protean
                     return null;
                 }
             }
-
+            #pragma warning restore 618
 
         }
 

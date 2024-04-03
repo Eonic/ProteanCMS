@@ -23,7 +23,7 @@ namespace Protean
 
             private Cms myWeb;
 
-            public event OnErrorEventHandler OnError;
+            //public event OnErrorEventHandler OnError;
 
             public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
             public event OnErrorWithWebEventHandler OnErrorWithWeb;
@@ -641,7 +641,7 @@ where cl.nStructId = " + myWeb.mnPageId));
                             {
                                 myWeb.moSession["FilterWhereCondition"] = whereSQL;
                             XmlElement argoPageDetail = null;int nCount = 0;
-                            myWeb.GetPageContentFromSelect(whereSQL,ref nCount, oContentsNode: ref oContentNode, oPageDetail: ref argoPageDetail, cShowSpecificContentTypes: cFilterTarget);
+                            myWeb.GetPageContentFromSelect(whereSQL,ref nCount, oContentsNode: ref oContentNode, oPageDetail: ref argoPageDetail, cShowSpecificContentTypes: cFilterTarget, bIgnorePermissionsCheck:true);
 
 
                                 if (oContentNode.SelectNodes("Content[@type='Product']").Count == 0)

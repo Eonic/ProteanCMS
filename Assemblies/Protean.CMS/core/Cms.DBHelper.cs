@@ -22,10 +22,12 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web.Configuration;
 using System.Xml;
+using Lucene.Net.Support;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Membership;
 using Protean.Providers.Messaging;
+using static Protean.Cms.dbImport;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
 
@@ -3075,7 +3077,12 @@ namespace Protean
                     else
                     {
 
-                        var oNewXml = new XmlDataDocument(oDs);
+                       // var oNewXml = new XmlDataDocument(oDs);
+                        XmlDocument oNewXml = new XmlDocument();
+                        if (oDs.Tables[0].Rows.Count>0)
+                        {
+                            oNewXml.LoadXml(oDs.GetXml());
+                        }                       
                         oXml = oNewXml;
 
                     }
@@ -4113,7 +4120,12 @@ namespace Protean
                         myWeb.moDbHelper.ReturnNullsEmpty(ref oDS);
 
                         // convert to Xml Dom
-                        var oXml = new XmlDataDocument(oDS);
+                        // var oXml = new XmlDataDocument(oDS);
+                        XmlDocument oXml = new XmlDocument();
+                        if (oDS.Tables[0].Rows.Count>0)
+                        {
+                            oXml.LoadXml(oDS.GetXml());
+                        }                       
                         oXml.PreserveWhitespace = false;
 
                         pendingList = moPageXml.CreateElement("Content");
@@ -4594,7 +4606,12 @@ namespace Protean
                     ds.Tables[0].Columns["childRelation"].ColumnMapping = MappingType.Attribute;
                     ds.Tables[0].Columns["parentRelation"].ColumnMapping = MappingType.Attribute;
                     ds.EnforceConstraints = false;
-                    var dsXml = new XmlDataDocument(ds);
+                    //var dsXml = new XmlDataDocument(ds);
+                    XmlDocument dsXml = new XmlDocument();
+                    if (ds.Tables[0].Rows.Count>0)
+                    {
+                        dsXml.LoadXml(ds.GetXml());
+                    }                    
                     ds = null;
 
 
@@ -4643,7 +4660,12 @@ namespace Protean
                     oDs.Tables[0].Columns["position"].ColumnMapping = MappingType.Attribute;
 
                     oDs.EnforceConstraints = false;
-                    var oXml = new XmlDataDocument(oDs);
+                    //var oXml = new XmlDataDocument(oDs);
+                    XmlDocument oXml = new XmlDocument();
+                    if (oDs.Tables[0].Rows.Count>0)
+                    {
+                        oXml.LoadXml(oDs.GetXml());
+                    }                    
 
                     oDs = null;
                     if (ContentNode is null)
@@ -5204,7 +5226,13 @@ namespace Protean
                             using (var oDr = getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                             {
                                 while (oDr.Read())
-                                    nParentid = Conversions.ToLong(oDr[getParIdFname(objectType)]);
+                                {
+                                    if (!(oDr[getParIdFname(objectType)] is DBNull))
+                                    {
+                                        nParentid = Convert.ToInt64(oDr[getParIdFname(objectType)]);
+                                    }
+                                }
+                                    
                             }
 
                             // Get Siblings
@@ -6881,7 +6909,7 @@ namespace Protean
                 // Dim oDr As SqlDataReader
                 XmlElement oElmt;
                 XmlElement oElmt2;
-                XmlDocument oXml = null;
+                XmlDocument oXml = new XmlDocument();
 
                 string sContent;
 
@@ -6944,7 +6972,11 @@ namespace Protean
                         {
                             oDs.Tables[0].Columns[0].ColumnMapping = MappingType.Attribute;
 
-                            oXml = new XmlDataDocument(oDs);
+                            //oXml = new XmlDataDocument(oDs);
+                            if (oDs.Tables[0].Rows.Count>0)
+                            {
+                                oXml.LoadXml(oDs.GetXml());
+                            }                           
                             oDs.EnforceConstraints = false;
 
                             // Convert any text to xml
@@ -6989,7 +7021,7 @@ namespace Protean
                     }
                     else
                     {
-                        oXml = (XmlDataDocument)goSession["sDirListType"];
+                        oXml = (XmlDocument)goSession["sDirListType"];
                     }
                     oElmt = moPageXml.CreateElement("directory");
                     if (oXml == null)
@@ -7282,7 +7314,7 @@ namespace Protean
                 // Dim oDr As SqlDataReader
                 XmlElement oElmt;
                 string cChildSchema = "";
-                XmlDataDocument oXml;
+                XmlDocument oXml = new XmlDocument();
                 string sSqlCompanyCol = "";
                 string sSqlCompanyOrder = "";
 
@@ -7410,7 +7442,11 @@ namespace Protean
                     }
 
 
-                    oXml = new XmlDataDocument(oDs);
+                    //oXml = new XmlDataDocument(oDs);
+                    if (oDs.Tables[0].Rows.Count>0)
+                    {
+                        oXml.LoadXml(oDs.GetXml());
+                    }                   
                     oDs.EnforceConstraints = false;
 
                     // Convert any text to xml
@@ -8239,7 +8275,7 @@ namespace Protean
                     cEmail = Strings.Trim(cEmail);
                     if (Tools.Text.IsEmail(cEmail))
                     {
-                        // This assumes that e-mail addresses are unique, but in case they're not we'll select
+                        // This assumes that email addresses are unique, but in case they're not we'll select
                         // the first active user that has been most recently updated
                         cSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT TOP 1 nDirKey " + "FROM tblDirectory  " + "INNER JOIN tblAudit ON nauditid = nauditkey  " + "WHERE cDirXml LIKE ('%<Email>' + @email + '</Email>%') " + "AND cDirSchema='User'  ", Interaction.IIf(bIncludeInactive, " ", "AND nStatus<>0 ")), "ORDER BY ABS(nStatus) DESC, dUpdateDate DESC "));
 
@@ -8316,7 +8352,7 @@ namespace Protean
             {
                 PerfMonLog("DBHelper", "getDirectoryParentsByType");
                 DataSet oDs;
-                XmlDocument oXml;
+                XmlDocument oXml = new XmlDocument();
                 string cSql;
                 string sContent;
 
@@ -8328,9 +8364,12 @@ namespace Protean
                 oDs = GetDataSet(cSql, "item", "directory");
                 ReturnNullsEmpty(ref oDs);
 
-                oXml = new XmlDataDocument(oDs);
+                //oXml = new XmlDataDocument(oDs);                
+                if (oDs.Tables[0].Rows.Count>0)
+                {
+                    oXml.LoadXml(oDs.GetXml());
+                }                
                 oDs.EnforceConstraints = false;
-
 
                 foreach (XmlElement oElmt2 in oXml.SelectNodes("descendant-or-self::cDirXml"))
                 {
@@ -8375,7 +8414,7 @@ namespace Protean
                         {
                             while (oDr.Read())
                             {
-                                var oXmlDetails = new XmlDataDocument();
+                                var oXmlDetails = new XmlDocument();
                                 oXmlDetails.LoadXml(GetUserXML(Conversions.ToLong(oDr["nDirKey"]), false).OuterXml);
 
                                 // lets add the saved password to the xml
@@ -8928,7 +8967,7 @@ namespace Protean
                 DataRow oRow;
 
                 XmlElement oElmt;
-                XmlDataDocument oXml;
+                XmlDocument oXml = new XmlDocument();
                 XmlElement oCartElmt;
                 XmlElement oOrderElmt;
 
@@ -9030,7 +9069,11 @@ namespace Protean
                             // cart contacts
                             oDs.Tables["Contact"].Columns[0].ColumnMapping = MappingType.Attribute;
 
-                            oXml = new XmlDataDocument(oDs);
+                            //oXml = new XmlDataDocument(oDs);
+                            if (oDs.Tables[0].Rows.Count>0)
+                            {
+                                oXml.LoadXml(oDs.GetXml());
+                            }                            
                             oDs.EnforceConstraints = false;
                             // Convert the detail to xml
                             foreach (XmlElement currentOElmt in oXml.SelectNodes("/Cart/Item/productDetail | /Cart/Contact/Detail"))
@@ -9191,7 +9234,7 @@ namespace Protean
                 string cProcessInfo = "";
                 string cExtraWhere = string.Empty;
                 long UserId = Conversions.ToLong(Operators.ConcatenateObject("0", goSession["nEwUserId"]));
-                XmlDocument oXml;
+                XmlDocument oXml = new XmlDocument();
                 try
                 {
 
@@ -9213,7 +9256,11 @@ namespace Protean
                         oDs.Tables[0].Columns["issueDate"].ColumnMapping = MappingType.Attribute;
                         oDs.Tables[0].Columns["usedDate"].ColumnMapping = MappingType.Attribute;
 
-                        oXml = new XmlDataDocument(oDs);
+                        //oXml = new XmlDataDocument(oDs);                        
+                        if (oDs.Tables[0].Rows.Count>0)
+                        {
+                            oXml.LoadXml(oDs.GetXml());
+                        }                        
                         oDs.EnforceConstraints = false;
 
                         oContentsXML.InnerXml = oXml.FirstChild.InnerXml;
@@ -9233,7 +9280,7 @@ namespace Protean
             {
                 PerfMonLog("DBHelper", "exportShippingLocations");
                 string cSql;
-                XmlDataDocument oXml;
+                XmlDocument oXml = new XmlDocument();
                 DataSet oDs;
                 string cXml;
 
@@ -9269,7 +9316,11 @@ namespace Protean
                 }
                 else
                 {
-                    oXml = new XmlDataDocument(oDs);
+                    //oXml = new XmlDataDocument(oDs);
+                    if (oDs.Tables[0].Rows.Count>0)
+                    {
+                        oXml.LoadXml(oDs.GetXml());
+                    }                    
                     cXml = oXml.InnerXml;
                 }
 
@@ -9441,7 +9492,7 @@ namespace Protean
                             if (completeCount > startNo)
                             {
 
-                                var stateObj = new dbImport.ImportStateObj();
+                                ImportStateObj stateObj = new dbImport.ImportStateObj();
                                 stateObj.oInstance = oInstance;
                                 stateObj.LogId = logId;
                                 stateObj.FeedRef = FeedRef;
@@ -12998,7 +13049,12 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    XmlDocument oXml = new XmlDataDocument(oDs);
+                    //XmlDocument oXml = new XmlDataDocument(oDs);
+                    XmlDocument oXml = new XmlDocument();
+                    if (oDs.Tables[0].Rows.Count>0)
+                    {
+                        oXml.LoadXml(oDs.GetXml());
+                    }                    
                     cProcessInfo = oXml.OuterXml;
                     // Return False
                     OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "getDataSet", ex, cProcessInfo));
@@ -14548,9 +14604,9 @@ namespace Protean
             }
 
 
-            public void ImportSingleObject(object ImportStateObj)
+            public void ImportSingleObject(object importStateObjObj)
             {
-                ImportStateObj importStateObj = new ImportStateObj();
+               ImportStateObj importStateObj = (ImportStateObj)importStateObjObj;
                 string cTableName = "";
                 string cTableKey = "";
                 string cTableFRef = "";
@@ -14922,6 +14978,7 @@ namespace Protean
                 {
                     modbhelper.logActivity(dbHelper.ActivityType.ValidationError, 0L, 0L, ErrorId, Strings.Right(ex.Message + " - " + ex.StackTrace, 700), fRef);
                     OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ImportSingleObject", ex, ""));
+                
                 }
                 finally
                 {

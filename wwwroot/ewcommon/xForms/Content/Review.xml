@@ -25,6 +25,7 @@
 						<Path/>
 						<EmailSent/>
 						<ShowImage/>
+						<TopReview/>
 						<ProductID/>
 					</Content>
 					<average_rating/>
@@ -47,6 +48,7 @@
 						<Path/>
 						<EmailSent/>
 						<ShowImage/>
+						<TopReview/>
 						<ProductID/>
 					</Content>
 					<average_rating/>
@@ -86,6 +88,7 @@
 				<bind id="cContentDocPath" nodeset="Path" required="false()" type="string"/>
 				<bind id="nEmailSent" nodeset="EmailSent" required="false()" type="string"/>
 				<bind id="nShowImage" nodeset="ShowImage" required="false()" type="string"/>
+				<bind id="nTopReview" nodeset="TopReview" required="false()" type="string"/>
 				<bind id="nRecommentToFriend" nodeset="@recommendToAFriend" required="false()" type="string"/>
 				<bind id="nProductID" nodeset="ProductID" required="false()" type="string"/>
 			</bind>
@@ -103,6 +106,7 @@
 				<bind id="cContentDocPath" nodeset="Path" required="false()" type="string"/>
 				<bind id="nEmailSent" nodeset="EmailSent" required="false()" type="string"/>
 				<bind id="nShowImage" nodeset="ShowImage" required="false()" type="string"/>
+				<bind id="nTopReview" nodeset="TopReview" required="false()" type="string"/>
 				<bind id="nRecommentToFriend" nodeset="@recommendToAFriend" required="false()" type="string"/>
 				<bind id="nProductID" nodeset="ProductID" required="false()" type="string"/>
 			</bind>
@@ -148,6 +152,12 @@
 				<select bind="nShowImage" appearance="full" class="vshort">
 					<item>
 						<label>Show Image</label>
+						<value>True</value>
+					</item>
+				</select>
+				<select bind="nTopReview" appearance="full" class="vshort">
+					<item>
+						<label>Top Review</label>
 						<value>True</value>
 					</item>
 				</select>

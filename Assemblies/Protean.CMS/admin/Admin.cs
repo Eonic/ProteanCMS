@@ -24,6 +24,7 @@ using static Protean.Tools.Xml;
 using System.Reflection.Emit;
 using Protean.Providers.Membership;
 using Protean.Providers.Messaging;
+using Lucene.Net.Support;
 
 namespace Protean
 {
@@ -673,7 +674,7 @@ namespace Protean
                         case "admin":
                             {
                                 mcEwCmd = "Content";
-                                goto ProcessFlow;                                
+                                goto ProcessFlow;
                             }
 
 
@@ -3165,7 +3166,7 @@ namespace Protean
                                 }
                                 else
                                 {
-                                    string sProductTypes = "Product,SKU,Ticket";
+                                    string sProductTypes = myWeb.defaultProductTypes;
                                     if (myWeb.Features.ContainsKey("Subscriptions"))
                                     {
                                         sProductTypes = sProductTypes + ",Subscription";
@@ -3174,11 +3175,9 @@ namespace Protean
                                     {
                                         sProductTypes = moConfig["ProductTypes"];
                                     }
-
                                     oPageDetail.AppendChild(moAdXfm.xFrmFindRelated(myWeb.moRequest.QueryString["GroupId"], sProductTypes, ref oPageDetail, myWeb.moRequest.QueryString["GroupId"], true, "tblCartCatProductRelations", "nContentId", "nCatId"));
                                     sAdminLayout = "RelatedSearch";
                                 }
-
                                 break;
                             }
                         case "RemoveProductGroupsProduct":
@@ -4019,7 +4018,7 @@ namespace Protean
                                 sProcessInfo = oConvert.Message;
                             }
 
-                          //  oImportXml.LoadXml(Conversions.ToString(oConvert.Output.OuterXml));
+                            //  oImportXml.LoadXml(Conversions.ToString(oConvert.Output.OuterXml));
                         }
                         else if (cFilePath.EndsWith(".xml"))
                         {
@@ -4146,9 +4145,9 @@ namespace Protean
                             {
                                 moAdXfm.valid = false;
                                 sErrorMsg = "No Content Returned";
-                               // XmlNode argoNode1 = (XmlNode)moAdXfm.moXformElmt;
+                                // XmlNode argoNode1 = (XmlNode)moAdXfm.moXformElmt;
                                 moAdXfm.addNote(ref moAdXfm.moXformElmt, Protean.xForm.noteTypes.Alert, sErrorMsg);
-                               // moAdXfm.moXformElmt = (XmlElement)argoNode1;
+                                // moAdXfm.moXformElmt = (XmlElement)argoNode1;
                             }
                         }
                         else
@@ -4616,8 +4615,11 @@ namespace Protean
                     }
                     Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
                     IMessagingProvider moMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
-                    moMessaging.AdminProcess.MailingListAdminMenu(ref oMenuRoot);
-                    moMessaging = null;
+                    if (moMessaging != null) { 
+                        moMessaging.AdminProcess.MailingListAdminMenu(ref oMenuRoot);
+                        moMessaging = null;
+                    };
+                    
 
                     // If this is a cloned page, then remove certain options under By Page
                     if (Cms.gbClone && moPageXML.DocumentElement.SelectSingleNode("//MenuItem[@id = /Page/@id and (@clone > 0 or (@cloneparent='" + myWeb.mnCloneContextPageId + "' and @cloneparent > 0 ))]") != null)
@@ -5055,7 +5057,8 @@ namespace Protean
                                     myWeb.mcOutputFileName = "DeliveryNote.pdf";
 
                                     string DeliveryNoteXslPath = @"\xsl\docs\deliverynote.xsl";
-                                    if (myWeb.bs5) {
+                                    if (myWeb.bs5)
+                                    {
                                         DeliveryNoteXslPath = @"\features\cart\docs\delivery-note.xsl";
                                     }
 
@@ -5223,7 +5226,7 @@ namespace Protean
                         var oCart = new Cms.Cart(ref myWeb);
                         oPageDetail.AppendChild(moAdXfm.xFrmCartActivityDrillDown());
                         if (moAdXfm.valid)
-                        {                           
+                        {
                             string OrderSatus = Convert.ToString(moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus").InnerText);
                             if (OrderSatus.Contains(","))
                             {
@@ -5244,7 +5247,7 @@ namespace Protean
                         var oCart = new Cms.Cart(ref myWeb);
                         oPageDetail.AppendChild(moAdXfm.xFrmCartActivityPeriod());
                         if (moAdXfm.valid)
-                        {                           
+                        {
                             oPageDetail.AppendChild(oCart.CartReportsPeriod(moAdXfm.Instance.FirstChild.SelectSingleNode("cGroup").InnerText, Convert.ToInt32(moAdXfm.Instance.FirstChild.SelectSingleNode("nYear").InnerText), Convert.ToInt32(moAdXfm.Instance.FirstChild.SelectSingleNode("nMonth").InnerText), Convert.ToInt32(moAdXfm.Instance.FirstChild.SelectSingleNode("nWeek").InnerText), moAdXfm.Instance.FirstChild.SelectSingleNode("cCurrencySymbol").InnerText, moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus").InnerText, Convert.ToString(moAdXfm.Instance.FirstChild.SelectSingleNode("cOrderType").InnerText)));
                         }
                         sAdminLayout = "CartActivityPeriod";
@@ -5611,13 +5614,17 @@ namespace Protean
                             votesDataset.Tables[0].Columns[2].ColumnMapping = MappingType.Attribute;
                         }
 
-                        var votesReport = new XmlDataDocument(votesDataset);
+                       // var votesReport = new XmlDataDocument(votesDataset);
+                        XmlDocument votesReport = new XmlDocument();
+                        if(votesDataset.Tables[0].Rows.Count > 0)
+                        {
+                            votesReport.LoadXml(votesDataset.GetXml());
+                        }                        
+
                         votesDataset.EnforceConstraints = false;
 
                         if (votesReport.FirstChild != null)
                         {
-
-
                             var reportElement = moPageXML.CreateElement("Content");
                             reportElement.SetAttribute("name", reportName);
                             reportElement.SetAttribute("type", "Report");
@@ -5638,7 +5645,6 @@ namespace Protean
 
                             reportElement.InnerXml = votesReport.InnerXml;
                             oPageDetail.AppendChild(reportElement);
-
                         }
 
                     }
@@ -5784,7 +5790,7 @@ namespace Protean
                 //long contentId = 0L;
                 string indexId = null;
                 string sSql;
-                string SchemaNameForUpdate;
+               
                 DataSet indexesDataset;
 
                 try
@@ -5808,62 +5814,21 @@ namespace Protean
 
                             }
                         case "updateAllRules":
-                            {
-                                if (myWeb.moRequest["SchemaName"] != default)
-                                {
-                                    SchemaNameForUpdate = myWeb.moRequest["SchemaName"];
-                                    sSql = "spScheduleToUpdateIndexTable";
-                                    var arrParms = new Hashtable();
-                                    arrParms.Add("SchemaName", SchemaNameForUpdate);
-                                    myWeb.moDbHelper.ExeProcessSql(sSql, CommandType.StoredProcedure, arrParms);
-                                    myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.SessionContinuation, (long)myWeb.mnUserId, 0L, 0L, 0L, "ReIndexing", true);
-                                    if (moAdXfm.valid == false & myWeb.moRequest["ewCmd2"] == "update")
-                                    {
-                                        oPageDetail.InnerXml = "";
-                                        indexId = null;
-                                        goto default;
-                                    }
-                                }
-                                goto default;
-
-                            }
                         case "update":
+
                             {
-                                if (myWeb.moRequest["SchemaName"] != default)
+                                sSql = "spScheduleToUpdateIndexTable";
+                                var arrParms = new Hashtable();
+                                arrParms.Add("IndexId", indexId);
+                                myWeb.moDbHelper.ExeProcessSql(sSql, CommandType.StoredProcedure, arrParms);
+                                myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.SessionContinuation, (long)myWeb.mnUserId, 0L, 0L, 0L, "ReIndexing", true);
+                                if (moAdXfm.valid == false & myWeb.moRequest["ewCmd2"] == "update")
                                 {
-                                    SchemaNameForUpdate = myWeb.moRequest["SchemaName"];
-                                    if (!string.IsNullOrEmpty(moConfig["FilterIndexITBCust"]))
-                                    {
-                                        sSql = "spUpdateFilterIndex";
-                                        var arrParms = new Hashtable();
-                                        arrParms.Add("SchemaName", SchemaNameForUpdate);
-                                        arrParms.Add("IndexId", indexId);
-                                        myWeb.moDbHelper.ExeProcessSql(sSql, CommandType.StoredProcedure, arrParms);
-                                        myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.SessionContinuation, (long)myWeb.mnUserId, 0L, 0L, 0L, "ReIndexing", true);
-                                        if (moAdXfm.valid == false & myWeb.moRequest["ewCmd2"] == "update")
-                                        {
-                                            oPageDetail.InnerXml = "";
-                                            indexId = null;
-                                            goto default;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        sSql = "spScheduleToUpdateIndexTable";
-                                        var arrParms = new Hashtable();
-                                        arrParms.Add("SchemaName", SchemaNameForUpdate);
-                                        myWeb.moDbHelper.ExeProcessSql(sSql, CommandType.StoredProcedure, arrParms);
-                                        myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.SessionContinuation, (long)myWeb.mnUserId, 0L, 0L, 0L, "ReIndexing", true);
-                                        if (moAdXfm.valid == false & myWeb.moRequest["ewCmd2"] == "update")
-                                        {
-                                            oPageDetail.InnerXml = "";
-                                            indexId = null;
-                                            goto default;
-                                        }
-                                    }
+                                    oPageDetail.InnerXml = "";
+                                    indexId = null;
+
                                 }
                                 goto default;
-
                             }
                         default:
                             {
@@ -6894,7 +6859,7 @@ from tblContentIndexDef";
 
                     string cSQL = "";
                     DataSet oDS;
-                    XmlDataDocument oXml;
+                    XmlDocument oXml = new XmlDocument();
                     string sContent = "";
                     int nId;
 
@@ -6947,8 +6912,11 @@ from tblContentIndexDef";
 
                                     myWeb.moDbHelper.ReturnNullsEmpty(ref oDS);
                                     oDS.EnforceConstraints = false;
-                                    oXml = new XmlDataDocument(oDS);
-
+                                    //oXml = new XmlDataDocument(oDS);
+                                    if(oDS.Tables[0].Rows.Count > 0)
+                                    {
+                                        oXml.LoadXml(oDS.GetXml());
+                                    }                                   
                                     // Convert any text to xml
                                     foreach (XmlElement oElmt in oXml.SelectNodes("descendant-or-self::UserXml"))
                                     {

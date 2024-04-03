@@ -10,7 +10,7 @@
 				<cContentName/>
 				<cContentSchemaName>Subscription</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content>
+					<Content action="" overridePrice="false">
 						<Name/>
 						<StockCode/>
 						<Type>Fixed Length</Type>
@@ -50,7 +50,7 @@
 					</Content>
 				</cContentXmlBrief>
 				<cContentXmlDetail>
-					<Content action="Protean.Cms+Cart+Subscriptions+Modules.Subscribe" >
+					<Content action="Protean.Cms+Cart+Subscriptions+Modules.Subscribe" purchaseAction="Protean.Cms+Cart+Subscriptions+Modules.Subscribe" overridePrice="false">
 						<Name/>
 						<StockCode/>
 						<Type>Fixed Length</Type>
@@ -122,7 +122,9 @@
 					</bind>
 				</bind>
 				<bind id="cContentPrice" nodeset="Prices/Price[@type='sale']" required="true()" type="format:^[-+]?[0-9]*\.?[0-9]+$"/>
+				<bind id="cVariablePrice" nodeset="@action" required="false()" type="string"/>
 				<bind nodeset="Prices/Price[@type='sale']">
+					
 					<bind id="cContentSetupSuffix" nodeset="@suffix" required="false()" type="string"/>
 				</bind>
 				<bind id="cContentThumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
@@ -180,6 +182,10 @@
 
 		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
 		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+		
+		<bind nodeset="ProductGroups">
+			<bind id="nProductGroups" nodeset="@ids" required="false()" type="string"/>
+		</bind>
 	</model>
 
 	<group ref="EditContent">
@@ -191,7 +197,6 @@
 					<span class="space"> </span>
 					<span>Content</span>
 				</label>
-
 				<group>
 					<label>Subscription Details</label>
 					<input bind="cContentName" class="long required">
@@ -264,21 +269,32 @@
 							<input bind="cContentSetupSuffix" class="short">
 								<label>Setup label</label>
 							</input>
-						</group>
-					</group>
-					
+						</group>						
+					</group>					
 					<group class="row">
-						<group class="col-lg-6">
+						<group class="col-lg-4">
 							<input bind="cContentSubscriptionPrice" class="short required">
 								<label>Repeating payment amount</label>
 								<help class="inline">Numeric only (e.g. 0.00)</help>
 							</input>
 						</group>
-
-						<group class="col-lg-6">
+						<group class="col-lg-4">
 							<input bind="cContentRepeatSuffix" class="short">
 								<label>Repeat label</label>
 							</input>
+						</group>
+						<group class="col-lg-4">
+							<select1 bind="cVariablePrice" appearance="full" class="required vshort inline-items">
+								<label>Amount type</label>
+								<item>
+									<label>Fixed Price</label>
+									<value></value>
+								</item>
+								<item>
+									<label>User Specified</label>
+									<value>Protean.Cms+Cart+Subscriptions+Modules.VariableSubscription</value>
+								</item>
+							</select1>
 						</group>
 					</group>
 					<group class="row">
@@ -320,8 +336,10 @@
 							<value>false</value>
 						</item>
 					</select1>
+					<select bind="nProductGroups" class="ewQuery list-vertical" query="ProductGroups" appearance="full">
+						<label>Product Groups</label>
+					</select>
 				</group>
-
 				<group ref="mainContent" class="Content">
 					<label>Subscription Descriptions</label>
 					<textarea bind="cContentStrap" class="TextArea xhtml" rows="1">
@@ -340,7 +358,6 @@
 								<help class="inline">When a user has purchased THIS subscription, you can specify which Membership group they will become a member of.  Usually it is a Membership group that has a higher level of access to the site</help>
 							</select1>
 						</group>
-
 						<group class="col-lg-6">
 							<select1 bind="nGroup_2" class="ewQuery" query="Directory.Group">
 								<label>User group</label>
@@ -362,7 +379,6 @@
 					</group>
 				</group>
 			</group>
-			
 			<group>
 				<label>
 					<i class="fas fa-image"> </i>
@@ -410,9 +426,6 @@
 				</group>
 			</group>
 		</group>
-		<group>
-		</group>
-
 	</group>
 	<group ref="submit" class="contentSubmit">
 		<submit submission="" ref="ewSubmit" class="principle">

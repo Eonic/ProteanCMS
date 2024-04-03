@@ -125,57 +125,19 @@
         <bind id="cContentStock" nodeset="Stock" required="false()" type="string"/>
       </bind>
     </bind>
+	  <bind nodeset="ProductGroups">
+		  <bind id="nProductGroups" nodeset="@ids" required="false()" type="string"/>
+	  </bind>
   </model>
-  <group ref="EditContent" class="2col">
+  <group ref="EditContent">
     <label>Edit Ticket</label>
-    <group class="ContentColumn1">
-      <group ref="Settings" class="leftSettings">
-        <input bind="nContentKey" class="hidden">
-          <label>ContentId</label>
-        </input>
-        <label>Settings</label>
-        <!--<input bind="cContentForiegnRef" class="short">
-					<label>Foriegn Reference</label>
-				</input>-->
-        <input bind="dPublishDate" class="calendar short">
-          <label>Publish Date</label>
-        </input>
-        <input bind="dExpireDate" class="calendar short">
-          <label>Expire Date</label>
-        </input>
-        <select1 bind="nStatus" appearance="full" class="required vshort">
-          <label>Status</label>
-          <item>
-            <label>Live</label>
-            <value>1</value>
-          </item>
-          <item>
-            <label>Hidden</label>
-            <value>0</value>
-          </item>
-        </select1>
-        <!--<input bind="cDescription" class="short">
-					<label>Change Notes</label>
-				</input>-->
-      </group>
-
-      <group class="Content">
-        <label>Images</label>
-        <input bind="cContentDetail" class="short pickImage">
-          <label>Main ticket image</label>
-          <help class="inline">
-            <p>The main image is automatically resized for other smaller images such as thumbnails.</p>
-            <p>However if you would like a different image for the thumbnail or main product page, they can be specified below.</p>
-          </help>
-        </input>
-        <input bind="cContentThumbnail" class="short pickImage">
-          <label>Alternative thumbnail</label>
-        </input>
-      </group>
-
-    </group>
-
-    <group class="ContentColumn2">
+	  <group class="tabs">
+    <group>
+		<label>
+			<i class="fas fa-pen"> </i>
+			<span class="space"> </span>
+			<span>Content</span>
+		</label>
       <group ref="Content" class="Content required">
         <label>Ticket Details</label>
 
@@ -188,12 +150,12 @@
             </p>
           </help>-->
         </input>
-        <group class="inline">
-          <input bind="cContentSKU" class="short required">
+        <group class="row">
+          <input bind="cContentSKU" class="short required col-lg-6">
             <label>Stock code (SKU)</label>
             <help class="inline">Unique stock code, matching your back-office system if you have one.</help>
           </input>
-          <input bind="cContentStock" class="short">
+          <input bind="cContentStock" class="short col-lg-6">
             <label>Stock level</label>
             <help class="inline">If stock control is enabled, this value will reduce as a quantity is successfully sold.</help>
           </input>
@@ -201,32 +163,32 @@
 
       </group>
 
-      <group class="inline">
+      <group class="row">
         <label>Ticket Date and Times</label>
-        <input bind="dEventDate" class="calendar form-inline">
+        <input bind="dEventDate" class="calendar form-inline col-lg-6">
           <label>Start Date</label>
         </input>
-        <input bind="dEventEndDate" class="calendar form-inline ">
+        <input bind="dEventEndDate" class="calendar form-inline  col-lg-6">
           <label>End date</label>
         </input>
-        <input bind="cContentSTime" class="time form-inline ">
+        <input bind="cContentSTime" class="time form-inline col-lg-6">
           <label>Start time</label>
         </input>
-        <input bind="cContentETime" class="time form-inline ">
+        <input bind="cContentETime" class="time form-inline col-lg-6">
           <label>End time</label>
         </input>
       </group>
 
 
-      <group class="inline">
+      <group class="row">
         <label>Prices</label>
-        <input bind="cContentPrice" class="short required">
+        <input bind="cContentPrice" class="short required  col-lg-6">
           <label>Purchase price</label>
           <help class="inline">
             <p>The price a customer can purchase the ticket for.</p>
           </help>
         </input>
-        <input bind="cContentPriceRRP" class="short">
+        <input bind="cContentPriceRRP" class="short  col-lg-6">
           <label>RRP</label>
           <help class="inline">
             <p>Optional. If an RRP is specified, it will display to the user;</p>
@@ -236,11 +198,88 @@
             <p>If ecommerce, the user will still pay the 'purchase price'.</p>
           </help>
         </input>
+		  <select bind="nProductGroups" class="ewQuery list-vertical checkboxes" query="ProductGroups" appearance="full">
+			<label>Product Groups</label>
+		</select>
       </group>
 
     </group>
-  </group>
+		  <group>
+			  <label>
+				  <i class="fas fa-image"> </i>
+				  <span class="space"> </span>
+				  <span>Images</span>
+			  </label>
+			  <group>
+			  <input bind="cContentDetail" class="short pickImage">
+				  <label>Main ticket image</label>
+				  <help class="inline">
+					  <p>The main image is automatically resized for other smaller images such as thumbnails.</p>
+					  <p>However if you would like a different image for the thumbnail or main product page, they can be specified below.</p>
+				  </help>
+			  </input>
+			  <input bind="cContentThumbnail" class="short pickImage">
+				  <label>Alternative thumbnail</label>
+			  </input>
+			  </group>
+		  </group>
+		  <group>
+			  <label>
+				  <i class="fas fa-cog"> </i>
+				  <span class="space"> </span>
+				  <span>Advanced Settings</span>
+			  </label>
+			  <group>
+				  <label>Settings</label>
+				  <input bind="nContentKey" class="hidden">
+					  <label>ContentId</label>
+				  </input>
+				  <input bind="dPublishDate" class="calendar short">
+					  <label>Publish date</label>
+				  </input>
+				  <select1 bind="nStatus" appearance="full" class="vshort">
+					  <label>Status</label>
+					  <item>
+						  <label>Live</label>
+						  <value>1</value>
+					  </item>
+					  <item>
+						  <label>Hidden</label>
+						  <value>0</value>
+					  </item>
+				  </select1>
+				  <input bind="cDescription" class="short">
+					  <label>Change Notes</label>
+				  </input>
+				  <input bind="cMetaTitle" class="short">
+					  <label>Meta Title</label>
+					  <help>Google typically displays the first 50–60 characters of a title tag. If you keep your titles under 60 characters, our research suggests that you can expect about 90% of your titles to display properly. There's no exact character limit, because characters can vary in width and Google's display titles max out (currently) at 600 pixels.</help>
+				  </input>
+				  <input bind="cMetaDescripton" class="short">
+					  <label>Meta Description</label>
+					  <help>Meta descriptions can be any length, but Google generally truncates snippets to ~155–160 characters. It's best to keep meta descriptions long enough that they're sufficiently descriptive, so we recommend descriptions between 50–160 characters. Keep in mind that the "optimal" length will vary depending on the situation, and your primary goal should be to provide value and drive clicks.</help>
+				  </input>
 
+				  <group class="form-section-wrapper">
+					  <!-- label>Event Terms</label-->
+					  <input bind="cContentSpecificationDocument" class="short pickDocument">
+						  <label>Event Terms / Specification document</label>
+					  </input>
+				  </group>
+				  <group>
+					  <input bind="cEventBookingURL" class="long">
+						  <label>External Booking URL</label>
+					  </input>
+				  </group>
+
+			  </group>
+
+
+		  </group>
+
+
+	  </group>
+    </group>
   <group ref="submit" class="contentSubmit">
     <submit submission="" ref="ewSubmit" class="principle">
       <label>Save Ticket</label>

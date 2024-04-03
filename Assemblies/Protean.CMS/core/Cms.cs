@@ -17,6 +17,7 @@ using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
 using Protean.Providers.Membership;
+using Lucene.Net.Support;
 
 namespace Protean
 {
@@ -130,7 +131,7 @@ namespace Protean
         public int sessionRootPageId = 0;
 
         public static bool gbCompiledTransform = false;
-        private static System.Xml.Xsl.XslCompiledTransform moCompliedStyle;
+        //private static System.Xml.Xsl.XslCompiledTransform moCompliedStyle;
         public long gnPageNotFoundId = 0L;
         private long gnPageAccessDeniedId = 0L;
         private long gnPageLoginRequiredId = 0L;
@@ -175,6 +176,8 @@ namespace Protean
         private XmlElement _responses;
 
         private Protean.ExternalSynchronisation _oSync;
+
+        public string defaultProductTypes = "Product,SKU,Ticket";
 
         public virtual Protean.ExternalSynchronisation oSync
         {
@@ -235,7 +238,7 @@ namespace Protean
         private string mcSessionReferrer = null;
 
 
-        private PerformanceCounter _workingSetPrivateMemoryCounter;
+       // private PerformanceCounter _workingSetPrivateMemoryCounter;
         public string mcOutputFileName = "FileName.pdf";
 
         private const string NotFoundPagePath = "/System-Pages/Page-Not-Found";
@@ -2407,12 +2410,9 @@ namespace Protean
                             this.moSession.Remove("RedirectReason");
                         }
                     }
-
                     GetPageXMLRet = moPageXml;
-
                 }
             }
-
             catch (Exception ex)
             {
                 // returnException(msException, mcModuleName, "getPageXML", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
@@ -3007,7 +3007,7 @@ namespace Protean
 
                     string ProductTypes = this.moConfig["ProductTypes"];
                     if (string.IsNullOrEmpty(ProductTypes))
-                        ProductTypes = "Product,SKU";
+                        ProductTypes = defaultProductTypes;
 
                     if (this.moConfig["Cart"] == "on")
                     {
@@ -3774,8 +3774,8 @@ namespace Protean
                     moCart.InitializeVariables();
                     moCart.apply();
                     // get any discount information for this page
-                    var argoRootElmt = moPageXml.DocumentElement;
-                    moDiscount.getAvailableDiscounts(ref argoRootElmt);
+                    XmlElement RootElmt = moPageXml.DocumentElement;
+                    moDiscount.getAvailableDiscounts(ref RootElmt);
                     sProcessInfo = "End Cart";
                 }
             }
@@ -4376,12 +4376,13 @@ namespace Protean
                     this.moDbHelper.getContentFromModuleGrabber(ref ocNode);
                 }
 
-                foreach (XmlElement currentOcNode4 in moPageXml.SelectNodes("/Page/Contents/Content[@display='group']"))
-                {
-                    ocNode = currentOcNode4;
-                    this.moDbHelper.getContentFromProductGroup(ref ocNode);
+                if (!gcBlockContentType.Contains("Product")) { 
+                    foreach (XmlElement currentOcNode4 in moPageXml.SelectNodes("/Page/Contents/Content[@display='group']"))
+                    {
+                        ocNode = currentOcNode4;
+                        this.moDbHelper.getContentFromProductGroup(ref ocNode);
+                    }
                 }
-
                 // Content Type : ContentGrabber
                 foreach (XmlElement currentOcNode5 in moPageXml.SelectNodes("/Page/Contents/Content[@type='ContentGrabber']"))
                 {
@@ -4848,7 +4849,22 @@ namespace Protean
                     sPrimarySql = " CL.bPrimary = 1 ";
                 }
 
-
+                if (oContentsNode != null)
+                {
+                    if (oContentsNode.Attributes["contentType"] != null)
+                    {
+                        cFilterTarget = oContentsNode.Attributes["contentType"].Value;
+                    }
+                    if (oContentsNode.Attributes["filterTarget"] != null)
+                    {
+                        cFilterTarget = oContentsNode.Attributes["filterTarget"].Value;
+                    }
+                }
+                object sFilterTargetSql = "";
+                if (!string.IsNullOrEmpty(cFilterTarget))
+                {
+                    cFilterTarget = " and c.cContentSchemaName ='" + cFilterTarget + "' ";
+                }
 
                 if (gbMembership == true & bIgnorePermissionsCheck == false)
                 {
@@ -4889,25 +4905,10 @@ namespace Protean
                         nAuthGroup = gnAuthUsers;
                     }
 
-                    if (oContentsNode != null)
-                    {
-                        if (oContentsNode.Attributes["contentType"] != null)
-                        {
-                            cFilterTarget = oContentsNode.Attributes["contentType"].Value;
-                        }
-                        if (oContentsNode.Attributes["filterTarget"] != null)
-                        {
-                            cFilterTarget = oContentsNode.Attributes["filterTarget"].Value;
-                        }
-                    }
-                    object sFilterTargetSql = "";
-                    if (!string.IsNullOrEmpty(cFilterTarget))
-                    {
-                        cFilterTarget = " c.cContentSchemaName ='" + cFilterTarget + "' and ";
-                    }
+                   
 
                     // Check the page is not denied
-                    sMembershipSql = cFilterTarget + "NOT(dbo.fxn_checkPermission(CL.nStructId," + nAuthUserId + "," + nAuthGroup + ") LIKE '%DENIED%')";
+                    sMembershipSql = "NOT(dbo.fxn_checkPermission(CL.nStructId," + nAuthUserId + "," + nAuthGroup + ") LIKE '%DENIED%')";
 
 
 
@@ -4935,6 +4936,12 @@ namespace Protean
 
 
                 string combinedWhereSQL = sPrimarySql + sMembershipSql + sFilterSql + sWhereSql;
+
+                if (!string.IsNullOrEmpty(cFilterTarget))
+                {
+                    combinedWhereSQL = combinedWhereSQL + cFilterTarget;
+                }
+
                 if (Strings.Trim(combinedWhereSQL).StartsWith("and"))
                 {
                     combinedWhereSQL = combinedWhereSQL.Substring(4);
@@ -4947,7 +4954,7 @@ namespace Protean
                 {
                     // Quick call to get the total number of records
                     string cSQL = "SET ARITHABORT ON ";
-                    cSQL += "Select COUNT(distinct c.nContentKey) FROM tblContent AS c INNER JOIN ";
+                    cSQL += "Select COUNT(distinct c.nContentKey) FROM tblContent AS c with(NOLOCK) INNER JOIN ";
                     cSQL += "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN ";
                     cSQL += "tblContentLocation AS CL ON c.nContentKey = CL.nContentId ";
                     // ' Add the extra joins if specified.
@@ -5444,9 +5451,9 @@ namespace Protean
 
             // If Tools.Text.IsEmail(cDecrypted) Then
 
-            // ' Authentication is by way of e-mail address
+            // ' Authentication is by way of email address
             // cProcessInfo = "Email authenctication: Retrieving user for email: " & cDecrypted
-            // ' Get the user id based on the e-mail address
+            // ' Get the user id based on the email address
             // nReturnId = moDbHelper.GetUserIDFromEmail(cDecrypted)
 
             // If nReturnId > 0 Then
@@ -5458,7 +5465,7 @@ namespace Protean
 
             // ' Authentication is by way of user ID
             // cProcessInfo = "User ID Authentication: " & cDecrypted
-            // ' Get the user id based on the e-mail address
+            // ' Get the user id based on the email address
             // bCheck = moDbHelper.IsValidUser(CInt(cDecrypted))
             // If bCheck Then Me.mnUserId = CInt(cDecrypted)
 
@@ -7965,26 +7972,25 @@ namespace Protean
                                     int nStart = 0;
                                     int nRows = 500;
                                     nRows = Conversions.ToInteger("0" + ContentModule.GetAttribute("stepCount"));
-
-                                    string sFilterSql = GetStandardFilterSQLForContent();
-                                    sFilterSql = sFilterSql + " and nstructid=" + this.mnPageId;
-                                    if (ContentModule.HasAttribute("TotalCount") == false)
-                                    {
-                                        ContentModule.SetAttribute("TotalCount", 0.ToString());
+                                    if (Conversions.ToInteger("0" + ContentModule.GetAttribute("firstPageCount")) > 0) {
+                                        nRows = 0;// Conversions.ToInteger("0" + ContentModule.GetAttribute("firstPageCount"));
                                     }
-                                    var argoPageElmt1 = moPageXml.DocumentElement;
-                                    XmlElement oPagedetail = null;
-                                    this.GetContentXMLByTypeAndOffset(ref argoPageElmt1, SingleContentType + cSort, (long)nStart, (long)nRows, ref oPagedetail, oContentModule: ref ContentModule, sFilterSql, bShowContentDetails: false);
-
+                                    if (nRows > 0) { 
+                                        string sFilterSql = GetStandardFilterSQLForContent();
+                                        sFilterSql = sFilterSql + " and nstructid=" + this.mnPageId;
+                                        if (ContentModule.HasAttribute("TotalCount") == false)
+                                        {
+                                            ContentModule.SetAttribute("TotalCount", 0.ToString());
+                                        }
+                                        var argoPageElmt1 = moPageXml.DocumentElement;
+                                        XmlElement oPagedetail = null;
+                                        this.GetContentXMLByTypeAndOffset(ref argoPageElmt1, SingleContentType + cSort, (long)nStart, (long)nRows, ref oPagedetail, oContentModule: ref ContentModule, sFilterSql, bShowContentDetails: false);
+                                    }
                                 }
-
                             }
                         }
-
                     }
                 }
-
-
                 else
                 {
                     // if we are on a system page we only want the content on that page not parents.
@@ -8367,7 +8373,12 @@ namespace Protean
 
                             oDs.EnforceConstraints = false;
                             // convert to Xml Dom
-                            var oXml = new XmlDataDocument(oDs);
+                            //var oXml = new XmlDataDocument(oDs);
+                            XmlDocument oXml = new XmlDocument();
+                            if (oDs.Tables[0].Rows.Count>0)
+                            {
+                                oXml.LoadXml(oDs.GetXml());
+                            }                            
                             oXml.PreserveWhitespace = false;
 
                             foreach (XmlElement oReplaceContent in oXml.SelectNodes("/Contents/Content"))
@@ -8503,7 +8514,12 @@ namespace Protean
 
                             oDs.EnforceConstraints = false;
                             // convert to Xml Dom
-                            var oXml = new XmlDataDocument(oDs);
+                            //var oXml = new XmlDataDocument(oDs);
+                            XmlDocument oXml = new XmlDocument();
+                            if (oDs.Tables[0].Rows.Count>0)
+                            {
+                                oXml.LoadXml(oDs.GetXml());
+                            }                           
                             oXml.PreserveWhitespace = false;
 
 
@@ -9171,7 +9187,7 @@ namespace Protean
                             // Add single item shipping costs for JSON-LD
                             string ProductTypes = this.moConfig["ProductTypes"];
                             if (string.IsNullOrEmpty(ProductTypes))
-                                ProductTypes = "Product,SKU";
+                                ProductTypes = defaultProductTypes;
                             if (ProductTypes.Contains(contentElmt.GetAttribute("type")) & moCart != null)
                             {
                                 try

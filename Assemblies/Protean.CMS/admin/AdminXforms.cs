@@ -50,6 +50,7 @@ namespace Protean
                 public bool mbAdminMode = false;
                 public System.Web.HttpRequest moRequest;
                 public Tools.Security.Impersonate moImp = null;
+                public string ReportExportPath = "/ewcommon/tools/export.ashx?ewCmd=CartDownload";
 
                 // Error Handling hasn't been formally set up for AdminXforms so this is just for method invocation found in xfrmEditContent
                 public new event OnErrorEventHandler OnError;
@@ -74,6 +75,9 @@ namespace Protean
                         moRequest = this.myWeb.moRequest;
 
                         base.cLanguage = this.myWeb.mcPageLanguage;
+                        if (myWeb.bs5) {
+                            ReportExportPath = "/ptn/tools/export.ashx?ewCmd=CartDownload";
+                        }
                     }
 
                     catch (Exception ex)
@@ -1039,7 +1043,7 @@ namespace Protean
 
                             oFrmElmt = base.addGroup(ref base.moXformElmt, "Config", "", "ConfigSettings");
                             base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, xFormPath + " could not be found. - ");
-                       
+
                         }
 
                         else
@@ -1062,7 +1066,7 @@ namespace Protean
                             string oCgfSectPath = "rewriteMaps/rewriteMap[@name='" + ConfigType + "']";
                             // Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection(oCgfSectName)
                             cProcessInfo = "Getting Section Name:" + oCgfSectPath;
-                           // bool sectionMissing = false;
+                            // bool sectionMissing = false;
 
                             // Get the current settings
                             if (rewriteXml.SelectSingleNode(oCgfSectPath) != null)
@@ -1084,7 +1088,7 @@ namespace Protean
                                     {
                                         string xmlstring = "<rewriteMap name='" + ConfigType + "'>";
                                         string xmlstringend = "</rewriteMap>";
-                                       // int count = 0;
+                                        // int count = 0;
 
                                         for (int i = 0, loopTo = PerPageCount - 1; i <= loopTo; i++)
                                             xmlstring = xmlstring + props.ChildNodes[i].OuterXml;
@@ -1108,7 +1112,7 @@ namespace Protean
                             else
                             {
                                 // no current settings create them
-                               // sectionMissing = true;
+                                // sectionMissing = true;
                                 oFrmElmt = base.moXformElmt;
                                 //XmlNode argoNode1 = oFrmElmt;
                                 base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "This config section has not yet been setup, saving will implement these settings for the first time and then log you off the admin system.");
@@ -1445,9 +1449,9 @@ namespace Protean
                                             newXml.Save(this.goServer.MapPath(themePath + currentTheme + "/themeManifest.xml"));
                                         }
 
-                                       // XmlNode argoNode1 = (XmlNode)this.moXformElmt;
+                                        // XmlNode argoNode1 = (XmlNode)this.moXformElmt;
                                         base.addNote(ref this.moXformElmt, Protean.xForm.noteTypes.Alert, "New Preset Saved");
-                                       // this.moXformElmt = (XmlElement)argoNode1;
+                                        // this.moXformElmt = (XmlElement)argoNode1;
                                     }
                                     else
                                     {
@@ -2158,7 +2162,7 @@ namespace Protean
                                         base.valid = false;
                                         //XmlNode argoNode1 = oFrmElmt;
                                         base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "<strong>" + aReservedDirs[i] + "</strong> is a reserved directory name, please use another.");
-                                       // oFrmElmt = (XmlElement)argoNode1;
+                                        // oFrmElmt = (XmlElement)argoNode1;
                                     }
                                 }
 
@@ -3501,10 +3505,10 @@ namespace Protean
                     int unusedReturnId = 0;
                     string unusedReturnSchema = "";
                     string unusedAlternateFormName = "";
-                    return xFrmEditContent(id, cContentSchemaName, pgid, cContentName, bCopy,ref unusedReturnId,ref unusedReturnSchema,ref unusedAlternateFormName);
+                    return xFrmEditContent(id, cContentSchemaName, pgid, cContentName, bCopy, ref unusedReturnId, ref unusedReturnSchema, ref unusedAlternateFormName);
                 }
 
-                public virtual XmlElement xFrmEditContent(long id , string cContentSchemaName , long pgid , string cContentName , bool bCopy , ref int nReturnId , ref string zcReturnSchema , ref string AlternateFormName , long nVersionId = 0L)
+                public virtual XmlElement xFrmEditContent(long id, string cContentSchemaName, long pgid, string cContentName, bool bCopy, ref int nReturnId, ref string zcReturnSchema, ref string AlternateFormName, long nVersionId = 0L)
                 {
                     XmlElement oFrmElmt;
                     // Dim oGrp1Elmt As XmlElement
@@ -3583,8 +3587,9 @@ namespace Protean
                             moDbHelper.getLocationsByContentId(id, ref argContentNode);
 
                             // Add ProductCategories
-                            string sProductTypes = "Product,SKU";
-                            if (myWeb.Features.ContainsKey("Subscriptions")) {
+                            string sProductTypes = "Product,SKU,Ticket";
+                            if (myWeb.Features.ContainsKey("Subscriptions"))
+                            {
                                 sProductTypes = sProductTypes + ",Subscription";
                             }
                             if (!string.IsNullOrEmpty(this.myWeb.moConfig["ProductTypes"]))
@@ -3662,7 +3667,7 @@ namespace Protean
                         {
                             if (cXformPath.StartsWith("/"))
                             {
-                                cXformPath = cXformPath;
+                                //cXformPath = cXformPath;
                             }
                             else
                             {
@@ -3779,7 +3784,14 @@ namespace Protean
 
                             if (!string.IsNullOrEmpty(cContentName) & base.Instance.FirstChild != null)
                             {
-                                base.Instance.SelectSingleNode("tblContent/cContentName").InnerText = cContentName;
+                                if (base.Instance.SelectSingleNode("tblContent/cContentSchemaName") != null)
+                                {
+                                    if (base.Instance.SelectSingleNode("tblContent/cContentSchemaName").InnerText.ToLower() != "filter")
+                                    {
+                                        base.Instance.SelectSingleNode("tblContent/cContentName").InnerText = cContentName;
+                                    }
+                                }
+
                                 base.Instance.SelectSingleNode("tblContent/dPublishDate").InnerText = XmlDate(DateTime.Now);
                             }
 
@@ -4627,7 +4639,7 @@ namespace Protean
                         {
                             //XmlNode argoNode1 = oFrmElmt;
                             base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "You cannot delete the root folder", false, "alert-danger");
-                           //oFrmElmt = (XmlElement)argoNode1;
+                            //oFrmElmt = (XmlElement)argoNode1;
                         }
                         else
                         {
@@ -5096,7 +5108,7 @@ namespace Protean
                                     this.valid = false;
                                     //XmlNode argoNode = (XmlNode)this.moXformElmt;
                                     base.addNote(ref this.moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse);
-                                   // this.moXformElmt = (XmlElement)argoNode;
+                                    // this.moXformElmt = (XmlElement)argoNode;
                                 }
                             }
                             else
@@ -5418,7 +5430,7 @@ namespace Protean
                                     this.valid = false;
                                     //XmlNode argoNode = (XmlNode)this.moXformElmt;
                                     base.addNote(ref this.moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse);
-                                   // this.moXformElmt = (XmlElement)argoNode;
+                                    // this.moXformElmt = (XmlElement)argoNode;
                                 }
                             }
                             else
@@ -5631,7 +5643,7 @@ namespace Protean
                     string cProcessInfo = "";
                     //string cCurrentPassword = "";
                     //string cCodeUsed = "";
-                   // bool addNewitemToParId = false;
+                    // bool addNewitemToParId = false;
                     string cDirectorySchemaName = "role";
                     string cXformName = "";
                     XmlElement oElmt;
@@ -6571,9 +6583,9 @@ namespace Protean
                         }
 
 
-                       // XmlNode argoNode1 = oFrmGrp1;
+                        // XmlNode argoNode1 = oFrmGrp1;
                         base.addNote(ref oFrmGrp1, Protean.xForm.noteTypes.Hint, "You can select multiple items by holding down CRTL whilse clicking the names");
-                       // oFrmGrp1 = (XmlElement)argoNode1;
+                        // oFrmGrp1 = (XmlElement)argoNode1;
 
 
                         // Populate the allow and denied boxes.
@@ -6667,7 +6679,7 @@ namespace Protean
                         oFrmGrp1 = base.addGroup(ref oFrmElmt, "AllObjects", "", "Select the items you want to have access to this page");
                         //XmlNode argoNode = oFrmGrp1;
                         base.addNote(ref oFrmGrp1, Protean.xForm.noteTypes.Hint, "You can select multiple items by holding down CTRL while clicking the names");
-                       // oFrmGrp1 = (XmlElement)argoNode;
+                        // oFrmGrp1 = (XmlElement)argoNode;
 
 
                         // Add the buttons and radios
@@ -6776,7 +6788,7 @@ namespace Protean
                         if (Conversions.ToBoolean(Operators.ConditionalCompareObjectGreater(moDbHelper.GetDataValue("SELECT COUNT(*) As pCount FROM tblDirectoryPermission WHERE nAccessLevel IN (0,2) AND nStructId=" + id, CommandType.Text, null, (object)0), 0, false)))
                         {
 
-                           // XmlNode argoNode2 = oFrmElmt;
+                            // XmlNode argoNode2 = oFrmElmt;
                             base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Note: there are also Permissions being applied to this page.  You can view these by clicking the Permissions button above.");
                             //oFrmElmt = (XmlElement)argoNode2;
 
@@ -6819,9 +6831,9 @@ namespace Protean
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "EditUserMemberships", "3col", "Memberships for User - ");
 
                         oFrmGrp1 = base.addGroup(ref oFrmElmt, "AllObjects", "", "Select the groups you want this user to belong too");
-                       // XmlNode argoNode = oFrmGrp1;
+                        // XmlNode argoNode = oFrmGrp1;
                         base.addNote(ref oFrmGrp1, Protean.xForm.noteTypes.Hint, "You can select multiple items by holding down CRTL whilse clicking the names");
-                       // oFrmGrp1 = (XmlElement)argoNode;
+                        // oFrmGrp1 = (XmlElement)argoNode;
 
                         // add the buttons so we can test for submission
                         oFrmGrp2 = base.addGroup(ref oFrmElmt, "EditPermissions", "PermissionButtons", "Buttons");
@@ -7315,10 +7327,20 @@ namespace Protean
 
                         if (moDbHelper.checkTableColumnExists("tblCartShippingMethods", "bCollection"))
                         {
-                            oSelElmt = base.addSelect(ref oGrp2Elmt, "bCollection", true, "Collection Option", "multiline", Protean.xForm.ApperanceTypes.Full);
+                            oSelElmt = base.addSelect(ref oGrp2Elmt, "bCollection", true, "Collection or Virtual Option", "multiline", Protean.xForm.ApperanceTypes.Full);
                             base.addOption(ref oSelElmt, "Collection", "True");
                             XmlElement argoBindParent19 = null;
                             base.addBind("bCollection", "tblCartShippingMethods/bCollection", oBindParent: ref argoBindParent19, "false()");
+                        }
+                        // new column added
+                        // Set if you need this shipping option to override all other shipping options, if this option is valid for any item in the cart.
+
+                        if (moDbHelper.checkTableColumnExists("tblCartShippingMethods", "bOverrideForWholeOrder"))
+                        {
+                            oSelElmt = base.addSelect(ref oGrp2Elmt, "bOverrideForWholeOrder", true, "Override For Whole Order", "multiline", Protean.xForm.ApperanceTypes.Full);
+                            base.addOption(ref oSelElmt, "Override", "True");
+                            XmlElement argoBindParent19 = null;
+                            base.addBind("bOverrideForWholeOrder", "tblCartShippingMethods/bOverrideForWholeOrder", oBindParent: ref argoBindParent19, "false()");
                         }
 
                         oSelElmt = base.addSelect1(ref oGrp2Elmt, "nStatus", true, "Status", "", Protean.xForm.ApperanceTypes.Minimal);
@@ -7644,13 +7666,13 @@ namespace Protean
                         {
                             sendEmailOnShipped = true;
                             if (this.goRequest["nStatus"] != "9")
-                                shippedStatus += " (Confirmation e-mail will be sent to customer)";
+                                shippedStatus += " (Confirmation email will be sent to customer)";
                         }
 
                         string completedMsg = "";
                         if (moCartConfig["SendRecieptsFromAdmin"] != "off")
                         {
-                            completedMsg = " - Payment Recieved (resends receipt)";
+                            completedMsg = " - Payment Recieved (Resends receipt email)";
                         }
 
                         // update the status if we have submitted it allready
@@ -7675,15 +7697,16 @@ namespace Protean
                             case 6L: // Completed
                                 {
                                     base.addOption(ref oSelElmt, "Awaiting Payment", 13.ToString(), false, "Awaiting_Payment");
-                                    base.addOption(ref oSelElmt, "Completed", 6.ToString(), false, "Completed");
+                                    base.addOption(ref oSelElmt, "New Sale", 6.ToString(), false, "New Sale");
                                     base.addOption(ref oSelElmt, "Refunded", 7.ToString(), false, "Refunded");
                                     base.addOption(ref oSelElmt, shippedStatus, 9.ToString(), false, "Shipped");
+                                    base.addOption(ref oSelElmt, "Shipped (No email)", 9.ToString() + ".1", false, "No email");
                                     base.addOption(ref oSelElmt, "Delete", 12.ToString());
                                     break;
                                 }
                             case 7L: // Refunded
                                 {
-                                    base.addOption(ref oSelElmt, "Completed" + completedMsg, 6.ToString());
+                                    base.addOption(ref oSelElmt, "New Sale" + completedMsg, 6.ToString());
                                     base.addOption(ref oSelElmt, "Refunded", 7.ToString());
                                     base.addOption(ref oSelElmt, "Delete", 12.ToString());
                                     break;
@@ -7696,7 +7719,7 @@ namespace Protean
                                 }
                             case 9L: // Shipped
                                 {
-                                    base.addOption(ref oSelElmt, "Completed" + completedMsg, 6.ToString());
+                                    base.addOption(ref oSelElmt, "New Sale" + completedMsg, 6.ToString());
                                     base.addOption(ref oSelElmt, "Refunded", 7.ToString());
                                     base.addOption(ref oSelElmt, shippedStatus, 9.ToString());
                                     break;
@@ -7704,7 +7727,7 @@ namespace Protean
                             case 10L: // Deposit Paid
                                 {
                                     base.addOption(ref oSelElmt, "Deposit Paid", 10.ToString());
-                                    base.addOption(ref oSelElmt, "Completed" + completedMsg, 6.ToString());
+                                    base.addOption(ref oSelElmt, "New Sale" + completedMsg, 6.ToString());
                                     base.addOption(ref oSelElmt, shippedStatus, 9.ToString());
                                     base.addOption(ref oSelElmt, "Delete", 12.ToString());
                                     break;
@@ -7712,7 +7735,7 @@ namespace Protean
                             case 13L: // Awaiting Payment
                                 {
                                     base.addOption(ref oSelElmt, "Awaiting Payment", 13.ToString());
-                                    base.addOption(ref oSelElmt, "Completed" + completedMsg, 6.ToString());
+                                    base.addOption(ref oSelElmt, "New Sale" + completedMsg, 6.ToString());
                                     base.addOption(ref oSelElmt, "Refunded", 7.ToString());
                                     base.addOption(ref oSelElmt, shippedStatus, 9.ToString());
                                     base.addOption(ref oSelElmt, "Delete", 12.ToString());
@@ -7721,7 +7744,7 @@ namespace Protean
                             case 17L: // In Progress
                                 {
                                     base.addOption(ref oSelElmt, "Awaiting Payment", 13.ToString(), false, "Awaiting_Payment");
-                                    base.addOption(ref oSelElmt, "Completed", 6.ToString(), false, "Completed");
+                                    base.addOption(ref oSelElmt, "New Sale", 6.ToString(), false, "New Sale");
                                     base.addOption(ref oSelElmt, "Refunded", 7.ToString(), false, "Refunded");
                                     base.addOption(ref oSelElmt, shippedStatus, 9.ToString(), false, "Shipped");
                                     base.addOption(ref oSelElmt, "Delete", 12.ToString());
@@ -7738,9 +7761,10 @@ namespace Protean
                             XmlElement argoInsertBeforeNode = null;
                             var oSwitch = base.addSwitch(ref oGrp1Elmt, "", oInsertBeforeNode: ref argoInsertBeforeNode);
                             var oCase = base.addCase(ref oSwitch, "Awaiting_Payment");
-                            var oCase1 = base.addCase(ref oSwitch, "Completed");
+                            var oCase1 = base.addCase(ref oSwitch, "New Sale");
                             var oCase2 = base.addCase(ref oSwitch, "Refunded");
                             var oCase3 = base.addCase(ref oSwitch, "Shipped");
+                            //var oCase4 = base.addCase(ref oSwitch, "Processed");
 
                             // Turn of validation when switching back to completed
                             string validationOn = "true()";
@@ -7864,7 +7888,7 @@ namespace Protean
                                     }
                                 case "6":
                                     {
-                                        sStatusDesc = "Completed";
+                                        sStatusDesc = "New Sale";
                                         break;
                                     }
                                 case "7":
@@ -7880,6 +7904,12 @@ namespace Protean
                                 case "9":
                                     {
                                         sStatusDesc = "Shipped";
+                                        break;
+                                    }
+                                case "9.1":
+                                    {
+                                        sStatusDesc = "Shipped";
+                                        sendEmailOnShipped = false;
                                         break;
                                     }
                                 case "10":
@@ -7977,12 +8007,9 @@ namespace Protean
                                 }
                             }
                         }
-
                         base.addValues();
-
                         return base.moXformElmt;
                     }
-
                     catch (Exception ex)
                     {
                         stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmUpdateOrder", ex, "", cProcessInfo, gbDebug);
@@ -8069,9 +8096,9 @@ namespace Protean
                                     IsRefund = Conversions.ToString(oPaymentProv.Activities.RefundPayment(providerPaymentReference, refundAmount));
                                     if (IsRefund.StartsWith("Error"))
                                     {
-                                       // XmlNode argoNode = oFrmElmt;
+                                        // XmlNode argoNode = oFrmElmt;
                                         base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Refund Failed:" + IsRefund);
-                                       // oFrmElmt = (XmlElement)argoNode;
+                                        // oFrmElmt = (XmlElement)argoNode;
                                         // myWeb.msRedirectOnEnd = "/?ewCmd=Orders&ewCmd2=Display&id=" + nOrderId
                                         base.valid = false;
                                     }
@@ -9703,14 +9730,14 @@ namespace Protean
                             }
                             else
                             {
-                                base.LoadInstance(this.myWeb.moSession["tempInstance"].ToString());
+                                base.LoadInstance((XmlElement)this.myWeb.moSession["tempInstance"]);
                             }
                         }
 
                         this.moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = base.Instance.InnerXml;
                         //int i = 1;
-                       // bool bDone = false;
-                       /// string cItems = "";
+                        // bool bDone = false;
+                        /// string cItems = "";
                         long initialSubContentId = Conversions.ToLong("0" + base.Instance.SelectSingleNode("tblSubscription/nSubContentId").InnerText);
 
 
@@ -9719,7 +9746,7 @@ namespace Protean
                         {
                             base.updateInstanceFromRequest();
 
-                            long ContentId = Conversions.ToLong(base.Instance.SelectSingleNode("tblSubscription/nSubContentId").InnerText);
+                            long ContentId = Conversions.ToLong("0" + base.Instance.SelectSingleNode("tblSubscription/nSubContentId").InnerText);
                             var ContentXml = this.myWeb.moPageXml.CreateElement("Content");
                             ContentXml.InnerXml = moDbHelper.getContentBrief((int)ContentId);
 
@@ -9860,7 +9887,7 @@ namespace Protean
 
                         //XmlNode argoNode = oFrmElmt;
                         base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, "Renew Subscription", true, "renew-sub");
-                       // oFrmElmt = (XmlElement)argoNode;
+                        // oFrmElmt = (XmlElement)argoNode;
 
                         base.addSubmit(ref oFrmElmt, "Back", "Back", "Back", "btn-default", "fa-chevron-left");
                         base.addSubmit(ref oFrmElmt, "Confirm", "Confirm Renewal", "Confirm", "btn-success principle", "fa-repeat");
@@ -9868,7 +9895,7 @@ namespace Protean
                         if (this.isSubmitted())
                         {
                             if (base.getSubmitted() == "Back")
-                            {                               
+                            {
                                 this.myWeb.msRedirectOnEnd = "/?ewCmd=RenewSubscription";
                                 return base.moXformElmt;
                             }
@@ -9935,9 +9962,9 @@ namespace Protean
                         base.addOption(ref oSelElmt, "Email Renewal Invoice", "yes");
                         base.addValue(ref oSelElmt, "yes");
 
-                       // XmlNode argoNode = oFrmElmt;
+                        // XmlNode argoNode = oFrmElmt;
                         base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, "Resend Subscription", true, "resend-sub");
-                       // oFrmElmt = (XmlElement)argoNode;
+                        // oFrmElmt = (XmlElement)argoNode;
 
                         base.addSubmit(ref oFrmElmt, "Back", "Back", "Back", "btn-default", "fa-chevron-left");
                         base.addSubmit(ref oFrmElmt, "Confirm", "Confirm Refresh and Resend", "Confirm", "btn-success principle", "fa-repeat");
@@ -9945,7 +9972,7 @@ namespace Protean
                         if (this.isSubmitted())
                         {
                             if (base.getSubmitted() == "Back")
-                            {                                
+                            {
                                 this.myWeb.msRedirectOnEnd = "/?ewCmd=ResendSubscription";
                                 return base.moXformElmt;
                             }
@@ -10491,8 +10518,10 @@ namespace Protean
                         //bool bCascade = false;
                         //string cProcessInfo = "";
 
+                        
+
                         base.NewFrm("CartActivity");
-                        base.submission("SeeReport", "/ewcommon/tools/export.ashx?ewCmd=CartDownload", "get", "");
+                        base.submission("SeeReport", ReportExportPath, "get", "");
 
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "Content", "");
 
@@ -11145,7 +11174,7 @@ namespace Protean
                                 {
                                     if (!string.IsNullOrEmpty(oCodes[i]))
                                     {
-                                        if (Convert.ToInt32(myWeb.moDbHelper.GetDataValue("SELECT nCodeKey FROM tblCodes WHERE cCode ='" +oCodes[i] + "'")) > 0)
+                                        if (Convert.ToInt32(myWeb.moDbHelper.GetDataValue("SELECT nCodeKey FROM tblCodes WHERE cCode ='" + oCodes[i] + "'")) > 0)
                                         {
                                             nSkipped += 1;
                                         }
@@ -11398,7 +11427,7 @@ namespace Protean
                             if (base.valid)
                             {
                                 bool bResult = true;
-                                idx.DoIndex( ref bResult,0);
+                                idx.DoIndex(ref bResult, 0);
 
                                 string cSubResponse = idx.cExError;
                                 if (string.IsNullOrEmpty(cSubResponse))
