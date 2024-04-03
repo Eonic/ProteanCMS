@@ -9644,7 +9644,7 @@ namespace Protean
                                 var abyBuffer = new byte[(int)(oFileStream.Length - 1L) + 1];
                                 oFileStream.Read(abyBuffer, 0, abyBuffer.Length);
 
-                                var objCrc32 = new ICSharpCode.SharpZipLib.Checksums.Crc32();
+                                var objCrc32 = new ICSharpCode.SharpZipLib.Checksum.Crc32();
                                 objCrc32.Reset();
                                 objCrc32.Update(abyBuffer);
                                 oZipEntry.Crc = objCrc32.Value;

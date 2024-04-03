@@ -10,7 +10,7 @@ Imports System.Web.Management
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.1.2.0"
+    Public Shared ewAssemblyVersion As String = "6.1.3.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.1.0.0"
     Public Shared bundleAssemblyVersion As String = "1.10.0.0"
     Public Shared bundleLessAssemblyVersion As String = "1.12.44.0"
@@ -44,7 +44,7 @@ Public Class CustomActions
     Public Shared DocumentFormatOpenXmlVersion As String = "2.9.1.0"
 
     Public Shared AngleSharpVersion As String = "1.1.2.0"
-    Public Shared PreMailerVersion As String = "2.9.1.0"
+    Public Shared PreMailerVersion As String = "2.5.0.0"
 
 
     Public Shared MicrosoftWebInfrastructureVersion As String = "2.0.0.0"
@@ -236,6 +236,9 @@ Public Class CustomActions
                     UpdateAssemblyRef(oAssembliesSect, "System.Buffers, Version=" & SystemBuffersVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
 
                     UpdateAssemblyRef(oAssembliesSect, "Microsoft.Web.Infrastructure, Version=" & MicrosoftWebInfrastructureVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+
+                    UpdateAssemblyRef(oAssembliesSect, "AngleSharp, Version=" & AngleSharpVersion & ", Culture=neutral, PublicKeyToken=e83494dcdc6d31ea")
+                    UpdateAssemblyRef(oAssembliesSect, "PreMailer.Net, Version=" & PreMailerVersion & ", Culture=neutral, PublicKeyToken=23e3f43e29cae17f")
 
 
                     ' UpdateAssemblyRef(oAssembliesSect, "DocumentFormat.OpenXml, Version=" & DocumentFormatOpenXmlVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
@@ -516,6 +519,9 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "System.Buffers", "cc7b13ffcd2ddd51", SystemBuffersVersion)
             UpdateDependantAssembly(oSectXml, "ICSharpCode.SharpZipLib", "1b03e6acf1164f73", SharpZipLibAssemblyVersion)
 
+            UpdateDependantAssembly(oSectXml, "AngleSharp", "e83494dcdc6d31ea", AngleSharpVersion)
+            UpdateDependantAssembly(oSectXml, "PreMailer.Net", "23e3f43e29cae17f", PreMailerVersion)
+
             Dim BindingElmt As XmlElement = oSectXml.DocumentElement.SelectSingleNode("assemblyBinding")
             BindingElmt.SetAttribute("xmlns", "urn:schemas-microsoft-com:asm.v1")
 
@@ -524,75 +530,77 @@ Public Class CustomActions
 
             oCgfRuntimeSect64.SectionInformation.SetRawXml(oSectXml.OuterXml)
             config64.Save()
-
-            FileSystem.FileCopy("C:\Windows\SysWOW64\ClearScriptV8.win-x64.dll", "C:\Windows\System32\ClearScriptV8.win-x64.dll")
-
-            'Add the AssetHandler for .Less
-            Dim sm As New Microsoft.Web.Administration.ServerManager
-
-            '    Dim appHostConfig As Microsoft.Web.Administration.Configuration = sm.GetApplicationHostConfiguration()
-            'get default config section
-            Dim webDefaultLocationConfig As Microsoft.Web.Administration.Configuration = sm.GetWebConfiguration("")
-
-            If Not webDefaultLocationConfig Is Nothing Then
-
-                'Dim handlerSection As Microsoft.Web.Administration.ConfigurationElement = webDefaultLocationConfig.GetSection("system.webServer/handlers")
-
-                'If handlerSection Is Nothing Then
-
-                '    Dim handlerCollection As Microsoft.Web.Administration.ConfigurationElementCollection = handlerSection.GetCollection()
-
-                '    Dim handlerElmt As Microsoft.Web.Administration.ConfigurationElement
-                '    Dim lessHandlerElmt As Microsoft.Web.Administration.ConfigurationElement = Nothing
-
-                '    For Each handlerElmt In handlerCollection
-                '        If handlerElmt.GetAttribute("name").Value = "LessAssetHandler" Then
-                '            lessHandlerElmt = handlerElmt
-                '        End If
-                '    Next
-                '    If lessHandlerElmt Is Nothing Then
-                '        lessHandlerElmt = handlerCollection.CreateElement("add")
-                '        lessHandlerElmt.SetAttributeValue("name", "LessAssetHandler")
-                '        lessHandlerElmt.SetAttributeValue("path", "*.less")
-                '        lessHandlerElmt.SetAttributeValue("verb", "GET")
-                '        lessHandlerElmt.SetAttributeValue("resourceType", "Unspecified")
-                '        lessHandlerElmt.SetAttributeValue("requireAccess", "Script")
-                '        lessHandlerElmt.SetAttributeValue("preCondition", "integratedMode")
-                '        handlerCollection.AddAt(0, lessHandlerElmt)
-                '    End If
-
-                '    lessHandlerElmt.SetAttributeValue("type", "BundleTransformer.Less.HttpHandlers.LessAssetHandler, BundleTransformer.Less, Version=" & bundleLessAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
-
-                '    sm.CommitChanges()
-                '    sm = Nothing
-                'Else
-                '    Try
-                '        System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS/setting-up-less?error=system.webServer/handlers-is-missing")
-                '    Catch ex As Exception
-                '        'do nuffing
-                '    End Try
-                'End If
-
-            Else
-                Try
-                    System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS/setting-up-less?error=cannot-get-appHostConfig")
-                Catch ex As Exception
-                    'do nuffing
-                End Try
-            End If
             Try
-                System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS")
+                FileSystem.FileCopy("C:\Windows\SysWOW64\ClearScriptV8.win-x64.dll", "C:\Windows\System32\ClearScriptV8.win-x64.dll")
             Catch ex As Exception
                 'do nuffing
             End Try
-            'MyBase.Install(savedState)
-            My.Computer.FileSystem.WriteAllText("c:\\ProteanInstallLog.txt", errstr, True)
-            Return ActionResult.Success
+            'Add the AssetHandler for .Less
+            Dim sm As New Microsoft.Web.Administration.ServerManager
+
+                '    Dim appHostConfig As Microsoft.Web.Administration.Configuration = sm.GetApplicationHostConfiguration()
+                'get default config section
+                Dim webDefaultLocationConfig As Microsoft.Web.Administration.Configuration = sm.GetWebConfiguration("")
+
+                If Not webDefaultLocationConfig Is Nothing Then
+
+                    'Dim handlerSection As Microsoft.Web.Administration.ConfigurationElement = webDefaultLocationConfig.GetSection("system.webServer/handlers")
+
+                    'If handlerSection Is Nothing Then
+
+                    '    Dim handlerCollection As Microsoft.Web.Administration.ConfigurationElementCollection = handlerSection.GetCollection()
+
+                    '    Dim handlerElmt As Microsoft.Web.Administration.ConfigurationElement
+                    '    Dim lessHandlerElmt As Microsoft.Web.Administration.ConfigurationElement = Nothing
+
+                    '    For Each handlerElmt In handlerCollection
+                    '        If handlerElmt.GetAttribute("name").Value = "LessAssetHandler" Then
+                    '            lessHandlerElmt = handlerElmt
+                    '        End If
+                    '    Next
+                    '    If lessHandlerElmt Is Nothing Then
+                    '        lessHandlerElmt = handlerCollection.CreateElement("add")
+                    '        lessHandlerElmt.SetAttributeValue("name", "LessAssetHandler")
+                    '        lessHandlerElmt.SetAttributeValue("path", "*.less")
+                    '        lessHandlerElmt.SetAttributeValue("verb", "GET")
+                    '        lessHandlerElmt.SetAttributeValue("resourceType", "Unspecified")
+                    '        lessHandlerElmt.SetAttributeValue("requireAccess", "Script")
+                    '        lessHandlerElmt.SetAttributeValue("preCondition", "integratedMode")
+                    '        handlerCollection.AddAt(0, lessHandlerElmt)
+                    '    End If
+
+                    '    lessHandlerElmt.SetAttributeValue("type", "BundleTransformer.Less.HttpHandlers.LessAssetHandler, BundleTransformer.Less, Version=" & bundleLessAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
+
+                    '    sm.CommitChanges()
+                    '    sm = Nothing
+                    'Else
+                    '    Try
+                    '        System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS/setting-up-less?error=system.webServer/handlers-is-missing")
+                    '    Catch ex As Exception
+                    '        'do nuffing
+                    '    End Try
+                    'End If
+
+                Else
+                    Try
+                        System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS/setting-up-less?error=cannot-get-appHostConfig")
+                    Catch ex As Exception
+                        'do nuffing
+                    End Try
+                End If
+                Try
+                    System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS")
+                Catch ex As Exception
+                    'do nuffing
+                End Try
+                'MyBase.Install(savedState)
+                My.Computer.FileSystem.WriteAllText("c:\\ProteanInstallLog.txt", errstr, True)
+                Return ActionResult.Success
 
 
-        Catch ex As Exception
+            Catch ex As Exception
 
-            Dim errorstr As String = ex.Message & ex.StackTrace
+                Dim errorstr As String = ex.Message & ex.StackTrace
 
             If Not ex.InnerException Is Nothing Then
                 errorstr = errorstr + ex.InnerException.Message & ex.InnerException.StackTrace
