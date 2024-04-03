@@ -51,7 +51,7 @@ namespace Protean.Tools
             int i, j, k;
             i = 1; j = 0;
             k = System.Convert.ToInt32(N > initialKey.Length? N: initialKey.Length);
-            for (k = k; k >= 1; k += -1)
+            for (; k >= 1; k += -1)
             {
                 mt[i] = System.Convert.ToUInt32(((mt[i] ^ ((mt[i - 1] ^ (mt[i - 1] >> 30)) * 1664525UL)) + initialKey[j] + System.Convert.ToUInt32(j)) & 0xFFFFFFFFU);
                 i += 1; j += 1;
@@ -95,7 +95,7 @@ namespace Protean.Tools
                     y = (mt[kk] & UPPER_MASK) | (mt[kk + 1] & LOWER_MASK);
                     mt[kk] = mt[kk + M] ^ (y >> 1) ^ mag01[System.Convert.ToInt32(y & 0x1)];
                 }
-                for (kk = kk; kk <= N - 2; kk++)
+                for (; kk <= N - 2; kk++)
                 {
                     y = (mt[kk] & UPPER_MASK) | (mt[kk + 1] & LOWER_MASK);
                     mt[kk] = mt[kk + (M - N)] ^ (y >> 1) ^ mag01[System.Convert.ToInt32(y & 0x1)];
