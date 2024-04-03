@@ -43,11 +43,10 @@ Public Class CustomActions
     Public Shared SystemBuffersVersion As String = "4.0.3.0"
     Public Shared DocumentFormatOpenXmlVersion As String = "2.9.1.0"
 
+    Public Shared MicrosoftWebInfrastructureVersion As String = "2.0.0.0"
+
     Public Shared AngleSharpVersion As String = "1.1.2.0"
     Public Shared PreMailerVersion As String = "2.5.0.0"
-
-
-    Public Shared MicrosoftWebInfrastructureVersion As String = "2.0.0.0"
 
     Public Shared installFolder As String = "C:\Program Files\Eonic Digital LLP\ProteanCMS into GAC " & ewAssemblyVersion.Trim("0").Trim(".") & " (64bit)"
 
@@ -235,7 +234,7 @@ Public Class CustomActions
                     UpdateAssemblyRef(oAssembliesSect, "Magick.NET-Q8-x64, Version=" & MagickNETAssemblyVersion & ", Culture=neutral, PublicKeyToken=2004825badfa91ec")
                     UpdateAssemblyRef(oAssembliesSect, "System.Buffers, Version=" & SystemBuffersVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
 
-                    UpdateAssemblyRef(oAssembliesSect, "Microsoft.Web.Infrastructure, Version=" & MicrosoftWebInfrastructureVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+                    UpdateAssemblyRef(oAssembliesSect, "Microsoft.Web.Infrastructure, Version=" & MicrosoftWebInfrastructureVersion & ", Culture=neutral, PublicKeyToken=31bf3856ad364e35")
 
                     UpdateAssemblyRef(oAssembliesSect, "AngleSharp, Version=" & AngleSharpVersion & ", Culture=neutral, PublicKeyToken=e83494dcdc6d31ea")
                     UpdateAssemblyRef(oAssembliesSect, "PreMailer.Net, Version=" & PreMailerVersion & ", Culture=neutral, PublicKeyToken=23e3f43e29cae17f")
@@ -521,6 +520,7 @@ Public Class CustomActions
 
             UpdateDependantAssembly(oSectXml, "AngleSharp", "e83494dcdc6d31ea", AngleSharpVersion)
             UpdateDependantAssembly(oSectXml, "PreMailer.Net", "23e3f43e29cae17f", PreMailerVersion)
+            UpdateDependantAssembly(oSectXml, "Microsoft.Web.Infrastructure", "31bf3856ad364e35", MicrosoftWebInfrastructureVersion)
 
             Dim BindingElmt As XmlElement = oSectXml.DocumentElement.SelectSingleNode("assemblyBinding")
             BindingElmt.SetAttribute("xmlns", "urn:schemas-microsoft-com:asm.v1")
