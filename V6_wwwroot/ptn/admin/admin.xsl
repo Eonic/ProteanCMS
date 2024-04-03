@@ -7278,6 +7278,12 @@
           <xsl:value-of select="Email"/>
           <br/>
         </xsl:if>
+		  <xsl:if test="Details/GiftAid/node()='true'">
+			  <div class="alert alert-success" role="alert">
+			  <strong>
+				  <i class="fa-solid fa-check fa-2xl">&#160;</i>&#160;GIFT AID CONFIRMED</strong>
+			  </div>
+		  </xsl:if>
       </p>
 
     </div>
