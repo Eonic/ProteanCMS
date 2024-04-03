@@ -25,6 +25,7 @@
 						<Path/>
 						<EmailSent/>
 						<ShowImage/>
+						<TopReview/>
 						<ProductID/>
 					</Content>
 					<average_rating/>
@@ -47,6 +48,7 @@
 						<Path/>
 						<EmailSent/>
 						<ShowImage/>
+						<TopReview/>
 						<ProductID/>
 					</Content>
 					<average_rating/>
