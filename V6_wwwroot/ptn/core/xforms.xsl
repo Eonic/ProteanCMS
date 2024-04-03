@@ -47,9 +47,28 @@
 		<xsl:variable name="ref2">
 			<xsl:value-of select="translate($ref,'/','-')"/>
 		</xsl:variable>
+		<xsl:variable name="errorText">
+			<xsl:choose>
+				<!-- for Multilanguage-->
+				<xsl:when test="*/span[contains(@class,'term-')]">
+					<xsl:apply-templates select="*/span[contains(@class,'term-')]" mode="term" />
+				</xsl:when>
+				<xsl:when test="*/span[contains(@class,'msg-1007')]">
+					<xsl:value-of select="label/node()"/>
+					<xsl:text> - </xsl:text>
+					<xsl:apply-templates select="*/span[contains(@class,'msg-')]" mode="term" />
+				</xsl:when>
+				<xsl:when test="*/span[contains(@class,'msg-')]">
+					<xsl:apply-templates select="*/span[contains(@class,'msg-')]" mode="term" />
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates select="./node()" mode="cleanXhtml"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<xsl:if test="$ref!=''">
 			<script>
-				displayErrorMessage('<xsl:copy-of select="alert/node()"/>', 'fa fa-info-circle');
+				displayErrorMessage('<xsl:copy-of select="$errorText"/>', 'fa fa-info-circle');
 			</script>
 		</xsl:if>
 	</xsl:template>
@@ -3002,7 +3021,7 @@
 
 	<xsl:template match="label" mode="legend">
 		<legend>
-			<xsl:choose>
+				<xsl:choose>
 				<!-- for Multilanguage-->
 				<xsl:when test="*[contains(@class,'term-')]">
 					<xsl:apply-templates select="*[contains(@class,'term-')]" mode="term" />
@@ -3419,7 +3438,7 @@
 			<i class="fa fa-exclamation-triangle">
 				<xsl:text> </xsl:text>
 			</i>
-			<xsl:text> </xsl:text>
+			<xsl:text> </xsl:text>			
 			<xsl:choose>
 				<xsl:when test="span[contains(@class,'msg-')]">
 					<!-- Send to system translations templates -->

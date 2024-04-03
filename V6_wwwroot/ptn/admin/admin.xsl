@@ -6565,7 +6565,7 @@
           <xsl:when test="@statusId='3'">Delivery Address Added</xsl:when>
           <xsl:when test="@statusId='4'">Confirmed</xsl:when>
           <xsl:when test="@statusId='5'">Pass for Payment</xsl:when>
-          <xsl:when test="@statusId='6'">Completed</xsl:when>
+          <xsl:when test="@statusId='6'">New Sale</xsl:when>
           <xsl:when test="@statusId='7'">Refunded</xsl:when>
           <xsl:when test="@statusId='8'">Failed</xsl:when>
           <xsl:when test="@statusId='9'">Shipped</xsl:when>
@@ -6697,7 +6697,7 @@
                       <xsl:when test="@statusId='3'">Delivery Address Added</xsl:when>
                       <xsl:when test="@statusId='4'">Confirmed</xsl:when>
                       <xsl:when test="@statusId='5'">Pass for Payment</xsl:when>
-                      <xsl:when test="@statusId='6'">Completed</xsl:when>
+                      <xsl:when test="@statusId='6'">New Sale</xsl:when>
                       <xsl:when test="@statusId='7'">Refunded</xsl:when>
                       <xsl:when test="@statusId='8'">Failed</xsl:when>
                       <xsl:when test="@statusId='9'">Shipped</xsl:when>
@@ -6790,8 +6790,8 @@
               <xsl:when test="$statusId='6'">
                 <i class="fa fa-check">
                   <xsl:text> </xsl:text>
-                </i><xsl:text> </xsl:text>Completed
-              </xsl:when>
+                </i><xsl:text> </xsl:text>New Sale
+			  </xsl:when>
               <xsl:when test="$statusId='7'">Refunded</xsl:when>
               <xsl:when test="$statusId='8'">Failed</xsl:when>
               <xsl:when test="$statusId='9'">
@@ -7534,7 +7534,7 @@
           <xsl:when test="$statusId='3'">Delivery Address Added</xsl:when>
           <xsl:when test="$statusId='4'">Confirmed</xsl:when>
           <xsl:when test="$statusId='5'">Pass for Payment</xsl:when>
-          <xsl:when test="$statusId='6'">Completed</xsl:when>
+          <xsl:when test="$statusId='6'">New Sale</xsl:when>
           <xsl:when test="$statusId='7'">Refunded</xsl:when>
           <xsl:when test="$statusId='8'">Failed</xsl:when>
           <xsl:when test="$statusId='9'">Shipped</xsl:when>
@@ -7951,8 +7951,8 @@
               <xsl:text> </xsl:text>
             </i>
             <h4>Hint</h4>
-            Carriers are the shipping companies that you use, when you ship a completed order you can select one of these and send information of a tracking link to your customer.
-          </div>
+			  Carriers are the shipping companies that you use, when you ship a new sale order you can select one of these and send information of a tracking link to your customer.
+		  </div>
         </div>
         <div class="col-md-9" id="column2">
           <div class="card card-default" >
