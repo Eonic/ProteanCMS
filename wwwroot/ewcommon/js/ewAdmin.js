@@ -2167,13 +2167,3 @@ function SaveFileName(isOverwrite) {
         }
     });
 }
-
-$(document).on("change", "#cListId", function (event) {
-
-    debugger;
-    var listid = $('#cListId :selected').text();
-    if (listid != "") {
-        $("#cListName").val(listid);
-    }
-
-});
