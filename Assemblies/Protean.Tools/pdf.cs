@@ -34,7 +34,7 @@ namespace Protean.Tools
                     if (pdfDocumentXml.ToLower().Contains("<html"))
                     {  //PDF code
                         HtmlToPdf converter = new HtmlToPdf();
-                        PdfDocument pdfDoc = converter.ConvertHtmlString(pdfDocumentXml, "");
+                       
                         //PdfCustomPageSize pageSize = PdfCustomPageSize.A4;
                        
                         if (cPageSize != string.Empty)
@@ -45,6 +45,11 @@ namespace Protean.Tools
                             }
                             else if (cPageSize.ToLower() == "a5")
                             {
+                             
+                                converter.Options.AutoFitWidth = HtmlToPdfPageFitMode.ShrinkOnly;
+                                converter.Options.AutoFitHeight = HtmlToPdfPageFitMode.ShrinkOnly;
+                                converter.Options.PdfPageSize = PdfPageSize.A5;
+                                
                                 PdfCustomPageSize pageSize = PdfCustomPageSize.A5;
                             }
                             else
@@ -56,6 +61,7 @@ namespace Protean.Tools
                         {
                             PdfCustomPageSize pageSize = PdfCustomPageSize.A4;
                         }
+                        PdfDocument pdfDoc = converter.ConvertHtmlString(pdfDocumentXml, "");
                         pdfDoc.Save(ofileStream);
                         byte[] oStreamByteArray = ofileStream.ToArray();
                         converter = null;
