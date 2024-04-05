@@ -57,6 +57,7 @@ namespace Protean
                 HttpWebRequest serviceRequest = (HttpWebRequest)soapRequest;
 
                 soapBody = Strings.Replace(soapBody, "xmlns=\"\"", "");
+                serviceRequest.ContentLength = soapBody.Length;
                 serviceRequest.ContentType = "text/xml; charset=UTF-8";
                 serviceRequest.Accept = "text/xml";
                 serviceRequest.Method = "POST";
@@ -118,16 +119,17 @@ namespace Protean
 
             catch (WebException)
             {
+                HttpWebResponse serviceResponse;
+               //  serviceResponseStream = New StreamReader(serviceResponse.GetResponseStream, System.Text.Encoding.ASCII)
+             //    returnException(mcModuleName, "ReturnSoapResponse", ex, "", cProcessInfo, gbDebug)
             }
 
-            // Dim serviceResponse As HttpWebResponse = ex.Response
-            // serviceResponseStream = New StreamReader(serviceResponse.GetResponseStream, System.Text.Encoding.ASCII)
-            // returnException(mcModuleName, "ReturnSoapResponse", ex, "", cProcessInfo, gbDebug)
 
-            catch (Exception)
+
+            catch (Exception ex)
             {
 
-                // Return ex.Message.tostring
+                return ex.Message.ToString();
                 // returnException(mcModuleName, "ReturnSoapResponse", ex, "", cProcessInfo, gbDebug)
 
             }
