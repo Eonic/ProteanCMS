@@ -84,6 +84,7 @@
 							<xsl:with-param name="alignment" select="@alignment"/>
 							<xsl:with-param name="parentId" select="@id"/>
 							<xsl:with-param name="linked" select="@linkArticle"/>
+							<xsl:with-param name="heading" select="@heading"/>
 						</xsl:apply-templates>
 					</div>
 				</div>
@@ -117,7 +118,7 @@
 				</xsl:apply-templates>
 				<a href="{$url}" title="{$pageName}" class="nav-link">
 					<!--<xsl:apply-templates select="." mode="menuLink"/>-->
-          <xsl:apply-templates select="." mode="getDisplayName"/>
+					<xsl:apply-templates select="." mode="getDisplayName"/>
 				</a>
 			</li>
 		</xsl:if>
@@ -134,6 +135,7 @@
 		<xsl:param name="alignment"/>
 		<xsl:param name="parentId"/>
 		<xsl:param name="linked"/>
+		<xsl:param name="heading"/>
 		<xsl:variable name="url">
 			<xsl:apply-templates select="." mode="getHref"/>
 		</xsl:variable>
@@ -171,14 +173,26 @@
 				</xsl:apply-templates>
 				<div class="lIinner">
 					<xsl:if test="$imagePosition='below'">
-						<h3 class="title">
-							<xsl:attribute name="class">
-								<xsl:text>title text-</xsl:text>
-								<xsl:value-of select="$alignment"/>
-							</xsl:attribute>
-							
-							<xsl:apply-templates select="." mode="menuLink"/>
-						</h3>
+						<xsl:choose>
+							<xsl:when test="$heading='h2'">
+								<xsl:element name="{$heading}">
+									<xsl:attribute name="class">
+										<xsl:text>title text-</xsl:text>
+										<xsl:value-of select="$alignment"/>
+									</xsl:attribute>
+									<xsl:apply-templates select="." mode="menuLink"/>
+								</xsl:element>
+							</xsl:when>
+							<xsl:otherwise>
+								<h3 class="title">
+									<xsl:attribute name="class">
+										<xsl:text>title text-</xsl:text>
+										<xsl:value-of select="$alignment"/>
+									</xsl:attribute>
+									<xsl:apply-templates select="." mode="menuLink"/>
+								</h3>
+							</xsl:otherwise>
+						</xsl:choose>
 					</xsl:if>
 					<xsl:if test="Images/img[@src!=''] and not($showImg='false')">
 						<a href="{$url}" title="{$pageName}">
@@ -192,13 +206,27 @@
 						</a>
 					</xsl:if>
 					<xsl:if test="not($imagePosition='below')">
-						<h3 class="title">
-							<xsl:attribute name="class">
-								<xsl:text>title text-</xsl:text>
-								<xsl:value-of select="$alignment"/>
-							</xsl:attribute>
-							<xsl:apply-templates select="." mode="menuLink"/>
-						</h3>
+						<xsl:choose>
+							<xsl:when test="$heading='h2'">
+								<xsl:element name="{$heading}">
+									<xsl:attribute name="class">
+										<xsl:text>title text-</xsl:text>
+										<xsl:value-of select="$alignment"/>
+									</xsl:attribute>
+									<xsl:apply-templates select="." mode="menuLink"/>
+								</xsl:element>
+							</xsl:when>
+							<xsl:otherwise>
+								<h3 class="title">
+									<xsl:attribute name="class">
+										<xsl:text>title text-</xsl:text>
+										<xsl:value-of select="$alignment"/>
+									</xsl:attribute>
+									<xsl:apply-templates select="." mode="menuLink"/>
+								</h3>
+							</xsl:otherwise>
+						</xsl:choose>
+						
 					</xsl:if>
 					<xsl:if test="Description/node()!=''">
 						<span class="listDescription">
