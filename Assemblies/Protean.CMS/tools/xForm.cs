@@ -2,6 +2,7 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using System.Web;
 using System.Web.Configuration;
 using System.Xml;
 using Microsoft.VisualBasic;
@@ -211,15 +212,24 @@ namespace Protean
 
         public void LoadInstance(XmlDocument xml)
         {
-            // add instance to model from xmlDocument
-            oInstance = xml.DocumentElement;
-
-            if (oInitialInstance is null)
+            try
             {
-                oInitialInstance = (XmlElement)oInstance.Clone();
+    // add instance to model from xmlDocument
+                oInstance = xml.DocumentElement;
+
+                if (oInitialInstance is null)
+                {
+                    oInitialInstance = (XmlElement)oInstance.Clone();
+                }
+
+                processRepeats(ref moXformElmt);
+            }
+            catch (Exception ex)
+            {
+                returnException(ref msException, mcModuleName, "Loadinstance-xmlElement", ex, "", "", gbDebug);
             }
 
-            processRepeats(ref moXformElmt);
+
         }
 
         public void LoadInstance(XmlElement oElmt, bool resetInitial = false)

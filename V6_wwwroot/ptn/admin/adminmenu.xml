@@ -139,6 +139,8 @@
         <MenuItem name="Payment Providers" cmd="PaymentProviders" display="true" icon="fa-credit-card"/>
         <MenuItem name="Access Syncronisation" cmd="Sync" display="true" feature="AccessSync" icon="fa-exchange"/>
       </MenuItem>
+
+		<MenuItem name="Edit Order Contact" cmd="EditOrderContact" display="false"/>
     </MenuItem>
     <MenuItem name="Reports" cmd="Reports" display="true" plugin="Report" icon="fas fa-chart-bar">
       <MenuItem name="Reports" cmd="Reports" display="true" icon="fa-chart-bar"/>

@@ -167,7 +167,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<div class="faqList panel-group accordion-module" id="accordion-{@id}" role="tablist" aria-multiselectable="true">
+		<div class="faqList panel-group accordion-module" id="accordion-{@id}" aria-multiselectable="true">
 			<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayFAQAccordianBrief">
 				<xsl:with-param name="parId" select="@id"/>
 			</xsl:apply-templates>
@@ -178,9 +178,9 @@
 	<xsl:template match="Content[@type='FAQ']" mode="displayFAQAccordianBrief">
 		<xsl:param name="sortBy"/>
 		<xsl:param name="parId"/>
-		<div class="panel-group" id="accordion{@id}" role="tablist" aria-multiselectable="true">
+		<div class="panel-group" id="accordion{@id}" aria-multiselectable="true">
 			<div class="panel panel-default">
-				<div class="panel-heading" role="tab" id="heading{@id}">
+				<div class="panel-heading" id="heading{@id}">
 					<xsl:apply-templates select="." mode="inlinePopupOptions">
 						<xsl:with-param name="class" select="'panel-heading'"/>
 						<xsl:with-param name="sortBy" select="$sortBy"/>
@@ -196,7 +196,7 @@
 						</div>
 					</xsl:if>
 				</div>
-				<div id="accordian-item-{$parId}-{@id}" class="panel-collapse collapse " role="tabpanel" aria-labelledby="heading{@id}">
+				<div id="accordian-item-{$parId}-{@id}" class="panel-collapse collapse " aria-labelledby="heading{@id}">
 					<div class="panel-body">
 						<xsl:if test="Body/node()!=''">
 							<xsl:apply-templates select="Body" mode="cleanXhtml"/>

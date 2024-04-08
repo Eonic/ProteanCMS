@@ -9048,7 +9048,9 @@ namespace Protean
                     string cProcessInfo = "";
                     try
                     {
-
+                        if (xFormPath == "/xforms/directory/UserContact.xml" && myWeb.bs5) {
+                            xFormPath = "/features/membership/UserContact.xml";
+                        }
 
                         base.NewFrm("EditContact");
                         base.load(xFormPath, this.myWeb.maCommonFolders);
