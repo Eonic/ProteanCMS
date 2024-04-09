@@ -3417,6 +3417,7 @@ namespace Protean
                             case objectTypes.CartDelivery:
                             case objectTypes.Subscription:
                             case objectTypes.SubscriptionRenewal:
+                            case objectTypes.CartPayment:
                             case objectTypes.CartPaymentMethod:
                             case objectTypes.indexkey:
                                 {
@@ -3527,6 +3528,7 @@ namespace Protean
                             case objectTypes.CartDelivery:
                             case objectTypes.Subscription:
                             case objectTypes.SubscriptionRenewal:
+                            case objectTypes.CartPayment:
                             case objectTypes.CartPaymentMethod:
                             case objectTypes.indexkey:
                                 {

@@ -10338,7 +10338,7 @@ namespace Protean
                                     oContent.SetAttribute("type", mcOrderType);
                                     oContent.SetAttribute("id", Conversions.ToString(oDR["nCartOrderKey"]));
                                     oContent.SetAttribute("statusId", Conversions.ToString(oDR["nCartStatus"]));
-                                    oContent.SetAttribute("cartForiegnRef", Conversions.ToString(oDR["cCartForiegnRef"]));
+                                    oContent.SetAttribute("cartForiegnRef", (oDR["cCartForiegnRef"] == null) ? string.Empty : (string)oDR["cCartForiegnRef"]);
                                     // Get Date
                                     cSQL = Conversions.ToString(Operators.ConcatenateObject("Select dInsertDate from tblAudit where nAuditKey =", oDR["nAuditId"]));
                                     using (var oDRe = moDBHelper.getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
@@ -10457,7 +10457,7 @@ namespace Protean
                                         if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectGreater(oDR["nCartStatus"], 5, false), moDBHelper.doesTableExist(ref argsTableName))))
                                         {
                                             DataSet oDs3 = new DataSet();
-                                            string sSql = Conversions.ToString(Operators.ConcatenateObject("Select p.*, pm.*, a.dInsertDate from tblCartPayment p inner join tblCartPaymentMethod pm on p.nCartPaymentMethodId = pm.nPayMthdKey inner join tblAudit a on a.nAuditKey = p.nAuditId where nCartOrderId=", oDR["nCartOrderKey"]));
+                                            string sSql = Conversions.ToString(Operators.ConcatenateObject("Select p.*, pm.*, a.dInsertDate from tblCartPayment p inner join tblCartPaymentMethod pm on p.nCartPaymentMethodId = pm.nPayMthdKey left outer join tblAudit a on a.nAuditKey = p.nAuditId where nCartOrderId=", oDR["nCartOrderKey"]));
                                             oDs3 = moDBHelper.GetDataSet(sSql, "Payment", "Details");
                                             oDs3.Tables["Payment"].Columns["cPayMthdDetailXml"].ColumnMapping = MappingType.Element;
                                             var oXML2 = new XmlDocument();
