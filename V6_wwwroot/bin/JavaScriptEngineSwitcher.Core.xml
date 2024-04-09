@@ -1141,6 +1141,11 @@
             JS engine switcher
             </summary>
         </member>
+        <member name="F:JavaScriptEngineSwitcher.Core.JsEngineSwitcher._allowCurrentProperty">
+            <summary>
+            Flag for whether to allow usage of the <see cref="P:JavaScriptEngineSwitcher.Core.JsEngineSwitcher.Current"/> property
+            </summary>
+        </member>
         <member name="F:JavaScriptEngineSwitcher.Core.JsEngineSwitcher._default">
             <summary>
             Default instance of JS engine switcher
@@ -1150,6 +1155,15 @@
             <summary>
             Current instance of JS engine switcher
             </summary>
+        </member>
+        <member name="P:JavaScriptEngineSwitcher.Core.JsEngineSwitcher.AllowCurrentProperty">
+            <summary>
+            Gets or sets a flag for whether to allow usage of the <see cref="P:JavaScriptEngineSwitcher.Core.JsEngineSwitcher.Current"/> property
+            </summary>
+            <remarks>
+            Required to ensure the usage of an instance of the JS engine switcher that is registered by using
+            the <c>IServiceCollection</c> interface.
+            </remarks>
         </member>
         <member name="P:JavaScriptEngineSwitcher.Core.JsEngineSwitcher.Current">
             <summary>
@@ -1696,9 +1710,19 @@
             Looks up a localized string similar to "Cannot convert null to a value type."
             </summary>
         </member>
+        <member name="P:JavaScriptEngineSwitcher.Core.Resources.Strings.Configuration_AssigningToJsEngineSwitcherCurrentPropertyForbidden">
+            <summary>
+            Looks up a localized string similar to "Assigning an instance of the JS engine switcher to the `Current` property of `JsEngineSwitcher`..."
+            </summary>
+        </member>
         <member name="P:JavaScriptEngineSwitcher.Core.Resources.Strings.Configuration_DefaultJsEngineNameNotSpecified">
             <summary>
             Looks up a localized string similar to "Name of default JavaScript engine not specified."
+            </summary>
+        </member>
+        <member name="P:JavaScriptEngineSwitcher.Core.Resources.Strings.Configuration_GettingFromJsEngineSwitcherCurrentPropertyForbidden">
+            <summary>
+            Looks up a localized string similar to "Getting an instance of the JS engine switcher from the `Current` property of `JsEngineSwitcher`..."
             </summary>
         </member>
         <member name="P:JavaScriptEngineSwitcher.Core.Resources.Strings.Configuration_JsEngineFactoryNotFound">

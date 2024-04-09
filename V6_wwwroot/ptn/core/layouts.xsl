@@ -1266,6 +1266,9 @@
 						<xsl:if test="@title=''">
 							<xsl:text> boxnotitle</xsl:text>
 						</xsl:if>
+						<xsl:if test="@icon!='' or @uploadIcon!=''">
+							<xsl:text> module-with-icon</xsl:text>
+						</xsl:if>
 						pos-<xsl:value-of select="@position"/>
 						<xsl:if test="@modAnim and @modAnim!=''">
 							<xsl:text> moduleAnimate-invisible</xsl:text>

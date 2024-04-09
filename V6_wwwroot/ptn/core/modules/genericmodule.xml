@@ -31,11 +31,14 @@
 		<bind nodeset="tblContent/cContentXmlBrief/Content">
 			<bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
 			<bind id="cIcon" nodeset="@icon" required="false()" type="string"/>
+			<bind id="cIcon-size" nodeset="@icon-size" required="false()" type="string"/>
 			<bind id="cIconStyle" nodeset="@iconStyle" required="false()" type="string"/>
 			<bind id="cModAnim" nodeset="@modAnim" required="false()" type="string"/>
 			<bind id="cModAnimDelay" nodeset="@modAnimDelay" required="false()" type="string"/>
 			<bind id="cModAnimSpeed" nodeset="@modAnimSpeed" required="false()" type="string"/>
 			<bind id="uploadIcon" nodeset="@uploadIcon" required="false()" type="string" />
+			<bind id="uploadIcon-w" nodeset="@uploadIcon-w" required="false()" type="string" />
+			<bind id="uploadIcon-h" nodeset="@uploadIcon-h" required="false()" type="string" />
 			<bind id="bMatchHeight" nodeset="@matchHeight" required="false()" type="string"/>
 			<bind id="carousel" nodeset="@carousel" required="false()" type="string"/>
 			<bind id="carouselBullets" nodeset="@carouselBullets" required="false()" type="string"/>
@@ -125,8 +128,18 @@
 									<toggle case="Match_true" event="DOMActivate"/>
 								</item>
 								<help class="inline">Tick this box on 2 or more modules within a page, and they will all be the same height. This only works on panel box styles and the match doesn't include the module footer link height.</help>
-								
+
 							</select>
+							<select1 bind="marginBelow" appearance="full" class="form-group">
+								<item>
+									<label>Margin below module (default)</label>
+									<value>true</value>
+								</item>
+								<item>
+									<label>No margin below</label>
+									<value>false</value>
+								</item>
+							</select1>
 							<switch class="disable">
 								<case id="Match_true">
 									<select bind="Screens" appearance="full" class="multiline bs-only">
@@ -183,28 +196,78 @@
 							</switch>
 						</group>
 						<group class="col-lg-6">
+							<group class="form-section-wrapper ">
+								<select1 bind="cIcon" class="iconSelect ewQuery bs-only" query="availableIcons" appearance="minimal">
+									<label>Icon</label>
+									<item>
+										<label>None</label>
+										<value>false</value>
+									</item>
+								</select1>
+								<select1 bind="cIcon-size" class="bs-only" appearance="minimal">
+									<label>Icon Size</label>
+									<item>
+										<label>1x</label>
+										<value>fa-1x</value>
+									</item>
+									<item>
+										<label>2x</label>
+										<value>fa-2x</value>
+									</item>
+									<item>
+										<label>3x</label>
+										<value>fa-3x</value>
+									</item>
+									<item>
+										<label>4x</label>
+										<value>fa-4x</value>
+									</item>
+									<item>
+										<label>5x</label>
+										<value>fa-5x</value>
+									</item>
+									<item>
+										<label>6x</label>
+										<value>fa-6x</value>
+									</item>
+									<item>
+										<label>7x</label>
+										<value>fa-7x</value>
+									</item>
+									<item>
+										<label>8x</label>
+										<value>fa-8x</value>
+									</item>
+									<item>
+										<label>9x</label>
+										<value>fa-9x</value>
+									</item>
+									<item>
+										<label>10x</label>
+										<value>fa-10x</value>
+									</item>
+								</select1>
+							</group>
+							<group class="form-section-wrapper ">
+								<input bind="uploadIcon" class="pickImageFile bs-only">
+									<label>Upload icon from file</label>
+									<value></value>
+								</input>
 
-							<select1 bind="cIcon" class="iconSelect ewQuery bs-only" query="availableIcons" appearance="minimal">
-								<label>Icon</label>
-								<item>
-									<label>None</label>
-									<value>false</value>
-								</item>
-							</select1>
-							<input bind="uploadIcon" class="pickImageFile bs-only">
-								<label>Upload icon from file</label>
-								<value></value>
-							</input>
-							<select1 bind="marginBelow" appearance="full" class="form-group">
-								<item>
-									<label>Margin below module (default)</label>
-									<value>true</value>
-								</item>
-								<item>
-									<label>No margin below</label>
-									<value>false</value>
-								</item>
-							</select1>
+								<group class="row">
+									<group class="col-lg-6">
+										<input bind="uploadIcon-w" class="">
+											<label>Icon width (px)</label>
+										</input>
+									</group>
+
+									<group class="col-lg-6">
+										<input bind="uploadIcon-h" class="">
+											<label>Icon height (px)</label>
+										</input>
+									</group>
+								</group>
+							</group>
 						</group>
 					</group>
 				</group>
@@ -232,7 +295,7 @@
 								<item>
 									<label>Shake X</label>
 									<value>shakeX</value>
-								</item>	
+								</item>
 								<item>
 									<label>Shake Y</label>
 									<value>shakeY</value>
@@ -240,27 +303,27 @@
 								<item>
 									<label>Head Shake</label>
 									<value>headShake</value>
-								</item>								
+								</item>
 								<item>
 									<label>Swing</label>
 									<value>swing</value>
-								</item>								
+								</item>
 								<item>
 									<label>Tada</label>
 									<value>tada</value>
-								</item>							
+								</item>
 								<item>
 									<label>Wobble</label>
 									<value>wobble</value>
-								</item>					
+								</item>
 								<item>
 									<label>Jello</label>
 									<value>jello</value>
-								</item>				
+								</item>
 								<item>
 									<label>Heartbeat</label>
 									<value>heartbeat</value>
-								</item>				
+								</item>
 								<item>
 									<label>Hinge</label>
 									<value>hinge</value>
@@ -297,7 +360,7 @@
 									<label>Zoom In Right</label>
 									<value>zoomInRight</value>
 								</item>
-									<item>
+								<item>
 									<label>Zoom Out</label>
 									<value>zoomOut</value>
 								</item>
@@ -521,7 +584,7 @@
 							</item>
 							<help class="inline">This module will be shown on every child of the current page. If you use this feature when adding a module to the home page, the module will appear on every page.</help>
 						</select>
-            <!-- removed as duplicated in most xforms-->
+						<!-- removed as duplicated in most xforms-->
 						<!--<select1 bind="marginBelow" appearance="full" class="inline-items">
 							<label>Margin Below Module</label>
 							<item>
@@ -536,7 +599,7 @@
 								<p>By default modules have a margin below them. If you would like to remove this for this module, please select "no"</p>
 							</help>
 						</select1>-->
-						
+
 					</group>
 					<group class="col-lg-4">
 						<select bind="Screens" appearance="full" class="multiline bs-only">
@@ -618,7 +681,7 @@
 							</item>
 
 						</select1>
-						
+
 					</group>
 					<group class="col-lg-4">
 						<input bind="dPublishDate" class="calendar short">
@@ -865,7 +928,7 @@
 							<label>External</label>
 							<value>external</value>
 							<toggle case="cLinkType_2" event="DOMActivate"/>
-							
+
 						</item>
 						<item>
 							<label>Content</label>

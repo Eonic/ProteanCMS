@@ -1282,6 +1282,16 @@
             and max capacity can't be larger than char count in the source.
             </summary>
         </member>
+        <member name="M:AngleSharp.Common.ArrayPoolBuffer.#ctor(System.Int32)">
+            <summary>
+            A buffer that uses an array pool to store the characters.
+            Usage of this buffer assumes that the max capacity is known upfront
+            Maintains an append only contiguous chunk of characters.
+            Created <see cref="T:AngleSharp.Common.StringOrMemory"/> instances lifetime is tied to the buffer.
+            Works under assumption that the buffer will be disposed after use
+            and max capacity can't be larger than char count in the source.
+            </summary>
+        </member>
         <member name="T:AngleSharp.Common.BaseTokenizer">
             <summary>
             Common methods and variables of all tokenizers.
@@ -7618,7 +7628,7 @@
             Applies the multipart/form-data algorithm.
             http://www.w3.org/html/wg/drafts/html/master/forms.html#multipart/form-data-encoding-algorithm
             </summary>
-            <param name="htmlEncoder">HTML encoder.</param>
+            <param name="htmlEncoder">HTML encoder. If null is given a default encoder is created.</param>
             <param name="encoding">(Optional) Explicit encoding.</param>
             <returns>A stream containing the body.</returns>
         </member>
@@ -8526,7 +8536,7 @@
         </member>
         <member name="M:AngleSharp.Html.Parser.HtmlDomBuilder`2.Consume(AngleSharp.Html.Parser.Tokens.Struct.StructHtmlToken@)">
             <summary>
-            Consumes a token and processes it.
+            Consumes a token and processes it.0
             </summary>
             <param name="token">The token to consume.</param>
         </member>
@@ -23532,6 +23542,25 @@
             </summary>
             <param name="target">The target to use.</param>
             <param name="fields">The fields to send.</param>
+            <returns>The new document request.</returns>
+        </member>
+        <member name="M:AngleSharp.Io.DocumentRequest.PostAsMultipart(AngleSharp.Dom.Url,AngleSharp.Html.FormDataSet)">
+            <summary>
+            Creates a POST request for the given target with the fields being
+            used to generate the body and encoding type url encoded.
+            </summary>
+            <param name="target">The target to use.</param>
+            <param name="form">The form to send.</param>
+            <returns>The new document request.</returns>
+        </member>
+        <member name="M:AngleSharp.Io.DocumentRequest.PostAsMultipart(AngleSharp.Dom.Url,System.IO.Stream,System.String)">
+            <summary>
+            Creates a POST request for the given target with the fields being
+            used to generate the body and encoding type url encoded.
+            </summary>
+            <param name="target">The target to use.</param>
+            <param name="formBody">The body of the form to send.</param>
+            <param name="formBoundary">The boundary of the form to send.</param>
             <returns>The new document request.</returns>
         </member>
         <member name="P:AngleSharp.Io.DocumentRequest.Source">
