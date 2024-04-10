@@ -1093,3 +1093,9 @@ dd {
         animation-delay: 0 !important;
     }
 }
+.normalMode, 
+.previewMode{
+    header {
+        position: static;
+    }
+}
