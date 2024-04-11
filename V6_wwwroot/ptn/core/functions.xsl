@@ -528,7 +528,7 @@
 				<xsl:apply-templates select="//Content[@rss and @rss!='false']" mode="feedLinks"/>
 
 
-				
+
 				<!-- common css -->
 				<xsl:choose>
 					<xsl:when test="not(/Page/Contents/Content[@name='criticalPathCSS']) or $adminMode">
@@ -5903,16 +5903,42 @@
 					<xsl:if test="@icon!=''">
 						<i role="img" aria-hidden="true">
 							<xsl:attribute name="class">
-								<xsl:text>fa fa-3x center-block </xsl:text>
+								<xsl:text>fa center-block </xsl:text>
+								<xsl:choose>
+									<xsl:when test="@icon-size and @icon-size!=''">
+										<xsl:value-of select="@icon-size"/>
+										<xsl:text> </xsl:text>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:text> fa-3x </xsl:text>
+									</xsl:otherwise>
+								</xsl:choose>
 								<xsl:value-of select="@icon"/>
 							</xsl:attribute>
+							<!--<xsl:if test="@uploadIcon-w and @uploadIcon-w!='' or @uploadIcon-h and @uploadIcon-h!=''">
+								<xsl:attribute name="style">
+									<xsl:if test="@uploadIcon-w and @uploadIcon-w!=''">
+										<xsl:text>width:</xsl:text>
+										<xsl:value-of select="@uploadIcon-w"/>
+										<xsl:text>px</xsl:text>
+									</xsl:if>
+									<xsl:if test="@uploadIcon-w and @uploadIcon-w!='' and @uploadIcon-h and @uploadIcon-h!=''">
+										<xsl:text>;</xsl:text>
+									</xsl:if>
+									<xsl:if test="@uploadIcon-h and @uploadIcon-h!=''">
+										<xsl:text>height:</xsl:text>
+										<xsl:value-of select="@uploadIcon-h"/>
+										<xsl:text>px</xsl:text>
+									</xsl:if>
+								</xsl:attribute>
+							</xsl:if>-->
 							<xsl:text> </xsl:text>
 						</i>
 						<xsl:text> </xsl:text>
 					</xsl:if>
 					<xsl:if test="@uploadIcon!='' and @uploadIcon!='_'">
 						<span class="upload-icon" role="img" aria-hidden="true">
-							<img src="{@uploadIcon}" alt="icon" class="center-block img-responsive"/>
+							<img src="{@uploadIcon}" alt="icon" class="center-block img-responsive" width="{@uploadIcon-w}" height="{@uploadIcon-h}"/>
 						</span>
 					</xsl:if>
 					<xsl:if test="@title!=''">
@@ -5933,13 +5959,22 @@
 								<xsl:text>fa center-block </xsl:text>
 								<xsl:value-of select="@icon"/>
 							</xsl:attribute>
+							<xsl:choose>
+								<xsl:when test="@icon-size and @icon-size!=''">
+									<xsl:value-of select="@icon-size"/>
+									<xsl:text> </xsl:text>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:text> fa-3x </xsl:text>
+								</xsl:otherwise>
+							</xsl:choose>
 							<xsl:text> </xsl:text>
 						</i>
 						<xsl:text> </xsl:text>
 					</xsl:if>
 					<xsl:if test="@uploadIcon!='' and @uploadIcon!='_'">
 						<span class="upload-icon">
-							<img src="{@uploadIcon}" alt="icon" class="center-block img-responsive"/>
+							<img src="{@uploadIcon}" alt="icon" class="center-block img-responsive" width="{@uploadIcon-w}" height="{@uploadIcon-h}"/>
 						</span>
 					</xsl:if>
 					<xsl:if test="@title!=''">
@@ -5960,13 +5995,22 @@
 								<xsl:text>fa </xsl:text>
 								<xsl:value-of select="@icon"/>
 							</xsl:attribute>
+							<xsl:choose>
+								<xsl:when test="@icon-size and @icon-size!=''">
+									<xsl:value-of select="@icon-size"/>
+									<xsl:text> </xsl:text>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:text> fa-3x </xsl:text>
+								</xsl:otherwise>
+							</xsl:choose>
 							<xsl:text> </xsl:text>
 						</i>
 						<xsl:text> </xsl:text>
 					</xsl:if>
 					<xsl:if test="@uploadIcon!='' and @uploadIcon!='_'">
 						<span class="upload-icon">
-							<img src="{@uploadIcon}" alt="icon" class="img-responsive"/>
+							<img src="{@uploadIcon}" alt="icon" class="img-responsive" width="{@uploadIcon-w}" height="{@uploadIcon-h}"/>
 						</span>
 					</xsl:if>
 					<xsl:if test="@title!=''">
@@ -5984,13 +6028,22 @@
 							<xsl:text>fa </xsl:text>
 							<xsl:value-of select="@icon"/>
 						</xsl:attribute>
+						<xsl:choose>
+							<xsl:when test="@icon-size and @icon-size!=''">
+								<xsl:value-of select="@icon-size"/>
+								<xsl:text> </xsl:text>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:text> fa-3x </xsl:text>
+							</xsl:otherwise>
+						</xsl:choose>
 						<xsl:text> </xsl:text>
 					</i>
 					<span class="space">&#160;</span>
 				</xsl:if>
 				<xsl:if test="@uploadIcon!='' and @uploadIcon!='_'">
 					<span class="upload-icon">
-						<img src="{@uploadIcon}" alt="icon" class="img-responsive"/>
+						<img src="{@uploadIcon}" alt="icon" class="img-responsive" width="{@uploadIcon-w}" height="{@uploadIcon-h}"/>
 					</span>
 				</xsl:if>
 				<xsl:copy-of select="ms:node-set($title)" />
