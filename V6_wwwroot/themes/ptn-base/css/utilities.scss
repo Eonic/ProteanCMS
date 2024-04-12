@@ -95,7 +95,14 @@
     @extend .btn;
     @extend .btn-primary;
 }
-
+.skip:focus {
+    left: 10px;
+    top: 10px;
+    z-index: 20;
+    width: auto;
+    height: auto;
+    overflow: visible;
+}
 a {
     outline-offset: 5px;
     outline-color: $link-color;

@@ -70,21 +70,26 @@
 				<div class="media-inner">
 					<xsl:choose>
 						<xsl:when test="$title!='' and $heading!=''">
-							<xsl:variable name="headingNo" select="substring-before($heading,2)"/>
-							<h3 class="title">
-								<a href="{$parentURL}" title="Read more about {Headline/node()}">
+							<xsl:variable name="headingNo" select="substring-after($heading,'h')"/>
+							<xsl:variable name="headingNoPlus" select="$headingNo + 1"/>
+							<xsl:variable name="listHeading">
+								<xsl:text>h</xsl:text>
+								<xsl:value-of select="$headingNoPlus"/>
+							</xsl:variable>
+							<xsl:element name="{$listHeading}">
+								<xsl:attribute name="class">
+									<xsl:text>title</xsl:text>
+								</xsl:attribute>
+								<a href="{$parentURL}">
 									<xsl:apply-templates select="." mode="getDisplayName"/>
 								</a>
-							</h3>
-							<span>
-								<xsl:value-of select="$headingNo"/>
-							</span>
+							</xsl:element>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:choose>
 								<xsl:when test="$heading=''">
 									<h3 class="title">
-										<a href="{$parentURL}" title="Read more about {Headline/node()}">
+										<a href="{$parentURL}">
 											<xsl:apply-templates select="." mode="getDisplayName"/>
 										</a>
 									</h3>
@@ -94,7 +99,7 @@
 										<xsl:attribute name="class">
 											<xsl:text>title</xsl:text>
 										</xsl:attribute>
-										<a href="{$parentURL}" title="Read more about {Headline/node()}">
+										<a href="{$parentURL}">
 											<xsl:apply-templates select="." mode="getDisplayName"/>
 										</a>
 									</xsl:element>
