@@ -4885,19 +4885,13 @@ namespace Protean
                         nAuthGroup = gnNonAuthUsers;
                     }
 
-
-
                     else if (this.mnUserId == 0)
                     {
-
-
 
                         // If no gnNonAuthUsers user group exists, then remove the auth group
                         nAuthUserId = (long)this.mnUserId;
                         nAuthGroup = -1;
                     }
-
-
 
                     else
                     {
@@ -4970,11 +4964,26 @@ namespace Protean
 
                 if (!string.IsNullOrEmpty(cOrderBy))
                 {
-                    sSql += " ORDER BY " + cOrderBy;
+                    sSql = sSql + " ORDER BY ";
+                    if (mbAdminMode)
+                    {
+                        sSql = sSql + "a.nStatus desc,";
+                    }
+
+                    sSql += cOrderBy;
+                   
                 }
                 else
                 {
-                    sSql += " ORDER BY(SELECT NULL)";
+                    
+                    if(mbAdminMode)
+                    {
+                        sSql = sSql + "ORDER BY a.nStatus desc ";
+                    }
+                    else
+                    { 
+                        sSql += " ORDER BY(SELECT NULL)"; 
+                    }
                 }
                 if (nItemCount > 0L)
                 {
@@ -5143,8 +5152,16 @@ namespace Protean
 
                 sSql = sSql + " where (" + combinedWhereSQL + ")";
                 if (!string.IsNullOrEmpty(cOrderBy))
-                    sSql += " ORDER BY " + cOrderBy;
+                {
+                    sSql = sSql + " ORDER BY "; 
+                    if (mbAdminMode)
+                    {
+                        sSql = sSql + "a.nStatus desc,";
+                    }
 
+                    sSql += cOrderBy;
+                    //sSql += " ORDER BY " + cOrderBy;
+                }
 
                 sSql += " offset " + nStartPos + " rows fetch next " + nItemCount + " rows only";
 
@@ -7884,7 +7901,7 @@ namespace Protean
                             string whereSQL = Conversions.ToString(this.moSession["FilterWhereCondition"]);
                             XmlElement argoPageDetail = null;
                             int nCount = 0;
-                            this.GetPageContentFromSelectFilterPagination(ref nCount, oContentsNode: ref oPageElmt, oPageDetail: ref argoPageDetail, whereSQL, cShowSpecificContentTypes: this.moRequest["singleContentType"], ignoreActiveAndDate: false, nStartPos: (long)nStart, nItemCount: (long)nRows);
+                            this.GetPageContentFromSelectFilterPagination(ref nCount, oContentsNode: ref oPageElmt, oPageDetail: ref argoPageDetail, whereSQL,bIgnorePermissionsCheck:true, cShowSpecificContentTypes: this.moRequest["singleContentType"], ignoreActiveAndDate: false, nStartPos: (long)nStart, nItemCount: (long)nRows);
                         }
                         else
                         {
