@@ -20,6 +20,8 @@
 		<xsl:param name="parentId"/>
 		<xsl:param name="linked"/>
 		<xsl:param name="itemLayout"/>
+		<xsl:param name="heading"/>
+		<xsl:param name="title"/>
 		<xsl:variable name="parentURL">
 			<xsl:apply-templates select="." mode="getHref"/>
 		</xsl:variable>
@@ -66,12 +68,45 @@
 					</a>
 				</xsl:if>
 				<div class="media-inner">
-					<h3 class="title">
-						<a href="{$parentURL}" title="Read more about {Headline/node()}">
-							<xsl:apply-templates select="." mode="getDisplayName"/>
-						</a>
-					</h3>
-
+					<xsl:choose>
+						<xsl:when test="$title!='' and $heading!=''">
+							<xsl:variable name="headingNo" select="substring-after($heading,'h')"/>
+							<xsl:variable name="headingNoPlus" select="$headingNo + 1"/>
+							<xsl:variable name="listHeading">
+								<xsl:text>h</xsl:text>
+								<xsl:value-of select="$headingNoPlus"/>
+							</xsl:variable>
+							<xsl:element name="{$listHeading}">
+								<xsl:attribute name="class">
+									<xsl:text>title</xsl:text>
+								</xsl:attribute>
+								<a href="{$parentURL}">
+									<xsl:apply-templates select="." mode="getDisplayName"/>
+								</a>
+							</xsl:element>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:choose>
+								<xsl:when test="$heading=''">
+									<h3 class="title">
+										<a href="{$parentURL}">
+											<xsl:apply-templates select="." mode="getDisplayName"/>
+										</a>
+									</h3>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:element name="{$heading}">
+										<xsl:attribute name="class">
+											<xsl:text>title</xsl:text>
+										</xsl:attribute>
+										<a href="{$parentURL}">
+											<xsl:apply-templates select="." mode="getDisplayName"/>
+										</a>
+									</xsl:element>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:otherwise>
+					</xsl:choose>
 					<span class="news-brief-info">
 						<xsl:apply-templates select="Content[@type='Contact' and @rtype='Author'][1]" mode="displayAuthorBrief"/>
 						<xsl:if test="@publish!=''">

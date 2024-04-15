@@ -76,7 +76,11 @@
 	<label>Add/Edit Page</label>
 	<group ref="EditPage" class="tabs">
 		<group>
-			<label>Basic Page Settings</label>
+			<label>
+				<i class="fas fa-file"> </i>
+				<span class="space">&#160;</span>
+				<span>Basic Page Settings</span>
+			</label>
 			<group class="form-2-col">
 				<input bind="cStructName" class="required">
 					<label>Page Name</label>
@@ -171,7 +175,11 @@
 			</group>
 		</group>
 		<group>
-			<label>Advanced Settings</label>
+			<label>
+				<i class="fas fa-cog"> </i>
+				<span class="space">&#160;</span>
+				<span>Advanced Settings</span>
+			</label>
 			<group class="row">
 				<group class="col-lg-6">
 					<input bind="nStructParId" class="hidden">
