@@ -5958,7 +5958,7 @@
 							<xsl:attribute name="class">
 								<xsl:text>fa center-block </xsl:text>
 								<xsl:value-of select="@icon"/>
-							</xsl:attribute>
+						
 							<xsl:choose>
 								<xsl:when test="@icon-size and @icon-size!=''">
 									<xsl:value-of select="@icon-size"/>
@@ -5968,6 +5968,7 @@
 									<xsl:text> fa-3x </xsl:text>
 								</xsl:otherwise>
 							</xsl:choose>
+							</xsl:attribute>
 							<xsl:text> </xsl:text>
 						</i>
 						<xsl:text> </xsl:text>
@@ -5994,7 +5995,7 @@
 							<xsl:attribute name="class">
 								<xsl:text>fa </xsl:text>
 								<xsl:value-of select="@icon"/>
-							</xsl:attribute>
+						
 							<xsl:choose>
 								<xsl:when test="@icon-size and @icon-size!=''">
 									<xsl:value-of select="@icon-size"/>
@@ -6003,7 +6004,7 @@
 								<xsl:otherwise>
 									<xsl:text> fa-3x </xsl:text>
 								</xsl:otherwise>
-							</xsl:choose>
+							</xsl:choose>	</xsl:attribute>
 							<xsl:text> </xsl:text>
 						</i>
 						<xsl:text> </xsl:text>
@@ -6027,7 +6028,7 @@
 						<xsl:attribute name="class">
 							<xsl:text>fa </xsl:text>
 							<xsl:value-of select="@icon"/>
-						</xsl:attribute>
+					
 						<xsl:choose>
 							<xsl:when test="@icon-size and @icon-size!=''">
 								<xsl:value-of select="@icon-size"/>
@@ -6036,7 +6037,7 @@
 							<xsl:otherwise>
 								<xsl:text> fa-3x </xsl:text>
 							</xsl:otherwise>
-						</xsl:choose>
+						</xsl:choose>	</xsl:attribute>
 						<xsl:text> </xsl:text>
 					</i>
 					<span class="space">&#160;</span>
