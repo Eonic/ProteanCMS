@@ -971,6 +971,7 @@ namespace Protean
 
                         cProcessInfo = cProcessInfo + " - Constraint Compile Error: " + oBindElmt.GetAttribute("constraint");
                         string constraintXpath = Tools.Xml.addNsToXpath(oBindElmt.GetAttribute("constraint"), ref nsMgr);
+                        //string constraintXpath = oBindElmt.GetAttribute("constraint");
                         // Dim constraintXpath As String = oBindElmt.GetAttribute("constraint")
                         expr = xPathNav2.Compile(constraintXpath);
 
@@ -1001,11 +1002,8 @@ namespace Protean
                                 missedError = true;
                             }
                             cValidationError += "<span class=\"msg-1035\"><span class=\"labelName\">" + labelText + "</span> - " + thisValidationError + "</span>";
-
                         }
                     }
-
-
 
                     if (!string.IsNullOrEmpty(oBindElmt.GetAttribute("unique")) & bIsThisBindValid)
                     {

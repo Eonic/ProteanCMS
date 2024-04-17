@@ -344,6 +344,8 @@ namespace Protean.Tools
                         }
 
                         // undo any attributes
+
+                        cXpath = Strings.Replace(cXpath, "/ews:node()", "/node()");
                         cXpath = Strings.Replace(cXpath, "/ews:@", "/@");
                         cXpath = Strings.Replace(cXpath, "[ews:@", "[@");
                         cXpath = Strings.Replace(cXpath, "[ews:position()", "[position()");
