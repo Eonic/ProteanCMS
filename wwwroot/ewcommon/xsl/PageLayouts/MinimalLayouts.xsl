@@ -10866,6 +10866,80 @@
       </div>
     </div>
   </xsl:template>
+	
+	<xsl:template match="Content[@type='Job']" mode="json-ld">
+   <xsl:variable name="href">
+            <xsl:if test="not(starts-with($currentPage/@url,'http'))">
+              <xsl:if test="$siteURL=''">
+                <xsl:text>http</xsl:text>
+                <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
+                <xsl:text>://</xsl:text>
+                <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+              </xsl:if>
+            </xsl:if>
+            <xsl:choose>
+              <xsl:when test="/Page/ContentDetail">
+                <xsl:apply-templates select="/Page/ContentDetail/Content" mode="getHref"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:apply-templates select="$currentPage" mode="getHref"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:variable>
+    <script type="application/ld+json">
+      {
+      "@context": "http://schema.org",
+      "@type": "JobPosting",
+      "baseSalary":{
+	  "@type": "MonetaryAmount",
+	  "currency": "GBP",
+	  "value": {
+	    "@type": "QuantitativeValue",
+	    "value": <xsl:value-of select="Salary/@figure"/>000,
+	    "unitText": "YEAR"
+	  }
+	},
+      "url": "<xsl:value-of select="$href"/>",
+      "jobBenefits": "<xsl:value-of select="Salary/node()"/> <xsl:value-of select="Incentives/node()"/>",
+      "datePosted": "<xsl:value-of select="@publish"/>",
+      "description": "<xsl:value-of select="Description/node()"/>",
+      "educationRequirements": "<xsl:value-of select="EducationRequirements/node()"/>",
+      "employmentType": "<xsl:value-of select="ContractType/node()"/>",
+      "experienceRequirements": "<xsl:value-of select="ExperienceRequirements/node()"/>",
+      "incentiveCompensation": "<xsl:value-of select="Incentives/node()"/>",
+      "industry": "FMCG",
+      "jobLocation": {
+      "@type": "place", 
+	      "address": {
+	      "@type": "PostalAddress",
+	      "addressLocality": "<xsl:value-of select="Location/node()"/>",
+	      "postalCode": "",
+      	      "addressCountry": "GB"
+	      }
+     },
+      "occupationalCategory": "<xsl:value-of select="JobOccupation/node()"/>",
+      "qualifications": "<xsl:value-of select="Qualifications/node()"/>",
+      "responsibilities": "<xsl:value-of select="Qualifications/node()"/>",
+      "salaryCurrency": "GBP",
+      "skills": "<xsl:value-of select="Skills/node()"/> ",
+      "specialCommitments": "Skills ",
+      "title": "<xsl:value-of select="JobTitle/node()"/>",
+      "workHours": "<xsl:value-of select="JobHours/node()"/>",
+      "hiringOrganization" : {
+	    "@type": "Organization",
+	    "name": "<xsl:call-template name="getSettings">
+      <xsl:with-param name="sectionName" select="'web'"/>
+      <xsl:with-param name="valueName" select="'CompanyName'"/>
+    </xsl:call-template>",
+	    "url": "<xsl:value-of select="$href"/>",
+	    "logo": "<xsl:call-template name="getSettings">
+      <xsl:with-param name="sectionName" select="'web'"/>
+      <xsl:with-param name="valueName" select="'SiteLogo'"/>
+    </xsl:call-template>"
+	  }
+      }
+    </script>
+  </xsl:template>
 
   <!-- Job Brief -->
   <xsl:template match="Content[@type='Job']" mode="displayBrief">
