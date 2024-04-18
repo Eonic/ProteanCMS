@@ -3273,11 +3273,11 @@ namespace Protean
         public void addNote(ref XmlElement oNode, noteTypes nTypes, string sMessage, bool bInsertFirst = false, string sClass = "")
         {
             valid = false;
-            XmlNode frmNode = (XmlNode)moXformElmt;
+            XmlNode frmNode = (XmlNode)oNode;
             addNote(ref frmNode, nTypes, sMessage, bInsertFirst, sClass);
         }
 
-            public void addNote(ref XmlNode oNode, noteTypes nTypes, string sMessage, bool bInsertFirst = false, string sClass = "")
+        public void addNote(ref XmlNode oNode, noteTypes nTypes, string sMessage, bool bInsertFirst = false, string sClass = "")
         {
             if (sMessage is null)
                 sMessage = "";
