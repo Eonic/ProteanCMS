@@ -13933,13 +13933,65 @@
             </a>
           </xsl:if>
           <xsl:if test="@instagramURL!=''">
-            <a href="{@instagramURL}" target="_blank" title="{$myName} on Instagram" id="social-id-ig">
+            <a href="{@instagramURL}" target="_blank" title="{$myName} on Instagram" class="social-id-ig">
               <i class="fa fa-instagram">
                 <xsl:text> </xsl:text>
               </i>
             </a>
           </xsl:if>
         </xsl:when>
+		  
+        <!--<xsl:when test="$iconSet='plain' and @ids='true'">
+          <xsl:if test="@facebookURL!=''">
+            <a href="{@facebookURL}" target="_blank" title="{$myName} on Facebook" class="social-id-fb">
+              <i class="fa fa-facebook">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@twitterURL!=''">
+            <a href="{@twitterURL}" target="_blank" title="{$myName} on Twitter" class="social-id-tw">
+              <i class="fa fa-twitter">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@linkedInURL!=''">
+            <a href="{@linkedInURL}" target="_blank" title="{$myName} on LinkedIn" class="social-id-li">
+              <i class="fa fa-linkedin">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@googlePlusURL!=''">
+            <a href="{@googlePlusURL}" target="_blank" title="{$myName} on Google+" class="social-id-gp">
+              <i class="fa fa-google-plus">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@pinterestURL!=''">
+            <a href="{@pinterestURL}" target="_blank" title="{$myName} on Pinterest" class="social-id-pi">
+              <i class="fa fa-pinterest">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@youtubeURL!=''">
+            <a href="{@youtubeURL}" target="_blank" title="{$myName} on Youtube" class="social-id-yt">
+              <i class="fa fa-youtube ">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@instagramURL!=''">
+            <a href="{@instagramURL}" target="_blank" title="{$myName} on Instagram" class="social-id-ig">
+              <i class="fa fa-instagram">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+        </xsl:when>-->
         <xsl:otherwise>
           <xsl:if test="@facebookURL!=''">
             <a href="{@facebookURL}" target="_blank" title="{$myName} on Facebook" id="social-id-fb">

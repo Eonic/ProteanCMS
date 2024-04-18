@@ -30,6 +30,7 @@
 		<bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
 		<bind nodeset="tblContent/cContentXmlBrief/Content">
 			<bind id="cPosition" nodeset="@position" required="true()" type="string"/>
+			<bind id="ids" nodeset="@ids" required="true()" type="string"/>
 			<bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
 			<bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
 			<bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
@@ -214,6 +215,17 @@
 					</input>
 					<!-- end of hidden fields -->
 					<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+					<select1 bind="ids" appearance="full" class="inline-items">
+						<label>Switch IDs to classes?</label>
+						<item>
+							<label>Yes</label>
+							<value>true</value>
+						</item>
+						<item>
+							<label>No</label>
+							<value>false</value>
+						</item>
+					</select1>
 				</group>
 			</group>
 		</group>
