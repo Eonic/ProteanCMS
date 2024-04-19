@@ -3,8 +3,8 @@
   <xsl:import href="../../core/functions.xsl"/>
   <xsl:import href="../../core/Layouts.xsl"/>
   <xsl:import href="../../admin/admin-wysiwyg.xsl"/>
-	<xsl:import href="../../core/modules/modules.xsl"/>
-	<xsl:import href="../../modules/modules.xsl"/>
+  <xsl:import href="../../core/modules/modules.xsl"/>
+  <xsl:import href="../../modules/modules.xsl"/>
   <xsl:import href="search.xsl"/>
   <xsl:import href="../../core/localisation.xsl"/>
 
@@ -107,15 +107,7 @@
     </meta>
     <meta name="abstract">
       <xsl:attribute name="content">
-        <xsl:variable name="content">
-          <xsl:for-each select="ContentDetail/Content">
-            <xsl:apply-templates select="*" mode="getValues"/>
-          </xsl:for-each>
-        </xsl:variable>
-        <xsl:call-template name="truncateString">
-          <xsl:with-param name="string" select="$content"/>
-          <xsl:with-param name="length" select="'500'"/>
-        </xsl:call-template>
+		  <xsl:apply-templates select="//ContentDetail/Content" mode="metaabstract"/>
       </xsl:attribute>
     </meta>
 
@@ -136,9 +128,7 @@
     </xsl:if>
   </xsl:template>
 
-	<xsl:template match="Content" mode="getAbstractContent">
-		<xsl:apply-templates select="*" mode="getValues"/>
-	</xsl:template>
+
 	
 	
   <xsl:template match="PublishDate | StartDate | EndDate" mode="getValues">
@@ -172,6 +162,9 @@
       <xsl:for-each select="/Page/Contents/Content[@moduleType='FormattedText']">
         <xsl:apply-templates select="." mode="displayModule"/>
       </xsl:for-each>
+		<xsl:for-each select="/Page/Contents/Content[@moduleType='FAQList']">
+			<xsl:apply-templates select="." mode="displayModule"/>
+		</xsl:for-each>
     </div>
   </xsl:template>
 

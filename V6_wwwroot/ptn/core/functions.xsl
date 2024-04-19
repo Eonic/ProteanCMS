@@ -1364,7 +1364,18 @@
 	<xsl:template match="Page" mode="sitemeta">
 
 	</xsl:template>
-
+	
+	<!-- Used for Indexer leave here-->
+	<xsl:template match="Content" mode="metaabstract">
+		<xsl:variable name="content">
+			<xsl:apply-templates select="*" mode="getValues"/>
+		</xsl:variable>
+		<xsl:call-template name="truncateString">
+			<xsl:with-param name="string" select="$content"/>
+			<xsl:with-param name="length" select="'500'"/>
+		</xsl:call-template>
+	</xsl:template>
+	
 
 	<xsl:template match="Page" mode="dublincore">
 
