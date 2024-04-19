@@ -106,6 +106,8 @@
 							<xsl:with-param name="imagePosition" select="@imagePosition"/>
 							<xsl:with-param name="alignment" select="@alignment"/>
 							<xsl:with-param name="linked" select="@linkArticle"/>
+							<xsl:with-param name="heading" select="@heading"/>
+							<xsl:with-param name="title" select="@title"/>
 						</xsl:apply-templates>
 					</div>
 				</div>
@@ -159,6 +161,8 @@
 		<xsl:param name="imagePosition"/>
 		<xsl:param name="alignment"/>
 		<xsl:param name="linked"/>
+		<xsl:param name="heading"/>
+		<xsl:param name="title"/>
 		<xsl:variable name="preURL" select="substring(Url,1,3)" />
 		<xsl:variable name="url" select="Url/node()" />
 		<xsl:variable name="linkURL">
@@ -205,7 +209,7 @@
 				<xsl:with-param name="sortBy" select="$sortBy"/>
 			</xsl:apply-templates>
 			<div class="lIinner">
-				<xsl:if test="$imagePosition='below'">
+				<!--<xsl:if test="$imagePosition='below'">
 					<h3 class="title">
 						<xsl:attribute name="class">
 							<xsl:text>title text-</xsl:text>
@@ -219,7 +223,7 @@
 							<xsl:value-of select="Name"/>
 						</a>
 					</h3>
-				</xsl:if>
+				</xsl:if>-->
 				<xsl:if test="Images/img/@src!=''">
 					<a href="{$linkURL}" title="Click here to link to {Name}">
 						<xsl:if test="not(substring(@linkURL,1,1)='/') and (contains(@linkURL,'http://') and Url/@type='external')">
@@ -230,61 +234,107 @@
 						</xsl:apply-templates>
 					</a>
 				</xsl:if>
-				<xsl:if test="not($imagePosition='below')">
-					<h3 class="title">
-						<xsl:attribute name="class">
-							<xsl:text>title text-</xsl:text>
-							<xsl:value-of select="$alignment"/>
-						</xsl:attribute>
-						<a href="{$linkURL}" title="{Name}">
-							<xsl:if test="not(substring(@linkURL,1,1)='/') and (contains(@linkURL,'http://') and Url/@type='external')">
-								<xsl:attribute name="rel">external</xsl:attribute>
-								<xsl:attribute name="class">extLink</xsl:attribute>
-							</xsl:if>
-							<xsl:value-of select="Name"/>
-						</a>
-					</h3>
-				</xsl:if>
-				<xsl:if test="Body/node()!=''">
-					<div class="description">
-						<xsl:attribute name="class">
-							<xsl:text>description text-</xsl:text>
-							<xsl:value-of select="$alignment"/>
-						</xsl:attribute>
-						<xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
-					</div>
-				</xsl:if>
-				<xsl:if test="$linked='true' and $button='false'">
-					<a href="{$linkURL}" class="stretched-link">
-						<xsl:if test="Url[@target='New Window']">
-							<xsl:attribute name="target">
-								<xsl:text>_blank</xsl:text>
+				<div class="media-inner">
+					<xsl:if test="not($imagePosition='below')">
+						<xsl:choose>
+							<xsl:when test="$title!='' and $heading!=''">
+								<xsl:variable name="headingNo" select="substring-after($heading,'h')"/>
+								<xsl:variable name="headingNoPlus" select="$headingNo + 1"/>
+								<xsl:variable name="listHeading">
+									<xsl:text>h</xsl:text>
+									<xsl:value-of select="$headingNoPlus"/>
+								</xsl:variable>
+								<xsl:element name="{$listHeading}">
+									<xsl:attribute name="class">
+										<xsl:text>title text-</xsl:text>
+										<xsl:value-of select="$alignment"/>
+									</xsl:attribute>
+									<a href="{$linkURL}" title="{Name}">
+										<xsl:if test="not(substring(@linkURL,1,1)='/') and (contains(@linkURL,'http://') and Url/@type='external')">
+											<xsl:attribute name="rel">external</xsl:attribute>
+											<xsl:attribute name="class">extLink</xsl:attribute>
+										</xsl:if>
+										<xsl:value-of select="Name"/>
+									</a>
+								</xsl:element>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:choose>
+									<xsl:when test="$heading=''">
+										<h3 class="title">
+											<xsl:attribute name="class">
+												<xsl:text>title text-</xsl:text>
+												<xsl:value-of select="$alignment"/>
+											</xsl:attribute>
+											<a href="{$linkURL}" title="{Name}">
+												<xsl:if test="not(substring(@linkURL,1,1)='/') and (contains(@linkURL,'http://') and Url/@type='external')">
+													<xsl:attribute name="rel">external</xsl:attribute>
+													<xsl:attribute name="class">extLink</xsl:attribute>
+												</xsl:if>
+												<xsl:value-of select="Name"/>
+											</a>
+										</h3>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:element name="{$heading}">
+											<xsl:attribute name="class">
+												<xsl:text>title text-</xsl:text>
+												<xsl:value-of select="$alignment"/>
+											</xsl:attribute>
+											<a href="{$linkURL}" title="{Name}">
+												<xsl:if test="not(substring(@linkURL,1,1)='/') and (contains(@linkURL,'http://') and Url/@type='external')">
+													<xsl:attribute name="rel">external</xsl:attribute>
+													<xsl:attribute name="class">extLink</xsl:attribute>
+												</xsl:if>
+												<xsl:value-of select="Name"/>
+											</a>
+										</xsl:element>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:if>
+					<xsl:if test="Body/node()!=''">
+						<div class="description">
+							<xsl:attribute name="class">
+								<xsl:text>description text-</xsl:text>
+								<xsl:value-of select="$alignment"/>
 							</xsl:attribute>
-						</xsl:if>
-						<span class="visually-hidden">
-							<xsl:value-of select="Name/node()"/>
-							<xsl:text> </xsl:text>
-						</span>
-					</a>
-				</xsl:if>
-				<xsl:if test="not($button='false')">
-					<div>
-						<xsl:attribute name="class">
-							<xsl:text>entryFooter light-flex justify-content-</xsl:text>
-							<xsl:value-of select="$alignment"/>
-						</xsl:attribute>
-						<xsl:apply-templates select="." mode="displayTags"/>
-						<xsl:apply-templates select="." mode="moreLink">
-							<xsl:with-param name="link" select="$linkURL"/>
-							<xsl:with-param name="stretchLink" select="$linked"/>
-							<xsl:with-param name="linkType" select="Url/@type"/>
-							<xsl:with-param name="altText">
+							<xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
+						</div>
+					</xsl:if>
+					<xsl:if test="$linked='true' and $button='false'">
+						<a href="{$linkURL}" class="stretched-link">
+							<xsl:if test="Url[@target='New Window']">
+								<xsl:attribute name="target">
+									<xsl:text>_blank</xsl:text>
+								</xsl:attribute>
+							</xsl:if>
+							<span class="visually-hidden">
 								<xsl:value-of select="Name/node()"/>
-							</xsl:with-param>
-						</xsl:apply-templates>
-						<xsl:text> </xsl:text>
-					</div>
-				</xsl:if>
+								<xsl:text> </xsl:text>
+							</span>
+						</a>
+					</xsl:if>
+					<xsl:if test="not($button='false')">
+						<div>
+							<xsl:attribute name="class">
+								<xsl:text>entryFooter light-flex justify-content-</xsl:text>
+								<xsl:value-of select="$alignment"/>
+							</xsl:attribute>
+							<xsl:apply-templates select="." mode="displayTags"/>
+							<xsl:apply-templates select="." mode="moreLink">
+								<xsl:with-param name="link" select="$linkURL"/>
+								<xsl:with-param name="stretchLink" select="$linked"/>
+								<xsl:with-param name="linkType" select="Url/@type"/>
+								<xsl:with-param name="altText">
+									<xsl:value-of select="Name/node()"/>
+								</xsl:with-param>
+							</xsl:apply-templates>
+							<xsl:text> </xsl:text>
+						</div>
+					</xsl:if>
+				</div>
 			</div>
 		</div>
 	</xsl:template>

@@ -19,6 +19,8 @@
 		<xsl:param name="pos"/>
 		<xsl:param name="parentId"/>
 		<xsl:param name="linked"/>
+		<xsl:param name="heading"/>
+		<xsl:param name="title"/>
 		<xsl:variable name="parId">
 			<xsl:choose>
 				<xsl:when test="@parId &gt; 0">
@@ -73,64 +75,97 @@
 						</xsl:apply-templates>
 					</a>
 				</xsl:if>
-				<h3 class="title">
-					<xsl:variable name="title">
-						<xsl:apply-templates select="." mode="getDisplayName"/>
-					</xsl:variable>
-					<a href="{$parentURL}">
-						<xsl:value-of select="$title"/>
-					</a>
-				</h3>
-				<xsl:if test="StockCode/node()!='' or Manufacturer/node()!=''">
-					<p class="product-facts">
-						<xsl:if test="StockCode/node()!=''">
-							<span class="stockCode">
-								<span class="item-label">
-									<xsl:call-template name="term2014" />
-								</span>
-								<xsl:text>: </xsl:text>
-								<xsl:value-of select="StockCode/node()"/>
-							</span>
-						</xsl:if>
-						<xsl:if test="StockCode/node()!='' and Manufacturer/node()!=''">
-							<br/>
-						</xsl:if>
-						<xsl:if test="Manufacturer/node()!=''">
-							<span class="manufacturer">
-								<xsl:if test="/Page/Contents/Content[@name='makeLabel']">
-									<span class="label">
-										<xsl:value-of select="/Page/Contents/Content[@name='makeLabel']"/>&#160;
+				<div class="media-inner">
+					<xsl:choose>
+						<xsl:when test="$title!='' and $heading!=''">
+							<xsl:variable name="headingNo" select="substring-after($heading,'h')"/>
+							<xsl:variable name="headingNoPlus" select="$headingNo + 1"/>
+							<xsl:variable name="listHeading">
+								<xsl:text>h</xsl:text>
+								<xsl:value-of select="$headingNoPlus"/>
+							</xsl:variable>
+							<xsl:element name="{$listHeading}">
+								<xsl:attribute name="class">
+									<xsl:text>title</xsl:text>
+								</xsl:attribute>
+								<a href="{$parentURL}">
+									<xsl:apply-templates select="." mode="getDisplayName"/>
+								</a>
+							</xsl:element>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:choose>
+								<xsl:when test="$heading=''">
+									<h3 class="title">
+										<a href="{$parentURL}">
+											<xsl:apply-templates select="." mode="getDisplayName"/>
+										</a>
+									</h3>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:element name="{$heading}">
+										<xsl:attribute name="class">
+											<xsl:text>title</xsl:text>
+										</xsl:attribute>
+										<a href="{$parentURL}">
+											<xsl:apply-templates select="." mode="getDisplayName"/>
+										</a>
+									</xsl:element>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:otherwise>
+					</xsl:choose>
+					<xsl:if test="StockCode/node()!='' or Manufacturer/node()!=''">
+						<p class="product-facts">
+							<xsl:if test="StockCode/node()!=''">
+								<span class="stockCode">
+									<span class="item-label">
+										<xsl:call-template name="term2014" />
 									</span>
-								</xsl:if>
-								<span class="brand">
-									<xsl:value-of select="Manufacturer/node()"/>
+									<xsl:text>: </xsl:text>
+									<xsl:value-of select="StockCode/node()"/>
 								</span>
-							</span>
-						</xsl:if>
-					</p>
-				</xsl:if>
-				<xsl:choose>
-					<xsl:when test="Content[@type='SKU']">
-						<xsl:apply-templates select="Content[@type='SKU'][1]" mode="displayPrice" />
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:apply-templates select="." mode="displayPrice" />
-					</xsl:otherwise>
-				</xsl:choose>
-				<!--<xsl:if test="ShortDescription/node()!=''">
+							</xsl:if>
+							<xsl:if test="StockCode/node()!='' and Manufacturer/node()!=''">
+								<br/>
+							</xsl:if>
+							<xsl:if test="Manufacturer/node()!=''">
+								<span class="manufacturer">
+									<xsl:if test="/Page/Contents/Content[@name='makeLabel']">
+										<span class="label">
+											<xsl:value-of select="/Page/Contents/Content[@name='makeLabel']"/>&#160;
+										</span>
+									</xsl:if>
+									<span class="brand">
+										<xsl:value-of select="Manufacturer/node()"/>
+									</span>
+								</span>
+							</xsl:if>
+						</p>
+					</xsl:if>
+					<xsl:choose>
+						<xsl:when test="Content[@type='SKU']">
+							<xsl:apply-templates select="Content[@type='SKU'][1]" mode="displayPrice" />
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:apply-templates select="." mode="displayPrice" />
+						</xsl:otherwise>
+					</xsl:choose>
+					<!--<xsl:if test="ShortDescription/node()!=''">
 					<div class="description">
 						<xsl:apply-templates select="ShortDescription/node()" mode="cleanXhtml"/>
 					</div>
 				</xsl:if>-->
-				<div class="entryFooter">
-					<xsl:apply-templates select="." mode="moreLink">
-						<xsl:with-param name="link" select="$parentURL"/>
-						<xsl:with-param name="stretchLink" select="$linked"/>
-						<xsl:with-param name="altText">
-							<xsl:apply-templates select="." mode="getDisplayName"/>
-						</xsl:with-param>
-					</xsl:apply-templates>
-					<xsl:text> </xsl:text>
+					<div class="entryFooter">
+						<xsl:apply-templates select="." mode="moreLink">
+							<xsl:with-param name="link" select="$parentURL"/>
+							<xsl:with-param name="stretchLink" select="$linked"/>
+							<xsl:with-param name="altText">
+								<xsl:apply-templates select="." mode="getDisplayName"/>
+							</xsl:with-param>
+						</xsl:apply-templates>
+						<xsl:text> </xsl:text>
+					</div>
 				</div>
 			</div>
 		</div>

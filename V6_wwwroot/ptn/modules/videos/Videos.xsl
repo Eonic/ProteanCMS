@@ -55,6 +55,8 @@
 				</xsl:if>
 				<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
 					<xsl:with-param name="sortBy" select="@sortBy"/>
+					<xsl:with-param name="heading" select="@heading"/>
+					<xsl:with-param name="title" select="@title"/>
 				</xsl:apply-templates>
 			</div>
 		</div>
@@ -105,6 +107,8 @@
 		<xsl:param name="linked"/>
 		<xsl:param name="class"/>
 		<xsl:param name="parentId"/>
+		<xsl:param name="heading"/>
+		<xsl:param name="title"/>
 		<xsl:variable name="thisURL" select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url"></xsl:variable>
 		<xsl:variable name="parentURL">
 			<xsl:apply-templates select="." mode="getHref"/>
@@ -129,45 +133,81 @@
 				<a href="{$parentURL}">
 					<xsl:apply-templates select="." mode="displayThumbnail"/>
 				</a>
-				<h3 class="title">
-					<a href="{$parentURL}">
-						<xsl:value-of select="Title/node()"/>
-					</a>
-				</h3>
-				<xsl:if test="Author/node()!=''">
-					<p class="author">
-						<span class="label">
-							<!--Author-->
-							<xsl:call-template name="term2045" />
-							<xsl:text>: </xsl:text>
-						</span>
-						<xsl:value-of select="Author/node()"/>
-					</p>
-				</xsl:if>
-				<xsl:if test="Copyright/node()!=''">
-					<p class="copyright">
-						<span class="label">
-							<!--Copyright-->
-							<xsl:call-template name="term2046" />
-							<xsl:text>: </xsl:text>
-						</span>
-						<xsl:value-of select="Copyright/node()"/>
-					</p>
-				</xsl:if>
-				<xsl:if test="Intro/node()!=''">
-					<p class="VideoDescription">
-						<xsl:apply-templates select="Intro" mode="cleanXhtml"/>
-					</p>
-				</xsl:if>
-				<div class="entryFooter">
-					<xsl:apply-templates select="." mode="displayTags"/>
-					<xsl:apply-templates select="." mode="moreLink">
-						<xsl:with-param name="link" select="$parentURL"/>
-						<xsl:with-param name="stretchLink" select="$linked"/>
-						<xsl:with-param name="altText">
-							<xsl:value-of select="Title/node()"/>
-						</xsl:with-param>
-					</xsl:apply-templates>
+				<div class="media-inner">
+					<xsl:choose>
+						<xsl:when test="$title!='' and $heading!=''">
+							<xsl:variable name="headingNo" select="substring-after($heading,'h')"/>
+							<xsl:variable name="headingNoPlus" select="$headingNo + 1"/>
+							<xsl:variable name="listHeading">
+								<xsl:text>h</xsl:text>
+								<xsl:value-of select="$headingNoPlus"/>
+							</xsl:variable>
+							<xsl:element name="{$listHeading}">
+								<xsl:attribute name="class">
+									<xsl:text>title</xsl:text>
+								</xsl:attribute>
+								<a href="{$parentURL}">
+									<xsl:value-of select="Title/node()"/>
+								</a>
+							</xsl:element>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:choose>
+								<xsl:when test="$heading=''">
+									<h3 class="title">
+										<a href="{$parentURL}">
+											<xsl:value-of select="Title/node()"/>
+										</a>
+									</h3>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:element name="{$heading}">
+										<xsl:attribute name="class">
+											<xsl:text>title</xsl:text>
+										</xsl:attribute>
+										<a href="{$parentURL}">
+											<xsl:value-of select="Title/node()"/>
+										</a>
+									</xsl:element>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:otherwise>
+					</xsl:choose>
+					<xsl:if test="Author/node()!=''">
+						<p class="author">
+							<span class="label">
+								<!--Author-->
+								<xsl:call-template name="term2045" />
+								<xsl:text>: </xsl:text>
+							</span>
+							<xsl:value-of select="Author/node()"/>
+						</p>
+					</xsl:if>
+					<xsl:if test="Copyright/node()!=''">
+						<p class="copyright">
+							<span class="label">
+								<!--Copyright-->
+								<xsl:call-template name="term2046" />
+								<xsl:text>: </xsl:text>
+							</span>
+							<xsl:value-of select="Copyright/node()"/>
+						</p>
+					</xsl:if>
+					<xsl:if test="Intro/node()!=''">
+						<p class="VideoDescription">
+							<xsl:apply-templates select="Intro" mode="cleanXhtml"/>
+						</p>
+					</xsl:if>
+					<div class="entryFooter">
+						<xsl:apply-templates select="." mode="displayTags"/>
+						<xsl:apply-templates select="." mode="moreLink">
+							<xsl:with-param name="link" select="$parentURL"/>
+							<xsl:with-param name="stretchLink" select="$linked"/>
+							<xsl:with-param name="altText">
+								<xsl:value-of select="Title/node()"/>
+							</xsl:with-param>
+						</xsl:apply-templates>
+					</div>
 				</div>
 			</div>
 		</div>
