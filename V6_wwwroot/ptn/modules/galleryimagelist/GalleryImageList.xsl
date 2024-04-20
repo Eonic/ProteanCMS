@@ -60,6 +60,8 @@
 					<xsl:with-param name="showTitle" select="@showTitle"/>
 					<xsl:with-param name="alignment" select="@alignment"/>
 					<xsl:with-param name="alignmentV" select="@alignmentV"/>
+					<xsl:with-param name="heading" select="@heading"/>
+					<xsl:with-param name="title" select="@title"/>
 				</xsl:apply-templates>
 			</div>
 		</div>

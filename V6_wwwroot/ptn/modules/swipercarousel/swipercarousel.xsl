@@ -61,6 +61,8 @@
 					<xsl:apply-templates select="Content[@type='SwiperSlide']" mode="displayBrief">
 						<xsl:with-param name="sortBy" select="@sortBy"/>
 						<xsl:with-param name="cHeightOptions" select="@cHeightOptions"/>
+						<xsl:with-param name="heading" select="@heading"/>
+						<xsl:with-param name="title" select="@title"/>
 					</xsl:apply-templates>
 				</div>
 				<div class="swiper-pagination" id="swiper-pagination-{@id}">
@@ -76,15 +78,15 @@
 	<!-- Library Image Brief -->
 	<xsl:template match="Content[@type='SwiperSlide']" mode="displayBrief">
 		<xsl:param name="cHeightOptions"/>
+		<xsl:param name="heading"/>
+		<xsl:param name="title"/>
 		<xsl:choose>
 			<xsl:when test="@linkSlide='true'">
-
 				<div class="swiper-slide" style="background-image:url({Images/img[@class='detail']/@src})">
 					<xsl:attribute name="class">
 						<xsl:text>swiper-slide justify-content-</xsl:text>
 						<xsl:value-of select="@position-vertical"/>
 					</xsl:attribute>
-
 					<div class="swiper-admin-btns">
 						<xsl:apply-templates select="." mode="inlinePopupOptions">
 							<xsl:with-param name="class" select="swiper-admin-btns"/>
@@ -110,8 +112,6 @@
 							<xsl:value-of select="@position-horizontal"/>
 						</xsl:attribute>
 						<xsl:if test="(Title/node()!='' and not(@showHeading='false')) or Body/node()!=''">
-
-
 							<div class="swiper-caption">
 								<xsl:attribute name="class">
 									<xsl:text>swiper-caption</xsl:text>
@@ -131,13 +131,26 @@
 								</xsl:attribute>
 								<div class="swiper-caption-inner">
 									<xsl:if test="Title/node()!='' and not(@showHeading='false')">
-										<h3 class="caption-title">
-											<xsl:attribute name="class">
-												<xsl:text>caption-title text-</xsl:text>
-												<xsl:value-of select="@title-horizontal"/>
-											</xsl:attribute>
-											<xsl:value-of select="Title/node()"/>
-										</h3>
+										<xsl:choose>
+											<xsl:when test="$heading='h1' or $heading='h2' or $heading='h4' or $heading='h5' or $heading='h6'">
+												<xsl:element name="{$heading}">
+													<xsl:attribute name="class">
+														<xsl:text>caption-title text-</xsl:text>
+														<xsl:value-of select="@title-horizontal"/>
+													</xsl:attribute>
+													<xsl:value-of select="Title/node()"/>
+												</xsl:element>
+											</xsl:when>
+											<xsl:otherwise>
+												<h3 class="caption-title">
+													<xsl:attribute name="class">
+														<xsl:text>caption-title text-</xsl:text>
+														<xsl:value-of select="@title-horizontal"/>
+													</xsl:attribute>
+													<xsl:value-of select="Title/node()"/>
+												</h3>
+											</xsl:otherwise>
+										</xsl:choose>
 									</xsl:if>
 									<xsl:apply-templates select="Body/node()" mode="cleanXhtml"></xsl:apply-templates>
 									<xsl:if test="@link!=''">
@@ -178,22 +191,20 @@
 						</xsl:if>
 					</a>
 				</div>
-
 			</xsl:when>
 			<xsl:otherwise>
 				<div style="background-image:url({Images/img[@class='detail']/@src})" class="swiper-slide">
 					<!--<xsl:if test="$cHeightOptions!='adapt'">
 						<xsl:attribute name="style">background-image:url({Images/img[@class='detail']/@src})</xsl:attribute>
 					</xsl:if>-->
-
 					<div class="swiper-admin-btns">
 						<xsl:apply-templates select="." mode="inlinePopupOptions">
 							<xsl:with-param name="class" select="swiper-admin-btns"/>
 						</xsl:apply-templates>
 					</div>
 					<!--<xsl:if test="position()=1">
-				<xsl:attribute name="class">swiper-slide</xsl:attribute>
-			</xsl:if>-->
+						<xsl:attribute name="class">swiper-slide</xsl:attribute>
+					</xsl:if>-->
 					<xsl:if test="$cHeightOptions='adapt'">
 						<img src="{Images/img[@class='detail']/@src}" alt="{Title/node()}" />
 					</xsl:if>
@@ -222,15 +233,27 @@
 									<!--<xsl:value-of select="@bg-cover"/>-->
 								</xsl:attribute>
 								<div class="swiper-caption-inner">
-
 									<xsl:if test="Title/node()!='' and not(@showHeading='false')">
-										<h3 class="caption-title">
-											<xsl:attribute name="class">
-												<xsl:text>caption-title text-</xsl:text>
-												<xsl:value-of select="@title-horizontal"/>
-											</xsl:attribute>
-											<xsl:value-of select="Title/node()"/>
-										</h3>
+										<xsl:choose>
+											<xsl:when test="$heading='h1' or $heading='h2' or $heading='h4' or $heading='h5' or $heading='h6'">
+												<xsl:element name="{$heading}">
+													<xsl:attribute name="class">
+														<xsl:text>caption-title text-</xsl:text>
+														<xsl:value-of select="@title-horizontal"/>
+													</xsl:attribute>
+													<xsl:value-of select="Title/node()"/>
+												</xsl:element>
+											</xsl:when>
+											<xsl:otherwise>
+												<h3 class="caption-title">
+													<xsl:attribute name="class">
+														<xsl:text>caption-title text-</xsl:text>
+														<xsl:value-of select="@title-horizontal"/>
+													</xsl:attribute>
+													<xsl:value-of select="Title/node()"/>
+												</h3>
+											</xsl:otherwise>
+										</xsl:choose>
 									</xsl:if>
 									<xsl:apply-templates select="Body/node()" mode="cleanXhtml"></xsl:apply-templates>
 									<xsl:if test="@link!=''">
