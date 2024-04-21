@@ -207,7 +207,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<div class="faqList accordion accordion-module" id="accordion-{@id}" aria-multiselectable="true">
+		<div class="faqList accordion accordion-module" id="accordion-{@id}">
 			<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayFAQAccordianBrief">
 				<xsl:with-param name="parId" select="@id"/>
 				<xsl:with-param name="heading" select="@heading"/>
