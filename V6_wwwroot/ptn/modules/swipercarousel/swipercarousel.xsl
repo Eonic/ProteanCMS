@@ -37,6 +37,14 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
+		<xsl:variable name="heading">
+			<xsl:choose>
+				<xsl:when test="@heading">
+					<xsl:value-of select="@heading"/>
+				</xsl:when>
+				<xsl:otherwise>h3</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<!-- Output Module -->
 		<xsl:variable name="id" select="concat('scarousel-',@id)"></xsl:variable>
 		<div class="swiper-container">
@@ -61,7 +69,7 @@
 					<xsl:apply-templates select="Content[@type='SwiperSlide']" mode="displayBrief">
 						<xsl:with-param name="sortBy" select="@sortBy"/>
 						<xsl:with-param name="cHeightOptions" select="@cHeightOptions"/>
-						<xsl:with-param name="heading" select="@heading"/>
+						<xsl:with-param name="heading" select="$heading"/>
 						<xsl:with-param name="title" select="@title"/>
 					</xsl:apply-templates>
 				</div>

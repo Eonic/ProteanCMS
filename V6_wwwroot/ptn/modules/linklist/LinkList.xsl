@@ -56,6 +56,14 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
+		<xsl:variable name="heading">
+			<xsl:choose>
+				<xsl:when test="@heading">
+					<xsl:value-of select="@heading"/>
+				</xsl:when>
+				<xsl:otherwise>h3</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<!--end responsive columns variables-->
 		<xsl:choose>
 			<xsl:when test="@layout='simple'">
@@ -106,7 +114,7 @@
 							<xsl:with-param name="imagePosition" select="@imagePosition"/>
 							<xsl:with-param name="alignment" select="@alignment"/>
 							<xsl:with-param name="linked" select="@linkArticle"/>
-							<xsl:with-param name="heading" select="@heading"/>
+							<xsl:with-param name="heading" select="$heading"/>
 							<xsl:with-param name="title" select="@title"/>
 						</xsl:apply-templates>
 					</div>

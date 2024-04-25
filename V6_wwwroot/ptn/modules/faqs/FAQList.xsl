@@ -23,6 +23,14 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
+		<xsl:variable name="heading">
+			<xsl:choose>
+				<xsl:when test="@heading">
+					<xsl:value-of select="@heading"/>
+				</xsl:when>
+				<xsl:otherwise>h3</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<div class="faqList">
 			<a name="pageTop" class="pageTop">
 				<xsl:text> </xsl:text>
@@ -45,7 +53,7 @@
 				</xsl:if>
 				<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
 					<xsl:with-param name="sortBy" select="@sortBy"/>
-					<xsl:with-param name="heading" select="@heading"/>
+					<xsl:with-param name="heading" select="$heading"/>
 					<xsl:with-param name="title" select="@title"/>
 				</xsl:apply-templates>
 				<xsl:text> </xsl:text>
