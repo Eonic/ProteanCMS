@@ -9,6 +9,8 @@
 		<xsl:param name="class"/>
 		<xsl:param name="parentId"/>
 		<xsl:param name="linked"/>
+		<xsl:param name="heading"/>
+		<xsl:param name="title"/>
 		<!-- contactBrief -->
 		<xsl:variable name="parentURL">
 			<xsl:apply-templates select="self::Content" mode="getHref">
@@ -77,88 +79,103 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:if>
-				<h3 class="title">
+				<div class="media-inner">
 					<xsl:choose>
-						<xsl:when test="@noLink='true'">
-							<xsl:attribute name="title">
-								<xsl:call-template name="term2072" />
-								<xsl:text>&#160;</xsl:text>
-								<xsl:value-of select="GivenName/node()"/>
-								<xsl:text>&#160;</xsl:text>
-								<xsl:value-of select="Surname/node()"/>
-							</xsl:attribute>
-							<xsl:apply-templates select="." mode="getDisplayName"/>
+						<xsl:when test="$title!='' and $heading!=''">
+							<xsl:variable name="headingNo" select="substring-after($heading,'h')"/>
+							<xsl:variable name="headingNoPlus" select="$headingNo + 1"/>
+							<xsl:variable name="listHeading">
+								<xsl:text>h</xsl:text>
+								<xsl:value-of select="$headingNoPlus"/>
+							</xsl:variable>
+							<xsl:element name="{$listHeading}">
+								<xsl:attribute name="class">
+									<xsl:text>title</xsl:text>
+								</xsl:attribute>
+								<a href="{$parentURL}">
+									<xsl:apply-templates select="." mode="getDisplayName"/>
+								</a>
+							</xsl:element>
 						</xsl:when>
 						<xsl:otherwise>
-							<a href="{$parentURL}">
-								<xsl:attribute name="title">
-									<xsl:call-template name="term2072" />
-									<xsl:text>&#160;</xsl:text>
-									<xsl:value-of select="GivenName/node()"/>
-									<xsl:text>&#160;</xsl:text>
-									<xsl:value-of select="Surname/node()"/>
-								</xsl:attribute>
-								<xsl:apply-templates select="." mode="getDisplayName"/>
-							</a>
+							<xsl:choose>
+								<xsl:when test="$heading=''">
+									<h3 class="title">
+										<a href="{$parentURL}">
+											<xsl:apply-templates select="." mode="getDisplayName"/>
+										</a>
+									</h3>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:element name="{$heading}">
+										<xsl:attribute name="class">
+											<xsl:text>title</xsl:text>
+										</xsl:attribute>
+										<a href="{$parentURL}">
+											<xsl:apply-templates select="." mode="getDisplayName"/>
+										</a>
+									</xsl:element>
+								</xsl:otherwise>
+							</xsl:choose>
 						</xsl:otherwise>
 					</xsl:choose>
-				</h3>
-				<xsl:if test="Title/node()!=''">
-					<h4 class="job-title">
-						<xsl:apply-templates select="Title" mode="displayBrief"/>
-					</h4>
-				</xsl:if>
-
-				<dl class="clearfix dl-horizontal">
-					<xsl:if test="Telephone/node()!=''">
-						<dt class="tel">
-							<xsl:call-template name="term2007" />
-							<xsl:text>: </xsl:text>
-						</dt>
-						<dd class="tel">
-							<xsl:apply-templates select="Telephone" mode="displayBrief"/>
-						</dd>
-
+					<xsl:if test="Title/node()!=''">
+						<h4 class="job-title">
+							<xsl:apply-templates select="Title" mode="displayBrief"/>
+						</h4>
 					</xsl:if>
-					<xsl:if test="Mobile/node()!=''">
-						<dt class="mobile">
-							<xsl:call-template name="term2080" />
-							<xsl:text>: </xsl:text>
-						</dt>
-						<dd>
-							<xsl:apply-templates select="Mobile" mode="displayBrief"/>
-						</dd>
-					</xsl:if>
-					<xsl:if test="Email/node()!=''">
-						<dt class="email">
-							<xsl:call-template name="term2009" />
-							<xsl:text>: </xsl:text>
-						</dt>
-						<dd>
-							<a href="mailto:{Email/node()}">
-								<xsl:apply-templates select="Email" mode="displayBrief"/>
-							</a>
-						</dd>
-					</xsl:if>
-				</dl>
 
-				<xsl:if test="Profile/node()!=''">
-					<xsl:apply-templates select="Profile/node()" mode="cleanXhtml"/>
-				</xsl:if>
-				<xsl:if test="not(@noLink='true')">
-					<div class="entryFooter">
-						<xsl:apply-templates select="." mode="moreLink">
-							<xsl:with-param name="link" select="$parentURL"/>
-							<xsl:with-param name="stretchLink" select="$linked"/>
-							<xsl:with-param name="altText">
-								<xsl:value-of select="GivenName/node()"/>
-								<xsl:text> </xsl:text>
-								<xsl:value-of select="Surname/node()"/>
-							</xsl:with-param>
-						</xsl:apply-templates>
-						<xsl:text> </xsl:text>
-					</div>
-				</xsl:if>
+					<dl class="clearfix dl-horizontal">
+						<xsl:if test="Telephone/node()!=''">
+							<dt class="tel">
+								<xsl:call-template name="term2007" />
+								<xsl:text>: </xsl:text>
+							</dt>
+							<dd class="tel">
+								<xsl:apply-templates select="Telephone" mode="displayBrief"/>
+							</dd>
+
+						</xsl:if>
+						<xsl:if test="Mobile/node()!=''">
+							<dt class="mobile">
+								<xsl:call-template name="term2080" />
+								<xsl:text>: </xsl:text>
+							</dt>
+							<dd>
+								<xsl:apply-templates select="Mobile" mode="displayBrief"/>
+							</dd>
+						</xsl:if>
+						<xsl:if test="Email/node()!=''">
+							<dt class="email">
+								<xsl:call-template name="term2009" />
+								<xsl:text>: </xsl:text>
+							</dt>
+							<dd>
+								<a href="mailto:{Email/node()}">
+									<xsl:apply-templates select="Email" mode="displayBrief"/>
+								</a>
+							</dd>
+						</xsl:if>
+					</dl>
+
+					<xsl:if test="Profile/node()!=''">
+						<xsl:apply-templates select="Profile/node()" mode="cleanXhtml"/>
+					</xsl:if>
+					<xsl:if test="not(@noLink='true')">
+						<div class="entryFooter">
+							<xsl:apply-templates select="." mode="moreLink">
+								<xsl:with-param name="link" select="$parentURL"/>
+								<xsl:with-param name="stretchLink" select="$linked"/>
+								<xsl:with-param name="altText">
+									<xsl:value-of select="GivenName/node()"/>
+									<xsl:text> </xsl:text>
+									<xsl:value-of select="Surname/node()"/>
+								</xsl:with-param>
+							</xsl:apply-templates>
+							<xsl:text> </xsl:text>
+						</div>
+					</xsl:if>
+				</div>
 			</div>
 		</div>
 	</xsl:template>

@@ -6,9 +6,9 @@
       <ContentType type="SKU" name="SKU">A simple product that users can buy</ContentType>
     </ContentTypeGroup>
   </ContentTypes-->
-  <ModuleTypes>
+  <!--<ModuleTypes>
     <ModuleGroup name="Content Lists" icon="fa-th-list">
       <Module type="ProductGallery" formPath="productgallery" icon="far fa-images" name="Product Gallery"></Module>
     </ModuleGroup>
-  </ModuleTypes>
+  </ModuleTypes>-->
 </PageLayouts>

@@ -1672,6 +1672,14 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
+		<xsl:variable name="heading">
+			<xsl:choose>
+				<xsl:when test="@heading">
+					<xsl:value-of select="@heading"/>
+				</xsl:when>
+				<xsl:otherwise>h3</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<div class="clearfix {@moduleType}">
 			<div>
 				<!--responsive columns -->
@@ -1683,7 +1691,7 @@
 					<xsl:with-param name="crop" select="$cropSetting"/>
 					<xsl:with-param name="linked" select="@linkArticle"/>
 					<xsl:with-param name="itemLayout" select="@itemLayout"/>
-					<xsl:with-param name="heading" select="@heading"/>
+					<xsl:with-param name="heading" select="$heading"/>
 					<xsl:with-param name="title" select="@title"/>
 				</xsl:apply-templates>
 				<xsl:if test="@stepCount != '0'">

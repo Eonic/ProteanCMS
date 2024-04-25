@@ -9,7 +9,7 @@
   <ModuleTypes>
     <ModuleGroup name="Content Lists" icon="fas fa-th-list">
       <Module type="NewsList" formPath="news-list" icon="far fa-newspaper" name="News Articles List"></Module>
-      <Module type="NewsListDateMenu" formPath="news-list-date-menu" icon="far fa-calendar-alt" name="News Article Date Filter"></Module>
+      <!--<Module type="NewsListDateMenu" formPath="news-list-date-menu" icon="far fa-calendar-alt" name="News Article Date Filter"></Module>-->
     </ModuleGroup>
   </ModuleTypes>
 </PageLayouts>
