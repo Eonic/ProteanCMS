@@ -290,6 +290,14 @@
 					</div>
 				</div>
 			</div>
+			<xsl:if test="/Page/@modalAlert!=''">
+				<script>
+					addEventListener("DOMContentLoaded", (event) => {
+						showAdminAlert("<xsl:value-of select="@modalAlert"/>")
+					});
+				</script>
+			</xsl:if>
+			
 			<iframe id="keepalive" src="/ewCommon/tools/keepalive.ashx" frameborder="0" width="0" height="0" xmlns:ew="urn:ew">Keep Alive frame</iframe>
 		</body>
 	</xsl:template>
