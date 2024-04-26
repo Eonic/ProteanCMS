@@ -153,7 +153,7 @@
 											</item>
 										</select1>
 									</group>
-									<group class="col-md-6">
+									<!--<group class="col-md-6">
 										<select1 bind="imagePosition" appearance="full" class="inline-items">
 											<label>Place image above or below heading?</label>
 											<item>
@@ -165,7 +165,7 @@
 												<value>below</value>
 											</item>
 										</select1>
-									</group>
+									</group>-->
 									<group class="col-md-6">
 										<select1 bind="alignment">
 											<label>
@@ -308,6 +308,14 @@
 			</group>
 			<group>
 				<label>
+					<i class="fas fa-brush"> </i>
+					<span class="space"> </span>
+					<span>Presentation</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericModule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
+			</group>
+			<group>
+				<label>
 					<i class="fas fa-cog"> </i>
 					<span class="space"> </span>
 					<span>Advanced Settings</span>
@@ -322,7 +330,7 @@
 						<label>ModuleType</label>
 					</input>
 					<!-- end of hidden fields -->
-					<ewInclude filePath="/ptn/core/modules/genericModule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
+					
 					<ewInclude filePath="/ptn/core/modules/genericModule.xml" xPath="descendant-or-self::group[@id='publish']"/>
 				</group>
 			</group>

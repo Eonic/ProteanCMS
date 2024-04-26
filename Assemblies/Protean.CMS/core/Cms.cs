@@ -3775,7 +3775,9 @@ namespace Protean
                     moCart.apply();
                     // get any discount information for this page
                     XmlElement RootElmt = moPageXml.DocumentElement;
-                    moDiscount.getAvailableDiscounts(ref RootElmt);
+                    if (moDiscount != null){
+                        moDiscount.getAvailableDiscounts(ref RootElmt);
+                    }
                     sProcessInfo = "End Cart";
                 }
             }

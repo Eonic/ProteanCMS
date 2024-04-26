@@ -9846,9 +9846,12 @@ namespace Protean
                         base.submission("RenewSubscription", "", "post");
                         XmlElement oFrmElmt;
 
-                        var argoParentElmt = base.Instance;
-                        oSub.GetSubscriptionDetail(ref argoParentElmt, Conversions.ToInteger(nSubscriptionId));
-                        base.Instance = argoParentElmt;
+                        XmlElement InstanceElmt = base.Instance;
+                        oSub.GetSubscriptionDetail(ref InstanceElmt, Conversions.ToInteger(nSubscriptionId));
+
+
+
+                        base.Instance = InstanceElmt;
                         XmlElement SubXml = (XmlElement)base.Instance.FirstChild;
                         // calculate new expiry date
 

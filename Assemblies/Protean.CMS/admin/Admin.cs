@@ -212,11 +212,17 @@ namespace Protean
                 bool bSystemPagesMenu = false;
                 long nContentId = 0L;
                 bool clearEditContext = true;
+                string modalAlert = null;
 
                 moAdXfm.mbAdminMode = myWeb.mbAdminMode;
 
                 try
                 {
+
+                    if (myWeb.moSession["modalAlert"] != null) {
+                        modalAlert = myWeb.moSession["modalAlert"].ToString();
+                        myWeb.moSession.Remove("modalAlert");
+                    };
 
                     oWeb.mbAdminMode = true;
                     moPageXML = oWeb.moPageXml;
@@ -3572,7 +3578,9 @@ namespace Protean
                         myWeb.moSession["editContext"] = EditContext;
                     }
 
-
+                    if (modalAlert != null) {
+                        moPageXML.DocumentElement.SetAttribute("modalAlert", modalAlert);
+                    }
 
                     moPageXML.DocumentElement.SetAttribute("ewCmd", mcEwCmd);
                     if (!string.IsNullOrEmpty(mcEwCmd2))

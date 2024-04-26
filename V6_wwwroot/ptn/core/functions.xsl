@@ -1364,7 +1364,18 @@
 	<xsl:template match="Page" mode="sitemeta">
 
 	</xsl:template>
-
+	
+	<!-- Used for Indexer leave here-->
+	<xsl:template match="Content" mode="metaabstract">
+		<xsl:variable name="content">
+			<xsl:apply-templates select="*" mode="getValues"/>
+		</xsl:variable>
+		<xsl:call-template name="truncateString">
+			<xsl:with-param name="string" select="$content"/>
+			<xsl:with-param name="length" select="'500'"/>
+		</xsl:call-template>
+	</xsl:template>
+	
 
 	<xsl:template match="Page" mode="dublincore">
 
@@ -5958,7 +5969,7 @@
 							<xsl:attribute name="class">
 								<xsl:text>fa center-block </xsl:text>
 								<xsl:value-of select="@icon"/>
-							</xsl:attribute>
+						
 							<xsl:choose>
 								<xsl:when test="@icon-size and @icon-size!=''">
 									<xsl:value-of select="@icon-size"/>
@@ -5968,6 +5979,7 @@
 									<xsl:text> fa-3x </xsl:text>
 								</xsl:otherwise>
 							</xsl:choose>
+							</xsl:attribute>
 							<xsl:text> </xsl:text>
 						</i>
 						<xsl:text> </xsl:text>
@@ -5994,7 +6006,7 @@
 							<xsl:attribute name="class">
 								<xsl:text>fa </xsl:text>
 								<xsl:value-of select="@icon"/>
-							</xsl:attribute>
+						
 							<xsl:choose>
 								<xsl:when test="@icon-size and @icon-size!=''">
 									<xsl:value-of select="@icon-size"/>
@@ -6003,7 +6015,7 @@
 								<xsl:otherwise>
 									<xsl:text> fa-3x </xsl:text>
 								</xsl:otherwise>
-							</xsl:choose>
+							</xsl:choose>	</xsl:attribute>
 							<xsl:text> </xsl:text>
 						</i>
 						<xsl:text> </xsl:text>
@@ -6027,7 +6039,7 @@
 						<xsl:attribute name="class">
 							<xsl:text>fa </xsl:text>
 							<xsl:value-of select="@icon"/>
-						</xsl:attribute>
+					
 						<xsl:choose>
 							<xsl:when test="@icon-size and @icon-size!=''">
 								<xsl:value-of select="@icon-size"/>
@@ -6036,7 +6048,7 @@
 							<xsl:otherwise>
 								<xsl:text> fa-3x </xsl:text>
 							</xsl:otherwise>
-						</xsl:choose>
+						</xsl:choose>	</xsl:attribute>
 						<xsl:text> </xsl:text>
 					</i>
 					<span class="space">&#160;</span>

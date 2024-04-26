@@ -9,6 +9,8 @@
 		<xsl:param name="alignment"/>
 		<xsl:param name="alignmentV"/>
 		<xsl:param name="class"/>
+		<xsl:param name="heading"/>
+		<xsl:param name="title"/>
 		<xsl:variable name="cropSetting">
 			<xsl:choose>
 				<xsl:when test="$crop='false'">
@@ -88,14 +90,14 @@
 			</xsl:apply-templates>
 			<!--<xsl:choose>
 				<xsl:when test="$lightbox='false'">-->
-					<div class="thumbnail-wrapper">
-						<div class="thumbnail">
-							<!--<xsl:attribute name="class">
+			<div class="thumbnail-wrapper">
+				<div class="thumbnail">
+					<!--<xsl:attribute name="class">
 								<xsl:text>thumbnail text-</xsl:text>
 								<xsl:value-of select="$alignment"/>
 								<xsl:text> d-flex h-100 flex-column</xsl:text>
 							</xsl:attribute>-->
-							<!--<xsl:attribute name="class">
+					<!--<xsl:attribute name="class">
 								<xsl:text>d-flex justify-content-</xsl:text>
 								<xsl:value-of select="$alignment"/>
 								<xsl:text> align-items-</xsl:text>
@@ -103,72 +105,129 @@
 							</xsl:attribute>-->
 
 
-							<xsl:choose>
-								<xsl:when test="$url!=''">
-									<div class="gallery-img-wrapper">
-										<xsl:if test="@maxWidth!=''">
-											<xsl:attribute name="style">
-												<xsl:text>max-width:</xsl:text>
-												<xsl:value-of select="@maxWidth"/>
-												<xsl:text>px;</xsl:text>
-											</xsl:attribute>
-										</xsl:if>
-										<a href="{$linkURL}" title="{Name}">
-											<xsl:apply-templates select="." mode="displayThumbnail">
-												<xsl:with-param name="crop" select="$cropSetting" />
-												<xsl:with-param name="class" select="'img-responsive'" />
-												<xsl:with-param name="style" select="'overflow:hidden;'" />
-												<xsl:with-param name="width" select="$lg-max-width"/>
-												<xsl:with-param name="height" select="$lg-max-height"/>
-												<xsl:with-param name="no-stretch" select="$no-stretchSetting"/>												
-											</xsl:apply-templates>
-										</a>
-									</div>
-									<xsl:if test="(Title/node()!='' or Body/node()!='') and not($showTitle='false')">
-										<div class="caption">
-											<h4>
-
-												<a href="{$linkURL}" title="{Name}">
+					<xsl:choose>
+						<xsl:when test="$url!=''">
+							<div class="gallery-img-wrapper">
+								<xsl:if test="@maxWidth!=''">
+									<xsl:attribute name="style">
+										<xsl:text>max-width:</xsl:text>
+										<xsl:value-of select="@maxWidth"/>
+										<xsl:text>px;</xsl:text>
+									</xsl:attribute>
+								</xsl:if>
+								<a href="{$linkURL}" title="{Name}">
+									<xsl:apply-templates select="." mode="displayThumbnail">
+										<xsl:with-param name="crop" select="$cropSetting" />
+										<xsl:with-param name="class" select="'img-responsive'" />
+										<xsl:with-param name="style" select="'overflow:hidden;'" />
+										<xsl:with-param name="width" select="$lg-max-width"/>
+										<xsl:with-param name="height" select="$lg-max-height"/>
+										<xsl:with-param name="no-stretch" select="$no-stretchSetting"/>
+									</xsl:apply-templates>
+								</a>
+							</div>
+							<xsl:if test="(Title/node()!='' or Body/node()!='') and not($showTitle='false')">
+								<div class="caption">
+									<xsl:choose>
+										<xsl:when test="$title!='' and $heading!=''">
+											<xsl:variable name="headingNo" select="substring-after($heading,'h')"/>
+											<xsl:variable name="headingNoPlus" select="$headingNo + 1"/>
+											<xsl:variable name="listHeading">
+												<xsl:text>h</xsl:text>
+												<xsl:value-of select="$headingNoPlus"/>
+											</xsl:variable>
+											<xsl:element name="{$listHeading}">
+												<a href="{$linkURL}">
 													<xsl:value-of select="Title/node()"/>
 												</a>
-											</h4>
-											<xsl:apply-templates select="Body/node()" mode="cleanXhtml" />
-										</div>
-									</xsl:if>
-								</xsl:when>
-								<xsl:otherwise>
-									<div class="gallery-img-wrapper">
-										<xsl:if test="@maxWidth!=''">
-											<xsl:attribute name="style">
-												<xsl:text>max-width:</xsl:text>
-												<xsl:value-of select="@maxWidth"/>
-												<xsl:text>px;</xsl:text>
-											</xsl:attribute>
-										</xsl:if>
-										
-										<xsl:apply-templates select="." mode="displayThumbnail">
-											<xsl:with-param name="crop" select="$cropSetting" />
-											<xsl:with-param name="class" select="'img-responsive'" />
-											<xsl:with-param name="style" select="'overflow:hidden;'" />
-											<xsl:with-param name="width" select="$lg-max-width"/>
-											<xsl:with-param name="height" select="$lg-max-height"/>
-											<xsl:with-param name="no-stretch" select="$no-stretchSetting"/>
-										</xsl:apply-templates>
-									</div>
-									<xsl:if test="(Title/node()!='' or Body/node()!='') and not($showTitle='false')">
-										<div class="caption">
-											<h4>
-												<xsl:value-of select="Title/node()"/>
-											</h4>
-											<xsl:apply-templates select="Body/node()" mode="cleanXhtml" />
-										</div>
-									</xsl:if>
-								</xsl:otherwise>
-							</xsl:choose>
+											</xsl:element>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:choose>
+												<xsl:when test="$heading=''">
+													<h4>
+														<a href="{$linkURL}">
+															<xsl:value-of select="Title/node()"/>
+														</a>
+													</h4>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:element name="{$heading}">
+														<a href="{$linkURL}">
+															<xsl:value-of select="Title/node()"/>
+														</a>
+													</xsl:element>
+												</xsl:otherwise>
+											</xsl:choose>
+										</xsl:otherwise>
+									</xsl:choose>
+									<xsl:apply-templates select="Body/node()" mode="cleanXhtml" />
+								</div>
+							</xsl:if>
+						</xsl:when>
+						<xsl:otherwise>
+							<div class="gallery-img-wrapper">
+								<xsl:if test="@maxWidth!=''">
+									<xsl:attribute name="style">
+										<xsl:text>max-width:</xsl:text>
+										<xsl:value-of select="@maxWidth"/>
+										<xsl:text>px;</xsl:text>
+									</xsl:attribute>
+								</xsl:if>
 
-						</div>
-					</div>
-				<!--</xsl:when>
+								<xsl:apply-templates select="." mode="displayThumbnail">
+									<xsl:with-param name="crop" select="$cropSetting" />
+									<xsl:with-param name="class" select="'img-responsive'" />
+									<xsl:with-param name="style" select="'overflow:hidden;'" />
+									<xsl:with-param name="width" select="$lg-max-width"/>
+									<xsl:with-param name="height" select="$lg-max-height"/>
+									<xsl:with-param name="no-stretch" select="$no-stretchSetting"/>
+								</xsl:apply-templates>
+							</div>
+							<xsl:if test="(Title/node()!='' or Body/node()!='') and not($showTitle='false')">
+								<div class="caption">
+									<xsl:choose>
+										<xsl:when test="$title!='' and $heading!=''">
+											<xsl:variable name="headingNo" select="substring-after($heading,'h')"/>
+											<xsl:variable name="headingNoPlus" select="$headingNo + 1"/>
+											<xsl:variable name="listHeading">
+												<xsl:text>h</xsl:text>
+												<xsl:value-of select="$headingNoPlus"/>
+											</xsl:variable>
+											<xsl:element name="{$listHeading}">
+												<a href="{$linkURL}">
+													<xsl:value-of select="Title/node()"/>
+												</a>
+											</xsl:element>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:choose>
+												<xsl:when test="$heading=''">
+													<h4>
+														<a href="{$linkURL}">
+															<xsl:value-of select="Title/node()"/>
+														</a>
+													</h4>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:element name="{$heading}">
+														<a href="{$linkURL}">
+															<xsl:value-of select="Title/node()"/>
+														</a>
+													</xsl:element>
+												</xsl:otherwise>
+											</xsl:choose>
+										</xsl:otherwise>
+									</xsl:choose>
+									<xsl:apply-templates select="Body/node()" mode="cleanXhtml" />
+								</div>
+							</xsl:if>
+						</xsl:otherwise>
+					</xsl:choose>
+
+				</div>
+			</div>
+			<!--</xsl:when>
 				<xsl:otherwise>
 					<a href="{$fullSize}" title="{Title/node()} - {Body/node()}" class="responsive-lightbox grid-link">
 						<div class="thumbnail">

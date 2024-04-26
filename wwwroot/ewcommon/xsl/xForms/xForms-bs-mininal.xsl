@@ -1336,6 +1336,9 @@
 				<xsl:when test="value/node()!='' and value/node()!=' '">
 					<xsl:value-of select="value"/>
 				</xsl:when>
+				<xsl:when test="/Page/Request/*/Item[@name='position']">
+					<xsl:value-of select="/Page/Request/*/Item[@name='position']/node()"/>
+				</xsl:when>
 				<xsl:when test="/Page/Request/Form/Item[@name='cPosition']">
 					<xsl:value-of select="/Page/Request/Form/Item[@name='cPosition']/node()"/>
 				</xsl:when>

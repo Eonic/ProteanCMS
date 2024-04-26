@@ -211,8 +211,10 @@ namespace Protean.Tools
                 string regexOfDoctype = "<!DOCTYPE((.|\n|\r)*?)\">";
                 shtml = Regex.Replace(shtml, regexOfDoctype, string.Empty, RegexOptions.IgnoreCase);
                 shtml = Strings.Replace(shtml, " Xmlns = \"http://www.w3.org/1999/xhtml\"", "");
-                 shtml = Strings.Replace(shtml, " Xmlns=\"http://www.w3.org/1999/xhtml\"", "");
-                 shtml = Strings.Replace(shtml, " Xml:lang=\"\"", "");
+                shtml = Strings.Replace(shtml, " xmlns=\"http://www.w3.org/1999/xhtml\"", "");
+                shtml = Strings.Replace(shtml, " Xml:lang=\"\"", "");
+                shtml = Strings.Replace(shtml, " xml:lang=\"\"", "");
+
                 oXmlDoc.LoadXml(shtml);
 
                 return oXmlDoc;
@@ -344,6 +346,8 @@ namespace Protean.Tools
                         }
 
                         // undo any attributes
+
+                        cXpath = Strings.Replace(cXpath, "/ews:node()", "/node()");
                         cXpath = Strings.Replace(cXpath, "/ews:@", "/@");
                         cXpath = Strings.Replace(cXpath, "[ews:@", "[@");
                         cXpath = Strings.Replace(cXpath, "[ews:position()", "[position()");

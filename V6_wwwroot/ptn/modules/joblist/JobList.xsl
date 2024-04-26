@@ -10,6 +10,8 @@
 		<xsl:param name="class"/>
 		<xsl:param name="parentId"/>
 		<xsl:param name="linked"/>
+		<xsl:param name="heading"/>
+		<xsl:param name="title"/>
 		<xsl:variable name="parentURL">
 			<xsl:apply-templates select="." mode="getHref"/>
 		</xsl:variable>
@@ -50,94 +52,130 @@
 						<xsl:with-param name="class">list-image</xsl:with-param>
 					</xsl:apply-templates>
 				</a>
-				<h3 class="title">
-					<a href="{$parentURL}" title="{JobTitle/node()}">
-						<xsl:value-of select="JobTitle/node()"/>
-					</a>
-				</h3>
-				<div class="job-intro">
-					<dl class="clearfix dl-horizontal">
-						<xsl:if test="@publish and @publish!=''">
-							<dt class="job-date">
-								<!--Added on-->
-								<xsl:call-template name="term2062" />
-								<xsl:text>: </xsl:text>
-							</dt>
-							<dd>
-								<xsl:call-template name="DisplayDate">
-									<xsl:with-param name="date" select="@publish"/>
-								</xsl:call-template>
-							</dd>
+				<div class="media-inner">
+					<xsl:choose>
+						<xsl:when test="$title!='' and $heading!=''">
+							<xsl:variable name="headingNo" select="substring-after($heading,'h')"/>
+							<xsl:variable name="headingNoPlus" select="$headingNo + 1"/>
+							<xsl:variable name="listHeading">
+								<xsl:text>h</xsl:text>
+								<xsl:value-of select="$headingNoPlus"/>
+							</xsl:variable>
+							<xsl:element name="{$listHeading}">
+								<xsl:attribute name="class">
+									<xsl:text>title</xsl:text>
+								</xsl:attribute>
+								<a href="{$parentURL}">
+									<xsl:apply-templates select="." mode="getDisplayName"/>
+								</a>
+							</xsl:element>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:choose>
+								<xsl:when test="$heading=''">
+									<h3 class="title">
+										<a href="{$parentURL}">
+											<xsl:apply-templates select="." mode="getDisplayName"/>
+										</a>
+									</h3>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:element name="{$heading}">
+										<xsl:attribute name="class">
+											<xsl:text>title</xsl:text>
+										</xsl:attribute>
+										<a href="{$parentURL}">
+											<xsl:apply-templates select="." mode="getDisplayName"/>
+										</a>
+									</xsl:element>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:otherwise>
+					</xsl:choose>
+					<div class="job-intro">
+						<dl class="clearfix dl-horizontal">
+							<xsl:if test="@publish and @publish!=''">
+								<dt class="job-date">
+									<!--Added on-->
+									<xsl:call-template name="term2062" />
+									<xsl:text>: </xsl:text>
+								</dt>
+								<dd>
+									<xsl:call-template name="DisplayDate">
+										<xsl:with-param name="date" select="@publish"/>
+									</xsl:call-template>
+								</dd>
+							</xsl:if>
+							<xsl:if test="ContractType/node()!=''">
+								<dt class="contract">
+									<!--Contract Type-->
+									<xsl:call-template name="term2063" />
+									<xsl:text>: </xsl:text>
+								</dt>
+								<dd>
+									<xsl:value-of select="ContractType/node()"/>
+								</dd>
+							</xsl:if>
+							<xsl:if test="Ref/node()!=''">
+								<dt class="ref">
+									<!--Ref-->
+									<xsl:call-template name="term2064" />
+									<xsl:text>: </xsl:text>
+								</dt>
+								<dd>
+									<xsl:value-of select="Ref/node()"/>
+								</dd>
+							</xsl:if>
+							<xsl:if test="Location/node()!=''">
+								<dt class="location">
+									<!--Location-->
+									<xsl:call-template name="term2065" />
+									<xsl:text>: </xsl:text>
+								</dt>
+								<dd>
+									<xsl:value-of select="Location/node()"/>
+								</dd>
+							</xsl:if>
+							<xsl:if test="Salary/node()!=''">
+								<dt class="salary">
+									<!--Salary-->
+									<xsl:call-template name="term2066" />
+									<xsl:text>: </xsl:text>
+								</dt>
+								<dd>
+									<xsl:value-of select="Salary/node()"/>
+								</dd>
+							</xsl:if>
+							<xsl:if test="ApplyBy/node()!=''">
+								<dt class="applyBy">
+									<!--Deadline for applications-->
+									<xsl:call-template name="term2067" />
+									<xsl:text>: </xsl:text>
+								</dt>
+								<dd>
+									<xsl:call-template name="DisplayDate">
+										<xsl:with-param name="date" select="ApplyBy/node()"/>
+									</xsl:call-template>
+								</dd>
+							</xsl:if>
+						</dl>
+					</div>
+					<div class="job-summary">
+						<xsl:if test="Summary/node()!=''">
+							<xsl:apply-templates select="Summary/node()" mode="cleanXhtml"/>
 						</xsl:if>
-						<xsl:if test="ContractType/node()!=''">
-							<dt class="contract">
-								<!--Contract Type-->
-								<xsl:call-template name="term2063" />
-								<xsl:text>: </xsl:text>
-							</dt>
-							<dd>
-								<xsl:value-of select="ContractType/node()"/>
-							</dd>
-						</xsl:if>
-						<xsl:if test="Ref/node()!=''">
-							<dt class="ref">
-								<!--Ref-->
-								<xsl:call-template name="term2064" />
-								<xsl:text>: </xsl:text>
-							</dt>
-							<dd>
-								<xsl:value-of select="Ref/node()"/>
-							</dd>
-						</xsl:if>
-						<xsl:if test="Location/node()!=''">
-							<dt class="location">
-								<!--Location-->
-								<xsl:call-template name="term2065" />
-								<xsl:text>: </xsl:text>
-							</dt>
-							<dd>
-								<xsl:value-of select="Location/node()"/>
-							</dd>
-						</xsl:if>
-						<xsl:if test="Salary/node()!=''">
-							<dt class="salary">
-								<!--Salary-->
-								<xsl:call-template name="term2066" />
-								<xsl:text>: </xsl:text>
-							</dt>
-							<dd>
-								<xsl:value-of select="Salary/node()"/>
-							</dd>
-						</xsl:if>
-						<xsl:if test="ApplyBy/node()!=''">
-							<dt class="applyBy">
-								<!--Deadline for applications-->
-								<xsl:call-template name="term2067" />
-								<xsl:text>: </xsl:text>
-							</dt>
-							<dd>
-								<xsl:call-template name="DisplayDate">
-									<xsl:with-param name="date" select="ApplyBy/node()"/>
-								</xsl:call-template>
-							</dd>
-						</xsl:if>
-					</dl>
-				</div>
-				<div class="job-summary">
-					<xsl:if test="Summary/node()!=''">
-						<xsl:apply-templates select="Summary/node()" mode="cleanXhtml"/>
-					</xsl:if>
-				</div>
-				<div class="entryFooter">
-					<xsl:apply-templates select="." mode="displayTags"/>
-					<xsl:apply-templates select="." mode="moreLink">
-						<xsl:with-param name="link" select="$parentURL"/>
-						<xsl:with-param name="stretchLink" select="$linked"/>
-						<xsl:with-param name="altText">
-							<xsl:value-of select="JobTitle/node()"/>
-						</xsl:with-param>
-					</xsl:apply-templates>
-					<xsl:text> </xsl:text>
+					</div>
+					<div class="entryFooter">
+						<xsl:apply-templates select="." mode="displayTags"/>
+						<xsl:apply-templates select="." mode="moreLink">
+							<xsl:with-param name="link" select="$parentURL"/>
+							<xsl:with-param name="stretchLink" select="$linked"/>
+							<xsl:with-param name="altText">
+								<xsl:value-of select="JobTitle/node()"/>
+							</xsl:with-param>
+						</xsl:apply-templates>
+						<xsl:text> </xsl:text>
+					</div>
 				</div>
 			</div>
 		</div>
