@@ -297,7 +297,7 @@ namespace Protean
                     // PerfMon.Log("Web", "ReturnPageHTML - loaded Style")
                     var oTransform = new Protean.XmlHelper.Transform();
                     oTransform.XslFilePath = styleFile;
-                    oTransform.Compiled = false; // IIf(LCase(moConfig("CompiledTransform")) = "on", True, False)
+                    oTransform.Compiled = false; // (myWeb.moConfig["CompiledTransform"].ToLower() == "on")?true:false;
                     oTransform.xsltArgs = new System.Xml.Xsl.XsltArgumentList();
                     var ewXsltExt = new Protean.xmlTools.xsltExtensions(ref myWeb);
                     oTransform.xsltArgs.AddExtensionObject("urn:ew", ewXsltExt);
@@ -951,7 +951,7 @@ namespace Protean
                             var oPageErrElmt = oIndexInfo.CreateElement("errorInfo");
                             oPageErrElmt.SetAttribute("pgid", myWeb.mnPageId.ToString());
                             oPageErrElmt.SetAttribute("type", "Page");
-                            oPageErrElmt.InnerText = ex.Message;
+                            oPageErrElmt.InnerText = Protean.stdTools.exceptionReport(ex, oElmtURL.GetAttribute("url"),"") ;
                             oInfoElmt.AppendChild(oPageErrElmt);
                             nPagesSkipped += 1L;
                         }
@@ -1097,7 +1097,7 @@ namespace Protean
                                             oPageErrElmt.SetAttribute("pgid", myWeb.mnPageId.ToString());
                                             oPageErrElmt.SetAttribute("type", oElmt.GetAttribute("type"));
                                             oPageErrElmt.SetAttribute("artid", oElmt.GetAttribute("id"));
-                                            oPageErrElmt.InnerText = ex.Message;
+                                            oPageErrElmt.InnerText = Protean.stdTools.exceptionReport(ex, oElmtURL.GetAttribute("url"), "");
                                             oPageElmt.AppendChild(oPageErrElmt);
                                             nContentSkipped += 1L;
                                             cProcessInfo = cPageHtml;
