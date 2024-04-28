@@ -23,6 +23,14 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
+		<xsl:variable name="heading">
+			<xsl:choose>
+				<xsl:when test="@heading">
+					<xsl:value-of select="@heading"/>
+				</xsl:when>
+				<xsl:otherwise>h3</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<div class="faqList">
 			<a name="pageTop" class="pageTop">
 				<xsl:text> </xsl:text>
@@ -45,6 +53,8 @@
 				</xsl:if>
 				<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
 					<xsl:with-param name="sortBy" select="@sortBy"/>
+					<xsl:with-param name="heading" select="$heading"/>
+					<xsl:with-param name="title" select="@title"/>
 				</xsl:apply-templates>
 				<xsl:text> </xsl:text>
 			</div>
@@ -80,6 +90,8 @@
 	<!-- FAQ Brief -->
 	<xsl:template match="Content[@type='FAQ']" mode="displayBrief">
 		<xsl:param name="sortBy"/>
+		<xsl:param name="heading"/>
+		<xsl:param name="title"/>
 		<div class="listItem faq">
 			<xsl:apply-templates select="." mode="inlinePopupOptions">
 				<xsl:with-param name="class" select="'listItem'"/>
@@ -89,9 +101,45 @@
 				<a name="faq-{@id}" class="faq-link">
 					<xsl:text> </xsl:text>
 				</a>
-				<h3>
+
+				<xsl:choose>
+					<xsl:when test="$title!='' and $heading!=''">
+						<xsl:variable name="headingNo" select="substring-after($heading,'h')"/>
+						<xsl:variable name="headingNoPlus" select="$headingNo + 1"/>
+						<xsl:variable name="listHeading">
+							<xsl:text>h</xsl:text>
+							<xsl:value-of select="$headingNoPlus"/>
+						</xsl:variable>
+						<xsl:element name="{$listHeading}">
+							<xsl:attribute name="class">
+								<xsl:text>title</xsl:text>
+							</xsl:attribute>
+							<xsl:value-of select="@name"/>
+						</xsl:element>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:choose>
+							<xsl:when test="$heading=''">
+								<h3 class="title">
+									<xsl:value-of select="@name"/>
+								</h3>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:element name="{$heading}">
+									<xsl:attribute name="class">
+										<xsl:text>title</xsl:text>
+									</xsl:attribute>
+									<xsl:value-of select="@name"/>
+								</xsl:element>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:otherwise>
+				</xsl:choose>
+				<!--<h3>
 					<xsl:choose>
-						<!-- Older sites might not have the DisplayName Field, had to be introduced to allow ? when used as an FAQ page. -->
+						-->
+				<!-- Older sites might not have the DisplayName Field, had to be introduced to allow ? when used as an FAQ page. -->
+				<!--
 						<xsl:when test="DisplayName/node()!=''">
 							<xsl:value-of select="DisplayName/node()"/>
 						</xsl:when>
@@ -99,7 +147,7 @@
 							<xsl:value-of select="@name"/>
 						</xsl:otherwise>
 					</xsl:choose>
-				</h3>
+				</h3>-->
 				<xsl:if test="Images/img[@class='thumbnail']/@src!=''">
 					<img src="{Images/img[@class='thumbnail']/@src}" width="{Images/img[@class='thumbnail']/@width}" height="{Images/img[@class='thumbnail']/@height}" alt="{Images/img[@class='thumbnail']/@alt}" class="thumbnail"/>
 				</xsl:if>
@@ -167,9 +215,11 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<div class="faqList panel-group accordion-module" id="accordion-{@id}" aria-multiselectable="true">
+		<div class="faqList accordion accordion-module" id="accordion-{@id}">
 			<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayFAQAccordianBrief">
 				<xsl:with-param name="parId" select="@id"/>
+				<xsl:with-param name="heading" select="@heading"/>
+				<xsl:with-param name="title" select="@title"/>
 			</xsl:apply-templates>
 		</div>
 	</xsl:template>
@@ -178,30 +228,88 @@
 	<xsl:template match="Content[@type='FAQ']" mode="displayFAQAccordianBrief">
 		<xsl:param name="sortBy"/>
 		<xsl:param name="parId"/>
-		<div class="panel-group" id="accordion{@id}" aria-multiselectable="true">
-			<div class="panel panel-default">
-				<div class="panel-heading" id="heading{@id}">
-					<xsl:apply-templates select="." mode="inlinePopupOptions">
-						<xsl:with-param name="class" select="'panel-heading'"/>
-						<xsl:with-param name="sortBy" select="$sortBy"/>
-					</xsl:apply-templates>
-					<a role="button" data-bs-toggle="collapse" data-parent="#accordion{@id}" href="#accordian-item-{$parId}-{@id}" aria-expanded="false" aria-controls="accordian-item-{$parId}-{@id}" class="accordion-load">
-						<h4 class="panel-title">
-							<i class="fa fa-caret-down">&#160;</i>&#160;<xsl:apply-templates select="DisplayName" mode="cleanXhtml"/>
-						</h4>
-					</a>
+		<xsl:param name="heading"/>
+		<xsl:param name="title"/>
+		<div class="accordion-item">
+
+			<xsl:choose>
+				<xsl:when test="$title!='' and $heading!=''">
+					<xsl:variable name="headingNo" select="substring-after($heading,'h')"/>
+					<xsl:variable name="headingNoPlus" select="$headingNo + 1"/>
+					<xsl:variable name="listHeading">
+						<xsl:text>h</xsl:text>
+						<xsl:value-of select="$headingNoPlus"/>
+					</xsl:variable>
+					<xsl:element name="{$listHeading}">
+						<xsl:attribute name="class">
+							<xsl:text>accordion-header</xsl:text>
+						</xsl:attribute>
+						<xsl:attribute name="id">
+							<xsl:text>heading</xsl:text>
+							<xsl:value-of select="@id"/>
+						</xsl:attribute>
+						<xsl:apply-templates select="." mode="inlinePopupOptions">
+							<xsl:with-param name="class" select="'accordion-header'"/>
+							<xsl:with-param name="sortBy" select="$sortBy"/>
+						</xsl:apply-templates>
+						<button role="button" data-bs-toggle="collapse" data-parent="#accordion{@id}" data-bs-target="#accordian-item-{$parId}-{@id}" aria-expanded="false" aria-controls="accordian-item-{$parId}-{@id}" class="accordion-button collapsed">
+							<xsl:apply-templates select="DisplayName" mode="cleanXhtml"/>
+						</button>
+					</xsl:element>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:choose>
+						<xsl:when test="$heading=''">
+							<h3 class="accordion-header" id="heading{@id}">
+								<xsl:apply-templates select="." mode="inlinePopupOptions">
+									<xsl:with-param name="class" select="'accordion-header'"/>
+									<xsl:with-param name="sortBy" select="$sortBy"/>
+								</xsl:apply-templates>
+								<button role="button" data-bs-toggle="collapse" data-parent="#accordion{@id}" data-bs-target="#accordian-item-{$parId}-{@id}" aria-expanded="false" aria-controls="accordian-item-{$parId}-{@id}" class="accordion-button collapsed">
+									<xsl:apply-templates select="DisplayName" mode="cleanXhtml"/>
+								</button>
+							</h3>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:element name="{$heading}">
+								<xsl:attribute name="class">
+									<xsl:text>accordion-header</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="id">
+									<xsl:text>heading</xsl:text>
+									<xsl:value-of select="@id"/>
+								</xsl:attribute>
+								<xsl:apply-templates select="." mode="inlinePopupOptions">
+									<xsl:with-param name="class" select="'accordion-header'"/>
+									<xsl:with-param name="sortBy" select="$sortBy"/>
+								</xsl:apply-templates>
+								<button role="button" data-bs-toggle="collapse" data-parent="#accordion{@id}" data-bs-target="#accordian-item-{$parId}-{@id}" aria-expanded="false" aria-controls="accordian-item-{$parId}-{@id}" class="accordion-button collapsed">
+									<xsl:apply-templates select="DisplayName" mode="cleanXhtml"/>
+								</button>
+							</xsl:element>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:otherwise>
+			</xsl:choose>
+			<!--<h3 class="accordion-header" id="heading{@id}">
+				<xsl:apply-templates select="." mode="inlinePopupOptions">
+					<xsl:with-param name="class" select="'panel-heading'"/>
+					<xsl:with-param name="sortBy" select="$sortBy"/>
+				</xsl:apply-templates>
+				<button role="button" data-bs-toggle="collapse" data-parent="#accordion{@id}" data-bs-target="#accordian-item-{$parId}-{@id}" aria-expanded="false" aria-controls="accordian-item-{$parId}-{@id}" class="accordion-button">
+					<xsl:apply-templates select="DisplayName" mode="cleanXhtml"/>
+				</button>
+			</h3>-->
+			<div id="accordian-item-{$parId}-{@id}" class="accordion-collapse collapse " aria-labelledby="heading{@id}">
+				<div class="accordion-body">
 					<xsl:if test="Strapline/node()!=''">
 						<div class="strapline">
 							<xsl:apply-templates select="Strapline" mode="cleanXhtml"/>
 						</div>
 					</xsl:if>
-				</div>
-				<div id="accordian-item-{$parId}-{@id}" class="panel-collapse collapse " aria-labelledby="heading{@id}">
-					<div class="panel-body">
-						<xsl:if test="Body/node()!=''">
-							<xsl:apply-templates select="Body" mode="cleanXhtml"/>
-						</xsl:if>
-					</div>
+					<xsl:if test="Body/node()!=''">
+						<xsl:apply-templates select="Body" mode="cleanXhtml"/>
+					</xsl:if>
 				</div>
 			</div>
 		</div>

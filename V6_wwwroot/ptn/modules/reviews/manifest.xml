@@ -7,8 +7,8 @@
 		</ContentTypeGroup>
 	</ContentTypes>
 	<ModuleTypes>
-		<ModuleGroup name="Content Lists" icon="fas fa-th-list">
+		<!--<ModuleGroup name="Content Lists" icon="fas fa-th-list">
 			<Module type="ReviewsList" formPath="ReviewsList" icon="fas fa-star" name="Reviews List"></Module>
-		</ModuleGroup>
+		</ModuleGroup>-->
 	</ModuleTypes>
 </PageLayouts>

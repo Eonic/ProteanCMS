@@ -5,9 +5,9 @@
   </ContentTypes>
   <ModuleTypes>
 
-    <ModuleGroup name="Content Lists" icon="fa-th-list">
+    <!--<ModuleGroup name="Content Lists" icon="fa-th-list">
       <Module type="EventCalendar" formPath="calendar" icon="fas fa-calendar" name="Calendar"></Module>
-    </ModuleGroup>
+    </ModuleGroup>-->
 
     
   </ModuleTypes>

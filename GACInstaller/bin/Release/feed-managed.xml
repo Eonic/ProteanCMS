@@ -1,0 +1,302 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <webpiFile version="5.0.0.0"/>
+  <title>ProteanCMS Managed Feed</title>
+  <link href="https://www.proteancms.com/deploy/feed-managed.xml"/>
+  <updated>2019-2-18T01:00:00Z</updated>
+  <author>
+    <name>Trevor Spink - Eonic Associates LLP.</name>
+    <uri>https://www.proteancms.com</uri>
+  </author>
+  <id>https://www.proteancms.com/deploy/feed-managed.xml</id>
+  <entry type="application">
+    <productId>ProteanCMSManaged</productId>
+    <title resourceName="Entry_ProteanCMSManaged_Title">ProteanCMS (managed)</title>
+    <id>https://www.proteancms.com/web/webpi/2.0/ProteanCMS</id>
+   
+    <images>
+      <icon>http://www.proteancms.com/deploy/proteancmslogo.png</icon>
+    </images>
+    <summary resourceName="Entry_ProteanCMSManaged_Summary">Website Content Management Platform, with all the features you need to build a modern up to date website</summary>
+
+    <updated>2015-8-31T01:00:00Z</updated>
+    <published>2015-8-31T01:00:00Z</published>
+    <longSummary resourceName="Entry_ProteanCMSManaged_LongSummary">Website Content Management Platform, with all the features you need to build a modern up to date website</longSummary>
+    <productFamily resourceName="Applications">Applications</productFamily>
+    <version>6.3</version>
+    <link href="https://www.proteancms.com"/>
+    <keywords>
+      <keywordId>ContentMgmt</keywordId>
+      <keywordId>Blogs</keywordId>
+      <keywordId>eCommerce</keywordId>
+      <keywordId>SQL</keywordId>
+      <keywordId>SQLCE</keywordId>
+      <keywordId>AzureReady</keywordId>
+    </keywords>
+    <author>
+      <name>Trevor Spink - Eonic Associates LLP.</name>
+      <uri>http://www.eonicweb.net</uri>
+    </author>
+    <dependency idref="SQL_ASPNET45App_IIS"/>
+
+    <installers>
+      <installer>
+        <id>1</id>
+        <architectures>
+          <x64/>
+        </architectures>
+        <languageId>en</languageId>
+        <osList idref="SupportedAppPlatforms"/>
+        <installerFile>
+          <fileSize>510</fileSize>
+          <installerURL>http://www.proteancms.com/deploy/ProteanCMS_Managed_WPI_6_3.zip</installerURL>
+          <sha1>5E317196BB838F6CACFC7808B7196F3A098DDDC6</sha1>
+        </installerFile>
+        <helpLink>http://www.proteancms.com/Support/Web-Designers-Guide/Installing-ProteanCMS</helpLink>
+        <msDeploy>
+          <startPage/>
+        </msDeploy>
+      </installer>
+    </installers>
+  </entry>
+  <oses>
+    <os id="NoXPSupport">
+      <minimumVersion>
+        <osMajorVersion>5</osMajorVersion>
+        <osMinorVersion>2</osMinorVersion>
+        <spMajorVersion>0</spMajorVersion>
+      </minimumVersion>
+      <osTypes>
+        <Server/>
+        <HomePremium/>
+        <Ultimate/>
+        <Enterprise/>
+        <Business/>
+      </osTypes>
+    </os>
+    <os id="PreVistaNoHomeBasic">
+      <maximumVersion>
+        <osMajorVersion>5</osMajorVersion>
+      </maximumVersion>
+      <osTypes>
+        <Server/>
+        <HomePremium/>
+        <Ultimate/>
+        <Enterprise/>
+        <Business/>
+      </osTypes>
+    </os>
+    <os id="VistaSP1PlusNoHomeBasic">
+      <minimumVersion>
+        <osMajorVersion>6</osMajorVersion>
+        <osMinorVersion>0</osMinorVersion>
+        <spMajorVersion>1</spMajorVersion>
+      </minimumVersion>
+      <osTypes>
+        <Server/>
+        <HomePremium/>
+        <Ultimate/>
+        <Enterprise/>
+        <Business/>
+      </osTypes>
+    </os>
+  </oses>
+  <osLists>
+    <!-- support xp sp2+ (no server core) -->
+    <osList id="SupportedAppPlatforms">
+      <os>
+        <minimumVersion>
+          <osMajorVersion>5</osMajorVersion>
+          <osMinorVersion>1</osMinorVersion>
+          <spMajorVersion>2</spMajorVersion>
+        </minimumVersion>
+        <osTypes>
+          <Server/>
+          <Client/>
+        </osTypes>
+      </os>
+      <os idref="PreVistaNoHomeBasic"/>
+      <os idref="VistaSP1PlusNoHomeBasic"/>
+    </osList>
+    <osList id="SupportedAppPlatformsExcludeXP">
+      <os idref="NoXPSupport"/>
+    </osList>
+  </osLists>
+  <dependencies>
+    <dependency id="ASPNET45App">
+      <and>
+        <dependency>
+          <productId>NETFramework45</productId>
+        </dependency>
+        <dependency>
+          <productId>NETFramework451</productId>
+        </dependency>
+        <dependency>
+          <or>
+            <dependency idref="IISForASPNET"/>
+            <dependency>
+              <or>
+                <dependency>
+                  <productId>WebMatrix</productId>
+                </dependency>
+                <dependency>
+                  <productId>WebMatrix_appdetect</productId>
+                </dependency>
+              </or>
+            </dependency>
+          </or>
+        </dependency>
+        <dependency>
+          <or>
+            <dependency>
+              <productId>WDeployNOSMO</productId>
+            </dependency>
+            <dependency>
+              <productId>WDeploy</productId>
+            </dependency>
+          </or>
+        </dependency>
+      </and>
+    </dependency>
+    <dependency id="IISForASPNET">
+      <or>
+        <!--IIS 5.1-->
+        <dependency>
+          <productId>IIS51</productId>
+        </dependency>
+        <!--IIS 6.0-->
+        <dependency>
+          <productId>IIS60</productId>
+        </dependency>
+        <!--IIS 7.0-->
+        <dependency>
+          <and>
+            <dependency>
+              <productId>StaticContent</productId>
+            </dependency>
+            <dependency>
+              <productId>DefaultDocument</productId>
+            </dependency>
+            <dependency>
+              <productId>DirectoryBrowse</productId>
+            </dependency>
+            <dependency>
+              <productId>HTTPErrors</productId>
+            </dependency>
+            <dependency>
+              <productId>HTTPLogging</productId>
+            </dependency>
+            <dependency>
+              <productId>LoggingTools</productId>
+            </dependency>
+            <dependency>
+              <productId>RequestMonitor</productId>
+            </dependency>
+            <dependency>
+              <productId>RequestFiltering</productId>
+            </dependency>
+            <dependency>
+              <productId>StaticContentCompression</productId>
+            </dependency>
+            <dependency>
+              <productId>IISManagementConsole</productId>
+            </dependency>
+            <dependency>
+              <productId>ASPNET</productId>
+            </dependency>
+            <dependency>
+              <productId>NETExtensibility</productId>
+            </dependency>
+            <dependency>
+              <productId>ISAPIFilters</productId>
+            </dependency>
+            <dependency>
+              <productId>ISAPIExtensions</productId>
+            </dependency>
+          </and>
+        </dependency>
+      </or>
+    </dependency>
+    <dependency id="SQL_ASPNET45App_IIS">
+<and>
+<dependency>
+<productId>NETFramework45</productId>
+</dependency>
+<dependency>
+<productId>NETFramework451</productId>
+</dependency>
+<dependency>
+<productId>NETFX4</productId>
+</dependency>
+<dependency>
+<and>
+<!--IIS 5.1-->
+<dependency>
+<productId>IIS51</productId>
+</dependency>
+<!--IIS 6.0-->
+<dependency>
+<productId>IIS60</productId>
+</dependency>
+<!--IIS 7.0-->
+<dependency>
+<and>
+<dependency>
+<productId>StaticContent</productId>
+</dependency>
+<dependency>
+<productId>DefaultDocument</productId>
+</dependency>
+<dependency>
+<productId>DirectoryBrowse</productId>
+</dependency>
+<dependency>
+<productId>HTTPErrors</productId>
+</dependency>
+<dependency>
+<productId>HTTPLogging</productId>
+</dependency>
+<dependency>
+<productId>LoggingTools</productId>
+</dependency>
+<dependency>
+<productId>RequestMonitor</productId>
+</dependency>
+<dependency>
+<productId>RequestFiltering</productId>
+</dependency>
+<dependency>
+<productId>StaticContentCompression</productId>
+</dependency>
+<dependency>
+<productId>IISManagementConsole</productId>
+</dependency>
+<dependency>
+<productId>ASPNET</productId>
+</dependency>
+<dependency>
+<productId>NETExtensibility</productId>
+</dependency>
+<dependency>
+<productId>ISAPIFilters</productId>
+</dependency>
+<dependency>
+<productId>ISAPIExtensions</productId>
+</dependency>
+</and>
+</dependency>
+</and>
+</dependency>
+<dependency>
+<productId>SMO</productId>
+</dependency>
+<dependency>
+<productId>WDeploy</productId>
+</dependency>
+</and>
+</dependency>
+  </dependencies>
+  <featured>
+    <productId>ProteanCMSManaged</productId>
+  </featured>
+</feed>
