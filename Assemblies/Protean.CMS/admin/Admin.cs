@@ -4090,7 +4090,8 @@ namespace Protean
                                             }
 
                                             ImportDS = mDataProv.GetDataSet(sSql, oImportRootElmt.GetAttribute("tableName"));
-
+                                            oImportXml.LoadXml(ImportDS.GetXml());
+                                            }
                                             break;
                                         }
 
