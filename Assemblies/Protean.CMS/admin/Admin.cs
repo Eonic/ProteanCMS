@@ -25,6 +25,7 @@ using System.Reflection.Emit;
 using Protean.Providers.Membership;
 using Protean.Providers.Messaging;
 using Lucene.Net.Support;
+using Microsoft.Ajax.Utilities;
 
 namespace Protean
 {
@@ -4062,7 +4063,31 @@ namespace Protean
 
                                             break;
                                         }
-                                        // Case "mysql"
+                                    default:
+                                        {
+                                            Protean.Providers.Database.IDatabaseProvider mDataProv;
+
+                                            Protean.Providers.Database.ReturnProvider RetProv = new Protean.Providers.Database.ReturnProvider();
+                                            mDataProv = RetProv.Get(ref myWeb, databaseType);
+
+                                            mDataProv.ConnStr = "server=" + oImportRootElmt.GetAttribute("databaseServer") + "; " +
+                                            "port=" + oImportRootElmt.GetAttribute("databasePort") + "; " +
+                                            "database=" + oImportRootElmt.GetAttribute("databaseName") + "; " +
+                                            "uid=" + oImportRootElmt.GetAttribute("databaseUsername") + "; pwd=" + oImportRootElmt.GetAttribute("databasePassword");
+
+                                            var ImportDS = new DataSet();
+                                            String sSql = oImportRootElmt.GetAttribute("select");
+                                            if (sSql == ""){
+                                                sSql = "select * from " + oImportRootElmt.GetAttribute("tableName");
+                                            }
+
+                                            ImportDS = mDataProv.GetDataSet(sSql, oImportRootElmt.GetAttribute("tableName"));
+
+                                            break;
+                                        }
+
+
+
                                         // DBConn = "server=" & oImportRootElmt.GetAttribute("databaseServer") & "; " &
                                         // "port=" & oImportRootElmt.GetAttribute("databasePort") & "; " &
                                         // "database=" & oImportRootElmt.GetAttribute("databaseName") & "; " &
