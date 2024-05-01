@@ -334,11 +334,18 @@ namespace Protean
                                             try
                                             {
                                                 string paymentMethodid = oDr["paymentMethodId"].ToString();
-                                                paymentStatus = Conversions.ToString(oPaymentProv.Activities.CheckStatus(ref myWeb, ref paymentMethodid));
+                                                if (oPaymentProv != null)
+                                                {
+                                                    paymentStatus = Conversions.ToString(oPaymentProv.Activities.CheckStatus(ref myWeb, ref paymentMethodid));    
+                                                    XmlElement oPaymentMethodDetails = myWeb.moPageXml.CreateElement("PaymentMethodDetails");
+                                                    oPaymentMethodDetails.InnerXml = Conversions.ToString(oPaymentProv.Activities.GetMethodDetail(ref myWeb, ref paymentMethodid));
+                                                    oElmt.AppendChild(oPaymentMethodDetails);
+                                                }
+                                                else {
+                                                    paymentStatus = "unavailable";
+                                                }
                                                 oElmt.SetAttribute("paymentStatus", paymentStatus);
-                                                var oPaymentMethodDetails = myWeb.moPageXml.CreateElement("PaymentMethodDetails");
-                                                oPaymentMethodDetails.InnerXml = Conversions.ToString(oPaymentProv.Activities.GetMethodDetail(ref myWeb, ref paymentMethodid));
-                                                oElmt.AppendChild(oPaymentMethodDetails);
+                                            
                                             }
                                             catch (Exception)
                                             {
