@@ -181,7 +181,6 @@
   </xsl:template>
 
 
-
   <xsl:template match="Content[@moduleType='2Columns5050' or @moduleType='2columns5050']" mode="displayBrief">
     <xsl:variable name="responsiveColumns">
       <xsl:apply-templates select="." mode="responsiveColumns">
