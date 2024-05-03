@@ -5977,7 +5977,7 @@
 										<xsl:text> </xsl:text>
 									</xsl:when>
 									<xsl:otherwise>
-										<xsl:text> fa-3x </xsl:text>
+										<xsl:text> </xsl:text>
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:attribute>
@@ -6015,7 +6015,7 @@
 										<xsl:text> </xsl:text>
 									</xsl:when>
 									<xsl:otherwise>
-										<xsl:text> fa-3x </xsl:text>
+										<xsl:text> </xsl:text>
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:attribute>
@@ -6050,7 +6050,7 @@
 									<xsl:text> </xsl:text>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:text> fa-3x </xsl:text>
+									<xsl:text> </xsl:text>
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:attribute>
