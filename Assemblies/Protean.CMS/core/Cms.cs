@@ -4816,7 +4816,7 @@ namespace Protean
 
 
                 sSql = "SET ARITHABORT ON ";
-                sSql = Conversions.ToString(sSql + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT ", Interaction.IIf(distinct, "DISTINCT ", "")), sTopSql), " c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, CAST("), cContentField), " AS varchar(max)) as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, CL.cPosition as position "));
+                sSql = Conversions.ToString(sSql + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT ", Interaction.IIf(distinct, "DISTINCT ", "")), sTopSql), " c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentForiegnRef as ref, cContentName as name, c.cContentSchemaName as type, CAST("), cContentField), " AS varchar(max)) as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, CL.cPosition as position "));
                 sSql += "FROM tblContent AS c INNER JOIN ";
                 sSql += "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN ";
                 sSql += "tblContentLocation AS CL ON c.nContentKey = CL.nContentId ";
@@ -4967,25 +4967,13 @@ namespace Protean
                 if (!string.IsNullOrEmpty(cOrderBy))
                 {
                     sSql = sSql + " ORDER BY ";
-                    if (mbAdminMode)
-                    {
-                        sSql = sSql + "a.nStatus desc,";
-                    }
-
                     sSql += cOrderBy;
                    
                 }
                 else
                 {
-                    
-                    if(mbAdminMode)
-                    {
-                        sSql = sSql + "ORDER BY a.nStatus desc ";
-                    }
-                    else
-                    { 
-                        sSql += " ORDER BY(SELECT NULL)"; 
-                    }
+                    sSql += " ORDER BY(SELECT NULL)"; 
+                  
                 }
                 if (nItemCount > 0L)
                 {
