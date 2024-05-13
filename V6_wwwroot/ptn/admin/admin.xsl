@@ -7152,13 +7152,7 @@
                 <xsl:value-of select="format-number(@payableAmount, '0.00')"/>
               </td>
             </tr>
-          </xsl:if>
-          <tr>
-            <td colspan="6">
-              Seller Notes:<br/>
-              <xsl:copy-of select="SellerNotes/node()"/>
-            </td>
-          </tr>
+          </xsl:if>         
         </table>
       </div>
     </div>

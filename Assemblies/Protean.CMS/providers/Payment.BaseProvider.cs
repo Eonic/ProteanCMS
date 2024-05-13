@@ -115,7 +115,8 @@ namespace Protean.Providers
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "New", ex, "", ProviderName + " Could Not be Loaded", gbDebug);
+                    // TS commented this out as if we have an old payment provider that has been retired we do not want errors.
+                    //stdTools.returnException(ref myWeb.msException, mcModuleName, "New", ex, "", ProviderName + " Could Not be Loaded", gbDebug);
                     return null;
                 }
 

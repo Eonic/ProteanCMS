@@ -809,12 +809,15 @@ function showDependant(dependant, allDependants) {
     // Find all inactive inputs, and re-activate,
     $("#" + dependant).find(":input").not(':submit').each(function () {
         var fieldName = $(this).attr('name');
-        var tempFieldName = fieldName.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
-        $(this).attr('name', tempFieldName);
-
+        if (fieldName != undefined) {
+            var tempFieldName = fieldName.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
+            $(this).attr('name', tempFieldName);
+        }
         var fieldId = $(this).attr('id');
-        var tempFieldId = fieldId.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
-        $(this).attr('id', tempFieldId);
+        if (fieldId != undefined) {
+            var tempFieldId = fieldId.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
+            $(this).attr('id', tempFieldId);
+        }
         //  alert("enable " + tempFieldName);
         //  $(this).attr('id', $(this).attr('name').replace('~inactive', ''));
     });
