@@ -96,12 +96,9 @@ namespace Protean
                         {
                             cShipOptKey = CartXml.SelectSingleNode("Order").Attributes["shippingType"].Value;
                             myCart.updateGCgetValidShippingOptionsDS(cShipOptKey);
+                            argoCartElmt = (XmlElement)CartXml.FirstChild;
+                            myCart.GetCart(ref argoCartElmt);
                         }
-
-                        argoCartElmt = (XmlElement)CartXml.FirstChild;
-                        myCart.GetCart(ref argoCartElmt);
-                       
-
                         CartXml = updateCartforJSON(CartXml);
 
                         string jsonString = JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented);
