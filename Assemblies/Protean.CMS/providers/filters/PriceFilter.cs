@@ -312,7 +312,7 @@ namespace Protean.Providers
 
             public override string GetFilterOrderByClause()
             {
-                return " CONVERT(XML, cContentXmlBrief).value('(/Content/Prices/Price[@type=''sale''])[1]', 'FLOAT') ";
+                return " ci.nNumberValue ";
             }
 
         }

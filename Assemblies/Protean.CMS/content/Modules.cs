@@ -620,9 +620,22 @@ where cl.nStructId = " + myWeb.mnPageId));
                                         whereSQL = " AND " + whereSQL;
                                     }
 
-                                    whereSQL = " c.cContentSchemaName='" + cFilterTarget + "' And nStructId IN (select nStructKey from tblContentStructure where nStructParId in (" + parentPageId + "))" + whereSQL;
-                                    // Else
-                                    // whereSQL = " c.cContentSchemaName='" & cFilterTarget & whereSQL
+                                    if (oContentNode.Attributes["ShowProductListlevel"] != null)
+                                    {
+                                        if (oContentNode.Attributes["ShowProductListlevel"].ToString().ToLower() == "true")
+                                        {
+                                            whereSQL = " c.cContentSchemaName='" + cFilterTarget + "' And nStructId =" + parentPageId + whereSQL;
+                                        }
+                                        else
+                                        {
+                                            whereSQL = " c.cContentSchemaName='" + cFilterTarget + "' And nStructId IN (select nStructKey from tblContentStructure where nStructParId in (" + parentPageId + "))" + whereSQL;
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        whereSQL = " c.cContentSchemaName='" + cFilterTarget + "' And nStructId IN (select nStructKey from tblContentStructure where nStructParId in (" + parentPageId + "))" + whereSQL;
+                                    }
                                 }
                             }
                         }
