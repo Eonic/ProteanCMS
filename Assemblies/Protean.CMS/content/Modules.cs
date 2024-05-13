@@ -648,17 +648,22 @@ where cl.nStructId = " + myWeb.mnPageId));
                                 myWeb.moSession["FilterWhereCondition"] = whereSQL;
                                 XmlElement argoPageDetail = null; int nCount = 0;
 
-                                String cAddionalJoins = " Left Outer join tblContentIndex ci Inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey and cid.cDefinitionName='Price' on ci.nContentId=c.nContentKey ";
-
+                                String cAdditionalJoins = string.Empty;
                                 if (myWeb.mbAdminMode)
                                 {
                                     if(orderBySql!=string.Empty)
                                     {
                                         orderBySql = "a.nStatus desc," + orderBySql;
+
                                     }
+
+                                }
+                                if(orderBySql!=string.Empty)
+                                {
+                                    cAdditionalJoins = " Left Outer join tblContentIndex ci Inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey and cid.cDefinitionName='Price' on ci.nContentId=c.nContentKey ";
                                 }
                                 myWeb.GetPageContentFromSelect(whereSQL, ref nCount, oContentsNode: ref oContentNode, oPageDetail: ref argoPageDetail, 
-                                    cShowSpecificContentTypes: cFilterTarget, bIgnorePermissionsCheck: true, cOrderBy: orderBySql,cAdditionalJoins: cAddionalJoins);
+                                    cShowSpecificContentTypes: cFilterTarget, bIgnorePermissionsCheck: true, cOrderBy: orderBySql,cAdditionalJoins: cAdditionalJoins);
 
                                 if (oContentNode.SelectNodes("Content[@type='Product']").Count == 0)
                                 {
