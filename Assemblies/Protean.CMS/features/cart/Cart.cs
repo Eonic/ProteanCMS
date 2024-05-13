@@ -3573,8 +3573,8 @@ namespace Protean
 
                             // check if shipping group exists or not and then we set bydefault delivery option on cart
 
-                            if (myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure))
-                            {
+                            //if (myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure))
+                            //{
                                 //if (nStatusId > 100) {
 
                                 //// Get Shipping Group from query if assigned to that product and add new node in order and use this node for displaying messages for x50 and t03 category.
@@ -3600,7 +3600,7 @@ namespace Protean
                                 //    }
                                 //}
                                 //}
-                            }
+                            //}
 
 
                             try

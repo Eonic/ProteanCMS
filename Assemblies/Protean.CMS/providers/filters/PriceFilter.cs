@@ -15,7 +15,7 @@ namespace Protean.Providers
     namespace Filters
     {
 
-        public class PriceFilter : DefaultProvider, IFilterProvider
+        public class PriceFilter : DefaultProvider
         {
 
             public event OnErrorEventHandler OnError;
@@ -308,6 +308,11 @@ namespace Protean.Providers
                     OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(cProcessInfo, "PriceFilter", ex, ""));
                 }
                 return cWhereSql;
+            }
+
+            public override string GetFilterOrderByClause()
+            {
+                return " ci.nNumberValue ";
             }
 
         }

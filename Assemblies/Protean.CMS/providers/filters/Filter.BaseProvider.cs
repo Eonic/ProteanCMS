@@ -181,7 +181,6 @@ namespace Protean.Providers
                 {
                     throw new NotImplementedException();
                 }
-
             }
 
             public class AdminProcess : Cms.Admin, IFilterAdminProcess
@@ -298,7 +297,10 @@ namespace Protean.Providers
 
             }
 
-
+            public virtual string GetFilterOrderByClause()
+            {
+                return null;
+            }
         }
 
 
