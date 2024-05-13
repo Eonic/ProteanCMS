@@ -85,7 +85,7 @@
             <group class="getFilterButtons" />
         </group>
 		  <select1 bind="bShowProductListlevel"  appearance="full" class="form-group ">
-			  <label>DisplayOn Product List Page</label>
+			  <label>Display On Product List Page</label>
 			  <item>
 				  <label>Yes</label>
 				  <value>true</value>

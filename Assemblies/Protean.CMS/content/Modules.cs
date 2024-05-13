@@ -622,7 +622,7 @@ where cl.nStructId = " + myWeb.mnPageId));
 
                                     if (oContentNode.Attributes["ShowProductListlevel"] != null)
                                     {
-                                        if (oContentNode.Attributes["ShowProductListlevel"].ToString().ToLower() == "true")
+                                        if (oContentNode.Attributes["ShowProductListlevel"].Value.ToString().ToLower() == "true")
                                         {
                                             whereSQL = " c.cContentSchemaName='" + cFilterTarget + "' And nStructId =" + parentPageId + whereSQL;
                                         }
