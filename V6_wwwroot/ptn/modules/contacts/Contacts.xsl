@@ -261,15 +261,16 @@
 		</xsl:variable>
 		<div class="contributor row">
 			<xsl:if test="Images/img/@src!=''">
-				<a href="{$parentURL}" rel="author" title="click here to view more details on {GivenName/node()} {Surname/node()}" class="col-md-4">
+				<a href="{$parentURL}" rel="author" title="click here to view more details on {GivenName/node()} {Surname/node()}" class="col-md-3">
 					<xsl:apply-templates select="." mode="displayThumbnail">
-						<xsl:with-param name="width">150</xsl:with-param>
-						<xsl:with-param name="height">150</xsl:with-param>
+						<xsl:with-param name="width">220</xsl:with-param>
+						<xsl:with-param name="height">220</xsl:with-param>
 						<xsl:with-param name="crop" select="true()"/>
 					</xsl:apply-templates>
 				</a>
+
 			</xsl:if>
-			<div class="col-md-8">
+			<div class="col-md-9">
 				<h5 class="title">
 					<a href="{$parentURL}" rel="author">
 						<xsl:attribute name="title">
