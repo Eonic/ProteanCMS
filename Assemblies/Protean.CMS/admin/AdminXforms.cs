@@ -32,6 +32,7 @@ using static Protean.Tools.Xml;
 using System.Web.UI.HtmlControls;
 using Protean.Providers.Membership;
 using Protean.Providers.Payment;
+using System.Windows.Shapes;
 
 namespace Protean
 {
@@ -7838,9 +7839,12 @@ namespace Protean
 
                         string[] aSellerNotes = Strings.Split(sellerNotes, "/n");
                         string cSellerNotesHtml = "<ul>";
-                        for (int snCount = 0, loopTo = Information.UBound(aSellerNotes); snCount <= loopTo; snCount++)
-                            cSellerNotesHtml = cSellerNotesHtml + "<li>" + convertEntitiesToCodes(aSellerNotes[snCount]) + "</li>";
-                        tempElement.InnerXml = cSellerNotesHtml + "</ul>";
+                        for (int snCount = 0, loopTo = Information.UBound(aSellerNotes); snCount <= loopTo; snCount++) { 
+                        string replaceWith = " ";
+                        string removedBreaks = convertEntitiesToCodes(aSellerNotes[snCount]).Replace("\r\n", replaceWith).Replace("\n", replaceWith).Replace("\r", replaceWith).Replace("\\n", replaceWith);
+                        cSellerNotesHtml = cSellerNotesHtml + "<li>" + removedBreaks + "</li>";
+                        };
+                    tempElement.InnerXml = cSellerNotesHtml + "</ul>";
 
                         string argsClass = "";
                         int argnRows = Conversions.ToInteger("5");
