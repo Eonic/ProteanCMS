@@ -183,7 +183,7 @@ namespace Protean.Providers
                     throw new NotImplementedException();
                 }
 
-                public string PostFilterContentUpdates(ref Cms aWeb)
+                public void PostFilterContentUpdates(ref Cms aWeb)
                 {
                     throw new NotImplementedException();
                 }

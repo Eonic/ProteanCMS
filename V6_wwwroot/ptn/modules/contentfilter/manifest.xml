@@ -10,4 +10,8 @@
       <Module type="ContentFilter" formPath="content-filter" icon="fa-solid fa-filter" name="Content Filter"></Module>
     </ModuleGroup>
   </ModuleTypes>
+	<FilterTypes>
+		<Filter type="PageFilter" formPath="contentfilter/PageFilter/PageFilter" name="Page Filter" >Page Filter</Filter>
+		<Filter type="PriceFilter" formPath="contentfilter/PriceFilter/PageFilter" name="Price Filter" >Price Filter</Filter>
+	</FilterTypes>
 </PageLayouts>

@@ -3026,11 +3026,8 @@ namespace Protean
 
                                     break;
                                 }
-
                             default:
                                 {
-
-
                                     object PathPrefix = @"ewcommon\";
                                     EnumberateManifest(ref ManifestDoc, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "xsl/PageLayouts")), "LayoutManifest.xml");
                                     if (!string.IsNullOrEmpty(this.myWeb.moConfig["ClientCommonFolder"]))
@@ -3040,22 +3037,15 @@ namespace Protean
                                     EnumberateManifest(ref ManifestDoc, "/xsl", "layoutManifest.xml");
                                     break;
                                 }
-
                         }
-
-
                         return ManifestDoc;
                     }
-
                     catch (Exception ex)
                     {
                         stdTools.returnException(ref this.myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
-
-
                 }
-
 
                 public void EnumberateManifest(ref XmlDocument ManifestDoc, string filepath, string manifestFilename = "LayoutManifest.xml")
                 {
@@ -3181,16 +3171,21 @@ namespace Protean
                                     // oModuleType.SetAttribute("formPath", filepath & "/" & formPath)
 
                                     XmlElement filterTypes = (XmlElement)ManifestDoc.SelectSingleNode("/PageLayouts/FilterTypes");
-                                    if (filterTypes.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Module[@name='", FilterTypeName), "']"))) is null)
-                                    {
-                                        filterTypes.AppendChild(filterTypes.OwnerDocument.ImportNode(oModuleType.CloneNode(true), true));
+                                    if (filterTypes == null){
+                                        filterTypes = ManifestDoc.CreateElement("FilterTypes");
+                                        ManifestDoc.DocumentElement.AppendChild(filterTypes);
                                     }
-                                    else
-                                    {
-                                        filterTypes.ReplaceChild(filterTypes.OwnerDocument.ImportNode(oModuleType, true), filterTypes.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Filter[@name='", FilterTypeName), "']"))));
+                                    if (filterTypes != null) {
+                                        if (filterTypes.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Module[@name='", FilterTypeName), "']"))) is null)
+                                        {
+                                            filterTypes.AppendChild(filterTypes.OwnerDocument.ImportNode(oModuleType.CloneNode(true), true));
+                                        }
+                                        else
+                                        {
+                                            filterTypes.ReplaceChild(filterTypes.OwnerDocument.ImportNode(oModuleType, true), filterTypes.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Filter[@name='", FilterTypeName), "']"))));
+                                        }
                                     }
                                 }
-
                             }
                         }
                         else
