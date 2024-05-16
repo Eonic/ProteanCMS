@@ -664,8 +664,53 @@ where cl.nStructId = " + myWeb.mnPageId));
                                 }
                                 myWeb.moSession["OrderByClause"] = orderBySql;
                                 myWeb.GetPageContentFromSelect(whereSQL, ref nCount, oContentsNode: ref oContentNode, oPageDetail: ref argoPageDetail, 
-                                    cShowSpecificContentTypes: cFilterTarget, bIgnorePermissionsCheck: true, cOrderBy: orderBySql,cAdditionalJoins: cAdditionalJoins);
+                                cShowSpecificContentTypes: cFilterTarget, bIgnorePermissionsCheck: true, cOrderBy: orderBySql,cAdditionalJoins: cAdditionalJoins);
+                                
+                                // Modify results after they are loaded onto the page.
+                                foreach (XmlElement currentOFilterElmt1 in oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']"))
+                                {
+                                    oFilterElmt = currentOFilterElmt1;
+                                    Type calledType;
+                                    className = oFilterElmt.GetAttribute("className");
+                                    string providerName = oFilterElmt.GetAttribute("providerName");
+                                    if (!string.IsNullOrEmpty(className))
+                                    {
+                                        if (string.IsNullOrEmpty(providerName) | Strings.LCase(providerName) == "default")
+                                        {
+                                            providerName = "Protean.Providers.Filters." + className;
+                                            calledType = Type.GetType(providerName, true);
+                                        }
+                                        else
+                                        {
+                                            var castObject = WebConfigurationManager.GetWebApplicationSection("protean/filterProviders");
+                                            Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)castObject;
+                                            System.Configuration.ProviderSettings ourProvider = moPrvConfig.Providers[providerName];
+                                            Assembly assemblyInstance;
 
+                                            if (ourProvider.Parameters["path"] != "" && ourProvider.Parameters["path"] != null)
+                                            {
+                                                assemblyInstance = Assembly.LoadFrom(myWeb.goServer.MapPath(Conversions.ToString(ourProvider.Parameters["path"])));
+                                            }
+                                            else
+                                            {
+                                                assemblyInstance = Assembly.Load(ourProvider.Type);
+                                            }
+                                            if (ourProvider.Parameters["rootClass"] == "")
+                                            {
+                                                calledType = assemblyInstance.GetType("Protean.Providers.Filters." + providerName, true);
+                                            }
+                                            else
+                                            {
+                                                calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], "."), className)), true);
+                                            }
+                                        }
+                                        string methodname = "PostFilterContentUpdates";
+                                        var o = Activator.CreateInstance(calledType);
+                                        var args = new object[1];
+                                        args[0] = myWeb;
+                                        calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, null, o, args);
+                                    }
+                                }
                                 if (oContentNode.SelectNodes("Content[@type='Product']").Count == 0)
                                 {
                                     filterForm.addSubmit(ref oFrmGroup, "Clear Filters", "No results found", "clearfilters", "clear-filters", sValue: "clearfilters");
