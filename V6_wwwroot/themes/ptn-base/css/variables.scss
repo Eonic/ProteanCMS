@@ -45,6 +45,9 @@ $content-btn-align: true;
 
 /*##################### HEADER #######################*/
 $header-menu: "header-menu-right";
+$header-bg: transparent;
+$header-color: $body-color;
+$header-icon-color: $header-color;
 $header-spacing: 1.4rem;
 $header-icon-size: 1.3rem;
 $nav-breakpoint: lg;
@@ -63,6 +66,10 @@ $main-nav-size: 1.2rem;
 //$dropdown-link-hover-bg: var(--#{$prefix}tertiary-bg) !default;
 //$dropdown-link-active-color: $component-active-color !default;
 //$dropdown-link-active-bg: $component-active-bg !default;
+
+$mobile-dd-background: #fff;
+$mobile-dd-color: $body-color; 
+
 /*###################### GRID ########################*/
 $spacer: 1.5rem;
 $grid-gutter-width: 1.5rem;

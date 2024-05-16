@@ -1002,10 +1002,18 @@ dd {
     background: $footer-bg;
     padding-top: $grid-gutter-height;
     padding-bottom: $grid-gutter-height;
-    color: rgba(color-contrast($footer-bg),0.7);
+    color: rgba(color-contrast($footer-bg),1);
 
     h1, h2, h3, h4, h5, h6 {
-        color: rgba(color-contrast($footer-bg),0.9);
+        color: rgba(color-contrast($footer-bg),1);
+    }
+
+    a {
+        color: rgba(color-contrast($footer-bg),1);
+        &:hover,
+        &:focus{
+            opacity:0.8;
+        }
     }
 
     .footer-nav {

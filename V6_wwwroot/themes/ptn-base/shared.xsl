@@ -26,7 +26,7 @@
 	<xsl:variable name="HomeNav">false</xsl:variable>
 	<xsl:variable name="NavFix">true</xsl:variable>
 	<xsl:variable name="nav-dropdown">true</xsl:variable>
-	<xsl:variable name="sub-nav">right</xsl:variable>
+	<xsl:variable name="sub-nav">false</xsl:variable>
 	<xsl:variable name="SideSubWidth">3</xsl:variable>
 	<xsl:variable name="SideSubWidthCustom"></xsl:variable>
 	<xsl:variable name="themeBreadcrumb">false</xsl:variable>
@@ -156,7 +156,7 @@
 	<xsl:template match="Content | MenuItem" mode="getThHeight-xs">
 		<xsl:value-of select="$thHeight-xs"/>
 	</xsl:template>
-		
+
 	<xsl:template match="Content | MenuItem" mode="getThWidth">
 		<xsl:value-of select="$thWidth"/>
 	</xsl:template>
