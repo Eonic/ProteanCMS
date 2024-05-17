@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+  <ContentTypes>
+    <!--<ContentTypeGroup name="Information">
+      <ContentType type="Contact" formPath="contact" name="Contact">A contact for visitors</ContentType>
+    </ContentTypeGroup>  --> 
+  </ContentTypes>
+  <ModuleTypes>
+    <ModuleGroup name="Content Lists" icon="fa-th-list">
+      <Module type="ContentFilter" formPath="content-filter" icon="fa-solid fa-filter" name="Content Filter"></Module>
+    </ModuleGroup>
+  </ModuleTypes>
+	<FilterTypes>
+		<Filter type="PageFilter" formPath="contentfilter/PageFilter/PageFilter" name="Page Filter" >Page Filter</Filter>
+		<Filter type="PriceFilter" formPath="contentfilter/PriceFilter/PageFilter" name="Price Filter" >Price Filter</Filter>
+	</FilterTypes>
+</PageLayouts>
