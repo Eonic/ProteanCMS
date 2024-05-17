@@ -4777,7 +4777,17 @@ namespace Protean
             try
             {
 
-
+                if (oContentsNode != null)
+                {
+                    if (oContentsNode.Attributes["contentType"] != null)
+                    {
+                        cFilterTarget = oContentsNode.Attributes["contentType"].Value;
+                    }
+                    if (oContentsNode.Attributes["filterTarget"] != null)
+                    {
+                        cFilterTarget = oContentsNode.Attributes["filterTarget"].Value;
+                    }
+                }
 
                 // Apply the possiblity of getting contents into a node other than the page contents node
                 if (oContentsNode is null)
@@ -4816,10 +4826,16 @@ namespace Protean
 
 
                 sSql = "SET ARITHABORT ON ";
-                sSql = Conversions.ToString(sSql + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT ", Interaction.IIf(distinct, "DISTINCT ", "")), sTopSql), " c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentForiegnRef as ref, cContentName as name, c.cContentSchemaName as type, CAST("), cContentField), " AS varchar(max)) as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, CL.cPosition as position "));
+                sSql = sSql + " SELECT " + Interaction.IIf(distinct, "DISTINCT ", "") + sTopSql + " c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentForiegnRef as ref, cContentName as name, c.cContentSchemaName as type, ";
+                sSql = sSql + "CAST(" + cContentField + " AS varchar(max)) as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner,CL.cPosition as position  ";
+
+                //if (distinct) { 
+                //    sSql = sSql + ",cl.nDisplayOrder ";
+                //}
                 sSql += "FROM tblContent AS c INNER JOIN ";
                 sSql += "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN ";
                 sSql += "tblContentLocation AS CL ON c.nContentKey = CL.nContentId ";
+                
                 // sSql &= "INNER Join tblCartCatProductRelations On c.nContentKey = tblCartCatProductRelations.nContentId "   'uncomment by nita because resolving table not found error
 
 
@@ -4851,17 +4867,7 @@ namespace Protean
                     sPrimarySql = " CL.bPrimary = 1 ";
                 }
 
-                if (oContentsNode != null)
-                {
-                    if (oContentsNode.Attributes["contentType"] != null)
-                    {
-                        cFilterTarget = oContentsNode.Attributes["contentType"].Value;
-                    }
-                    if (oContentsNode.Attributes["filterTarget"] != null)
-                    {
-                        cFilterTarget = oContentsNode.Attributes["filterTarget"].Value;
-                    }
-                }
+               
                 object sFilterTargetSql = "";
                 if (!string.IsNullOrEmpty(cFilterTarget))
                 {
