@@ -8,6 +8,7 @@ using System.Xml;
 using System.Xml.Xsl;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using Microsoft.VisualBasic.Logging;
 using static Protean.stdTools;
 
 
@@ -374,7 +375,7 @@ where cl.nStructId = " + myWeb.mnPageId));
                         // Get content by date range
                         XmlElement xmlContentNode = null; int nCount = 0;
                         XmlElement argoPageDetail = null;
-                        myWeb.GetPageContentFromSelect("CL.nStructId = " + myWeb.mnPageId + " And c.cContentSchemaName = '" + oContentNode.GetAttribute("contentType") + "' ",ref nCount, ref xmlContentNode,oPageDetail: ref argoPageDetail, nReturnRows: (int)nItemsPerPage, pageNumber: nCurrentPage);
+                        myWeb.GetPageContentFromSelect("CL.nStructId = " + myWeb.mnPageId + " And c.cContentSchemaName = '" + oContentNode.GetAttribute("contentType") + "' ", ref nCount, ref xmlContentNode, oPageDetail: ref argoPageDetail, nReturnRows: (int)nItemsPerPage, pageNumber: nCurrentPage);
                         // remove content detail
                         if (myWeb.moContentDetail != null)
                         {
@@ -419,8 +420,8 @@ where cl.nStructId = " + myWeb.mnPageId));
                             else
                             {
                                 XmlElement argoPageDetail = null;
-                                XmlElement xmlContentNode = null;int nCount = 0;
-                                myWeb.GetPageContentFromSelect("CL.nStructId = " + PageId + " And a.dExpireDate < GETDATE() And a.nStatus = 1 And c.cContentSchemaName = '" + oContentNode.GetAttribute("contentType") + "' ",ref nCount, ref xmlContentNode, oPageDetail: ref argoPageDetail, nReturnRows: (int)nItemsPerPage, pageNumber: nCurrentPage, ignoreActiveAndDate: true);
+                                XmlElement xmlContentNode = null; int nCount = 0;
+                                myWeb.GetPageContentFromSelect("CL.nStructId = " + PageId + " And a.dExpireDate < GETDATE() And a.nStatus = 1 And c.cContentSchemaName = '" + oContentNode.GetAttribute("contentType") + "' ", ref nCount, ref xmlContentNode, oPageDetail: ref argoPageDetail, nReturnRows: (int)nItemsPerPage, pageNumber: nCurrentPage, ignoreActiveAndDate: true);
                             }
 
 
@@ -532,7 +533,8 @@ where cl.nStructId = " + myWeb.mnPageId));
                         }
                         oContentNode.AppendChild(filterForm.moXformElmt);
 
-                        string whereSQL = "";
+                        string whereSQL = string.Empty;
+                        string orderBySql = string.Empty;
 
                         filterForm.addSubmit(ref oFrmGroup, "Show Experiences", "Show Experiences", "Show Experiences", "hidden-sm hidden-md hidden-lg filter-xs-btn showexperiences");
                         // filterForm.addSubmit(oFrmGroup, "Clear Filters", "Clear Filters", "submit", "ClearFilters")
@@ -540,9 +542,6 @@ where cl.nStructId = " + myWeb.mnPageId));
 
                         if (filterForm.isSubmitted())
                         {
-
-
-
                             filterForm.updateInstanceFromRequest();
                             filterForm.validate();
 
@@ -609,12 +608,10 @@ where cl.nStructId = " + myWeb.mnPageId));
                                             parentPageId = oFilterElmt.Attributes["parId"].Value;
 
                                         }
-
+                                        orderBySql += GetFilterOrderByClause(calledType, orderBySql);
                                     }
 
                                 }
-
-
 
                                 if (!string.IsNullOrEmpty(parentPageId) & !string.IsNullOrEmpty(whereSQL) & whereSQL.ToLower().Contains("nstructid") == false)
                                 {
@@ -623,27 +620,97 @@ where cl.nStructId = " + myWeb.mnPageId));
                                         whereSQL = " AND " + whereSQL;
                                     }
 
-                                    whereSQL = " c.cContentSchemaName='" + cFilterTarget + "' And nStructId IN (select nStructKey from tblContentStructure where nStructParId in (" + parentPageId + "))" + whereSQL;
-                                    // Else
-                                    // whereSQL = " c.cContentSchemaName='" & cFilterTarget & whereSQL
+                                    if (oContentNode.Attributes["ShowContentListlevel"] != null)
+                                    {
+                                        if (oContentNode.Attributes["ShowContentListlevel"].Value.ToString().ToLower() == "true")
+                                        {
+                                            whereSQL = " c.cContentSchemaName='" + cFilterTarget + "' And nStructId =" + parentPageId + whereSQL;
+                                        }
+                                        else
+                                        {
+                                            whereSQL = " c.cContentSchemaName='" + cFilterTarget + "' And nStructId IN (select nStructKey from tblContentStructure where nStructParId in (" + parentPageId + "))" + whereSQL;
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        whereSQL = " c.cContentSchemaName='" + cFilterTarget + "' And nStructId IN (select nStructKey from tblContentStructure where nStructParId in (" + parentPageId + "))" + whereSQL;
+                                    }
                                 }
                             }
                         }
 
-
-
-
                         // now we go and get the results from the filter.
                         if (!string.IsNullOrEmpty(whereSQL))
                         {
-
                             if (whereSQL.ToLower().Trim().EndsWith(" and") == false)
                             {
                                 myWeb.moSession["FilterWhereCondition"] = whereSQL;
-                            XmlElement argoPageDetail = null;int nCount = 0;
-                            myWeb.GetPageContentFromSelect(whereSQL,ref nCount, oContentsNode: ref oContentNode, oPageDetail: ref argoPageDetail, cShowSpecificContentTypes: cFilterTarget, bIgnorePermissionsCheck:true);
+                                XmlElement argoPageDetail = null; int nCount = 0;
 
+                                String cAdditionalJoins = string.Empty;
+                                if (myWeb.mbAdminMode)
+                                {
+                                    if(orderBySql!=string.Empty)
+                                    {
+                                        orderBySql = "a.nStatus desc," + orderBySql;
 
+                                    }
+
+                                }
+                                if(orderBySql!=string.Empty)
+                                {
+                                    cAdditionalJoins = " Left Outer join tblContentIndex ci Inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey and cid.cDefinitionName='Price' on ci.nContentId=c.nContentKey ";
+                                }
+                                myWeb.moSession["OrderByClause"] = orderBySql;
+                                myWeb.GetPageContentFromSelect(whereSQL, ref nCount, oContentsNode: ref oContentNode, oPageDetail: ref argoPageDetail, 
+                                cShowSpecificContentTypes: cFilterTarget, bIgnorePermissionsCheck: true, cOrderBy: orderBySql,cAdditionalJoins: cAdditionalJoins);
+                                
+                                // Modify results after they are loaded onto the page.
+                                foreach (XmlElement currentOFilterElmt1 in oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']"))
+                                {
+                                    oFilterElmt = currentOFilterElmt1;
+                                    Type calledType;
+                                    className = oFilterElmt.GetAttribute("className");
+                                    string providerName = oFilterElmt.GetAttribute("providerName");
+                                    if (!string.IsNullOrEmpty(className))
+                                    {
+                                        if (string.IsNullOrEmpty(providerName) | Strings.LCase(providerName) == "default")
+                                        {
+                                            providerName = "Protean.Providers.Filters." + className;
+                                            calledType = Type.GetType(providerName, true);
+                                        }
+                                        else
+                                        {
+                                            var castObject = WebConfigurationManager.GetWebApplicationSection("protean/filterProviders");
+                                            Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)castObject;
+                                            System.Configuration.ProviderSettings ourProvider = moPrvConfig.Providers[providerName];
+                                            Assembly assemblyInstance;
+
+                                            if (ourProvider.Parameters["path"] != "" && ourProvider.Parameters["path"] != null)
+                                            {
+                                                assemblyInstance = Assembly.LoadFrom(myWeb.goServer.MapPath(Conversions.ToString(ourProvider.Parameters["path"])));
+                                            }
+                                            else
+                                            {
+                                                assemblyInstance = Assembly.Load(ourProvider.Type);
+                                            }
+                                            if (ourProvider.Parameters["rootClass"] == "")
+                                            {
+                                                calledType = assemblyInstance.GetType("Protean.Providers.Filters." + providerName, true);
+                                            }
+                                            else
+                                            {
+                                                calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], "."), className)), true);
+                                            }
+                                        }
+                                        string methodname = "PostFilterContentUpdates";
+                                        var o = Activator.CreateInstance(calledType);
+                                        var args = new object[1];
+                                        args[0] = myWeb;
+                                        calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, null, o, args);
+                                    }
+                                }
                                 if (oContentNode.SelectNodes("Content[@type='Product']").Count == 0)
                                 {
                                     filterForm.addSubmit(ref oFrmGroup, "Clear Filters", "No results found", "clearfilters", "clear-filters", sValue: "clearfilters");
@@ -662,6 +729,32 @@ where cl.nStructId = " + myWeb.mnPageId));
                     }
                 }
 
+                public string GetFilterOrderByClause(Type calledType, string existingOrderBy)
+                {
+                    string filterOrderByClause = string.Empty;
+
+                    if (calledType != null)
+                    {
+                        string methodname = "GetFilterOrderByClause";
+
+                        var o = Activator.CreateInstance(calledType);
+                        filterOrderByClause = Convert.ToString(calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, null, o, null));
+                    }
+
+                    if (!string.IsNullOrEmpty(existingOrderBy))
+                    {
+                        if (existingOrderBy.IndexOf(filterOrderByClause) >= 0)
+                        {
+                            filterOrderByClause = null;
+                        }
+                        else
+                        {
+                            filterOrderByClause = existingOrderBy + ", " + filterOrderByClause;
+                        }
+                    }
+
+                    return filterOrderByClause;
+                }
 
                 public string GetFilterWhereClause(ref Cms myWeb, ref Cms.xForm filterForm, ref XmlElement oContentNode, string excludeClassName)
                 {
@@ -771,6 +864,7 @@ where cl.nStructId = " + myWeb.mnPageId));
                     }
                 }
 
+              
             }
 
 

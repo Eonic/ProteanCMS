@@ -32,6 +32,7 @@ namespace Protean.Providers
             void AddControl(ref Cms aWeb, ref XmlElement FilterConfig, ref Protean.xForm oXform, ref XmlElement oFromGroup, ref XmlElement oContentNode, string cWhereSql);
             string ApplyFilter(ref Cms aWeb, ref string cWhereSql, ref Protean.xForm oXform, ref XmlElement oFromGroup, ref XmlElement FilterConfig, ref string cFilterTarget);
             string GetFilterSQL(ref Cms aWeb);
+            void PostFilterContentUpdates(ref Cms aWeb);
         }
         public interface IFilterAdminProcess
         {
@@ -182,6 +183,10 @@ namespace Protean.Providers
                     throw new NotImplementedException();
                 }
 
+                public void PostFilterContentUpdates(ref Cms aWeb)
+                {
+                    throw new NotImplementedException();
+                }
             }
 
             public class AdminProcess : Cms.Admin, IFilterAdminProcess
@@ -298,7 +303,10 @@ namespace Protean.Providers
 
             }
 
-
+            public virtual string GetFilterOrderByClause()
+            {
+                return null;
+            }
         }
 
 

@@ -10008,6 +10008,10 @@
 		</xsl:choose>
 	</xsl:template>
 
+	<xsl:template  name="getFilterButtons">
 
+		<xsl:copy-of select="ew:GetFilterButtons()"/>
+
+	</xsl:template>
 
 </xsl:stylesheet>

@@ -3644,5 +3644,101 @@
 		</div>
 	</xsl:template>
 
+	<xsl:template match="div[@class='orderNotes']" mode="xform">
+		<xsl:if test="./@class">
+			<xsl:attribute name="class">
+				<xsl:value-of select="./@class"/>
+			</xsl:attribute>
+		</xsl:if>
+
+		<div class="card">
+			<div class="card-body">
+			<xsl:for-each select="ul/li">
+				<xsl:variable name="wordcount">
+					<xsl:call-template name="word-count">
+						<xsl:with-param name="data" select="node()"/>
+						<xsl:with-param name="num" select="'0'"/>
+					</xsl:call-template>
+				</xsl:variable>
+			<div>
+				
+				<xsl:choose>
+					<xsl:when test="$wordcount > 20">
+						<xsl:call-template name="firstWords">
+							<xsl:with-param name="value" select="node()"/>
+							<xsl:with-param name="count" select="'20'"/>
+						</xsl:call-template>
+						<a data-bs-toggle="collapse" href="#ordernote-{position()}" role="button" aria-expanded="false" aria-controls="collapseExample">
+							&#160;more...
+						</a>
+						<div class="collapse" id="ordernote-{position()}">
+							<xsl:apply-templates select="node()" mode="cleanXhtml"/>
+						</div>
+					</xsl:when>
+					<xsl:otherwise>
+						
+							<xsl:apply-templates select="node()" mode="cleanXhtml"/>
+
+					</xsl:otherwise>
+				</xsl:choose>
+	</div>
+			
+			</xsl:for-each></div>
+		</div>
+		
+	</xsl:template>
+
+	<xsl:template match="group[@class='getFilterButtons']" mode="xform">
+		<xsl:variable name="filterButtons">
+			<xsl:call-template name="getFilterButtons"/>
+		</xsl:variable>
+		<xsl:variable name="thisGroup" select="."/>
+		<div class="list-group">
+
+
+			<xsl:for-each select="ms:node-set($filterButtons)/*/*">
+				<xsl:variable name="buttonName" select="node()"/>
+				<xsl:variable name="filterType" select="@filterType"/>
+
+				<div class="list-group-item row">
+					<div class="col-md-3">
+						<label>
+							<xsl:value-of select="$buttonName"/>
+						</label>
+					</div>
+					<div class="col-md-6">
+						<xsl:text> </xsl:text>
+					</div>
+					<div class="col-md-3">
+						<xsl:text> </xsl:text>
+						<xsl:choose>
+							<xsl:when test="$thisGroup/ancestor::ContentDetail/Content/model/instance/ContentRelations/Content[@filterType=$filterType]">
+								<xsl:variable name="relatedContent" select="concat('FilterEdit_',$filterType)" />
+								<xsl:variable name="filterId" select="$thisGroup/ancestor::ContentDetail/Content/model/instance/ContentRelations/Content[@filterType=$filterType]/@id"/>
+
+								<button type="submit" name="{concat('FilterRemove_',$filterType)}_{$filterId}" filtertype="{$buttonName}"  class="btn btn-sm btn-danger pull-right">
+									<i class="fa fa-times">&#160;</i>&#160;Del
+								</button>
+								<button type="submit" name="{$relatedContent}_{$filterId}" filtertype="{$buttonName}"  class="btn btn-sm btn-primary pull-right">
+									<i class="fa fa-edit">&#160;</i>&#160;Edit
+								</button>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:variable name="relatedContent" select="concat('FilterAdd_',$filterType)" />
+								<xsl:variable name="FilterType" select="concat($relatedContent,'_1Way_~inactive')" />
+								<button type="submit" name="{$FilterType}" filtertype="{$buttonName}" class="btn btn-sm btn-primary pull-right">
+									<i class="fa fa-plus">&#160;</i>&#160;
+									Add
+								</button>
+							</xsl:otherwise>
+						</xsl:choose>
+
+					</div>
+
+				</div>
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+
 
 </xsl:stylesheet>
