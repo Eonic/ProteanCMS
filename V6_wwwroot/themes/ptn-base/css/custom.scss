@@ -86,6 +86,10 @@ a {
     text-decoration-thickness: 0px;
 }
 
+strong, b {
+    font-weight: 700;
+}
+
 .sitemap a {
     text-decoration-thickness: 0px;
 
@@ -98,6 +102,11 @@ h1, h2, h3 {
     a {
         text-underline-offset: 0.4rem;
     }
+}
+
+.title a {
+    text-decoration: none;
+    color: $headings-color;
 }
 
 .center-block {
@@ -1010,9 +1019,10 @@ dd {
 
     a {
         color: rgba(color-contrast($footer-bg),1);
+
         &:hover,
-        &:focus{
-            opacity:0.8;
+        &:focus {
+            opacity: 0.8;
         }
     }
 
@@ -1101,8 +1111,9 @@ dd {
         animation-delay: 0 !important;
     }
 }
-.normalMode, 
-.previewMode{
+
+.normalMode,
+.previewMode {
     header {
         position: static;
     }
