@@ -899,15 +899,12 @@ namespace Protean.Tools
                             Type thisType = oEntry.GetType();
                             oCmd.Parameters.AddWithValue(oEntry.Key.ToString(), oEntry.Value);
                         }
-
+                    }
                         // Open the connection
                         if (oLConn.State == ConnectionState.Closed)
                             oLConn.Open();
                         return oCmd.ExecuteReader(CommandBehavior.CloseConnection);
-                    }
-                    else {
-                        return null;
-                    }
+
                 }
             }
             catch (Exception ex)
