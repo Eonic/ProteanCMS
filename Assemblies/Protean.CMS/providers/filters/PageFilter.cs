@@ -32,7 +32,7 @@ namespace Protean.Providers
 
                     int nParentId = 1;
                     string sSql = "spGetPagesByParentPageId";
-                    var arrParams = new Hashtable();
+                    Hashtable arrParams = new Hashtable() ;
                     var oXml = oXform.moPageXML.CreateElement("PageFilter");
                     //XmlElement oFilterElmt = null;
                     string className = string.Empty;
@@ -74,8 +74,10 @@ namespace Protean.Providers
                         arrParams.Add("whereSql", cWhereSql);
                     }
 
+                   // arrParams = null;
+                   //  sSql = sSql + $" @FilterTarget = '{cFilterTarget}', @PageId = null, @whereSQL = '{cWhereSql}' ";
 
-                    using (SqlDataReader oDr = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure, arrParams))  // Done by nita on 6/7/22
+                    using (SqlDataReader oDr = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.Text, arrParams))  // Done by nita on 6/7/22
                     {
                         // Adding controls to the form like dropdown, radiobuttons
                         if (oDr != null && oDr.HasRows)
