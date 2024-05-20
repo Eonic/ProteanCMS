@@ -36,7 +36,7 @@
 		</instance>
 		<submission id="EditPage" action="" method="post" event="form_check(this)"/>
 		
-		<bind id="cFref" nodeset="tblContentStructure/cStructForiegnRef" required="true()" type="string"/>
+		<bind id="cFref" nodeset="tblContentStructure/cStructForiegnRef" required="false()" type="string"/>
 		<bind id="nStructParId" nodeset="tblContentStructure/nStructParId" required="true()" type="string"/>
 		<bind id="cStructName" nodeset="tblContentStructure/cStructName" required="true()" type="string"/>
 		<bind nodeset="tblContentStructure/cStructDescription">
@@ -194,7 +194,7 @@
 						<label>Expire date</label>
 					</input>
 					<input bind="cFref">
-						<label>Foriegn Ref</label>
+						<label>Foreign Ref</label>
 					</input>
 					<group>
 						<label>Images</label>

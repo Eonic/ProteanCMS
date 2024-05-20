@@ -100,20 +100,36 @@
 						<xsl:otherwise>
 							<xsl:choose>
 								<xsl:when test="$heading=''">
-									<h3 class="title">
-										<a href="{$parentURL}">
-											<xsl:apply-templates select="." mode="getDisplayName"/>
-										</a>
-									</h3>
+									<xsl:choose>
+										<xsl:when test="@noLink='true'">
+											<h3 class="title">
+												<xsl:apply-templates select="." mode="getDisplayName"/>
+											</h3>
+										</xsl:when>
+										<xsl:otherwise>
+											<h3 class="title">
+												<a href="{$parentURL}">
+													<xsl:apply-templates select="." mode="getDisplayName"/>
+												</a>
+											</h3>
+										</xsl:otherwise>
+									</xsl:choose>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:element name="{$heading}">
 										<xsl:attribute name="class">
 											<xsl:text>title</xsl:text>
 										</xsl:attribute>
-										<a href="{$parentURL}">
-											<xsl:apply-templates select="." mode="getDisplayName"/>
-										</a>
+										<xsl:choose>
+											<xsl:when test="@noLink='true'">
+												<xsl:apply-templates select="." mode="getDisplayName"/>
+											</xsl:when>
+											<xsl:otherwise>
+												<a href="{$parentURL}">
+													<xsl:apply-templates select="." mode="getDisplayName"/>
+												</a>
+											</xsl:otherwise>
+										</xsl:choose>
 									</xsl:element>
 								</xsl:otherwise>
 							</xsl:choose>
@@ -482,16 +498,16 @@
 						<xsl:apply-templates select="Description/node()" mode="cleanXhtml"/>
 					</div>
 					<xsl:if test="Content[@type='NewsArticle']">
-					<div class="relatedcontent NewsList">
-						<h2>
-							Articles by <xsl:value-of select="GivenName"/><xsl:text> </xsl:text><xsl:value-of select="Surname"/>
-						</h2>
-						<div class="row cols row-cols-1 row-cols-lg-2">
-							<xsl:apply-templates select="Content[@type='NewsArticle']" mode="displayBrief">
-								<xsl:with-param name="sortBy" select="@publishDate"/>
-							</xsl:apply-templates>
+						<div class="relatedcontent NewsList">
+							<h2>
+								Articles by <xsl:value-of select="GivenName"/><xsl:text> </xsl:text><xsl:value-of select="Surname"/>
+							</h2>
+							<div class="row cols row-cols-1 row-cols-lg-2">
+								<xsl:apply-templates select="Content[@type='NewsArticle']" mode="displayBrief">
+									<xsl:with-param name="sortBy" select="@publishDate"/>
+								</xsl:apply-templates>
+							</div>
 						</div>
-					</div>
 					</xsl:if>
 					<div class="entryFooter">
 						<xsl:if test="Content[@type='Tag']">
@@ -510,7 +526,7 @@
 				</div>
 			</div>
 
-			
+
 
 		</div>
 	</xsl:template>
