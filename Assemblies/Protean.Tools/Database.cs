@@ -891,16 +891,20 @@ namespace Protean.Tools
                     // Set the command type
                     oCmd.CommandType = commandtype;
                     // Set the Paremeters if any
+                    oCmd.Parameters.Clear();
                     if (!(parameters == null))
                     {
                         foreach (DictionaryEntry oEntry in parameters)
+                        {
+                            Type thisType = oEntry.GetType();
                             oCmd.Parameters.AddWithValue(oEntry.Key.ToString(), oEntry.Value);
+                        }
                     }
+                        // Open the connection
+                        if (oLConn.State == ConnectionState.Closed)
+                            oLConn.Open();
+                        return oCmd.ExecuteReader(CommandBehavior.CloseConnection);
 
-                    // Open the connection
-                    if (oLConn.State == ConnectionState.Closed)
-                        oLConn.Open();
-                    return oCmd.ExecuteReader(CommandBehavior.CloseConnection);
                 }
             }
             catch (Exception ex)
@@ -911,6 +915,7 @@ namespace Protean.Tools
                 return null/* TODO Change to default(_) if this is not a reference type */;
             }
         }
+
 
 
 
@@ -925,7 +930,7 @@ namespace Protean.Tools
         /// <param name="bHandleTimeouts">Indicates whether to pass timeouts through the standard error handling, or ignore them.</param>
         /// <returns></returns>
         /// <remarks></remarks>
-        
+
 
         public DataSet GetDataSet(string sql, string tablename, string datasetname = "", bool bHandleTimeouts = false, Hashtable parameters = null/* TODO Change to default(_) if this is not a reference type */, CommandType querytype = CommandType.Text, int pageSize = 0, int pageNumber = 0, string cConn ="")
         {
