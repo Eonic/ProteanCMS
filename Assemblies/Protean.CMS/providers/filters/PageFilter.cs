@@ -12,13 +12,13 @@ namespace Protean.Providers
     namespace Filters
     {
 
-        public class PageFilter : DefaultProvider, IFilterProvider
+        public class PageFilter : DefaultFilter
         {
 
             public event OnErrorEventHandler OnError;
 
             public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
-            public void AddControl(ref Cms aWeb, ref XmlElement FilterConfig, ref Protean.xForm oXform, ref XmlElement oFromGroup, ref XmlElement oContentNode, string cWhereSql)
+            public override void AddControl(ref Cms aWeb, ref XmlElement FilterConfig, ref Protean.xForm oXform, ref XmlElement oFromGroup, ref XmlElement oContentNode, string cWhereSql)
             {
                 string cProcessInfo = "AddControl";
                 try
@@ -138,7 +138,7 @@ namespace Protean.Providers
                 }
             }
 
-            public string ApplyFilter(ref Cms aWeb, ref string cWhereSql, ref Protean.xForm oXform, ref XmlElement oFromGroup, ref XmlElement FilterConfig, ref string cFilterTarget)
+            public override string ApplyFilter(ref Cms aWeb, ref string cWhereSql, ref Protean.xForm oXform, ref XmlElement oFromGroup, ref XmlElement FilterConfig, ref string cFilterTarget)
             {
                 string cProcessInfo = "ApplyFilter";
                 try
@@ -187,7 +187,7 @@ namespace Protean.Providers
 
             }
 
-            public string GetFilterSQL(ref Cms aWeb)
+            public override string GetFilterSQL(ref Cms aWeb)
             {
                 string cWhereSql = string.Empty;
                 string cProcessInfo = "GetFilterSQL";
