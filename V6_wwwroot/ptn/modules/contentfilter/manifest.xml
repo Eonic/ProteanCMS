@@ -12,6 +12,7 @@
   </ModuleTypes>
 	<FilterTypes>
 		<Filter type="PageFilter" formPath="contentfilter/PageFilter/PageFilter" name="Page Filter" >Page Filter</Filter>
-		<Filter type="PriceFilter" formPath="contentfilter/PriceFilter/PageFilter" name="Price Filter" >Price Filter</Filter>
+		<Filter type="PriceFilter" formPath="contentfilter/PriceFilter/PriceFilter" name="Price Filter" >Price Filter</Filter>
+		<Filter type="SpecFilter" formPath="contentfilter/SpecFilter/SpecFilter" name="Spec Filter" >Spec Filter</Filter>
 	</FilterTypes>
 </PageLayouts>
