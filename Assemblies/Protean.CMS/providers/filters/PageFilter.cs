@@ -70,14 +70,14 @@ namespace Protean.Providers
                     if (bParentPageId)
                     {
                         arrParams.Add("PageId", nParentId);
-                        arrParams.Add("FilterTarget", cFilterTarget);
                         arrParams.Add("whereSql", cWhereSql);
+                        arrParams.Add("FilterTarget", cFilterTarget);
                     }
 
                    // arrParams = null;
                    //  sSql = sSql + $" @FilterTarget = '{cFilterTarget}', @PageId = null, @whereSQL = '{cWhereSql}' ";
 
-                    using (SqlDataReader oDr = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.Text, arrParams))  // Done by nita on 6/7/22
+                    using (SqlDataReader oDr = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure, arrParams))  // Done by nita on 6/7/22
                     {
                         // Adding controls to the form like dropdown, radiobuttons
                         if (oDr != null && oDr.HasRows)
