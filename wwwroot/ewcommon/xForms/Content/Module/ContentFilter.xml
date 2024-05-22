@@ -86,6 +86,7 @@
         </group>
 		  <select1 bind="bShowContentListlevel"  appearance="full" class="form-group ">
 			  <label>Display On Content List Page</label>
+			  <help class="inline">Please set it to true if filters needs to add on content/product/news list page</help>
 			  <item>
 				  <label>Yes</label>
 				  <value>true</value>
