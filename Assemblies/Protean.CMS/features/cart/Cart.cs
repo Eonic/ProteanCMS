@@ -5197,7 +5197,7 @@ namespace Protean
                                     // set the billing address
                                     string sSql = "Select nContactKey from tblCartContact where cContactType = 'Delivery Address' and nContactCartid=" + mnCartId;
                                     string DeliveryAddressID = moDBHelper.ExeProcessSqlScalar(sSql);
-                                    useSavedAddressesOnCart(BillingAddressID, Conversions.ToLong(DeliveryAddressID));
+                                    useSavedAddressesOnCart(BillingAddressID, Conversions.ToLong(DeliveryAddressID),null);
 
                                     mcPaymentMethod = myWeb.moRequest[buttonRef];
 
@@ -5277,7 +5277,7 @@ namespace Protean
                             }
                             if (deliveryAddId != 0L & billingAddId != 0L)
                             {
-                                useSavedAddressesOnCart(billingAddId, deliveryAddId);
+                                useSavedAddressesOnCart(billingAddId, deliveryAddId, null);
                                 // skip
                                 mcCartCmd = "ChoosePaymentShippingOption";
                                 return true;
@@ -5972,7 +5972,18 @@ namespace Protean
 
                     // Build the xform
                     oXform.moPageXML = moPageXml;
-                    oXform.NewFrm(cAddressType);
+                    string cPickAddressXform = moCartConfig["PickAddressXForm"];
+
+                    if (!string.IsNullOrEmpty(cPickAddressXform))
+                    {
+                        if (!oXform.load(cPickAddressXform))
+                        {
+                            oXform.NewFrm(cAddressType);
+                        }
+                    }
+                    else {
+                        oXform.NewFrm(cAddressType);
+                    }
                     oXform.valid = false;
 
                     // oReturnForm is going to be the form returned at the end of the function.
@@ -6087,17 +6098,10 @@ namespace Protean
                             {
                                 oXform.addSubmit(ref oAddressGrp, Conversions.ToString(oDr["nContactKey"]), "Deliver To This Address", Conversions.ToString(Operators.ConcatenateObject(submitPrefix + "contact", oDr["nContactKey"])), "deliver-here principle", "fas fa-truck");
                             }
-
-
                         }
-
-
-
-
                         // Check if the form has been submitted
                         if (oXform.isSubmitted())
                         {
-
                             oXform.updateInstanceFromRequest();
                             // bool forCollection = false;
                             if (moDBHelper.checkTableColumnExists("tblCartShippingMethods", "bCollection"))
@@ -6134,12 +6138,12 @@ namespace Protean
                                                 NewInstance.SelectSingleNode("tblCartContact/cContactCompany").InnerText = oDrCollectionOptions["cShipOptCarrier"].ToString();
                                                 NewInstance.SelectSingleNode("tblCartContact/cContactCountry").InnerText = moCartConfig["DefaultDeliveryCountry"];
 
-
+                                                string billingContactXml = null;
                                                 string collectionContactID;
 
                                                 collectionContactID = moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartContact, NewInstance);
 
-                                                useSavedAddressesOnCart(billingAddId, Conversions.ToInteger(collectionContactID));
+                                                useSavedAddressesOnCart(billingAddId, Conversions.ToInteger(collectionContactID), billingContactXml);
                                                 return oReturnForm;
                                             }
                                         }
@@ -6276,7 +6280,12 @@ namespace Protean
                         // If pick address has been submitted, then we have a contactXform that has not been submitted, and therefore not saved.  Let's save it.
                         if (!string.IsNullOrEmpty(myWeb.moRequest[submitPrefix + "contact" + contactId]))
                         {
-                            useSavedAddressesOnCart(billingAddId, contactId);
+                            string billingContactXml = null;
+                            if (!string.IsNullOrEmpty(cPickAddressXform)){
+                                billingContactXml = oXform.Instance.SelectSingleNode("tblCartContact/cContactXml").InnerXml;
+                            }
+
+                             useSavedAddressesOnCart(billingAddId, contactId, billingContactXml);
                             // skip delivery
                             oContactXform.moXformElmt.SetAttribute("cartCmd", "ChoosePaymentShippingOption");
                         }
@@ -6284,7 +6293,7 @@ namespace Protean
                         if (!string.IsNullOrEmpty(myWeb.moRequest[submitPrefix + "addDelivery" + contactId]))
                         {
                             // remove the deliver from the instance if it is there
-                            useSavedAddressesOnCart(billingAddId, 0L);
+                            useSavedAddressesOnCart(billingAddId, 0L, null);
                             foreach (XmlNode oNode in oContactXform.Instance.SelectNodes("tblCartContact[cContactType='Delivery Address']"))
                                 oNode.ParentNode.RemoveChild(oNode);
                         }
@@ -6391,7 +6400,7 @@ namespace Protean
                 }
             }
 
-            public void useSavedAddressesOnCart(long billingId, long deliveryId)
+            public void useSavedAddressesOnCart(long billingId, long deliveryId, string billingContactXml)
             {
                 string cProcessInfo = "";
                 DataSet oDs;
@@ -6444,6 +6453,9 @@ namespace Protean
                     billInstance.SelectSingleNode("*/cContactType").InnerText = "Billing Address";
                     billInstance.SelectSingleNode("*/nAuditId").InnerText = savedBillingAuditId;
                     billInstance.SelectSingleNode("*/nAuditKey").InnerText = savedBillingAuditId;
+                    if (billingContactXml != null) { 
+                        billInstance.SelectSingleNode("*/cContactXml    ").InnerXml = billingContactXml;
+                    }
 
                     moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartContact, billInstance);
 
@@ -12243,7 +12255,7 @@ namespace Protean
 
                     if (deliveryAddId != 0 & billingAddId != 0)
                     {
-                        useSavedAddressesOnCart(billingAddId, deliveryAddId);
+                        useSavedAddressesOnCart(billingAddId, deliveryAddId, null);
                     }
                     ConfirmPayment(ref oCartListElmt, ref oePaymentDetailsInstanceElmt, cNewAuthNumber, cMethodName, Amount);
                     GetCart(ref oCartListElmt, mnCartId);

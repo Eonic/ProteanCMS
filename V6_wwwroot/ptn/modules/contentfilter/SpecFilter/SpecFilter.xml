@@ -10,7 +10,7 @@
 				<cContentName>Category</cContentName>
 				<cContentSchemaName>Filter</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content type="Filter" filterType="PageFilter"  parentPageId="" className="PageFilter" providerName="default" hideByDefault="false" />
+					<Content type="Filter" filterType="SpecFilter"  parentPageId="" className="SpecFilter" providerName="default"/>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
 				<nAuditId/>
@@ -34,7 +34,6 @@
 		<bind id="nStatus" nodeset="tblContent/nStatus" required="true()" type="string"/>
 		<bind id="cDescription" nodeset="tblContent/cDescription" required="false()" type="string"/>
 		<bind id="bCascade" nodeset="tblContent/bCascade" required="false()" type="string"/>
-		<bind id="bHideByDefault" nodeset="tblContent/cContentXmlBrief/Content/@hideByDefault" required="false()" type="string"/>
 	</model>
 	<group ref="EditContent" class="2col">
 		<label>Edit Page Filter</label>
@@ -68,24 +67,9 @@
 		</group>
     <group>
 		  <group>
-			  <select1 bind="cModuleLinkPage" appearance="full" class="vshort">
-				  <label class="label-border-top label-heading">Display Pages</label>
-				  <item>
-					  <label>All pages with products</label>
-					  <value>0</value>
-				  </item>
-				  <item>
-					  <label>Pages with products under current page</label>
-					  <value>1</value>
-				  </item>
-			  </select1>
-			  <select bind="bHideByDefault"  appearance="full" class="vshort">
-				  <label>Hide By Default</label>
-				  <item>
-					  <label>Hide By Default</label>
-					  <value>true</value>
-				  </item>
-			  </select>
+			  <input bind="cSpecName" class="required short">
+				  <label>Specification Name</label>
+			  </input> 
 		  </group>
     </group>
 	</group>

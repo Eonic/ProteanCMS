@@ -223,6 +223,13 @@
 									<xsl:value-of select="Email"/>
 									<br/>
 								</xsl:if>
+								<xsl:if test="Details/GiftAid/node()!=''">
+									<!--Fax-->
+									GiftAid
+									<xsl:text>:&#160;</xsl:text>
+									Agreed
+									<br/>
+								</xsl:if>
 							</p>
 
 						</div>
@@ -2134,8 +2141,6 @@
 					</span>
 				</xsl:for-each>
 			</div>
-
-
 		</xsl:if>
 	</xsl:template>
 
@@ -2143,10 +2148,8 @@
 	<xsl:template match="group[contains(@ref,'address') and group[contains(@class,'addressGrp')]]" mode="xform">
 		<xsl:param name="class"/>
 		<fieldset>
-
 			<xsl:attribute name="class">
 				<xsl:value-of select="$class"/>
-
 				<xsl:if test="@class!=''">
 					<xsl:text> </xsl:text>
 					<xsl:value-of select="@class"/>
