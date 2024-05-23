@@ -1324,6 +1324,15 @@
 									<xsl:with-param name="class" select="'card-body'"/>
 								</xsl:apply-templates>
 							</xsl:if>
+							<xsl:attribute name="class">
+								<xsl:text>card-body</xsl:text>
+								<xsl:if test="@title!=''">
+									<xsl:text> card-body-w-head</xsl:text>
+								</xsl:if>
+								<xsl:if test="@linkText!='' and @link!=''">
+									<xsl:text> card-body-w-footer</xsl:text>
+								</xsl:if>
+							</xsl:attribute>
 							<xsl:apply-templates select="." mode="displayBrief"/>
 
 							<xsl:text> </xsl:text>

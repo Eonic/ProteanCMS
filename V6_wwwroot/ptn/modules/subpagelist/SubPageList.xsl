@@ -123,7 +123,7 @@
 			</li>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template match="MenuItem" mode="displayBrief">
 		<xsl:param name="sortBy"/>
 		<xsl:param name="crop"/>
@@ -226,7 +226,7 @@
 								</h3>
 							</xsl:otherwise>
 						</xsl:choose>
-						
+
 					</xsl:if>
 					<xsl:if test="Description/node()!=''">
 						<span class="listDescription">
@@ -238,6 +238,15 @@
 							<xsl:text> </xsl:text>
 						</span>
 					</xsl:if>
+					<xsl:if test="$linked='true' and $button='false'">
+						<a href="{$url}" class="stretched-link">
+							<span class="visually-hidden">
+								<xsl:value-of select="Name/node()"/>
+								<xsl:text> </xsl:text>
+							</span>
+						</a>
+					</xsl:if>
+					<xsl:if test="not($button='false')">
 						<div>
 							<xsl:attribute name="class">
 								<xsl:text>entryFooter light-flex justify-content-</xsl:text>
@@ -250,13 +259,14 @@
 									<xsl:apply-templates select="." mode="getDisplayName" />
 								</xsl:with-param>-->
 								<xsl:with-param name="link" select="$url"/>
-						<xsl:with-param name="stretchLink" select="$linked"/>
+								<xsl:with-param name="stretchLink" select="$linked"/>
 								<xsl:with-param name="altText">
 									<xsl:apply-templates select="." mode="getTitleAttr" />
 								</xsl:with-param>
 							</xsl:apply-templates>
 							<xsl:text> </xsl:text>
 						</div>
+					</xsl:if>
 				</div>
 			</div>
 		</xsl:if>
