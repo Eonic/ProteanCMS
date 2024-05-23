@@ -536,7 +536,7 @@ where cl.nStructId = " + myWeb.mnPageId));
                         string whereSQL = string.Empty;
                         string orderBySql = string.Empty;
 
-                        filterForm.addSubmit(ref oFrmGroup, "Show Experiences", "Show Experiences", "Show Experiences", "hidden-sm hidden-md hidden-lg filter-xs-btn showexperiences");
+                        filterForm.addSubmit(ref oFrmGroup, "Show " + cFilterTarget, "Show " + cFilterTarget, "Show " + cFilterTarget, "hidden-sm hidden-md hidden-lg filter-xs-btn showfiltertarget");
                         // filterForm.addSubmit(oFrmGroup, "Clear Filters", "Clear Filters", "submit", "ClearFilters")
                         filterForm.addValues();
 

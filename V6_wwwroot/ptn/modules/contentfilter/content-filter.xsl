@@ -13,12 +13,14 @@
 
 
 	</xsl:template>
+	
+	
 	<!-- ## Layout Types are specified in the LayoutsManifest.XML file  ################################   -->
 	<xsl:template match="Content[@name='ContentFilter']" mode="xform">
 		<button class="btn btn-success hidden-sm hidden-md hidden-lg filter-xs-btn">
 			<i class="fas fa-sliders-h">
 				<xsl:text> </xsl:text>
-			</i> Filter Experiences
+			</i> Filter <xsl:value-of select="parent::Content/@filterTarget"/>
 		</button>
 		<form method="{model/submission/@method}" action="" data-fv-framework="bootstrap"
 			data-fv-icon-valid="fa fa-check"
@@ -60,7 +62,7 @@
 			</xsl:if>
 			<div class="hidden-sm hidden-md hidden-lg filter-xs-heading">
 				<h3>
-					<!--<i class="fas fa-sliders-h"> </i>--> Filter Experiences
+					<!--<i class="fas fa-sliders-h"> </i>--> Filter <xsl:value-of select="parent::Content/@filterTarget"/>
 				</h3>
 				<i class="fas fa-times">
 					<xsl:text> </xsl:text>
@@ -557,7 +559,7 @@
 								<h4 style="align:center;">
 									<i class="fas fa-spinner fa-spin">
 										<xsl:text> </xsl:text>
-									</i>  Please wait... loading more experiences
+									</i>  Please wait... loading more 
 									<!--<div class="{$totalCount} {$noPerPage} {$startPos}">&#160;</div>-->
 								</h4>
 							</div>
