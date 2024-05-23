@@ -74,6 +74,7 @@
 				<xsl:otherwise>
 					<xsl:apply-templates select="." mode="header-menu-below">
 						<xsl:with-param name="nav-collapse">false</xsl:with-param>
+						<xsl:with-param name="social-links">true</xsl:with-param>
 						<xsl:with-param name="containerClass" select="$container"/>
 					</xsl:apply-templates>
 				</xsl:otherwise>

@@ -2271,7 +2271,7 @@ namespace Protean
 
                         long billingId = Conversions.ToLong(myWeb.moDbHelper.GetDataValue("select nContactKey from tblCartContact where cContactType = 'Billing Address' and nContactCartId = 0 and nContactDirId = " + UserId));
                         long deliveryId = billingId;
-                        myWeb.moCart.useSavedAddressesOnCart(billingId, deliveryId);
+                        myWeb.moCart.useSavedAddressesOnCart(billingId, deliveryId, null);
 
                         // Collect the payment
                         string CurrencyCode = "GBP";
@@ -2455,7 +2455,7 @@ namespace Protean
 
                         long billingId = Conversions.ToLong(myWeb.moDbHelper.GetDataValue("select nContactKey from tblCartContact where cContactType = 'Billing Address' and nContactCartId = 0 and nContactDirId = " + UserId));
                         long deliveryId = billingId;
-                        myWeb.moCart.useSavedAddressesOnCart(billingId, deliveryId);
+                        myWeb.moCart.useSavedAddressesOnCart(billingId, deliveryId,null);
 
                         myWeb.moCart.mnProcessId = 6;
                         string strSuccuess = "Success";

@@ -10,7 +10,7 @@
 				<cContentName>Price</cContentName>
 				<cContentSchemaName>Filter</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content type="Filter" filterType="PriceFilter"  fromPrice="" toPrice="" step="" maxPriceLimit="" className="PriceFilter" providerName="default"/>
+					<Content type="Filter" filterType="PriceFilter"  fromPrice="" toPrice="" step="" maxPriceLimit="" className="PriceFilter" providerName="default" hideByDefault="false" />
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
 				<nAuditId/>
@@ -28,17 +28,18 @@
 		</instance>
 		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
 		<bind id="cContentName" nodeset="tblContent/cContentName" required="true()" type="string"/>
-		
+
 		<bind id="dPublishDate" nodeset="tblContent/dPublishDate" required="false()" type="string"/>
 		<bind id="dExpireDate" nodeset="tblContent/dExpireDate" required="false()" type="string"/>
 		<bind id="nStatus" nodeset="tblContent/nStatus" required="true()" type="string"/>
 		<bind id="cDescription" nodeset="tblContent/cDescription" required="false()" type="string"/>
 		<bind id="bCascade" nodeset="tblContent/bCascade" required="false()" type="string"/>
-		
+
 		<bind id="nFromPrice" nodeset="tblContent/cContentXmlBrief/Content/@fromPrice" required="false()" type="string"/>
 		<bind id="nToPrice" nodeset="tblContent/cContentXmlBrief/Content/@toPrice" required="false()" type="string"/>
 		<bind id="nMaxPriceLimit" nodeset="tblContent/cContentXmlBrief/Content/@maxPriceLimit" required="false()" type="string"/>
 		<bind id="nStep" nodeset="tblContent/cContentXmlBrief/Content/@step" required="false()" type="string"/>
+		<bind id="bHideByDefault" nodeset="tblContent/cContentXmlBrief/Content/@hideByDefault" required="false()" type="string"/>
 	</model>
 	<group ref="EditContent" class="2col">
 		<label>Edit Price Filter</label>
@@ -73,8 +74,8 @@
 		<group>
 			<group>
 				<input bind="nFromPrice" type="text" >
-				
-				<label>From Price</label>
+
+					<label>From Price</label>
 				</input>
 				<input bind="nToPrice" type="text" >
 
@@ -86,6 +87,13 @@
 				<input bind="nMaxPriceLimit" type="text" >
 					<label>Max Price Limit</label>
 				</input>
+				<select bind="bHideByDefault"  appearance="full" class="vshort">
+					<label>Hide By Default</label>
+					<item>
+						<label>Hide By Default</label>
+						<value>true</value>
+					</item>
+				</select>
 			</group>
 		</group>
 	</group>
