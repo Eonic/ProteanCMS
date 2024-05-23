@@ -39,6 +39,7 @@
 				<Unit_Price/>
 				<Net_Line label="Net (line)"/>
 				<Discount_Line label="Discount (line)"/>
+				<GiftAid/>
 			</Item>
 		</xsl:variable>
 		<xsl:apply-templates select="ms:node-set($orderDownloadHeader)" mode="reportHeaderRow"/>
@@ -146,6 +147,9 @@
 				<Discount_Line label="Discount (line)">
 					<xsl:value-of select="$lineDiscount"/>
 				</Discount_Line>
+				<GiftAid>
+					<xsl:value-of select="$billAddr/Details/GiftAid/node()"/>
+				</GiftAid>
 			</Item>
 		</xsl:variable>
 		<xsl:apply-templates select="ms:node-set($orderItem)/*/*" mode="reportCell"/>
