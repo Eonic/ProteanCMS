@@ -627,7 +627,7 @@
 				<xsl:text> </xsl:text>
 			</div>
 		</xsl:if>
-		<div class="totals-row">
+		<div class="clearfix totals-row">
 			<xsl:if test="@vatRate &gt; 0">
 				<div class="vat-row">
 					<div class="subTotal">
@@ -716,7 +716,6 @@
 				</div>
 			</xsl:if>
 			<xsl:if test="@payableAmount &lt; @total">
-
 				<div class="total">
 					<xsl:choose>
 						<xsl:when test="@payableType='deposit' and not(@transStatus)">
