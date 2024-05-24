@@ -1,14 +1,15 @@
 ﻿#ContentFilter {
     @media(min-width:786px) {
-        border: 2px solid $primary;
-        background: $info;
-        border-radius: $btn-border-radius;
+        //border: 2px solid $primary;
+        background: $light;
+        border-radius: $border-radius;
         display: flex;
+        color: color-contrast($light);
 
         &:before {
             content: 'Filter by:';
-            background: $primary;
-            color: #fff;
+            background: $light;
+            color: color-contrast($light);
             padding: 9px 16px;
             float: left;
             font-size: 1.125rem;
@@ -23,6 +24,7 @@
         > .form-group {
             margin: 0;
             z-index: 9999;
+
 
             @media(min-width:768px) {
                 padding-bottom: 8px !important;
@@ -44,7 +46,7 @@
                 }
 
                 &.active:after {
-                   // .chevron-up;
+                    // .chevron-up;
                 }
             }
 
