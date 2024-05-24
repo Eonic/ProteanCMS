@@ -860,7 +860,7 @@
 	</xsl:template>
 
 	<!-- -->
-	<!-- ========================== CONTROL : SUBMIT (with xFormQuiz bespokeness) ========================== -->
+	<!-- ========================== CONTROL : SUBMIT ========================== -->
 	<!-- -->
 
 	<xsl:template match="submit" mode="xform">
