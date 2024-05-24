@@ -17,7 +17,7 @@
 	
 	<!-- ## Layout Types are specified in the LayoutsManifest.XML file  ################################   -->
 	<xsl:template match="Content[@name='ContentFilter']" mode="xform">
-		<button class="btn btn-success hidden-sm hidden-md hidden-lg filter-xs-btn">
+		<button class="btn btn-custom d-sm-none filter-xs-btn">
 			<i class="fas fa-sliders-h">
 				<xsl:text> </xsl:text>
 			</i> Filter <xsl:value-of select="parent::Content/@filterTarget"/>
@@ -60,7 +60,7 @@
 			<xsl:if test="descendant::upload">
 				<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
 			</xsl:if>
-			<div class="hidden-sm hidden-md hidden-lg filter-xs-heading">
+			<div class="d-sm-none filter-xs-heading">
 				<h3>
 					<!--<i class="fas fa-sliders-h"> </i>--> Filter <xsl:value-of select="parent::Content/@filterTarget"/>
 				</h3>
@@ -398,7 +398,7 @@
 								</xsl:otherwise>
 							</xsl:choose>
 							<!--strapline placeholder-->
-							<p class="sr-subhead hidden-xs">
+							<p class="sr-subhead d-none d-sm-block">
 
 								<xsl:call-template name="firstWords">
 									<xsl:with-param name="value">
