@@ -644,7 +644,7 @@
 	</xsl:template>
 
 
-	<xsl:template match="submit[contains(@showfiltertarget,'showfiltertarget')]" mode="xform">
+	<xsl:template match="submit[contains(@class,'showfiltertarget')]" mode="xform">
 		<xsl:variable name="class">
 			<xsl:text>btn</xsl:text>
 			<xsl:if test="not(contains(@class,'btn-'))">
