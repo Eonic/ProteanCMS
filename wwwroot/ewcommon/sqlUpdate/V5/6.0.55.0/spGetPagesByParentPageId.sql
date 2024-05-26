@@ -1,5 +1,5 @@
         
-CREATE PROCEDURE spGetPagesByParentPageId   
+CREATE PROCEDURE dbo.spGetPagesByParentPageId   
 @PageId as Int=null       
 AS        
 BEGIN        

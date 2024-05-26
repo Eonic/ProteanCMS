@@ -62,7 +62,8 @@
 		<xsl:text>"Quantity",</xsl:text>
 		<xsl:text>"Unit Price",</xsl:text>
 		<xsl:text>"Net (line)",</xsl:text>
-		<xsl:text>"Discount (line)"</xsl:text>
+		<xsl:text>"Discount (line)",</xsl:text>
+		<xsl:text>"GiftAid"</xsl:text>
 		<xsl:text>&#10;</xsl:text>
 	</xsl:template>
 
@@ -154,7 +155,10 @@
 			<xsl:text>",</xsl:text>
 			<xsl:text>"</xsl:text>
 			<xsl:value-of select="$lineDiscount"/>
+			<xsl:text>",</xsl:text>
 			<xsl:text>"</xsl:text>
+			<xsl:value-of select="$billAddr/Details/GiftAid/node()"/>
+			<xsl:text>",</xsl:text>
 			<xsl:text>&#xD;</xsl:text>
 		</xsl:for-each>
 	</xsl:template>

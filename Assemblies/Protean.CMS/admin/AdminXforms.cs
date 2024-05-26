@@ -10554,7 +10554,8 @@ namespace Protean
 
                         base.addInput(ref oGrp0Elmt, "dBegin", true, "From", "calendarTime");
                         base.addInput(ref oGrp0Elmt, "dEnd", true, "To", "calendarTime");
-                        var oSel1 = base.addSelect1(ref oGrp0Elmt, "cCurrencySymbol", true, "Currency");
+                        XmlElement oSel1;
+                        //oSel1 = base.addSelect1(ref oGrp0Elmt, "cCurrencySymbol", true, "Currency");
                         if (this.myWeb.moConfig["Quote"] != "on")
                         {
                             oSel1 = base.addSelect1(ref oGrp0Elmt, "cOrderType", true, "Cart Type");

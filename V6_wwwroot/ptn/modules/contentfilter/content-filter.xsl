@@ -13,12 +13,14 @@
 
 
 	</xsl:template>
+	
+	
 	<!-- ## Layout Types are specified in the LayoutsManifest.XML file  ################################   -->
 	<xsl:template match="Content[@name='ContentFilter']" mode="xform">
-		<button class="btn btn-success hidden-sm hidden-md hidden-lg filter-xs-btn">
+		<button class="btn btn-custom d-sm-none filter-xs-btn">
 			<i class="fas fa-sliders-h">
 				<xsl:text> </xsl:text>
-			</i> Filter Experiences
+			</i> Filter <xsl:value-of select="parent::Content/@filterTarget"/>
 		</button>
 		<form method="{model/submission/@method}" action="" data-fv-framework="bootstrap"
 			data-fv-icon-valid="fa fa-check"
@@ -58,9 +60,9 @@
 			<xsl:if test="descendant::upload">
 				<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
 			</xsl:if>
-			<div class="hidden-sm hidden-md hidden-lg filter-xs-heading">
+			<div class="d-sm-none filter-xs-heading">
 				<h3>
-					<!--<i class="fas fa-sliders-h"> </i>--> Filter Experiences
+					<!--<i class="fas fa-sliders-h"> </i>--> Filter <xsl:value-of select="parent::Content/@filterTarget"/>
 				</h3>
 				<i class="fas fa-times">
 					<xsl:text> </xsl:text>
@@ -396,7 +398,7 @@
 								</xsl:otherwise>
 							</xsl:choose>
 							<!--strapline placeholder-->
-							<p class="sr-subhead hidden-xs">
+							<p class="sr-subhead d-none d-sm-block">
 
 								<xsl:call-template name="firstWords">
 									<xsl:with-param name="value">
@@ -557,7 +559,7 @@
 								<h4 style="align:center;">
 									<i class="fas fa-spinner fa-spin">
 										<xsl:text> </xsl:text>
-									</i>  Please wait... loading more experiences
+									</i>  Please wait... loading more 
 									<!--<div class="{$totalCount} {$noPerPage} {$startPos}">&#160;</div>-->
 								</h4>
 							</div>
@@ -640,4 +642,198 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
+
+
+	<xsl:template match="submit[contains(@class,'showfiltertarget')]" mode="xform">
+		<xsl:variable name="class">
+			<xsl:text>btn</xsl:text>
+			<xsl:if test="not(contains(@class,'btn-'))">
+				<xsl:text> btn-custom</xsl:text>
+			</xsl:if>
+			d-sm-none
+			showfiltertarget
+		</xsl:variable>
+		<xsl:variable name="name">
+			<xsl:choose>
+				<xsl:when test="@ref!=''">
+					<xsl:value-of select="@ref"/>
+				</xsl:when>
+				<xsl:when test="@submission!=''">
+					<xsl:value-of select="@submission"/>
+				</xsl:when>
+				<xsl:when test="@bind!=''">
+					<xsl:value-of select="@bind"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>ewSubmit</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="icon">
+			<xsl:choose>
+				<xsl:when test="@icon!=''">
+					<xsl:value-of select="@icon"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text> </xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="buttonValue">
+			<xsl:choose>
+				<xsl:when test="@value!=''">
+					<xsl:value-of select="@value"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="label/node()"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<button type="submit" name="{$name}" value="{$buttonValue}" class="{$class}">
+			<xsl:if test="@data-pleasewaitmessage != ''">
+				<xsl:attribute name="data-pleasewaitmessage">
+					<xsl:value-of select="@data-pleasewaitmessage"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="@data-pleasewaitdetail != ''">
+				<xsl:attribute name="data-pleasewaitdetail">
+					<xsl:value-of select="@data-pleasewaitdetail"/>
+				</xsl:attribute>
+			</xsl:if>
+
+			<xsl:if test="not(contains($class,'icon-right')) and $icon!=''">
+				<i class="fa {$icon} fa-white">
+					<xsl:text> </xsl:text>
+				</i>
+				<xsl:text> </xsl:text>
+			</xsl:if>
+			<xsl:apply-templates select="label" mode="submitText"/>
+			<xsl:if test="contains($class,'icon-right') and $icon!=''">
+				<xsl:text> </xsl:text>
+				<i class="fa {$icon} fa-white">
+					<xsl:text> </xsl:text>
+				</i>
+			</xsl:if>
+		</button>
+	</xsl:template>
+
+
+	<xsl:template match="label[ancestor::Content[@name='ContentFilter']]">
+		<xsl:param name="cLabel"/>
+		<xsl:param name="bRequired"/>
+		<xsl:if test="parent::*[@data-length!='']">
+			<span class="field-char-count badge" data-fieldref="{$cLabel}">
+				<span id="{$cLabel}-char-count">0</span>/<xsl:value-of select="parent::*/@data-length"/> characters
+			</span>
+		</xsl:if>
+		<xsl:if test ="./node()!='' or span[contains(@class,'term')]">
+			<label data-bs-toggle="dropdown" aria-expanded="false">
+				<xsl:if test="$cLabel!=''">
+					<xsl:attribute name="for">
+						<xsl:value-of select="$cLabel"/>
+					</xsl:attribute>
+				</xsl:if>
+				<xsl:attribute name="class">
+					<xsl:text>form-label</xsl:text>
+					<xsl:if test="$bRequired='true' and not(ancestor::select1[@appearance='full' and value/node()!=''])">
+						<xsl:text> required</xsl:text>
+					</xsl:if>
+					<xsl:if test="parent::input[contains(@class,'readonly')]">
+						<xsl:text> readonly</xsl:text>
+					</xsl:if>
+					<xsl:text> dropdown-toggle</xsl:text>
+				</xsl:attribute>
+				
+				<xsl:for-each select="@*">
+					<xsl:attribute name="{name()}">
+						<xsl:value-of select="." />
+					</xsl:attribute>
+				</xsl:for-each>
+				<xsl:choose>
+					<!-- for Multilanguage-->
+					<xsl:when test="span[contains(@class,'term')]">
+						<xsl:apply-templates select="span" mode="term" />
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:apply-templates select="." mode="xform-label"/>
+					</xsl:otherwise>
+				</xsl:choose>
+				<!--<xsl:value-of select="./node()"/>-->
+				<xsl:if test="$bRequired='true' and not(ancestor::select1[@appearance='full' and value/node()!=''])">
+					<span class="req">*</span>
+				</xsl:if>
+			</label>
+			<xsl:apply-templates select="parent::*[help|hint]" mode="infoButton"/>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="input[ancestor::Content[@name='ContentFilter']] | secret[ancestor::Content[@name='ContentFilter']]  | select[ancestor::Content[@name='ContentFilter']] | select1[ancestor::Content[@name='ContentFilter']]  | range[ancestor::Content[@name='ContentFilter']]  | textarea[ancestor::Content[@name='ContentFilter']] | upload[ancestor::Content[@name='ContentFilter']]" mode="xform">
+		<xsl:param name="nolabel"/>
+		<xsl:param name="dependantClass"/>
+
+		<!-- NB : the count(item)!=1 basically stops you from making a one checkbox field (ie a boolean) from being required -->
+		<xsl:if test="not($nolabel!='')">
+			<xsl:apply-templates select="label">
+				<xsl:with-param name="cLabel">
+					<xsl:apply-templates select="." mode="getRefOrBind"/>
+				</xsl:with-param>
+				<xsl:with-param name="bRequired">
+					<xsl:if test="contains(@class,'required') and count(item)!=1">true</xsl:if>
+				</xsl:with-param>
+			</xsl:apply-templates>
+		</xsl:if>
+		<xsl:variable name="fmhz">
+			<xsl:if test="ancestor::group[contains(@class,'inline-labels')]">
+				<xsl:text>col-sm-9</xsl:text>
+				<xsl:if test="not(label)">
+					<xsl:text> col-md-offset-3</xsl:text>
+				</xsl:if>
+			</xsl:if>
+		</xsl:variable>
+		<xsl:choose>
+			<xsl:when test="@prefixIcon!='' or @prefix!='' or @suffix!='' or @suffixIcon!=''">
+				<div class="input-group">
+					<xsl:if test="@prefixIcon!=''">
+						<span class="input-group-text">
+							<i class="{@prefixIcon}">&#160;</i>
+						</span>
+					</xsl:if>
+					<xsl:if test="@prefix!=''">
+						<div class="input-group-text">
+							<xsl:value-of select="@prefix"/>
+						</div>
+					</xsl:if>
+					<xsl:apply-templates select="." mode="xform_control">
+						<xsl:with-param select="$dependantClass" name="dependantClass"/>
+					</xsl:apply-templates>
+					<xsl:if test="@suffix!=''">
+						<div class="input-group-text">
+							<xsl:value-of select="@suffix"/>
+						</div>
+					</xsl:if>
+					<xsl:if test="@suffixIcon!=''">
+						<span class="input-group-text">
+							<i class="{@suffixIcon}">&#160;</i>
+						</span>
+					</xsl:if>
+					<!--xsl:if test="hint">
+            <xsl:apply-templates select="." mode="hintButton"/>
+
+          </xsl:if-->
+				</div>
+			</xsl:when>
+			<xsl:otherwise>
+				<div class="dropdown-menu">
+				<xsl:apply-templates select="." mode="xform_control">
+					<xsl:with-param select="$dependantClass" name="dependantClass"/>
+				</xsl:apply-templates>
+				</div>
+			</xsl:otherwise>
+		</xsl:choose>
+
+		<xsl:if test="not(contains(@class,'pickImage'))">
+			<xsl:apply-templates select="self::node()[not(item[toggle]) and not(hint)]" mode="xform_legend"/>
+		</xsl:if>
+	</xsl:template>
+
 </xsl:stylesheet>
