@@ -727,7 +727,7 @@
 			</span>
 		</xsl:if>
 		<xsl:if test ="./node()!='' or span[contains(@class,'term')]">
-			<label>
+			<label data-bs-toggle="dropdown" aria-expanded="false">
 				<xsl:if test="$cLabel!=''">
 					<xsl:attribute name="for">
 						<xsl:value-of select="$cLabel"/>
@@ -741,8 +741,9 @@
 					<xsl:if test="parent::input[contains(@class,'readonly')]">
 						<xsl:text> readonly</xsl:text>
 					</xsl:if>
-					<xsl:text> vicstuff</xsl:text>
+					<xsl:text> dropdown-toggle</xsl:text>
 				</xsl:attribute>
+				
 				<xsl:for-each select="@*">
 					<xsl:attribute name="{name()}">
 						<xsl:value-of select="." />
