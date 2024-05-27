@@ -5130,27 +5130,27 @@
 		<xsl:variable name="parentURL">
 			<xsl:apply-templates select="self::Content" mode="getHref"/>
 		</xsl:variable>
-		<ul class="pager">
+		<ul class="pagination">
 			<xsl:choose>
 				<xsl:when test="/Page/Contents/Content[contains(@name,$prevItem)]">
-					<li class="previous">
+					<li class="page-item previous">
 						<a href="{$parentURL}?curPg={number($curPg) - 1}" title="go to the previous page">&lt; previous</a>
 					</li>
 				</xsl:when>
 				<xsl:otherwise>
-					<li class="previous disabled">
+					<li class="page-item previous disabled">
 						<span class="ghosted">&lt; previous</span>
 					</li>
 				</xsl:otherwise>
 			</xsl:choose> |
 			<xsl:choose>
 				<xsl:when test="/Page/Contents/Content[contains(@name,$nextItem)]">
-					<li class="next">
+					<li class="page-item next">
 						<a href="{$parentURL}?curPg={number($curPg) + 1}" title="go to the next page">next &gt;</a>
 					</li>
 				</xsl:when>
 				<xsl:otherwise>
-					<li class="next disabled">
+					<li class="page-item next disabled">
 						<span class="ghosted">next &gt;</span>
 					</li>
 				</xsl:otherwise>
@@ -5167,9 +5167,10 @@
 		<xsl:param name="queryString"/>
 		<xsl:param name="queryStringParam"/>
 		<xsl:param name="totalCount" />
+
+
 		<xsl:variable name="thisURL">
 			<xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]" mode="getHref" />
-
 			<xsl:choose>
 				<xsl:when test="contains(/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url,'?')">
 					<xsl:text>&amp;</xsl:text>
@@ -5186,61 +5187,74 @@
 					startPos
 				</xsl:otherwise>
 			</xsl:choose>
-
 		</xsl:variable>
-
 		<div class="col-md-12">
-			<ul class="pager">
-
+			<ul class="pagination">
 				<!-- Back Button-->
 				<xsl:choose>
 					<xsl:when test="$startPos - $noPerPage='0' and $startPos &gt; ($noPerPage - 1)">
 						<xsl:variable name="origURL">
 							<xsl:apply-templates select="$currentPage" mode="getHref"/>
 						</xsl:variable>
-						<li class="previous">
-							<a href="{$origURL}" title="click here to view the previous page in sequence">
+						<li class="page-item previous">
+							<a class="page-link" href="{$origURL}" title="click here to view the previous page in sequence">
 								<span class="pager-arrow">&#8592;</span> Back
 							</a>
 						</li>
 					</xsl:when>
+
 					<xsl:when test="$startPos &gt; ($noPerPage - 1)">
-						<li class="previous">
-							<a href="{$thisURL}={$startPos - $noPerPage}" title="click here to view the previous page in sequence">
+						<li class="page-item previous">
+							<a class="page-link" href="{$thisURL}={$startPos - $noPerPage}" title="click here to view the previous page in sequence">
 								<span class="pager-arrow">&#8592;</span> Back
 							</a>
 						</li>
 					</xsl:when>
 					<xsl:otherwise>
-						<li class="previous disabled">
-							<a href="#">
+						<li class="page-item previous disabled">
+							<a class="page-link" href="#">
 								<span class="pager-arrow">&#8592;</span> Back
 							</a>
 						</li>
 					</xsl:otherwise>
 				</xsl:choose>
-
-
+				<xsl:call-template name="StepperStep">
+					<xsl:with-param name="noPerPage">
+						<xsl:value-of select="$noPerPage"/>
+					</xsl:with-param>
+					<xsl:with-param name="startPos">
+						<xsl:value-of select="'0'"/>
+					</xsl:with-param>
+					<xsl:with-param name="totalCount">
+						<xsl:value-of select="$totalCount"/>
+					</xsl:with-param>
+					<xsl:with-param name="thisURL">
+						<xsl:value-of select="$thisURL"/>
+					</xsl:with-param>
+					<xsl:with-param name="queryStringParam">
+						<xsl:value-of select="$queryStringParam"/>
+					</xsl:with-param>
+					<xsl:with-param name="step">
+						<xsl:value-of select="'1'"/>
+					</xsl:with-param>
+				</xsl:call-template>
 				<xsl:choose>
 					<xsl:when test="$totalCount &gt; ($startPos +$noPerPage)">
-						<li class="next">
-							<a href="{$thisURL}={$startPos+$noPerPage}" title="click here to view the next page in sequence">
+						<li class="page-item next">
+							<a class="page-link" href="{$thisURL}={$startPos+$noPerPage}" title="click here to view the next page in sequence">
 								Next <span class="pager-arrow">&#8594;</span>
 							</a>
 						</li>
 					</xsl:when>
 					<xsl:otherwise>
-						<li class="next disabled">
+						<li class="page-item next disabled">
 							<span class="ghosted">
 								Next <span class="pager-arrow">&#8594;</span>
 							</span>
 						</li>
 					</xsl:otherwise>
 				</xsl:choose>
-
-				<!-- ### to ### of ### (At the top) -->
-				<li class="itemInfo">
-					<span class="pager-caption">
+					</ul><div class="pager-caption">
 						<xsl:if test="$noPerPage!=1">
 							<xsl:value-of select="$startPos + 1"/>
 							<xsl:text> to </xsl:text>
@@ -5251,11 +5265,49 @@
 						<xsl:if test="$totalCount &lt; ($startPos + $noPerPage)">
 							<xsl:value-of select="$totalCount"/>
 						</xsl:if> of <xsl:value-of select="$totalCount"/>
-					</span>
-				</li>
-			</ul>
+					</div>
 		</div>
-
+	</xsl:template>
+	
+	<xsl:template name="StepperStep">
+		<xsl:param name="noPerPage"/>
+		<xsl:param name="startPos"/>
+		<xsl:param name="queryString"/>
+		<xsl:param name="queryStringParam"/>
+		<xsl:param name="totalCount" />
+		<xsl:param name="thisURL" />
+		<xsl:param name="step" />
+		<xsl:variable name="active">
+			<xsl:if test="$startPos = number(concat('0',$page/Request/QueryString/Item[@name=$queryStringParam]))">
+				<xsl:text>active</xsl:text>
+			</xsl:if>
+		</xsl:variable>
+		<a class="page-link {$active}" href="{$thisURL}={$startPos}" title="page {@step}">
+			<xsl:value-of select="$step"/>
+		</a>
+		<xsl:if test="$step * $noPerPage &lt;= $totalCount">
+			<xsl:call-template name="StepperStep">
+				<xsl:with-param name="noPerPage">
+					<xsl:value-of select="$noPerPage"/>
+				</xsl:with-param>
+				<xsl:with-param name="startPos">
+					<xsl:value-of select="$startPos + $noPerPage"/>
+				</xsl:with-param>
+				<xsl:with-param name="totalCount">
+					<xsl:value-of select="$totalCount"/>
+				</xsl:with-param>
+				<xsl:with-param name="thisURL">
+					<xsl:value-of select="$thisURL"/>
+				</xsl:with-param>
+				<xsl:with-param name="queryStringParam">
+					<xsl:value-of select="$queryStringParam"/>
+				</xsl:with-param>
+				<xsl:with-param name="step">
+					<xsl:value-of select="$step + 1"/>
+				</xsl:with-param>
+			</xsl:call-template>
+		</xsl:if>
+		
 	</xsl:template>
 
 	<!-- Retrieves the additional Params from the URL -->

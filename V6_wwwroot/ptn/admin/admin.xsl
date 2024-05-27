@@ -8478,7 +8478,6 @@
           </xsl:otherwise>
         </xsl:choose>
       </span>
-
     </div>
   </xsl:template>
 

@@ -5990,7 +5990,7 @@
             Initializes a new <see cref="T:ImageMagick.IMagickGeometry"/> instance using the specified page size.
             </summary>
             <param name="pageSize">The page size.</param>
-            <returns>A <see cref="T:ImageMagick.IMagickGeometry"/> instance that represents the specified page size.</returns>
+            <returns>A <see cref="T:ImageMagick.IMagickGeometry"/> instance that represents the specified page size at 72 dpi.</returns>
         </member>
         <member name="T:ImageMagick.MagickImageCollectionFactory">
             <summary>
@@ -7011,9 +7011,29 @@
             Gets the defines that should be set as a define on an image.
             </summary>
         </member>
+        <member name="T:ImageMagick.Formats.HeicChromaUpsampling">
+            <summary>
+            Specifies heic chroma upsampling.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Formats.HeicChromaUpsampling.Bilinear">
+            <summary>
+            Bilinear.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Formats.HeicChromaUpsampling.NearestNeighbor">
+            <summary>
+            Nearest neighbor.
+            </summary>
+        </member>
         <member name="T:ImageMagick.Formats.HeicReadDefines">
             <summary>
             Class for defines that are used when a <see cref="F:ImageMagick.MagickFormat.Heic"/> image is read.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.Formats.HeicReadDefines.ChromaUpsampling">
+            <summary>
+            Gets or sets a value which chroma upsampling method should be used (heic:chroma-upsampling).
             </summary>
         </member>
         <member name="P:ImageMagick.Formats.HeicReadDefines.DepthImage">
@@ -7395,7 +7415,7 @@
         </member>
         <member name="P:ImageMagick.Formats.PdfReadDefines.Interpolate">
             <summary>
-            Gets or sets a value indicating whether all images are forced to be interpolated at full device resolution.
+            Gets or sets a value indicating whether all images are forced to be interpolated at full device resolution (pdf: interpolate).
             </summary>
         </member>
         <member name="P:ImageMagick.Formats.PdfReadDefines.Password">
@@ -7453,6 +7473,11 @@
             Gets or sets the modification time of the pdf document (pdf:modify-epoch).
             </summary>
         </member>
+        <member name="P:ImageMagick.Formats.PdfWriteDefines.NoIdentifier">
+            <summary>
+            Gets or sets a value indicating whether an identifier should be written (pdf:no-identifier).
+            </summary>
+        </member>
         <member name="P:ImageMagick.Formats.PdfWriteDefines.Producer">
             <summary>
             Gets or sets the producer of the pdf document (pdf:producer).
@@ -7463,9 +7488,19 @@
             Gets or sets the subject of the pdf document (pdf:subject).
             </summary>
         </member>
+        <member name="P:ImageMagick.Formats.PdfWriteDefines.Thumbnail">
+            <summary>
+            Gets or sets a value indicating wether a thumbnail should be added to the pdf document (pdf:thumbnail).
+            </summary>
+        </member>
         <member name="P:ImageMagick.Formats.PdfWriteDefines.Title">
             <summary>
             Gets or sets the title of the pdf document (pdf:title).
+            </summary>
+        </member>
+        <member name="P:ImageMagick.Formats.PdfWriteDefines.Version">
+            <summary>
+            Gets or sets the version of the pdf document, for example 1.4 or 1.7 (pdf:version).
             </summary>
         </member>
         <member name="P:ImageMagick.Formats.PdfWriteDefines.Defines">
@@ -7695,6 +7730,11 @@
         <member name="T:ImageMagick.Formats.TiffReadDefines">
             <summary>
             Class for defines that are used when a <see cref="F:ImageMagick.MagickFormat.Tiff"/> image is read.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.Formats.TiffReadDefines.AssumeAlpha">
+            <summary>
+            Gets or sets a value indicating whether to assume that a single extra sample is an alpha channel (tiff:assume-alpha).
             </summary>
         </member>
         <member name="P:ImageMagick.Formats.TiffReadDefines.Format">
@@ -10170,8 +10210,8 @@
             </summary>
             <param name="source">The source image to copy the pixels from.</param>
             <param name="geometry">The geometry to copy.</param>
-            <param name="x">The X offset to start the copy from.</param>
-            <param name="y">The Y offset to start the copy from.</param>
+            <param name="x">The X offset to copy the pixels to.</param>
+            <param name="y">The Y offset to copy the pixels to.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
         <member name="M:ImageMagick.MagickImage.CopyPixels(ImageMagick.IMagickImage,ImageMagick.IMagickGeometry,System.Int32,System.Int32,ImageMagick.Channels)">
@@ -11491,7 +11531,7 @@
             <param name="method">The morphology method.</param>
             <param name="kernel">Built-in kernel.</param>
             <param name="channels">The channels to apply the kernel to.</param>
-            <param name="iterations">The number of iterations.</param>
+            <param name="iterations">The number of iterations. A value of -1 means loop until no change found.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
         <member name="M:ImageMagick.MagickImage.Morphology(ImageMagick.MorphologyMethod,ImageMagick.Kernel,System.Int32)">
@@ -11500,7 +11540,7 @@
             </summary>
             <param name="method">The morphology method.</param>
             <param name="kernel">Built-in kernel.</param>
-            <param name="iterations">The number of iterations.</param>
+            <param name="iterations">The number of iterations. A value of -1 means loop until no change found.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
         <member name="M:ImageMagick.MagickImage.Morphology(ImageMagick.MorphologyMethod,ImageMagick.Kernel,System.String)">
@@ -11530,7 +11570,7 @@
             <param name="kernel">Built-in kernel.</param>
             <param name="arguments">Kernel arguments.</param>
             <param name="channels">The channels to apply the kernel to.</param>
-            <param name="iterations">The number of iterations.</param>
+            <param name="iterations">The number of iterations. A value of -1 means loop until no change found.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
         <member name="M:ImageMagick.MagickImage.Morphology(ImageMagick.MorphologyMethod,ImageMagick.Kernel,System.String,System.Int32)">
@@ -11540,7 +11580,7 @@
             <param name="method">The morphology method.</param>
             <param name="kernel">Built-in kernel.</param>
             <param name="arguments">Kernel arguments.</param>
-            <param name="iterations">The number of iterations.</param>
+            <param name="iterations">The number of iterations. A value of -1 means loop until no change found.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
         <member name="M:ImageMagick.MagickImage.Morphology(ImageMagick.MorphologyMethod,System.String)">
@@ -11567,7 +11607,7 @@
             <param name="method">The morphology method.</param>
             <param name="userKernel">User suplied kernel.</param>
             <param name="channels">The channels to apply the kernel to.</param>
-            <param name="iterations">The number of iterations.</param>
+            <param name="iterations">The number of iterations. A value of -1 means loop until no change found.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
         <member name="M:ImageMagick.MagickImage.Morphology(ImageMagick.MorphologyMethod,System.String,System.Int32)">
@@ -11576,7 +11616,7 @@
             </summary>
             <param name="method">The morphology method.</param>
             <param name="userKernel">User suplied kernel.</param>
-            <param name="iterations">The number of iterations.</param>
+            <param name="iterations">The number of iterations. A value of -1 means loop until no change found.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
         <member name="M:ImageMagick.MagickImage.Morphology(ImageMagick.IMorphologySettings)">
@@ -11639,6 +11679,7 @@
             <summary>
             Oilpaint image (image looks like oil painting).
             </summary>
+            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
         <member name="M:ImageMagick.MagickImage.OilPaint(System.Double,System.Double)">
             <summary>
@@ -12360,14 +12401,12 @@
             Remove a profile from the image.
             </summary>
             <param name="profile">The profile to remove.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
         <member name="M:ImageMagick.MagickImage.RemoveProfile(System.String)">
             <summary>
             Remove a named profile from the image.
             </summary>
             <param name="name">The name of the profile (e.g. "ICM", "IPTC", or a generic profile name).</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
         <member name="M:ImageMagick.MagickImage.RemoveReadMask">
             <summary>
@@ -14998,6 +15037,11 @@
             Gets the type of interlacing.
             </summary>
         </member>
+        <member name="P:ImageMagick.MagickImageInfo.Orientation">
+            <summary>
+            Gets the orientation of the image.
+            </summary>
+        </member>
         <member name="P:ImageMagick.MagickImageInfo.Quality">
             <summary>
             Gets the JPEG/MIFF/PNG compression level.
@@ -15717,6 +15761,7 @@
             </summary>
         </member>
         <member name="T:ImageMagick.ResourceLimits">
+            <content />
             <summary>
             Class that can be used to set the limits to the resources that are being used.
             </summary>
@@ -15745,7 +15790,13 @@
         <member name="P:ImageMagick.ResourceLimits.MaxMemoryRequest">
             <summary>
             Gets or sets the max memory request in bytes. ImageMagick maintains a separate memory pool for large
-            resource requests. If the limit is exceeded, the allocation is instead memory-mapped on disk.
+            resource requests. If the limit is exceeded when allocating pixels, the allocation is instead memory-mapped
+            on disk.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.ResourceLimits.MaxProfileSize">
+            <summary>
+            Gets or sets the max size of a profile in bytes that can be added to the image.
             </summary>
         </member>
         <member name="P:ImageMagick.ResourceLimits.Memory">
@@ -15801,6 +15852,11 @@
             <summary>
             Gets or sets the max memory request in bytes. ImageMagick maintains a separate memory pool for large
             resource requests. If the limit is exceeded, the allocation is instead memory-mapped on disk.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.ResourceLimits.ImageMagick#IResourceLimits#MaxProfileSize">
+            <summary>
+            Gets or sets the max size of a profile in bytes that can be added to the image.
             </summary>
         </member>
         <member name="P:ImageMagick.ResourceLimits.ImageMagick#IResourceLimits#Memory">
@@ -16338,7 +16394,7 @@
         </member>
         <member name="T:ImageMagick.ChannelPerceptualHash">
             <summary>
-            Contains the he perceptual hash of one image channel.
+            Contains the perceptual hash of one image channel.
             </summary>
         </member>
         <member name="M:ImageMagick.ChannelPerceptualHash.#ctor(ImageMagick.PixelChannel,System.Double[],System.Double[],System.String)">
@@ -16410,7 +16466,7 @@
         </member>
         <member name="T:ImageMagick.PerceptualHash">
             <summary>
-            Contains the he perceptual hash of one or more image channels.
+            Contains the perceptual hash of one or more image channels.
             </summary>
         </member>
         <member name="M:ImageMagick.PerceptualHash.#ctor(System.String)">
@@ -16668,7 +16724,7 @@
             Initializes a new <see cref="T:ImageMagick.IMagickGeometry"/> instance using the specified page size.
             </summary>
             <param name="pageSize">The page size.</param>
-            <returns>A <see cref="T:ImageMagick.IMagickGeometry"/> instance that represents the specified page size.</returns>
+            <returns>A <see cref="T:ImageMagick.IMagickGeometry"/> instance that represents the specified page size at 72 dpi.</returns>
         </member>
         <member name="M:ImageMagick.MagickGeometry.CompareTo(ImageMagick.IMagickGeometry)">
             <summary>
