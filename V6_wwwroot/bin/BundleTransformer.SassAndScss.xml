@@ -86,15 +86,17 @@
             Gets or sets a line feed type
             </summary>
         </member>
-        <member name="P:BundleTransformer.SassAndScss.Configuration.SassAndScssSettings.Precision">
+        <member name="P:BundleTransformer.SassAndScss.Configuration.SassAndScssSettings.Severity">
             <summary>
-            Gets or sets a precision for fractional numbers
+            Gets or sets a severity level of errors:
+            	0 - only error messages;
+            	1 - only error messages and warnings except deprecations;
+            	2 - only error messages and all warnings.
             </summary>
         </member>
-        <member name="P:BundleTransformer.SassAndScss.Configuration.SassAndScssSettings.SourceComments">
+        <member name="P:BundleTransformer.SassAndScss.Configuration.SassAndScssSettings.JsEngine">
             <summary>
-            Gets or sets a flag for whether to emit comments in the generated CSS
-            indicating the corresponding source line
+            Gets a configuration settings of JS engine
             </summary>
         </member>
         <member name="T:BundleTransformer.SassAndScss.Constants.AssetTypeCode">
@@ -176,16 +178,35 @@
             </summary>
             <param name="virtualFileSystemWrapper">Virtual file system wrapper</param>
         </member>
-        <member name="M:BundleTransformer.SassAndScss.Internal.VirtualFileManager.IsAppRelativePath(System.String)">
-            <summary>
-            Determines whether the beginning of specified path matches the '~/'
-            </summary>
-            <param name="path">The path</param>
-            <returns>true if path starts with the '~/'; otherwise, false</returns>
-        </member>
         <member name="T:BundleTransformer.SassAndScss.LineFeedType">
             <summary>
             Line feed types
+            </summary>
+        </member>
+        <member name="T:BundleTransformer.SassAndScss.Resources.Strings">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.SassAndScss.Resources.Strings.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.SassAndScss.Resources.Strings.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.SassAndScss.Resources.Strings.ErrorDetails_Description">
+            <summary>
+              Looks up a localized string similar to Description.
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.SassAndScss.Resources.Strings.ErrorDetails_StackTrace">
+            <summary>
+              Looks up a localized string similar to Stack trace.
             </summary>
         </member>
         <member name="T:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator">
@@ -198,14 +219,14 @@
             Name of output code type
             </summary>
         </member>
-        <member name="F:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator._initializationSynchronizer">
+        <member name="F:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator._createJsEngineInstance">
             <summary>
-            Synchronizer of Sass compiler's initialization
+            Delegate that creates an instance of JS engine
             </summary>
         </member>
-        <member name="F:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator._initialized">
+        <member name="F:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator._virtualFileManager">
             <summary>
-            Flag that indicates if the Sass compiler is initialized
+            Virtual file manager
             </summary>
         </member>
         <member name="P:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.IncludePaths">
@@ -228,15 +249,12 @@
             Gets or sets a line feed type
             </summary>
         </member>
-        <member name="P:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.Precision">
+        <member name="P:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.Severity">
             <summary>
-            Gets or sets a precision for fractional numbers
-            </summary>
-        </member>
-        <member name="P:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.SourceComments">
-            <summary>
-            Gets or sets a flag for whether to emit comments in the generated CSS
-            indicating the corresponding source line
+            Gets or sets a severity level of errors:
+            	0 - only error messages;
+            	1 - only error messages and warnings except deprecations;
+            	2 - only error messages and all warnings.
             </summary>
         </member>
         <member name="M:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.#ctor">
@@ -244,22 +262,13 @@
             Constructs an instance of Sass and SCSS translator
             </summary>
         </member>
-        <member name="M:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.#ctor(BundleTransformer.SassAndScss.Configuration.SassAndScssSettings)">
+        <member name="M:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.#ctor(System.Func{JavaScriptEngineSwitcher.Core.IJsEngine},BundleTransformer.Core.FileSystem.IVirtualFileSystemWrapper,BundleTransformer.SassAndScss.Configuration.SassAndScssSettings)">
             <summary>
             Constructs an instance of Sass and SCSS translator
             </summary>
-            <param name="sassAndScssConfig">Configuration settings of Sass and SCSS translator</param>
-        </member>
-        <member name="M:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.SetVirtualFileSystemWrapper(BundleTransformer.Core.FileSystem.IVirtualFileSystemWrapper)">
-            <summary>
-            Sets a virtual file system wrapper
-            </summary>
+            <param name="createJsEngineInstance">Delegate that creates an instance of JS engine</param>
             <param name="virtualFileSystemWrapper">Virtual file system wrapper</param>
-        </member>
-        <member name="M:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.Initialize">
-            <summary>
-            Initializes a Sass compiler
-            </summary>
+            <param name="sassAndScssConfig">Configuration settings of Sass and SCSS translator</param>
         </member>
         <member name="M:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.Translate(BundleTransformer.Core.Assets.IAsset)">
             <summary>
@@ -281,6 +290,27 @@
             </summary>
             <param name="enableNativeMinification">Flag that indicating to use of native minification</param>
             <returns>Compilation options</returns>
+        </member>
+        <member name="M:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.ConvertSeverityToWarningLevel(System.Int32)">
+            <summary>
+            Converts a severity level of errors to the warning level
+            </summary>
+            <param name="severity">Severity level of errors</param>
+            <returns>Warning level</returns>
+        </member>
+        <member name="M:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.GenerateDetailedErrorMessage(DartSassHost.SassCompilationException)">
+            <summary>
+            Generates a detailed error message
+            </summary>
+            <param name="error">Error details</param>
+            <returns>Detailed error message</returns>
+        </member>
+        <member name="M:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.GenerateDetailedWarningMessage(DartSassHost.ProblemInfo)">
+            <summary>
+            Generates a detailed warning message
+            </summary>
+            <param name="warning">Warning details</param>
+            <returns>Detailed warning message</returns>
         </member>
     </members>
 </doc>
