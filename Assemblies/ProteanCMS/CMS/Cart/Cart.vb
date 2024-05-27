@@ -1442,10 +1442,6 @@ processFlow:
                                     '   execute next step unless form filled out wrong / not in db
                                     GoTo processFlow
                                 End If
-
-
-
-
                             Else
                                 Dim oContentsElmt As XmlElement = moPageXml.SelectSingleNode("/Page/Contents")
                                 If oContentsElmt Is Nothing Then

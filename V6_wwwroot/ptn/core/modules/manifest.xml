@@ -32,9 +32,9 @@
 		</ModuleGroup>
 		<ModuleGroup name="Layout" icon="fas fa-columns">
 			<!--<Module type="1Column" formPath="columns/1column" name="1 Column" icon="icon-1-col">1 column layout to allow alternative backgrounds to be used without multiple columns</Module>-->
-			<Module type="MultiColumn" formPath="columns/MultiColumn" name="Basic Columns" icon="icon-3-col">Set 1-6 even columns</Module>
-			<Module type="2Columns" formPath="columns/2columns"  icon="icon-2-col" name="2 Columns">2 columns in various widths</Module>
-			<Module type="AutoColumn" formPath="columns/AutoColumn" name="Auto Columns" icon="fa-th">Items arranged into columns automatically</Module>
+			<Module type="MultiColumn" formPath="columns/MultiColumn" name="Column Layouts" icon="icon-3-col">Range of layouts up to 6 columns, or set width of items to auto arrange</Module>
+			<!--<Module type="2Columns" formPath="columns/2columns"  icon="icon-2-col" name="2 Columns">2 columns in various widths</Module>
+			<Module type="AutoColumn" formPath="columns/AutoColumn" name="Auto Columns" icon="fa-th">Items arranged into columns automatically</Module>-->
 			<!--<Module type="2Columns5050" formPath="columns/2columns5050"  icon="icon-2-col" name="2 Columns 50 50">2 equal columns</Module>-->
 			<!--<Module type="2Columns4060" formPath="columns/2columns4060" name="2 Columns 40 60" icon="icon-2-col">2 columns, 2/5 and 3/5</Module>
       <Module type="2Columns6040" formPath="columns/2columns6040" name="2 Columns 60 40" icon="icon-2-col">2 columns, 3/5 and 2/5</Module>
@@ -52,7 +52,7 @@
       <Module type="6Columns" formPath="columns/6columns" name="6 Columns" icon="icon-6-col">6 equal columns</Module>-->
 
 			<Module type="Accordion" formPath="columns/Accordion"  name="Accordion Layout" icon="icon-accordion">Accordion layout offers stacked sections which expand and collapse</Module>
-			<Module type="Tabbed" formPath="columns/Tabbed" name="Tabbed Layout" icon="icon-tab">Tabbed navigation at the top of this module allows you to navigate through the content</Module>
+			<Module type="Tabbed" formPath="columns/Tabbed" name="Tabbed Layout" icon="icon-tab">Tabs at the top allow you to navigate through this content</Module>
 
 		</ModuleGroup>
 		<ModuleGroup name="Advanced Content" icon="fas fa-code">

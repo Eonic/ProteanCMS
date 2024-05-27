@@ -1266,6 +1266,9 @@
 						<xsl:if test="@title=''">
 							<xsl:text> boxnotitle</xsl:text>
 						</xsl:if>
+						<xsl:if test="@icon!='' or @uploadIcon!=''">
+							<xsl:text> module-with-icon</xsl:text>
+						</xsl:if>
 						pos-<xsl:value-of select="@position"/>
 						<xsl:if test="@modAnim and @modAnim!=''">
 							<xsl:text> moduleAnimate-invisible</xsl:text>
@@ -1321,6 +1324,15 @@
 									<xsl:with-param name="class" select="'card-body'"/>
 								</xsl:apply-templates>
 							</xsl:if>
+							<xsl:attribute name="class">
+								<xsl:text>card-body</xsl:text>
+								<xsl:if test="@title!=''">
+									<xsl:text> card-body-w-head</xsl:text>
+								</xsl:if>
+								<xsl:if test="@linkText!='' and @link!=''">
+									<xsl:text> card-body-w-footer</xsl:text>
+								</xsl:if>
+							</xsl:attribute>
 							<xsl:apply-templates select="." mode="displayBrief"/>
 
 							<xsl:text> </xsl:text>
@@ -1669,6 +1681,14 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
+		<xsl:variable name="heading">
+			<xsl:choose>
+				<xsl:when test="@heading">
+					<xsl:value-of select="@heading"/>
+				</xsl:when>
+				<xsl:otherwise>h3</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<div class="clearfix {@moduleType}">
 			<div>
 				<!--responsive columns -->
@@ -1680,6 +1700,8 @@
 					<xsl:with-param name="crop" select="$cropSetting"/>
 					<xsl:with-param name="linked" select="@linkArticle"/>
 					<xsl:with-param name="itemLayout" select="@itemLayout"/>
+					<xsl:with-param name="heading" select="$heading"/>
+					<xsl:with-param name="title" select="@title"/>
 				</xsl:apply-templates>
 				<xsl:if test="@stepCount != '0'">
 					<xsl:apply-templates select="/" mode="genericStepper">

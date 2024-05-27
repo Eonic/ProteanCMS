@@ -70,6 +70,14 @@
                 }
             }
         }
+
+        .card-body-w-head {
+            padding-top: 1rem;
+        }
+
+        .card-body-w-footer {
+            padding-bottom: 1rem;
+        }
     }
 
     @include card-color-bg;

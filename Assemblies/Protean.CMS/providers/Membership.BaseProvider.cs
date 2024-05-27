@@ -1835,7 +1835,7 @@ namespace Protean.Providers
                                     // 1. Find the last activity for the session id (within the timeout period)
                                     // 2. Work out if the user id for that session id has had a more recent session
                                     // 3. If not, then we can assume that the session is still alive and we need to update for this session.
-                                    string lastSeenQuery = "SELECT nUserDirId FROM (SELECT TOP 1 nUserDirId,nACtivityType,cSessionId, (SELECT TOP 1 l2.cSessionId As sessionId FROM tblActivityLog l2 WHERE l2.nUserDirId = l.nUserDirId ORDER BY dDateTime DESC) As lastSessionForUser FROM tblActivityLog l " + "WHERE cSessionId = " + Database.SqlString(oldSession.Value) + " " + "AND DATEDIFF(s,l.dDateTime,GETDATE()) < " + gnSingleLoginSessionTimeout + " " + "ORDER BY dDateTime DESC) s WHERE s.cSessionId = s.lastSessionForUser AND s.nACtivityType <> " + dbHelper.ActivityType.Logoff;
+                                    string lastSeenQuery = "SELECT nUserDirId FROM (SELECT TOP 1 nUserDirId,nACtivityType,cSessionId, (SELECT TOP 1 l2.cSessionId As sessionId FROM tblActivityLog l2 WHERE l2.nUserDirId = l.nUserDirId ORDER BY dDateTime DESC) As lastSessionForUser FROM tblActivityLog l " + "WHERE cSessionId = " + Protean.Tools.Database.SqlString(oldSession.Value) + " " + "AND DATEDIFF(s,l.dDateTime,GETDATE()) < " + gnSingleLoginSessionTimeout + " " + "ORDER BY dDateTime DESC) s WHERE s.cSessionId = s.lastSessionForUser AND s.nACtivityType <> " + dbHelper.ActivityType.Logoff;
 
 
 

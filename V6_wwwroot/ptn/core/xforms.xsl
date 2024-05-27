@@ -860,7 +860,7 @@
 	</xsl:template>
 
 	<!-- -->
-	<!-- ========================== CONTROL : SUBMIT (with xFormQuiz bespokeness) ========================== -->
+	<!-- ========================== CONTROL : SUBMIT ========================== -->
 	<!-- -->
 
 	<xsl:template match="submit" mode="xform">
@@ -3021,7 +3021,7 @@
 
 	<xsl:template match="label" mode="legend">
 		<legend>
-				<xsl:choose>
+			<xsl:choose>
 				<!-- for Multilanguage-->
 				<xsl:when test="*[contains(@class,'term-')]">
 					<xsl:apply-templates select="*[contains(@class,'term-')]" mode="term" />

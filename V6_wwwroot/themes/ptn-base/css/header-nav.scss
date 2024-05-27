@@ -19,6 +19,13 @@
 
 //General Header Settings
 header {
+    background-color: $header-bg;
+    color: $header-color;
+
+    a {
+        color: $header-color;
+    }
+
     &.header-one-line {
         flex-wrap: nowrap;
         border-bottom: 0;
@@ -63,6 +70,7 @@ header {
             margin-top: -0.5rem;
         }
     }
+
     &.cart-class {
         .navbar-content {
             flex-grow: 2;
@@ -73,6 +81,7 @@ header {
         border: 0;
         padding: 0.1rem 0.2rem;
         margin: -0.1rem -0.2rem;
+        color: $header-color;
     }
 }
 
@@ -267,7 +276,7 @@ header {
         //FULL SCREEN MOBILE NAV
         #navbarSupportedContent {
             position: fixed;
-            background: #fff;
+            background: $mobile-dd-background;
             top: 0;
             bottom: 0;
             left: 0;
@@ -277,7 +286,7 @@ header {
             display: block;
             overflow: scroll;
             display: none;
-            z-index: 30;
+            z-index: 110;
             padding: 2rem 1rem 0;
             overflow-x: hidden;
 
@@ -303,15 +312,15 @@ header {
             }
 
             .nav-link {
-                color: $body-color;
+                color: $mobile-dd-color;
                 width: 100%;
                 text-align: left;
             }
 
             .dropdown-toggle:after {
                 content: '\f061';
-                color: $body-color;
-                border: 1px solid $body-color;
+                color: $mobile-dd-color;
+                border: 1px solid $mobile-dd-color;
                 border-radius: 2px;
                 padding: 2px 5px;
                 float: right;
@@ -322,6 +331,7 @@ header {
 
             .dropdown-menu {
                 position: fixed;
+                background: $mobile-dd-background;
                 top: 0;
                 bottom: 0;
                 left: 0;
@@ -339,12 +349,15 @@ header {
             .dropdown-item {
                 font-size: 1rem;
                 padding-bottom: 0.6rem;
+                color: $mobile-dd-color;
+                white-space: normal;
+                padding-right: 2rem;
             }
 
             .btn-sm.btn-outline-primary {
                 width: 100%;
-                background: $primary;
-                color: #fff;
+                background: $mobile-dd-background;
+                color: $mobile-dd-color;
             }
 
             .search-wrapper {
@@ -377,7 +390,7 @@ header {
             }
 
             .emergency-xs-link {
-                color: $primary;
+                color: $mobile-dd-background;
                 font-weight: 600;
             }
 
@@ -395,6 +408,8 @@ header {
                 line-height: 1;
                 font-size: 0.8rem;
                 margin-top: 0.4rem;
+                border-color: $mobile-dd-color;
+                color: $mobile-dd-color;
 
                 i {
                     font-size: 0.8rem;
@@ -416,13 +431,13 @@ header {
                 transform: translateX(100%);
                 position: absolute;
                 display: block;
-                background: #fff;
                 width: 100%;
                 top: 0;
                 bottom: 0;
                 transition: all ease 0.3s;
                 padding: 0;
-                height: 400px;
+                height: 600px;
+                background: $mobile-dd-background;
             }
 
             .dropdown-active {

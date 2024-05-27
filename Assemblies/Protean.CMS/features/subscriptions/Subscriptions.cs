@@ -523,7 +523,7 @@ namespace Protean
                         oDs = myWeb.moDbHelper.GetDataSet(sSQL, "tblSubscription", "OrderList");
                         foreach (DataRow oDr in oDs.Tables[0].Rows)
                         {
-                            oElmt = myWeb.moPageXml.CreateElement("Subscription");
+                            oElmt = oParentElmt.OwnerDocument.CreateElement("Subscription");
                             oElmt.InnerXml = Conversions.ToString(oDr["cSubXml"]);
                             oElmt.SetAttribute("status", oDr["status"].ToString());
                             oElmt.SetAttribute("id", oDr["id"].ToString());
@@ -568,8 +568,9 @@ namespace Protean
                                 oElmt.SetAttribute("paymentStatus", "unknown");
                             }
 
-                            // Get user Info
-                            oElmt.AppendChild(myWeb.GetUserXML(Conversions.ToLong(oDr["userId"])));
+                            // Get user Info                      
+
+                            oElmt.AppendChild(oElmt.OwnerDocument.ImportNode((XmlNode)myWeb.GetUserXML(Conversions.ToLong(oDr["userId"])), true));
 
                             // Get the renewal Info
                             sSQL = "select a.dPublishDate as startDate, a.dExpireDate as endDate, sub.nPaymentMethodId as payMthdId,  pay.cPayMthdProviderName as providerName, sub.xNotesXml, sub.nOrderId as orderId" + " from tblSubscriptionRenewal sub INNER JOIN tblAudit a ON sub.nAuditId = a.nAuditKey " + " LEFT OUTER JOIN tblCartPaymentMethod pay on pay.nPayMthdKey = sub.nPaymentMethodId " + " where sub.nSubId = " + nSubId;
@@ -588,7 +589,7 @@ namespace Protean
                                 elmtRenewals.InnerXml = oDs.GetXml();
                                 foreach (XmlElement renewalElmt in elmtRenewals.SelectNodes("Renewals/Renewal"))
                                     renewalElmt.InnerXml = renewalElmt.InnerText;
-                                oElmt.AppendChild(elmtRenewals.FirstChild);
+                                oElmt.AppendChild(oElmt.OwnerDocument.ImportNode(elmtRenewals.FirstChild,true));
                             }
 
                             oParentElmt.AppendChild(oElmt);
@@ -2270,7 +2271,7 @@ namespace Protean
 
                         long billingId = Conversions.ToLong(myWeb.moDbHelper.GetDataValue("select nContactKey from tblCartContact where cContactType = 'Billing Address' and nContactCartId = 0 and nContactDirId = " + UserId));
                         long deliveryId = billingId;
-                        myWeb.moCart.useSavedAddressesOnCart(billingId, deliveryId);
+                        myWeb.moCart.useSavedAddressesOnCart(billingId, deliveryId, null);
 
                         // Collect the payment
                         string CurrencyCode = "GBP";
@@ -2454,7 +2455,7 @@ namespace Protean
 
                         long billingId = Conversions.ToLong(myWeb.moDbHelper.GetDataValue("select nContactKey from tblCartContact where cContactType = 'Billing Address' and nContactCartId = 0 and nContactDirId = " + UserId));
                         long deliveryId = billingId;
-                        myWeb.moCart.useSavedAddressesOnCart(billingId, deliveryId);
+                        myWeb.moCart.useSavedAddressesOnCart(billingId, deliveryId,null);
 
                         myWeb.moCart.mnProcessId = 6;
                         string strSuccuess = "Success";

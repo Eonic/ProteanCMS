@@ -86,6 +86,10 @@ a {
     text-decoration-thickness: 0px;
 }
 
+strong, b {
+    font-weight: 700;
+}
+
 .sitemap a {
     text-decoration-thickness: 0px;
 
@@ -98,6 +102,11 @@ h1, h2, h3 {
     a {
         text-underline-offset: 0.4rem;
     }
+}
+
+.title a {
+    text-decoration: none;
+    color: $headings-color;
 }
 
 .center-block {
@@ -113,7 +122,7 @@ h1, h2, h3 {
         color: $visited;
     }
 
-    *:last-child {
+    *:last-child:not(button) {
         margin-bottom: 0;
     }
 }
@@ -808,7 +817,7 @@ dd {
         }
 
         .card-body {
-            *:last-child {
+            *:last-child:not(button) {
                 margin-bottom: 0;
                 border-bottom: 0;
                 padding-bottom: 0;
@@ -1002,10 +1011,19 @@ dd {
     background: $footer-bg;
     padding-top: $grid-gutter-height;
     padding-bottom: $grid-gutter-height;
-    color: rgba(color-contrast($footer-bg),0.7);
+    color: rgba(color-contrast($footer-bg),1);
 
     h1, h2, h3, h4, h5, h6 {
-        color: rgba(color-contrast($footer-bg),0.9);
+        color: rgba(color-contrast($footer-bg),1);
+    }
+
+    a {
+        color: rgba(color-contrast($footer-bg),1);
+
+        &:hover,
+        &:focus {
+            opacity: 0.8;
+        }
     }
 
     .footer-nav {
@@ -1091,5 +1109,12 @@ dd {
     .moduleAnimate-animated {
         animation: none !important;
         animation-delay: 0 !important;
+    }
+}
+
+.normalMode,
+.previewMode {
+    header {
+        position: static;
     }
 }

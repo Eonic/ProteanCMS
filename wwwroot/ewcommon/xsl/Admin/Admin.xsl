@@ -164,6 +164,7 @@
 	</xsl:template>
 
   <xsl:template match="Page" mode="adminJs">
+
     <xsl:if test="ContentDetail/Content[@type='xform']/descendant::submit[contains(@class,'getGeocodeButton')]">
       <script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false&amp;key={$GoogleAPIKey}">&#160;</script>
     </xsl:if>
@@ -174,12 +175,12 @@
         <xsl:text>~/ewcommon/js/codemirror/codemirror.js,</xsl:text>
         <xsl:text>~/ewcommon/js/jQuery/jquery.magnific-popup.min.js,</xsl:text>
         <xsl:text>~/ewcommon/js/codemirror/mirrorframe.js,</xsl:text>
-	<xsl:text>~/ewcommon/js/vuejs/vue.min.js,</xsl:text>
-	<xsl:text>~/ewcommon/js/vuejs/axios.min.js,</xsl:text>
-	<xsl:text>~/ewcommon/js/vuejs/polyfill.js,</xsl:text>
-	<xsl:text>~/ewcommon/js/vuejs/protean-vue.js,</xsl:text>
-	<xsl:text>~/ewcommon/js/ajaxtreeview/ajaxtreeview.js,</xsl:text>
-	<xsl:text>~/ewcommon/js/ewAdmin.js</xsl:text>
+		<xsl:text>~/ewcommon/js/vuejs/vue.min.js,</xsl:text>
+		<xsl:text>~/ewcommon/js/vuejs/axios.min.js,</xsl:text>
+		<xsl:text>~/ewcommon/js/vuejs/polyfill.js,</xsl:text>
+		<xsl:text>~/ewcommon/js/vuejs/protean-vue.js,</xsl:text>
+		<xsl:text>~/ewcommon/js/ajaxtreeview/ajaxtreeview.js,</xsl:text>
+		<xsl:text>~/ewcommon/js/ewAdmin.js</xsl:text>
       </xsl:with-param>
       <xsl:with-param name="bundle-path">
         <xsl:text>~/Bundles/Admin</xsl:text>
@@ -188,6 +189,7 @@
     </xsl:call-template>
     <xsl:apply-templates select="." mode="siteAdminJs"/>
     <xsl:apply-templates select="." mode="LayoutAdminJs"/>
+
   </xsl:template>
 
 	<xsl:template match="Page" mode="LayoutAdminJs"></xsl:template>
@@ -196,7 +198,7 @@
 	<!-- -->
 	<!--   ##################  Edit Structure - dynamically generated from menu   ##############################   -->
 	<!-- -->
-	<xsl:template match="Page[@ewCmd='EditStructure' or @ewCmd='DeliveryMethods' or @layout='ImageLib' or @layout='DocsLib' or @layout='MediaLib' or @ewCmd='Permissions' or @ewCmd='MoveContent' or @ewCmd='ShippingLocations' or @layout='MovePage']" mode="adminJs">
+	<xsl:template match="Page[@ewCmd='EditStructure' or @ewCmd='EditPage' or @ewCmd='DeliveryMethods' or @layout='ImageLib' or @layout='DocsLib' or @layout='MediaLib' or @ewCmd='Permissions' or @ewCmd='MoveContent' or @ewCmd='ShippingLocations' or @layout='MovePage']" mode="adminJs">
 
 		<xsl:variable name="getMenuNoReload">
 			<xsl:call-template name="getSettings">
@@ -227,8 +229,9 @@
     <!--level: <xsl:value-of select="$menuLevelDepth"/>-->
 
 		<xsl:apply-templates select="." mode="LayoutAdminJs"/>
-
+<!-- this gets called elsewhere
 		<xsl:apply-templates select="." mode="xform_control_scripts"/>
+-->
 
 	</xsl:template>
 
@@ -290,6 +293,14 @@
 					</div>
 				</div>
 			</div>
+			<xsl:if test="/Page/@modalAlert!=''">
+				<script>
+					addEventListener("DOMContentLoaded", (event) => {
+						showAdminAlert("<xsl:value-of select="@modalAlert"/>")
+					});
+				</script>
+			</xsl:if>
+			
 			<iframe id="keepalive" src="/ewCommon/tools/keepalive.ashx" frameborder="0" width="0" height="0" xmlns:ew="urn:ew">Keep Alive frame</iframe>
 		</body>
 	</xsl:template>

@@ -19,12 +19,12 @@ body.normalMode, #adminLayout {
     }
 }
 .normalMode .ptn-edit #adminHeader {
-    z-index: 9990;
+    //z-index: 9990;
 }
 
 .ptn-edit #adminHeader {
     background: $admin-header-bg;
-    z-index: 1000;
+    z-index: 100;
     font-size: 15px;
     font-family: $admin-header-font;
     font-weight: 300;
@@ -383,4 +383,7 @@ body.normalMode, #adminLayout {
 }
 .ptn-edit #footerCopyright {
     color: #999 !important;
+}
+.setup #adminHeader .navbar-brand:hover{
+    background-color:transparent!important;
 }

@@ -1,0 +1,308 @@
+﻿#ContentFilter {
+    @media(min-width:786px) {
+        //border: 2px solid $primary;
+        background: $light;
+        border-radius: $border-radius;
+        display: flex;
+        color: color-contrast($light);
+
+        &:before {
+            content: 'Filter by:';
+            background: $light;
+            color: color-contrast($light);
+            padding: 9px 16px;
+            float: left;
+            font-size: 1.125rem;
+        }
+
+        .form-margin {
+            float: left;
+            padding: 0.5rem 1rem;
+            margin: 0;
+            label{
+                margin:0;
+            }
+        }
+        .dropdown-menu{
+            padding:1rem;
+            border:0;
+            background:$primary;
+            color:color-contrast($primary);
+        }
+    }
+
+    > fieldset {
+        @media(min-width:768px) {
+            padding: 9px 18px 0;
+        }
+
+        > .form-group {
+            margin: 0;
+            z-index: 9999;
+
+
+            @media(min-width:768px) {
+                padding-bottom: 8px !important;
+            }
+
+            > label {
+                color: $primary;
+                font-size: 1.125rem;
+                padding: 0px 0 0px;
+                cursor: pointer;
+                margin: 0;
+                display: block;
+                position: relative;
+
+                &:after {
+                    //.chevron-down;
+                    padding-left: 5px;
+                    font-size: 0.8125rem;
+                }
+
+                &.active:after {
+                    // .chevron-up;
+                }
+            }
+
+            > .control-wrapper {
+                display: none;
+                padding-top: 10px;
+            }
+
+            input, textarea {
+                border: 1px solid $primary;
+                background: #fff;
+                margin-bottom: 10px;
+            }
+
+            .btnLocationSub {
+                margin-top: 10px;
+                width: 170px;
+
+                i {
+                    display: none;
+                }
+            }
+
+            .btnWeightSub, .btnPriceSubmit, .btnGroupSizeSub, .btnAgeSubmit {
+                width: 100%;
+            }
+
+            > label[for='OfferFilter'] {
+                color: #ec8400;
+            }
+        }
+    }
+
+    .radio {
+        //padding-right:28px;
+        position: relative;
+    }
+
+    .ProductCount {
+        //position:absolute;
+        //right:0;
+        white-space: nowrap;
+        //font-size: 0;
+        display: inline-flex;
+
+        &:before {
+            content: '[';
+        }
+
+        &:after {
+            content: ']';
+        }
+    }
+
+
+    .no-results-panel {
+        text-align: center;
+
+        button {
+            i {
+                display: none;
+            }
+        }
+    }
+
+    .form-actions {
+        margin-right: -5px;
+        margin-left: -5px;
+        clear: both;
+
+        @media(max-width:768px) {
+            text-align: center;
+        }
+
+        button {
+            margin-right: 5px;
+            margin-left: 5px;
+            margin-bottom: 10px;
+        }
+
+        .clear-filters {
+            border-radius: 100px;
+            border: 2px solid #ff0000;
+            background-color: red;
+            color: white;
+        }
+
+        .filter-applied {
+            border-radius: 5px;
+            border: 2px solid #0070B0;
+            background-color: aliceblue;
+            color: #0070B0;
+            padding: 5px 10px;
+            font-size: 0.75rem;
+        }
+    }
+    /*.filter-selected label ::before {
+            content: "●";
+            color: green;
+        }*/
+    fieldset > .filter-selected > label {
+        &:before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: $success;
+            display: inline-block;
+            border-radius: 100px;
+            position: absolute;
+            left: -13px;
+            top: 7px;
+        }
+    }
+
+    @media(max-width:768px) {
+        display: none;
+        position: fixed;
+        overflow: scroll;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: $info;
+        z-index: 10;
+
+        .filter-xs-heading {
+            background: $primary;
+            padding: 12px 20px;
+            position: relative;
+
+            h3 {
+                color: #fff;
+                margin: 0;
+                padding: 0;
+                font-size: 1.5625rem;
+            }
+
+            i.fa-times {
+                color: #fff;
+                cursor: pointer;
+                position: absolute;
+                right: 20px;
+                font-size: 1.25rem;
+                top: 17px;
+            }
+        }
+
+        > fieldset {
+            padding: 20px;
+
+            > .form-group {
+                padding-bottom: 15px;
+
+                > label {
+                }
+            }
+        }
+
+        .form-actions button {
+            float: none;
+        }
+    }
+
+    @media(min-width:768px) {
+        > fieldset > .form-group {
+            float: left;
+            padding-right: 25px;
+            position: relative;
+            padding-bottom: 15px;
+
+
+            > .control-wrapper {
+                position: absolute;
+                left: 0;
+                top: 30px;
+                background: $info;
+                border: 2px solid $primary;
+                border-radius: 10px;
+                padding: 10px;
+                z-index: 2;
+
+                label {
+                    width: 170px !important;
+                    max-width: 100%;
+                }
+
+                &:before {
+                    border-bottom: 10px solid $primary;
+                    border-left: 10px solid transparent;
+                    border-right: 10px solid transparent;
+                    width: 10px;
+                    height: 10px;
+                    content: '';
+                    display: block;
+                    position: absolute;
+                    top: -10px;
+                    left: 30px;
+                }
+
+                &:after {
+                    border-bottom: 8px solid $info;
+                    border-left: 8px solid transparent;
+                    border-right: 8px solid transparent;
+                    width: 8px;
+                    height: 8px;
+                    content: '';
+                    display: block;
+                    position: absolute;
+                    top: -7px;
+                    left: 32px;
+                }
+            }
+        }
+    }
+
+    #histogramSliderPrice-slider,
+    #histogramSliderAge-slider {
+        border: 1px solid $primary;
+
+        span {
+            padding-top: 7px;
+            display: inline-block;
+            color: #757575;
+            font-size: 0.75rem;
+        }
+
+        span:first-of-type {
+            &:before {
+                content: 'min';
+            }
+        }
+
+        span:last-of-type {
+            &:before {
+                content: 'max';
+                margin-left: -18px;
+            }
+        }
+    }
+
+    #histogramSliderPrice-histogram .tooltip {
+        opacity: 0.5;
+    }
+}

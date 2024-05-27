@@ -9,6 +9,8 @@
 		<xsl:param name="class"/>
 		<xsl:param name="parentId"/>
 		<xsl:param name="linked"/>
+		<xsl:param name="heading"/>
+		<xsl:param name="title"/>
 		<!-- contactBrief -->
 		<xsl:variable name="parentURL">
 			<xsl:apply-templates select="self::Content" mode="getHref">
@@ -77,88 +79,119 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:if>
-				<h3 class="title">
+				<div class="media-inner">
 					<xsl:choose>
-						<xsl:when test="@noLink='true'">
-							<xsl:attribute name="title">
-								<xsl:call-template name="term2072" />
-								<xsl:text>&#160;</xsl:text>
-								<xsl:value-of select="GivenName/node()"/>
-								<xsl:text>&#160;</xsl:text>
-								<xsl:value-of select="Surname/node()"/>
-							</xsl:attribute>
-							<xsl:apply-templates select="." mode="getDisplayName"/>
+						<xsl:when test="$title!='' and $heading!=''">
+							<xsl:variable name="headingNo" select="substring-after($heading,'h')"/>
+							<xsl:variable name="headingNoPlus" select="$headingNo + 1"/>
+							<xsl:variable name="listHeading">
+								<xsl:text>h</xsl:text>
+								<xsl:value-of select="$headingNoPlus"/>
+							</xsl:variable>
+							<xsl:element name="{$listHeading}">
+								<xsl:attribute name="class">
+									<xsl:text>title</xsl:text>
+								</xsl:attribute>
+								<a href="{$parentURL}">
+									<xsl:apply-templates select="." mode="getDisplayName"/>
+								</a>
+							</xsl:element>
 						</xsl:when>
 						<xsl:otherwise>
-							<a href="{$parentURL}">
-								<xsl:attribute name="title">
-									<xsl:call-template name="term2072" />
-									<xsl:text>&#160;</xsl:text>
-									<xsl:value-of select="GivenName/node()"/>
-									<xsl:text>&#160;</xsl:text>
-									<xsl:value-of select="Surname/node()"/>
-								</xsl:attribute>
-								<xsl:apply-templates select="." mode="getDisplayName"/>
-							</a>
+							<xsl:choose>
+								<xsl:when test="$heading=''">
+									<xsl:choose>
+										<xsl:when test="@noLink='true'">
+											<h3 class="title">
+												<xsl:apply-templates select="." mode="getDisplayName"/>
+											</h3>
+										</xsl:when>
+										<xsl:otherwise>
+											<h3 class="title">
+												<a href="{$parentURL}">
+													<xsl:apply-templates select="." mode="getDisplayName"/>
+												</a>
+											</h3>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:element name="{$heading}">
+										<xsl:attribute name="class">
+											<xsl:text>title</xsl:text>
+										</xsl:attribute>
+										<xsl:choose>
+											<xsl:when test="@noLink='true'">
+												<xsl:apply-templates select="." mode="getDisplayName"/>
+											</xsl:when>
+											<xsl:otherwise>
+												<a href="{$parentURL}">
+													<xsl:apply-templates select="." mode="getDisplayName"/>
+												</a>
+											</xsl:otherwise>
+										</xsl:choose>
+									</xsl:element>
+								</xsl:otherwise>
+							</xsl:choose>
 						</xsl:otherwise>
 					</xsl:choose>
-				</h3>
-				<xsl:if test="Title/node()!=''">
-					<h4 class="job-title">
-						<xsl:apply-templates select="Title" mode="displayBrief"/>
-					</h4>
-				</xsl:if>
-
-				<dl class="clearfix dl-horizontal">
-					<xsl:if test="Telephone/node()!=''">
-						<dt class="tel">
-							<xsl:call-template name="term2007" />
-							<xsl:text>: </xsl:text>
-						</dt>
-						<dd class="tel">
-							<xsl:apply-templates select="Telephone" mode="displayBrief"/>
-						</dd>
-
+					<xsl:if test="Title/node()!=''">
+						<h4 class="job-title">
+							<xsl:apply-templates select="Title" mode="displayBrief"/>
+						</h4>
 					</xsl:if>
-					<xsl:if test="Mobile/node()!=''">
-						<dt class="mobile">
-							<xsl:call-template name="term2080" />
-							<xsl:text>: </xsl:text>
-						</dt>
-						<dd>
-							<xsl:apply-templates select="Mobile" mode="displayBrief"/>
-						</dd>
-					</xsl:if>
-					<xsl:if test="Email/node()!=''">
-						<dt class="email">
-							<xsl:call-template name="term2009" />
-							<xsl:text>: </xsl:text>
-						</dt>
-						<dd>
-							<a href="mailto:{Email/node()}">
-								<xsl:apply-templates select="Email" mode="displayBrief"/>
-							</a>
-						</dd>
-					</xsl:if>
-				</dl>
 
-				<xsl:if test="Profile/node()!=''">
-					<xsl:apply-templates select="Profile/node()" mode="cleanXhtml"/>
-				</xsl:if>
-				<xsl:if test="not(@noLink='true')">
-					<div class="entryFooter">
-						<xsl:apply-templates select="." mode="moreLink">
-							<xsl:with-param name="link" select="$parentURL"/>
-							<xsl:with-param name="stretchLink" select="$linked"/>
-							<xsl:with-param name="altText">
-								<xsl:value-of select="GivenName/node()"/>
-								<xsl:text> </xsl:text>
-								<xsl:value-of select="Surname/node()"/>
-							</xsl:with-param>
-						</xsl:apply-templates>
-						<xsl:text> </xsl:text>
-					</div>
-				</xsl:if>
+					<dl class="clearfix dl-horizontal">
+						<xsl:if test="Telephone/node()!=''">
+							<dt class="tel">
+								<xsl:call-template name="term2007" />
+								<xsl:text>: </xsl:text>
+							</dt>
+							<dd class="tel">
+								<xsl:apply-templates select="Telephone" mode="displayBrief"/>
+							</dd>
+
+						</xsl:if>
+						<xsl:if test="Mobile/node()!=''">
+							<dt class="mobile">
+								<xsl:call-template name="term2080" />
+								<xsl:text>: </xsl:text>
+							</dt>
+							<dd>
+								<xsl:apply-templates select="Mobile" mode="displayBrief"/>
+							</dd>
+						</xsl:if>
+						<xsl:if test="Email/node()!=''">
+							<dt class="email">
+								<xsl:call-template name="term2009" />
+								<xsl:text>: </xsl:text>
+							</dt>
+							<dd>
+								<a href="mailto:{Email/node()}">
+									<xsl:apply-templates select="Email" mode="displayBrief"/>
+								</a>
+							</dd>
+						</xsl:if>
+					</dl>
+
+					<xsl:if test="Profile/node()!=''">
+						<xsl:apply-templates select="Profile/node()" mode="cleanXhtml"/>
+					</xsl:if>
+					<xsl:if test="not(@noLink='true')">
+						<div class="entryFooter">
+							<xsl:apply-templates select="." mode="moreLink">
+								<xsl:with-param name="link" select="$parentURL"/>
+								<xsl:with-param name="stretchLink" select="$linked"/>
+								<xsl:with-param name="altText">
+									<xsl:value-of select="GivenName/node()"/>
+									<xsl:text> </xsl:text>
+									<xsl:value-of select="Surname/node()"/>
+								</xsl:with-param>
+							</xsl:apply-templates>
+							<xsl:text> </xsl:text>
+						</div>
+					</xsl:if>
+				</div>
 			</div>
 		</div>
 	</xsl:template>
@@ -244,15 +277,16 @@
 		</xsl:variable>
 		<div class="contributor row">
 			<xsl:if test="Images/img/@src!=''">
-				<a href="{$parentURL}" rel="author" title="click here to view more details on {GivenName/node()} {Surname/node()}" class="col-md-4">
+				<a href="{$parentURL}" rel="author" title="click here to view more details on {GivenName/node()} {Surname/node()}" class="col-md-3">
 					<xsl:apply-templates select="." mode="displayThumbnail">
-						<xsl:with-param name="width">150</xsl:with-param>
-						<xsl:with-param name="height">150</xsl:with-param>
+						<xsl:with-param name="width">220</xsl:with-param>
+						<xsl:with-param name="height">220</xsl:with-param>
 						<xsl:with-param name="crop" select="true()"/>
 					</xsl:apply-templates>
 				</a>
+
 			</xsl:if>
-			<div class="col-md-8">
+			<div class="col-md-9">
 				<h5 class="title">
 					<a href="{$parentURL}" rel="author">
 						<xsl:attribute name="title">
@@ -464,16 +498,16 @@
 						<xsl:apply-templates select="Description/node()" mode="cleanXhtml"/>
 					</div>
 					<xsl:if test="Content[@type='NewsArticle']">
-					<div class="relatedcontent NewsList">
-						<h2>
-							Articles by <xsl:value-of select="GivenName"/><xsl:text> </xsl:text><xsl:value-of select="Surname"/>
-						</h2>
-						<div class="row cols row-cols-1 row-cols-lg-2">
-							<xsl:apply-templates select="Content[@type='NewsArticle']" mode="displayBrief">
-								<xsl:with-param name="sortBy" select="@publishDate"/>
-							</xsl:apply-templates>
+						<div class="relatedcontent NewsList">
+							<h2>
+								Articles by <xsl:value-of select="GivenName"/><xsl:text> </xsl:text><xsl:value-of select="Surname"/>
+							</h2>
+							<div class="row cols row-cols-1 row-cols-lg-2">
+								<xsl:apply-templates select="Content[@type='NewsArticle']" mode="displayBrief">
+									<xsl:with-param name="sortBy" select="@publishDate"/>
+								</xsl:apply-templates>
+							</div>
 						</div>
-					</div>
 					</xsl:if>
 					<div class="entryFooter">
 						<xsl:if test="Content[@type='Tag']">
@@ -492,7 +526,7 @@
 				</div>
 			</div>
 
-			
+
 
 		</div>
 	</xsl:template>

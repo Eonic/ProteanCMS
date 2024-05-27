@@ -1079,11 +1079,8 @@ namespace Protean
                                 cProcessInfo = ex.StackTrace;
                             }
                         }
-
                     }
-
                     return successMessage;
-
                 }
             }
 

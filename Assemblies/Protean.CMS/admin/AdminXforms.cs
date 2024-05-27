@@ -32,6 +32,7 @@ using static Protean.Tools.Xml;
 using System.Web.UI.HtmlControls;
 using Protean.Providers.Membership;
 using Protean.Providers.Payment;
+using System.Windows.Shapes;
 
 namespace Protean
 {
@@ -3025,11 +3026,8 @@ namespace Protean
 
                                     break;
                                 }
-
                             default:
                                 {
-
-
                                     object PathPrefix = @"ewcommon\";
                                     EnumberateManifest(ref ManifestDoc, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "xsl/PageLayouts")), "LayoutManifest.xml");
                                     if (!string.IsNullOrEmpty(this.myWeb.moConfig["ClientCommonFolder"]))
@@ -3039,22 +3037,15 @@ namespace Protean
                                     EnumberateManifest(ref ManifestDoc, "/xsl", "layoutManifest.xml");
                                     break;
                                 }
-
                         }
-
-
                         return ManifestDoc;
                     }
-
                     catch (Exception ex)
                     {
                         stdTools.returnException(ref this.myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
-
-
                 }
-
 
                 public void EnumberateManifest(ref XmlDocument ManifestDoc, string filepath, string manifestFilename = "LayoutManifest.xml")
                 {
@@ -3180,16 +3171,21 @@ namespace Protean
                                     // oModuleType.SetAttribute("formPath", filepath & "/" & formPath)
 
                                     XmlElement filterTypes = (XmlElement)ManifestDoc.SelectSingleNode("/PageLayouts/FilterTypes");
-                                    if (filterTypes.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Module[@name='", FilterTypeName), "']"))) is null)
-                                    {
-                                        filterTypes.AppendChild(filterTypes.OwnerDocument.ImportNode(oModuleType.CloneNode(true), true));
+                                    if (filterTypes == null){
+                                        filterTypes = ManifestDoc.CreateElement("FilterTypes");
+                                        ManifestDoc.DocumentElement.AppendChild(filterTypes);
                                     }
-                                    else
-                                    {
-                                        filterTypes.ReplaceChild(filterTypes.OwnerDocument.ImportNode(oModuleType, true), filterTypes.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Filter[@name='", FilterTypeName), "']"))));
+                                    if (filterTypes != null) {
+                                        if (filterTypes.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Module[@name='", FilterTypeName), "']"))) is null)
+                                        {
+                                            filterTypes.AppendChild(filterTypes.OwnerDocument.ImportNode(oModuleType.CloneNode(true), true));
+                                        }
+                                        else
+                                        {
+                                            filterTypes.ReplaceChild(filterTypes.OwnerDocument.ImportNode(oModuleType, true), filterTypes.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Filter[@name='", FilterTypeName), "']"))));
+                                        }
                                     }
                                 }
-
                             }
                         }
                         else
@@ -7838,9 +7834,12 @@ namespace Protean
 
                         string[] aSellerNotes = Strings.Split(sellerNotes, "/n");
                         string cSellerNotesHtml = "<ul>";
-                        for (int snCount = 0, loopTo = Information.UBound(aSellerNotes); snCount <= loopTo; snCount++)
-                            cSellerNotesHtml = cSellerNotesHtml + "<li>" + convertEntitiesToCodes(aSellerNotes[snCount]) + "</li>";
-                        tempElement.InnerXml = cSellerNotesHtml + "</ul>";
+                        for (int snCount = 0, loopTo = Information.UBound(aSellerNotes); snCount <= loopTo; snCount++) { 
+                        string replaceWith = " ";
+                        string removedBreaks = convertEntitiesToCodes(aSellerNotes[snCount]).Replace("\r\n", replaceWith).Replace("\n", replaceWith).Replace("\r", replaceWith).Replace("\\n", replaceWith);
+                        cSellerNotesHtml = cSellerNotesHtml + "<li>" + removedBreaks + "</li>";
+                        };
+                    tempElement.InnerXml = cSellerNotesHtml + "</ul>";
 
                         string argsClass = "";
                         int argnRows = Conversions.ToInteger("5");
@@ -9048,7 +9047,9 @@ namespace Protean
                     string cProcessInfo = "";
                     try
                     {
-
+                        if (xFormPath == "/xforms/directory/UserContact.xml" && myWeb.bs5) {
+                            xFormPath = "/features/membership/UserContact.xml";
+                        }
 
                         base.NewFrm("EditContact");
                         base.load(xFormPath, this.myWeb.maCommonFolders);
@@ -9844,9 +9845,12 @@ namespace Protean
                         base.submission("RenewSubscription", "", "post");
                         XmlElement oFrmElmt;
 
-                        var argoParentElmt = base.Instance;
-                        oSub.GetSubscriptionDetail(ref argoParentElmt, Conversions.ToInteger(nSubscriptionId));
-                        base.Instance = argoParentElmt;
+                        XmlElement InstanceElmt = base.Instance;
+                        oSub.GetSubscriptionDetail(ref InstanceElmt, Conversions.ToInteger(nSubscriptionId));
+
+
+
+                        base.Instance = InstanceElmt;
                         XmlElement SubXml = (XmlElement)base.Instance.FirstChild;
                         // calculate new expiry date
 
@@ -10550,7 +10554,8 @@ namespace Protean
 
                         base.addInput(ref oGrp0Elmt, "dBegin", true, "From", "calendarTime");
                         base.addInput(ref oGrp0Elmt, "dEnd", true, "To", "calendarTime");
-                        var oSel1 = base.addSelect1(ref oGrp0Elmt, "cCurrencySymbol", true, "Currency");
+                        XmlElement oSel1;
+                        //oSel1 = base.addSelect1(ref oGrp0Elmt, "cCurrencySymbol", true, "Currency");
                         if (this.myWeb.moConfig["Quote"] != "on")
                         {
                             oSel1 = base.addSelect1(ref oGrp0Elmt, "cOrderType", true, "Cart Type");
@@ -11356,6 +11361,7 @@ namespace Protean
                                         //XmlNode argoNode = (XmlNode)this.moXformElmt;
                                         base.addNote(ref this.moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse + " - File Imported");
                                         //this.moXformElmt = (XmlElement)argoNode;
+                                        this.valid = true;
                                     }
                                     else
                                     {

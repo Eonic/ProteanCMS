@@ -7924,9 +7924,6 @@
 						<xsl:variable name="imageSize" select="ew:ImageSize($newSrc)"/>
 
 						<xsl:variable name="image">
-							(<xsl:value-of select="$max-width"/>
-							<xsl:text>x</xsl:text>
-							<xsl:value-of select="$max-height"/>)
 							<img itemprop="image">
 								<!-- SRC -->
 								<xsl:choose>

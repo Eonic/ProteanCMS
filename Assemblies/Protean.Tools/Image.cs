@@ -12,6 +12,7 @@ using Exception = System.Exception;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text.RegularExpressions;
 
+
 namespace Protean.Tools
 {
     public class Image
@@ -933,6 +934,7 @@ namespace Protean.Tools
 
                                         catch (Exception ex)
                                         {
+                                           
                                             optimizer = default;
                                             OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CompressImage", ex, ""));
                                         }

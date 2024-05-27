@@ -10866,6 +10866,80 @@
       </div>
     </div>
   </xsl:template>
+	
+	<xsl:template match="Content[@type='Job']" mode="json-ld">
+   <xsl:variable name="href">
+            <xsl:if test="not(starts-with($currentPage/@url,'http'))">
+              <xsl:if test="$siteURL=''">
+                <xsl:text>http</xsl:text>
+                <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
+                <xsl:text>://</xsl:text>
+                <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+              </xsl:if>
+            </xsl:if>
+            <xsl:choose>
+              <xsl:when test="/Page/ContentDetail">
+                <xsl:apply-templates select="/Page/ContentDetail/Content" mode="getHref"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:apply-templates select="$currentPage" mode="getHref"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:variable>
+    <script type="application/ld+json">
+      {
+      "@context": "http://schema.org",
+      "@type": "JobPosting",
+      "baseSalary":{
+	  "@type": "MonetaryAmount",
+	  "currency": "GBP",
+	  "value": {
+	    "@type": "QuantitativeValue",
+	    "value": <xsl:value-of select="Salary/@figure"/>000,
+	    "unitText": "YEAR"
+	  }
+	},
+      "url": "<xsl:value-of select="$href"/>",
+      "jobBenefits": "<xsl:value-of select="Salary/node()"/> <xsl:value-of select="Incentives/node()"/>",
+      "datePosted": "<xsl:value-of select="@publish"/>",
+      "description": "<xsl:value-of select="Description/node()"/>",
+      "educationRequirements": "<xsl:value-of select="EducationRequirements/node()"/>",
+      "employmentType": "<xsl:value-of select="ContractType/node()"/>",
+      "experienceRequirements": "<xsl:value-of select="ExperienceRequirements/node()"/>",
+      "incentiveCompensation": "<xsl:value-of select="Incentives/node()"/>",
+      "industry": "FMCG",
+      "jobLocation": {
+      "@type": "place", 
+	      "address": {
+	      "@type": "PostalAddress",
+	      "addressLocality": "<xsl:value-of select="Location/node()"/>",
+	      "postalCode": "",
+      	      "addressCountry": "GB"
+	      }
+     },
+      "occupationalCategory": "<xsl:value-of select="JobOccupation/node()"/>",
+      "qualifications": "<xsl:value-of select="Qualifications/node()"/>",
+      "responsibilities": "<xsl:value-of select="Qualifications/node()"/>",
+      "salaryCurrency": "GBP",
+      "skills": "<xsl:value-of select="Skills/node()"/> ",
+      "specialCommitments": "Skills ",
+      "title": "<xsl:value-of select="JobTitle/node()"/>",
+      "workHours": "<xsl:value-of select="JobHours/node()"/>",
+      "hiringOrganization" : {
+	    "@type": "Organization",
+	    "name": "<xsl:call-template name="getSettings">
+      <xsl:with-param name="sectionName" select="'web'"/>
+      <xsl:with-param name="valueName" select="'CompanyName'"/>
+    </xsl:call-template>",
+	    "url": "<xsl:value-of select="$href"/>",
+	    "logo": "<xsl:call-template name="getSettings">
+      <xsl:with-param name="sectionName" select="'web'"/>
+      <xsl:with-param name="valueName" select="'SiteLogo'"/>
+    </xsl:call-template>"
+	  }
+      }
+    </script>
+  </xsl:template>
 
   <!-- Job Brief -->
   <xsl:template match="Content[@type='Job']" mode="displayBrief">
@@ -13744,14 +13818,18 @@
           </xsl:if>
           <xsl:if test="@twitterURL!=''">
             <a href="{@twitterURL}" target="_blank" title="{$myName} on Twitter" id="social-id-tw">
-              <span class="fa-stack fa-lg">
+              <!--<span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x">
                   <xsl:text> </xsl:text>
                 </i>
                 <i class="fa fa-twitter fa-stack-1x fa-inverse">
                   <xsl:text> </xsl:text>
                 </i>
-              </span>
+              </span>-->
+
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+					<path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/>
+				</svg>
             </a>
           </xsl:if>
           <xsl:if test="@linkedInURL!=''">
@@ -13825,6 +13903,61 @@
           </xsl:if>
           <xsl:if test="@twitterURL!=''">
             <a href="{@twitterURL}" target="_blank" title="{$myName} on Twitter" class="social-id-tw">
+              <!--<i class="fa fa-twitter">
+                <xsl:text> </xsl:text>
+              </i>-->
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+					<path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/>
+				</svg>
+            </a>
+          </xsl:if>
+          <xsl:if test="@linkedInURL!=''">
+            <a href="{@linkedInURL}" target="_blank" title="{$myName} on LinkedIn" class="social-id-li">
+              <i class="fa fa-linkedin">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@googlePlusURL!=''">
+            <a href="{@googlePlusURL}" target="_blank" title="{$myName} on Google+" class="social-id-gp">
+              <i class="fa fa-google-plus">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@pinterestURL!=''">
+            <a href="{@pinterestURL}" target="_blank" title="{$myName} on Pinterest" class="social-id-pi">
+              <i class="fa fa-pinterest">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@youtubeURL!=''">
+            <a href="{@youtubeURL}" target="_blank" title="{$myName} on Youtube" class="social-id-yt">
+              <i class="fa fa-youtube ">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@instagramURL!=''">
+            <a href="{@instagramURL}" target="_blank" title="{$myName} on Instagram" class="social-id-ig">
+              <i class="fa fa-instagram">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+        </xsl:when>
+		  
+        <!--<xsl:when test="$iconSet='plain' and @ids='true'">
+          <xsl:if test="@facebookURL!=''">
+            <a href="{@facebookURL}" target="_blank" title="{$myName} on Facebook" class="social-id-fb">
+              <i class="fa fa-facebook">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@twitterURL!=''">
+            <a href="{@twitterURL}" target="_blank" title="{$myName} on Twitter" class="social-id-tw">
               <i class="fa fa-twitter">
                 <xsl:text> </xsl:text>
               </i>
@@ -13859,13 +13992,13 @@
             </a>
           </xsl:if>
           <xsl:if test="@instagramURL!=''">
-            <a href="{@instagramURL}" target="_blank" title="{$myName} on Instagram" id="social-id-ig">
+            <a href="{@instagramURL}" target="_blank" title="{$myName} on Instagram" class="social-id-ig">
               <i class="fa fa-instagram">
                 <xsl:text> </xsl:text>
               </i>
             </a>
           </xsl:if>
-        </xsl:when>
+        </xsl:when>-->
         <xsl:otherwise>
           <xsl:if test="@facebookURL!=''">
             <a href="{@facebookURL}" target="_blank" title="{$myName} on Facebook" id="social-id-fb">
@@ -14085,9 +14218,10 @@
                 <i class="fa fa-circle fa-stack-2x">
                   <xsl:text> </xsl:text>
                 </i>
-                <i class="fa fa-twitter fa-stack-1x fa-inverse">
-                  <xsl:text> </xsl:text>
-                </i>
+                
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="fa-stack-1x">
+					<path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/>
+				</svg>
               </span>
             </a>
           </xsl:if>

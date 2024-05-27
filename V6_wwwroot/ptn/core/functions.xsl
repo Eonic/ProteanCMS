@@ -528,7 +528,7 @@
 				<xsl:apply-templates select="//Content[@rss and @rss!='false']" mode="feedLinks"/>
 
 
-				
+
 				<!-- common css -->
 				<xsl:choose>
 					<xsl:when test="not(/Page/Contents/Content[@name='criticalPathCSS']) or $adminMode">
@@ -1363,6 +1363,17 @@
 
 	<xsl:template match="Page" mode="sitemeta">
 
+	</xsl:template>
+
+	<!-- Used for Indexer leave here-->
+	<xsl:template match="Content" mode="metaabstract">
+		<xsl:variable name="content">
+			<xsl:apply-templates select="*" mode="getValues"/>
+		</xsl:variable>
+		<xsl:call-template name="truncateString">
+			<xsl:with-param name="string" select="$content"/>
+			<xsl:with-param name="length" select="'500'"/>
+		</xsl:call-template>
 	</xsl:template>
 
 
@@ -5119,27 +5130,27 @@
 		<xsl:variable name="parentURL">
 			<xsl:apply-templates select="self::Content" mode="getHref"/>
 		</xsl:variable>
-		<ul class="pager">
+		<ul class="pagination">
 			<xsl:choose>
 				<xsl:when test="/Page/Contents/Content[contains(@name,$prevItem)]">
-					<li class="previous">
+					<li class="page-item previous">
 						<a href="{$parentURL}?curPg={number($curPg) - 1}" title="go to the previous page">&lt; previous</a>
 					</li>
 				</xsl:when>
 				<xsl:otherwise>
-					<li class="previous disabled">
+					<li class="page-item previous disabled">
 						<span class="ghosted">&lt; previous</span>
 					</li>
 				</xsl:otherwise>
 			</xsl:choose> |
 			<xsl:choose>
 				<xsl:when test="/Page/Contents/Content[contains(@name,$nextItem)]">
-					<li class="next">
+					<li class="page-item next">
 						<a href="{$parentURL}?curPg={number($curPg) + 1}" title="go to the next page">next &gt;</a>
 					</li>
 				</xsl:when>
 				<xsl:otherwise>
-					<li class="next disabled">
+					<li class="page-item next disabled">
 						<span class="ghosted">next &gt;</span>
 					</li>
 				</xsl:otherwise>
@@ -5156,9 +5167,10 @@
 		<xsl:param name="queryString"/>
 		<xsl:param name="queryStringParam"/>
 		<xsl:param name="totalCount" />
+
+
 		<xsl:variable name="thisURL">
 			<xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]" mode="getHref" />
-
 			<xsl:choose>
 				<xsl:when test="contains(/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url,'?')">
 					<xsl:text>&amp;</xsl:text>
@@ -5175,61 +5187,74 @@
 					startPos
 				</xsl:otherwise>
 			</xsl:choose>
-
 		</xsl:variable>
-
 		<div class="col-md-12">
-			<ul class="pager">
-
+			<ul class="pagination">
 				<!-- Back Button-->
 				<xsl:choose>
 					<xsl:when test="$startPos - $noPerPage='0' and $startPos &gt; ($noPerPage - 1)">
 						<xsl:variable name="origURL">
 							<xsl:apply-templates select="$currentPage" mode="getHref"/>
 						</xsl:variable>
-						<li class="previous">
-							<a href="{$origURL}" title="click here to view the previous page in sequence">
+						<li class="page-item previous">
+							<a class="page-link" href="{$origURL}" title="click here to view the previous page in sequence">
 								<span class="pager-arrow">&#8592;</span> Back
 							</a>
 						</li>
 					</xsl:when>
+
 					<xsl:when test="$startPos &gt; ($noPerPage - 1)">
-						<li class="previous">
-							<a href="{$thisURL}={$startPos - $noPerPage}" title="click here to view the previous page in sequence">
+						<li class="page-item previous">
+							<a class="page-link" href="{$thisURL}={$startPos - $noPerPage}" title="click here to view the previous page in sequence">
 								<span class="pager-arrow">&#8592;</span> Back
 							</a>
 						</li>
 					</xsl:when>
 					<xsl:otherwise>
-						<li class="previous disabled">
-							<a href="#">
+						<li class="page-item previous disabled">
+							<a class="page-link" href="#">
 								<span class="pager-arrow">&#8592;</span> Back
 							</a>
 						</li>
 					</xsl:otherwise>
 				</xsl:choose>
-
-
+				<xsl:call-template name="StepperStep">
+					<xsl:with-param name="noPerPage">
+						<xsl:value-of select="$noPerPage"/>
+					</xsl:with-param>
+					<xsl:with-param name="startPos">
+						<xsl:value-of select="'0'"/>
+					</xsl:with-param>
+					<xsl:with-param name="totalCount">
+						<xsl:value-of select="$totalCount"/>
+					</xsl:with-param>
+					<xsl:with-param name="thisURL">
+						<xsl:value-of select="$thisURL"/>
+					</xsl:with-param>
+					<xsl:with-param name="queryStringParam">
+						<xsl:value-of select="$queryStringParam"/>
+					</xsl:with-param>
+					<xsl:with-param name="step">
+						<xsl:value-of select="'1'"/>
+					</xsl:with-param>
+				</xsl:call-template>
 				<xsl:choose>
 					<xsl:when test="$totalCount &gt; ($startPos +$noPerPage)">
-						<li class="next">
-							<a href="{$thisURL}={$startPos+$noPerPage}" title="click here to view the next page in sequence">
+						<li class="page-item next">
+							<a class="page-link" href="{$thisURL}={$startPos+$noPerPage}" title="click here to view the next page in sequence">
 								Next <span class="pager-arrow">&#8594;</span>
 							</a>
 						</li>
 					</xsl:when>
 					<xsl:otherwise>
-						<li class="next disabled">
+						<li class="page-item next disabled">
 							<span class="ghosted">
 								Next <span class="pager-arrow">&#8594;</span>
 							</span>
 						</li>
 					</xsl:otherwise>
 				</xsl:choose>
-
-				<!-- ### to ### of ### (At the top) -->
-				<li class="itemInfo">
-					<span class="pager-caption">
+					</ul><div class="pager-caption">
 						<xsl:if test="$noPerPage!=1">
 							<xsl:value-of select="$startPos + 1"/>
 							<xsl:text> to </xsl:text>
@@ -5240,11 +5265,49 @@
 						<xsl:if test="$totalCount &lt; ($startPos + $noPerPage)">
 							<xsl:value-of select="$totalCount"/>
 						</xsl:if> of <xsl:value-of select="$totalCount"/>
-					</span>
-				</li>
-			</ul>
+					</div>
 		</div>
-
+	</xsl:template>
+	
+	<xsl:template name="StepperStep">
+		<xsl:param name="noPerPage"/>
+		<xsl:param name="startPos"/>
+		<xsl:param name="queryString"/>
+		<xsl:param name="queryStringParam"/>
+		<xsl:param name="totalCount" />
+		<xsl:param name="thisURL" />
+		<xsl:param name="step" />
+		<xsl:variable name="active">
+			<xsl:if test="$startPos = number(concat('0',$page/Request/QueryString/Item[@name=$queryStringParam]))">
+				<xsl:text>active</xsl:text>
+			</xsl:if>
+		</xsl:variable>
+		<a class="page-link {$active}" href="{$thisURL}={$startPos}" title="page {@step}">
+			<xsl:value-of select="$step"/>
+		</a>
+		<xsl:if test="$step * $noPerPage &lt;= $totalCount">
+			<xsl:call-template name="StepperStep">
+				<xsl:with-param name="noPerPage">
+					<xsl:value-of select="$noPerPage"/>
+				</xsl:with-param>
+				<xsl:with-param name="startPos">
+					<xsl:value-of select="$startPos + $noPerPage"/>
+				</xsl:with-param>
+				<xsl:with-param name="totalCount">
+					<xsl:value-of select="$totalCount"/>
+				</xsl:with-param>
+				<xsl:with-param name="thisURL">
+					<xsl:value-of select="$thisURL"/>
+				</xsl:with-param>
+				<xsl:with-param name="queryStringParam">
+					<xsl:value-of select="$queryStringParam"/>
+				</xsl:with-param>
+				<xsl:with-param name="step">
+					<xsl:value-of select="$step + 1"/>
+				</xsl:with-param>
+			</xsl:call-template>
+		</xsl:if>
+		
 	</xsl:template>
 
 	<!-- Retrieves the additional Params from the URL -->
@@ -5903,16 +5966,42 @@
 					<xsl:if test="@icon!=''">
 						<i role="img" aria-hidden="true">
 							<xsl:attribute name="class">
-								<xsl:text>fa fa-3x center-block </xsl:text>
+								<xsl:text>fa center-block </xsl:text>
+								<xsl:choose>
+									<xsl:when test="@icon-size and @icon-size!=''">
+										<xsl:value-of select="@icon-size"/>
+										<xsl:text> </xsl:text>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:text> fa-3x </xsl:text>
+									</xsl:otherwise>
+								</xsl:choose>
 								<xsl:value-of select="@icon"/>
 							</xsl:attribute>
+							<!--<xsl:if test="@uploadIcon-w and @uploadIcon-w!='' or @uploadIcon-h and @uploadIcon-h!=''">
+								<xsl:attribute name="style">
+									<xsl:if test="@uploadIcon-w and @uploadIcon-w!=''">
+										<xsl:text>width:</xsl:text>
+										<xsl:value-of select="@uploadIcon-w"/>
+										<xsl:text>px</xsl:text>
+									</xsl:if>
+									<xsl:if test="@uploadIcon-w and @uploadIcon-w!='' and @uploadIcon-h and @uploadIcon-h!=''">
+										<xsl:text>;</xsl:text>
+									</xsl:if>
+									<xsl:if test="@uploadIcon-h and @uploadIcon-h!=''">
+										<xsl:text>height:</xsl:text>
+										<xsl:value-of select="@uploadIcon-h"/>
+										<xsl:text>px</xsl:text>
+									</xsl:if>
+								</xsl:attribute>
+							</xsl:if>-->
 							<xsl:text> </xsl:text>
 						</i>
 						<xsl:text> </xsl:text>
 					</xsl:if>
 					<xsl:if test="@uploadIcon!='' and @uploadIcon!='_'">
 						<span class="upload-icon" role="img" aria-hidden="true">
-							<img src="{@uploadIcon}" alt="icon" class="center-block img-responsive"/>
+							<img src="{@uploadIcon}" alt="icon" class="center-block img-responsive" width="{@uploadIcon-w}" height="{@uploadIcon-h}"/>
 						</span>
 					</xsl:if>
 					<xsl:if test="@title!=''">
@@ -5932,6 +6021,17 @@
 							<xsl:attribute name="class">
 								<xsl:text>fa center-block </xsl:text>
 								<xsl:value-of select="@icon"/>
+
+								<xsl:choose>
+									<xsl:when test="@icon-size and @icon-size!=''">
+										<xsl:text> </xsl:text>
+										<xsl:value-of select="@icon-size"/>
+										<xsl:text> </xsl:text>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:text> </xsl:text>
+									</xsl:otherwise>
+								</xsl:choose>
 							</xsl:attribute>
 							<xsl:text> </xsl:text>
 						</i>
@@ -5939,7 +6039,7 @@
 					</xsl:if>
 					<xsl:if test="@uploadIcon!='' and @uploadIcon!='_'">
 						<span class="upload-icon">
-							<img src="{@uploadIcon}" alt="icon" class="center-block img-responsive"/>
+							<img src="{@uploadIcon}" alt="icon" class="center-block img-responsive" width="{@uploadIcon-w}" height="{@uploadIcon-h}"/>
 						</span>
 					</xsl:if>
 					<xsl:if test="@title!=''">
@@ -5959,6 +6059,17 @@
 							<xsl:attribute name="class">
 								<xsl:text>fa </xsl:text>
 								<xsl:value-of select="@icon"/>
+
+								<xsl:choose>
+									<xsl:when test="@icon-size and @icon-size!=''">
+										<xsl:text> </xsl:text>
+										<xsl:value-of select="@icon-size"/>
+										<xsl:text> </xsl:text>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:text> </xsl:text>
+									</xsl:otherwise>
+								</xsl:choose>
 							</xsl:attribute>
 							<xsl:text> </xsl:text>
 						</i>
@@ -5966,7 +6077,7 @@
 					</xsl:if>
 					<xsl:if test="@uploadIcon!='' and @uploadIcon!='_'">
 						<span class="upload-icon">
-							<img src="{@uploadIcon}" alt="icon" class="img-responsive"/>
+							<img src="{@uploadIcon}" alt="icon" class="img-responsive" width="{@uploadIcon-w}" height="{@uploadIcon-h}"/>
 						</span>
 					</xsl:if>
 					<xsl:if test="@title!=''">
@@ -5983,6 +6094,17 @@
 						<xsl:attribute name="class">
 							<xsl:text>fa </xsl:text>
 							<xsl:value-of select="@icon"/>
+
+							<xsl:choose>
+								<xsl:when test="@icon-size and @icon-size!=''">
+									<xsl:text> </xsl:text>
+									<xsl:value-of select="@icon-size"/>
+									<xsl:text> </xsl:text>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:text> </xsl:text>
+								</xsl:otherwise>
+							</xsl:choose>
 						</xsl:attribute>
 						<xsl:text> </xsl:text>
 					</i>
@@ -5990,7 +6112,7 @@
 				</xsl:if>
 				<xsl:if test="@uploadIcon!='' and @uploadIcon!='_'">
 					<span class="upload-icon">
-						<img src="{@uploadIcon}" alt="icon" class="img-responsive"/>
+						<img src="{@uploadIcon}" alt="icon" class="img-responsive" width="{@uploadIcon-w}" height="{@uploadIcon-h}"/>
 					</span>
 				</xsl:if>
 				<xsl:copy-of select="ms:node-set($title)" />
@@ -9938,6 +10060,10 @@
 		</xsl:choose>
 	</xsl:template>
 
+	<xsl:template  name="getFilterButtons">
 
+		<xsl:copy-of select="ew:GetFilterButtons()"/>
+
+	</xsl:template>
 
 </xsl:stylesheet>

@@ -25,6 +25,7 @@ using System.Reflection.Emit;
 using Protean.Providers.Membership;
 using Protean.Providers.Messaging;
 using Lucene.Net.Support;
+using Microsoft.Ajax.Utilities;
 
 namespace Protean
 {
@@ -212,11 +213,17 @@ namespace Protean
                 bool bSystemPagesMenu = false;
                 long nContentId = 0L;
                 bool clearEditContext = true;
+                string modalAlert = null;
 
                 moAdXfm.mbAdminMode = myWeb.mbAdminMode;
 
                 try
                 {
+
+                    if (myWeb.moSession["modalAlert"] != null) {
+                        modalAlert = myWeb.moSession["modalAlert"].ToString();
+                        myWeb.moSession.Remove("modalAlert");
+                    };
 
                     oWeb.mbAdminMode = true;
                     moPageXML = oWeb.moPageXml;
@@ -3572,7 +3579,9 @@ namespace Protean
                         myWeb.moSession["editContext"] = EditContext;
                     }
 
-
+                    if (modalAlert != null) {
+                        moPageXML.DocumentElement.SetAttribute("modalAlert", modalAlert);
+                    }
 
                     moPageXML.DocumentElement.SetAttribute("ewCmd", mcEwCmd);
                     if (!string.IsNullOrEmpty(mcEwCmd2))
@@ -3997,7 +4006,7 @@ namespace Protean
                         string cFilePath = moAdXfm.Instance.SelectSingleNode("file/@filename").InnerText;
 
                         // first we take our take our xls and convert to xml
-                        var oImportXml = new XmlDocument();
+                        XmlDocument oImportXml = new XmlDocument();
 
                         if (cFilePath.EndsWith(".xls") | cFilePath.EndsWith(".xlsx") | cFilePath.EndsWith(".csv"))
                         {
@@ -4062,26 +4071,51 @@ namespace Protean
 
                                             break;
                                         }
-                                        // Case "mysql"
-                                        // DBConn = "server=" & oImportRootElmt.GetAttribute("databaseServer") & "; " &
-                                        // "port=" & oImportRootElmt.GetAttribute("databasePort") & "; " &
-                                        // "database=" & oImportRootElmt.GetAttribute("databaseName") & "; " &
-                                        // "uid=" & oImportRootElmt.GetAttribute("databaseUsername") & "; pwd=" & oImportRootElmt.GetAttribute("databasePassword")
+                                    default:
+                                        {
+                                            Protean.Providers.Database.IDatabaseProvider mDataProv;
 
-                                        // Dim mysqlDb As New MySqlDatabase(DBConn)
-                                        // If mysqlDb.ConnectionValid = False Then
-                                        // moAdXfm.valid = False
-                                        // sErrorMsg = "Bad DB Connection - " & DBConn
-                                        // Else
-                                        // Dim ImportDS As New DataSet
-                                        // Dim sSql As String = oImportRootElmt.GetAttribute("select")
-                                        // If sSql = "" Then
-                                        // sSql = "select * from " & oImportRootElmt.GetAttribute("tableName")
-                                        // End If
-                                        // ImportDS = mysqlDb.GetDataSet(sSql, oImportRootElmt.GetAttribute("tableName"))
-                                        // oImportXml.LoadXml(ImportDS.GetXml())
-                                        // End If
+                                            Protean.Providers.Database.ReturnProvider RetProv = new Protean.Providers.Database.ReturnProvider();
+                                            mDataProv = RetProv.Get(ref myWeb, databaseType);
+
+                                            mDataProv.ConnStr = "server=" + oImportRootElmt.GetAttribute("databaseServer") + "; " +
+                                            "port=" + oImportRootElmt.GetAttribute("databasePort") + "; " +
+                                            "database=" + oImportRootElmt.GetAttribute("databaseName") + "; " +
+                                            "uid=" + oImportRootElmt.GetAttribute("databaseUsername") + "; pwd=" + oImportRootElmt.GetAttribute("databasePassword");
+
+                                            var ImportDS = new DataSet();
+                                            String sSql = oImportRootElmt.GetAttribute("select");
+                                            if (sSql == "")
+                                            {
+                                                sSql = "select * from " + oImportRootElmt.GetAttribute("tableName");
+                                            }
+
+                                            ImportDS = mDataProv.GetDataSet(sSql, oImportRootElmt.GetAttribute("tableName"));
+                                            oImportXml.LoadXml(ImportDS.GetXml());
+                                        }
+                                        break;
                                 }
+
+
+
+                                // DBConn = "server=" & oImportRootElmt.GetAttribute("databaseServer") & "; " &
+                                // "port=" & oImportRootElmt.GetAttribute("databasePort") & "; " &
+                                // "database=" & oImportRootElmt.GetAttribute("databaseName") & "; " &
+                                // "uid=" & oImportRootElmt.GetAttribute("databaseUsername") & "; pwd=" & oImportRootElmt.GetAttribute("databasePassword")
+
+                                // Dim mysqlDb As New MySqlDatabase(DBConn)
+                                // If mysqlDb.ConnectionValid = False Then
+                                // moAdXfm.valid = False
+                                // sErrorMsg = "Bad DB Connection - " & DBConn
+                                // Else
+                                // Dim ImportDS As New DataSet
+                                // Dim sSql As String = oImportRootElmt.GetAttribute("select")
+                                // If sSql = "" Then
+                                // sSql = "select * from " & oImportRootElmt.GetAttribute("tableName")
+                                // End If
+                                // ImportDS = mysqlDb.GetDataSet(sSql, oImportRootElmt.GetAttribute("tableName"))
+                                // oImportXml.LoadXml(ImportDS.GetXml())
+                                // End If
                             }
                         }
 
@@ -4160,6 +4194,7 @@ namespace Protean
                         }
 
                     }
+
                 }
 
 

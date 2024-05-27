@@ -7152,13 +7152,7 @@
                 <xsl:value-of select="format-number(@payableAmount, '0.00')"/>
               </td>
             </tr>
-          </xsl:if>
-          <tr>
-            <td colspan="6">
-              Seller Notes:<br/>
-              <xsl:copy-of select="SellerNotes/node()"/>
-            </td>
-          </tr>
+          </xsl:if>         
         </table>
       </div>
     </div>
@@ -7278,6 +7272,12 @@
           <xsl:value-of select="Email"/>
           <br/>
         </xsl:if>
+		  <xsl:if test="Details/GiftAid/node()='true'">
+			  <div class="alert alert-success" role="alert">
+			  <strong>
+				  <i class="fa-solid fa-check fa-2xl">&#160;</i>&#160;GIFT AID CONFIRMED</strong>
+			  </div>
+		  </xsl:if>
       </p>
 
     </div>
@@ -8478,7 +8478,6 @@
           </xsl:otherwise>
         </xsl:choose>
       </span>
-
     </div>
   </xsl:template>
 

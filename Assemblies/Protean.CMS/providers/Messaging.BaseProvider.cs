@@ -434,10 +434,16 @@ namespace Protean.Providers
                     try
                     {
 
-                        if (moRequest["cModuleBox"] != "")
+                        if (!string.IsNullOrEmpty(moRequest["cModuleBox"]) | !string.IsNullOrEmpty(moRequest["cModuleType"]))
                         {
 
-                            xFrmEditContent(0, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"]);
+                            int argnReturnId1 = 0;
+                            string argzcReturnSchema1 = "";
+                            string argAlternateFormName1 = "";
+                            xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, position, false, nReturnId: ref argnReturnId1, zcReturnSchema: ref argzcReturnSchema1, AlternateFormName: ref argAlternateFormName1);
+
+
+                         //   xFrmEditContent(0, "Module/" + moRequest["cModuleType"], pgid, position);
                             return base.moXformElmt;
                         }
 
@@ -450,7 +456,8 @@ namespace Protean.Providers
                             oFrmElmt = base.addGroup(ref base.moXformElmt, "Add Module", "", "Select Module Type");
                             base.addInput(ref oFrmElmt, "nStructParId", true, "ParId", "hidden");
                             base.addInput(ref oFrmElmt, "cPosition", true, "Position", "hidden");
-                            base.addBind("cPosition", "Module/@position", ref oBindParentElmt, "true()");
+                            XmlElement argoBindParent = null;
+                            base.addBind("cPosition", "Module/@position", oBindParent: ref argoBindParent, "true()");
                             base.addNote(oFrmElmt.ToString(), Protean.xForm.noteTypes.Hint, "Click the image to select Module Type");
 
                             oSelElmt = base.addSelect1(ref oFrmElmt, "cModuleType", true, "", "PickByImage", Protean.xForm.ApperanceTypes.Full);

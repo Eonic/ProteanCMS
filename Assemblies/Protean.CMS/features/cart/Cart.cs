@@ -3573,8 +3573,8 @@ namespace Protean
 
                             // check if shipping group exists or not and then we set bydefault delivery option on cart
 
-                            if (myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure))
-                            {
+                            //if (myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure))
+                            //{
                                 //if (nStatusId > 100) {
 
                                 //// Get Shipping Group from query if assigned to that product and add new node in order and use this node for displaying messages for x50 and t03 category.
@@ -3600,7 +3600,7 @@ namespace Protean
                                 //    }
                                 //}
                                 //}
-                            }
+                            //}
 
 
                             try
@@ -5197,7 +5197,7 @@ namespace Protean
                                     // set the billing address
                                     string sSql = "Select nContactKey from tblCartContact where cContactType = 'Delivery Address' and nContactCartid=" + mnCartId;
                                     string DeliveryAddressID = moDBHelper.ExeProcessSqlScalar(sSql);
-                                    useSavedAddressesOnCart(BillingAddressID, Conversions.ToLong(DeliveryAddressID));
+                                    useSavedAddressesOnCart(BillingAddressID, Conversions.ToLong(DeliveryAddressID),null);
 
                                     mcPaymentMethod = myWeb.moRequest[buttonRef];
 
@@ -5277,7 +5277,7 @@ namespace Protean
                             }
                             if (deliveryAddId != 0L & billingAddId != 0L)
                             {
-                                useSavedAddressesOnCart(billingAddId, deliveryAddId);
+                                useSavedAddressesOnCart(billingAddId, deliveryAddId, null);
                                 // skip
                                 mcCartCmd = "ChoosePaymentShippingOption";
                                 return true;
@@ -5972,7 +5972,18 @@ namespace Protean
 
                     // Build the xform
                     oXform.moPageXML = moPageXml;
-                    oXform.NewFrm(cAddressType);
+                    string cPickAddressXform = moCartConfig["PickAddressXForm"];
+
+                    if (!string.IsNullOrEmpty(cPickAddressXform))
+                    {
+                        if (!oXform.load(cPickAddressXform))
+                        {
+                            oXform.NewFrm(cAddressType);
+                        }
+                    }
+                    else {
+                        oXform.NewFrm(cAddressType);
+                    }
                     oXform.valid = false;
 
                     // oReturnForm is going to be the form returned at the end of the function.
@@ -6087,17 +6098,10 @@ namespace Protean
                             {
                                 oXform.addSubmit(ref oAddressGrp, Conversions.ToString(oDr["nContactKey"]), "Deliver To This Address", Conversions.ToString(Operators.ConcatenateObject(submitPrefix + "contact", oDr["nContactKey"])), "deliver-here principle", "fas fa-truck");
                             }
-
-
                         }
-
-
-
-
                         // Check if the form has been submitted
                         if (oXform.isSubmitted())
                         {
-
                             oXform.updateInstanceFromRequest();
                             // bool forCollection = false;
                             if (moDBHelper.checkTableColumnExists("tblCartShippingMethods", "bCollection"))
@@ -6134,12 +6138,12 @@ namespace Protean
                                                 NewInstance.SelectSingleNode("tblCartContact/cContactCompany").InnerText = oDrCollectionOptions["cShipOptCarrier"].ToString();
                                                 NewInstance.SelectSingleNode("tblCartContact/cContactCountry").InnerText = moCartConfig["DefaultDeliveryCountry"];
 
-
+                                                string billingContactXml = null;
                                                 string collectionContactID;
 
                                                 collectionContactID = moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartContact, NewInstance);
 
-                                                useSavedAddressesOnCart(billingAddId, Conversions.ToInteger(collectionContactID));
+                                                useSavedAddressesOnCart(billingAddId, Conversions.ToInteger(collectionContactID), billingContactXml);
                                                 return oReturnForm;
                                             }
                                         }
@@ -6276,7 +6280,12 @@ namespace Protean
                         // If pick address has been submitted, then we have a contactXform that has not been submitted, and therefore not saved.  Let's save it.
                         if (!string.IsNullOrEmpty(myWeb.moRequest[submitPrefix + "contact" + contactId]))
                         {
-                            useSavedAddressesOnCart(billingAddId, contactId);
+                            string billingContactXml = null;
+                            if (!string.IsNullOrEmpty(cPickAddressXform)){
+                                billingContactXml = oXform.Instance.SelectSingleNode("tblCartContact/cContactXml").InnerXml;
+                            }
+
+                             useSavedAddressesOnCart(billingAddId, contactId, billingContactXml);
                             // skip delivery
                             oContactXform.moXformElmt.SetAttribute("cartCmd", "ChoosePaymentShippingOption");
                         }
@@ -6284,7 +6293,7 @@ namespace Protean
                         if (!string.IsNullOrEmpty(myWeb.moRequest[submitPrefix + "addDelivery" + contactId]))
                         {
                             // remove the deliver from the instance if it is there
-                            useSavedAddressesOnCart(billingAddId, 0L);
+                            useSavedAddressesOnCart(billingAddId, 0L, null);
                             foreach (XmlNode oNode in oContactXform.Instance.SelectNodes("tblCartContact[cContactType='Delivery Address']"))
                                 oNode.ParentNode.RemoveChild(oNode);
                         }
@@ -6391,7 +6400,7 @@ namespace Protean
                 }
             }
 
-            public void useSavedAddressesOnCart(long billingId, long deliveryId)
+            public void useSavedAddressesOnCart(long billingId, long deliveryId, string billingContactXml)
             {
                 string cProcessInfo = "";
                 DataSet oDs;
@@ -6444,6 +6453,9 @@ namespace Protean
                     billInstance.SelectSingleNode("*/cContactType").InnerText = "Billing Address";
                     billInstance.SelectSingleNode("*/nAuditId").InnerText = savedBillingAuditId;
                     billInstance.SelectSingleNode("*/nAuditKey").InnerText = savedBillingAuditId;
+                    if (billingContactXml != null) { 
+                        billInstance.SelectSingleNode("*/cContactXml    ").InnerXml = billingContactXml;
+                    }
 
                     moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartContact, billInstance);
 
@@ -10338,7 +10350,7 @@ namespace Protean
                                     oContent.SetAttribute("type", mcOrderType);
                                     oContent.SetAttribute("id", Conversions.ToString(oDR["nCartOrderKey"]));
                                     oContent.SetAttribute("statusId", Conversions.ToString(oDR["nCartStatus"]));
-                                    oContent.SetAttribute("cartForiegnRef", Conversions.ToString(oDR["cCartForiegnRef"]));
+                                    oContent.SetAttribute("cartForiegnRef", (oDR["cCartForiegnRef"] == null) ? string.Empty : (string)oDR["cCartForiegnRef"]);
                                     // Get Date
                                     cSQL = Conversions.ToString(Operators.ConcatenateObject("Select dInsertDate from tblAudit where nAuditKey =", oDR["nAuditId"]));
                                     using (var oDRe = moDBHelper.getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
@@ -10457,7 +10469,7 @@ namespace Protean
                                         if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectGreater(oDR["nCartStatus"], 5, false), moDBHelper.doesTableExist(ref argsTableName))))
                                         {
                                             DataSet oDs3 = new DataSet();
-                                            string sSql = Conversions.ToString(Operators.ConcatenateObject("Select p.*, pm.*, a.dInsertDate from tblCartPayment p inner join tblCartPaymentMethod pm on p.nCartPaymentMethodId = pm.nPayMthdKey inner join tblAudit a on a.nAuditKey = p.nAuditId where nCartOrderId=", oDR["nCartOrderKey"]));
+                                            string sSql = Conversions.ToString(Operators.ConcatenateObject("Select p.*, pm.*, a.dInsertDate from tblCartPayment p inner join tblCartPaymentMethod pm on p.nCartPaymentMethodId = pm.nPayMthdKey left outer join tblAudit a on a.nAuditKey = p.nAuditId where nCartOrderId=", oDR["nCartOrderKey"]));
                                             oDs3 = moDBHelper.GetDataSet(sSql, "Payment", "Details");
                                             oDs3.Tables["Payment"].Columns["cPayMthdDetailXml"].ColumnMapping = MappingType.Element;
                                             var oXML2 = new XmlDocument();
@@ -12243,7 +12255,7 @@ namespace Protean
 
                     if (deliveryAddId != 0 & billingAddId != 0)
                     {
-                        useSavedAddressesOnCart(billingAddId, deliveryAddId);
+                        useSavedAddressesOnCart(billingAddId, deliveryAddId, null);
                     }
                     ConfirmPayment(ref oCartListElmt, ref oePaymentDetailsInstanceElmt, cNewAuthNumber, cMethodName, Amount);
                     GetCart(ref oCartListElmt, mnCartId);
