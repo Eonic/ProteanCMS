@@ -73,8 +73,8 @@
       <HintPath>..\..\packages\AngleSharp.1.1.2\lib\net472\AngleSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Antlr3.Runtime, Version=3.4.1.9004, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="BundleTransformer.Core, Version=1.10.0.0, Culture=neutral, PublicKeyToken=973c344c93aac60d, processorArchitecture=MSIL">
       <HintPath>..\..\packages\BundleTransformer.Core.1.10.0\lib\net40\BundleTransformer.Core.dll</HintPath>
@@ -85,8 +85,8 @@
     <Reference Include="BundleTransformer.SassAndScss, Version=1.13.16.0, Culture=neutral, PublicKeyToken=973c344c93aac60d, processorArchitecture=MSIL">
       <HintPath>..\..\packages\BundleTransformer.SassAndScss.1.13.16\lib\net40\BundleTransformer.SassAndScss.dll</HintPath>
     </Reference>
-    <Reference Include="DartSassHost, Version=1.0.11.0, Culture=neutral, PublicKeyToken=83ed06f2bd4ecb43, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DartSassHost.1.0.11\lib\net471\DartSassHost.dll</HintPath>
+    <Reference Include="DartSassHost, Version=1.0.12.0, Culture=neutral, PublicKeyToken=83ed06f2bd4ecb43, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\DartSassHost.1.0.12\lib\net471\DartSassHost.dll</HintPath>
     </Reference>
     <Reference Include="Fonet, Version=1.0.0.0, Culture=neutral, PublicKeyToken=52effa152c4a9dc6, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Fonet.1.0\lib\net20\Fonet.dll</HintPath>
