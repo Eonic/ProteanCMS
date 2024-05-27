@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>Magick.NET-Q8-x64</name>
+        <name>Magick.NET-Q8-AnyCPU</name>
     </assembly>
     <members>
         <member name="T:ImageMagick.ColorBase">

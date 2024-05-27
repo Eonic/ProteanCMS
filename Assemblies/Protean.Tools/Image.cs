@@ -876,7 +876,7 @@ namespace Protean.Tools
                                     }
                                     var newImgFile = new FileInfo(NewFileName);
                                     difference = imgfileInfo.Length;
-                                    var optimizer = new ImageMagick.ImageOptimizers.PngOptimizer();
+                                    ImageMagick.ImageOptimizers.PngOptimizer optimizer = new ImageMagick.ImageOptimizers.PngOptimizer();
                                     if (lossless)
                                     {
                                         optimizer.LosslessCompress(newImgFile);
