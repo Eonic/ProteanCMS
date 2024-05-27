@@ -1,8 +1,7 @@
 ################################################################################
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
-packages/
-!packages/repositories.config
+
 
 /.vs/ProteanCMS/v16
 /.vs/ProteanCMS/v17
