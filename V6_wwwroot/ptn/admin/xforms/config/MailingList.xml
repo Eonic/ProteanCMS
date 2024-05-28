@@ -13,7 +13,7 @@
          <add key="MessagingProvider" value="CampaignMonitor"/>
          <add key="SenderEmail" value=""/>
          <add key="SenderName" value=""/>
-         <add key="ApiKey" value="5fa4fdbe9d1ca52d8b86b64f9fd15194"/>
+         <add key="ApiKey" value=""/>
          <add key="ClientID" value=""/>
          <add key="CMUsername" value=""/>
          <add key="CMP" value="" />
