@@ -23,24 +23,6 @@
     word-wrap: normal;
 }
 
-.skip {
-    position: absolute;
-    left: -10000px;
-    top: auto;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-}
-
-.skip:focus {
-    left: 10px;
-    top: 10px;
-    z-index: 20;
-    width: auto;
-    height: auto;
-    overflow: visible;
-}
-
 @mixin clear-shadow() {
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
@@ -94,10 +76,12 @@
     overflow: hidden;
     @extend .btn;
     @extend .btn-primary;
+    border-radius: 0 0 4px 4px;
+    padding: 1rem;
 }
 .skip:focus {
     left: 10px;
-    top: 10px;
+    top: 0px;
     z-index: 20;
     width: auto;
     height: auto;
