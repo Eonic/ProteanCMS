@@ -1629,8 +1629,8 @@
 				<xsl:if test="$editQtyLocal='true'">
 					<xsl:choose>
 						<xsl:when test="@quantity&lt;'10'">
-							<label>Qty:</label>
-							<select value="{@quantity}" class="cart-quantity" name="itemId-{@id}">
+							<label for="itemId-{@id}">Qty:</label>
+							<select value="{@quantity}" class="cart-quantity" name="itemId-{@id}" id="itemId-{@id}">
 								<option value="1">
 									<xsl:if test="@quantity=1">
 										<xsl:attribute name="selected">selected</xsl:attribute>
@@ -1850,12 +1850,14 @@
 					<i class="fa fa-minus">
 						<xsl:text> </xsl:text>
 					</i>
+					<span class="visually-hidden">reduce quantity</span>
 				</button>
 				<input type="text" name="qty_{@id}" id="qty_{@id}" value="1" size="3" class="qtybox form-control"/>
 				<button class="btn qty-plus" type="button" value="+" onClick="incrementQuantity('qty_{@id}','+')">
 					<i class="fa fa-plus">
 						<xsl:text> </xsl:text>
 					</i>
+					<span class="visually-hidden">increase quantity</span>
 				</button>
 			</div>
 		</div>
