@@ -10,7 +10,7 @@
 				<cContentName/>
 				<cContentSchemaName>Module</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content contentType="CountdownClock" position="" moduleType="CountdownClock" targetDate="" targetTime="" box="" title="" link="" linkType="internal" linkText="Shop Now" linkBox="" imagePosition="below" Circle="#D9D9D9" CircleBorder="#3377FC" NumberColor="#3377FC" TextColor="#3377FC" NumberTextSize="20px" HeadingTextSize="16px" resize="false" responsiveImg="true">
+					<Content contentType="CountdownClock" position="" moduleType="CountdownClock" targetDate="" targetTime="" box="" title="" link="" linkType="internal" linkText="Shop Now" linkBox="" imagePosition="below" Circle="#D9D9D9" CircleBorder="#3377FC" NumberColor="#3377FC" TextColor="#3377FC" NumberTextSize="20px" HeadingTextSize="16px" resize="false" responsiveImg="true" showHoursOnly="">
 					</Content>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
@@ -48,7 +48,9 @@
 			<bind id="TextColor" nodeset="@TextColor" required="false()" type="string"/>
 			<bind id="NumberTextSize" nodeset="@NumberTextSize" required="false()" type="string"/>
 			<bind id="HeadingTextSize" nodeset="@HeadingTextSize" required="false()" type="string"/>
-		</bind>
+      <bind id="showHoursOnly" nodeset="@showHoursOnly" required="false()" type="string"/>
+      
+    </bind>
 		<ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
 		<ewInclude filePath="/ewthemes/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
 		<ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
@@ -125,6 +127,12 @@
 				<input bind="ntargetTime" appearance="minimal" class="time ">
 					<label>Target Time</label>
 				</input>
+        <select bind="showHoursOnly" appearance="full" class="multiline bs-only">
+          <item>
+            <label>Show Hours Only</label>
+            <value>true</value>
+          </item>
+        </select>
 			</group>
 			<group>
 				<label>Module Links</label>
