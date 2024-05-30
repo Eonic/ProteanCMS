@@ -444,6 +444,7 @@ where cl.nStructId = " + myWeb.mnPageId));
                     try
                     {
                         // current contentfilter id
+                        bool bDistinct = true;
                         XmlElement oFilterElmt;
                         string parentPageId = string.Empty;
                         string formName = "ContentFilter";
@@ -651,20 +652,23 @@ where cl.nStructId = " + myWeb.mnPageId));
                                 String cAdditionalJoins = string.Empty;
                                 if (myWeb.mbAdminMode)
                                 {
+                                    bDistinct = false;
                                     if(orderBySql!=string.Empty)
                                     {
-                                        orderBySql = "a.nStatus desc," + orderBySql;
-
+                                        orderBySql = orderBySql + ",";
                                     }
+                                    orderBySql =   " a.nStatus desc";
+
+                                    
 
                                 }
-                                if(orderBySql!=string.Empty)
-                                {
-                                    cAdditionalJoins = " Left Outer join tblContentIndex ci Inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey and cid.cDefinitionName='Price' on ci.nContentId=c.nContentKey ";
-                                }
+                                //if(orderBySql!=string.Empty)
+                                //{
+                                //    cAdditionalJoins = " Left Outer join tblContentIndex ci Inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey and cid.cDefinitionName='Price' on ci.nContentId=c.nContentKey ";
+                                //}
                                 myWeb.moSession["OrderByClause"] = orderBySql;
                                 myWeb.GetPageContentFromSelect(whereSQL, ref nCount, oContentsNode: ref oContentNode, oPageDetail: ref argoPageDetail, 
-                                cShowSpecificContentTypes: cFilterTarget, bIgnorePermissionsCheck: true, cOrderBy: orderBySql,cAdditionalJoins: cAdditionalJoins);
+                                cShowSpecificContentTypes: cFilterTarget, bIgnorePermissionsCheck: true,distinct: bDistinct, cOrderBy: orderBySql,cAdditionalJoins: cAdditionalJoins);
                                 
                                 // Modify results after they are loaded onto the page.
                                 foreach (XmlElement currentOFilterElmt1 in oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']"))
