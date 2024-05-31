@@ -3163,6 +3163,8 @@
 					<i class="fas fa-question-circle">
 						<xsl:text> </xsl:text>
 					</i>
+					<span class="visually-hidden">Button for help tip saying <xsl:value-of select="help/node()"/>
+				</span>
 				</button>
 				<xsl:text> </xsl:text>
 			</xsl:when>
@@ -3172,6 +3174,9 @@
 						<xsl:text> </xsl:text>
 					</i>
 				</button>
+				<span class="visually-hidden">
+					Button for help tip saying <xsl:value-of select="hint/node()"/>
+				</span>
 				<xsl:text> </xsl:text>
 			</xsl:when>
 		</xsl:choose>
