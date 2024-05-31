@@ -9,7 +9,7 @@
 				<cStructName/>
 				<cStructDescription>
 					<!-- SEE COMMENTS IN BIND -->
-					<DisplayName title="" linkType="internal" exclude="false" noindex="false" nonav="false" navpad="true" showRedirectModal="false" banner="basic"/>
+					<DisplayName title="" linkType="internal" exclude="false" noindex="false" nonav="false" navpad="true" showRedirectModal="false" banner="basic" menu="default"/>
 					<Images>
 						<img class="icon" />
 						<img class="thumbnail" />
@@ -61,9 +61,11 @@
 				<bind id="Screens" nodeset="@screens" required="false()" type="string"/>
 				<bind id="cIcon" nodeset="@icon" required="false()" type="string"/>
 				<bind id="uploadIcon" nodeset="@uploadIcon" required="false()" type="string" />
+				<bind id="menuBG" nodeset="@menuBG" required="false()" type="string" />
 				<bind id="bParalaxLoad" nodeset="@paralaxLoad" required="false()" type="string" />
 				<bind id="featuredLink" nodeset="@featuredLink" required="false()" type="string" />
 				<bind id="banner" nodeset="@banner" required="false()" type="string"/>
+				<bind id="menu" nodeset="@menu" required="false()" type="string"/>
 			</bind>
 			<bind id="cStructDescription" nodeset="Description" required="false()" type="string"/>
 			<bind id="thumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
@@ -117,6 +119,9 @@
 				</select1>
 				<select1 bind="banner" class="bannerStyles" appearance="minimal">
 					<label>Heading Banner Style</label>
+				</select1>
+				<select1 bind="menu" class="menuStyles" appearance="minimal">
+					<label>Menu Dropdown Style</label>
 				</select1>
 			</group>
 			<group>
@@ -200,6 +205,10 @@
 						<label>Images</label>
 						<input bind="thumbnail" class="short pickImage">
 							<label>Thumbnail image</label>
+						</input>
+						<input bind="menuBG" class="pickImageFile bs-only">
+							<label>Background for menu</label>
+							<value></value>
 						</input>
 					</group>
 					<group>

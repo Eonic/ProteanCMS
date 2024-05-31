@@ -63,7 +63,126 @@
 			</xsl:if>
 			<xsl:text>No Banner</xsl:text>
 		</option>
-	</xsl:template>	
+	</xsl:template>
+
+	<!-- ############################################ MENU DD STYLES ############################################### -->
+	<!--<xsl:template match="select1[@appearance='minimal' and contains(@class,'menuStyles')]" mode="control-outer">
+		<xsl:choose>
+			<xsl:when test="name()='group'">
+				<xsl:apply-templates select="." mode="xform"/>
+			</xsl:when>
+
+			<xsl:when test="name()='alert'">
+				<xsl:apply-templates select="." mode="xform"/>
+			</xsl:when>
+
+			<xsl:when test="contains(@class,'hidden')">
+				<div class="form-group hidden">
+					<xsl:apply-templates select="." mode="xform"/>
+				</div>
+			</xsl:when>
+			<xsl:otherwise>
+				<div>
+					<xsl:attribute name="class">
+						<xsl:choose>
+							<xsl:when test="name()='div'">
+								<xsl:text>form-text</xsl:text>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:text>form-margin </xsl:text>
+								<xsl:if test="name()='input'">
+									<xsl:value-of select="name()"/>
+									<xsl:text>-containing </xsl:text>
+								</xsl:if>
+								<xsl:if test="name()!='input'">
+									<xsl:value-of select="name()"/>
+									<xsl:text>-group </xsl:text>
+								</xsl:if>
+								<xsl:if test="name()='select'">
+									<xsl:choose>
+										<xsl:when test="name()='div'">
+											<xsl:text>form-text</xsl:text>
+										</xsl:when>
+										<xsl:when test="@appearance='full'">
+											<xsl:text>checkbox-group </xsl:text>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:text>select-group</xsl:text>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:if>
+								<xsl:if test="name()='select1'">
+									<xsl:choose>
+										<xsl:when test="name()='div'">
+											<xsl:text>form-text</xsl:text>
+										</xsl:when>
+										<xsl:when test="@appearance='full'">
+											<xsl:text>radio-group </xsl:text>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:text> </xsl:text>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:if>
+							</xsl:otherwise>
+						</xsl:choose>
+						<xsl:if test="not(contains(@class,'row'))">
+							<xsl:value-of select="./@class"/>
+						</xsl:if>
+						<xsl:if test="alert">
+							<xsl:text> alert-outer</xsl:text>
+						</xsl:if>
+						<xsl:if test="ancestor::group[contains(@class,'inline-2-col')] and not(name()='div')">
+							<xsl:text> col-lg-6 2-col-inline</xsl:text>
+						</xsl:if>
+						<xsl:if test="ancestor::group[contains(@class,'inline-3-col')] and not(name()='div')">
+							<xsl:text> col-lg-4 3-col-inline</xsl:text>
+						</xsl:if>
+					</xsl:attribute>
+					<xsl:apply-templates select="." mode="xform"/>
+				</div>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="select1[@appearance='minimal' and contains(@class,'menuStyles')]" mode="xform_control">
+		<xsl:variable name="ref">
+			<xsl:apply-templates select="." mode="getRefOrBind"/>
+		</xsl:variable>
+		<select name="{$ref}" id="{$ref}">
+			<xsl:if test="@class!=''">
+				<xsl:attribute name="class">
+					<xsl:value-of select="@class"/>
+					<xsl:text> dropdown form-control</xsl:text>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="@onChange!=''">
+				<xsl:attribute name="onChange">
+					<xsl:value-of select="@onChange"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:apply-templates select="item" mode="xform_select"/>
+			<xsl:apply-templates select="." mode="menuStyles1">
+				<xsl:with-param name="value" select="value/node()" />
+			</xsl:apply-templates>
+		</select>
+	</xsl:template>
+
+	<xsl:template match="*" mode="menuStyles1">
+		<xsl:param name="value" />
+		<option value="default">
+			<xsl:if test="$value='default'">
+				<xsl:attribute name="selected">selected</xsl:attribute>
+			</xsl:if>
+			<xsl:text>Default</xsl:text>
+		</option>
+		<option value="tiles">
+			<xsl:if test="$value='tiles'">
+				<xsl:attribute name="selected">selected</xsl:attribute>
+			</xsl:if>
+			<xsl:text>Tiles</xsl:text>
+		</option>
+	</xsl:template>-->
 	
   <!-- ############################################ TinyMCE styles ############################################### -->
   <!-- Example Follows www.tinymce.com/tryit/custom_formats.php -->
