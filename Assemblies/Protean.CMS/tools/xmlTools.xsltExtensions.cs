@@ -2896,7 +2896,7 @@ namespace Protean
                 {
                     cProjectPath = myWeb.moConfig["ProjectPath"];
                 }
-                object AppVariableName = Strings.LCase("css" + TargetPath.Replace("~", ""));
+                string AppVariableName = Strings.LCase("css" + TargetPath.Replace("~", ""));
                 do
                 {
                     try
@@ -2926,7 +2926,7 @@ namespace Protean
 
                             bool bAppVarExists = false;
                             // New logic to stop rebuilding css when application is killed or restarted.
-                            if (myWeb.moCtx.Application.Get(AppVariableName.ToString()) != null)
+                            if (myWeb.moCtx.Application.Get(AppVariableName) != null)
                             {
                                 bAppVarExists = true;
                             }
@@ -2941,7 +2941,7 @@ namespace Protean
                                     string sReturnStringNew = "";
                                     foreach (var myFile in Directory.GetFiles(goServer.MapPath("/" + cProjectPath + "css" + TargetPath.Replace("~", "")), "*.css"))
                                         sReturnStringNew = sReturnStringNew + "/" + cProjectPath + "css" + TargetPath.Replace("~", "") + "/" + Path.GetFileName(myFile) + ",";
-                                    myWeb.moCtx.Application.Set(AppVariableName.ToString(), sReturnStringNew.Trim(','));
+                                    myWeb.moCtx.Application.Set(AppVariableName, sReturnStringNew.Trim(','));
                                     bAppVarExists = true;
                                 }
                             }
@@ -2951,7 +2951,7 @@ namespace Protean
                             {
                                 // check to see if the filename is saved in the application variable.
 
-                                sReturnString =Convert.ToString(myWeb.moCtx.Application.Get(AppVariableName.ToString()));
+                                sReturnString =Convert.ToString(myWeb.moCtx.Application.Get(AppVariableName));
 
                                 if (!sReturnString.StartsWith("/" + cProjectPath + "css" + TargetPath.TrimStart('~')))
                                 {
@@ -3070,7 +3070,7 @@ namespace Protean
                                     // check the file exists before we set the application variable...
                                     if (Conversions.ToBoolean(VirtualFileExists("/" + cProjectPath + "css" + TargetPath.Replace("~", "") + "/style.css")))
                                     {
-                                        myWeb.moCtx.Application.Set(AppVariableName.ToString(), sReturnString);
+                                        myWeb.moCtx.Application.Set(AppVariableName, sReturnString);
                                     }
                                 }
                                 else
@@ -3092,18 +3092,15 @@ namespace Protean
                             }
                         }
                         //sReturnString = null;
-                        return sReturnString.Replace("~", "");
-                        
+                        return sReturnString.Replace("~", "");                        
                     }
-
-                    catch (IOException)    // New changes on 9/12/21'
+                    catch (IOException ioex)    // New changes on 9/12/21'
                     {
                         myWeb.bPageCache = false;
-                        sReturnString = "/" + cProjectPath + "css" + string.Format("{0}/style.css", TargetPath);
+                        sReturnString = "/" + cProjectPath + string.Format("{0}/style.css", TargetPath) + "?ioException=" + ioex.Message;
                         // Return ioex.StackTrace
                         return sReturnString;
                     }
-
                     catch (Exception ex)
                     {
                         // OnComponentError(myWeb, New Protean.Tools.Errors.ErrorEventArgs("xslt.BundleCSS", "LayoutActions", ex, CommaSeparatedFilenames))
@@ -3116,7 +3113,7 @@ namespace Protean
 
                         myWeb.bPageCache = false; // This is not working 100% - can we understand why?????B
 
-                        return sReturnString.Replace("~", "") + "?error=" + ex.Message + ex.StackTrace.Replace(",", "");
+                        return sReturnString.Replace("~", "") + "?error=" + sReturnError + ex.Message + ex.StackTrace.Replace(",", "");
                     }
                 }
 
