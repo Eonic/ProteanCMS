@@ -11670,6 +11670,7 @@ namespace Protean
                         string cContentValueXpath = "";
                         string bBriefNotDetail = "";
                         string bProductRefForSKU = "";
+                        string cDefaultValue = string.Empty;
 
                         string sSqlcheck = "";
                         DataSet lookupsSingleDataset;
@@ -11687,6 +11688,7 @@ namespace Protean
                                 cContentValueXpath = lookupsSingleDataset.Tables[0].Rows[0]["cContentValueXpath"].ToString();
                                 bBriefNotDetail = lookupsSingleDataset.Tables[0].Rows[0]["bBriefNotDetail"].ToString();
                                 bProductRefForSKU = lookupsSingleDataset.Tables[0].Rows[0]["bProductRefForSKU"].ToString();
+                                cDefaultValue = lookupsSingleDataset.Tables[0].Rows[0]["cDefaultValue"].ToString();
 
                             }
                         }
@@ -11695,11 +11697,11 @@ namespace Protean
                         base.NewFrm("EditProductGroup");
                         if (indexId > 0)
                         {
-                            base.Instance.InnerXml = "<tblContentIndexDef><nContentIndexDefKey/><nContentIndexDataType>" + nContentIndexDataType + "</nContentIndexDataType><cContentSchemaName>" + cContentSchemaName.Trim() + "</cContentSchemaName><cDefinitionName>" + cDefinitionName.Trim() + "</cDefinitionName><cContentValueXpath>" + cContentValueXpath.Trim() + "</cContentValueXpath><bBriefNotDetail>" + bBriefNotDetail + "</bBriefNotDetail><nKeywordGroupName/><nAuditId/><bProductRefForSKU>" + bProductRefForSKU + "</bProductRefForSKU></tblContentIndexDef>";
+                            base.Instance.InnerXml = "<tblContentIndexDef><nContentIndexDefKey/><nContentIndexDataType>" + nContentIndexDataType + "</nContentIndexDataType><cContentSchemaName>" + cContentSchemaName.Trim() + "</cContentSchemaName><cDefinitionName>" + cDefinitionName.Trim() + "</cDefinitionName><cContentValueXpath>" + cContentValueXpath.Trim() + "</cContentValueXpath><bBriefNotDetail>" + bBriefNotDetail + "</bBriefNotDetail><nKeywordGroupName/><nAuditId/><bProductRefForSKU>" + bProductRefForSKU + "</bProductRefForSKU><cDefaultValue>" + cDefaultValue + "</cDefaultValue></tblContentIndexDef>";
                         }
                         else
                         {
-                            base.Instance.InnerXml = "<tblContentIndexDef><nContentIndexDefKey/><nContentIndexDataType/><cContentSchemaName/><cDefinitionName/><cContentValueXpath/><bBriefNotDetail>" + "0" + "</bBriefNotDetail><nKeywordGroupName/><nAuditId/><bProductRefForSKU>" + "0" + "</bProductRefForSKU> </tblContentIndexDef>";
+                            base.Instance.InnerXml = "<tblContentIndexDef><nContentIndexDefKey/><nContentIndexDataType/><cContentSchemaName/><cDefinitionName/><cContentValueXpath/><bBriefNotDetail>" + "0" + "</bBriefNotDetail><nKeywordGroupName/><nAuditId/><bProductRefForSKU>" + "0" + "</bProductRefForSKU><cDefaultValue></cDefaultValue> </tblContentIndexDef>";
                         }
 
                         if (indexId > 0)
@@ -11751,10 +11753,7 @@ namespace Protean
                         base.addBind("bProductRefForSKU", "tblContentIndexDef/bProductRefForSKU", oBindParent: ref argoBindParent5, "false()");
 
 
-                        // oSelElmt = MyBase.addSelect1(oGrp1Elmt, "bBriefNotDetail", True, "Brief Not Detail", "hidden", ApperanceTypes.Minimal)
-                        // MyBase.addOption(oSelElmt, "Yes", "1")
-                        // MyBase.addOption(oSelElmt, "No", "0",)
-                        // MyBase.addBind("bBriefNotDetail", "tblContentIndexDef/bBriefNotDetail", "false()")
+                       
 
                         base.addInput(ref oGrp1Elmt, "nKeywordGroupName", true, "nKeywordGroupName", "hidden");
                         XmlElement argoBindParent6 = null;
@@ -11763,6 +11762,10 @@ namespace Protean
                         base.addInput(ref oGrp1Elmt, "nAuditId", true, "nAuditId", "hidden");
                         XmlElement argoBindParent7 = null;
                         base.addBind("nAuditId", "tblContentIndexDef/nAuditId", oBindParent: ref argoBindParent7);
+
+                        base.addInput(ref oGrp1Elmt, "cDefaultValue", true, "Default Value");
+                        XmlElement argoBindParent8 = null;
+                        base.addBind("cDefaultValue", "tblContentIndexDef/cDefaultValue", oBindParent: ref argoBindParent8, "true()");
 
                         // search button
 

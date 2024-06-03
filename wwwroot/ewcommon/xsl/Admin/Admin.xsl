@@ -14131,6 +14131,9 @@
 					<th colspan="2">
 						Brief
 					</th>
+					<th colspan="2">
+						Default Value
+					</th>
 					<th class="clearfix buttonCell">
 						<a href="{$appPath}?ewCmd=FilterIndex&amp;pgid={/Page/@id}&amp;id=0&amp;SchemaName={indexkeys/SchemaName/@Name}" class="btn btn-success pull-right">
 							<i class="fa fa-plus fa-white">
@@ -14171,6 +14174,9 @@
 			</td>
 			<td colspan="2">
 				<xsl:value-of select="bBriefNotDetail/node()"/>
+			</td>
+			<td colspan="2">
+				<xsl:value-of select="cDefaultValue/node()"/>
 			</td>
 			<td class="clearfix">
 				<a href="{$appPath}?ewCmd=FilterIndex&amp;ewCmd2=delete&amp;pgid={/Page/@id}&amp;id={@nContentIndexDefKey}&amp;SchemaName={../@Name}" class="btn btn-danger btn-xs pull-right">
