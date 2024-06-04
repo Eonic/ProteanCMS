@@ -44,7 +44,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.ValueTuple
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Web.Optimization.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\WebActivatorEx.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\WebGrease.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Magick.NET-Q8-x64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Tinify.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\TidyHTML5Managed.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Magick.NET.Core.dll
@@ -83,7 +82,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Text.Json.
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Threading.Tasks.Extensions.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.ValueTuple.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Web.Optimization.xml
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Magick.NET-Q8-x64.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Magick.NET.Core.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Select.HtmlToPdf.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\ru-ru\BundleTransformer.Core.resources.dll
@@ -92,6 +90,10 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\ru-ru\BundleTrans
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\ru-RU\JavaScriptEngineSwitcher.Core.resources.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\ru-RU\JavaScriptEngineSwitcher.V8.resources.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Select.Html.dep
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Release\Protean.CMS.csproj.CopyComplete
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Release\ProteanCMS.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Release\ProteanCMS.pdb
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Magick.Native-Q8-arm64.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Magick.Native-Q8-x86.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Magick.NET-Q8-AnyCPU.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Magick.NET-Q8-AnyCPU.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Release\Protean..4E1E49F9.Up2Date

@@ -117,7 +117,8 @@ header {
                 padding: $nav-padding-y $nav-padding-x;
 
                 &.active,
-                &.on {
+                &.on,
+                &.show {
                     color: $nav-link-hover-color;
                 }
             }

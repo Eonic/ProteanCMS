@@ -121,6 +121,9 @@
 								<xsl:value-of select="@background"/>
 								<xsl:text> </xsl:text>
 							</xsl:if>
+							<xsl:text> bg-wrapper-</xsl:text>
+							<xsl:value-of select="@id"/>
+							<xsl:text> </xsl:text>
 							<xsl:apply-templates select="." mode="hideScreens" />
 							<xsl:if test="@marginBelow='false'">
 								<xsl:text> mb-0 </xsl:text>
@@ -164,7 +167,45 @@
               </xsl:attribute>-->
 						</xsl:if>
 						<xsl:if test="@backgroundImage!=''">
-							<xsl:choose>
+							<style>
+								<xsl:text>.bg-wrapper-</xsl:text>
+								<xsl:value-of select="@id"/>{
+								<xsl:text>background-image: url('</xsl:text>
+								<xsl:value-of select="@backgroundImage"/>
+								<xsl:text>');</xsl:text>
+								<xsl:if test="@minHeightxs!=''">
+									<xsl:text>min-height:</xsl:text>
+									<xsl:value-of select="@minHeightxs"/>
+									<xsl:text>px!important;</xsl:text>
+									<xsl:text>height:</xsl:text>
+									<xsl:value-of select="@minHeightxs"/>
+									<xsl:text>px!important;</xsl:text>
+								</xsl:if>}
+								@media(min-width:768px){
+								<xsl:text>.bg-wrapper-</xsl:text>
+
+								<xsl:value-of select="@id"/>{
+								<xsl:if test="@minHeight!=''">
+									<xsl:text>min-height:</xsl:text>
+									<xsl:value-of select="@minHeight"/>
+									<xsl:text>px!important;</xsl:text>
+									<xsl:text>height:</xsl:text>
+									<xsl:value-of select="@minHeight"/>
+									<xsl:text>px!important;</xsl:text>
+								</xsl:if>}}
+							</style>
+							<xsl:if test="@data-stellar-background-ratio!='10'">
+								<div class="parallax"
+									 data-parallax-image="{$backgroundResized}"  data-parallax-image-webp="{$backgroundResized-webp}"
+									 data-parallax-image-xs="{$backgroundResized-xs}"  data-parallax-image-xs-webp="{$backgroundResized-xs-webp}"
+									 data-parallax-image-sm="{$backgroundResized-sm}"  data-parallax-image-sm-webp="{$backgroundResized-sm-webp}"
+									 data-parallax-image-md="{$backgroundResized-md}"  data-parallax-image-md-webp="{$backgroundResized-md-webp}"
+									 data-parallax-image-lg="{$backgroundResized-lg}"  data-parallax-image-lg-webp="{$backgroundResized-lg-webp}"
+									 data-parallax-image-xxl="{@backgroundImage}">
+									<xsl:text> </xsl:text>
+								</div>
+							</xsl:if>
+							<!--<xsl:choose>
 								<xsl:when test="@data-stellar-background-ratio!='0'">
 									<xsl:choose>
 										<xsl:when test="@data-stellar-background-ratio!='10'">
@@ -211,7 +252,7 @@
 										</xsl:if>
 									</xsl:attribute>
 								</xsl:otherwise>
-							</xsl:choose>
+							</xsl:choose>-->
 						</xsl:if>
 						<xsl:if test="@backgroundVideo-mp4!='' and @backgroundVideo-webm!=''">
 							<style>

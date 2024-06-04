@@ -509,6 +509,34 @@ namespace Protean.Tools
             }
         }
 
+        public static XmlElement addNewTextNode(string cNodeName, ref XmlElement oElmtIn, string cNodeValue = "", bool bAppendNotPrepend = true, bool bOverwriteExistingNode = false)
+        {
+            try
+            {
+                XmlElement oElem;
+                if (bOverwriteExistingNode)
+                {
+                    // Search for an existing node - delete it if it exists
+                    oElem = (XmlElement)oElmtIn.SelectSingleNode(cNodeName);
+                    if (!(oElem == null))
+                        oElmtIn.RemoveChild(oElem);
+                }
+                oElem = oElmtIn.OwnerDocument.CreateElement(cNodeName);
+                if (cNodeValue != "")
+                    oElem.InnerText = cNodeValue;
+                if (bAppendNotPrepend)
+                    oElmtIn.AppendChild(oElem);
+                else
+                    oElmtIn.PrependChild(oElem);
+                return oElem;
+            }
+            catch (Exception ex)
+            {
+                OnError?.Invoke(null/* TODO Change to default(_) if this is not a reference type */, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "addNewTextNode", ex, ""));
+                return null;
+            }
+        }
+
         // Public Shared Function getNodeValueByType(ByVal oParent As XmlNode, ByVal cXPath As String, Optional ByVal nNodeType As XmlDataType = XmlDataType.TypeString, Optional ByVal vDefaultValue As Object = "") As Object
         // Try
         // Dim oNode As XmlNode

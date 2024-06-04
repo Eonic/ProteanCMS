@@ -2954,6 +2954,10 @@
 		<!-- THEIR ARE NO GENRIC BACKGROUNDS-->
 	</xsl:template>
 
+	<xsl:template match="select1[@appearance='minimal' and contains(@class,'menuStyles')]" mode="control-outer">
+		
+	</xsl:template>
+	
 	<!-- -->
 	<xsl:template match="select1[@appearance='minimal' and contains(@class,'cssStyle')]" mode="xform_control">
 		<xsl:variable name="ref">

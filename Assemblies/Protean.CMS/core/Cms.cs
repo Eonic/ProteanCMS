@@ -4969,18 +4969,30 @@ namespace Protean
                     oContentsNode.SetAttribute("resultCount", nTotal.ToString());
                 }
 
+               
+                    if (!string.IsNullOrEmpty(cOrderBy))
+                    {
+                        sSql = sSql + " ORDER BY ";
+                        if(distinct)
+                        {
+                            sSql  = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
+                        }
+                        sSql += cOrderBy;
 
-                if (!string.IsNullOrEmpty(cOrderBy))
-                {
-                    sSql = sSql + " ORDER BY ";
-                    sSql += cOrderBy;
-                   
-                }
-                else
-                {
-                    sSql += " ORDER BY(SELECT NULL)"; 
-                  
-                }
+                    }
+                    else
+                    {
+                        sSql = sSql + " ORDER BY";
+                        if (distinct)
+                        {
+                            sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
+                        }
+                        else
+                        {
+                            sSql += "(SELECT NULL)";
+                        }
+                    }
+                
                 if (nItemCount > 0L)
                 {
 

@@ -8278,7 +8278,7 @@ namespace Protean
 
             }
 
-            public bool AddItem(long nProductId, long nQuantity, string[] oProdOptions, string cProductText = "", double nPrice = 0d, string ProductXml = "", bool UniqueProduct = false, string overideUrl = "", bool bDepositOnly = false, string cProductOption = "", double dProductOptionPrice = 0d)
+            public bool AddItem(long nProductId, long nQuantity, string[][] oProdOptions, string cProductText = "", double nPrice = 0d, string ProductXml = "", bool UniqueProduct = false, string overideUrl = "", bool bDepositOnly = false, string cProductOption = "", double dProductOptionPrice = 0d)
             {
                 myWeb.PerfMon.Log("Cart", "AddItem");
                 string cSQL = "Select * From tblCartItem WHERE nCartOrderID = " + mnCartId + " AND nItemiD =" + nProductId;
@@ -8337,13 +8337,18 @@ namespace Protean
                                             var loopTo = Information.UBound(oProdOptions) - 1;
                                             for (i = 0; i <= loopTo; i++)
                                             {
+                                                string cProdOpt1 = "";
+                                                if (oProdOptions[i].Length > 1) {
+                                                    cProdOpt1 = oProdOptions[i][1].ToString();
+                                                }
+
                                                 if (oProdOptions[i].Count() < 1)
                                                 {
                                                     // Case for text option with no index
                                                     if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oProdOptions[i][0], Conversions.ToString(oDr2["nItemOptGrpIdx"]), false)))
                                                         nCountExOptions += 1;
                                                 }
-                                                else if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(oProdOptions[i][0], oDr2["nItemOptGrpIdx"], false), Operators.ConditionalCompareObjectEqual(oProdOptions[i][1], oDr2["nItemOptIdx"], false))))
+                                                else if ((oProdOptions[i][0].ToString() != oDr2["nItemOptGrpIdx"].ToString()) && (cProdOpt1.ToString() != oDr2["nItemOptIdx"].ToString()))
                                                     nCountExOptions += 1;
                                             }
                                             NoOptions += 1;
@@ -8374,26 +8379,16 @@ namespace Protean
                                 oItemInstance.AppendChild(oItemInstance.CreateElement("instance"));
                                 XmlNode argoNode = oItemInstance.DocumentElement;
                                 oElmt = addNewTextNode("tblCartItem", ref argoNode);
-
-                                XmlNode argoNode1 = oElmt;
-                                addNewTextNode("nCartOrderId", ref argoNode1, mnCartId.ToString());
-                                oElmt = (XmlElement)argoNode1;
-                                XmlNode argoNode2 = oElmt;
-                                addNewTextNode("nItemId", ref argoNode2, nProductId.ToString());
-                                oElmt = (XmlElement)argoNode2;
+                                addNewTextNode("nCartOrderId", ref oElmt, mnCartId.ToString());
+                                addNewTextNode("nItemId", ref oElmt, nProductId.ToString());
                                 if (string.IsNullOrEmpty(overideUrl))
                                 {
-                                    XmlNode argoNode3 = oElmt;
-                                    Tools.Xml.addNewTextNode("cItemURL", ref argoNode3, myWeb.GetContentUrl(nProductId));
-                                    oElmt = (XmlElement)argoNode3; // Erm?
+                                    Tools.Xml.addNewTextNode("cItemURL", ref oElmt, myWeb.GetContentUrl(nProductId));
                                 }
                                 else
                                 {
-                                    XmlNode argoNode4 = oElmt;
-                                    addNewTextNode("cItemURL", ref argoNode4, overideUrl);
-                                    oElmt = (XmlElement)argoNode4;
-                                } // Erm?
-
+                                    addNewTextNode("cItemURL", ref oElmt, overideUrl);
+                                }
                                 if (!string.IsNullOrEmpty(ProductXml))
                                 {
                                     oProdXml.InnerXml = ProductXml;
@@ -8448,9 +8443,7 @@ namespace Protean
                                     if (oProdXml.SelectSingleNode("/Content/Prices/Discount[@currency='" + mcCurrency + "']") != null)
                                     {
                                         string strDiscount1 = oProdXml.SelectSingleNode("/Content/Prices/Discount[@currency='" + mcCurrency + "']").InnerText;
-                                        XmlNode argoNode6 = oElmt;
-                                        addNewTextNode("nDiscountValue", ref argoNode6, Conversions.ToString(Interaction.IIf(Information.IsNumeric(strDiscount1), strDiscount1, 0)));
-                                        oElmt = (XmlElement)argoNode6;
+                                        addNewTextNode("nDiscountValue", ref oElmt, Conversions.ToString(Interaction.IIf(Information.IsNumeric(strDiscount1), strDiscount1, 0)));
                                     }
 
                                     if (oProdXml.SelectSingleNode("/Content/ShippingWeight") != null)
@@ -8484,23 +8477,13 @@ namespace Protean
                                     oProdXml.DocumentElement.SetAttribute("type", cContentType);
                                 }
 
-                                XmlNode argoNode8 = oElmt;
-                                addNewTextNode("cItemName", ref argoNode8, cProductText);
-                                oElmt = (XmlElement)argoNode8;
-                                XmlNode argoNode9 = oElmt;
-                                addNewTextNode("nItemOptGrpIdx", ref argoNode9, 0.ToString());
-                                oElmt = (XmlElement)argoNode9; // Dont Need
-                                XmlNode argoNode10 = oElmt;
-                                addNewTextNode("nItemOptIdx", ref argoNode10, 0.ToString());
-                                oElmt = (XmlElement)argoNode10; // Dont Need
-
+                                addNewTextNode("cItemName", ref oElmt, cProductText);
+                                addNewTextNode("nItemOptGrpIdx", ref oElmt, 0.ToString());
+                                addNewTextNode("nItemOptIdx", ref oElmt, 0.ToString());
                                 if (!string.IsNullOrEmpty(myWeb.moRequest["unit"]))
                                 {
-                                    XmlNode argoNode11 = oElmt;
-                                    Tools.Xml.addNewTextNode("cItemUnit", ref argoNode11, myWeb.moRequest["unit"]);
-                                    oElmt = (XmlElement)argoNode11;
+                                    Tools.Xml.addNewTextNode("cItemUnit", ref oElmt, myWeb.moRequest["unit"]);
                                 }
-
                                 if (oPrice != null)
                                 {
                                     strPrice1 = oPrice.InnerText;
@@ -8517,27 +8500,13 @@ namespace Protean
                                     {
                                         strPrice1 = myWeb.moRequest["price_" + nProductId];
                                     }
-                                }
-
-                                XmlNode argoNode12 = oElmt;
-                                addNewTextNode("nPrice", ref argoNode12, Conversions.ToString(Interaction.IIf(Information.IsNumeric(strPrice1), strPrice1, 0)));
-                                oElmt = (XmlElement)argoNode12;
-                                XmlNode argoNode13 = oElmt;
-                                addNewTextNode("nShpCat", ref argoNode13, (-1).ToString());
-                                oElmt = (XmlElement)argoNode13; // @ Where do we get this from?
-                                XmlNode argoNode14 = oElmt;
-                                addNewTextNode("nTaxRate", ref argoNode14, nTaxRate.ToString());
-                                oElmt = (XmlElement)argoNode14;
-                                XmlNode argoNode15 = oElmt;
-                                addNewTextNode("nQuantity", ref argoNode15, nQuantity.ToString());
-                                oElmt = (XmlElement)argoNode15;
-                                XmlNode argoNode16 = oElmt;
-                                addNewTextNode("nWeight", ref argoNode16, nWeight.ToString());
-                                oElmt = (XmlElement)argoNode16;
-                                XmlNode argoNode17 = oElmt;
-                                addNewTextNode("nParentId", ref argoNode17, 0.ToString());
-                                oElmt = (XmlElement)argoNode17;
-
+                                }                              
+                                addNewTextNode("nPrice", ref oElmt, Conversions.ToString(Interaction.IIf(Information.IsNumeric(strPrice1), strPrice1, 0)));
+                                addNewTextNode("nShpCat", ref oElmt, (-1).ToString());
+                                addNewTextNode("nTaxRate", ref oElmt, nTaxRate.ToString());
+                                addNewTextNode("nQuantity", ref oElmt, nQuantity.ToString());
+                                addNewTextNode("nWeight", ref oElmt, nWeight.ToString());
+                                addNewTextNode("nParentId", ref oElmt, 0.ToString());
                                 if (bDepositOnly)
                                 {
                                     XmlNode argoNode18 = oElmt;
@@ -8555,25 +8524,32 @@ namespace Protean
                                 // Options
                                 if (oProdOptions != null)
                                 {
-                                    var loopTo1 = oProdOptions.Count();
-                                    for (i = 0; i <= loopTo1; i++)
+                                    for (i = 0; i < oProdOptions.Length; i++)
                                     {
                                         if (oProdOptions[i] != null & nQuantity > 0L)
                                         {
                                             // Add Options
                                             oItemInstance = new XmlDocument();
                                             oItemInstance.AppendChild(oItemInstance.CreateElement("instance"));
-                                            XmlNode argoNode20 = oItemInstance.DocumentElement;
-                                            oElmt = addNewTextNode("tblCartItem", ref argoNode20);
-                                            XmlNode argoNode21 = oElmt;
-                                            addNewTextNode("nCartOrderId", ref argoNode21, mnCartId.ToString());
-                                            oElmt = (XmlElement)argoNode21;
+                                            XmlElement docElmt = oItemInstance.DocumentElement;
+                                            oElmt = addNewTextNode("tblCartItem", ref docElmt);                                            
+                                            addNewTextNode("nCartOrderId", ref oElmt, mnCartId.ToString());                                          
 
                                             string cStockCode = "";
                                             string cOptName = "";
                                             bool bTextOption = false;
+                                           // string opt1stval = "";
+                                            string opt2ndval = "";
+                                            if (oProdOptions[i].Count() == 2)
+                                            {
+                                                opt2ndval = oProdOptions[i][1].ToString();
+                                            }
+                                            else {
+                                               // opt2ndval
+                                                opt2ndval = "0";
+                                            }
 
-                                            if (Convert.ToInt32(oProdOptions[i]) < 1)
+                                            if (oProdOptions[i].Count() < 2 && opt2ndval != "0")
                                             {
                                                 // This option dosen't have an index value
                                                 // Save the submitted value against stock code.
@@ -8581,33 +8557,33 @@ namespace Protean
                                                 cOptName = cStockCode;
                                                 bTextOption = true;
                                             }
-                                            else if (Information.IsNumeric(oProdOptions[i][0]) & Information.IsNumeric(oProdOptions[i][1]))
+                                            else if (Information.IsNumeric(oProdOptions[i][0]) & Information.IsNumeric(opt2ndval))
                                             {
                                                 // add the stock code from the option
-                                                if (oProdXml.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("/Content/Options/OptGroup[", oProdOptions[i][0]), "]/option["), oProdOptions[i][1]), "]/StockCode"))) != null)
+                                                if (oProdXml.SelectSingleNode($"/Content/Options/OptGroup[{oProdOptions[i][0]}]/option[{opt2ndval}]/StockCode") != null)
                                                 {
-                                                    cStockCode = oProdXml.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("/Content/Options/OptGroup[", oProdOptions[i][0]), "]/option["), oProdOptions[i][1]), "]/StockCode"))).InnerText;
+                                                    cStockCode = oProdXml.SelectSingleNode($"/Content/Options/OptGroup[{oProdOptions[i][0]}]/option[{opt2ndval}]/StockCode").InnerText;
                                                 }
-                                                else if (oProdXml.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("/Content/Options/OptGroup[", oProdOptions[i][0]), "]/option["), oProdOptions[i][1]), "]/code"))) != null)
+                                                else if (oProdXml.SelectSingleNode($"/Content/Options/OptGroup[{oProdOptions[i][0]}]/option[{opt2ndval}]/code") != null)
                                                 {
-                                                    cStockCode = oProdXml.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("/Content/Options/OptGroup[", oProdOptions[i][0]), "]/option["), oProdOptions[i][1]), "]/code"))).InnerText;
+                                                    cStockCode = oProdXml.SelectSingleNode($"/Content/Options/OptGroup[{oProdOptions[i][0]}]/option[{opt2ndval}]/code").InnerText;
                                                 }
-                                                else if (oProdXml.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("/Content/Options/OptGroup[", oProdOptions[i][0]), "]/option["), oProdOptions[i][1]), "]/name"))) != null)
+                                                else if (oProdXml.SelectSingleNode($"/Content/Options/OptGroup[{oProdOptions[i][0]}]/option[{opt2ndval}]/name") != null)
                                                 {
-                                                    cStockCode = oProdXml.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("/Content/Options/OptGroup[", oProdOptions[i][0]), "]/option["), oProdOptions[i][1]), "]/name"))).InnerText;
+                                                    cStockCode = oProdXml.SelectSingleNode($"/Content/Options/OptGroup[{oProdOptions[i][0]}]/option[{opt2ndval}]/name").InnerText;
                                                 }
                                                 // add the name from the option
-                                                if (oProdXml.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("/Content/Options/OptGroup[", oProdOptions[i][0]), "]"), "/option["), oProdOptions[i][1]), "]/Name"))) != null)
+                                                if (oProdXml.SelectSingleNode($"/Content/Options/OptGroup[{oProdOptions[i][0]}]/option[{opt2ndval}]/Name") != null)
                                                 {
-                                                    cOptName = oProdXml.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("/Content/Options/OptGroup[", oProdOptions[i][0]), "]"), "/option["), oProdOptions[i][1]), "]/Name"))).InnerText;
+                                                    cOptName = oProdXml.SelectSingleNode($"/Content/Options/OptGroup[{oProdOptions[i][0]}]/option[{opt2ndval}]/Name").InnerText;
                                                 }
-                                                else if (oProdXml.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("/Content/Options/OptGroup[", oProdOptions[i][0]), "]"), "/option["), oProdOptions[i][1]), "]/name"))) != null)
+                                                else if (oProdXml.SelectSingleNode($"/Content/Options/OptGroup[{oProdOptions[i][0]}]/option[{opt2ndval}]/name") != null)
                                                 {
-                                                    cOptName = oProdXml.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("/Content/Options/OptGroup[", oProdOptions[i][0]), "]"), "/option["), oProdOptions[i][1]), "]/name"))).InnerText;
+                                                    cOptName = oProdXml.SelectSingleNode($"/Content/Options/OptGroup[{oProdOptions[i][0]}]/option[{opt2ndval}]/name").InnerText;
                                                 }
-                                                else if (oProdXml.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("/Content/Options/OptGroup[", oProdOptions[i][0]), "]"), "/option["), oProdOptions[i][1]), "]/@name"))) != null)
+                                                else if (oProdXml.SelectSingleNode($"/Content/Options/OptGroup[{oProdOptions[i][0]}]/option[{opt2ndval}]/@name") != null)
                                                 {
-                                                    cOptName = oProdXml.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("/Content/Options/OptGroup[", oProdOptions[i][0]), "]"), "/option["), oProdOptions[i][1]), "]/@name"))).InnerText;
+                                                    cOptName = oProdXml.SelectSingleNode($"/Content/Options/OptGroup[{oProdOptions[i][0]}]/option[{opt2ndval}]/@name").InnerText;
                                                 }
                                             }
                                             else
@@ -8615,75 +8591,38 @@ namespace Protean
                                                 cStockCode = "";
                                                 cOptName = "Invalid Option";
                                             }
-
-                                            XmlNode argoNode22 = oElmt;
-                                            addNewTextNode("cItemRef", ref argoNode22, cStockCode);
-                                            oElmt = (XmlElement)argoNode22;
-                                            XmlNode argoNode23 = oElmt;
-                                            addNewTextNode("nItemId", ref argoNode23, nProductId.ToString());
-                                            oElmt = (XmlElement)argoNode23;
-                                            XmlNode argoNode24 = oElmt;
-                                            Tools.Xml.addNewTextNode("cItemURL", ref argoNode24, myWeb.mcOriginalURL);
-                                            oElmt = (XmlElement)argoNode24; // Erm?
-                                            XmlNode argoNode25 = oElmt;
-                                            addNewTextNode("cItemName", ref argoNode25, cOptName);
-                                            oElmt = (XmlElement)argoNode25;
-
+                                            addNewTextNode("cItemRef", ref oElmt, cStockCode);                             
+                                            addNewTextNode("nItemId", ref oElmt, nProductId.ToString());                            
+                                            addNewTextNode("cItemURL", ref oElmt, myWeb.mcOriginalURL);
+                                            addNewTextNode("cItemName", ref oElmt, cOptName);
                                             if (bTextOption)
                                             {
                                                 // save the option index as -1 for text option
-                                                XmlNode argoNode26 = oElmt;
-                                                addNewTextNode("nItemOptGrpIdx", ref argoNode26, (i + 1).ToString());
-                                                oElmt = (XmlElement)argoNode26;
-                                                XmlNode argoNode27 = oElmt;
-                                                addNewTextNode("nItemOptIdx", ref argoNode27, (-1).ToString());
-                                                oElmt = (XmlElement)argoNode27;
+                                                addNewTextNode("nItemOptGrpIdx", ref oElmt, (i + 1).ToString());  
+                                                addNewTextNode("nItemOptIdx", ref oElmt, (-1).ToString());
                                                 // No price variation for text options
-                                                XmlNode argoNode28 = oElmt;
-                                                addNewTextNode("nPrice", ref argoNode28, "0");
-                                                oElmt = (XmlElement)argoNode28;
+                                                addNewTextNode("nPrice", ref oElmt, "0");
                                             }
                                             else
                                             {
-                                                XmlNode argoNode29 = oElmt;
-                                                addNewTextNode("nItemOptGrpIdx", ref argoNode29, Conversions.ToString(oProdOptions[i][0]));
-                                                oElmt = (XmlElement)argoNode29;
-                                                XmlNode argoNode30 = oElmt;
-                                                addNewTextNode("nItemOptIdx", ref argoNode30, Conversions.ToString(oProdOptions[i][1]));
-                                                oElmt = (XmlElement)argoNode30;
-
-                                                XmlElement oPriceElmt = (XmlElement)oProdXml.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("/Content/Options/OptGroup[", oProdOptions[i][0]), "]"), "/option["), oProdOptions[i][1]), "]/Prices/Price[@currency='"), mcCurrency), "']")));
+                                                addNewTextNode("nItemOptGrpIdx", ref oElmt, Conversions.ToString(oProdOptions[i][0]));
+                                                addNewTextNode("nItemOptIdx", ref oElmt, Conversions.ToString(opt2ndval));
+                                                XmlElement oPriceElmt = (XmlElement)oProdXml.SelectSingleNode($"/Content/Options/OptGroup[{oProdOptions[i][0]}]/option[{opt2ndval}]/Prices/Price[@currency='{mcCurrency}']");
                                                 string strPrice2 = 0.ToString();
                                                 if (oPriceElmt != null)
                                                     strPrice2 = oPriceElmt.InnerText;
-                                                XmlNode argoNode31 = oElmt;
-                                                addNewTextNode("nPrice", ref argoNode31, Conversions.ToString(Interaction.IIf(Information.IsNumeric(strPrice2), strPrice2, 0)));
-                                                oElmt = (XmlElement)argoNode31;
-                                            }
-                                            XmlNode argoNode32 = oElmt;
-                                            addNewTextNode("nShpCat", ref argoNode32, (-1).ToString());
-                                            oElmt = (XmlElement)argoNode32;
-                                            XmlNode argoNode33 = oElmt;
-                                            addNewTextNode("nTaxRate", ref argoNode33, 0.ToString());
-                                            oElmt = (XmlElement)argoNode33;
-                                            XmlNode argoNode34 = oElmt;
-                                            addNewTextNode("nQuantity", ref argoNode34, 1.ToString());
-                                            oElmt = (XmlElement)argoNode34;
-                                            XmlNode argoNode35 = oElmt;
-                                            addNewTextNode("nWeight", ref argoNode35, 0.ToString());
-                                            oElmt = (XmlElement)argoNode35;
-                                            XmlNode argoNode36 = oElmt;
-                                            addNewTextNode("nParentId", ref argoNode36, nItemID.ToString());
-                                            oElmt = (XmlElement)argoNode36;
+                                                addNewTextNode("nPrice", ref oElmt, Conversions.ToString(Interaction.IIf(Information.IsNumeric(strPrice2), strPrice2, 0)));
+                                            }                                           
+                                            addNewTextNode("nShpCat", ref oElmt, (-1).ToString());                                                                               
+                                            addNewTextNode("nTaxRate", ref oElmt, 0.ToString());                                       
+                                            addNewTextNode("nQuantity", ref oElmt, 1.ToString());                                
+                                            addNewTextNode("nWeight", ref oElmt, 0.ToString());                                   
+                                            addNewTextNode("nParentId", ref oElmt, nItemID.ToString());                         
                                             moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement);
-
-
-
                                         }
                                     }
                                 }
                                 // 
-
                                 if (myWeb.moRequest["OptionName_" + nProductId] != null)
                                 {
                                     this.AddProductOption(nItemID, myWeb.moRequest["OptionName_" + nProductId], Conversions.ToDouble(myWeb.moRequest["OptionValue_" + nProductId]));
@@ -8752,7 +8691,7 @@ namespace Protean
                 string cProcessInfo = "Checking Submitted Products and Options"; // Object for product keys/quantittie
                                                                                  // Object for options
                 string strAddedProducts = "Start:"; // string of products added
-                string[] oOptions = new string[2]; // an array of option arrays (2 dimensional array)
+                string[][] oOptions; // an array of option arrays (2 dimensional array)
                 int nCurOptNo = 0;
                 string[] oCurOpt; // CurrentOption bieng evaluated
                 long nProductKey;
@@ -8872,12 +8811,11 @@ namespace Protean
                                                 if ((Strings.Split(Conversions.ToString(oItem2), "_")[0] + "_" + Strings.Split(Conversions.ToString(oItem2), "_")[1] ?? "") == ("opt_" + nProductKey ?? "")) // check it is an option
                                                 {
                                                     oCurOpt = Strings.Split(Conversions.ToString(myWeb.moRequest.Form.Get(oItem2)), ","); // get array of option in "1_2" format
-                                                    var loopTo = Information.UBound(oCurOpt);
-                                                    for (nI = 0; nI <= loopTo; nI++) // loop through current options to split into another array
+                                                    for (nI = 0; nI < oCurOpt.Length; nI++) // loop through current options to split into another array
                                                     {
-                                                        Array.Resize(ref oOptions, nCurOptNo + 1 + 1); // redim the array to new length while preserving the current data
+                                                        Array.Resize(ref oOptions, nCurOptNo + 1); // redim the array to new length while preserving the current data
                                                         char[] delimiterChars = { '_' };
-                                                        oOptions = oCurOpt[nI].Split(delimiterChars); // split out the arrays of options
+                                                        oOptions[nCurOptNo] = oCurOpt[nI].Split(delimiterChars); // split out the arrays of options
                                                         nCurOptNo += 1; // update number of options
                                                     }
                                                 } // end option check

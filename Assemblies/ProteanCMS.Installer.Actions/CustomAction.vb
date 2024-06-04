@@ -10,19 +10,18 @@ Imports System.Web.Management
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.1.3.0"
+    Public Shared ewAssemblyVersion As String = "6.1.4.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.1.0.0"
     Public Shared bundleAssemblyVersion As String = "1.10.0.0"
     Public Shared bundleLessAssemblyVersion As String = "1.12.44.0"
-    Public Shared bundleSassAssemblyVersion As String = "1.12.36.0"
-    Public Shared LibSassHostAssemblyVersion As String = "1.3.3.0"
-    Public Shared DartSassHostAssemblyVersion As String = "1.0.11.0"
+    Public Shared bundleSassAssemblyVersion As String = "1.13.16.0"
+    Public Shared DartSassHostAssemblyVersion As String = "1.0.12.0"
     Public Shared jsSwitcherAssemblyVersion As String = "3.24.1.0"
     Public Shared jsSwitcherV8AssemblyVersion As String = "3.24.1.0"
     Public Shared jsSwitcherV8NativeWinx64AssemblyVersion As String = "3.23.2.0"
     Public Shared WebGreaseAssemblyVersion As String = "1.6.5135.21930"
     Public Shared AdvancedStringBuilderVersion As String = "0.1.1.0"
-    Public Shared JsonAssemblyVersion As String = "13.0.2.27524" '"8.0.1.19229""
+    Public Shared JsonAssemblyVersion As String = "13.0.0.0" '"8.0.1.19229""
     Public Shared YUIAssemblyVersion As String = "1.9.23.0"
     Public Shared MicrosoftAjaxAssemblyVersion As String = "1.10.0.0"
     Public Shared AjaxMinAssemblyVersion As String = "5.14.5506.26196"
@@ -36,8 +35,8 @@ Public Class CustomActions
     Public Shared ClearScriptAssemblyVersion As String = "5.5.6.0"
     Public Shared MicrosoftClearScriptV8AssemblyVersion As String = "7.4.4.0"
     Public Shared AlphaFSAssemblyVersion As String = "2.2.0.0"
-    Public Shared MagickNETCoreAssemblyVersion As String = "13.6.0.0"
-    Public Shared MagickNETAssemblyVersion As String = "13.6.0.0"
+    Public Shared MagickNETCoreAssemblyVersion As String = "13.8.0.0"
+    Public Shared MagickNETAssemblyVersion As String = "13.8.0.0"
     Public Shared GoogleProtoBufAssemblyVersion As String = "3.20.1.0"
     Public Shared SharpZipLibAssemblyVersion As String = "1.4.2.13"
     Public Shared SystemBuffersVersion As String = "4.0.3.0"
@@ -207,9 +206,7 @@ Public Class CustomActions
                     UpdateAssemblyRef(oAssembliesSect, "BundleTransformer.Core, Version=" & bundleAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
                     UpdateAssemblyRef(oAssembliesSect, "BundleTransformer.Less, Version=" & bundleLessAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
                     UpdateAssemblyRef(oAssembliesSect, "BundleTransformer.SassAndScss, Version=" & bundleSassAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
-                    UpdateAssemblyRef(oAssembliesSect, "LibSassHost, Version=" & LibSassHostAssemblyVersion & ", Culture=neutral, PublicKeyToken=3e24e88796a38e46")
                     UpdateAssemblyRef(oAssembliesSect, "DartSassHost, Version=" & DartSassHostAssemblyVersion & ", Culture=neutral, PublicKeyToken=83ed06f2bd4ecb43")
-                    ' Not required for runtimes   UpdateAssemblyRef(oAssembliesSect, "LibSassHost.Native.win-x64, Version=" & LibSassHostAssemblyVersion & ", Culture=neutral, PublicKeyToken=3e24e88796a38e46")
                     UpdateAssemblyRef(oAssembliesSect, "BundleTransformer.MicrosoftAjax, Version=" & MicrosoftAjaxAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
                     UpdateAssemblyRef(oAssembliesSect, "AjaxMin, Version=" & AjaxMinAssemblyVersion & ", Culture=neutral, PublicKeyToken=21ef50ce11b5d80f")
                     UpdateAssemblyRef(oAssembliesSect, "JavaScriptEngineSwitcher.Core, Version=" & jsSwitcherAssemblyVersion & ", Culture=neutral, PublicKeyToken=C608B2A8CC9E4472")
@@ -231,7 +228,7 @@ Public Class CustomActions
                     UpdateAssemblyRef(oAssembliesSect, "ICSharpCode.SharpZipLib, Version=" & SharpZipLibAssemblyVersion & ", Culture=neutral, PublicKeyToken=1b03e6acf1164f73")
                     UpdateAssemblyRef(oAssembliesSect, "Google.Protobuf, Version=" & GoogleProtoBufAssemblyVersion & ", Culture=neutral, PublicKeyToken=a7d26565bac4d604")
                     UpdateAssemblyRef(oAssembliesSect, "Magick.NET.Core, Version=" & MagickNETCoreAssemblyVersion & ", Culture=neutral, PublicKeyToken=2004825badfa91ec")
-                    UpdateAssemblyRef(oAssembliesSect, "Magick.NET-Q8-x64, Version=" & MagickNETAssemblyVersion & ", Culture=neutral, PublicKeyToken=2004825badfa91ec")
+                    UpdateAssemblyRef(oAssembliesSect, "Magick.NET-Q8-AnyCPU, Version=" & MagickNETAssemblyVersion & ", Culture=neutral, PublicKeyToken=2004825badfa91ec")
                     UpdateAssemblyRef(oAssembliesSect, "System.Buffers, Version=" & SystemBuffersVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
 
                     UpdateAssemblyRef(oAssembliesSect, "Microsoft.Web.Infrastructure, Version=" & MicrosoftWebInfrastructureVersion & ", Culture=neutral, PublicKeyToken=31bf3856ad364e35")
@@ -264,6 +261,28 @@ Public Class CustomActions
                 oHandler.SetAttribute("path", "*.less")
                 oHandler.SetAttribute("verb", "GET")
                 oHandler.SetAttribute("type", "BundleTransformer.Less.HttpHandlers.LessAssetHandler, BundleTransformer.Less, Version=" & bundleLessAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
+                oHandler.SetAttribute("validate", "True")
+
+                If ohttpHandlers.SelectSingleNode("add[@path='*.sass']") Is Nothing Then
+                    oHandler = webConfig.CreateElement("add")
+                    ohttpHandlers.AppendChild(oHandler)
+                Else
+                    oHandler = ohttpHandlers.SelectSingleNode("add[@path='*.sass']")
+                End If
+                oHandler.SetAttribute("path", "*.scss")
+                oHandler.SetAttribute("verb", "GET")
+                oHandler.SetAttribute("type", "BundleTransformer.SassAndScss.HttpHandlers.SassAndScssAssetHandler, BundleTransformer.SassAndScss, Version=" & bundleSassAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
+                oHandler.SetAttribute("validate", "True")
+
+                If ohttpHandlers.SelectSingleNode("add[@path='*.scss']") Is Nothing Then
+                    oHandler = webConfig.CreateElement("add")
+                    ohttpHandlers.AppendChild(oHandler)
+                Else
+                    oHandler = ohttpHandlers.SelectSingleNode("add[@path='*.scss']")
+                End If
+                oHandler.SetAttribute("path", "*.scss")
+                oHandler.SetAttribute("verb", "GET")
+                oHandler.SetAttribute("type", "BundleTransformer.SassAndScss.HttpHandlers.SassAndScssAssetHandler, BundleTransformer.SassAndScss, Version=" & bundleSassAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
                 oHandler.SetAttribute("validate", "True")
 
                 'add Bundle Transformer config
@@ -309,7 +328,11 @@ Public Class CustomActions
                                 "</core>" &
                                 "<less useNativeMinification=""true"" ieCompat=""true"" strictUnits=""false"" dumpLineNumbers=""None"" javascriptEnabled=""true"">" &
                                 "<jsEngine name=""V8JsEngine"" />" &
-                                "</less>"
+                                "</less>" &
+                                "<sassAndScss>" &
+                                    "<jsEngine name=""V8JsEngine""/>" &
+                                "</sassAndScss>"
+
 
                 obt.SetAttribute("xmlns", "http://tempuri.org/BundleTransformer.Configuration.xsd")
 
@@ -487,9 +510,7 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "BundleTransformer.Core", "973C344C93AAC60D", bundleAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "BundleTransformer.Less", "973C344C93AAC60D", bundleLessAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "BundleTransformer.SassAndScss", "973C344C93AAC60D", bundleSassAssemblyVersion)
-            UpdateDependantAssembly(oSectXml, "LibSassHost", "3e24e88796a38e46", LibSassHostAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "DartSassHost", "83ed06f2bd4ecb43", DartSassHostAssemblyVersion)
-            UpdateDependantAssembly(oSectXml, "LibSassHost.Native.win-x64", "3e24e88796a38e46", LibSassHostAssemblyVersion)
 
             'JavascriptEngineSwitcher
             UpdateDependantAssembly(oSectXml, "JavaScriptEngineSwitcher.Core", "C608B2A8CC9E4472", jsSwitcherAssemblyVersion)
@@ -514,7 +535,7 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "System.Text.Encoding.CodePages", "b03f5f7f11d50a3a", SystemTextEncodingCodePagesAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "AlphaFS", "4d31a58f7d7ad5c9", AlphaFSAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "Magick.NET.Core", "2004825badfa91ec", MagickNETCoreAssemblyVersion)
-            UpdateDependantAssembly(oSectXml, "Magick.NET-Q8-x64", "2004825badfa91ec", MagickNETAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "Magick.NET-Q8-AnyCPU", "2004825badfa91ec", MagickNETAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "System.Buffers", "cc7b13ffcd2ddd51", SystemBuffersVersion)
             UpdateDependantAssembly(oSectXml, "ICSharpCode.SharpZipLib", "1b03e6acf1164f73", SharpZipLibAssemblyVersion)
 
@@ -676,7 +697,7 @@ Public Class CustomActions
             '    System.IO.File.Move(installFolder & "\tidy.x64.dll", GACFolder & "\TidyHTML5Managed\v4.0_1.1.5.0__0e5e11efc3341916\tidy.x64.dll")
             '            System.IO.File.Move(installFolder & "\tidy.x86.dll", GACFolder & "\TidyHTML5Managed\v4.0_1.1.5.0__0e5e11efc3341916\tidy.x86.dll")
             '   End If
-            '    End If
+            '  End If
 
             ' MyBase.Install(savedState)
 

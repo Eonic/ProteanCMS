@@ -130,6 +130,10 @@
 									<xsl:when test="$nav-dropdown='hover'">
 										<xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenudropdown">
 											<xsl:with-param name="hover">true</xsl:with-param>
+											<xsl:with-param name="overviewLink">self</xsl:with-param>
+											<xsl:with-param name="level2">true</xsl:with-param>
+											<xsl:with-param name="level3">true</xsl:with-param>
+											<xsl:with-param name="menu-back">true</xsl:with-param>
 										</xsl:apply-templates>
 									</xsl:when>
 									<xsl:otherwise>
@@ -676,7 +680,11 @@
 										</xsl:when>
 										<xsl:when test="$nav-dropdown='hover'">
 											<xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenudropdown">
-												<xsl:with-param name="hover">true</xsl:with-param>
+											<xsl:with-param name="hover">true</xsl:with-param>
+											<xsl:with-param name="overviewLink">self</xsl:with-param>
+											<xsl:with-param name="level2">true</xsl:with-param>
+											<xsl:with-param name="level3">true</xsl:with-param>
+											<xsl:with-param name="menu-back">true</xsl:with-param>
 											</xsl:apply-templates>
 										</xsl:when>
 										<xsl:otherwise>
