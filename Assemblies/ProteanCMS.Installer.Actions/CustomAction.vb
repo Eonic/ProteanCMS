@@ -44,7 +44,7 @@ Public Class CustomActions
     Public Shared DocumentFormatOpenXmlVersion As String = "2.9.1.0"
     Public Shared SystemRuntimeCompilerServicesUnsafeVersion As String = "6.0.0.0"
     Public Shared MicrosoftWebInfrastructureVersion As String = "2.0.0.0"
-    Public Shared SystemThreadingTasksExtensionsVersion As String = "4.5.4.0"
+    Public Shared SystemThreadingTasksExtensionsVersion As String = "4.2.0.1"
 
     Public Shared AngleSharpVersion As String = "1.1.2.0"
     Public Shared PreMailerVersion As String = "2.5.0.0"
