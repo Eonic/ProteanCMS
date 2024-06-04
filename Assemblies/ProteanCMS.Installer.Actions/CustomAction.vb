@@ -10,7 +10,7 @@ Imports System.Web.Management
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.1.5.0"
+    Public Shared ewAssemblyVersion As String = "6.1.6.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.1.0.0"
     Public Shared bundleAssemblyVersion As String = "1.10.0.0"
     Public Shared bundleLessAssemblyVersion As String = "1.12.44.0"
@@ -42,7 +42,7 @@ Public Class CustomActions
     Public Shared SystemBuffersVersion As String = "4.0.3.0"
     Public Shared SystemMemoryVersion As String = "4.0.1.2"
     Public Shared DocumentFormatOpenXmlVersion As String = "2.9.1.0"
-
+    Public Shared SystemRuntimeCompilerServicesUnsafeVersion As String = "6.0.0.0"
     Public Shared MicrosoftWebInfrastructureVersion As String = "2.0.0.0"
 
     Public Shared AngleSharpVersion As String = "1.1.2.0"
@@ -227,7 +227,7 @@ Public Class CustomActions
                     UpdateAssemblyRef(oAssembliesSect, "Protean.AppStart, Version=" & ptnAppStartAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
                     UpdateAssemblyRef(oAssembliesSect, "TidyHTML5Managed, Version=" & TidyHTML5ManagedAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
                     UpdateAssemblyRef(oAssembliesSect, "ICSharpCode.SharpZipLib, Version=" & SharpZipLibAssemblyVersion & ", Culture=neutral, PublicKeyToken=1b03e6acf1164f73")
-                    UpdateAssemblyRef(oAssembliesSect, "Google.Protobuf, Version=" & GoogleProtoBufAssemblyVersion & ", Culture=neutral, PublicKeyToken=a7d26565bac4d604")
+                   ' UpdateAssemblyRef(oAssembliesSect, "Google.Protobuf, Version=" & GoogleProtoBufAssemblyVersion & ", Culture=neutral, PublicKeyToken=a7d26565bac4d604")
                     UpdateAssemblyRef(oAssembliesSect, "Magick.NET.Core, Version=" & MagickNETCoreAssemblyVersion & ", Culture=neutral, PublicKeyToken=2004825badfa91ec")
                     UpdateAssemblyRef(oAssembliesSect, "Magick.NET-Q8-AnyCPU, Version=" & MagickNETAssemblyVersion & ", Culture=neutral, PublicKeyToken=2004825badfa91ec")
                     UpdateAssemblyRef(oAssembliesSect, "System.Buffers, Version=" & SystemBuffersVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
@@ -237,15 +237,14 @@ Public Class CustomActions
 
                     UpdateAssemblyRef(oAssembliesSect, "AngleSharp, Version=" & AngleSharpVersion & ", Culture=neutral, PublicKeyToken=e83494dcdc6d31ea")
                     UpdateAssemblyRef(oAssembliesSect, "PreMailer.Net, Version=" & PreMailerVersion & ", Culture=neutral, PublicKeyToken=23e3f43e29cae17f")
-
+                    UpdateAssemblyRef(oAssembliesSect, "System.Runtime.CompilerServices.Unsafe, Version=" & SystemRuntimeCompilerServicesUnsafeVersion & ", Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
 
                     ' UpdateAssemblyRef(oAssembliesSect, "DocumentFormat.OpenXml, Version=" & DocumentFormatOpenXmlVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
 
-
                     'TS: These are not required and forces the CMS to load so cannot be overiden by newer version
                     '  UpdateAssemblyRef(oAssembliesSect, "ProteanCms, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
-                    '   UpdateAssemblyRef(oAssembliesSect, "Protean.Tools, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=2030ce1af675e93f")
-                    '   UpdateAssemblyRef(oAssembliesSect, "Protean.Tools.Csharp, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
+                    '  UpdateAssemblyRef(oAssembliesSect, "Protean.Tools, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=2030ce1af675e93f")
+                    '  UpdateAssemblyRef(oAssembliesSect, "Protean.Tools.Csharp, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
                 End If
 
                 'UpdateAssemblyRef(oAssembliesSect, "Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=EB42632606E9261F")
@@ -539,11 +538,15 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "Magick.NET.Core", "2004825badfa91ec", MagickNETCoreAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "Magick.NET-Q8-AnyCPU", "2004825badfa91ec", MagickNETAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "System.Buffers", "cc7b13ffcd2ddd51", SystemBuffersVersion)
+            UpdateDependantAssembly(oSectXml, "System.Memory", "cc7b13ffcd2ddd51", SystemMemoryVersion)
             UpdateDependantAssembly(oSectXml, "ICSharpCode.SharpZipLib", "1b03e6acf1164f73", SharpZipLibAssemblyVersion)
 
             UpdateDependantAssembly(oSectXml, "AngleSharp", "e83494dcdc6d31ea", AngleSharpVersion)
             UpdateDependantAssembly(oSectXml, "PreMailer.Net", "23e3f43e29cae17f", PreMailerVersion)
             UpdateDependantAssembly(oSectXml, "Microsoft.Web.Infrastructure", "31bf3856ad364e35", MicrosoftWebInfrastructureVersion)
+            UpdateDependantAssembly(oSectXml, "System.Runtime.CompilerServices.Unsafe", "b03f5f7f11d50a3a", SystemRuntimeCompilerServicesUnsafeVersion)
+
+
 
             Dim BindingElmt As XmlElement = oSectXml.DocumentElement.SelectSingleNode("assemblyBinding")
             BindingElmt.SetAttribute("xmlns", "urn:schemas-microsoft-com:asm.v1")
