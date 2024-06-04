@@ -10,7 +10,7 @@ Imports System.Web.Management
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.1.7.0"
+    Public Shared ewAssemblyVersion As String = "6.1.8.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.1.0.0"
     Public Shared bundleAssemblyVersion As String = "1.10.0.0"
     Public Shared bundleLessAssemblyVersion As String = "1.12.44.0"
@@ -45,6 +45,7 @@ Public Class CustomActions
     Public Shared SystemRuntimeCompilerServicesUnsafeVersion As String = "6.0.0.0"
     Public Shared MicrosoftWebInfrastructureVersion As String = "2.0.0.0"
     Public Shared SystemThreadingTasksExtensionsVersion As String = "4.2.0.1"
+    Public Shared SystemTextJsonVersion As String = "4.0.1.2"
 
     Public Shared AngleSharpVersion As String = "1.1.2.0"
     Public Shared PreMailerVersion As String = "2.5.0.0"
@@ -240,6 +241,7 @@ Public Class CustomActions
                     UpdateAssemblyRef(oAssembliesSect, "PreMailer.Net, Version=" & PreMailerVersion & ", Culture=neutral, PublicKeyToken=23e3f43e29cae17f")
                     UpdateAssemblyRef(oAssembliesSect, "System.Runtime.CompilerServices.Unsafe, Version=" & SystemRuntimeCompilerServicesUnsafeVersion & ", Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
                     UpdateAssemblyRef(oAssembliesSect, "System.Threading.Tasks.Extensions, Version=" & SystemThreadingTasksExtensionsVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+                    UpdateAssemblyRef(oAssembliesSect, "System.Text.Json, Version=" & SystemThreadingTasksExtensionsVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
 
 
 
@@ -551,6 +553,7 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "System.Runtime.CompilerServices.Unsafe", "b03f5f7f11d50a3a", SystemRuntimeCompilerServicesUnsafeVersion)
 
             UpdateDependantAssembly(oSectXml, "System.Threading.Tasks.Extensions", "cc7b13ffcd2ddd51", SystemThreadingTasksExtensionsVersion)
+            UpdateDependantAssembly(oSectXml, "System.Text.Json", "cc7b13ffcd2ddd51", SystemTextJsonVersion)
 
 
             Dim BindingElmt As XmlElement = oSectXml.DocumentElement.SelectSingleNode("assemblyBinding")

@@ -31,9 +31,9 @@ Installer_Logo.jpg
 ..\Assemblies\NonNuget\libwebp.dll
 ..\packages\Magick.NET.Core.13.8.0\lib\netstandard20\Magick.NET.Core.dll
 ..\packages\Magick.NET-Q8-AnyCPU.13.8.0\lib\netstandard20\Magick.NET-Q8-AnyCPU.dll
-..\packages\Microsoft.ClearScript.Core.7.4.4\lib\net471\ClearScript.Core.dll
-..\packages\Microsoft.ClearScript.V8.7.4.4\lib\net471\ClearScript.V8.dll
-..\packages\Microsoft.ClearScript.V8.Native.win-x64.7.4.4\runtimes\win-x64\native\ClearScriptV8.win-x64.dll
+..\packages\Microsoft.ClearScript.Core.7.4.5\lib\net471\ClearScript.Core.dll
+..\packages\Microsoft.ClearScript.V8.7.4.5\lib\net471\ClearScript.V8.dll
+..\packages\Microsoft.ClearScript.V8.Native.win-x64.7.4.5\runtimes\win-x64\native\ClearScriptV8.win-x64.dll
 ..\packages\BundleTransformer.MicrosoftAjax.1.10.0\lib\net40\BundleTransformer.MicrosoftAjax.dll
 ..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll
 libraries\Newtonsoft.Json.dll
@@ -44,6 +44,7 @@ libraries\Newtonsoft.Json.dll
 ..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll
 ..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll
 ..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll
+..\packages\System.Text.Json.4.7.2\lib\net461\System.Text.Json.dll
 ..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll
 ..\Providers\ReplaceProvider\bin\Release\ReplaceProvider.dll
 ..\packages\System.Net.FtpClient.1.0.5824.34026\lib\net40\System.Net.FTPClient.dll
