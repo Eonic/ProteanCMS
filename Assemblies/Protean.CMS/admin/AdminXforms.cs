@@ -11765,7 +11765,7 @@ namespace Protean
 
                         base.addInput(ref oGrp1Elmt, "cDefaultValue", true, "Default Value");
                         XmlElement argoBindParent8 = null;
-                        base.addBind("cDefaultValue", "tblContentIndexDef/cDefaultValue", oBindParent: ref argoBindParent8, "true()");
+                        base.addBind("cDefaultValue", "tblContentIndexDef/cDefaultValue", oBindParent: ref argoBindParent8, "false()");
 
                         // search button
 
