@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?define version  = "6.1.9"?>
+<?define version  = "6.1.10"?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi' xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
     <Product Id='*' Name='ProteanCMS GAC Installer $(var.version)' Language='1033' Version='$(var.version)' Manufacturer='Eonic Digital LLP' UpgradeCode='{577597F8-BE6F-46B4-8A9D-46E8A5360918}' Codepage='1252'>
         <Package AdminImage='no' Comments='ProteanCMS GAC Installer' Compressed='yes' Description='ProteanCMS GAC Installer (64bit)' InstallerVersion='300' InstallScope='perMachine' Languages='1033' Manufacturer='Eonic Digital LLP' Platform='x64' ReadOnly='no' ShortNames='no' />
@@ -117,6 +117,9 @@
 				<Component Id='com_Microsoft_ClearScript_V8' Guid='f6470464-1c1a-471a-8307-ff1debf2515d' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_Microsoft_ClearScript_V8' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='ClearScript.V8.dll' Source='..\packages\Microsoft.ClearScript.V8.7.4.5\lib\net471\ClearScript.V8.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
+				<Component Id='com_Microsoft_ClearScript_V8_ICUData' Guid='1fd8c025-f0d2-4c21-8d7d-dd39681def3b' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+					<File Id='_Microsoft_ClearScript_V8_ICUData' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='ClearScript.V8.ICUData.dll' Source='..\packages\Microsoft.ClearScript.V8.ICUData.7.4.5\lib\netstandard1.0\ClearScript.V8.ICUData.dll' Assembly='.net' KeyPath='yes' />
+				</Component>
 				<!--
 				Move to runtimes
 				<Component Id='com_Microsoft_ClearScript_V8_WinX64' Guid='66b71b5b-dfea-49ea-8591-98daca8fce2a' Permanent='no' SharedDllRefCount='no' Transitive='no'>
@@ -229,6 +232,10 @@
 				<Component Id='com_MicrosoftBclAsyncInterfaces' Guid='0b0f40f8-1240-4b30-b06b-93ebd7a717c4' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_MicrosoftBclAsyncInterfaces' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Microsoft.Bcl.AsyncInterfaces.dll' Source='..\packages\Microsoft.Bcl.AsyncInterfaces.1.1.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
+				
+				<Component Id='com_SystemTextEncodingsWeb' Guid='4dfb277c-b692-4118-b0f2-e086ef193c53' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+					<File Id='_SystemTextEncodingsWeb' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Encodings.Web.dll' Source='..\packages\System.Text.Encodings.Web.8.0.0\lib\net462\System.Text.Encodings.Web.dll' Assembly='.net' KeyPath='yes' />
+				</Component>
 <!--
 				<Component Id='com_SelectHtmlToPdf' Guid='8ecf5eae-ab8d-4390-95d0-234e54902a58' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_SelectHtmlToPdf' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Select.HtmlToPdf.dll' Source='..\packages\Select.HtmlToPdf.23.1.0\lib\net40\Select.HtmlToPdf.dll' Assembly='.net' KeyPath='yes' />
@@ -331,7 +338,10 @@
 			<ComponentRef Id='com_DartSassHost' />
 			<ComponentRef Id='com_Microsoft_ClearScript_Core'/>
 			<ComponentRef Id='com_Microsoft_ClearScript_V8'/>
-			<ComponentRef Id='com_Microsoft_ClearScript_V8_WinX64' />				
+			<ComponentRef Id='com_Microsoft_ClearScript_V8_WinX64' />
+			<ComponentRef Id='com_Microsoft_ClearScript_V8_ICUData' />	
+			
+			
           <ComponentRef Id='com_Protean_AppStart' />
           <ComponentRef Id='com_AdvancedStringBuilder' />
           <ComponentRef Id='com_System_Text_Encoding_CodePages' />
@@ -346,6 +356,7 @@
 			<ComponentRef Id='com_SystemThreadingTasksExtensions' />
 			<ComponentRef Id='com_SystemTextJson' />
 			<ComponentRef Id='com_MicrosoftBclAsyncInterfaces' />
+			<ComponentRef Id='com_SystemTextEncodingsWeb' />
 			
 			<!--
 			<ComponentRef Id='com_SelectHtmlToPdf' />
