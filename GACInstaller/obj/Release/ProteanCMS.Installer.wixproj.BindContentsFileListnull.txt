@@ -35,6 +35,7 @@ Installer_Logo.jpg
 ..\packages\Microsoft.ClearScript.V8.7.4.5\lib\net471\ClearScript.V8.dll
 ..\packages\Microsoft.ClearScript.V8.Native.win-x64.7.4.5\runtimes\win-x64\native\ClearScriptV8.win-x64.dll
 ..\packages\BundleTransformer.MicrosoftAjax.1.10.0\lib\net40\BundleTransformer.MicrosoftAjax.dll
+..\packages\Microsoft.Bcl.AsyncInterfaces.1.1.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll
 ..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll
 libraries\Newtonsoft.Json.dll
 ..\packages\PreMailer.Net.2.5.0\lib\net461\PreMailer.Net.dll
