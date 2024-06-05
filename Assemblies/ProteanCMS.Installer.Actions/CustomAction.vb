@@ -10,7 +10,7 @@ Imports System.Web.Management
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.1.9.0"
+    Public Shared ewAssemblyVersion As String = "6.1.10.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.1.0.0"
     Public Shared bundleAssemblyVersion As String = "1.10.0.0"
     Public Shared bundleLessAssemblyVersion As String = "1.12.44.0"
@@ -33,7 +33,7 @@ Public Class CustomActions
     Public Shared CreateSendAssemblyVersion As String = "4.2.2.0"
     Public Shared TidyHTML5ManagedAssemblyVersion As String = "1.1.5.0"
     Public Shared ClearScriptAssemblyVersion As String = "5.5.6.0"
-    Public Shared MicrosoftClearScriptV8AssemblyVersion As String = "7.4.4.0"
+    Public Shared MicrosoftClearScriptV8AssemblyVersion As String = "7.4.5.0"
     Public Shared AlphaFSAssemblyVersion As String = "2.2.0.0"
     Public Shared MagickNETCoreAssemblyVersion As String = "13.8.0.0"
     Public Shared MagickNETAssemblyVersion As String = "13.8.0.0"
@@ -47,6 +47,7 @@ Public Class CustomActions
     Public Shared SystemThreadingTasksExtensionsVersion As String = "4.2.0.1"
     Public Shared SystemTextJsonVersion As String = "4.0.1.2"
     Public Shared MicrosoftBclAsyncInterfacesVersion As String = "1.0.0.0"
+    Public Shared SystemTextEncodingsWebVersion As String = "8.0.0.0"
 
     Public Shared AngleSharpVersion As String = "1.1.2.0"
     Public Shared PreMailerVersion As String = "2.5.0.0"
@@ -220,6 +221,8 @@ Public Class CustomActions
                     ' Not required for runtimes      UpdateAssemblyRef(oAssembliesSect, "JavaScriptEngineSwitcher.V8.Native.win-x64, Version=" & jsSwitcherV8NativeWinx64AssemblyVersion & ", Culture=neutral, PublicKeyToken=C608B2A8CC9E4472")
                     UpdateAssemblyRef(oAssembliesSect, "ClearScript.Core, Version=" & MicrosoftClearScriptV8AssemblyVersion & ", Culture=neutral, PublicKeyToken=31bf3856ad364e35")
                     UpdateAssemblyRef(oAssembliesSect, "ClearScript.V8, Version=" & MicrosoftClearScriptV8AssemblyVersion & ", Culture=neutral, PublicKeyToken=31bf3856ad364e35")
+                    UpdateAssemblyRef(oAssembliesSect, "ClearScript.V8.ICUData, Version=" & MicrosoftClearScriptV8AssemblyVersion & ", Culture=neutral, PublicKeyToken=31bf3856ad364e35")
+
                     ' UpdateAssemblyRef(oAssembliesSect, "MsieJavaScriptEngine, Version=" & MSIEJsEngineAssemblyVersion & ", Culture=neutral, PublicKeyToken=A3A2846A37AC0D3E")
                     ' UpdateAssemblyRef(oAssembliesSect, "EcmaScript.NET, Version=" & ECMAAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
                     UpdateAssemblyRef(oAssembliesSect, "WebGrease, Version=" & WebGreaseAssemblyVersion & ", Culture=neutral, PublicKeyToken=31BF3856AD364E35")
@@ -244,6 +247,9 @@ Public Class CustomActions
                     UpdateAssemblyRef(oAssembliesSect, "System.Threading.Tasks.Extensions, Version=" & SystemThreadingTasksExtensionsVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
                     UpdateAssemblyRef(oAssembliesSect, "System.Text.Json, Version=" & SystemTextJsonVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
                     UpdateAssemblyRef(oAssembliesSect, "Microsoft.Bcl.AsyncInterfaces, Version=" & MicrosoftBclAsyncInterfacesVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+                    UpdateAssemblyRef(oAssembliesSect, "System.Text.Encodings.Web, Version=" & SystemTextEncodingsWebVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+
+
 
 
 
@@ -531,6 +537,7 @@ Public Class CustomActions
 
             UpdateDependantAssembly(oSectXml, "ClearScript.Core", "31bf3856ad364e35", MicrosoftClearScriptV8AssemblyVersion)
             UpdateDependantAssembly(oSectXml, "ClearScript.V8", "31bf3856ad364e35", MicrosoftClearScriptV8AssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "ClearScript.V8.ICUData", "31bf3856ad364e35", MicrosoftClearScriptV8AssemblyVersion)
 
             UpdateDependantAssembly(oSectXml, "Newtonsoft.Json", "30AD4FE6B2A6AEED", JsonAssemblyVersion, "10.0.0.0", "13.0.0.0")
 
@@ -557,8 +564,7 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "System.Threading.Tasks.Extensions", "cc7b13ffcd2ddd51", SystemThreadingTasksExtensionsVersion)
             UpdateDependantAssembly(oSectXml, "System.Text.Json", "cc7b13ffcd2ddd51", SystemTextJsonVersion)
             UpdateDependantAssembly(oSectXml, "Microsoft.Bcl.AsyncInterfaces", "cc7b13ffcd2ddd51", MicrosoftBclAsyncInterfacesVersion)
-
-
+            UpdateDependantAssembly(oSectXml, "System.Text.Encodings.Web", "cc7b13ffcd2ddd51", SystemTextEncodingsWebVersion)
 
 
             Dim BindingElmt As XmlElement = oSectXml.DocumentElement.SelectSingleNode("assemblyBinding")
