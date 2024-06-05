@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?define version  = "6.1.10"?>
+<?define version  = "6.1.11"?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi' xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
     <Product Id='*' Name='ProteanCMS GAC Installer $(var.version)' Language='1033' Version='$(var.version)' Manufacturer='Eonic Digital LLP' UpgradeCode='{577597F8-BE6F-46B4-8A9D-46E8A5360918}' Codepage='1252'>
         <Package AdminImage='no' Comments='ProteanCMS GAC Installer' Compressed='yes' Description='ProteanCMS GAC Installer (64bit)' InstallerVersion='300' InstallScope='perMachine' Languages='1033' Manufacturer='Eonic Digital LLP' Platform='x64' ReadOnly='no' ShortNames='no' />
@@ -236,6 +236,9 @@
 				<Component Id='com_SystemTextEncodingsWeb' Guid='4dfb277c-b692-4118-b0f2-e086ef193c53' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_SystemTextEncodingsWeb' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Encodings.Web.dll' Source='..\packages\System.Text.Encodings.Web.8.0.0\lib\net462\System.Text.Encodings.Web.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
+				<Component Id='com_SystemNumericsVectors' Guid='5e62ecb1-4b75-4ba1-9dc4-9bbc032eb8cc' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+					<File Id='_SystemNumericsVectors' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Numerics.Vectors.dll' Source='..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll' Assembly='.net' KeyPath='yes' />
+				</Component>
 <!--
 				<Component Id='com_SelectHtmlToPdf' Guid='8ecf5eae-ab8d-4390-95d0-234e54902a58' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_SelectHtmlToPdf' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Select.HtmlToPdf.dll' Source='..\packages\Select.HtmlToPdf.23.1.0\lib\net40\Select.HtmlToPdf.dll' Assembly='.net' KeyPath='yes' />
@@ -357,6 +360,7 @@
 			<ComponentRef Id='com_SystemTextJson' />
 			<ComponentRef Id='com_MicrosoftBclAsyncInterfaces' />
 			<ComponentRef Id='com_SystemTextEncodingsWeb' />
+			<ComponentRef Id='com_SystemNumericsVectors' />
 			
 			<!--
 			<ComponentRef Id='com_SelectHtmlToPdf' />

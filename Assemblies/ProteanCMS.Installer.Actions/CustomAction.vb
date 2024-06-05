@@ -10,7 +10,7 @@ Imports System.Web.Management
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.1.10.0"
+    Public Shared ewAssemblyVersion As String = "6.1.11.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.1.0.0"
     Public Shared bundleAssemblyVersion As String = "1.10.0.0"
     Public Shared bundleLessAssemblyVersion As String = "1.12.44.0"
@@ -48,6 +48,8 @@ Public Class CustomActions
     Public Shared SystemTextJsonVersion As String = "4.0.1.2"
     Public Shared MicrosoftBclAsyncInterfacesVersion As String = "1.0.0.0"
     Public Shared SystemTextEncodingsWebVersion As String = "8.0.0.0"
+
+    Public Shared SystemNumericsVectorsVersion As String = "4.1.4.0"
 
     Public Shared AngleSharpVersion As String = "1.1.2.0"
     Public Shared PreMailerVersion As String = "2.5.0.0"
@@ -248,6 +250,7 @@ Public Class CustomActions
                     UpdateAssemblyRef(oAssembliesSect, "System.Text.Json, Version=" & SystemTextJsonVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
                     UpdateAssemblyRef(oAssembliesSect, "Microsoft.Bcl.AsyncInterfaces, Version=" & MicrosoftBclAsyncInterfacesVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
                     UpdateAssemblyRef(oAssembliesSect, "System.Text.Encodings.Web, Version=" & SystemTextEncodingsWebVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+                    UpdateAssemblyRef(oAssembliesSect, "System.Numerics.Vectors, Version=" & SystemNumericsVectorsVersion & ", Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
 
 
 
@@ -565,6 +568,9 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "System.Text.Json", "cc7b13ffcd2ddd51", SystemTextJsonVersion)
             UpdateDependantAssembly(oSectXml, "Microsoft.Bcl.AsyncInterfaces", "cc7b13ffcd2ddd51", MicrosoftBclAsyncInterfacesVersion)
             UpdateDependantAssembly(oSectXml, "System.Text.Encodings.Web", "cc7b13ffcd2ddd51", SystemTextEncodingsWebVersion)
+            UpdateDependantAssembly(oSectXml, "System.Numerics.Vectors", "b03f5f7f11d50a3a", SystemNumericsVectorsVersion)
+
+
 
 
             Dim BindingElmt As XmlElement = oSectXml.DocumentElement.SelectSingleNode("assemblyBinding")
