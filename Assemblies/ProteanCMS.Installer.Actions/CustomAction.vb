@@ -287,7 +287,7 @@ Public Class CustomActions
                 Else
                     oHandler = ohttpHandlers.SelectSingleNode("add[@path='*.sass']")
                 End If
-                oHandler.SetAttribute("path", "*.scss")
+                oHandler.SetAttribute("path", "*.sass")
                 oHandler.SetAttribute("verb", "GET")
                 oHandler.SetAttribute("type", "BundleTransformer.SassAndScss.HttpHandlers.SassAndScssAssetHandler, BundleTransformer.SassAndScss, Version=" & bundleSassAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
                 oHandler.SetAttribute("validate", "True")
@@ -369,9 +369,6 @@ Public Class CustomActions
                 ' End If
                 ' jsEng.InnerXml = "<core><engines><add name=""MsieJsEngine"" type=""JavaScriptEngineSwitcher.Msie.MsieJsEngine, JavaScriptEngineSwitcher.Msie, Version=" & jsSwitcherMSIEAssemblyVersion & ", Culture=neutral, PublicKeyToken=C608B2A8CC9E4472"" /></engines></core>"
                 ' jsEng.SetAttribute("xmlns", "http://tempuri.org/JavaScriptEngineSwitcher.Configuration.xsd")
-
-
-
 
                 webConfig.Save(WebFilePath)
 
