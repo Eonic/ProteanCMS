@@ -507,11 +507,11 @@
 						</xsl:if>
 						<xsl:apply-templates select="Description/node()" mode="cleanXhtml"/>
 					</div>
-					<xsl:when>
-					<xsl:choose test="Content[@type='NewsArticle' and @rtype='Curated']">
+					<xsl:choose>
+					<xsl:when test="Content[@type='NewsArticle' and @rtype='Curated']">
 						<div class="relatedcontent NewsList">
 							<h2>
-								Selected articles from <xsl:value-of select="GivenName"/><xsl:text> </xsl:text><xsl:value-of select="Surname"/>
+								Latest insights from <xsl:value-of select="GivenName"/>
 							</h2>
 							<div class="row cols row-cols-1 row-cols-lg-2">
 								<xsl:apply-templates select="Content[@type='NewsArticle' and @rtype='Curated']" mode="displayBrief">
@@ -519,13 +519,13 @@
 								</xsl:apply-templates>
 							</div>
 						</div>
-					</xsl:choose>
+					</xsl:when>
 						<xsl:otherwise>
 							<xsl:if test="Content[@type='NewsArticle' and @rtype='Author']">
 							<div class="relatedcontent NewsList">
-								<h2>
-									Articles from <xsl:value-of select="GivenName"/><xsl:text> </xsl:text><xsl:value-of select="Surname"/>
-								</h2>
+								<h3>
+									Insights from <xsl:value-of select="GivenName"/>
+								</h3>
 								<div class="row cols row-cols-1 row-cols-lg-2">
 									<xsl:apply-templates select="Content[@type='NewsArticle' and @rtype='Author']" mode="displayBrief">
 										<xsl:with-param name="sortBy" select="@publishDate"/>
@@ -534,7 +534,7 @@
 							</div>
 							</xsl:if>
 						</xsl:otherwise>
-					</xsl:when>
+					</xsl:choose>
 					<div class="entryFooter">
 						<xsl:if test="Content[@type='Tag']">
 							<div class="tags">
