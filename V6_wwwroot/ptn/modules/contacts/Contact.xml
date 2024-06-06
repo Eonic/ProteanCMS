@@ -103,6 +103,7 @@
 				<bind id="cContentPinterest" nodeset="@pinterestURL" required="false()" type="format:/(?:http:\/\/)?(?:www\.)?pinterest\.com\/*"/>
 				<bind id="cContentInstagram" nodeset="@instagramURL" required="false()" type="format:/(?:http:\/\/)?(?:www\.)?instagram\.com\/*"/>
 				<bind id="bNoLink" nodeset="@noLink" required="false()" type="string"/>
+				<bind id="cMoreLinkText" nodeset="@morelinktext" required="false()" type="string"/>
 			</bind>
 			<bind nodeset="cContentXmlDetail/Content">
 				<bind id="cContentGivenName" nodeset="GivenName" required="false()" type="string"/>
@@ -188,17 +189,16 @@
 							</item>
 							<help class="inline">This will remove the 'read more' button from the bottom of this contact, so that only the information shown in this contact list is available, without an additional page for further information</help>
 						</select>
-
 					</group>
 					<textarea bind="cContentProfile" class="TextArea xhtml" rows="5" cols="70">
 						<label>Short profile</label>
 					</textarea>
-
 					<textarea bind="cContentBody" class="TextArea xhtml" rows="15" cols="70">
 						<label>Full profile</label>
 					</textarea>
-
-
+					<input bind="cMoreLinkText" class="short col-lg-6">
+						<label>More Link Text</label>
+					</input>
 				</group>
 			</group>
 			<group>
@@ -322,7 +322,21 @@
 				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
 
 			</group>
-
+			<group>
+				<label>
+					<i class="fas fa-paperclip"> </i>
+					<span class="space"> </span>
+					<span>Related Content</span>
+				</label>
+				<group>
+					<relatedContent search="find add" type="NewsArticle" relationType="Curated" direction="2way" class="form-section-wrapper">
+						<label>Curated Articles</label>
+					</relatedContent>
+					<relatedContent search="find add" type="NewsArticle" relationType="NewsArticle" direction="2way" class="form-section-wrapper">
+						<label>Related Articles</label>
+					</relatedContent>
+				</group>
+			</group>
 			<group>
 				<label>
 					<i class="fas fa-cog"> </i>

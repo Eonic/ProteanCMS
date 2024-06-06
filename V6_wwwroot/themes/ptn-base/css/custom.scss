@@ -139,6 +139,9 @@ h1, h2, h3 {
     }
 }
 
+.btn-custom {
+    @extend .btn-primary;
+}
 /*############### IMAGES #################*/
 img, svg {
     max-width: 100%;
@@ -155,9 +158,6 @@ img {
     @extend .img-fluid;
 }
 
-.btn-custom {
-    @extend .btn-primary;
-}
 
 .bannerless-page {
     padding-top: $top-padding;

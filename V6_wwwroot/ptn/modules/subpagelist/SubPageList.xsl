@@ -241,7 +241,7 @@
 					<xsl:if test="$linked='true' and $button='false'">
 						<a href="{$url}" class="stretched-link">
 							<span class="visually-hidden">
-								<xsl:value-of select="Name/node()"/>
+								<xsl:apply-templates select="." mode="getTitleAttr"/>
 								<xsl:text> </xsl:text>
 							</span>
 						</a>

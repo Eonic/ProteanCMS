@@ -179,8 +179,10 @@
 					</xsl:if>
 					<xsl:if test="not(@noLink='true')">
 						<div class="entryFooter">
+							
 							<xsl:apply-templates select="." mode="moreLink">
 								<xsl:with-param name="link" select="$parentURL"/>
+								<xsl:with-param name="linktext" select="@readmoretext"/>
 								<xsl:with-param name="stretchLink" select="$linked"/>
 								<xsl:with-param name="altText">
 									<xsl:value-of select="GivenName/node()"/>
@@ -277,7 +279,7 @@
 		</xsl:variable>
 		<div class="contributor row">
 			<xsl:if test="Images/img/@src!=''">
-				<a href="{$parentURL}" rel="author" title="click here to view more details on {GivenName/node()} {Surname/node()}" class="col-md-3">
+				<a href="{$parentURL}" rel="author" title="click here to view more details on {GivenName/node()} {Surname/node()}" class="col col-xs-2 col-md-3">
 					<xsl:apply-templates select="." mode="displayThumbnail">
 						<xsl:with-param name="width">220</xsl:with-param>
 						<xsl:with-param name="height">220</xsl:with-param>
@@ -286,7 +288,7 @@
 				</a>
 
 			</xsl:if>
-			<div class="col-md-9">
+			<div class="col col-xs-10 col-md-9">
 				<h5 class="title">
 					<a href="{$parentURL}" rel="author">
 						<xsl:attribute name="title">
@@ -314,8 +316,16 @@
 					</p>
 				</xsl:if>
 				<a href="{$parentURL}" class="btn btn-sm btn-default">
-					more about
-					<xsl:value-of select="GivenName/node()"/>
+					<xsl:choose>
+						<xsl:when test="@morelinktext!=''">
+							<xsl:value-of select="@morelinktext"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:text>More about </xsl:text>
+							<xsl:value-of select="GivenName/node()"/>
+						</xsl:otherwise>
+					</xsl:choose>
+					
 				</a>
 			</div>
 		</div>
@@ -497,18 +507,34 @@
 						</xsl:if>
 						<xsl:apply-templates select="Description/node()" mode="cleanXhtml"/>
 					</div>
-					<xsl:if test="Content[@type='NewsArticle']">
+					<xsl:choose>
+					<xsl:when test="Content[@type='NewsArticle' and @rtype='Curated']">
 						<div class="relatedcontent NewsList">
 							<h2>
-								Articles by <xsl:value-of select="GivenName"/><xsl:text> </xsl:text><xsl:value-of select="Surname"/>
+								Latest insights from <xsl:value-of select="GivenName"/>
 							</h2>
 							<div class="row cols row-cols-1 row-cols-lg-2">
-								<xsl:apply-templates select="Content[@type='NewsArticle']" mode="displayBrief">
+								<xsl:apply-templates select="Content[@type='NewsArticle' and @rtype='Curated']" mode="displayBrief">
 									<xsl:with-param name="sortBy" select="@publishDate"/>
 								</xsl:apply-templates>
 							</div>
 						</div>
-					</xsl:if>
+					</xsl:when>
+						<xsl:otherwise>
+							<xsl:if test="Content[@type='NewsArticle' and @rtype='Author']">
+							<div class="relatedcontent NewsList">
+								<h3>
+									Insights from <xsl:value-of select="GivenName"/>
+								</h3>
+								<div class="row cols row-cols-1 row-cols-lg-2">
+									<xsl:apply-templates select="Content[@type='NewsArticle' and @rtype='Author']" mode="displayBrief">
+										<xsl:with-param name="sortBy" select="@publishDate"/>
+									</xsl:apply-templates>
+								</div>
+							</div>
+							</xsl:if>
+						</xsl:otherwise>
+					</xsl:choose>
 					<div class="entryFooter">
 						<xsl:if test="Content[@type='Tag']">
 							<div class="tags">

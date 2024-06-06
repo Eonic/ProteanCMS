@@ -3170,6 +3170,11 @@
             RGB data still intact, but fully transparent.
             </summary>
         </member>
+        <member name="F:ImageMagick.AlphaOption.OffIfOpaque">
+            <summary>
+            Removes the alpha channel when the alpha value is opaque for all pixels.
+            </summary>
+        </member>
         <member name="T:ImageMagick.AutoThresholdMethod">
             <summary>
             Specifies the auto threshold methods.
@@ -5797,7 +5802,7 @@
         </member>
         <member name="F:ImageMagick.MagickFormat.ThreeFr">
             <summary>
-            Hasselblad CFV/H3D39II.
+            Hasselblad CFV/H3D39II Raw Format.
             </summary>
         </member>
         <member name="F:ImageMagick.MagickFormat.ThreeG2">
@@ -5837,7 +5842,7 @@
         </member>
         <member name="F:ImageMagick.MagickFormat.Arw">
             <summary>
-            Sony Alpha Raw Image Format.
+            Sony Alpha Raw Format.
             </summary>
         </member>
         <member name="F:ImageMagick.MagickFormat.Ashlar">
@@ -5967,17 +5972,17 @@
         </member>
         <member name="F:ImageMagick.MagickFormat.Cr2">
             <summary>
-            Canon Digital Camera Raw Image Format.
+            Canon Digital Camera Raw Format.
             </summary>
         </member>
         <member name="F:ImageMagick.MagickFormat.Cr3">
             <summary>
-            Canon Digital Camera Raw Image Format.
+            Canon Digital Camera Raw Format.
             </summary>
         </member>
         <member name="F:ImageMagick.MagickFormat.Crw">
             <summary>
-            Canon Digital Camera Raw Image Format.
+            Canon Digital Camera Raw Format.
             </summary>
         </member>
         <member name="F:ImageMagick.MagickFormat.Cube">
@@ -6007,12 +6012,12 @@
         </member>
         <member name="F:ImageMagick.MagickFormat.Dcr">
             <summary>
-            Kodak Digital Camera Raw Image File.
+            Kodak Digital Camera Raw Format.
             </summary>
         </member>
         <member name="F:ImageMagick.MagickFormat.Dcraw">
             <summary>
-            Raw Photo Decoder (dcraw) (Dng).
+            Raw Photo Decoder (dcraw).
             </summary>
         </member>
         <member name="F:ImageMagick.MagickFormat.Dcx">
@@ -6037,7 +6042,7 @@
         </member>
         <member name="F:ImageMagick.MagickFormat.Dng">
             <summary>
-            Digital Negative.
+            Digital Negative Raw Format.
             </summary>
         </member>
         <member name="F:ImageMagick.MagickFormat.Dpx">
@@ -6112,7 +6117,7 @@
         </member>
         <member name="F:ImageMagick.MagickFormat.Erf">
             <summary>
-            Epson RAW Format.
+            Epson Raw Format.
             </summary>
         </member>
         <member name="F:ImageMagick.MagickFormat.Exr">
@@ -6287,7 +6292,7 @@
         </member>
         <member name="F:ImageMagick.MagickFormat.Iiq">
             <summary>
-            Phase One Raw Image Format.
+            Phase One Raw Format.
             </summary>
         </member>
         <member name="F:ImageMagick.MagickFormat.Info">
@@ -6392,12 +6397,12 @@
         </member>
         <member name="F:ImageMagick.MagickFormat.K25">
             <summary>
-            Kodak Digital Camera Raw Image Format.
+            Kodak Digital Camera Raw Format.
             </summary>
         </member>
         <member name="F:ImageMagick.MagickFormat.Kdc">
             <summary>
-            Kodak Digital Camera Raw Image Format.
+            Kodak Digital Camera Raw Format.
             </summary>
         </member>
         <member name="F:ImageMagick.MagickFormat.Label">
@@ -6447,7 +6452,7 @@
         </member>
         <member name="F:ImageMagick.MagickFormat.Mef">
             <summary>
-            Mamiya Raw Image File.
+            Mamiya Raw Format.
             </summary>
         </member>
         <member name="F:ImageMagick.MagickFormat.Miff">
@@ -6495,14 +6500,9 @@
             MPEG Video Stream.
             </summary>
         </member>
-        <member name="F:ImageMagick.MagickFormat.Mpo">
-            <summary>
-            Joint Photographic Experts Group JFIF format (Jpeg).
-            </summary>
-        </member>
         <member name="F:ImageMagick.MagickFormat.Mrw">
             <summary>
-            Sony (Minolta) Raw Image File.
+            Sony (Minolta) Raw Format.
             </summary>
         </member>
         <member name="F:ImageMagick.MagickFormat.Msl">
@@ -6527,12 +6527,12 @@
         </member>
         <member name="F:ImageMagick.MagickFormat.Nef">
             <summary>
-            Nikon Digital SLR Camera Raw Image File.
+            Nikon Digital SLR Camera Raw Format.
             </summary>
         </member>
         <member name="F:ImageMagick.MagickFormat.Nrw">
             <summary>
-            Nikon Digital SLR Camera Raw Image File.
+            Nikon Digital SLR Camera Raw Format.
             </summary>
         </member>
         <member name="F:ImageMagick.MagickFormat.Null">
@@ -6552,7 +6552,7 @@
         </member>
         <member name="F:ImageMagick.MagickFormat.Orf">
             <summary>
-            Olympus Digital Camera Raw Image File.
+            Olympus Digital Camera Raw Format.
             </summary>
         </member>
         <member name="F:ImageMagick.MagickFormat.Otb">
@@ -6637,7 +6637,7 @@
         </member>
         <member name="F:ImageMagick.MagickFormat.Pef">
             <summary>
-            Pentax Electronic File.
+            Pentax Electronic Raw Format.
             </summary>
         </member>
         <member name="F:ImageMagick.MagickFormat.Pes">
@@ -6660,6 +6660,11 @@
             Portable float format.
             </summary>
         </member>
+        <member name="F:ImageMagick.MagickFormat.Pgx">
+            <summary>
+            JPEG 2000 uncompressed format.
+            </summary>
+        </member>
         <member name="F:ImageMagick.MagickFormat.Pgm">
             <summary>
             Portable graymap format (gray scale).
@@ -6668,11 +6673,6 @@
         <member name="F:ImageMagick.MagickFormat.Phm">
             <summary>
             Portable half float format.
-            </summary>
-        </member>
-        <member name="F:ImageMagick.MagickFormat.Pgx">
-            <summary>
-            JPEG 2000 uncompressed format.
             </summary>
         </member>
         <member name="F:ImageMagick.MagickFormat.Picon">
@@ -6862,7 +6862,7 @@
         </member>
         <member name="F:ImageMagick.MagickFormat.Rw2">
             <summary>
-            Panasonic Lumix Raw Image.
+            Panasonic Lumix Raw Format.
             </summary>
         </member>
         <member name="F:ImageMagick.MagickFormat.Scr">
@@ -7087,7 +7087,7 @@
         </member>
         <member name="F:ImageMagick.MagickFormat.X3f">
             <summary>
-            Sigma Camera RAW Picture File.
+            Sigma Camera RAW Format.
             </summary>
         </member>
         <member name="F:ImageMagick.MagickFormat.Xbm">
@@ -7143,6 +7143,41 @@
         <member name="F:ImageMagick.MagickFormat.Yuv">
             <summary>
             CCIR 601 4:1:1 or 4:2:2.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.MagickFormat.Mpo">
+            <summary>
+            Joint Photographic Experts Group JFIF format (Jpeg).
+            </summary>
+        </member>
+        <member name="F:ImageMagick.MagickFormat.Fff">
+            <summary>
+            Hasselblad CFV/H3D39II Raw Format.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.MagickFormat.Mdc">
+            <summary>
+            Minolta Digital Camera Raw Format.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.MagickFormat.Mos">
+            <summary>
+            Aptus Leaf Raw Format.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.MagickFormat.Rwl">
+            <summary>
+            Leica Raw Format.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.MagickFormat.Srw">
+            <summary>
+            Samsung Raw Format.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.MagickFormat.Sti">
+            <summary>
+            Sinar CaptureShop Raw Format.
             </summary>
         </member>
         <member name="T:ImageMagick.MorphologyMethod">
@@ -8952,14 +8987,13 @@
             Initializes a new <see cref="T:ImageMagick.IMagickGeometry"/> instance using the specified page size.
             </summary>
             <param name="pageSize">The page size.</param>
-            <returns>A <see cref="T:ImageMagick.IMagickGeometry"/> instance that represents the specified page size.</returns>
+            <returns>A <see cref="T:ImageMagick.IMagickGeometry"/> instance that represents the specified page size at 72 dpi.</returns>
         </member>
         <member name="T:ImageMagick.IMagickImageCollectionFactory`1">
             <summary>
             Class that can be used to create <see cref="T:ImageMagick.IMagickImageCollection`1"/> instances.
             </summary>
             <typeparam name="TQuantumType">The quantum type.</typeparam>
-            <content />
         </member>
         <member name="M:ImageMagick.IMagickImageCollectionFactory`1.Create">
             <summary>
@@ -9172,46 +9206,11 @@
             <returns>A new <see cref="T:ImageMagick.IMagickImageCollection`1"/> instance.</returns>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
-        <member name="M:ImageMagick.IMagickImageCollectionFactory`1.Create(System.Buffers.ReadOnlySequence{System.Byte})">
-            <summary>
-            Initializes a new instance that implements <see cref="T:ImageMagick.IMagickImageCollection`1"/>.
-            </summary>
-            <param name="data">The sequence of bytes to read the image data from.</param>
-            <returns>A new <see cref="T:ImageMagick.IMagickImageCollection`1"/> instance.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImageCollectionFactory`1.Create(System.Buffers.ReadOnlySequence{System.Byte},ImageMagick.IMagickReadSettings{`0})">
-            <summary>
-            Initializes a new instance that implements <see cref="T:ImageMagick.IMagickImageCollection`1"/>.
-            </summary>
-            <param name="data">The sequence of bytes to read the image data from.</param>
-            <param name="readSettings">The settings to use when reading the image.</param>
-            <returns>A new <see cref="T:ImageMagick.IMagickImageCollection`1"/> instance.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImageCollectionFactory`1.Create(System.ReadOnlySpan{System.Byte})">
-            <summary>
-            Initializes a new instance that implements <see cref="T:ImageMagick.IMagickImageCollection`1"/>.
-            </summary>
-            <param name="data">The span of bytes to read the image data from.</param>
-            <returns>A new <see cref="T:ImageMagick.IMagickImageCollection`1"/> instance.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImageCollectionFactory`1.Create(System.ReadOnlySpan{System.Byte},ImageMagick.IMagickReadSettings{`0})">
-            <summary>
-            Initializes a new instance that implements <see cref="T:ImageMagick.IMagickImageCollection`1"/>.
-            </summary>
-            <param name="data">The span of bytes to read the image data from.</param>
-            <param name="readSettings">The settings to use when reading the image.</param>
-            <returns>A new <see cref="T:ImageMagick.IMagickImageCollection`1"/> instance.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
         <member name="T:ImageMagick.IMagickImageFactory`1">
             <summary>
             Class that can be used to create <see cref="T:ImageMagick.IMagickImage`1"/> instances.
             </summary>
             <typeparam name="TQuantumType">The quantum type.</typeparam>
-            <content />
         </member>
         <member name="M:ImageMagick.IMagickImageFactory`1.Create">
             <summary>
@@ -9493,53 +9492,7 @@
             <returns>A new <see cref="T:ImageMagick.IMagickImage`1"/> instance.</returns>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
-        <member name="M:ImageMagick.IMagickImageFactory`1.Create(System.Buffers.ReadOnlySequence{System.Byte})">
-            <summary>
-            Initializes a new instance that implements <see cref="T:ImageMagick.IMagickImage`1"/>.
-            </summary>
-            <param name="data">The sequence of bytes to read the image data from.</param>
-            <returns>A new <see cref="T:ImageMagick.IMagickImage`1"/> instance.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImageFactory`1.Create(System.Buffers.ReadOnlySequence{System.Byte},ImageMagick.IMagickReadSettings{`0})">
-            <summary>
-            Initializes a new instance that implements <see cref="T:ImageMagick.IMagickImage`1"/>.
-            </summary>
-            <param name="data">The sequence of bytes to read the image data from.</param>
-            <param name="readSettings">The settings to use when reading the image.</param>
-            <returns>A new <see cref="T:ImageMagick.IMagickImage`1"/> instance.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImageFactory`1.Create(System.ReadOnlySpan{System.Byte})">
-            <summary>
-            Initializes a new instance that implements <see cref="T:ImageMagick.IMagickImage`1"/>.
-            </summary>
-            <param name="data">The span of bytes to read the image data from.</param>
-            <returns>A new <see cref="T:ImageMagick.IMagickImage`1"/> instance.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImageFactory`1.Create(System.ReadOnlySpan{System.Byte},ImageMagick.IMagickReadSettings{`0})">
-            <summary>
-            Initializes a new instance that implements <see cref="T:ImageMagick.IMagickImage`1"/>.
-            </summary>
-            <param name="data">The span of bytes to read the image data from.</param>
-            <param name="readSettings">The settings to use when reading the image.</param>
-            <returns>A new <see cref="T:ImageMagick.IMagickImage`1"/> instance.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImageFactory`1.Create(System.ReadOnlySpan{System.Byte},ImageMagick.IPixelReadSettings{`0})">
-            <summary>
-            Initializes a new instance that implements <see cref="T:ImageMagick.IMagickImage`1"/>.
-            </summary>
-            <param name="data">The span of bytes to read the image data from.</param>
-            <param name="settings">The pixel settings to use when reading the image.</param>
-            <returns>A new <see cref="T:ImageMagick.IMagickImage`1"/> instance.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
         <member name="T:ImageMagick.IMagickImageInfoFactory">
-            <summary>
-            Class that can be used to create <see cref="T:ImageMagick.IMagickImageInfo"/> instances.
-            </summary>
             <summary>
             Class that can be used to create <see cref="T:ImageMagick.IMagickImageInfo"/> instances.
             </summary>
@@ -9589,22 +9542,6 @@
             Initializes a new instance that implements <see cref="T:ImageMagick.IMagickImageInfo"/>.
             </summary>
             <param name="fileName">The fully qualified name of the image file, or the relative image file name.</param>
-            <returns>A new <see cref="T:ImageMagick.IMagickImageInfo"/> instance.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImageInfoFactory.Create(System.Buffers.ReadOnlySequence{System.Byte})">
-            <summary>
-            Initializes a new instance that implements <see cref="T:ImageMagick.IMagickImageInfo"/>.
-            </summary>
-            <param name="data">The sequence of bytes to read the information from.</param>
-            <returns>A new <see cref="T:ImageMagick.IMagickImageInfo"/> instance.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImageInfoFactory.Create(System.ReadOnlySpan{System.Byte})">
-            <summary>
-            Initializes a new instance that implements <see cref="T:ImageMagick.IMagickImageInfo"/>.
-            </summary>
-            <param name="data">The span of bytes to read the information from.</param>
             <returns>A new <see cref="T:ImageMagick.IMagickImageInfo"/> instance.</returns>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
@@ -9902,7 +9839,6 @@
             <summary>
             Interface that represents an ImageMagick image.
             </summary>
-            <content/>
         </member>
         <member name="E:ImageMagick.IMagickImage.Progress">
             <summary>
@@ -11102,8 +11038,8 @@
             </summary>
             <param name="source">The source image to copy the pixels from.</param>
             <param name="geometry">The geometry to copy.</param>
-            <param name="x">The X offset to start the copy from.</param>
-            <param name="y">The Y offset to start the copy from.</param>
+            <param name="x">The X offset to copy the pixels to.</param>
+            <param name="y">The Y offset to copy the pixels to.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
         <member name="M:ImageMagick.IMagickImage.CopyPixels(ImageMagick.IMagickImage,ImageMagick.IMagickGeometry,System.Int32,System.Int32,ImageMagick.Channels)">
@@ -12042,7 +11978,7 @@
             <param name="method">The morphology method.</param>
             <param name="kernel">Built-in kernel.</param>
             <param name="channels">The channels to apply the kernel to.</param>
-            <param name="iterations">The number of iterations.</param>
+            <param name="iterations">The number of iterations. A value of -1 means loop until no change found.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
         <member name="M:ImageMagick.IMagickImage.Morphology(ImageMagick.MorphologyMethod,ImageMagick.Kernel,System.Int32)">
@@ -12051,7 +11987,7 @@
             </summary>
             <param name="method">The morphology method.</param>
             <param name="kernel">Built-in kernel.</param>
-            <param name="iterations">The number of iterations.</param>
+            <param name="iterations">The number of iterations. A value of -1 means loop until no change found.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
         <member name="M:ImageMagick.IMagickImage.Morphology(ImageMagick.MorphologyMethod,ImageMagick.Kernel,System.String)">
@@ -12081,7 +12017,7 @@
             <param name="kernel">Built-in kernel.</param>
             <param name="arguments">Kernel arguments.</param>
             <param name="channels">The channels to apply the kernel to.</param>
-            <param name="iterations">The number of iterations.</param>
+            <param name="iterations">The number of iterations. A value of -1 means loop until no change found.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
         <member name="M:ImageMagick.IMagickImage.Morphology(ImageMagick.MorphologyMethod,ImageMagick.Kernel,System.String,System.Int32)">
@@ -12091,7 +12027,7 @@
             <param name="method">The morphology method.</param>
             <param name="kernel">Built-in kernel.</param>
             <param name="arguments">Kernel arguments.</param>
-            <param name="iterations">The number of iterations.</param>
+            <param name="iterations">The number of iterations. A value of -1 means loop until no change found.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
         <member name="M:ImageMagick.IMagickImage.Morphology(ImageMagick.MorphologyMethod,System.String)">
@@ -12118,7 +12054,7 @@
             <param name="method">The morphology method.</param>
             <param name="userKernel">User suplied kernel.</param>
             <param name="channels">The channels to apply the kernel to.</param>
-            <param name="iterations">The number of iterations.</param>
+            <param name="iterations">The number of iterations. A value of -1 means loop until no change found.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
         <member name="M:ImageMagick.IMagickImage.Morphology(ImageMagick.MorphologyMethod,System.String,System.Int32)">
@@ -12127,7 +12063,7 @@
             </summary>
             <param name="method">The morphology method.</param>
             <param name="userKernel">User suplied kernel.</param>
-            <param name="iterations">The number of iterations.</param>
+            <param name="iterations">The number of iterations. A value of -1 means loop until no change found.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
         <member name="M:ImageMagick.IMagickImage.Morphology(ImageMagick.IMorphologySettings)">
@@ -12190,6 +12126,7 @@
             <summary>
             Oilpaint image (image looks like oil painting).
             </summary>
+            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
         <member name="M:ImageMagick.IMagickImage.OilPaint(System.Double,System.Double)">
             <summary>
@@ -12625,14 +12562,12 @@
             Remove a profile from the image.
             </summary>
             <param name="profile">The profile to remove.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
         <member name="M:ImageMagick.IMagickImage.RemoveProfile(System.String)">
             <summary>
             Remove a named profile from the image.
             </summary>
             <param name="name">The name of the profile (e.g. "ICM", "IPTC", or a generic profile name).</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
         <member name="M:ImageMagick.IMagickImage.RemoveReadMask">
             <summary>
@@ -13796,78 +13731,10 @@
             <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
-        <member name="M:ImageMagick.IMagickImage.Ping(System.Buffers.ReadOnlySequence{System.Byte})">
-            <summary>
-            Reads only metadata and not the pixel data.
-            </summary>
-            <param name="data">The sequence of bytes to read the information from.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImage.Ping(System.ReadOnlySpan{System.Byte})">
-            <summary>
-            Reads only metadata and not the pixel data.
-            </summary>
-            <param name="data">The span of bytes to read the information from.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImage.Read(System.Buffers.ReadOnlySequence{System.Byte})">
-            <summary>
-            Read single image frame.
-            </summary>
-            <param name="data">The sequence of bytes to read the information from.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImage.Read(System.Buffers.ReadOnlySequence{System.Byte},ImageMagick.MagickFormat)">
-            <summary>
-            Read single image frame.
-            </summary>
-            <param name="data">The sequence of bytes to read the information from.</param>
-            <param name="format">The format to use.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImage.Read(System.ReadOnlySpan{System.Byte})">
-            <summary>
-            Read single image frame.
-            </summary>
-            <param name="data">The span of bytes to read the information from.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImage.Read(System.ReadOnlySpan{System.Byte},ImageMagick.MagickFormat)">
-            <summary>
-            Read single image frame.
-            </summary>
-            <param name="data">The span of bytes to read the information from.</param>
-            <param name="format">The format to use.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImage.Write(System.Buffers.IBufferWriter{System.Byte})">
-            <summary>
-            Writes the image to the specified file.
-            </summary>
-            <param name="bufferWriter">The buffer writer to write the image to.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImage.Write(System.Buffers.IBufferWriter{System.Byte},ImageMagick.IWriteDefines)">
-            <summary>
-            Writes the image to the specified file.
-            </summary>
-            <param name="bufferWriter">The buffer writer to write the image to.</param>
-            <param name="defines">The defines to set.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImage.Write(System.Buffers.IBufferWriter{System.Byte},ImageMagick.MagickFormat)">
-            <summary>
-            Writes the image to the specified file.
-            </summary>
-            <param name="bufferWriter">The buffer writer to write the image to.</param>
-            <param name="format">The format to use.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
         <member name="T:ImageMagick.IMagickImageCollection">
             <summary>
             Represents the collection of images.
             </summary>
-            <content/>
         </member>
         <member name="E:ImageMagick.IMagickImageCollection.Warning">
             <summary>
@@ -14511,82 +14378,11 @@
             <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
-        <member name="M:ImageMagick.IMagickImageCollection.Ping(System.Buffers.ReadOnlySequence{System.Byte})">
-            <summary>
-            Read only metadata and not the pixel data from all image frames.
-            </summary>
-            <param name="data">The sequence of bytes to read the image data from.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImageCollection.Ping(System.ReadOnlySpan{System.Byte})">
-            <summary>
-            Read only metadata and not the pixel data from all image frames.
-            </summary>
-            <param name="data">The span of bytes to read the image data from.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImageCollection.Read(System.Buffers.ReadOnlySequence{System.Byte})">
-            <summary>
-            Read all image frames.
-            </summary>
-            <param name="data">The sequence of bytes to read the image data from.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImageCollection.Read(System.Buffers.ReadOnlySequence{System.Byte},ImageMagick.MagickFormat)">
-            <summary>
-            Read all image frames.
-            </summary>
-            <param name="data">The sequence of bytes to read the image data from.</param>
-            <param name="format">The format to use.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImageCollection.Read(System.ReadOnlySpan{System.Byte})">
-            <summary>
-            Read all image frames.
-            </summary>
-            <param name="data">The span of bytes to read the image data from.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImageCollection.Read(System.ReadOnlySpan{System.Byte},ImageMagick.MagickFormat)">
-            <summary>
-            Read all image frames.
-            </summary>
-            <param name="data">The span of bytes to read the image data from.</param>
-            <param name="format">The format to use.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImageCollection.Write(System.Buffers.IBufferWriter{System.Byte})">
-            <summary>
-            Writes the images to the specified buffer writter. If the output image's file format does not
-            allow multi-image files multiple files will be written.
-            </summary>
-            <param name="bufferWriter">The buffer writer to write the images to.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImageCollection.Write(System.Buffers.IBufferWriter{System.Byte},ImageMagick.IWriteDefines)">
-            <summary>
-            Writes the images to the specified buffer writter. If the output image's file format does not
-            allow multi-image files multiple files will be written.
-            </summary>
-            <param name="bufferWriter">The buffer writer to write the images to.</param>
-            <param name="defines">The defines to set.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImageCollection.Write(System.Buffers.IBufferWriter{System.Byte},ImageMagick.MagickFormat)">
-            <summary>
-            Writes the images to the specified buffer writter. If the output image's file format does not
-            allow multi-image files multiple files will be written.
-            </summary>
-            <param name="bufferWriter">The buffer writer to write the images to.</param>
-            <param name="format">The format to use.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
         <member name="T:ImageMagick.IMagickImageCollection`1">
             <summary>
             Represents the collection of images.
             </summary>
             <typeparam name="TQuantumType">The quantum type.</typeparam>
-            <content/>
         </member>
         <member name="M:ImageMagick.IMagickImageCollection`1.AddRange(System.Byte[],ImageMagick.IMagickReadSettings{`0})">
             <summary>
@@ -14889,43 +14685,10 @@
             <returns>The resulting image of the smush operation.</returns>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
-        <member name="M:ImageMagick.IMagickImageCollection`1.Ping(System.Buffers.ReadOnlySequence{System.Byte},ImageMagick.IMagickReadSettings{`0})">
-            <summary>
-            Read only metadata and not the pixel data from all image frames.
-            </summary>
-            <param name="data">The sequence of bytes to read the image data from.</param>
-            <param name="readSettings">The settings to use when reading the image.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImageCollection`1.Ping(System.ReadOnlySpan{System.Byte},ImageMagick.IMagickReadSettings{`0})">
-            <summary>
-            Read only metadata and not the pixel data from all image frames.
-            </summary>
-            <param name="data">The span of bytes to read the image data from.</param>
-            <param name="readSettings">The settings to use when reading the image.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImageCollection`1.Read(System.Buffers.ReadOnlySequence{System.Byte},ImageMagick.IMagickReadSettings{`0})">
-            <summary>
-            Read all image frames.
-            </summary>
-            <param name="data">The sequence of bytes to read the image data from.</param>
-            <param name="readSettings">The settings to use when reading the image.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImageCollection`1.Read(System.ReadOnlySpan{System.Byte},ImageMagick.IMagickReadSettings{`0})">
-            <summary>
-            Read all image frames.
-            </summary>
-            <param name="data">The span of bytes to read the image data from.</param>
-            <param name="readSettings">The settings to use when reading the image.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
         <member name="T:ImageMagick.IMagickImageInfo">
             <summary>
             Interface that contains basic information about an image.
             </summary>
-            <content />
         </member>
         <member name="P:ImageMagick.IMagickImageInfo.ColorSpace">
             <summary>
@@ -14960,6 +14723,11 @@
         <member name="P:ImageMagick.IMagickImageInfo.Interlace">
             <summary>
             Gets the type of interlacing.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.IMagickImageInfo.Orientation">
+            <summary>
+            Gets the orientation of the image.
             </summary>
         </member>
         <member name="P:ImageMagick.IMagickImageInfo.Quality">
@@ -15009,26 +14777,11 @@
             <param name="fileName">The fully qualified name of the image file, or the relative image file name.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
-        <member name="M:ImageMagick.IMagickImageInfo.Read(System.Buffers.ReadOnlySequence{System.Byte})">
-            <summary>
-            Read basic information about an image.
-            </summary>
-            <param name="data">The sequence of bytes to read the information from.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImageInfo.Read(System.ReadOnlySpan{System.Byte})">
-            <summary>
-            Read basic information about an image.
-            </summary>
-            <param name="data">The span of bytes to read the information from.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
         <member name="T:ImageMagick.IMagickImageInfo`1">
             <summary>
             Interface that contains basic information about an image.
             </summary>
             <typeparam name="TQuantumType">The quantum type.</typeparam>
-            <content />
         </member>
         <member name="M:ImageMagick.IMagickImageInfo`1.Read(System.Byte[],ImageMagick.IMagickReadSettings{`0})">
             <summary>
@@ -15072,28 +14825,11 @@
             <param name="readSettings">The settings to use when reading the image.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
-        <member name="M:ImageMagick.IMagickImageInfo`1.Read(System.Buffers.ReadOnlySequence{System.Byte},ImageMagick.IMagickReadSettings{`0})">
-            <summary>
-            Read basic information about an image.
-            </summary>
-            <param name="data">The sequence of bytes to read the information from.</param>
-            <param name="readSettings">The settings to use when reading the image.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImageInfo`1.Read(System.ReadOnlySpan{System.Byte},ImageMagick.IMagickReadSettings{`0})">
-            <summary>
-            Read basic information about an image.
-            </summary>
-            <param name="data">The span of bytes to read the information from.</param>
-            <param name="readSettings">The settings to use when reading the image.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
         <member name="T:ImageMagick.IMagickImage`1">
             <summary>
             Interface that represents an ImageMagick image.
             </summary>
             <typeparam name="TQuantumType">The quantum type.</typeparam>
-            <content/>
         </member>
         <member name="P:ImageMagick.IMagickImage`1.BackgroundColor">
             <summary>
@@ -16076,70 +15812,6 @@
             <param name="threshold">The threshold for smoothing.</param>
             <param name="softness">Attenuate the smoothing threshold.</param>
         </member>
-        <member name="M:ImageMagick.IMagickImage`1.ImportPixels(System.ReadOnlySpan{System.Byte},ImageMagick.IPixelImportSettings)">
-            <summary>
-            Import pixels from the specified byte array into the current image.
-            </summary>
-            <param name="data">The quantum array to read the pixels from.</param>
-            <param name="settings">The import settings to use when importing the pixels.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImage`1.ImportPixels(System.ReadOnlySpan{`0},ImageMagick.IPixelImportSettings)">
-            <summary>
-            Import pixels from the specified quantum array into the current image.
-            </summary>
-            <param name="data">The quantum array to read the pixels from.</param>
-            <param name="settings">The import settings to use when importing the pixels.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImage`1.Ping(System.Buffers.ReadOnlySequence{System.Byte},ImageMagick.IMagickReadSettings{`0})">
-            <summary>
-            Reads only metadata and not the pixel data.
-            </summary>
-            <param name="data">The sequence of bytes to read the information from.</param>
-            <param name="readSettings">The settings to use when reading the image.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImage`1.Ping(System.ReadOnlySpan{System.Byte},ImageMagick.IMagickReadSettings{`0})">
-            <summary>
-            Reads only metadata and not the pixel data.
-            </summary>
-            <param name="data">The span of bytes to read the information from.</param>
-            <param name="readSettings">The settings to use when reading the image.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImage`1.Read(System.Buffers.ReadOnlySequence{System.Byte},ImageMagick.IMagickReadSettings{`0})">
-            <summary>
-            Read single image frame.
-            </summary>
-            <param name="data">The sequence of bytes to read the image data from.</param>
-            <param name="readSettings">The settings to use when reading the image.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImage`1.Read(System.ReadOnlySpan{System.Byte},ImageMagick.IMagickReadSettings{`0})">
-            <summary>
-            Read single image frame.
-            </summary>
-            <param name="data">The span of bytes to read the image data from.</param>
-            <param name="readSettings">The settings to use when reading the image.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImage`1.ReadPixels(System.ReadOnlySpan{System.Byte},ImageMagick.IPixelReadSettings{`0})">
-            <summary>
-            Read single image frame.
-            </summary>
-            <param name="data">The span of bytes to read the image data from.</param>
-            <param name="settings">The pixel settings to use when reading the image.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.IMagickImage`1.ReadPixels(System.ReadOnlySpan{`0},ImageMagick.IPixelReadSettings{`0})">
-            <summary>
-            Read single image frame.
-            </summary>
-            <param name="data">The span of quantum to read the image data from.</param>
-            <param name="settings">The pixel settings to use when reading the image.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
         <member name="T:ImageMagick.IMagickNET">
             <summary>
             Interface that represents MagickNET.
@@ -16339,7 +16011,13 @@
         <member name="P:ImageMagick.IResourceLimits.MaxMemoryRequest">
             <summary>
             Gets or sets the max memory request in bytes. ImageMagick maintains a separate memory pool for large
-            resource requests. If the limit is exceeded, the allocation is instead memory-mapped on disk.
+            resource requests. If the limit is exceeded when allocating pixels, the allocation is instead memory-mapped
+            on disk.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.IResourceLimits.MaxProfileSize">
+            <summary>
+            Gets or sets the max size of a profile in bytes that can be added to the image.
             </summary>
         </member>
         <member name="P:ImageMagick.IResourceLimits.Memory">
@@ -16440,60 +16118,110 @@
             Encapsulates a color matrix in the order of 1 to 6 (1x1 through 6x6).
             </summary>
         </member>
+        <member name="T:ImageMagick.IOpenCL">
+            <summary>
+            Interface that represents the OpenCL information of ImageMagick.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.IOpenCL.IsEnabled">
+            <summary>
+            Gets or sets a value indicating whether OpenCL is enabled.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.IOpenCL.Devices">
+            <summary>
+            Gets all the OpenCL devices.
+            </summary>
+            <returns>A <see cref="T:ImageMagick.IOpenCLDevice"/> iteration.</returns>
+        </member>
+        <member name="M:ImageMagick.IOpenCL.SetCacheDirectory(System.String)">
+            <summary>
+            Sets the directory that will be used by ImageMagick to store OpenCL cache files.
+            </summary>
+            <param name="path">The path of the OpenCL cache directory.</param>
+        </member>
+        <member name="T:ImageMagick.IOpenCLDevice">
+            <summary>
+            Interface that represents an OpenCL device.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.IOpenCLDevice.BenchmarkScore">
+            <summary>
+            Gets the benchmark score of the device.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.IOpenCLDevice.DeviceType">
+            <summary>
+            Gets the type of the device.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.IOpenCLDevice.IsEnabled">
+            <summary>
+            Gets or sets a value indicating whether the device is enabled or disabled.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.IOpenCLDevice.KernelProfileRecords">
+            <summary>
+            Gets all the kernel profile records for this devices.
+            </summary>
+            <returns>A <see cref="T:System.Collections.Generic.IEnumerable`1"/>.</returns>
+        </member>
+        <member name="P:ImageMagick.IOpenCLDevice.Name">
+            <summary>
+            Gets the name of the device.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.IOpenCLDevice.ProfileKernels">
+            <summary>
+            Gets or sets a value indicating whether kernel profiling is enabled.
+            This can be used to get information about the OpenCL performance.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.IOpenCLDevice.Version">
+            <summary>
+            Gets the OpenCL version supported by the device.
+            </summary>
+        </member>
+        <member name="T:ImageMagick.IOpenCLKernelProfileRecord">
+            <summary>
+            Interface that represents a kernel profile record for an OpenCL device.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.IOpenCLKernelProfileRecord.AverageDuration">
+            <summary>
+            Gets the average duration of all executions in microseconds.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.IOpenCLKernelProfileRecord.Count">
+            <summary>
+            Gets the number of times that this kernel was executed.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.IOpenCLKernelProfileRecord.MaximumDuration">
+            <summary>
+            Gets the maximum duration of a single execution in microseconds.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.IOpenCLKernelProfileRecord.MinimumDuration">
+            <summary>
+            Gets the minimum duration of a single execution in microseconds.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.IOpenCLKernelProfileRecord.Name">
+            <summary>
+            Gets the name of the device.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.IOpenCLKernelProfileRecord.TotalDuration">
+            <summary>
+            Gets the total duration of all executions in microseconds.
+            </summary>
+        </member>
         <member name="T:ImageMagick.IPixelCollection`1">
-            <content />
             <summary>
             Interface that can be used to access the individual pixels of an image.
             </summary>
             <typeparam name="TQuantumType">The quantum type.</typeparam>
-        </member>
-        <member name="M:ImageMagick.IPixelCollection`1.GetReadOnlyArea(System.Int32,System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Returns the pixels at the specified area.
-            </summary>
-            <param name="x">The X coordinate of the area.</param>
-            <param name="y">The Y coordinate of the area.</param>
-            <param name="width">The width of the area.</param>
-            <param name="height">The height of the area.</param>
-            <returns>A <typeparamref name="TQuantumType"/> array.</returns>
-        </member>
-        <member name="M:ImageMagick.IPixelCollection`1.GetReadOnlyArea(ImageMagick.IMagickGeometry)">
-            <summary>
-            Returns the pixels of the specified area.
-            </summary>
-            <param name="geometry">The geometry of the area.</param>
-            <returns>A <typeparamref name="TQuantumType"/> array.</returns>
-        </member>
-        <member name="M:ImageMagick.IPixelCollection`1.SetArea(System.Int32,System.Int32,System.Int32,System.Int32,System.ReadOnlySpan{`0})">
-            <summary>
-            Changes the values of the specified pixels.
-            </summary>
-            <param name="x">The X coordinate of the area.</param>
-            <param name="y">The Y coordinate of the area.</param>
-            <param name="width">The width of the area.</param>
-            <param name="height">The height of the area.</param>
-            <param name="values">The values of the pixels.</param>
-        </member>
-        <member name="M:ImageMagick.IPixelCollection`1.SetArea(ImageMagick.IMagickGeometry,System.ReadOnlySpan{`0})">
-            <summary>
-            Changes the values of the specified pixels.
-            </summary>
-            <param name="geometry">The geometry of the area.</param>
-            <param name="values">The values of the pixels.</param>
-        </member>
-        <member name="M:ImageMagick.IPixelCollection`1.SetPixel(System.Int32,System.Int32,System.ReadOnlySpan{`0})">
-            <summary>
-            Changes the value of the specified pixel.
-            </summary>
-            <param name="x">The X coordinate of the pixel.</param>
-            <param name="y">The Y coordinate of the pixel.</param>
-            <param name="value">The value of the pixel.</param>
-        </member>
-        <member name="M:ImageMagick.IPixelCollection`1.SetPixels(System.ReadOnlySpan{`0})">
-            <summary>
-            Changes the values of the specified pixels.
-            </summary>
-            <param name="values">The values of the pixels.</param>
         </member>
         <member name="P:ImageMagick.IPixelCollection`1.Channels">
             <summary>
@@ -16774,105 +16502,6 @@
             </summary>
             <param name="mapping">The mapping of the pixels (e.g. RGB/RGBA/ARGB).</param>
             <returns>An <see cref="T:System.UInt16"/> array.</returns>
-        </member>
-        <member name="T:ImageMagick.IOpenCL">
-            <summary>
-            Interface that represents the OpenCL information of ImageMagick.
-            </summary>
-        </member>
-        <member name="P:ImageMagick.IOpenCL.IsEnabled">
-            <summary>
-            Gets or sets a value indicating whether OpenCL is enabled.
-            </summary>
-        </member>
-        <member name="P:ImageMagick.IOpenCL.Devices">
-            <summary>
-            Gets all the OpenCL devices.
-            </summary>
-            <returns>A <see cref="T:ImageMagick.IOpenCLDevice"/> iteration.</returns>
-        </member>
-        <member name="M:ImageMagick.IOpenCL.SetCacheDirectory(System.String)">
-            <summary>
-            Sets the directory that will be used by ImageMagick to store OpenCL cache files.
-            </summary>
-            <param name="path">The path of the OpenCL cache directory.</param>
-        </member>
-        <member name="T:ImageMagick.IOpenCLDevice">
-            <summary>
-            Interface that represents an OpenCL device.
-            </summary>
-        </member>
-        <member name="P:ImageMagick.IOpenCLDevice.BenchmarkScore">
-            <summary>
-            Gets the benchmark score of the device.
-            </summary>
-        </member>
-        <member name="P:ImageMagick.IOpenCLDevice.DeviceType">
-            <summary>
-            Gets the type of the device.
-            </summary>
-        </member>
-        <member name="P:ImageMagick.IOpenCLDevice.IsEnabled">
-            <summary>
-            Gets or sets a value indicating whether the device is enabled or disabled.
-            </summary>
-        </member>
-        <member name="P:ImageMagick.IOpenCLDevice.KernelProfileRecords">
-            <summary>
-            Gets all the kernel profile records for this devices.
-            </summary>
-            <returns>A <see cref="T:System.Collections.Generic.IEnumerable`1"/>.</returns>
-        </member>
-        <member name="P:ImageMagick.IOpenCLDevice.Name">
-            <summary>
-            Gets the name of the device.
-            </summary>
-        </member>
-        <member name="P:ImageMagick.IOpenCLDevice.ProfileKernels">
-            <summary>
-            Gets or sets a value indicating whether kernel profiling is enabled.
-            This can be used to get information about the OpenCL performance.
-            </summary>
-        </member>
-        <member name="P:ImageMagick.IOpenCLDevice.Version">
-            <summary>
-            Gets the OpenCL version supported by the device.
-            </summary>
-        </member>
-        <member name="T:ImageMagick.IOpenCLKernelProfileRecord">
-            <summary>
-            Interface that represents a kernel profile record for an OpenCL device.
-            </summary>
-        </member>
-        <member name="P:ImageMagick.IOpenCLKernelProfileRecord.AverageDuration">
-            <summary>
-            Gets the average duration of all executions in microseconds.
-            </summary>
-        </member>
-        <member name="P:ImageMagick.IOpenCLKernelProfileRecord.Count">
-            <summary>
-            Gets the number of times that this kernel was executed.
-            </summary>
-        </member>
-        <member name="P:ImageMagick.IOpenCLKernelProfileRecord.MaximumDuration">
-            <summary>
-            Gets the maximum duration of a single execution in microseconds.
-            </summary>
-        </member>
-        <member name="P:ImageMagick.IOpenCLKernelProfileRecord.MinimumDuration">
-            <summary>
-            Gets the minimum duration of a single execution in microseconds.
-            </summary>
-        </member>
-        <member name="P:ImageMagick.IOpenCLKernelProfileRecord.Name">
-            <summary>
-            Gets the name of the device.
-            </summary>
-        </member>
-        <member name="P:ImageMagick.IOpenCLKernelProfileRecord.TotalDuration">
-            <summary>
-            Gets the total duration of all executions in microseconds.
-            </summary>
         </member>
         <member name="T:ImageMagick.IPixel`1">
             <summary>
@@ -20318,6 +19947,12 @@
             </summary>
             <returns>A <see cref="T:System.Byte"/> array.</returns>
         </member>
+        <member name="M:ImageMagick.ImageProfile.GetDataProtected">
+            <summary>
+            Returns the <see cref="T:System.Byte"/> array of this profile.
+            </summary>
+            <returns>A <see cref="T:System.Byte"/> array.</returns>
+        </member>
         <member name="M:ImageMagick.ImageProfile.SetData(System.Byte[])">
             <summary>
             Sets the data of the profile.
@@ -21612,7 +21247,7 @@
         </member>
         <member name="P:ImageMagick.IMorphologySettings.UserKernel">
             <summary>
-            Gets or sets user suplied kernel.
+            Gets or sets user supplied kernel.
             </summary>
         </member>
         <member name="T:ImageMagick.IPixelImportSettings">
@@ -21745,7 +21380,7 @@
         </member>
         <member name="T:ImageMagick.IChannelPerceptualHash">
             <summary>
-            Contains the he perceptual hash of one image channel.
+            Contains the perceptual hash of one image channel.
             </summary>
         </member>
         <member name="P:ImageMagick.IChannelPerceptualHash.Channel">
@@ -21858,7 +21493,7 @@
         </member>
         <member name="T:ImageMagick.IPerceptualHash">
             <summary>
-            Contains the he perceptual hash of one or more image channels.
+            Contains the perceptual hash of one or more image channels.
             </summary>
         </member>
         <member name="M:ImageMagick.IPerceptualHash.GetChannel(ImageMagick.PixelChannel)">
@@ -22414,25 +22049,25 @@
             <summary>
             Initializes a new instance of the <see cref="T:ImageMagick.Percentage"/> struct.
             </summary>
-            <param name="value">The value (0% = 0.0, 100% = 100.0).</param>
+            <param name="value">The value (0% = 0.0, 100% = 100.0, 142.42% = 142.42).</param>
         </member>
         <member name="M:ImageMagick.Percentage.#ctor(System.Int32)">
             <summary>
             Initializes a new instance of the <see cref="T:ImageMagick.Percentage"/> struct.
             </summary>
-            <param name="value">The value (0% = 0, 100% = 100).</param>
+            <param name="value">The value (0% = 0, 100% = 100, 142% = 142).</param>
         </member>
         <member name="M:ImageMagick.Percentage.op_Explicit(System.Double)~ImageMagick.Percentage">
             <summary>
             Converts the specified double to an instance of this type.
             </summary>
-            <param name="value">The value (0% = 0, 100% = 100).</param>
+            <param name="value">The value (0% = 0.0, 100% = 100.0, 142.42% = 142.42).</param>
         </member>
         <member name="M:ImageMagick.Percentage.op_Explicit(System.Int32)~ImageMagick.Percentage">
             <summary>
             Converts the specified int to an instance of this type.
             </summary>
-            <param name="value">The value (0% = 0, 100% = 100).</param>
+            <param name="value">The value (0% = 0, 100% = 100, 142% = 142).</param>
         </member>
         <member name="M:ImageMagick.Percentage.op_Explicit(ImageMagick.Percentage)~System.Double">
             <summary>
