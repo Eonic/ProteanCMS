@@ -509,3 +509,4 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Magick.Native-Q8-ar
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Magick.Native-Q8-x86.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Magick.NET-Q8-AnyCPU.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Magick.NET-Q8-AnyCPU.xml
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScriptV8.win-x64.dll
