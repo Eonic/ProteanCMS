@@ -26,6 +26,9 @@ using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
 using Protean.Tools.Integration.Twitter;
+using System.Web.UI;
+using System.Web.Optimization;
+using BundleTransformer.Core.Bundles;
 
 namespace Protean
 {
@@ -2792,20 +2795,17 @@ namespace Protean
                                 }
                             }
 
-                            var CtxBase = new HttpContextWrapper(myWeb.moCtx);
-                            var BundlesCtx = new System.Web.Optimization.BundleContext(CtxBase, Bundles, "~/" + myWeb.moConfig["ProjectPath"] + "js//");
-                            var jsBundle = new BundleTransformer.Core.Bundles.CustomScriptBundle(TargetPath);
-
+                            HttpContextWrapper CtxBase = new HttpContextWrapper(myWeb.moCtx);
+                            BundleContext BundlesCtx = new System.Web.Optimization.BundleContext(CtxBase, Bundles, "~/" + myWeb.moConfig["ProjectPath"] + "js//");
                             BundlesCtx.EnableInstrumentation = false;
 
+                            CustomScriptBundle jsBundle = new BundleTransformer.Core.Bundles.CustomScriptBundle(TargetPath);
                             jsBundle.Include(bundleFilePaths);
-
                             jsBundle.Builder = nullBuilder;
                             jsBundle.Transforms.Add(scriptTransformer);
-
                             jsBundle.Orderer = nullOrderer;
 
-                            System.Web.Optimization.BundleTable.EnableOptimizations = true;
+                            BundleTable.EnableOptimizations = true;
 
                             Bundles.Add(jsBundle);
 
@@ -2817,14 +2817,15 @@ namespace Protean
                             var fsh = new fsHelper(myWeb.moCtx);
                             fsh.initialiseVariables(fsHelper.LibraryType.Scripts);
 
-                            var br = Bundles.GetBundleFor(TargetPath).GenerateBundleResponse(BundlesCtx);
+                            BundleResponse br = Bundles.GetBundleFor(TargetPath).GenerateBundleResponse(BundlesCtx);
                             byte[] info = new System.Text.UTF8Encoding(true).GetBytes(br.Content);
 
                             string strFileName = "script.js";
 
                             if (info.Length < 10)
                             {
-                                info = new System.Text.UTF8Encoding(true).GetBytes("This file is empty");
+                                string emptyerror = "This file is empty: " + bundleFilePaths.ToString();
+                                info = new System.Text.UTF8Encoding(true).GetBytes(emptyerror);
                                 strFileName = "empty.js";
                                 scriptFile = fsh.SaveFile(ref strFileName, TargetPath, info);
                             }
