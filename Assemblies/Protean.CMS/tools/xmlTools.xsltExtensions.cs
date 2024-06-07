@@ -2790,10 +2790,7 @@ namespace Protean
                                     }
                                     bundleFilePaths[cntFile] = "~/" + myWeb.moConfig["ProjectPath"] + ("js/external/" + fileNameToSave);
                                 }
-
-
                             }
-
 
                             var CtxBase = new HttpContextWrapper(myWeb.moCtx);
                             var BundlesCtx = new System.Web.Optimization.BundleContext(CtxBase, Bundles, "~/" + myWeb.moConfig["ProjectPath"] + "js//");
@@ -2824,8 +2821,16 @@ namespace Protean
                             byte[] info = new System.Text.UTF8Encoding(true).GetBytes(br.Content);
 
                             string strFileName = "script.js";
-                            scriptFile = fsh.SaveFile(ref strFileName, TargetPath, info);
 
+                            if (info.Length < 10)
+                            {
+                                info = new System.Text.UTF8Encoding(true).GetBytes("This file is empty");
+                                strFileName = "empty.js";
+                                scriptFile = fsh.SaveFile(ref strFileName, TargetPath, info);
+                            }
+                            else {
+                                scriptFile = fsh.SaveFile(ref strFileName, TargetPath, info); 
+                            }
                             if (scriptFile.StartsWith("ERROR: "))
                             {
                                 myWeb.bPageCache = false;
@@ -2863,10 +2868,10 @@ namespace Protean
                     //sReturnString = null;
                 }
 
-                catch (IOException)    // New changes on 9/12/21'
+                catch (IOException ex)    // New changes on 9/12/21'
                 {
                     myWeb.bPageCache = false;
-                    sReturnString = TargetPath + "/script.js";
+                    sReturnString = TargetPath + "/script.js?error=" + ex.Message ;
                     // Return ioex.StackTrace
                     return sReturnString;
                 }

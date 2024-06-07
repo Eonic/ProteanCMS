@@ -10,9 +10,9 @@ Imports System.Web.Management
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.1.11.0"
+    Public Shared ewAssemblyVersion As String = "6.1.12.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.1.0.0"
-    Public Shared bundleAssemblyVersion As String = "1.10.0.0"
+    Public Shared bundleAssemblyVersion As String = "1.14.0.0"
     Public Shared bundleLessAssemblyVersion As String = "1.12.44.0"
     Public Shared bundleSassAssemblyVersion As String = "1.13.16.0"
     Public Shared DartSassHostAssemblyVersion As String = "1.0.12.0"
@@ -23,7 +23,7 @@ Public Class CustomActions
     Public Shared AdvancedStringBuilderVersion As String = "0.1.1.0"
     Public Shared JsonAssemblyVersion As String = "13.0.3.0" '"8.0.1.19229""
     Public Shared YUIAssemblyVersion As String = "1.9.23.0"
-    Public Shared MicrosoftAjaxAssemblyVersion As String = "1.10.0.0"
+    Public Shared MicrosoftAjaxAssemblyVersion As String = "1.14.0.0"
     Public Shared AjaxMinAssemblyVersion As String = "5.14.5506.26196"
     Public Shared ECMAAssemblyVersion As String = "1.0.1.0"
     Public Shared DynamicImagePDFAssemblyVersion As String = "1.0.0.4"
@@ -287,7 +287,7 @@ Public Class CustomActions
                 Else
                     oHandler = ohttpHandlers.SelectSingleNode("add[@path='*.sass']")
                 End If
-                oHandler.SetAttribute("path", "*.scss")
+                oHandler.SetAttribute("path", "*.sass")
                 oHandler.SetAttribute("verb", "GET")
                 oHandler.SetAttribute("type", "BundleTransformer.SassAndScss.HttpHandlers.SassAndScssAssetHandler, BundleTransformer.SassAndScss, Version=" & bundleSassAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
                 oHandler.SetAttribute("validate", "True")
@@ -369,9 +369,6 @@ Public Class CustomActions
                 ' End If
                 ' jsEng.InnerXml = "<core><engines><add name=""MsieJsEngine"" type=""JavaScriptEngineSwitcher.Msie.MsieJsEngine, JavaScriptEngineSwitcher.Msie, Version=" & jsSwitcherMSIEAssemblyVersion & ", Culture=neutral, PublicKeyToken=C608B2A8CC9E4472"" /></engines></core>"
                 ' jsEng.SetAttribute("xmlns", "http://tempuri.org/JavaScriptEngineSwitcher.Configuration.xsd")
-
-
-
 
                 webConfig.Save(WebFilePath)
 
@@ -529,12 +526,10 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "BundleTransformer.Less", "973C344C93AAC60D", bundleLessAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "BundleTransformer.SassAndScss", "973C344C93AAC60D", bundleSassAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "DartSassHost", "83ed06f2bd4ecb43", DartSassHostAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "BundleTransformer.MicrosoftAjax", "973C344C93AAC60D", MicrosoftAjaxAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "AjaxMin", "21ef50ce11b5d80f", AjaxMinAssemblyVersion)
 
-            'JavascriptEngineSwitcher
             UpdateDependantAssembly(oSectXml, "JavaScriptEngineSwitcher.Core", "C608B2A8CC9E4472", jsSwitcherAssemblyVersion)
-            'UpdateDependantAssembly(oSectXml, "JavaScriptEngineSwitcher.Msie", "C608B2A8CC9E4472", jsSwitcherMSIEAssemblyVersion)
-            'UpdateDependantAssembly(oSectXml, "MsieJavaScriptEngine", "A3A2846A37AC0D3E", MSIEJsEngineAssemblyVersion)
-            'UpdateDependantAssembly(oSectXml, "JavaScriptEngineSwitcher.ChakraCore", "C608B2A8CC9E4472", jsSwitcherChakraAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "JavaScriptEngineSwitcher.V8", "C608B2A8CC9E4472", jsSwitcherV8AssemblyVersion)
             UpdateDependantAssembly(oSectXml, "JavaScriptEngineSwitcher.V8.Native.win-x64", "C608B2A8CC9E4472", jsSwitcherV8NativeWinx64AssemblyVersion)
 

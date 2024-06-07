@@ -3589,7 +3589,7 @@
       <div class="tab-pane active" id="general">
         <table cellpadding="0" class="table table-mobile-cards-1col">
           <xsl:call-template name="editNamedContent">
-            <xsl:with-param name="desc">Browser Page Title</xsl:with-param>
+            <xsl:with-param name="desc">Meta/Tab Page Title</xsl:with-param>
             <xsl:with-param name="name">PageTitle</xsl:with-param>
             <xsl:with-param name="type">PlainText</xsl:with-param>
           </xsl:call-template>
@@ -3598,16 +3598,17 @@
             <xsl:with-param name="name">title</xsl:with-param>
             <xsl:with-param name="type">PlainText</xsl:with-param>
           </xsl:call-template>
-          <xsl:call-template name="editNamedContent">
-            <xsl:with-param name="desc">Copyright Message</xsl:with-param>
-            <xsl:with-param name="name">Copyright</xsl:with-param>
-            <xsl:with-param name="type">FormattedText</xsl:with-param>
-          </xsl:call-template>
-          <xsl:call-template name="editNamedContent">
-            <xsl:with-param name="desc">Contact Information</xsl:with-param>
-            <xsl:with-param name="name">Contact</xsl:with-param>
-            <xsl:with-param name="type">FormattedText</xsl:with-param>
-          </xsl:call-template>
+			<xsl:call-template name="editNamedContent">
+				<xsl:with-param name="desc">Page Description</xsl:with-param>
+				<xsl:with-param name="name">MetaDescription</xsl:with-param>
+				<xsl:with-param name="type">MetaData</xsl:with-param>
+			</xsl:call-template>
+			<xsl:call-template name="editNamedContent">
+				<xsl:with-param name="desc">Page Keywords</xsl:with-param>
+				<xsl:with-param name="name">MetaKeywords</xsl:with-param>
+				<xsl:with-param name="type">MetaData</xsl:with-param>
+			</xsl:call-template>
+
           <xsl:call-template name="editNamedContent">
             <xsl:with-param name="desc">JSON-LD</xsl:with-param>
             <xsl:with-param name="name">jsonld</xsl:with-param>
@@ -3626,16 +3627,7 @@
           <tr>
             <th colspan="3">Meta Tags - Hidden information for search engines.</th>
           </tr>
-          <xsl:call-template name="editNamedContent">
-            <xsl:with-param name="desc">Page Description</xsl:with-param>
-            <xsl:with-param name="name">MetaDescription</xsl:with-param>
-            <xsl:with-param name="type">MetaData</xsl:with-param>
-          </xsl:call-template>
-          <xsl:call-template name="editNamedContent">
-            <xsl:with-param name="desc">Page Keywords</xsl:with-param>
-            <xsl:with-param name="name">MetaKeywords</xsl:with-param>
-            <xsl:with-param name="type">MetaData</xsl:with-param>
-          </xsl:call-template>
+         
           <xsl:call-template name="editNamedContent">
             <xsl:with-param name="desc">Geographical Location</xsl:with-param>
             <xsl:with-param name="name">MetaLocation</xsl:with-param>
@@ -3666,6 +3658,16 @@
             <xsl:with-param name="name">MetaOrganisation</xsl:with-param>
             <xsl:with-param name="type">Organisation</xsl:with-param>
           </xsl:call-template>
+			<xsl:call-template name="editNamedContent">
+				<xsl:with-param name="desc">Copyright Message</xsl:with-param>
+				<xsl:with-param name="name">Copyright</xsl:with-param>
+				<xsl:with-param name="type">FormattedText</xsl:with-param>
+			</xsl:call-template>
+			<xsl:call-template name="editNamedContent">
+				<xsl:with-param name="desc">Contact Information</xsl:with-param>
+				<xsl:with-param name="name">Contact</xsl:with-param>
+				<xsl:with-param name="type">FormattedText</xsl:with-param>
+			</xsl:call-template>
         </table>
       </div>
       <div class="tab-pane" id="dublinCore">
@@ -12896,6 +12898,157 @@
     </i>
   </xsl:template>
 
+	<!-- code for filter indexes -->
+
+	<xsl:template match="Page[@layout='FilterIndex']" mode="Admin">
+		<div class="row" id="template_AdvancedMode">
+			<div class="col-md-3">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						Filter Indexes
+					</div>
+				</div>
+			</div>
+			<div class="col-md-9">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<p class="btn-group headerButtons">
+							<xsl:if test="ContentDetail/Content[@type='xform']">
+								<a href="{$appPath}?ewCmd=FilterIndex&amp;pgid={/Page/@id}" class="btn btn-default" title="Back to FilterIndexes">
+									<i class="fa fa-caret-left">&#160; </i>&#160;Back to FilterIndexex List
+								</a>
+							</xsl:if>
+						</p>
+					</div>
+					<div class="panel-body">
+						<xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+					</div>
+					<xsl:apply-templates select="ContentDetail/Content[@type!='xform']" mode="ListIndexes"/>
+				</div>
+			</div>
+
+		</div>
+	</xsl:template>
+
+	<xsl:template match="Content[@type='Report']" mode="ListIndexes">
+		<!--<div class="panel-body">
+			<form method="get" role="form" class="form-inline">
+				<input type="hidden" name="ewCmd" value="FilterIndex"/>
+				<input type="hidden" name="indexkey" value="0"/>
+				
+
+			</form>
+		</div>-->
+		<div class="table-responsive">
+			<table class="table manage-lookups table-hover ">
+				<tr>
+					<th colspan="2">
+						Data Type
+					</th>
+					<th colspan="2">
+						Schema Name
+					</th>
+					<th colspan="2">
+						Defination
+					</th>
+					<th colspan="2">
+						Xpath
+					</th>
+					<th colspan="2">
+						Brief
+					</th>
+					<th class="clearfix buttonCell">
+						<a href="{$appPath}?ewCmd=FilterIndex&amp;pgid={/Page/@id}&amp;id=0&amp;SchemaName={indexkeys/SchemaName/@Name}" class="btn btn-success pull-right">
+							<i class="fa fa-plus fa-white">
+								<xsl:text> </xsl:text>
+							</i><xsl:text> </xsl:text>Add New Item
+						</a>
+						<a href="{$appPath}?ewCmd=FilterIndex&amp;ewCmd2=updateAllRules&amp;pgid={/Page/@id}&amp;id={@nContentIndexDefKey}&amp;SchemaName=null" class="btn btn-primary btn-xs pull-right">
+							<i class="fa-solid fa-refresh fa-white">
+								<xsl:text> </xsl:text>
+							</i><xsl:text> </xsl:text>Re-Index All
+						</a>
+					</th>
+
+				</tr>
+				<xsl:apply-templates select="indexkeys" mode="LookupList"/>
+			</table>
+		</div>
+	</xsl:template>
+
+	<!--<xsl:template match="SchemaName" mode="LookupList">
+	
+		<xsl:apply-templates select="indexkey" mode="LookupList"/>
+	</xsl:template>-->
+
+	<xsl:template match="indexkey" mode="LookupList">
+		<tr>
+			<td colspan="2">
+				<xsl:value-of select="nContentIndexDataType/node()"/>
+			</td>
+			<td colspan="2">
+				<xsl:value-of select="cContentSchemaName/node()"/>
+			</td>
+			<td colspan="2">
+				<xsl:value-of select="cDefinitionName/node()"/>
+			</td>
+			<td colspan="2">
+				<xsl:value-of select="cContentValueXpath/node()"/>
+			</td>
+			<td colspan="2">
+				<xsl:value-of select="bBriefNotDetail/node()"/>
+			</td>
+			<td class="clearfix">
+				<a href="{$appPath}?ewCmd=FilterIndex&amp;ewCmd2=delete&amp;pgid={/Page/@id}&amp;id={@nContentIndexDefKey}&amp;SchemaName={../@Name}" class="btn btn-danger btn-xs pull-right">
+					<i class="fa-solid fa-trash fa-white">
+						<xsl:text> </xsl:text>
+					</i><xsl:text> </xsl:text>Del
+				</a>
+				<a href="{$appPath}?ewCmd=FilterIndex&amp;pgid={/Page/@id}&amp;id={@nContentIndexDefKey}&amp;SchemaName={../@Name}" class="btn btn-primary btn-xs pull-right">
+					<i class="fa fa-edit fa-white">
+						<xsl:text> </xsl:text>
+					</i><xsl:text> </xsl:text>Edit
+				</a>
+				<a href="{$appPath}?ewCmd=FilterIndex&amp;ewCmd2=update&amp;pgid={/Page/@id}&amp;id={@nContentIndexDefKey}&amp;DefName={@cDefinitionName}&amp;SchemaName={../@Name}" class="btn btn-primary btn-xs pull-right">
+					<i class="fa-solid fa-refresh fa-white">
+						<xsl:text> </xsl:text>
+					</i><xsl:text> </xsl:text>Re-Index
+				</a>
+			</td>
+		</tr>
+	</xsl:template>
+
+	<!-- code for filter indexes -->
+
+	<xsl:template match="Page[@layout='FilterIndex']" mode="Admin">
+		<div class="row" id="template_AdvancedMode">
+			<div class="col-md-3">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						Filter Indexes
+					</div>
+				</div>
+			</div>
+			<div class="col-md-9">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<p class="btn-group headerButtons">
+							<xsl:if test="ContentDetail/Content[@type='xform']">
+								<a href="{$appPath}?ewCmd=FilterIndex&amp;pgid={/Page/@id}" class="btn btn-default" title="Back to FilterIndexes">
+									<i class="fa fa-caret-left">&#160; </i>&#160;Back to FilterIndexex List
+								</a>
+							</xsl:if>
+						</p>
+					</div>
+					<div class="panel-body">
+						<xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+					</div>
+					<xsl:apply-templates select="ContentDetail/Content[@type!='xform']" mode="ListIndexes"/>
+				</div>
+			</div>
+
+		</div>
+	</xsl:template>
 
 
 </xsl:stylesheet>

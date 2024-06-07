@@ -58,10 +58,10 @@
 @import "../libs/bs5/scss/utilities/api";
 // scss-docs-end import-stack
 
-@import "../libs/jqueryui/jquery-ui.css";
+@import "../libs/jqueryui/jquery-ui";
 @import "skin/skin";
 @import "skin/header";
 @import "skin/forms";
-@import "../core/icons/custom/custom.scss";
-@import "../core/icons/fa6/css/all.css";
-@import "../libs/fancyapps/ui/dist/fancybox.css";
+@import "../core/icons/custom/custom";
+@import "../core/icons/fa6/css/all";
+@import "../libs/fancyapps/ui/dist/fancybox";
