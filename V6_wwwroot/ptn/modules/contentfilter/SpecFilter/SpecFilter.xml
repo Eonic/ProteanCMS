@@ -10,7 +10,7 @@
 				<cContentName>Category</cContentName>
 				<cContentSchemaName>Filter</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content type="Filter" filterType="SpecFilter"  parentPageId="" className="SpecFilter" providerName="default"/>
+					<Content type="Filter" filterType="SpecFilter"  parentPageId="" className="SpecFilter" providerName="default" specName=""/>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
 				<nAuditId/>
@@ -27,8 +27,10 @@
 			</tblContent>
 		</instance>
 		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
-		<bind id="cContentName" nodeset="tblContent/cContentName" required="true()" type="string"/>
-	  <bind id="cModuleLinkPage" nodeset="tblContent/cContentXmlBrief/Content/@parentPageId" required="true()" type="string"/>
+		<bind id="cSpecName" nodeset="tblContent/cContentName" required="true()" type="string"/>
+		<bind id="cSpecName" nodeset="tblContent/cContentXmlBrief/Content">
+			<bind id="cSpecName" nodeset="@specName" required="true()" type="string"/>
+		</bind>
 		<bind id="dPublishDate" nodeset="tblContent/dPublishDate" required="false()" type="string"/>
 		<bind id="dExpireDate" nodeset="tblContent/dExpireDate" required="false()" type="string"/>
 		<bind id="nStatus" nodeset="tblContent/nStatus" required="true()" type="string"/>
@@ -43,9 +45,6 @@
 				  <label>ContentId</label>
 			  </input>
 			  <label>Settings</label>
-			  <input bind="cContentName" class="required short">
-				  <label>Name</label>
-			  </input>
 			  <input bind="dPublishDate" class="calendar short">
 				  <label>Publish Date</label>
 			  </input>
