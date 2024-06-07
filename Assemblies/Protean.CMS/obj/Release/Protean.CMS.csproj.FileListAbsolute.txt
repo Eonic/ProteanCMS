@@ -11,7 +11,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\AngleSharp.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Antlr3.Runtime.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\BundleTransformer.Core.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\BundleTransformer.Less.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\BundleTransformer.SassAndScss.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DartSassHost.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Fonet.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\ICSharpCode.SharpZipLib.dll
@@ -49,7 +48,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\AngleSharp.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Antlr3.Runtime.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\BundleTransformer.Core.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\BundleTransformer.Less.xml
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\BundleTransformer.SassAndScss.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DartSassHost.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Fonet.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\ICSharpCode.SharpZipLib.pdb
@@ -68,7 +66,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Magick.NET.Core.x
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Select.HtmlToPdf.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\ru-ru\BundleTransformer.Core.resources.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\ru-ru\BundleTransformer.Less.resources.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\ru-ru\BundleTransformer.SassAndScss.resources.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\ru-RU\JavaScriptEngineSwitcher.Core.resources.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\ru-RU\JavaScriptEngineSwitcher.V8.resources.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Select.Html.dep
@@ -79,3 +76,5 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Magick.Native-Q8-
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Magick.NET-Q8-AnyCPU.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Magick.NET-Q8-AnyCPU.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Release\Protean..4E1E49F9.Up2Date
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\BundleTransformer.MicrosoftAjax.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\BundleTransformer.MicrosoftAjax.xml
