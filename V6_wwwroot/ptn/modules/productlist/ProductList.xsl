@@ -332,9 +332,7 @@
 							<xsl:apply-templates select="." mode="displayPrice" />
 						</xsl:otherwise>
 					</xsl:choose>
-
-
-					<xsl:if test="/Page/Cart">
+					<xsl:if test="$page/Cart">
 						<xsl:apply-templates select="." mode="addToCartButton"/>
 					</xsl:if>
 					<xsl:apply-templates select="." mode="SpecLink"/>
