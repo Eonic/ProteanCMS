@@ -11254,7 +11254,7 @@ namespace Protean
             }
         }
 
-        private void CallPostFilterContentUpdates()
+        public void CallPostFilterContentUpdates()
         {
             if (this.moSession["FilterList"] != null)
             {

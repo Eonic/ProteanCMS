@@ -669,7 +669,7 @@ where cl.nStructId = " + myWeb.mnPageId));
                                 myWeb.moSession["OrderByClause"] = orderBySql;
                                 myWeb.GetPageContentFromSelect(whereSQL, ref nCount, oContentsNode: ref oContentNode, oPageDetail: ref argoPageDetail, 
                                 cShowSpecificContentTypes: cFilterTarget, bIgnorePermissionsCheck: true,distinct: bDistinct, cOrderBy: orderBySql,cAdditionalJoins: cAdditionalJoins);
-                                
+
                                 // Modify results after they are loaded onto the page.
                                 foreach (XmlElement currentOFilterElmt1 in oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']"))
                                 {
@@ -725,6 +725,7 @@ where cl.nStructId = " + myWeb.mnPageId));
                                 filterForm.addSubmit(ref oFrmGroup, "Clear Filters", "No results found", "clearfilters", "clear-filters", sValue: "clearfilters");
                             }
                         }
+                        myWeb.CallPostFilterContentUpdates();
                     }
 
                     catch (Exception ex)

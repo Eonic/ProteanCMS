@@ -265,7 +265,7 @@ namespace Protean.Providers
                 return null;
             }
 
-            public virtual void SaveFilterInSession(ref Cms aWeb, string filterDetails)
+            public void SaveFilterInSession(ref Cms aWeb, string filterDetails)
             {
                 if (aWeb.moSession["FilterList"] == null)
                 {
