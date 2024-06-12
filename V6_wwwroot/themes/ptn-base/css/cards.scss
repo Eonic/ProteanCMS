@@ -50,6 +50,13 @@
 }
 
 /*############### CARDS #################*/
+@mixin bg-card-border {
+    @if $bg-card-border == false {
+        div[class*='bg-'] {
+            border: 0 !important
+        }
+    }
+}
 .Site {
     .card {
         margin-bottom: $grid-gutter-height;
@@ -82,16 +89,8 @@
     }
 
     @include card-color-bg;
-
-    @if $bg-card-border == false {
-        &div[class^='bg-'] {
-            .card-header,
-            .card-footer,
-            .card-body {
-                border: 0 !important
-            }
-        }
-    }
+    @include bg-card-border;
+    
 }
 
 /*############### MISC #################*/
