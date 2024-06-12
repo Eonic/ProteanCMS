@@ -113,6 +113,14 @@ h1, h2, h3 {
     text-align: center;
 }
 
+.module.justify-content-center {
+    height: 100%
+}
+
+.module-centred > .clearfix {
+    width: 100%;
+}
+
 .FormattedText {
     .table-responsive {
         margin-bottom: 1rem;

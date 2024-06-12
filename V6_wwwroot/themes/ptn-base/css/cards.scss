@@ -27,7 +27,7 @@
         @include card-contrast($primary);
 
         .btn-custom,
-        .btn-primary{
+        .btn-primary {
             @extend .btn-dark;
         }
     }
@@ -55,7 +55,8 @@
         margin-bottom: $grid-gutter-height;
 
         .card-header {
-            padding-bottom:0;
+            padding-bottom: 0;
+
             .card-title {
                 margin-bottom: 0;
             }
@@ -81,12 +82,23 @@
     }
 
     @include card-color-bg;
+
+    @if $bg-card-border == false {
+        &div[class^='bg-'] {
+            .card-header,
+            .card-footer,
+            .card-body {
+                border: 0 !important
+            }
+        }
+    }
 }
 
 /*############### MISC #################*/
 .alert {
     margin-bottom: $grid-gutter-height;
 }
+
 .inline-content {
     @include media-breakpoint-up(md) {
         display: flex;
