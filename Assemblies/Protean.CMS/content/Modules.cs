@@ -565,7 +565,7 @@ namespace Protean
                                 cCssClassName = string.Empty;
                             }
                         }
-                        filterForm.addSubmit(ref oFrmGroup, "More >", "More >", "Submit", cCssClassName +" filter-xs-btn btnShowMoreFilter");
+                        filterForm.addInput(ref oFrmGroup,"",false, "More +", cCssClassName +" btnShowMoreFilter");
                         filterForm.addSubmit(ref oFrmGroup, "< Less", "< Less ", "Submit", "hidden filter-xs-btn btnHideFilter");
                         filterForm.addSubmit(ref oFrmGroup, "Show " + cFilterTarget, "Show " + cFilterTarget, "Show " + cFilterTarget, "hidden-sm hidden-md hidden-lg filter-xs-btn showfiltertarget");
                        
