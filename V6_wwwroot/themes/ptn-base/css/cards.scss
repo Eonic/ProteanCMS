@@ -27,7 +27,7 @@
         @include card-contrast($primary);
 
         .btn-custom,
-        .btn-primary{
+        .btn-primary {
             @extend .btn-dark;
         }
     }
@@ -50,12 +50,21 @@
 }
 
 /*############### CARDS #################*/
+@mixin bg-card-border {
+    @if $bg-card-border == false {
+        div[class*='bg-'] {
+            border: 0 !important
+        }
+    }
+}
+
 .Site {
     .card {
         margin-bottom: $grid-gutter-height;
 
         .card-header {
-            padding-bottom:0;
+            padding-bottom: 0;
+
             .card-title {
                 margin-bottom: 0;
             }
@@ -81,12 +90,14 @@
     }
 
     @include card-color-bg;
+    @include bg-card-border;
 }
 
 /*############### MISC #################*/
 .alert {
     margin-bottom: $grid-gutter-height;
 }
+
 .inline-content {
     @include media-breakpoint-up(md) {
         display: flex;

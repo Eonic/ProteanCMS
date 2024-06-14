@@ -21,7 +21,9 @@ body {
     flex-shrink: 0;
     flex-grow: 2;
 }
-
+.container-wrapper.home-class{
+    margin-top:0;
+}
 //FLUID CONTAINER
 .container-fluid {
     padding: 0 ($grid-gutter-width/2);
@@ -84,6 +86,7 @@ a {
     //text-decoration: none;
     text-underline-offset: 0.2rem;
     text-decoration-thickness: 0px;
+    text-decoration-color:rgba($link-color,0.4)
 }
 
 strong, b {
@@ -111,6 +114,14 @@ h1, h2, h3 {
 
 .center-block {
     text-align: center;
+}
+
+.module.justify-content-center {
+    height: 100%
+}
+
+.module-centred > .clearfix {
+    width: 100%;
 }
 
 .FormattedText {
@@ -202,6 +213,10 @@ figure {
     margin: 0;
 }
 /*############### BACKGROUNDS #################*/
+.bg-wrapper-51 {
+    background-size: cover;
+}
+
 .section-spacing {
     padding-top: $section-padding;
     padding-bottom: $section-padding - $grid-gutter-height;
@@ -262,7 +277,7 @@ section.bg-video-wrapper {
         margin: 0;
 
         > div {
-            padding: 0
+            //padding: 0
         }
     }
 }
@@ -294,6 +309,7 @@ section.bg-video-wrapper {
         .banner-caption {
             background: $banner-bg;
             padding: 3vw;
+	    border-radius:$border-radius $border-radius 0 0;
         }
 
         .image-banner-inner {
@@ -319,9 +335,13 @@ section.bg-video-wrapper {
             min-height: 500px;
             max-width: 42%;
 
-            .breadcrumb li,
-            #mainTitle,
-            p {
+            .banner-caption-inner {
+                background: $banner-bg;
+                padding:1.5rem;
+                border-radius:$border-radius;
+            }
+
+            .breadcrumb li, #mainTitle, p {
                 background: $banner-bg;
             }
 

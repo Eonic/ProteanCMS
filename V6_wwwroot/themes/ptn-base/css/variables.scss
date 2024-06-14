@@ -41,8 +41,8 @@ $visited: #64acbc;
 $content-btn-align: true;
 //$btn-border-radius: var(--#{$prefix}border-radius);
 //$btn-border-width: $input-btn-border-width;
-$btn-padding-y: 1.5rem;
-$btn-padding-x: 0.4rem;
+$btn-padding-x: 1.5rem;
+$btn-padding-y: 0.4rem;
 
 /*##################### HEADER #######################*/
 $header-menu: "header-menu-right";
@@ -65,7 +65,7 @@ $main-nav-size: 1.2rem;
 //$dropdown-link-color: var(--#{$prefix}body-color) !default;
 //$dropdown-link-hover-color: $dropdown-link-color !default;
 //$dropdown-link-hover-bg: var(--#{$prefix}tertiary-bg) !default;
-//$dropdown-link-active-color: $component-active-color !default;
+$dropdown-link-active-color: $component-active-color !default;
 //$dropdown-link-active-bg: $component-active-bg !default;
 
 $mobile-dd-background: #fff;
@@ -91,7 +91,8 @@ $form-check-input-border: 1px solid $input-border-color;
 
 /*##################### CARDS ########################*/
 //$card-border-radius: var(--#{$prefix}border-radius);
-$card-border-width: 0;
+$card-border-width: 2px;
+$bg-card-border: false; 
 
 /*#################### BANNERS #######################*/
 $slide-opacity: 0.7;
