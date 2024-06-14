@@ -57,6 +57,7 @@
         }
     }
 }
+
 .Site {
     .card {
         margin-bottom: $grid-gutter-height;
@@ -90,7 +91,6 @@
 
     @include card-color-bg;
     @include bg-card-border;
-    
 }
 
 /*############### MISC #################*/

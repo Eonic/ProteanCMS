@@ -210,6 +210,10 @@ figure {
     margin: 0;
 }
 /*############### BACKGROUNDS #################*/
+.bg-wrapper-51 {
+    background-size: cover;
+}
+
 .section-spacing {
     padding-top: $section-padding;
     padding-bottom: $section-padding - $grid-gutter-height;

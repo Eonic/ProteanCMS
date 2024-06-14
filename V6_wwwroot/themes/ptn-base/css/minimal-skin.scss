@@ -1,4 +1,4 @@
-﻿header{
+﻿header {
     border-bottom: 1px solid $grey;
 }
 
@@ -21,6 +21,7 @@ footer#pagefooter {
         //border-bottom: 1px solid $grey;
     }
 }
+
 .author {
     border-bottom: 1px solid $grey;
 }
@@ -45,4 +46,6 @@ footer#pagefooter {
     @extend .btn-outline-primary;
 }
 
-
+.card-title i {
+    @include circle-icon;
+}
