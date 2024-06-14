@@ -506,6 +506,7 @@
 
         <!-- common css -->
 		<xsl:apply-templates select="/Page" mode="headerCommonStyle"/>
+		  HEADER JS
         <xsl:apply-templates select="." mode="headerOnlyJS"/>
         <xsl:if test="$ScriptAtBottom!='on' and not($adminMode)">
           <xsl:apply-templates select="." mode="js"/>
@@ -615,7 +616,7 @@
   <xsl:template match="Page" mode="LayoutAdminJs"></xsl:template>
 
   <xsl:template match="Page" mode="headerOnlyJS">
-	   <xsl:apply-templates select="/Page/Contents/Content" mode="headerOnlyContentJS"/>
+	   <xsl:apply-templates select="Contents/Content" mode="headerOnlyContentJS"/>
   </xsl:template>
 
   <xsl:template match="Content" mode="opengraph-namespace">
