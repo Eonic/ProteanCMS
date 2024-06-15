@@ -38,30 +38,29 @@
 	<xsl:variable name="thHeight">496</xsl:variable>
 	<xsl:variable name="container">container</xsl:variable>
 	<xsl:variable name="siteAlert">false</xsl:variable>
-
+	<xsl:variable name="search">
+			<xsl:call-template name="getXmlSettings">
+				<xsl:with-param name="sectionName" select="'web'"/>
+				<xsl:with-param name="valueName" select="'Search'"/>
+			</xsl:call-template>
+	</xsl:variable>
+	
 	<!-- forced on, needs fixing-->
 	<xsl:variable name="membership">
-		<xsl:choose>
-			<xsl:when test="$page/User">on</xsl:when>
-			<xsl:when test="$page/Contents/Content[@name='UserLogon']">on</xsl:when>
-			<xsl:otherwise>on</xsl:otherwise>
-		</xsl:choose>
+		<xsl:call-template name="getXmlSettings">
+			<xsl:with-param name="sectionName" select="'web'"/>
+			<xsl:with-param name="valueName" select="'Membership'"/>
+		</xsl:call-template>
 	</xsl:variable>
 
 	<xsl:variable name="cart">
-		<xsl:choose>
-			<xsl:when test="$page/Cart">on</xsl:when>
-			<xsl:otherwise>off</xsl:otherwise>
-		</xsl:choose>
+		<xsl:call-template name="getXmlSettings">
+			<xsl:with-param name="sectionName" select="'web'"/>
+			<xsl:with-param name="valueName" select="'Cart'"/>
+		</xsl:call-template>
 	</xsl:variable>
 
-	<!-- forced on, needs fixing-->
-	<xsl:variable name="search">
-		<xsl:choose>
-			<xsl:when test="$page/Search">on</xsl:when>
-			<xsl:otherwise>on</xsl:otherwise>
-		</xsl:choose>
-	</xsl:variable>
+
 
 
 	<!-- ########################################## CORE TEMPLATES VARIABLES ######################################## -->
