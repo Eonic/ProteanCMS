@@ -2790,11 +2790,7 @@ namespace Protean
                                     }
                                     bundleFilePaths[cntFile] = "~/" + myWeb.moConfig["ProjectPath"] + ("js/external/" + fileNameToSave);
                                 }
-
-
                             }
-
-
                             var CtxBase = new HttpContextWrapper(myWeb.moCtx);
                             var BundlesCtx = new System.Web.Optimization.BundleContext(CtxBase, Bundles, "~/" + myWeb.moConfig["ProjectPath"] + "js//");
                             var jsBundle = new BundleTransformer.Core.Bundles.CustomScriptBundle(TargetPath);
