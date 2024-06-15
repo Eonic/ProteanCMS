@@ -37,6 +37,18 @@
     filter: progid:DXImageTransform.Microsoft.gradient(enabled = false) !important;
 }
 
+@mixin circle-icon($color: $primary,$size: 6rem,$font: 3rem) {
+    width: $size;
+    height: $size;
+    background: $color;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100rem;
+    font-size: $font;
+}
+
 .module-centred {
     display: flex;
     flex-direction: column;
@@ -79,6 +91,7 @@
     border-radius: 0 0 4px 4px;
     padding: 1rem;
 }
+
 .skip:focus {
     left: 10px;
     top: 0px;
@@ -87,6 +100,7 @@
     height: auto;
     overflow: visible;
 }
+
 a {
     outline-offset: 5px;
     outline-color: $link-color;

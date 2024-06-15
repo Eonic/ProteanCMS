@@ -10,9 +10,9 @@ Imports System.Web.Management
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.1.12.0"
+    Public Shared ewAssemblyVersion As String = "6.1.13.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.1.0.0"
-    Public Shared bundleAssemblyVersion As String = "1.10.0.0"
+    Public Shared bundleAssemblyVersion As String = "1.14.0.0"
     Public Shared bundleLessAssemblyVersion As String = "1.12.44.0"
     Public Shared bundleSassAssemblyVersion As String = "1.13.16.0"
     Public Shared DartSassHostAssemblyVersion As String = "1.0.12.0"
@@ -23,7 +23,7 @@ Public Class CustomActions
     Public Shared AdvancedStringBuilderVersion As String = "0.1.1.0"
     Public Shared JsonAssemblyVersion As String = "13.0.3.0" '"8.0.1.19229""
     Public Shared YUIAssemblyVersion As String = "1.9.23.0"
-    Public Shared MicrosoftAjaxAssemblyVersion As String = "1.10.0.0"
+    Public Shared MicrosoftAjaxAssemblyVersion As String = "1.14.0.0"
     Public Shared AjaxMinAssemblyVersion As String = "5.14.5506.26196"
     Public Shared ECMAAssemblyVersion As String = "1.0.1.0"
     Public Shared DynamicImagePDFAssemblyVersion As String = "1.0.0.4"
@@ -210,11 +210,11 @@ Public Class CustomActions
                 Else
                     '  Don't want a global assembly ref for ProteanCMS makes impossible to overload.
                     '  UpdateAssemblyRef(oAssembliesSect, "ProteanCMS, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
-                    UpdateAssemblyRef(oAssembliesSect, "BundleTransformer.Core, Version=" & bundleAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
-                    UpdateAssemblyRef(oAssembliesSect, "BundleTransformer.Less, Version=" & bundleLessAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
-                    UpdateAssemblyRef(oAssembliesSect, "BundleTransformer.SassAndScss, Version=" & bundleSassAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
+                    UpdateAssemblyRef(oAssembliesSect, "BundleTransformer.Core, Version=" & bundleAssemblyVersion & ", Culture=neutral, PublicKeyToken=973c344c93aac60d")
+                    UpdateAssemblyRef(oAssembliesSect, "BundleTransformer.Less, Version=" & bundleLessAssemblyVersion & ", Culture=neutral, PublicKeyToken=973c344c93aac60d")
+                    UpdateAssemblyRef(oAssembliesSect, "BundleTransformer.SassAndScss, Version=" & bundleSassAssemblyVersion & ", Culture=neutral, PublicKeyToken=973c344c93aac60d")
                     UpdateAssemblyRef(oAssembliesSect, "DartSassHost, Version=" & DartSassHostAssemblyVersion & ", Culture=neutral, PublicKeyToken=83ed06f2bd4ecb43")
-                    UpdateAssemblyRef(oAssembliesSect, "BundleTransformer.MicrosoftAjax, Version=" & MicrosoftAjaxAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
+                    UpdateAssemblyRef(oAssembliesSect, "BundleTransformer.MicrosoftAjax, Version=" & MicrosoftAjaxAssemblyVersion & ", Culture=neutral, PublicKeyToken=973c344c93aac60d")
                     UpdateAssemblyRef(oAssembliesSect, "AjaxMin, Version=" & AjaxMinAssemblyVersion & ", Culture=neutral, PublicKeyToken=21ef50ce11b5d80f")
                     UpdateAssemblyRef(oAssembliesSect, "JavaScriptEngineSwitcher.Core, Version=" & jsSwitcherAssemblyVersion & ", Culture=neutral, PublicKeyToken=C608B2A8CC9E4472")
                     'UpdateAssemblyRef(oAssembliesSect, "JavaScriptEngineSwitcher.Msie, Version=" & jsSwitcherMSIEAssemblyVersion & ", Culture=neutral, PublicKeyToken=C608B2A8CC9E4472")
@@ -278,7 +278,7 @@ Public Class CustomActions
                 End If
                 oHandler.SetAttribute("path", "*.less")
                 oHandler.SetAttribute("verb", "GET")
-                oHandler.SetAttribute("type", "BundleTransformer.Less.HttpHandlers.LessAssetHandler, BundleTransformer.Less, Version=" & bundleLessAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
+                oHandler.SetAttribute("type", "BundleTransformer.Less.HttpHandlers.LessAssetHandler, BundleTransformer.Less, Version=" & bundleLessAssemblyVersion & ", Culture=neutral, PublicKeyToken=973c344c93aac60d")
                 oHandler.SetAttribute("validate", "True")
 
                 If ohttpHandlers.SelectSingleNode("add[@path='*.sass']") Is Nothing Then
@@ -289,7 +289,7 @@ Public Class CustomActions
                 End If
                 oHandler.SetAttribute("path", "*.sass")
                 oHandler.SetAttribute("verb", "GET")
-                oHandler.SetAttribute("type", "BundleTransformer.SassAndScss.HttpHandlers.SassAndScssAssetHandler, BundleTransformer.SassAndScss, Version=" & bundleSassAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
+                oHandler.SetAttribute("type", "BundleTransformer.SassAndScss.HttpHandlers.SassAndScssAssetHandler, BundleTransformer.SassAndScss, Version=" & bundleSassAssemblyVersion & ", Culture=neutral, PublicKeyToken=973c344c93aac60d")
                 oHandler.SetAttribute("validate", "True")
 
                 If ohttpHandlers.SelectSingleNode("add[@path='*.scss']") Is Nothing Then
@@ -300,7 +300,7 @@ Public Class CustomActions
                 End If
                 oHandler.SetAttribute("path", "*.scss")
                 oHandler.SetAttribute("verb", "GET")
-                oHandler.SetAttribute("type", "BundleTransformer.SassAndScss.HttpHandlers.SassAndScssAssetHandler, BundleTransformer.SassAndScss, Version=" & bundleSassAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
+                oHandler.SetAttribute("type", "BundleTransformer.SassAndScss.HttpHandlers.SassAndScssAssetHandler, BundleTransformer.SassAndScss, Version=" & bundleSassAssemblyVersion & ", Culture=neutral, PublicKeyToken=973c344c93aac60d")
                 oHandler.SetAttribute("validate", "True")
 
                 'add Bundle Transformer config
@@ -522,16 +522,14 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "Protean.Providers.Messaging.CampaignMonitor", "0e5e11efc3341916", ewAssemblyVersion, "5.0.0.0")
 
             'BundleTransformer
-            UpdateDependantAssembly(oSectXml, "BundleTransformer.Core", "973C344C93AAC60D", bundleAssemblyVersion)
-            UpdateDependantAssembly(oSectXml, "BundleTransformer.Less", "973C344C93AAC60D", bundleLessAssemblyVersion)
-            UpdateDependantAssembly(oSectXml, "BundleTransformer.SassAndScss", "973C344C93AAC60D", bundleSassAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "BundleTransformer.Core", "973c344c93aac60d", bundleAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "BundleTransformer.Less", "973c344c93aac60d", bundleLessAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "BundleTransformer.SassAndScss", "973c344c93aac60d", bundleSassAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "DartSassHost", "83ed06f2bd4ecb43", DartSassHostAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "BundleTransformer.MicrosoftAjax", "973c344c93aac60d", MicrosoftAjaxAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "AjaxMin", "21ef50ce11b5d80f", AjaxMinAssemblyVersion)
 
-            'JavascriptEngineSwitcher
             UpdateDependantAssembly(oSectXml, "JavaScriptEngineSwitcher.Core", "C608B2A8CC9E4472", jsSwitcherAssemblyVersion)
-            'UpdateDependantAssembly(oSectXml, "JavaScriptEngineSwitcher.Msie", "C608B2A8CC9E4472", jsSwitcherMSIEAssemblyVersion)
-            'UpdateDependantAssembly(oSectXml, "MsieJavaScriptEngine", "A3A2846A37AC0D3E", MSIEJsEngineAssemblyVersion)
-            'UpdateDependantAssembly(oSectXml, "JavaScriptEngineSwitcher.ChakraCore", "C608B2A8CC9E4472", jsSwitcherChakraAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "JavaScriptEngineSwitcher.V8", "C608B2A8CC9E4472", jsSwitcherV8AssemblyVersion)
             UpdateDependantAssembly(oSectXml, "JavaScriptEngineSwitcher.V8.Native.win-x64", "C608B2A8CC9E4472", jsSwitcherV8NativeWinx64AssemblyVersion)
 

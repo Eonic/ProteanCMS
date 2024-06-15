@@ -143,7 +143,7 @@ header {
             &.active,
             &.on,
             &:focus {
-                color: $nav-link-hover-color;
+                color: $dropdown-link-active-color;
             }
 
             &:first-child {
@@ -180,7 +180,7 @@ header {
             a.on,
             a:hover,
             a:focus {
-                color: #000;
+                color: $dropdown-link-active-color;
             }
 
             @include media-breakpoint-up($nav-breakpoint) {
@@ -192,7 +192,7 @@ header {
                 a.on,
                 a:hover,
                 a:focus {
-                    color: $primary;
+                    color: $dropdown-link-active-color;
                 }
 
                 a.on {
@@ -624,7 +624,8 @@ header {
         padding: 1rem 1.4rem;
         color: #fff;
         text-decoration: none;
-
+        margin:1px;
+        border-radius:$btn-border-radius;
         @include media-breakpoint-up(xxl) {
             font-size: 1.4rem;
         }

@@ -564,8 +564,9 @@
 					</xsl:if>
 					<!--<xsl:value-of select="$websitecreditText"/>-->
 					<span>site by </span>
-					<img src="/ptn/core/images/eonic-digital-white.svg" alt="eonic digital" width="82" height="17"/>
-
+					<xsl:if test="$websitecreditLogo='' or not($websitecreditLogo)">
+						<img src="/ptn/core/images/eonic-digital-white.svg" alt="eonic digital" width="82" height="17"/>
+					</xsl:if>
 				</a>
 				<xsl:if test="$websitecreditLogo!=''">
 					<a href="{$websitecreditURL}" title="{$websitecreditText}" rel="nofollow external">
