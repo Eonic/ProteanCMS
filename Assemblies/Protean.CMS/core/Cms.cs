@@ -6128,7 +6128,7 @@ namespace Protean
                         platform = "eonicweb";
                     }
                     // Please never add any setting here you do not want to be publicly accessible.
-                    object s = "web.DescriptiveContentURLs;web.BaseUrl;web.SiteName;web.SiteLogo;web.GoogleAnalyticsUniversalID;web.GoogleGA4MeasurementID;web.GoogleTagManagerID;web.GoogleAPIKey;web.PayPalTagManagerID;web.ScriptAtBottom;web.debug;cart.SiteURL;web.ImageRootPath;web.DocRootPath;web.MediaRootPath;web.menuNoReload;web.RootPageId;web.MenuTreeDepth;";
+                    object s = "web.Cart;web.Membership;web.Search;web.DescriptiveContentURLs;web.BaseUrl;web.SiteName;web.SiteLogo;web.GoogleAnalyticsUniversalID;web.GoogleGA4MeasurementID;web.GoogleTagManagerID;web.GoogleAPIKey;web.PayPalTagManagerID;web.ScriptAtBottom;web.debug;cart.SiteURL;web.ImageRootPath;web.DocRootPath;web.MediaRootPath;web.menuNoReload;web.RootPageId;web.MenuTreeDepth;";
                     s = Operators.AddObject(s, $"web.{platform}ProductName;web.{platform}CMSName;web.{platform}AdminSystemName;web.{platform}Copyright;web.{platform}SupportTelephone;web.{platform}Website;web.{platform}SupportEmail;web.{platform}Logo;web.websitecreditURL;web.websitecreditText;web.websitecreditLogo;web.GoogleTagManagerID;web.GoogleOptimizeID;web.FeedOptimiseID;web.FacebookPixelId;web.BingTrackingID;web.ReCaptchaKey;web.EnableWebP;web.EnableRetina;");
                     s = Operators.AddObject(s, "theme.BespokeBoxStyles;theme.BespokeBackgrounds;theme.BespokeTextClasses;");
                     s = Operators.ConcatenateObject(Operators.AddObject(s, this.moConfig["XmlSettings"]), ";");
