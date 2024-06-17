@@ -308,8 +308,14 @@ form.xform {
     button.form-tip {
         margin-bottom: -4px;
         margin-top: -9px;
+        --bs-btn-padding-x: 0.35rem;
+        --bs-btn-padding-y: 0.35rem;
     }
 
+    .colform-label{
+        padding-right:0;
+    }
+    
     .form-check-input:checked {
         // background-color: lighten($admin-header-font-color,10%);
         // border-color: lighten($admin-header-font-color,10%);
