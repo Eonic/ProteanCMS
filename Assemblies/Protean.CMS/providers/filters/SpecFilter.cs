@@ -43,9 +43,11 @@ namespace Protean.Providers
                     XmlElement thisSelect = oXform.addSelect(ref oFromGroup,"", false, sControlDisplayName, "specfilter", xForm.ApperanceTypes.Full);
                     // oXform.addOption(ref thisSelect, "Value1", "Value1");
                     SqlDataReader odr = aWeb.moDbHelper.getDataReader("SELECT DISTINCT CONCAT(cTextValue,' [',Count(*),']') as [Name], cTextValue as [Value] FROM [dbo].[tblContentIndex]\r\n  Where nContentIndexDefinitionKey = (Select nContentIndexDefKey from tblContentIndexDef where cDefinitionName = '" + sControlDisplayName + "') GROUP BY cTextValue Order By cTextValue");
-                        oXform.addOptionsFromSqlDataReader(ref thisSelect,ref odr);
-                        odr.Dispose(); 
 
+                    if (odr != null) {
+                        oXform.addOptionsFromSqlDataReader(ref thisSelect,ref odr);
+                        //odr.Dispose();
+                    }
                 }
 
                 catch (Exception ex)
