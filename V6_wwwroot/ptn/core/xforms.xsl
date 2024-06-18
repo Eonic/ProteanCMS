@@ -784,7 +784,7 @@
 		<!-- NB : the count(item)!=1 basically stops you from making a one checkbox field (ie a boolean) from being required -->
 		<xsl:if test="not($nolabel!='')">
 			<div class="row mb-3">
-				<div class="col-sm-3 colform-label">
+				<div class="col-sm-3 col form-label">
 					<xsl:apply-templates select="label"/>
 				</div>
 				<xsl:choose>
