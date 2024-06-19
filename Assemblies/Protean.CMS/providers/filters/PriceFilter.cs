@@ -312,7 +312,7 @@ namespace Protean.Providers
 
             public override string GetFilterOrderByClause()
             {
-                return "";// " ci.nNumberValue ";
+                return "";// , ci.nNumberValue asc ";
             }
 
         }
