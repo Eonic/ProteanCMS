@@ -44,6 +44,7 @@
 				<xsl:with-param name="valueName" select="'Search'"/>
 			</xsl:call-template>
 	</xsl:variable>
+	<xsl:variable name="show-layout-footer">false</xsl:variable>
 	
 	<!-- forced on, needs fixing-->
 	<xsl:variable name="membership">

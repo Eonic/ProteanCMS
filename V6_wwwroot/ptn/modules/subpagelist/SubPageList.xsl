@@ -37,6 +37,16 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
+		<xsl:variable name="showDesc">
+			<xsl:choose>
+				<xsl:when test="@showDesc='false'">
+					<xsl:text>false</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>true</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<xsl:variable name="totalCount">
 			<xsl:choose>
 				<xsl:when test="@display='related'">
@@ -77,6 +87,7 @@
 							<xsl:with-param name="sortBy" select="@sortBy"/>
 							<xsl:with-param name="crop" select="$cropSetting"/>
 							<xsl:with-param name="showImg" select="$showImg"/>
+							<xsl:with-param name="showDesc" select="$showDesc"/>
 							<xsl:with-param name="showHidden" select="@showHidden"/>
 							<xsl:with-param name="fixedThumb" select="@fixedThumb"/>
 							<xsl:with-param name="button" select="@button"/>
@@ -128,6 +139,7 @@
 		<xsl:param name="sortBy"/>
 		<xsl:param name="crop"/>
 		<xsl:param name="showImg"/>
+		<xsl:param name="showDesc"/>
 		<xsl:param name="showHidden"/>
 		<xsl:param name="fixedThumb"/>
 		<xsl:param name="button"/>
@@ -195,7 +207,7 @@
 						</xsl:choose>
 					</xsl:if>
 					<xsl:if test="Images/img[@src!=''] and not($showImg='false')">
-						<a href="{$url}" title="{$pageName}">
+						<a href="{$url}" title="{$pageName}" class="list-image-link">
 							<xsl:attribute name="title">
 								<xsl:apply-templates select="." mode="getTitleAttr"/>
 							</xsl:attribute>
@@ -228,7 +240,7 @@
 						</xsl:choose>
 
 					</xsl:if>
-					<xsl:if test="Description/node()!=''">
+					<xsl:if test="Description/node()!='' and not($showDesc='false')">
 						<span class="listDescription">
 							<xsl:attribute name="class">
 								<xsl:text>title text-</xsl:text>

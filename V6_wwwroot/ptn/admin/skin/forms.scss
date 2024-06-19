@@ -15,7 +15,9 @@ body {
 textarea {
     max-width:100%;
 }
-
+.form-control, .form-select {
+    border-bottom: 2px solid #5c5c5c;
+}
 @mixin btn-spacing($space:4px) {
     margin-left: -$space;
     margin-right: -$space;
@@ -306,16 +308,25 @@ form.xform {
     }
 
     button.form-tip {
-        margin-bottom: -4px;
-        margin-top: -9px;
+        margin-left: -2px;
+        margin-top: -7px;
         --bs-btn-padding-x: 0.35rem;
         --bs-btn-padding-y: 0.35rem;
+        position: absolute;
     }
 
-    .colform-label{
-        padding-right:0;
+    .colform-label {
+        // padding-right:0;
     }
-    
+
+    .fa-question-circle {
+        padding-right: 0;
+    }
+
+    .form-check-input {
+        border: 2px solid #5c5c5c;
+    }
+
     .form-check-input:checked {
         // background-color: lighten($admin-header-font-color,10%);
         // border-color: lighten($admin-header-font-color,10%);
@@ -797,8 +808,11 @@ form.xform .relatedContent-group {
         @include button-variant($admin-info,$admin-info);
     }
 }
+.form-full-width {
+    width: calc(100% + var(--bs-gutter-x));
+}
 .accordion-body > label:first-child {
-    display:none;
+    display: none;
 }
 .inline-select .form-margin {
     min-width: 120px;

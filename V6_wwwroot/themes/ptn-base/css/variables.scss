@@ -29,15 +29,16 @@ $img-border-radius: $border-radius;
 
 /*###################### TEXT #########################*/
 $body-color: #242424;
-$link-color: $primary !default;
 //$font-family-base: 'Lato', sans-serif;
 //$font-weight-base: 300;
 //$font-size-base: 1.1rem !default;
 $line-height-base: 1.3;
 
 /*################# BUTTONS & LINKS ###################*/
+$link-color: $primary !default;
+$visited: lighten($link-color,30%);
+
 $btn-color: $primary;
-$visited: #64acbc;
 $content-btn-align: true;
 //$btn-border-radius: var(--#{$prefix}border-radius);
 //$btn-border-width: $input-btn-border-width;
