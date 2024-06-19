@@ -7,7 +7,7 @@
         <add key="SiteURL" value="http://test.ds01.eonic.co.uk" />
         <add key="SecureURL" value="http://test.ds01.eonic.co.uk/" />
         <add key="TaxRate" value="20" />
-        <add key="MerchantName" value="Eonic Associates LLP." />
+        <add key="MerchantName" value="Eonic Digital LLP." />
         <add key="MerchantEmail" value="support@eonic.co.uk" />
         <add key="OrderEmailSubject" value="" />
         <add key="TermsContentId" value="" />
@@ -28,7 +28,8 @@
         <add key="SavePayments" value="on" />
         <add key="VatAtUnit" value="on" />
         <add key="Discounts" value="on" />
-        <add key="AddBehaviour" value="none" />
+		<add key="CheckCartForDiscountToRequestDiscountCode" value="on" />
+		<add key="AddBehaviour" value="none" />
         <add key="PriorityCountries" value="United Kingdom, United States" />
         <add key="PriceModOrder" value="Basic_Money,Basic_Percent,Break_Product" />
         <add key="ClearOnAdd" value="off" />
@@ -42,8 +43,8 @@
       </cart>
     </instance>
     <submission id="WebSettings" action="" method="post" event="form_check(this)" />
-    <bind id="ewSiteURL" nodeset="cart/add[@key='SiteURL']/@value" required="true()" type="string" />
-    <bind id="ewSecureURL" nodeset="cart/add[@key='SecureURL']/@value" required="true()" type="string" />
+    <bind id="ewSiteURL" nodeset="cart/add[@key='SiteURL']/@value" required="false()" type="string" />
+    <bind id="ewSecureURL" nodeset="cart/add[@key='SecureURL']/@value" required="false()" type="string" />
     <bind id="ewTaxRate" nodeset="cart/add[@key='TaxRate']/@value" required="true()" type="string" />
     <bind id="ewMerchantName" nodeset="cart/add[@key='MerchantName']/@value" required="true()" type="string" />
     <bind id="ewMerchantEmail" nodeset="cart/add[@key='MerchantEmail']/@value" required="true()" type="string" />
@@ -66,6 +67,7 @@
     <bind id="ewSavePayments" nodeset="cart/add[@key='SavePayments']/@value" required="true()" type="string" />
     <bind id="ewVatAtUnit" nodeset="cart/add[@key='VatAtUnit']/@value" required="true()" type="string" />
     <bind id="ewDiscounts" nodeset="cart/add[@key='Discounts']/@value" required="true()" type="string" />
+	  <bind id="ewCheckCartForDiscountToRequestDiscountCode" nodeset="cart/add[@key='CheckCartForDiscountToRequestDiscountCode']/@value" required="true()" type="string" />
     <bind id="ewAddBehaviour" nodeset="cart/add[@key='AddBehaviour']/@value" required="true()" type="string" />
     <bind id="ewPriceModOrder" nodeset="cart/add[@key='PriceModOrder']/@value" required="false()" type="string" />
     <bind id="ewClearOnAdd" nodeset="cart/add[@key='ClearOnAdd']/@value" required="false()" type="string" />
@@ -230,7 +232,21 @@
         </item>
         <value />
       </select1>
-      <input bind="ewPriceModOrder">
+		<select1 bind="ewCheckCartForDiscountToRequestDiscountCode" appearance="full">
+			<label>Check Cart For Discount To Request Discount Code</label>
+			<item>
+				<label>On</label>
+				<value>on</value>
+			</item>
+			<item>
+				<label>Off</label>
+				<value>off</value>
+			</item>
+			<value />
+		</select1>
+		
+
+		<input bind="ewPriceModOrder">
         <label>Price Mod Order</label>
         <value />
       </input><input bind="ewPriorityCountries">
