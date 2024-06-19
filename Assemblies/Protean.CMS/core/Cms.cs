@@ -5225,7 +5225,6 @@ namespace Protean
 
                 }
 
-                CallPostFilterContentUpdates();
             }
 
             // If gbCart Or gbQuote Then
@@ -11254,58 +11253,7 @@ namespace Protean
             }
         }
 
-        public void CallPostFilterContentUpdates()
-        {
-            if (this.moSession["FilterList"] != null)
-            {
-                List<string> filters = (List<string>)this.moSession["FilterList"];
-                foreach (string currentOFilterElmt1 in filters)
-                {
-                    string[] filterDetails = currentOFilterElmt1.Split(',');
-                    //oFilterElmt = currentOFilterElmt1;
-                    Type calledType;
-                    string className = filterDetails[0];
-                    string providerName = filterDetails[1];
-                    if (!string.IsNullOrEmpty(className))
-                    {
-                        if (string.IsNullOrEmpty(providerName) | Strings.LCase(providerName) == "default")
-                        {
-                            providerName = "Protean.Providers.Filters." + className;
-                            calledType = Type.GetType(providerName, true);
-                        }
-                        else
-                        {
-                            var castObject = WebConfigurationManager.GetWebApplicationSection("protean/filterProviders");
-                            Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)castObject;
-                            System.Configuration.ProviderSettings ourProvider = moPrvConfig.Providers[providerName];
-                            Assembly assemblyInstance;
 
-                            if (ourProvider.Parameters["path"] != "" && ourProvider.Parameters["path"] != null)
-                            {
-                                assemblyInstance = Assembly.LoadFrom(this.goServer.MapPath(Conversions.ToString(ourProvider.Parameters["path"])));
-                            }
-                            else
-                            {
-                                assemblyInstance = Assembly.Load(ourProvider.Type);
-                            }
-                            if (ourProvider.Parameters["rootClass"] == "")
-                            {
-                                calledType = assemblyInstance.GetType("Protean.Providers.Filters." + providerName, true);
-                            }
-                            else
-                            {
-                                calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], "."), className)), true);
-                            }
-                        }
-                        string methodname = "PostFilterContentUpdates";
-                        var o = Activator.CreateInstance(calledType);
-                        var args = new object[1];
-                        args[0] = this;
-                        calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, null, o, args);
-                    }
-                }
-            }
-        }
 
         #region  IDisposable Support 
         // This code added by Visual Basic to correctly implement the disposable pattern.
