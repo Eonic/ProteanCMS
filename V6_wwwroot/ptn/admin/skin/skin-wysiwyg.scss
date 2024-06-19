@@ -3,7 +3,7 @@
 #pagefooter .ptn-edit {
     .btn-primary {
         box-shadow: none !important;
-        transition:none;
+        transition: none;
     }
 
     .dropdown {
@@ -105,9 +105,11 @@
         }
     }
 }
-.active-admin-dd{
-    z-index:30!important;
+
+.active-admin-dd {
+    z-index: 30 !important;
 }
+
 .normalMode {
     .text-primary {
         color: $admin-header-color-link !important;
@@ -176,8 +178,11 @@
         }
     }
 
-    .ptn-edit > .btn-primary,
-    .ptn-edit > .dropdown .btn-primary {
+    i.fa-grip-vertical {
+        font-size:13px!important;
+    }
+
+    .ptn-edit > .btn-primary, .ptn-edit > .dropdown .btn-primary {
         margin-left: 1px;
     }
 
@@ -525,6 +530,7 @@
         justify-content: right;
         //margin-bottom: -22px;
         width: 100%;
+        position: relative;
 
         .btn {
             //margin-right: 3px;
@@ -568,8 +574,8 @@
         }
     }
 
-    .module, 
-     .nav-module {
+    .module,
+    .nav-module {
         > .editable .options {
             .btn,
             .text-primary {
