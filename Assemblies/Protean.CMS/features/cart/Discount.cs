@@ -186,10 +186,10 @@ namespace Protean
                                 }
                             }
                         }
-
+                        if (moCartConfig["CheckCartForDiscountToRequestDiscountCode"] != null) {
                         if (moCartConfig["CheckCartForDiscountToRequestDiscountCode"].ToLower() == "on") {
                             bDefaultPromoCode = true;
-                        }
+                        } }
 
 
 
