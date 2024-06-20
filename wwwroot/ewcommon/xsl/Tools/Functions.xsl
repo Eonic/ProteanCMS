@@ -506,7 +506,6 @@
 
         <!-- common css -->
 		<xsl:apply-templates select="/Page" mode="headerCommonStyle"/>
-		  HEADER JS
         <xsl:apply-templates select="." mode="headerOnlyJS"/>
         <xsl:if test="$ScriptAtBottom!='on' and not($adminMode)">
           <xsl:apply-templates select="." mode="js"/>

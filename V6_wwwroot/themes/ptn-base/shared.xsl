@@ -134,7 +134,7 @@
 	</xsl:template>
 
 	<!-- ############################################ BOX STYLES ############################################### -->
-
+	<!-- NOW IN FUNCTIONS.XSL
 	<xsl:template match="Content[@type='Module']" mode="themeModuleExtras">
 		<xsl:if test="@modAnim!=''">
 			<xsl:attribute name="data-modAnim">
@@ -145,7 +145,7 @@
 			</xsl:attribute>
 		</xsl:if>
 	</xsl:template>
-
+-->
 
 	<!-- ############################################ IMAGE SIZES ############################################### -->
 
