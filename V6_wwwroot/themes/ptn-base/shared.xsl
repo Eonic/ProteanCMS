@@ -492,7 +492,7 @@
 						</div>-->
 					</div>
 				</div>
-				<div class="clearfix footer-utility">
+				<!--<div class="clearfix footer-utility">
 					<div class="{$containerClass}">
 						<div class="clearfix footer-utility-inner">
 							<div id="footer-utility">
@@ -500,17 +500,17 @@
 									<xsl:with-param name="position">footer-utility</xsl:with-param>
 								</xsl:apply-templates>
 							</div>
-							<!--<div id="copyright">
+							--><!--<div id="copyright">
 								<xsl:apply-templates select="/Page" mode="addModule">
 									<xsl:with-param name="position">copyright</xsl:with-param>
 								</xsl:apply-templates>
-							</div>-->
-							<!--<div class="credit">
+							</div>--><!--
+							--><!--<div class="credit">
 								<xsl:apply-templates select="/" mode="developerLink"/>
-							</div>-->
+							</div>--><!--
 						</div>
 					</div>
-				</div>
+				</div>-->
 			</div>
 			<xsl:if test="$currentPage/@id='1'">
 				<div class="dev-credit">

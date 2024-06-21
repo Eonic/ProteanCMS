@@ -54,11 +54,11 @@
 			</xsl:when>
 			<xsl:when test="@externalLink!=''">
 				<a href="{@externalLink}" title="Go to {@externalLink}">
+					<xsl:if test="not(contains(@externalLink,/Page/Request/ServerVariables/Item[@name='SERVER_NAME']/node())) and contains(@externalLink,'http')">
+						<xsl:attribute name="rel">external</xsl:attribute>
+						<!-- All browsers open rel externals as new windows anyway. Target not a valid attribute -->
+					</xsl:if>
 					<figure>
-						<xsl:if test="not(contains(@externalLink,/Page/Request/ServerVariables/Item[@name='SERVER_NAME']/node())) and contains(@externalLink,'http')">
-							<xsl:attribute name="rel">external</xsl:attribute>
-							<!-- All browsers open rel externals as new windows anyway. Target not a valid attribute -->
-						</xsl:if>
 						<xsl:apply-templates select="./node()" mode="cleanXhtml">
 							<xsl:with-param name="noLazy" select="'true'"/>
 						</xsl:apply-templates>
@@ -185,32 +185,32 @@
 		<xsl:param name="maxHeight"/>
 		<xsl:param name="lazy"/>
 		<a>
+			<xsl:attribute name="href">
+				<xsl:choose>
+					<xsl:when test="format-number(@link,'0')!='NaN'">
+						<xsl:variable name="pageId" select="@link"/>
+						<xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId]" mode="getHref"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="@link"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>
+			<xsl:attribute name="title">
+				<xsl:choose>
+					<xsl:when test="format-number(@link,'0')!='NaN'">
+						<xsl:variable name="pageId" select="@url"/>
+						<xsl:value-of select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId]/@name"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="@linkText"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>
+			<xsl:if test="@linkType='external' and starts-with(@link,'http')">
+				<xsl:attribute name="rel">external</xsl:attribute>
+			</xsl:if>
 			<figure>
-				<xsl:attribute name="href">
-					<xsl:choose>
-						<xsl:when test="format-number(@link,'0')!='NaN'">
-							<xsl:variable name="pageId" select="@link"/>
-							<xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId]" mode="getHref"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="@link"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:attribute>
-				<xsl:attribute name="title">
-					<xsl:choose>
-						<xsl:when test="format-number(@link,'0')!='NaN'">
-							<xsl:variable name="pageId" select="@url"/>
-							<xsl:value-of select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId]/@name"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="@linkText"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:attribute>
-				<xsl:if test="@linkType='external' and starts-with(@link,'http')">
-					<xsl:attribute name="rel">external</xsl:attribute>
-				</xsl:if>
 				<xsl:apply-templates select="." mode="displayBriefImg">
 					<xsl:with-param name="maxWidth" select="$maxWidth"/>
 					<xsl:with-param name="maxHeight" select="$maxHeight"/>
