@@ -281,6 +281,14 @@ section.bg-video-wrapper {
         }
     }
 }
+.breadcrumb {
+    .breadcrumb-item {
+        a {
+            padding-top: 0.3rem;
+            padding-bottom: 0.3rem;
+        }
+    }
+}
 /*############### BANNERS #################*/
 .image-banner {
     padding: 0.3rem 0 $section-padding 0;
