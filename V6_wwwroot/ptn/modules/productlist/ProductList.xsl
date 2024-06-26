@@ -375,7 +375,7 @@
 												</xsl:choose>-->
 
 												<!--<xsl:apply-templates select="." mode="displayDetailImage"/>-->
-												<img src="{Images/img[@class='detail']/@src}"/>
+												<img src="{Images/img[@class='detail']/@src}" alt="{Images/img[@class='detail']/@alt}"/>
 											</div>
 											<xsl:apply-templates select="Content[@type='LibraryImage']" mode="scrollerImage"/>
 										</div>
