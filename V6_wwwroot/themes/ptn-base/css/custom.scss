@@ -21,8 +21,9 @@ body {
     flex-shrink: 0;
     flex-grow: 2;
 }
-.container-wrapper.home-class{
-    margin-top:0;
+
+.container-wrapper.home-class {
+    margin-top: 0;
 }
 //FLUID CONTAINER
 .container-fluid {
@@ -86,7 +87,7 @@ a {
     //text-decoration: none;
     text-underline-offset: 0.2rem;
     text-decoration-thickness: 0px;
-    text-decoration-color:rgba($link-color,0.4)
+    text-decoration-color: rgba($link-color,0.4)
 }
 
 strong, b {
@@ -134,6 +135,12 @@ h1, h2, h3 {
     }
 
     *:last-child:not(button) {
+        margin-bottom: 0;
+    }
+}
+
+.banner-caption-inner {
+    > *:last-child:not(button) {
         margin-bottom: 0;
     }
 }
@@ -281,6 +288,7 @@ section.bg-video-wrapper {
         }
     }
 }
+
 .breadcrumb {
     .breadcrumb-item {
         a {
@@ -317,7 +325,7 @@ section.bg-video-wrapper {
         .banner-caption {
             background: $banner-bg;
             padding: 3vw;
-	    border-radius:$border-radius $border-radius 0 0;
+            border-radius: $border-radius $border-radius 0 0;
         }
 
         .image-banner-inner {
@@ -338,15 +346,14 @@ section.bg-video-wrapper {
         .banner-caption {
             max-width: 36%;
             padding: 4vw 6.1% 10% 4vw;
-            background: url(/themes/ptn-base/images/heart-bg2.png) no-repeat right bottom;
             background-size: 100%;
             min-height: 500px;
             max-width: 42%;
 
             .banner-caption-inner {
                 background: $banner-bg;
-                padding:1.5rem;
-                border-radius:$border-radius;
+                padding: 1.5rem;
+                border-radius: $border-radius;
             }
 
             .breadcrumb li, #mainTitle, p {
