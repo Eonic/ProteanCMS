@@ -20,7 +20,7 @@
 	<xsl:variable name="header-layout">header-one-line</xsl:variable>
 		<!-- options are header-menu-right, header-info-above, header-one-line, header-menu-below, -->
 	<xsl:variable name="font-import-base">Lato:300,400,700</xsl:variable>
-	<xsl:variable name="headings-font-import">Lato:300,400,700</xsl:variable>
+	<xsl:variable name="headings-font-import">none</xsl:variable>
 	<xsl:variable name="color-mode">default</xsl:variable>
 	<xsl:variable name="HomeInfo">false</xsl:variable>
 	<xsl:variable name="HomeNav">false</xsl:variable>

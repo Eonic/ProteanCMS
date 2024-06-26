@@ -56,7 +56,6 @@
 						<xsl:apply-templates select="/" mode="cartSimple"/>
 					</xsl:if>
 					<!--SEARCH (DESKTOP)-->
-					SEARCH!!
 					<xsl:if test="$search='on' and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
 						<div class="not-xs search-wrapper">
 							<xsl:apply-templates select="/" mode="searchSimple"/>
