@@ -4,13 +4,13 @@
 
 .not-xs {
     @include media-breakpoint-down($nav-breakpoint) {
-        display: none;
+        display: none !important;
     }
 }
 
 .xs-only {
     @include media-breakpoint-up($nav-breakpoint) {
-        display: none;
+        display: none !important;
     }
 }
 

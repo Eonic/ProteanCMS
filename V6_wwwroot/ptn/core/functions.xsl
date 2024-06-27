@@ -6009,8 +6009,7 @@
 			<xsl:when test="@iconStyle='Centre'">
 
 				<div class="center-block center-large">
-
-					<xsl:if test="@icon!=''">
+					<xsl:if test="@icon!='' or @icon-class!=''">
 						<i role="img" aria-hidden="true">
 							<xsl:attribute name="class">
 								<xsl:text>fa center-block </xsl:text>
@@ -6023,7 +6022,15 @@
 										<xsl:text> fa-3x </xsl:text>
 									</xsl:otherwise>
 								</xsl:choose>
-								<xsl:value-of select="@icon"/>
+								<xsl:choose>
+									<xsl:when test="@icon-class and @icon-class!=''">
+										<xsl:text>fa-</xsl:text>
+										<xsl:value-of select="@icon-class"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="@icon"/>
+									</xsl:otherwise>
+								</xsl:choose>
 							</xsl:attribute>
 							<!--<xsl:if test="@uploadIcon-w and @uploadIcon-w!='' or @uploadIcon-h and @uploadIcon-h!=''">
 								<xsl:attribute name="style">
@@ -6067,7 +6074,15 @@
 						<i>
 							<xsl:attribute name="class">
 								<xsl:text>fa center-block </xsl:text>
-								<xsl:value-of select="@icon"/>
+								<xsl:choose>
+									<xsl:when test="@icon-class and @icon-class!=''">
+										<xsl:text>fa-</xsl:text>
+										<xsl:value-of select="@icon-class"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="@icon"/>
+									</xsl:otherwise>
+								</xsl:choose>
 
 								<xsl:choose>
 									<xsl:when test="@icon-size and @icon-size!=''">
@@ -6105,7 +6120,15 @@
 						<i>
 							<xsl:attribute name="class">
 								<xsl:text>fa </xsl:text>
-								<xsl:value-of select="@icon"/>
+								<xsl:choose>
+									<xsl:when test="@icon-class and @icon-class!=''">
+										<xsl:text>fa-</xsl:text>
+										<xsl:value-of select="@icon-class"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="@icon"/>
+									</xsl:otherwise>
+								</xsl:choose>
 
 								<xsl:choose>
 									<xsl:when test="@icon-size and @icon-size!=''">
@@ -6140,7 +6163,15 @@
 					<i>
 						<xsl:attribute name="class">
 							<xsl:text>fa </xsl:text>
-							<xsl:value-of select="@icon"/>
+							<xsl:choose>
+								<xsl:when test="@icon-class and @icon-class!=''">
+									<xsl:text>fa-</xsl:text>
+									<xsl:value-of select="@icon-class"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="@icon"/>
+								</xsl:otherwise>
+							</xsl:choose>
 
 							<xsl:choose>
 								<xsl:when test="@icon-size and @icon-size!=''">

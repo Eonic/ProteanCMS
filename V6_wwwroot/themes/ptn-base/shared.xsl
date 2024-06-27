@@ -24,7 +24,7 @@
 	<xsl:variable name="color-mode">default</xsl:variable>
 	<xsl:variable name="HomeInfo">false</xsl:variable>
 	<xsl:variable name="HomeNav">false</xsl:variable>
-	<xsl:variable name="NavFix">true</xsl:variable>
+	<xsl:variable name="NavFix">false</xsl:variable>
 	<xsl:variable name="nav-dropdown">true</xsl:variable>
 	<xsl:variable name="sub-nav">false</xsl:variable>
 	<xsl:variable name="SideSubWidth">3</xsl:variable>
