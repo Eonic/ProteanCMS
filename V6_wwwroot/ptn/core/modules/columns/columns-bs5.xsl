@@ -880,7 +880,7 @@
 					<xsl:if test="count(./preceding-sibling::Content[@position=$contentPosition])=0">
 						<xsl:attribute name="class">
 							<xsl:value-of select="@position"/>
-							<xsl:text> tab-pane active</xsl:text>
+							<xsl:text> clearfix tab-pane active</xsl:text>
 						</xsl:attribute>
 					</xsl:if>
 					<div id="mod_{@id}" class="module nobox pos-{@position}">
@@ -927,7 +927,6 @@
 						<xsl:if test="@rss and @rss!='false'">
 							<xsl:apply-templates select="." mode="rssLink" />
 						</xsl:if>
-						<div class="terminus">&#160;</div>
 						<xsl:apply-templates select="." mode="displayBrief"/>
 						<xsl:if test="@linkText!='' and @link!=''">
 							<div class="entryFooter">
@@ -949,7 +948,6 @@
 								<xsl:text> </xsl:text>
 							</div>
 						</xsl:if>
-						<div class="terminus">&#160;</div>
 					</div>
 				</div>
 			</xsl:otherwise>

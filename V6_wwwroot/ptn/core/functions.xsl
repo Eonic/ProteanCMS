@@ -6159,7 +6159,7 @@
 				</div>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:if test="@icon!=''">
+				<xsl:if test="@icon!='' or @icon-class!=''">
 					<i>
 						<xsl:attribute name="class">
 							<xsl:text>fa </xsl:text>

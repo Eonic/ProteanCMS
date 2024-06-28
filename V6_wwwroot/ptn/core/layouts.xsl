@@ -306,6 +306,12 @@
 									<xsl:text> </xsl:text>
 								</div>
 							</xsl:when>
+							<xsl:when test="@fullWidth='true-w-padding'">
+								<div class="fullwidthContainer fullwidth-w-padding">
+									<xsl:apply-templates select="." mode="displayModule"/>
+									<xsl:text> </xsl:text>
+								</div>
+							</xsl:when>
 							<xsl:otherwise>
 								<div class="{$class} content">
 									<xsl:apply-templates select="." mode="displayModule"/>
@@ -902,6 +908,7 @@
 					<xsl:text> char80-</xsl:text>
 					<xsl:value-of select="@char80Layout"/>
 				</xsl:if>
+
 				<xsl:if test="@panelImage!=''">
 					<xsl:text> panelImage </xsl:text>
 				</xsl:if>
@@ -919,6 +926,12 @@
 					<xsl:value-of select="@position-horizontal"/>
 				</xsl:if>
 			</xsl:attribute>
+			<xsl:if test="@maxWidth!=''">
+				<xsl:attribute name='style'>
+					<xsl:text>max-width:</xsl:text>
+					<xsl:value-of select="@maxWidth"/>
+				</xsl:attribute>
+			</xsl:if>
 			<xsl:if test="@contentType='Module'">
 				<xsl:attribute name="class">
 					<xsl:text>module noboxlayout layoutModule pos-</xsl:text>
@@ -1319,6 +1332,12 @@
 						<xsl:apply-templates select="." mode="marginBelow" />
 						<!--<xsl:apply-templates select="." mode="themeModuleExtras"/>-->
 					</xsl:attribute>
+					<xsl:if test="@maxWidth!=''">
+						<xsl:attribute name='style'>
+							<xsl:text>max-width:</xsl:text>
+							<xsl:value-of select="@maxWidth"/>
+						</xsl:attribute>
+					</xsl:if>
 					<xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and @imagePosition='above'">
 						<div class="panel-image">
 							<img src="{@panelImage}" alt="{@title}" class="img-responsive" />
