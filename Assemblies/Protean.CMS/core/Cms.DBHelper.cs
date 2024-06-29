@@ -10038,13 +10038,14 @@ namespace Protean
                     using (var oDr = getDataReaderDisposable("select nStructKey from tblContentStructure where cStructForiegnRef like '" + SqlFmt(cStructFRef) + "'"))  // Done by nita on 6/7/22
                     {
                         int lastloc = 0;
-
-                        while (oDr.Read())
-                        {
-                            nID = Conversions.ToString(oDr["nStructKey"]);
-                            if (string.IsNullOrEmpty(nID))
-                                nID = 0.ToString();
-                            lastloc = setContentLocation(Conversions.ToLong(nID), nContentId, Conversions.ToBoolean(Interaction.IIf(bPrimary == 1, true, false)), Conversions.ToBoolean(bCascade), false, cPosition, false, nDisplayOrder);
+                        if (oDr != null) { 
+                            while (oDr.Read())
+                            {
+                                nID = Conversions.ToString(oDr["nStructKey"]);
+                                if (string.IsNullOrEmpty(nID))
+                                    nID = 0.ToString();
+                                lastloc = setContentLocation(Conversions.ToLong(nID), nContentId, Conversions.ToBoolean(Interaction.IIf(bPrimary == 1, true, false)), Conversions.ToBoolean(bCascade), false, cPosition, false, nDisplayOrder);
+                            }
                         }
                         return lastloc;
                     }

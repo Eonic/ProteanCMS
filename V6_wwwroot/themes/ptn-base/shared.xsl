@@ -44,6 +44,7 @@
 				<xsl:with-param name="valueName" select="'Search'"/>
 			</xsl:call-template>
 	</xsl:variable>
+	<xsl:variable name="show-layout-footer">false</xsl:variable>
 	
 	<!-- forced on, needs fixing-->
 	<xsl:variable name="membership">
@@ -133,7 +134,7 @@
 	</xsl:template>
 
 	<!-- ############################################ BOX STYLES ############################################### -->
-
+	<!-- NOW IN FUNCTIONS.XSL
 	<xsl:template match="Content[@type='Module']" mode="themeModuleExtras">
 		<xsl:if test="@modAnim!=''">
 			<xsl:attribute name="data-modAnim">
@@ -144,7 +145,7 @@
 			</xsl:attribute>
 		</xsl:if>
 	</xsl:template>
-
+-->
 
 	<!-- ############################################ IMAGE SIZES ############################################### -->
 
@@ -491,7 +492,7 @@
 						</div>-->
 					</div>
 				</div>
-				<div class="clearfix footer-utility">
+				<!--<div class="clearfix footer-utility">
 					<div class="{$containerClass}">
 						<div class="clearfix footer-utility-inner">
 							<div id="footer-utility">
@@ -499,17 +500,17 @@
 									<xsl:with-param name="position">footer-utility</xsl:with-param>
 								</xsl:apply-templates>
 							</div>
-							<!--<div id="copyright">
+							--><!--<div id="copyright">
 								<xsl:apply-templates select="/Page" mode="addModule">
 									<xsl:with-param name="position">copyright</xsl:with-param>
 								</xsl:apply-templates>
-							</div>-->
-							<!--<div class="credit">
+							</div>--><!--
+							--><!--<div class="credit">
 								<xsl:apply-templates select="/" mode="developerLink"/>
-							</div>-->
+							</div>--><!--
 						</div>
 					</div>
-				</div>
+				</div>-->
 			</div>
 			<xsl:if test="$currentPage/@id='1'">
 				<div class="dev-credit">

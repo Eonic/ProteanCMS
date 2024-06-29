@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml" xmlns:ew="urn:ew">
+	<xsl:variable name="show-layout-footer">false</xsl:variable>
 	<xsl:template match="Page" mode="addModuleControls"></xsl:template>
 	<xsl:template match="Page" mode="addModuleControlsSection"></xsl:template>
 
@@ -406,7 +407,7 @@
 
 	<xsl:template match="Page" mode="layoutFooter">
 		<xsl:param name="containerClass"/>
-		<xsl:if test="/Page/Contents/Content[@name='footer' or @position='footer']">
+		<xsl:if test="/Page/Contents/Content[@name='footer' or @position='footer'] or $show-layout-footer='true'">
 			<xsl:apply-templates select="/Page" mode="addModule">
 				<xsl:with-param name="text">Add Module</xsl:with-param>
 				<xsl:with-param name="position">footer</xsl:with-param>
