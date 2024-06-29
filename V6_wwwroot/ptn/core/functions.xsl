@@ -3838,13 +3838,26 @@
 
 			<!-- get the href -->
 			<xsl:attribute name="href">
-				<xsl:apply-templates select="self::MenuItem" mode="getHref"/>
+				<xsl:choose>
+					<xsl:when test="DisplayName/@linkType='popUp'">
+						<xsl:text>#</xsl:text>
+						<xsl:value-of select="DisplayName/@ModalID"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:apply-templates select="self::MenuItem" mode="getHref"/>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:attribute>
 
 			<!-- title attribute -->
 			<xsl:attribute name="title">
 				<xsl:apply-templates select="." mode="getTitleAttr"/>
 			</xsl:attribute>
+
+			<xsl:if test="DisplayName/@linkType='popUp'">
+				<xsl:attribute name="data-bs-toggle">modal</xsl:attribute>
+				<xsl:attribute name="role">button</xsl:attribute>
+			</xsl:if>
 
 
 			<!-- check for different states to be applied -->
@@ -5996,8 +6009,7 @@
 			<xsl:when test="@iconStyle='Centre'">
 
 				<div class="center-block center-large">
-
-					<xsl:if test="@icon!=''">
+					<xsl:if test="@icon!='' or @icon-class!=''">
 						<i role="img" aria-hidden="true">
 							<xsl:attribute name="class">
 								<xsl:text>fa center-block </xsl:text>
@@ -6010,7 +6022,15 @@
 										<xsl:text> fa-3x </xsl:text>
 									</xsl:otherwise>
 								</xsl:choose>
-								<xsl:value-of select="@icon"/>
+								<xsl:choose>
+									<xsl:when test="@icon-class and @icon-class!=''">
+										<xsl:text>fa-</xsl:text>
+										<xsl:value-of select="@icon-class"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="@icon"/>
+									</xsl:otherwise>
+								</xsl:choose>
 							</xsl:attribute>
 							<!--<xsl:if test="@uploadIcon-w and @uploadIcon-w!='' or @uploadIcon-h and @uploadIcon-h!=''">
 								<xsl:attribute name="style">
@@ -6054,7 +6074,15 @@
 						<i>
 							<xsl:attribute name="class">
 								<xsl:text>fa center-block </xsl:text>
-								<xsl:value-of select="@icon"/>
+								<xsl:choose>
+									<xsl:when test="@icon-class and @icon-class!=''">
+										<xsl:text>fa-</xsl:text>
+										<xsl:value-of select="@icon-class"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="@icon"/>
+									</xsl:otherwise>
+								</xsl:choose>
 
 								<xsl:choose>
 									<xsl:when test="@icon-size and @icon-size!=''">
@@ -6092,7 +6120,15 @@
 						<i>
 							<xsl:attribute name="class">
 								<xsl:text>fa </xsl:text>
-								<xsl:value-of select="@icon"/>
+								<xsl:choose>
+									<xsl:when test="@icon-class and @icon-class!=''">
+										<xsl:text>fa-</xsl:text>
+										<xsl:value-of select="@icon-class"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="@icon"/>
+									</xsl:otherwise>
+								</xsl:choose>
 
 								<xsl:choose>
 									<xsl:when test="@icon-size and @icon-size!=''">
@@ -6123,11 +6159,19 @@
 				</div>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:if test="@icon!=''">
+				<xsl:if test="@icon!='' or @icon-class!=''">
 					<i>
 						<xsl:attribute name="class">
 							<xsl:text>fa </xsl:text>
-							<xsl:value-of select="@icon"/>
+							<xsl:choose>
+								<xsl:when test="@icon-class and @icon-class!=''">
+									<xsl:text>fa-</xsl:text>
+									<xsl:value-of select="@icon-class"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="@icon"/>
+								</xsl:otherwise>
+							</xsl:choose>
 
 							<xsl:choose>
 								<xsl:when test="@icon-size and @icon-size!=''">

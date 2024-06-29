@@ -46,7 +46,7 @@ Public Class CustomActions
     Public Shared MicrosoftWebInfrastructureVersion As String = "2.0.0.0"
     Public Shared SystemThreadingTasksExtensionsVersion As String = "4.2.0.1"
     Public Shared SystemTextJsonVersion As String = "4.0.1.2"
-    Public Shared MicrosoftBclAsyncInterfacesVersion As String = "1.0.0.0"
+    Public Shared MicrosoftBclAsyncInterfacesVersion As String = "8.0.0.0"
     Public Shared SystemTextEncodingsWebVersion As String = "8.0.0.0"
 
     Public Shared SystemNumericsVectorsVersion As String = "4.1.4.0"

@@ -3,6 +3,14 @@
         fakewaffle.responsiveTabs(['xs', 'sm']);
     })(jQuery);
 
+    $('.navbar-nav > .dropdown-hover-menu').hover(function () {
+        $(this).find('.dropdown-menu').show();
+        $(this).addClass('show dropdown-active');
+    }, function () {
+        $(this).find('.dropdown-menu').hide();
+        $(this).removeClass('show dropdown-active');
+        $(this).find('.dropdown-mobile-next > ul').hide();
+    });
     
     $('.mobile-dd-control').click(function () {
         $(this).parent().find(".dropdown-menu").toggle();

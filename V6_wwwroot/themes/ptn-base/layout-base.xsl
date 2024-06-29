@@ -124,11 +124,13 @@
 											</xsl:apply-templates>
 											<div class="banner-caption">
 												<div class="banner-caption-inner">
-													<nav aria-label="breadcrumb">
-														<ol class="breadcrumb">
-															<xsl:apply-templates select="Menu/MenuItem" mode="breadcrumb"/>
-														</ol>
-													</nav>
+													<xsl:if test="$themeBreadcrumb='true'">
+														<nav aria-label="breadcrumb">
+															<ol class="breadcrumb">
+																<xsl:apply-templates select="Menu/MenuItem" mode="breadcrumb"/>
+															</ol>
+														</nav>
+													</xsl:if>
 													<div id="content" class="visually-hidden">&#160;</div>
 													<div id="mainTitle">
 														<xsl:apply-templates select="/" mode="getMainTitle" />
@@ -147,12 +149,14 @@
 									<div class="container-fluid">
 										<div class="intro-banner-inner">
 											<div id="mainTitle">
-												<nav aria-label="breadcrumb">
-													<ol class="breadcrumb">
-														<xsl:apply-templates select="Menu/MenuItem" mode="breadcrumb"/>
-													</ol>
-													<div id="content" class="visually-hidden">&#160;</div>
-												</nav>
+												<xsl:if test="$themeBreadcrumb='true'">
+													<nav aria-label="breadcrumb">
+														<ol class="breadcrumb">
+															<xsl:apply-templates select="Menu/MenuItem" mode="breadcrumb"/>
+														</ol>
+														<div id="content" class="visually-hidden">&#160;</div>
+													</nav>
+												</xsl:if>
 												<xsl:apply-templates select="/" mode="getMainTitle" />
 												<xsl:if test="$currentPage/Description/node()">
 													<xsl:apply-templates select="$currentPage/Description/node()" mode="cleanXhtml"/>
