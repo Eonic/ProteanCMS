@@ -442,7 +442,7 @@ namespace Protean
                 public void ContentFilter(ref Cms myWeb, ref XmlElement oContentNode)
                 {
                     string cProcessInfo = "ContentFilter";
-                    
+
                     try
                     {
                         // current contentfilter id
@@ -475,11 +475,11 @@ namespace Protean
                         {
                             cShowMore = Convert.ToString(myWeb.moRequest.Form["cShowMore"]);
                         }
-                        bool bShowMoreFilterButton=false;
+                        bool bShowMoreFilterButton = false;
 
                         oFrmGroup = filterForm.addGroup(ref filterForm.moXformElmt, "main-group");
                         XmlElement oXml = filterForm.moPageXML.CreateElement("ShowMore");
-                        oXml.InnerText= cShowMore;
+                        oXml.InnerText = cShowMore;
                         filterForm.Instance.AppendChild(oXml);
                         foreach (XmlElement currentOFilterElmt in oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']"))
                         {
@@ -524,11 +524,11 @@ namespace Protean
                                     }
                                 }
 
-                                if(oFilterElmt.Attributes["hideByDefault"]!=null)
+                                if (oFilterElmt.Attributes["hideByDefault"] != null)
                                 {
-                                    if(Convert.ToString(oFilterElmt.Attributes["hideByDefault"].Value).ToLower()=="true")
+                                    if (Convert.ToString(oFilterElmt.Attributes["hideByDefault"].Value).ToLower() == "true")
                                     {
-                                        if(bShowMoreFilterButton==false)
+                                        if (bShowMoreFilterButton == false)
                                         {
                                             bShowMoreFilterButton = true;
                                         }
@@ -559,19 +559,20 @@ namespace Protean
                         string cCssClassName = "hidden";
                         filterForm.addBind("cShowMore", "ShowMore", ref filterForm.model, "false()", "string");
 
-                        filterForm.addInput(ref oFrmGroup, "cShowMore",true,"ShowMore","hidden");
+                        filterForm.addInput(ref oFrmGroup, "cShowMore", true, "ShowMore", "hidden");
                         if (cShowMore == string.Empty)
                         {
-                            if(bShowMoreFilterButton==true) {
+                            if (bShowMoreFilterButton == true)
+                            {
                                 cCssClassName = string.Empty;
                             }
                         }
-                        filterForm.addInput(ref oFrmGroup,"",false, "More +", cCssClassName +" btnShowMoreFilter");
+                        filterForm.addInput(ref oFrmGroup, "", false, "More +", cCssClassName + " btnShowMoreFilter");
                         filterForm.addSubmit(ref oFrmGroup, "< Less", "< Less ", "Submit", "hidden filter-xs-btn btnHideFilter");
                         filterForm.addSubmit(ref oFrmGroup, "Show " + cFilterTarget, "Show " + cFilterTarget, "Show " + cFilterTarget, "hidden-sm hidden-md hidden-lg filter-xs-btn showfiltertarget");
-                       
-                        
-                      
+
+
+
                         filterForm.addValues();
 
                         if (filterForm.isSubmitted())
@@ -673,7 +674,7 @@ namespace Protean
                                 }
                             }
                         }
-                       
+
                         // now we go and get the results from the filter.
                         if (!string.IsNullOrEmpty(whereSQL))
                         {
@@ -682,20 +683,20 @@ namespace Protean
                                 myWeb.moSession["FilterWhereCondition"] = whereSQL;
                                 XmlElement argoPageDetail = null; int nCount = 0;
 
-                                
+
                                 if (myWeb.mbAdminMode)
                                 {
                                     bDistinct = false;
-                                    if(orderBySql!=string.Empty)
+                                    if (orderBySql != string.Empty)
                                     {
                                         orderBySql = orderBySql + ",";
                                     }
-                                    orderBySql =   " a.nStatus desc";
+                                    orderBySql = " a.nStatus desc";
                                 }
-                               
-                                myWeb.GetPageContentFromSelect(whereSQL, ref nCount, oContentsNode: ref oContentNode, oPageDetail: ref argoPageDetail, 
-                                cShowSpecificContentTypes: cFilterTarget, bIgnorePermissionsCheck: true,distinct: bDistinct, cOrderBy: orderBySql);
-                                
+
+                                myWeb.GetPageContentFromSelect(whereSQL, ref nCount, oContentsNode: ref oContentNode, oPageDetail: ref argoPageDetail,
+                                cShowSpecificContentTypes: cFilterTarget, bIgnorePermissionsCheck: true, distinct: bDistinct, cOrderBy: orderBySql);
+
                                 if (oContentNode.SelectNodes("Content[@type='Product']").Count == 0)
                                 {
                                     filterForm.addSubmit(ref oFrmGroup, "Clear Filters", "No results found", "clearfilters", "clear-filters", sValue: "clearfilters");
@@ -707,65 +708,12 @@ namespace Protean
                             }
                         }
                         // Modify results after they are loaded onto the page.
-                        CallPostFilterContentUpdates(ref myWeb);
+                        myWeb.CallPostFilterContentUpdates();
                     }
 
                     catch (Exception ex)
                     {
                         stdTools.returnException(ref myWeb.msException, mcModuleName, "ContentFilter", ex, "", cProcessInfo, gbDebug);
-                    }
-                }
-
-                private void CallPostFilterContentUpdates(ref Cms myWeb)
-                {
-                    if (myWeb.moSession["FilterList"] != null)
-                    {
-                        List<string> filters = (List<string>)myWeb.moSession["FilterList"];
-                        foreach (string currentOFilterElmt1 in filters)
-                        {
-                            string[] filterDetails = currentOFilterElmt1.Split(',');
-                            //oFilterElmt = currentOFilterElmt1;
-                            Type calledType;
-                            string className = filterDetails[0];
-                            string providerName = filterDetails[1];
-                            if (!string.IsNullOrEmpty(className))
-                            {
-                                if (string.IsNullOrEmpty(providerName) | Strings.LCase(providerName) == "default")
-                                {
-                                    providerName = "Protean.Providers.Filters." + className;
-                                    calledType = Type.GetType(providerName, true);
-                                }
-                                else
-                                {
-                                    var castObject = WebConfigurationManager.GetWebApplicationSection("protean/filterProviders");
-                                    Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)castObject;
-                                    System.Configuration.ProviderSettings ourProvider = moPrvConfig.Providers[providerName];
-                                    Assembly assemblyInstance;
-
-                                    if (ourProvider.Parameters["path"] != "" && ourProvider.Parameters["path"] != null)
-                                    {
-                                        assemblyInstance = Assembly.LoadFrom(myWeb.goServer.MapPath(Conversions.ToString(ourProvider.Parameters["path"])));
-                                    }
-                                    else
-                                    {
-                                        assemblyInstance = Assembly.Load(ourProvider.Type);
-                                    }
-                                    if (ourProvider.Parameters["rootClass"] == "")
-                                    {
-                                        calledType = assemblyInstance.GetType("Protean.Providers.Filters." + providerName, true);
-                                    }
-                                    else
-                                    {
-                                        calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], "."), className)), true);
-                                    }
-                                }
-                                string methodname = "PostFilterContentUpdates";
-                                var o = Activator.CreateInstance(calledType);
-                                var args = new object[1];
-                                args[0] = myWeb;
-                                calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, null, o, args);
-                            }
-                        }
                     }
                 }
 
@@ -904,7 +852,7 @@ namespace Protean
                     }
                 }
 
-              
+
             }
 
 

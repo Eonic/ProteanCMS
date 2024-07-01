@@ -18,6 +18,7 @@ using static Protean.stdTools;
 using static Protean.Tools.Xml;
 using Protean.Providers.Membership;
 using Lucene.Net.Support;
+using Protean.tools;
 
 namespace Protean
 {
@@ -238,7 +239,7 @@ namespace Protean
         private string mcSessionReferrer = null;
 
 
-       // private PerformanceCounter _workingSetPrivateMemoryCounter;
+        // private PerformanceCounter _workingSetPrivateMemoryCounter;
         public string mcOutputFileName = "FileName.pdf";
 
         private const string NotFoundPagePath = "/System-Pages/Page-Not-Found";
@@ -723,7 +724,7 @@ namespace Protean
                             moMemProv = RetProv.Get(ref argmyWeb, this.moConfig["MembershipProvider"]);
                             RetProv = null;
                         }
-                        this.mnUserId = Conversions.ToInteger(moMemProv.Activities.GetUserId(ref argmyWeb));       
+                        this.mnUserId = Conversions.ToInteger(moMemProv.Activities.GetUserId(ref argmyWeb));
                     }
                     // We need the userId placed into dbhelper.
                     this.moDbHelper.mnUserId = (long)this.mnUserId;
@@ -1024,11 +1025,11 @@ namespace Protean
 
                 // Set the debug mode
                 //this.moConfig = this.moConfig;
-                switch (Strings.LCase(this.moConfig["CssFramework"]) ?? "") 
+                switch (Strings.LCase(this.moConfig["CssFramework"]) ?? "")
                 {
                     case "bs5":
                         { bs5 = true; break; }
-                    case "bs3": 
+                    case "bs3":
                         { bs3 = true; break; }
                     default:
                         { break; }
@@ -1361,7 +1362,7 @@ namespace Protean
                     // behaviour to check single session or transfer from the cart is still called from Open()
                     Cms argmyWeb = this;
                     if (moMemProv == null)
-                    { 
+                    {
                         ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
                         moMemProv = RetProv.Get(ref argmyWeb, this.moConfig["MembershipProvider"]);
                         RetProv = null;
@@ -1692,8 +1693,6 @@ namespace Protean
                                 {
                                     sProcessInfo = "Getting Page XML";
                                     GetPageXML();
-
-
                                 }
 
                                 if (moResponseType == pageResponseType.flush)
@@ -2002,9 +2001,10 @@ namespace Protean
                                                     }
 
                                                     fontPath = this.goServer.MapPath("/ewcommon") + "/fonts";
-                                                    if (bs5) {
+                                                    if (bs5)
+                                                    {
                                                         fontPath = this.goServer.MapPath("/ptn") + "/fonts";
-                                                    } 
+                                                    }
 
                                                     dir = new DirectoryInfo(fontPath);
 
@@ -3775,7 +3775,8 @@ namespace Protean
                     moCart.apply();
                     // get any discount information for this page
                     XmlElement RootElmt = moPageXml.DocumentElement;
-                    if (moDiscount != null){
+                    if (moDiscount != null)
+                    {
                         moDiscount.getAvailableDiscounts(ref RootElmt);
                     }
                     sProcessInfo = "End Cart";
@@ -4261,10 +4262,10 @@ namespace Protean
                     string assemblyType = ocNode.GetAttribute("assemblyType");
                     string providerName = ocNode.GetAttribute("providerName");
                     string providerType = ocNode.GetAttribute("providerType");
-                
+
                     if (providerType == "")
-                    { 
-                        providerType = "messaging"; 
+                    {
+                        providerType = "messaging";
                     }
                     string methodName = Strings.Right(classPath, Strings.Len(classPath) - classPath.LastIndexOf(".") - 1);
 
@@ -4304,34 +4305,34 @@ namespace Protean
                                 {
                                     if (moPrvConfig.Providers[providerName] != null)
                                     {
-      switch (moPrvConfig.Providers[providerName].Parameters["path"])
-                                    {
-                                        case var @case when @case == "":
-                                            {
-                                                assemblyInstance = Assembly.Load(moPrvConfig.Providers[providerName].Type);
-                                                calledType = assemblyInstance.GetType(classPath, true);
-                                                break;
-                                            }
-                                        case "builtin":
-                                            {
-                                                string prepProviderName; // = Replace(moPrvConfig.Providers(providerName).Type, ".", "+")
-                                                                         // prepProviderName = (New Regex("\+")).Replace(prepProviderName, ".", 1)
-                                                prepProviderName = moPrvConfig.Providers[providerName].Type;
-                                                calledType = Type.GetType(prepProviderName + "+" + classPath, true);
-                                                break;
-                                            }
+                                        switch (moPrvConfig.Providers[providerName].Parameters["path"])
+                                        {
+                                            case var @case when @case == "":
+                                                {
+                                                    assemblyInstance = Assembly.Load(moPrvConfig.Providers[providerName].Type);
+                                                    calledType = assemblyInstance.GetType(classPath, true);
+                                                    break;
+                                                }
+                                            case "builtin":
+                                                {
+                                                    string prepProviderName; // = Replace(moPrvConfig.Providers(providerName).Type, ".", "+")
+                                                                             // prepProviderName = (New Regex("\+")).Replace(prepProviderName, ".", 1)
+                                                    prepProviderName = moPrvConfig.Providers[providerName].Type;
+                                                    calledType = Type.GetType(prepProviderName + "+" + classPath, true);
+                                                    break;
+                                                }
 
-                                        default:
-                                            {
-                                                assemblyInstance = Assembly.LoadFrom(this.goServer.MapPath(moPrvConfig.Providers[providerName].Parameters["path"]));
-                                                classPath = moPrvConfig.Providers[providerName].Parameters["classPrefix"] + classPath;
-                                                calledType = assemblyInstance.GetType(classPath, true);
-                                                break;
-                                            }
-                                    }
+                                            default:
+                                                {
+                                                    assemblyInstance = Assembly.LoadFrom(this.goServer.MapPath(moPrvConfig.Providers[providerName].Parameters["path"]));
+                                                    classPath = moPrvConfig.Providers[providerName].Parameters["classPrefix"] + classPath;
+                                                    calledType = assemblyInstance.GetType(classPath, true);
+                                                    break;
+                                                }
+                                        }
                                     }
 
-                              
+
                                 }
                             }
                             else if (!string.IsNullOrEmpty(assemblyType))
@@ -4345,15 +4346,16 @@ namespace Protean
                                 // case for methods within EonicWeb Core DLL
                                 calledType = Type.GetType(classPath, true);
                             }
-                            if (calledType != null) { 
+                            if (calledType != null)
+                            {
 
-                            var o = Activator.CreateInstance(calledType);
+                                var o = Activator.CreateInstance(calledType);
 
-                            var args = new object[2];
-                            args[0] = this;
-                            args[1] = ocNode;
+                                var args = new object[2];
+                                args[0] = this;
+                                args[1] = ocNode;
 
-                            calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, null, o, args);
+                                calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, null, o, args);
 
                                 // Error Handling ?
                                 // Object Clearup ?
@@ -4378,7 +4380,8 @@ namespace Protean
                     this.moDbHelper.getContentFromModuleGrabber(ref ocNode);
                 }
 
-                if (!gcBlockContentType.Contains("Product")) { 
+                if (!gcBlockContentType.Contains("Product"))
+                {
                     foreach (XmlElement currentOcNode4 in moPageXml.SelectNodes("/Page/Contents/Content[@display='group']"))
                     {
                         ocNode = currentOcNode4;
@@ -4835,7 +4838,7 @@ namespace Protean
                 sSql += "FROM tblContent AS c INNER JOIN ";
                 sSql += "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN ";
                 sSql += "tblContentLocation AS CL ON c.nContentKey = CL.nContentId ";
-                
+
                 // sSql &= "INNER Join tblCartCatProductRelations On c.nContentKey = tblCartCatProductRelations.nContentId "   'uncomment by nita because resolving table not found error
 
 
@@ -4867,7 +4870,7 @@ namespace Protean
                     sPrimarySql = " CL.bPrimary = 1 ";
                 }
 
-               
+
                 object sFilterTargetSql = "";
                 if (!string.IsNullOrEmpty(cFilterTarget))
                 {
@@ -4907,7 +4910,7 @@ namespace Protean
                         nAuthGroup = gnAuthUsers;
                     }
 
-                   
+
 
                     // Check the page is not denied
                     sMembershipSql = "NOT(dbo.fxn_checkPermission(CL.nStructId," + nAuthUserId + "," + nAuthGroup + ") LIKE '%DENIED%')";
@@ -4969,30 +4972,30 @@ namespace Protean
                     oContentsNode.SetAttribute("resultCount", nTotal.ToString());
                 }
 
-               
-                    if (!string.IsNullOrEmpty(cOrderBy))
-                    {
-                        sSql = sSql + " ORDER BY ";
-                        if(distinct)
-                        {
-                            sSql  = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
-                        }
-                        sSql += cOrderBy;
 
+                if (!string.IsNullOrEmpty(cOrderBy))
+                {
+                    sSql = sSql + " ORDER BY ";
+                    if (distinct)
+                    {
+                        sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
+                    }
+                    sSql += cOrderBy;
+
+                }
+                else
+                {
+                    sSql = sSql + " ORDER BY";
+                    if (distinct)
+                    {
+                        sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
                     }
                     else
                     {
-                        sSql = sSql + " ORDER BY";
-                        if (distinct)
-                        {
-                            sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
-                        }
-                        else
-                        {
-                            sSql += "(SELECT NULL)";
-                        }
+                        sSql += "(SELECT NULL)";
                     }
-                
+                }
+
                 if (nItemCount > 0L)
                 {
 
@@ -5161,7 +5164,7 @@ namespace Protean
                 sSql = sSql + " where (" + combinedWhereSQL + ")";
                 if (!string.IsNullOrEmpty(cOrderBy))
                 {
-                    sSql = sSql + " ORDER BY "; 
+                    sSql = sSql + " ORDER BY ";
                     if (mbAdminMode)
                     {
                         sSql = sSql + "a.nStatus desc,";
@@ -5224,7 +5227,7 @@ namespace Protean
                     }
 
                 }
-
+                CallPostFilterContentUpdates();
             }
 
             // If gbCart Or gbQuote Then
@@ -5236,6 +5239,59 @@ namespace Protean
 
                 // returnException(msException, mcModuleName, "GetPageContentFromSelect", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
                 OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetPageContentFromSelect", ex, sProcessInfo));
+            }
+        }
+
+        private void CallPostFilterContentUpdates()
+        {
+            if (moSession["FilterList"] != null)
+            {
+                List<string> filters = (List<string>)moSession["FilterList"];
+                foreach (string currentOFilterElmt1 in filters)
+                {
+                    string[] filterDetails = currentOFilterElmt1.Split(',');
+                    //oFilterElmt = currentOFilterElmt1;
+                    Type calledType;
+                    string className = filterDetails[0];
+                    string providerName = filterDetails[1];
+                    if (!string.IsNullOrEmpty(className))
+                    {
+                        if (string.IsNullOrEmpty(providerName) | Strings.LCase(providerName) == "default")
+                        {
+                            providerName = "Protean.Providers.Filters." + className;
+                            calledType = Type.GetType(providerName, true);
+                        }
+                        else
+                        {
+                            var castObject = WebConfigurationManager.GetWebApplicationSection("protean/filterProviders");
+                            Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)castObject;
+                            System.Configuration.ProviderSettings ourProvider = moPrvConfig.Providers[providerName];
+                            Assembly assemblyInstance;
+
+                            if (ourProvider.Parameters["path"] != "" && ourProvider.Parameters["path"] != null)
+                            {
+                                assemblyInstance = Assembly.LoadFrom(goServer.MapPath(Conversions.ToString(ourProvider.Parameters["path"])));
+                            }
+                            else
+                            {
+                                assemblyInstance = Assembly.Load(ourProvider.Type);
+                            }
+                            if (ourProvider.Parameters["rootClass"] == "")
+                            {
+                                calledType = assemblyInstance.GetType("Protean.Providers.Filters." + providerName, true);
+                            }
+                            else
+                            {
+                                calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], "."), className)), true);
+                            }
+                        }
+                        string methodname = "PostFilterContentUpdates";
+                        var o = Activator.CreateInstance(calledType);
+                        var args = new object[1];
+                        args[0] = this;
+                        calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, null, o, args);
+                    }
+                }
             }
         }
 
@@ -7910,7 +7966,7 @@ namespace Protean
                             string whereSQL = Conversions.ToString(this.moSession["FilterWhereCondition"]);
                             XmlElement argoPageDetail = null;
                             int nCount = 0;
-                            this.GetPageContentFromSelectFilterPagination(ref nCount, oContentsNode: ref oPageElmt, oPageDetail: ref argoPageDetail, whereSQL,bIgnorePermissionsCheck:true, cShowSpecificContentTypes: this.moRequest["singleContentType"], ignoreActiveAndDate: false, nStartPos: (long)nStart, nItemCount: (long)nRows);
+                            this.GetPageContentFromSelectFilterPagination(ref nCount, oContentsNode: ref oPageElmt, oPageDetail: ref argoPageDetail, whereSQL, bIgnorePermissionsCheck: true, cShowSpecificContentTypes: this.moRequest["singleContentType"], ignoreActiveAndDate: false, nStartPos: (long)nStart, nItemCount: (long)nRows);
                         }
                         else
                         {
@@ -7998,10 +8054,12 @@ namespace Protean
                                     int nStart = 0;
                                     int nRows = 500;
                                     nRows = Conversions.ToInteger("0" + ContentModule.GetAttribute("stepCount"));
-                                    if (Conversions.ToInteger("0" + ContentModule.GetAttribute("firstPageCount")) > 0) {
+                                    if (Conversions.ToInteger("0" + ContentModule.GetAttribute("firstPageCount")) > 0)
+                                    {
                                         nRows = 0;// Conversions.ToInteger("0" + ContentModule.GetAttribute("firstPageCount"));
                                     }
-                                    if (nRows > 0) { 
+                                    if (nRows > 0)
+                                    {
                                         string sFilterSql = GetStandardFilterSQLForContent();
                                         sFilterSql = sFilterSql + " and nstructid=" + this.mnPageId;
                                         if (ContentModule.HasAttribute("TotalCount") == false)
@@ -8038,9 +8096,6 @@ namespace Protean
                     moPageXml.DocumentElement.AppendChild(oRoot);
                 }
             }
-
-
-
             catch (Exception ex)
             {
                 // returnException(msException, mcModuleName, "getContentXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
@@ -8401,10 +8456,10 @@ namespace Protean
                             // convert to Xml Dom
                             //var oXml = new XmlDataDocument(oDs);
                             XmlDocument oXml = new XmlDocument();
-                            if (oDs.Tables[0].Rows.Count>0)
+                            if (oDs.Tables[0].Rows.Count > 0)
                             {
                                 oXml.LoadXml(oDs.GetXml());
-                            }                            
+                            }
                             oXml.PreserveWhitespace = false;
 
                             foreach (XmlElement oReplaceContent in oXml.SelectNodes("/Contents/Content"))
@@ -8542,10 +8597,10 @@ namespace Protean
                             // convert to Xml Dom
                             //var oXml = new XmlDataDocument(oDs);
                             XmlDocument oXml = new XmlDocument();
-                            if (oDs.Tables[0].Rows.Count>0)
+                            if (oDs.Tables[0].Rows.Count > 0)
                             {
                                 oXml.LoadXml(oDs.GetXml());
-                            }                           
+                            }
                             oXml.PreserveWhitespace = false;
 
 
@@ -10012,22 +10067,23 @@ namespace Protean
                     rendererOpts.FontType = Fonet.Render.Pdf.FontType.Embed;
 
                     var dir = new DirectoryInfo(this.goServer.MapPath("/") + "/fonts");
-                    if (dir.Exists) { 
-                    DirectoryInfo[] subDirs = dir.GetDirectories();
-                    FileInfo[] files = dir.GetFiles();
-
-                    foreach (var fi in files)
+                    if (dir.Exists)
                     {
-                        string cExt = Strings.LCase(fi.Extension);
-                        switch (cExt ?? "")
+                        DirectoryInfo[] subDirs = dir.GetDirectories();
+                        FileInfo[] files = dir.GetFiles();
+
+                        foreach (var fi in files)
                         {
-                            case ".otf":
-                                {
-                                    rendererOpts.AddPrivateFont(fi);
-                                    break;
-                                }
+                            string cExt = Strings.LCase(fi.Extension);
+                            switch (cExt ?? "")
+                            {
+                                case ".otf":
+                                    {
+                                        rendererOpts.AddPrivateFont(fi);
+                                        break;
+                                    }
+                            }
                         }
-                    }
                     }
                     oFoNet.Options = rendererOpts;
                     oFoNet.Render(oTxtReader, ofileStream);
