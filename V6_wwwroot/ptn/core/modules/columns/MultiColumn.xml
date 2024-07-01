@@ -881,14 +881,18 @@
 						</group>
 						<group class="inline-items">
 							<select1 bind="fullWidth"  appearance="full">
-								<label>Full Width Content</label>
+								<label>Content Width</label>
 								<item>
-									<label>No</label>
+									<label>Contained</label>
 									<value></value>
 								</item>
 								<item>
-									<label>Yes</label>
+									<label>Full width</label>
 									<value>true</value>
+								</item>
+								<item>
+									<label>Full width with padding</label>
+									<value>true-w-padding</value>
 								</item>
 							</select1>
 						</group>

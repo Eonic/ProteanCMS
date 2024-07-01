@@ -4,13 +4,13 @@
 
 .not-xs {
     @include media-breakpoint-down($nav-breakpoint) {
-        display: none;
+        display: none !important;
     }
 }
 
 .xs-only {
     @include media-breakpoint-up($nav-breakpoint) {
-        display: none;
+        display: none !important;
     }
 }
 
@@ -37,11 +37,11 @@
     filter: progid:DXImageTransform.Microsoft.gradient(enabled = false) !important;
 }
 
-@mixin circle-icon($color: $primary,$size: 6rem,$font: 3rem) {
+@mixin circle-icon($background: $primary,$color: #fff,$size: 6rem,$font: 3rem) {
     width: $size;
     height: $size;
-    background: $color;
-    color: #fff;
+    background: $background;
+    color: $color;
     display: flex;
     justify-content: center;
     align-items: center;

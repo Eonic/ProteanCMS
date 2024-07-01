@@ -98,6 +98,19 @@ header {
     z-index: 20;
 }
 
+.navbar-fixed-top {
+    position: fixed;
+    background: #fff;
+    width: 100%;
+}
+
+.fixed-nav-content {
+    padding-top: 100px !important;
+
+    &.mt-0 {
+        padding-top: 100px !important;
+    }
+}
 /*############### NAVIGATION #################*/
 .main-nav {
     padding: 0;

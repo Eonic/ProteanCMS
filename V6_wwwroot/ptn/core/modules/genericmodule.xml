@@ -10,7 +10,7 @@
 				<cContentName/>
 				<cContentSchemaName>Module</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content position="" moduleType="FormattedText" box="" title="" link="" screens="" linkType="internal" linkText="Read more" columns="4" />
+					<Content position="" moduleType="FormattedText" box="" title="" link="" screens="" linkType="internal" linkText="Read more" columns="4" icon-options="picker" />
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
 				<nAuditId/>
@@ -52,6 +52,8 @@
 			<bind id="linkObject" nodeset="@linkObject" required="false()" type="string"/>
 			<bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
 			<bind id="heading" nodeset="@heading" required="false()" type="string"/>
+			<bind id="icon-options" nodeset="@icon-options" required="false()" type="string"/>
+			<bind id="icon-class" nodeset="@icon-class" required="false()" type="string"/>
 		</bind>
 		<bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
 		<bind nodeset="tblContent">
@@ -197,13 +199,34 @@
 						</group>
 						<group class="col-lg-6">
 							<group class="form-section-wrapper ">
-								<select1 bind="cIcon" class="iconSelect ewQuery bs-only" query="availableIcons" appearance="minimal">
-									<label>Icon</label>
+								<select1 bind="icon-options" appearance="full"  class="form-group inline-items">
 									<item>
-										<label>None</label>
-										<value>false</value>
+										<label>Icon Picker</label>
+										<value>picker</value>
+										<toggle case="icon-picker" event="DOMActivate"/>
+									</item>
+									<item>
+										<label>Icon Class</label>
+										<value>class</value>
+										<toggle case="icon-class" event="DOMActivate"/>
 									</item>
 								</select1>
+								<switch class="disable">
+									<case id="icon-picker">
+										<select1 bind="cIcon" class="iconSelect ewQuery bs-only" query="availableIcons" appearance="minimal">
+											<label>Icon</label>
+											<item>
+												<label>None</label>
+												<value>false</value>
+											</item>
+										</select1>
+									</case>
+									<case id="icon-class">
+										<input bind="icon-class" class="">
+											<label>Add icon class name here</label>
+										</input>
+									</case>
+								</switch>
 								<select1 bind="cIcon-size" class="bs-only" appearance="minimal">
 									<label>Icon Size</label>
 									<item>

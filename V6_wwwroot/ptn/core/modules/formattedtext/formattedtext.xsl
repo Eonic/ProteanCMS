@@ -8,7 +8,7 @@
 		</xsl:variable>
 		<xsl:if test="node()">
 			<div class="{$div-class}">
-				<xsl:if test="@maxWidth!=''">
+				<!--<xsl:if test="@maxWidth!=''">
 					<xsl:choose>
 						<xsl:when test="@iconStyle='Centre' or @iconStyle='CentreSmall'">
 							<xsl:attribute name="class">
@@ -27,7 +27,7 @@
 							</xsl:attribute>
 						</xsl:otherwise>
 					</xsl:choose>
-				</xsl:if>
+				</xsl:if>-->
 				<xsl:apply-templates select="node()" mode="cleanXhtml"/>
 			</div>
 		</xsl:if>
