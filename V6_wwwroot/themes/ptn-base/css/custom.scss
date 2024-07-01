@@ -113,7 +113,8 @@ h1, h2, h3 {
     color: $headings-color;
 }
 
-.center-block {
+.center-block,
+.center-block-footer {
     text-align: center;
 }
 
@@ -276,15 +277,24 @@ section.bg-video-wrapper {
     text-shadow: 1px 1px #000;
 }
 
-.fullwidthContainer {
-    @extend .container-fluid;
-    padding: 0;
-
+.fullwidthContainer:not(.fullwidth-w-padding) {
     > .layoutModule > .row {
         margin: 0;
 
         > div {
-            //padding: 0
+            padding: 0
+        }
+    }
+}
+
+.fullwidthContainer.fullwidth-w-padding {
+    @extend .container-fluid;
+
+
+    > .layoutModule > .row {
+
+
+        > div {
         }
     }
 }
