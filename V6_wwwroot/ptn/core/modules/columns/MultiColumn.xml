@@ -880,18 +880,22 @@
 							</select1>
 						</group>
 						<group class="inline-items">
-							<select1 bind="fullWidth"  appearance="full">
+							<select1 bind="fullWidth"  appearance="minimal">
 								<label>Content Width</label>
-								<item>
-									<label>Contained</label>
+                <item>
+                  <label>Narrow</label>
+                  <value>narrow</value>
+                </item>
+                <item>
+									<label>Default</label>
 									<value></value>
 								</item>
 								<item>
-									<label>Full width</label>
+									<label>Full width (no padding)</label>
 									<value>true</value>
 								</item>
 								<item>
-									<label>Full width with padding</label>
+									<label>Full width (with padding)</label>
 									<value>true-w-padding</value>
 								</item>
 							</select1>
