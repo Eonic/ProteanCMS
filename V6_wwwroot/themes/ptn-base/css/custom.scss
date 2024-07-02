@@ -1055,7 +1055,7 @@ dd {
     margin-top: auto;
     background: $footer-bg;
     padding-top: $grid-gutter-height;
-    padding-bottom: $grid-gutter-height;
+    padding-bottom: 2rem;
     color: rgba(color-contrast($footer-bg),1);
 
     h1, h2, h3, h4, h5, h6 {
