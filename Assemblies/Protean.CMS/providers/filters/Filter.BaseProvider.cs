@@ -267,20 +267,26 @@ namespace Protean.Providers
 
             public void SaveFilterInSession(ref Cms aWeb, string filterDetails)
             {
+                SaveFilterInSession(ref aWeb, filterDetails, false);
+            }
+            public void SaveFilterInSession(ref Cms aWeb, string filterDetails, bool remove)
+            {
                 if (aWeb.moSession["FilterList"] == null)
                 {
                     aWeb.moSession["FilterList"] = new List<string>();
                 }
                 List<string> filters = ((List<string>)aWeb.moSession["FilterList"]);
-                if (!filters.Contains(filterDetails))
-                { 
-                    filters.Add(filterDetails);
-                    aWeb.moSession["FilterList"] = filters;
+                if (remove)
+                {
+                    filters.Remove(filterDetails);
                 }
+                else if(!filters.Contains(filterDetails))
+                {
+                    filters.Add(filterDetails);
+                }
+                aWeb.moSession["FilterList"] = filters;
             }
         }
-
-
     }
 
 }

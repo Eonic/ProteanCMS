@@ -18,7 +18,6 @@ using static Protean.stdTools;
 using static Protean.Tools.Xml;
 using Protean.Providers.Membership;
 using Lucene.Net.Support;
-using Protean.tools;
 
 namespace Protean
 {
