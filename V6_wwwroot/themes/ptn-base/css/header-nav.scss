@@ -329,6 +329,11 @@ header {
                 color: $mobile-dd-color;
                 width: 100%;
                 text-align: left;
+
+                &.active,
+                &.on {
+                    color: $mobile-dd-active;
+                }
             }
 
             .dropdown-toggle:after {

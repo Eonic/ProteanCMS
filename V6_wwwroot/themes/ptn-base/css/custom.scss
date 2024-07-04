@@ -41,7 +41,8 @@ body {
     .accordion-body .FormattedText,
     .module-FAQList,
     .char80-center,
-    .module-Video {
+    .module-Video,
+    .narrow-container {
         max-width: 55rem;
         margin-left: auto;
         margin-right: auto;
@@ -113,7 +114,8 @@ h1, h2, h3 {
     color: $headings-color;
 }
 
-.center-block {
+.center-block,
+.center-block-footer {
     text-align: center;
 }
 
@@ -276,15 +278,24 @@ section.bg-video-wrapper {
     text-shadow: 1px 1px #000;
 }
 
-.fullwidthContainer {
-    @extend .container-fluid;
-    padding: 0;
-
+.fullwidthContainer:not(.fullwidth-w-padding) {
     > .layoutModule > .row {
         margin: 0;
 
         > div {
-            //padding: 0
+            padding: 0
+        }
+    }
+}
+
+.fullwidthContainer.fullwidth-w-padding {
+    @extend .container-fluid;
+
+
+    > .layoutModule > .row {
+
+
+        > div {
         }
     }
 }
@@ -1045,7 +1056,7 @@ dd {
     margin-top: auto;
     background: $footer-bg;
     padding-top: $grid-gutter-height;
-    padding-bottom: $grid-gutter-height;
+    padding-bottom: 2rem;
     color: rgba(color-contrast($footer-bg),1);
 
     h1, h2, h3, h4, h5, h6 {

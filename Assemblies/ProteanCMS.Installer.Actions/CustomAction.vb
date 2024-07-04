@@ -28,7 +28,6 @@ Public Class CustomActions
     Public Shared ECMAAssemblyVersion As String = "1.0.1.0"
     Public Shared DynamicImagePDFAssemblyVersion As String = "1.0.0.4"
     Public Shared SystemNetFTPClientAssemblyVersion As String = "1.0.5824.34026"
-    Public Shared SystemTextEncodingCodePagesAssemblyVersion As String = "4.0.2.0"
     'We have real problems with this specific DLL' the one PreMailer.Net references is 4.6.0.0 but installs as 4.0.2.0 in GAC therefore old version encompasses 4.6.0.0 to scale back to 4.0.2.0
     Public Shared CreateSendAssemblyVersion As String = "4.2.2.0"
     Public Shared TidyHTML5ManagedAssemblyVersion As String = "1.1.5.0"
@@ -48,6 +47,7 @@ Public Class CustomActions
     Public Shared SystemTextJsonVersion As String = "4.0.1.2"
     Public Shared MicrosoftBclAsyncInterfacesVersion As String = "8.0.0.0"
     Public Shared SystemTextEncodingsWebVersion As String = "8.0.0.0"
+    Public Shared SystemTextEncodingCodePagesAssemblyVersion As String = "8.0.0.0"
 
     Public Shared SystemNumericsVectorsVersion As String = "4.1.4.0"
 

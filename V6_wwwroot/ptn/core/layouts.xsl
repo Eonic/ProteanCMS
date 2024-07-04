@@ -139,6 +139,9 @@
 								<xsl:text> bg-video-wrapper bg-video-wrapper-</xsl:text>
 								<xsl:value-of select="@id"/>
 							</xsl:if>
+              <xsl:if test="@fullWidth='narrow'">
+                <xsl:text> narrow-container </xsl:text>
+              </xsl:if>
 						</xsl:attribute>
 						<xsl:if test="@data-stellar-background-ratio!='10'">
 							<xsl:attribute name="data-parallax-speed">
@@ -940,6 +943,9 @@
 					<xsl:if test="not(@position='header') and not(@position='footer') and not(@position='column1')">
 						<xsl:value-of select="@background"/>
 					</xsl:if>
+          <xsl:if test="@fullWidth='narrow'">
+            <xsl:text> narrow-container </xsl:text>
+          </xsl:if>
 					<xsl:apply-templates select="." mode="hideScreens" />
 					<xsl:apply-templates select="." mode="marginBelow" />
 					<xsl:value-of select="$thisClass"/>

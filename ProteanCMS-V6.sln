@@ -6,7 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "V6_wwwroot", "V6_wwwroot\", "{F029CDA1-F973-463A-BA08-6FCBA7C77919}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.8"
-		ProjectReferences = "{12AF6171-9AAB-4C4D-A83B-85FE18A334C1}|Protean.Tools.dll;{b8c13866-2804-4975-83a4-4f76296248f5}|ProteanCMS.dll;"
+		ProjectReferences = "{12AF6171-9AAB-4C4D-A83B-85FE18A334C1}|Protean.Tools.dll;{b8c13866-2804-4975-83a4-4f76296248f5}|ProteanCMS.dll;{e56fc8f2-7906-4182-ba6a-3ff427ea13c5}|Protean.AppStart.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_52108"
 		Debug.AspNetCompiler.PhysicalPath = "V6_wwwroot\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_52108\"
@@ -28,6 +28,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Protean.Tools", "Assemblies\Protean.Tools\Protean.Tools.csproj", "{12AF6171-9AAB-4C4D-A83B-85FE18A334C1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Protean.CMS", "Assemblies\Protean.CMS\Protean.CMS.csproj", "{B8C13866-2804-4975-83A4-4F76296248F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Protean.AppStart", "Assemblies\Protean.AppStart\Protean.AppStart.csproj", "{E56FC8F2-7906-4182-BA6A-3FF427EA13C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +63,14 @@ Global
 		{B8C13866-2804-4975-83A4-4F76296248F5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B8C13866-2804-4975-83A4-4F76296248F5}.Release|ARM64.ActiveCfg = Release|Any CPU
 		{B8C13866-2804-4975-83A4-4F76296248F5}.Release|ARM64.Build.0 = Release|Any CPU
+		{E56FC8F2-7906-4182-BA6A-3FF427EA13C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E56FC8F2-7906-4182-BA6A-3FF427EA13C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E56FC8F2-7906-4182-BA6A-3FF427EA13C5}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{E56FC8F2-7906-4182-BA6A-3FF427EA13C5}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{E56FC8F2-7906-4182-BA6A-3FF427EA13C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E56FC8F2-7906-4182-BA6A-3FF427EA13C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E56FC8F2-7906-4182-BA6A-3FF427EA13C5}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{E56FC8F2-7906-4182-BA6A-3FF427EA13C5}.Release|ARM64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
