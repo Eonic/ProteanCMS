@@ -68,6 +68,8 @@ $dropdown-link-hover-color: $secondary;
 //$dropdown-link-hover-bg: var(--#{$prefix}tertiary-bg) !default;
 $dropdown-link-active-color: $secondary;
 //$dropdown-link-active-bg: $component-active-bg !default;
+$dropdown-item-padding-y:           $spacer * .25 !default;
+$dropdown-item-padding-x:           $spacer !default;
 
 $mobile-dd-background: #fff;
 $mobile-dd-color: $body-color;
