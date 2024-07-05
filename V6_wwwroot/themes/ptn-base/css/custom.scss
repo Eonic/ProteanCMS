@@ -22,6 +22,9 @@ body {
     flex-grow: 2;
 }
 
+.container-wrapper.home-class {
+    margin-top: 0;
+}
 //FLUID CONTAINER
 .container-fluid {
     padding: 0 ($grid-gutter-width/2);
@@ -38,7 +41,8 @@ body {
     .accordion-body .FormattedText,
     .module-FAQList,
     .char80-center,
-    .module-Video {
+    .module-Video,
+    .narrow-container {
         max-width: 55rem;
         margin-left: auto;
         margin-right: auto;
@@ -84,6 +88,7 @@ a {
     //text-decoration: none;
     text-underline-offset: 0.2rem;
     text-decoration-thickness: 0px;
+    text-decoration-color: rgba($link-color,0.4)
 }
 
 strong, b {
@@ -109,8 +114,17 @@ h1, h2, h3 {
     color: $headings-color;
 }
 
-.center-block {
+.center-block,
+.center-block-footer {
     text-align: center;
+}
+
+.module.justify-content-center {
+    height: 100%
+}
+
+.module-centred > .clearfix {
+    width: 100%;
 }
 
 .FormattedText {
@@ -123,6 +137,12 @@ h1, h2, h3 {
     }
 
     *:last-child:not(button) {
+        margin-bottom: 0;
+    }
+}
+
+.banner-caption-inner {
+    > *:last-child:not(button) {
         margin-bottom: 0;
     }
 }
@@ -202,6 +222,10 @@ figure {
     margin: 0;
 }
 /*############### BACKGROUNDS #################*/
+section {
+    background-size: cover;
+}
+
 .section-spacing {
     padding-top: $section-padding;
     padding-bottom: $section-padding - $grid-gutter-height;
@@ -254,15 +278,33 @@ section.bg-video-wrapper {
     text-shadow: 1px 1px #000;
 }
 
-.fullwidthContainer {
-    @extend .container-fluid;
-    padding: 0;
-
+.fullwidthContainer:not(.fullwidth-w-padding) {
     > .layoutModule > .row {
         margin: 0;
 
         > div {
             padding: 0
+        }
+    }
+}
+
+.fullwidthContainer.fullwidth-w-padding {
+    @extend .container-fluid;
+
+
+    > .layoutModule > .row {
+
+
+        > div {
+        }
+    }
+}
+
+.breadcrumb {
+    .breadcrumb-item {
+        a {
+            padding-top: 0.3rem;
+            padding-bottom: 0.3rem;
         }
     }
 }
@@ -294,6 +336,7 @@ section.bg-video-wrapper {
         .banner-caption {
             background: $banner-bg;
             padding: 3vw;
+            border-radius: $border-radius $border-radius 0 0;
         }
 
         .image-banner-inner {
@@ -314,14 +357,17 @@ section.bg-video-wrapper {
         .banner-caption {
             max-width: 36%;
             padding: 4vw 6.1% 10% 4vw;
-            background: url(/themes/ptn-base/images/heart-bg2.png) no-repeat right bottom;
             background-size: 100%;
             min-height: 500px;
             max-width: 42%;
 
-            .breadcrumb li,
-            #mainTitle,
-            p {
+            .banner-caption-inner {
+                background: $banner-bg;
+                padding: 1.5rem;
+                border-radius: $border-radius;
+            }
+
+            .breadcrumb li, #mainTitle, p {
                 background: $banner-bg;
             }
 
@@ -397,6 +443,7 @@ section.bg-video-wrapper {
         margin-top: -$listItem-padding;
         margin-left: -$listItem-padding;
         margin-right: -$listItem-padding;
+        margin-bottom: $listItem-padding;
 
         img.thumbnail {
             margin-bottom: 0;
@@ -1010,11 +1057,12 @@ dd {
     margin-top: auto;
     background: $footer-bg;
     padding-top: $grid-gutter-height;
-    padding-bottom: $grid-gutter-height;
+    padding-bottom: 2rem;
     color: rgba(color-contrast($footer-bg),1);
 
     h1, h2, h3, h4, h5, h6 {
         color: rgba(color-contrast($footer-bg),1);
+        font-size: 1.3rem;
     }
 
     a {

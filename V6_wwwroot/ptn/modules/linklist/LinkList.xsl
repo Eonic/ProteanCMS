@@ -233,7 +233,7 @@
 					</h3>
 				</xsl:if>-->
 				<xsl:if test="Images/img/@src!=''">
-					<a href="{$linkURL}" title="Click here to link to {Name}">
+					<a href="{$linkURL}" title="{Name}" class="list-image-link">
 						<xsl:if test="not(substring(@linkURL,1,1)='/') and (contains(@linkURL,'http://') and Url/@type='external')">
 							<xsl:attribute name="rel">external</xsl:attribute>
 						</xsl:if>

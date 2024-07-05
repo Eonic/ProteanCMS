@@ -98,6 +98,19 @@ header {
     z-index: 20;
 }
 
+.navbar-fixed-top {
+    position: fixed;
+    background: #fff;
+    width: 100%;
+}
+
+.fixed-nav-content {
+    padding-top: 100px !important;
+
+    &.mt-0 {
+        padding-top: 100px !important;
+    }
+}
 /*############### NAVIGATION #################*/
 .main-nav {
     padding: 0;
@@ -143,7 +156,7 @@ header {
             &.active,
             &.on,
             &:focus {
-                color: $nav-link-hover-color;
+                color: $dropdown-link-active-color;
             }
 
             &:first-child {
@@ -167,6 +180,7 @@ header {
             font-size: 0.8rem;
             vertical-align: middle;
             margin-left: 0.4em;
+	    @include media-breakpoint-up($nav-breakpoint){display:none;}
         }
     }
 
@@ -180,7 +194,7 @@ header {
             a.on,
             a:hover,
             a:focus {
-                color: #000;
+                color: $dropdown-link-active-color;
             }
 
             @include media-breakpoint-up($nav-breakpoint) {
@@ -192,7 +206,7 @@ header {
                 a.on,
                 a:hover,
                 a:focus {
-                    color: $primary;
+                    color: $dropdown-link-active-color;
                 }
 
                 a.on {
@@ -316,6 +330,11 @@ header {
                 color: $mobile-dd-color;
                 width: 100%;
                 text-align: left;
+
+                &.active,
+                &.on {
+                    color: $mobile-dd-active;
+                }
             }
 
             .dropdown-toggle:after {
@@ -624,9 +643,10 @@ header {
         padding: 1rem 1.4rem;
         color: #fff;
         text-decoration: none;
-
+        margin:1px;
+        border-radius:$btn-border-radius;
         @include media-breakpoint-up(xxl) {
-            font-size: 1.4rem;
+         //   font-size: 1.4rem;
         }
 
         @include media-breakpoint-down($nav-breakpoint) {
@@ -639,7 +659,7 @@ header {
         }
 
         @include media-breakpoint-up(xxl) {
-            padding: 1.2rem 3rem;
+          //  padding: 1.2rem 3rem;
         }
 
         @include media-breakpoint-down($nav-breakpoint) {

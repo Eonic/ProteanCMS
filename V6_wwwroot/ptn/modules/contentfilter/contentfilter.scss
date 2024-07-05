@@ -1,33 +1,36 @@
 ﻿#ContentFilter {
     @media(min-width:786px) {
         //border: 2px solid $primary;
-        background: $light;
+        //background: $light;
         border-radius: $border-radius;
         display: flex;
-        color: color-contrast($light);
+        color: $body-color;
 
         &:before {
             content: 'Filter by:';
-            background: $light;
-            color: color-contrast($light);
-            padding: 9px 16px;
+            //background: $light;
+            color: $body-color;
+            //padding: 9px 16px;
             float: left;
             font-size: 1.125rem;
         }
 
         .form-margin {
             float: left;
-            padding: 0.5rem 1rem;
+            padding: 0rem 1rem;
             margin: 0;
-            label{
-                margin:0;
+
+            label {
+                margin: 0;
             }
         }
-        .dropdown-menu{
-            padding:1rem;
-            border:0;
-            background:$primary;
-            color:color-contrast($primary);
+
+        .dropdown-menu {
+            padding: 1rem;
+            border: 0;
+            background: $primary;
+            color: color-contrast($primary);
+            font-size: 1rem;
         }
     }
 
@@ -187,6 +190,8 @@
         background: $info;
         z-index: 10;
 
+
+
         .filter-xs-heading {
             background: $primary;
             padding: 12px 20px;
@@ -305,4 +310,8 @@
     #histogramSliderPrice-histogram .tooltip {
         opacity: 0.5;
     }
+}
+
+.module-ContentFilter {
+    text-align: center
 }
