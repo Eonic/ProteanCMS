@@ -1486,7 +1486,6 @@
 		<meta property="og:description" content="{$contentMetaDescription}"/>
 		<meta property="og:image">
 			<xsl:attribute name="content">
-				<xsl:attribute name="content">
 					<xsl:choose>
 						<xsl:when test="$siteURL=''">
 							<xsl:text>http</xsl:text>
@@ -1498,7 +1497,6 @@
 							<xsl:value-of select="$siteURL"/>
 						</xsl:otherwise>
 					</xsl:choose>
-					<xsl:choose>
 				<xsl:choose>
 					<!-- IF use display -->
 					<xsl:when test="ContentDetail/Content/Images/img[@class='display']/@src and ContentDetail/Content/Images/img[@class='display']/@src!=''">
