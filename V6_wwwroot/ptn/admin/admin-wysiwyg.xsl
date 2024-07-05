@@ -364,6 +364,7 @@
 		<xsl:param name="text"/>
 		<xsl:param name="name"/>
 		<xsl:param name="class"/>
+		<!--
 		<xsl:attribute name="class">
 			<xsl:if test="$class!=''">
 				<xsl:value-of select="$class"/>
@@ -375,6 +376,7 @@
 			</xsl:if>
 			<xsl:text>editable</xsl:text>
 		</xsl:attribute>
+		-->
 		<xsl:choose>
 			<xsl:when test="/Page/Contents/Content[@name=$name]">
 				<xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='EditContent'] and $adminMode">
