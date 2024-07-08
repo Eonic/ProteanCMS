@@ -180,7 +180,16 @@ header {
             font-size: 0.8rem;
             vertical-align: middle;
             margin-left: 0.4em;
-	    @include media-breakpoint-up($nav-breakpoint){display:none;}
+
+            @include media-breakpoint-up($nav-breakpoint) {
+                display: none;
+            }
+        }
+    }
+
+    .dropdown .dropdown-menu {
+        @include media-breakpoint-down($nav-breakpoint) {
+            animation: none;
         }
     }
 
@@ -212,10 +221,6 @@ header {
                 a.on {
                     color: $dropdown-link-color;
                 }
-            }
-
-            @include media-breakpoint-down($nav-breakpoint) {
-                animation: none;
             }
         }
 
