@@ -34,8 +34,8 @@
 	<xsl:variable name="MatchHeightType" select="'matchHeight'"/>
 	<xsl:variable name="GutterWidth" select="'20'"/>
 	<xsl:variable name="GutterWidthLg" select="'30'"/>
-
 	<xsl:variable name="responsiveImageSizes">off</xsl:variable>
+
 
 	<xsl:variable name="siteURL">
 		<xsl:variable name="baseUrl">
@@ -1486,12 +1486,17 @@
 		<meta property="og:description" content="{$contentMetaDescription}"/>
 		<meta property="og:image">
 			<xsl:attribute name="content">
-				<xsl:if test="$siteURL=''">
-					<xsl:text>http</xsl:text>
-					<xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
-					<xsl:text>://</xsl:text>
-					<xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
-				</xsl:if>
+					<xsl:choose>
+						<xsl:when test="$siteURL=''">
+							<xsl:text>http</xsl:text>
+							<xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
+							<xsl:text>://</xsl:text>
+							<xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="$siteURL"/>
+						</xsl:otherwise>
+					</xsl:choose>
 				<xsl:choose>
 					<!-- IF use display -->
 					<xsl:when test="ContentDetail/Content/Images/img[@class='display']/@src and ContentDetail/Content/Images/img[@class='display']/@src!=''">
@@ -3838,13 +3843,26 @@
 
 			<!-- get the href -->
 			<xsl:attribute name="href">
-				<xsl:apply-templates select="self::MenuItem" mode="getHref"/>
+				<xsl:choose>
+					<xsl:when test="DisplayName/@linkType='popUp'">
+						<xsl:text>#</xsl:text>
+						<xsl:value-of select="DisplayName/@ModalID"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:apply-templates select="self::MenuItem" mode="getHref"/>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:attribute>
 
 			<!-- title attribute -->
 			<xsl:attribute name="title">
 				<xsl:apply-templates select="." mode="getTitleAttr"/>
 			</xsl:attribute>
+
+			<xsl:if test="DisplayName/@linkType='popUp'">
+				<xsl:attribute name="data-bs-toggle">modal</xsl:attribute>
+				<xsl:attribute name="role">button</xsl:attribute>
+			</xsl:if>
 
 
 			<!-- check for different states to be applied -->
@@ -4005,6 +4023,7 @@
 	<xsl:template match="MenuItem" mode="mainmenudropdown">
 		<xsl:param name="homeLink"/>
 		<xsl:param name="span"/>
+		<xsl:param name="hover"/>
 		<xsl:variable name="liClass">
 			<xsl:text>nav-item </xsl:text>
 			<xsl:if test="self::MenuItem[@id=/Page/@id]">
@@ -4085,44 +4104,76 @@
 		</xsl:variable>
 
 		<li class="{$liClass} dropdown">
-			<xsl:if test="$hover='true'">
-				<xsl:attribute name="class">
-					<xsl:value-of select="$liClass"/>
-					<xsl:text> dropdown dropdown-hover-menu</xsl:text>
-				</xsl:attribute>
-			</xsl:if>
-			<!--<a href="{@url}" id="mainNavDD{@id}" role="button">-->
-			<button href="{@url}" id="mainNavDD{@id}" role="button">
-				<xsl:attribute name="data-bs-toggle">dropdown</xsl:attribute>
-
-				<xsl:attribute name="class">
-					<xsl:text>nav-link dropdown-toggle </xsl:text>
-					<xsl:choose>
-						<xsl:when test="self::MenuItem[@id=/Page/@id]">
-							<xsl:text>active</xsl:text>
-						</xsl:when>
-						<xsl:when test="descendant::MenuItem[@id=/Page/@id] and ancestor::MenuItem">
-							<xsl:text>on</xsl:text>
-						</xsl:when>
-					</xsl:choose>
-				</xsl:attribute>
-				<xsl:if test="DisplayName[@icon!='']">
-					<i>
+			<xsl:choose>
+				<xsl:when test="$hover='true'">
+					<xsl:attribute name="class">
+						<xsl:value-of select="$liClass"/>
+						<xsl:text> dropdown dropdown-hover-menu</xsl:text>
+					</xsl:attribute>
+					<a href="{@url}" id="mainNavDD{@id}">
 						<xsl:attribute name="class">
-							<xsl:text>fa </xsl:text>
-							<xsl:value-of select="DisplayName/@icon"/>
+							<xsl:text>nav-link dropdown-toggle </xsl:text>
+							<xsl:choose>
+								<xsl:when test="self::MenuItem[@id=/Page/@id]">
+									<xsl:text>active</xsl:text>
+								</xsl:when>
+								<xsl:when test="descendant::MenuItem[@id=/Page/@id] and ancestor::MenuItem">
+									<xsl:text>on</xsl:text>
+								</xsl:when>
+							</xsl:choose>
 						</xsl:attribute>
-						<xsl:text> </xsl:text>
-					</i>
-					<span class="space">&#160;</span>
-				</xsl:if>
-				<xsl:if test="DisplayName[@uploadIcon!='']">
-					<span class="nav-icon">
-						<img src="{DisplayName/@uploadIcon}" alt="icon"/>
-					</span>
-				</xsl:if>
-				<xsl:apply-templates select="." mode="getDisplayName"/>
-			</button>
+						<xsl:if test="DisplayName[@icon!='']">
+							<i>
+								<xsl:attribute name="class">
+									<xsl:text>fa </xsl:text>
+									<xsl:value-of select="DisplayName/@icon"/>
+								</xsl:attribute>
+								<xsl:text> </xsl:text>
+							</i>
+							<span class="space">&#160;</span>
+						</xsl:if>
+						<xsl:if test="DisplayName[@uploadIcon!='']">
+							<span class="nav-icon">
+								<img src="{DisplayName/@uploadIcon}" alt="icon"/>
+							</span>
+						</xsl:if>
+						<xsl:apply-templates select="." mode="getDisplayName"/>
+					</a>
+				</xsl:when>
+				<xsl:otherwise>
+					<button href="{@url}" id="mainNavDD{@id}" role="button">
+						<xsl:attribute name="data-bs-toggle">dropdown</xsl:attribute>
+
+						<xsl:attribute name="class">
+							<xsl:text>nav-link dropdown-toggle </xsl:text>
+							<xsl:choose>
+								<xsl:when test="self::MenuItem[@id=/Page/@id]">
+									<xsl:text>active</xsl:text>
+								</xsl:when>
+								<xsl:when test="descendant::MenuItem[@id=/Page/@id] and ancestor::MenuItem">
+									<xsl:text>on</xsl:text>
+								</xsl:when>
+							</xsl:choose>
+						</xsl:attribute>
+						<xsl:if test="DisplayName[@icon!='']">
+							<i>
+								<xsl:attribute name="class">
+									<xsl:text>fa </xsl:text>
+									<xsl:value-of select="DisplayName/@icon"/>
+								</xsl:attribute>
+								<xsl:text> </xsl:text>
+							</i>
+							<span class="space">&#160;</span>
+						</xsl:if>
+						<xsl:if test="DisplayName[@uploadIcon!='']">
+							<span class="nav-icon">
+								<img src="{DisplayName/@uploadIcon}" alt="icon"/>
+							</span>
+						</xsl:if>
+						<xsl:apply-templates select="." mode="getDisplayName"/>
+					</button>
+				</xsl:otherwise>
+			</xsl:choose>
 			<xsl:if test="$mobileDD='true'">
 				<span class="mobile-dd-control">
 					<i class="fa fa-angle-down"> </i>
@@ -5254,21 +5305,22 @@
 						</li>
 					</xsl:otherwise>
 				</xsl:choose>
-					</ul><div class="pager-caption">
-						<xsl:if test="$noPerPage!=1">
-							<xsl:value-of select="$startPos + 1"/>
-							<xsl:text> to </xsl:text>
-						</xsl:if>
-						<xsl:if test="$totalCount &gt;= ($startPos +$noPerPage)">
-							<xsl:value-of select="$startPos + $noPerPage"/>
-						</xsl:if>
-						<xsl:if test="$totalCount &lt; ($startPos + $noPerPage)">
-							<xsl:value-of select="$totalCount"/>
-						</xsl:if> of <xsl:value-of select="$totalCount"/>
-					</div>
+			</ul>
+			<div class="pager-caption">
+				<xsl:if test="$noPerPage!=1">
+					<xsl:value-of select="$startPos + 1"/>
+					<xsl:text> to </xsl:text>
+				</xsl:if>
+				<xsl:if test="$totalCount &gt;= ($startPos +$noPerPage)">
+					<xsl:value-of select="$startPos + $noPerPage"/>
+				</xsl:if>
+				<xsl:if test="$totalCount &lt; ($startPos + $noPerPage)">
+					<xsl:value-of select="$totalCount"/>
+				</xsl:if> of <xsl:value-of select="$totalCount"/>
+			</div>
 		</div>
 	</xsl:template>
-	
+
 	<xsl:template name="StepperStep">
 		<xsl:param name="noPerPage"/>
 		<xsl:param name="startPos"/>
@@ -5307,7 +5359,7 @@
 				</xsl:with-param>
 			</xsl:call-template>
 		</xsl:if>
-		
+
 	</xsl:template>
 
 	<!-- Retrieves the additional Params from the URL -->
@@ -5962,8 +6014,7 @@
 			<xsl:when test="@iconStyle='Centre'">
 
 				<div class="center-block center-large">
-
-					<xsl:if test="@icon!=''">
+					<xsl:if test="@icon!='' or @icon-class!=''">
 						<i role="img" aria-hidden="true">
 							<xsl:attribute name="class">
 								<xsl:text>fa center-block </xsl:text>
@@ -5976,7 +6027,15 @@
 										<xsl:text> fa-3x </xsl:text>
 									</xsl:otherwise>
 								</xsl:choose>
-								<xsl:value-of select="@icon"/>
+								<xsl:choose>
+									<xsl:when test="@icon-class and @icon-class!=''">
+										<xsl:text>fa-</xsl:text>
+										<xsl:value-of select="@icon-class"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="@icon"/>
+									</xsl:otherwise>
+								</xsl:choose>
 							</xsl:attribute>
 							<!--<xsl:if test="@uploadIcon-w and @uploadIcon-w!='' or @uploadIcon-h and @uploadIcon-h!=''">
 								<xsl:attribute name="style">
@@ -6020,7 +6079,15 @@
 						<i>
 							<xsl:attribute name="class">
 								<xsl:text>fa center-block </xsl:text>
-								<xsl:value-of select="@icon"/>
+								<xsl:choose>
+									<xsl:when test="@icon-class and @icon-class!=''">
+										<xsl:text>fa-</xsl:text>
+										<xsl:value-of select="@icon-class"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="@icon"/>
+									</xsl:otherwise>
+								</xsl:choose>
 
 								<xsl:choose>
 									<xsl:when test="@icon-size and @icon-size!=''">
@@ -6058,7 +6125,15 @@
 						<i>
 							<xsl:attribute name="class">
 								<xsl:text>fa </xsl:text>
-								<xsl:value-of select="@icon"/>
+								<xsl:choose>
+									<xsl:when test="@icon-class and @icon-class!=''">
+										<xsl:text>fa-</xsl:text>
+										<xsl:value-of select="@icon-class"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="@icon"/>
+									</xsl:otherwise>
+								</xsl:choose>
 
 								<xsl:choose>
 									<xsl:when test="@icon-size and @icon-size!=''">
@@ -6089,11 +6164,19 @@
 				</div>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:if test="@icon!=''">
+				<xsl:if test="@icon!='' or @icon-class!=''">
 					<i>
 						<xsl:attribute name="class">
 							<xsl:text>fa </xsl:text>
-							<xsl:value-of select="@icon"/>
+							<xsl:choose>
+								<xsl:when test="@icon-class and @icon-class!=''">
+									<xsl:text>fa-</xsl:text>
+									<xsl:value-of select="@icon-class"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="@icon"/>
+								</xsl:otherwise>
+							</xsl:choose>
 
 							<xsl:choose>
 								<xsl:when test="@icon-size and @icon-size!=''">

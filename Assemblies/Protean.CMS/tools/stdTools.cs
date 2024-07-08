@@ -198,11 +198,11 @@ namespace Protean
                                     }
                                     oSmtp.Send(oMail);
                                 }
-                                catch (Exception)
+                                catch (Exception ex)
                                 {
                                     try
                                     {
-                                        sProcessInfo = "Trying Email 2 -" + oConfig["MailServer"];
+                                        sProcessInfo = "Trying Email 2 -" + oConfig["MailServer"] + ex.Message;
                                         oSmtp.Host.Insert(0, oConfig["MailServer"]);
                                         oSmtp.Send(oMail);
                                     }

@@ -31,7 +31,6 @@ SWIPER
 
     [class*="bg-"] {
         border-radius: $border-radius;
-        
     }
 
     .bg-light-o {
@@ -45,7 +44,14 @@ SWIPER
             }
         }
     }
-    
+
+    .swiper img {
+        zoom: 2;
+    }
+
+    .swiper-slide {
+        background-size: cover;
+    }
 }
 
 /*############### CONTENT CAROUSEL #################*/

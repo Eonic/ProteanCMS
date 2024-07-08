@@ -20,11 +20,11 @@
 	<xsl:variable name="header-layout">header-one-line</xsl:variable>
 		<!-- options are header-menu-right, header-info-above, header-one-line, header-menu-below, -->
 	<xsl:variable name="font-import-base">Lato:300,400,700</xsl:variable>
-	<xsl:variable name="headings-font-import">Lato:300,400,700</xsl:variable>
+	<xsl:variable name="headings-font-import">none</xsl:variable>
 	<xsl:variable name="color-mode">default</xsl:variable>
 	<xsl:variable name="HomeInfo">false</xsl:variable>
 	<xsl:variable name="HomeNav">false</xsl:variable>
-	<xsl:variable name="NavFix">true</xsl:variable>
+	<xsl:variable name="NavFix">false</xsl:variable>
 	<xsl:variable name="nav-dropdown">true</xsl:variable>
 	<xsl:variable name="sub-nav">false</xsl:variable>
 	<xsl:variable name="SideSubWidth">3</xsl:variable>
@@ -38,30 +38,30 @@
 	<xsl:variable name="thHeight">496</xsl:variable>
 	<xsl:variable name="container">container</xsl:variable>
 	<xsl:variable name="siteAlert">false</xsl:variable>
-
+	<xsl:variable name="search">
+			<xsl:call-template name="getXmlSettings">
+				<xsl:with-param name="sectionName" select="'web'"/>
+				<xsl:with-param name="valueName" select="'Search'"/>
+			</xsl:call-template>
+	</xsl:variable>
+	<xsl:variable name="show-layout-footer">false</xsl:variable>
+	
 	<!-- forced on, needs fixing-->
 	<xsl:variable name="membership">
-		<xsl:choose>
-			<xsl:when test="$page/User">on</xsl:when>
-			<xsl:when test="$page/Contents/Content[@name='UserLogon']">on</xsl:when>
-			<xsl:otherwise>on</xsl:otherwise>
-		</xsl:choose>
+		<xsl:call-template name="getXmlSettings">
+			<xsl:with-param name="sectionName" select="'web'"/>
+			<xsl:with-param name="valueName" select="'Membership'"/>
+		</xsl:call-template>
 	</xsl:variable>
 
 	<xsl:variable name="cart">
-		<xsl:choose>
-			<xsl:when test="$page/Cart">on</xsl:when>
-			<xsl:otherwise>off</xsl:otherwise>
-		</xsl:choose>
+		<xsl:call-template name="getXmlSettings">
+			<xsl:with-param name="sectionName" select="'web'"/>
+			<xsl:with-param name="valueName" select="'Cart'"/>
+		</xsl:call-template>
 	</xsl:variable>
 
-	<!-- forced on, needs fixing-->
-	<xsl:variable name="search">
-		<xsl:choose>
-			<xsl:when test="$page/Search">on</xsl:when>
-			<xsl:otherwise>on</xsl:otherwise>
-		</xsl:choose>
-	</xsl:variable>
+
 
 
 	<!-- ########################################## CORE TEMPLATES VARIABLES ######################################## -->
@@ -134,7 +134,7 @@
 	</xsl:template>
 
 	<!-- ############################################ BOX STYLES ############################################### -->
-
+	<!-- NOW IN FUNCTIONS.XSL
 	<xsl:template match="Content[@type='Module']" mode="themeModuleExtras">
 		<xsl:if test="@modAnim!=''">
 			<xsl:attribute name="data-modAnim">
@@ -145,7 +145,7 @@
 			</xsl:attribute>
 		</xsl:if>
 	</xsl:template>
-
+-->
 
 	<!-- ############################################ IMAGE SIZES ############################################### -->
 
@@ -492,7 +492,7 @@
 						</div>-->
 					</div>
 				</div>
-				<div class="clearfix footer-utility">
+				<!--<div class="clearfix footer-utility">
 					<div class="{$containerClass}">
 						<div class="clearfix footer-utility-inner">
 							<div id="footer-utility">
@@ -500,17 +500,17 @@
 									<xsl:with-param name="position">footer-utility</xsl:with-param>
 								</xsl:apply-templates>
 							</div>
-							<!--<div id="copyright">
+							--><!--<div id="copyright">
 								<xsl:apply-templates select="/Page" mode="addModule">
 									<xsl:with-param name="position">copyright</xsl:with-param>
 								</xsl:apply-templates>
-							</div>-->
-							<!--<div class="credit">
+							</div>--><!--
+							--><!--<div class="credit">
 								<xsl:apply-templates select="/" mode="developerLink"/>
-							</div>-->
+							</div>--><!--
 						</div>
 					</div>
-				</div>
+				</div>-->
 			</div>
 			<xsl:if test="$currentPage/@id='1'">
 				<div class="dev-credit">
@@ -564,8 +564,9 @@
 					</xsl:if>
 					<!--<xsl:value-of select="$websitecreditText"/>-->
 					<span>site by </span>
-					<img src="/ptn/core/images/eonic-digital-white.svg" alt="eonic digital" width="82" height="17"/>
-
+					<xsl:if test="$websitecreditLogo='' or not($websitecreditLogo)">
+						<img src="/ptn/core/images/eonic-digital-white.svg" alt="eonic digital" width="82" height="17"/>
+					</xsl:if>
 				</a>
 				<xsl:if test="$websitecreditLogo!=''">
 					<a href="{$websitecreditURL}" title="{$websitecreditText}" rel="nofollow external">

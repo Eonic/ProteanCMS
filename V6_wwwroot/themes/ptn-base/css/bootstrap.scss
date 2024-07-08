@@ -2,6 +2,7 @@
 // Configuration
 @import "variables";
 
+@import "../../../ptn/core/icons/fa6/css/all";
 @import "../../../ptn/libs/bs5/scss/bootstrap";
 @import "../../../ptn/libs/animate.css/animate.scss";
 
@@ -11,6 +12,7 @@
 
 //Theme specific
 @import "five-cols";
+@import "custom-animation";
 //@import "variables2";
 @import "utilities";
 @import "carousels";

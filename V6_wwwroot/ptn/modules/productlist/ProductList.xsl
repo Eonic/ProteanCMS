@@ -332,9 +332,7 @@
 							<xsl:apply-templates select="." mode="displayPrice" />
 						</xsl:otherwise>
 					</xsl:choose>
-
-
-					<xsl:if test="/Page/Cart">
+					<xsl:if test="$page/Cart">
 						<xsl:apply-templates select="." mode="addToCartButton"/>
 					</xsl:if>
 					<xsl:apply-templates select="." mode="SpecLink"/>
@@ -377,7 +375,7 @@
 												</xsl:choose>-->
 
 												<!--<xsl:apply-templates select="." mode="displayDetailImage"/>-->
-												<img src="{Images/img[@class='detail']/@src}"/>
+												<img src="{Images/img[@class='detail']/@src}" alt="{Images/img[@class='detail']/@alt}"/>
 											</div>
 											<xsl:apply-templates select="Content[@type='LibraryImage']" mode="scrollerImage"/>
 										</div>

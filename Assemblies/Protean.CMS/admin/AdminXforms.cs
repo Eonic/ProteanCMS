@@ -1846,13 +1846,18 @@ namespace Protean
 
                         // disable the status if we are editing the home page
 
-                        if ((double)pgid == Conversions.ToDouble(this.myWeb.moConfig["RootPageId"]))
+                        if (pgid == Conversions.ToLong(this.myWeb.moConfig["RootPageId"]))
                         {
                             XmlElement oStatusElmt;
                             oStatusElmt = (XmlElement)base.moXformElmt.SelectSingleNode("descendant-or-self::*[@bind='nStatus' or @ref='nStatus']");
                             if (oStatusElmt != null)
                             {
                                 oStatusElmt.SetAttribute("class", oStatusElmt.GetAttribute("class") + " readonly");
+                            }
+                            XmlElement oStatusBindElmt = (XmlElement)base.moXformElmt.SelectSingleNode("descendant-or-self::bind[@id='nStatus']");
+                            if (oStatusBindElmt != null)
+                            {
+                                oStatusBindElmt.SetAttribute("required", "false()");
                             }
                         }
 

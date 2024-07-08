@@ -49,7 +49,7 @@ $admin-header-color:			#000;
 $admin-header-logo:				url(/ewcommon/images/admin/skin/eonic-admin-purple.png) 10px 13px no-repeat;*/
 // END VARIABLES
 .ptn-edit .btn {
-    border-radius: 0
+    border-radius: 3px
 }
 
 @mixin square-card() {

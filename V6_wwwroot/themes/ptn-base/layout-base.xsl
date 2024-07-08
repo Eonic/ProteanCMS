@@ -30,6 +30,9 @@
 		<xsl:variable name="cart-class">
 			<xsl:if test="$cartPage"> cart-class </xsl:if>
 		</xsl:variable>
+		<xsl:variable name="layout-class">
+			<xsl:if test="$currentPage/DisplayName/@banner='no-banner'"> no-banner-layout</xsl:if>
+		</xsl:variable>
 		<div id="mainTable" class="Site activateAppearAnimation {$nav-padding}">
 			<xsl:if test="$cartPage">
 				<xsl:attribute name="class">Site activateAppearAnimation nav-no-padding</xsl:attribute>
@@ -90,7 +93,7 @@
 			</xsl:if>
 
 			<!--~~~~~~~~~~~~~~ MAIN CONTENT ~~~~~~~~~~~~~~ -->
-			<div class="container-wrapper {$detail-heading} {$nav-padding} {$home-class} {$cart-class}">
+			<div class="container-wrapper {$detail-heading} {$nav-padding} {$home-class} {$cart-class} {$layout-class}">
 				<xsl:if test="not($adminMode or /Page[@previewMode='true']) and $NavFix='true'">
 					<xsl:attribute name="class">
 						<xsl:text>container-wrapper fixed-nav-content </xsl:text>
@@ -104,7 +107,7 @@
 					</xsl:attribute>
 				</xsl:if>
 				<div id="mainLayout" class="fullwidth activateAppearAnimation">
-					<xsl:if test="$currentPage/DisplayName/@banner='no-banner' or $cartPage or $page/ContentDetail and ($sub-nav='left' or $sub-nav='top')">
+					<xsl:if test="$currentPage/DisplayName/@banner='no-banner' or $currentPage/@name='Home' or $cartPage or $page/ContentDetail and ($sub-nav='left' or $sub-nav='top')">
 						<div id="content" class="visually-hidden">&#160;</div>
 					</xsl:if>
 					<xsl:if test="not($cartPage) and $currentPage/@name!='Home' and not($page/ContentDetail) and not($currentPage/DisplayName/@banner='no-banner')">
@@ -120,18 +123,22 @@
 												<xsl:with-param name="class">image-banner-inner</xsl:with-param>
 											</xsl:apply-templates>
 											<div class="banner-caption">
-												<nav aria-label="breadcrumb">
-													<ol class="breadcrumb">
-														<xsl:apply-templates select="Menu/MenuItem" mode="breadcrumb"/>
-													</ol>
-												</nav>
-												<div id="content" class="visually-hidden">&#160;</div>
-												<div id="mainTitle">
-													<xsl:apply-templates select="/" mode="getMainTitle" />
+												<div class="banner-caption-inner">
+													<xsl:if test="$themeBreadcrumb='true'">
+														<nav aria-label="breadcrumb">
+															<ol class="breadcrumb">
+																<xsl:apply-templates select="Menu/MenuItem" mode="breadcrumb"/>
+															</ol>
+														</nav>
+													</xsl:if>
+													<div id="content" class="visually-hidden">&#160;</div>
+													<div id="mainTitle">
+														<xsl:apply-templates select="/" mode="getMainTitle" />
+													</div>
+													<xsl:if test="$currentPage/Description/node()">
+														<xsl:apply-templates select="$currentPage/Description/node()" mode="cleanXhtml"/>
+													</xsl:if>
 												</div>
-												<xsl:if test="$currentPage/Description/node()">
-													<xsl:apply-templates select="$currentPage/Description/node()" mode="cleanXhtml"/>
-												</xsl:if>
 											</div>
 										</div>
 									</div>
@@ -142,12 +149,14 @@
 									<div class="container-fluid">
 										<div class="intro-banner-inner">
 											<div id="mainTitle">
-												<nav aria-label="breadcrumb">
-													<ol class="breadcrumb">
-														<xsl:apply-templates select="Menu/MenuItem" mode="breadcrumb"/>
-													</ol>
-													<div id="content" class="visually-hidden">&#160;</div>
-												</nav>
+												<xsl:if test="$themeBreadcrumb='true'">
+													<nav aria-label="breadcrumb">
+														<ol class="breadcrumb">
+															<xsl:apply-templates select="Menu/MenuItem" mode="breadcrumb"/>
+														</ol>
+														<div id="content" class="visually-hidden">&#160;</div>
+													</nav>
+												</xsl:if>
 												<xsl:apply-templates select="/" mode="getMainTitle" />
 												<xsl:if test="$currentPage/Description/node()">
 													<xsl:apply-templates select="$currentPage/Description/node()" mode="cleanXhtml"/>

@@ -615,7 +615,7 @@
   <xsl:template match="Page" mode="LayoutAdminJs"></xsl:template>
 
   <xsl:template match="Page" mode="headerOnlyJS">
-	   <xsl:apply-templates select="/Page/Contents/Content" mode="headerOnlyContentJS"/>
+	   <xsl:apply-templates select="Contents/Content" mode="headerOnlyContentJS"/>
   </xsl:template>
 
   <xsl:template match="Content" mode="opengraph-namespace">
@@ -1761,12 +1761,17 @@
     <meta property="og:description" content="{$contentMetaDescription}"/>
     <meta property="og:image">
       <xsl:attribute name="content">
-        <xsl:if test="$siteURL=''">
+		  <xsl:choose>
+        <xsl:when test="$siteURL=''">
           <xsl:text>http</xsl:text>
           <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
           <xsl:text>://</xsl:text>
           <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
-        </xsl:if>
+        </xsl:when>
+			  <xsl:otherwise>
+				  <xsl:value-of select="$siteURL"/>
+			  </xsl:otherwise>
+		  </xsl:choose>
         <xsl:choose>
           <!-- IF use display -->
           <xsl:when test="ContentDetail/Content/Images/img[@class='display']/@src and ContentDetail/Content/Images/img[@class='display']/@src!=''">

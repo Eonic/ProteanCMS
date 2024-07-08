@@ -130,6 +130,10 @@
 									<xsl:when test="$nav-dropdown='hover'">
 										<xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenudropdown">
 											<xsl:with-param name="hover">true</xsl:with-param>
+											<xsl:with-param name="overviewLink">self</xsl:with-param>
+											<xsl:with-param name="level2">true</xsl:with-param>
+											<xsl:with-param name="level3">true</xsl:with-param>
+											<xsl:with-param name="menu-back">true</xsl:with-param>
 										</xsl:apply-templates>
 									</xsl:when>
 									<xsl:otherwise>
@@ -667,7 +671,7 @@
 									</xsl:if>
 									<xsl:choose>
 										<xsl:when test="$nav-dropdown='true'">
-											<xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenudropdown">
+											<xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer' and not(DisplayName/@featuredLink='true')]" mode="mainmenudropdown">
 												<xsl:with-param name="overviewLink">self</xsl:with-param>
 												<xsl:with-param name="level2">true</xsl:with-param>
 												<xsl:with-param name="level3">true</xsl:with-param>
@@ -675,12 +679,16 @@
 											</xsl:apply-templates>
 										</xsl:when>
 										<xsl:when test="$nav-dropdown='hover'">
-											<xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenudropdown">
-												<xsl:with-param name="hover">true</xsl:with-param>
+											<xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer' and not(DisplayName/@featuredLink='true')]" mode="mainmenudropdown">
+											<xsl:with-param name="hover">true</xsl:with-param>
+											<xsl:with-param name="overviewLink">self</xsl:with-param>
+											<xsl:with-param name="level2">true</xsl:with-param>
+											<xsl:with-param name="level3">true</xsl:with-param>
+											<xsl:with-param name="menu-back">true</xsl:with-param>
 											</xsl:apply-templates>
 										</xsl:when>
 										<xsl:otherwise>
-											<xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenu"/>
+											<xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer' and not(DisplayName/@featuredLink='true')]" mode="mainmenu"/>
 										</xsl:otherwise>
 									</xsl:choose>
 									<li class="nav-item">
@@ -746,7 +754,12 @@
 					</xsl:if>
 				</div>
 				<div class="header-featured-btn">
-					<a href="/Everything-DISC/Products">Buy Now</a>
+					<!--<a href="/Everything-DISC/Products">Buy Now</a>-->
+					<xsl:for-each select="Menu/MenuItem/MenuItem[not(DisplayName/@exclude='true') and DisplayName/@featuredLink='true']">
+
+						<xsl:apply-templates select="." mode="menuLink"/>
+						
+					</xsl:for-each>
 				</div>
 				<xsl:if test="not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
 					<!--<button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

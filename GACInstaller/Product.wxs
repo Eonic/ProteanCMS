@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?define version  = "6.1.3"?>
+<?define version  = "6.1.13"?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi' xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
     <Product Id='*' Name='ProteanCMS GAC Installer $(var.version)' Language='1033' Version='$(var.version)' Manufacturer='Eonic Digital LLP' UpgradeCode='{577597F8-BE6F-46B4-8A9D-46E8A5360918}' Codepage='1252'>
         <Package AdminImage='no' Comments='ProteanCMS GAC Installer' Compressed='yes' Description='ProteanCMS GAC Installer (64bit)' InstallerVersion='300' InstallScope='perMachine' Languages='1033' Manufacturer='Eonic Digital LLP' Platform='x64' ReadOnly='no' ShortNames='no' />
@@ -9,7 +9,7 @@
         <Property Id='ARPCONTACT' Value='Trevor Spink' />
         <Property Id='ARPHELPLINK' Value='https://www.proteancms.com' />
         <Property Id='ARPURLINFOABOUT' Value='https://www.proteancms.com' />
-        <Property Id='ARPHELPTELEPHONE' Value='+44 1892 534044' />
+        <Property Id='ARPHELPTELEPHONE' Value='+44 1273 761586' />
         <!-- The '.NET Framework' launch condition. -->
         <PropertyRef Id='NETFRAMEWORK40FULL' />
         <Condition Message='This setup requires the .NET Framework version v4.0.  Please install the .NET Framework and run this setup again.'><![CDATA[Installed OR NETFRAMEWORK40FULL]]></Condition>
@@ -87,9 +87,6 @@
                 <!--Component Id='com_55C82BB1_0D6D_2A6A_5089_CF3B60B4DB68' Guid='16262759-0051-459F-929D-E0B9A713318E' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                     <File Id='_55C82BB1_0D6D_2A6A_5089_CF3B60B4DB68' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='TidyNet.dll' Source='..\ReferencedAssemblies\TidyNet.dll' Assembly='.net' KeyPath='yes' />
                 </Component-->
-              <Component Id='com_B20C138E_295E_F3EB_3EC1_D53E7993DC9D' Guid='DFE19D70-485A-49D4-83AE-314C8AC27B5A' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                <File Id='_B20C138E_295E_F3EB_3EC1_D53E7993DC9D' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='WebActivatorEx.dll' Source='..\packages\WebActivatorEx.2.2.0\lib\net40\WebActivatorEx.dll' Assembly='.net' KeyPath='yes' />
-              </Component>
               <Component Id='com_B9914EC8_D12B_85D0_6750_114591DFF224' Guid='CE47B5AE-C174-4DF0-A24A-4961C86FA578' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                 <File Id='_B9914EC8_D12B_85D0_6750_114591DFF224' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='CampaignMonitorAPIWrapper.dll' Source='..\..\ProteanCMS Addons\Providers\Messaging\CampaignMonitor\bin\Release\CampaignMonitorAPIWrapper.dll' Assembly='.net' KeyPath='yes' />
               </Component>
@@ -115,16 +112,24 @@
                   <File Id='_JavaScriptEngineSwitcher_V8' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='JavaScriptEngineSwitcher.V8.dll' Source='..\packages\JavaScriptEngineSwitcher.V8.3.24.1\lib\net45\JavaScriptEngineSwitcher.V8.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
 				<Component Id='com_Microsoft_ClearScript_Core' Guid='e5ed7dfd-948b-49a5-a535-d49164a7c0c8' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_Microsoft_ClearScript_Core' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='ClearScript.Core.dll' Source='..\packages\Microsoft.ClearScript.Core.7.4.4\lib\net471\ClearScript.Core.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_Microsoft_ClearScript_Core' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='ClearScript.Core.dll' Source='..\packages\Microsoft.ClearScript.Core.7.4.5\lib\net471\ClearScript.Core.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 				<Component Id='com_Microsoft_ClearScript_V8' Guid='f6470464-1c1a-471a-8307-ff1debf2515d' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_Microsoft_ClearScript_V8' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='ClearScript.V8.dll' Source='..\packages\Microsoft.ClearScript.V8.7.4.4\lib\net471\ClearScript.V8.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_Microsoft_ClearScript_V8' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='ClearScript.V8.dll' Source='..\packages\Microsoft.ClearScript.V8.7.4.5\lib\net471\ClearScript.V8.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
-				
+				<Component Id='com_Microsoft_ClearScript_V8_ICUData' Guid='1fd8c025-f0d2-4c21-8d7d-dd39681def3b' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+					<File Id='_Microsoft_ClearScript_V8_ICUData' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='ClearScript.V8.ICUData.dll' Source='..\packages\Microsoft.ClearScript.V8.ICUData.7.4.5\lib\netstandard1.0\ClearScript.V8.ICUData.dll' Assembly='.net' KeyPath='yes' />
+				</Component>
+				<!--
+				Move to runtimes
+				<Component Id='com_Microsoft_ClearScript_V8_WinX64' Guid='66b71b5b-dfea-49ea-8591-98daca8fce2a' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+					<File Id='_Microsoft_ClearScript_V8_WinX64' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='ClearScriptV8.win-x64.dll' Source='..\packages\Microsoft.ClearScript.V8.Native.win-x64.7.4.5\runtimes\win-x64\native\ClearScriptV8.win-x64.dll' Assembly='.net' KeyPath='yes' />
+				</Component>
+				-->
 				<!-- Bundle Transformer-->
 				
               <Component Id='com_F1DE126C_3FE1_A5B4_C357_7AEFEF2B1635' Guid='8F9ED269-F3B4-42AE-87C4-BF9CD55414B8' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                <File Id='_F1DE126C_3FE1_A5B4_C357_7AEFEF2B1635' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='BundleTransformer.Core.dll' Source='..\packages\BundleTransformer.Core.1.10.0\lib\net40\BundleTransformer.Core.dll' Assembly='.net' KeyPath='yes' />
+                <File Id='_F1DE126C_3FE1_A5B4_C357_7AEFEF2B1635' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='BundleTransformer.Core.dll' Source='..\packages\BundleTransformer.Core.1.14.0\lib\net40\BundleTransformer.Core.dll' Assembly='.net' KeyPath='yes' />
               </Component>
 				<Component Id='com_7AB06BD5_19B2_7FE1_D193_34F5FA63A1D7' Guid='9396FEDB-51E0-4454-9417-C2246F7913A3' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_7AB06BD5_19B2_7FE1_D193_34F5FA63A1D7' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='BundleTransformer.Less.dll' Source='..\packages\BundleTransformer.Less.1.12.44\lib\net40\BundleTransformer.Less.dll' Assembly='.net' KeyPath='yes' />
@@ -132,22 +137,11 @@
 				<Component Id='com_BundleTransformer_SassAndScss' Guid='e5f241ef-bbff-4fe8-b363-156da9192e8f' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_BundleTransformer_SassAndScss' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='BundleTransformer.SassAndScss.dll' Source='..\packages\BundleTransformer.SassAndScss.1.13.16\lib\net40\BundleTransformer.SassAndScss.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
-				<Component Id='com_LibSassHost' Guid='3c060441-2750-4938-8b2d-47103a5382df' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_LibSassHost' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='LibSassHost.dll' Source='..\packages\LibSassHost.1.3.3\lib\net471\LibSassHost.dll' Assembly='.net' KeyPath='yes' />
-				</Component>
 				<Component Id='com_DartSassHost' Guid='ca155d09-e7d5-4aa8-99c0-fb3b3111545b' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_DartSassHost' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='DartSassHost.dll' Source='..\packages\DartSassHost.1.0.11\lib\net471\DartSassHost.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_DartSassHost' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='DartSassHost.dll' Source='..\packages\DartSassHost.1.0.12\lib\net471\DartSassHost.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
-				<Component Id='com_Google_Protobuf' Guid='b9c569d8-11ed-4a3b-8841-d2321185a3d6' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_Google_Protobuf' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Google.Protobuf.dll' Source='..\packages\Google.Protobuf.3.20.1\lib\net45\Google.Protobuf.dll' Assembly='.net' KeyPath='yes' />
-				</Component>
-				
-				<!--
-
-                -->
-				
 				<Component Id='com_MicrosoftAjax' Guid='b235af82-3a6c-4652-bcee-9ff1c1b6fef2' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                <File Id='_MicrosoftAjax' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='BundleTransformer.MicrosoftAjax.dll' Source='..\packages\BundleTransformer.MicrosoftAjax.1.10.0\lib\net40\BundleTransformer.MicrosoftAjax.dll' Assembly='.net' KeyPath='yes' />
+                <File Id='_MicrosoftAjax' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='BundleTransformer.MicrosoftAjax.dll' Source='..\packages\BundleTransformer.MicrosoftAjax.1.14.0\lib\net40\BundleTransformer.MicrosoftAjax.dll' Assembly='.net' KeyPath='yes' />
               </Component>
               <Component Id='com_AjaxMin' Guid='27bf7242-eb9e-4a63-a033-db42e6e81430' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                 <File Id='_AjaxMin' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='AjaxMin.dll' Source='..\packages\AjaxMin.5.14.5506.26202\lib\net40\AjaxMin.dll' Assembly='.net' KeyPath='yes' />
@@ -155,19 +149,12 @@
 			 <Component Id='com_EcmaScript' Guid='96cd66a7-4cbf-4e31-abf9-64792af11d05' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                 <File Id='_EcmaScript' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='EcmaScript.NET.dll' Source='..\Assemblies\NonNuget\EcmaScript.Net.dll' Assembly='.net' KeyPath='yes' />
               </Component>          
-
-        
-                <Component Id='com_84313FCC_CA0A_5CD0_3148_C64EACFE5839' Guid='9E03A467-8C04-4D2D-852D-884CBFFF379F' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                    <File Id='_84313FCC_CA0A_5CD0_3148_C64EACFE5839' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='MsieJavaScriptEngine.dll' Source='..\packages\MsieJavaScriptEngine.3.0.3\lib\net45\MsieJavaScriptEngine.dll' Assembly='.net' KeyPath='yes' />
-                </Component>
-
                 <Component Id='com_Newtonsoft_Json' Guid='EB07F7B5-9832-4DC2-A077-F67183933D8D' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                    <File Id='_Newtonsoft_Json' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Newtonsoft.Json.dll' Source='..\packages\Newtonsoft.Json.13.0.2\lib\net45\Newtonsoft.Json.dll' Assembly='.net' KeyPath='yes' />
+                    <File Id='_Newtonsoft_Json' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Newtonsoft.Json.dll' Source='..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
                 <Component Id='com_AE9FA7A8_9BB7_A46E_31FA_6B9C1C39FD99' Guid='0365CBFD-BE11-4AFD-910D-D3C92FFC1F69' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                     <File Id='_AE9FA7A8_9BB7_A46E_31FA_6B9C1C39FD99' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='WebGrease.dll' Source='..\packages\WebGrease.1.6.0\lib\WebGrease.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
-
                 <Component Id='com_F747D995_D111_D27A_EAF9_4647B1AC33A1' Guid='C0E9F958-0B2A-4EF7-BA96-31C7C5DC7F0A' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                   <File Id='_F747D995_D111_D27A_EAF9_4647B1AC33A1' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Microsoft.Web.Infrastructure.dll' Source='..\packages\Microsoft.Web.Infrastructure.2.0.0\lib\net40\Microsoft.Web.Infrastructure.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
@@ -187,29 +174,14 @@
                   <File Id='com_TidyHTML5Managed' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='TidyHTML5Managed.dll' Source='..\Assemblies\NonNuget\TidyHTML5Managed.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
                 <Component Id='com_MagickNETCore' Guid='ef1e2c1c-123c-46f1-be4b-4baf7df7ebc2' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                  <File Id='_MagickNETCore' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Magick.NET.Core.dll' Source='..\packages\Magick.NET.Core.13.6.0\lib\netstandard20\Magick.NET.Core.dll' Assembly='.net' KeyPath='yes' />
+                  <File Id='_MagickNETCore' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Magick.NET.Core.dll' Source='..\packages\Magick.NET.Core.13.8.0\lib\netstandard20\Magick.NET.Core.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
-                <Component Id='com_MagickNETQ8x64' Guid='30b11aa1-f675-453a-b5b1-e8b44ee79450' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                  <File Id='_MagickNETQ8x64' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Magick.NET-Q8-x64.dll' Source='..\packages\Magick.NET-Q8-x64.13.6.0\lib\netstandard20\Magick.NET-Q8-x64.dll' Assembly='.net' KeyPath='yes' />
-                </Component>
-                <Component Id='com_Facebook' Guid='05e7d0c7-5f82-4eab-a281-1b768643c2cf' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                  <File Id='_Facebook' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Facebook.dll' Source='..\packages\Facebook.7.0.6\lib\net45\Facebook.dll' Assembly='.net' KeyPath='yes' />
-                </Component>
-                <Component Id='com_MicrosoftOwin' Guid='e7736bb5-b908-41b6-ab58-faeeff276b01' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                  <File Id='_MicrosoftOwin' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Microsoft.Owin.dll' Source='..\packages\Microsoft.Owin.4.2.2\lib\net45\Microsoft.Owin.dll' Assembly='.net' KeyPath='yes' />
-                </Component>
-                <Component Id='com_MicrosoftOwinSecurity' Guid='f1f5f295-002a-4f69-bc86-4c753a905030' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                  <File Id='_MicrosoftOwinSecurity' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Microsoft.Owin.Security.dll' Source='..\packages\Microsoft.Owin.Security.4.0.1\lib\net45\Microsoft.Owin.Security.dll' Assembly='.net' KeyPath='yes' />
-                </Component>
-                <Component Id='com_Owin' Guid='fb6a9f23-99bf-4903-887e-a28650b9618a' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                  <File Id='_Owin' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Owin.dll' Source='..\packages\Owin.1.0\lib\net40\Owin.dll' Assembly='.net' KeyPath='yes' />
+                <Component Id='com_MagickNETQ8AnyCPU' Guid='30b11aa1-f675-453a-b5b1-e8b44ee79450' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+                  <File Id='_MagickNETQ8AnyCPU' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Magick.NET-Q8-AnyCPU.dll' Source='..\packages\Magick.NET-Q8-AnyCPU.13.8.0\lib\netstandard20\Magick.NET-Q8-AnyCPU.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
                 <Component Id='com_AlphaFS' Guid='a0007f46-be79-462d-8c6f-a9026225065b' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                   <File Id='_AlphaFS' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='AlphaFS.dll' Source='..\packages\AlphaFS.2.2.6\lib\net452\AlphaFS.dll' Assembly='.net' KeyPath='yes' />
                 </Component>                
-                <Component Id='com_DocumentFormat_OpenXml' Guid='fb2c94d6-f1a5-440d-b292-b285356559f9' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                  <File Id='_DocumentFormat_OpenXml' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='DocumentFormat.OpenXml.dll' Source='..\packages\DocumentFormat.OpenXml.2.9.1\lib\net46\DocumentFormat.OpenXml.dll' Assembly='.net' KeyPath='yes' />
-                </Component>
                 <Component Id='com_AdvancedStringBuilder' Guid='4034daa4-a30d-48b7-ae2c-25962b84a411' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                   <File Id='_AdvancedStringBuilder' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='AdvancedStringBuilder.dll' Source='..\packages\AdvancedStringBuilder.0.1.1\lib\net45\AdvancedStringBuilder.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
@@ -217,7 +189,7 @@
 
               <!-- Libraies for PreMailer.Net - DONT UPDATE FROM NUGET!!!-->
               <Component Id='com_System_Text_Encoding_CodePages' Guid='a5b84f31-01e5-4904-af1e-d85a310cf875' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                <File Id='_System_Text_Encoding_CodePages' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Encoding.CodePages.dll' Source='..\Assemblies\NonNuget\System.Text.Encoding.CodePages.dll' Assembly='.net' KeyPath='yes' />
+                <File Id='_System_Text_Encoding_CodePages' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Encoding.CodePages.dll' Source='..\packages\System.Text.Encoding.CodePages.8.0.0\lib\netstandard2.0\System.Text.Encoding.CodePages.dll' Assembly='.net' KeyPath='yes' />
               </Component>
               <Component Id='com_AngleSharp' Guid='af54845d-f98c-43f5-9f9c-8b0c7c2d677e' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                 <File Id='_AngleSharp' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='AngleSharp.dll' Source='..\packages\AngleSharp.1.1.2\lib\net472\AngleSharp.dll' Assembly='.net' KeyPath='yes' />
@@ -229,17 +201,39 @@
               <Component Id='com_ImazenWebP' Guid='094ef4cf-5781-4c08-bb15-0614b7e06b93' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                 <File Id='_ImazenWebP' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Imazen.WebP.dll' Source='..\Assemblies\NonNuget\Imazen.WebP.dll' Assembly='.net' KeyPath='yes' />
               </Component>
-<!--
-				<Component Id='com_System_Text_Encodings_Web' Guid='a5b84f31-01e5-4904-af1e-d85a310cf875' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_System_Text_Encoding_Web' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Encoding.CodePages.dll' Source='..\Assemblies\NonNuget\System.Text.Encoding.CodePages.dll' Assembly='.net' KeyPath='yes' />
-				</Component>
--->				
+
 				<Component Id='com_QRcoder' Guid='bbd81acb-8106-49a6-a2e5-2bb767a63bfa' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_QRcoder' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='QRcoder.dll' Source='..\packages\QRcoder.1.4.3\lib\net40\QRcoder.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 
 				<Component Id='com_SystemBuffers' Guid='87bfe201-a4ce-4cd8-85c3-118972fd8e9b' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_SystemBuffers' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Buffers.dll' Source='..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll' Assembly='.net' KeyPath='yes' />
+				</Component>
+				<Component Id='com_SystemMemory' Guid='b076ef1f-c854-488b-a69b-4dafa0f94725' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+					<File Id='_SystemMemory' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Memory.dll' Source='..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll' Assembly='.net' KeyPath='yes' />
+				</Component>
+
+				<Component Id='com_SystemRuntimeCompilerServicesUnsafe' Guid='ee8a5f5d-a9c0-41e2-8ce9-e0b797582987' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+					<File Id='_SystemRuntimeCompilerServicesUnsafe' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Runtime.CompilerServices.Unsafe.dll' Source='..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll' Assembly='.net' KeyPath='yes' />
+				</Component>
+
+				<Component Id='com_SystemThreadingTasksExtensions' Guid='8b34d495-0c6c-4c9f-b0dd-cc3489579dc1' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+					<File Id='_SystemThreadingTasksExtensions' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Threading.Tasks.Extensions.dll' Source='..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll' Assembly='.net' KeyPath='yes' />
+				</Component>
+
+				<Component Id='com_SystemTextJson' Guid='221de48f-a70c-458b-aa0a-4c1d48519315' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+					<File Id='_SystemTextJson' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Json.dll' Source='..\packages\System.Text.Json.4.7.2\lib\net461\System.Text.Json.dll' Assembly='.net' KeyPath='yes' />
+				</Component>
+				
+				<Component Id='com_MicrosoftBclAsyncInterfaces' Guid='0b0f40f8-1240-4b30-b06b-93ebd7a717c4' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+					<File Id='_MicrosoftBclAsyncInterfaces' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Microsoft.Bcl.AsyncInterfaces.dll' Source='..\packages\Microsoft.Bcl.AsyncInterfaces.8.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll' Assembly='.net' KeyPath='yes' />
+				</Component>
+				
+				<Component Id='com_SystemTextEncodingsWeb' Guid='4dfb277c-b692-4118-b0f2-e086ef193c53' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+					<File Id='_SystemTextEncodingsWeb' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Encodings.Web.dll' Source='..\packages\System.Text.Encodings.Web.8.0.0\lib\net462\System.Text.Encodings.Web.dll' Assembly='.net' KeyPath='yes' />
+				</Component>
+				<Component Id='com_SystemNumericsVectors' Guid='5e62ecb1-4b75-4ba1-9dc4-9bbc032eb8cc' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+					<File Id='_SystemNumericsVectors' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Numerics.Vectors.dll' Source='..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 <!--
 				<Component Id='com_SelectHtmlToPdf' Guid='8ecf5eae-ab8d-4390-95d0-234e54902a58' Permanent='no' SharedDllRefCount='no' Transitive='no'>
@@ -285,17 +279,10 @@
               </Component>
 			<Component Id='com_Microsoft_ClearScript_V8_WinX64' Guid='af52af85-0ca4-459a-b7e5-dc3088aa17b6' Win64='no'>
 				<Condition>VersionNT64</Condition>
-				<File Id='_Microsoft_ClearScript_V8_WinX64' Source='..\packages\Microsoft.ClearScript.V8.Native.win-x64.7.4.4\runtimes\win-x64\native\ClearScriptV8.win-x64.dll' KeyPath='yes' />
-			</Component>
-			<Component Id='com_LibSassHost_WinX64' Guid='9dc55fab-0e3b-4b9c-a6d5-68ab5071e6d3' Win64='no'>
-				<Condition>VersionNT64</Condition>
-				<File Id='_LibSassHost_WinX64' Source='..\packages\LibSassHost.Native.win-x64.1.3.3\runtimes\win-x64\native\libsass.dll' KeyPath='yes' />
+				<File Id='_Microsoft_ClearScript_V8_WinX64' Source='..\packages\Microsoft.ClearScript.V8.Native.win-x64.7.4.5\runtimes\win-x64\native\ClearScriptV8.win-x64.dll' KeyPath='yes' />
 			</Component>
 		</Directory>
     </Directory>
-
-
-      
         <!-- The FileSystem group of the installation package. -->
         <ComponentGroup Id='FileSystemGroup'>
             <!--ComponentGroupRef Id='Eonic.Providers.Messaging.CampaignMonitor.Binaries' /-->
@@ -321,11 +308,9 @@
             <!--ComponentRef Id='com_55C82BB1_0D6D_2A6A_5089_CF3B60B4DB68' /-->
             <ComponentRef Id='com_63BDF556_ADF6_DC60_A6AE_DFCEBB6C3699' />
             <ComponentRef Id='com_7AB06BD5_19B2_7FE1_D193_34F5FA63A1D7' />
-            <ComponentRef Id='com_84313FCC_CA0A_5CD0_3148_C64EACFE5839' />
             <ComponentRef Id='com_Newtonsoft_Json' />
             <ComponentRef Id='com_AE9FA7A8_9BB7_A46E_31FA_6B9C1C39FD99' />
             <ComponentRef Id='com_B10633E9_8F94_9D1E_0AAD_BFBDC164608E' />
-            <ComponentRef Id='com_B20C138E_295E_F3EB_3EC1_D53E7993DC9D' />
             <ComponentRef Id='com_B9914EC8_D12B_85D0_6750_114591DFF224' />
             <ComponentRef Id='com_D6B83311_BC5C_813C_0A8A_F51BD806D360' />
             <ComponentRef Id='com_F1DE126C_3FE1_A5B4_C357_7AEFEF2B1635' />
@@ -340,41 +325,40 @@
             <ComponentRef Id='com_AjaxMin' />
             <ComponentRef Id='com_EcmaScript' />
             <ComponentRef Id='com_TidyHTML5Managed' />
-            <ComponentRef Id='com_MagickNETQ8x64' />
+            <ComponentRef Id='com_MagickNETQ8AnyCPU' />
             <ComponentRef Id='com_MagickNETCore' />
-            <ComponentRef Id='com_Facebook' />
-            <ComponentRef Id='com_MicrosoftOwin' />
-            <ComponentRef Id='com_MicrosoftOwinSecurity' />
-            <ComponentRef Id='com_Owin' />
             <ComponentRef Id='com_AlphaFS' />
-            <ComponentRef Id='com_DocumentFormat_OpenXml' />
-          <ComponentRef Id='com_tidy_x64' />
+            <ComponentRef Id='com_tidy_x64' />
             <ComponentRef Id='com_tidy_x86' />
           <!--  <ComponentRef Id='com_JavaScriptEngineSwitcher_MSIE' /> -->
 
            <ComponentRef Id='com_JavaScriptEngineSwitcher_V8' />
 			<ComponentRef Id='com_BundleTransformer_SassAndScss' />
-			<ComponentRef Id='com_LibSassHost' />
 			<ComponentRef Id='com_DartSassHost' />
-			<ComponentRef Id='com_LibSassHost_WinX64' />
 			<ComponentRef Id='com_Microsoft_ClearScript_Core'/>
 			<ComponentRef Id='com_Microsoft_ClearScript_V8'/>
 			<ComponentRef Id='com_Microsoft_ClearScript_V8_WinX64' />
-				
+			<ComponentRef Id='com_Microsoft_ClearScript_V8_ICUData' />	
+			
+			
           <ComponentRef Id='com_Protean_AppStart' />
-
           <ComponentRef Id='com_AdvancedStringBuilder' />
-
           <ComponentRef Id='com_System_Text_Encoding_CodePages' />
           <ComponentRef Id='com_AngleSharp' />
           <ComponentRef Id='com_PreMailerNet' />
           <ComponentRef Id='com_ImazenWebP' />
           <ComponentRef Id='com_libwebp' />
 		  <ComponentRef Id='com_QRcoder' />
-
-			<ComponentRef Id='com_Google_Protobuf' />
 			<ComponentRef Id='com_SystemBuffers' />
-               <!--
+			<ComponentRef Id='com_SystemMemory' />
+			<ComponentRef Id='com_SystemRuntimeCompilerServicesUnsafe' />
+			<ComponentRef Id='com_SystemThreadingTasksExtensions' />
+			<ComponentRef Id='com_SystemTextJson' />
+			<ComponentRef Id='com_MicrosoftBclAsyncInterfaces' />
+			<ComponentRef Id='com_SystemTextEncodingsWeb' />
+			<ComponentRef Id='com_SystemNumericsVectors' />
+			
+			<!--
 			<ComponentRef Id='com_SelectHtmlToPdf' />
 			-->
 			<!--  

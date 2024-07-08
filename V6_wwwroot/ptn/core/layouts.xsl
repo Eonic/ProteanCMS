@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml" xmlns:ew="urn:ew">
+	<xsl:variable name="show-layout-footer">false</xsl:variable>
 	<xsl:template match="Page" mode="addModuleControls"></xsl:template>
 	<xsl:template match="Page" mode="addModuleControlsSection"></xsl:template>
 
@@ -138,6 +139,9 @@
 								<xsl:text> bg-video-wrapper bg-video-wrapper-</xsl:text>
 								<xsl:value-of select="@id"/>
 							</xsl:if>
+              <xsl:if test="@fullWidth='narrow'">
+                <xsl:text> narrow-container </xsl:text>
+              </xsl:if>
 						</xsl:attribute>
 						<xsl:if test="@data-stellar-background-ratio!='10'">
 							<xsl:attribute name="data-parallax-speed">
@@ -173,7 +177,13 @@
 								<xsl:text>background-image: url('</xsl:text>
 								<xsl:value-of select="@backgroundImage"/>
 								<xsl:text>');</xsl:text>
-								<xsl:if test="@minHeightxs!=''">
+                <xsl:if test="@backgroundPosition and @backgroundPosition!=''">
+                  <xsl:text>background-position:</xsl:text>
+                  <xsl:value-of select="@backgroundPosition"/>
+                  <xsl:text>;</xsl:text>
+                </xsl:if>
+
+                <xsl:if test="@minHeightxs!=''">
 									<xsl:text>min-height:</xsl:text>
 									<xsl:value-of select="@minHeightxs"/>
 									<xsl:text>px!important;</xsl:text>
@@ -305,6 +315,12 @@
 									<xsl:text> </xsl:text>
 								</div>
 							</xsl:when>
+							<xsl:when test="@fullWidth='true-w-padding'">
+								<div class="fullwidthContainer fullwidth-w-padding">
+									<xsl:apply-templates select="." mode="displayModule"/>
+									<xsl:text> </xsl:text>
+								</div>
+							</xsl:when>
 							<xsl:otherwise>
 								<div class="{$class} content">
 									<xsl:apply-templates select="." mode="displayModule"/>
@@ -406,7 +422,7 @@
 
 	<xsl:template match="Page" mode="layoutFooter">
 		<xsl:param name="containerClass"/>
-		<xsl:if test="/Page/Contents/Content[@name='footer' or @position='footer']">
+		<xsl:if test="/Page/Contents/Content[@name='footer' or @position='footer'] or $show-layout-footer='true'">
 			<xsl:apply-templates select="/Page" mode="addModule">
 				<xsl:with-param name="text">Add Module</xsl:with-param>
 				<xsl:with-param name="position">footer</xsl:with-param>
@@ -881,7 +897,7 @@
 			<xsl:if test="@iconStyle='CentreSmall'"> module-centred</xsl:if>
 			<xsl:if test="@iconStyle='Right'"> module-right</xsl:if>
 			<xsl:if test="@iconStyle='Left'"> module-left</xsl:if>
-			<xsl:if test="@icon!='' or @uploadIcon!=''"> module-containing-icon</xsl:if>
+			<xsl:if test="@icon!='' or @icon-class!='' or @uploadIcon!=''"> module-containing-icon</xsl:if>
 		</xsl:variable>
 		<div id="mod_{@id}{$id}" class="module nobox pos-{@position} {$thisClass}">
 			<xsl:apply-templates select="." mode="themeModuleExtras"/>
@@ -901,6 +917,7 @@
 					<xsl:text> char80-</xsl:text>
 					<xsl:value-of select="@char80Layout"/>
 				</xsl:if>
+
 				<xsl:if test="@panelImage!=''">
 					<xsl:text> panelImage </xsl:text>
 				</xsl:if>
@@ -918,6 +935,12 @@
 					<xsl:value-of select="@position-horizontal"/>
 				</xsl:if>
 			</xsl:attribute>
+			<xsl:if test="@maxWidth!=''">
+				<xsl:attribute name='style'>
+					<xsl:text>max-width:</xsl:text>
+					<xsl:value-of select="@maxWidth"/>
+				</xsl:attribute>
+			</xsl:if>
 			<xsl:if test="@contentType='Module'">
 				<xsl:attribute name="class">
 					<xsl:text>module noboxlayout layoutModule pos-</xsl:text>
@@ -926,6 +949,9 @@
 					<xsl:if test="not(@position='header') and not(@position='footer') and not(@position='column1')">
 						<xsl:value-of select="@background"/>
 					</xsl:if>
+          <xsl:if test="@fullWidth='narrow'">
+            <xsl:text> narrow-container </xsl:text>
+          </xsl:if>
 					<xsl:apply-templates select="." mode="hideScreens" />
 					<xsl:apply-templates select="." mode="marginBelow" />
 					<xsl:value-of select="$thisClass"/>
@@ -1022,7 +1048,7 @@
 					<div>
 						<xsl:apply-templates select="." mode="inlinePopupOptions" />
 						<xsl:text> </xsl:text>
-						<xsl:if test="@title!='' or @icon!='' or @uploadIcon!=''">
+						<xsl:if test="@title!='' or @icon!='' or @icon-class!='' or @uploadIcon!=''">
 							<xsl:choose>
 								<xsl:when test="@contentType='Module'">
 									<h2 class="layout-title">
@@ -1035,7 +1061,7 @@
 											<xsl:element name="{@heading}">
 												<xsl:attribute name="class">
 													<xsl:text>title</xsl:text>
-													<xsl:if test="@icon!='' or @uploadIcon!=''">
+													<xsl:if test="@icon!='' or @icon-class!='' or @uploadIcon!=''">
 														<xsl:text> module-with-icon</xsl:text>
 													</xsl:if>
 												</xsl:attribute>
@@ -1044,7 +1070,7 @@
 										</xsl:when>
 										<xsl:otherwise>
 											<h3 class="title">
-												<xsl:if test="@icon!='' or @uploadIcon!=''">
+												<xsl:if test="@icon!='' or @icon-class!='' or @uploadIcon!=''">
 													<xsl:attribute name="class">title module-with-icon</xsl:attribute>
 												</xsl:if>
 												<xsl:apply-templates select="." mode="moduleLink"/>
@@ -1057,7 +1083,7 @@
 					</div>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:if test="@title!='' or @icon!='' or @uploadIcon!=''">
+					<xsl:if test="@title!='' or @icon!='' or @icon-class!='' or @uploadIcon!=''">
 						<xsl:choose>
 							<xsl:when test="@contentType='Module'">
 								<h2 class="layout-title">
@@ -1071,7 +1097,7 @@
 										<xsl:element name="{@heading}">
 											<xsl:attribute name="class">
 												<xsl:text>title</xsl:text>
-												<xsl:if test="@icon!='' or @uploadIcon!=''">
+												<xsl:if test="@icon!='' or @icon-class!='' or @uploadIcon!=''">
 													<xsl:text> module-with-icon</xsl:text>
 												</xsl:if>
 											</xsl:attribute>
@@ -1083,7 +1109,7 @@
 									</xsl:when>
 									<xsl:otherwise>
 										<h3 class="title">
-											<xsl:if test="@icon!='' or @uploadIcon!=''">
+											<xsl:if test="@icon!='' or @icon-class!='' or @uploadIcon!=''">
 												<xsl:attribute name="class">title module-with-icon</xsl:attribute>
 											</xsl:if>
 											<xsl:apply-templates select="." mode="moduleLink"/>
@@ -1184,7 +1210,7 @@
 						<xsl:if test="@panelImage!=''">
 							<xsl:text>panelImage </xsl:text>
 						</xsl:if>
-						<xsl:if test="@icon!='' or @uploadIcon!=''">
+						<xsl:if test="@icon!='' or @icon-class!='' or @uploadIcon!=''">
 							<xsl:text>panel-icon </xsl:text>
 						</xsl:if>
 						<xsl:value-of select="translate(@box,' ','-')"/>
@@ -1208,7 +1234,7 @@
 							<img src="{@panelImage}" alt="{@title}" class="img-responsive" />
 						</div>
 					</xsl:if>
-					<xsl:if test="@title!='' or @icon!='' or @uploadIcon!=''">
+					<xsl:if test="@title!='' or @icon!='' or @icon-class!='' or @uploadIcon!=''">
 
 						<xsl:apply-templates select="." mode="inlinePopupOptions"/>
 						<xsl:if test="@rss and @rss!='false'">
@@ -1290,7 +1316,7 @@
 						<xsl:if test="@panelImage!=''">
 							<xsl:text> panelImage </xsl:text>
 						</xsl:if>
-						<xsl:if test="@icon!='' or @uploadIcon!=''">
+						<xsl:if test="@icon!='' or @icon-class!='' or @uploadIcon!=''">
 							<xsl:text>panel-icon </xsl:text>
 						</xsl:if>
 						<xsl:choose>
@@ -1307,7 +1333,7 @@
 						<xsl:if test="@title=''">
 							<xsl:text> boxnotitle</xsl:text>
 						</xsl:if>
-						<xsl:if test="@icon!='' or @uploadIcon!=''">
+						<xsl:if test="@icon!='' or @icon-class!='' or @uploadIcon!=''">
 							<xsl:text> module-with-icon</xsl:text>
 						</xsl:if>
 						pos-<xsl:value-of select="@position"/>
@@ -1318,12 +1344,18 @@
 						<xsl:apply-templates select="." mode="marginBelow" />
 						<!--<xsl:apply-templates select="." mode="themeModuleExtras"/>-->
 					</xsl:attribute>
+					<xsl:if test="@maxWidth!=''">
+						<xsl:attribute name='style'>
+							<xsl:text>max-width:</xsl:text>
+							<xsl:value-of select="@maxWidth"/>
+						</xsl:attribute>
+					</xsl:if>
 					<xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and @imagePosition='above'">
 						<div class="panel-image">
 							<img src="{@panelImage}" alt="{@title}" class="img-responsive" />
 						</div>
 					</xsl:if>
-					<xsl:if test="@title!='' or @icon!='' or @uploadIcon!=''">
+					<xsl:if test="@title!='' or @icon!='' or @icon-class!='' or @uploadIcon!=''">
 						<div class="card-header">
 							<xsl:apply-templates select="." mode="inlinePopupOptions">
 								<xsl:with-param name="class" select="'card-header'"/>
@@ -1425,7 +1457,7 @@
 			<!-- define classes for box -->
 			<xsl:attribute name="class">
 				<xsl:text>modal-content </xsl:text>
-				<xsl:if test="@icon!='' or @uploadIcon!=''">
+				<xsl:if test="@icon!='' or @icon-class!='' or @uploadIcon!=''">
 					<xsl:text>panel-icon </xsl:text>
 				</xsl:if>
 				<xsl:choose>
@@ -1445,7 +1477,7 @@
 				<xsl:apply-templates select="." mode="marginBelow" />
 				<!-- <xsl:apply-templates select="." mode="themeModuleExtras"/>-->
 			</xsl:attribute>
-			<xsl:if test="@title!='' or @icon!='' or @uploadIcon!=''">
+			<xsl:if test="@title!='' or @icon!='' or @icon-class!='' or @uploadIcon!=''">
 				<div class="modal-header">
 					<xsl:apply-templates select="." mode="inlinePopupOptions">
 						<xsl:with-param name="class" select="'panel-heading'"/>
@@ -1573,7 +1605,7 @@
 									<img src="{@panelImage}" alt="{@title}" class="img-responsive" />
 								</div>
 							</xsl:if>
-							<xsl:if test="@title!='' or @icon!='' or @uploadIcon!=''">
+							<xsl:if test="@title!='' or @icon!='' or @icon-class!='' or @uploadIcon!=''">
 								<div class="alert-heading">
 
 									<h4 class="alert-title">
@@ -1625,7 +1657,7 @@
 							<img src="{@panelImage}" alt="{@title}" class="img-responsive" />
 						</div>
 					</xsl:if>
-					<xsl:if test="@title!='' or @icon!='' or @uploadIcon!=''">
+					<xsl:if test="@title!='' or @icon!='' or @icon-class!='' or @uploadIcon!=''">
 						<div class="alert-heading">
 							<xsl:apply-templates select="." mode="inlinePopupOptions">
 								<xsl:with-param name="class" select="'alert-heading'"/>

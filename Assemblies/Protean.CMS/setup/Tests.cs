@@ -5,6 +5,7 @@ using System.IO;
 using System.Web.Configuration;
 using System.Xml;
 using Microsoft.VisualBasic;
+using Microsoft.Win32;
 
 namespace Protean
 {
@@ -345,6 +346,40 @@ namespace Protean
                 return ex.Message + "<br/>" + ex.StackTrace;
             }
         }
+
+        public string TestCSRedist2010()
+        {
+            string displayName = "Microsoft Visual C++ 2010";
+            try
+            {
+                
+                string uninstallKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
+
+                using (RegistryKey rk = Registry.LocalMachine.OpenSubKey(uninstallKey))
+                {
+                    foreach (string skName in rk.GetSubKeyNames())
+                    {
+                        using (RegistryKey sk = rk.OpenSubKey(skName))
+                        {
+                            if (sk.GetValue("DisplayName") != null) { 
+                            string dispname = sk.GetValue("DisplayName").ToString();
+                            if (dispname.Contains(displayName))
+                            {
+                                return dispname + " Installed";
+                            }
+                            }
+                        }
+                    }
+                }
+                return displayName + " Error Installation Required";
+
+            }
+            catch (Exception ex)
+            {
+                return ex.Message + "<br/>" + ex.StackTrace;
+            }
+        }
+
 
     }
 }
