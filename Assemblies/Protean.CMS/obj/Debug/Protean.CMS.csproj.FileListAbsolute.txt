@@ -386,9 +386,14 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Debug\ProteanCMS.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Debug\ProteanCMS.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\BundleTransformer.MicrosoftAjax.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\BundleTransformer.MicrosoftAjax.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Magick.Native-Q8-arm64.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Magick.Native-Q8-x64.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Magick.Native-Q8-x86.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScriptV8.win-x64.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Magick.Native-Q8-arm64.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Magick.Native-Q8-x64.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Magick.Native-Q8-x86.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScriptV8.win-x64.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ProteanCMS.dll.config
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ProteanCMS.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ProteanCMS.pdb
@@ -422,6 +427,8 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Threading.Ta
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Web.Optimization.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\WebActivatorEx.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\WebGrease.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\DocumentFormat.OpenXml.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\DocumentFormat.OpenXml.Framework.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Magick.NET-Q8-AnyCPU.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Select.HtmlToPdf.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\TidyHTML5Managed.dll
@@ -450,6 +457,8 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Net.FtpClien
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Threading.Tasks.Extensions.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Web.Optimization.xml
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\DocumentFormat.OpenXml.xml
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\DocumentFormat.OpenXml.Framework.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Magick.NET-Q8-AnyCPU.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Select.HtmlToPdf.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Magick.NET.Core.xml
@@ -463,11 +472,3 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Debug\Protean.CMS.csproj.
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Debug\Protean..4E1E49F9.Up2Date
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Debug\ProteanCMS.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Debug\ProteanCMS.pdb
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Magick.Native-Q8-arm64.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Magick.Native-Q8-x64.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Magick.Native-Q8-x86.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScriptV8.win-x64.dll
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\DocumentFormat.OpenXml.dll
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\DocumentFormat.OpenXml.Framework.dll
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\DocumentFormat.OpenXml.xml
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\DocumentFormat.OpenXml.Framework.xml
