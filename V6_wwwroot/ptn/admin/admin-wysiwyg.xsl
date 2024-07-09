@@ -364,22 +364,26 @@
 		<xsl:param name="text"/>
 		<xsl:param name="name"/>
 		<xsl:param name="class"/>
+		<!--
+		<xsl:attribute name="class">
+			<xsl:if test="$class!=''">
+				<xsl:value-of select="$class"/>
+				<xsl:text> </xsl:text>
+			</xsl:if>
+			<xsl:if test="@class!=''">
+				<xsl:value-of select="@class"/>
+				<xsl:text> </xsl:text>
+			</xsl:if>
+			<xsl:text>editable</xsl:text>
+		</xsl:attribute>
+		-->
 		<xsl:choose>
 			<xsl:when test="/Page/Contents/Content[@name=$name]">
-				<!-- Do we need to tie it down by Type? What about bespoke types?-->
-				<!--<xsl:when test="/Page/Contents/Content[@name=$name and (@type='PlainText' or @type='FormattedText' or @type='Image')]">-->
-				<!-- The edit buttons only needed, when the basic of content types, others will have the Edit buttons within their displayBrief templates. -->
 				<xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='EditContent'] and $adminMode">
 					<xsl:apply-templates select="/Page/Contents/Content[@name=$name]" mode="inlinePopupSingleOptions">
-						<xsl:with-param name="class">
-							<xsl:value-of select="$class"/>
-						</xsl:with-param>
-						<xsl:with-param name="name">
-							<xsl:value-of select="$name"/>
-						</xsl:with-param>
-						<xsl:with-param name="type">
-							<xsl:value-of select="$type"/>
-						</xsl:with-param>
+						<xsl:with-param name="class" select="$class"/>
+						<xsl:with-param name="name" select="$name"/>
+						<xsl:with-param name="type" select="$type"/>
 					</xsl:apply-templates>
 				</xsl:if>
 			</xsl:when>
@@ -387,23 +391,19 @@
 				<xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddContent'] and $adminMode">
 					<div class="ptn-edit options">
 						<xsl:apply-templates select="/Page" mode="inlinePopupAdd">
-							<xsl:with-param name="type">
-								<xsl:value-of select="$type"/>
-							</xsl:with-param>
-							<xsl:with-param name="text">
-								<xsl:value-of select="$text"/>
-							</xsl:with-param>
-							<xsl:with-param name="name">
-								<xsl:value-of select="$name"/>
-							</xsl:with-param>
-							<xsl:with-param name="class">
-								<xsl:value-of select="$class"/>
-							</xsl:with-param>
+							<xsl:with-param name="type" select="$type"/>
+							<xsl:with-param name="text" select="$text"/>
+							<xsl:with-param name="class" select="$class"/>
+							<xsl:with-param name="name" select="$name"/>
 						</xsl:apply-templates>
 					</div>
 				</xsl:if>
 			</xsl:otherwise>
 		</xsl:choose>
+		<!-- Do we need to tie it down by Type? What about bespoke types?-->
+		<!--<xsl:when test="/Page/Contents/Content[@name=$name and (@type='PlainText' or @type='FormattedText' or @type='Image')]">-->
+		<!-- The edit buttons only needed, when the basic of content types, others will have the Edit buttons within their displayBrief templates. -->
+
 	</xsl:template>
 
 
@@ -1403,16 +1403,20 @@
 		<xsl:param name="class"/>
 		<xsl:param name="name"/>
 		<xsl:if test="$page/AdminMenu/descendant-or-self::MenuItem[@cmd='EditContent']">
+			<!--TS moved to inlinePopupSingle as was breaking compiled mode-->
+		
 			<xsl:attribute name="class">
 				<xsl:if test="$class!=''">
 					<xsl:value-of select="$class"/>
+					<xsl:text> </xsl:text>
 				</xsl:if>
 				<xsl:if test="@class!=''">
 					<xsl:value-of select="@class"/>
+					<xsl:text> </xsl:text>
 				</xsl:if>
-				<xsl:value-of select="@class"/>
-				<xsl:text> editable</xsl:text>
+				<xsl:text>editable</xsl:text>
 			</xsl:attribute>
+
 			<div class="ptn-edit over-content dropdown options pull-right">
 				<a href="?ewCmd=EditContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to edit this content" class="btn btn-primary btn-xs pull-right">
 					<i class="fas fa-pen">&#160;</i>&#160;
@@ -1423,8 +1427,6 @@
 					<xsl:if test="@status=0">[hidden]</xsl:if>
 				</a>
 				<ul class="dropdown-menu">
-					<!--xsl:attribute name="onmouseover">adminMenu(this,'onMenu')</xsl:attribute>
-						<xsl:attribute name="onmouseout">adminMenu(this,'offMenu')</xsl:attribute-->
 					<xsl:choose>
 						<xsl:when test="/Page/@id=@parId">
 							<li class="title">

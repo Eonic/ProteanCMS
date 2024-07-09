@@ -37,6 +37,7 @@
 			<bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
 			<bind id="cModuleBox" nodeset="@background" required="false()" type="string"/>
 			<bind id="backgroundImage" nodeset="@backgroundImage" required="false()" type="string"/>
+			<bind id="backgroundPosition" nodeset="@backgroundPosition" required="false()" type="string"/>
 			<bind id="backgroundVideo-mp4" nodeset="@backgroundVideo-mp4" required="false()" type="string"/>
 			<bind id="backgroundVideo-webm" nodeset="@backgroundVideo-webm" required="false()" type="string"/>
 			<bind id="height" nodeset="@height" required="false()" type="string"/>
@@ -991,7 +992,21 @@
 								</group>-->
 							</case>
 						</switch>
-						
+            <select1 bind="backgroundPosition" appearance="minimal">
+              <label>Background Image Position</label>
+              <item>
+                <label>None</label>
+                <value>Default</value>
+              </item>
+              <item>
+                <label>Top</label>
+                <value>center top</value>
+              </item>
+              <item>
+                <label>Centre</label>
+                <value>center center</value>
+              </item>
+            </select1>
 					</group>
 				</group>
 			</group>

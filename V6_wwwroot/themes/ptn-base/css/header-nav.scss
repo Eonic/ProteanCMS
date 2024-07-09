@@ -180,6 +180,16 @@ header {
             font-size: 0.8rem;
             vertical-align: middle;
             margin-left: 0.4em;
+
+            @include media-breakpoint-up($nav-breakpoint) {
+                display: none;
+            }
+        }
+    }
+
+    .dropdown .dropdown-menu {
+        @include media-breakpoint-down($nav-breakpoint) {
+            animation: none;
         }
     }
 
@@ -211,10 +221,6 @@ header {
                 a.on {
                     color: $dropdown-link-color;
                 }
-            }
-
-            @include media-breakpoint-down($nav-breakpoint) {
-                animation: none;
             }
         }
 
@@ -645,7 +651,7 @@ header {
         margin:1px;
         border-radius:$btn-border-radius;
         @include media-breakpoint-up(xxl) {
-            font-size: 1.4rem;
+         //   font-size: 1.4rem;
         }
 
         @include media-breakpoint-down($nav-breakpoint) {
@@ -658,7 +664,7 @@ header {
         }
 
         @include media-breakpoint-up(xxl) {
-            padding: 1.2rem 3rem;
+          //  padding: 1.2rem 3rem;
         }
 
         @include media-breakpoint-down($nav-breakpoint) {

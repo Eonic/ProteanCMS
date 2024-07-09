@@ -177,7 +177,13 @@
 								<xsl:text>background-image: url('</xsl:text>
 								<xsl:value-of select="@backgroundImage"/>
 								<xsl:text>');</xsl:text>
-								<xsl:if test="@minHeightxs!=''">
+                <xsl:if test="@backgroundPosition and @backgroundPosition!=''">
+                  <xsl:text>background-position:</xsl:text>
+                  <xsl:value-of select="@backgroundPosition"/>
+                  <xsl:text>;</xsl:text>
+                </xsl:if>
+
+                <xsl:if test="@minHeightxs!=''">
 									<xsl:text>min-height:</xsl:text>
 									<xsl:value-of select="@minHeightxs"/>
 									<xsl:text>px!important;</xsl:text>
