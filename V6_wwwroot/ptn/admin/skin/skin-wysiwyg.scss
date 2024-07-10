@@ -298,6 +298,7 @@
 
     .editable > div.ptn-edit.options {
         position: relative;
+        z-index:2;
     }
 
     .accordion-module .editable > div.ptn-edit.options {
