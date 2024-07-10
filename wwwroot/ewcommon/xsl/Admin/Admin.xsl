@@ -4642,6 +4642,11 @@
 					<tr>
 						<th colspan="3">Meta Tags - Hidden information for search engines.</th>
 					</tr>
+          <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">Canonical Tag</xsl:with-param>
+            <xsl:with-param name="name">Canonical Tag</xsl:with-param>
+            <xsl:with-param name="type">PlainText</xsl:with-param>
+          </xsl:call-template>
 					<xsl:call-template name="editNamedContent">
 						<xsl:with-param name="desc">Page Description</xsl:with-param>
 						<xsl:with-param name="name">MetaDescription</xsl:with-param>
@@ -14230,5 +14235,29 @@
 		</div>
 	</xsl:template>
 
+<!--  ==  Canonical links  ======================================================================  -->
+  <xsl:template match="Page" mode="canonicalLink">
+    
+    <!--<xsl:if test="not(/Page/@adminMode)">-->
+      <!-- not cart page-->
+      <xsl:if test="not(Cart/Order and Cart/Order/@cmd!='')">
+        <!-- not a steppered page -->
+        <xsl:if test="not(/Page/Request/QueryString/Item[starts-with(@name,'startPos')])">
+          <xsl:if test="$href!=''">
+            <link rel="canonical" href="{$href}"/>
+          </xsl:if>
+        </xsl:if>
+      </xsl:if>
+    <!--</xsl:if>-->
+  </xsl:template>
+
+  <!--  ==  Canonical links  ======================================================================  -->
+  <xsl:template match="Page[descendant-or-self::MenuItem[@id=//Page/@id and DisplayName/@canonicalLink!='']]" mode="canonicalLink">
+   
+    <xsl:variable name="canonicalID" select="descendant-or-self::MenuItem[@id=//Page/@id]/DisplayName/@canonicalLink"/>
+
+    <link rel="canonical" href="{descendant-or-self::MenuItem[@id=$canonicalID]/@url}"/>
+
+  </xsl:template>
 
 </xsl:stylesheet>
