@@ -3,6 +3,16 @@ form.ewXform {
     .form-margin {
         margin-bottom: 1rem;
     }
+
+    .buttons {
+        label.required {
+            display: none;
+        }
+
+        button {
+            float: right;
+        }
+    }
 }
 
 #Login {

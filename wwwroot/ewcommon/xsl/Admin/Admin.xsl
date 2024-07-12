@@ -4642,6 +4642,11 @@
 					<tr>
 						<th colspan="3">Meta Tags - Hidden information for search engines.</th>
 					</tr>
+          <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">Canonical Tag</xsl:with-param>
+            <xsl:with-param name="name">Canonical Tag</xsl:with-param>
+            <xsl:with-param name="type">PlainText</xsl:with-param>
+          </xsl:call-template>
 					<xsl:call-template name="editNamedContent">
 						<xsl:with-param name="desc">Page Description</xsl:with-param>
 						<xsl:with-param name="name">MetaDescription</xsl:with-param>
@@ -14131,6 +14136,9 @@
 					<th colspan="2">
 						Brief
 					</th>
+					<th colspan="2">
+						Default Value
+					</th>
 					<th class="clearfix buttonCell">
 						<a href="{$appPath}?ewCmd=FilterIndex&amp;pgid={/Page/@id}&amp;id=0&amp;SchemaName={indexkeys/SchemaName/@Name}" class="btn btn-success pull-right">
 							<i class="fa fa-plus fa-white">
@@ -14171,6 +14179,9 @@
 			</td>
 			<td colspan="2">
 				<xsl:value-of select="bBriefNotDetail/node()"/>
+			</td>
+			<td colspan="2">
+				<xsl:value-of select="cDefaultValue/node()"/>
 			</td>
 			<td class="clearfix">
 				<a href="{$appPath}?ewCmd=FilterIndex&amp;ewCmd2=delete&amp;pgid={/Page/@id}&amp;id={@nContentIndexDefKey}&amp;SchemaName={../@Name}" class="btn btn-danger btn-xs pull-right">
@@ -14224,5 +14235,29 @@
 		</div>
 	</xsl:template>
 
+<!--  ==  Canonical links  ======================================================================  -->
+  <xsl:template match="Page" mode="canonicalLink">
+    
+    <!--<xsl:if test="not(/Page/@adminMode)">-->
+      <!-- not cart page-->
+      <xsl:if test="not(Cart/Order and Cart/Order/@cmd!='')">
+        <!-- not a steppered page -->
+        <xsl:if test="not(/Page/Request/QueryString/Item[starts-with(@name,'startPos')])">
+          <xsl:if test="$href!=''">
+            <link rel="canonical" href="{$href}"/>
+          </xsl:if>
+        </xsl:if>
+      </xsl:if>
+    <!--</xsl:if>-->
+  </xsl:template>
+
+  <!--  ==  Canonical links  ======================================================================  -->
+  <xsl:template match="Page[descendant-or-self::MenuItem[@id=//Page/@id and DisplayName/@canonicalLink!='']]" mode="canonicalLink">
+   
+    <xsl:variable name="canonicalID" select="descendant-or-self::MenuItem[@id=//Page/@id]/DisplayName/@canonicalLink"/>
+
+    <link rel="canonical" href="{descendant-or-self::MenuItem[@id=$canonicalID]/@url}"/>
+
+  </xsl:template>
 
 </xsl:stylesheet>

@@ -33,28 +33,28 @@
   <xsl:variable name="subSubSubSubSectionPage" select="/Page/Menu/MenuItem/MenuItem/MenuItem/MenuItem/MenuItem/MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]"/>
   <xsl:variable name="MatchHeightType" select="'matchHeight'"/>
   <xsl:variable name="mediaWidth" select="'640'"/>
-  
+
   <xsl:variable name="responsiveImageSizes">off</xsl:variable>
-	
-    <xsl:variable name="debugMode">
-      <xsl:call-template name="getXmlSettings">
-        <xsl:with-param name="sectionName">web</xsl:with-param>
-        <xsl:with-param name="valueName">debug</xsl:with-param>
-      </xsl:call-template>
-    </xsl:variable>
+
+  <xsl:variable name="debugMode">
+    <xsl:call-template name="getXmlSettings">
+      <xsl:with-param name="sectionName">web</xsl:with-param>
+      <xsl:with-param name="valueName">debug</xsl:with-param>
+    </xsl:call-template>
+  </xsl:variable>
 
   <xsl:variable name="scriptType">
-	  <xsl:choose>
-		  <xsl:when test="/Page/Contents/Content[@type='FreeCookieConsent'] and $debugMode!='on' and not($adminMode)">
-			  <xsl:text>text/plain</xsl:text>
-		  </xsl:when>
-		  <xsl:otherwise>
-			  <xsl:text>text/javascript</xsl:text>
-		  </xsl:otherwise>
-	  </xsl:choose>
+    <xsl:choose>
+      <xsl:when test="/Page/Contents/Content[@type='FreeCookieConsent'] and $debugMode!='on' and not($adminMode)">
+        <xsl:text>text/plain</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>text/javascript</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:variable>
-	
-	
+
+
   <xsl:variable name="sitename">
     <xsl:choose>
       <xsl:when test="$siteURL=''">
@@ -195,40 +195,40 @@
     </xsl:call-template>
   </xsl:variable>
 
-	<xsl:template name="eonicwebLogo">
-		<xsl:choose>
-			<xsl:when test="$page/Settings/add[@key='web.eonicwebLogo']/@value!=''">
-				<xsl:value-of select="$page/Settings/add[@key='web.eonicwebLogo']/@value"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:text>/ewcommon/images/admin/skin/protean-admin-white.png</xsl:text>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
+  <xsl:template name="eonicwebLogo">
+    <xsl:choose>
+      <xsl:when test="$page/Settings/add[@key='web.eonicwebLogo']/@value!=''">
+        <xsl:value-of select="$page/Settings/add[@key='web.eonicwebLogo']/@value"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>/ewcommon/images/admin/skin/protean-admin-white.png</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 
-	<xsl:template name="eonicwebCMSName">
-		<xsl:choose>
-			<xsl:when test="$page/Settings/add[@key='web.eonicwebCMSName']/@value!=''">
-				<xsl:value-of select="$page/Settings/add[@key='web.eonicwebCMSName']/@value"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:call-template name="eonicwebProductName"/>
-				<xsl:text> - Content Management System</xsl:text>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
+  <xsl:template name="eonicwebCMSName">
+    <xsl:choose>
+      <xsl:when test="$page/Settings/add[@key='web.eonicwebCMSName']/@value!=''">
+        <xsl:value-of select="$page/Settings/add[@key='web.eonicwebCMSName']/@value"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="eonicwebProductName"/>
+        <xsl:text> - Content Management System</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 
-	<xsl:template name="eonicwebProductName">
-		<xsl:choose>
-			<xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
-				<xsl:value-of select="$page/Settings/add[@key='web.eonicwebProductName']/@value"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:text>Protean</xsl:text>
-				<strong>CMS</strong>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
+  <xsl:template name="eonicwebProductName">
+    <xsl:choose>
+      <xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
+        <xsl:value-of select="$page/Settings/add[@key='web.eonicwebProductName']/@value"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Protean</xsl:text>
+        <strong>CMS</strong>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 
   <xsl:variable name="siteURL">
     <xsl:variable name="baseUrl">
@@ -282,7 +282,7 @@
       </xsl:call-template>
     </xsl:if>
   </xsl:variable>
-	
+
   <xsl:variable name="GoogleGA4MeasurementID">
     <xsl:if test="not(/Page/@adminMode)">
       <xsl:call-template name="getXmlSettings">
@@ -292,14 +292,14 @@
     </xsl:if>
   </xsl:variable>
 
-	<xsl:variable name="GoogleAdConversionID">
-		<xsl:if test="not(/Page/@adminMode)">
-			<xsl:call-template name="getXmlSettings">
-				<xsl:with-param name="sectionName" select="'web'"/>
-				<xsl:with-param name="valueName" select="'GoogleAdConversionID'"/>
-			</xsl:call-template>
-		</xsl:if>
-	</xsl:variable>
+  <xsl:variable name="GoogleAdConversionID">
+    <xsl:if test="not(/Page/@adminMode)">
+      <xsl:call-template name="getXmlSettings">
+        <xsl:with-param name="sectionName" select="'web'"/>
+        <xsl:with-param name="valueName" select="'GoogleAdConversionID'"/>
+      </xsl:call-template>
+    </xsl:if>
+  </xsl:variable>
 
   <xsl:variable name="GoogleOptimizeID">
     <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
@@ -421,33 +421,33 @@
           </xsl:otherwise>
         </xsl:choose>
 
-		  <xsl:apply-templates select="." mode="metacharset"/>
-		  
+        <xsl:apply-templates select="." mode="metacharset"/>
+
         <xsl:if test="$GoogleOptimizeID!=''">
           <script src="https://www.googleoptimize.com/optimize.js?id={$GoogleOptimizeID}" cookie-consent="functionality">&#160;</script>
         </xsl:if>
-	<xsl:if test="not(/Page/@adminMode) and Contents/Content[@name='metaRefresh']/node()!=''">
-			  <meta http-equiv="refresh" content="0;URL='{Contents/Content[@name='metaRefresh']/node()}'" />
-		  </xsl:if>
-	   
+        <xsl:if test="not(/Page/@adminMode) and Contents/Content[@name='metaRefresh']/node()!=''">
+          <meta http-equiv="refresh" content="0;URL='{Contents/Content[@name='metaRefresh']/node()}'" />
+        </xsl:if>
+
 
         <xsl:if test="$GoogleTagManagerID!=''">
 
-	
-			    <!-- Google Tag Manager -->
-			        <script cookie-consent="tracking">
-                    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-                    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-                    j=d.createElement(s),dl=l!='dataLayer'?'&amp;l='+l:'';j.async=true;j.src=
-                    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-                    })(window,document,'script','dataLayer','<xsl:value-of select="$GoogleTagManagerID"/>');
-                  </script>
-                <!-- End Google Tag Manager -->
+
+          <!-- Google Tag Manager -->
+          <script cookie-consent="tracking">
+            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&amp;l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','<xsl:value-of select="$GoogleTagManagerID"/>');
+          </script>
+          <!-- End Google Tag Manager -->
 
         </xsl:if>
         <xsl:if test="$PayPalTagManagerID!=''">
           <!-- PayPal BEGIN -->
-			<script cookie-consent="tracking">
+          <script cookie-consent="tracking">
             (function (a, t, o, m, s) {
             a[m] = a[m] || []; a[m].push({ t: new Date().getTime(), event: 'snippetRun' });
             var f = t.getElementsByTagName(o)[0], e = t.createElement(o), d = m !== 'paypalDDL' ? '&amp;m=' + m : ''; e.async = !0;
@@ -505,7 +505,7 @@
         <xsl:apply-templates select="//Content[@rss and @rss!='false']" mode="feedLinks"/>
 
         <!-- common css -->
-		<xsl:apply-templates select="/Page" mode="headerCommonStyle"/>
+        <xsl:apply-templates select="/Page" mode="headerCommonStyle"/>
         <xsl:apply-templates select="." mode="headerOnlyJS"/>
         <xsl:if test="$ScriptAtBottom!='on' and not($adminMode)">
           <xsl:apply-templates select="." mode="js"/>
@@ -516,20 +516,20 @@
     </html>
   </xsl:template>
 
-	<xsl:template match="Page" mode="headerCommonStyle">
-		<xsl:choose>
-			<xsl:when test="not(/Page/Contents/Content[@name='criticalPathCSS']) or $adminMode">
-				<xsl:apply-templates select="." mode="commonStyle"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:apply-templates select="." mode="criticalPathCSS"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
+  <xsl:template match="Page" mode="headerCommonStyle">
+    <xsl:choose>
+      <xsl:when test="not(/Page/Contents/Content[@name='criticalPathCSS']) or $adminMode">
+        <xsl:apply-templates select="." mode="commonStyle"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:apply-templates select="." mode="criticalPathCSS"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 
-	<xsl:template match="Page" mode="google-ga4-config-params">
-		<!-- for overloading on specific actions -->
-		<!--
+  <xsl:template match="Page" mode="google-ga4-config-params">
+    <!-- for overloading on specific actions -->
+    <!--
 		<xsl:if test="$page/Request/GoogleCampaign">
 		'{		
 		        <xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">
@@ -542,48 +542,48 @@
 		}
 		</xsl:if>
 		-->
-	</xsl:template>
+  </xsl:template>
 
 
-	<xsl:template match="Page[User]" mode="google-ga4-config-params">
-	
-		, {
-		<xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">
-			'campaign_source': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_source']"/>'
-		</xsl:if>
-		<xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_medium']!=''">
-			<xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">,</xsl:if>
-			'campaign_medium': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_medium']"/>',
-		</xsl:if>
-		'user_id': '<xsl:value-of select="User/@id"/>'
-		}
-	</xsl:template>
+  <xsl:template match="Page[User]" mode="google-ga4-config-params">
+
+    , {
+    <xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">
+      'campaign_source': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_source']"/>'
+    </xsl:if>
+    <xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_medium']!=''">
+      <xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">,</xsl:if>
+      'campaign_medium': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_medium']"/>',
+    </xsl:if>
+    'user_id': '<xsl:value-of select="User/@id"/>'
+    }
+  </xsl:template>
 
 
   <xsl:template match="Page" mode="google-ga4-event">
-      <!-- for overloading on specific actions -->
+    <!-- for overloading on specific actions -->
   </xsl:template>
 
-	<xsl:template match="Page" mode="google-ga4-event-extra">
-		<!-- for overloading on specific actions -->
-	</xsl:template>
+  <xsl:template match="Page" mode="google-ga4-event-extra">
+    <!-- for overloading on specific actions -->
+  </xsl:template>
 
-	<xsl:template match="Page[//Content[descendant-or-self::alert/node()='Message Sent']]" mode="google-ga4-event-extra">
-		gtag('event', 'ptn_form_submission', {
-		'form_id':'<xsl:value-of select="//Content[descendant-or-self::alert/node()='Message Sent']/descendant-or-self::submission/@id"/>',
-		<xsl:for-each select="//Content[descendant-or-self::alert/node()='Message Sent']/descendant-or-self::*[name()='Items']/*">
-			'<xsl:value-of select="name()"/>':'<xsl:value-of select="node()"/>
-			<xsl:text>'</xsl:text>
-			<xsl:if test="position()!=last()">,</xsl:if>
-		</xsl:for-each>
-        });
-	</xsl:template>
-	
-		
+  <xsl:template match="Page[//Content[descendant-or-self::alert/node()='Message Sent']]" mode="google-ga4-event-extra">
+    gtag('event', 'ptn_form_submission', {
+    'form_id':'<xsl:value-of select="//Content[descendant-or-self::alert/node()='Message Sent']/descendant-or-self::submission/@id"/>',
+    <xsl:for-each select="//Content[descendant-or-self::alert/node()='Message Sent']/descendant-or-self::*[name()='Items']/*">
+      '<xsl:value-of select="name()"/>':'<xsl:value-of select="node()"/>
+      <xsl:text>'</xsl:text>
+      <xsl:if test="position()!=last()">,</xsl:if>
+    </xsl:for-each>
+    });
+  </xsl:template>
+
+
   <xsl:template match="Page" mode="criticalPathCSS">
-	  <style>
-        <xsl:copy-of select="/Page/Contents/Content[@name='criticalPathCSS']/node()"/>
-	  </style>
+    <style>
+      <xsl:copy-of select="/Page/Contents/Content[@name='criticalPathCSS']/node()"/>
+    </style>
   </xsl:template>
 
   <xsl:template match="Page" mode="alternatePages">
@@ -615,7 +615,7 @@
   <xsl:template match="Page" mode="LayoutAdminJs"></xsl:template>
 
   <xsl:template match="Page" mode="headerOnlyJS">
-	   <xsl:apply-templates select="Contents/Content" mode="headerOnlyContentJS"/>
+    <xsl:apply-templates select="Contents/Content" mode="headerOnlyContentJS"/>
   </xsl:template>
 
   <xsl:template match="Content" mode="opengraph-namespace">
@@ -731,10 +731,10 @@
         </style>
       </xsl:if>
 
-      
-        <xsl:if test="//Content[@type='CookiePolicy'] and not($adminMode)">
-          <link rel="stylesheet" href="/ewcommon/js/jquery/cookiecuttr/cookiecuttr.css"/>
-        </xsl:if>
+
+      <xsl:if test="//Content[@type='CookiePolicy'] and not($adminMode)">
+        <link rel="stylesheet" href="/ewcommon/js/jquery/cookiecuttr/cookiecuttr.css"/>
+      </xsl:if>
 
       <xsl:if test="//Content[@moduleType='SlideCarousel'] and not($adminMode)">
         <link rel="stylesheet" href="/ewcommon/js/jquery/SlideCarousel/SlideCarousel.css"/>
@@ -777,11 +777,11 @@
 
 
   <xsl:template match="Page" mode="js">
-	  <xsl:param name="async"/>
+    <xsl:param name="async"/>
     <!-- bring in jQuery and standard plugins -->
     <xsl:apply-templates select="." mode="commonJs">
-	    <xsl:with-param name="async" select="$async"/>
-	 </xsl:apply-templates>
+      <xsl:with-param name="async" select="$async"/>
+    </xsl:apply-templates>
 
     <!-- site specific javascripts -->
     <xsl:apply-templates select="." mode="siteJs"/>
@@ -801,7 +801,7 @@
 
   <xsl:template match="Content" mode="headerOnlyContentJS">
   </xsl:template>
-	
+
   <xsl:template match="Content" mode="contentJS">
   </xsl:template>
 
@@ -812,7 +812,7 @@
   </xsl:template>
 
   <xsl:template match="Page" mode="commonJs">
-	  <xsl:param name="async"/>
+    <xsl:param name="async"/>
     <xsl:call-template name="bundle-js">
       <xsl:with-param name="comma-separated-files">
         <xsl:apply-templates select="." mode="commonJsFiles" />
@@ -820,7 +820,7 @@
       <xsl:with-param name="bundle-path">
         <xsl:text>~/Bundles/common</xsl:text>
       </xsl:with-param>
-	<xsl:with-param name="async" select="$async"/>  
+      <xsl:with-param name="async" select="$async"/>
     </xsl:call-template>
   </xsl:template>
 
@@ -926,27 +926,27 @@
       <script type="text/javascript">
         <xsl:apply-templates select="." mode="initialiseJplayer"/>
       </script>
-    </xsl:if>    
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="Content[@type='CookieFirst']" mode="headerOnlyContentJS">
-		<xsl:if test="not($adminMode)">
-            <script src="https://consent.cookiefirst.com/sites/{SiteUrl/node()}-{ApiKey/node()}/consent.js">&#160;</script>
-		</xsl:if>
-	</xsl:template>
-	
-	
-	<xsl:template match="Content[@type='CookiePolicy']" mode="contentJS">
-		<xsl:if test="not($adminMode)">
-				<script type="text/javascript">
-					<xsl:text>$(document).ready(function () {</xsl:text>
-					<xsl:text>$.cookieCuttr(</xsl:text>
-					<xsl:apply-templates select="." mode="cookiePolicy"/>
-					<xsl:text>);</xsl:text>
-					<xsl:text>});</xsl:text>
-				</script>
-		</xsl:if>
-	</xsl:template>
+    <xsl:if test="not($adminMode)">
+      <script src="https://consent.cookiefirst.com/sites/{SiteUrl/node()}-{ApiKey/node()}/consent.js">&#160;</script>
+    </xsl:if>
+  </xsl:template>
+
+
+  <xsl:template match="Content[@type='CookiePolicy']" mode="contentJS">
+    <xsl:if test="not($adminMode)">
+      <script type="text/javascript">
+        <xsl:text>$(document).ready(function () {</xsl:text>
+        <xsl:text>$.cookieCuttr(</xsl:text>
+        <xsl:apply-templates select="." mode="cookiePolicy"/>
+        <xsl:text>);</xsl:text>
+        <xsl:text>});</xsl:text>
+      </script>
+    </xsl:if>
+  </xsl:template>
 
   <xsl:template match="Content[@type='CookiePolicy']" mode="cookiePolicy">
     <xsl:text>{</xsl:text>
@@ -1170,25 +1170,25 @@
 
   </xsl:template>
 
-	
 
-	<xsl:template match="Content[@type='FreeCookieConsent']" mode="contentJS">
-		<xsl:if test="not($adminMode)">
-			
-			<!-- Cookie Consent by https://www.FreePrivacyPolicy.com -->
-			
-			<script type="text/javascript" src="//www.freeprivacypolicy.com/public/cookie-consent/4.0.0/cookie-consent1.js" charset="UTF-8">
-				<xsl:text> </xsl:text>
-			</script>
-			<script type="text/javascript" charset="UTF-8">
-				document.addEventListener('DOMContentLoaded', function () {
-				cookieconsent.run({"notice_banner_type":"<xsl:value-of select="BannerType/node()"/>","consent_type":"<xsl:value-of select="ConsentType/node()"/>","palette":"<xsl:value-of select="ColourPalette/node()"/>","language":"<xsl:value-of select="DefaultLanguage/node()"/>","page_load_consent_levels":["<xsl:value-of select="PageLoadConsentLevels/node()"/>"],"notice_banner_reject_button_hide":false,"preferences_center_close_button_hide":false,"page_refresh_confirmation_buttons":false,"website_privacy_policy_url":"<xsl:value-of select="PrivacyPolicyUrl/node()"/>"});
-				});
-			</script>
-		</xsl:if>
-	</xsl:template>
-	
-	
+
+  <xsl:template match="Content[@type='FreeCookieConsent']" mode="contentJS">
+    <xsl:if test="not($adminMode)">
+
+      <!-- Cookie Consent by https://www.FreePrivacyPolicy.com -->
+
+      <script type="text/javascript" src="//www.freeprivacypolicy.com/public/cookie-consent/4.0.0/cookie-consent1.js" charset="UTF-8">
+        <xsl:text> </xsl:text>
+      </script>
+      <script type="text/javascript" charset="UTF-8">
+        document.addEventListener('DOMContentLoaded', function () {
+        cookieconsent.run({"notice_banner_type":"<xsl:value-of select="BannerType/node()"/>","consent_type":"<xsl:value-of select="ConsentType/node()"/>","palette":"<xsl:value-of select="ColourPalette/node()"/>","language":"<xsl:value-of select="DefaultLanguage/node()"/>","page_load_consent_levels":["<xsl:value-of select="PageLoadConsentLevels/node()"/>"],"notice_banner_reject_button_hide":false,"preferences_center_close_button_hide":false,"page_refresh_confirmation_buttons":false,"website_privacy_policy_url":"<xsl:value-of select="PrivacyPolicyUrl/node()"/>"});
+        });
+      </script>
+    </xsl:if>
+  </xsl:template>
+
+
   <!-- Javascripts that can be brought in in the footer of the HTML document, e.g. asynchronous scripts -->
   <xsl:template match="Page" mode="footerJs">
     <!-- common javascript -->
@@ -1204,14 +1204,14 @@
     <xsl:choose>
       <xsl:when test="/Page/ContentDetail/Content">
         <xsl:apply-templates select="/Page/ContentDetail/Content" mode="contentDetailJS"/>
-		<xsl:apply-templates select="/Page/Contents/Content[@type='FreeCookieConsent']" mode="contentJS"/>
+        <xsl:apply-templates select="/Page/Contents/Content[@type='FreeCookieConsent']" mode="contentJS"/>
       </xsl:when>
       <xsl:otherwise>
         <xsl:apply-templates select="/Page/Contents/Content" mode="contentJS"/>
       </xsl:otherwise>
     </xsl:choose>
 
-    <xsl:apply-templates select="/Page/Cart" mode="cartJS"/> 
+    <xsl:apply-templates select="/Page/Cart" mode="cartJS"/>
 
     <!-- GOOGLE MAPS -->
     <xsl:apply-templates select="." mode="googleMapJS" />
@@ -1259,27 +1259,27 @@
         <xsl:for-each select="descendant-or-self::instance[@valid='true']/emailer">
           <xsl:text>fbq('track', 'Lead');</xsl:text>
         </xsl:for-each>
-          <xsl:choose>
-			 
-            <xsl:when test="Cart/Order/@cmd='Logon'"> 
-				<xsl:text>fbq('track', 'AddToCart', {currency: "</xsl:text>
-				<xsl:value-of select="Cart/Order/@currency"/>  
-				<xsl:text>", value:</xsl:text>
-				<xsl:value-of select="Cart/Order/@total"/>  
-				<xsl:text>,content_type: 'product', contents: [</xsl:text>
-				<xsl:for-each select="Cart/Order/Item">
-				    <xsl:text>{id: '</xsl:text>
-					<xsl:value-of select="@id"/>
-                    <xsl:text>', quantity:</xsl:text>
-					<xsl:value-of select="@quantity"/>
-					<xsl:text>}</xsl:text>
-	                <xsl:if test="position()!=last()">
-						<xsl:text>,</xsl:text>					
-					</xsl:if>				
-				</xsl:for-each>
-                <xsl:text>]});</xsl:text>
-            </xsl:when>
-			<!--
+        <xsl:choose>
+
+          <xsl:when test="Cart/Order/@cmd='Logon'">
+            <xsl:text>fbq('track', 'AddToCart', {currency: "</xsl:text>
+            <xsl:value-of select="Cart/Order/@currency"/>
+            <xsl:text>", value:</xsl:text>
+            <xsl:value-of select="Cart/Order/@total"/>
+            <xsl:text>,content_type: 'product', contents: [</xsl:text>
+            <xsl:for-each select="Cart/Order/Item">
+              <xsl:text>{id: '</xsl:text>
+              <xsl:value-of select="@id"/>
+              <xsl:text>', quantity:</xsl:text>
+              <xsl:value-of select="@quantity"/>
+              <xsl:text>}</xsl:text>
+              <xsl:if test="position()!=last()">
+                <xsl:text>,</xsl:text>
+              </xsl:if>
+            </xsl:for-each>
+            <xsl:text>]});</xsl:text>
+          </xsl:when>
+          <!--
             <xsl:when test="/Page/Cart/Order/@cmd='Logon'">
               <xsl:apply-templates select="/Page/Cart/Order/Item" mode="ga-universal-addProduct" />
               ga('ec:setAction','checkout', {'step': 2});
@@ -1297,44 +1297,44 @@
               ga('ec:setAction','checkout', {'step': 4});
             </xsl:when>
 			  -->
-            <xsl:when test="Cart/Order/@cmd='EnterPaymentDetails'">
-					<xsl:text>fbq('track', 'AddPaymentInfo', {currency: "</xsl:text>
-				<xsl:value-of select="Cart/Order/@currency"/>  
-				<xsl:text>", value:</xsl:text>
-				<xsl:value-of select="Cart/Order/@total"/>  
-				<xsl:text>,content_type: 'product', contents: [</xsl:text>
-				<xsl:for-each select="Cart/Order/Item">
-				    <xsl:text>{id: '</xsl:text>
-					<xsl:value-of select="@id"/>
-                    <xsl:text>', quantity:</xsl:text>
-					<xsl:value-of select="@quantity"/>
-					<xsl:text>}</xsl:text>
-	                <xsl:if test="position()!=last()">
-						<xsl:text>,</xsl:text>					
-					</xsl:if>				
-				</xsl:for-each>
-                <xsl:text>]});</xsl:text>
-            </xsl:when>
-			  
-            <xsl:when test="Cart/Order/@cmd='ShowInvoice'">
-			    <xsl:text>fbq('track', 'Purchase', {currency: "</xsl:text>
-				<xsl:value-of select="Cart/@currency"/>  
-				<xsl:text>", value:</xsl:text>
-				<xsl:value-of select="Cart/Order/@total"/>  
-				<xsl:text>,content_type: 'product', contents: [</xsl:text>
-				<xsl:for-each select="Cart/Order/Item">
-				    <xsl:text>{id: '</xsl:text>
-					<xsl:value-of select="@id"/>
-                    <xsl:text>', quantity:</xsl:text>
-					<xsl:value-of select="@quantity"/>
-					<xsl:text>}</xsl:text>
-	                <xsl:if test="position()!=last()">
-						<xsl:text>,</xsl:text>					
-					</xsl:if>				
-				</xsl:for-each>
-                <xsl:text>]});</xsl:text>
-            </xsl:when>
-			  <!--
+          <xsl:when test="Cart/Order/@cmd='EnterPaymentDetails'">
+            <xsl:text>fbq('track', 'AddPaymentInfo', {currency: "</xsl:text>
+            <xsl:value-of select="Cart/Order/@currency"/>
+            <xsl:text>", value:</xsl:text>
+            <xsl:value-of select="Cart/Order/@total"/>
+            <xsl:text>,content_type: 'product', contents: [</xsl:text>
+            <xsl:for-each select="Cart/Order/Item">
+              <xsl:text>{id: '</xsl:text>
+              <xsl:value-of select="@id"/>
+              <xsl:text>', quantity:</xsl:text>
+              <xsl:value-of select="@quantity"/>
+              <xsl:text>}</xsl:text>
+              <xsl:if test="position()!=last()">
+                <xsl:text>,</xsl:text>
+              </xsl:if>
+            </xsl:for-each>
+            <xsl:text>]});</xsl:text>
+          </xsl:when>
+
+          <xsl:when test="Cart/Order/@cmd='ShowInvoice'">
+            <xsl:text>fbq('track', 'Purchase', {currency: "</xsl:text>
+            <xsl:value-of select="Cart/@currency"/>
+            <xsl:text>", value:</xsl:text>
+            <xsl:value-of select="Cart/Order/@total"/>
+            <xsl:text>,content_type: 'product', contents: [</xsl:text>
+            <xsl:for-each select="Cart/Order/Item">
+              <xsl:text>{id: '</xsl:text>
+              <xsl:value-of select="@id"/>
+              <xsl:text>', quantity:</xsl:text>
+              <xsl:value-of select="@quantity"/>
+              <xsl:text>}</xsl:text>
+              <xsl:if test="position()!=last()">
+                <xsl:text>,</xsl:text>
+              </xsl:if>
+            </xsl:for-each>
+            <xsl:text>]});</xsl:text>
+          </xsl:when>
+          <!--
             <xsl:when test="/Page/ContentDetail/Content[@type='Product']">
               <xsl:apply-templates select="/Page/ContentDetail/Content[@type='Product']" mode="ga-universal-addProduct" />
               ga('ec:setAction', 'detail');
@@ -1343,11 +1343,11 @@
               <xsl:apply-templates select="/Page/Contents/Content[@type='Product']" mode="ga-universal-impression" />
             </xsl:otherwise>
 			-->
-          </xsl:choose>
-      
-	  
+        </xsl:choose>
+
+
       </script>
-		
+
       <noscript>
         <img height="1" width="1" src="https://www.facebook.com/tr?id={Contents/Content[@name='fb-pixel_id']}&amp;ev=PageView&amp;noscript=1"/>
       </noscript>
@@ -1366,25 +1366,25 @@
         <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaGoogleAnalyticsID']" mode="googleAnalyticsCode"/>
       </xsl:otherwise>
     </xsl:choose>
-	  <xsl:if test="$GoogleGA4MeasurementID!=''">
-		  <!-- GA4 Tag Manager -->
-		  <script async="async" src="https://www.googletagmanager.com/gtag/js?id={$GoogleGA4MeasurementID}" cookie-consent="tracking">&#160;</script>
-		  <script id="GA4Code" cookie-consent="tracking">
-			  window.dataLayer = window.dataLayer || [];
-			  function gtag(){dataLayer.push(arguments);}
-			  gtag('js', new Date());
-			  gtag('config', '<xsl:value-of select="$GoogleGA4MeasurementID"/>'<xsl:apply-templates select="." mode="google-ga4-config-params"/>);
-			  <xsl:apply-templates select="." mode="google-ga4-event"/>
-			  <xsl:apply-templates select="." mode="google-ga4-event-extra"/>
-		  </script>
-		  <!-- End GA4 Tag Manager -->
-	  </xsl:if>
-	  <xsl:if test="$GoogleAdConversionID!=''">
-		  <script id="GadCode" cookie-consent="tracking">
-			  gtag('config', '<xsl:value-of select="$GoogleAdConversionID"/>')
-		  </script>
-	  </xsl:if>
-	  
+    <xsl:if test="$GoogleGA4MeasurementID!=''">
+      <!-- GA4 Tag Manager -->
+      <script async="async" src="https://www.googletagmanager.com/gtag/js?id={$GoogleGA4MeasurementID}" cookie-consent="tracking">&#160;</script>
+      <script id="GA4Code" cookie-consent="tracking">
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '<xsl:value-of select="$GoogleGA4MeasurementID"/>'<xsl:apply-templates select="." mode="google-ga4-config-params"/>);
+        <xsl:apply-templates select="." mode="google-ga4-event"/>
+        <xsl:apply-templates select="." mode="google-ga4-event-extra"/>
+      </script>
+      <!-- End GA4 Tag Manager -->
+    </xsl:if>
+    <xsl:if test="$GoogleAdConversionID!=''">
+      <script id="GadCode" cookie-consent="tracking">
+        gtag('config', '<xsl:value-of select="$GoogleAdConversionID"/>')
+      </script>
+    </xsl:if>
+
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaA1WebStatsID']" mode="A1WebStatsCode"/>
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaWhoIsVisitingID']" mode="MetaWhoIsVisitingCode"/>
 
@@ -1394,8 +1394,8 @@
 
     <!-- pull in site specific js in footer -->
     <xsl:apply-templates select="." mode="siteFooterJs"/>
-	  
-	<xsl:apply-templates select="/Page/Contents/Content[@type='FacebookChat' and @name='FacebookChat']" mode="FacebookChatCode"/>
+
+    <xsl:apply-templates select="/Page/Contents/Content[@type='FacebookChat' and @name='FacebookChat']" mode="FacebookChatCode"/>
 
   </xsl:template>
 
@@ -1473,7 +1473,7 @@
 
   <xsl:template match="Page" mode="metadata">
     <xsl:if test="@cssFramework='bs3' or $adminMode">
-	    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"/>
     </xsl:if>
 
     <xsl:if test="Contents/Content[@name='MetaDescription' or @name='metaDescription'] or ContentDetail">
@@ -1504,11 +1504,11 @@
     <!-- STOP SEARCH ENGINES INDEXING DS01 SITES IF SOME PLUM HAS PUBLISHED IT ON THE INTERWEBS -->
     <xsl:if test="contains(/Page/Request/ServerVariables/Item[@name='SERVER_NAME']/node(),'eonichost.co.uk') or contains(/Page/Request/ServerVariables/Item[@name='SERVER_NAME']/node(),'yeomanshosting.co.uk')">
       <xsl:comment>STOP SEARCH ENGINES INDEXING PREVIEW SITES IF SOME PLUM HAS SHARED A LINK ON THE INTERWEBS</xsl:comment>
-		<meta name="robots" content="noindex, nofollow"/>
+      <meta name="robots" content="noindex, nofollow"/>
     </xsl:if>
 
     <xsl:if test="Cart[@type='order']/Order/@cmd!=''">
-		<meta name="robots" content="noindex, nofollow"/>
+      <meta name="robots" content="noindex, nofollow"/>
     </xsl:if>
 
 
@@ -1545,7 +1545,7 @@
     <xsl:if test="Contents/Content[@name='fb-pages_id']">
       <meta property="fb:pages" content="{Contents/Content[@name='fb-pages_id']}"/>
     </xsl:if>
-    
+
     <!--LUKE 05.10.21-->
     <!--Open Graph-->
     <!-- xsl:if test="Contents/Content[@name='ogTitle']">
@@ -1572,7 +1572,7 @@
     <xsl:if test="Contents/Content[@name='ogtype']">
       <meta property="og:type" content="{Contents/Content[@name='ogtype']}"/>
     </xsl:if -->
- 
+
     <!--Twitter-->
     <xsl:if test="Contents/Content[@name='twittercard']">
       <meta name="twitter:card" content="{Contents/Content[@name='twittercard']}"/>
@@ -1595,7 +1595,7 @@
     </xsl:if>
 
     <!--LinkedIn-->
-   
+
     <xsl:if test="Contents/Content[@name='LinkedInInsightTag']">
       <script type="text/javascript">
         <xsl:text>_linkedin_partner_id = "</xsl:text>
@@ -1609,22 +1609,22 @@
         <img height="1" width="1" style="display:none;" alt="" src="https://px.ads.linkedin.com/collect/?pid=2741649&amp;fmt=gif" />
       </noscript>
 
-		<xsl:if test="Contents/Content[@name='LinkedInCampaignId']">
-			<xsl:for-each select="/Page/Contents/descendant-or-self::instance[@valid='true']/*[name()='emailer']">
-			<script type="text/javascript">
-				<xsl:text>window.lintrk('track', { conversion_id: </xsl:text>
-				<xsl:value-of select="$page/Contents/Content[@name='LinkedInCampaignId']/node()"/>
-				<xsl:text> });</xsl:text>
-			</script>
-			</xsl:for-each>
-		</xsl:if>
-		
+      <xsl:if test="Contents/Content[@name='LinkedInCampaignId']">
+        <xsl:for-each select="/Page/Contents/descendant-or-self::instance[@valid='true']/*[name()='emailer']">
+          <script type="text/javascript">
+            <xsl:text>window.lintrk('track', { conversion_id: </xsl:text>
+            <xsl:value-of select="$page/Contents/Content[@name='LinkedInCampaignId']/node()"/>
+            <xsl:text> });</xsl:text>
+          </script>
+        </xsl:for-each>
+      </xsl:if>
+
     </xsl:if>
 
     <!-- End Linked In Insight Tag Code -->
-    
+
     <!--END-->
-    
+
     <xsl:if test="Contents/Content[@name='pinterestVerify']">
       <meta name="p:domain_verify" content="{Contents/Content[@name='pinterestVerify']}"/>
     </xsl:if>
@@ -1761,17 +1761,17 @@
     <meta property="og:description" content="{$contentMetaDescription}"/>
     <meta property="og:image">
       <xsl:attribute name="content">
-		  <xsl:choose>
-        <xsl:when test="$siteURL=''">
-          <xsl:text>http</xsl:text>
-          <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
-          <xsl:text>://</xsl:text>
-          <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
-        </xsl:when>
-			  <xsl:otherwise>
-				  <xsl:value-of select="$siteURL"/>
-			  </xsl:otherwise>
-		  </xsl:choose>
+        <xsl:choose>
+          <xsl:when test="$siteURL=''">
+            <xsl:text>http</xsl:text>
+            <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
+            <xsl:text>://</xsl:text>
+            <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="$siteURL"/>
+          </xsl:otherwise>
+        </xsl:choose>
         <xsl:choose>
           <!-- IF use display -->
           <xsl:when test="ContentDetail/Content/Images/img[@class='display']/@src and ContentDetail/Content/Images/img[@class='display']/@src!=''">
@@ -1867,9 +1867,18 @@
       <xsl:if test="not(Cart/Order and Cart/Order/@cmd!='')">
         <!-- not a steppered page -->
         <xsl:if test="not(/Page/Request/QueryString/Item[starts-with(@name,'startPos')])">
-          <xsl:if test="$href!=''">
-            <link rel="canonical" href="{$href}"/>
-          </xsl:if>
+          <xsl:choose>
+            <xsl:when test="/Page/Contents/Content[starts-with(@name,'Canonical Tag')]!=''">
+              <link rel="canonical" href="{/Page/Contents/Content[starts-with(@name,'Canonical Tag')]/node()}"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:if test="$href!=''">
+                <link rel="canonical" href="{$href}"/>
+              </xsl:if>
+
+            </xsl:otherwise>
+
+          </xsl:choose>
         </xsl:if>
       </xsl:if>
     </xsl:if>
@@ -1878,9 +1887,11 @@
   <!--  ==  Canonical links  ======================================================================  -->
   <xsl:template match="Page[descendant-or-self::MenuItem[@id=//Page/@id and DisplayName/@canonicalLink!='']]" mode="canonicalLink">
     <!-- not admin -->
-    <xsl:variable name="canonicalID" select="descendant-or-self::MenuItem[@id=//Page/@id]/DisplayName/@canonicalLink"/>
 
-    <link rel="canonical" href="{descendant-or-self::MenuItem[@id=$canonicalID]/@url}"/>
+    <xsl:if test="not(/Page/Contents/Content[starts-with(@name,'Canonical Tag')])">
+      <xsl:variable name="canonicalID" select="descendant-or-self::MenuItem[@id=//Page/@id]/DisplayName/@canonicalLink"/>
+      <link rel="canonical" href="{descendant-or-self::MenuItem[@id=$canonicalID]/@url}"/>
+    </xsl:if>
 
   </xsl:template>
 
@@ -1938,26 +1949,26 @@
       </xsl:attribute>
       <xsl:apply-templates select="." mode="bodyStyle"/>
       <xsl:if test="$GoogleTagManagerID!=''">
-	<!-- Google Tag Manager (noscript) -->
-	<noscript>
-		<iframe src="https://www.googletagmanager.com/ns.html?id={$GoogleTagManagerID}" height="0" width="0" style="display:none;visibility:hidden">
-			<xsl:text> </xsl:text>
-		</iframe>
-	</noscript>
-	<!-- End Google Tag Manager (noscript) -->
+        <!-- Google Tag Manager (noscript) -->
+        <noscript>
+          <iframe src="https://www.googletagmanager.com/ns.html?id={$GoogleTagManagerID}" height="0" width="0" style="display:none;visibility:hidden">
+            <xsl:text> </xsl:text>
+          </iframe>
+        </noscript>
+        <!-- End Google Tag Manager (noscript) -->
       </xsl:if>
       <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaLeadForensicsID']" mode="MetaLeadForensicsCode"/>
       <xsl:apply-templates select="." mode="bodyDisplay"/>
-      <xsl:apply-templates select="/Page" mode="footerCommonStyle"/>      
+      <xsl:apply-templates select="/Page" mode="footerCommonStyle"/>
       <xsl:apply-templates select="." mode="footerJs"/>
     </body>
   </xsl:template>
 
-	<xsl:template match="Page" mode="footerCommonStyle">
-		<xsl:if test="/Page/Contents/Content[@name='criticalPathCSS'] and not($adminMode)">
-			<xsl:apply-templates select="." mode="commonStyle"/>
-		</xsl:if>
-	</xsl:template>
+  <xsl:template match="Page" mode="footerCommonStyle">
+    <xsl:if test="/Page/Contents/Content[@name='criticalPathCSS'] and not($adminMode)">
+      <xsl:apply-templates select="." mode="commonStyle"/>
+    </xsl:if>
+  </xsl:template>
 
   <xsl:template match="Page" mode="bodyStyle">
     <!-- Placeholder to overide -->
@@ -2788,107 +2799,107 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="Page" mode="BingTrackingCode">   
-      <xsl:if test="$BingTrackingID!=''">
-		 <script cookie-consent="tracking">
-			
-          (function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:'<xsl:value-of select="$BingTrackingID"/>'} ; <xsl:text disable-output-escaping="yes">o.q=w[u],w[u]=new UET(o),w[u].push('pageLoad')},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s &amp;&amp;s!=='loaded' &amp;&amp; s!=='complete'||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,'script','//bat.bing.com/bat.js','uetq'); </xsl:text>
-          <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
-			  window.uetq = window.uetq || [];
-			  window.uetq.push('event', 'purchase', {"revenue_value":<xsl:value-of select="Cart/Order/@total"/>,"currency":"<xsl:value-of select="Cart/@currency"/>"});
-          </xsl:if>
+  <xsl:template match="Page" mode="BingTrackingCode">
+    <xsl:if test="$BingTrackingID!=''">
+      <script cookie-consent="tracking">
 
-		 </script>
+        (function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:'<xsl:value-of select="$BingTrackingID"/>'} ; <xsl:text disable-output-escaping="yes">o.q=w[u],w[u]=new UET(o),w[u].push('pageLoad')},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s &amp;&amp;s!=='loaded' &amp;&amp; s!=='complete'||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,'script','//bat.bing.com/bat.js','uetq'); </xsl:text>
+        <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
+          window.uetq = window.uetq || [];
+          window.uetq.push('event', 'purchase', {"revenue_value":<xsl:value-of select="Cart/Order/@total"/>,"currency":"<xsl:value-of select="Cart/@currency"/>"});
+        </xsl:if>
+
+      </script>
     </xsl:if>
   </xsl:template>
 
   <xsl:template match="Page" mode="FacebookTrackingCode">
-	  <xsl:if test="$FacebookTrackingID!=''">
-	  <script cookie-consent="tracking">
-		  !function(f,b,e,v,n,t,s)
-		  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-		  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-		  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-		  n.queue=[];t=b.createElement(e);t.async=!0;
-		  t.src=v;s=b.getElementsByTagName(e)[0];
-		  s.parentNode.insertBefore(t,s)}(window, document,'script',
-		  'https://connect.facebook.net/en_US/fbevents.js');
-		  fbq('init', '<xsl:value-of select="$FacebookTrackingID"/>');
-		  fbq('track', 'PageView');
-		  <xsl:apply-templates select="." mode="FacebookTrackingAction"/>
-	  </script>
-	  <noscript>
-		  <img height="1" width="1" style="display:none"
-			   src="https://www.facebook.com/tr?id={your-pixel-id-goes-here}&amp;ev=PageView&amp;noscript=1"/>
-	  </noscript>
-	</xsl:if>	
+    <xsl:if test="$FacebookTrackingID!=''">
+      <script cookie-consent="tracking">
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '<xsl:value-of select="$FacebookTrackingID"/>');
+        fbq('track', 'PageView');
+        <xsl:apply-templates select="." mode="FacebookTrackingAction"/>
+      </script>
+      <noscript>
+        <img height="1" width="1" style="display:none"
+           src="https://www.facebook.com/tr?id={your-pixel-id-goes-here}&amp;ev=PageView&amp;noscript=1"/>
+      </noscript>
+    </xsl:if>
   </xsl:template>
-	
-	<xsl:template match="Page" mode="FacebookTrackingAction">
 
-	</xsl:template>
-	
-	<xsl:template match="Page[descendant-or-self::instance[@valid='true']/emailer]" mode="FacebookTrackingAction">
-          <xsl:text>fbq('track', 'Lead');</xsl:text>
-	</xsl:template>
-	
-	<xsl:template match="Page[Cart/Order/@cmd='Logon']" mode="FacebookTrackingAction">
-		<xsl:text>fbq('track', 'AddToCart', {currency: "</xsl:text>
-		<xsl:value-of select="Cart/Order/@currency"/>
-		<xsl:text>", value:</xsl:text>
-		<xsl:value-of select="Cart/Order/@total"/>
-		<xsl:text>,content_type: 'product', contents: [</xsl:text>
-		<xsl:for-each select="Cart/Order/Item">
-			<xsl:text>{id: '</xsl:text>
-			<xsl:value-of select="@id"/>
-			<xsl:text>', quantity:</xsl:text>
-			<xsl:value-of select="@quantity"/>
-			<xsl:text>}</xsl:text>
-			<xsl:if test="position()!=last()">
-				<xsl:text>,</xsl:text>
-			</xsl:if>
-		</xsl:for-each>
-		<xsl:text>]});</xsl:text>
-	</xsl:template>
+  <xsl:template match="Page" mode="FacebookTrackingAction">
 
-	<xsl:template match="Page[Cart/Order/@cmd='EnterPaymentDetails']" mode="FacebookTrackingAction">
-        <xsl:text>fbq('track', 'AddPaymentInfo', {currency: "</xsl:text>
-		<xsl:value-of select="Cart/Order/@currency"/>
-		<xsl:text>", value:</xsl:text>
-		<xsl:value-of select="Cart/Order/@total"/>
-		<xsl:text>,content_type: 'product', contents: [</xsl:text>
-		<xsl:for-each select="Cart/Order/Item">
-			<xsl:text>{id: '</xsl:text>
-			<xsl:value-of select="@id"/>
-			<xsl:text>', quantity:</xsl:text>
-			<xsl:value-of select="@quantity"/>
-			<xsl:text>}</xsl:text>
-			<xsl:if test="position()!=last()">
-				<xsl:text>,</xsl:text>
-			</xsl:if>
-		</xsl:for-each>
-		<xsl:text>]});</xsl:text>
-	</xsl:template>
+  </xsl:template>
 
-	<xsl:template match="Page[Cart/Order/@cmd='ShowInvoice']" mode="FacebookTrackingAction">
-		<xsl:text>fbq('track', 'Purchase', {currency: "</xsl:text>
-		<xsl:value-of select="Cart/Order/@currency"/>
-		<xsl:text>", value:</xsl:text>
-		<xsl:value-of select="Cart/Order/@total"/>
-		<xsl:text>,content_type: 'product', contents: [</xsl:text>
-		<xsl:for-each select="Cart/Order/Item">
-			<xsl:text>{id: '</xsl:text>
-			<xsl:value-of select="@id"/>
-			<xsl:text>', quantity:</xsl:text>
-			<xsl:value-of select="@quantity"/>
-			<xsl:text>}</xsl:text>
-			<xsl:if test="position()!=last()">
-				<xsl:text>,</xsl:text>
-			</xsl:if>
-		</xsl:for-each>
-		<xsl:text>]});</xsl:text>
-	</xsl:template>
-	
+  <xsl:template match="Page[descendant-or-self::instance[@valid='true']/emailer]" mode="FacebookTrackingAction">
+    <xsl:text>fbq('track', 'Lead');</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="Page[Cart/Order/@cmd='Logon']" mode="FacebookTrackingAction">
+    <xsl:text>fbq('track', 'AddToCart', {currency: "</xsl:text>
+    <xsl:value-of select="Cart/Order/@currency"/>
+    <xsl:text>", value:</xsl:text>
+    <xsl:value-of select="Cart/Order/@total"/>
+    <xsl:text>,content_type: 'product', contents: [</xsl:text>
+    <xsl:for-each select="Cart/Order/Item">
+      <xsl:text>{id: '</xsl:text>
+      <xsl:value-of select="@id"/>
+      <xsl:text>', quantity:</xsl:text>
+      <xsl:value-of select="@quantity"/>
+      <xsl:text>}</xsl:text>
+      <xsl:if test="position()!=last()">
+        <xsl:text>,</xsl:text>
+      </xsl:if>
+    </xsl:for-each>
+    <xsl:text>]});</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="Page[Cart/Order/@cmd='EnterPaymentDetails']" mode="FacebookTrackingAction">
+    <xsl:text>fbq('track', 'AddPaymentInfo', {currency: "</xsl:text>
+    <xsl:value-of select="Cart/Order/@currency"/>
+    <xsl:text>", value:</xsl:text>
+    <xsl:value-of select="Cart/Order/@total"/>
+    <xsl:text>,content_type: 'product', contents: [</xsl:text>
+    <xsl:for-each select="Cart/Order/Item">
+      <xsl:text>{id: '</xsl:text>
+      <xsl:value-of select="@id"/>
+      <xsl:text>', quantity:</xsl:text>
+      <xsl:value-of select="@quantity"/>
+      <xsl:text>}</xsl:text>
+      <xsl:if test="position()!=last()">
+        <xsl:text>,</xsl:text>
+      </xsl:if>
+    </xsl:for-each>
+    <xsl:text>]});</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="Page[Cart/Order/@cmd='ShowInvoice']" mode="FacebookTrackingAction">
+    <xsl:text>fbq('track', 'Purchase', {currency: "</xsl:text>
+    <xsl:value-of select="Cart/Order/@currency"/>
+    <xsl:text>", value:</xsl:text>
+    <xsl:value-of select="Cart/Order/@total"/>
+    <xsl:text>,content_type: 'product', contents: [</xsl:text>
+    <xsl:for-each select="Cart/Order/Item">
+      <xsl:text>{id: '</xsl:text>
+      <xsl:value-of select="@id"/>
+      <xsl:text>', quantity:</xsl:text>
+      <xsl:value-of select="@quantity"/>
+      <xsl:text>}</xsl:text>
+      <xsl:if test="position()!=last()">
+        <xsl:text>,</xsl:text>
+      </xsl:if>
+    </xsl:for-each>
+    <xsl:text>]});</xsl:text>
+  </xsl:template>
+
 
   <xsl:template match="Page" mode="FeedOptimiseCode">
     <xsl:if test="$FeedOptimiseID!=''">
@@ -3026,7 +3037,8 @@
       <!-- Your customer chat code -->
       <div class="fb-customerchat"
         attribution="setup_tool"
-        page_id="{@page_id}"> <xsl:text> </xsl:text>
+        page_id="{@page_id}">
+        <xsl:text> </xsl:text>
       </div>
 
 
@@ -3913,98 +3925,98 @@
 
   </xsl:template>
 
-	<xsl:template name="getTimeZone">
-		<xsl:param name="utcTimeZone"/>
-		<xsl:choose>
-			<xsl:when test="$utcTimeZone='-12:00'">(GMT -12:00) Eniwetok, Kwajalein</xsl:when>
-			<xsl:when test="$utcTimeZone='-11:00'">(GMT -11:00) Midway Island, Samoa</xsl:when>
-			<xsl:when test="$utcTimeZone='-10:00'">(GMT -10:00) Hawaii</xsl:when>
-			<xsl:when test="$utcTimeZone='-09:50'">(GMT -9:30) Taiohae</xsl:when>
-			<xsl:when test="$utcTimeZone='-09:00'">(GMT -9:00) Alaska</xsl:when>
-			<xsl:when test="$utcTimeZone='-08:00'">(GMT -8:00) Pacific Time (US &amp; Canada)</xsl:when>
-			<xsl:when test="$utcTimeZone='-07:00'">(GMT -7:00) Mountain Time (US &amp; Canada)</xsl:when>
-			<xsl:when test="$utcTimeZone='-06:00'">(GMT -6:00) Central Time (US &amp; Canada), Mexico City</xsl:when>
-			<xsl:when test="$utcTimeZone='-05:00'">(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima</xsl:when>
-			<xsl:when test="$utcTimeZone='-04:50'">(GMT -4:30) Caracas</xsl:when>
-			<xsl:when test="$utcTimeZone='-04:00'">(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz</xsl:when>
-			<xsl:when test="$utcTimeZone='-03:50'">(GMT -3:30) Newfoundland</xsl:when>
-			<xsl:when test="$utcTimeZone='-03:00'">(GMT -3:00) Brazil, Buenos Aires, Georgetown</xsl:when>
-			<xsl:when test="$utcTimeZone='-02:00'">(GMT -2:00) Mid-Atlantic</xsl:when>
-			<xsl:when test="$utcTimeZone='-01:00'">(GMT -1:00) Azores, Cape Verde Islands</xsl:when>
-			<xsl:when test="$utcTimeZone='+00:00'">(GMT) Western Europe Time, London, Lisbon, Casablanca</xsl:when>
-			<xsl:when test="$utcTimeZone='+01:00'">(GMT +1:00) Brussels, Copenhagen, Madrid, Paris</xsl:when>
-			<xsl:when test="$utcTimeZone='+02:00'">(GMT +2:00) Kaliningrad, South Africa</xsl:when>
-			<xsl:when test="$utcTimeZone='+03:00'">(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg</xsl:when>
-			<xsl:when test="$utcTimeZone='+03:50'">(GMT +3:30) Tehran</xsl:when>
-			<xsl:when test="$utcTimeZone='+04:00'">(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi</xsl:when>
-			<xsl:when test="$utcTimeZone='+04:50'">(GMT +4:30) Kabul</xsl:when>
-			<xsl:when test="$utcTimeZone='+05:00'">(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent</xsl:when>
-			<xsl:when test="$utcTimeZone='+05:50'">(GMT +5:30) Bombay, Calcutta, Madras, New Delhi</xsl:when>
-			<xsl:when test="$utcTimeZone='+05:75'">(GMT +5:45) Kathmandu, Pokhara</xsl:when>
-			<xsl:when test="$utcTimeZone='+06:00'">(GMT +6:00) Almaty, Dhaka, Colombo</xsl:when>
-			<xsl:when test="$utcTimeZone='+06:50'">(GMT +6:30) Yangon, Mandalay</xsl:when>
-			<xsl:when test="$utcTimeZone='+07:00'">(GMT +7:00) Bangkok, Hanoi, Jakarta</xsl:when>
-			<xsl:when test="$utcTimeZone='+08:00'">(GMT +8:00) Beijing, Perth, Singapore, Hong Kong</xsl:when>
-			<xsl:when test="$utcTimeZone='+08:75'">(GMT +8:45) Eucla</xsl:when>
-			<xsl:when test="$utcTimeZone='+09:00'">(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk</xsl:when>
-			<xsl:when test="$utcTimeZone='+09:50'">(GMT +9:30) Adelaide, Darwin</xsl:when>
-			<xsl:when test="$utcTimeZone='+10:00'">(GMT +10:00) Eastern Australia, Guam, Vladivostok</xsl:when>
-			<xsl:when test="$utcTimeZone='+10:50'">(GMT +10:30) Lord Howe Island</xsl:when>
-			<xsl:when test="$utcTimeZone='+11:00'">(GMT +11:00) Magadan, Solomon Islands, New Caledonia</xsl:when>
-			<xsl:when test="$utcTimeZone='+11:50'">(GMT +11:30) Norfolk Island</xsl:when>
-			<xsl:when test="$utcTimeZone='+12:00'">(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka</xsl:when>
-			<xsl:when test="$utcTimeZone='+12:75'">(GMT +12:45) Chatham Islands</xsl:when>
-			<xsl:when test="$utcTimeZone='+13:00'">(GMT +13:00) Apia, Nukualofa</xsl:when>
-			<xsl:when test="$utcTimeZone='+14:00'">(GMT +14:00) Line Islands, Tokelau</xsl:when>
-		</xsl:choose>
-	</xsl:template>
+  <xsl:template name="getTimeZone">
+    <xsl:param name="utcTimeZone"/>
+    <xsl:choose>
+      <xsl:when test="$utcTimeZone='-12:00'">(GMT -12:00) Eniwetok, Kwajalein</xsl:when>
+      <xsl:when test="$utcTimeZone='-11:00'">(GMT -11:00) Midway Island, Samoa</xsl:when>
+      <xsl:when test="$utcTimeZone='-10:00'">(GMT -10:00) Hawaii</xsl:when>
+      <xsl:when test="$utcTimeZone='-09:50'">(GMT -9:30) Taiohae</xsl:when>
+      <xsl:when test="$utcTimeZone='-09:00'">(GMT -9:00) Alaska</xsl:when>
+      <xsl:when test="$utcTimeZone='-08:00'">(GMT -8:00) Pacific Time (US &amp; Canada)</xsl:when>
+      <xsl:when test="$utcTimeZone='-07:00'">(GMT -7:00) Mountain Time (US &amp; Canada)</xsl:when>
+      <xsl:when test="$utcTimeZone='-06:00'">(GMT -6:00) Central Time (US &amp; Canada), Mexico City</xsl:when>
+      <xsl:when test="$utcTimeZone='-05:00'">(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima</xsl:when>
+      <xsl:when test="$utcTimeZone='-04:50'">(GMT -4:30) Caracas</xsl:when>
+      <xsl:when test="$utcTimeZone='-04:00'">(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz</xsl:when>
+      <xsl:when test="$utcTimeZone='-03:50'">(GMT -3:30) Newfoundland</xsl:when>
+      <xsl:when test="$utcTimeZone='-03:00'">(GMT -3:00) Brazil, Buenos Aires, Georgetown</xsl:when>
+      <xsl:when test="$utcTimeZone='-02:00'">(GMT -2:00) Mid-Atlantic</xsl:when>
+      <xsl:when test="$utcTimeZone='-01:00'">(GMT -1:00) Azores, Cape Verde Islands</xsl:when>
+      <xsl:when test="$utcTimeZone='+00:00'">(GMT) Western Europe Time, London, Lisbon, Casablanca</xsl:when>
+      <xsl:when test="$utcTimeZone='+01:00'">(GMT +1:00) Brussels, Copenhagen, Madrid, Paris</xsl:when>
+      <xsl:when test="$utcTimeZone='+02:00'">(GMT +2:00) Kaliningrad, South Africa</xsl:when>
+      <xsl:when test="$utcTimeZone='+03:00'">(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg</xsl:when>
+      <xsl:when test="$utcTimeZone='+03:50'">(GMT +3:30) Tehran</xsl:when>
+      <xsl:when test="$utcTimeZone='+04:00'">(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi</xsl:when>
+      <xsl:when test="$utcTimeZone='+04:50'">(GMT +4:30) Kabul</xsl:when>
+      <xsl:when test="$utcTimeZone='+05:00'">(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent</xsl:when>
+      <xsl:when test="$utcTimeZone='+05:50'">(GMT +5:30) Bombay, Calcutta, Madras, New Delhi</xsl:when>
+      <xsl:when test="$utcTimeZone='+05:75'">(GMT +5:45) Kathmandu, Pokhara</xsl:when>
+      <xsl:when test="$utcTimeZone='+06:00'">(GMT +6:00) Almaty, Dhaka, Colombo</xsl:when>
+      <xsl:when test="$utcTimeZone='+06:50'">(GMT +6:30) Yangon, Mandalay</xsl:when>
+      <xsl:when test="$utcTimeZone='+07:00'">(GMT +7:00) Bangkok, Hanoi, Jakarta</xsl:when>
+      <xsl:when test="$utcTimeZone='+08:00'">(GMT +8:00) Beijing, Perth, Singapore, Hong Kong</xsl:when>
+      <xsl:when test="$utcTimeZone='+08:75'">(GMT +8:45) Eucla</xsl:when>
+      <xsl:when test="$utcTimeZone='+09:00'">(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk</xsl:when>
+      <xsl:when test="$utcTimeZone='+09:50'">(GMT +9:30) Adelaide, Darwin</xsl:when>
+      <xsl:when test="$utcTimeZone='+10:00'">(GMT +10:00) Eastern Australia, Guam, Vladivostok</xsl:when>
+      <xsl:when test="$utcTimeZone='+10:50'">(GMT +10:30) Lord Howe Island</xsl:when>
+      <xsl:when test="$utcTimeZone='+11:00'">(GMT +11:00) Magadan, Solomon Islands, New Caledonia</xsl:when>
+      <xsl:when test="$utcTimeZone='+11:50'">(GMT +11:30) Norfolk Island</xsl:when>
+      <xsl:when test="$utcTimeZone='+12:00'">(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka</xsl:when>
+      <xsl:when test="$utcTimeZone='+12:75'">(GMT +12:45) Chatham Islands</xsl:when>
+      <xsl:when test="$utcTimeZone='+13:00'">(GMT +13:00) Apia, Nukualofa</xsl:when>
+      <xsl:when test="$utcTimeZone='+14:00'">(GMT +14:00) Line Islands, Tokelau</xsl:when>
+    </xsl:choose>
+  </xsl:template>
 
-	<xsl:template name="getTimeZoneIANA">
-		<xsl:param name="utcTimeZone"/>
-		<xsl:choose>
-			<xsl:when test="$utcTimeZone='-12:00'">Etc/GMT+12</xsl:when>
-			<xsl:when test="$utcTimeZone='-11:00'">Pacific/Pago_Pago</xsl:when>
-			<xsl:when test="$utcTimeZone='-10:00'">America/Adak</xsl:when>
-			<xsl:when test="$utcTimeZone='-09:50'">Pacific/Marquesas</xsl:when>
-			<xsl:when test="$utcTimeZone='-09:00'">Pacific/Gambier</xsl:when>
-			<xsl:when test="$utcTimeZone='-08:00'">America/Los_Angeles</xsl:when>
-			<xsl:when test="$utcTimeZone='-07:00'">America/Denver</xsl:when>
-			<xsl:when test="$utcTimeZone='-06:00'">America/Chicago</xsl:when>
-			<xsl:when test="$utcTimeZone='-05:00'">America/New_York</xsl:when>
-			<xsl:when test="$utcTimeZone='-04:50'">America/Caracas</xsl:when>
-			<xsl:when test="$utcTimeZone='-04:00'">America/Caracas</xsl:when>
-			<xsl:when test="$utcTimeZone='-03:50'">Canada/Newfoundland</xsl:when>
-			<xsl:when test="$utcTimeZone='-03:00'">America/Buenos_Aires</xsl:when>
-			<xsl:when test="$utcTimeZone='-02:00'">Atlantic/South_Georgia</xsl:when>
-			<xsl:when test="$utcTimeZone='-01:00'">Atlantic/Azores</xsl:when>
-			<xsl:when test="$utcTimeZone='+00:00'">Europe/London</xsl:when>
-			<xsl:when test="$utcTimeZone='+01:00'">Europe/Amsterdam</xsl:when>
-			<xsl:when test="$utcTimeZone='+02:00'">Africa/Maputo</xsl:when>
-			<xsl:when test="$utcTimeZone='+03:00'">Europe/Moscow</xsl:when>
-			<xsl:when test="$utcTimeZone='+03:50'">Iran</xsl:when>
-			<xsl:when test="$utcTimeZone='+04:00'">Asia/Dubai</xsl:when>
-			<xsl:when test="$utcTimeZone='+04:50'">Asia/Kabul</xsl:when>
-			<xsl:when test="$utcTimeZone='+05:00'">Indian/Maldives</xsl:when>
-			<xsl:when test="$utcTimeZone='+05:50'">Asia/Colombo</xsl:when>
-			<xsl:when test="$utcTimeZone='+05:75'">Asia/Kathmandu</xsl:when>
-			<xsl:when test="$utcTimeZone='+06:00'">Asia/Urumqi</xsl:when>
-			<xsl:when test="$utcTimeZone='+06:50'">Asia/Yangon</xsl:when>
-			<xsl:when test="$utcTimeZone='+07:00'">Asia/Bangkok</xsl:when>
-			<xsl:when test="$utcTimeZone='+08:00'">Asia/Hong_Kong</xsl:when>
-			<xsl:when test="$utcTimeZone='+08:75'">Australia/Eucla</xsl:when>
-			<xsl:when test="$utcTimeZone='+09:00'">Asia/Tokyo</xsl:when>
-			<xsl:when test="$utcTimeZone='+09:50'">Australia/Darwin</xsl:when>
-			<xsl:when test="$utcTimeZone='+10:00'">Asia/Vladivostok</xsl:when>
-			<xsl:when test="$utcTimeZone='+10:50'">Australia/Lord_Howe</xsl:when>
-			<xsl:when test="$utcTimeZone='+11:00'">Asia/Magadan</xsl:when>
-			<xsl:when test="$utcTimeZone='+11:50'">Pacific/Norfolk</xsl:when>
-			<xsl:when test="$utcTimeZone='+12:00'">Pacific/Auckland</xsl:when>
-			<xsl:when test="$utcTimeZone='+12:75'">Pacific/Chatham</xsl:when>
-			<xsl:when test="$utcTimeZone='+13:00'">Pacific/Apia</xsl:when>
-			<xsl:when test="$utcTimeZone='+14:00'">Pacific/Kiritimati</xsl:when>
-		</xsl:choose>
-	</xsl:template>
-	
+  <xsl:template name="getTimeZoneIANA">
+    <xsl:param name="utcTimeZone"/>
+    <xsl:choose>
+      <xsl:when test="$utcTimeZone='-12:00'">Etc/GMT+12</xsl:when>
+      <xsl:when test="$utcTimeZone='-11:00'">Pacific/Pago_Pago</xsl:when>
+      <xsl:when test="$utcTimeZone='-10:00'">America/Adak</xsl:when>
+      <xsl:when test="$utcTimeZone='-09:50'">Pacific/Marquesas</xsl:when>
+      <xsl:when test="$utcTimeZone='-09:00'">Pacific/Gambier</xsl:when>
+      <xsl:when test="$utcTimeZone='-08:00'">America/Los_Angeles</xsl:when>
+      <xsl:when test="$utcTimeZone='-07:00'">America/Denver</xsl:when>
+      <xsl:when test="$utcTimeZone='-06:00'">America/Chicago</xsl:when>
+      <xsl:when test="$utcTimeZone='-05:00'">America/New_York</xsl:when>
+      <xsl:when test="$utcTimeZone='-04:50'">America/Caracas</xsl:when>
+      <xsl:when test="$utcTimeZone='-04:00'">America/Caracas</xsl:when>
+      <xsl:when test="$utcTimeZone='-03:50'">Canada/Newfoundland</xsl:when>
+      <xsl:when test="$utcTimeZone='-03:00'">America/Buenos_Aires</xsl:when>
+      <xsl:when test="$utcTimeZone='-02:00'">Atlantic/South_Georgia</xsl:when>
+      <xsl:when test="$utcTimeZone='-01:00'">Atlantic/Azores</xsl:when>
+      <xsl:when test="$utcTimeZone='+00:00'">Europe/London</xsl:when>
+      <xsl:when test="$utcTimeZone='+01:00'">Europe/Amsterdam</xsl:when>
+      <xsl:when test="$utcTimeZone='+02:00'">Africa/Maputo</xsl:when>
+      <xsl:when test="$utcTimeZone='+03:00'">Europe/Moscow</xsl:when>
+      <xsl:when test="$utcTimeZone='+03:50'">Iran</xsl:when>
+      <xsl:when test="$utcTimeZone='+04:00'">Asia/Dubai</xsl:when>
+      <xsl:when test="$utcTimeZone='+04:50'">Asia/Kabul</xsl:when>
+      <xsl:when test="$utcTimeZone='+05:00'">Indian/Maldives</xsl:when>
+      <xsl:when test="$utcTimeZone='+05:50'">Asia/Colombo</xsl:when>
+      <xsl:when test="$utcTimeZone='+05:75'">Asia/Kathmandu</xsl:when>
+      <xsl:when test="$utcTimeZone='+06:00'">Asia/Urumqi</xsl:when>
+      <xsl:when test="$utcTimeZone='+06:50'">Asia/Yangon</xsl:when>
+      <xsl:when test="$utcTimeZone='+07:00'">Asia/Bangkok</xsl:when>
+      <xsl:when test="$utcTimeZone='+08:00'">Asia/Hong_Kong</xsl:when>
+      <xsl:when test="$utcTimeZone='+08:75'">Australia/Eucla</xsl:when>
+      <xsl:when test="$utcTimeZone='+09:00'">Asia/Tokyo</xsl:when>
+      <xsl:when test="$utcTimeZone='+09:50'">Australia/Darwin</xsl:when>
+      <xsl:when test="$utcTimeZone='+10:00'">Asia/Vladivostok</xsl:when>
+      <xsl:when test="$utcTimeZone='+10:50'">Australia/Lord_Howe</xsl:when>
+      <xsl:when test="$utcTimeZone='+11:00'">Asia/Magadan</xsl:when>
+      <xsl:when test="$utcTimeZone='+11:50'">Pacific/Norfolk</xsl:when>
+      <xsl:when test="$utcTimeZone='+12:00'">Pacific/Auckland</xsl:when>
+      <xsl:when test="$utcTimeZone='+12:75'">Pacific/Chatham</xsl:when>
+      <xsl:when test="$utcTimeZone='+13:00'">Pacific/Apia</xsl:when>
+      <xsl:when test="$utcTimeZone='+14:00'">Pacific/Kiritimati</xsl:when>
+    </xsl:choose>
+  </xsl:template>
+
 
   <!--   ################################################   Menu & Content display name  ##############################################   -->
   <!-- Display Name for a Page -->
@@ -4115,7 +4127,7 @@
         <xsl:copy-of select="$titleText"/>
       </h1>
     </xsl:if>
-	  <xsl:text> </xsl:text>
+    <xsl:text> </xsl:text>
   </xsl:template>
 
 
@@ -4136,23 +4148,23 @@
     <xsl:choose>
       <xsl:when test="@url!=''">
         <xsl:choose>
-			<xsl:when test="DisplayName/@linkType='replicate'">
-				<xsl:value-of select="@url"/>
-			</xsl:when>
+          <xsl:when test="DisplayName/@linkType='replicate'">
+            <xsl:value-of select="@url"/>
+          </xsl:when>
           <xsl:when test="format-number(@url,'0')!='NaN'">
 
-              <!--change(s):
+            <!--change(s):
               1. check if the edit-content-menu-item has redirect page under pagesettings
               2. on clicking the item on admin mode, open the actual page on customize mode
               3. on clicking the item on non-admin mode, open the redirected page-->
-              
-              <!--old code - start-->
-              <!--<xsl:value-of select="$siteURL"/>
+
+            <!--old code - start-->
+            <!--<xsl:value-of select="$siteURL"/>
               <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$url]/@url"/>-->
-              <!--old code - end-->
-              
-              <!--new code - start-->
-              <xsl:choose>
+            <!--old code - end-->
+
+            <!--new code - start-->
+            <xsl:choose>
               <xsl:when test="$adminMode='true'">
                 <xsl:value-of select="@name"/>
                 <xsl:text>?pgid=</xsl:text>
@@ -4162,9 +4174,9 @@
                 <xsl:value-of select="$siteURL"/>
                 <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$url]/@url"/>
               </xsl:otherwise>
-              </xsl:choose>
-              <!--new code - end-->
-            
+            </xsl:choose>
+            <!--new code - end-->
+
           </xsl:when>
           <xsl:when test="contains(@url,'http')">
             <xsl:value-of select="@url"/>
@@ -4931,7 +4943,7 @@
 
   <xsl:template match="Content[@type='Module']" mode="moreLink">
     <xsl:variable name="link" select="@link"/>
-	  <xsl:variable name="linkType" select="@linkType"/>
+    <xsl:variable name="linkType" select="@linkType"/>
     <xsl:if test="$link!=''">
       <xsl:variable name="numbertest">
         <!-- Test if link is numeric then link is internal-->
@@ -4942,65 +4954,65 @@
       <xsl:choose>
         <xsl:when test="$page[@cssFramework='bs3']">
           <div class="morelink">
-			  <xsl:choose>
-				  <xsl:when test="$linkType='form' or $linkType='modalLink'">
-					  <span>
-						  <a href="#" data-toggle="modal" data-target="#{$link}" class="btn btn-default btn-sm">
-							  <xsl:value-of select="@linkText"/>
-						  </a>
-					  </span>
-			        </xsl:when>
-				  <xsl:otherwise>
-					  <span>
-						  <a title="{@linkText}" class="btn btn-default btn-sm">
-							  <xsl:choose>
-								  <xsl:when test="$numbertest = 'number'">
-									  <xsl:variable name="pageId" select="@link"/>
-									  <xsl:attribute name="href">
-										  <xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId]" mode="getHref"/>
-									  </xsl:attribute>
-								  </xsl:when>
-								  <xsl:otherwise>
-									  <xsl:choose>
-										  <xsl:when test="contains($link,'#')">
-											  <xsl:attribute name="class">
-												  <xsl:text>btn btn-default btn-sm scroll-to-anchor</xsl:text>
-											  </xsl:attribute>
-											  <xsl:attribute name="href">
-												  <xsl:value-of select="$link"/>
-											  </xsl:attribute>
-										  </xsl:when>
-										  <xsl:when test="contains($link,'http')">
-											  <xsl:attribute name="href">
-												  <xsl:value-of select="$link"/>
-											  </xsl:attribute>
-											  <xsl:attribute name="rel">external</xsl:attribute>
-										  </xsl:when>
-										  <xsl:otherwise>
-											  <xsl:attribute name="href">
-												  <xsl:text>http://</xsl:text>
-												  <xsl:value-of select="$link"/>
-											  </xsl:attribute>
-											  <xsl:attribute name="rel">external</xsl:attribute>
-										  </xsl:otherwise>
-									  </xsl:choose>
+            <xsl:choose>
+              <xsl:when test="$linkType='form' or $linkType='modalLink'">
+                <span>
+                  <a href="#" data-toggle="modal" data-target="#{$link}" class="btn btn-default btn-sm">
+                    <xsl:value-of select="@linkText"/>
+                  </a>
+                </span>
+              </xsl:when>
+              <xsl:otherwise>
+                <span>
+                  <a title="{@linkText}" class="btn btn-default btn-sm">
+                    <xsl:choose>
+                      <xsl:when test="$numbertest = 'number'">
+                        <xsl:variable name="pageId" select="@link"/>
+                        <xsl:attribute name="href">
+                          <xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId]" mode="getHref"/>
+                        </xsl:attribute>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <xsl:choose>
+                          <xsl:when test="contains($link,'#')">
+                            <xsl:attribute name="class">
+                              <xsl:text>btn btn-default btn-sm scroll-to-anchor</xsl:text>
+                            </xsl:attribute>
+                            <xsl:attribute name="href">
+                              <xsl:value-of select="$link"/>
+                            </xsl:attribute>
+                          </xsl:when>
+                          <xsl:when test="contains($link,'http')">
+                            <xsl:attribute name="href">
+                              <xsl:value-of select="$link"/>
+                            </xsl:attribute>
+                            <xsl:attribute name="rel">external</xsl:attribute>
+                          </xsl:when>
+                          <xsl:otherwise>
+                            <xsl:attribute name="href">
+                              <xsl:text>http://</xsl:text>
+                              <xsl:value-of select="$link"/>
+                            </xsl:attribute>
+                            <xsl:attribute name="rel">external</xsl:attribute>
+                          </xsl:otherwise>
+                        </xsl:choose>
 
-								  </xsl:otherwise>
-							  </xsl:choose>
+                      </xsl:otherwise>
+                    </xsl:choose>
 
-							  <xsl:if test="$GoogleAnalyticsUniversalID!='' and contains($link,'.pdf')">
-								  <xsl:attribute name="onclick">
-									  <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
-									  <xsl:value-of select="$link"/>
-									  <xsl:text>');</xsl:text>
-								  </xsl:attribute>
-							  </xsl:if>
+                    <xsl:if test="$GoogleAnalyticsUniversalID!='' and contains($link,'.pdf')">
+                      <xsl:attribute name="onclick">
+                        <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
+                        <xsl:value-of select="$link"/>
+                        <xsl:text>');</xsl:text>
+                      </xsl:attribute>
+                    </xsl:if>
 
-							  <xsl:value-of select="@linkText"/>
-						  </a>
-					  </span>
-				  </xsl:otherwise>
-			  </xsl:choose>
+                    <xsl:value-of select="@linkText"/>
+                  </a>
+                </span>
+              </xsl:otherwise>
+            </xsl:choose>
           </div>
         </xsl:when>
         <xsl:otherwise>
@@ -5257,15 +5269,15 @@
       <xsl:when test="@status=1 or @status='-1'">
         <i>
           <xsl:attribute name="class">
-			  <xsl:choose>
-				  <xsl:when test="name()='PageVersion'">
-					  <xsl:text>fa fa-files-o fa-lg status active</xsl:text>
-				  </xsl:when>
-				  <xsl:otherwise>
-					  <xsl:text>fa fa-file-text-o fa-lg status active</xsl:text>
-				  </xsl:otherwise>
-			  </xsl:choose>
-            
+            <xsl:choose>
+              <xsl:when test="name()='PageVersion'">
+                <xsl:text>fa fa-files-o fa-lg status active</xsl:text>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:text>fa fa-file-text-o fa-lg status active</xsl:text>
+              </xsl:otherwise>
+            </xsl:choose>
+
             <xsl:if test="MenuItem">Parent</xsl:if>
           </xsl:attribute>
           &#160;
@@ -5517,12 +5529,12 @@
         <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
         <xsl:text>://</xsl:text>
         <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
-		  <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='off'">
-			  <xsl:if test="$page/Request/ServerVariables/Item[@name='SERVER_PORT']!='80'">
-				  <xsl:text>:</xsl:text>
-				  <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_PORT']/node()"/>
-			  </xsl:if>			  
-		  </xsl:if>
+        <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='off'">
+          <xsl:if test="$page/Request/ServerVariables/Item[@name='SERVER_PORT']!='80'">
+            <xsl:text>:</xsl:text>
+            <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_PORT']/node()"/>
+          </xsl:if>
+        </xsl:if>
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="$thisPageUrl"/>
@@ -6330,13 +6342,13 @@
     </iframe>
   </xsl:template>
 
-	<xsl:template match="iframe[contains(@src,'youtube.com')]" mode="cleanXhtml">
-		<div class="responsive-video">
-			 <iframe title="YouTube video player" width="{@width}" height="{@height}" src="{@src}" frameborder="0" allowfullscreen="{@allowfullscreen}" style="{@style}">
-                <xsl:text> </xsl:text>
-            </iframe>
-		</div>
-	</xsl:template>
+  <xsl:template match="iframe[contains(@src,'youtube.com')]" mode="cleanXhtml">
+    <div class="responsive-video">
+      <iframe title="YouTube video player" width="{@width}" height="{@height}" src="{@src}" frameborder="0" allowfullscreen="{@allowfullscreen}" style="{@style}">
+        <xsl:text> </xsl:text>
+      </iframe>
+    </div>
+  </xsl:template>
 
 
   <xsl:template match="a" mode="cleanXhtml">
@@ -6363,7 +6375,7 @@
         </xsl:attribute>
 
       </xsl:for-each>
-      
+
       <xsl:if test="$GoogleAnalyticsUniversalID!='' and contains(@href,'.pdf')">
         <xsl:attribute name="onclick">
           <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
@@ -6373,7 +6385,7 @@
       </xsl:if>
 
       <xsl:apply-templates mode="cleanXhtml"/>
-	    <xsl:text> </xsl:text>
+      <xsl:text> </xsl:text>
     </xsl:element>
   </xsl:template>
 
@@ -6990,7 +7002,7 @@
     </xsl:variable>
 
     <xsl:if test="Images/img[@src and @src!='']">
-		     <xsl:call-template  name="displayResponsiveImage">
+      <xsl:call-template  name="displayResponsiveImage">
         <xsl:with-param name="crop" select="$crop"/>
         <xsl:with-param name="width" select="$max-width"/>
         <xsl:with-param name="height" select="$max-height"/>
@@ -7013,37 +7025,37 @@
 
     </xsl:if>
   </xsl:template>
-  
- <xsl:template name="displayResponsiveImage">
-		<xsl:param name="crop"/>
-		<xsl:param name="no-stretch" select="true()" />
-		<xsl:param name="width"/>
-		<xsl:param name="height"/>
-  	    <xsl:param name="max-width-xxs"/>
-		<xsl:param name="max-height-xxs"/>
-  	    <xsl:param name="max-width-xs"/>
-		<xsl:param name="max-height-xs"/>
-  	    <xsl:param name="max-width-sm"/>
-		<xsl:param name="max-height-sm"/>
-  	    <xsl:param name="max-width-md"/>
-		<xsl:param name="max-height-md"/>
-  	    <xsl:param name="max-width-lg"/>
-		<xsl:param name="max-height-lg"/>
-   	    <xsl:param name="forceResize"/>
-		<xsl:param name="class"/>
-		<xsl:param name="style"/>
+
+  <xsl:template name="displayResponsiveImage">
+    <xsl:param name="crop"/>
+    <xsl:param name="no-stretch" select="true()" />
+    <xsl:param name="width"/>
+    <xsl:param name="height"/>
+    <xsl:param name="max-width-xxs"/>
+    <xsl:param name="max-height-xxs"/>
+    <xsl:param name="max-width-xs"/>
+    <xsl:param name="max-height-xs"/>
+    <xsl:param name="max-width-sm"/>
+    <xsl:param name="max-height-sm"/>
+    <xsl:param name="max-width-md"/>
+    <xsl:param name="max-height-md"/>
+    <xsl:param name="max-width-lg"/>
+    <xsl:param name="max-height-lg"/>
+    <xsl:param name="forceResize"/>
+    <xsl:param name="class"/>
+    <xsl:param name="style"/>
     <xsl:param name="imageUrl"/>
     <xsl:param name="altText"/>
-	 <xsl:param name="noLazy"/>
-   	<!-- IF SO THAT we don't get empty tags if NO IMAGE -->
-		<xsl:if test="$imageUrl!=''">
-      	<!-- SRC VALUE -->
+    <xsl:param name="noLazy"/>
+    <!-- IF SO THAT we don't get empty tags if NO IMAGE -->
+    <xsl:if test="$imageUrl!=''">
+      <!-- SRC VALUE -->
       <xsl:variable name="src">
-					<xsl:value-of select="$imageUrl"/>
-			</xsl:variable>
-       <xsl:variable name="alt">
-            <xsl:value-of select="$altText"/>
-       </xsl:variable>
+        <xsl:value-of select="$imageUrl"/>
+      </xsl:variable>
+      <xsl:variable name="alt">
+        <xsl:value-of select="$altText"/>
+      </xsl:variable>
       <xsl:variable name="cropvar">
         <xsl:choose>
           <xsl:when test="$crop='true'">
@@ -7054,7 +7066,7 @@
           </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
-	  <xsl:variable name="bForceResize">
+      <xsl:variable name="bForceResize">
         <xsl:choose>
           <xsl:when test="$forceResize">
             <xsl:value-of select="true()"/>
@@ -7064,34 +7076,34 @@
           </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
-     
+
       <xsl:variable name="imageType">
-      <xsl:choose>
-	      <xsl:when test="contains($src, '.jpg') and normalize-space(substring-after($src, '.jpg')) = ''">
-		      <xsl:text>image/jpeg</xsl:text>
-	      </xsl:when>
-	      <xsl:when test="contains($src, '.png') and normalize-space(substring-after($src, '.png')) = ''">
-		      <xsl:text>image/png</xsl:text>
-	      </xsl:when>
-	      <xsl:when test="contains($src, '.gif') and normalize-space(substring-after($src, '.gif')) = ''">
-		      <xsl:text>image/gif</xsl:text>
-	      </xsl:when>
-      </xsl:choose>
+        <xsl:choose>
+          <xsl:when test="contains($src, '.jpg') and normalize-space(substring-after($src, '.jpg')) = ''">
+            <xsl:text>image/jpeg</xsl:text>
+          </xsl:when>
+          <xsl:when test="contains($src, '.png') and normalize-space(substring-after($src, '.png')) = ''">
+            <xsl:text>image/png</xsl:text>
+          </xsl:when>
+          <xsl:when test="contains($src, '.gif') and normalize-space(substring-after($src, '.gif')) = ''">
+            <xsl:text>image/gif</xsl:text>
+          </xsl:when>
+        </xsl:choose>
       </xsl:variable>
-      
+
       <xsl:variable name="max-width">
-            <xsl:value-of select="$width"/>
+        <xsl:value-of select="$width"/>
       </xsl:variable>
 
       <xsl:variable name="max-height">
-           <xsl:value-of select="$height"/>
-       </xsl:variable>
-  
-			<xsl:choose>
-				 <xsl:when test="$EnableWebP='on' and $EnableRetina='on' ">
-					<!-- IF Image to resize -->
-					<xsl:if test="$src!=''">
-						 <xsl:variable name="newSrc">
+        <xsl:value-of select="$height"/>
+      </xsl:variable>
+
+      <xsl:choose>
+        <xsl:when test="$EnableWebP='on' and $EnableRetina='on' ">
+          <!-- IF Image to resize -->
+          <xsl:if test="$src!=''">
+            <xsl:variable name="newSrc">
               <xsl:call-template name="resize-image">
                 <xsl:with-param name="path" select="$src"/>
                 <xsl:with-param name="max-width" select="$max-width"/>
@@ -7117,452 +7129,452 @@
               </xsl:call-template>
             </xsl:variable>
 
-						<xsl:variable name="imageSize" select="ew:ImageSize($newSrc)"/>
-
-					
-
-						<xsl:variable name="newSrc-xxs">
-							<xsl:call-template name="resize-image">
-								<xsl:with-param name="path" select="$src"/>
-								<xsl:with-param name="max-width" select="$max-width-xxs"/>
-								<xsl:with-param name="max-height" select="$max-height-xxs"/>
-								<xsl:with-param name="file-prefix">
-									<xsl:text>~th-xxs-</xsl:text>
-									<xsl:value-of select="$max-width-xxs"/>
-									<xsl:text>x</xsl:text>
-									<xsl:value-of select="$max-height-xxs"/>
-									<xsl:text>/~th-</xsl:text>
-									<xsl:if test="$cropvar='true'">
-										<xsl:text>crop-</xsl:text>
-									</xsl:if>
-									<xsl:if test="not($no-stretch)">
-										<xsl:text>strch-</xsl:text>
-									</xsl:if>
-								</xsl:with-param>
-								<xsl:with-param name="file-suffix" select="''"/>
-								<xsl:with-param name="quality" select="100"/>
-								<xsl:with-param name="crop" select="$cropvar" />
-								<xsl:with-param name="no-stretch" select="$no-stretch" />
-								<xsl:with-param name="forceResize" select="$forceResize" />
-							</xsl:call-template>
-						</xsl:variable>
-
-						<xsl:variable name="newSrc-xxs-x2">
-							<xsl:call-template name="resize-image">
-								<xsl:with-param name="path" select="$src"/>
-								<xsl:with-param name="max-width" select="($max-width-xxs * 2)"/>
-								<xsl:with-param name="max-height" select="($max-height-xxs * 2)"/>
-								<xsl:with-param name="file-prefix">
-									<xsl:text>~th-xxs-</xsl:text>
-									<xsl:value-of select="$max-width-xxs"/>
-									<xsl:text>x</xsl:text>
-									<xsl:value-of select="$max-height-xxs"/>
-									<xsl:text>-x2/~th-</xsl:text>
-									<xsl:if test="$cropvar='true'">
-										<xsl:text>crop-</xsl:text>
-									</xsl:if>
-									<xsl:if test="not($no-stretch)">
-										<xsl:text>strch-</xsl:text>
-									</xsl:if>
-								</xsl:with-param>
-								<xsl:with-param name="file-suffix" select="''"/>
-								<xsl:with-param name="quality" select="100"/>
-								<xsl:with-param name="crop" select="$cropvar" />
-								<xsl:with-param name="no-stretch" select="$no-stretch" />
-								<xsl:with-param name="forceResize" select="$forceResize" />
-							</xsl:call-template>
-						</xsl:variable>
-
-						<xsl:variable name="newSrc-xs">
-							<xsl:call-template name="resize-image">
-								<xsl:with-param name="path" select="$src"/>
-								<xsl:with-param name="max-width" select="$max-width-xs"/>
-								<xsl:with-param name="max-height" select="$max-height-xs"/>
-								<xsl:with-param name="file-prefix">
-									<xsl:text>~th-xs-</xsl:text>
-									<xsl:value-of select="$max-width-xs"/>
-									<xsl:text>x</xsl:text>
-									<xsl:value-of select="$max-height-xs"/>
-									<xsl:text>/~th-</xsl:text>
-									<xsl:if test="$cropvar='true'">
-										<xsl:text>crop-</xsl:text>
-									</xsl:if>
-									<xsl:if test="not($no-stretch)">
-										<xsl:text>strch-</xsl:text>
-									</xsl:if>
-								</xsl:with-param>
-								<xsl:with-param name="file-suffix" select="''"/>
-								<xsl:with-param name="quality" select="100"/>
-								<xsl:with-param name="crop" select="$cropvar" />
-								<xsl:with-param name="no-stretch" select="$no-stretch" />
-								<xsl:with-param name="forceResize" select="$forceResize" />
-							</xsl:call-template>
-						</xsl:variable>
-
-						<xsl:variable name="newSrc-xs-x2">
-							<xsl:call-template name="resize-image">
-								<xsl:with-param name="path" select="$src"/>
-								<xsl:with-param name="max-width" select="($max-width-xs * 2)"/>
-								<xsl:with-param name="max-height" select="($max-height-xs * 2)"/>
-								<xsl:with-param name="file-prefix">
-									<xsl:text>~th-xs-</xsl:text>
-									<xsl:value-of select="$max-width-xs"/>
-									<xsl:text>x</xsl:text>
-									<xsl:value-of select="$max-height-xs"/>
-									<xsl:text>-x2/~th-</xsl:text>
-									<xsl:if test="$cropvar='true'">
-										<xsl:text>crop-</xsl:text>
-									</xsl:if>
-									<xsl:if test="not($no-stretch)">
-										<xsl:text>strch-</xsl:text>
-									</xsl:if>
-								</xsl:with-param>
-								<xsl:with-param name="file-suffix" select="''"/>
-								<xsl:with-param name="quality" select="100"/>
-								<xsl:with-param name="crop" select="$cropvar" />
-								<xsl:with-param name="no-stretch" select="$no-stretch" />
-								<xsl:with-param name="forceResize" select="$forceResize" />
-							</xsl:call-template>
-						</xsl:variable>
-
-						<xsl:variable name="newSrc-sm">
-							<xsl:call-template name="resize-image">
-								<xsl:with-param name="path" select="$src"/>
-								<xsl:with-param name="max-width" select="$max-width-sm"/>
-								<xsl:with-param name="max-height" select="$max-height-sm"/>
-								<xsl:with-param name="file-prefix">
-									<xsl:text>~th-sm-</xsl:text>
-									<xsl:value-of select="$max-width-sm"/>
-									<xsl:text>x</xsl:text>
-									<xsl:value-of select="$max-height-sm"/>
-									<xsl:text>/~th-</xsl:text>
-									<xsl:if test="$cropvar='true'">
-										<xsl:text>crop-</xsl:text>
-									</xsl:if>
-									<xsl:if test="not($no-stretch)">
-										<xsl:text>strch-</xsl:text>
-									</xsl:if>
-								</xsl:with-param>
-								<xsl:with-param name="file-suffix" select="''"/>
-								<xsl:with-param name="quality" select="100"/>
-								<xsl:with-param name="crop" select="$cropvar" />
-								<xsl:with-param name="no-stretch" select="$no-stretch" />
-								<xsl:with-param name="forceResize" select="$forceResize" />
-							</xsl:call-template>
-						</xsl:variable>
-
-						<xsl:variable name="newSrc-sm-x2">
-							<xsl:call-template name="resize-image">
-								<xsl:with-param name="path" select="$src"/>
-								<xsl:with-param name="max-width" select="($max-width-sm * 2)"/>
-								<xsl:with-param name="max-height" select="($max-height-sm * 2)"/>
-								<xsl:with-param name="file-prefix">
-									<xsl:text>~th-sm-</xsl:text>
-									<xsl:value-of select="$max-width-sm"/>
-									<xsl:text>x</xsl:text>
-									<xsl:value-of select="$max-height-sm"/>
-									<xsl:text>-x2/~th-</xsl:text>
-									<xsl:if test="$cropvar='true'">
-										<xsl:text>crop-</xsl:text>
-									</xsl:if>
-									<xsl:if test="not($no-stretch)">
-										<xsl:text>strch-</xsl:text>
-									</xsl:if>
-								</xsl:with-param>
-								<xsl:with-param name="file-suffix" select="''"/>
-								<xsl:with-param name="quality" select="100"/>
-								<xsl:with-param name="crop" select="$cropvar" />
-								<xsl:with-param name="no-stretch" select="$no-stretch" />
-								<xsl:with-param name="forceResize" select="$forceResize" />
-							</xsl:call-template>
-						</xsl:variable>
-
-						<xsl:variable name="newSrc-md">
-							<xsl:call-template name="resize-image">
-								<xsl:with-param name="path" select="$src"/>
-								<xsl:with-param name="max-width" select="$max-width-md"/>
-								<xsl:with-param name="max-height" select="$max-height-md"/>
-								<xsl:with-param name="file-prefix">
-									<xsl:text>~th-md-</xsl:text>
-									<xsl:value-of select="$max-width-md"/>
-									<xsl:text>x</xsl:text>
-									<xsl:value-of select="$max-height-md"/>
-									<xsl:text>/~th-</xsl:text>
-									<xsl:if test="$cropvar='true'">
-										<xsl:text>crop-</xsl:text>
-									</xsl:if>
-									<xsl:if test="not($no-stretch)">
-										<xsl:text>strch-</xsl:text>
-									</xsl:if>
-								</xsl:with-param>
-								<xsl:with-param name="file-suffix" select="''"/>
-								<xsl:with-param name="quality" select="100"/>
-								<xsl:with-param name="crop" select="$cropvar" />
-								<xsl:with-param name="no-stretch" select="$no-stretch" />
-								<xsl:with-param name="forceResize" select="$forceResize" />
-							</xsl:call-template>
-						</xsl:variable>
-
-						<xsl:variable name="newSrc-md-x2">
-							<xsl:call-template name="resize-image">
-								<xsl:with-param name="path" select="$src"/>
-								<xsl:with-param name="max-width" select="($max-width-md * 2)"/>
-								<xsl:with-param name="max-height" select="($max-height-md * 2)"/>
-								<xsl:with-param name="file-prefix">
-									<xsl:text>~th-md-</xsl:text>
-									<xsl:value-of select="$max-width-md"/>
-									<xsl:text>x</xsl:text>
-									<xsl:value-of select="$max-height-md"/>
-									<xsl:text>-x2/~th-</xsl:text>
-									<xsl:if test="$cropvar='true'">
-										<xsl:text>crop-</xsl:text>
-									</xsl:if>
-									<xsl:if test="not($no-stretch)">
-										<xsl:text>strch-</xsl:text>
-									</xsl:if>
-								</xsl:with-param>
-								<xsl:with-param name="file-suffix" select="''"/>
-								<xsl:with-param name="quality" select="100"/>
-								<xsl:with-param name="crop" select="$cropvar" />
-								<xsl:with-param name="no-stretch" select="$no-stretch" />
-								<xsl:with-param name="forceResize" select="$forceResize" />
-							</xsl:call-template>
-						</xsl:variable>
-
-						<xsl:variable name="newSrc-lg">
-							<xsl:call-template name="resize-image">
-								<xsl:with-param name="path" select="$src"/>
-								<xsl:with-param name="max-width" select="$max-width-lg"/>
-								<xsl:with-param name="max-height" select="$max-height-lg"/>
-								<xsl:with-param name="file-prefix">
-									<xsl:text>~th-lg-</xsl:text>
-									<xsl:value-of select="$max-width-lg"/>
-									<xsl:text>x</xsl:text>
-									<xsl:value-of select="$max-height-lg"/>
-									<xsl:text>/~th-</xsl:text>
-									<xsl:if test="$cropvar='true'">
-										<xsl:text>crop-</xsl:text>
-									</xsl:if>
-									<xsl:if test="not($no-stretch)">
-										<xsl:text>strch-</xsl:text>
-									</xsl:if>
-								</xsl:with-param>
-								<xsl:with-param name="file-suffix" select="''"/>
-								<xsl:with-param name="quality" select="100"/>
-								<xsl:with-param name="crop" select="$cropvar" />
-								<xsl:with-param name="no-stretch" select="$no-stretch" />
-								<xsl:with-param name="forceResize" select="$forceResize" />
-							</xsl:call-template>
-						</xsl:variable>
-
-						<xsl:variable name="newSrc-lg-x2">
-							<xsl:call-template name="resize-image">
-								<xsl:with-param name="path" select="$src"/>
-								<xsl:with-param name="max-width" select="($max-width-lg * 2)"/>
-								<xsl:with-param name="max-height" select="($max-height-lg * 2)"/>
-								<xsl:with-param name="file-prefix">
-									<xsl:text>~th-xs-</xsl:text>
-									<xsl:value-of select="$max-width-lg"/>
-									<xsl:text>x</xsl:text>
-									<xsl:value-of select="$max-height-lg"/>
-									<xsl:text>-x2/~th-</xsl:text>
-									<xsl:if test="$cropvar='true'">
-										<xsl:text>crop-</xsl:text>
-									</xsl:if>
-									<xsl:if test="not($no-stretch)">
-										<xsl:text>strch-</xsl:text>
-									</xsl:if>
-								</xsl:with-param>
-								<xsl:with-param name="file-suffix" select="''"/>
-								<xsl:with-param name="quality" select="100"/>
-								<xsl:with-param name="crop" select="$cropvar" />
-								<xsl:with-param name="no-stretch" select="$no-stretch" />
-								<xsl:with-param name="forceResize" select="$forceResize" />
-							</xsl:call-template>
-						</xsl:variable>
-
-						<!--/xsl:if-->
+            <xsl:variable name="imageSize" select="ew:ImageSize($newSrc)"/>
 
 
-						<xsl:variable name="image">
-							<picture>
 
-								<xsl:variable name="newSrc-webp" select="ew:CreateWebP($newSrc,$bForceResize)"/>
-								<xsl:variable name="newSrc-xxs-x2-webp" select="ew:CreateWebP($newSrc-xxs-x2,$bForceResize)"/>
-								<xsl:variable name="newSrc-xs-webp" select="ew:CreateWebP($newSrc-xs,$bForceResize)"/>
-								<xsl:variable name="newSrc-xs-x2-webp" select="ew:CreateWebP($newSrc-xs-x2,$bForceResize)"/>
-								<xsl:variable name="newSrc-sm-webp" select="ew:CreateWebP($newSrc-sm,$bForceResize)"/>
-								<xsl:variable name="newSrc-sm-x2-webp" select="ew:CreateWebP($newSrc-sm-x2,$bForceResize)"/>
-								<xsl:variable name="newSrc-md-webp" select="ew:CreateWebP($newSrc-md,$bForceResize)"/>
-								<xsl:variable name="newSrc-md-x2-webp" select="ew:CreateWebP($newSrc-md-x2,$bForceResize)"/>
-								<xsl:variable name="newSrc-lg-webp" select="ew:CreateWebP($newSrc-lg,$bForceResize)"/>
-								<xsl:variable name="newSrc-lg-x2-webp" select="ew:CreateWebP($newSrc-lg-x2,$bForceResize)"/>
-								<xsl:variable name="placeholder-webp" select="ew:CreateWebP($lazyplaceholder,$bForceResize)"/>
+            <xsl:variable name="newSrc-xxs">
+              <xsl:call-template name="resize-image">
+                <xsl:with-param name="path" select="$src"/>
+                <xsl:with-param name="max-width" select="$max-width-xxs"/>
+                <xsl:with-param name="max-height" select="$max-height-xxs"/>
+                <xsl:with-param name="file-prefix">
+                  <xsl:text>~th-xxs-</xsl:text>
+                  <xsl:value-of select="$max-width-xxs"/>
+                  <xsl:text>x</xsl:text>
+                  <xsl:value-of select="$max-height-xxs"/>
+                  <xsl:text>/~th-</xsl:text>
+                  <xsl:if test="$cropvar='true'">
+                    <xsl:text>crop-</xsl:text>
+                  </xsl:if>
+                  <xsl:if test="not($no-stretch)">
+                    <xsl:text>strch-</xsl:text>
+                  </xsl:if>
+                </xsl:with-param>
+                <xsl:with-param name="file-suffix" select="''"/>
+                <xsl:with-param name="quality" select="100"/>
+                <xsl:with-param name="crop" select="$cropvar" />
+                <xsl:with-param name="no-stretch" select="$no-stretch" />
+                <xsl:with-param name="forceResize" select="$forceResize" />
+              </xsl:call-template>
+            </xsl:variable>
+
+            <xsl:variable name="newSrc-xxs-x2">
+              <xsl:call-template name="resize-image">
+                <xsl:with-param name="path" select="$src"/>
+                <xsl:with-param name="max-width" select="($max-width-xxs * 2)"/>
+                <xsl:with-param name="max-height" select="($max-height-xxs * 2)"/>
+                <xsl:with-param name="file-prefix">
+                  <xsl:text>~th-xxs-</xsl:text>
+                  <xsl:value-of select="$max-width-xxs"/>
+                  <xsl:text>x</xsl:text>
+                  <xsl:value-of select="$max-height-xxs"/>
+                  <xsl:text>-x2/~th-</xsl:text>
+                  <xsl:if test="$cropvar='true'">
+                    <xsl:text>crop-</xsl:text>
+                  </xsl:if>
+                  <xsl:if test="not($no-stretch)">
+                    <xsl:text>strch-</xsl:text>
+                  </xsl:if>
+                </xsl:with-param>
+                <xsl:with-param name="file-suffix" select="''"/>
+                <xsl:with-param name="quality" select="100"/>
+                <xsl:with-param name="crop" select="$cropvar" />
+                <xsl:with-param name="no-stretch" select="$no-stretch" />
+                <xsl:with-param name="forceResize" select="$forceResize" />
+              </xsl:call-template>
+            </xsl:variable>
+
+            <xsl:variable name="newSrc-xs">
+              <xsl:call-template name="resize-image">
+                <xsl:with-param name="path" select="$src"/>
+                <xsl:with-param name="max-width" select="$max-width-xs"/>
+                <xsl:with-param name="max-height" select="$max-height-xs"/>
+                <xsl:with-param name="file-prefix">
+                  <xsl:text>~th-xs-</xsl:text>
+                  <xsl:value-of select="$max-width-xs"/>
+                  <xsl:text>x</xsl:text>
+                  <xsl:value-of select="$max-height-xs"/>
+                  <xsl:text>/~th-</xsl:text>
+                  <xsl:if test="$cropvar='true'">
+                    <xsl:text>crop-</xsl:text>
+                  </xsl:if>
+                  <xsl:if test="not($no-stretch)">
+                    <xsl:text>strch-</xsl:text>
+                  </xsl:if>
+                </xsl:with-param>
+                <xsl:with-param name="file-suffix" select="''"/>
+                <xsl:with-param name="quality" select="100"/>
+                <xsl:with-param name="crop" select="$cropvar" />
+                <xsl:with-param name="no-stretch" select="$no-stretch" />
+                <xsl:with-param name="forceResize" select="$forceResize" />
+              </xsl:call-template>
+            </xsl:variable>
+
+            <xsl:variable name="newSrc-xs-x2">
+              <xsl:call-template name="resize-image">
+                <xsl:with-param name="path" select="$src"/>
+                <xsl:with-param name="max-width" select="($max-width-xs * 2)"/>
+                <xsl:with-param name="max-height" select="($max-height-xs * 2)"/>
+                <xsl:with-param name="file-prefix">
+                  <xsl:text>~th-xs-</xsl:text>
+                  <xsl:value-of select="$max-width-xs"/>
+                  <xsl:text>x</xsl:text>
+                  <xsl:value-of select="$max-height-xs"/>
+                  <xsl:text>-x2/~th-</xsl:text>
+                  <xsl:if test="$cropvar='true'">
+                    <xsl:text>crop-</xsl:text>
+                  </xsl:if>
+                  <xsl:if test="not($no-stretch)">
+                    <xsl:text>strch-</xsl:text>
+                  </xsl:if>
+                </xsl:with-param>
+                <xsl:with-param name="file-suffix" select="''"/>
+                <xsl:with-param name="quality" select="100"/>
+                <xsl:with-param name="crop" select="$cropvar" />
+                <xsl:with-param name="no-stretch" select="$no-stretch" />
+                <xsl:with-param name="forceResize" select="$forceResize" />
+              </xsl:call-template>
+            </xsl:variable>
+
+            <xsl:variable name="newSrc-sm">
+              <xsl:call-template name="resize-image">
+                <xsl:with-param name="path" select="$src"/>
+                <xsl:with-param name="max-width" select="$max-width-sm"/>
+                <xsl:with-param name="max-height" select="$max-height-sm"/>
+                <xsl:with-param name="file-prefix">
+                  <xsl:text>~th-sm-</xsl:text>
+                  <xsl:value-of select="$max-width-sm"/>
+                  <xsl:text>x</xsl:text>
+                  <xsl:value-of select="$max-height-sm"/>
+                  <xsl:text>/~th-</xsl:text>
+                  <xsl:if test="$cropvar='true'">
+                    <xsl:text>crop-</xsl:text>
+                  </xsl:if>
+                  <xsl:if test="not($no-stretch)">
+                    <xsl:text>strch-</xsl:text>
+                  </xsl:if>
+                </xsl:with-param>
+                <xsl:with-param name="file-suffix" select="''"/>
+                <xsl:with-param name="quality" select="100"/>
+                <xsl:with-param name="crop" select="$cropvar" />
+                <xsl:with-param name="no-stretch" select="$no-stretch" />
+                <xsl:with-param name="forceResize" select="$forceResize" />
+              </xsl:call-template>
+            </xsl:variable>
+
+            <xsl:variable name="newSrc-sm-x2">
+              <xsl:call-template name="resize-image">
+                <xsl:with-param name="path" select="$src"/>
+                <xsl:with-param name="max-width" select="($max-width-sm * 2)"/>
+                <xsl:with-param name="max-height" select="($max-height-sm * 2)"/>
+                <xsl:with-param name="file-prefix">
+                  <xsl:text>~th-sm-</xsl:text>
+                  <xsl:value-of select="$max-width-sm"/>
+                  <xsl:text>x</xsl:text>
+                  <xsl:value-of select="$max-height-sm"/>
+                  <xsl:text>-x2/~th-</xsl:text>
+                  <xsl:if test="$cropvar='true'">
+                    <xsl:text>crop-</xsl:text>
+                  </xsl:if>
+                  <xsl:if test="not($no-stretch)">
+                    <xsl:text>strch-</xsl:text>
+                  </xsl:if>
+                </xsl:with-param>
+                <xsl:with-param name="file-suffix" select="''"/>
+                <xsl:with-param name="quality" select="100"/>
+                <xsl:with-param name="crop" select="$cropvar" />
+                <xsl:with-param name="no-stretch" select="$no-stretch" />
+                <xsl:with-param name="forceResize" select="$forceResize" />
+              </xsl:call-template>
+            </xsl:variable>
+
+            <xsl:variable name="newSrc-md">
+              <xsl:call-template name="resize-image">
+                <xsl:with-param name="path" select="$src"/>
+                <xsl:with-param name="max-width" select="$max-width-md"/>
+                <xsl:with-param name="max-height" select="$max-height-md"/>
+                <xsl:with-param name="file-prefix">
+                  <xsl:text>~th-md-</xsl:text>
+                  <xsl:value-of select="$max-width-md"/>
+                  <xsl:text>x</xsl:text>
+                  <xsl:value-of select="$max-height-md"/>
+                  <xsl:text>/~th-</xsl:text>
+                  <xsl:if test="$cropvar='true'">
+                    <xsl:text>crop-</xsl:text>
+                  </xsl:if>
+                  <xsl:if test="not($no-stretch)">
+                    <xsl:text>strch-</xsl:text>
+                  </xsl:if>
+                </xsl:with-param>
+                <xsl:with-param name="file-suffix" select="''"/>
+                <xsl:with-param name="quality" select="100"/>
+                <xsl:with-param name="crop" select="$cropvar" />
+                <xsl:with-param name="no-stretch" select="$no-stretch" />
+                <xsl:with-param name="forceResize" select="$forceResize" />
+              </xsl:call-template>
+            </xsl:variable>
+
+            <xsl:variable name="newSrc-md-x2">
+              <xsl:call-template name="resize-image">
+                <xsl:with-param name="path" select="$src"/>
+                <xsl:with-param name="max-width" select="($max-width-md * 2)"/>
+                <xsl:with-param name="max-height" select="($max-height-md * 2)"/>
+                <xsl:with-param name="file-prefix">
+                  <xsl:text>~th-md-</xsl:text>
+                  <xsl:value-of select="$max-width-md"/>
+                  <xsl:text>x</xsl:text>
+                  <xsl:value-of select="$max-height-md"/>
+                  <xsl:text>-x2/~th-</xsl:text>
+                  <xsl:if test="$cropvar='true'">
+                    <xsl:text>crop-</xsl:text>
+                  </xsl:if>
+                  <xsl:if test="not($no-stretch)">
+                    <xsl:text>strch-</xsl:text>
+                  </xsl:if>
+                </xsl:with-param>
+                <xsl:with-param name="file-suffix" select="''"/>
+                <xsl:with-param name="quality" select="100"/>
+                <xsl:with-param name="crop" select="$cropvar" />
+                <xsl:with-param name="no-stretch" select="$no-stretch" />
+                <xsl:with-param name="forceResize" select="$forceResize" />
+              </xsl:call-template>
+            </xsl:variable>
+
+            <xsl:variable name="newSrc-lg">
+              <xsl:call-template name="resize-image">
+                <xsl:with-param name="path" select="$src"/>
+                <xsl:with-param name="max-width" select="$max-width-lg"/>
+                <xsl:with-param name="max-height" select="$max-height-lg"/>
+                <xsl:with-param name="file-prefix">
+                  <xsl:text>~th-lg-</xsl:text>
+                  <xsl:value-of select="$max-width-lg"/>
+                  <xsl:text>x</xsl:text>
+                  <xsl:value-of select="$max-height-lg"/>
+                  <xsl:text>/~th-</xsl:text>
+                  <xsl:if test="$cropvar='true'">
+                    <xsl:text>crop-</xsl:text>
+                  </xsl:if>
+                  <xsl:if test="not($no-stretch)">
+                    <xsl:text>strch-</xsl:text>
+                  </xsl:if>
+                </xsl:with-param>
+                <xsl:with-param name="file-suffix" select="''"/>
+                <xsl:with-param name="quality" select="100"/>
+                <xsl:with-param name="crop" select="$cropvar" />
+                <xsl:with-param name="no-stretch" select="$no-stretch" />
+                <xsl:with-param name="forceResize" select="$forceResize" />
+              </xsl:call-template>
+            </xsl:variable>
+
+            <xsl:variable name="newSrc-lg-x2">
+              <xsl:call-template name="resize-image">
+                <xsl:with-param name="path" select="$src"/>
+                <xsl:with-param name="max-width" select="($max-width-lg * 2)"/>
+                <xsl:with-param name="max-height" select="($max-height-lg * 2)"/>
+                <xsl:with-param name="file-prefix">
+                  <xsl:text>~th-xs-</xsl:text>
+                  <xsl:value-of select="$max-width-lg"/>
+                  <xsl:text>x</xsl:text>
+                  <xsl:value-of select="$max-height-lg"/>
+                  <xsl:text>-x2/~th-</xsl:text>
+                  <xsl:if test="$cropvar='true'">
+                    <xsl:text>crop-</xsl:text>
+                  </xsl:if>
+                  <xsl:if test="not($no-stretch)">
+                    <xsl:text>strch-</xsl:text>
+                  </xsl:if>
+                </xsl:with-param>
+                <xsl:with-param name="file-suffix" select="''"/>
+                <xsl:with-param name="quality" select="100"/>
+                <xsl:with-param name="crop" select="$cropvar" />
+                <xsl:with-param name="no-stretch" select="$no-stretch" />
+                <xsl:with-param name="forceResize" select="$forceResize" />
+              </xsl:call-template>
+            </xsl:variable>
+
+            <!--/xsl:if-->
 
 
-								<!--WebP Images-->
-								<xsl:call-template name="sourceTag">
-									<xsl:with-param name="type" select="'image/webp'"/>
-									<xsl:with-param name="media" select="$mediaWidth"/>
-									<xsl:with-param name="imageUrl" select="$newSrc-webp"/>
-									<xsl:with-param name="imageRetinaUrl" select="$newSrc-xxs-x2-webp"/>
-									<xsl:with-param name="class" select="$class"/>
-									<xsl:with-param name="style" select="$style"/>
-								</xsl:call-template>
-								<xsl:call-template name="sourceTag">
-									<xsl:with-param name="type" select="'image/webp'"/>
-									<xsl:with-param name="media" select="'(max-width: 767px)'"/>
-									<xsl:with-param name="imageUrl" select="$newSrc-xs-webp"/>
-									<xsl:with-param name="imageRetinaUrl" select="$newSrc-xs-x2-webp"/>
-									<xsl:with-param name="class" select="$class"/>
-									<xsl:with-param name="style" select="$style"/>
-								</xsl:call-template>
-								<xsl:call-template name="sourceTag">
-									<xsl:with-param name="type" select="'image/webp'"/>
-									<xsl:with-param name="media" select="'(max-width: 991px)'"/>
-									<xsl:with-param name="imageUrl" select="$newSrc-sm-webp"/>
-									<xsl:with-param name="imageRetinaUrl" select="$newSrc-sm-x2-webp"/>
-									<xsl:with-param name="class" select="$class"/>
-									<xsl:with-param name="style" select="$style"/>
-								</xsl:call-template>
-								<xsl:call-template name="sourceTag">
-									<xsl:with-param name="type" select="'image/webp'"/>
-									<xsl:with-param name="media" select="'(max-width: 1199px)'"/>
-									<xsl:with-param name="imageUrl" select="$newSrc-md-webp"/>
-									<xsl:with-param name="imageRetinaUrl" select="$newSrc-md-x2-webp"/>
-									<xsl:with-param name="class" select="$class"/>
-									<xsl:with-param name="style" select="$style"/>
-								</xsl:call-template>
-								<xsl:call-template name="sourceTag">
-									<xsl:with-param name="type" select="'image/webp'"/>
-									<xsl:with-param name="media" select="'(min-width: 1200px)'"/>
-									<xsl:with-param name="imageUrl" select="$newSrc-lg-webp"/>
-									<xsl:with-param name="imageRetinaUrl" select="$newSrc-lg-x2-webp"/>
-									<xsl:with-param name="class" select="$class"/>
-									<xsl:with-param name="style" select="$style"/>
-								</xsl:call-template>
-								<!--JPG/PNG/GIF Images-->
-								<xsl:call-template name="sourceTag">
-									<xsl:with-param name="type" select="$imageType"/>
-									<xsl:with-param name="media" select="'(max-width: 574px)'"/>
-									<xsl:with-param name="imageUrl" select="$newSrc-xxs"/>
-									<xsl:with-param name="imageRetinaUrl" select="$newSrc-xxs-x2"/>
-									<xsl:with-param name="class" select="$class"/>
-									<xsl:with-param name="style" select="$style"/>
-								</xsl:call-template>
-								<xsl:call-template name="sourceTag">
-									<xsl:with-param name="type" select="$imageType"/>
-									<xsl:with-param name="media" select="'(max-width: 767px)'"/>
-									<xsl:with-param name="imageUrl" select="$newSrc-xs"/>
-									<xsl:with-param name="imageRetinaUrl" select="$newSrc-xs-x2"/>
-									<xsl:with-param name="class" select="$class"/>
-									<xsl:with-param name="style" select="$style"/>
-								</xsl:call-template>
-								<xsl:call-template name="sourceTag">
-									<xsl:with-param name="type" select="$imageType"/>
-									<xsl:with-param name="media" select="'(max-width: 991px)'"/>
-									<xsl:with-param name="imageUrl" select="$newSrc-sm"/>
-									<xsl:with-param name="imageRetinaUrl" select="$newSrc-sm-x2"/>
-									<xsl:with-param name="class" select="$class"/>
-									<xsl:with-param name="style" select="$style"/>
-								</xsl:call-template>
-								<xsl:call-template name="sourceTag">
-									<xsl:with-param name="type" select="$imageType"/>
-									<xsl:with-param name="media" select="'(max-width: 1199px)'"/>
-									<xsl:with-param name="imageUrl" select="$newSrc-md"/>
-									<xsl:with-param name="imageRetinaUrl" select="$newSrc-md-x2"/>
-									<xsl:with-param name="class" select="$class"/>
-									<xsl:with-param name="style" select="$style"/>
-								</xsl:call-template>
-								<xsl:call-template name="sourceTag">
-									<xsl:with-param name="type" select="$imageType"/>
-									<xsl:with-param name="media" select="'(min-width: 1200px)'"/>
-									<xsl:with-param name="imageUrl" select="$newSrc-lg"/>
-									<xsl:with-param name="imageRetinaUrl" select="$newSrc-lg-x2"/>
-									<xsl:with-param name="class" select="$class"/>
-									<xsl:with-param name="style" select="$style"/>
-								</xsl:call-template>
-								<!--FALLBACK IMAGE TAG-->
-								<img>
-									<!-- SRC -->
-									<xsl:choose>
-										<xsl:when test="$lazy='on' and not($noLazy)">
-											<xsl:attribute name="data-src">
-												<xsl:value-of select="$newSrc"/>
-											</xsl:attribute>
-											<xsl:attribute name="src">
-												<xsl:value-of select="$lazyplaceholder"/>
-											</xsl:attribute>										
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:attribute name="src">
-												<xsl:value-of select="$newSrc"/>
-											</xsl:attribute>
-										</xsl:otherwise>
-									</xsl:choose>
-									<xsl:if test="not($noLazy)">
-										<xsl:attribute name="loading">
-											<xsl:text>lazy</xsl:text>
-										</xsl:attribute>
-									</xsl:if>
-									<!-- Width -->
-									<xsl:attribute name="width">										
-										<xsl:choose>
-											<xsl:when test="contains($newSrc,'awaiting-image-thumbnail.gif')">
-												<xsl:value-of select="$max-width"/>
-											</xsl:when>
-											<xsl:otherwise>
-												<xsl:value-of select="substring-before($imageSize,'x')" />
-											</xsl:otherwise>
-										</xsl:choose>
-									</xsl:attribute>
-									<!-- Height -->
-									<xsl:attribute name="height">
-										
-										<xsl:choose>
-											<xsl:when test="contains($newSrc,'awaiting-image-thumbnail.gif')">
-												<xsl:value-of select="$max-height"/>
-											</xsl:when>
-											<xsl:otherwise>
-												<xsl:value-of select="substring-after($imageSize,'x')" />
-											</xsl:otherwise>
-										</xsl:choose>
-									</xsl:attribute>
-									<!-- Alt -->
-									<xsl:attribute name="alt">
-										<xsl:value-of select="$alt" />
-									</xsl:attribute>
-									<!-- Title -->
-									<xsl:attribute name="title">
-										<xsl:value-of select="$alt" />
-									</xsl:attribute>
-									<!-- Class -->
-									<xsl:attribute name="class">
-										<xsl:choose>
-											<xsl:when test="$class!=''">
-												<xsl:value-of select="$class" />
-											</xsl:when>
-											<xsl:otherwise>
-												<xsl:text>photo thumbnail resized</xsl:text>
-											</xsl:otherwise>
-										</xsl:choose>
-										<xsl:if test="$lazy='on'">
-											<xsl:text> lazy</xsl:text>
-										</xsl:if>
-									</xsl:attribute>
-									<xsl:if test="$style!=''">
-										<xsl:attribute name="style">
-											<xsl:value-of select="$style" />
-										</xsl:attribute>
-									</xsl:if>
-								</img>
-							</picture>
-						</xsl:variable>
-						<xsl:copy-of select="ms:node-set($image)/*" />
-					</xsl:if>
-				</xsl:when>
-				<xsl:when test="$EnableWebP='on'">
-				 
+            <xsl:variable name="image">
+              <picture>
+
+                <xsl:variable name="newSrc-webp" select="ew:CreateWebP($newSrc,$bForceResize)"/>
+                <xsl:variable name="newSrc-xxs-x2-webp" select="ew:CreateWebP($newSrc-xxs-x2,$bForceResize)"/>
+                <xsl:variable name="newSrc-xs-webp" select="ew:CreateWebP($newSrc-xs,$bForceResize)"/>
+                <xsl:variable name="newSrc-xs-x2-webp" select="ew:CreateWebP($newSrc-xs-x2,$bForceResize)"/>
+                <xsl:variable name="newSrc-sm-webp" select="ew:CreateWebP($newSrc-sm,$bForceResize)"/>
+                <xsl:variable name="newSrc-sm-x2-webp" select="ew:CreateWebP($newSrc-sm-x2,$bForceResize)"/>
+                <xsl:variable name="newSrc-md-webp" select="ew:CreateWebP($newSrc-md,$bForceResize)"/>
+                <xsl:variable name="newSrc-md-x2-webp" select="ew:CreateWebP($newSrc-md-x2,$bForceResize)"/>
+                <xsl:variable name="newSrc-lg-webp" select="ew:CreateWebP($newSrc-lg,$bForceResize)"/>
+                <xsl:variable name="newSrc-lg-x2-webp" select="ew:CreateWebP($newSrc-lg-x2,$bForceResize)"/>
+                <xsl:variable name="placeholder-webp" select="ew:CreateWebP($lazyplaceholder,$bForceResize)"/>
+
+
+                <!--WebP Images-->
+                <xsl:call-template name="sourceTag">
+                  <xsl:with-param name="type" select="'image/webp'"/>
+                  <xsl:with-param name="media" select="$mediaWidth"/>
+                  <xsl:with-param name="imageUrl" select="$newSrc-webp"/>
+                  <xsl:with-param name="imageRetinaUrl" select="$newSrc-xxs-x2-webp"/>
+                  <xsl:with-param name="class" select="$class"/>
+                  <xsl:with-param name="style" select="$style"/>
+                </xsl:call-template>
+                <xsl:call-template name="sourceTag">
+                  <xsl:with-param name="type" select="'image/webp'"/>
+                  <xsl:with-param name="media" select="'(max-width: 767px)'"/>
+                  <xsl:with-param name="imageUrl" select="$newSrc-xs-webp"/>
+                  <xsl:with-param name="imageRetinaUrl" select="$newSrc-xs-x2-webp"/>
+                  <xsl:with-param name="class" select="$class"/>
+                  <xsl:with-param name="style" select="$style"/>
+                </xsl:call-template>
+                <xsl:call-template name="sourceTag">
+                  <xsl:with-param name="type" select="'image/webp'"/>
+                  <xsl:with-param name="media" select="'(max-width: 991px)'"/>
+                  <xsl:with-param name="imageUrl" select="$newSrc-sm-webp"/>
+                  <xsl:with-param name="imageRetinaUrl" select="$newSrc-sm-x2-webp"/>
+                  <xsl:with-param name="class" select="$class"/>
+                  <xsl:with-param name="style" select="$style"/>
+                </xsl:call-template>
+                <xsl:call-template name="sourceTag">
+                  <xsl:with-param name="type" select="'image/webp'"/>
+                  <xsl:with-param name="media" select="'(max-width: 1199px)'"/>
+                  <xsl:with-param name="imageUrl" select="$newSrc-md-webp"/>
+                  <xsl:with-param name="imageRetinaUrl" select="$newSrc-md-x2-webp"/>
+                  <xsl:with-param name="class" select="$class"/>
+                  <xsl:with-param name="style" select="$style"/>
+                </xsl:call-template>
+                <xsl:call-template name="sourceTag">
+                  <xsl:with-param name="type" select="'image/webp'"/>
+                  <xsl:with-param name="media" select="'(min-width: 1200px)'"/>
+                  <xsl:with-param name="imageUrl" select="$newSrc-lg-webp"/>
+                  <xsl:with-param name="imageRetinaUrl" select="$newSrc-lg-x2-webp"/>
+                  <xsl:with-param name="class" select="$class"/>
+                  <xsl:with-param name="style" select="$style"/>
+                </xsl:call-template>
+                <!--JPG/PNG/GIF Images-->
+                <xsl:call-template name="sourceTag">
+                  <xsl:with-param name="type" select="$imageType"/>
+                  <xsl:with-param name="media" select="'(max-width: 574px)'"/>
+                  <xsl:with-param name="imageUrl" select="$newSrc-xxs"/>
+                  <xsl:with-param name="imageRetinaUrl" select="$newSrc-xxs-x2"/>
+                  <xsl:with-param name="class" select="$class"/>
+                  <xsl:with-param name="style" select="$style"/>
+                </xsl:call-template>
+                <xsl:call-template name="sourceTag">
+                  <xsl:with-param name="type" select="$imageType"/>
+                  <xsl:with-param name="media" select="'(max-width: 767px)'"/>
+                  <xsl:with-param name="imageUrl" select="$newSrc-xs"/>
+                  <xsl:with-param name="imageRetinaUrl" select="$newSrc-xs-x2"/>
+                  <xsl:with-param name="class" select="$class"/>
+                  <xsl:with-param name="style" select="$style"/>
+                </xsl:call-template>
+                <xsl:call-template name="sourceTag">
+                  <xsl:with-param name="type" select="$imageType"/>
+                  <xsl:with-param name="media" select="'(max-width: 991px)'"/>
+                  <xsl:with-param name="imageUrl" select="$newSrc-sm"/>
+                  <xsl:with-param name="imageRetinaUrl" select="$newSrc-sm-x2"/>
+                  <xsl:with-param name="class" select="$class"/>
+                  <xsl:with-param name="style" select="$style"/>
+                </xsl:call-template>
+                <xsl:call-template name="sourceTag">
+                  <xsl:with-param name="type" select="$imageType"/>
+                  <xsl:with-param name="media" select="'(max-width: 1199px)'"/>
+                  <xsl:with-param name="imageUrl" select="$newSrc-md"/>
+                  <xsl:with-param name="imageRetinaUrl" select="$newSrc-md-x2"/>
+                  <xsl:with-param name="class" select="$class"/>
+                  <xsl:with-param name="style" select="$style"/>
+                </xsl:call-template>
+                <xsl:call-template name="sourceTag">
+                  <xsl:with-param name="type" select="$imageType"/>
+                  <xsl:with-param name="media" select="'(min-width: 1200px)'"/>
+                  <xsl:with-param name="imageUrl" select="$newSrc-lg"/>
+                  <xsl:with-param name="imageRetinaUrl" select="$newSrc-lg-x2"/>
+                  <xsl:with-param name="class" select="$class"/>
+                  <xsl:with-param name="style" select="$style"/>
+                </xsl:call-template>
+                <!--FALLBACK IMAGE TAG-->
+                <img>
+                  <!-- SRC -->
+                  <xsl:choose>
+                    <xsl:when test="$lazy='on' and not($noLazy)">
+                      <xsl:attribute name="data-src">
+                        <xsl:value-of select="$newSrc"/>
+                      </xsl:attribute>
+                      <xsl:attribute name="src">
+                        <xsl:value-of select="$lazyplaceholder"/>
+                      </xsl:attribute>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:attribute name="src">
+                        <xsl:value-of select="$newSrc"/>
+                      </xsl:attribute>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                  <xsl:if test="not($noLazy)">
+                    <xsl:attribute name="loading">
+                      <xsl:text>lazy</xsl:text>
+                    </xsl:attribute>
+                  </xsl:if>
+                  <!-- Width -->
+                  <xsl:attribute name="width">
+                    <xsl:choose>
+                      <xsl:when test="contains($newSrc,'awaiting-image-thumbnail.gif')">
+                        <xsl:value-of select="$max-width"/>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <xsl:value-of select="substring-before($imageSize,'x')" />
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </xsl:attribute>
+                  <!-- Height -->
+                  <xsl:attribute name="height">
+
+                    <xsl:choose>
+                      <xsl:when test="contains($newSrc,'awaiting-image-thumbnail.gif')">
+                        <xsl:value-of select="$max-height"/>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <xsl:value-of select="substring-after($imageSize,'x')" />
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </xsl:attribute>
+                  <!-- Alt -->
+                  <xsl:attribute name="alt">
+                    <xsl:value-of select="$alt" />
+                  </xsl:attribute>
+                  <!-- Title -->
+                  <xsl:attribute name="title">
+                    <xsl:value-of select="$alt" />
+                  </xsl:attribute>
+                  <!-- Class -->
+                  <xsl:attribute name="class">
+                    <xsl:choose>
+                      <xsl:when test="$class!=''">
+                        <xsl:value-of select="$class" />
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <xsl:text>photo thumbnail resized</xsl:text>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                    <xsl:if test="$lazy='on'">
+                      <xsl:text> lazy</xsl:text>
+                    </xsl:if>
+                  </xsl:attribute>
+                  <xsl:if test="$style!=''">
+                    <xsl:attribute name="style">
+                      <xsl:value-of select="$style" />
+                    </xsl:attribute>
+                  </xsl:if>
+                </img>
+              </picture>
+            </xsl:variable>
+            <xsl:copy-of select="ms:node-set($image)/*" />
+          </xsl:if>
+        </xsl:when>
+        <xsl:when test="$EnableWebP='on'">
+
           <!-- IF Image to resize -->
           <xsl:if test="$src!=''">
             <xsl:variable name="newSrc">
@@ -7809,11 +7821,11 @@
                   <xsl:with-param name="style" select="$style"/>
                 </xsl:call-template>
                 <!--FALLBACK IMAGE TAG-->
-				  <xsl:variable name="imageSize">
-					  <xsl:if test="not(contains($newSrc,'awaiting-image-thumbnail.gif'))">
-						  <xsl:value-of select="ew:ImageSize($newSrc)"/>
-					  </xsl:if>
-				  </xsl:variable>
+                <xsl:variable name="imageSize">
+                  <xsl:if test="not(contains($newSrc,'awaiting-image-thumbnail.gif'))">
+                    <xsl:value-of select="ew:ImageSize($newSrc)"/>
+                  </xsl:if>
+                </xsl:variable>
                 <img>
                   <!-- SRC -->
                   <xsl:choose>
@@ -7824,10 +7836,10 @@
                       <xsl:attribute name="src">
                         <xsl:value-of select="$lazyplaceholder"/>
                       </xsl:attribute>
-						
-						<xsl:attribute name="loading">
-							<xsl:text>lazy</xsl:text>
-						</xsl:attribute>
+
+                      <xsl:attribute name="loading">
+                        <xsl:text>lazy</xsl:text>
+                      </xsl:attribute>
                     </xsl:when>
                     <xsl:otherwise>
                       <xsl:attribute name="src">
@@ -7842,7 +7854,7 @@
                         <xsl:value-of select="$max-width"/>
                       </xsl:when>
                       <xsl:otherwise>
-						  <xsl:value-of select="substring-before($imageSize,'x')" />
+                        <xsl:value-of select="substring-before($imageSize,'x')" />
                       </xsl:otherwise>
                     </xsl:choose>
                   </xsl:attribute>
@@ -7884,133 +7896,133 @@
                       <xsl:value-of select="$style" />
                     </xsl:attribute>
                   </xsl:if>
-					
-					<xsl:if test="not($noLazy)">
-						<xsl:attribute name="loading">
-							<xsl:text>lazy</xsl:text>
-						</xsl:attribute>
-					</xsl:if>
+
+                  <xsl:if test="not($noLazy)">
+                    <xsl:attribute name="loading">
+                      <xsl:text>lazy</xsl:text>
+                    </xsl:attribute>
+                  </xsl:if>
                 </img>
               </picture>
             </xsl:variable>
             <xsl:copy-of select="ms:node-set($image)/*" />
           </xsl:if>
         </xsl:when>
-				<xsl:otherwise>
-					<!-- SRC VALUE -->
-					
-					<!-- IF Image to resize -->
-					<xsl:if test="$src!=''">
-						<xsl:variable name="newSrc">
-							<xsl:call-template name="resize-image">
-								<xsl:with-param name="path" select="$src"/>
-								<xsl:with-param name="max-width" select="$max-width"/>
-								<xsl:with-param name="max-height" select="$max-height"/>
-								<xsl:with-param name="file-prefix">
-									<xsl:text>~th-</xsl:text>
-									<xsl:value-of select="$max-width"/>
-									<xsl:text>x</xsl:text>
-									<xsl:value-of select="$max-height"/>
-									<xsl:text>/~th-</xsl:text>
-									<xsl:if test="$cropvar='true'">
-										<xsl:text>crop-</xsl:text>
-									</xsl:if>
-									<xsl:if test="not($no-stretch)">
-										<xsl:text>strch-</xsl:text>
-									</xsl:if>
-								</xsl:with-param>
-								<xsl:with-param name="file-suffix" select="''"/>
-								<xsl:with-param name="quality" select="100"/>
-								<xsl:with-param name="crop" select="$cropvar" />
-								<xsl:with-param name="no-stretch" select="$no-stretch" />
-								<xsl:with-param name="forceResize" select="$forceResize" />
-							</xsl:call-template>
-						</xsl:variable>
-						<xsl:variable name="imageSize" select="ew:ImageSize($newSrc)"/>
+        <xsl:otherwise>
+          <!-- SRC VALUE -->
 
-						<xsl:variable name="image">
-							<img itemprop="image">
-								<!-- SRC -->
-								<xsl:choose>
-									<xsl:when test="$lazy='on'">
-										<xsl:attribute name="data-src">
-											<xsl:value-of select="$newSrc"/>
-										</xsl:attribute>
-										<xsl:attribute name="src">
-											<xsl:value-of select="$lazyplaceholder"/>
-										</xsl:attribute>
-										<xsl:attribute name="loading">
-											<xsl:text>lazy</xsl:text>
-										</xsl:attribute>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:attribute name="src">
-											<xsl:value-of select="$newSrc"/>
-										</xsl:attribute>
-									</xsl:otherwise>
-								</xsl:choose>
-								<!-- Width -->
-								<xsl:attribute name="width">
-									<xsl:choose>
-										<xsl:when test="contains($newSrc,'awaiting-image-thumbnail.gif')">
-											<xsl:value-of select="$max-width"/>
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:value-of select="substring-before($imageSize,'x')" />
-										</xsl:otherwise>
-									</xsl:choose>
+          <!-- IF Image to resize -->
+          <xsl:if test="$src!=''">
+            <xsl:variable name="newSrc">
+              <xsl:call-template name="resize-image">
+                <xsl:with-param name="path" select="$src"/>
+                <xsl:with-param name="max-width" select="$max-width"/>
+                <xsl:with-param name="max-height" select="$max-height"/>
+                <xsl:with-param name="file-prefix">
+                  <xsl:text>~th-</xsl:text>
+                  <xsl:value-of select="$max-width"/>
+                  <xsl:text>x</xsl:text>
+                  <xsl:value-of select="$max-height"/>
+                  <xsl:text>/~th-</xsl:text>
+                  <xsl:if test="$cropvar='true'">
+                    <xsl:text>crop-</xsl:text>
+                  </xsl:if>
+                  <xsl:if test="not($no-stretch)">
+                    <xsl:text>strch-</xsl:text>
+                  </xsl:if>
+                </xsl:with-param>
+                <xsl:with-param name="file-suffix" select="''"/>
+                <xsl:with-param name="quality" select="100"/>
+                <xsl:with-param name="crop" select="$cropvar" />
+                <xsl:with-param name="no-stretch" select="$no-stretch" />
+                <xsl:with-param name="forceResize" select="$forceResize" />
+              </xsl:call-template>
+            </xsl:variable>
+            <xsl:variable name="imageSize" select="ew:ImageSize($newSrc)"/>
 
-								</xsl:attribute>
-								<!-- Height -->
-								<xsl:attribute name="height">
-									<xsl:choose>
-										<xsl:when test="contains($newSrc,'awaiting-image-thumbnail.gif')">
-											<xsl:value-of select="$max-height"/>
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:value-of select="substring-after($imageSize,'x')" />
-										</xsl:otherwise>
-									</xsl:choose>
-								</xsl:attribute>
-								<!-- Alt -->
-								<xsl:attribute name="alt">
-									<xsl:value-of select="$alt" />
-								</xsl:attribute>
-								<!-- Title -->
-								<xsl:attribute name="title">
-									<xsl:value-of select="$alt" />
-								</xsl:attribute>
-								<!-- Class -->
-								<xsl:attribute name="class">
-									<xsl:choose>
-										<xsl:when test="$class!=''">
-											<xsl:value-of select="$class" />
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:text>photo thumbnail resized</xsl:text>
-										</xsl:otherwise>
-									</xsl:choose>
-									<xsl:if test="$lazy='on'">
-										<xsl:text> lazy</xsl:text>
-									</xsl:if>
-								</xsl:attribute>
-								<xsl:if test="$style!=''">
-									<xsl:attribute name="style">
-										<xsl:value-of select="$style" />
-									</xsl:attribute>
-								</xsl:if>
-							</img>
-						</xsl:variable>
-						<xsl:copy-of select="ms:node-set($image)/*" />
-					</xsl:if>
-					
-				</xsl:otherwise>
-			</xsl:choose>
+            <xsl:variable name="image">
+              <img itemprop="image">
+                <!-- SRC -->
+                <xsl:choose>
+                  <xsl:when test="$lazy='on'">
+                    <xsl:attribute name="data-src">
+                      <xsl:value-of select="$newSrc"/>
+                    </xsl:attribute>
+                    <xsl:attribute name="src">
+                      <xsl:value-of select="$lazyplaceholder"/>
+                    </xsl:attribute>
+                    <xsl:attribute name="loading">
+                      <xsl:text>lazy</xsl:text>
+                    </xsl:attribute>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:attribute name="src">
+                      <xsl:value-of select="$newSrc"/>
+                    </xsl:attribute>
+                  </xsl:otherwise>
+                </xsl:choose>
+                <!-- Width -->
+                <xsl:attribute name="width">
+                  <xsl:choose>
+                    <xsl:when test="contains($newSrc,'awaiting-image-thumbnail.gif')">
+                      <xsl:value-of select="$max-width"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:value-of select="substring-before($imageSize,'x')" />
+                    </xsl:otherwise>
+                  </xsl:choose>
 
-		</xsl:if>
- </xsl:template>
-  
-    
+                </xsl:attribute>
+                <!-- Height -->
+                <xsl:attribute name="height">
+                  <xsl:choose>
+                    <xsl:when test="contains($newSrc,'awaiting-image-thumbnail.gif')">
+                      <xsl:value-of select="$max-height"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:value-of select="substring-after($imageSize,'x')" />
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </xsl:attribute>
+                <!-- Alt -->
+                <xsl:attribute name="alt">
+                  <xsl:value-of select="$alt" />
+                </xsl:attribute>
+                <!-- Title -->
+                <xsl:attribute name="title">
+                  <xsl:value-of select="$alt" />
+                </xsl:attribute>
+                <!-- Class -->
+                <xsl:attribute name="class">
+                  <xsl:choose>
+                    <xsl:when test="$class!=''">
+                      <xsl:value-of select="$class" />
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:text>photo thumbnail resized</xsl:text>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                  <xsl:if test="$lazy='on'">
+                    <xsl:text> lazy</xsl:text>
+                  </xsl:if>
+                </xsl:attribute>
+                <xsl:if test="$style!=''">
+                  <xsl:attribute name="style">
+                    <xsl:value-of select="$style" />
+                  </xsl:attribute>
+                </xsl:if>
+              </img>
+            </xsl:variable>
+            <xsl:copy-of select="ms:node-set($image)/*" />
+          </xsl:if>
+
+        </xsl:otherwise>
+      </xsl:choose>
+
+    </xsl:if>
+  </xsl:template>
+
+
   <xsl:template name="sourceTag">
     <xsl:param name="type"/>
     <xsl:param name="media"/>
@@ -8416,8 +8428,8 @@
     <xsl:param name="no-stretch" select="true()" />
     <xsl:param name="showImage"/>
     <xsl:param name="class"/>
-	  <xsl:param name="width"/>
-	  <xsl:param name="height"/>
+    <xsl:param name="width"/>
+    <xsl:param name="height"/>
     <xsl:param name="forceResize"/>
     <xsl:variable name="VForceResize">
       <xsl:choose>
@@ -8499,27 +8511,27 @@
         <xsl:variable name="newimageSize" select="ew:ImageSize($displaySrc)"/>
         <xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
         <xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>
-		  <xsl:choose>
-			  <xsl:when test="$width or $height">
-				  <img src="{$displaySrc}" width="{$width}" height="{$height}" alt="{$alt}" class="detail photo">
-					  <xsl:if test="$imgId != ''">
-						  <xsl:attribute name="id">
-							  <xsl:value-of select="$imgId"/>
-						  </xsl:attribute>
-					  </xsl:if>
-				  </img>
-			  </xsl:when>
-			  <xsl:otherwise>
-				  <img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="detail photo">
-					  <xsl:if test="$imgId != ''">
-						  <xsl:attribute name="id">
-							  <xsl:value-of select="$imgId"/>
-						  </xsl:attribute>
-					  </xsl:if>
-				  </img>
-			  </xsl:otherwise>
-		  </xsl:choose>
-        
+        <xsl:choose>
+          <xsl:when test="$width or $height">
+            <img src="{$displaySrc}" width="{$width}" height="{$height}" alt="{$alt}" class="detail photo">
+              <xsl:if test="$imgId != ''">
+                <xsl:attribute name="id">
+                  <xsl:value-of select="$imgId"/>
+                </xsl:attribute>
+              </xsl:if>
+            </img>
+          </xsl:when>
+          <xsl:otherwise>
+            <img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="detail photo">
+              <xsl:if test="$imgId != ''">
+                <xsl:attribute name="id">
+                  <xsl:value-of select="$imgId"/>
+                </xsl:attribute>
+              </xsl:if>
+            </img>
+          </xsl:otherwise>
+        </xsl:choose>
+
       </xsl:when>
       <!--<xsl:otherwise>
         -->
@@ -8846,7 +8858,7 @@
   <xsl:template match="Content | MenuItem | Discount | Company" mode="getDisplayWidth">300</xsl:template>
   <xsl:template match="Content | MenuItem | Discount | Company" mode="getDisplayHeight">400</xsl:template>
 
-  
+
   <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-xxs">768</xsl:template>
   <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-xxs">768</xsl:template>
 
@@ -8865,7 +8877,7 @@
 
   <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-lg">496</xsl:template>
   <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-lg">496</xsl:template>
-  
+
   <!-- To fit 800x600 - fits nicely inside any screen ratio -->
   <xsl:template match="Content | MenuItem | Discount | Company" mode="getFullSizeWidth">750</xsl:template>
   <xsl:template match="Content | MenuItem | Discount | Company" mode="getFullSizeHeight">550</xsl:template>
@@ -8944,20 +8956,20 @@
     <xsl:variable name="newimageSize" select="ew:ImageSize($newSrc)"/>
     <xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
     <xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>
-	  <xsl:choose>
-		  <xsl:when test="$EnableWebP='on' ">
-			  <xsl:variable name="webpPath" select="ew:CreateWebP(concat($rootpath,$newSrc))"/>
+    <xsl:choose>
+      <xsl:when test="$EnableWebP='on' ">
+        <xsl:variable name="webpPath" select="ew:CreateWebP(concat($rootpath,$newSrc))"/>
 
-			  <picture>
-				  <source srcset="{$webpPath}" type="image/webp"/>
-				  <source srcset="{$rootpath}{$newSrc}" type="image/png"/>
-				  <img src="{$rootpath}{$newSrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{img/@alt}" class="photo {$responsiveImg}"/>
-			  </picture>
-		  </xsl:when>
-		  <xsl:otherwise>
-			  <img src="{$rootpath}{$newSrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{img/@alt}" class="photo {$responsiveImg}"/>
-		  </xsl:otherwise>
-	  </xsl:choose>
+        <picture>
+          <source srcset="{$webpPath}" type="image/webp"/>
+          <source srcset="{$rootpath}{$newSrc}" type="image/png"/>
+          <img src="{$rootpath}{$newSrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{img/@alt}" class="photo {$responsiveImg}"/>
+        </picture>
+      </xsl:when>
+      <xsl:otherwise>
+        <img src="{$rootpath}{$newSrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{img/@alt}" class="photo {$responsiveImg}"/>
+      </xsl:otherwise>
+    </xsl:choose>
 
   </xsl:template>
 
@@ -9082,7 +9094,7 @@
         </xsl:when>
         <xsl:otherwise>descending</xsl:otherwise>
       </xsl:choose>
-    </xsl:param> 
+    </xsl:param>
     <xsl:param name="stepCount" select="@stepCount"/>
     <xsl:param name="endPos">
       <xsl:choose>
@@ -9676,34 +9688,34 @@
     <xsl:apply-templates select="." mode="getDiscountInfo"/>
   </xsl:template>
 
-	<xsl:template match="Content" mode="PriceNumberic">
+  <xsl:template match="Content" mode="PriceNumberic">
 
-		<xsl:variable name="price">
-			<xsl:choose>
-				<xsl:when test="Prices/Price[@currency=$currency and @type='sale']/node()!=''">
-					<xsl:value-of select="Prices/Price[@currency=$currency and @type='sale']/node()"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="Prices/Price[@currency=$currency and @type='rrp']/node()"/>
-				</xsl:otherwise>
-			</xsl:choose>
+    <xsl:variable name="price">
+      <xsl:choose>
+        <xsl:when test="Prices/Price[@currency=$currency and @type='sale']/node()!=''">
+          <xsl:value-of select="Prices/Price[@currency=$currency and @type='sale']/node()"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="Prices/Price[@currency=$currency and @type='rrp']/node()"/>
+        </xsl:otherwise>
+      </xsl:choose>
 
-		</xsl:variable>
+    </xsl:variable>
 
-		<!-- RRP and standard prices must remain within the #price_{$id} -->
+    <!-- RRP and standard prices must remain within the #price_{$id} -->
 
-				<xsl:choose>
-					<xsl:when test="format-number($price, '#.00')='NaN'">
-						<xsl:value-of select="$price"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="format-number($price,'###,###,##0.00')"/>
-					</xsl:otherwise>
-				</xsl:choose>
-	</xsl:template>
+    <xsl:choose>
+      <xsl:when test="format-number($price, '#.00')='NaN'">
+        <xsl:value-of select="$price"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="format-number($price,'###,###,##0.00')"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 
 
-	<!-- Get Discount Info -->
+  <!-- Get Discount Info -->
   <xsl:template match="Content | option" mode="getDiscountInfo">
     <xsl:variable name="discount">
       <xsl:choose>
@@ -10484,9 +10496,9 @@
   </xsl:template>
 
   <xsl:template  name="getFilterButtons">
-    
-     <xsl:copy-of select="ew:GetFilterButtons()"/>
-    
+
+    <xsl:copy-of select="ew:GetFilterButtons()"/>
+
   </xsl:template>
 
   <xsl:template name="getSelectOptionsFunction">
@@ -10758,17 +10770,17 @@
           </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>
-			<xsl:choose>
-				<xsl:when test="not(/Page/Contents/Content[@name='criticalPathCSS'])">
-					<link rel="stylesheet" href="{$first}{$bundleVersion}"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<link rel="preload" href="{$first}{$bundleVersion}" as="style" onload="this.rel='stylesheet'"/>
-					<noscript>
-						<link rel="stylesheet" href="{$first}{$bundleVersion}"/>
-					</noscript>
-				</xsl:otherwise>
-			</xsl:choose>
+          <xsl:choose>
+            <xsl:when test="not(/Page/Contents/Content[@name='criticalPathCSS'])">
+              <link rel="stylesheet" href="{$first}{$bundleVersion}"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <link rel="preload" href="{$first}{$bundleVersion}" as="style" onload="this.rel='stylesheet'"/>
+              <noscript>
+                <link rel="stylesheet" href="{$first}{$bundleVersion}"/>
+              </noscript>
+            </xsl:otherwise>
+          </xsl:choose>
 
         </xsl:otherwise>
       </xsl:choose>
@@ -10802,7 +10814,7 @@
     <xsl:param name="text"/>
     <xsl:param name="position"/>
     <xsl:param name="class"/>
-    
+
     <!-- THIS IS OVERRIDDEN IN ADMIN MODE BY TEMPLATE IN ADMINWYSIWYG-->
     <xsl:choose>
       <xsl:when test="$position='header' or $position='footer' or ($position='column1' and @layout='Modules_1_column')">
@@ -10830,7 +10842,7 @@
               <xsl:text>wrapper-sm </xsl:text>
               <xsl:value-of select="@background"/>
               <xsl:apply-templates select="." mode="hideScreens" />
-			 
+
               <xsl:if test="@marginBelow='false'">
                 <xsl:text> margin-bottom-0 </xsl:text>
               </xsl:if>
@@ -10955,8 +10967,8 @@
       <xsl:if test="@mdCol='6'">col-md-2 </xsl:if>
     </xsl:variable>
     <xsl:choose>
-		<xsl:when test="@xsCol='4'">col-xs-3 </xsl:when>
-		<xsl:when test="@xsCol='3'">col-xs-4 </xsl:when>
+      <xsl:when test="@xsCol='4'">col-xs-3 </xsl:when>
+      <xsl:when test="@xsCol='3'">col-xs-4 </xsl:when>
       <xsl:when test="@xsCol='2'">col-xs-6 </xsl:when>
       <xsl:otherwise>mobile-1-col </xsl:otherwise>
     </xsl:choose>
