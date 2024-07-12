@@ -4,6 +4,7 @@ using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -497,12 +498,14 @@ namespace Protean
                     bIsError = true;
                     try
                     {
-                        oIndexWriter.Dispose();
-                        oIndexWriter = null;
+                        if (oIndexWriter != null) {
+                            oIndexWriter.Dispose();
+                            oIndexWriter = null;
+                        }
                     }
                     catch (Exception)
                     {
-
+              
                     }
                 }
             }

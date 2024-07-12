@@ -10,6 +10,7 @@
 
 using Protean.Providers.Membership;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Web.Configuration;
 
@@ -107,7 +108,7 @@ namespace Protean.Providers
                 //_AdminXforms = new AdminXForms(ref myWeb);
                 //_AdminProcess = new AdminProcess(ref myWeb);
                 // MemProvider.AdminProcess.oAdXfm = MemProvider.AdminXforms
-               // _Activities = new Activities();
+                // _Activities = new Activities();
                 return this;
             }
 
@@ -168,7 +169,7 @@ namespace Protean.Providers
             }
             public void DoContentIndex()
             {
-            }                    
+            }
 
             public class Filters
             {
@@ -263,9 +264,29 @@ namespace Protean.Providers
             {
                 return null;
             }
+
+            public void SaveFilterInSession(ref Cms aWeb, string filterDetails)
+            {
+                SaveFilterInSession(ref aWeb, filterDetails, false);
+            }
+            public void SaveFilterInSession(ref Cms aWeb, string filterDetails, bool remove)
+            {
+                if (aWeb.moSession["FilterList"] == null)
+                {
+                    aWeb.moSession["FilterList"] = new List<string>();
+                }
+                List<string> filters = ((List<string>)aWeb.moSession["FilterList"]);
+                if (remove)
+                {
+                    filters.Remove(filterDetails);
+                }
+                else if(!filters.Contains(filterDetails))
+                {
+                    filters.Add(filterDetails);
+                }
+                aWeb.moSession["FilterList"] = filters;
+            }
         }
-
-
     }
 
 }

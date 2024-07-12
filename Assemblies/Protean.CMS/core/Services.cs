@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Data;
 using System.IO;
 using System.Net;
 using System.Runtime.CompilerServices;
@@ -8,6 +10,7 @@ using System.Web.Services;
 using System.Xml;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using static Lucene.Net.Documents.Field;
 using static Protean.stdTools;
 
 namespace Protean
@@ -1134,7 +1137,38 @@ namespace Protean
             
         }
 
+        [WebMethod(Description = "update content index")]
 
+        public void RunContentFilterIndex()
+        {
+            try
+            {
+                CreateResponse();
+                if (CheckUserIP())
+                {
+                    myWeb = new Cms();
+                    myWeb.Open();
+
+                    string sSql = "spScheduleToUpdateIndexTable";
+                    var arrParms = new Hashtable();
+                    arrParms.Add("IndexId", "");
+                    myWeb.moDbHelper.ExeProcessSql(sSql, CommandType.StoredProcedure, arrParms);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                bResult = false;
+               
+            }
+            finally
+            {
+                oResponseElmt.SetAttribute("bResult", Conversions.ToString(bResult));
+            }
+
+            HttpContext.Current.ApplicationInstance.CompleteRequest();
+            
+        }
 
         #endregion
 

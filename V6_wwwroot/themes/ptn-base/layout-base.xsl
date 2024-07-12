@@ -115,13 +115,37 @@
 							<xsl:when test="$currentPage/DisplayName/@banner='img-banner'">
 								<div class="image-banner">
 									<div class="container-fluid">
-										<div class="image-banner-inner" id="banner" style="background-image:url({/Page/Contents/Content[@name='Banner']/img/@src})">
+										<!--<div class="image-banner-inner" id="banner" style="background-image:url({/Page/Contents/Content[@name='Banner']/img/@src})">-->
+										<div class="image-banner-inner" id="banner">
 											<xsl:apply-templates select="/Page" mode="inlinePopupSingle">
-												<xsl:with-param name="type">Image</xsl:with-param>
-												<xsl:with-param name="text">Add Banner Background</xsl:with-param>
-												<xsl:with-param name="name">Banner</xsl:with-param>
-												<xsl:with-param name="class">image-banner-inner</xsl:with-param>
-											</xsl:apply-templates>
+                        <xsl:with-param name="type">Image</xsl:with-param>
+                        <xsl:with-param name="text">Add Banner Background</xsl:with-param>
+                        <xsl:with-param name="name">Banner</xsl:with-param>
+                        <xsl:with-param name="class">image-banner-inner</xsl:with-param>
+                      </xsl:apply-templates>
+                      <xsl:call-template  name="displayResponsiveImage">
+                        <xsl:with-param name="crop" select="true()"/>
+                        <xsl:with-param name="no-stretch" select="false()"/>
+                        <xsl:with-param name="width" select="'1898'"/>
+                        <xsl:with-param name="height" select="'500'"/>
+                        <xsl:with-param name="max-width-xs" select="'527'"/>
+                        <xsl:with-param name="max-height-xs" select="'220'"/>
+                        <xsl:with-param name="max-width-sm" select="'719'"/>
+                        <xsl:with-param name="max-height-sm" select="'317'"/>
+                        <xsl:with-param name="max-width-md" select="'943'"/>
+                        <xsl:with-param name="max-height-md" select="'430'" />
+                        <xsl:with-param name="max-width-lg" select="'1151'"/>
+                        <xsl:with-param name="max-height-lg" select="'500'" />
+                        <xsl:with-param name="max-width-xl" select="'1351'"/>
+                        <xsl:with-param name="max-height-xl" select="'500'"/>
+                        <xsl:with-param name="max-width-xxl" select="'1898'"/>
+                        <xsl:with-param name="max-height-xxl" select="'500'"/>
+                        <xsl:with-param name="imageUrl" select="/Page/Contents/Content[@name='Banner']/img/@src"/>
+                        <xsl:with-param name="altText" select="''"/>
+                        <xsl:with-param name="forceResize" select="true()"/>
+                        <xsl:with-param name="class" select="'banner-background'"/>
+                        <xsl:with-param name="style" select="''"/>
+                      </xsl:call-template>
 											<div class="banner-caption">
 												<div class="banner-caption-inner">
 													<xsl:if test="$themeBreadcrumb='true'">
