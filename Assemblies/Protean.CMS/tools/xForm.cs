@@ -3369,9 +3369,9 @@ namespace Protean
 
 
 
-        public object addSubmit(ref XmlElement oContextNode, string sSubmission, string sLabel, string sRef = "submit", string sClass = "principle", string sIcon = "", string sValue = "")
+        public XmlElement addSubmit(ref XmlElement oContextNode, string sSubmission, string sLabel, string sRef = "submit", string sClass = "principle", string sIcon = "", string sValue = "")
         {
-            object addSubmitRet = default;
+            XmlElement addSubmitRet = default;
 
             XmlElement oIptElmt;
             XmlElement oLabelElmt;
