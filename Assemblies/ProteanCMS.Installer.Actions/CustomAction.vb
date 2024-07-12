@@ -10,7 +10,7 @@ Imports System.Web.Management
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.1.14.0"
+    Public Shared ewAssemblyVersion As String = "6.1.15.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.1.0.0"
     Public Shared bundleAssemblyVersion As String = "1.14.0.0"
     Public Shared bundleLessAssemblyVersion As String = "1.14.0.0"
@@ -44,7 +44,7 @@ Public Class CustomActions
     Public Shared SystemRuntimeCompilerServicesUnsafeVersion As String = "6.0.0.0"
     Public Shared MicrosoftWebInfrastructureVersion As String = "2.0.0.0"
     Public Shared SystemThreadingTasksExtensionsVersion As String = "4.2.0.1"
-    Public Shared SystemTextJsonVersion As String = "8.0.4.0"
+    Public Shared SystemTextJsonVersion As String = "8.0.0.0"
     Public Shared MicrosoftBclAsyncInterfacesVersion As String = "8.0.0.0"
     Public Shared SystemTextEncodingsWebVersion As String = "8.0.0.0"
     Public Shared SystemTextEncodingCodePagesAssemblyVersion As String = "8.0.0.0"
@@ -54,7 +54,7 @@ Public Class CustomActions
     Public Shared AngleSharpVersion As String = "1.1.2.0"
     Public Shared PreMailerVersion As String = "2.6.0.0"
     Public Shared QRCoderVersion As String = "1.6.0.0"
-    Public Shared ImazenWebPVersion As String = "10.0.1.0"
+    'do not use as no SNK - Public Shared ImazenWebPVersion As String = "10.0.1.0"
     Public Shared installFolder As String = "C:\Program Files\Eonic Digital LLP\ProteanCMS into GAC " & ewAssemblyVersion.Trim("0").Trim(".") & " (64bit)"
 
     <CustomAction()>
@@ -247,7 +247,7 @@ Public Class CustomActions
                     UpdateAssemblyRef(oAssembliesSect, "AngleSharp, Version=" & AngleSharpVersion & ", Culture=neutral, PublicKeyToken=e83494dcdc6d31ea")
                     UpdateAssemblyRef(oAssembliesSect, "PreMailer.Net, Version=" & PreMailerVersion & ", Culture=neutral, PublicKeyToken=23e3f43e29cae17f")
 
-                    UpdateAssemblyRef(oAssembliesSect, "Imazen.WebP, Version=" & ImazenWebPVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
+                    ' UpdateAssemblyRef(oAssembliesSect, "Imazen.WebP, Version=" & ImazenWebPVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
 
                     UpdateAssemblyRef(oAssembliesSect, "QRCoder, Version=" & QRCoderVersion & ", Culture=neutral, PublicKeyToken=c4ed5b9ae8358a28")
                     UpdateAssemblyRef(oAssembliesSect, "System.Runtime.CompilerServices.Unsafe, Version=" & SystemRuntimeCompilerServicesUnsafeVersion & ", Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
@@ -565,7 +565,7 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "System.Runtime.CompilerServices.Unsafe", "b03f5f7f11d50a3a", SystemRuntimeCompilerServicesUnsafeVersion)
 
             UpdateDependantAssembly(oSectXml, "System.Threading.Tasks.Extensions", "cc7b13ffcd2ddd51", SystemThreadingTasksExtensionsVersion)
-            UpdateDependantAssembly(oSectXml, "System.Text.Json", "cc7b13ffcd2ddd51", SystemTextJsonVersion)
+            UpdateDependantAssembly(oSectXml, "System.Text.Json", "cc7b13ffcd2ddd51", SystemTextJsonVersion, "0.0.0.0", "8.0.4.0")
             UpdateDependantAssembly(oSectXml, "Microsoft.Bcl.AsyncInterfaces", "cc7b13ffcd2ddd51", MicrosoftBclAsyncInterfacesVersion)
             UpdateDependantAssembly(oSectXml, "System.Text.Encodings.Web", "cc7b13ffcd2ddd51", SystemTextEncodingsWebVersion)
             UpdateDependantAssembly(oSectXml, "System.Numerics.Vectors", "b03f5f7f11d50a3a", SystemNumericsVectorsVersion)
@@ -582,7 +582,7 @@ Public Class CustomActions
             oCgfRuntimeSect64.SectionInformation.SetRawXml(oSectXml.OuterXml)
             config64.Save()
             Try
-                FileSystem.FileCopy("C:\Windows\SysWOW64\ClearScriptV8.win-x64.dll", "C:\Windows\System32\ClearScriptV8.win-x64.dll")
+                '    FileSystem.FileCopy("C:\Windows\SysWOW64\ClearScriptV8.win-x64.dll", "C:\Windows\System32\ClearScriptV8.win-x64.dll")
             Catch ex As Exception
                 'do nuffing
             End Try
