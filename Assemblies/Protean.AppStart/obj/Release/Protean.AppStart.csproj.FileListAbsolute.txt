@@ -16,7 +16,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.AppStart\obj\Release\Protean.AppSt
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Release\Protean.AppStart.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Release\Protean.AppStart.pdb
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Release\AdvancedStringBuilder.dll
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Release\ClearScript.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Release\JavaScriptEngineSwitcher.Core.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Release\JavaScriptEngineSwitcher.V8.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Release\AdvancedStringBuilder.xml
@@ -53,3 +52,12 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Release\Protean.AppS
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Release\Protean.AppStart.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Release\Protean.AppStart.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Release\Protean..1C248B77.Up2Date
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Release\Protean.AppStart.dll.config
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Release\ClearScript.Core.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Release\ClearScript.V8.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Release\ClearScript.V8.ICUData.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Release\Newtonsoft.Json.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Release\ClearScript.Core.xml
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Release\ClearScript.V8.xml
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Release\ClearScript.V8.ICUData.xml
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Release\Newtonsoft.Json.xml

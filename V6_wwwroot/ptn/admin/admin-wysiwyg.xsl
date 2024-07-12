@@ -364,6 +364,7 @@
 		<xsl:param name="text"/>
 		<xsl:param name="name"/>
 		<xsl:param name="class"/>
+		<!--
 		<xsl:attribute name="class">
 			<xsl:if test="$class!=''">
 				<xsl:value-of select="$class"/>
@@ -375,6 +376,7 @@
 			</xsl:if>
 			<xsl:text>editable</xsl:text>
 		</xsl:attribute>
+		-->
 		<xsl:choose>
 			<xsl:when test="/Page/Contents/Content[@name=$name]">
 				<xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='EditContent'] and $adminMode">
@@ -1401,7 +1403,8 @@
 		<xsl:param name="class"/>
 		<xsl:param name="name"/>
 		<xsl:if test="$page/AdminMenu/descendant-or-self::MenuItem[@cmd='EditContent']">
-			<!--TS moved to inlinePopupSingle as was breaking compiled mode
+			<!--TS moved to inlinePopupSingle as was breaking compiled mode-->
+		
 			<xsl:attribute name="class">
 				<xsl:if test="$class!=''">
 					<xsl:value-of select="$class"/>
@@ -1412,7 +1415,8 @@
 					<xsl:text> </xsl:text>
 				</xsl:if>
 				<xsl:text>editable</xsl:text>
-			</xsl:attribute>-->
+			</xsl:attribute>
+
 			<div class="ptn-edit over-content dropdown options pull-right">
 				<a href="?ewCmd=EditContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to edit this content" class="btn btn-primary btn-xs pull-right">
 					<i class="fas fa-pen">&#160;</i>&#160;

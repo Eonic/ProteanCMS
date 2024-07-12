@@ -53,16 +53,17 @@
 			</xsl:apply-templates>-->
 			<div id="{$id}" class="swiper" data-id="{@id}" data-speed="{@speed}" data-effect="{@effect}" data-direction="{@direction}" data-xscol="1" data-smcol="1" data-mdcol="1" data-lgcol="1" data-xlcol="1" data-xxlcol="1" data-spacebetween="0" data-spacebetweenlg="0" data-autoplay="{@autoplay}" data-autoplayspeed="{@interval}">
 				<xsl:if test="@bullets!='true'">
+					<xsl:if test="Content[@type='SwiperSlide']">
 					<ol class="carousel-indicators">
-						<xsl:for-each select="Content[@type='LibraryImageWithLink']">
+						<xsl:for-each select="Content[@type='SwiperSlide']">
 							<li data-target="#{$id}" data-slide-to="{position()-1}">
 								<xsl:if test="position()=1">
 									<xsl:attribute name="class">active</xsl:attribute>
 								</xsl:if>
-								<xsl:text></xsl:text>
+								<xsl:text> </xsl:text>
 							</li>
 						</xsl:for-each>
-					</ol>
+					</ol></xsl:if>
 				</xsl:if>
 				<!--<div class="swiper-wrapper" style="height:{@height}px">-->
 				<div class="swiper-wrapper">
@@ -78,8 +79,12 @@
 				</div>
 			</div>
 			<xsl:if test="@arrows!='true' or not(@arrows)">
-				<div class="swiper-button-prev" id="swiper-button-prev-{@id}"> </div>
-				<div class="swiper-button-next" id="swiper-button-next-{@id}"> </div>
+				<div class="swiper-button-prev" id="swiper-button-prev-{@id}">
+					<xsl:text> </xsl:text>
+				</div>
+				<div class="swiper-button-next" id="swiper-button-next-{@id}">
+					<xsl:text> </xsl:text>
+				</div>
 			</xsl:if>
 		</div>
 	</xsl:template>
@@ -95,11 +100,14 @@
 						<xsl:text>swiper-slide justify-content-</xsl:text>
 						<xsl:value-of select="@position-vertical"/>
 					</xsl:attribute>
+					<xsl:if test="$adminMode">
 					<div class="swiper-admin-btns">
 						<xsl:apply-templates select="." mode="inlinePopupOptions">
 							<xsl:with-param name="class" select="swiper-admin-btns"/>
 						</xsl:apply-templates>
+						<xsl:text> </xsl:text>
 					</div>
+					</xsl:if>
 					<xsl:if test="$cHeightOptions='adapt'">
 						<img src="{Images/img[@class='detail']/@src}" alt="{Title/node()}" />
 					</xsl:if>
@@ -209,6 +217,8 @@
 						<xsl:apply-templates select="." mode="inlinePopupOptions">
 							<xsl:with-param name="class" select="swiper-admin-btns"/>
 						</xsl:apply-templates>
+
+						<xsl:text> </xsl:text>
 					</div>
 					<!--<xsl:if test="position()=1">
 						<xsl:attribute name="class">swiper-slide</xsl:attribute>

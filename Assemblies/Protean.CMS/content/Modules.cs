@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using System.Web.Configuration;
@@ -359,7 +360,7 @@ namespace Protean
                         long nItemsPerPage = Conversions.ToLong(oContentNode.GetAttribute("stepCount"));
                         long nCurrentPage = 1L;
                         long itemCount = Conversions.ToLong(myWeb.moDbHelper.GetDataValue(@"select count(nContentKey) from tblContent c inner join tblContentLocation cl on c.nContentKey =  cl.nContentId
-where cl.nStructId = " + myWeb.mnPageId));
+                        where cl.nStructId = " + myWeb.mnPageId));
                         oContentNode.SetAttribute("itemCount", itemCount.ToString());
                         if (!string.IsNullOrEmpty(myWeb.moRequest["startPos" + oContentNode.GetAttribute("id")]))
                         {
@@ -441,6 +442,7 @@ where cl.nStructId = " + myWeb.mnPageId));
                 public void ContentFilter(ref Cms myWeb, ref XmlElement oContentNode)
                 {
                     string cProcessInfo = "ContentFilter";
+
                     try
                     {
                         // current contentfilter id
@@ -468,12 +470,17 @@ where cl.nStructId = " + myWeb.mnPageId));
 
                             }
                         }
-
+                        string cShowMore = string.Empty;
+                        if (myWeb.moRequest.Form["cShowMore"] != null)
+                        {
+                            cShowMore = Convert.ToString(myWeb.moRequest.Form["cShowMore"]);
+                        }
+                        bool bShowMoreFilterButton = false;
 
                         oFrmGroup = filterForm.addGroup(ref filterForm.moXformElmt, "main-group");
-
-
-
+                        XmlElement oXml = filterForm.moPageXML.CreateElement("ShowMore");
+                        oXml.InnerText = cShowMore;
+                        filterForm.Instance.AppendChild(oXml);
                         foreach (XmlElement currentOFilterElmt in oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']"))
                         {
                             oFilterElmt = currentOFilterElmt;
@@ -517,6 +524,17 @@ where cl.nStructId = " + myWeb.mnPageId));
                                     }
                                 }
 
+                                if (oFilterElmt.Attributes["hideByDefault"] != null)
+                                {
+                                    if (Convert.ToString(oFilterElmt.Attributes["hideByDefault"].Value).ToLower() == "true")
+                                    {
+                                        if (bShowMoreFilterButton == false)
+                                        {
+                                            bShowMoreFilterButton = true;
+                                        }
+                                    }
+                                }
+
                                 string methodname = "AddControl";
 
                                 var o = Activator.CreateInstance(calledType);
@@ -529,6 +547,8 @@ where cl.nStructId = " + myWeb.mnPageId));
                                 args[4] = oContentNode;
                                 args[5] = cWhereSql;
                                 calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, null, o, args);
+
+
                             }
 
                         }
@@ -536,9 +556,23 @@ where cl.nStructId = " + myWeb.mnPageId));
 
                         string whereSQL = string.Empty;
                         string orderBySql = string.Empty;
+                        string cCssClassName = "hidden";
+                        filterForm.addBind("cShowMore", "ShowMore", ref filterForm.model, "false()", "string");
 
+                        filterForm.addInput(ref oFrmGroup, "cShowMore", true, "ShowMore", "hidden");
+                        if (cShowMore == string.Empty)
+                        {
+                            if (bShowMoreFilterButton == true)
+                            {
+                                cCssClassName = string.Empty;
+                            }
+                        }
+                        filterForm.addInput(ref oFrmGroup, "", false, "More +", cCssClassName + " btnShowMoreFilter");
+                        filterForm.addSubmit(ref oFrmGroup, "< Less", "< Less ", "Submit", "hidden filter-xs-btn btnHideFilter");
                         filterForm.addSubmit(ref oFrmGroup, "Show " + cFilterTarget, "Show " + cFilterTarget, "Show " + cFilterTarget, "hidden-sm hidden-md hidden-lg filter-xs-btn showfiltertarget");
-                        // filterForm.addSubmit(oFrmGroup, "Clear Filters", "Clear Filters", "submit", "ClearFilters")
+
+
+
                         filterForm.addValues();
 
                         if (filterForm.isSubmitted())
@@ -649,72 +683,20 @@ where cl.nStructId = " + myWeb.mnPageId));
                                 myWeb.moSession["FilterWhereCondition"] = whereSQL;
                                 XmlElement argoPageDetail = null; int nCount = 0;
 
-                                String cAdditionalJoins = string.Empty;
+
                                 if (myWeb.mbAdminMode)
                                 {
                                     bDistinct = false;
-                                    if(orderBySql!=string.Empty)
+                                    if (orderBySql != string.Empty)
                                     {
                                         orderBySql = orderBySql + ",";
                                     }
-                                    orderBySql =   " a.nStatus desc";
-
-                                    
-
+                                    orderBySql = " a.nStatus desc";
                                 }
-                                //if(orderBySql!=string.Empty)
-                                //{
-                                //    cAdditionalJoins = " Left Outer join tblContentIndex ci Inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey and cid.cDefinitionName='Price' on ci.nContentId=c.nContentKey ";
-                                //}
-                                myWeb.moSession["OrderByClause"] = orderBySql;
-                                myWeb.GetPageContentFromSelect(whereSQL, ref nCount, oContentsNode: ref oContentNode, oPageDetail: ref argoPageDetail, 
-                                cShowSpecificContentTypes: cFilterTarget, bIgnorePermissionsCheck: true,distinct: bDistinct, cOrderBy: orderBySql,cAdditionalJoins: cAdditionalJoins);
-                                
-                                // Modify results after they are loaded onto the page.
-                                foreach (XmlElement currentOFilterElmt1 in oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']"))
-                                {
-                                    oFilterElmt = currentOFilterElmt1;
-                                    Type calledType;
-                                    className = oFilterElmt.GetAttribute("className");
-                                    string providerName = oFilterElmt.GetAttribute("providerName");
-                                    if (!string.IsNullOrEmpty(className))
-                                    {
-                                        if (string.IsNullOrEmpty(providerName) | Strings.LCase(providerName) == "default")
-                                        {
-                                            providerName = "Protean.Providers.Filters." + className;
-                                            calledType = Type.GetType(providerName, true);
-                                        }
-                                        else
-                                        {
-                                            var castObject = WebConfigurationManager.GetWebApplicationSection("protean/filterProviders");
-                                            Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)castObject;
-                                            System.Configuration.ProviderSettings ourProvider = moPrvConfig.Providers[providerName];
-                                            Assembly assemblyInstance;
 
-                                            if (ourProvider.Parameters["path"] != "" && ourProvider.Parameters["path"] != null)
-                                            {
-                                                assemblyInstance = Assembly.LoadFrom(myWeb.goServer.MapPath(Conversions.ToString(ourProvider.Parameters["path"])));
-                                            }
-                                            else
-                                            {
-                                                assemblyInstance = Assembly.Load(ourProvider.Type);
-                                            }
-                                            if (ourProvider.Parameters["rootClass"] == "")
-                                            {
-                                                calledType = assemblyInstance.GetType("Protean.Providers.Filters." + providerName, true);
-                                            }
-                                            else
-                                            {
-                                                calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], "."), className)), true);
-                                            }
-                                        }
-                                        string methodname = "PostFilterContentUpdates";
-                                        var o = Activator.CreateInstance(calledType);
-                                        var args = new object[1];
-                                        args[0] = myWeb;
-                                        calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, null, o, args);
-                                    }
-                                }
+                                myWeb.GetPageContentFromSelect(whereSQL, ref nCount, oContentsNode: ref oContentNode, oPageDetail: ref argoPageDetail,
+                                cShowSpecificContentTypes: cFilterTarget, bIgnorePermissionsCheck: true, distinct: bDistinct, cOrderBy: orderBySql);
+
                                 if (oContentNode.SelectNodes("Content[@type='Product']").Count == 0)
                                 {
                                     filterForm.addSubmit(ref oFrmGroup, "Clear Filters", "No results found", "clearfilters", "clear-filters", sValue: "clearfilters");
@@ -725,6 +707,8 @@ where cl.nStructId = " + myWeb.mnPageId));
                                 filterForm.addSubmit(ref oFrmGroup, "Clear Filters", "No results found", "clearfilters", "clear-filters", sValue: "clearfilters");
                             }
                         }
+                        // Modify results after they are loaded onto the page.
+                        myWeb.CallPostFilterContentUpdates();
                     }
 
                     catch (Exception ex)
@@ -868,7 +852,7 @@ where cl.nStructId = " + myWeb.mnPageId));
                     }
                 }
 
-              
+
             }
 
 
