@@ -188,3 +188,7 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\ClearScript.Windo
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\ClearScript.Windows.Core.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Text.Json.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\ru-ru\BundleTransformer.SassAndScss.resources.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.OpenXml.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.OpenXml.Framework.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.OpenXml.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.OpenXml.Framework.xml

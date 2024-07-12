@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?define version  = "6.1.15"?>
+<?define version  = "6.1.16"?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi' xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
     <Product Id='*' Name='ProteanCMS GAC Installer $(var.version)' Language='1033' Version='$(var.version)' Manufacturer='Eonic Digital LLP' UpgradeCode='{577597F8-BE6F-46B4-8A9D-46E8A5360918}' Codepage='1252'>
         <Package AdminImage='no' Comments='ProteanCMS GAC Installer' Compressed='yes' Description='ProteanCMS GAC Installer (64bit)' InstallerVersion='300' InstallScope='perMachine' Languages='1033' Manufacturer='Eonic Digital LLP' Platform='x64' ReadOnly='no' ShortNames='no' />
@@ -57,7 +57,10 @@
             <Directory Id='GAC' Name='Global Assembly Cache'>
 				
                 <!-- PROTEAN CMS DLL's-->
-
+				<Component Id='com_Protean_AppStart' Guid='eb957554-8eaa-430b-a790-7236ed0d2be7' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+					<File Id='_Protean_AppStart' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Protean.AppStart.dll' Source='..\Assemblies\Protean.AppStart\bin\$(var.Configuration)\Protean.AppStart.dll' Assembly='.net' KeyPath='yes' />
+				</Component>
+				
 				<Component Id='com_F2AD2069_BE06_11F8_0190_40CE3BBB25C8' Guid='16EAE569-B738-4819-BE9A-C6279AD16BE5' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_F2AD2069_BE06_11F8_0190_40CE3BBB25C8' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Protean.Tools.dll' Source='..\Assemblies\Protean.Tools\bin\$(var.Configuration)\Protean.Tools.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
@@ -285,8 +288,9 @@
             <!--ComponentGroupRef Id='ewInstaller.Binaries' />
             <ComponentGroupRef Id='ReplaceProvider.Binaries' /-->
             <ComponentRef Id='StartMenu' />
-          
-           <ComponentRef Id='com_47119BB9_5091_9F08_7BCB_3FC0FC9C7A3C' />
+			<ComponentRef Id='com_Protean_AppStart' />
+			
+			<ComponentRef Id='com_47119BB9_5091_9F08_7BCB_3FC0FC9C7A3C' />
              <ComponentRef Id='com_4F4E0891_9559_2849_AA81_90D923C221DF' />
 			<ComponentRef Id='com_90E2C6FA_B536_6248_86D8_A92A1B7AD160' />
            

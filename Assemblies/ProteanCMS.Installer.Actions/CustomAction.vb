@@ -10,7 +10,7 @@ Imports System.Web.Management
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.1.15.0"
+    Public Shared ewAssemblyVersion As String = "6.1.16.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.1.0.0"
     Public Shared bundleAssemblyVersion As String = "1.14.0.0"
     Public Shared bundleLessAssemblyVersion As String = "1.14.0.0"
@@ -742,7 +742,7 @@ Public Class CustomActions
 
             My.Computer.FileSystem.WriteAllText("c:\\ProteanInstallLog.txt", errorstr, True)
             Try
-                System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS-troubleshoot")
+                '  System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS-troubleshoot")
             Catch ex2 As Exception
                 'do nuffing
             End Try
@@ -783,7 +783,7 @@ Public Class CustomActions
 
         Catch ex As Exception
             Dim errorstr As String = ex.InnerException.StackTrace
-            '     My.Computer.FileSystem.WriteAllText("C:\installError.txt", errorstr, True)
+            My.Computer.FileSystem.WriteAllText("C:\installError.txt", errorstr, True)
         End Try
 
     End Sub
@@ -799,7 +799,7 @@ Public Class CustomActions
 
         Catch ex As Exception
             Dim errorstr As String = ex.InnerException.StackTrace
-            '     My.Computer.FileSystem.WriteAllText("C:\installError.txt", errorstr, True)
+            My.Computer.FileSystem.WriteAllText("C:\installError.txt", errorstr, True)
         End Try
 
     End Sub
@@ -834,7 +834,7 @@ Public Class CustomActions
 
         Catch ex As Exception
             Dim errorstr As String = ex.InnerException.StackTrace
-            '    My.Computer.FileSystem.WriteAllText("C:\installError.txt", errorstr, True)
+            My.Computer.FileSystem.WriteAllText("C:\installError.txt", errorstr, True)
         End Try
 
     End Sub
@@ -859,7 +859,7 @@ Public Class CustomActions
 
         Catch ex As Exception
             Dim errorstr As String = ex.InnerException.StackTrace
-            '    My.Computer.FileSystem.WriteAllText("C:\installError.txt", errorstr, True)
+            My.Computer.FileSystem.WriteAllText("C:\installError.txt", errorstr, True)
         End Try
 
     End Sub
@@ -882,7 +882,7 @@ Public Class CustomActions
 
         Catch ex As Exception
             Dim errorstr As String = ex.InnerException.StackTrace
-            '   My.Computer.FileSystem.WriteAllText("C:\installError.txt", errorstr, True)
+            My.Computer.FileSystem.WriteAllText("C:\installError.txt", errorstr, True)
         End Try
 
     End Sub

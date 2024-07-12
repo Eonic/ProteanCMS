@@ -39,6 +39,7 @@ Installer_Logo.jpg
 ..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll
 libraries\Newtonsoft.Json.dll
 ..\packages\PreMailer.Net.2.6.0\lib\net461\PreMailer.Net.dll
+..\Assemblies\Protean.AppStart\bin\Release\Protean.AppStart.dll
 ..\packages\QRcoder.1.6.0\lib\netstandard2.0\QRcoder.dll
 ..\packages\System.Text.Encoding.CodePages.8.0.0\lib\netstandard2.0\System.Text.Encoding.CodePages.dll
 ..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll

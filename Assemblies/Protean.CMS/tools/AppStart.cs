@@ -7,7 +7,7 @@ using JavaScriptEngineSwitcher.Core;
 
 namespace Protean
 {
-    public class AppStart
+    public class ApplicationStart
     {
         public static void InitialiseJSEngine()
         {
