@@ -5872,7 +5872,7 @@ namespace Protean
                                 {
                                     // list Lookup Lists
                                     sSql = @"select nContentIndexDefKey, CASE WHen nContentIndexDataType = 1 Then 'Int' when nContentIndexDataType=2 Then 'String' Else 'Date' End As nContentIndexDataType,
-cContentSchemaName, cDefinitionName, cContentValueXpath, Case When bBriefNotDetail=0 Then 'false' Else 'True' End As bBriefNotDetail, nKeywordGroupName
+cContentSchemaName, cDefinitionName, cContentValueXpath, Case When bBriefNotDetail=0 Then 'false' Else 'True' End As bBriefNotDetail, nKeywordGroupName,isNull(cDefaultValue,'') as cDefaultValue
 from tblContentIndexDef";
 
                                     indexesDataset = myWeb.moDbHelper.GetDataSet(sSql, "indexkey", "indexkeys");

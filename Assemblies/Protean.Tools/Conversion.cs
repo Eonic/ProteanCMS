@@ -56,6 +56,7 @@ namespace Protean.Tools
             ConversionNotAvailable = 3,
             InputSourceNotValidorEmpty = 4
         }
+        public string ErrorMsg = null;
 
         private Type nInputType = Type.Undefined;
         private Type nOutputType = Type.Undefined;
@@ -539,8 +540,9 @@ namespace Protean.Tools
                 oOutputXml.LoadXml(ResponseXml.OuterXml);
                 this.oOutputXml = oOutputXml.DocumentElement;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                ErrorMsg = ex.ToString();
                 SetStatus(Status.Failed, StatusReason.Undefined);
             }
             finally

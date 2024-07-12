@@ -1,0 +1,1 @@
+Alter table tblContentIndexDef Add cDefaultValue varchar(20)
