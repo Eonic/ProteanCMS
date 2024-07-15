@@ -10639,61 +10639,68 @@ namespace Protean
                     // If nCurrentPageId = 0 Then nCurrentPageId = gnPageId
 
                     // map the feilds to columns
-                    oDs.Tables[0].Columns["id"].ColumnMapping = MappingType.Attribute;
-
-                    if (oDs.Tables[0].Columns.Contains("parID"))
+                    if (oDs != null)
                     {
-                        oDs.Tables[0].Columns["parId"].ColumnMapping = MappingType.Attribute;
-                    }
 
-                    if (oDs.Tables[0].Columns.Contains("locId"))
-                    {
-                        oDs.Tables[0].Columns["locId"].ColumnMapping = MappingType.Attribute;
-                    }
+                        oDs.Tables[0].Columns["id"].ColumnMapping = MappingType.Attribute;
 
-                    // Added to handle the new relationship type
-                    if (oDs.Tables[0].Columns.Contains("rtype"))
-                    {
-                        oDs.Tables[0].Columns["rtype"].ColumnMapping = MappingType.Attribute;
-                    }
-
-                    {
-                        var withBlock = oDs.Tables[0];
-                        withBlock.Columns["ref"].ColumnMapping = MappingType.Attribute;
-                        withBlock.Columns["name"].ColumnMapping = MappingType.Attribute;
-                        withBlock.Columns["type"].ColumnMapping = MappingType.Attribute;
-                        withBlock.Columns["status"].ColumnMapping = MappingType.Attribute;
-                        withBlock.Columns["publish"].ColumnMapping = MappingType.Attribute;
-                        withBlock.Columns["expire"].ColumnMapping = MappingType.Attribute;
-                        withBlock.Columns["owner"].ColumnMapping = MappingType.Attribute;
-
-                        if (oDs.Tables[0].Columns["position"] != null)
+                        if (oDs.Tables[0].Columns.Contains("parID"))
                         {
-                            oDs.Tables[0].Columns["position"].ColumnMapping = MappingType.Attribute;
+                            oDs.Tables[0].Columns["parId"].ColumnMapping = MappingType.Attribute;
                         }
-                        if (oDs.Tables[0].Columns["overall_count"] != null)
+
+                        if (oDs.Tables[0].Columns.Contains("locId"))
                         {
-                            oDs.Tables[0].Columns["overall_count"].ColumnMapping = MappingType.Attribute;
+                            oDs.Tables[0].Columns["locId"].ColumnMapping = MappingType.Attribute;
                         }
-                        if (oDs.Tables[0].Columns["update"] != null)
+
+                        // Added to handle the new relationship type
+                        if (oDs.Tables[0].Columns.Contains("rtype"))
                         {
-                            if (dUpdateDate != default)
+                            oDs.Tables[0].Columns["rtype"].ColumnMapping = MappingType.Attribute;
+                        }
+
+                        {
+                            var withBlock = oDs.Tables[0];
+                            withBlock.Columns["ref"].ColumnMapping = MappingType.Attribute;
+                            withBlock.Columns["name"].ColumnMapping = MappingType.Attribute;
+                            withBlock.Columns["type"].ColumnMapping = MappingType.Attribute;
+                            withBlock.Columns["status"].ColumnMapping = MappingType.Attribute;
+                            withBlock.Columns["publish"].ColumnMapping = MappingType.Attribute;
+                            withBlock.Columns["expire"].ColumnMapping = MappingType.Attribute;
+                            withBlock.Columns["owner"].ColumnMapping = MappingType.Attribute;
+
+                            if (oDs.Tables[0].Columns["position"] != null)
                             {
-                                withBlock.Columns["update"].ColumnMapping = MappingType.Attribute;
+                                oDs.Tables[0].Columns["position"].ColumnMapping = MappingType.Attribute;
                             }
+                            if (oDs.Tables[0].Columns["overall_count"] != null)
+                            {
+                                oDs.Tables[0].Columns["overall_count"].ColumnMapping = MappingType.Attribute;
+                            }
+                            if (oDs.Tables[0].Columns["update"] != null)
+                            {
+                                if (dUpdateDate != default)
+                                {
+                                    withBlock.Columns["update"].ColumnMapping = MappingType.Attribute;
+                                }
+                            }
+                            withBlock.Columns["content"].ColumnMapping = MappingType.SimpleContent;
                         }
-                        withBlock.Columns["content"].ColumnMapping = MappingType.SimpleContent;
+
+                        oDs.EnforceConstraints = false;
+                        // convert to Xml Dom
+                        var oXml = new XmlDocument();
+                        oXml.LoadXml(oDs.GetXml());
+                        oXml.PreserveWhitespace = false;
+
+                        PerfMonLog("DBHelper", "ContentDataSetToXml - End");
+
+                        return oXml;
                     }
-
-                    oDs.EnforceConstraints = false;
-                    // convert to Xml Dom
-                    var oXml = new XmlDocument();
-                    oXml.LoadXml(oDs.GetXml());
-                    oXml.PreserveWhitespace = false;
-
-                    PerfMonLog("DBHelper", "ContentDataSetToXml - End");
-
-                    return oXml;
+                    else {
+                        return null;
+                    }
                 }
 
                 catch (Exception ex)

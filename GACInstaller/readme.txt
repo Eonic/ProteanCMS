@@ -1,0 +1,1 @@
+to run wix copy bootstrapper and unzip to C:\Program Files (x86)\Microsoft SDKs\Windows\v8.0A

@@ -7,6 +7,7 @@ body {
     display: flex;
     flex-direction: column;
     height: 100%;
+    background: #f4f6f7;
 
     p, li {
         word-break: break-word;
@@ -20,6 +21,12 @@ body {
 #mainTable {
     flex-shrink: 0;
     flex-grow: 2;
+    background: $body-bg;
+
+    @media(min-width:2000px) {
+        max-width: 2000px;
+        margin: 0 auto;
+    }
 }
 
 .container-wrapper.home-class {
@@ -183,10 +190,6 @@ img {
     padding-top: $top-padding;
 }
 
-.container-wrapper {
-    margin-top: $top-padding;
-}
-
 .layout-title {
     text-align: center;
 }
@@ -329,6 +332,13 @@ section.bg-video-wrapper {
 
     .image-banner-inner {
         border-radius: $border-radius;
+        background: $light;
+        position: relative;
+        overflow: hidden;
+
+        h1 {
+            margin-bottom: 0;
+        }
     }
 
 
@@ -336,14 +346,14 @@ section.bg-video-wrapper {
         .banner-caption {
             background: $banner-bg;
             padding: 3vw;
-            border-radius: $border-radius $border-radius 0 0;
+            border-radius: 0;
         }
 
         .image-banner-inner {
             background-size: contain;
             background-position: center;
             background-position: bottom center;
-            padding-bottom: 40%;
+            //padding-bottom: 40%;
             background-repeat: no-repeat;
         }
     }
@@ -355,11 +365,13 @@ section.bg-video-wrapper {
         }
 
         .banner-caption {
+            position: absolute;
             max-width: 36%;
             padding: 4vw 6.1% 10% 4vw;
             background-size: 100%;
             min-height: 500px;
             max-width: 42%;
+            top:0;
 
             .banner-caption-inner {
                 background: $banner-bg;
@@ -1047,55 +1059,6 @@ dd {
             padding-right: 5px;
             font-weight: 700;
             font-size: 0.7rem;
-        }
-    }
-}
-
-
-/*############### FOOTER #################*/
-#pagefooter {
-    margin-top: auto;
-    background: $footer-bg;
-    padding-top: $grid-gutter-height;
-    padding-bottom: 2rem;
-    color: rgba(color-contrast($footer-bg),1);
-
-    h1, h2, h3, h4, h5, h6 {
-        color: rgba(color-contrast($footer-bg),1);
-        font-size: 1.3rem;
-    }
-
-    a {
-        color: rgba(color-contrast($footer-bg),1);
-
-        &:hover,
-        &:focus {
-            opacity: 0.8;
-        }
-    }
-
-    .footer-nav {
-        margin-left: -1rem;
-        margin-right: -1rem;
-    }
-
-    .dev-credit {
-        background: #4e4d4d;
-        padding: 0.5rem;
-        font-size: 0.85rem;
-        margin-top: 2rem;
-        text-align: center;
-        margin-bottom: -2rem;
-
-        a {
-            color: #fff;
-            text-decoration: none;
-            font-weight: 300;
-
-            span {
-                vertical-align: middle;
-                line-height: 1;
-            }
         }
     }
 }
