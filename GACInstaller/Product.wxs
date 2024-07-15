@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?define version  = "6.1.14"?>
+<?define version  = "6.1.18"?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi' xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
     <Product Id='*' Name='ProteanCMS GAC Installer $(var.version)' Language='1033' Version='$(var.version)' Manufacturer='Eonic Digital LLP' UpgradeCode='{577597F8-BE6F-46B4-8A9D-46E8A5360918}' Codepage='1252'>
         <Package AdminImage='no' Comments='ProteanCMS GAC Installer' Compressed='yes' Description='ProteanCMS GAC Installer (64bit)' InstallerVersion='300' InstallScope='perMachine' Languages='1033' Manufacturer='Eonic Digital LLP' Platform='x64' ReadOnly='no' ShortNames='no' />
@@ -57,21 +57,19 @@
             <Directory Id='GAC' Name='Global Assembly Cache'>
 				
                 <!-- PROTEAN CMS DLL's-->
-
-				<Component Id='com_F2AD2069_BE06_11F8_0190_40CE3BBB25C8' Guid='16EAE569-B738-4819-BE9A-C6279AD16BE5' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_F2AD2069_BE06_11F8_0190_40CE3BBB25C8' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Protean.Tools.dll' Source='..\Assemblies\Protean.Tools\bin\$(var.Configuration)\Protean.Tools.dll' Assembly='.net' KeyPath='yes' />
-				</Component>
 				<Component Id='com_Protean_AppStart' Guid='eb957554-8eaa-430b-a790-7236ed0d2be7' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_Protean_AppStart' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Protean.AppStart.dll' Source='..\Assemblies\Protean.AppStart\bin\$(var.Configuration)\Protean.AppStart.dll' Assembly='.net' KeyPath='yes' />
+				</Component>
+				
+				<Component Id='com_F2AD2069_BE06_11F8_0190_40CE3BBB25C8' Guid='16EAE569-B738-4819-BE9A-C6279AD16BE5' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+					<File Id='_F2AD2069_BE06_11F8_0190_40CE3BBB25C8' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Protean.Tools.dll' Source='..\Assemblies\Protean.Tools\bin\$(var.Configuration)\Protean.Tools.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 				<Component Id='com_47119BB9_5091_9F08_7BCB_3FC0FC9C7A3C' Guid='CA3ECC2F-BB9C-41C8-A73B-40739B106AE0' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_47119BB9_5091_9F08_7BCB_3FC0FC9C7A3C' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='ProteanCMS.dll' Source='..\Assemblies\Protean.CMS\bin\$(var.Configuration)\ProteanCMS.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 				<Component Id='com_Eonic_Providers_Messaging_CampaignMonitor' Guid='ea7edd77-2c4d-4f5d-aef1-d33daf6ed21b' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_Eonic_Providers_Messaging_CampaignMonitor' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Protean.Providers.Messaging.CampaignMonitor.dll' Source='..\..\ProteanCMS Addons\Providers\Messaging\CampaignMonitor\bin\$(var.Configuration)\Protean.Providers.Messaging.CampaignMonitor.dll' Assembly='.net' KeyPath='yes' />
-				</Component>
-				
-				
+				</Component>	
                 <Component Id='com_06F482B3_1FDF_E839_AF25_0B1482DBBD28' Guid='EA5F7DF1-7CF6-4607-9712-4E01E7B80FA1' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                     <File Id='_06F482B3_1FDF_E839_AF25_0B1482DBBD28' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='SoundInTheory.DynamicImage.dll' Source='..\Assemblies\NonNuget\SoundInTheory.DynamicImage.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
@@ -199,11 +197,11 @@
               </Component>
 
               <Component Id='com_ImazenWebP' Guid='094ef4cf-5781-4c08-bb15-0614b7e06b93' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                <File Id='_ImazenWebP' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Imazen.WebP.dll' Source='..\packages\Imazen.WebP.10.0.1\lib\net45\Imazen.WebP.dll' Assembly='.net' KeyPath='yes' />
+                <File Id='_ImazenWebP' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Imazen.WebP.dll' Source='..\Assemblies\NonNuget\Imazen.WebP.dll' Assembly='.net' KeyPath='yes' />
               </Component>
 
 				<Component Id='com_QRcoder' Guid='bbd81acb-8106-49a6-a2e5-2bb767a63bfa' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_QRcoder' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='QRcoder.dll' Source='..\packages\QRcoder.1.6.0\lib\netstandard2.0\QRcoder.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_QRcoder' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='QRcoder.dll' Source='..\packages\QRcoder.1.6.0\lib\net40\QRcoder.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 
 				<Component Id='com_SystemBuffers' Guid='87bfe201-a4ce-4cd8-85c3-118972fd8e9b' Permanent='no' SharedDllRefCount='no' Transitive='no'>
@@ -277,10 +275,10 @@
 				<Condition>VersionNT64</Condition>
                 <File Id='_libwebp' Source='..\Assemblies\NonNuget\libwebp.dll' KeyPath='yes' />
               </Component>
-			<Component Id='com_Microsoft_ClearScript_V8_WinX64' Guid='af52af85-0ca4-459a-b7e5-dc3088aa17b6' Win64='no'>
+			<!--<Component Id='com_Microsoft_ClearScript_V8_WinX64' Guid='af52af85-0ca4-459a-b7e5-dc3088aa17b6' Win64='no'>
 				<Condition>VersionNT64</Condition>
 				<File Id='_Microsoft_ClearScript_V8_WinX64' Source='..\packages\Microsoft.ClearScript.V8.Native.win-x64.7.4.5\runtimes\win-x64\native\ClearScriptV8.win-x64.dll' KeyPath='yes' />
-			</Component>
+			</Component>-->
 		</Directory>
     </Directory>
         <!-- The FileSystem group of the installation package. -->
@@ -290,8 +288,9 @@
             <!--ComponentGroupRef Id='ewInstaller.Binaries' />
             <ComponentGroupRef Id='ReplaceProvider.Binaries' /-->
             <ComponentRef Id='StartMenu' />
-          
-           <ComponentRef Id='com_47119BB9_5091_9F08_7BCB_3FC0FC9C7A3C' />
+			<ComponentRef Id='com_Protean_AppStart' />
+			
+			<ComponentRef Id='com_47119BB9_5091_9F08_7BCB_3FC0FC9C7A3C' />
              <ComponentRef Id='com_4F4E0891_9559_2849_AA81_90D923C221DF' />
 			<ComponentRef Id='com_90E2C6FA_B536_6248_86D8_A92A1B7AD160' />
            
@@ -337,18 +336,15 @@
 			<ComponentRef Id='com_DartSassHost' />
 			<ComponentRef Id='com_Microsoft_ClearScript_Core'/>
 			<ComponentRef Id='com_Microsoft_ClearScript_V8'/>
-			<ComponentRef Id='com_Microsoft_ClearScript_V8_WinX64' />
+			<!--<ComponentRef Id='com_Microsoft_ClearScript_V8_WinX64' />-->
 			<ComponentRef Id='com_Microsoft_ClearScript_V8_ICUData' />	
-			
-			
-          <ComponentRef Id='com_Protean_AppStart' />
-          <ComponentRef Id='com_AdvancedStringBuilder' />
-          <ComponentRef Id='com_System_Text_Encoding_CodePages' />
-          <ComponentRef Id='com_AngleSharp' />
-          <ComponentRef Id='com_PreMailerNet' />
-          <ComponentRef Id='com_ImazenWebP' />
-          <ComponentRef Id='com_libwebp' />
-		  <ComponentRef Id='com_QRcoder' />
+            <ComponentRef Id='com_AdvancedStringBuilder' />
+            <ComponentRef Id='com_System_Text_Encoding_CodePages' />
+            <ComponentRef Id='com_AngleSharp' />
+            <ComponentRef Id='com_PreMailerNet' />
+            <ComponentRef Id='com_ImazenWebP' />
+            <ComponentRef Id='com_libwebp' />
+		    <ComponentRef Id='com_QRcoder' />
 			<ComponentRef Id='com_SystemBuffers' />
 			<ComponentRef Id='com_SystemMemory' />
 			<ComponentRef Id='com_SystemRuntimeCompilerServicesUnsafe' />

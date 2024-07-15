@@ -902,7 +902,7 @@ namespace Protean.Tools
                     sheetCount = sheetCount + 1;
                 }
                 // End Using
-                spreadsheetDocument.Close();
+                //spreadsheetDocument.Close();
                 spreadsheetDocument = null;
                 return ds;
             }
