@@ -3,4 +3,10 @@
   <PropertyGroup>
     <ProjectView>ShowAllFiles</ProjectView>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <StartAction>URL</StartAction>
+    <StartURL>http://local.avantee.co.uk</StartURL>
+    <StartWorkingDirectory>C:\HostingSpaces\ProteanCMS\wwwroot\</StartWorkingDirectory>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
 </Project>

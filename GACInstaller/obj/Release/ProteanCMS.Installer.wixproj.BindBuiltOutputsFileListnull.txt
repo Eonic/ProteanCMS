@@ -1,2 +1,2 @@
-C:\HostingSpaces\ProteanCMS\GACInstaller\bin\Release\ProteanCMSInstaller.msi
-C:\HostingSpaces\ProteanCMS\GACInstaller\bin\Release\ProteanCMSInstaller.wixpdb
+D:\HostingSpaces\ProteanCMS\GACInstaller\bin\Release\ProteanCMSInstaller.msi
+D:\HostingSpaces\ProteanCMS\GACInstaller\bin\Release\ProteanCMSInstaller.wixpdb
