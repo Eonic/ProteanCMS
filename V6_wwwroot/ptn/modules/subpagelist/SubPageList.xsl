@@ -72,8 +72,14 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<div class="SubPages">
-					<div data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}" data-height="{@carouselHeight}" >
-						<xsl:apply-templates select="." mode="contentColumns"/>
+          <xsl:attribute name="class">
+            <xsl:text>SubPages </xsl:text>
+            <xsl:text>crop-setting-</xsl:text>
+            <xsl:value-of select="$cropSetting"/>
+          </xsl:attribute>
+          <div data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}" data-height="{@carouselHeight}" >
+
+            <xsl:apply-templates select="." mode="contentColumns"/>
 						<xsl:if test="@stepCount != '0'">
 							<xsl:apply-templates select="/" mode="genericStepper">
 								<xsl:with-param name="contentList" select="$contentList"/>
