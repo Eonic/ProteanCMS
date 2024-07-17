@@ -316,6 +316,17 @@ section.bg-video-wrapper {
     padding: 0.3rem 0 $section-padding 0;
     margin-bottom: 0;
     @include card-contrast($banner-bg);
+    position: relative;
+
+    img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 100%;
+        object-fit: cover;
+    }
 
     .breadcrumb {
         color: color-contrast($banner-bg);
@@ -371,7 +382,7 @@ section.bg-video-wrapper {
             background-size: 100%;
             min-height: 500px;
             max-width: 42%;
-            top:0;
+            top: 0;
 
             .banner-caption-inner {
                 background: $banner-bg;
