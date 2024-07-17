@@ -1099,7 +1099,7 @@ namespace Protean.Providers
                     }
                 }
 
-                public bool AddToList(string ListId, string Name, string Email, IDictionary values)
+                public virtual bool AddToList(string ListId, string Name, string Email, IDictionary values)
                 {
                     // PerfMon.Log("Activities", "AddToList")
                     try
@@ -1114,7 +1114,7 @@ namespace Protean.Providers
                     }
                 }
 
-                public bool RemoveFromList(string ListId, string Email)
+                public virtual bool RemoveFromList(string ListId, string Email)
                 {
                     // PerfMon.Log("Activities", "RemoveFromList")
                     try
