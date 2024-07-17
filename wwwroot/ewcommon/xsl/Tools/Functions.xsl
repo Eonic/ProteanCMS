@@ -1887,11 +1887,9 @@
   <!--  ==  Canonical links  ======================================================================  -->
   <xsl:template match="Page[descendant-or-self::MenuItem[@id=//Page/@id and DisplayName/@canonicalLink!='']]" mode="canonicalLink">
     <!-- not admin -->
+    <xsl:variable name="canonicalID" select="descendant-or-self::MenuItem[@id=//Page/@id]/DisplayName/@canonicalLink"/>
 
-    <xsl:if test="not(/Page/Contents/Content[starts-with(@name,'Canonical Tag')])">
-      <xsl:variable name="canonicalID" select="descendant-or-self::MenuItem[@id=//Page/@id]/DisplayName/@canonicalLink"/>
-      <link rel="canonical" href="{descendant-or-self::MenuItem[@id=$canonicalID]/@url}"/>
-    </xsl:if>
+    <link rel="canonical" href="{descendant-or-self::MenuItem[@id=$canonicalID]/@url}"/>
 
   </xsl:template>
 

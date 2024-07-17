@@ -50,12 +50,14 @@ namespace Protean
 
         public Messaging()
         {
-            goApp = (System.Web.HttpApplicationState)Interaction.IIf(moCtx == null, null, moCtx.Application);
-            goRequest = moCtx.Request;
-            goResponse = moCtx.Response;
-            goSession = moCtx.Session;
-            goServer = moCtx.Server;
-
+            if (moCtx != null)
+            {
+                goApp = (System.Web.HttpApplicationState)Interaction.IIf(moCtx == null, null, moCtx.Application);
+                goRequest = moCtx.Request;
+                goResponse = moCtx.Response;
+                goSession = moCtx.Session;
+                goServer = moCtx.Server;
+            }
         }
         public Messaging(ref string sException)
         {
