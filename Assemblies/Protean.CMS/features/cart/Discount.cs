@@ -347,39 +347,47 @@ namespace Protean
                                         double nItemCost = 0d;
                                         if (oDsCart.Tables["Item"].Rows.Count > 0)
                                         {
-                                            foreach (DataRow drItem in oDsCart.Tables["Item"].Rows)
+
+                                            if (oDsDiscounts.Tables["Discount"].Rows.Count < nMinQuantity)
                                             {
-
-                                                if (Operators.ConditionalCompareObjectEqual(drItem["nParentId"], 0, false))
+                                                validateAddedDiscount = false;
+                                            }
+                                            else
+                                            {
+                                                foreach (DataRow drItem in oDsCart.Tables["Item"].Rows)
                                                 {
-                                                    nItemCost = Conversions.ToDouble(Operators.MultiplyObject(drItem["price"], drItem["quantity"]));
-                                                    totalAmount = totalAmount + nItemCost;
 
-                                                    if (dMaxPrice != 0d)
+                                                    if (Operators.ConditionalCompareObjectEqual(drItem["nParentId"], 0, false))
                                                     {
-                                                        if (nItemCost >= dMinPrice & nItemCost <= dMaxPrice)
+                                                        nItemCost = Conversions.ToDouble(Operators.MultiplyObject(drItem["price"], drItem["quantity"]));
+                                                        totalAmount = totalAmount + nItemCost;
+
+                                                        if (dMaxPrice != 0d)
                                                         {
-                                                            nValidProductCount = (short)(nValidProductCount + 1);
-                                                        }
-                                                        else
-                                                        {
-                                                            var loopTo = (short)(iDiscount - 1);
-                                                            for (iCount = 0; iCount <= loopTo; iCount++) // looping inside discount row for valid items else remove it from the list
+                                                            if (nItemCost >= dMinPrice & nItemCost <= dMaxPrice)
                                                             {
-                                                                if (iCount < iDiscount)
+                                                                nValidProductCount = (short)(nValidProductCount + 1);
+                                                            }
+                                                            else
+                                                            {
+                                                                var loopTo = (short)(iDiscount - 1);
+                                                                for (iCount = 0; iCount <= loopTo; iCount++) // looping inside discount row for valid items else remove it from the list
                                                                 {
-                                                                    drDiscount = oDsDiscounts.Tables["Discount"].Rows[iCount];
-                                                                    if (Operators.ConditionalCompareObjectEqual(drDiscount["nCartItemKey"], drItem["id"], false))
+                                                                    if (iCount < iDiscount)
                                                                     {
-                                                                        oDsDiscounts.Tables["Discount"].Rows.RemoveAt(iCount);
-                                                                        iDiscount = (short)(iDiscount - 1);
+                                                                        drDiscount = oDsDiscounts.Tables["Discount"].Rows[iCount];
+                                                                        if (Operators.ConditionalCompareObjectEqual(drDiscount["nCartItemKey"], drItem["id"], false))
+                                                                        {
+                                                                            oDsDiscounts.Tables["Discount"].Rows.RemoveAt(iCount);
+                                                                            iDiscount = (short)(iDiscount - 1);
+                                                                        }
                                                                     }
                                                                 }
                                                             }
                                                         }
                                                     }
-                                                }
 
+                                                }
                                             }
 
                                         }
@@ -393,7 +401,10 @@ namespace Protean
                                         // validate discount if it is on total
                                         if (bApplyToTotal)
                                         {
-                                            validateAddedDiscount = ValidateDiscount(totalAmount, additionalInfo);
+                                            if (validateAddedDiscount)
+                                            {
+                                                validateAddedDiscount = ValidateDiscount(totalAmount, additionalInfo);
+                                            }
                                         }
                                         if (validateAddedDiscount == false)
                                         {
@@ -689,8 +700,8 @@ namespace Protean
 
                         }
 
-                        oDsDiscounts.Dispose();
-                        oDsDiscounts = null;
+                       // oDsDiscounts.Dispose();
+                        //oDsDiscounts = null;
                         myWeb.moDbHelper.CloseConnection();
                     }
 
