@@ -159,10 +159,11 @@
         }
     }
 
-    .ptn-edit > .btn-default,
-    .ptn-edit > .btn-primary,
-    .ptn-edit > .dropdown > .btn-primary,
-    .ptn-edit > .dropdown .dropdown-menu a {
+    .ptn-edit > .btn-default {
+        z-index:2;
+    }
+
+    .ptn-edit > .btn-default, .ptn-edit > .btn-primary, .ptn-edit > .dropdown > .btn-primary, .ptn-edit > .dropdown .dropdown-menu a {
         font-family: $admin-header-font;
 
         i {
@@ -179,7 +180,7 @@
     }
 
     i.fa-grip-vertical {
-        font-size:13px!important;
+        font-size: 13px !important;
     }
 
     .ptn-edit > .btn-primary, .ptn-edit > .dropdown .btn-primary {
@@ -298,7 +299,7 @@
 
     .editable > div.ptn-edit.options {
         position: relative;
-        z-index:2;
+        z-index: 2;
     }
 
     .accordion-module .editable > div.ptn-edit.options {
