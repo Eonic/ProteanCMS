@@ -1199,7 +1199,17 @@
 		<xsl:variable name="value">
 			<xsl:apply-templates select="." mode="xform_value"/>
 		</xsl:variable>
-		<input type="text" name="{$ref}" id="{$ref}">
+		<xsl:variable name="type">
+			<xsl:choose>
+				<xsl:when test="@type!=''">
+					<xsl:value-of select="@type"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>text</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<input type="{$type}" name="{$ref}" id="{$ref}">
 			<xsl:if test="contains(@class,'readonly') or contains(@class,'displayOnly') ">
 				<xsl:attribute name="readonly">readonly</xsl:attribute>
 			</xsl:if>

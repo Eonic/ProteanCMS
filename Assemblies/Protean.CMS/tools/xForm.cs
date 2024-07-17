@@ -2552,6 +2552,24 @@ namespace Protean
             }
         }
 
+        public XmlElement addBind(string sId, string sXpath, string sRequired = "false()", string sType = "string", string sConstraint = "")
+        {
+            string cProcessInfo = "";
+            try
+            {             
+                XmlElement argoBindParent = null;
+                return addBind(sId, sXpath,ref argoBindParent, sRequired, sType, sConstraint);
+            }            
+            
+            catch (Exception ex)
+            {
+                returnException(ref msException, mcModuleName, "addBind", ex, "", cProcessInfo, gbDebug);
+                return null;
+            }
+
+        }
+
+
 
         public XmlElement addBind(string sId, string sXpath, ref XmlElement oBindParent, string sRequired = "false()", string sType = "string", string sConstraint = "")
         {
