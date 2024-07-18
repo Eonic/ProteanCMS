@@ -35,8 +35,13 @@
         $(".dropdown-active").removeClass('dropdown-active');
     });
     $('.dropdown-mobile-btn').click(function () {
+        var currentHeight = $(this).parent().find("> .nav-pills").height();
+        var newHeight = $(this).parent().parent().height();
         $(this).parent().find("> .nav-pills").addClass('dropdown-active');
         $(this).parent('li').parent('ul').addClass('menu-no-scroll');
+        if (newHeight > currentHeight) {
+            $(this).parent().find('.nav-pills').height(newHeight);
+        }
     });
     $('.dropdown-toggle').click(function () {
         $(this).parent().find("> .dropdown-menu").addClass('dropdown-active');

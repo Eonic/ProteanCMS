@@ -4721,7 +4721,8 @@ namespace Protean
                         var oFsh = new Protean.fsHelper();
                         oFsh.initialiseVariables(nType);
                         string fileToFind = "/" + oFsh.mcRoot + cPath.Replace(@"\", "/") + "/" + cName;
-                        string sSQL = "select * from tblContent where cContentXmlBrief like '%" + fileToFind + "%' or cContentXmlDetail like '%" + fileToFind + "%'";
+                        //string sSQL = "select * from tblContent where cContentXmlBrief like '%" + fileToFind + "%' or cContentXmlDetail like '%" + fileToFind + "%'";
+                        string sSQL = "select nContentKey,cContentSchemaName,cContentName from tblContent where contains(cContentXmlBrief,'" + fileToFind + "') or contains(cContentXmlDetail,'" + fileToFind + "')";
                         using (var oDr = moDbHelper.getDataReaderDisposable(sSQL))  // Done by nita on 6/7/22
                         {
                             if (oDr.HasRows)
