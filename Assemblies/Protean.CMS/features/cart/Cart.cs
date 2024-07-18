@@ -110,6 +110,7 @@ namespace Protean
             public bool mbNoDeliveryAddress = false; // Option to turn off the need for a delivery address
 
             public string mcReturnPage; // page to return to with continue Shopping
+            public string mcPaymentGetwayEmergencyMessage;
 
             public string mcCartCmd = ""; // Action String for ewCart main function, ewcartPlugin()
                                           // Can be:     <case sensitive>
@@ -647,6 +648,8 @@ namespace Protean
                         mcMerchantEmailTemplatePath = moCartConfig["MerchantEmailTemplatePath"];
                         mcPriorityCountries = moCartConfig["PriorityCountries"];
                         mcPersistCart = moCartConfig["PersistCart"]; // might need to add checks for missing key
+                        mcPaymentGetwayEmergencyMessage = moCartConfig["PaymentGetwayEmergencyMessage"];
+
                         if (mcPriorityCountries is null | string.IsNullOrEmpty(mcPriorityCountries))
                         {
                             mcPriorityCountries = "United Kingdom,United States";
@@ -1269,6 +1272,13 @@ namespace Protean
                         oContentElmt.SetAttribute("displayPrice", mbDisplayPrice.ToString());
                     oElmt = oCartXML.CreateElement("Order");
                     oContentElmt.AppendChild(oElmt);
+
+                    if (!string.IsNullOrEmpty(mcPaymentGetwayEmergencyMessage))
+                    {
+                        XmlElement emergencyMessageElmt = oCartXML.CreateElement("PaymentGetwayEmergencyMessage");
+                        emergencyMessageElmt.InnerXml = mcPaymentGetwayEmergencyMessage;
+                        oContentElmt.AppendChild(emergencyMessageElmt);
+                    }
 
                     moCartXml = oContentElmt;
 
