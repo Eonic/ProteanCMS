@@ -7,7 +7,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 -- spUpdateFilterIndex  'PRODUCT',4 
-ALTER PROCEDURE [dbo].[spUpdateFilterIndex] @SchemaName VARCHAR(50)
+CREATE PROCEDURE [dbo].[spUpdateFilterIndex] @SchemaName VARCHAR(50)
 	,@IndexId INT
 AS
 BEGIN
