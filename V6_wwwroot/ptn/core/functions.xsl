@@ -767,6 +767,7 @@
 		<xsl:text>~/ptn/libs/bs5/js/bootstrap.bundle.min.js,</xsl:text>
 		<xsl:text>~/ptn/libs/swiper/swiper-bundle.min.js,</xsl:text>
 		<xsl:text>~/ptn/libs/fancyapps/ui/dist/fancybox.umd.min.js,</xsl:text>
+    <xsl:text>~/ptn/core/modules/columns/universal-parallax.min.js,</xsl:text>
 		<xsl:text>~/ptn/core/core.js,</xsl:text>
 	</xsl:template>
 

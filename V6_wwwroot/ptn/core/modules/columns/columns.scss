@@ -31,3 +31,32 @@
         display: block
     }
 }
+.parallax__container {
+    clip: rect(0, auto, auto, 0);
+    height: 100%;
+    left: 0;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    //z-index: -100;
+}
+
+.parallax {
+    position: fixed;
+    top: 0;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    width: 100%;
+    /* BG behaviour */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.parallax-wrapper {
+    .content {
+        position:relative;
+    }
+}
