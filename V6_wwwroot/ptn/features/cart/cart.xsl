@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml">
 
+	<xsl:variable name="tax-rate" select="/Page/Cart/Order/@vatRate div 100"/>
+
 	<xsl:template match="Content" mode="addToCartButton">
 
 		<xsl:param name="actionURL"/>
@@ -25,6 +27,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
+		
 		<div id="cartButtons{@id}" class="cartButtons">
 			<form action="{$actionURL}" method="post" class="ewXform">
 				<xsl:apply-templates select="." mode="Options_List"/>
