@@ -591,45 +591,7 @@
 
 
 	<xsl:template match="Order" mode="orderTotals">
-		<div class="product-totals">
-			<span class="amount-label">Item Total: </span>
-			<span class="amount">
-				<xsl:apply-templates select="/Page" mode="formatPrice">
-					<xsl:with-param name="price" select="@total - @shippingCost"/>
-					<xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
-				</xsl:apply-templates>
-			</span>
-		</div>
-		<xsl:if test="@shippingType &gt; 0 and @shippingDesc!='No Delivery Required-'">
-			<div class="shipping">
-				<span class="shipping-title">
-					<xsl:call-template name="term3044" />
-					<xsl:text>:</xsl:text>
-				</span>
-				<span class="amount">
-					<xsl:text> </xsl:text>
-					<xsl:apply-templates select="/Page" mode="formatPrice">
-						<xsl:with-param name="price" select="@shippingCost"/>
-						<xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
-					</xsl:apply-templates>
-				</span>
-			</div>
-			<div class="shipping-desc">
-				<xsl:choose>
-					<xsl:when test="/Page/Cart/Order/Shipping">
-						<xsl:value-of select="/Page/Cart/Order/Shipping/Name/node()"/>
-						<strong>&#160;-&#160;</strong>
-						<xsl:value-of select="/Page/Cart/Order/Shipping/Carrier/node()"/>
-						<strong>&#160;-&#160;</strong>
-						<xsl:value-of select="/Page/Cart/Order/Shipping/DeliveryTime/node()"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="/Page/Cart/Order/@shippingDesc"/>
-					</xsl:otherwise>
-				</xsl:choose>
-				<xsl:text> </xsl:text>
-			</div>
-		</xsl:if>
+		
 		<div class="clearfix totals-row">
 			<xsl:if test="@vatRate &gt; 0">
 				<div class="vat-row">
@@ -678,6 +640,45 @@
 							</xsl:apply-templates>
 						</span>
 					</div>
+				</div>
+			</xsl:if>
+			<div class="product-totals">
+				<span class="amount-label">Order Total: </span>
+				<span class="amount">
+					<xsl:apply-templates select="/Page" mode="formatPrice">
+						<xsl:with-param name="price" select="@total - @shippingCost"/>
+						<xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
+					</xsl:apply-templates>
+				</span>
+			</div>
+			<xsl:if test="@shippingType &gt; 0 and @shippingDesc!='No Delivery Required-'">
+				<div class="shipping">
+					<span class="shipping-title">
+						<xsl:call-template name="term3044" />
+						<xsl:text>:</xsl:text>
+					</span>
+					<span class="amount">
+						<xsl:text> </xsl:text>
+						<xsl:apply-templates select="/Page" mode="formatPrice">
+							<xsl:with-param name="price" select="@shippingCost"/>
+							<xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
+						</xsl:apply-templates>
+					</span>
+				</div>
+				<div class="shipping-desc">
+					<xsl:choose>
+						<xsl:when test="/Page/Cart/Order/Shipping">
+							<xsl:value-of select="/Page/Cart/Order/Shipping/Name/node()"/>
+							<strong>&#160;-&#160;</strong>
+							<xsl:value-of select="/Page/Cart/Order/Shipping/Carrier/node()"/>
+							<strong>&#160;-&#160;</strong>
+							<xsl:value-of select="/Page/Cart/Order/Shipping/DeliveryTime/node()"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="/Page/Cart/Order/@shippingDesc"/>
+						</xsl:otherwise>
+					</xsl:choose>
+					<xsl:text> </xsl:text>
 				</div>
 			</xsl:if>
 			<div class="total">
@@ -1740,6 +1741,9 @@
 							</xsl:apply-templates>
 						</xsl:otherwise>
 					</xsl:choose>
+					<xsl:if test="$tax-rate!='0'">
+						<span class="ex-vat">ex VAT</span>
+					</xsl:if>
 					<xsl:if test="nDepositAmount&gt;0">
 						<div class="deposit">
 							Deposit: <xsl:apply-templates select="/Page" mode="formatPrice">
