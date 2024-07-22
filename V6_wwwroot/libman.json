@@ -78,6 +78,10 @@
       "destination": "ptn/core/icons/fa6"
     },
     {
+      "library": "universal-parallax@1.3.2",
+      "destination": "ptn/libs/universal-parallax/"
+    },
+    {
       "provider": "cdnjs",
       "library": "Swiper@11.0.5",
       "destination": "ptn/libs/Swiper/"
