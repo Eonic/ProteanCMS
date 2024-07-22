@@ -627,7 +627,7 @@ namespace Protean.Tools
 
                     default:
                         {
-                            cValue = (string)cValue != ""? cValue.ToString(): (string)vDefaultValue != ""? vDefaultValue.ToString(): "";
+                            cValue = (string)cValue != ""? cValue.ToString(): Convert.ToString(vDefaultValue) != "" ? Convert.ToString(vDefaultValue) : "";
                             break;
                         }
                 }
