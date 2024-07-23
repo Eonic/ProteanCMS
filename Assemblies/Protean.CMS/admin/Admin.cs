@@ -1088,12 +1088,14 @@ namespace Protean
                                                 if (!string.IsNullOrEmpty(myWeb.moRequest["Location"]))
                                                 {
                                                     FilterValue = myWeb.moRequest["Location"];
-                                                    myWeb.mnPageId = (int)Conversions.ToLong("0" + FilterValue);
+
                                                 }
                                                 else if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(myWeb.moSession["FilterValue"], "", false)))
                                                 {
                                                     FilterValue = Conversions.ToString(myWeb.moSession["FilterValue"]);
                                                 }
+                                                myWeb.mnPageId = (int)Conversions.ToLong("0" + FilterValue);
+
                                                 oXfrm.addValue(ref locSelect, FilterValue);
                                                 using (var oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql))  // Done by sonali on 12/7/22
                                                 {

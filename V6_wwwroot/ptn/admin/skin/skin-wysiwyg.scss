@@ -299,7 +299,7 @@
 
     .editable > div.ptn-edit.options {
         position: relative;
-        z-index: 2;
+        z-index: 3;
     }
 
     .accordion-module .editable > div.ptn-edit.options {
@@ -493,7 +493,11 @@
     .ptn-edit .btn-xs {
         //padding: 1px 5px;
         padding: 3px 1px 3px 7px !important;
-        min-width: 30px;
+
+        &.btn-primary {
+            width: 30px !important;
+            height: 30px !important;
+        }
     }
 
     .ptn-edit .addHere {
@@ -549,13 +553,15 @@
         .ptn-edit.options {
             margin-bottom: -28px;
 
-            .dropdown > .btn {
+            .dropdown > .btn,
+            .btn-primary {
                 opacity: 0.3;
             }
         }
 
         &:hover {
-            .ptn-edit.options > .dropdown .btn {
+            .ptn-edit.options > .dropdown .btn,
+            .ptn-edit.options > .btn-primary {
                 opacity: 1;
             }
         }
