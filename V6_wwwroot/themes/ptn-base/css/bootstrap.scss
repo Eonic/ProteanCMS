@@ -1,4 +1,11 @@
-﻿// scss-docs-start import-stack
+﻿//Icons
+$fa-font-path: "/ptn/core/icons/fa6/webfonts";
+@import "../../../ptn/core/icons/fa6/scss/fontawesome";
+@import "../../../ptn/core/icons/fa6/scss/regular";
+@import "../../../ptn/core/icons/fa6/scss/solid";
+@import "../../../ptn/core/icons/fa6/scss/brands";
+
+// scss-docs-start import-stack
 // Configuration
 @import "variables";
 

@@ -1765,6 +1765,7 @@
 			</xsl:choose>
 		</xsl:variable>
 		<div class="clearfix {@moduleType}">
+			<xsl:apply-templates select="." mode="module-header"/>
 			<div>
 				<!--responsive columns -->
 				<xsl:apply-templates select="." mode="contentColumns"/>
@@ -1791,7 +1792,11 @@
 			</div>
 		</div>
 	</xsl:template>
-
+	
+	<xsl:template match="Content" mode="module-header">
+		<!-- allows insertion of extra stuff at top of list-->	
+	</xsl:template>
+	
 	<!-- Module with Swiper -->
 	<xsl:template match="Content[@type='Module' and @carousel='true']" mode="displayBrief">
 		<xsl:variable name="contentType" select="@contentType" />
