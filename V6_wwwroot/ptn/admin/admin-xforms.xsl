@@ -882,7 +882,7 @@
 			theme: "silver",
 			width: "auto",
 			relative_urls: false,
-			plugins: "table paste link image ptnimage media visualchars searchreplace emoticons anchor lists advlist code visualblocks contextmenu fullscreen searchreplace wordcount",
+			plugins: "table paste link image ptnimage media visualchars searchreplace emoticons anchor lists advlist code visualblocks contextmenu fullscreen searchreplace wordcount charmap",
 			entity_enconding: "numeric",
             image_advtab: true,
             menubar: "edit insert view format table tools",
