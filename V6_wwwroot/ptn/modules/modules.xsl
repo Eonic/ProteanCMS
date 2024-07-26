@@ -31,7 +31,7 @@
   <xsl:import href="recipegrid/RecipeGrid.xsl"/>-->
   <xsl:import href="productgallery/ProductGallery.xsl"/>
   <xsl:import href="productlist/ProductList.xsl"/>
-  <xsl:import href="faqs/FAQList.xsl"/>
+ <xsl:import href="faqs/FAQList.xsl"/>
   <!--<xsl:import href="carouseladvanced/AdvanceCarousel.xsl"/>-->
   <xsl:import href="carousel/CarouselGallery.xsl"/>
   <xsl:import href="carouselbackground/BackgroundCarousel.xsl"/>
