@@ -165,10 +165,13 @@ h1, h2, h3 {
         }
     }
 }
-
-.btn-custom {
-    @extend .btn-primary;
+.nobox > .entryFooter,
+.nobox > .FormattedText {
+    .btn-custom {
+        @extend .#{$btn-style};
+    }
 }
+
 /*############### IMAGES #################*/
 img, svg {
     max-width: 100%;
@@ -261,6 +264,9 @@ section {
         }
     }
 }
+.bg-content-center {
+    @extend .section-center;
+}
 
 section.bg-light,
 section.bg-dark,
@@ -271,22 +277,34 @@ section.bg-secondary {
 
 section.bg-dark,
 section.bg-primary,
-section.bg-secondary {
+section.bg-secondary,
+.layoutModule.bg-dark,
+.layoutModule.bg-primary,
+.layoutModule.bg-secondary {
     @extend .text-white;
+
+    .listItem .lIinner .btn-custom {
+        @extend .#{$btn-list-style};
+    }
+
+    .nobox > .entryFooter,
+    .nobox > .FormattedText {
+        a:not(.btn) {
+            @extend .link-light;
+        }
+
+        .btn-custom {
+            &:not(:hover):not(:focus-visible) {
+                background: transparent;
+            }
+
+            @extend .btn-outline-white;
+        }
+    }
+
 
     .swiper-button-prev, .swiper-button-next {
         color: #fff;
-    }
-}
-
-section.bg-primary,
-section.bg-secondary {
-    .btn-primary {
-        @extend .btn-dark;
-    }
-
-    a {
-        @extend .link-light;
     }
 }
 
@@ -320,6 +338,10 @@ section.stretchBG {
         > * > .row {
             height: 100%;
         }
+    }
+
+    .row {
+        margin:0;
     }
 
     .module {
@@ -458,6 +480,8 @@ section.stretchBG {
 
 .intro-banner {
     margin-bottom: $spacer;
+    margin-top: $spacer;
+    color: #fff;
 
     .intro-banner-inner {
         padding: $card-spacer-y $card-spacer-x;
@@ -494,7 +518,7 @@ section.stretchBG {
 
     &:before {
         content: '\f073';
-        font-family: 'Font Awesome 5 Free';
+        font-family: 'Font Awesome 6 Free';
         color: $primary;
         padding-right: 5px;
     }
@@ -512,6 +536,20 @@ section.stretchBG {
     height: 100%;
     display: flex;
     flex-direction: column;
+    background: #fff;
+    color: $body-color;
+
+    .btn-custom {
+        @extend .#{$btn-list-style};
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        color: $headings-color;
+
+        a {
+            color: $headings-color;
+        }
+    }
 
     *:nth-last-child(2) {
         flex-grow: 2;
@@ -860,7 +898,7 @@ div[class$="List"].module {
 
     i {
         content: '\f00e';
-        font-family: 'Font Awesome 5 Free';
+        font-family: 'Font Awesome 6 Free';
         font-weight: 900;
         padding: 5px;
         background: $body-bg;
@@ -1121,7 +1159,7 @@ dd {
 
         &:before {
             content: '\f053';
-            font-family: 'Font Awesome 5 Free';
+            font-family: 'Font Awesome 6 Free';
             padding-right: 5px;
             font-weight: 700;
             font-size: 0.7rem;

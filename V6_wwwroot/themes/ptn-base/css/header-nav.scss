@@ -103,6 +103,11 @@ header {
     background: $header-bg;
     width: 100%;
     z-index: 3;
+    height: $fixed-height-xs !important;
+
+    @include media-breakpoint-up($nav-breakpoint) {
+        height: $fixed-height-lg !important;
+    }
 }
 
 .fixed-nav-content {
@@ -184,7 +189,7 @@ header {
         &:after {
             content: '\f078';
             border: none;
-            font-family: 'Font Awesome 5 Free';
+            font-family: 'Font Awesome 6 Free';
             font-weight: 900;
             font-size: 0.8rem;
             vertical-align: middle;
@@ -358,7 +363,7 @@ header {
                 border-radius: 2px;
                 padding: 2px 5px;
                 float: right;
-                font-family: 'Font Awesome 5 Free';
+                font-family: 'Font Awesome 6 Free';
                 font-weight: 900;
                 font-size: 0.8rem;
             }
@@ -647,38 +652,13 @@ header {
     }
 
     a {
-        background: $secondary;
-        font-size: 1.3rem;
+        @extend .btn;
+        @extend .#{$header-btn-style};
         transition: all .2s;
         line-height: 1;
         display: flex;
         align-items: center;
-        margin-left: 1rem;
-        padding: 1rem 1.4rem;
-        color: #fff;
-        text-decoration: none;
-        margin:1px;
-        border-radius:$btn-border-radius;
-        @include media-breakpoint-up(xxl) {
-         //   font-size: 1.4rem;
-        }
-
-        @include media-breakpoint-down($nav-breakpoint) {
-            font-size: 1rem;
-            margin-right: 0.7rem;
-        }
-
-        &:hover {
-            transform: scale(1.04);
-        }
-
-        @include media-breakpoint-up(xxl) {
-          //  padding: 1.2rem 3rem;
-        }
-
-        @include media-breakpoint-down($nav-breakpoint) {
-            padding: 1rem 1rem;
-        }
+        margin: 1px;
     }
 }
 

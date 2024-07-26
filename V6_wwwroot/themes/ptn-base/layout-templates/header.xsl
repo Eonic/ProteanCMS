@@ -754,11 +754,8 @@
 					</xsl:if>
 				</div>
 				<div class="header-featured-btn">
-					<!--<a href="/Everything-DISC/Products">Buy Now</a>-->
 					<xsl:for-each select="Menu/MenuItem/MenuItem[not(DisplayName/@exclude='true') and DisplayName/@featuredLink='true']">
-
 						<xsl:apply-templates select="." mode="menuLink"/>
-						
 					</xsl:for-each>
 				</div>
 				<xsl:if test="not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
