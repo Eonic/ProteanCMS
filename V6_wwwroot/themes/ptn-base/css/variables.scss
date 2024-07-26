@@ -39,6 +39,7 @@ $link-color: $primary !default;
 $visited: lighten($link-color,30%);
 
 $btn-color: $primary;
+//$btn-font-weight: 600;
 $content-btn-align: true;
 //$btn-border-radius: var(--#{$prefix}border-radius);
 //$btn-border-width: $input-btn-border-width;
@@ -53,6 +54,8 @@ $header-icon-color: $header-color;
 $header-spacing: 1.4rem;
 $header-icon-size: 1.3rem;
 $nav-breakpoint: lg;
+$fixed-height-xs: 100px;
+$fixed-height-lg: 100px;
 
 /*################### NAVIGATION #####################*/
 $navbar-light-color: $body-color;

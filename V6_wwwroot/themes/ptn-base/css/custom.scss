@@ -235,14 +235,43 @@ section {
     margin-bottom: $grid-gutter-height;
 }
 
+.section-center {
+    padding: 0;
+
+    > .container {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        flex-wrap: wrap;
+    }
+
+    > .row {
+        height: 100%;
+
+        > div[class^="column"] {
+            justify-content: center;
+            display: flex;
+            flex-direction: column;
+
+            > .module {
+                height: auto;
+            }
+        }
+    }
+}
+
 section.bg-light,
 section.bg-dark,
-section.bg-primary {
+section.bg-primary,
+section.bg-secondary {
     @extend .section-spacing;
 }
 
 section.bg-dark,
-section.bg-primary {
+section.bg-primary,
+section.bg-secondary {
     @extend .text-white;
 
     .swiper-button-prev, .swiper-button-next {
@@ -250,7 +279,8 @@ section.bg-primary {
     }
 }
 
-section.bg-primary {
+section.bg-primary,
+section.bg-secondary {
     .btn-primary {
         @extend .btn-dark;
     }
@@ -267,9 +297,35 @@ section.whiteBG {
 section.bg-video-wrapper {
     padding-top: 0;
     padding-bottom: 0;
+    height: 100%;
+
+    video.bg-video {
+        height: 100%;
+        object-fit: cover;
+    }
 
     > .container {
         //   padding-top: $section-padding;
+    }
+}
+
+section.stretchBG {
+    display: flex;
+    justify-content: stretch;
+    align-items: stretch;
+
+    > .fullwidthContainer {
+        width: 100%;
+
+        > * > .row {
+            height: 100%;
+        }
+    }
+
+    .module {
+        height: 100%;
+        margin-bottom: 0;
+        border-radius: 0 !important
     }
 }
 
@@ -296,7 +352,6 @@ section.bg-video-wrapper {
 
 
     > .layoutModule > .row {
-
 
         > div {
         }

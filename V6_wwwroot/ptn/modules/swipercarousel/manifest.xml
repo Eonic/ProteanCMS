@@ -7,7 +7,7 @@
 	</ContentTypes>  
   <ModuleTypes>
     <ModuleGroup name="Image Galleries" icon="fas fa-images">     
-      <Module type="SwiperCarousel" formPath="swipercarousel" icon="fas fa-images" name="Carousel">Create a carousel of images with optional captions and links</Module>
+      <Module type="SwiperCarousel" formPath="swipercarousel" icon="fas fa-images" name="Carousel"></Module>
     </ModuleGroup>
   </ModuleTypes>
 </PageLayouts>
