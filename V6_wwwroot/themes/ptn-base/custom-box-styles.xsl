@@ -22,6 +22,12 @@
       </xsl:if>
       <xsl:text>Brand colour background</xsl:text>
     </option>
+    <option value="bg-secondary text-white">
+      <xsl:if test="$value='bg-secondary text-white'">
+        <xsl:attribute name="selected">selected</xsl:attribute>
+      </xsl:if>
+      <xsl:text>Secondary colour background</xsl:text>
+    </option>
     <option value="bg-dark">
       <xsl:if test="$value='bg-dark'">
         <xsl:attribute name="selected">selected</xsl:attribute>
@@ -34,39 +40,45 @@
       </xsl:if>
       <xsl:text>White background</xsl:text>
     </option>
-	<option value="videoBG">
+    <option value="videoBG">
       <xsl:if test="$value='videoBG'">
         <xsl:attribute name="selected">selected</xsl:attribute>
       </xsl:if>
       <xsl:text>Video background</xsl:text>
     </option>
+    <option value="stretchBG">
+      <xsl:if test="$value='stretchBG'">
+        <xsl:attribute name="selected">selected</xsl:attribute>
+      </xsl:if>
+      <xsl:text>Stretch background</xsl:text>
+    </option>
   </xsl:template>
-<!-- ############################################ HEADING BANNER STYLES ############################################### -->
+  <!-- ############################################ HEADING BANNER STYLES ############################################### -->
 
-	<xsl:template match="*" mode="bannerStyles1">
-		<xsl:param name="value" />
-		<option value="img-banner">
-			<xsl:if test="$value='img-banner'">
-				<xsl:attribute name="selected">selected</xsl:attribute>
-			</xsl:if>
-			<xsl:text>Image Banner</xsl:text>
-		</option>
-		<option value="basic-banner">
-			<xsl:if test="$value='basic-banner'">
-				<xsl:attribute name="selected">selected</xsl:attribute>
-			</xsl:if>
-			<xsl:text>Basic Banner</xsl:text>
-		</option>
-		<option value="no-banner">
-			<xsl:if test="$value='no-banner'">
-				<xsl:attribute name="selected">selected</xsl:attribute>
-			</xsl:if>
-			<xsl:text>No Banner</xsl:text>
-		</option>
-	</xsl:template>
+  <xsl:template match="*" mode="bannerStyles1">
+    <xsl:param name="value" />
+    <option value="img-banner">
+      <xsl:if test="$value='img-banner'">
+        <xsl:attribute name="selected">selected</xsl:attribute>
+      </xsl:if>
+      <xsl:text>Image Banner</xsl:text>
+    </option>
+    <option value="basic-banner">
+      <xsl:if test="$value='basic-banner'">
+        <xsl:attribute name="selected">selected</xsl:attribute>
+      </xsl:if>
+      <xsl:text>Basic Banner</xsl:text>
+    </option>
+    <option value="no-banner">
+      <xsl:if test="$value='no-banner'">
+        <xsl:attribute name="selected">selected</xsl:attribute>
+      </xsl:if>
+      <xsl:text>No Banner</xsl:text>
+    </option>
+  </xsl:template>
 
-	<!-- ############################################ MENU DD STYLES ############################################### -->
-	<!--<xsl:template match="select1[@appearance='minimal' and contains(@class,'menuStyles')]" mode="control-outer">
+  <!-- ############################################ MENU DD STYLES ############################################### -->
+  <!--<xsl:template match="select1[@appearance='minimal' and contains(@class,'menuStyles')]" mode="control-outer">
 		<xsl:choose>
 			<xsl:when test="name()='group'">
 				<xsl:apply-templates select="." mode="xform"/>
@@ -183,7 +195,7 @@
 			<xsl:text>Tiles</xsl:text>
 		</option>
 	</xsl:template>-->
-	
+
   <!-- ############################################ TinyMCE styles ############################################### -->
   <!-- Example Follows www.tinymce.com/tryit/custom_formats.php -->
 

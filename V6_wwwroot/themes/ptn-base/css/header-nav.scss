@@ -100,15 +100,24 @@ header {
 
 .navbar-fixed-top {
     position: fixed;
-    background: #fff;
+    background: $header-bg;
     width: 100%;
+    z-index: 3;
 }
 
 .fixed-nav-content {
-    padding-top: 100px !important;
+    padding-top: $fixed-height-xs !important;
+
+    @include media-breakpoint-up($nav-breakpoint) {
+        padding-top: $fixed-height-lg !important;
+    }
 
     &.mt-0 {
-        padding-top: 100px !important;
+        padding-top: $fixed-height-xs !important;
+
+        @include media-breakpoint-up($nav-breakpoint) {
+            padding-top: $fixed-height-lg !important;
+        }
     }
 }
 /*############### NAVIGATION #################*/
