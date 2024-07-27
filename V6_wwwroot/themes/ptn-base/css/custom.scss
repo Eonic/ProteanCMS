@@ -49,7 +49,8 @@ body {
     .module-FAQList,
     .char80-center,
     .module-Video,
-    .narrow-container {
+    .narrow-container,
+    .heading-only {
         max-width: 55rem;
         margin-left: auto;
         margin-right: auto;
@@ -283,6 +284,14 @@ section.bg-secondary,
 .layoutModule.bg-secondary {
     @extend .text-white;
 
+    h1, h2, h3, h4, h5, h6 {
+        color: #fff;
+
+        a {
+            color: #fff;
+        }
+    }
+
     .listItem .lIinner .btn-custom {
         @extend .#{$btn-list-style};
     }
@@ -324,6 +333,7 @@ section.bg-video-wrapper {
 
     > .container {
         //   padding-top: $section-padding;
+        justify-content: center;
     }
 }
 
@@ -341,13 +351,22 @@ section.stretchBG {
     }
 
     .row {
-        margin:0;
+        margin: 0;
+    }
+
+    .row > * {
+        margin: 0;
+        padding:0;
     }
 
     .module {
         height: 100%;
         margin-bottom: 0;
         border-radius: 0 !important
+    }
+
+    .layoutModule .layoutModule {
+        padding: $card-cap-padding-y $card-cap-padding-x;
     }
 }
 
@@ -381,6 +400,8 @@ section.stretchBG {
 }
 
 .breadcrumb {
+    font-size: 0.8rem;
+
     .breadcrumb-item {
         a {
             padding-top: 0.3rem;
@@ -392,8 +413,17 @@ section.stretchBG {
 .image-banner {
     padding: 0.3rem 0 $section-padding 0;
     margin-bottom: 0;
-    @include card-contrast($banner-bg);
     position: relative;
+    @include card-contrast($banner-bg);
+
+    @if $banner-flush == true {
+        padding-top: 0;
+
+        .container-fluid {
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
 
     img {
         position: absolute;
@@ -423,6 +453,7 @@ section.stretchBG {
         background: $light;
         position: relative;
         overflow: hidden;
+        min-height: 300px;
 
         h1 {
             margin-bottom: 0;
@@ -454,10 +485,8 @@ section.stretchBG {
 
         .banner-caption {
             position: absolute;
-            max-width: 36%;
             padding: 4vw 6.1% 10% 4vw;
             background-size: 100%;
-            min-height: 500px;
             max-width: 42%;
             top: 0;
 
@@ -480,8 +509,18 @@ section.stretchBG {
 
 .intro-banner {
     margin-bottom: $spacer;
-    margin-top: $spacer;
     color: #fff;
+
+    @if $banner-flush != true {
+        margin-top: $spacer;
+    }
+
+    @if $banner-flush == true {
+        .container-fluid {
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
 
     .intro-banner-inner {
         padding: $card-spacer-y $card-spacer-x;
@@ -529,7 +568,6 @@ section.stretchBG {
 }
 
 @mixin boxed-listItem {
-    $listItem-padding: 1rem;
     padding: $listItem-padding;
     border: 1px solid $grey;
     border-radius: $border-radius;
@@ -1231,5 +1269,11 @@ dd {
 .previewMode {
     header {
         position: static;
+    }
+}
+
+.normalMode {
+    section.stretchBG .module-FormattedText .FormattedText {
+        flex-grow: 0;
     }
 }

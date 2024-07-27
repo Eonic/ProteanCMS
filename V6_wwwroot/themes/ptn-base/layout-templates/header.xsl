@@ -765,9 +765,9 @@
 						</span>
 					</button>-->
 					<button class="navbar-toggler mainnav-toggler" type="button"  data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-						<span class="navbar-toggler-icon">
-							<xsl:text> </xsl:text>
-						</span>
+            <i class="fas fa-bars">
+              <xsl:text> </xsl:text>
+            </i>
 					</button>
 				</xsl:if>
 			</div>

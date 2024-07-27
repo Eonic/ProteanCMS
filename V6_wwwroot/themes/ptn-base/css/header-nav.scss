@@ -65,10 +65,9 @@ header {
         flex-wrap: wrap;
         align-items: center;
         justify-content: right;
-
-        @include media-breakpoint-up($nav-breakpoint) {
+        /*@include media-breakpoint-up($nav-breakpoint) {
             margin-top: -0.5rem;
-        }
+        }*/
     }
 
     &.cart-class {
@@ -79,7 +78,7 @@ header {
 
     .navbar-toggler {
         border: 0;
-        padding: 0.1rem 0.2rem;
+        padding: 1rem 0 1rem 1rem;
         margin: -0.1rem -0.2rem;
         color: $header-color;
     }
