@@ -55,10 +55,11 @@
 			<Module type="Tabbed" formPath="columns/Tabbed" name="Tabbed Layout" icon="icon-tab">Tabs at the top allow you to navigate through this content</Module>
 
 		</ModuleGroup>
-    <ModuleGroup name="Content Lists" icon="fas fa-th-list"></ModuleGroup>
+    <ModuleGroup name="Content Lists" icon="fas fa-list"></ModuleGroup>
     <ModuleGroup name="Image Galleries" icon="fas fa-images"></ModuleGroup>
     <ModuleGroup name="Navigation and Links" icon="fas fa-link"></ModuleGroup>
-    <ModuleGroup name="Ecommerce controls" icon="fas fa-shopping-cart"></ModuleGroup>
+    <ModuleGroup name="Ecommerce" icon="fas fa-shopping-cart"></ModuleGroup>
+    <ModuleGroup name="Membership" icon="fas fa-user"></ModuleGroup>
 		<ModuleGroup name="Advanced Content" icon="fas fa-code">
 			<Module type="EmbeddedHtml" formPath="embeddedhtml/embeddedhtml" icon="fa-solid fa-code"  name="Embedded HTML"></Module>
 		</ModuleGroup>

@@ -6,7 +6,7 @@
     </ContentTypeGroup>
   </ContentTypes>
   <ModuleTypes>
-    <ModuleGroup name="Content Lists" icon="fa-th-list">
+    <ModuleGroup name="Content Lists" icon="fa-list">
       <Module type="JobList" formPath="job-list" icon="fas fa-hands-helping" name="Job List"></Module>
     </ModuleGroup>
   </ModuleTypes>

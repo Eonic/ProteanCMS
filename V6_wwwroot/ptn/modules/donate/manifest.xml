@@ -2,7 +2,7 @@
 <PageLayouts imgPath="/ewcommon/images/pagelayouts">
   
   <ModuleTypes>
-	  <ModuleGroup name="Ecommerce controls" icon="fas fa-shopping-cart">
+	  <ModuleGroup name="Ecommerce" icon="fas fa-shopping-cart">
 		  <Module type="DonateButton" formPath="donatebutton" icon="fas fa-hand-holding-heart" name="Donate Button"></Module>
 	  </ModuleGroup>
   </ModuleTypes>
