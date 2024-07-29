@@ -557,7 +557,7 @@ section.stretchBG {
 
     &:before {
         content: '\f073';
-        font-family: 'Font Awesome 6 Free';
+        font-family: $font-awesome-version;
         color: $primary;
         padding-right: 5px;
     }
@@ -936,7 +936,7 @@ div[class$="List"].module {
 
     i {
         content: '\f00e';
-        font-family: 'Font Awesome 6 Free';
+        font-family: $font-awesome-version;
         font-weight: 900;
         padding: 5px;
         background: $body-bg;
@@ -1197,7 +1197,7 @@ dd {
 
         &:before {
             content: '\f053';
-            font-family: 'Font Awesome 6 Free';
+            font-family: $font-awesome-version;
             padding-right: 5px;
             font-weight: 700;
             font-size: 0.7rem;

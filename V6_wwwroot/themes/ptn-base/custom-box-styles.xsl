@@ -218,13 +218,17 @@
     {title: 'Superscript', inline: 'sup', icon: 'superscript'},
     {title: 'Subscript', inline: 'sub', icon: 'subscript'},
     {title: 'Code', inline: 'code', icon: 'code'},
+    {title: 'Lead', inline: 'span', classes: 'lead'},
+    {title: 'Small', inline: 'span', classes: 'small'},
     ]},
 
     {title: 'Blocks', items: [
     {title: 'Paragraph', block: 'p'},
     {title: 'Blockquote', block: 'blockquote'},
     {title: 'Div', block: 'div'},
-    {title: 'Pre', block: 'pre'}
+    {title: 'Pre', block: 'pre'},
+    {title: 'Two Columns', block: 'div', classes: 'two-col-text'},
+    {title: 'Three Columns', block: 'div', classes: 'three-col-text'}
     ]},
 
     {title: 'Alignment', items: [
@@ -233,8 +237,7 @@
     {title: 'Right', block: 'div', styles : {textAlign : 'right'}, icon: 'alignright'},
     {title: 'Justify', block: 'div', styles : {textAlign : 'justify'}, icon: 'alignjustify'}
     ]},
-    {title: 'Lead', inline: 'span', classes: 'lead'},
-    {title: 'Small', inline: 'span', classes: 'small'},
+
     {title: 'Button', inline: 'a', classes: 'btn btn-custom'}
     ],
   </xsl:template>

@@ -188,7 +188,7 @@ header {
         &:after {
             content: '\f078';
             border: none;
-            font-family: 'Font Awesome 6 Free';
+            font-family: $font-awesome-version;
             font-weight: 900;
             font-size: 0.8rem;
             vertical-align: middle;
@@ -362,7 +362,7 @@ header {
                 border-radius: 2px;
                 padding: 2px 5px;
                 float: right;
-                font-family: 'Font Awesome 6 Free';
+                font-family: $font-awesome-version;
                 font-weight: 900;
                 font-size: 0.8rem;
             }
