@@ -49,7 +49,8 @@ body {
     .module-FAQList,
     .char80-center,
     .module-Video,
-    .narrow-container {
+    .narrow-container,
+    .heading-only {
         max-width: 55rem;
         margin-left: auto;
         margin-right: auto;
@@ -165,10 +166,13 @@ h1, h2, h3 {
         }
     }
 }
-
-.btn-custom {
-    @extend .btn-primary;
+.nobox > .entryFooter,
+.nobox > .FormattedText {
+    .btn-custom {
+        @extend .#{$btn-style};
+    }
 }
+
 /*############### IMAGES #################*/
 img, svg {
     max-width: 100%;
@@ -235,28 +239,81 @@ section {
     margin-bottom: $grid-gutter-height;
 }
 
+.section-center {
+    padding: 0;
+
+    > .container {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        flex-wrap: wrap;
+    }
+
+    > .row {
+        height: 100%;
+
+        > div[class^="column"] {
+            justify-content: center;
+            display: flex;
+            flex-direction: column;
+
+            > .module {
+                height: auto;
+            }
+        }
+    }
+}
+.bg-content-center {
+    @extend .section-center;
+}
+
 section.bg-light,
 section.bg-dark,
-section.bg-primary {
+section.bg-primary,
+section.bg-secondary {
     @extend .section-spacing;
 }
 
 section.bg-dark,
-section.bg-primary {
+section.bg-primary,
+section.bg-secondary,
+.layoutModule.bg-dark,
+.layoutModule.bg-primary,
+.layoutModule.bg-secondary {
     @extend .text-white;
+
+    h1, h2, h3, h4, h5, h6 {
+        color: #fff;
+
+        a {
+            color: #fff;
+        }
+    }
+
+    .listItem .lIinner .btn-custom {
+        @extend .#{$btn-list-style};
+    }
+
+    .nobox > .entryFooter,
+    .nobox > .FormattedText {
+        a:not(.btn) {
+            @extend .link-light;
+        }
+
+        .btn-custom {
+            &:not(:hover):not(:focus-visible) {
+                background: transparent;
+            }
+
+            @extend .btn-outline-white;
+        }
+    }
+
 
     .swiper-button-prev, .swiper-button-next {
         color: #fff;
-    }
-}
-
-section.bg-primary {
-    .btn-primary {
-        @extend .btn-dark;
-    }
-
-    a {
-        @extend .link-light;
     }
 }
 
@@ -267,9 +324,49 @@ section.whiteBG {
 section.bg-video-wrapper {
     padding-top: 0;
     padding-bottom: 0;
+    height: 100%;
+
+    video.bg-video {
+        height: 100%;
+        object-fit: cover;
+    }
 
     > .container {
         //   padding-top: $section-padding;
+        justify-content: center;
+    }
+}
+
+section.stretchBG {
+    display: flex;
+    justify-content: stretch;
+    align-items: stretch;
+
+    > .fullwidthContainer {
+        width: 100%;
+
+        > * > .row {
+            height: 100%;
+        }
+    }
+
+    .row {
+        margin: 0;
+    }
+
+    .row > * {
+        margin: 0;
+        padding:0;
+    }
+
+    .module {
+        height: 100%;
+        margin-bottom: 0;
+        border-radius: 0 !important
+    }
+
+    .layoutModule .layoutModule {
+        padding: $card-cap-padding-y $card-cap-padding-x;
     }
 }
 
@@ -297,13 +394,14 @@ section.bg-video-wrapper {
 
     > .layoutModule > .row {
 
-
         > div {
         }
     }
 }
 
 .breadcrumb {
+    font-size: 0.8rem;
+
     .breadcrumb-item {
         a {
             padding-top: 0.3rem;
@@ -315,8 +413,17 @@ section.bg-video-wrapper {
 .image-banner {
     padding: 0.3rem 0 $section-padding 0;
     margin-bottom: 0;
-    @include card-contrast($banner-bg);
     position: relative;
+    @include card-contrast($banner-bg);
+
+    @if $banner-flush == true {
+        padding-top: 0;
+
+        .container-fluid {
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
 
     img {
         position: absolute;
@@ -346,6 +453,7 @@ section.bg-video-wrapper {
         background: $light;
         position: relative;
         overflow: hidden;
+        min-height: 300px;
 
         h1 {
             margin-bottom: 0;
@@ -377,10 +485,8 @@ section.bg-video-wrapper {
 
         .banner-caption {
             position: absolute;
-            max-width: 36%;
             padding: 4vw 6.1% 10% 4vw;
             background-size: 100%;
-            min-height: 500px;
             max-width: 42%;
             top: 0;
 
@@ -403,6 +509,18 @@ section.bg-video-wrapper {
 
 .intro-banner {
     margin-bottom: $spacer;
+    color: #fff;
+
+    @if $banner-flush != true {
+        margin-top: $spacer;
+    }
+
+    @if $banner-flush == true {
+        .container-fluid {
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
 
     .intro-banner-inner {
         padding: $card-spacer-y $card-spacer-x;
@@ -439,7 +557,7 @@ section.bg-video-wrapper {
 
     &:before {
         content: '\f073';
-        font-family: 'Font Awesome 5 Free';
+        font-family: $font-awesome-version;
         color: $primary;
         padding-right: 5px;
     }
@@ -450,13 +568,26 @@ section.bg-video-wrapper {
 }
 
 @mixin boxed-listItem {
-    $listItem-padding: 1rem;
     padding: $listItem-padding;
     border: 1px solid $grey;
     border-radius: $border-radius;
     height: 100%;
     display: flex;
     flex-direction: column;
+    background: #fff;
+    color: $body-color;
+
+    .btn-custom {
+        @extend .#{$btn-list-style};
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        color: $headings-color;
+
+        a {
+            color: $headings-color;
+        }
+    }
 
     *:nth-last-child(2) {
         flex-grow: 2;
@@ -805,7 +936,7 @@ div[class$="List"].module {
 
     i {
         content: '\f00e';
-        font-family: 'Font Awesome 5 Free';
+        font-family: $font-awesome-version;
         font-weight: 900;
         padding: 5px;
         background: $body-bg;
@@ -1066,7 +1197,7 @@ dd {
 
         &:before {
             content: '\f053';
-            font-family: 'Font Awesome 5 Free';
+            font-family: $font-awesome-version;
             padding-right: 5px;
             font-weight: 700;
             font-size: 0.7rem;
@@ -1138,5 +1269,11 @@ dd {
 .previewMode {
     header {
         position: static;
+    }
+}
+
+.normalMode {
+    section.stretchBG .module-FormattedText .FormattedText {
+        flex-grow: 0;
     }
 }

@@ -28,25 +28,25 @@
 @mixin chevron-left() {
     content: "\f053";
     font-weight: 900;
-    font-family: 'Font Awesome 5 Free';
+    font-family: $font-awesome-version;
 }
 
 @mixin chevron-right() {
     content: "\f054";
     font-weight: 900;
-    font-family: 'Font Awesome 5 Free';
+    font-family: $font-awesome-version;
 }
 
 @mixin chevron-down() {
     content: "\f107";
     font-weight: 900;
-    font-family: 'Font Awesome 5 Free';
+    font-family: $font-awesome-version;
 }
 
 @mixin chevron-up() {
     content: "\f106";
     font-weight: 900;
-    font-family: 'Font Awesome 5 Free';
+    font-family: $font-awesome-version;
 }
 
 //------------------------

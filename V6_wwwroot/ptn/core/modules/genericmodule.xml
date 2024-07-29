@@ -106,12 +106,8 @@
 									<value>Right</value>
 								</item>
 								<item>
-									<label>Centre - Large</label>
+									<label>Centre</label>
 									<value>Centre</value>
-								</item>
-								<item>
-									<label>Centre - Small</label>
-									<value>CentreSmall</value>
 								</item>
 							</select1>
 							<select1 bind="cModuleBox" class="boxStyle" appearance="minimal">

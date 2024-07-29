@@ -104,6 +104,9 @@
             <xsl:value-of select="$home-class"/>
             <xsl:value-of select="$cart-class"/>
             <xsl:if test="not($cartPage) and $currentPage/@name!='Home'"> mt-0</xsl:if>
+            <xsl:if test="$currentPage/DisplayName/@banner='no-banner' or $cartPage or $page/ContentDetail and ($sub-nav='left' or $sub-nav='top')">
+              <xsl:text> bannerless-page</xsl:text>
+            </xsl:if>
           </xsl:attribute>
         </xsl:if>
         <div id="mainLayout" class="fullwidth activateAppearAnimation">

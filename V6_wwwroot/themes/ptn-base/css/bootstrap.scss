@@ -1,5 +1,6 @@
 ﻿//Icons
 $fa-font-path: "/ptn/core/icons/fa6/webfonts";
+$font-awesome-version: 'Font Awesome 6 Free';
 @import "../../../ptn/core/icons/fa6/scss/fontawesome";
 @import "../../../ptn/core/icons/fa6/scss/regular";
 @import "../../../ptn/core/icons/fa6/scss/solid";
@@ -9,7 +10,6 @@ $fa-font-path: "/ptn/core/icons/fa6/webfonts";
 // Configuration
 @import "variables";
 
-@import "../../../ptn/core/icons/fa6/css/all";
 @import "../../../ptn/libs/bs5/scss/bootstrap";
 @import "../../../ptn/libs/animate.css/animate.scss";
 
@@ -23,11 +23,11 @@ $fa-font-path: "/ptn/core/icons/fa6/webfonts";
 //@import "variables2";
 @import "utilities";
 @import "carousels";
+@import "../layout-templates/buttons-links";
 //@import "../layout-templates/utility";
 //@import "../layout-templates/templates";
 //@import "../layout-templates/header-menu-below";
 //@import "theme-defaults-common";
-@import "../../../ptn/core/icons/fa6/css/all.css";
 //@import "grid";
 //@import "grid-xs";
 //@import "forms-cart";
