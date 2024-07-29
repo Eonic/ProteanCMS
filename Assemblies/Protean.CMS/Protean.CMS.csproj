@@ -286,7 +286,7 @@
     <Compile Include="api\rest.cs" />
     <Compile Include="api\soap.cs" />
     <Compile Include="tools\AppStart.cs" />
-    <Compile Include="App_Start\DynamicImage.cs" />
+    <Compile Include="bin\App_Start\DynamicImage.cs" />
     <Compile Include="Connected Services\AdminProxy\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
