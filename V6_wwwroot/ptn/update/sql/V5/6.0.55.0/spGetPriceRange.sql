@@ -1,4 +1,4 @@
-CREATE PROCEDURE spGetPriceRange 
+CREATE PROCEDURE dbo.spGetPriceRange 
 @MinPrice int,
 @MaxPrice int,
 @Step int

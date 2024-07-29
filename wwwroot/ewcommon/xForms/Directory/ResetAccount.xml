@@ -5,5 +5,5 @@
 </model><group ref="ResetAccount"><label>
   <span class="msg-028">Please enter your email address and we will email a link to reset the password.</span></label>
 <input bind="cEmail"><label>Email address / Username</label><value></value></input>
-<submit submission="" ref="ewAccountReset" class="principle"><label>Send Password</label></submit></group>
+<submit submission="" ref="ewAccountReset" class="principle"><label>Reset Password</label></submit></group>
 </Content>
