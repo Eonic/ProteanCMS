@@ -151,6 +151,16 @@
                   <value>vertical</value>
                 </item>
               </select1>
+              <select1 bind="marginBelow" appearance="full" class="form-group">
+                <item>
+                  <label>Margin below module (default)</label>
+                  <value>true</value>
+                </item>
+                <item>
+                  <label>No margin below</label>
+                  <value>false</value>
+                </item>
+              </select1>
             </group>
           </group>
           <group class="form-section-wrapper">
