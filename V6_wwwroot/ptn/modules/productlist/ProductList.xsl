@@ -5,11 +5,14 @@
 
 	<xsl:template match="Content[@type='Module' and @moduleType='ProductList']" mode="themeModuleExtras">
 		<!-- this is empty because we want this on individual listing panels not the containing module-->
+
 	</xsl:template>
 
 	<xsl:template match="Content[@type='Module' and @moduleType='ProductList']" mode="themeModuleClassExtras">
 		<!-- this is empty because we want this on individual listing panels not the containing module-->
+	
 	</xsl:template>
+
 
 	<!-- Product Brief -->
 	<xsl:template match="Content[@type='Product']" mode="displayBrief">
