@@ -25,7 +25,7 @@
 		</xsl:variable>
 		<xsl:variable name="heading">
 			<xsl:choose>
-				<xsl:when test="@heading">
+				<xsl:when test="@heading!=''">
 					<xsl:value-of select="@heading"/>
 				</xsl:when>
 				<xsl:otherwise>h3</xsl:otherwise>
@@ -205,6 +205,14 @@
 				<xsl:with-param name="startPos" select="$startPos" />
 			</xsl:apply-templates>
 		</xsl:variable>
+		<xsl:variable name="heading">
+			<xsl:choose>
+				<xsl:when test="@heading!=''">
+					<xsl:value-of select="@heading"/>
+				</xsl:when>
+				<xsl:otherwise>h3</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<xsl:variable name="totalCount">
 			<xsl:choose>
 				<xsl:when test="@display='related'">
@@ -218,7 +226,7 @@
 		<div class="faqList accordion accordion-module" id="accordion-{@id}">
 			<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayFAQAccordianBrief">
 				<xsl:with-param name="parId" select="@id"/>
-				<xsl:with-param name="heading" select="@heading"/>
+				<xsl:with-param name="heading" select="$heading"/>
 				<xsl:with-param name="title" select="@title"/>
 			</xsl:apply-templates>
 		</div>
@@ -231,7 +239,6 @@
 		<xsl:param name="heading"/>
 		<xsl:param name="title"/>
 		<div class="accordion-item">
-
 			<xsl:choose>
 				<xsl:when test="$title!='' and $heading!=''">
 					<xsl:variable name="headingNo" select="substring-after($heading,'h')"/>

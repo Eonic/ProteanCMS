@@ -6,16 +6,26 @@
         color: color-contrast($color);
     }
 
-    a {
+    a:not(.btn) {
         color: color-contrast($color);
     }
 
-    a.btn-custom {
-        border: 2px solid color-contrast($color);
-        background: transparent;
+    .btn-custom {
+        &:not(:hover):not(:focus-visible) {
+            background: transparent;
+        }
+
+        $card-contrast-ratio: contrast-ratio($color);
+        @extend .btn-outline-dark;
+
+        @if $card-contrast-ratio > $min-contrast-ratio {
+            @extend .btn-outline-white;
+        }
     }
 }
-
+.card {
+    @include card-contrast($light);
+}
 @mixin card-color-bg {
     .card-header,
     .card-footer {
@@ -25,11 +35,6 @@
 
     .card.bg-primary {
         @include card-contrast($primary);
-
-        .btn-custom,
-        .btn-primary {
-            @extend .btn-dark;
-        }
     }
 
     .card.bg-secondary {
@@ -38,6 +43,7 @@
 
     .card.bg-info {
         @include card-contrast($info);
+
     }
 
     .card.bg-light {

@@ -4373,7 +4373,7 @@ namespace Protean
                     oDs = moDBHelper.GetDataSet(sSql, "Shipping", "Cart");
                     oXml.LoadXml(oDs.GetXml());
                     oDs.EnforceConstraints = false;
-                    oShippingXml = moPageXml.CreateElement("Cart");
+                    oShippingXml = oCartXml.OwnerDocument.CreateElement("Cart");
                     oShippingXml.InnerXml = oXml.InnerXml;
                     oCartXml.AppendChild(oShippingXml.FirstChild.FirstChild);
                 }

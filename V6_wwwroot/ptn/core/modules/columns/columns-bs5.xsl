@@ -864,9 +864,6 @@
 
 	<!--tabbed with and without box-->
 	<xsl:template match="Content[starts-with(@position,'tabbed')]" mode="displayModule">
-		<xsl:variable name="contentPosition">
-			<xsl:value-of select="@position"/>
-		</xsl:variable>
 		<xsl:choose>
 			<xsl:when test="@box!='false' and @box!=''">
 				<xsl:apply-templates select="." mode="moduleBox"/>

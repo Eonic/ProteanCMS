@@ -6,7 +6,7 @@
     </ContentTypeGroup>  --> 
   </ContentTypes>
   <ModuleTypes>
-    <ModuleGroup name="Content Lists" icon="fa-th-list">
+    <ModuleGroup name="Ecommerce" icon="fas fa-shopping-cart">
       <Module type="ContentFilter" formPath="content-filter" icon="fa-solid fa-filter" name="Content Filter"></Module>
     </ModuleGroup>
   </ModuleTypes>
@@ -14,5 +14,6 @@
 		<Filter type="PageFilter" formPath="contentfilter/PageFilter/PageFilter" name="Page Filter" >Page Filter</Filter>
 		<Filter type="PriceFilter" formPath="contentfilter/PriceFilter/PriceFilter" name="Price Filter" >Price Filter</Filter>
 		<Filter type="SpecFilter" formPath="contentfilter/SpecFilter/SpecFilter" name="Spec Filter" >Spec Filter</Filter>
+		<Filter type="SortbyFilter" formPath="contentfilter/SortbyFilter/SortbyFilter" name="Sortby Filter" >Sortby Filter</Filter>
 	</FilterTypes>
 </PageLayouts>
