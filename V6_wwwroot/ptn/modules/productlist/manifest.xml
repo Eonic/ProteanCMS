@@ -8,7 +8,7 @@
   </ContentTypes>
   <ModuleTypes>
     <ModuleGroup name="Ecommerce" icon="fas fa-shopping-cart">
-      <Module type="ProductList" formPath="product-list" icon="fas fa-cart-plus" name="Product List 1"></Module>
+      <Module type="ProductList" formPath="product-list" icon="fas fa-cart-plus" name="Product List"></Module>
       <!--Module type="ProductGallery" name="Product Gallery">Gallery of Products</Module>
       <Module type="ProductFilter" name="Product Filter">Product Filtering</Module-->
     </ModuleGroup>
