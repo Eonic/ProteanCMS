@@ -12,7 +12,7 @@ END
 ELSE
 
 BEGIN
-set @sql='select * from tblContent where cContentXmlBrief like ''%' + @filePath + '''%'''+ ' or cContentXmlDetail like ''%''' + @filePath + '''%'''
+set @sql='select * from tblContent where cContentXmlBrief like ''%' + @filePath + '%'''+ ' or cContentXmlDetail like ''%' + @filePath + '%'''
 
 END
 
