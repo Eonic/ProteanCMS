@@ -595,7 +595,9 @@
 				<Action Order="1" Type="File" ObjectType="" ObjectName="/v5/6.0.72.0/DropFullTextCatalogForTblContent.sql"/>
 				<Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.0.72.0/CreateFullTextCatalogForTblContent.sql"/>
 				<Action Order="3" Type="File" ObjectType="" ObjectName="/v5/6.0.72.0/DropFullTextIndexOnTblContent.sql"/>
-				<Action Order="3" Type="File" ObjectType="" ObjectName="/v5/6.0.72.0/CreateFullTextIndexOnTblContent.sql"/>
+				<Action Order="4" Type="File" ObjectType="" ObjectName="/v5/6.0.72.0/CreateFullTextIndexOnTblContent.sql"/>
+				<Action Order="5" Type="Drop" ObjectType="Procedure" ObjectName="spCheckFileInUse"/>
+				<Action Order="6" Type="File" ObjectType="" ObjectName="/v5/6.0.71.0/spCheckFileInUse.sql"/>
 			</Sub3>
 		</Sub2>
     </Sub1>

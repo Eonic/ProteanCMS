@@ -33,6 +33,8 @@ using System.Web.UI.HtmlControls;
 using Protean.Providers.Membership;
 using Protean.Providers.Payment;
 using System.Windows.Shapes;
+using System.Data.SqlClient;
+using Protean.Models;
 
 namespace Protean
 {
@@ -4721,9 +4723,15 @@ namespace Protean
                         var oFsh = new Protean.fsHelper();
                         oFsh.initialiseVariables(nType);
                         string fileToFind = "/" + oFsh.mcRoot + cPath.Replace(@"\", "/") + "/" + cName;
+
+
                         //string sSQL = "select * from tblContent where cContentXmlBrief like '%" + fileToFind + "%' or cContentXmlDetail like '%" + fileToFind + "%'";
-                        string sSQL = "select nContentKey,cContentSchemaName,cContentName from tblContent where contains(cContentXmlBrief,'" + fileToFind + "') or contains(cContentXmlDetail,'" + fileToFind + "')";
-                        using (var oDr = moDbHelper.getDataReaderDisposable(sSQL))  // Done by nita on 6/7/22
+                        //string sSQL = "select nContentKey,cContentSchemaName,cContentName from tblContent where contains(cContentXmlBrief,'" + fileToFind + "') or contains(cContentXmlDetail,'" + fileToFind + "')";
+                        string sSQL = "spCheckFileInUse";
+
+                        System.Collections.Hashtable arrParms = new System.Collections.Hashtable();
+                        arrParms.Add("filePath", fileToFind);
+                        using (var oDr = moDbHelper.getDataReaderDisposable(sSQL,CommandType.StoredProcedure, arrParms))  // Done by nita on 6/7/22
                         {
                             if (oDr.HasRows)
                             {
