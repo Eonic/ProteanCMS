@@ -11292,7 +11292,7 @@ namespace Protean
                             {
                                 // Dim oChoicesElmt As XmlElement = MyBase.addChoices(oSelectElmt, oChoices.GetAttribute("name"))
                                 // For Each oItem In oChoices.SelectNodes("Import")
-                                base.addOption(ref oSelectElmt, Strings.Replace(oChoices.GetAttribute("name"), "_", " "), oChoices.GetAttribute("xslFile"));
+                                base.addOption(ref oSelectElmt, oChoices.GetAttribute("name"), oChoices.GetAttribute("xslFile"));
                                 if (string.IsNullOrEmpty(sDefaultXslt))
                                     sDefaultXslt = oChoices.GetAttribute("xslFile");
                                 // Next
@@ -11358,7 +11358,7 @@ namespace Protean
                                     XmlElement oElmt = (XmlElement)base.Instance.FirstChild;
 
                                     string cFilename = oFs.mcStartFolder + Strings.Right(fUpld.FileName, Strings.Len(fUpld.FileName) - fUpld.FileName.LastIndexOf(@"\"));
-                                    cFilename = cFilename.Replace(" ", "-");
+                                    //cFilename = cFilename.Replace(" ", "-");
                                     oElmt.SetAttribute("filename", cFilename);
 
                                     if ((sValidResponse ?? "") == (fUpld.FileName ?? ""))
