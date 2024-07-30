@@ -1,7 +1,7 @@
 using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 using SoundInTheory.DynamicImage;
 
-[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(Protean.Tools.App_Start.DynamicImage), "PreStart")]
+//[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(Protean.Tools.App_Start.DynamicImage), "PreStart")]
 
 namespace Protean.Tools.App_Start
 {

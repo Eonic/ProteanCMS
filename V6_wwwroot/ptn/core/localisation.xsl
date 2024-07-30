@@ -2555,6 +2555,29 @@
     </xsl:choose>
   </xsl:template>
 
+	
+  <xsl:template name="term3048e">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>ex VAT</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>ex VAT</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+	<xsl:template name="term3048f">
+		<xsl:choose>
+			<xsl:when test="$lang='en-pr'">
+				<xsl:text>inc VAT</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>inc VAT</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	
   <xsl:template name="term3048">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">

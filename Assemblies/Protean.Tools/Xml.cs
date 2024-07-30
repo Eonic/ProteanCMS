@@ -847,6 +847,8 @@ namespace Protean.Tools
                     // sString = Strings.Replace(sString, "&lt;", "&#60;")
                     // sString = Strings.Replace(sString, "&gt;", "&#92;")
 
+                    //sString = Strings.Replace(sString, "&amp;", "&");
+
                     sString = Strings.Replace(sString, "&quot;", "&#34;");
                     sString = Strings.Replace(sString, "&apos;", "&#39;");
                     sString = Strings.Replace(sString, "&nbsp;", "&#160;");

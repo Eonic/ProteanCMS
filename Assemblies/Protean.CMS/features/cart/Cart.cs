@@ -4373,7 +4373,7 @@ namespace Protean
                     oDs = moDBHelper.GetDataSet(sSql, "Shipping", "Cart");
                     oXml.LoadXml(oDs.GetXml());
                     oDs.EnforceConstraints = false;
-                    oShippingXml = moPageXml.CreateElement("Cart");
+                    oShippingXml = oCartXml.OwnerDocument.CreateElement("Cart");
                     oShippingXml.InnerXml = oXml.InnerXml;
                     oCartXml.AppendChild(oShippingXml.FirstChild.FirstChild);
                 }
@@ -7840,7 +7840,11 @@ namespace Protean
                         if (bPaymentTypeButtons)
                         {
                             XmlElement xmlXfromGroup = (XmlElement)oOptXform.moXformElmt.SelectSingleNode("group");
-                            oPay.getPaymentMethodButtons(ref oOptXform, ref xmlXfromGroup, nAmount);
+
+                            // added by TS, if you need just the product amount without VAT or shipping we need to talk.
+                            double totalAmount = Convert.ToDouble(cartElmt.GetAttribute("total"));
+                            oPay.getPaymentMethodButtons(ref oOptXform, ref xmlXfromGroup, totalAmount);
+                            
                             foreach (XmlElement oSubmitBtn in oOptXform.moXformElmt.SelectNodes("descendant-or-self::submit"))
                                 AllowedPaymentMethods.Add(oSubmitBtn.GetAttribute("value"));
 

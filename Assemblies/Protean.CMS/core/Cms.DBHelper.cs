@@ -1114,7 +1114,7 @@ namespace Protean
                         }
                     case (objectTypes)14:
                         {
-                            return "cContactForeignRef";
+                            return "cContactForiegnRef";
                         }
                     case (objectTypes)15:
                         {
