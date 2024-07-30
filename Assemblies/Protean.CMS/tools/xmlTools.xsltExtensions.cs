@@ -784,6 +784,9 @@ namespace Protean
                     else
                     {
                         cHtml = oHtmlNode.Current.InnerXml;
+
+                        cHtml = Strings.Replace(cHtml, "&amp;", "&");
+
                         cHtml = convertEntitiesToCodes(cHtml);
                         cHtml = Strings.Replace(Strings.Replace(cHtml, "&gt;", ">"), "&lt;", "<");
                         cHtml = cHtml.Replace("&amp;#", "&#");

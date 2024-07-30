@@ -367,7 +367,7 @@ form.xform {
         }*/
         &:after {
             content: '\f078';
-            font-family: 'Font Awesome 5 Free';
+            font-family: 'Font Awesome 6 Free';
             font-weight: 900;
             position: absolute;
             top: 11px;
@@ -412,14 +412,18 @@ form.xform {
         //@extend .btn-info;
         &:before {
             content: '\f0c7';
-            font-family: 'Font Awesome 5 Free';
+            font-family: 'Font Awesome 6 Free';
             font-weight: 900;
             margin-right: 8px;
         }
+    }
 
-        i {
-            display: none;
-        }
+    #tpltRelatedSearch .principle::before {
+        content: '\2b';
+    }
+
+    #AddRelated .principle::before {
+        content: '\f002';
     }
 }
 // MODULE PICKER 
@@ -1116,7 +1120,7 @@ form .form-actions .required {
             }
 
             &:before {
-                font-family: 'Font Awesome 5 Free';
+                font-family: 'Font Awesome 6 Free';
                 padding-right: 5px;
             }
         }

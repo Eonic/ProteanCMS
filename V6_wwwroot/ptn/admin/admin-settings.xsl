@@ -73,7 +73,7 @@
         <xsl:value-of select="$page/Settings/add[@key='web.proteanWebsite']/@value"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>eonic.com</xsl:text>
+        <xsl:text>eonic.digital</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -84,7 +84,7 @@
         <xsl:value-of select="$page/Settings/add[@key='web.proteanSupportEmail']/@value"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>support@eonic.co.uk</xsl:text>
+        <xsl:text>support@eonic.digital</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>

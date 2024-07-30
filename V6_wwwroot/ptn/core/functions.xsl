@@ -767,6 +767,7 @@
 		<xsl:text>~/ptn/libs/bs5/js/bootstrap.bundle.min.js,</xsl:text>
 		<xsl:text>~/ptn/libs/swiper/swiper-bundle.min.js,</xsl:text>
 		<xsl:text>~/ptn/libs/fancyapps/ui/dist/fancybox.umd.min.js,</xsl:text>
+    <xsl:text>~/ptn/core/modules/columns/universal-parallax.min.js,</xsl:text>
 		<xsl:text>~/ptn/core/core.js,</xsl:text>
 	</xsl:template>
 
@@ -5406,18 +5407,29 @@
 	</xsl:template>
 
 	<xsl:template match="table" mode="cleanXhtml">
-		<div class="table-responsive">
 			<xsl:element name="{name()}">
+					<xsl:attribute name="class">
+						<xsl:text>table table-responsive</xsl:text>
+					</xsl:attribute>
 				<!-- process attributes -->
 				<xsl:for-each select="@*">
 					<!-- remove attribute prefix (if any) -->
-					<xsl:attribute name="{name()}">
-						<xsl:value-of select="." />
-					</xsl:attribute>
+					<xsl:choose>
+						<xsl:when test="name()='class'">
+							<xsl:attribute name="class">
+								<xsl:text>table table-responsive </xsl:text>								
+								<xsl:value-of select="." />
+							</xsl:attribute>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:attribute name="{name()}">
+								<xsl:value-of select="." />
+							</xsl:attribute>
+						</xsl:otherwise>
+					</xsl:choose>					
 				</xsl:for-each>
 				<xsl:apply-templates mode="cleanXhtml"/>
-			</xsl:element>
-		</div>
+			</xsl:element>	
 	</xsl:template>
 
 

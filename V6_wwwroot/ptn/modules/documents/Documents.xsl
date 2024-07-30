@@ -25,6 +25,14 @@
     <xsl:variable name="idsList">
       <xsl:apply-templates select="ms:node-set($contentList)/*" mode="idList" />
     </xsl:variable>
+	  <xsl:variable name="heading">
+		  <xsl:choose>
+			  <xsl:when test="@heading!=''">
+				  <xsl:value-of select="@heading"/>
+			  </xsl:when>
+			  <xsl:otherwise>h3</xsl:otherwise>
+		  </xsl:choose>
+	  </xsl:variable>
     
     <div class="Documents">
       <div class="cols{@cols}">
@@ -41,7 +49,7 @@
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief" >
           <xsl:with-param name="sortBy" select="@sortBy"/>
           <xsl:with-param name="showThumbnail" select="@showThumbnails"/>
-			<xsl:with-param name="heading" select="@heading"/>
+			<xsl:with-param name="heading" select="$heading"/>
 			<xsl:with-param name="title" select="@title"/>
         </xsl:apply-templates>
       </div>

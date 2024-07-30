@@ -58,6 +58,15 @@ $.extend({
 /*  ==  END EXTEND JQUERY  ========================================================================  */
 
 function PageContentActions() {
+    if (typeof universalParallax === 'function') {
+        var parallaxspeed = $('.parallax-wrapper').last().data("parallax-speed");
+        if (parallaxspeed === '') {
+            parallaxspeed = 1;
+        }
+        new universalParallax().init({
+            speed: parallaxspeed
+        });
+    }
     //contentScroller();
     contentSwiper();
 }

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="no">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Universal Parallax | Demo</title>
+	<link rel="stylesheet" type="text/css" href="css/demo.min.css">
+	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,700" rel="stylesheet">
+	<style>
+	</style>
+</head>
+
+<body>
+
+	<section class="container container--full">
+		<div class="content" style="position:relative;">
+			<div class="arrow" id="arrow"><img src="img/arrow-down.png"></div>
+			<h1>Universal Parallax</h1>
+			<p>A vanilla javascript plugin</p>
+		</div>
+		<div class="parallax bg1"></div>
+	</section>
+
+	<section class="container container--small">
+		<div class="content">
+			<p>
+				<strong>Adapts to height</strong>
+				<br>
+				Displays 100% of BG regardless
+			</p>
+		</div>
+		<div class="parallax" data-parallax-image="img/bg2.jpg"></div>
+	</section>
+
+	<section class="container container--big">
+		<div class="content">
+			<p>
+				<strong>Container going off screen?</strong>
+				<br>
+				No sweat
+			</p>
+		</div>
+		<div class="parallax" id="bg3"></div>
+	</section>
+
+	<section class="container container--full">
+		<div class="content">
+			<h2>Universal Parallax</h2>
+			<p>
+				Automatically scales to the height of your container
+				<span class="hide-on-mobile"><br></span>
+				Check out <a href="https://www.npmjs.com/package/universal-parallax" target="_blank">npm</a> or <a href="https://github.com/marrio-h/universal-parallax" target="_blank">github</a> for docs and download
+			</p>
+			<p>
+				Photo credits in order of appearance from <a href="https://unsplash.com/" target="_blank">unsplash</a>
+				<span class="show-on-mobile--inline">:</span>
+				<span class="hide-on-mobile"><br></span>
+				<a class="a--no-weight" href="https://unsplash.com/@dnevozhai" target="_blank">Denys Nevozhai</a>,
+				<a class="a--no-weight" href="https://unsplash.com/@rohittandon" target="_blank">Rohit Tandon</a>,
+				<span class="hide-on-mobile"><br></span>
+				<a class="a--no-weight" href="https://unsplash.com/@jim_dons" target="_blank">James Donaldson</a>,
+				<a class="a--no-weight" href="https://unsplash.com/@jampatcon" target="_blank">James Connolly</a>
+			</p>
+			<p class="p--credits">Find me on git <a href="https://github.com/marrio-h" target="_blank">@marrio-h</a></p>
+
+		</div>
+		<div class="parallax" data-parallax-image="img/bg4.jpg"></div>
+	</section>
+
+	<script src="../dist/universal-parallax.min.js"></script>
+	<script src="js/demo.min.js"></script>
+	<script>
+		new universalParallax().init({
+			speed: 4
+		});
+	</script>
+
+</body>
+</html>
