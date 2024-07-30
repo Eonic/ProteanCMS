@@ -16,6 +16,6 @@ set @sql='select * from tblContent where cContentXmlBrief like ''%' + @filePath 
 
 END
 
-print(@sql)
+
 exec(@sql)
 END
