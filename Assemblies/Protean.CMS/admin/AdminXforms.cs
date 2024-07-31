@@ -4727,12 +4727,22 @@ namespace Protean
 
                         //string sSQL = "select * from tblContent where cContentXmlBrief like '%" + fileToFind + "%' or cContentXmlDetail like '%" + fileToFind + "%'";
                         //string sSQL = "select nContentKey,cContentSchemaName,cContentName from tblContent where contains(cContentXmlBrief,'" + fileToFind + "') or contains(cContentXmlDetail,'" + fileToFind + "')";
-                        string sSQL = "spCheckFileInUse";
-
-                        System.Collections.Hashtable arrParms = new System.Collections.Hashtable();
-                        arrParms.Add("filePath", fileToFind);
-                        using (var oDr = moDbHelper.getDataReaderDisposable(sSQL,CommandType.StoredProcedure, arrParms))  // Done by nita on 6/7/22
+                        SqlDataReader oDr;
+                        if (myWeb.moDbHelper.checkDBObjectExists("spCheckFileInUse",Database.objectTypes.StoredProcedure))
                         {
+                            string sSQL = "spCheckFileInUse";
+                            System.Collections.Hashtable arrParms = new System.Collections.Hashtable();
+                            arrParms.Add("filePath", fileToFind);
+                             oDr = moDbHelper.getDataReader(sSQL, CommandType.StoredProcedure, arrParms);
+                        }
+                        else
+                        {
+                            string sSQL = "select * from tblContent where cContentXmlBrief like '%" + fileToFind + "%' or cContentXmlDetail like '%" + fileToFind + "%'";
+                             oDr = moDbHelper.getDataReader(sSQL);
+                        }
+
+
+                       
                             if (oDr.HasRows)
                             {
                                 string contentFound = "<p>This file is used in these content Items</p><ul>";
@@ -4749,7 +4759,8 @@ namespace Protean
                                 base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet");
                                 //oFrmElmt = (XmlElement)argoNode2;
                             }
-                        }
+                        oDr.Close();
+                        oDr = null;
 
                         //XmlNode argoNode3 = oFrmElmt;
                         base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Are you sure you want to delete this file? - \"" + cPath + @"\" + cName + "\"", false, "alert-danger");
@@ -11165,7 +11176,7 @@ namespace Protean
                                     for (int i = 0, loopTo = nNoCodes - 1; i <= loopTo; i++)
                                     {
                                         // Generate a random password
-                                        object localgetNodeValueByType2() { XmlNode argoParent3 = oInstanceRoot; var ret = getNodeValueByType(ref argoParent3, "nRNDLength", vDefaultValue: "8"); oInstanceRoot = (XmlElement)argoParent3; return ret; }
+                                       // object localgetNodeValueByType2() { XmlNode argoParent3 = oInstanceRoot; var ret = getNodeValueByType(ref argoParent3, "nRNDLength", vDefaultValue: "8"); oInstanceRoot = (XmlElement)argoParent3; return ret; }
 
                                         object localgetNodeValueByType3() { XmlNode argoParent4 = oInstanceRoot; var ret = getNodeValueByType(ref argoParent4, "nRNDLength", vDefaultValue: "8"); oInstanceRoot = (XmlElement)argoParent4; return ret; }
 
@@ -11174,7 +11185,7 @@ namespace Protean
                                         // Check for duplicates
                                         while (!(Array.LastIndexOf(oCodes, cC) == -1 | string.IsNullOrEmpty(cC)))
                                         {
-                                            object localgetNodeValueByType4() { XmlNode argoParent5 = oInstanceRoot; var ret = getNodeValueByType(ref argoParent5, "nRNDLength", vDefaultValue: "8"); oInstanceRoot = (XmlElement)argoParent5; return ret; }
+                                         //   object localgetNodeValueByType4() { XmlNode argoParent5 = oInstanceRoot; var ret = getNodeValueByType(ref argoParent5, "nRNDLength", vDefaultValue: "8"); oInstanceRoot = (XmlElement)argoParent5; return ret; }
 
                                             object localgetNodeValueByType5() { XmlNode argoParent6 = oInstanceRoot; var ret = getNodeValueByType(ref argoParent6, "nRNDLength", vDefaultValue: "8"); oInstanceRoot = (XmlElement)argoParent6; return ret; }
 
