@@ -6,7 +6,6 @@
 			<cart>
 				<add key="SiteURL" value="http://test.ds01.eonic.co.uk" />
 				<add key="SecureURL" value="http://test.ds01.eonic.co.uk/" />
-				<add key="PaymentGetwayEmergencyMessage" value="Customized emergency message" />
 				<add key="TaxRate" value="20" />
 				<add key="MerchantName" value="Eonic Digital LLP." />
 				<add key="MerchantEmail" value="support@eonic.co.uk" />
@@ -46,7 +45,6 @@
 		<submission id="WebSettings" action="" method="post" event="form_check(this)" />
 		<bind id="ewSiteURL" nodeset="cart/add[@key='SiteURL']/@value" required="false()" type="string" />
 		<bind id="ewSecureURL" nodeset="cart/add[@key='SecureURL']/@value" required="false()" type="string" />
-		<bind id="ewEmergencyMessage" nodeset="cart/add[@key='PaymentGetwayEmergencyMessage']/@value" required="false()" type="string" />
 		<bind id="ewTaxRate" nodeset="cart/add[@key='TaxRate']/@value" required="true()" type="string" />
 		<bind id="ewMerchantName" nodeset="cart/add[@key='MerchantName']/@value" required="true()" type="string" />
 		<bind id="ewMerchantEmail" nodeset="cart/add[@key='MerchantEmail']/@value" required="true()" type="string" />
@@ -95,27 +93,6 @@
 			</input>
 			<input bind="ewSecureURL">
 				<label>Secure URL</label>
-				<value></value>
-			</input>
-			<group class="multiline">
-				<select1 appearance="minimal" id="ewEmergencyMessageDropDown" class="overridableDropdown">
-					<label>Payment Getway Emergency Message</label>
-					<item>
-						<label>Emergency Msg1</label>
-						<value>Emergency Msg1</value>
-					</item>
-					<item>
-						<label>Emergency Msg2</label>
-						<value>Emergency Msg2</value>
-					</item>
-					<item>
-						<label>Other</label>
-						<value>ewEmergencyMessage</value>
-					</item>
-				</select1>
-			</group>
-			<input bind="ewEmergencyMessage" id="ewEmergencyMessage" placeholder="Emergency Message" class="col-md-7">
-				<label>Customized Payment Getway Emergency Message&#160;:</label>
 				<value></value>
 			</input>
 		</group>
