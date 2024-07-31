@@ -1,0 +1,1 @@
+DROP FULLTEXT INDEX ON [dbo].[tblContent]

@@ -6778,20 +6778,20 @@
 						<xsl:variable name="image">
 							<picture>
 
-								<xsl:variable name="newSrc-webp" select="ew:CreateWebP($newSrc)"/>
-								<xsl:variable name="newSrc-xs-webp" select="ew:CreateWebP($newSrc-xs)"/>
-								<xsl:variable name="newSrc-xs-x2-webp" select="ew:CreateWebP($newSrc-xs-x2)"/>
-								<xsl:variable name="newSrc-sm-webp" select="ew:CreateWebP($newSrc-sm)"/>
-								<xsl:variable name="newSrc-sm-x2-webp" select="ew:CreateWebP($newSrc-sm-x2)"/>
-								<xsl:variable name="newSrc-md-webp" select="ew:CreateWebP($newSrc-md)"/>
-								<xsl:variable name="newSrc-md-x2-webp" select="ew:CreateWebP($newSrc-md-x2)"/>
-								<xsl:variable name="newSrc-lg-webp" select="ew:CreateWebP($newSrc-lg)"/>
-								<xsl:variable name="newSrc-lg-x2-webp" select="ew:CreateWebP($newSrc-lg-x2)"/>
-								<xsl:variable name="newSrc-xl-webp" select="ew:CreateWebP($newSrc-xl)"/>
-								<xsl:variable name="newSrc-xl-x2-webp" select="ew:CreateWebP($newSrc-xl-x2)"/>
-								<xsl:variable name="newSrc-xxl-webp" select="ew:CreateWebP($newSrc-xxl)"/>
-								<xsl:variable name="newSrc-xxl-x2-webp" select="ew:CreateWebP($newSrc-xxl-x2)"/>
-								<xsl:variable name="placeholder-webp" select="ew:CreateWebP($lazyplaceholder)"/>
+								<xsl:variable name="newSrc-webp" select="ew:CreateWebP($newSrc,$forceResize)"/>
+								<xsl:variable name="newSrc-xs-webp" select="ew:CreateWebP($newSrc-xs,$forceResize)"/>
+								<xsl:variable name="newSrc-xs-x2-webp" select="ew:CreateWebP($newSrc-xs-x2,$forceResize)"/>
+								<xsl:variable name="newSrc-sm-webp" select="ew:CreateWebP($newSrc-sm,$forceResize)"/>
+								<xsl:variable name="newSrc-sm-x2-webp" select="ew:CreateWebP($newSrc-sm-x2,$forceResize)"/>
+								<xsl:variable name="newSrc-md-webp" select="ew:CreateWebP($newSrc-md,$forceResize)"/>
+								<xsl:variable name="newSrc-md-x2-webp" select="ew:CreateWebP($newSrc-md-x2,$forceResize)"/>
+								<xsl:variable name="newSrc-lg-webp" select="ew:CreateWebP($newSrc-lg,$forceResize)"/>
+								<xsl:variable name="newSrc-lg-x2-webp" select="ew:CreateWebP($newSrc-lg-x2,$forceResize)"/>
+								<xsl:variable name="newSrc-xl-webp" select="ew:CreateWebP($newSrc-xl,$forceResize)"/>
+								<xsl:variable name="newSrc-xl-x2-webp" select="ew:CreateWebP($newSrc-xl-x2,$forceResize)"/>
+								<xsl:variable name="newSrc-xxl-webp" select="ew:CreateWebP($newSrc-xxl,$forceResize)"/>
+								<xsl:variable name="newSrc-xxl-x2-webp" select="ew:CreateWebP($newSrc-xxl-x2,$forceResize)"/>
+								<xsl:variable name="placeholder-webp" select="ew:CreateWebP($lazyplaceholder,$forceResize)"/>
 
 
 								<!--WebP Images-->
@@ -7156,13 +7156,13 @@
 						<xsl:variable name="image">
 							<picture>
 
-								<xsl:variable name="newSrc-xs-webp" select="ew:CreateWebP($newSrc-xs)"/>
-								<xsl:variable name="newSrc-sm-webp" select="ew:CreateWebP($newSrc-sm)"/>
-								<xsl:variable name="newSrc-md-webp" select="ew:CreateWebP($newSrc-md)"/>
-								<xsl:variable name="newSrc-lg-webp" select="ew:CreateWebP($newSrc-lg)"/>
-								<xsl:variable name="newSrc-xl-webp" select="ew:CreateWebP($newSrc-xl)"/>
-								<xsl:variable name="newSrc-xxl-webp" select="ew:CreateWebP($newSrc-xxl)"/>
-								<xsl:variable name="placeholder-webp" select="ew:CreateWebP($lazyplaceholder)"/>
+								<xsl:variable name="newSrc-xs-webp" select="ew:CreateWebP($newSrc-xs,$forceResize)"/>
+								<xsl:variable name="newSrc-sm-webp" select="ew:CreateWebP($newSrc-sm,$forceResize)"/>
+								<xsl:variable name="newSrc-md-webp" select="ew:CreateWebP($newSrc-md,$forceResize)"/>
+								<xsl:variable name="newSrc-lg-webp" select="ew:CreateWebP($newSrc-lg,$forceResize)"/>
+								<xsl:variable name="newSrc-xl-webp" select="ew:CreateWebP($newSrc-xl,$forceResize)"/>
+								<xsl:variable name="newSrc-xxl-webp" select="ew:CreateWebP($newSrc-xxl,$forceResize)"/>
+								<xsl:variable name="placeholder-webp" select="ew:CreateWebP($lazyplaceholder,$forceResize)"/>
 
 
 								<!--WebP Images-->
