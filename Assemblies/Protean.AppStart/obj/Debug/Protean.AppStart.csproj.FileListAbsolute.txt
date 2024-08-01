@@ -28,7 +28,6 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Debug\Protean.AppSta
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Debug\Protean.AppStart.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Debug\Protean.AppStart.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Debug\AdvancedStringBuilder.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Debug\ClearScript.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Debug\JavaScriptEngineSwitcher.Core.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Debug\JavaScriptEngineSwitcher.V8.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Debug\AdvancedStringBuilder.xml
@@ -38,7 +37,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Debug\ru-ru\JavaScri
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Debug\ru-ru\JavaScriptEngineSwitcher.V8.resources.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Debug\Protean.AppStart.csproj.AssemblyReference.cache
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Debug\Protean.AppStart.csproj.CoreCompileInputs.cache
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Debug\Protean.AppStart.csproj.CopyComplete
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Debug\Protean.AppStart.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Debug\Protean.AppStart.pdb
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Debug\Protean.AppStart.dll.config
@@ -52,3 +50,13 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Debug\ClearScript.V8
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Debug\Newtonsoft.Json.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Debug\Protean.AppStart.csproj.AssemblyReference.cache
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Debug\Protean..1C248B77.Up2Date
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Debug\Protean.AppStart.dll.config
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Debug\ClearScript.Core.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Debug\ClearScript.V8.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Debug\ClearScript.V8.ICUData.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Debug\Newtonsoft.Json.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Debug\ClearScript.Core.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Debug\ClearScript.V8.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Debug\ClearScript.V8.ICUData.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Debug\Newtonsoft.Json.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Debug\Protean..1C248B77.Up2Date
