@@ -1,0 +1,1 @@
+DROP FULLTEXT CATALOG [ContentIdx]

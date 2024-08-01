@@ -1,12 +1,3 @@
-
-/****** Object:  StoredProcedure [dbo].[spUpdateFilterIndex]    Script Date: 28-05-2024 15:50:43 ******/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
--- spUpdateFilterIndex  'PRODUCT',4 
 CREATE PROCEDURE [dbo].[spUpdateFilterIndex] @SchemaName VARCHAR(50)
 	,@IndexId INT
 AS
