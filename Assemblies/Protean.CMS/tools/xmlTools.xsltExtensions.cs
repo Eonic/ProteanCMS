@@ -1637,6 +1637,15 @@ namespace Protean
                     }
                 }
             }
+
+            public string CreateWebP(string cVirtualPath, string sForceCheck)
+            {
+                Boolean bForceCheck = false;
+                if (sForceCheck.ToLower().Contains("true"))
+                { bForceCheck = true; }
+                return CreateWebP(cVirtualPath, bForceCheck);
+            }
+
             public string CreateWebP(string cVirtualPath, bool forceCheck)
             {
                 string cProcessInfo = string.Empty;
