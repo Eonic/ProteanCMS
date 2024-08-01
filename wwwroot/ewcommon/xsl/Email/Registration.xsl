@@ -45,16 +45,7 @@
           </font>
         </td>
       </tr>-->
-      <tr>
-        <th>
-          <font face="verdana" size="2">Password</font>
-        </th>
-        <td>
-          <font face="verdana" size="2">
-            <xsl:value-of select="Password/node()"/>
-          </font>
-        </td>
-      </tr>
+   
 
       <tr>
         <th>
