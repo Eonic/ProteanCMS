@@ -20,7 +20,7 @@
             Initializes a new Windows Script engine instance with the specified list of supported file name extensions.
             </summary>
             <param name="progID">The programmatic identifier (ProgID) of the Windows Script engine class.</param>
-            <param name="name">A name to associate with the instance. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="name">A name to associate with the instance. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <param name="fileNameExtensions">A semicolon-delimited list of supported file name extensions.</param>
             <param name="flags">A value that selects options for the operation.</param>
             <remarks>
@@ -53,7 +53,7 @@
             <summary>
             Initializes a new JScript engine instance with the specified name.
             </summary>
-            <param name="name">A name to associate with the instance. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="name">A name to associate with the instance. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
         </member>
         <member name="M:Microsoft.ClearScript.Windows.JScriptEngine.#ctor(Microsoft.ClearScript.Windows.WindowsScriptEngineFlags)">
             <summary>
@@ -65,7 +65,7 @@
             <summary>
             Initializes a new JScript engine instance with the specified name and options.
             </summary>
-            <param name="name">A name to associate with the instance. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="name">A name to associate with the instance. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <param name="flags">A value that selects options for the operation.</param>
         </member>
         <member name="M:Microsoft.ClearScript.Windows.JScriptEngine.#ctor(System.String,System.String,System.String,Microsoft.ClearScript.Windows.WindowsScriptEngineFlags)">
@@ -74,7 +74,7 @@
             identifier, name, list of supported file name extensions, and options.
             </summary>
             <param name="progID">The programmatic identifier (ProgID) of the JScript engine class.</param>
-            <param name="name">A name to associate with the instance. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="name">A name to associate with the instance. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <param name="fileNameExtensions">A semicolon-delimited list of supported file name extensions.</param>
             <param name="flags">A value that selects options for the operation.</param>
             <remarks>
@@ -130,7 +130,7 @@
             <summary>
             Initializes a new VBScript engine instance with the specified name.
             </summary>
-            <param name="name">A name to associate with the instance. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="name">A name to associate with the instance. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
         </member>
         <member name="M:Microsoft.ClearScript.Windows.VBScriptEngine.#ctor(Microsoft.ClearScript.Windows.WindowsScriptEngineFlags)">
             <summary>
@@ -142,7 +142,7 @@
             <summary>
             Initializes a new VBScript engine instance with the specified name and options.
             </summary>
-            <param name="name">A name to associate with the instance. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="name">A name to associate with the instance. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <param name="flags">A value that selects options for the operation.</param>
         </member>
         <member name="M:Microsoft.ClearScript.Windows.VBScriptEngine.#ctor(System.String,System.String,System.String,Microsoft.ClearScript.Windows.WindowsScriptEngineFlags)">
@@ -151,7 +151,7 @@
             identifier, name, list of supported file name extensions, and options.
             </summary>
             <param name="progID">The programmatic identifier (ProgID) of the VBScript engine class.</param>
-            <param name="name">A name to associate with the instance. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="name">A name to associate with the instance. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <param name="fileNameExtensions">A semicolon-delimited list of supported file name extensions.</param>
             <param name="flags">A value that selects options for the operation.</param>
             <remarks>

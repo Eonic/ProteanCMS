@@ -6,10 +6,10 @@
     </ContentTypeGroup>
    </ContentTypes>
   <ModuleTypes>
-	  <ModuleGroup name="Ecommerce controls" icon="fas fa-shopping-cart">
-		  <Module type="EcommerceListOrders" formPath="listorders" name="List Orders">List Orders [requires membership]</Module>
-          <Module type="VoucherList" formPath="voucherlist" name="List Vouchers">List Vouchers to purchase</Module>
-          <Module type="MyVouchers" formPath="voucherlist" name="My Vouchers">My Vouchers</Module>
+	  <ModuleGroup name="Ecommerce" icon="fas fa-shopping-cart">
+		  <Module type="EcommerceListOrders" formPath="listorders" name="List Orders" icon="fas fa-boxes-stacked">[requires membership]</Module>
+          <Module type="VoucherList" formPath="voucherlist" name="List Vouchers" icon="fas fa-ticket"></Module>
+          <Module type="MyVouchers" formPath="voucherlist" name="My Vouchers" icon="fas fa-ticket-simple"></Module>
 	  </ModuleGroup>
   </ModuleTypes>
 </PageLayouts>

@@ -420,16 +420,18 @@
             <xsl:attribute name="prefix">og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#</xsl:attribute>
           </xsl:otherwise>
         </xsl:choose>
-
-        <xsl:apply-templates select="." mode="metacharset"/>
-
-        <xsl:if test="$GoogleOptimizeID!=''">
-          <script src="https://www.googleoptimize.com/optimize.js?id={$GoogleOptimizeID}" cookie-consent="functionality">&#160;</script>
-        </xsl:if>
-        <xsl:if test="not(/Page/@adminMode) and Contents/Content[@name='metaRefresh']/node()!=''">
+        
+		<xsl:if test="not(/Page/@adminMode) and Contents/Content[@name='metaRefresh']/node()!=''">
           <meta http-equiv="refresh" content="0;URL='{Contents/Content[@name='metaRefresh']/node()}'" />
         </xsl:if>
-
+		  
+        <xsl:apply-templates select="." mode="metacharset"/>
+		<!-- common css -->
+        <xsl:apply-templates select="/Page" mode="headerCommonStyle"/>
+       
+      
+        
+		<xsl:apply-templates select="." mode="headerOnlyJS"/>
 
         <xsl:if test="$GoogleTagManagerID!=''">
 
@@ -444,6 +446,9 @@
           </script>
           <!-- End Google Tag Manager -->
 
+        </xsl:if>
+		  <xsl:if test="$GoogleOptimizeID!=''">
+          <script src="https://www.googleoptimize.com/optimize.js?id={$GoogleOptimizeID}" cookie-consent="functionality">&#160;</script>
         </xsl:if>
         <xsl:if test="$PayPalTagManagerID!=''">
           <!-- PayPal BEGIN -->
@@ -504,9 +509,8 @@
         <xsl:apply-templates select="/Page/Contents/Content[@type='FeedControl']" mode="feedLinks"/>
         <xsl:apply-templates select="//Content[@rss and @rss!='false']" mode="feedLinks"/>
 
-        <!-- common css -->
-        <xsl:apply-templates select="/Page" mode="headerCommonStyle"/>
-        <xsl:apply-templates select="." mode="headerOnlyJS"/>
+     
+        <!--<xsl:apply-templates select="." mode="headerOnlyJS"/>-->
         <xsl:if test="$ScriptAtBottom!='on' and not($adminMode)">
           <xsl:apply-templates select="." mode="js"/>
         </xsl:if>
@@ -525,7 +529,11 @@
         <xsl:apply-templates select="." mode="criticalPathCSS"/>
       </xsl:otherwise>
     </xsl:choose>
+   <xsl:apply-templates select="Contents/Content" mode="headerOnlyContentCSS"/>
+  
   </xsl:template>
+	
+	
 
   <xsl:template match="Page" mode="google-ga4-config-params">
     <!-- for overloading on specific actions -->
@@ -616,6 +624,7 @@
 
   <xsl:template match="Page" mode="headerOnlyJS">
     <xsl:apply-templates select="Contents/Content" mode="headerOnlyContentJS"/>
+  
   </xsl:template>
 
   <xsl:template match="Content" mode="opengraph-namespace">
@@ -801,6 +810,9 @@
 
   <xsl:template match="Content" mode="headerOnlyContentJS">
   </xsl:template>
+	
+   <xsl:template match="Content" mode="headerOnlyContentCSS">
+   </xsl:template>
 
   <xsl:template match="Content" mode="contentJS">
   </xsl:template>

@@ -465,7 +465,7 @@
 			<div class="footer-inner">
 				<div class="clearfix footer-main">
 					<div class="{$containerClass}">
-						<xsl:if test="Menu/MenuItem/MenuItem[@name='Footer']/MenuItem and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
+						<!--<xsl:if test="Menu/MenuItem/MenuItem[@name='Footer']/MenuItem and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
 							<div class="footer-nav-wrapper" role="navigation">
 								<ul class="nav footer-nav">
 									<xsl:for-each select="Menu/MenuItem/MenuItem[@name='Footer']/MenuItem[not(DisplayName/@exclude='true')]">
@@ -477,7 +477,7 @@
 									</xsl:for-each>
 								</ul>
 							</div>
-						</xsl:if>
+						</xsl:if>-->
 						<div id="main-footer">
 							<xsl:apply-templates select="/Page" mode="addModule">
 								<xsl:with-param name="position">main-footer</xsl:with-param>
