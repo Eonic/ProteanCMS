@@ -35,6 +35,7 @@ using Protean.Providers.Payment;
 using System.Windows.Shapes;
 using System.Data.SqlClient;
 using Protean.Models;
+using System.Windows.Controls;
 
 namespace Protean
 {
@@ -3611,6 +3612,7 @@ namespace Protean
                                     prodCatElmt.SetAttribute("ids", Ids);
                                     oTempInstance.AppendChild(prodCatElmt);
                                 }
+                                AddPageSpecs(ref myWeb.mnPageId,ref oTempInstance);
                             }
                         }
                         else
@@ -3778,6 +3780,25 @@ namespace Protean
                         }
                         else
                         {
+
+                            XmlElement myInstance = base.Instance;
+                            // if product
+                            string sProductTypes = "Product,SKU,Ticket";
+                            if (myWeb.Features.ContainsKey("Subscriptions"))
+                            {
+                                sProductTypes = sProductTypes + ",Subscription";
+                            }
+                            if (!string.IsNullOrEmpty(this.myWeb.moConfig["ProductTypes"]))
+                            {
+                                sProductTypes = this.myWeb.moConfig["ProductTypes"];
+                            }
+                            sProductTypes = sProductTypes.Trim().TrimEnd(',') + ",";
+                            if (sProductTypes.Contains(cContentSchemaName + ","))
+                            {
+                                AddPageSpecs(ref myWeb.mnPageId, ref myInstance);
+                                this.bProcessRepeats = true;
+                                this.LoadInstance(myInstance);
+                            }
 
                             if (this.goSession["oContentInstance"] != null)
                             {
@@ -4464,6 +4485,42 @@ namespace Protean
                     {
                         stdTools.returnException(ref this.myWeb.msException, mcModuleName, "addInput", ex, "", "", gbDebug);
                         return default;
+                    }
+                }
+
+                public void AddPageSpecs(ref int nPgId, ref XmlElement Instance) {
+
+                    if (Instance.SelectSingleNode("descendant-or-self::Specs") != null) { 
+
+                        Protean.Cms myCMS = new Protean.Cms(myWeb.moCtx);
+                        myCMS.InitializeVariables();
+                        myCMS.mnPageId = nPgId;
+                        myCMS.ibIndexMode = true;
+                        myCMS.mbAdminMode = false;
+                        XmlDocument myPageXml = myCMS.GetPageXML();
+
+                        XmlElement SpecsElmt = myPageXml.CreateElement("Specs");
+                        foreach (XmlElement SpecElmt in myPageXml.SelectNodes("descendant-or-self::Spec"))
+                        {
+                            string name = SpecElmt.GetAttribute("name");
+                            if (name != "")
+                            {
+                                if (SpecsElmt.SelectSingleNode($"Spec[@name='{name}']") == null)
+                                {
+                                    SpecElmt.InnerText = "";
+                                    XmlElement existingSpec = (XmlElement)Instance.SelectSingleNode($"Spec[@name='{name}']");
+                                    if (existingSpec != null)
+                                    {
+                                        SpecElmt.InnerText = existingSpec.InnerText;
+                                    }
+                                    SpecsElmt.AppendChild(SpecElmt);
+                                }
+                            }
+                        }
+
+                        foreach (XmlNode InstanceSpecs in Instance.SelectNodes("descendant-or-self::Specs")){
+                            InstanceSpecs.InnerXml = SpecsElmt.InnerXml;
+                        }
                     }
                 }
 
