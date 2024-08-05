@@ -1061,7 +1061,43 @@ namespace Protean
 
 
             }
+            public XmlElement GetSpecsOnPageItems(string pageId, string artId) {
+                try {
 
+                    int nPgId = Convert.ToInt16(pageId);
+                  
+
+                    Protean.Cms myCMS = new Protean.Cms(myWeb.moCtx);
+                    myCMS.InitializeVariables();
+                    myCMS.mnPageId = nPgId;
+                    myCMS.ibIndexMode = true;
+                    myCMS.mbAdminMode = false;
+                    XmlDocument myPageXml = myCMS.GetPageXML();
+
+                    XmlElement grpElmt = myPageXml.CreateElement("group");
+                    foreach (XmlElement SpecElmt in myPageXml.SelectNodes("descendant-or-self::Spec")) {
+                        string name  = SpecElmt.GetAttribute("name");
+                        if (name != "") {                       
+                            if (grpElmt.SelectSingleNode($"Spec[@name='{name}']") == null){
+                                SpecElmt.InnerText = "";
+                                grpElmt.AppendChild(SpecElmt);
+                            }
+                        }
+                    }
+
+                    if (artId != "") { 
+                    
+                    
+                    };
+
+
+                    return grpElmt;
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+    }
             public string GetDirIdFromFref(string fRef)
             {
 
