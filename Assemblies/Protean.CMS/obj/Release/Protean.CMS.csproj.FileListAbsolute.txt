@@ -91,6 +91,10 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Release\Protean.CMS.cspro
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Release\Protean..4E1E49F9.Up2Date
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Release\ProteanCMS.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Release\ProteanCMS.pdb
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.OpenXml.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.OpenXml.Framework.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.OpenXml.xml
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.OpenXml.Framework.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Magick.Native-Q8-arm64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Magick.Native-Q8-x64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Magick.Native-Q8-x86.dll
@@ -188,7 +192,3 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Release\Protean.CMS.cspro
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Release\Protean..4E1E49F9.Up2Date
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Release\ProteanCMS.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Release\ProteanCMS.pdb
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.OpenXml.dll
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.OpenXml.Framework.dll
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.OpenXml.xml
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.OpenXml.Framework.xml

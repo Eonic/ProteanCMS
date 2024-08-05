@@ -1,0 +1,11 @@
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\bin\x64\Release\ProteanCMSInstallActions.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\bin\x64\Release\ProteanCMSInstallActions.CA.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\bin\x64\Release\Microsoft.Deployment.WindowsInstaller.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\bin\x64\Release\Microsoft.Web.Administration.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\bin\x64\Release\Newtonsoft.Json.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\bin\x64\Release\Newtonsoft.Json.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\bin\x64\Release\Microsoft.Deployment.WindowsInstaller.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\obj\x64\Release\ProteanCMS.Installer.Actions.vbproj.AssemblyReference.cache
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\obj\x64\Release\ProteanCMS.Installer.Actions.vbproj.CoreCompileInputs.cache
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\obj\x64\Release\ProteanC.C7065053.Up2Date
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\obj\x64\Release\ProteanCMSInstallActions.dll
