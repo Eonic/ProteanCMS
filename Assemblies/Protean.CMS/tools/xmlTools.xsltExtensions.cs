@@ -2034,6 +2034,23 @@ namespace Protean
                 return null;
             }
 
+            public object evaluateXpathObj(XPathNodeIterator nodes, string xpath)
+            {
+                try
+                {
+                    while (nodes.MoveNext())
+                    {
+                        var n = nodes.Current as XPathNavigator;
+                        return n.Evaluate(xpath);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return "Error - Not Deleted" + ex.Message;
+                }
+                return null;
+            }
+
             public string DeleteContent(string nContentId)
             {
                 try
