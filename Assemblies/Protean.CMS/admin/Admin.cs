@@ -4017,7 +4017,9 @@ namespace Protean
                             oConvert.Convert();
                             if (oConvert.State == Tools.Conversion.Status.Succeeded)
                             {
-                                XmlDocument outputXml = (XmlDocument)oConvert.Output;
+                                // XmlDocument outputXml = (XmlDocument)oConvert.Output; 
+                                XmlElement outputElmt = (XmlElement)oConvert.Output;
+                                XmlDocument outputXml = outputElmt.OwnerDocument;
                                 oImportXml.LoadXml(outputXml.OuterXml);
                             }
                             else
