@@ -10,7 +10,7 @@ Imports System.Web.Management
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.1.19.0"
+    Public Shared ewAssemblyVersion As String = "6.1.21.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.1.0.0"
     Public Shared bundleAssemblyVersion As String = "1.14.1.0"
     Public Shared bundleLessAssemblyVersion As String = "1.14.0.0"
@@ -85,9 +85,9 @@ Public Class CustomActions
 
         Try
 
-            ' System.Diagnostics.Debugger.Launch()
+            '  System.Diagnostics.Debugger.Launch()
 
-            ' MessageBox.Show("Please attach a debugger.")
+            '  MessageBox.Show("Please attach a debugger.")
 
             'Edit the ApplicationHost.config in 
             'no edits required right now.
@@ -95,16 +95,16 @@ Public Class CustomActions
             'Edit the machine level web.Config to include...
 
             Dim machineConfig As System.Configuration.Configuration = System.Web.Configuration.WebConfigurationManager.OpenMachineConfiguration()
-            Dim FilePath As String = machineConfig.FilePath
-            Dim FilePath64 As String = machineConfig.FilePath.Replace("Framework", "Framework64")
+            Dim FilePath As String = machineConfig.FilePath.Replace("Framework64", "Framework")
+            Dim FilePath64 As String = machineConfig.FilePath
 
             Dim machineWebConfig As System.Configuration.Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration(Nothing)
 
             Dim WebFilePaths(1) As String
-            Dim errstr As String = "Success"
+            Dim errstr As String = "Successful Install " & Now() & vbCrLf
 
-            WebFilePaths(0) = machineWebConfig.FilePath
-            WebFilePaths(1) = machineWebConfig.FilePath.Replace("Framework", "Framework64")
+            WebFilePaths(0) = machineWebConfig.FilePath.Replace("Framework64", "Framework")
+            WebFilePaths(1) = machineWebConfig.FilePath
 
             'Dim webConfig64 As System.Configuration.Configuration = WebConfigurationManager.OpenMappedWebConfiguration(webConfigFile64, Nothing)
             Dim WebFilePath As String

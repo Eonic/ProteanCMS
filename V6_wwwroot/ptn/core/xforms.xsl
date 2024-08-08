@@ -307,7 +307,9 @@
 		</div>
 	</xsl:template>
 
-
+	
+	
+	
 	<!-- -->
 	<!-- ========================== GROUP In Columns ========================== -->
 	<xsl:template match="group[(contains(@class,'2col') or contains(@class,'2Col'))]" mode="xform">
@@ -1123,8 +1125,8 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
-			<div class="rptInsert">
-				<button type="submit" name="insert:{@bind}" value="{./parent::trigger/label/node()}" class="btn btn-custom {$class}">
+			<div class="rptInsert clearfix">
+				<button type="submit" name="insert:{@bind}" value="{./parent::trigger/label/node()}" class="btn btn-custom {$class} float-end">
 					<i class="fa {$icon} fa-white">
 						<xsl:text> </xsl:text>
 					</i>

@@ -1061,7 +1061,43 @@ namespace Protean
 
 
             }
+            public XmlElement GetSpecsOnPageItems(string pageId, string artId) {
+                try {
 
+                    int nPgId = Convert.ToInt16(pageId);
+                  
+
+                    Protean.Cms myCMS = new Protean.Cms(myWeb.moCtx);
+                    myCMS.InitializeVariables();
+                    myCMS.mnPageId = nPgId;
+                    myCMS.ibIndexMode = true;
+                    myCMS.mbAdminMode = false;
+                    XmlDocument myPageXml = myCMS.GetPageXML();
+
+                    XmlElement grpElmt = myPageXml.CreateElement("group");
+                    foreach (XmlElement SpecElmt in myPageXml.SelectNodes("descendant-or-self::Spec")) {
+                        string name  = SpecElmt.GetAttribute("name");
+                        if (name != "") {                       
+                            if (grpElmt.SelectSingleNode($"Spec[@name='{name}']") == null){
+                                SpecElmt.InnerText = "";
+                                grpElmt.AppendChild(SpecElmt);
+                            }
+                        }
+                    }
+
+                    if (artId != "") { 
+                    
+                    
+                    };
+
+
+                    return grpElmt;
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+    }
             public string GetDirIdFromFref(string fRef)
             {
 
@@ -1475,6 +1511,10 @@ namespace Protean
             {
                 string newFilepath = "";
                 string cProcessInfo = "Resizing - " + cVirtualPath;
+                string awaitingImgPath = "/ewcommon/images/awaiting-image-thumbnail.gif";
+                if (this.myWeb.bs5)
+                    awaitingImgPath = "/ptn/images/awaiting-image-thumbnail.gif";
+
                 try
                 {
                     System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
@@ -1620,7 +1660,7 @@ namespace Protean
                     else
                     {
                         // PerfMon.Log("xmlTools", "ResizeImage - End")
-                        return "/ewcommon/images/awaiting-image-thumbnail.gif";
+                        return awaitingImgPath;
                     }
                 }
                 catch (Exception ex)
@@ -1629,14 +1669,23 @@ namespace Protean
                     if ((myWeb.moConfig["Debug"]).ToLower() == "on")
                     {
                         stdTools.reportException(ref myWeb.msException, "xmlTools.xsltExtensions", "ResizeImage2", ex, vstrFurtherInfo: cProcessInfo);
-                        return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" + ex.InnerException.Message + " - " + ex.Message + " - " + ex.StackTrace;
+                        return awaitingImgPath + "?error=" + ex.InnerException.Message + " - " + ex.Message + " - " + ex.StackTrace;
                     }
                     else
                     {
-                        return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" + ex.Message;
+                        return awaitingImgPath + "error=" + ex.Message;
                     }
                 }
             }
+
+            public string CreateWebP(string cVirtualPath, string sForceCheck)
+            {
+                Boolean bForceCheck = false;
+                if (sForceCheck.ToLower().Contains("true"))
+                { bForceCheck = true; }
+                return CreateWebP(cVirtualPath, bForceCheck);
+            }
+
             public string CreateWebP(string cVirtualPath, bool forceCheck)
             {
                 string cProcessInfo = string.Empty;
@@ -1646,7 +1695,10 @@ namespace Protean
 
                     if (string.IsNullOrEmpty(cVirtualPath))
                     {
-                        return "/ewcommon/images/awaiting-image-thumbnail.gif";
+                        string awaitingImgPath = "/ewcommon/images/awaiting-image-thumbnail.gif";
+                        if (this.myWeb.bs5)
+                            awaitingImgPath = "/ptn/images/awaiting-image-thumbnail.gif";
+                        return awaitingImgPath;
                     }
                     else
                     {
@@ -1973,6 +2025,23 @@ namespace Protean
                     {
                         var n = nodes.Current as XPathNavigator;
                         return n.Evaluate(xpath).ToString();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return "Error - Not Deleted" + ex.Message;
+                }
+                return null;
+            }
+
+            public object evaluateXpathObj(XPathNodeIterator nodes, string xpath)
+            {
+                try
+                {
+                    while (nodes.MoveNext())
+                    {
+                        var n = nodes.Current as XPathNavigator;
+                        return n.Evaluate(xpath);
                     }
                 }
                 catch (Exception ex)

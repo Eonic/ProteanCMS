@@ -43,11 +43,9 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Web.Optimi
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\WebActivatorEx.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\WebGrease.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Magick.NET-Q8-AnyCPU.dll
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Tinify.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Select.HtmlToPdf.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\TidyHTML5Managed.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Magick.NET.Core.dll
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\JsonWebTokens.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Protean.Tools.pdb
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Protean.Tools.dll.config
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\AdvancedStringBuilder.xml
@@ -93,6 +91,10 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Release\Protean.CMS.cspro
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Release\Protean..4E1E49F9.Up2Date
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Release\ProteanCMS.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Release\ProteanCMS.pdb
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.OpenXml.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.OpenXml.Framework.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.OpenXml.xml
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.OpenXml.Framework.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Magick.Native-Q8-arm64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Magick.Native-Q8-x64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Magick.Native-Q8-x86.dll

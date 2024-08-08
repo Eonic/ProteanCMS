@@ -110,7 +110,7 @@
 								<value>plain</value>
 							</item>
 						</select1>-->
-					<!--<group class="row">
+					<group class="row">
 							<group class="col-lg-6">
 								<select1 bind="cAlign" appearance="full" class="inline-items">
 									<label>Alignment</label>
@@ -129,7 +129,7 @@
 								</select1>
 							</group>
 							
-						</group>-->
+						</group>
 				</group>
 				<group class="row">
 					<div>All web links require the https:// prefix</div>

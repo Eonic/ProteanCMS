@@ -12116,7 +12116,7 @@
   </xsl:template>
 
   <xsl:template match="Page[@layout='WebStats']" mode="Admin">
-    <xsl:variable name="statsId" select="ew:EonicConfigValue('web','StatsID')"/>
+    <xsl:variable name="statsId" select="ew:PtnConfigValue('web','StatsID')"/>
 
     <xsl:choose>
       <xsl:when test="$statsId!=''">
@@ -12127,9 +12127,9 @@
         </script>
         <form name="statsform" action="http://stats.eonichost.co.uk/Login.aspx" method="post">
           <input type="hidden" name="shortcutLink" value="autologin" id="shortcutLink"/>
-          <input type="hidden" name="txtSiteID" id="txtSiteID" value="{ew:EonicConfigValue('web','StatsID')}"/>
-          <input type="hidden" name="txtUser" id="txtUser" value="{ew:EonicConfigValue('web','StatsUser')}"/>
-          <input type="hidden" name="txtPass" id="txtPass" value="{ew:EonicConfigValue('web','StatsPass')}"/>
+          <input type="hidden" name="txtSiteID" id="txtSiteID" value="{ew:PtnConfigValue('web','StatsID')}"/>
+          <input type="hidden" name="txtUser" id="txtUser" value="{ew:PtnConfigValue('web','StatsUser')}"/>
+          <input type="hidden" name="txtPass" id="txtPass" value="{ew:PtnConfigValue('web','StatsPass')}"/>
         </form>
         <p>
           <a href="JavaScript:GoToStats()">Sign in to your stats</a>
@@ -12148,7 +12148,7 @@
   </xsl:template>
 
   <xsl:template match="Page[@layout='WebStats']" mode="LayoutAdminJs">
-    <xsl:variable name="statsId" select="ew:EonicConfigValue('web','StatsID')"/>
+    <xsl:variable name="statsId" select="ew:PtnConfigValue('web','StatsID')"/>
 
     <xsl:choose>
       <xsl:when test="$statsId!=''">
@@ -12202,7 +12202,7 @@
 
 
   <!--<xsl:template match="Page[@layout='RavenFrameset']" mode="Admin">
-    <xsl:variable name="ravenUser" select="ew:EonicConfigValue('web','RavenUsername')"/>
+    <xsl:variable name="ravenUser" select="ew:PtnConfigValue('web','RavenUsername')"/>
 
     <xsl:choose>
       <xsl:when test="$ravenUser!=''">
@@ -12213,8 +12213,8 @@
         </script>
         <form name="statsform" action="https://eonic.raventools.com/tools/m/login/" method="post">
           <input type="hidden" name="ref" id="ref" value=""/>
-          <input type="hidden" name="username" id="username" value="{ew:EonicConfigValue('web','RavenUsername')}"/>
-          <input type="hidden" name="password" id="password" value="{ew:EonicConfigValue('web','RavenPassword')}"/>
+          <input type="hidden" name="username" id="username" value="{ew:PtnConfigValue('web','RavenUsername')}"/>
+          <input type="hidden" name="password" id="password" value="{ew:PtnConfigValue('web','RavenPassword')}"/>
         </form>
         <p>
           <a href="JavaScript:GoToStats()">Log into your stats</a>
