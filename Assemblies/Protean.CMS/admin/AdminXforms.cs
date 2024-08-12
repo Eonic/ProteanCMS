@@ -3683,6 +3683,9 @@ namespace Protean
                         {
                             cXformPath = "/xforms/content/" + cXformPath;
                         }
+                        
+                        // TS we want to do this later after we have loaded specs etc.
+                        base.bProcessRepeats = false;
 
                         if (!base.load(cXformPath + ".xml", this.myWeb.maCommonFolders))
                         {
@@ -3796,9 +3799,9 @@ namespace Protean
                             if (sProductTypes.Contains(cContentSchemaName + ","))
                             {
                                 AddPageSpecs(ref myWeb.mnPageId, ref myInstance);
+                            }
                                 this.bProcessRepeats = true;
                                 this.LoadInstance(myInstance);
-                            }
 
                             if (this.goSession["oContentInstance"] != null)
                             {
@@ -4508,7 +4511,7 @@ namespace Protean
                                 if (SpecsElmt.SelectSingleNode($"Spec[@name='{name}']") == null)
                                 {
                                     SpecElmt.InnerText = "";
-                                    XmlElement existingSpec = (XmlElement)Instance.SelectSingleNode($"Spec[@name='{name}']");
+                                    XmlElement existingSpec = (XmlElement)Instance.SelectSingleNode($"descendant-or-self::Spec[@name='{name}']");
                                     if (existingSpec != null)
                                     {
                                         SpecElmt.InnerText = existingSpec.InnerText;
