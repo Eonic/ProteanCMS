@@ -190,7 +190,7 @@ img {
 }
 
 
-.bannerless-page {
+.bannerless-page #mainLayout {
     padding-top: $top-padding;
 }
 
@@ -509,7 +509,7 @@ section.stretchBG {
 
 .intro-banner {
     margin-bottom: $spacer;
-    color: #fff;
+    color: contrast($no-banner-bg);
 
     @if $banner-flush != true {
         margin-top: $spacer;
@@ -549,7 +549,9 @@ section.stretchBG {
         color: color-contrast($no-banner-bg);
     }
 }
-
+.no-banner-layout {
+    padding-top: 3rem;
+}
 /*############### LIST ITEMS #################*/
 .date,
 .dtstamp {
