@@ -685,7 +685,7 @@ namespace Protean
                         if (myWeb.mnUserId == 0 & (myWeb.moRequest["ewCmd"] != "passwordReminder" & myWeb.moRequest["ewCmd"] != "ActivateAccount"))
                         {
 
-                            oXfmElmt = (XmlElement)oAdXfm.xFrmUserLogon();
+                            oXfmElmt = (XmlElement)oAdXfm.GetProviderXFrmUserLogon();
                             bool bAdditionalChecks = false;
                             if (Conversions.ToBoolean(!oAdXfm.valid))
                             {
