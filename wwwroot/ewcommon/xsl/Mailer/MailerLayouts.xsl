@@ -857,7 +857,7 @@
           <xsl:apply-templates select="." mode="displayThumbnail"/>
         </a>
 
-      </xsl:if>
+      </xsl:if>!!!
       <font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
         <xsl:if test="StartDate/node()!=''">
           <p class="date">
@@ -876,6 +876,22 @@
                 <span class="value-title" title="{EndDate/node()}T{translate(Times/@end,',',':')}"></span>
               </span>
             </xsl:if>
+			  <xsl:text>: </xsl:text>
+			  <strong>
+				  <xsl:if test="Times/@start!='' and Times/@start!=','">
+					  <span class="times">
+						  <span class="starttime">
+							  <xsl:value-of select="translate(Times/@start,',',':')"/>
+						  </span>
+						  <xsl:if test="Times/@end!='' and Times/@end!=','">
+							  <xsl:text> - </xsl:text>
+							  <span class="finstart">
+								  <xsl:value-of select="translate(Times/@end,',',':')"/>
+							  </span>
+						  </xsl:if>
+					  </span>
+				  </xsl:if>
+			  </strong>
           </p>
         </xsl:if>
         <xsl:if test="Location/Venue!=''">
