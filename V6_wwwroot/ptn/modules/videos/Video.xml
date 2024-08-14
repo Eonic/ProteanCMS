@@ -217,12 +217,12 @@
 								<value>HTML5</value>
 								<toggle case="cTypeHTML5" event="DOMActivate"/>
 							</item>
-							<!--<item>
+							<item>
 								<label>Vimeo</label>
 								<value>Vimeo</value>
 								<toggle case="cTypeVimeo" event="DOMActivate"/>
 							</item>
-							<item>
+							<!--<item>
 								<label>Legacy FLV player</label>
 								<value>Local</value>
 								<toggle case="cTypeLocal" event="DOMActivate"/>
@@ -277,7 +277,7 @@
 							</case>
 
 							<!-- Vimeo-->
-							<!--<case id="cTypeVimeo">
+							<case id="cTypeVimeo">
 								<input bind="cVimeoCode">
 									<label>Video code</label>
 									<help>
@@ -323,7 +323,7 @@
 										<value>true</value>
 									</item>
 								</select>
-							</case>-->
+							</case>
 
 							<!--HTML5-->
 							<case id="cTypeHTML5">
