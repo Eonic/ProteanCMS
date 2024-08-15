@@ -224,8 +224,8 @@ namespace Protean
                 }
 
 
-                [Obsolete("Don't use this routine any more. Use the new one in Membership Provider ", false)]
-                public virtual XmlElement xFrmUserLogon(string FormName = "UserLogon")
+               
+                public virtual XmlElement GetProviderXFrmUserLogon(string FormName = "UserLogon")
                 {
                     string cProcessInfo = "";
 
