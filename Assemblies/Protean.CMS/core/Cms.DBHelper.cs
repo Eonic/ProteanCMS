@@ -14396,7 +14396,7 @@ namespace Protean
                 }
             }
 
-            public int SetContact(ref Cms.Contact contact)
+            public int SetContact(ref Cms.modal.Contact contact)
             {
                 if (contact.nContactKey > 0)
                 {
@@ -14410,7 +14410,7 @@ namespace Protean
                 return default;
             }
 
-            public int AddContact(ref Cms.Contact contact)
+            public int AddContact(ref Cms.modal.Contact contact)
             {
                 PerfMonLog("DBHelper", "AddContact ([args])");
                 string sSql;
@@ -14431,7 +14431,7 @@ namespace Protean
                 }
             }
 
-            public bool UpdateContact(ref Cms.Contact contact)
+            public bool UpdateContact(ref Cms.modal.Contact contact)
             {
                 PerfMonLog("DBHelper", "UpdateContact ([args])");
                 string sSql;
