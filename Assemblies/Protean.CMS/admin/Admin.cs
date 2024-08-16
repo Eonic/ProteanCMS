@@ -5,7 +5,7 @@
 // $Author:      Trevor Spink (trevor@eonic.co.uk)
 // &Website:     www.eonic.co.uk
 // &Licence:     All Rights Reserved.
-// $Copyright:   Copyright (c) 2002 - 2006 Eonic Ltd.
+// $Copyright:   Copyright (c) 2002 - 2024 Trevor Spink Consultants Ltd.
 // ***********************************************************************
 
 using System;

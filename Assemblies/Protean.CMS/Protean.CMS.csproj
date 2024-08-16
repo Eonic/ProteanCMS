@@ -285,6 +285,7 @@
     <Compile Include="admin\AdminXforms.cs" />
     <Compile Include="api\rest.cs" />
     <Compile Include="api\soap.cs" />
+    <Compile Include="core\DBImport.cs" />
     <Compile Include="tools\AppStart.cs" />
     <Compile Include="bin\App_Start\DynamicImage.cs" />
     <Compile Include="Connected Services\AdminProxy\Reference.cs">

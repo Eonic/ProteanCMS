@@ -374,9 +374,9 @@ namespace Protean.Tools
             }
 
 
-            catch (Exception)
+            catch (Exception ex)
             {
-                //ex = null;
+                ex = null;
                 SetStatus(Status.Failed, StatusReason.Undefined);
             }
 
