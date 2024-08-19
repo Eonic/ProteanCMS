@@ -25,16 +25,16 @@
     <xsl:variable name="idsList">
       <xsl:apply-templates select="ms:node-set($contentList)/*" mode="idList" />
     </xsl:variable>
-	  <xsl:variable name="heading">
-		  <xsl:choose>
-			  <xsl:when test="@heading!=''">
-				  <xsl:value-of select="@heading"/>
-			  </xsl:when>
-			  <xsl:otherwise>h3</xsl:otherwise>
-		  </xsl:choose>
-	  </xsl:variable>
-    
-    <div class="Documents">
+    <xsl:variable name="heading">
+      <xsl:choose>
+        <xsl:when test="@heading!=''">
+          <xsl:value-of select="@heading"/>
+        </xsl:when>
+        <xsl:otherwise>h3</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <div class="clearfix DocumentList">
       <div class="cols{@cols}">
         <xsl:apply-templates select="." mode="contentColumns"/>
         <xsl:if test="@stepCount != '0'">
@@ -49,8 +49,8 @@
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief" >
           <xsl:with-param name="sortBy" select="@sortBy"/>
           <xsl:with-param name="showThumbnail" select="@showThumbnails"/>
-			<xsl:with-param name="heading" select="$heading"/>
-			<xsl:with-param name="title" select="@title"/>
+          <xsl:with-param name="heading" select="$heading"/>
+          <xsl:with-param name="title" select="@title"/>
         </xsl:apply-templates>
       </div>
       <xsl:if test="@allAsZip='on'">
@@ -76,8 +76,8 @@
   <xsl:template match="Content[@type='Document']" mode="displayBrief">
     <xsl:param name="sortBy"/>
     <xsl:param name="showThumbnail"/>
-	  <xsl:param name="heading"/>
-	  <xsl:param name="title"/>
+    <xsl:param name="heading"/>
+    <xsl:param name="title"/>
     <!-- documentBrief -->
     <xsl:variable name="parentURL">
       <xsl:apply-templates select="self::Content" mode="getHref">
@@ -96,125 +96,125 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-	  <div class="listItem documents">
-		  <xsl:apply-templates select="." mode="inlinePopupOptions">
-			  <xsl:with-param name="class" select="'listItem documents'"/>
-			  <xsl:with-param name="sortBy" select="$sortBy"/>
-		  </xsl:apply-templates>
-		  <div class="lIinner">
-			  <xsl:if test="$showThumbnail='true'">
-				  <xsl:apply-templates select="." mode="displayThumbnail"/>
-			  </xsl:if>
-			  <div class="media-inner">
-				  <xsl:choose>
-					  <xsl:when test="$title!='' and $heading!=''">
-						  <xsl:variable name="headingNo" select="substring-after($heading,'h')"/>
-						  <xsl:variable name="headingNoPlus" select="$headingNo + 1"/>
-						  <xsl:variable name="listHeading">
-							  <xsl:text>h</xsl:text>
-							  <xsl:value-of select="$headingNoPlus"/>
-						  </xsl:variable>
-						  <xsl:element name="{$listHeading}">
-							  <xsl:attribute name="class">
-								  <xsl:text>title</xsl:text>
-							  </xsl:attribute>
-							  <a rel="external">
-								  <xsl:if test="$GoogleAnalyticsUniversalID!=''">
-									  <xsl:attribute name="onclick">
-										  <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
-										  <xsl:value-of select="Title/node()"/>
-										  <xsl:text>');</xsl:text>
-									  </xsl:attribute>
-								  </xsl:if>
-								  <xsl:attribute name="href">
-									  <xsl:choose>
-										  <xsl:when test="contains(Path,'http://')">
-											  <xsl:value-of select="Path/node()"/>
-										  </xsl:when>
-										  <xsl:otherwise>
-											  <xsl:value-of select="$appPath"/>
-											  <xsl:text>ptn/tools/download.ashx?docId=</xsl:text>
-											  <xsl:value-of select="@id"/>
-										  </xsl:otherwise>
-									  </xsl:choose>
-								  </xsl:attribute>
-								  <xsl:attribute name="title">
-									  <!-- click here to download a copy of this document -->
-									  <xsl:call-template name="term2027" />
-								  </xsl:attribute>
-								  <xsl:value-of select="Title/node()"/>
-							  </a>
-						  </xsl:element>
-					  </xsl:when>
-					  <xsl:otherwise>
-						  <xsl:choose>
-							  <xsl:when test="$heading=''">
-								  <h3 class="title">
-									  <a rel="external">
-										  <xsl:if test="$GoogleAnalyticsUniversalID!=''">
-											  <xsl:attribute name="onclick">
-												  <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
-												  <xsl:value-of select="Title/node()"/>
-												  <xsl:text>');</xsl:text>
-											  </xsl:attribute>
-										  </xsl:if>
-										  <xsl:attribute name="href">
-											  <xsl:choose>
-												  <xsl:when test="contains(Path,'http://')">
-													  <xsl:value-of select="Path/node()"/>
-												  </xsl:when>
-												  <xsl:otherwise>
-													  <xsl:value-of select="$appPath"/>
-													  <xsl:text>ptn/tools/download.ashx?docId=</xsl:text>
-													  <xsl:value-of select="@id"/>
-												  </xsl:otherwise>
-											  </xsl:choose>
-										  </xsl:attribute>
-										  <xsl:attribute name="title">
-											  <!-- click here to download a copy of this document -->
-											  <xsl:call-template name="term2027" />
-										  </xsl:attribute>
-										  <xsl:value-of select="Title/node()"/>
-									  </a>
-								  </h3>
-							  </xsl:when>
-							  <xsl:otherwise>
-								  <xsl:element name="{$heading}">
-									  <xsl:attribute name="class">
-										  <xsl:text>title</xsl:text>
-									  </xsl:attribute>
-									  <a rel="external">
-										  <xsl:if test="$GoogleAnalyticsUniversalID!=''">
-											  <xsl:attribute name="onclick">
-												  <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
-												  <xsl:value-of select="Title/node()"/>
-												  <xsl:text>');</xsl:text>
-											  </xsl:attribute>
-										  </xsl:if>
-										  <xsl:attribute name="href">
-											  <xsl:choose>
-												  <xsl:when test="contains(Path,'http://')">
-													  <xsl:value-of select="Path/node()"/>
-												  </xsl:when>
-												  <xsl:otherwise>
-													  <xsl:value-of select="$appPath"/>
-													  <xsl:text>ptn/tools/download.ashx?docId=</xsl:text>
-													  <xsl:value-of select="@id"/>
-												  </xsl:otherwise>
-											  </xsl:choose>
-										  </xsl:attribute>
-										  <xsl:attribute name="title">
-											  <!-- click here to download a copy of this document -->
-											  <xsl:call-template name="term2027" />
-										  </xsl:attribute>
-										  <xsl:value-of select="Title/node()"/>
-									  </a>
-								  </xsl:element>
-							  </xsl:otherwise>
-						  </xsl:choose>
-					  </xsl:otherwise>
-				  </xsl:choose>
-				  <!--<h3 class="title">
+    <div class="listItem documents">
+      <xsl:apply-templates select="." mode="inlinePopupOptions">
+        <xsl:with-param name="class" select="'listItem documents'"/>
+        <xsl:with-param name="sortBy" select="$sortBy"/>
+      </xsl:apply-templates>
+      <div class="lIinner">
+        <xsl:if test="$showThumbnail='true'">
+          <xsl:apply-templates select="." mode="displayThumbnail"/>
+        </xsl:if>
+        <div class="media-inner">
+          <xsl:choose>
+            <xsl:when test="$title!='' and $heading!=''">
+              <xsl:variable name="headingNo" select="substring-after($heading,'h')"/>
+              <xsl:variable name="headingNoPlus" select="$headingNo + 1"/>
+              <xsl:variable name="listHeading">
+                <xsl:text>h</xsl:text>
+                <xsl:value-of select="$headingNoPlus"/>
+              </xsl:variable>
+              <xsl:element name="{$listHeading}">
+                <xsl:attribute name="class">
+                  <xsl:text>title</xsl:text>
+                </xsl:attribute>
+                <a rel="external">
+                  <xsl:if test="$GoogleAnalyticsUniversalID!=''">
+                    <xsl:attribute name="onclick">
+                      <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
+                      <xsl:value-of select="Title/node()"/>
+                      <xsl:text>');</xsl:text>
+                    </xsl:attribute>
+                  </xsl:if>
+                  <xsl:attribute name="href">
+                    <xsl:choose>
+                      <xsl:when test="contains(Path,'http://')">
+                        <xsl:value-of select="Path/node()"/>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <xsl:value-of select="$appPath"/>
+                        <xsl:text>ptn/tools/download.ashx?docId=</xsl:text>
+                        <xsl:value-of select="@id"/>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </xsl:attribute>
+                  <xsl:attribute name="title">
+                    <!-- click here to download a copy of this document -->
+                    <xsl:call-template name="term2027" />
+                  </xsl:attribute>
+                  <xsl:value-of select="Title/node()"/>
+                </a>
+              </xsl:element>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:choose>
+                <xsl:when test="$heading=''">
+                  <h3 class="title">
+                    <a rel="external">
+                      <xsl:if test="$GoogleAnalyticsUniversalID!=''">
+                        <xsl:attribute name="onclick">
+                          <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
+                          <xsl:value-of select="Title/node()"/>
+                          <xsl:text>');</xsl:text>
+                        </xsl:attribute>
+                      </xsl:if>
+                      <xsl:attribute name="href">
+                        <xsl:choose>
+                          <xsl:when test="contains(Path,'http://')">
+                            <xsl:value-of select="Path/node()"/>
+                          </xsl:when>
+                          <xsl:otherwise>
+                            <xsl:value-of select="$appPath"/>
+                            <xsl:text>ptn/tools/download.ashx?docId=</xsl:text>
+                            <xsl:value-of select="@id"/>
+                          </xsl:otherwise>
+                        </xsl:choose>
+                      </xsl:attribute>
+                      <xsl:attribute name="title">
+                        <!-- click here to download a copy of this document -->
+                        <xsl:call-template name="term2027" />
+                      </xsl:attribute>
+                      <xsl:value-of select="Title/node()"/>
+                    </a>
+                  </h3>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:element name="{$heading}">
+                    <xsl:attribute name="class">
+                      <xsl:text>title</xsl:text>
+                    </xsl:attribute>
+                    <a rel="external">
+                      <xsl:if test="$GoogleAnalyticsUniversalID!=''">
+                        <xsl:attribute name="onclick">
+                          <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
+                          <xsl:value-of select="Title/node()"/>
+                          <xsl:text>');</xsl:text>
+                        </xsl:attribute>
+                      </xsl:if>
+                      <xsl:attribute name="href">
+                        <xsl:choose>
+                          <xsl:when test="contains(Path,'http://')">
+                            <xsl:value-of select="Path/node()"/>
+                          </xsl:when>
+                          <xsl:otherwise>
+                            <xsl:value-of select="$appPath"/>
+                            <xsl:text>ptn/tools/download.ashx?docId=</xsl:text>
+                            <xsl:value-of select="@id"/>
+                          </xsl:otherwise>
+                        </xsl:choose>
+                      </xsl:attribute>
+                      <xsl:attribute name="title">
+                        <!-- click here to download a copy of this document -->
+                        <xsl:call-template name="term2027" />
+                      </xsl:attribute>
+                      <xsl:value-of select="Title/node()"/>
+                    </a>
+                  </xsl:element>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:otherwise>
+          </xsl:choose>
+          <!--<h3 class="title">
 					  <a rel="external">
 						  <xsl:if test="$GoogleAnalyticsUniversalID!=''">
 							  <xsl:attribute name="onclick">
@@ -236,64 +236,66 @@
 							  </xsl:choose>
 						  </xsl:attribute>
 						  <xsl:attribute name="title">
-							  --><!-- click here to download a copy of this document --><!--
+							  -->
+          <!-- click here to download a copy of this document -->
+          <!--
 							  <xsl:call-template name="term2027" />
 						  </xsl:attribute>
 						  <xsl:value-of select="Title/node()"/>
 					  </a>
 				  </h3>-->
-				  <xsl:if test="Body/node()!=''">
-					  <div class="description">
-						  <xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
-					  </div>
-				  </xsl:if>
-				  <p class="link">
-					  <a rel="external" class="docLink {substring-after(Path,'.')}icon">
-						  <xsl:attribute name="href">
-							  <xsl:choose>
-								  <xsl:when test="contains(Path,'http://')">
-									  <xsl:value-of select="Path/node()"/>
-								  </xsl:when>
-								  <xsl:otherwise>
-									  <xsl:value-of select="$appPath"/>
-									  <xsl:text>ptn/tools/download.ashx?docId=</xsl:text>
-									  <xsl:value-of select="@id"/>
-								  </xsl:otherwise>
-							  </xsl:choose>
-						  </xsl:attribute>
-						  <xsl:if test="$GoogleAnalyticsUniversalID!=''">
-							  <xsl:attribute name="onclick">
-								  <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
-								  <xsl:value-of select="Title/node()"/>
-								  <xsl:text>');</xsl:text>
-							  </xsl:attribute>
-						  </xsl:if>
-						  <xsl:choose>
-							  <xsl:when test="contains(Path,'http://')">
-								  <xsl:attribute name="title">
-									  <!-- click here to view this document -->
-									  <xsl:call-template name="term2027a" />
-								  </xsl:attribute>
-								  <xsl:value-of select="Path/node()"/>
-							  </xsl:when>
-							  <xsl:otherwise>
-								  <xsl:attribute name="title">
-									  <!-- click here to download a copy of this document -->
-									  <xsl:call-template name="term2027" />
-								  </xsl:attribute>
-								  <!--Download-->
-								  <xsl:call-template name="term2028" />
-								  <xsl:text>&#160;</xsl:text>
-								  <xsl:call-template name="getFileTypeName">
-									  <xsl:with-param name="extension" select="concat('.',substring-after(Path,'.'))"/>
-								  </xsl:call-template>
-							  </xsl:otherwise>
-						  </xsl:choose>
-					  </a>
-				  </p>
-			  </div>
-		  </div>
-	  </div>
+          <xsl:if test="Body/node()!=''">
+            <div class="description">
+              <xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
+            </div>
+          </xsl:if>
+          <p class="link">
+            <a rel="external" class="docLink {substring-after(Path,'.')}icon">
+              <xsl:attribute name="href">
+                <xsl:choose>
+                  <xsl:when test="contains(Path,'http://')">
+                    <xsl:value-of select="Path/node()"/>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:value-of select="$appPath"/>
+                    <xsl:text>ptn/tools/download.ashx?docId=</xsl:text>
+                    <xsl:value-of select="@id"/>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:attribute>
+              <xsl:if test="$GoogleAnalyticsUniversalID!=''">
+                <xsl:attribute name="onclick">
+                  <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
+                  <xsl:value-of select="Title/node()"/>
+                  <xsl:text>');</xsl:text>
+                </xsl:attribute>
+              </xsl:if>
+              <xsl:choose>
+                <xsl:when test="contains(Path,'http://')">
+                  <xsl:attribute name="title">
+                    <!-- click here to view this document -->
+                    <xsl:call-template name="term2027a" />
+                  </xsl:attribute>
+                  <xsl:value-of select="Path/node()"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:attribute name="title">
+                    <!-- click here to download a copy of this document -->
+                    <xsl:call-template name="term2027" />
+                  </xsl:attribute>
+                  <!--Download-->
+                  <xsl:call-template name="term2028" />
+                  <xsl:text>&#160;</xsl:text>
+                  <xsl:call-template name="getFileTypeName">
+                    <xsl:with-param name="extension" select="concat('.',substring-after(Path,'.'))"/>
+                  </xsl:call-template>
+                </xsl:otherwise>
+              </xsl:choose>
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
   </xsl:template>
-  
+
 </xsl:stylesheet>
