@@ -817,7 +817,7 @@ namespace Protean
                             {
                                 newPageId = (long)this.moDbHelper.checkPagePermission((long)this.mnPageId);
                             }
-                            else if (!this.moDbHelper.checkPageExist((long)this.mnPageId))
+                            else if (!this.moDbHelper.checkPageExist((long)this.mnPageId) && !this.mbAdminMode)
                             {
                                 // And we still need to check it exists
                                 newPageId = gnPageNotFoundId;
@@ -4756,8 +4756,8 @@ namespace Protean
         /// <param name="pageNumber"></param>
         /// <param name="distinct"></param>
         /// <param name="cShowSpecificContentTypes"></param>
-        /// 
-
+        /// <param name="bShowContentDetails"></param>
+        ///
 
         public void GetPageContentFromSelect(string sWhereSql, ref int nCount, ref XmlElement oContentsNode, ref XmlElement oPageDetail, bool bPrimaryOnly = false, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false, string cShowSpecificContentTypes = "", bool ignoreActiveAndDate = false, long nStartPos = 0L, long nItemCount = 0L, bool bShowContentDetails = true)
         {
@@ -4977,7 +4977,7 @@ namespace Protean
                     sSql = sSql + " ORDER BY ";
                     if (distinct)
                     {
-                        sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
+                        sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition, ";
                     }
                     sSql += cOrderBy;
 
