@@ -438,6 +438,7 @@ Original preload function has been kept but is unused.
         },
 
         checkChildren: function () {
+            var myTreeRoot = $('#MenuTree');
             $(this).find('li').each(function () {
                 var thisParentId = $(this).data('tree-parent');
 
