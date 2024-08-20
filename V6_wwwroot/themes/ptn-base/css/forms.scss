@@ -4,18 +4,28 @@ form.ewXform {
         margin-bottom: 1rem;
     }
 
-    .buttons {
-        label.required {
-            display: none;
-        }
+    .form-label {
+        margin-bottom: 0.3rem;
+    }
+}
 
-        button {
-            float: right;
-        }
+#Login {
+    form .principle {
+        float: right;
     }
 
-    .btn-custom {
-        @extend .#{$btn-style};
+    .morelink a {
+        @extend .btn-clean;
+    }
+}
+
+.EmailForm {
+    p.buttons {
+        float: right;
+
+        label.required {
+            @extend .visually-hidden;
+        }
     }
 }
 
