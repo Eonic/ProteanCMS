@@ -163,7 +163,9 @@
                             <xsl:apply-templates select="/" mode="getMainTitle" />
                           </div>
                           <xsl:if test="$currentPage/Description/node()">
-                            <xsl:apply-templates select="$currentPage/Description/node()" mode="cleanXhtml"/>
+                            <div class="image-banner-info">
+                              <xsl:apply-templates select="$currentPage/Description/node()" mode="cleanXhtml"/>
+                            </div>
                           </xsl:if>
                         </div>
                       </div>
@@ -186,7 +188,9 @@
                         </xsl:if>
                         <xsl:apply-templates select="/" mode="getMainTitle" />
                         <xsl:if test="$currentPage/Description/node()">
-                          <xsl:apply-templates select="$currentPage/Description/node()" mode="cleanXhtml"/>
+                          <div class="intro-banner-info">
+                            <xsl:apply-templates select="$currentPage/Description/node()" mode="cleanXhtml"/>
+                          </div>
                         </xsl:if>
                       </div>
                     </div>
