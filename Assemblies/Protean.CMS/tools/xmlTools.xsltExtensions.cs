@@ -1686,7 +1686,7 @@ namespace Protean
                 return CreateWebP(cVirtualPath, bForceCheck);
             }
 
-            public string CreateWebP(string cVirtualPath, bool forceCheck)
+            public string CreateWebP(string cVirtualPath, bool forceCheck,bool bChecked=false)
             {
                 string cProcessInfo = string.Empty;
 
