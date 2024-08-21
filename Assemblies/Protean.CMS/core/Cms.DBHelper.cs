@@ -1636,8 +1636,8 @@ namespace Protean
                                     if (nArtId > 0L)
                                     {
                                         sSql = "select nStructId from tblContentLocation where bPrimary = 1 and nContentId = " + nArtId;
-                                        sSql = sSql + " union ";
-                                        sSql = sSql + " select nStructId from tblContentLocation where bPrimary = 1 and nContentId IN(select cl.nContentParentId from tblContentRelation cl where cl.nContentChildId = " + nArtId + ")";
+                                        //sSql = sSql + " union ";
+                                        //sSql = sSql + " select nStructId from tblContentLocation where bPrimary = 1 and nContentId IN(select cl.nContentParentId from tblContentRelation cl where cl.nContentChildId = " + nArtId + ")";
 
 
                                         ods = GetDataSet(sSql, "Pages");
