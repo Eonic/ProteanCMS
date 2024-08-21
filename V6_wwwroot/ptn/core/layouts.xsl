@@ -1316,7 +1316,7 @@
       </xsl:when>
       <xsl:otherwise>
         <div id="mod_{@id}{$id}" class="card">
-          <xsl:apply-templates select="." mode="themeModuleExtras"/>
+         <xsl:apply-templates select="." mode="themeModuleExtras"/>
           <!-- define classes for box -->
           <xsl:attribute name="class">
             <xsl:text>card </xsl:text>
@@ -1348,12 +1348,13 @@
             <xsl:if test="@icon!='' or @icon-class!='' or @uploadIcon!=''">
               <xsl:text> module-with-icon</xsl:text>
             </xsl:if>
-            pos-<xsl:value-of select="@position"/>
+			  <xsl:text> pos-</xsl:text>
+            <xsl:value-of select="@position"/>
             <xsl:if test="@modAnim and @modAnim!=''">
               <xsl:text> moduleAnimate-invisible</xsl:text>
-            </xsl:if>
+            </xsl:if><!--
             <xsl:apply-templates select="." mode="hideScreens" />
-            <xsl:apply-templates select="." mode="marginBelow" />
+            <xsl:apply-templates select="." mode="marginBelow" />-->
             <!--<xsl:apply-templates select="." mode="themeModuleExtras"/>-->
           </xsl:attribute>
           <xsl:if test="@maxWidth!=''">
@@ -1403,23 +1404,22 @@
                 <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
               </div>
             </xsl:if>
-            <div class="card-body">
+			  <xsl:variable name="thisClass">
+				  <xsl:text>card-body</xsl:text>
+				  <xsl:if test="@title!=''">
+					  <xsl:text> card-body-w-head</xsl:text>
+				  </xsl:if>
+				  <xsl:if test="@linkText!='' and @link!=''">
+					  <xsl:text> card-body-w-footer</xsl:text>
+				  </xsl:if>
+			  </xsl:variable>
+            <div class="{$thisClass}">
               <xsl:if test="not(@title!='')">
                 <xsl:apply-templates select="." mode="inlinePopupOptions">
-                  <xsl:with-param name="class" select="'card-body'"/>
+                  <xsl:with-param name="class" select="$thisClass"/>
                 </xsl:apply-templates>
               </xsl:if>
-              <xsl:attribute name="class">
-                <xsl:text>card-body</xsl:text>
-                <xsl:if test="@title!=''">
-                  <xsl:text> card-body-w-head</xsl:text>
-                </xsl:if>
-                <xsl:if test="@linkText!='' and @link!=''">
-                  <xsl:text> card-body-w-footer</xsl:text>
-                </xsl:if>
-              </xsl:attribute>
               <xsl:apply-templates select="." mode="displayBrief"/>
-
               <xsl:text> </xsl:text>
             </div>
           </xsl:if>

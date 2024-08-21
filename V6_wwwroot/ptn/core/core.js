@@ -281,7 +281,7 @@ function disableButton(oBtn, disableMessage) {
 function displayErrorMessage() {
     if ($('#xFrmAlertModal').exists()) {
         var iconClassName = document.getElementById("errorIcon").className;
-        if ($('#xFrmAlertModal #errorMessage').html() == "&nbsp;") {
+        if ($('#xFrmAlertModal #errorMessage').html() == "&nbsp;" || arguments[2]==true) {
             $('#xFrmAlertModal #errorMessage').html('');
             $('#xFrmAlertModal #errorMessage').html(arguments[0]);
             $("#xFrmAlertModal #errorIcon").removeClass(iconClassName);

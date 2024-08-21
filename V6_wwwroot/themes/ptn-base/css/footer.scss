@@ -44,6 +44,26 @@
         }
     }
 
+    .moduleSocialLinks {
+        &.align-right {
+            text-align: right;
+        }
+
+        &.align-left {
+            text-align: left;
+        }
+
+        &.align-center {
+            text-align: center;
+        }
+    }
+
+    .socialLinks {
+        i {
+            font-size: 2.5rem;
+        }
+    }
+
     .dev-credit {
         background: #4e4d4d;
         padding: 0.5rem;

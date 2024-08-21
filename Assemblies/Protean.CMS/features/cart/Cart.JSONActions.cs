@@ -550,7 +550,7 @@ namespace Protean
                     try
                     {
                         int supplierId = (int)jObj["supplierId"];
-                        var contact = jObj["venue"].ToObject<Contact>();
+                        var contact = jObj["venue"].ToObject<modal.Contact>();
                         contact.cContactType = cContactType;
                         contact.cContactForeignRef = string.Format("SUP-{0}", supplierId);
 
@@ -749,7 +749,7 @@ namespace Protean
                 {
                     try
                     {
-                        var contact = new Cms.Contact();
+                        var contact = new Cms.modal.Contact();
                         int nId;
                         if (jObj != null)
                         {

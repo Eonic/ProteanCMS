@@ -1683,10 +1683,10 @@ namespace Protean
                 Boolean bForceCheck = false;
                 if (sForceCheck.ToLower().Contains("true"))
                 { bForceCheck = true; }
-                return CreateWebP(cVirtualPath, bForceCheck);
+                return CreateWebPAlt(cVirtualPath, bForceCheck);
             }
 
-            public string CreateWebP(string cVirtualPath, bool forceCheck,bool bChecked=false)
+            public string CreateWebPAlt(string cVirtualPath, bool forceCheck)
             {
                 string cProcessInfo = string.Empty;
 
@@ -1759,7 +1759,7 @@ namespace Protean
                 string cProcessInfo = string.Empty;
                 try
                 {
-                    return CreateWebP(cVirtualPath, false);
+                    return CreateWebPAlt(cVirtualPath, false);
                 }
                 catch (Exception ex)
                 {

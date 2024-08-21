@@ -24,6 +24,7 @@ header {
 
     a {
         color: $header-color;
+        text-decoration: none;
     }
 
     &.header-one-line {
@@ -45,6 +46,7 @@ header {
 
     &.navbar {
         padding: 0;
+        font-family: $navbar-font;
     }
 
     .header-inner {
@@ -93,11 +95,11 @@ header {
     right: 0;
     top: 0;
     padding: 10px 15px;
-    color: $navbar-light-color;
+    color: $navbar-light-color !important;
     z-index: 20;
 }
 
-.navbar-fixed-top {
+#mainTable .navbar-fixed-top {
     position: fixed;
     background: $header-bg;
     width: 100%;

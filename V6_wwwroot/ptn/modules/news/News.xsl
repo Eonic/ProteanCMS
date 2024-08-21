@@ -60,7 +60,7 @@
 			</xsl:apply-templates>
 			<div class="lIinner">
 				<xsl:if test="Images/img/@src!=''">
-					<a href="{$parentURL}" title="Read more about {Headline/node()}" class="list-image-link">
+					<a href="{$parentURL}" class="list-image-link">
 						<xsl:apply-templates select="." mode="displayThumbnail">
 							<xsl:with-param name="crop" select="$cropSetting" />
 							<xsl:with-param name="class">list-image img-fluid</xsl:with-param>

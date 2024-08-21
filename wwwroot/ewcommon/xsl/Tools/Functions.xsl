@@ -7951,7 +7951,7 @@
             <xsl:variable name="imageSize" select="ew:ImageSize($newSrc)"/>
 
             <xsl:variable name="image">
-              <img itemprop="image">
+              <img itemprop="image2">
                 <!-- SRC -->
                 <xsl:choose>
                   <xsl:when test="$lazy='on'">
