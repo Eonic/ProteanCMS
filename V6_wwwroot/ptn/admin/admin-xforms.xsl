@@ -823,7 +823,7 @@
 
 				</xsl:when>
 				<xsl:otherwise>
-					<a data-bs-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;ewCmd2=PathOnly&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$scriptRef}&amp;targetClass={value/*/@class}" data-bs-target="#modal-{$scriptRef}" class="btn btn-primary input-group-btn">
+					<a data-bs-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;ewCmd2=PathOnly&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$scriptRef}&amp;targetClass={value/*/@class}" data-bs-target="#modal-{$scriptRef}" class="btn btn-primary">
 						<i class="fas fa-image">
 							<xsl:text> </xsl:text>
 						</i><xsl:text> </xsl:text>Pick
