@@ -78,6 +78,7 @@ namespace Protean
                     this.cContactLastName = cContactLastName;
                     this.cContactEmail = cContactEmail;
                     this.cContactXml = cContactXml;
+                    this.cContactForeignRef = cContactForeignRef;
                 }
 
                 public int nContactKey;
