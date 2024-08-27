@@ -11045,7 +11045,11 @@ namespace Protean
 
                         // Build the form
                         base.NewFrm("MemberCodes");
-                        base.load("/xforms/directory/" + cFormName + ".xml", this.myWeb.maCommonFolders);
+                        string formPath = "/xforms/directory/" + cFormName + ".xml";
+                        if (myWeb.bs5) {
+                            formPath = "/admin/xforms/directory/" + cFormName + ".xml";
+                        }
+                        base.load(formPath, this.myWeb.maCommonFolders);
 
                         // Load the instance.
                         if (nCodesetKey > 0)
