@@ -600,6 +600,11 @@
 				<Action Order="6" Type="File" ObjectType="" ObjectName="/v5/6.0.72.0/spCheckFileInUse.sql"/>
 			</Sub3>
 		</Sub2>
+		<Sub2 Number="73">
+			<Sub3 Number="0">
+				<Action Order="1" Type="File" ObjectType="" ObjectName="/v5/6.0.73.0/tblCartContact.sql"/>
+			</Sub3>
+		</Sub2>
     </Sub1>
   </Version>
 </DatabaseUpgrade>
