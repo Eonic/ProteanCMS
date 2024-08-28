@@ -8878,25 +8878,6 @@ namespace Protean
                 }
             }
 
-            public int FindCartContactByForiegn(string ForiegnRef) // returns the id of the Contact Entry with the Foreign Ref
-            {
-                PerfMonLog("DBHelper", "FindCartContactByForiegn");
-                try
-                {
-
-                    string strSQL = "SELECT nContactKey FROM tblCartContact WHERE cContactForeignRef = '" + SqlFmt(ForiegnRef) + "'";
-                    int iID;
-                    iID = Conversions.ToInteger(ExeProcessSqlScalar(strSQL));
-                    return iID;
-                }
-                catch (Exception ex)
-                {
-                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "FindDirectoryByForiegn", ex, "AllowMigration"));
-                    return -1;
-
-                }
-            }
-
             public bool isParent(int pageId)
             {
                 PerfMonLog("DBHelper", "FindpageIsParent");
