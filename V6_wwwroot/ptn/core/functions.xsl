@@ -9474,6 +9474,15 @@
 		<xsl:value-of select="ew:RegexTest($text,$pattern)"/>
 	</xsl:template>
 
+	<xsl:template name="regexresult">
+		<xsl:param name="text"/>
+		<xsl:param name="pattern"/>
+		<xsl:param name="resultIndex"/>
+		<xsl:value-of select="ew:RegexResult($text,$pattern,$resultIndex)"/>
+	</xsl:template>
+
+
+
 	<!-- ## TRIM ##############################################################################################-->
 	<!--    ew:Trim(string) Function 
           Returns a string. Trims a string of any whitespace

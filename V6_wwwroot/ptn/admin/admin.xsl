@@ -267,8 +267,8 @@
   <xsl:template match="Page[@layout='Logon']" mode="Admin">
     <div class="adminTemplate container" id="template_Logon">
 		<span class="text-light logo-text login-logo">
-			<img src="/ptn/admin/skin/images/ptn-logo.png" alt="ProteanCMS" class="cms-logo-dd"/>
-			<strong>Protean</strong>CMS
+			<img src="/ptn/admin/skin/images/ptn-logo.png" alt="proteanCMS" class="cms-logo-dd"/>
+			<strong>protean</strong>CMS
 		</span>
 		<div class="card">
 			<div class="card-header">
@@ -695,8 +695,8 @@
         <div class="row">
           <div class="btn-group-spaced mb-3">
 			  <span class="text-light logo-text">
-				  <img src="/ptn/admin/skin/images/ptn-logo.png" alt="ProteanCMS" class="cms-logo-dd"/>
-					  <strong>Protean</strong>CMS
+				  <img src="/ptn/admin/skin/images/ptn-logo.png" alt="proteanCMS" class="cms-logo-dd"/>
+					  <strong>protean</strong>CMS
 				  </span>
 			  <xsl:for-each select="$page/AdminMenu/MenuItem/MenuItem">
 				  <a href="?ewCmd={@cmd}" class="btn btn-sm btn-primary">
@@ -755,7 +755,7 @@
                         </xsl:when>
                         <xsl:otherwise>
                           <h3>
-                            <strong>ProteanCMS</strong>
+                            <strong>proteanCMS</strong>
                           </h3>
                           <p>ProteanCMS is fully opensource.</p>
                           <a href="https://www.proteancms.com" target="_blank">For more information click here.</a>
