@@ -5680,7 +5680,9 @@
 				</xsl:attribute>
 			</xsl:for-each>
 			<xsl:apply-templates mode="cleanXhtml"/>
-			<xsl:text> </xsl:text>
+			<xsl:if test="not(node()!='')">
+				<xsl:text> </xsl:text>
+			</xsl:if>
 		</xsl:element>
 
 	</xsl:template>

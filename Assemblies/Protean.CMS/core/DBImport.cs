@@ -143,11 +143,12 @@ namespace Protean
                     // End If
 
                     XmlElement fRefNode = (XmlElement)importStateObj.oInstance.SelectSingleNode(cTableName + "/" + cTableFRef);
-                    fRef = fRefNode.InnerText;
-
-                    
+                    string fRefOld = "";
+                    if (fRefNode != null) {                     
+                        fRef = fRefNode.InnerText;
+                        fRefOld = fRefNode.GetAttribute("oldValue");
+                    }                    
                     long nId;
-                    string fRefOld = fRefNode.GetAttribute("oldValue");
                     if (!string.IsNullOrEmpty(fRef))
                     {
                         nId = modbhelper.getObjectByRef(cTableName, cTableKey, cTableFRef, oObjType, fRef);
