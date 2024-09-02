@@ -1115,7 +1115,7 @@ namespace Protean
                         }
                     case (objectTypes)15:
                         {
-                            return "cLocationForeignRef";
+                            return "cLocationForiegnRef";
                         }
                     case (objectTypes)16:
                         {

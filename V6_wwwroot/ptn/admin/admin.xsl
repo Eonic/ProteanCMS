@@ -367,7 +367,7 @@
     <xsl:variable name="moduleType" select="/Page/ContentDetail/descendant::Content/@moduleType"/>
     <a target="_new" id="userGuideURL">
       <xsl:attribute name="href">
-        <xsl:text>/ewcommon/tools/UserGuide.ashx?fRef=</xsl:text>
+        <xsl:text>/ptn/tools/UserGuide.ashx?fRef=</xsl:text>
         <xsl:choose>
           <xsl:when test="$ewCmd='EditContent' or $ewCmd='AddModule' or $ewCmd='AddContent'">
             <xsl:choose>

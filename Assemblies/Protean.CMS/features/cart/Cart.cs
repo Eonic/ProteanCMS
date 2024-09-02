@@ -3866,10 +3866,11 @@ namespace Protean
 
                                 // Default Shipping Country.
                                 string cDestinationCountry = moCartConfig["DefaultCountry"];
-                                cDestinationCountry = moCartConfig["DefaultCountry"];
+                                string cDestinationPostalCode = "";
                                 if (oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country") != null)
                                 {
                                     cDestinationCountry = oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country").InnerText;
+                                    cDestinationPostalCode = oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/PostalCode").InnerText;
                                 }
                                 if (!string.IsNullOrEmpty(cDestinationCountry))
                                 {
@@ -11283,7 +11284,21 @@ namespace Protean
                     return null;
                 }
             }
+
             public DataSet getValidShippingOptionsDS(string cDestinationCountry, double nAmount, long nQuantity, double nWeight, string cPromoCode, int ProductId)
+            {
+                try
+                {
+                    var dsShippingOption = getValidShippingOptionsDS(cDestinationCountry,"", nAmount, nQuantity, nWeight, cPromoCode, ProductId);
+                    return dsShippingOption;
+                }
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getValidShippingOptionsDS", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    return null;
+                }
+            }
+            public DataSet getValidShippingOptionsDS(string cDestinationCountry, string cDestinationPostalCode, double nAmount, long nQuantity, double nWeight, string cPromoCode, int ProductId)
             {
 
                 try
@@ -11310,6 +11325,26 @@ namespace Protean
 
                     // Add code for checking shipping group is included/Excluded for delievry methods
                     var PublishExpireDate = DateTime.Now;
+                    if (moCartConfig["ShippingPostcodes"] == "on") {
+                        var param = new Hashtable();
+                        param.Add("CartOrderId", mnCartId);
+                        param.Add("Amount", nAmount);
+                        param.Add("Quantity", nQuantity);
+                        param.Add("Weight", nWeight);
+                        param.Add("Currency", mcCurrency);
+                        param.Add("userId", userId);
+                        param.Add("AuthUsers", (object)Cms.gnAuthUsers);
+                        param.Add("NonAuthUsers", (object)Cms.gnNonAuthUsers);
+                        param.Add("CountryList", sCountryList);
+                        param.Add("PostalCode", System.Text.RegularExpressions.Regex.Split(cDestinationPostalCode, "(?m)^([A-Z0-9]{2,4})(?:\\s*[A-Z0-9]{3})?$")[1]);
+                        param.Add("dValidDate", PublishExpireDate);
+                        param.Add("PromoCode", cPromoCode);
+                        param.Add("ProductId", ProductId);
+                        return moDBHelper.GetDataSet("spGetValidShippingOptionsPostcodeVersion", "Option", "Shipping", false, param, CommandType.StoredProcedure);
+
+                    }
+                    else { 
+
 
                     if (myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure))
                     {
@@ -11404,6 +11439,7 @@ namespace Protean
                         // Go and collect the valid shipping options available for this order
                         return moDBHelper.GetDataSet(sSql + " order by opt.nDisplayPriority, nShippingTotal", "Option", "Shipping");
 
+                        }
                     }
                 }
 
