@@ -2852,6 +2852,10 @@ namespace Protean
 
                             GetModuleOptions(ref oSelElmt);
 
+                            var submitted = base.isSubmitted();
+                            var ewsubmit = !string.IsNullOrEmpty(this.goRequest.Form["ewsubmit.x"]);
+                            var cModuletype = !string.IsNullOrEmpty(this.goRequest.Form["cModuleType"]);
+
                             if (base.isSubmitted() | !string.IsNullOrEmpty(this.goRequest.Form["ewsubmit.x"]) | !string.IsNullOrEmpty(this.goRequest.Form["cModuleType"]))
                             {
                                 base.updateInstanceFromRequest();
