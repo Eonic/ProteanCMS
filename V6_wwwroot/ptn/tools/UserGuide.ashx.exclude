@@ -25,7 +25,7 @@ Public Class AjaxAdmin : Implements IHttpHandler, IRequiresSessionState
             xReader = oEwCom.GetPageXml(oEwCom.).CreateReader()
             xReader.MoveToContent()
             oEw.moPageXml.LoadXml(xReader.ReadOuterXml())
-            oEw.mcEwSiteXsl = "/ewcommon/xsl/admin/guidePage.xsl"
+            oEw.mcEwSiteXsl = "/ptn/admin/admin-guide.xsl"
             oEw.mbAdminMode = False
             oEw.bPageCache = False
             Dim styleFile As String = CStr(oEw.goServer.MapPath(oEw.mcEwSiteXsl))
