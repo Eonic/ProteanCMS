@@ -227,7 +227,12 @@ img {
 
 figure {
     margin: 0;
+
+    figcaption {
+        padding-top: 5px;
+    }
 }
+
 /*############### BACKGROUNDS #################*/
 section {
     background-size: cover;
