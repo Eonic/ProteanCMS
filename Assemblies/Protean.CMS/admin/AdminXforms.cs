@@ -6356,7 +6356,7 @@ namespace Protean
                         // load the directory item to be deleted
                         moDbHelper.moPageXml = this.moPageXML;
 
-                        base.NewFrm("EditDeliveryMethod");
+                        base.NewFrm("DeleteDeliveryMethod");
 
                         // Lets get the object
                         oElmt = this.moPageXML.CreateElement("sType");
@@ -7370,6 +7370,16 @@ namespace Protean
                         base.addInput(ref oGrp1Elmt, "nShipOptWeightMax", true, "Maximum Weight", "short");
                         XmlElement argoBindParent9 = null;
                         base.addBind("nShipOptWeightMax", "tblCartShippingMethods/nShipOptWeightMax", oBindParent: ref argoBindParent9, "false()");
+
+                        if (myWeb.moDbHelper.checkTableColumnExists("tblCartShippingMethods","nShipOptWeightOverageRate")) {
+                            base.addInput(ref oGrp1Elmt, "nShipOptWeightOverageUnit", true, "Overage Unit", "short");
+                            XmlElement oElmtOverageUnit = null;
+                            base.addBind("nShipOptWeightOverageUnit", "tblCartShippingMethods/nShipOptWeightOverageUnit", oBindParent: ref oElmtOverageUnit, "false()");
+
+                            base.addInput(ref oGrp1Elmt, "nShipOptWeightOverageRate", true, "Overage Rate", "short");
+                            XmlElement oElmtOverageRate = null;
+                            base.addBind("nShipOptWeightOverageRate", "tblCartShippingMethods/nShipOptWeightOverageRate", oBindParent: ref oElmtOverageRate, "false()");
+                        }
 
                         base.addInput(ref oGrp1Elmt, "nShipOptPriceMin", true, "Minimum Price", "short");
                         XmlElement argoBindParent10 = null;

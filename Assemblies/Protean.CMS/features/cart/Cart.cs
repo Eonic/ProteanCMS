@@ -3875,7 +3875,8 @@ namespace Protean
                                 if (!string.IsNullOrEmpty(cDestinationCountry))
                                 {
                                     // Go and collect the valid shipping options available for this order
-                                    var oDsShipOptions = getValidShippingOptionsDS(cDestinationCountry, total, quant, weight, cPromoCode);
+                                    int productId = 0;
+                                    var oDsShipOptions = getValidShippingOptionsDS(cDestinationCountry, cDestinationPostalCode, total, quant, weight, cPromoCode, productId);
                                     if (oDsShipOptions != null)
                                     {
                                         foreach (DataRow oRowSO in oDsShipOptions.Tables[0].Rows)
@@ -7322,6 +7323,7 @@ namespace Protean
                 double nAmount;
                 double nWeight;
                 string cDestinationCountry;
+                string cDestinationPostalCode = "";
                 var nShippingCost = default(double);
                 string cShippingDesc = "";
 
@@ -7394,11 +7396,12 @@ namespace Protean
                     else
                     {
                         cDestinationCountry = cartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country").InnerText;
+                        cDestinationPostalCode = cartElmt.SelectSingleNode("Contact[@type='Delivery Address']/PostalCode").InnerText;
                     }
                     if (string.IsNullOrEmpty(cDestinationCountry))
                         cDestinationCountry = moCartConfig["DefaultCountry"];
                     // Go and collect the valid shipping options available for this order
-                    ods = getValidShippingOptionsDS(cDestinationCountry, nAmount, nQuantity, nWeight);
+                    ods = getValidShippingOptionsDS(cDestinationCountry, cDestinationPostalCode, nAmount, nQuantity, nWeight,"",0);
 
                     var oOptXform = new Cms.xForm(ref myWeb.msException);
                     oOptXform.moPageXML = moPageXml;
@@ -11321,29 +11324,19 @@ namespace Protean
 
                     }
                     int argnIndex = 1;
-                    string sCountryList = getParentCountries(ref cDestinationCountry, ref argnIndex);
-
+                    string sCountryList = ""; 
                     // Add code for checking shipping group is included/Excluded for delievry methods
                     var PublishExpireDate = DateTime.Now;
-                    if (moCartConfig["ShippingPostcodes"] == "on") {
-                        var param = new Hashtable();
-                        param.Add("CartOrderId", mnCartId);
-                        param.Add("Amount", nAmount);
-                        param.Add("Quantity", nQuantity);
-                        param.Add("Weight", nWeight);
-                        param.Add("Currency", mcCurrency);
-                        param.Add("userId", userId);
-                        param.Add("AuthUsers", (object)Cms.gnAuthUsers);
-                        param.Add("NonAuthUsers", (object)Cms.gnNonAuthUsers);
-                        param.Add("CountryList", sCountryList);
-                        param.Add("PostalCode", System.Text.RegularExpressions.Regex.Split(cDestinationPostalCode, "(?m)^([A-Z0-9]{2,4})(?:\\s*[A-Z0-9]{3})?$")[1]);
-                        param.Add("dValidDate", PublishExpireDate);
-                        param.Add("PromoCode", cPromoCode);
-                        param.Add("ProductId", ProductId);
-                        return moDBHelper.GetDataSet("spGetValidShippingOptionsPostcodeVersion", "Option", "Shipping", false, param, CommandType.StoredProcedure);
+                    if (moCartConfig["ShippingPostcodes"] == "on" && cDestinationPostalCode != "") {
 
+                        string PostcodePrefix = System.Text.RegularExpressions.Regex.Split(cDestinationPostalCode, "(?m)^([A-Z0-9]{2,4})(?:\\s*[A-Z0-9]{3})?$")[1];
+                        sCountryList = getParentCountries(ref PostcodePrefix, ref argnIndex);
+                       
                     }
-                    else { 
+
+                    if (sCountryList == "") {
+                        sCountryList = getParentCountries(ref cDestinationCountry, ref argnIndex);
+                    }
 
 
                     if (myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure))
@@ -11440,7 +11433,7 @@ namespace Protean
                         return moDBHelper.GetDataSet(sSql + " order by opt.nDisplayPriority, nShippingTotal", "Option", "Shipping");
 
                         }
-                    }
+                    
                 }
 
                 catch (Exception ex)
