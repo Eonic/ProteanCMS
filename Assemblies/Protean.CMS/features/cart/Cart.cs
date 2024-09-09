@@ -3881,6 +3881,16 @@ namespace Protean
                                     {
                                         foreach (DataRow oRowSO in oDsShipOptions.Tables[0].Rows)
                                         {
+                                            shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"]));
+                                            double overageUnit = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptWeightOverageUnit"]));
+                                            double overageRate = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptWeightOverageRate"]));
+                                            if (overageUnit > 0) {
+                                                shipCost = shipCost + (overageUnit * overageRate);
+                                            }
+
+
+
+
                                             bool bCollection = false;
                                             if (!(oRowSO["bCollection"] is DBNull))
                                             {
@@ -3902,7 +3912,7 @@ namespace Protean
                                                     {
                                                         if (Convert.ToString(oRowSO["nShipOptKey"]) == Convert.ToString(ShippingOptionKey))
                                                         {
-                                                            shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"]));
+                                                           
                                                             oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig["DefaultCountry"]);
                                                             oCartElmt.SetAttribute("shippingType", ShippingOptionKey + "");
                                                             oCartElmt.SetAttribute("shippingCost", shipCost + "");
@@ -3916,7 +3926,6 @@ namespace Protean
                                                 {
                                                     if (Convert.ToString(oRowSO["nShipOptKey"]) == moCartConfig["DefaultShippingMethod"])
                                                     {
-                                                        shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"]));
                                                         oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig["DefaultCountry"]);
                                                         oCartElmt.SetAttribute("shippingType", moCartConfig["DefaultShippingMethod"] + "");
                                                         oCartElmt.SetAttribute("shippingCost", shipCost + "");
@@ -3930,7 +3939,6 @@ namespace Protean
                                                 {
                                                     if (oCartElmt.GetAttribute("freeShippingMethods").Contains(oCartElmt.GetAttribute("shippingType")))
                                                     {
-                                                        shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"]));
                                                         oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig["DefaultCountry"]);
                                                         oCartElmt.SetAttribute("shippingType", Conversions.ToString(Operators.ConcatenateObject(oRowSO["nShipOptKey"], "")));
                                                         oCartElmt.SetAttribute("shippingCost", shipCost + "");
@@ -3945,7 +3953,6 @@ namespace Protean
                                             }
                                             else if ((shipCost == -1 || Convert.ToDouble("0" + oRowSO["nShipOptCost"].ToString()) < shipCost) & bCollection == false)
                                             {
-                                                shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"]));
                                                 oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig["DefaultCountry"]);
                                                 oCartElmt.SetAttribute("shippingType", Conversions.ToString(Operators.ConcatenateObject(oRowSO["nShipOptKey"], "")));
                                                 oCartElmt.SetAttribute("shippingCost", shipCost + "");
