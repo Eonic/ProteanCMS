@@ -10238,6 +10238,11 @@ namespace Protean
 
             public XmlElement GetContentDetailXml(long nArtId = 0L)
             {
+                return GetContentDetailXml(nArtId, false);
+            }
+
+                public XmlElement GetContentDetailXml(long nArtId = 0L, Boolean noFilter = false)
+            {
                 PerfMonLog("Web", "GetContentDetailXml");
                 XmlElement oRoot;
                 XmlElement oElmt = null;
@@ -10260,9 +10265,10 @@ namespace Protean
                     if (nArtId > 0L)
                     {
                         sProcessInfo = "loading content" + nArtId;
-
-                        sFilterSql += GetStandardFilterSQLForContent();
-
+                        if (noFilter = false)
+                        {
+                            sFilterSql += GetStandardFilterSQLForContent();
+                        }
                         oRoot = moPageXml.CreateElement("ContentDetail");
                         sSql = "select c.nContentKey as id, cContentForiegnRef as ref, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentName as name, cContentSchemaName as type, cContentXmlDetail as content, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, a.nStatus as status from tblContent c ";
                         sSql += "inner join tblAudit a on c.nAuditId = a.nAuditKey  ";

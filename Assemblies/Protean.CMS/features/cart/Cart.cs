@@ -8488,8 +8488,10 @@ namespace Protean
                                         long nParentId = Conversions.ToLong(moDBHelper.ExeProcessSqlScalar(sSQL2));
                                         XmlNode argoNode7 = oProdXml.DocumentElement;
                                         var ItemParent = addNewTextNode("ParentProduct", ref argoNode7, "");
-
-                                        ItemParent.InnerXml = moDBHelper.GetContentDetailXml(nParentId).OuterXml;
+                                        XmlElement parentElmt = moDBHelper.GetContentDetailXml(nParentId,true);
+                                        if (parentElmt != null) {
+                                            ItemParent.InnerXml = parentElmt.OuterXml; 
+                                        }
                                     }
 
                                     oProdXml.DocumentElement.SetAttribute("type", cContentType);
