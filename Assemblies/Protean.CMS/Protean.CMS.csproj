@@ -412,12 +412,6 @@
   <ItemGroup>
     <WCFMetadataStorage Include="Connected Services\AdminProxy\" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Protean.Tools\Protean.Tools.csproj">
-      <Project>{12af6171-9aab-4c4d-a83b-85fe18a334c1}</Project>
-      <Name>Protean.Tools</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
