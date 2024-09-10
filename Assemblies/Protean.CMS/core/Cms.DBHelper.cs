@@ -10648,6 +10648,10 @@ namespace Protean
                     // map the feilds to columns
                     if (oDs != null)
                     {
+                        if (oDs.Tables[0].Columns.Count >= 13)
+                        {
+                            oDs.Tables[0].Columns.RemoveAt(12);
+                        }
 
                         oDs.Tables[0].Columns["id"].ColumnMapping = MappingType.Attribute;
 
