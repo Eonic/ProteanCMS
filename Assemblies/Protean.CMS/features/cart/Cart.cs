@@ -3884,8 +3884,10 @@ namespace Protean
                                     {
                                         foreach (DataRow oRowSO in oDsShipOptions.Tables[0].Rows)
                                         {
-                                            locationfound = oRowSO["cLocationNameShort"].ToString();
-
+                                            if (oRowSO.Table.Columns.Contains("cLocationNameShort"))
+                                            {
+                                                locationfound = oRowSO["cLocationNameShort"].ToString();
+                                            }
                                             shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"]));
                                         
                                             bool bCollection = false;
