@@ -4830,8 +4830,12 @@ namespace Protean
                 sSql = "SET ARITHABORT ON ";
                 sSql = sSql + " SELECT " + Interaction.IIf(distinct, "DISTINCT ", "") + sTopSql + " c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentForiegnRef as ref, cContentName as name, c.cContentSchemaName as type, ";
                 sSql = sSql + "CAST(" + cContentField + " AS varchar(max)) as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner,CL.cPosition as position  ";
-                
+
                 // if distinct flag true and order by clause is also enabled then  required to bring all this column in select query too. 
+                // column which you are passing here is either 
+                // - agreegate function
+               // -or an xpath/xquery too eg : return Convert(XML, cContentXmlBrief).value("/Content/StockCode[1]",'varchar(10)')
+
                 if (cAdditionalColumns != string.Empty)
                 {
                     sSql = sSql + cAdditionalColumns;
@@ -5071,7 +5075,7 @@ namespace Protean
 
 
 
-        public void GetPageContentFromSelectFilterPagination(ref int nCount, ref XmlElement oContentsNode, ref XmlElement oPageDetail, string sWhereSql, bool bPrimaryOnly = false, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false, string cShowSpecificContentTypes = "", bool ignoreActiveAndDate = false, long nStartPos = 0L, long nItemCount = 0L, bool bShowContentDetails = true, string cAdditionalColumn = "", string cAdminMode = "false")
+        public void GetPageContentFromSelectFilterPagination(ref int nCount, ref XmlElement oContentsNode, ref XmlElement oPageDetail, string sWhereSql, bool bPrimaryOnly = false, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false, string cShowSpecificContentTypes = "", bool ignoreActiveAndDate = false, long nStartPos = 0L, long nItemCount = 0L, bool bShowContentDetails = true, string cAdditionalColumns = "", string cAdminMode = "false")
         {
             this.PerfMon.Log("Web", "GetPageContentFromSelect");
             XmlElement oRoot;
@@ -5141,9 +5145,9 @@ namespace Protean
                 sSql = sSql + " SELECT " + Interaction.IIf(distinct, "DISTINCT ", "") + sTopSql + " c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentForiegnRef as ref, cContentName as name, c.cContentSchemaName as type, ";
                 sSql = sSql + "CAST(" + cContentField + " AS varchar(max)) as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner,CL.cPosition as position  ";
 
-                if (cAdditionalColumn != string.Empty)
+                if (cAdditionalColumns != string.Empty)
                 {
-                    sSql = sSql + cAdditionalColumn;
+                    sSql = sSql + cAdditionalColumns;
                 }
                 sSql += "FROM tblContent AS c INNER JOIN ";
                 sSql += "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN ";
@@ -8072,7 +8076,7 @@ namespace Protean
                             string cAdminMode = Convert.ToString(this.moSession["AdminMode"]);
                             XmlElement argoPageDetail = null;
                             int nCount = 0;
-                            this.GetPageContentFromSelectFilterPagination(ref nCount, oContentsNode: ref oPageElmt, oPageDetail: ref argoPageDetail, whereSQL, bIgnorePermissionsCheck: true, cShowSpecificContentTypes: this.moRequest["singleContentType"], ignoreActiveAndDate: false, nStartPos: (long)nStart, nItemCount: (long)nRows, distinct: true, cAdditionalJoins: cAdditionalJoins, cAdditionalColumn: cAdditionalColumn, cOrderBy: cOrderBySql, cAdminMode: cAdminMode);
+                            this.GetPageContentFromSelectFilterPagination(ref nCount, oContentsNode: ref oPageElmt, oPageDetail: ref argoPageDetail, whereSQL, bIgnorePermissionsCheck: true, cShowSpecificContentTypes: this.moRequest["singleContentType"], ignoreActiveAndDate: false, nStartPos: (long)nStart, nItemCount: (long)nRows, distinct: true, cAdditionalJoins: cAdditionalJoins, cAdditionalColumns: cAdditionalColumn, cOrderBy: cOrderBySql, cAdminMode: cAdminMode);
                         }
                         else
                         {

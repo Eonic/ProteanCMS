@@ -449,7 +449,7 @@ namespace Protean
                         bool bDistinct = true;
                         XmlElement oFilterElmt;
                         string cAdditionalJoins = string.Empty;
-                        string cAdditionalColumn = string.Empty;
+                        string cAdditionalColumns = string.Empty;
                         string cOrderBySql = string.Empty;
                         string parentPageId = string.Empty;
                         string formName = "ContentFilter";
@@ -654,7 +654,7 @@ namespace Protean
 
                                         {
                                             string cAlies = className.Replace("Filter", "");
-                                            cAdditionalColumn += "," + orderBySql.ToLower().Replace(",", "").Replace("asc", "").Replace("desc", "");
+                                            cAdditionalColumns += "," + orderBySql.ToLower().Replace(",", "").Replace("asc", "").Replace("desc", "");
                                             cAdditionalJoins += "inner join tblContentIndex cii" + cAlies + " on cii" + cAlies + ".nContentId=c.nContentKey inner join tblContentIndexDef cid" + cAlies;
                                             cAdditionalJoins += " on cii" + cAlies + ".nContentIndexDefinitionKey=cid" + cAlies + ".nContentIndexDefKey ";
                                             cAdditionalJoins += " and cid" + cAlies + ".cDefinitionName='" + cAlies + "'";
@@ -697,7 +697,7 @@ namespace Protean
                             if (whereSQL.ToLower().Trim().EndsWith(" and") == false)
                             {
                                 myWeb.moSession["FilterWhereCondition"] = whereSQL;
-                                myWeb.moSession["AdditionalColumn"] = cAdditionalColumn;
+                                myWeb.moSession["AdditionalColumn"] = cAdditionalColumns;
                                 myWeb.moSession["AdditionalJoins"] = cAdditionalJoins;
                                 myWeb.moSession["OrderBy"] = cOrderBySql;
                                 XmlElement argoPageDetail = null; int nCount = 0;
@@ -721,7 +721,7 @@ namespace Protean
                                 }
 
                                 myWeb.GetPageContentFromSelect(whereSQL, ref nCount, oContentsNode: ref oContentNode, oPageDetail: ref argoPageDetail,
-                                cShowSpecificContentTypes: cFilterTarget, bIgnorePermissionsCheck: true, distinct: bDistinct, cOrderBy: cOrderBySql, cAdditionalJoins: cAdditionalJoins, cAdditionalColumn: cAdditionalColumn);
+                                cShowSpecificContentTypes: cFilterTarget, bIgnorePermissionsCheck: true, distinct: bDistinct, cOrderBy: cOrderBySql, cAdditionalJoins: cAdditionalJoins, cAdditionalColumns: cAdditionalColumns);
 
                                 if (oContentNode.SelectNodes("Content[@type='Product']").Count == 0)
                                 {
