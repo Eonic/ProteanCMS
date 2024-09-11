@@ -22,6 +22,7 @@ using Lucene.Net.Analysis;
 using System.Web.UI.WebControls;
 using Lucene.Net.Search;
 using Lucene.Net.Support;
+using static QRCoder.PayloadGenerator;
 
 namespace Protean
 {
@@ -11346,7 +11347,7 @@ namespace Protean
                         sCountryList = getParentCountries(ref cDestinationCountry, ref argnIndex);
                     }
 
-
+                    DataSet oDS;
                     if (myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure))
                     {
                         // ' call stored procedure else existing code.
@@ -11365,7 +11366,7 @@ namespace Protean
                         param.Add("dValidDate", PublishExpireDate);
                         param.Add("PromoCode", cPromoCode);
                         param.Add("ProductId", ProductId);
-                        return moDBHelper.GetDataSet("spGetValidShippingOptions", "Option", "Shipping", false, param, CommandType.StoredProcedure);
+                        oDS = moDBHelper.GetDataSet("spGetValidShippingOptions", "Option", "Shipping", false, param, CommandType.StoredProcedure);
                     }
                     // End If
                     else
@@ -11438,36 +11439,53 @@ namespace Protean
                         // Build Form
 
                         // Go and collect the valid shipping options available for this order
-                        DataSet oDS;
-
-
-
-                        oDS = moDBHelper.GetDataSet(sSql + " order by opt.nDisplayPriority, nShippingTotal", "Option", "Shipping");
-                        foreach (DataRow oRow in oDS.Tables["Option"].Rows)
-                        {
-                            // Calculate any shipping cost overage
-                            double nShippingCost;
-                            nShippingCost = Conversions.ToDouble(oRow["nShippingTotal"]);
-                            nShippingCost = Conversions.ToDouble(Strings.FormatNumber(nShippingCost, 2, TriState.True, TriState.False, TriState.False));
-
-                            double overageUnit = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShipOptWeightOverageUnit"]));
-                            double overageRate = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShipOptWeightOverageRate"]));
-                            if (overageUnit > 0)
+                       oDS = moDBHelper.GetDataSet(sSql + " order by opt.nDisplayPriority, nShippingTotal", "Option", "Shipping");
+                    }
+                    if (oDS.Tables["Option"].Columns["cLocationNameShort"] != null) { 
+                            string overiddenLocations = "";                        
+                            foreach (DataRow oRow in oDS.Tables["Option"].Rows)
                             {
-                                double multiplier = 0;
-                                if (nWeight > Conversions.ToDouble(oRow["nShipOptWeightMax"]))
+                                // Calculate any shipping cost overage
+                                double nShippingCost;
+                                nShippingCost = Conversions.ToDouble(oRow["nShippingTotal"]);
+                                nShippingCost = Conversions.ToDouble(Strings.FormatNumber(nShippingCost, 2, TriState.True, TriState.False, TriState.False));
+
+                                double overageUnit = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShipOptWeightOverageUnit"]));
+                                double overageRate = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShipOptWeightOverageRate"]));
+                                if (overageUnit > 0)
                                 {
-                                    multiplier = Math.Ceiling(nWeight - Conversions.ToDouble(oRow["nShipOptWeightMax"]));
+                                    double multiplier = 0;
+                                    if (nWeight > Conversions.ToDouble(oRow["nShipOptWeightMax"]))
+                                    {
+                                        multiplier = Math.Ceiling(nWeight - Conversions.ToDouble(oRow["nShipOptWeightMax"]));
+                                    }
+                                    nShippingCost = nShippingCost + ((multiplier / overageUnit) * overageRate);
                                 }
-                                nShippingCost = nShippingCost + ((multiplier / overageUnit) * overageRate);
+                                oRow["nShippingTotal"] = nShippingCost;
+
+                                // TODO delete any parent relations /  or remove if allready have child
+                                string delLocation = oRow["cLocationNameShort"].ToString();
+                                if (overiddenLocations.Contains("'" + delLocation + "'") == false && sCountryList!="") {
+                                Int32 startPos = sCountryList.IndexOf(delLocation) + delLocation.Length + 1;
+                                Int32 endPos = sCountryList.Length - sCountryList.IndexOf(delLocation) - delLocation.Length - 1;
+                                overiddenLocations = sCountryList.Substring(startPos,endPos);
+                                }
                             }
-                            oRow["nShippingTotal"] = nShippingCost;
-                            
-                            // TODO delete any parent relations /  or remove if allready have child
+                            if (overiddenLocations != "") { 
+                                foreach (DataRow oRow in oDS.Tables["Option"].Rows)
+                                {
+                                    string delLocation = oRow["cLocationNameShort"].ToString();
+                                    if (overiddenLocations.Contains("'" + delLocation + "'"))
+                                    {
+                                        oRow.Delete();
+                                    }
+                                 }
+                            }
                         }
 
-                        return oDS;
-                        }
+                    oDS.AcceptChanges();
+                    return oDS;
+                       
                     
                 }
 
