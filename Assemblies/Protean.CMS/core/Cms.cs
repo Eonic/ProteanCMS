@@ -4759,7 +4759,7 @@ namespace Protean
         /// <param name="bShowContentDetails"></param>
         ///
 
-        public void GetPageContentFromSelect(string sWhereSql, ref int nCount, ref XmlElement oContentsNode, ref XmlElement oPageDetail, bool bPrimaryOnly = false, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false, string cShowSpecificContentTypes = "", bool ignoreActiveAndDate = false, long nStartPos = 0L, long nItemCount = 0L, bool bShowContentDetails = true, string cAdditionalColumn = "")
+        public void GetPageContentFromSelect(string sWhereSql, ref int nCount, ref XmlElement oContentsNode, ref XmlElement oPageDetail, bool bPrimaryOnly = false, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false, string cShowSpecificContentTypes = "", bool ignoreActiveAndDate = false, long nStartPos = 0L, long nItemCount = 0L, bool bShowContentDetails = true, string cAdditionalColumns = "")
         {
             this.PerfMon.Log("Web", "GetPageContentFromSelect");
             XmlElement oRoot;
@@ -4830,10 +4830,11 @@ namespace Protean
                 sSql = "SET ARITHABORT ON ";
                 sSql = sSql + " SELECT " + Interaction.IIf(distinct, "DISTINCT ", "") + sTopSql + " c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentForiegnRef as ref, cContentName as name, c.cContentSchemaName as type, ";
                 sSql = sSql + "CAST(" + cContentField + " AS varchar(max)) as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner,CL.cPosition as position  ";
-
-                if (cAdditionalColumn != string.Empty)
+                
+                // if distinct flag true and order by clause is also enabled then  required to bring all this column in select query too. 
+                if (cAdditionalColumns != string.Empty)
                 {
-                    sSql = sSql + cAdditionalColumn;
+                    sSql = sSql + cAdditionalColumns;
                 }
                 sSql += "FROM tblContent AS c INNER JOIN ";
                 sSql += "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN ";
@@ -4888,7 +4889,7 @@ namespace Protean
 
 
                         // Note : if we are checking permissions for a page, and we're not logged in, then we shouldn't check with the gnAuthUsers group
-                        // Ratehr, we should use the gnNonAuthUsers user group if it exists.
+                        // Rather, we should use the gnNonAuthUsers user group if it exists.
 
 
 
@@ -4979,10 +4980,15 @@ namespace Protean
 
                     if (distinct)
                     {
+                        // additional column have agreegate function and distinct flag is true then group by needs to eanble with default column
+                        // along with orderby clause
                         sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus,a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
                         sSql = sSql + " ORDER BY ";
                         sSql += cOrderBy;
 
+                        //this code is checking  if input cOrderby parameter is already contains nStatus field, then removing it from default column list
+                        // in order by clause.
+                        // else default column will have same columns.. 
                         if (cOrderBy.Contains("a.nStatus"))
                         {
                             sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
@@ -5002,7 +5008,8 @@ namespace Protean
                 }
                 else
                 {
-
+                    // additional column have agreegate function and distinct flag is true then group by needs to eanble with default column
+                    // along with orderby clause
                     if (distinct)
                     {
                         sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)),a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
@@ -5012,6 +5019,7 @@ namespace Protean
                     }
                     else
                     {
+                        //default behaviour
                         sSql = sSql + " ORDER BY";
                         sSql += "(SELECT NULL)";
                     }
@@ -5167,7 +5175,7 @@ namespace Protean
                     {
 
                         // Note : if we are checking permissions for a page, and we're not logged in, then we shouldn't check with the gnAuthUsers group
-                        // Ratehr, we should use the gnNonAuthUsers user group if it exists.
+                        // Rather, we should use the gnNonAuthUsers user group if it exists.
 
                         nAuthUserId = gnNonAuthUsers;
                         nAuthGroup = gnNonAuthUsers;
@@ -5476,7 +5484,7 @@ namespace Protean
                     {
 
                         // Note : if we are checking permissions for a page, and we're not logged in, then we shouldn't check with the gnAuthUsers group
-                        // Ratehr, we should use the gnNonAuthUsers user group if it exists.
+                        // Rather, we should use the gnNonAuthUsers user group if it exists.
 
                         nAuthUserId = gnNonAuthUsers;
                         nAuthGroup = gnNonAuthUsers;
