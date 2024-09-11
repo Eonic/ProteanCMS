@@ -6,7 +6,7 @@
   <!-- ## Variables for all EonicWeb XSLT   #######################################################   -->
 
   <!-- General node trees -->
-
+ 
   <xsl:variable name="page" select="/Page"/>
   <xsl:variable name="pageId" select="/Page/@id"/>
   <xsl:variable name="artId" select="number(concat(0,/Page/Request/QueryString/Item[@name='artid']))"/>
@@ -5552,6 +5552,8 @@
     </xsl:choose>
   </xsl:template>
 
+  
+    
   <xsl:template match="*" mode="reportHeader">
     <xsl:param name="sort"/>
     <xsl:param name="bSortFormMethod"/>
