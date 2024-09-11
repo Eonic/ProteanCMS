@@ -312,7 +312,10 @@ namespace Protean.Providers
 
             public override string GetFilterOrderByClause()
             {
-                return "";// , ci.nNumberValue asc ";
+
+                string cIndexDefinationName = "Price";
+                return " min(cii" + cIndexDefinationName + ".nNumberValue), ";
+
             }
 
         }
