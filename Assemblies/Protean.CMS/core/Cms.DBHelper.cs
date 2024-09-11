@@ -8,6 +8,10 @@
 // $Copyright:   Copyright (c) 2002 - 2024 Trevor Spink Consultants Ltd.
 // ***********************************************************************
 
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using Protean.Providers.Membership;
+using Protean.Providers.Messaging;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,10 +24,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web.Configuration;
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
-using Protean.Providers.Membership;
-using Protean.Providers.Messaging;
 using static Protean.Cms.dbImport;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
@@ -1684,68 +1684,68 @@ namespace Protean
                             }
                     }
 
-                   /// if (nArtId == default)
-                  ///  {
-                        sSql = "select nStructKey, nStructParId, nVersionParId, cVersionLang from tblContentStructure where (cStructName like '" + SqlFmt(sPath) + "' or cStructName like '" + SqlFmt(Strings.Replace(sPath, " ", "")) + "' or cStructName like '" + SqlFmt(Strings.Replace(sPath, " ", "-")) + "')";
+                    /// if (nArtId == default)
+                    ///  {
+                    sSql = "select nStructKey, nStructParId, nVersionParId, cVersionLang from tblContentStructure where (cStructName like '" + SqlFmt(sPath) + "' or cStructName like '" + SqlFmt(Strings.Replace(sPath, " ", "")) + "' or cStructName like '" + SqlFmt(Strings.Replace(sPath, " ", "-")) + "')";
 
-                        ods = GetDataSet(sSql, "Pages");
+                    ods = GetDataSet(sSql, "Pages");
 
-                        if (ods != null)
+                    if (ods != null)
+                    {
+                        if (ods.Tables["Pages"].Rows.Count == 1)
                         {
-                            if (ods.Tables["Pages"].Rows.Count == 1)
-                            {
-                                nPageId = Conversions.ToLong(ods.Tables["Pages"].Rows[Conversions.ToInteger("0")]["nStructKey"]);
-                            }
-                            // if there is just one page validate it
-                            else if (ods.Tables["Pages"].Rows.Count == 0)
-                            {
-                            }
+                            nPageId = Conversions.ToLong(ods.Tables["Pages"].Rows[Conversions.ToInteger("0")]["nStructKey"]);
+                        }
+                        // if there is just one page validate it
+                        else if (ods.Tables["Pages"].Rows.Count == 0)
+                        {
+                        }
 
-                            // do nothing nothing found
+                        // do nothing nothing found
 
-                            else
+                        else
+                        {
+                            foreach (DataRow oRow in ods.Tables["Pages"].Rows)
                             {
-                                foreach (DataRow oRow in ods.Tables["Pages"].Rows)
+                                // Debug.WriteLine(oRow.Item("nStructKey"))
+                                if (!(Conversions.ToInteger(Operators.ConcatenateObject("0", oRow["nVersionParId"])) == 0))
                                 {
-                                    // Debug.WriteLine(oRow.Item("nStructKey"))
-                                    if (!(Conversions.ToInteger(Operators.ConcatenateObject("0", oRow["nVersionParId"])) == 0))
+                                    // we have a language verion we need to behave differently to confirm id
+                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.mcPageLanguage, oRow["cVersionLang"], false)))
                                     {
-                                        // we have a language verion we need to behave differently to confirm id
-                                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.mcPageLanguage, oRow["cVersionLang"], false)))
+                                        nPageId = Conversions.ToLong(oRow["nStructKey"]);
+                                        break;
+                                    }
+                                }
+                                else
+                                {
+                                    int argnStep = Information.UBound(aPath) - 1;
+                                    if (recurseUpPathArray(Conversions.ToInteger(oRow["nStructParId"]), ref aPath, ref argnStep) == true)
+                                    {
+                                        if (bCheckPermissions)
+                                        {
+
+                                            // Check the permissions for the page - this will either return 0, the page id or a system page.
+                                            long checkPermissionPageId = checkPagePermission(Conversions.ToLong(oRow["nStructKey"]));
+
+                                            if (Conversions.ToBoolean(Operators.AndObject(checkPermissionPageId != 0L, Operators.OrObject(Operators.ConditionalCompareObjectEqual(oRow["nStructKey"], checkPermissionPageId, false), IsSystemPage(checkPermissionPageId)))))
+
+                                            {
+                                                nPageId = checkPermissionPageId;
+                                                break;
+                                            }
+                                        }
+                                        else
                                         {
                                             nPageId = Conversions.ToLong(oRow["nStructKey"]);
                                             break;
                                         }
                                     }
-                                    else
-                                    {
-                                        int argnStep = Information.UBound(aPath) - 1;
-                                        if (recurseUpPathArray(Conversions.ToInteger(oRow["nStructParId"]), ref aPath, ref argnStep) == true)
-                                        {
-                                            if (bCheckPermissions)
-                                            {
-
-                                                // Check the permissions for the page - this will either return 0, the page id or a system page.
-                                                long checkPermissionPageId = checkPagePermission(Conversions.ToLong(oRow["nStructKey"]));
-
-                                                if (Conversions.ToBoolean(Operators.AndObject(checkPermissionPageId != 0L, Operators.OrObject(Operators.ConditionalCompareObjectEqual(oRow["nStructKey"], checkPermissionPageId, false), IsSystemPage(checkPermissionPageId)))))
-
-                                                {
-                                                    nPageId = checkPermissionPageId;
-                                                    break;
-                                                }
-                                            }
-                                            else
-                                            {
-                                                nPageId = Conversions.ToLong(oRow["nStructKey"]);
-                                                break;
-                                            }
-                                        }
-                                    }
                                 }
                             }
                         }
-                 //   }
+                    }
+                    //   }
 
                     // Note : if sPath is empty the SQL call above WILL return pages, we don't want these, we want top level pgid
                     if (!(nPageId > 1L && !string.IsNullOrEmpty(sPath)))
@@ -3078,12 +3078,12 @@ namespace Protean
                     else
                     {
 
-                       // var oNewXml = new XmlDataDocument(oDs);
+                        // var oNewXml = new XmlDataDocument(oDs);
                         XmlDocument oNewXml = new XmlDocument();
-                        if (oDs.Tables[0].Rows.Count>0)
+                        if (oDs.Tables[0].Rows.Count > 0)
                         {
                             oNewXml.LoadXml(oDs.GetXml());
-                        }                       
+                        }
                         oXml = oNewXml;
 
                     }
@@ -4125,10 +4125,10 @@ namespace Protean
                         // convert to Xml Dom
                         // var oXml = new XmlDataDocument(oDS);
                         XmlDocument oXml = new XmlDocument();
-                        if (oDS.Tables[0].Rows.Count>0)
+                        if (oDS.Tables[0].Rows.Count > 0)
                         {
                             oXml.LoadXml(oDS.GetXml());
-                        }                       
+                        }
                         oXml.PreserveWhitespace = false;
 
                         pendingList = moPageXml.CreateElement("Content");
@@ -4611,10 +4611,10 @@ namespace Protean
                     ds.EnforceConstraints = false;
                     //var dsXml = new XmlDataDocument(ds);
                     XmlDocument dsXml = new XmlDocument();
-                    if (ds.Tables[0].Rows.Count>0)
+                    if (ds.Tables[0].Rows.Count > 0)
                     {
                         dsXml.LoadXml(ds.GetXml());
-                    }                    
+                    }
                     ds = null;
 
 
@@ -4665,10 +4665,10 @@ namespace Protean
                     oDs.EnforceConstraints = false;
                     //var oXml = new XmlDataDocument(oDs);
                     XmlDocument oXml = new XmlDocument();
-                    if (oDs.Tables[0].Rows.Count>0)
+                    if (oDs.Tables[0].Rows.Count > 0)
                     {
                         oXml.LoadXml(oDs.GetXml());
-                    }                    
+                    }
 
                     oDs = null;
                     if (ContentNode is null)
@@ -5235,7 +5235,7 @@ namespace Protean
                                         nParentid = Convert.ToInt64(oDr[getParIdFname(objectType)]);
                                     }
                                 }
-                                    
+
                             }
 
                             // Get Siblings
@@ -6976,10 +6976,10 @@ namespace Protean
                             oDs.Tables[0].Columns[0].ColumnMapping = MappingType.Attribute;
 
                             //oXml = new XmlDataDocument(oDs);
-                            if (oDs.Tables[0].Rows.Count>0)
+                            if (oDs.Tables[0].Rows.Count > 0)
                             {
                                 oXml.LoadXml(oDs.GetXml());
-                            }                           
+                            }
                             oDs.EnforceConstraints = false;
 
                             // Convert any text to xml
@@ -7032,7 +7032,8 @@ namespace Protean
                         oXml = new XmlDocument();
                         oXml.AppendChild(oElmt);
                     }
-                    else { 
+                    else
+                    {
                         if (oXml.FirstChild != null)
                         {
                             oElmt.InnerXml = oXml.FirstChild.InnerXml;
@@ -7446,10 +7447,10 @@ namespace Protean
 
 
                     //oXml = new XmlDataDocument(oDs);
-                    if (oDs.Tables[0].Rows.Count>0)
+                    if (oDs.Tables[0].Rows.Count > 0)
                     {
                         oXml.LoadXml(oDs.GetXml());
-                    }                   
+                    }
                     oDs.EnforceConstraints = false;
 
                     // Convert any text to xml
@@ -8099,17 +8100,18 @@ namespace Protean
                                             {
                                                 XmlElement oUserXml = GetUserXML(nUserId);
 
-                                                if (oUserXml.SelectSingleNode("ActivationKey").InnerText !="")
+                                                if (oUserXml.SelectSingleNode("ActivationKey").InnerText != "")
                                                 {
-                                                   
-                                                    
+
+
                                                     sReturn = "<span class=\"msg-1021\">User account awaiting activation by email</span>";
                                                 }
-                                                else {
+                                                else
+                                                {
                                                     sReturn = "<span class=\"msg-1013\">User account has been disabled</span>";
                                                 }
-                                                
-                                                
+
+
                                             }
 
                                             break;
@@ -8368,10 +8370,10 @@ namespace Protean
                 ReturnNullsEmpty(ref oDs);
 
                 //oXml = new XmlDataDocument(oDs);                
-                if (oDs.Tables[0].Rows.Count>0)
+                if (oDs.Tables[0].Rows.Count > 0)
                 {
                     oXml.LoadXml(oDs.GetXml());
-                }                
+                }
                 oDs.EnforceConstraints = false;
 
                 foreach (XmlElement oElmt2 in oXml.SelectNodes("descendant-or-self::cDirXml"))
@@ -9073,10 +9075,10 @@ namespace Protean
                             oDs.Tables["Contact"].Columns[0].ColumnMapping = MappingType.Attribute;
 
                             //oXml = new XmlDataDocument(oDs);
-                            if (oDs.Tables[0].Rows.Count>0)
+                            if (oDs.Tables[0].Rows.Count > 0)
                             {
                                 oXml.LoadXml(oDs.GetXml());
-                            }                            
+                            }
                             oDs.EnforceConstraints = false;
                             // Convert the detail to xml
                             foreach (XmlElement currentOElmt in oXml.SelectNodes("/Cart/Item/productDetail | /Cart/Contact/Detail"))
@@ -9260,10 +9262,10 @@ namespace Protean
                         oDs.Tables[0].Columns["usedDate"].ColumnMapping = MappingType.Attribute;
 
                         //oXml = new XmlDataDocument(oDs);                        
-                        if (oDs.Tables[0].Rows.Count>0)
+                        if (oDs.Tables[0].Rows.Count > 0)
                         {
                             oXml.LoadXml(oDs.GetXml());
-                        }                        
+                        }
                         oDs.EnforceConstraints = false;
 
                         oContentsXML.InnerXml = oXml.FirstChild.InnerXml;
@@ -9320,10 +9322,10 @@ namespace Protean
                 else
                 {
                     //oXml = new XmlDataDocument(oDs);
-                    if (oDs.Tables[0].Rows.Count>0)
+                    if (oDs.Tables[0].Rows.Count > 0)
                     {
                         oXml.LoadXml(oDs.GetXml());
-                    }                    
+                    }
                     cXml = oXml.InnerXml;
                 }
 
@@ -10039,7 +10041,8 @@ namespace Protean
                     using (var oDr = getDataReaderDisposable("select nStructKey from tblContentStructure where cStructForiegnRef like '" + SqlFmt(cStructFRef) + "'"))  // Done by nita on 6/7/22
                     {
                         int lastloc = 0;
-                        if (oDr != null) { 
+                        if (oDr != null)
+                        {
                             while (oDr.Read())
                             {
                                 nID = Conversions.ToString(oDr["nStructKey"]);
@@ -10241,7 +10244,7 @@ namespace Protean
                 return GetContentDetailXml(nArtId, false);
             }
 
-                public XmlElement GetContentDetailXml(long nArtId = 0L, Boolean noFilter = false)
+            public XmlElement GetContentDetailXml(long nArtId = 0L, Boolean noFilter = false)
             {
                 PerfMonLog("Web", "GetContentDetailXml");
                 XmlElement oRoot;
@@ -10705,7 +10708,8 @@ namespace Protean
 
                         return oXml;
                     }
-                    else {
+                    else
+                    {
                         return null;
                     }
                 }
@@ -13068,10 +13072,10 @@ namespace Protean
                 {
                     //XmlDocument oXml = new XmlDataDocument(oDs);
                     XmlDocument oXml = new XmlDocument();
-                    if (oDs.Tables[0].Rows.Count>0)
+                    if (oDs.Tables[0].Rows.Count > 0)
                     {
                         oXml.LoadXml(oDs.GetXml());
-                    }                    
+                    }
                     cProcessInfo = oXml.OuterXml;
                     // Return False
                     OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "getDataSet", ex, cProcessInfo));
@@ -13167,9 +13171,9 @@ namespace Protean
                                 if (!((column.ToString() ?? "") == (keyField ?? "")))
                                 {
                                     cProcessInfo += column.ToString() + " - " + instanceElmt.SelectSingleNode("*/" + column.ToString()).InnerXml;
-                                   
+
                                     //convertDtXMLtoSQL(column.DataType, instanceElmt.SelectSingleNode("*/" & column.ToString).InnerXml, IIf(InStr(column.ToString, "Xml") > 0, True, False))
-                                    oRow[column] = convertDtXMLtoSQL(column.DataType, instanceElmt.SelectSingleNode("*/" + column), Strings.InStr(column.ToString(), "Xml") > 0? true: false);
+                                    oRow[column] = convertDtXMLtoSQL(column.DataType, instanceElmt.SelectSingleNode("*/" + column), Strings.InStr(column.ToString(), "Xml") > 0 ? true : false);
                                 }
                             }
                         }
@@ -13310,7 +13314,7 @@ namespace Protean
                     {
                         case "Boolean":
                             {
-                                if (value.InnerText == "true" || value.InnerText == "True" || value.InnerText =="1")
+                                if (value.InnerText == "true" || value.InnerText == "True" || value.InnerText == "1")
                                 {
                                     return true;
                                 }
@@ -14425,7 +14429,8 @@ namespace Protean
 
                     nId = GetIdInsertSql(sSql);
 
-                    if (nId == "0") {
+                    if (nId == "0")
+                    {
 
                         throw new Exception("Address not saved");
 
@@ -14448,11 +14453,12 @@ namespace Protean
                 string cProcessInfo = "";
                 try
                 {
-                    if (contact.nContactKey == null) {
+                    if (contact.nContactKey == null)
+                    {
                         contact.nContactKey = (int)myWeb.moDbHelper.getObjectByRef(objectTypes.CartContact, contact.cContactForiegnRef, "");
                     }
                     //sSql = "UPDATE [dbo].[tblCartContact]" + "SET [cContactName] = '" + Tools.Database.SqlFmt(contact.cContactName) + "'" + ", [cContactAddress] = '" + Tools.Database.SqlFmt(contact.cContactAddress) + "'" + ", [cContactAddress2] = '" + Tools.Database.SqlFmt(contact.cContactAddress2) + "'" + ", [cContactCity] = '" + Tools.Database.SqlFmt(contact.cContactCity) + "'" + ", [cContactState] = '" + Tools.Database.SqlFmt(contact.cContactState) + "'" + ", [cContactZip] = '" + Tools.Database.SqlFmt(contact.cContactZip) + "'" + ", [cContactCountry] = '" + Tools.Database.SqlFmt(contact.cContactCountry) + "'" + ", [cContactTel] = '" + Tools.Database.SqlFmt(contact.cContactTel) + "'" + ", [cContactFax] = '" + Tools.Database.SqlFmt(contact.cContactFax) + "'" + ", [cContactXml] = '<Content><LocationSummary>" + Tools.Database.SqlFmt(contact.cContactLocationSummary) + "</LocationSummary></Content>'" + "WHERE [nContactKey] = " + contact.nContactKey;
-                    sSql = "UPDATE [dbo].[tblCartContact]" + "SET [cContactName] = '" + Tools.Database.SqlFmt(contact.cContactName) + "'" + ", [cContactAddress] = '" + Tools.Database.SqlFmt(contact.cContactAddress) + "'" +  ", [cContactCity] = '" + Tools.Database.SqlFmt(contact.cContactCity) + "'" + ", [cContactState] = '" + Tools.Database.SqlFmt(contact.cContactState) + "'" + ", [cContactZip] = '" + Tools.Database.SqlFmt(contact.cContactZip) + "'" + ", [cContactCountry] = '" + Tools.Database.SqlFmt(contact.cContactCountry) + "'" + ", [cContactTel] = '" + Tools.Database.SqlFmt(contact.cContactTel) + "'" + ", [cContactFax] = '" + Tools.Database.SqlFmt(contact.cContactFax) + "'" + ", [cContactXml] = '<Content><LocationSummary>" + Tools.Database.SqlFmt(contact.cContactLocationSummary) + "</LocationSummary></Content>'" + "WHERE [nContactKey] = " + contact.nContactKey;
+                    sSql = "UPDATE [dbo].[tblCartContact]" + "SET [cContactName] = '" + Tools.Database.SqlFmt(contact.cContactName) + "'" + ", [cContactAddress] = '" + Tools.Database.SqlFmt(contact.cContactAddress) + "'" + ", [cContactCity] = '" + Tools.Database.SqlFmt(contact.cContactCity) + "'" + ", [cContactState] = '" + Tools.Database.SqlFmt(contact.cContactState) + "'" + ", [cContactZip] = '" + Tools.Database.SqlFmt(contact.cContactZip) + "'" + ", [cContactCountry] = '" + Tools.Database.SqlFmt(contact.cContactCountry) + "'" + ", [cContactTel] = '" + Tools.Database.SqlFmt(contact.cContactTel) + "'" + ", [cContactFax] = '" + Tools.Database.SqlFmt(contact.cContactFax) + "'" + ", [cContactXml] = '<Content><LocationSummary>" + Tools.Database.SqlFmt(contact.cContactLocationSummary) + "</LocationSummary></Content>'" + "WHERE [nContactKey] = " + contact.nContactKey;
 
                     ExeProcessSql(sSql);
                     return true;
