@@ -20,6 +20,8 @@ using Protean.Providers.Payment;
 using static Protean.Cms.dbImport;
 using Lucene.Net.Analysis;
 using System.Web.UI.WebControls;
+using Lucene.Net.Search;
+using Lucene.Net.Support;
 
 namespace Protean
 {
@@ -3877,10 +3879,15 @@ namespace Protean
                                     // Go and collect the valid shipping options available for this order
                                     int productId = 0;
                                     var oDsShipOptions = getValidShippingOptionsDS(cDestinationCountry, cDestinationPostalCode, total, quant, weight, cPromoCode, productId);
+                                    string locationfound = string.Empty;
                                     if (oDsShipOptions != null)
                                     {
                                         foreach (DataRow oRowSO in oDsShipOptions.Tables[0].Rows)
                                         {
+                                            locationfound = oRowSO["cLocationNameShort"].ToString();
+
+                                            shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"]));
+                                        
                                             bool bCollection = false;
                                             if (!(oRowSO["bCollection"] is DBNull))
                                             {
@@ -3902,7 +3909,7 @@ namespace Protean
                                                     {
                                                         if (Convert.ToString(oRowSO["nShipOptKey"]) == Convert.ToString(ShippingOptionKey))
                                                         {
-                                                            shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"]));
+                                                           
                                                             oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig["DefaultCountry"]);
                                                             oCartElmt.SetAttribute("shippingType", ShippingOptionKey + "");
                                                             oCartElmt.SetAttribute("shippingCost", shipCost + "");
@@ -3916,7 +3923,6 @@ namespace Protean
                                                 {
                                                     if (Convert.ToString(oRowSO["nShipOptKey"]) == moCartConfig["DefaultShippingMethod"])
                                                     {
-                                                        shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"]));
                                                         oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig["DefaultCountry"]);
                                                         oCartElmt.SetAttribute("shippingType", moCartConfig["DefaultShippingMethod"] + "");
                                                         oCartElmt.SetAttribute("shippingCost", shipCost + "");
@@ -3930,7 +3936,6 @@ namespace Protean
                                                 {
                                                     if (oCartElmt.GetAttribute("freeShippingMethods").Contains(oCartElmt.GetAttribute("shippingType")))
                                                     {
-                                                        shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"]));
                                                         oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig["DefaultCountry"]);
                                                         oCartElmt.SetAttribute("shippingType", Conversions.ToString(Operators.ConcatenateObject(oRowSO["nShipOptKey"], "")));
                                                         oCartElmt.SetAttribute("shippingCost", shipCost + "");
@@ -3945,7 +3950,6 @@ namespace Protean
                                             }
                                             else if ((shipCost == -1 || Convert.ToDouble("0" + oRowSO["nShipOptCost"].ToString()) < shipCost) & bCollection == false)
                                             {
-                                                shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"]));
                                                 oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig["DefaultCountry"]);
                                                 oCartElmt.SetAttribute("shippingType", Conversions.ToString(Operators.ConcatenateObject(oRowSO["nShipOptKey"], "")));
                                                 oCartElmt.SetAttribute("shippingCost", shipCost + "");
@@ -7617,6 +7621,7 @@ namespace Protean
                                                 oOptXform.Instance.SelectSingleNode("nShipOptKey").InnerText = Conversions.ToString(oRow["nShipOptKey"]);
                                                 nShippingCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShippingTotal"]));
                                                 nShippingCost = Conversions.ToDouble(Strings.FormatNumber(nShippingCost, 2, TriState.True, TriState.False, TriState.False));
+
                                                 XmlElement argoSelectNode = (XmlElement)oGrpElmt.LastChild;
                                                 var optElmt = oOptXform.addOption(ref argoSelectNode, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cShipOptName"], "-"), oRow["cShipOptCarrier"]), ": "), mcCurrencySymbol), Strings.FormatNumber(nShippingCost, 2))), Conversions.ToString(oRow["nShipOptKey"]));
                                                 XmlElement optLabel = (XmlElement)optElmt.SelectSingleNode("label");
@@ -7645,6 +7650,7 @@ namespace Protean
                                                     oOptXform.Instance.SelectSingleNode("nShipOptKey").InnerText = Conversions.ToString(oRow["nShipOptKey"]);
                                                 nShippingCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShippingTotal"]));
                                                 nShippingCost = Conversions.ToDouble(Strings.FormatNumber(nShippingCost, 2, TriState.True, TriState.False, TriState.False));
+
                                                 XmlElement argoSelectNode1 = (XmlElement)oGrpElmt.LastChild;
                                                 var optElmt = oOptXform.addOption(ref argoSelectNode1, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cShipOptName"], "-"), oRow["cShipOptCarrier"]), ": "), mcCurrencySymbol), Strings.FormatNumber(nShippingCost, 2))), Conversions.ToString(oRow["nShipOptKey"]));
                                                 XmlElement optLabel = (XmlElement)optElmt.SelectSingleNode("label");
@@ -11432,8 +11438,35 @@ namespace Protean
                         // Build Form
 
                         // Go and collect the valid shipping options available for this order
-                        return moDBHelper.GetDataSet(sSql + " order by opt.nDisplayPriority, nShippingTotal", "Option", "Shipping");
+                        DataSet oDS;
 
+
+
+                        oDS = moDBHelper.GetDataSet(sSql + " order by opt.nDisplayPriority, nShippingTotal", "Option", "Shipping");
+                        foreach (DataRow oRow in oDS.Tables["Option"].Rows)
+                        {
+                            // Calculate any shipping cost overage
+                            double nShippingCost;
+                            nShippingCost = Conversions.ToDouble(oRow["nShippingTotal"]);
+                            nShippingCost = Conversions.ToDouble(Strings.FormatNumber(nShippingCost, 2, TriState.True, TriState.False, TriState.False));
+
+                            double overageUnit = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShipOptWeightOverageUnit"]));
+                            double overageRate = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShipOptWeightOverageRate"]));
+                            if (overageUnit > 0)
+                            {
+                                double multiplier = 0;
+                                if (nWeight > Conversions.ToDouble(oRow["nShipOptWeightMax"]))
+                                {
+                                    multiplier = Math.Ceiling(nWeight - Conversions.ToDouble(oRow["nShipOptWeightMax"]));
+                                }
+                                nShippingCost = nShippingCost + ((multiplier / overageUnit) * overageRate);
+                            }
+                            oRow["nShippingTotal"] = nShippingCost;
+                            
+                            // TODO delete any parent relations /  or remove if allready have child
+                        }
+
+                        return oDS;
                         }
                     
                 }

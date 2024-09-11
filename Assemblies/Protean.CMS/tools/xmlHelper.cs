@@ -539,28 +539,30 @@ namespace Protean
                         resolver.Credentials = System.Net.CredentialCache.DefaultCredentials;
 
                         var ws = oCStyle.OutputSettings.Clone();
-
-                        // load the pagexml into a reader
-                        var oReader = new XmlTextReader(new StringReader(oXml.OuterXml));
-                        var sWriter = new StringWriter();
-
-                        if (myWeb.msException == "")
+                        if (oCStyle != null)
                         {
-                            // Run transformation
+                            // load the pagexml into a reader
+                            var oReader = new XmlTextReader(new StringReader(oXml.OuterXml));
+                            var sWriter = new StringWriter();
 
-                            // Dim xsltDomainProxy As ProxyDomain = xsltDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, GetType(ProxyDomain).FullName)
-                            // xsltDomainProxy._LocalContext = myWeb.moCtx
-                            // Dim responseString As String = xsltDomainProxy.RunTransform(AssemblyPath, ClassName, oXml.OuterXml)
-                            // oResponse.Write(responseString)
+                            if (myWeb.msException == "")
+                            {
+                                // Run transformation
 
-                            oCStyle.Transform(oReader, xsltArgs, XmlWriter.Create(oResponse.OutputStream, ws), resolver);
+                                // Dim xsltDomainProxy As ProxyDomain = xsltDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, GetType(ProxyDomain).FullName)
+                                // xsltDomainProxy._LocalContext = myWeb.moCtx
+                                // Dim responseString As String = xsltDomainProxy.RunTransform(AssemblyPath, ClassName, oXml.OuterXml)
+                                // oResponse.Write(responseString)
+
+                                oCStyle.Transform(oReader, xsltArgs, XmlWriter.Create(oResponse.OutputStream, ws), resolver);
+                            }
+                            else
+                            {
+                                oResponse.Write(myWeb.msException);
+                            }
+                            oReader.Close();
+                            sWriter.Dispose();
                         }
-                        else
-                        {
-                            oResponse.Write(myWeb.msException);
-                        }
-                        oReader.Close();
-                        sWriter.Dispose();
                     }
 
                     else
