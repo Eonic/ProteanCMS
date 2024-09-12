@@ -857,7 +857,7 @@
           <xsl:apply-templates select="." mode="displayThumbnail"/>
         </a>
 
-      </xsl:if>!!!
+      </xsl:if>
       <font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
         <xsl:if test="StartDate/node()!=''">
           <p class="date">
