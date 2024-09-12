@@ -190,6 +190,33 @@ namespace Protean
             }
 
 
+            public string RegexResult(string input, string pattern, string resultIndex)
+            {
+
+                string[] results;
+                if (resultIndex == "") {
+                    resultIndex = "0";
+                }
+
+                if (!(string.IsNullOrEmpty(pattern) | string.IsNullOrEmpty(input)))
+                {
+                    try
+                    {
+                        results = Regex.Split(input, pattern);
+                        return results[Convert.ToInt16(resultIndex)];
+                    }
+                    catch (Exception ex)
+                    {
+                        return ex.Message;
+                    }
+                }
+                else {
+                    return "input or pattern not defined";
+                }
+            }
+
+
+
             public string ToTitleCase(string input)
             {
 
@@ -1061,7 +1088,43 @@ namespace Protean
 
 
             }
+            public XmlElement GetSpecsOnPageItems(string pageId, string artId) {
+                try {
 
+                    int nPgId = Convert.ToInt16(pageId);
+                  
+
+                    Protean.Cms myCMS = new Protean.Cms(myWeb.moCtx);
+                    myCMS.InitializeVariables();
+                    myCMS.mnPageId = nPgId;
+                    myCMS.ibIndexMode = true;
+                    myCMS.mbAdminMode = false;
+                    XmlDocument myPageXml = myCMS.GetPageXML();
+
+                    XmlElement grpElmt = myPageXml.CreateElement("group");
+                    foreach (XmlElement SpecElmt in myPageXml.SelectNodes("descendant-or-self::Spec")) {
+                        string name  = SpecElmt.GetAttribute("name");
+                        if (name != "") {                       
+                            if (grpElmt.SelectSingleNode($"Spec[@name='{name}']") == null){
+                                SpecElmt.InnerText = "";
+                                grpElmt.AppendChild(SpecElmt);
+                            }
+                        }
+                    }
+
+                    if (artId != "") { 
+                    
+                    
+                    };
+
+
+                    return grpElmt;
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+    }
             public string GetDirIdFromFref(string fRef)
             {
 
@@ -1647,10 +1710,10 @@ namespace Protean
                 Boolean bForceCheck = false;
                 if (sForceCheck.ToLower().Contains("true"))
                 { bForceCheck = true; }
-                return CreateWebP(cVirtualPath, bForceCheck);
+                return CreateWebPAlt(cVirtualPath, bForceCheck);
             }
 
-            public string CreateWebP(string cVirtualPath, bool forceCheck)
+            public string CreateWebPAlt(string cVirtualPath, bool forceCheck)
             {
                 string cProcessInfo = string.Empty;
 
@@ -1723,7 +1786,7 @@ namespace Protean
                 string cProcessInfo = string.Empty;
                 try
                 {
-                    return CreateWebP(cVirtualPath, false);
+                    return CreateWebPAlt(cVirtualPath, false);
                 }
                 catch (Exception ex)
                 {
@@ -1989,6 +2052,23 @@ namespace Protean
                     {
                         var n = nodes.Current as XPathNavigator;
                         return n.Evaluate(xpath).ToString();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return "Error - Not Deleted" + ex.Message;
+                }
+                return null;
+            }
+
+            public object evaluateXpathObj(XPathNodeIterator nodes, string xpath)
+            {
+                try
+                {
+                    while (nodes.MoveNext())
+                    {
+                        var n = nodes.Current as XPathNavigator;
+                        return n.Evaluate(xpath);
                     }
                 }
                 catch (Exception ex)

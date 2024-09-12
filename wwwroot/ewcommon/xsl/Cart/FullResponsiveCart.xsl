@@ -1399,7 +1399,7 @@
           <xsl:otherwise>
             <xsl:choose>
               <xsl:when test="@quantity&lt;'10'">
-                <select value="{@quantity}" class="cart-quantity" name="itemId-{@id}">
+                <select value="{@quantity}" class="cart-quantity form-control" name="itemId-{@id}">
                   <option value="1">
                     <xsl:if test="@quantity=1">
                       <xsl:attribute name="selected">selected</xsl:attribute>

@@ -1,4 +1,24 @@
-﻿//------------------------
+﻿.phone-icon,
+.email-icon {
+    display: flex;
+    align-items: center;
+
+    &:before {
+        content: '\f095';
+        font-family: $font-awesome-version;
+        padding-right: 0.2rem;
+        font-weight: 900;
+    }
+}
+
+.email-icon {
+    &:before {
+        content: '\f0e0';
+        font-weight: 400;
+    }
+}
+
+//------------------------
 //ICON SHORTCUTS
 //------------------------
 @mixin angle-left() {

@@ -5,7 +5,7 @@
 // $Author:      Trevor Spink (trevor@eonic.co.uk)
 // &Website:     www.eonic.co.uk
 // &Licence:     All Rights Reserved.
-// $Copyright:   Copyright (c) 2002 - 2006 Eonic Ltd.
+// $Copyright:   Copyright (c) 2002 - 2024 Trevor Spink Consultants Ltd.
 // ***********************************************************************
 
 using System;
@@ -4017,7 +4017,9 @@ namespace Protean
                             oConvert.Convert();
                             if (oConvert.State == Tools.Conversion.Status.Succeeded)
                             {
-                                XmlDocument outputXml = (XmlDocument)oConvert.Output;
+                                // XmlDocument outputXml = (XmlDocument)oConvert.Output; 
+                                XmlElement outputElmt = (XmlElement)oConvert.Output;
+                                XmlDocument outputXml = outputElmt.OwnerDocument;
                                 oImportXml.LoadXml(outputXml.OuterXml);
                             }
                             else

@@ -110,6 +110,10 @@
     z-index: 30 !important;
 }
 
+.moduleDrag.active-admin-dd {
+    z-index: 31 !important;
+}
+
 .normalMode {
     .text-primary {
         color: $admin-header-color-link !important;
@@ -160,7 +164,7 @@
     }
 
     .ptn-edit > .btn-default {
-        z-index:2;
+        z-index: 2;
     }
 
     .ptn-edit > .btn-default, .ptn-edit > .btn-primary, .ptn-edit > .dropdown > .btn-primary, .ptn-edit > .dropdown .dropdown-menu a {
@@ -645,6 +649,7 @@
         }
     }
 }
+
 #dragableModules {
     display: flex;
     flex-direction: column;

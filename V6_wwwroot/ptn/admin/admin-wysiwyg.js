@@ -1,6 +1,12 @@
 ﻿$(document).ready(function () {
     $(".ptn-edit .dropdown .dropdown-toggle").click(function () {
-        $(this).parents(".ptn-edit").addClass("active-admin-dd");
+        //$(this).parents(".ptn-edit").toggle(function () {
+        //    $(this).addClass("active-admin-dd");
+        //}, function () {
+        //    $(this).removeClass("active-admin-dd");
+        //});
+        // $(this).parents(".ptn-edit").addClass("active-admin-dd");
+        $(this).parents(".ptn-edit").toggleClass("active-admin-dd");
     });
 
     $('div.module div.moduleDrag').closest('.module').draggable({

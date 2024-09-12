@@ -35,6 +35,7 @@ using Protean.Providers.Payment;
 using System.Windows.Shapes;
 using System.Data.SqlClient;
 using Protean.Models;
+using System.Windows.Controls;
 
 namespace Protean
 {
@@ -223,8 +224,8 @@ namespace Protean
                 }
 
 
-                [Obsolete("Don't use this routine any more. Use the new one in Membership Provider ", false)]
-                public virtual XmlElement xFrmUserLogon(string FormName = "UserLogon")
+               
+                public virtual XmlElement GetProviderXFrmUserLogon(string FormName = "UserLogon")
                 {
                     string cProcessInfo = "";
 
@@ -2851,6 +2852,10 @@ namespace Protean
 
                             GetModuleOptions(ref oSelElmt);
 
+                            var submitted = base.isSubmitted();
+                            var ewsubmit = !string.IsNullOrEmpty(this.goRequest.Form["ewsubmit.x"]);
+                            var cModuletype = !string.IsNullOrEmpty(this.goRequest.Form["cModuleType"]);
+
                             if (base.isSubmitted() | !string.IsNullOrEmpty(this.goRequest.Form["ewsubmit.x"]) | !string.IsNullOrEmpty(this.goRequest.Form["cModuleType"]))
                             {
                                 base.updateInstanceFromRequest();
@@ -3611,6 +3616,7 @@ namespace Protean
                                     prodCatElmt.SetAttribute("ids", Ids);
                                     oTempInstance.AppendChild(prodCatElmt);
                                 }
+                                AddPageSpecs(ref myWeb.mnPageId,ref oTempInstance);
                             }
                         }
                         else
@@ -3681,6 +3687,9 @@ namespace Protean
                         {
                             cXformPath = "/xforms/content/" + cXformPath;
                         }
+                        
+                        // TS we want to do this later after we have loaded specs etc.
+                        base.bProcessRepeats = false;
 
                         if (!base.load(cXformPath + ".xml", this.myWeb.maCommonFolders))
                         {
@@ -3778,6 +3787,25 @@ namespace Protean
                         }
                         else
                         {
+
+                            XmlElement myInstance = base.Instance;
+                            // if product
+                            string sProductTypes = "Product,SKU,Ticket";
+                            if (myWeb.Features.ContainsKey("Subscriptions"))
+                            {
+                                sProductTypes = sProductTypes + ",Subscription";
+                            }
+                            if (!string.IsNullOrEmpty(this.myWeb.moConfig["ProductTypes"]))
+                            {
+                                sProductTypes = this.myWeb.moConfig["ProductTypes"];
+                            }
+                            sProductTypes = sProductTypes.Trim().TrimEnd(',') + ",";
+                            if (sProductTypes.Contains(cContentSchemaName + ","))
+                            {
+                                AddPageSpecs(ref myWeb.mnPageId, ref myInstance);
+                            }
+                                this.bProcessRepeats = true;
+                                this.LoadInstance(myInstance);
 
                             if (this.goSession["oContentInstance"] != null)
                             {
@@ -4464,6 +4492,42 @@ namespace Protean
                     {
                         stdTools.returnException(ref this.myWeb.msException, mcModuleName, "addInput", ex, "", "", gbDebug);
                         return default;
+                    }
+                }
+
+                public void AddPageSpecs(ref int nPgId, ref XmlElement Instance) {
+
+                    if (Instance.SelectSingleNode("descendant-or-self::Specs") != null) { 
+
+                        Protean.Cms myCMS = new Protean.Cms(myWeb.moCtx);
+                        myCMS.InitializeVariables();
+                        myCMS.mnPageId = nPgId;
+                        myCMS.ibIndexMode = true;
+                        myCMS.mbAdminMode = false;
+                        XmlDocument myPageXml = myCMS.GetPageXML();
+
+                        XmlElement SpecsElmt = myPageXml.CreateElement("Specs");
+                        foreach (XmlElement SpecElmt in myPageXml.SelectNodes("descendant-or-self::Spec"))
+                        {
+                            string name = SpecElmt.GetAttribute("name");
+                            if (name != "")
+                            {
+                                if (SpecsElmt.SelectSingleNode($"Spec[@name='{name}']") == null)
+                                {
+                                    SpecElmt.InnerText = "";
+                                    XmlElement existingSpec = (XmlElement)Instance.SelectSingleNode($"descendant-or-self::Spec[@name='{name}']");
+                                    if (existingSpec != null)
+                                    {
+                                        SpecElmt.InnerText = existingSpec.InnerText;
+                                    }
+                                    SpecsElmt.AppendChild(SpecElmt);
+                                }
+                            }
+                        }
+
+                        foreach (XmlNode InstanceSpecs in Instance.SelectNodes("descendant-or-self::Specs")){
+                            InstanceSpecs.InnerXml = SpecsElmt.InnerXml;
+                        }
                     }
                 }
 
@@ -6292,7 +6356,7 @@ namespace Protean
                         // load the directory item to be deleted
                         moDbHelper.moPageXml = this.moPageXML;
 
-                        base.NewFrm("EditDeliveryMethod");
+                        base.NewFrm("DeleteDeliveryMethod");
 
                         // Lets get the object
                         oElmt = this.moPageXML.CreateElement("sType");
@@ -7306,6 +7370,16 @@ namespace Protean
                         base.addInput(ref oGrp1Elmt, "nShipOptWeightMax", true, "Maximum Weight", "short");
                         XmlElement argoBindParent9 = null;
                         base.addBind("nShipOptWeightMax", "tblCartShippingMethods/nShipOptWeightMax", oBindParent: ref argoBindParent9, "false()");
+
+                        if (myWeb.moDbHelper.checkTableColumnExists("tblCartShippingMethods","nShipOptWeightOverageRate")) {
+                            base.addInput(ref oGrp1Elmt, "nShipOptWeightOverageUnit", true, "Overage Unit", "short");
+                            XmlElement oElmtOverageUnit = null;
+                            base.addBind("nShipOptWeightOverageUnit", "tblCartShippingMethods/nShipOptWeightOverageUnit", oBindParent: ref oElmtOverageUnit, "false()");
+
+                            base.addInput(ref oGrp1Elmt, "nShipOptWeightOverageRate", true, "Overage Rate", "short");
+                            XmlElement oElmtOverageRate = null;
+                            base.addBind("nShipOptWeightOverageRate", "tblCartShippingMethods/nShipOptWeightOverageRate", oBindParent: ref oElmtOverageRate, "false()");
+                        }
 
                         base.addInput(ref oGrp1Elmt, "nShipOptPriceMin", true, "Minimum Price", "short");
                         XmlElement argoBindParent10 = null;
@@ -10985,7 +11059,11 @@ namespace Protean
 
                         // Build the form
                         base.NewFrm("MemberCodes");
-                        base.load("/xforms/directory/" + cFormName + ".xml", this.myWeb.maCommonFolders);
+                        string formPath = "/xforms/directory/" + cFormName + ".xml";
+                        if (myWeb.bs5) {
+                            formPath = "/admin/xforms/directory/" + cFormName + ".xml";
+                        }
+                        base.load(formPath, this.myWeb.maCommonFolders);
 
                         // Load the instance.
                         if (nCodesetKey > 0)
