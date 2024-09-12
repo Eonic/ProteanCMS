@@ -1584,7 +1584,7 @@ namespace Protean
                                         thisContentType = prefixs[i].Substring(prefixs[i].IndexOf("/") + 1, prefixs[i].Length - prefixs[i].IndexOf("/") - 1);
                                         if ((contentType ?? "") == (thisContentType ?? ""))
                                         {
-                                            redirectUrl += "/" + thisPrefix + "/" + contentName.ToString().Replace(" ", "-").Trim('-');
+                                            redirectUrl += "/" + thisPrefix + "/" + Protean.Tools.Text.CleanName(contentName).Replace(" ", "-").Trim('-');
                                             if (myWeb.moConfig["DetailPathTrailingSlash"] == "on")
                                             {
                                                 redirectUrl = redirectUrl + "/";
@@ -1611,13 +1611,16 @@ namespace Protean
 
                                 if (!string.IsNullOrEmpty(thisPrefix))
                                 {
+                                    string cContentName = SqlFmt(sPath).Replace("*", "%").Replace(" ", "%");
+
                                     if (gbAdminMode)
                                     {
-                                        sSql = "select TOP(1) nContentKey  from tblContent c inner join tblAudit a on a.nAuditKey = c.nAuditId where cContentName like '" + SqlFmt(sPath) + "' and cContentSchemaName like '" + thisContentType + "' order by nVersion desc";
+                                        // replace * with wildcard as content names replace / with * in cleanname
+                                        sSql = "select TOP(1) nContentKey  from tblContent c inner join tblAudit a on a.nAuditKey = c.nAuditId where cContentName like '" + cContentName + "' and cContentSchemaName like '" + thisContentType + "' order by nVersion desc";
                                     }
                                     else
                                     {
-                                        sSql = "select TOP(1) nContentKey from tblContent c inner join tblAudit a on a.nAuditKey = c.nAuditId where cContentName like '" + SqlFmt(sPath) + "' and cContentSchemaName like '" + thisContentType + "' " + myWeb.GetStandardFilterSQLForContent() + " order by nVersion desc";
+                                        sSql = "select TOP(1) nContentKey from tblContent c inner join tblAudit a on a.nAuditKey = c.nAuditId where cContentName like '" + cContentName + "' and cContentSchemaName like '" + thisContentType + "' " + myWeb.GetStandardFilterSQLForContent() + " order by nVersion desc";
                                     }
                                     ods = GetDataSet(sSql, "Content");
                                     if (ods != null)
