@@ -4,7 +4,7 @@
   <xsl:variable name="hPadding">10</xsl:variable>
   <xsl:variable name="boxMargin">25</xsl:variable>
   <xsl:variable name="emailWidth">620</xsl:variable>
-  <xsl:variable name="mainColour">#1ba5d8</xsl:variable>
+  <xsl:variable name="mainColour">#aaaaaa</xsl:variable>
   <xsl:variable name="highlightColour">#ef890a</xsl:variable>
 
   <xsl:template match="Content" mode="getThWidth">300</xsl:template>
@@ -25,7 +25,7 @@
       /*GENERAL STYLES*/
       .emailContentWrapper{padding:20px 0 0;}
       .Mail,
-      #emailContent{background:#ECECEC}
+      #emailContent{background:#ffffff}
       .Mail a{color:<xsl:value-of select="$mainColour"/>;text-decoration:none}
       .cleanLink a,
       a .cleanLink{
@@ -37,7 +37,7 @@
       font-family:Arial, sans-serif;
       line-height:20px;
       font-size:15px;
-      color:#666;
+      color:#000000;
       }
       .emailPaddingBottom{padding-bottom:10px;}
 
