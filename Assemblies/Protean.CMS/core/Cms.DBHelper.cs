@@ -8764,6 +8764,9 @@ namespace Protean
                     valuesList.Add(artId.ToString());
                     valuesList.Add(SqlDate(DateTime.Now, true));
                     valuesList.Add(((int)loggedActivityType).ToString());
+                    if (activityDetail.Length >= 800) {
+                        activityDetail = "TRUNCATED:" + activityDetail.Substring(0, 785);
+                    }
                     valuesList.Add(SqlString(activityDetail));
                     valuesList.Add(SqlString(Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(sessionId), "Service_" + DateTime.Now.ToString(), sessionId))));
                     if (otherId > 0L)
