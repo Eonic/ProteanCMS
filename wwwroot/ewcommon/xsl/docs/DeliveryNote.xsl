@@ -217,7 +217,35 @@
 									</fo:block>
 								</fo:table-cell>
 							</fo:table-row>
-
+							<xsl:if test="@vatAmt&gt;0">
+							<fo:table-row border-bottom-color="#000000" border-bottom-width=".25cm" border-bottom-style="solid">
+								<fo:table-cell border-bottom-width="0pt">
+								</fo:table-cell>
+								<fo:table-cell padding="6pt" border-bottom="0.5pt solid black">
+									<fo:block text-align="left" color="#000000">
+										VAT:
+									</fo:block>
+								</fo:table-cell>
+								<fo:table-cell padding="6pt" border-bottom="0.5pt solid black">
+									<fo:block text-align="left" color="#000000">
+										<xsl:value-of select="format-number(@vatRate, '#.00')"/>%
+									</fo:block>
+								</fo:table-cell>
+								<fo:table-cell padding="6pt" border-bottom="0.5pt solid black">
+									<fo:block text-align="right" color="#000000">
+									</fo:block>
+								</fo:table-cell>
+								<fo:table-cell padding="6pt" border-bottom="0.5pt solid black">
+									<fo:block text-align="right" color="#000000">
+									</fo:block>
+								</fo:table-cell>
+								<fo:table-cell padding="6pt" border-bottom="0.5pt solid black">
+									<fo:block text-align="right" color="#000000">
+										£ <xsl:value-of select="format-number(@vatAmt, '0.00')"/>
+									</fo:block>
+								</fo:table-cell>
+							</fo:table-row>
+							</xsl:if>
 							<fo:table-row border-bottom-color="#000000" border-bottom-width=".25cm" border-bottom-style="solid">
 								<fo:table-cell border-bottom-width="0pt">
 								</fo:table-cell>
