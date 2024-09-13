@@ -3430,12 +3430,10 @@ namespace Protean
                                     // Go and collect the valid shipping options available for this order
                                     int productId = 0;
                                     var oDsShipOptions = getValidShippingOptionsDS(cDestinationCountry, cDestinationPostalCode, total, quant, weight, cPromoCode, productId);
-                                    string locationfound = string.Empty;
                                     if (oDsShipOptions != null)
                                     {
                                         foreach (DataRow oRowSO in oDsShipOptions.Tables[0].Rows)
-                                        {
-                                            locationfound = oRowSO["cLocationNameShort"].ToString();
+                                        {                                          
 
                                             shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"]));
                                         
