@@ -523,14 +523,19 @@
           </xsl:if>
         </video>
       </div>
-      <xsl:if test="HTML5/@autoplay='autoplay'">
-        <script>
-          document.getElementById('vid-<xsl:value-of select="@id"/>').play();
-        </script>
-      </xsl:if>
+
     </xsl:if>
   </xsl:template>
-
+	
+	<xsl:template match="Content[@moduleType='Video' and @videoType='HTML5']" mode="contentJS">
+		<xsl:if test="HTML5/@autoplay='autoplay'">
+			<script>
+				document.getElementById('vid-<xsl:value-of select="@id"/>').play();
+			</script>
+		</xsl:if>
+	</xsl:template>
+	
+	
   <!-- Video Detail -->
   <xsl:template match="Content[@type='Video']" mode="VideoDetailDisplay">
     <xsl:param name="classes"/>
