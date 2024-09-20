@@ -89,12 +89,14 @@
         }
     }
 }
-.two-col-text {
-    column-count: 2;
-}
+@include media-breakpoint-up(md) {
+    .two-col-text {
+        column-count: 2;
+    }
 
-.three-col-text {
-    column-count: 3;
+    .three-col-text {
+        column-count: 3;
+    }
 }
 /*############### BUTTONS AND LINKS #################*/
 .skip {
