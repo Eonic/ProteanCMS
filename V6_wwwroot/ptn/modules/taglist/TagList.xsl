@@ -158,13 +158,14 @@
 						</xsl:if>
 					</span>
 				</xsl:if>
-			</a>
-			<xsl:if test="position()!=last()">
-				<span class="tag-comma">
-					<xsl:text>, </xsl:text>
-				</span>
-			</xsl:if>
-		</span>
+        <xsl:if test="position()!=last()">
+          <span class="tag-comma">
+            <xsl:text>, </xsl:text>
+          </span>
+        </xsl:if>
+      </a>
+
+    </span>
 	</xsl:template>
 
 	<!-- Tags Brief -->
