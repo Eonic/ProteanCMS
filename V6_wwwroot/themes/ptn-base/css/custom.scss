@@ -1,6 +1,12 @@
 ﻿/*############### LAYOUT #################*/
 html {
     height: 100%;
+    //for sticky headers
+   /* scroll-padding-top: calc($fixed-height-xs + 10px);
+
+    @include media-breakpoint-up($nav-breakpoint) {
+        scroll-padding-top: calc($fixed-height-lg + 100px);
+    }*/
 }
 
 body {
