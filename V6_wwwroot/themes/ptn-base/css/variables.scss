@@ -28,8 +28,10 @@ $img-border-radius: $border-radius;
 
 /*###################### TEXT #########################*/
 $body-color: #242424;
-//$font-family-base: 'Lato', sans-serif;
-//$headings-font-family: 'Lato', sans-serif;
+$font-family-base: 'Lato', sans-serif;
+$headings-font-family: 'Lato', sans-serif;
+
+$navbar-font: 'Lato', sans-serif;
 //$font-weight-base: 300;
 //$font-size-base: 1.1rem !default;
 $line-height-base: 1.3;
@@ -65,7 +67,7 @@ $navbar-light-color: $body-color;
 $nav-link-hover-color: $secondary;
 $navbar-light-hover-color: $nav-link-hover-color;
 $main-nav-size: 1.2rem;
-$navbar-font:$headings-font-family;
+//$navbar-font:$headings-font-family;
 
 //$dropdown-font-size: $font-size-base !default;
 //$dropdown-color: var(--#{$prefix}body-color) !default;

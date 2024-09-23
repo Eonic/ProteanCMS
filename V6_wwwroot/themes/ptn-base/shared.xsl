@@ -122,13 +122,14 @@
 				<xsl:value-of select="$theme"/>
 				<xsl:text>/js/theme-specific.js,</xsl:text>
 				<xsl:if test="$cart='on'">
-					<xsl:text>/ptn/features/cart/cart.js</xsl:text>
+					<xsl:text>~/ptn/features/cart/cart.js</xsl:text>
 				</xsl:if>
 			</xsl:with-param>
 			<xsl:with-param name="bundle-path">
 				<xsl:text>~/Bundles/site</xsl:text>
-			</xsl:with-param>
-		</xsl:call-template>
+      </xsl:with-param>
+      <xsl:with-param name="async" select="false()"/>
+    </xsl:call-template>
 
 		<xsl:apply-templates select="." mode="siteAdminJs" />
 	</xsl:template>
