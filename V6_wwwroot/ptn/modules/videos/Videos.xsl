@@ -139,7 +139,9 @@
       </xsl:apply-templates>
       <div class="lIinner">
         <a href="{$parentURL}">
-          <xsl:apply-templates select="." mode="displayThumbnail"/>
+          <xsl:apply-templates select="." mode="displayThumbnail">
+            <xsl:with-param name="crop" select="false()" />
+          </xsl:apply-templates>
         </a>
         <div class="media-inner">
           <xsl:choose>
