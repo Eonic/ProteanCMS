@@ -6073,9 +6073,11 @@
 						<xsl:text> </xsl:text>
 					</xsl:if>
 					<xsl:if test="@uploadIcon!='' and @uploadIcon!='_'">
-						<span class="upload-icon" role="img" aria-hidden="true">
-							<img src="{@uploadIcon}" alt="icon" class="center-block img-responsive" width="{@uploadIcon-w}" height="{@uploadIcon-h}"/>
-						</span>
+            <div class="center-block">
+              <span class="upload-icon" role="img" aria-hidden="true">
+                <img src="{@uploadIcon}" alt="icon" class="img-responsive" width="{@uploadIcon-w}" height="{@uploadIcon-h}"/>
+              </span>
+            </div>
 					</xsl:if>
 					<xsl:if test="@title!=''">
 						<span>
@@ -6119,9 +6121,11 @@
 						<xsl:text> </xsl:text>
 					</xsl:if>
 					<xsl:if test="@uploadIcon!='' and @uploadIcon!='_'">
-						<span class="upload-icon">
-							<img src="{@uploadIcon}" alt="icon" class="center-block img-responsive" width="{@uploadIcon-w}" height="{@uploadIcon-h}"/>
-						</span>
+            <div class="center-block">
+              <span class="upload-icon">
+                <img src="{@uploadIcon}" alt="icon" class="img-responsive" width="{@uploadIcon-w}" height="{@uploadIcon-h}"/>
+              </span>
+            </div>
 					</xsl:if>
 					<xsl:if test="@title!=''">
 						<span>
