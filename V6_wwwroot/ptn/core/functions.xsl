@@ -9418,7 +9418,7 @@
             to be found within the First argument. The Third argument is a string to replace the Second argument 
             from within the First argument -->
 
-	<xsl:template name="replace-string">
+	<xsl:template name="+-">
 		<xsl:param name="text"/>
 		<xsl:param name="replace"/>
 		<xsl:param name="with"/>
