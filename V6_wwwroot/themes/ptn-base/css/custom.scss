@@ -567,6 +567,7 @@ section.stretchBG {
 .date,
 .dtstamp {
     font-size: 0.75rem;
+    padding-bottom: 1rem;
 
     &:before {
         content: '\f073';
@@ -851,6 +852,10 @@ div[class$="List"].module {
 
     .media-inner {
         padding: 1rem;
+
+        .entryFooter {
+            padding-top: 1rem;
+        }
     }
 }
 
