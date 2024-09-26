@@ -662,8 +662,13 @@
     <!-- Membership Register Module -->
     <xsl:template match="Content[@type='Module' and (@moduleType='MembershipRegister')]" mode="displayBrief">
 		<xsl:choose>
+			<xsl:when test="@activationMsg!=''">
+				Your activation link has been sent.
+			</xsl:when>
 			<xsl:when test="$page/User/@status!='1'">
 				You must activate your account before you can update your details.
+				<br/>
+				<a class="btn btn-primary" href="?ewCmd=ResendActivation">Resend Activation Link</a>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:choose>

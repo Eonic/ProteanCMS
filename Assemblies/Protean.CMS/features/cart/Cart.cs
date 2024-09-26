@@ -20,6 +20,9 @@ using Protean.Providers.Payment;
 using static Protean.Cms.dbImport;
 using Lucene.Net.Analysis;
 using System.Web.UI.WebControls;
+using Lucene.Net.Search;
+using Lucene.Net.Support;
+using static QRCoder.PayloadGenerator;
 
 namespace Protean
 {
@@ -2774,461 +2777,7 @@ namespace Protean
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "RemoveDeliveryOption", ex, "", "", gbDebug);
                 }
             }
-            // Sub GetCartSummary(ByRef oCartElmt As XmlElement, Optional ByVal nSelCartId As Integer = 0)
-            // myWeb.PerfMon.Log("Cart", "GetCartSummary")
-            // '   Sets content for the XML to be displayed in the small summary plugin attached
-            // '   to the current content page
-
-            // Dim oDs As DataSet
-            // Dim sSql As String
-
-            // Dim cNotes As String
-            // Dim total As Double
-            // Dim quant As Integer
-            // Dim weight As Integer
-            // Dim nCheckPrice As Double
-            // Dim oRow As DataRow
-            // 'We need to read this value from somewhere so we can change where vat is added
-            // 'Currently defaulted to per line
-            // 'If true will be added to the unit
-            // Dim nUnitVat As Decimal = 0
-            // Dim nLineVat As Decimal = 0
-
-            // Dim nCartIdUse As Integer
-            // If nSelCartId > 0 Then nCartIdUse = nSelCartId Else nCartIdUse = mnCartId
-
-            // Dim cProcessInfo As String = ""
-
-            // oCartElmt.SetAttribute("vatRate", moCartConfig("TaxRate"))
-            // Try
-
-
-            // If Not moSubscription Is Nothing Then moSubscription.CheckCartForSubscriptions(nCartIdUse, myWeb.mnUserId)
-
-            // If Not (nCartIdUse > 0) Then '   no shopping
-            // oCartElmt.SetAttribute("status", "Empty") '   set CartXML attributes
-            // oCartElmt.SetAttribute("itemCount", "0") '       to nothing
-            // oCartElmt.SetAttribute("vatRate", moCartConfig("TaxRate"))
-            // oCartElmt.SetAttribute("total", "0.00") '       for nothing
-            // Else
-            // '   otherwise
-
-            // '   and the address details we have obtained
-            // '   (if any)
-
-
-            // 'Add Totals
-            // quant = 0 '   get number of items & sum of collective prices (ie. cart total) from db
-            // total = 0.0#
-            // weight = 0.0#
-
-            // sSql = "select i.nCartItemKey as id, i.nItemId as contentId, i.cItemRef as ref, i.cItemURL as url, i.cItemName as Name, i.cItemUnit as unit, i.nPrice as price, i.nTaxRate as taxRate, i.nQuantity as quantity, i.nShpCat as shippingLevel, i.nDiscountValue as discount,i.nWeight as weight, p.cContentXmlDetail as productDetail, i.nItemOptGrpIdx, i.nItemOptIdx, i.nParentId, p.cContentSchemaName AS contentType from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey where nCartOrderId=" & nCartIdUse
-
-
-            // ':TODO we only want to check prices on current orders not history
-            // oDs = moDBHelper.getDataSetForUpdate(sSql, "Item", "Cart")
-
-            // '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-            // oDs.Relations.Add("Rel1", oDs.Tables("Item").Columns("id"), oDs.Tables("Item").Columns("nParentId"), False)
-            // oDs.Relations("Rel1").Nested = True
-            // '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-            // For Each oRow In oDs.Tables("Item").Rows
-
-            // If moDBHelper.DBN2int(oRow("nParentId")) = 0 Then
-            // Dim oOpRow As DataRow
-            // Dim nOpPrices As Decimal = 0
-
-            // If Not IsDBNull(oRow("productDetail")) Then
-            // ' Go get the lowest price based on user and group
-            // nCheckPrice = getProductPricesByXml(oRow("productDetail"), oRow("unit") & "", oRow("quantity"))
-
-            // If Not moSubscription Is Nothing And oRow("contentType") = "Subscription" Then nCheckPrice = moSubscription.CartSubscriptionPrice(oRow("contentId"), myWeb.mnUserId)
-
-            // If nCheckPrice > 0 And nCheckPrice <> oRow("price") Then
-            // ' If price is lower, then update the item price field
-            // oRow.BeginEdit()
-            // oRow("price") = nCheckPrice
-            // oRow.EndEdit()
-            // End If
-
-            // '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-            // For Each oOpRow In oRow.GetChildRows("Rel1")
-            // 'need an option check price bit here
-            // Dim nNPrice As Decimal = getOptionPricesByXml(oRow("productDetail"), oRow("nItemOptGrpIdx"), oRow("nItemOptIdx"))
-            // If nNPrice > 0 And nNPrice <> oOpRow("price") Then
-            // nOpPrices += nNPrice
-            // oOpRow.BeginEdit()
-            // oOpRow("price") = nNPrice
-            // oOpRow.EndEdit()
-            // Else
-            // nOpPrices += oOpRow("price")
-            // End If
-            // Next
-            // 'oRow.BeginEdit()
-            // 'oRow("price") = nOpPrices
-            // 'oRow.EndEdit()
-            // '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-            // End If
-
-            // ' Apply stock control
-            // If mbStockControl Then CheckStock(oCartElmt, oRow("productDetail"), oRow("quantity"))
-            // ' Apply quantity control
-            // CheckQuantities(oCartElmt, oRow("productDetail"), oRow("quantity"))
-
-            // weight = weight + (oRow("weight") * oRow("quantity"))
-            // quant = quant + oRow("quantity")
-
-            // If moCartConfig("DiscountDirection") = "up" Then
-            // total = total + (oRow("quantity") * (oRow("price") + nOpPrices)) + CDec("0" & oRow("discount"))
-            // Else
-            // total = total + (oRow("quantity") * (oRow("price") + nOpPrices)) - CDec("0" & oRow("discount"))
-            // End If
-
-            // 'Round( Price * Vat ) * Quantity
-            // nUnitVat += RoundUp(((oRow("price") + nOpPrices)) - CDec("0" & oRow("discount")) * (mnTaxRate / 100)) * oRow("quantity")
-            // 'Round( ( Price * Quantity )* VAT )
-            // nLineVat += RoundUp((((oRow("price") + nOpPrices) - CDec("0" & oRow("discount"))) * oRow("quantity")) * (mnTaxRate / 100))
-            // End If
-            // Dim cUpdtSQL As String = "UPDATE tblCartItem SET nPrice = " & oRow("price") & " WHERE nCartItemKey = " & oRow("id")
-            // moDBHelper.exeProcessSQLScalar(cUpdtSQL)
-            // Next
-
-
-            // ' Quantity based error messaging
-            // Dim oError As XmlElement = oCartElmt.SelectSingleNode("error")
-            // If Not (oError Is Nothing) Then
-            // Dim oMsg As XmlElement
-            // oMsg = oCartElmt.OwnerDocument.CreateElement("msg")
-            // oMsg.SetAttribute("type", "zz_footer") ' Forces it to the bottom of the message block
-            // oMsg.InnerText = "Please adjust the quantities you require, or call for assistance."
-            // oError.AppendChild(oMsg)
-            // End If
-
-            // 'moDBHelper.updateDataset(oDs, "Item", True)
-
-            // sSql = "select cClientNotes from tblCartOrder where nCartOrderKey=" & nCartIdUse
-            // Dim oNotes As XmlElement = oCartElmt.OwnerDocument.CreateElement("Notes")
-            // oNotes.InnerXml = moDBHelper.exeProcessSQLScalar(sSql)
-            // total -= moDiscount.CheckDiscounts(oDs, oCartElmt, False, oNotes)
-
-            // oCartElmt.SetAttribute("status", "Active")
-            // oCartElmt.SetAttribute("itemCount", quant)
-            // oCartElmt.SetAttribute("vatRate", moCartConfig("TaxRate"))
-            // oCartElmt.SetAttribute("total", total)
-            // oCartElmt.SetAttribute("weight", weight)
-            // oCartElmt.SetAttribute("orderType", mmcOrderType & "")
-
-            // 'Adding notes to cart summary
-            // sSql = "Select cClientNotes from tblCartOrder where nCartOrderKey = " & nCartIdUse
-            // cNotes = moDBHelper.DBN2Str(moDBHelper.exeProcessSQLScalar(sSql), False, False)
-            // sSql = "Select nCartStatus  from tblCartOrder where nCartOrderKey = " & nCartIdUse
-            // If moDBHelper.DBN2Str(moDBHelper.exeProcessSQLScalar(sSql), False, False) = 6 Then
-            // oCartElmt.SetAttribute("complete", "true")
-            // Else
-            // oCartElmt.SetAttribute("complete", "true")
-            // End If
-            // Dim oElmt As XmlElement
-            // If Not (cNotes = "") Then
-            // oElmt = moPageXml.CreateElement("Notes")
-            // oElmt.InnerXml = cNotes
-            // oCartElmt.AppendChild(oElmt.FirstChild())
-            // End If
-            // End If
-
-            // Catch ex As Exception
-            // returnException(myWeb.msException, mcModuleName, "GetCartSummary", ex, "", cProcessInfo, gbDebug)
-            // End Try
-
-            // End Sub
-            // Public Sub GetCartSummary(ByRef oCartElmt As XmlElement, Optional ByVal nSelCartId As Integer = 0)
-            // 'made same as get cart
-            // myWeb.PerfMon.Log("Cart", "GetCartSummary")
-            // '   Content for the XML that will display all the information stored for the Cart
-            // '   This is a list of cart items (and quantity, price ...), totals,
-            // '   billing & delivery addressi and delivery method.
-
-            // Dim oDs As DataSet
-
-            // Dim sSql As String
-            // Dim oRow As DataRow
-
-            // Dim oElmt As XmlElement
-            // Dim oElmt2 As XmlElement
-            // Dim oXml As XmlDataDocument
-
-            // Dim quant As Integer
-            // Dim weight As Double
-            // Dim total As Double
-            // Dim vatAmt As Double
-            // Dim shipCost As Double
-            // Dim nCheckPrice As Double
-            // 'We need to read this value from somewhere so we can change where vat is added
-            // 'Currently defaulted to per line
-            // 'If true will be added to the unit
-            // Dim nUnitVat As Decimal = 0
-            // Dim nLineVat As Decimal = 0
-
-
-            // Dim cProcessInfo As String = ""
-            // Dim cOptionGroupName As String = ""
-
-            // Dim nCartIdUse As Integer
-            // If nSelCartId > 0 Then nCartIdUse = nSelCartId Else nCartIdUse = mnCartId
-
-
-            // Try
-
-            // If Not moSubscription Is Nothing Then moSubscription.CheckCartForSubscriptions(nCartIdUse, myWeb.mnUserId)
-
-            // If Not (nCartIdUse > 0) Then '   no shopping
-            // oCartElmt.SetAttribute("status", "Empty") '   set CartXML attributes
-            // oCartElmt.SetAttribute("itemCount", "0") '       to nothing
-            // oCartElmt.SetAttribute("vatRate", moCartConfig("TaxRate"))
-            // oCartElmt.SetAttribute("total", "0.00") '       for nothing
-
-            // Else
-            // '   otherwise
-
-            // '   and the address details we have obtained
-            // '   (if any)
-            // 'Add Totals
-            // quant = 0 '   get number of items & sum of collective prices (ie. cart total) from db
-            // total = 0.0#
-            // weight = 0.0#
-
-            // sSql = "select i.nCartItemKey as id, i.nItemId as contentId, i.cItemRef as ref, i.cItemURL as url, i.cItemName as Name, i.cItemUnit as unit, i.nPrice as price, i.nTaxRate as taxRate, i.nQuantity as quantity, i.nShpCat as shippingLevel, i.nDiscountValue as discount,i.nWeight as weight, p.cContentXmlDetail as productDetail, i.nItemOptGrpIdx, i.nItemOptIdx, i.nParentId, p.cContentSchemaName AS contentType, dbo.fxn_getContentParents(i.nItemId) as parId  from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey where nCartOrderId=" & nCartIdUse
-
-            // oDs = moDBHelper.getDataSetForUpdate(sSql, "Item", "Cart")
-            // 'add relationship for options
-            // oDs.Relations.Add("Rel1", oDs.Tables("Item").Columns("id"), oDs.Tables("Item").Columns("nParentId"), False)
-            // oDs.Relations("Rel1").Nested = True
-            // '
-            // For Each oRow In oDs.Tables("Item").Rows
-            // If moDBHelper.DBN2int(oRow("nParentId")) = 0 Then
-            // ' Go get the lowest price based on user and group
-            // If Not IsDBNull(oRow("productDetail")) Then
-            // nCheckPrice = getProductPricesByXml(oRow("productDetail"), oRow("unit") & "", oRow("quantity"))
-
-            // If Not moSubscription Is Nothing And oRow("contentType") = "Subscription" Then nCheckPrice = moSubscription.CartSubscriptionPrice(oRow("contentId"), myWeb.mnUserId)
-            // End If
-            // If nCheckPrice > 0 And nCheckPrice <> oRow("price") Then
-            // ' If price is lower, then update the item price field
-            // 'oRow.BeginEdit()
-            // oRow("price") = nCheckPrice
-            // 'oRow.EndEdit()
-            // End If
-
-            // 'option prices
-            // Dim oOpRow As DataRow
-            // Dim nOpPrices As Decimal = 0
-            // For Each oOpRow In oRow.GetChildRows("Rel1")
-
-            // Dim nNPrice As Decimal = getOptionPricesByXml(oRow("productDetail"), oRow("nItemOptGrpIdx"), oRow("nItemOptIdx"))
-            // If nNPrice > 0 And nNPrice <> oOpRow("price") Then
-            // nOpPrices += nNPrice
-            // 'oOpRow.BeginEdit()
-            // oOpRow("price") = nNPrice
-
-            // 'oOpRow.EndEdit()
-            // Else
-            // nOpPrices += oOpRow("price")
-            // End If
-            // Next
-
-            // ' Apply stock control
-            // If mbStockControl Then CheckStock(oCartElmt, oRow("productDetail"), oRow("quantity"))
-            // ' Apply quantity control
-            // CheckQuantities(oCartElmt, oRow("productDetail"), oRow("quantity"))
-
-            // weight = weight + (oRow("weight") * oRow("quantity"))
-            // quant = quant + oRow("quantity")
-            // total = total + (oRow("quantity") * (oRow("price") + nOpPrices))
-
-            // 'Round( Price * Vat ) * Quantity
-            // ' nUnitVat += Round((oRow("price") + nOpPrices) * (mnTaxRate / 100), , , mbRoundup) * oRow("quantity")
-            // 'Round( ( Price * Quantity )* VAT )
-            // '  nLineVat += Round((((oRow("price") + nOpPrices)) * oRow("quantity")) * (mnTaxRate / 100), , , mbRoundup)
-
-            // End If
-            // 'Dim ix As Integer
-            // 'Dim xstr As String
-            // 'For ix = 0 To oRow.Table.Columns.Count - 1
-            // '    xstr &= oRow.Table.Columns(ix).ColumnName & "="
-            // '    xstr &= oRow(ix) & ", "
-            // 'Next
-
-            // Dim cUpdtSQL As String = "UPDATE tblCartItem SET nPrice = " & oRow("price") & " WHERE nCartItemKey = " & oRow("id")
-            // moDBHelper.exeProcessSQLScalar(cUpdtSQL)
-            // Next
-
-
-            // ' Quantity based error messaging
-            // Dim oError As XmlElement = oCartElmt.SelectSingleNode("error")
-            // If Not (oError Is Nothing) Then
-            // Dim oMsg As XmlElement
-            // oMsg = oCartElmt.OwnerDocument.CreateElement("msg")
-            // oMsg.SetAttribute("type", "zz_footer") ' Forces it to the bottom of the message block
-            // oMsg.InnerText = "Please adjust the quantities you require, or call for assistance."
-            // oError.AppendChild(oMsg)
-            // End If
-
-
-            // 'moDBHelper.updateDataset(oDs, "Item", True)
-
-            // '   add to Cart XML
-            // sSql = "Select nCartStatus from tblCartOrder where nCartOrderKey = " & mnCartId
-            // Dim nStatusId As Long = moDBHelper.DBN2Str(moDBHelper.exeProcessSQLScalar(sSql), False, False)
-            // oCartElmt.SetAttribute("statusId", nStatusId)
-            // oCartElmt.SetAttribute("status", Me.getProcessName(nStatusId))
-            // oCartElmt.SetAttribute("itemCount", quant)
-            // oCartElmt.SetAttribute("weight", weight)
-            // oCartElmt.SetAttribute("orderType", mmcOrderType & "")
-
-            // If nStatusId = 6 Then
-            // oCartElmt.SetAttribute("complete", "true")
-            // Else
-            // oCartElmt.SetAttribute("complete", "true")
-            // End If
-            // 'Add the addresses to the dataset
-            // If nCartIdUse > 0 Then
-            // sSql = "select cContactType as type, cContactName as GivenName, cContactCompany as Company, cContactAddress as Street, cContactCity as City, cContactState as State, cContactZip as PostalCode, cContactCountry as Country, cContactTel as Telephone, cContactFax as Fax, cContactEmail as Email, cContactXml as Details from tblCartContact where nContactCartId=" & nCartIdUse
-            // moDBHelper.addTableToDataSet(oDs, sSql, "Contact")
-            // End If
-            // 'Add Items - note - do this AFTER we've updated the prices! 
-
-            // If oDs.Tables("Item").Rows.Count > 0 Then
-            // 'cart items
-            // oDs.Tables(0).Columns(0).ColumnMapping = Data.MappingType.Attribute
-            // oDs.Tables(0).Columns(1).ColumnMapping = Data.MappingType.Attribute
-            // oDs.Tables(0).Columns(2).ColumnMapping = Data.MappingType.Attribute
-            // oDs.Tables(0).Columns(3).ColumnMapping = Data.MappingType.Attribute
-            // oDs.Tables(0).Columns(5).ColumnMapping = Data.MappingType.Attribute
-            // oDs.Tables(0).Columns(6).ColumnMapping = Data.MappingType.Attribute
-            // oDs.Tables(0).Columns(7).ColumnMapping = Data.MappingType.Attribute
-            // oDs.Tables(0).Columns(8).ColumnMapping = Data.MappingType.Attribute
-            // oDs.Tables(0).Columns(9).ColumnMapping = Data.MappingType.Attribute
-            // oDs.Tables(0).Columns(10).ColumnMapping = Data.MappingType.Attribute
-            // oDs.Tables(0).Columns(11).ColumnMapping = Data.MappingType.Attribute
-            // oDs.Tables(0).Columns("parId").ColumnMapping = Data.MappingType.Attribute
-            // 'cart contacts
-            // oDs.Tables("Contact").Columns(0).ColumnMapping = Data.MappingType.Attribute
-
-            // oXml = New XmlDataDocument(oDs)
-            // oDs.EnforceConstraints = False
-            // 'Convert the detail to xml
-            // For Each oElmt In oXml.SelectNodes("/Cart/Item/productDetail | /Cart/Contact/Detail | /Cart/Contact/Details")
-            // oElmt.InnerXml = oElmt.InnerText
-            // If Not oElmt.SelectSingleNode("Content") Is Nothing Then
-            // oElmt.InnerXml = oElmt.SelectSingleNode("Content").InnerXml
-            // End If
-            // Next
-
-            // 'get the option xml
-            // For Each oElmt In oXml.SelectNodes("/Cart/Item/Item/productDetail")
-            // oElmt.InnerXml = oElmt.InnerText
-
-            // Dim nGroupIndex As String = oElmt.ParentNode.SelectSingleNode("nItemOptGrpIdx").InnerText
-            // Dim nOptionIndex As String = oElmt.ParentNode.SelectSingleNode("nItemOptIdx").InnerText
-            // cOptionGroupName = ""
-            // If Not oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/@name") Is Nothing Then
-            // cOptionGroupName = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/@name").InnerText
-            // End If
-            // If nOptionIndex >= 0 Then
-
-            // oElmt2 = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/option[" & nOptionIndex & "]")
-            // If cOptionGroupName <> "" Then oElmt2.SetAttribute("groupName", cOptionGroupName)
-            // oElmt.ParentNode.InnerXml = oElmt2.OuterXml
-            // Else
-            // 'case for text option
-            // oElmt2 = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/option[1]")
-            // If cOptionGroupName <> "" Then oElmt2.SetAttribute("groupName", cOptionGroupName)
-            // oElmt2.SetAttribute("name", oElmt.ParentNode.SelectSingleNode("Name").InnerText)
-            // oElmt.ParentNode.InnerXml = oElmt2.OuterXml
-            // End If
-
-            // Next
-
-            // oElmt = moPageXml.CreateElement("Cart")
-            // ' Note: Preserve the original elements in oCartElmt
-            // 'oCartElmt.InnerXml = oCartElmt.InnerXml + oXml.FirstChild.InnerXml
-
-
-            // End If
-            // myWeb.CheckMultiParents(oCartElmt)
-            // sSql = "select cClientNotes from tblCartOrder where nCartOrderKey=" & nCartIdUse
-            // Dim oNotes As XmlElement = oCartElmt.OwnerDocument.CreateElement("Notes")
-            // oNotes.InnerXml = moDBHelper.exeProcessSQLScalar(sSql)
-            // total -= moDiscount.CheckDiscounts(oDs, oCartElmt, True, oNotes)
-
-            // oXml = Nothing
-            // oDs = Nothing
-
-            // If mbNoDeliveryAddress Then oCartElmt.SetAttribute("hideDeliveryAddress", "true")
-            // If mnGiftListId > 0 Then oCartElmt.SetAttribute("giftListId", mnGiftListId)
-
-            // sSql = "select * from tblCartOrder where nCartOrderKey=" & nCartIdUse
-
-            // oDs = moDBHelper.getDataSet(sSql, "Order", "Cart")
-
-            // For Each oRow In oDs.Tables("Order").Rows
-            // shipCost = CDbl("0" & oRow("nShippingCost"))
-            // oCartElmt.SetAttribute("shippingType", oRow("nShippingMethodId") & "")
-            // oCartElmt.SetAttribute("shippingCost", shipCost & "")
-            // oCartElmt.SetAttribute("shippingDesc", oRow("cShippingDesc") & "")
-
-            // If oRow("nShippingMethodId") > 0 Then
-            // getShippingDetailXml(oCartElmt, oRow("nShippingMethodId"))
-            // End If
-
-            // If mnTaxRate > 0 Then
-            // 'we calculate vat at the end after we have applied discounts etc
-            // For Each oElmt In oXml.SelectNodes("/Cart/Item")
-            // Dim nOpPrices As Long = 0
-
-            // 'get the prices of options to calculate vat
-            // For Each oElmt2 In oXml.SelectNodes("/Item")
-            // nOpPrices += oElmt2.GetAttribute("price")
-            // Next
-
-            // If mbVatAtUnit Then
-            // 'Round( Price * Vat ) * Quantity
-            // nLineVat = Round((oElmt.GetAttribute("price") + nOpPrices) * (mnTaxRate / 100), , , mbRoundup) * oElmt.GetAttribute("quantity"))
-            // Else
-            // 'Round( ( Price * Quantity )* VAT )
-            // nLineVat = Round((((oRow("price") + nOpPrices)) * oRow("quantity")) * (mnTaxRate / 100), , , mbRoundup)
-            // End If
-
-            // ' oElmt.SetAttribute("itemTax", nLineVat)
-            // vatAmt += nLineVat
-            // Next
-
-            // vatAmt = Round((shipCost) * (mnTaxRate / 100), , , mbRoundup) + vatAmt
-
-            // oCartElmt.SetAttribute("totalNet", FormatNumber(total + shipCost, 2, TriState.True, TriState.False, TriState.False))
-            // oCartElmt.SetAttribute("vatRate", mnTaxRate)
-            // oCartElmt.SetAttribute("shippingType", oRow("nShippingMethodId") & "")
-            // oCartElmt.SetAttribute("shippingCost", FormatNumber(shipCost, 2, TriState.True, TriState.False, TriState.False))
-            // oCartElmt.SetAttribute("vatAmt", FormatNumber(vatAmt, 2, TriState.True, TriState.False, TriState.False))
-            // oCartElmt.SetAttribute("total", FormatNumber(total + shipCost + vatAmt, 2, TriState.True, TriState.False, TriState.False))
-            // Else
-            // oCartElmt.SetAttribute("totalNet", FormatNumber(total + shipCost, 2, TriState.True, TriState.False, TriState.False))
-            // oCartElmt.SetAttribute("vatRate", 0.0#)
-            // oCartElmt.SetAttribute("shippingType", oRow("nShippingMethodId") & "")
-            // oCartElmt.SetAttribute("shippingCost", FormatNumber(shipCost, 2, TriState.True, TriState.False, TriState.False))
-            // oCartElmt.SetAttribute("vatAmt", 0.0#)
-            // oCartElmt.SetAttribute("total", FormatNumber(total + shipCost, 2, TriState.True, TriState.False, TriState.False))
-            // End If
-            // Next
-            // End If
-
-
-
-            // Catch ex As Exception
-            // returnException(myWeb.msException, mcModuleName, "GetCartSummary", ex, "", cProcessInfo, gbDebug)
-            // End Try
-
-            // End Sub
+ 
 
             /// <summary>
             /// This does the same as get cart without the item information, so we call get cart and delete any items we find
@@ -3373,6 +2922,10 @@ namespace Protean
                         quant = 0L; // get number of items & sum of collective prices (ie. cart total) from db
                         total = 0.0d;
                         weight = 0.0d;
+                        if (moCartConfig["TareWeight"] != "") {
+                            weight = Convert.ToInt32(moCartConfig["TareWeight"]);
+                        }
+
                         ReceiptDeliveryType = 0;
                         // Process promo code from external refs.
                         if (Conversions.ToBoolean(Operators.OrObject(Operators.ConditionalCompareObjectNotEqual(myWeb.moSession["promocode"], "", false), !string.IsNullOrEmpty(myWeb.moRequest["promocode"]))))
@@ -3866,19 +3419,24 @@ namespace Protean
 
                                 // Default Shipping Country.
                                 string cDestinationCountry = moCartConfig["DefaultCountry"];
-                                cDestinationCountry = moCartConfig["DefaultCountry"];
+                                string cDestinationPostalCode = "";
                                 if (oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country") != null)
                                 {
                                     cDestinationCountry = oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country").InnerText;
+                                    cDestinationPostalCode = oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/PostalCode").InnerText;
                                 }
                                 if (!string.IsNullOrEmpty(cDestinationCountry))
                                 {
                                     // Go and collect the valid shipping options available for this order
-                                    var oDsShipOptions = getValidShippingOptionsDS(cDestinationCountry, total, quant, weight, cPromoCode);
+                                    int productId = 0;
+                                    var oDsShipOptions = getValidShippingOptionsDS(cDestinationCountry, cDestinationPostalCode, total, quant, weight, cPromoCode, productId);
                                     if (oDsShipOptions != null)
                                     {
                                         foreach (DataRow oRowSO in oDsShipOptions.Tables[0].Rows)
-                                        {
+                                        {                                          
+
+                                            shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"]));
+                                        
                                             bool bCollection = false;
                                             if (!(oRowSO["bCollection"] is DBNull))
                                             {
@@ -3900,7 +3458,7 @@ namespace Protean
                                                     {
                                                         if (Convert.ToString(oRowSO["nShipOptKey"]) == Convert.ToString(ShippingOptionKey))
                                                         {
-                                                            shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"]));
+                                                           
                                                             oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig["DefaultCountry"]);
                                                             oCartElmt.SetAttribute("shippingType", ShippingOptionKey + "");
                                                             oCartElmt.SetAttribute("shippingCost", shipCost + "");
@@ -3914,7 +3472,6 @@ namespace Protean
                                                 {
                                                     if (Convert.ToString(oRowSO["nShipOptKey"]) == moCartConfig["DefaultShippingMethod"])
                                                     {
-                                                        shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"]));
                                                         oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig["DefaultCountry"]);
                                                         oCartElmt.SetAttribute("shippingType", moCartConfig["DefaultShippingMethod"] + "");
                                                         oCartElmt.SetAttribute("shippingCost", shipCost + "");
@@ -3928,7 +3485,6 @@ namespace Protean
                                                 {
                                                     if (oCartElmt.GetAttribute("freeShippingMethods").Contains(oCartElmt.GetAttribute("shippingType")))
                                                     {
-                                                        shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"]));
                                                         oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig["DefaultCountry"]);
                                                         oCartElmt.SetAttribute("shippingType", Conversions.ToString(Operators.ConcatenateObject(oRowSO["nShipOptKey"], "")));
                                                         oCartElmt.SetAttribute("shippingCost", shipCost + "");
@@ -3943,7 +3499,6 @@ namespace Protean
                                             }
                                             else if ((shipCost == -1 || Convert.ToDouble("0" + oRowSO["nShipOptCost"].ToString()) < shipCost) & bCollection == false)
                                             {
-                                                shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"]));
                                                 oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig["DefaultCountry"]);
                                                 oCartElmt.SetAttribute("shippingType", Conversions.ToString(Operators.ConcatenateObject(oRowSO["nShipOptKey"], "")));
                                                 oCartElmt.SetAttribute("shippingCost", shipCost + "");
@@ -7321,6 +6876,7 @@ namespace Protean
                 double nAmount;
                 double nWeight;
                 string cDestinationCountry;
+                string cDestinationPostalCode = "";
                 var nShippingCost = default(double);
                 string cShippingDesc = "";
 
@@ -7393,11 +6949,12 @@ namespace Protean
                     else
                     {
                         cDestinationCountry = cartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country").InnerText;
+                        cDestinationPostalCode = cartElmt.SelectSingleNode("Contact[@type='Delivery Address']/PostalCode").InnerText;
                     }
                     if (string.IsNullOrEmpty(cDestinationCountry))
                         cDestinationCountry = moCartConfig["DefaultCountry"];
                     // Go and collect the valid shipping options available for this order
-                    ods = getValidShippingOptionsDS(cDestinationCountry, nAmount, nQuantity, nWeight);
+                    ods = getValidShippingOptionsDS(cDestinationCountry, cDestinationPostalCode, nAmount, nQuantity, nWeight,"",0);
 
                     var oOptXform = new Cms.xForm(ref myWeb.msException);
                     oOptXform.moPageXML = moPageXml;
@@ -7613,6 +7170,7 @@ namespace Protean
                                                 oOptXform.Instance.SelectSingleNode("nShipOptKey").InnerText = Conversions.ToString(oRow["nShipOptKey"]);
                                                 nShippingCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShippingTotal"]));
                                                 nShippingCost = Conversions.ToDouble(Strings.FormatNumber(nShippingCost, 2, TriState.True, TriState.False, TriState.False));
+
                                                 XmlElement argoSelectNode = (XmlElement)oGrpElmt.LastChild;
                                                 var optElmt = oOptXform.addOption(ref argoSelectNode, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cShipOptName"], "-"), oRow["cShipOptCarrier"]), ": "), mcCurrencySymbol), Strings.FormatNumber(nShippingCost, 2))), Conversions.ToString(oRow["nShipOptKey"]));
                                                 XmlElement optLabel = (XmlElement)optElmt.SelectSingleNode("label");
@@ -7641,6 +7199,7 @@ namespace Protean
                                                     oOptXform.Instance.SelectSingleNode("nShipOptKey").InnerText = Conversions.ToString(oRow["nShipOptKey"]);
                                                 nShippingCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShippingTotal"]));
                                                 nShippingCost = Conversions.ToDouble(Strings.FormatNumber(nShippingCost, 2, TriState.True, TriState.False, TriState.False));
+
                                                 XmlElement argoSelectNode1 = (XmlElement)oGrpElmt.LastChild;
                                                 var optElmt = oOptXform.addOption(ref argoSelectNode1, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cShipOptName"], "-"), oRow["cShipOptCarrier"]), ": "), mcCurrencySymbol), Strings.FormatNumber(nShippingCost, 2))), Conversions.ToString(oRow["nShipOptKey"]));
                                                 XmlElement optLabel = (XmlElement)optElmt.SelectSingleNode("label");
@@ -8484,8 +8043,10 @@ namespace Protean
                                         long nParentId = Conversions.ToLong(moDBHelper.ExeProcessSqlScalar(sSQL2));
                                         XmlNode argoNode7 = oProdXml.DocumentElement;
                                         var ItemParent = addNewTextNode("ParentProduct", ref argoNode7, "");
-
-                                        ItemParent.InnerXml = moDBHelper.GetContentDetailXml(nParentId).OuterXml;
+                                        XmlElement parentElmt = moDBHelper.GetContentDetailXml(nParentId,true);
+                                        if (parentElmt != null) {
+                                            ItemParent.InnerXml = parentElmt.OuterXml; 
+                                        }
                                     }
 
                                     oProdXml.DocumentElement.SetAttribute("type", cContentType);
@@ -11283,7 +10844,21 @@ namespace Protean
                     return null;
                 }
             }
+
             public DataSet getValidShippingOptionsDS(string cDestinationCountry, double nAmount, long nQuantity, double nWeight, string cPromoCode, int ProductId)
+            {
+                try
+                {
+                    var dsShippingOption = getValidShippingOptionsDS(cDestinationCountry,"", nAmount, nQuantity, nWeight, cPromoCode, ProductId);
+                    return dsShippingOption;
+                }
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getValidShippingOptionsDS", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    return null;
+                }
+            }
+            public DataSet getValidShippingOptionsDS(string cDestinationCountry, string cDestinationPostalCode, double nAmount, long nQuantity, double nWeight, string cPromoCode, int ProductId)
             {
 
                 try
@@ -11306,11 +10881,21 @@ namespace Protean
 
                     }
                     int argnIndex = 1;
-                    string sCountryList = getParentCountries(ref cDestinationCountry, ref argnIndex);
-
+                    string sCountryList = ""; 
                     // Add code for checking shipping group is included/Excluded for delievry methods
                     var PublishExpireDate = DateTime.Now;
+                    if (moCartConfig["ShippingPostcodes"] == "on" && cDestinationPostalCode != "") {
 
+                        string PostcodePrefix = System.Text.RegularExpressions.Regex.Split(cDestinationPostalCode, "(?m)^([A-Z0-9]{2,4})(?:\\s*[A-Z0-9]{3})?$")[1];
+                        sCountryList = getParentCountries(ref PostcodePrefix, ref argnIndex);
+                       
+                    }
+
+                    if (sCountryList == "") {
+                        sCountryList = getParentCountries(ref cDestinationCountry, ref argnIndex);
+                    }
+
+                    DataSet oDS;
                     if (myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure))
                     {
                         // ' call stored procedure else existing code.
@@ -11329,7 +10914,7 @@ namespace Protean
                         param.Add("dValidDate", PublishExpireDate);
                         param.Add("PromoCode", cPromoCode);
                         param.Add("ProductId", ProductId);
-                        return moDBHelper.GetDataSet("spGetValidShippingOptions", "Option", "Shipping", false, param, CommandType.StoredProcedure);
+                        oDS = moDBHelper.GetDataSet("spGetValidShippingOptions", "Option", "Shipping", false, param, CommandType.StoredProcedure);
                     }
                     // End If
                     else
@@ -11402,9 +10987,54 @@ namespace Protean
                         // Build Form
 
                         // Go and collect the valid shipping options available for this order
-                        return moDBHelper.GetDataSet(sSql + " order by opt.nDisplayPriority, nShippingTotal", "Option", "Shipping");
-
+                       oDS = moDBHelper.GetDataSet(sSql + " order by opt.nDisplayPriority, nShippingTotal", "Option", "Shipping");
                     }
+                    if (oDS.Tables["Option"].Columns["cLocationNameShort"] != null) { 
+                            string overiddenLocations = "";                        
+                            foreach (DataRow oRow in oDS.Tables["Option"].Rows)
+                            {
+                                // Calculate any shipping cost overage
+                                double nShippingCost;
+                                nShippingCost = Conversions.ToDouble(oRow["nShippingTotal"]);
+                                nShippingCost = Conversions.ToDouble(Strings.FormatNumber(nShippingCost, 2, TriState.True, TriState.False, TriState.False));
+
+                                double overageUnit = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShipOptWeightOverageUnit"]));
+                                double overageRate = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShipOptWeightOverageRate"]));
+                                if (overageUnit > 0)
+                                {
+                                    double multiplier = 0;
+                                    if (nWeight > Conversions.ToDouble(oRow["nShipOptWeightMax"]))
+                                    {
+                                        multiplier = Math.Ceiling(nWeight - Conversions.ToDouble(oRow["nShipOptWeightMax"]));
+                                    }
+                                    nShippingCost = nShippingCost + ((multiplier / overageUnit) * overageRate);
+                                }
+                                oRow["nShippingTotal"] = nShippingCost;
+
+                                // TODO delete any parent relations /  or remove if allready have child
+                                string delLocation = oRow["cLocationNameShort"].ToString();
+                                if (overiddenLocations.Contains("'" + delLocation + "'") == false && sCountryList!="") {
+                                Int32 startPos = sCountryList.IndexOf(delLocation) + delLocation.Length + 1;
+                                Int32 endPos = sCountryList.Length - sCountryList.IndexOf(delLocation) - delLocation.Length - 1;
+                                overiddenLocations = sCountryList.Substring(startPos,endPos);
+                                }
+                            }
+                            if (overiddenLocations != "") { 
+                                foreach (DataRow oRow in oDS.Tables["Option"].Rows)
+                                {
+                                    string delLocation = oRow["cLocationNameShort"].ToString();
+                                    if (overiddenLocations.Contains("'" + delLocation + "'"))
+                                    {
+                                        oRow.Delete();
+                                    }
+                                 }
+                            }
+                        }
+
+                    oDS.AcceptChanges();
+                    return oDS;
+                       
+                    
                 }
 
                 catch (Exception ex)

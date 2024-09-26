@@ -1,9 +1,9 @@
 ﻿<xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml" xmlns:ew="urn:ew">
 
   <!--   ################   Videos   ###############   -->
-  <!-- Video list Module -->
+  <!-- Video list Module --><!--
   <xsl:template match="Content[@type='Module' and @moduleType='VideoList']" mode="displayBrief">
-    <!-- Set Variables -->
+    --><!-- Set Variables --><!--
     <xsl:variable name="contentType" select="@contentType" />
     <xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
     <xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
@@ -32,7 +32,7 @@
         <xsl:otherwise>h3</xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <!-- Output Module -->
+    --><!-- Output Module --><!--
     <div class="clearfix VideoList">
       <xsl:if test="@carousel='true'">
         <xsl:attribute name="class">
@@ -51,7 +51,7 @@
             <xsl:value-of select="@autoPlaySpeed"/>
           </xsl:attribute>
         </xsl:if>
-        <!-- If Stepper, display Stepper -->
+        --><!-- If Stepper, display Stepper --><!--
         <xsl:if test="@stepCount != '0'">
           <xsl:apply-templates select="/" mode="genericStepper">
             <xsl:with-param name="articleList" select="$contentList"/>
@@ -68,7 +68,7 @@
         </xsl:apply-templates>
       </div>
     </div>
-  </xsl:template>
+  </xsl:template>-->
 
   <!-- Returns video width -->
   <xsl:template match="Content[@moduleType='Video']" mode="videoWidth">
@@ -225,7 +225,7 @@
   <xsl:template match="Content[@type='Video']" mode="ContentDetail">
     <xsl:variable name="thisURL" select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url"></xsl:variable>
     <div id="Video{@id}" class="detail Video">
-     
+
       <div class="video-detail-wrapper">
         <xsl:apply-templates select="." mode="VideoDetailDisplay">
         </xsl:apply-templates>

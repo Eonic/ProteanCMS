@@ -674,9 +674,6 @@ function showDependant(dependant, allDependants) {
 
     $("#" + dependant).prepareXform();
     $("#" + dependant).trigger('bespokeXform');
-
-
-
 }
 
 function showHideDependant(bindVar) {

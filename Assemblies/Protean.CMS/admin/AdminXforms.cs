@@ -2852,6 +2852,10 @@ namespace Protean
 
                             GetModuleOptions(ref oSelElmt);
 
+                            var submitted = base.isSubmitted();
+                            var ewsubmit = !string.IsNullOrEmpty(this.goRequest.Form["ewsubmit.x"]);
+                            var cModuletype = !string.IsNullOrEmpty(this.goRequest.Form["cModuleType"]);
+
                             if (base.isSubmitted() | !string.IsNullOrEmpty(this.goRequest.Form["ewsubmit.x"]) | !string.IsNullOrEmpty(this.goRequest.Form["cModuleType"]))
                             {
                                 base.updateInstanceFromRequest();
@@ -6352,7 +6356,7 @@ namespace Protean
                         // load the directory item to be deleted
                         moDbHelper.moPageXml = this.moPageXML;
 
-                        base.NewFrm("EditDeliveryMethod");
+                        base.NewFrm("DeleteDeliveryMethod");
 
                         // Lets get the object
                         oElmt = this.moPageXML.CreateElement("sType");
@@ -7366,6 +7370,16 @@ namespace Protean
                         base.addInput(ref oGrp1Elmt, "nShipOptWeightMax", true, "Maximum Weight", "short");
                         XmlElement argoBindParent9 = null;
                         base.addBind("nShipOptWeightMax", "tblCartShippingMethods/nShipOptWeightMax", oBindParent: ref argoBindParent9, "false()");
+
+                        if (myWeb.moDbHelper.checkTableColumnExists("tblCartShippingMethods","nShipOptWeightOverageRate")) {
+                            base.addInput(ref oGrp1Elmt, "nShipOptWeightOverageUnit", true, "Overage Unit", "short");
+                            XmlElement oElmtOverageUnit = null;
+                            base.addBind("nShipOptWeightOverageUnit", "tblCartShippingMethods/nShipOptWeightOverageUnit", oBindParent: ref oElmtOverageUnit, "false()");
+
+                            base.addInput(ref oGrp1Elmt, "nShipOptWeightOverageRate", true, "Overage Rate", "short");
+                            XmlElement oElmtOverageRate = null;
+                            base.addBind("nShipOptWeightOverageRate", "tblCartShippingMethods/nShipOptWeightOverageRate", oBindParent: ref oElmtOverageRate, "false()");
+                        }
 
                         base.addInput(ref oGrp1Elmt, "nShipOptPriceMin", true, "Minimum Price", "short");
                         XmlElement argoBindParent10 = null;
@@ -11045,7 +11059,11 @@ namespace Protean
 
                         // Build the form
                         base.NewFrm("MemberCodes");
-                        base.load("/xforms/directory/" + cFormName + ".xml", this.myWeb.maCommonFolders);
+                        string formPath = "/xforms/directory/" + cFormName + ".xml";
+                        if (myWeb.bs5) {
+                            formPath = "/admin/xforms/directory/" + cFormName + ".xml";
+                        }
+                        base.load(formPath, this.myWeb.maCommonFolders);
 
                         // Load the instance.
                         if (nCodesetKey > 0)

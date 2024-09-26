@@ -537,12 +537,16 @@ namespace Protean.Tools
             cValids = "0123456789";
             cValids += "abcdefghijklmnopqrstuvwxyz";
             cValids += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            cValids += " -&";
+            cValids += " -&*,";
             try
             {
                 if (cName != null)
                 {
-
+                    cName = Strings.Replace(cName, "/", "*");//TS need to remove any slashes from names replace with * so we can wildcard later.
+                    cName = Strings.Replace(cName, "'", "*");//TS need to remove any slashes from names replace with * so we can wildcard later.
+                    cName = Strings.Replace(cName, "(", "*");
+                    cName = Strings.Replace(cName, ")", "*");
+                    cName = Strings.Replace(cName, ".", "*");
                     cName = Strings.Replace(cName, "'", "");
                     cName = Strings.Replace(cName, "&amp;", "&");
                     if (!bLeaveAmp)

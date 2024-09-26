@@ -2210,7 +2210,10 @@ namespace Protean.Providers
                             }
                             myWeb.AddContentXml(ref oXfmElmt);
                         }
-
+                        else if (moRequest["ewCmd"] == "ResendActivation")
+                        { 
+                            
+                        }
                         else if (moRequest["ewCmd"] == "ActivateAccount")
                         {
 

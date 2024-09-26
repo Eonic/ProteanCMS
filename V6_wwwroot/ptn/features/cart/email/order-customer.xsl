@@ -29,8 +29,8 @@
     <table cellpadding="10" cellspacing="0" width="100%" id="cartBody">
       <tr>
         <td id="layoutHeader" colspan="2" align="left" style="text-align:left !important;">
-          <font face="verdana">
-            <font size="2">
+          <font face="Arial">
+            <font size="3">
               Reference:&#160;<xsl:value-of select="@InvoiceRef" />
               <br/>
               Order Total:&#160;<xsl:value-of select="$currency" /><xsl:value-of select="format-number(@total, '0.00')" />

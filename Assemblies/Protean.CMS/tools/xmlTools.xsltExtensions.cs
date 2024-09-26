@@ -191,6 +191,33 @@ namespace Protean
             }
 
 
+            public string RegexResult(string input, string pattern, string resultIndex)
+            {
+
+                string[] results;
+                if (resultIndex == "") {
+                    resultIndex = "0";
+                }
+
+                if (!(string.IsNullOrEmpty(pattern) | string.IsNullOrEmpty(input)))
+                {
+                    try
+                    {
+                        results = Regex.Split(input, pattern);
+                        return results[Convert.ToInt16(resultIndex)];
+                    }
+                    catch (Exception ex)
+                    {
+                        return ex.Message;
+                    }
+                }
+                else {
+                    return "input or pattern not defined";
+                }
+            }
+
+
+
             public string ToTitleCase(string input)
             {
 

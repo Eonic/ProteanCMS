@@ -8,6 +8,10 @@
 // $Copyright:   Copyright (c) 2002 - 2024 Trevor Spink Consultants Ltd.
 // ***********************************************************************
 
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using Protean.Providers.Membership;
+using Protean.Providers.Messaging;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,10 +24,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web.Configuration;
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
-using Protean.Providers.Membership;
-using Protean.Providers.Messaging;
 using static Protean.Cms.dbImport;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
@@ -1115,7 +1115,7 @@ namespace Protean
                         }
                     case (objectTypes)15:
                         {
-                            return "cLocationForeignRef";
+                            return "cLocationForiegnRef";
                         }
                     case (objectTypes)16:
                         {
@@ -1584,7 +1584,7 @@ namespace Protean
                                         thisContentType = prefixs[i].Substring(prefixs[i].IndexOf("/") + 1, prefixs[i].Length - prefixs[i].IndexOf("/") - 1);
                                         if ((contentType ?? "") == (thisContentType ?? ""))
                                         {
-                                            redirectUrl += "/" + thisPrefix + "/" + contentName.ToString().Replace(" ", "-").Trim('-');
+                                            redirectUrl += "/" + thisPrefix + "/" + Protean.Tools.Text.CleanName(contentName).Replace(" ", "-").Trim('-');
                                             if (myWeb.moConfig["DetailPathTrailingSlash"] == "on")
                                             {
                                                 redirectUrl = redirectUrl + "/";
@@ -1611,13 +1611,16 @@ namespace Protean
 
                                 if (!string.IsNullOrEmpty(thisPrefix))
                                 {
+                                    string cContentName = SqlFmt(sPath).Replace("*", "%").Replace(" ", "%");
+
                                     if (gbAdminMode)
                                     {
-                                        sSql = "select TOP(1) nContentKey  from tblContent c inner join tblAudit a on a.nAuditKey = c.nAuditId where cContentName like '" + SqlFmt(sPath) + "' and cContentSchemaName like '" + thisContentType + "' order by nVersion desc";
+                                        // replace * with wildcard as content names replace / with * in cleanname
+                                        sSql = "select TOP(1) nContentKey  from tblContent c inner join tblAudit a on a.nAuditKey = c.nAuditId where cContentName like '" + cContentName + "' and cContentSchemaName like '" + thisContentType + "' order by nVersion desc";
                                     }
                                     else
                                     {
-                                        sSql = "select TOP(1) nContentKey from tblContent c inner join tblAudit a on a.nAuditKey = c.nAuditId where cContentName like '" + SqlFmt(sPath) + "' and cContentSchemaName like '" + thisContentType + "' " + myWeb.GetStandardFilterSQLForContent() + " order by nVersion desc";
+                                        sSql = "select TOP(1) nContentKey from tblContent c inner join tblAudit a on a.nAuditKey = c.nAuditId where cContentName like '" + cContentName + "' and cContentSchemaName like '" + thisContentType + "' " + myWeb.GetStandardFilterSQLForContent() + " order by nVersion desc";
                                     }
                                     ods = GetDataSet(sSql, "Content");
                                     if (ods != null)
@@ -8761,6 +8764,9 @@ namespace Protean
                     valuesList.Add(artId.ToString());
                     valuesList.Add(SqlDate(DateTime.Now, true));
                     valuesList.Add(((int)loggedActivityType).ToString());
+                    if (activityDetail.Length >= 800) {
+                        activityDetail = "TRUNCATED:" + activityDetail.Substring(0, 785);
+                    }
                     valuesList.Add(SqlString(activityDetail));
                     valuesList.Add(SqlString(Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(sessionId), "Service_" + DateTime.Now.ToString(), sessionId))));
                     if (otherId > 0L)
@@ -10241,6 +10247,11 @@ namespace Protean
 
             public XmlElement GetContentDetailXml(long nArtId = 0L)
             {
+                return GetContentDetailXml(nArtId, false);
+            }
+
+            public XmlElement GetContentDetailXml(long nArtId = 0L, Boolean noFilter = false)
+            {
                 PerfMonLog("Web", "GetContentDetailXml");
                 XmlElement oRoot;
                 XmlElement oElmt = null;
@@ -10263,9 +10274,10 @@ namespace Protean
                     if (nArtId > 0L)
                     {
                         sProcessInfo = "loading content" + nArtId;
-
-                        sFilterSql += GetStandardFilterSQLForContent();
-
+                        if (noFilter = false)
+                        {
+                            sFilterSql += GetStandardFilterSQLForContent();
+                        }
                         oRoot = moPageXml.CreateElement("ContentDetail");
                         sSql = "select c.nContentKey as id, cContentForiegnRef as ref, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentName as name, cContentSchemaName as type, cContentXmlDetail as content, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, a.nStatus as status from tblContent c ";
                         sSql += "inner join tblAudit a on c.nAuditId = a.nAuditKey  ";
@@ -10645,6 +10657,10 @@ namespace Protean
                     // map the feilds to columns
                     if (oDs != null)
                     {
+                        if (oDs.Tables[0].Columns.Count >= 13)
+                        {
+                            oDs.Tables[0].Columns.RemoveAt(12);
+                        }
 
                         oDs.Tables[0].Columns["id"].ColumnMapping = MappingType.Attribute;
 
@@ -14422,6 +14438,14 @@ namespace Protean
                     sSql = "INSERT INTO [dbo].[tblCartContact] ([nContactDirId], [nContactCartId], [cContactType], [cContactName], [cContactCompany]," + " [cContactAddress], [cContactCity], [cContactState], [cContactZip], [cContactCountry], [cContactTel], [cContactFax], [cContactEmail]," + " [cContactXml], [nAuditId], [cContactForiegnRef], [nLat], [nLong], [cContactForeignRef], [cContactAddress2])" + " VALUES (" + contact.nContactDirId + "," + contact.nContactCartId + "" + ",'" + Tools.Database.SqlFmt(contact.cContactType) + "'" + ",'" + Tools.Database.SqlFmt(contact.cContactName) + "'" + ",'" + Tools.Database.SqlFmt(contact.cContactCompany) + "'" + ",'" + Tools.Database.SqlFmt(contact.cContactAddress) + "'" + ",'" + Tools.Database.SqlFmt(contact.cContactCity) + "'" + ",'" + Tools.Database.SqlFmt(contact.cContactState) + "'" + ",'" + Tools.Database.SqlFmt(contact.cContactZip) + "'" + ",'" + Tools.Database.SqlFmt(contact.cContactCountry) + "'" + ",'" + Tools.Database.SqlFmt(contact.cContactTel) + "'" + ",'" + Tools.Database.SqlFmt(contact.cContactFax) + "'" + ",'" + Tools.Database.SqlFmt(contact.cContactEmail) + "'" + ",'<Content><LocationSummary>" + Tools.Database.SqlFmt(contact.cContactLocationSummary) + "</LocationSummary></Content>'" + "," + getAuditId() + ",'" + Tools.Database.SqlFmt(contact.cContactForiegnRef) + "'" + ",'" + contact.nLat + "'" + ",'" + contact.nLong + "'" + ",'" + Tools.Database.SqlFmt(contact.cContactForeignRef) + "'" + ",'" + Tools.Database.SqlFmt(contact.cContactAddress2) + "')";
 
                     nId = GetIdInsertSql(sSql);
+
+                    if (nId == "0")
+                    {
+
+                        throw new Exception("Address not saved");
+
+                    }
+
                     return Conversions.ToInteger(nId);
                 }
 
@@ -14439,7 +14463,12 @@ namespace Protean
                 string cProcessInfo = "";
                 try
                 {
-                    sSql = "UPDATE [dbo].[tblCartContact]" + "SET [cContactName] = '" + Tools.Database.SqlFmt(contact.cContactName) + "'" + ", [cContactAddress] = '" + Tools.Database.SqlFmt(contact.cContactAddress) + "'" + ", [cContactAddress2] = '" + Tools.Database.SqlFmt(contact.cContactAddress2) + "'" + ", [cContactCity] = '" + Tools.Database.SqlFmt(contact.cContactCity) + "'" + ", [cContactState] = '" + Tools.Database.SqlFmt(contact.cContactState) + "'" + ", [cContactZip] = '" + Tools.Database.SqlFmt(contact.cContactZip) + "'" + ", [cContactCountry] = '" + Tools.Database.SqlFmt(contact.cContactCountry) + "'" + ", [cContactTel] = '" + Tools.Database.SqlFmt(contact.cContactTel) + "'" + ", [cContactFax] = '" + Tools.Database.SqlFmt(contact.cContactFax) + "'" + ", [cContactXml] = '<Content><LocationSummary>" + Tools.Database.SqlFmt(contact.cContactLocationSummary) + "</LocationSummary></Content>'" + "WHERE [nContactKey] = " + contact.nContactKey;
+                    if (contact.nContactKey == null)
+                    {
+                        contact.nContactKey = (int)myWeb.moDbHelper.getObjectByRef(objectTypes.CartContact, contact.cContactForiegnRef, "");
+                    }
+                    //sSql = "UPDATE [dbo].[tblCartContact]" + "SET [cContactName] = '" + Tools.Database.SqlFmt(contact.cContactName) + "'" + ", [cContactAddress] = '" + Tools.Database.SqlFmt(contact.cContactAddress) + "'" + ", [cContactAddress2] = '" + Tools.Database.SqlFmt(contact.cContactAddress2) + "'" + ", [cContactCity] = '" + Tools.Database.SqlFmt(contact.cContactCity) + "'" + ", [cContactState] = '" + Tools.Database.SqlFmt(contact.cContactState) + "'" + ", [cContactZip] = '" + Tools.Database.SqlFmt(contact.cContactZip) + "'" + ", [cContactCountry] = '" + Tools.Database.SqlFmt(contact.cContactCountry) + "'" + ", [cContactTel] = '" + Tools.Database.SqlFmt(contact.cContactTel) + "'" + ", [cContactFax] = '" + Tools.Database.SqlFmt(contact.cContactFax) + "'" + ", [cContactXml] = '<Content><LocationSummary>" + Tools.Database.SqlFmt(contact.cContactLocationSummary) + "</LocationSummary></Content>'" + "WHERE [nContactKey] = " + contact.nContactKey;
+                    sSql = "UPDATE [dbo].[tblCartContact]" + "SET [cContactName] = '" + Tools.Database.SqlFmt(contact.cContactName) + "'" + ", [cContactAddress] = '" + Tools.Database.SqlFmt(contact.cContactAddress) + "'" + ", [cContactCity] = '" + Tools.Database.SqlFmt(contact.cContactCity) + "'" + ", [cContactState] = '" + Tools.Database.SqlFmt(contact.cContactState) + "'" + ", [cContactZip] = '" + Tools.Database.SqlFmt(contact.cContactZip) + "'" + ", [cContactCountry] = '" + Tools.Database.SqlFmt(contact.cContactCountry) + "'" + ", [cContactTel] = '" + Tools.Database.SqlFmt(contact.cContactTel) + "'" + ", [cContactFax] = '" + Tools.Database.SqlFmt(contact.cContactFax) + "'" + ", [cContactXml] = '<Content><LocationSummary>" + Tools.Database.SqlFmt(contact.cContactLocationSummary) + "</LocationSummary></Content>'" + "WHERE [nContactKey] = " + contact.nContactKey;
 
                     ExeProcessSql(sSql);
                     return true;
