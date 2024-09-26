@@ -41,14 +41,6 @@ footer#pagefooter {
         }
     }
 
-    .dropdown-menu {
-        border-top: 1px solid $grey;
-        border-bottom: 1px solid $grey;
-
-        @include media-breakpoint-up($nav-breakpoint) {
-            border: 1px solid $grey;
-        }
-    }
 }
 
 .header-menu-below .main-nav {

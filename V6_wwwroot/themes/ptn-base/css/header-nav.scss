@@ -162,21 +162,27 @@ header {
         animation-duration: 0.3s;
 
         .dropdown-item {
+            color: color-contrast($dropdown-bg);
+
             &:hover,
             &:active,
             &.active {
                 background: none;
+                opacity: 0.8;
             }
 
             &.active,
             &.on,
             &:focus {
-                color: $dropdown-link-active-color;
+                //color: $dropdown-link-active-color;
+                opacity: 0.8;
             }
 
             &:first-child {
+                color: color-contrast($dropdown-bg);
+
                 &.on {
-                    color: $navbar-light-color;
+                    color: color-contrast($dropdown-bg);
                 }
             }
         }
@@ -247,7 +253,7 @@ header {
 
         @include media-breakpoint-up($nav-breakpoint) {
             .dropdown-menu > li > a {
-                font-weight: 600;
+                font-weight: 300;
             }
 
             position: static;
@@ -267,15 +273,16 @@ header {
                 clear: both;
 
                 > a {
-                    color: $primary;
-                    border-bottom: 1px solid $primary;
+                    color: color-contrast($dropdown-bg);
+                    border-bottom: 2px solid color-contrast($dropdown-bg);
                     margin-bottom: 0.6rem;
                     padding-bottom: 0.5rem;
                     padding-left: 0;
                     padding-right: 0;
-                    margin-left: 1.5rem;
-                    margin-right: 1.5rem;
+                    margin-left: $dropdown-item-padding-x;
+                    margin-right: $dropdown-item-padding-x;
                     width: calc(100% - 3rem);
+                    font-weight: 600;
                 }
             }
         }
