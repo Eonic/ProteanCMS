@@ -522,6 +522,8 @@ header {
 /*############### SIGN IN #################*/
 .login-btn {
     white-space: nowrap;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
 
     &:hover {
         color: $nav-link-hover-color;
@@ -640,8 +642,8 @@ header {
 
 .search-btn {
     color: $navbar-light-color;
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
 
     &:hover,
     &:focus {
@@ -659,6 +661,10 @@ header {
         justify-content: flex-end;
     }
 
+    @include media-breakpoint-up($nav-breakpoint) {
+        padding-left: 0.5rem;
+    }
+
     a {
         @extend .btn;
         @extend .#{$header-btn-style};
@@ -667,6 +673,7 @@ header {
         display: flex;
         align-items: center;
         margin: 1px;
+        font-weight:600;
     }
 }
 

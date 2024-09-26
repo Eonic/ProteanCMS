@@ -4,9 +4,9 @@
 
 /*##################### COLOURS #######################*/
 //$body-bg: $white !default;
-$primary: #02809C;
-$secondary: #1b19be;
-$info: #3498db;
+$primary: #147CA9;
+$secondary: #003e74;
+$info: #41b6df;
 $light: #efefef;
 $dark: #111;
 $mid-gray: #111;
@@ -46,7 +46,7 @@ $btn-color: $primary;
 //$btn-font-weight: 600;
 $content-btn-align: true;
 //$btn-border-radius: var(--#{$prefix}border-radius);
-//$btn-border-width: $input-btn-border-width;
+$btn-border-width: 2px;
 $btn-padding-x: 1.5rem;
 $btn-padding-y: 0.4rem;
 
