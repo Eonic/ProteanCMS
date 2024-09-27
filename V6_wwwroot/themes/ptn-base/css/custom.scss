@@ -1,6 +1,12 @@
 ﻿/*############### LAYOUT #################*/
 html {
     height: 100%;
+    //for sticky headers
+   /* scroll-padding-top: calc($fixed-height-xs + 10px);
+
+    @include media-breakpoint-up($nav-breakpoint) {
+        scroll-padding-top: calc($fixed-height-lg + 100px);
+    }*/
 }
 
 body {
@@ -561,6 +567,7 @@ section.stretchBG {
 .date,
 .dtstamp {
     font-size: 0.75rem;
+    padding-bottom: 1rem;
 
     &:before {
         content: '\f073';
@@ -804,6 +811,14 @@ div[class$="List"].module {
     .pngicon:before {
         content: '\f1c5';
     }
+
+    .pptxicon:before {
+        content: '\f1c4';
+    }
+
+    .docxicon:before {
+        content: '\f1c2';
+    }
 }
 
 .ProductList {
@@ -837,6 +852,10 @@ div[class$="List"].module {
 
     .media-inner {
         padding: 1rem;
+
+        .entryFooter {
+            padding-top: 1rem;
+        }
     }
 }
 

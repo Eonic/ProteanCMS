@@ -30,7 +30,10 @@
       </xsl:choose>
     </xsl:variable>
 
-    <div class="SubscriptionList">
+    <div class="clearfix SubscriptionList">
+      <div>
+        <!--responsive columns -->
+        <xsl:apply-templates select="." mode="contentColumns"/>
         <xsl:if test="@stepCount != '0'">
           <xsl:apply-templates select="/" mode="genericStepper">
             <xsl:with-param name="articleList" select="$contentList"/>
@@ -43,6 +46,7 @@
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
+      </div>
     </div>
 
   </xsl:template>
@@ -67,9 +71,9 @@
       </xsl:apply-templates>
     </xsl:variable>
     <!-- hproduct for microformats -->
-    <div class="listItem list-group-item hproduct subscription">
+    <div class="listItem subscription">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'listItem list-group-item hproduct subscription'"/>
+        <xsl:with-param name="class" select="'listItem subscription'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
       <div class="lIinner">
