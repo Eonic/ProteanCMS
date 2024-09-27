@@ -119,7 +119,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
-      <HintPath>..\..\..\EonicClients\WannerInternational2022\Wanner2021\packages\BouncyCastle.Cryptography.2.3.1\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
+      <HintPath>..\..\packages\BouncyCastle.Cryptography.2.4.0\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
     </Reference>
     <Reference Include="DocumentFormat.OpenXml, Version=3.0.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
       <HintPath>..\..\packages\DocumentFormat.OpenXml.3.0.2\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
@@ -133,9 +133,8 @@
     <Reference Include="ICSharpCode.SharpZipLib, Version=1.4.2.13, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SharpZipLib.1.4.2\lib\netstandard2.0\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="iTextSharp.LGPLv2.Core, Version=3.4.21.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\NonNuget\iTextSharp.LGPLv2.Core.dll</HintPath>
+    <Reference Include="iTextSharp.LGPLv2.Core, Version=3.4.22.0, Culture=neutral, PublicKeyToken=51d712e21b66ad36, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\iTextSharp.LGPLv2.Core.3.4.22\lib\net462\iTextSharp.LGPLv2.Core.dll</HintPath>
     </Reference>
     <Reference Include="JsonWebTokens, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
