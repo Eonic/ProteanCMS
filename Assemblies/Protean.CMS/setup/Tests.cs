@@ -380,6 +380,26 @@ namespace Protean
             }
         }
 
+        public string TestReadPDF()
+        {
+            try
+            {
+                Cms oEw = new Cms();
+                oEw.InitializeVariables();
+                string filepath = oEw.goServer.MapPath("/ewcommon/setup/test.pdf");
+                string response = "";
+
+                response =  Protean.Tools.FileHelper.GetPDFText(filepath);
+              
+                return  response;
+            }
+
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
+
 
     }
 }
