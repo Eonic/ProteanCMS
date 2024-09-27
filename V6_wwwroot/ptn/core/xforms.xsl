@@ -2552,6 +2552,11 @@
 		<xsl:param name="selectedValue"/>
 		<xsl:variable name="value" select="value"/>
 		<option>
+		<xsl:if test="@title!=''">
+			<xsl:attribute name="title">
+				<xsl:value-of select="@title"/>
+			</xsl:attribute>
+		</xsl:if>
 			<xsl:attribute name="value">
 				<xsl:value-of select="value"/>
 			</xsl:attribute>
@@ -2567,6 +2572,11 @@
 		<xsl:param name="selectedValues"/>
 		<xsl:variable name="value" select="value"/>
 		<option>
+		<xsl:if test="@title!=''">
+			<xsl:attribute name="title">
+				<xsl:value-of select="@title"/>
+			</xsl:attribute>
+		</xsl:if>
 			<xsl:attribute name="value">
 				<xsl:value-of select="value"/>
 			</xsl:attribute>
