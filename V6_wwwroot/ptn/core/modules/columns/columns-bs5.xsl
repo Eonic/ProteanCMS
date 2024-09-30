@@ -405,6 +405,11 @@
           row flexbox-columns flexbox-cols-<xsl:value-of select="@flexColumns"/>
         </xsl:attribute>
       </xsl:if>-->
+      <xsl:if test="@contentHeight='true'">
+        <xsl:attribute name="class">
+          row match-content-height
+        </xsl:attribute>
+      </xsl:if>
 			<xsl:if test="$adminMode and @moduleType='Conditional1Column'">
 				<xsl:attribute name="class">row conditional-block</xsl:attribute>
 				<div class="conditional-note">
@@ -468,7 +473,7 @@
 			<xsl:apply-templates select="." mode="unevenColumns2">
 			</xsl:apply-templates>
 		</xsl:variable>
-		<div class="row test">
+		<div class="row">
 			<div id="column1-{@id}" class="column1 {$unevenColumns1}">
 				<xsl:apply-templates select="/Page" mode="addModule">
 					<xsl:with-param name="text">Add Module</xsl:with-param>
@@ -519,7 +524,7 @@
 		<xsl:choose>
 			<xsl:when test="@colType='false'">
 
-				<div class="row test">
+				<div class="row">
 					<div id="column1-{@id}" class="column1 {$unevenColumns1}">
 						<xsl:apply-templates select="/Page" mode="addModule">
 							<xsl:with-param name="text">Add Module</xsl:with-param>
@@ -576,6 +581,11 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<div class="row">
+          <xsl:if test="@contentHeight='true'">
+            <xsl:attribute name="class">
+              row match-content-height
+            </xsl:attribute>
+          </xsl:if>
 					<div id="column1-{@id}" class="column1 {$responsiveColumns-bs5}">
 						<xsl:apply-templates select="/Page" mode="addModule">
 							<xsl:with-param name="text">Add Module</xsl:with-param>
