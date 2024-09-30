@@ -99,7 +99,7 @@
     }
 }
 .match-content-height {
-    > div > div {
+    > div > div:not(.ptn-edit) {
         height: calc(100% - $grid-gutter-height);
     }
 }

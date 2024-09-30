@@ -63,8 +63,3 @@
     }
 }
 
-.match-content-height {
-    > div > div {
-        height: calc(100% - $grid-gutter-height);
-    }
-}
