@@ -18,6 +18,7 @@ using System.Threading;
 using System.Web;
 using System.Web.Configuration;
 using System.Xml;
+using AngleSharp.Io;
 using DelegateWrappers;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
@@ -1512,13 +1513,22 @@ namespace Protean
                     statuses.Add(new FilesStatus(fullName.Replace(" ", "-"), Conversions.ToInteger(file.ContentLength)));
                     context.Server.MapPath("/");
                     // We will add one node in ReviewFeedback.xml form and use it instead of config key = context.Request.Form("reviewimagepath")
-                    if (!string.IsNullOrEmpty(context.Request.Form["cImageBasePath"]) && !string.IsNullOrEmpty(context.Request.Form["cImageBasePath"]))
+                    if (!string.IsNullOrEmpty(goConfig["ReviewImageBasePath"]) && !string.IsNullOrEmpty(goConfig["ReviewImageBasePath"]))
                     {
-                        cleanUploadedPaths = "/" + mcStartFolder.Replace(context.Request.Form["cImageBasePath"], "").Replace(@"\", "/") + cfileName;
+                        cleanUploadedPaths = "/" + mcStartFolder.Replace(goConfig["ReviewImageBasePath"], "").Replace(@"\", "/") + cfileName;
                     }
                     else
                     {
-                        cleanUploadedPaths = "/" + mcStartFolder.Replace(context.Server.MapPath("/"), "").Replace(@"\", "/") + cfileName;
+                        if (!string.IsNullOrEmpty(context.Request.Form["cImageBasePath"]) && !string.IsNullOrEmpty(context.Request.Form["cImageBasePath"]))
+                        {
+
+                            cleanUploadedPaths = "/" + mcStartFolder.Replace(context.Request.Form["cImageBasePath"], "").Replace(@"\", "/") + cfileName;
+
+                        }
+                        else
+                        {
+                            cleanUploadedPaths = "/" + mcStartFolder.Replace(context.Server.MapPath("/"), "").Replace(@"\", "/") + cfileName;
+                        }
                     }
                 }
 
