@@ -14580,7 +14580,34 @@ namespace Protean
             }
             #endregion
 
-
+            public string getProductIdFromOrder(string orderRef, string ContentName)
+            {
+                // Dim oDr As SqlDataReader
+                string sSql;
+                string nContentID = string.Empty;
+                
+                string cProcessInfo = "";
+                try
+                {
+                    sSql = "execute spGetProductIdFromOrderReference @orderRef=" + orderRef + ", @ProductName=" + "'"+ ContentName + "'";
+                    using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql))
+                    {
+                        if (oDr != null)
+                        {
+                            while (oDr.Read())
+                            {
+                                nContentID = Convert.ToString(oDr["nItemId"]);                                
+                            }                            
+                        }
+                    }
+                    return nContentID.ToString();
+                }
+                catch (Exception ex)
+                {
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "UpdateContact", ex, cProcessInfo));
+                    return nContentID;
+                }
+            }
         }
 
 
