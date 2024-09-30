@@ -98,6 +98,11 @@
         column-count: 3;
     }
 }
+.match-content-height {
+    > div > div {
+        height: calc(100% - $grid-gutter-height);
+    }
+}
 /*############### BUTTONS AND LINKS #################*/
 .skip {
     position: absolute;

@@ -45,6 +45,7 @@
       <bind id="minHeightxs" nodeset="@minHeightxs" required="false()" type="string"/>
       <bind id="minHeight" nodeset="@minHeight" required="false()" type="string"/>
       <bind id="relHeight" nodeset="@relHeight" required="false()" type="string"/>
+      <bind id="contentHeight" nodeset="@contentHeight" required="false()" type="string"/>
       <bind id="data-stellar-background-ratio" nodeset="@data-stellar-background-ratio" required="false()" type="string"/>
       <bind id="fullWidth" nodeset="@fullWidth" required="false()" type="string"/>
       <bind id="marginBelow" nodeset="@marginBelow" required="false()" type="string"/>
@@ -1022,6 +1023,17 @@
                 <label>Bottom</label>
                 <value>bottom</value>
               </item>-->
+            </select1>
+            <select1 bind="contentHeight" appearance="full">
+              <label>Make content items equal heights?</label>
+              <item>
+                <label>Yes</label>
+                <value>true</value>
+              </item>
+              <item>
+                <label>No</label>
+                <value>false</value>
+              </item>
             </select1>
           </group>
         </group>

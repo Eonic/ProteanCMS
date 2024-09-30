@@ -23,7 +23,7 @@
         align-items: center;
 
         .module {
-            margin-bottom:0;
+            margin-bottom: 0;
         }
     }
 
@@ -31,6 +31,7 @@
         display: block
     }
 }
+
 .parallax__container {
     clip: rect(0, auto, auto, 0);
     height: 100%;
@@ -55,8 +56,15 @@
     background-repeat: no-repeat;
     background-size: cover;
 }
+
 .parallax-wrapper {
     .content {
-        position:relative;
+        position: relative;
+    }
+}
+
+.match-content-height {
+    > div > div {
+        height: calc(100% - $grid-gutter-height);
     }
 }
