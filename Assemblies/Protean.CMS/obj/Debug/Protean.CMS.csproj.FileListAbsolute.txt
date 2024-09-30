@@ -416,3 +416,5 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\BouncyCastle.Crypto
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\SkiaSharp.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\SkiaSharp.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\iTextSharp.LGPLv2.Core.xml
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Debug\Protean.CMS.csproj.AssemblyReference.cache
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Debug\Protean.CMS.csproj.CoreCompileInputs.cache
