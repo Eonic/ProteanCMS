@@ -9,33 +9,27 @@
 // $Copyright:   Copyright (c) 2002 - 2022 Eonic Digital LLP.
 // ***********************************************************************
 
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using Protean.Providers.Membership;
+using Protean.Providers.Payment;
+using Protean.Tools;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
-using static System.Web.HttpUtility;
-
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
-using Protean.Tools;
 using static Protean.Tools.Text;
 using static Protean.Tools.Xml;
-using System.Web.UI.HtmlControls;
-using Protean.Providers.Membership;
-using Protean.Providers.Payment;
-using System.Windows.Shapes;
-using System.Data.SqlClient;
-using Protean.Models;
-using System.Windows.Controls;
+using static System.Web.HttpUtility;
 
 namespace Protean
 {
@@ -79,7 +73,8 @@ namespace Protean
                         moRequest = this.myWeb.moRequest;
 
                         base.cLanguage = this.myWeb.mcPageLanguage;
-                        if (myWeb.bs5) {
+                        if (myWeb.bs5)
+                        {
                             ReportExportPath = "/ptn/tools/export.ashx?ewCmd=CartDownload";
                         }
                     }
@@ -224,7 +219,7 @@ namespace Protean
                 }
 
 
-               
+
                 public virtual XmlElement GetProviderXFrmUserLogon(string FormName = "UserLogon")
                 {
                     string cProcessInfo = "";
@@ -1868,7 +1863,7 @@ namespace Protean
                         if (string.IsNullOrEmpty(cParId))
                         {
                             XmlElement xmlBase = base.Instance;
-                            Xml.NodeState(ref xmlBase, "tblContentStructure/nStructParId", (base.goRequest["parId"] == null? "": Convert.ToString(base.goRequest["parId"])));
+                            Xml.NodeState(ref xmlBase, "tblContentStructure/nStructParId", (base.goRequest["parId"] == null ? "" : Convert.ToString(base.goRequest["parId"])));
                         }
                         else
                         {
@@ -2823,14 +2818,14 @@ namespace Protean
                                 int argnReturnId = 0;
                                 string argzcReturnSchema = "";
                                 string argAlternateFormName = "";
-                                xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"],false, nReturnId: ref argnReturnId, zcReturnSchema: ref argzcReturnSchema, AlternateFormName: ref argAlternateFormName);
+                                xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId, zcReturnSchema: ref argzcReturnSchema, AlternateFormName: ref argAlternateFormName);
                             }
                             else
                             {
                                 int argnReturnId1 = 0;
                                 string argzcReturnSchema1 = "";
                                 string argAlternateFormName1 = "";
-                                xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"],false, nReturnId: ref argnReturnId1, zcReturnSchema: ref argzcReturnSchema1, AlternateFormName: ref argAlternateFormName1);
+                                xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId1, zcReturnSchema: ref argzcReturnSchema1, AlternateFormName: ref argAlternateFormName1);
                             }
 
 
@@ -2871,7 +2866,7 @@ namespace Protean
                                         int argnReturnId2 = 0;
                                         string argzcReturnSchema2 = "";
                                         string argAlternateFormName2 = "";
-                                        xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"],false, nReturnId: ref argnReturnId2, zcReturnSchema: ref argzcReturnSchema2, AlternateFormName: ref argAlternateFormName2);
+                                        xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId2, zcReturnSchema: ref argzcReturnSchema2, AlternateFormName: ref argAlternateFormName2);
                                     }
 
                                     else
@@ -2879,7 +2874,7 @@ namespace Protean
                                         int argnReturnId3 = 0;
                                         string argzcReturnSchema3 = "";
                                         string argAlternateFormName3 = "";
-                                        xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"],false, nReturnId: ref argnReturnId3, zcReturnSchema: ref argzcReturnSchema3, AlternateFormName: ref argAlternateFormName3);
+                                        xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId3, zcReturnSchema: ref argzcReturnSchema3, AlternateFormName: ref argAlternateFormName3);
                                     }
                                 }
                             }
@@ -3183,11 +3178,13 @@ namespace Protean
                                     // oModuleType.SetAttribute("formPath", filepath & "/" & formPath)
 
                                     XmlElement filterTypes = (XmlElement)ManifestDoc.SelectSingleNode("/PageLayouts/FilterTypes");
-                                    if (filterTypes == null){
+                                    if (filterTypes == null)
+                                    {
                                         filterTypes = ManifestDoc.CreateElement("FilterTypes");
                                         ManifestDoc.DocumentElement.AppendChild(filterTypes);
                                     }
-                                    if (filterTypes != null) {
+                                    if (filterTypes != null)
+                                    {
                                         if (filterTypes.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Module[@name='", FilterTypeName), "']"))) is null)
                                         {
                                             filterTypes.AppendChild(filterTypes.OwnerDocument.ImportNode(oModuleType.CloneNode(true), true));
@@ -3616,7 +3613,7 @@ namespace Protean
                                     prodCatElmt.SetAttribute("ids", Ids);
                                     oTempInstance.AppendChild(prodCatElmt);
                                 }
-                                AddPageSpecs(ref myWeb.mnPageId,ref oTempInstance);
+                                AddPageSpecs(ref myWeb.mnPageId, ref oTempInstance);
                             }
                         }
                         else
@@ -3687,7 +3684,7 @@ namespace Protean
                         {
                             cXformPath = "/xforms/content/" + cXformPath;
                         }
-                        
+
                         // TS we want to do this later after we have loaded specs etc.
                         base.bProcessRepeats = false;
 
@@ -3804,8 +3801,8 @@ namespace Protean
                             {
                                 AddPageSpecs(ref myWeb.mnPageId, ref myInstance);
                             }
-                                this.bProcessRepeats = true;
-                                this.LoadInstance(myInstance);
+                            this.bProcessRepeats = true;
+                            this.LoadInstance(myInstance);
 
                             if (this.goSession["oContentInstance"] != null)
                             {
@@ -4495,9 +4492,11 @@ namespace Protean
                     }
                 }
 
-                public void AddPageSpecs(ref int nPgId, ref XmlElement Instance) {
+                public void AddPageSpecs(ref int nPgId, ref XmlElement Instance)
+                {
 
-                    if (Instance.SelectSingleNode("descendant-or-self::Specs") != null) { 
+                    if (Instance.SelectSingleNode("descendant-or-self::Specs") != null)
+                    {
 
                         Protean.Cms myCMS = new Protean.Cms(myWeb.moCtx);
                         myCMS.InitializeVariables();
@@ -4525,7 +4524,8 @@ namespace Protean
                             }
                         }
 
-                        foreach (XmlNode InstanceSpecs in Instance.SelectNodes("descendant-or-self::Specs")){
+                        foreach (XmlNode InstanceSpecs in Instance.SelectNodes("descendant-or-self::Specs"))
+                        {
                             InstanceSpecs.InnerXml = SpecsElmt.InnerXml;
                         }
                     }
@@ -4792,37 +4792,37 @@ namespace Protean
                         //string sSQL = "select * from tblContent where cContentXmlBrief like '%" + fileToFind + "%' or cContentXmlDetail like '%" + fileToFind + "%'";
                         //string sSQL = "select nContentKey,cContentSchemaName,cContentName from tblContent where contains(cContentXmlBrief,'" + fileToFind + "') or contains(cContentXmlDetail,'" + fileToFind + "')";
                         SqlDataReader oDr;
-                        if (myWeb.moDbHelper.checkDBObjectExists("spCheckFileInUse",Database.objectTypes.StoredProcedure))
+                        if (myWeb.moDbHelper.checkDBObjectExists("spCheckFileInUse", Database.objectTypes.StoredProcedure))
                         {
                             string sSQL = "spCheckFileInUse";
                             System.Collections.Hashtable arrParms = new System.Collections.Hashtable();
                             arrParms.Add("filePath", fileToFind);
-                             oDr = moDbHelper.getDataReader(sSQL, CommandType.StoredProcedure, arrParms);
+                            oDr = moDbHelper.getDataReader(sSQL, CommandType.StoredProcedure, arrParms);
                         }
                         else
                         {
                             string sSQL = "select * from tblContent where cContentXmlBrief like '%" + fileToFind + "%' or cContentXmlDetail like '%" + fileToFind + "%'";
-                             oDr = moDbHelper.getDataReader(sSQL);
+                            oDr = moDbHelper.getDataReader(sSQL);
                         }
 
 
-                       
-                            if (oDr.HasRows)
-                            {
-                                string contentFound = "<p>This file is used in these content Items</p><ul>";
-                                while (oDr.Read())
-                                    contentFound = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(contentFound + "<li><a href=\"?artid=", oDr["nContentKey"]), "\" target=\"_new\">"), oDr["cContentSchemaName"]), " - "), oDr["cContentName"]), "</a></li>"));
-                                //XmlNode argoNode1 = oFrmElmt;
-                                base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, contentFound + "</ul>");
-                                //oFrmElmt = (XmlElement)argoNode1;
-                            }
 
-                            else
-                            {
-                                //XmlNode argoNode2 = oFrmElmt;
-                                base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet");
-                                //oFrmElmt = (XmlElement)argoNode2;
-                            }
+                        if (oDr.HasRows)
+                        {
+                            string contentFound = "<p>This file is used in these content Items</p><ul>";
+                            while (oDr.Read())
+                                contentFound = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(contentFound + "<li><a href=\"?artid=", oDr["nContentKey"]), "\" target=\"_new\">"), oDr["cContentSchemaName"]), " - "), oDr["cContentName"]), "</a></li>"));
+                            //XmlNode argoNode1 = oFrmElmt;
+                            base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, contentFound + "</ul>");
+                            //oFrmElmt = (XmlElement)argoNode1;
+                        }
+
+                        else
+                        {
+                            //XmlNode argoNode2 = oFrmElmt;
+                            base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet");
+                            //oFrmElmt = (XmlElement)argoNode2;
+                        }
                         oDr.Close();
                         oDr = null;
 
@@ -5560,7 +5560,7 @@ namespace Protean
                 //}
 
                 [Obsolete("Don't use this routine any more. Use the new one in Membership Provider ", false)]
-                public virtual XmlElement xFrmEditDirectoryItem(ref XmlElement InstanceAppend,long id = 0L, string cDirectorySchemaName = "User", long parId = 0L, string cXformName = "", string FormXML = "")
+                public virtual XmlElement xFrmEditDirectoryItem(ref XmlElement InstanceAppend, long id = 0L, string cDirectorySchemaName = "User", long parId = 0L, string cXformName = "", string FormXML = "")
                 {
                     string cProcessInfo = "";
 
@@ -6704,7 +6704,7 @@ namespace Protean
                         // Rights Alert - to give a user an idea that Rights exists on this page, we'll highlight
                         // this on the Rights page in an alert
                         //If moDbHelper.GetDataValue("SELECT COUNT(*) As pCount FROM tblDirectoryPermission WHERE nAccessLevel > 2 AND nStructId=" & id, , , 0) > 0 Then
-                        if (Convert.ToInt32(moDbHelper.GetDataValue("SELECT COUNT(*) As pCount FROM tblDirectoryPermission WHERE nAccessLevel > 2 AND nStructId=" +id)) > 0)
+                        if (Convert.ToInt32(moDbHelper.GetDataValue("SELECT COUNT(*) As pCount FROM tblDirectoryPermission WHERE nAccessLevel > 2 AND nStructId=" + id)) > 0)
                         {
 
                             //XmlNode argoNode3 = oFrmElmt;
@@ -7371,7 +7371,8 @@ namespace Protean
                         XmlElement argoBindParent9 = null;
                         base.addBind("nShipOptWeightMax", "tblCartShippingMethods/nShipOptWeightMax", oBindParent: ref argoBindParent9, "false()");
 
-                        if (myWeb.moDbHelper.checkTableColumnExists("tblCartShippingMethods","nShipOptWeightOverageRate")) {
+                        if (myWeb.moDbHelper.checkTableColumnExists("tblCartShippingMethods", "nShipOptWeightOverageRate"))
+                        {
                             base.addInput(ref oGrp1Elmt, "nShipOptWeightOverageUnit", true, "Overage Unit", "short");
                             XmlElement oElmtOverageUnit = null;
                             base.addBind("nShipOptWeightOverageUnit", "tblCartShippingMethods/nShipOptWeightOverageUnit", oBindParent: ref oElmtOverageUnit, "false()");
@@ -7933,12 +7934,13 @@ namespace Protean
 
                         string[] aSellerNotes = Strings.Split(sellerNotes, "/n");
                         string cSellerNotesHtml = "<ul>";
-                        for (int snCount = 0, loopTo = Information.UBound(aSellerNotes); snCount <= loopTo; snCount++) { 
-                        string replaceWith = " ";
-                        string removedBreaks = convertEntitiesToCodes(aSellerNotes[snCount]).Replace("\r\n", replaceWith).Replace("\n", replaceWith).Replace("\r", replaceWith).Replace("\\n", replaceWith);
-                        cSellerNotesHtml = cSellerNotesHtml + "<li>" + removedBreaks + "</li>";
+                        for (int snCount = 0, loopTo = Information.UBound(aSellerNotes); snCount <= loopTo; snCount++)
+                        {
+                            string replaceWith = " ";
+                            string removedBreaks = convertEntitiesToCodes(aSellerNotes[snCount]).Replace("\r\n", replaceWith).Replace("\n", replaceWith).Replace("\r", replaceWith).Replace("\\n", replaceWith);
+                            cSellerNotesHtml = cSellerNotesHtml + "<li>" + removedBreaks + "</li>";
                         };
-                    tempElement.InnerXml = cSellerNotesHtml + "</ul>";
+                        tempElement.InnerXml = cSellerNotesHtml + "</ul>";
 
                         string argsClass = "";
                         int argnRows = Conversions.ToInteger("5");
@@ -9146,7 +9148,8 @@ namespace Protean
                     string cProcessInfo = "";
                     try
                     {
-                        if (xFormPath == "/xforms/directory/UserContact.xml" && myWeb.bs5) {
+                        if (xFormPath == "/xforms/directory/UserContact.xml" && myWeb.bs5)
+                        {
                             xFormPath = "/features/membership/UserContact.xml";
                         }
 
@@ -10621,7 +10624,7 @@ namespace Protean
                         //bool bCascade = false;
                         //string cProcessInfo = "";
 
-                        
+
 
                         base.NewFrm("CartActivity");
                         base.submission("SeeReport", ReportExportPath, "get", "");
@@ -11060,7 +11063,8 @@ namespace Protean
                         // Build the form
                         base.NewFrm("MemberCodes");
                         string formPath = "/xforms/directory/" + cFormName + ".xml";
-                        if (myWeb.bs5) {
+                        if (myWeb.bs5)
+                        {
                             formPath = "/admin/xforms/directory/" + cFormName + ".xml";
                         }
                         base.load(formPath, this.myWeb.maCommonFolders);
@@ -11254,7 +11258,7 @@ namespace Protean
                                     for (int i = 0, loopTo = nNoCodes - 1; i <= loopTo; i++)
                                     {
                                         // Generate a random password
-                                       // object localgetNodeValueByType2() { XmlNode argoParent3 = oInstanceRoot; var ret = getNodeValueByType(ref argoParent3, "nRNDLength", vDefaultValue: "8"); oInstanceRoot = (XmlElement)argoParent3; return ret; }
+                                        // object localgetNodeValueByType2() { XmlNode argoParent3 = oInstanceRoot; var ret = getNodeValueByType(ref argoParent3, "nRNDLength", vDefaultValue: "8"); oInstanceRoot = (XmlElement)argoParent3; return ret; }
 
                                         object localgetNodeValueByType3() { XmlNode argoParent4 = oInstanceRoot; var ret = getNodeValueByType(ref argoParent4, "nRNDLength", vDefaultValue: "8"); oInstanceRoot = (XmlElement)argoParent4; return ret; }
 
@@ -11263,7 +11267,7 @@ namespace Protean
                                         // Check for duplicates
                                         while (!(Array.LastIndexOf(oCodes, cC) == -1 | string.IsNullOrEmpty(cC)))
                                         {
-                                         //   object localgetNodeValueByType4() { XmlNode argoParent5 = oInstanceRoot; var ret = getNodeValueByType(ref argoParent5, "nRNDLength", vDefaultValue: "8"); oInstanceRoot = (XmlElement)argoParent5; return ret; }
+                                            //   object localgetNodeValueByType4() { XmlNode argoParent5 = oInstanceRoot; var ret = getNodeValueByType(ref argoParent5, "nRNDLength", vDefaultValue: "8"); oInstanceRoot = (XmlElement)argoParent5; return ret; }
 
                                             object localgetNodeValueByType5() { XmlNode argoParent6 = oInstanceRoot; var ret = getNodeValueByType(ref argoParent6, "nRNDLength", vDefaultValue: "8"); oInstanceRoot = (XmlElement)argoParent6; return ret; }
 
@@ -11856,7 +11860,7 @@ namespace Protean
                         base.addBind("bProductRefForSKU", "tblContentIndexDef/bProductRefForSKU", oBindParent: ref argoBindParent5, "false()");
 
 
-                       
+
 
                         base.addInput(ref oGrp1Elmt, "nKeywordGroupName", true, "nKeywordGroupName", "hidden");
                         XmlElement argoBindParent6 = null;
@@ -12618,6 +12622,111 @@ namespace Protean
                                 AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/RecipientName"));
 
                                 AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/emailer"));
+                                base.LoadInstance(existingInstance);
+                                this.myWeb.moSession[InstanceSessionName.ToString()] = base.Instance;
+                            }
+                            else
+                            {
+                                base.LoadInstance(this.myWeb.moSession["tempInstance"].ToString());
+                            }
+                        }
+
+                        this.moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = base.Instance.InnerXml;
+
+                        if (base.isSubmitted())
+                        {
+                            // MyBase.updateInstanceFromRequest()
+                            base.validate();
+                            if (base.valid)
+                            {
+                                NameValueCollection moMailConfig = (NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
+
+                                // Send Email
+                                var oMsg = new Protean.Messaging();
+                                Cms.dbHelper argodbHelper = null;
+                                oMsg.emailer((XmlElement)base.Instance.SelectSingleNode("AlertEmail"), base.Instance.SelectSingleNode("AlertEmail/emailer/xsltPath").InnerText, base.Instance.SelectSingleNode("AlertEmail/emailer/fromName").InnerText, moMailConfig["FromEmail"], base.Instance.SelectSingleNode("AlertEmail/Email").InnerText, base.Instance.SelectSingleNode("AlertEmail/emailer/SubjectLine").InnerText, odbHelper: ref argodbHelper);
+                                // myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
+
+                                this.myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
+
+                            }
+                        }
+                        else if (base.isTriggered)
+                        {
+                            // we have clicked a trigger so we must update the instance
+                            base.updateInstanceFromRequest();
+                            // lets save the instance
+                            this.goSession[InstanceSessionName.ToString()] = base.Instance;
+                        }
+                        else
+                        {
+                            this.goSession[InstanceSessionName.ToString()] = base.Instance;
+                        }
+
+                        // we populate the values onto the form.
+                        base.addValues();
+
+                        return base.moXformElmt;
+                    }
+
+                    catch (Exception ex)
+                    {
+                        this.myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
+                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
+                        return null;
+                    }
+                }
+
+                public XmlElement xFrmAlertEmail(string recordType, int nUserId, string xFormPath, string senderName, string senderEmail, string ccName, string ccEmail, string recipientName, string recipientEmail, string emailXsltPath, string emailContentXsltPath)
+                {
+                    string cProcessInfo = "";
+                    object FormTitle = "AlertEmail User";
+                    object InstanceSessionName = "tempInstance_alert" + nUserId.ToString();
+                    try
+                    {
+                        this.myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
+                        base.NewFrm(Conversions.ToString(FormTitle));
+                        base.bProcessRepeats = false;
+
+                        // We load the xform from a file, it may be in local or in common folders.
+                        base.load(xFormPath, this.myWeb.maCommonFolders);
+
+                        // We get the instance
+                        if (nUserId > 0)
+                        {
+                            string sNewGroupNames = string.Empty;
+
+                            base.bProcessRepeats = true;
+                            if (this.myWeb.moSession[InstanceSessionName.ToString()] is null)
+                            {
+                                var existingInstance = base.moXformElmt.OwnerDocument.CreateElement("instance");
+                                XmlElement AlertEmail = (XmlElement)existingInstance.AppendChild(base.moXformElmt.OwnerDocument.CreateElement("AlertEmail"));
+                                // AlertEmail.SetAttribute("existingGroupId", "")
+                                // AlertEmail.SetAttribute("existingGroupName", myWeb.moDbHelper.getNameByKey(dbHelper.objectTypes.Directory, existingGroupId))
+                                AlertEmail.SetAttribute("sendEmail", "1");
+
+                                base.Instance.SelectSingleNode("AlertEmail/id").InnerText = this.myWeb.moRequest["id"];
+                                base.Instance.SelectSingleNode("AlertEmail/xFormName").InnerText = this.myWeb.moRequest["xFormName"];
+                                base.Instance.SelectSingleNode("AlertEmail/RecordType").InnerText = recordType;
+                                base.Instance.SelectSingleNode("AlertEmail/SenderName").InnerText = senderName;
+                                base.Instance.SelectSingleNode("AlertEmail/SenderEmail").InnerText = senderEmail;
+                                base.Instance.SelectSingleNode("AlertEmail/CcName").InnerText = ccName;
+                                base.Instance.SelectSingleNode("AlertEmail/CcEmail").InnerText = ccEmail;
+                                base.Instance.SelectSingleNode("AlertEmail/RecipientName").InnerText = recipientName;
+                                base.Instance.SelectSingleNode("AlertEmail/RecipientEmail").InnerText = recipientEmail;
+
+                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/id"));
+                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/xFormName"));
+                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/RecordType"));
+                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/SenderName"));
+                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/SenderEmail"));
+                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/CcName"));
+                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/CcEmail"));
+                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/RecipientName"));
+                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/RecipientEmail"));
+
+                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/emailer"));
+
                                 base.LoadInstance(existingInstance);
                                 this.myWeb.moSession[InstanceSessionName.ToString()] = base.Instance;
                             }
