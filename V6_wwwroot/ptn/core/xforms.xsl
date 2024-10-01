@@ -2330,8 +2330,9 @@
 		</xsl:variable>
 		<script>
 			function toggle_<xsl:value-of select="$ref"/>(ourRef) {
-			
-			var selectedValue = document.getElementById(ourRef).value;
+
+			var selectedValue = $("input[name='<xsl:value-of select="$ref"/>']:checked").val();
+
 			//get the selected value for ref
 			//create array of values / toggle ids
 			var dict = {
@@ -2346,6 +2347,8 @@
 			showDependant(dict[selectedValue].toString() + '-dependant', ourRef + '-dependant',', false');
 			}
 			//
+			toggle_<xsl:value-of select="$ref"/>('<xsl:value-of select="$ref"/>');
+
 		</script>
 	</xsl:template>
 
@@ -2384,6 +2387,7 @@
 					<xsl:apply-templates select="submit" mode="xform"/>
 				</div>
 			</xsl:if>
+			<xsl:text> </xsl:text>
 		</div>
 
 	</xsl:template>
