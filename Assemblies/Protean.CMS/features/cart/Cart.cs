@@ -3425,7 +3425,7 @@ namespace Protean
                                 {
                                     cDestinationCountry = oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country").InnerText;
                                     cDestinationPostalCode = oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/PostalCode").InnerText;
-                                    bGetLowest = false;
+                                  //  bGetLowest = false;
                                 }
                                 double lowestShipCost = 0;
                                 if (!string.IsNullOrEmpty(cDestinationCountry))
