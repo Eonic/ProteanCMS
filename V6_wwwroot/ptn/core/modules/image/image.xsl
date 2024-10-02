@@ -16,7 +16,7 @@
 				<xsl:variable name="title">
 					<xsl:apply-templates select="//MenuItem[@id=$pageId]" mode="getTitleAttr" />
 				</xsl:variable>
-				<a href="{$href}" title="{$title}">
+        <a href="{$href}" title="{$title}">
 					<figure>
 						<xsl:choose>
 							<xsl:when test="img[contains(@src,'.svg')]">

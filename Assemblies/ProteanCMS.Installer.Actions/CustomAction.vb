@@ -10,7 +10,7 @@ Imports System.Web.Management
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.1.21.0"
+    Public Shared ewAssemblyVersion As String = "6.1.22.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.1.0.0"
     Public Shared bundleAssemblyVersion As String = "1.14.1.0"
     Public Shared bundleLessAssemblyVersion As String = "1.14.0.0"
@@ -54,6 +54,11 @@ Public Class CustomActions
     Public Shared AngleSharpVersion As String = "1.1.2.0"
     Public Shared PreMailerVersion As String = "2.6.0.0"
     Public Shared QRCoderVersion As String = "1.6.0.0"
+
+    Public Shared iTextSharpVersion As String = "3.4.21.0"
+    Public Shared SkiaSharpVersion As String = "2.88.0.0"
+
+
     'do not use as no SNK - Public Shared ImazenWebPVersion As String = "10.0.1.0"
     Public Shared installFolder As String = "C:\Program Files\Eonic Digital LLP\ProteanCMS into GAC " & ewAssemblyVersion.Trim("0").Trim(".") & " (64bit)"
 
@@ -257,6 +262,8 @@ Public Class CustomActions
                     UpdateAssemblyRef(oAssembliesSect, "System.Text.Encodings.Web, Version=" & SystemTextEncodingsWebVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
                     UpdateAssemblyRef(oAssembliesSect, "System.Numerics.Vectors, Version=" & SystemNumericsVectorsVersion & ", Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
 
+                    UpdateAssemblyRef(oAssembliesSect, "iTextSharp.LGPLv2.Core, Version=" & iTextSharpVersion & ", Culture=neutral, PublicKeyToken=c1e5d94ab6402b0b")
+                    UpdateAssemblyRef(oAssembliesSect, "SkiaSharp, Version=" & SkiaSharpVersion & ", Culture=neutral, PublicKeyToken=0738eb9f132ed756")
 
 
 
@@ -570,6 +577,8 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "System.Text.Encodings.Web", "cc7b13ffcd2ddd51", SystemTextEncodingsWebVersion)
             UpdateDependantAssembly(oSectXml, "System.Numerics.Vectors", "b03f5f7f11d50a3a", SystemNumericsVectorsVersion)
 
+            UpdateDependantAssembly(oSectXml, "iTextSharp.LGPLv2.Core", "c1e5d94ab6402b0b", iTextSharpVersion)
+            UpdateDependantAssembly(oSectXml, "SkiaSharp", "0738eb9f132ed756", SkiaSharpVersion)
 
 
 
