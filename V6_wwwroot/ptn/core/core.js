@@ -676,6 +676,18 @@ function showDependant(dependant, allDependants) {
     $("#" + dependant).trigger('bespokeXform');
 }
 
+function clearRadioOther(ref,position) {
+    $("input[id='" + ref + "_other']").attr('type', 'input');
+    $("input[id='" + ref + "_other']").on('input', function () {
+        $("input[id='" + ref + "_" + position + "']").val($("input[id='" + ref + "_other']").val())
+    });
+
+    $("input[id^='" + ref + "_']").not("[id='" + ref + "_" + position + "']").not("[id='" + ref + "_other']").on('change', function () {
+        $("input[id='" + ref + "_other']").attr('type', 'hidden');
+    });
+}
+
+
 function showHideDependant(bindVar) {
 
     //get this list of service chkbxs under bindVar

@@ -3277,10 +3277,9 @@
 		<xsl:param name="type"/>
 		<xsl:param name="ref"/>
 		<xsl:param name="dependantClass"/>
-
 		<xsl:variable name="value" select="value"/>
 		<xsl:variable name="class" select="../@class"/>
-		<span>
+		<div>
 			<xsl:attribute name="class">
 				<xsl:text>form-check form-check-inline</xsl:text>
 				<xsl:if test="contains($class,'multiline')">
@@ -3326,16 +3325,143 @@
 					<xsl:text>-dependant','</xsl:text>
 					<xsl:value-of select="$dependantClass"/>
 					<xsl:text>');</xsl:text>
+					<xsl:variable name="cmd">
+						<xsl:text>$(&#34;input[type='text'][name='</xsl:text>
+						<xsl:value-of select="$ref"/>
+						<xsl:text>']&#34;).val('');alert('hi')'</xsl:text>
+					</xsl:variable>
+					
+					<xsl:if test="following-sibling::item[toggle and @bindTo]">
+						<xsl:text>clearRadioOther('</xsl:text>
+						<xsl:value-of select="$ref"/>
+						<xsl:text>');</xsl:text>
+					</xsl:if>
 				</xsl:attribute>
 			</input>
 			<label for="{$ref}_{position()}" class="form-check-label {translate(value/node(),'/ ','')}">
 				<xsl:value-of select="label/node()"/>
 			</label>
-		</span>
+		</div>
 		<!--<xsl:if test="contains($class,'multiline') and position()!=last()">
       <br/>
     </xsl:if>-->
 
+	</xsl:template>
+
+
+
+	<!-- Radio Input with dependant Case toggle and @bindTo -->
+	<xsl:template match="item[label/node()='Other']" mode="xform_radiocheck">
+		<xsl:param name="type"/>
+		<xsl:param name="ref"/>
+		<xsl:param name="dependantClass"/>
+		<xsl:variable name="bindTo" select="@bindTo"/>
+		<xsl:variable name="value">
+			<xsl:choose>
+				<xsl:when test="preceding-sibling::item[value/node()=../value/node()]">
+					<xsl:text></xsl:text>				
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="../value/node()"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="class" select="../@class"/>
+		<div>
+			<xsl:attribute name="class">
+				<xsl:text>form-check form-check-inline</xsl:text>
+				<xsl:if test="contains($class,'multiline')">
+					<xsl:text> multiline</xsl:text>
+				</xsl:if>
+			</xsl:attribute>
+			<input type="{$type}" class="form-check-input">
+
+				<xsl:attribute name="name">
+					<xsl:value-of select="$ref"/>
+				</xsl:attribute>
+				<xsl:attribute name="id">
+					<xsl:value-of select="$ref"/>_<xsl:value-of select="position()"/>
+				</xsl:attribute>
+				<xsl:attribute name="value">
+					<xsl:value-of select="$value"/>
+				</xsl:attribute>
+
+				<!-- Check Radio adminButton is selected -->
+
+				<xsl:if test="../value/node()=$value">
+					<xsl:attribute name="checked">checked</xsl:attribute>
+				</xsl:if>
+				
+				<!-- Check checkbox should be selected -->
+				<xsl:if test="contains($class,'checkboxes')">
+					<!-- Run through CSL to see if this should be checked -->
+					<xsl:variable name="valueMatch">
+						<xsl:call-template name="checkValueMatch">
+							<xsl:with-param name="CSLValue" select="../value/node()"/>
+							<xsl:with-param name="value" select="$value"/>
+							<xsl:with-param name="seperator" select="','"/>
+						</xsl:call-template>
+					</xsl:variable>
+					<xsl:if test="$valueMatch='true'">
+						<xsl:attribute name="checked">checked</xsl:attribute>
+					</xsl:if>
+				</xsl:if>
+
+				<xsl:attribute name="onclick">
+					<xsl:text>clearRadioOther('</xsl:text>
+					<xsl:value-of select="$ref"/>
+					<xsl:text>','</xsl:text>
+					<xsl:value-of select="position()"/>
+					<xsl:text>' );</xsl:text>
+				</xsl:attribute>
+				<xsl:if test="ancestor::select1/item[1]/value/node() = $value">
+					<xsl:attribute name="data-fv-notempty">
+						<xsl:value-of select="ancestor::select1/@data-fv-notempty"/>
+					</xsl:attribute>
+					<xsl:attribute name="data-fv-notempty-message">
+						<xsl:value-of select="ancestor::select1/@data-fv-notempty-message"/>
+					</xsl:attribute>
+				</xsl:if>
+				<xsl:if test="ancestor::select/item[1]/value/node() = $value">
+					<xsl:attribute name="data-fv-choice">
+						<xsl:value-of select="ancestor::select/@data-fv-choice"/>
+					</xsl:attribute>
+					<xsl:attribute name="data-fv-choice-min">
+						<xsl:value-of select="ancestor::select/@data-fv-choice-min"/>
+					</xsl:attribute>
+					<xsl:attribute name="data-fv-choice-max">
+						<xsl:value-of select="ancestor::select/@data-fv-choice-max"/>
+					</xsl:attribute>
+					<xsl:attribute name="data-fv-choice-message">
+						<xsl:value-of select="ancestor::select/@data-fv-choice-message"/>
+					</xsl:attribute>
+					<xsl:if test="ancestor::select/@data-fv-notempty">
+						<xsl:attribute name="data-fv-notempty">
+							<xsl:value-of select="ancestor::select/@data-fv-notempty"/>
+						</xsl:attribute>
+						<xsl:attribute name="data-fv-notempty-message">
+							<xsl:value-of select="ancestor::select/@data-fv-notempty-message"/>
+						</xsl:attribute>
+					</xsl:if>
+				</xsl:if>
+			</input>
+			<label for="{$ref}_{position()}" class="form-check-label {translate(value/node(),'/ ','')}">			
+				&#160;
+				<xsl:value-of select="label/node()"/>
+			</label>
+		</div>
+		<xsl:variable name="showOther">
+			<xsl:choose>
+				<xsl:when test="preceding-sibling::item[value/node()=$value]">
+					<xsl:text>hidden</xsl:text>				
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>text</xsl:text>	    
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
+		<input type="{$showOther}" name="{$ref}_other" id="{$ref}_other" value="{$value}" class="form-control form-inline short-input" />
 	</xsl:template>
 
 	<xsl:template match="label[ancestor::select[contains(@class,'content')] and Content]" mode="xform-label">
