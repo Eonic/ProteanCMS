@@ -12677,7 +12677,7 @@ namespace Protean
                     }
                 }
 
-                public XmlElement xFrmAlertEmail(string recordType, int nUserId, string xFormPath, string senderName, string senderEmail, string ccName, string ccEmail, string recipientName, string recipientEmail, string emailXsltPath, string emailContentXsltPath)
+                public XmlElement xFrmAlertEmail(string recordType, int nUserId, string xFormPath, string subject, string senderName, string senderEmail, string ccName, string ccEmail, string recipientName, string recipientEmail, string emailContentXsltPath)
                 {
                     string cProcessInfo = "";
                     object FormTitle = "AlertEmail User";
@@ -12707,23 +12707,29 @@ namespace Protean
 
                                 base.Instance.SelectSingleNode("AlertEmail/id").InnerText = this.myWeb.moRequest["id"];
                                 base.Instance.SelectSingleNode("AlertEmail/xFormName").InnerText = this.myWeb.moRequest["xFormName"];
+                                base.Instance.SelectSingleNode("AlertEmail/Email").InnerText = recipientEmail;
+                                base.Instance.SelectSingleNode("AlertEmail/emailer/SubjectLine").InnerText = subject;
                                 base.Instance.SelectSingleNode("AlertEmail/RecordType").InnerText = recordType;
-                                base.Instance.SelectSingleNode("AlertEmail/SenderName").InnerText = senderName;
-                                base.Instance.SelectSingleNode("AlertEmail/SenderEmail").InnerText = senderEmail;
-                                base.Instance.SelectSingleNode("AlertEmail/CcName").InnerText = ccName;
-                                base.Instance.SelectSingleNode("AlertEmail/CcEmail").InnerText = ccEmail;
+                                base.Instance.SelectSingleNode("AlertEmail/emailer/fromName").InnerText = senderName;
+                                base.Instance.SelectSingleNode("AlertEmail/emailer/fromEmail").InnerText = senderEmail;
+                                base.Instance.SelectSingleNode("AlertEmail/emailer/ccRecipientName").InnerText = ccName;
+                                base.Instance.SelectSingleNode("AlertEmail/emailer/ccRecipient").InnerText = ccEmail;
+                                base.Instance.SelectSingleNode("AlertEmail/emailer/recipientEmail").InnerText = recipientEmail;
+                                base.Instance.SelectSingleNode("AlertEmail/emailer/recipientName").InnerText = recipientName;
                                 base.Instance.SelectSingleNode("AlertEmail/RecipientName").InnerText = recipientName;
-                                base.Instance.SelectSingleNode("AlertEmail/RecipientEmail").InnerText = recipientEmail;
 
                                 AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/id"));
                                 AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/xFormName"));
                                 AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/RecordType"));
-                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/SenderName"));
-                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/SenderEmail"));
-                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/CcName"));
-                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/CcEmail"));
+                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/Email"));
+                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/emailer/SubjectLine"));
+                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/emailer/fromName"));
+                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/emailer/fromEmail"));
+                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/emailer/ccRecipientName"));
+                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/emailer/ccRecipient"));
+                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/emailer/recipientEmail"));
+                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/emailer/recipientName"));
                                 AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/RecipientName"));
-                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/RecipientEmail"));
 
                                 AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/emailer"));
 
@@ -12777,7 +12783,7 @@ namespace Protean
                     catch (Exception ex)
                     {
                         this.myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmAlertEmail", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
