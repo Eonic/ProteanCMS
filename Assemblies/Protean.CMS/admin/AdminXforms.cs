@@ -12754,8 +12754,15 @@ namespace Protean
 
                                 // Send Email
                                 var oMsg = new Protean.Messaging();
+                                XmlElement alertEmail = (XmlElement)base.Instance.SelectSingleNode("AlertEmail");
+                                string xsltPath = base.Instance.SelectSingleNode("AlertEmail/emailer/xsltPath").InnerText;
+                                string fromName = base.Instance.SelectSingleNode("AlertEmail/fromName").InnerText;
+                                string fromEmail = moMailConfig["FromEmail"];
+                                string email = base.Instance.SelectSingleNode("AlertEmail/Email").InnerText;
+                                string subjectLine = base.Instance.SelectSingleNode("AlertEmail/SubjectLine").InnerText;
+
                                 Cms.dbHelper argodbHelper = null;
-                                oMsg.emailer((XmlElement)base.Instance.SelectSingleNode("AlertEmail"), base.Instance.SelectSingleNode("AlertEmail/emailer/xsltPath").InnerText, base.Instance.SelectSingleNode("AlertEmail/emailer/fromName").InnerText, moMailConfig["FromEmail"], base.Instance.SelectSingleNode("AlertEmail/Email").InnerText, base.Instance.SelectSingleNode("AlertEmail/emailer/SubjectLine").InnerText, odbHelper: ref argodbHelper);
+                                oMsg.emailer(alertEmail, xsltPath, fromName, fromEmail, email, subjectLine, odbHelper: ref argodbHelper);
                                 // myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
 
                                 this.myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
