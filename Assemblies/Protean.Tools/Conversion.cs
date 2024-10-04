@@ -374,9 +374,9 @@ namespace Protean.Tools
             }
 
 
-            catch (Exception)
+            catch (Exception ex)
             {
-                //ex = null;
+                ex = null;
                 SetStatus(Status.Failed, StatusReason.Undefined);
             }
 
@@ -656,6 +656,8 @@ namespace Protean.Tools
                                 // Expected input is a filepath in the form of a string
                                 if (!Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectNotEqual(oResource, "", false), File.Exists(Conversions.ToString(oResource)))))
                                     bCheck = false;
+                              
+
                             }
                             else if (oResource is StreamReader)
                             {

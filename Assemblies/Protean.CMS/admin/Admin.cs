@@ -5,7 +5,7 @@
 // $Author:      Trevor Spink (trevor@eonic.co.uk)
 // &Website:     www.eonic.co.uk
 // &Licence:     All Rights Reserved.
-// $Copyright:   Copyright (c) 2002 - 2006 Eonic Ltd.
+// $Copyright:   Copyright (c) 2002 - 2024 Trevor Spink Consultants Ltd.
 // ***********************************************************************
 
 using System;
@@ -1088,12 +1088,14 @@ namespace Protean
                                                 if (!string.IsNullOrEmpty(myWeb.moRequest["Location"]))
                                                 {
                                                     FilterValue = myWeb.moRequest["Location"];
-                                                    myWeb.mnPageId = (int)Conversions.ToLong("0" + FilterValue);
+
                                                 }
                                                 else if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(myWeb.moSession["FilterValue"], "", false)))
                                                 {
                                                     FilterValue = Conversions.ToString(myWeb.moSession["FilterValue"]);
                                                 }
+                                                myWeb.mnPageId = (int)Conversions.ToLong("0" + FilterValue);
+
                                                 oXfrm.addValue(ref locSelect, FilterValue);
                                                 using (var oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql))  // Done by sonali on 12/7/22
                                                 {
@@ -4015,7 +4017,9 @@ namespace Protean
                             oConvert.Convert();
                             if (oConvert.State == Tools.Conversion.Status.Succeeded)
                             {
-                                XmlDocument outputXml = (XmlDocument)oConvert.Output;
+                                // XmlDocument outputXml = (XmlDocument)oConvert.Output; 
+                                XmlElement outputElmt = (XmlElement)oConvert.Output;
+                                XmlDocument outputXml = outputElmt.OwnerDocument;
                                 oImportXml.LoadXml(outputXml.OuterXml);
                             }
                             else

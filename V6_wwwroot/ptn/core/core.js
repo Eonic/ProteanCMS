@@ -58,6 +58,15 @@ $.extend({
 /*  ==  END EXTEND JQUERY  ========================================================================  */
 
 function PageContentActions() {
+    if (typeof universalParallax === 'function') {
+        var parallaxspeed = $('.parallax-wrapper').last().data("parallax-speed");
+        if (parallaxspeed === '') {
+            parallaxspeed = 1;
+        }
+        new universalParallax().init({
+            speed: parallaxspeed
+        });
+    }
     //contentScroller();
     contentSwiper();
 }
@@ -272,7 +281,7 @@ function disableButton(oBtn, disableMessage) {
 function displayErrorMessage() {
     if ($('#xFrmAlertModal').exists()) {
         var iconClassName = document.getElementById("errorIcon").className;
-        if ($('#xFrmAlertModal #errorMessage').html() == "&nbsp;") {
+        if ($('#xFrmAlertModal #errorMessage').html() == "&nbsp;" || arguments[2]==true) {
             $('#xFrmAlertModal #errorMessage').html('');
             $('#xFrmAlertModal #errorMessage').html(arguments[0]);
             $("#xFrmAlertModal #errorIcon").removeClass(iconClassName);
@@ -665,9 +674,6 @@ function showDependant(dependant, allDependants) {
 
     $("#" + dependant).prepareXform();
     $("#" + dependant).trigger('bespokeXform');
-
-
-
 }
 
 function showHideDependant(bindVar) {

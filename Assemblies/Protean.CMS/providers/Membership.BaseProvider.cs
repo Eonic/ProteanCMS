@@ -26,6 +26,7 @@ using Protean.Tools;
 using static Protean.Tools.Xml;
 using System.Dynamic;
 using System.Security.Policy;
+using AngleSharp.Io;
 
 
 namespace Protean.Providers
@@ -58,6 +59,8 @@ namespace Protean.Providers
             XmlElement xFrmActivationCode(long nUserId, string cXformName = "ActivationCode", string cFormXml = "");
 
             XmlElement xFrmEditDirectoryContact(long id = 0L, int nUID = 0, string xFormPath = "/xforms/directory/UserContact.xml");
+
+            XmlElement xFrmUserIntegrations(long userid , string cmd);
 
             void open(XmlDocument oPageXml);
 
@@ -243,8 +246,8 @@ namespace Protean.Providers
                 public AdminXForms(ref Cms aWeb) : base(ref aWeb)
                 {
                 }
-                [Obsolete]
-                XmlElement IMembershipAdminXforms.xFrmUserLogon(string FormName = "UserLogon") // Just replace Overridable to Overrides
+
+                public XmlElement xFrmUserLogon(string FormName = "UserLogon") // Just replace Overridable to Overrides
                 {
 
                     // Called to get XML for the User Logon.
@@ -1998,7 +2001,7 @@ namespace Protean.Providers
                     try
                     {
 
-                        DefaultProvider.AdminXForms adXfm = new DefaultProvider.AdminXForms(ref myWeb);
+                        IMembershipAdminXforms adXfm = myWeb.moMemProv.AdminXforms;
                         
                         adXfm.open(myWeb.moPageXml);
 
@@ -2207,7 +2210,10 @@ namespace Protean.Providers
                             }
                             myWeb.AddContentXml(ref oXfmElmt);
                         }
-
+                        else if (moRequest["ewCmd"] == "ResendActivation")
+                        { 
+                            
+                        }
                         else if (moRequest["ewCmd"] == "ActivateAccount")
                         {
 

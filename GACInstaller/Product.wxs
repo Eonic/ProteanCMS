@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?define version  = "6.1.18"?>
+<?define version="6.1.21"?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi' xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
     <Product Id='*' Name='ProteanCMS GAC Installer $(var.version)' Language='1033' Version='$(var.version)' Manufacturer='Eonic Digital LLP' UpgradeCode='{577597F8-BE6F-46B4-8A9D-46E8A5360918}' Codepage='1252'>
         <Package AdminImage='no' Comments='ProteanCMS GAC Installer' Compressed='yes' Description='ProteanCMS GAC Installer (64bit)' InstallerVersion='300' InstallScope='perMachine' Languages='1033' Manufacturer='Eonic Digital LLP' Platform='x64' ReadOnly='no' ShortNames='no' />
@@ -17,7 +17,7 @@
         <Binary Id='InstallUtil' SourceFile='Resources\Binary\InstallUtil' />
         <Binary Id='InstallUtilConfig' SourceFile='Resources\Binary\InstallUtilConfig' />
         <Binary Id='ADXDPCADLL' SourceFile='Resources\Binary\adxdpca64.dll' />
-        <Binary Id="ProteanCMSInstallActions" src="..\Assemblies\ProteanCMS.Installer.Actions\bin\$(var.Configuration)\ProteanCMSInstallActions.CA.dll" />
+        <Binary Id="ProteanCMSInstallActions" SourceFile="..\Assemblies\ProteanCMS.Installer.Actions\bin\x64\$(var.Configuration)\ProteanCMSInstallActions.CA.dll" />
       
         <CustomAction Id='CA_CreateConfig' BinaryKey='ADXDPCADLL' DllEntry='GetConfig' />
         <!-- The 'Primary output from ewInstaller (Active)' custom action. -->
@@ -51,16 +51,11 @@
             <!-- The 'ewInstaller' project output. -->
             <Directory Id='ewInstaller.Binaries' />
             <Directory Id='DesktopFolder' Name='Desktop' />
-
-
-          
-            <Directory Id='GAC' Name='Global Assembly Cache'>
-				
+            <Directory Id='GAC' Name='Global Assembly Cache'>				
                 <!-- PROTEAN CMS DLL's-->
 				<Component Id='com_Protean_AppStart' Guid='eb957554-8eaa-430b-a790-7236ed0d2be7' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_Protean_AppStart' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Protean.AppStart.dll' Source='..\Assemblies\Protean.AppStart\bin\$(var.Configuration)\Protean.AppStart.dll' Assembly='.net' KeyPath='yes' />
-				</Component>
-				
+				</Component>				
 				<Component Id='com_F2AD2069_BE06_11F8_0190_40CE3BBB25C8' Guid='16EAE569-B738-4819-BE9A-C6279AD16BE5' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_F2AD2069_BE06_11F8_0190_40CE3BBB25C8' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Protean.Tools.dll' Source='..\Assemblies\Protean.Tools\bin\$(var.Configuration)\Protean.Tools.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
@@ -99,10 +94,8 @@
               </Component>
               <Component Id='com_4F0D1002_B59E_0C43_41C3_30E73F6AD423' Guid='C730052B-3CE8-45AC-ACAD-E7419868FBE4' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                 <File Id='_4F0D1002_B59E_0C43_41C3_30E73F6AD423' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Antlr3.Runtime.dll' Source='..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll' Assembly='.net' KeyPath='yes' />
-              </Component>
-				
-				<!-- Javascript Engine Switcher-->
-				
+              </Component>				
+				<!-- Javascript Engine Switcher-->				
                 <Component Id='com_63BDF556_ADF6_DC60_A6AE_DFCEBB6C3699' Guid='BDF81526-8DFD-4FFE-8A0F-C671951D7029' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                     <File Id='_63BDF556_ADF6_DC60_A6AE_DFCEBB6C3699' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='JavaScriptEngineSwitcher.Core.dll' Source='..\packages\JavaScriptEngineSwitcher.Core.3.24.1\lib\net45\JavaScriptEngineSwitcher.Core.dll' Assembly='.net' KeyPath='yes' />
                 </Component>

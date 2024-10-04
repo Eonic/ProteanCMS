@@ -15,9 +15,20 @@
         color: lighten($color,$percentage)
     }
 }
+
+.btn-outline-white {
+    @include button-outline-variant(#fff);
+    border-color: #fff;
+    color: #fff;
+
+    &:hover {
+        color: $dark;
+    }
+}
 //------------------------
 //BUTTONS
 //------------------------
+
 @mixin btn-icon($_, $size: inherit, $offset: 7px, $indent: 5px) {
     &:after {
         padding-left: $offset;
@@ -97,6 +108,7 @@
         border-color: darken($color,$percentage);
     }
 }
+
 //------------------------
 //CONTENT CAROUSEL ARROWS
 //------------------------
@@ -139,9 +151,9 @@
         background: $background;
         border-radius: $radius;
         text-align: center;
-        display:flex;
-        align-items:center;
-        justify-content:center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .slick-prev:before,
@@ -200,11 +212,11 @@
 .content-carousel-clean-buttons {
     .slick-prev:before,
     .slick-next:before {
-        color: fade($text-color,30%);
+        //color: rgba($text-color,0.3);
     }
 
     button:hover.slick-prev:before,
     button:hover.slick-next:before {
-        color: $text-color;
+        color: $body-color;
     }
 }

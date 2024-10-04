@@ -5,11 +5,14 @@
 
 	<xsl:template match="Content[@type='Module' and @moduleType='ProductList']" mode="themeModuleExtras">
 		<!-- this is empty because we want this on individual listing panels not the containing module-->
+
 	</xsl:template>
 
 	<xsl:template match="Content[@type='Module' and @moduleType='ProductList']" mode="themeModuleClassExtras">
 		<!-- this is empty because we want this on individual listing panels not the containing module-->
+	
 	</xsl:template>
+
 
 	<!-- Product Brief -->
 	<xsl:template match="Content[@type='Product']" mode="displayBrief">
@@ -334,8 +337,7 @@
 					</xsl:choose>
 					<xsl:if test="$page/Cart">
 						<xsl:apply-templates select="." mode="addToCartButton"/>
-					</xsl:if>
-					<xsl:apply-templates select="." mode="SpecLink"/>
+					</xsl:if>					
 				</div>
 				<xsl:if test="Images/img[@class='detail']/@src!=''">
 					<div class="">
@@ -458,6 +460,9 @@
 			<xsl:if test="Body/node()!=''">
 				<div class="description">
 					<xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
+					<div class="spec-downloads">
+						<xsl:apply-templates select="." mode="SpecLink"/>
+					</div>
 				</div>
 			</xsl:if>
 			<xsl:if test="Content[@type='Tag']">

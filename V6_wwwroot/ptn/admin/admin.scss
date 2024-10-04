@@ -5,6 +5,7 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
 
+
 @import "../libs/bs5/scss/mixins/banner";
 @include bsBanner("");
 
@@ -63,5 +64,12 @@
 @import "skin/header";
 @import "skin/forms";
 @import "../core/icons/custom/custom";
-@import "../core/icons/fa6/css/all";
+
+// Font Awesome
+$fa-font-path: "../core/icons/fa6/webfonts";
+@import "../core/icons/fa6/scss/fontawesome";
+@import "../core/icons/fa6/scss/regular";
+@import "../core/icons/fa6/scss/solid";
+@import "../core/icons/fa6/scss/brands";
+
 @import "../libs/fancyapps/ui/dist/fancybox";

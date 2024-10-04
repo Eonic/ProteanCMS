@@ -448,6 +448,9 @@ namespace Protean
                         // current contentfilter id
                         bool bDistinct = true;
                         XmlElement oFilterElmt;
+                        string cAdditionalJoins = string.Empty;
+                        string cAdditionalColumns = string.Empty;
+                        string cOrderBySql = string.Empty;
                         string parentPageId = string.Empty;
                         string formName = "ContentFilter";
                         string cFilterTarget = "Product";
@@ -643,7 +646,20 @@ namespace Protean
                                             parentPageId = oFilterElmt.Attributes["parId"].Value;
 
                                         }
-                                        orderBySql += GetFilterOrderByClause(calledType, orderBySql);
+                                        orderBySql = GetFilterOrderByClause(calledType, "");
+
+                                        cOrderBySql = cOrderBySql + orderBySql;
+
+                                        if (orderBySql.Length > 0)
+
+                                        {
+                                            string cAlies = className.Replace("Filter", "");
+                                            cAdditionalColumns += "," + orderBySql.ToLower().Replace(",", "").Replace("asc", "").Replace("desc", "");
+                                            cAdditionalJoins += "inner join tblContentIndex cii" + cAlies + " on cii" + cAlies + ".nContentId=c.nContentKey inner join tblContentIndexDef cid" + cAlies;
+                                            cAdditionalJoins += " on cii" + cAlies + ".nContentIndexDefinitionKey=cid" + cAlies + ".nContentIndexDefKey ";
+                                            cAdditionalJoins += " and cid" + cAlies + ".cDefinitionName='" + cAlies + "'";
+                                        }
+
                                     }
 
                                 }
@@ -681,21 +697,31 @@ namespace Protean
                             if (whereSQL.ToLower().Trim().EndsWith(" and") == false)
                             {
                                 myWeb.moSession["FilterWhereCondition"] = whereSQL;
+                                myWeb.moSession["AdditionalColumn"] = cAdditionalColumns;
+                                myWeb.moSession["AdditionalJoins"] = cAdditionalJoins;
+                                myWeb.moSession["OrderBy"] = cOrderBySql;
                                 XmlElement argoPageDetail = null; int nCount = 0;
 
 
                                 if (myWeb.mbAdminMode)
                                 {
-                                    bDistinct = false;
-                                    if (orderBySql != string.Empty)
+                                    myWeb.moSession["AdminMode"] = "true";
+                                    if (cOrderBySql != string.Empty)
                                     {
-                                        orderBySql = orderBySql + ",";
+                                        //cOrderBySql += cOrderBySql;
+
+                                        cOrderBySql = " a.nStatus desc," + cOrderBySql;
                                     }
-                                    orderBySql = " a.nStatus desc";
+                                    else
+                                    {
+                                        cOrderBySql = " a.nStatus desc";
+                                    }
+
+
                                 }
 
                                 myWeb.GetPageContentFromSelect(whereSQL, ref nCount, oContentsNode: ref oContentNode, oPageDetail: ref argoPageDetail,
-                                cShowSpecificContentTypes: cFilterTarget, bIgnorePermissionsCheck: true, distinct: bDistinct, cOrderBy: orderBySql);
+                                cShowSpecificContentTypes: cFilterTarget, bIgnorePermissionsCheck: true, distinct: bDistinct, cOrderBy: cOrderBySql, cAdditionalJoins: cAdditionalJoins, cAdditionalColumns: cAdditionalColumns);
 
                                 if (oContentNode.SelectNodes("Content[@type='Product']").Count == 0)
                                 {

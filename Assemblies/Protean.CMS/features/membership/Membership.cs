@@ -685,7 +685,7 @@ namespace Protean
                         if (myWeb.mnUserId == 0 & (myWeb.moRequest["ewCmd"] != "passwordReminder" & myWeb.moRequest["ewCmd"] != "ActivateAccount"))
                         {
 
-                            oXfmElmt = (XmlElement)oAdXfm.xFrmUserLogon();
+                            oXfmElmt = (XmlElement)oAdXfm.GetProviderXFrmUserLogon();
                             bool bAdditionalChecks = false;
                             if (Conversions.ToBoolean(!oAdXfm.valid))
                             {
@@ -819,6 +819,42 @@ namespace Protean
                         Admin.AdminXforms oAdXfm = myWeb.getAdminXform();
 
                         bool bRedirect = true;
+                        if (moRequest["ewCmd"] == "ResendActivation")
+                        {
+                            Membership oMembership = new Cms.Membership(ref myWeb);
+                            //oMembership.OnErrorWithWeb += OnComponentError;
+                            //oMembership.AccountActivateLink(Convert.ToInt16(mnUserId));
+
+                            string xsltPath = "/xsl/email/registration.xsl";
+                            if (myWeb.moConfig["cssFramework"] == "bs5")
+                            {
+                                xsltPath = "/features/membership/email/registration.xsl";
+                            }
+                            if (!string.IsNullOrEmpty(xsltPath))
+                            {
+                                var oUserElmt = myWeb.moDbHelper.GetUserXML(myWeb.mnUserId);
+                                oUserElmt.SetAttribute("Url", myWeb.mcOriginalURL);
+                                XmlElement oUserEmail = (XmlElement)oUserElmt.SelectSingleNode("Email");
+                                string fromName = myWeb.moConfig["SiteAdminName"];
+                                string fromEmail = myWeb.moConfig["SiteAdminEmail"];
+                                string recipientEmail = "";
+                                if (oUserEmail != null)
+                                    recipientEmail = oUserEmail.InnerText;
+                                string SubjectLine = "Your Account Activation Link";
+                                var oMsg = new Protean.Messaging(ref myWeb.msException);
+                                // send an email to the new registrant
+                                if (!string.IsNullOrEmpty(recipientEmail))
+                                {
+                                    Cms.dbHelper argodbHelper = null;
+                                    String cProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, odbHelper: ref argodbHelper, "Message Sent", "Message Failed"));
+                                }
+                               oMsg = (Protean.Messaging)null;
+                                oContentNode.SetAttribute("activationMsg", "Activation Link Sent");
+                            }
+
+                        }
+
+
                         if (moRequest["ewCmd"] == "ActivateAccount")
                         {
                         }

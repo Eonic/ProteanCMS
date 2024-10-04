@@ -10,7 +10,7 @@
 	  <ModuleGroup name="Basic Content" icon="fas fa-pencil-alt">
 		  <Module type="Video" formPath="video-module" icon="fab fa-youtube" name="Video"></Module>
 	  </ModuleGroup>
-    <ModuleGroup name="Content Lists" icon="fas fa-th-list">
+    <ModuleGroup name="Content Lists" icon="fas fa-list">
       <Module type="VideoList" formPath="video-list" icon="far fa-file-video" name="Video List"></Module>
     </ModuleGroup>
   </ModuleTypes>

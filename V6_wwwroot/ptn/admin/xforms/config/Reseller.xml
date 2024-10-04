@@ -35,12 +35,14 @@
      <bind id="websitecreditURL" nodeset="web/add[@key='websitecreditURL']/@value" required="false()" type="string" />
    
    </model>
-   <group ref="WebSettings">
-    <label>Reseller Settings</label>
-     <alert>This changes the default email address that contact form messages are sent from. Ideally these domains should have an SPF that accepts from the mailserver (mail01.eonic.co.uk) IP address. If you do not understand what this means don't use it ! <br/>
+   <group ref="WebSettings" class="admin-form-style">
+	   <group class="tabs">
+		   <group ref="Reseller Settings">
+			   <label>Reseller Settings</label>    <alert>This changes the default email address that contact form messages are sent from. Ideally these domains should have an SPF that accepts from the mailserver (mail01.eonic.co.uk) IP address. If you do not understand what this means don't use it ! <br/>
        Default values are emailsender@eonichost.co.uk [eonicweb Email Sender]
      </alert>
-	   <group ref="Email" class="inline">
+			   <group  class="row row-cols-md-2">
+ 
 		   <label>Email</label>
 		   <input bind="ServerSenderEmail">
 			   <label>Server Sender Email</label>
@@ -94,7 +96,10 @@
          <label>Website Credit URL</label>
          <value></value>
        </input>
-     </group>
+
+   </group>
+		   </group>
+   </group>
      <submit submission="" ref="submit" class="principle">
       <label>Save Settings</label>
     </submit>

@@ -789,7 +789,7 @@ function passDocToForm(targetForm, targetField, cUrl) {
 
 function passMediaToForm(targetForm, targetField, cUrl) {
     $('#' + targetField).val(cUrl);
-    buttonDiv = $('#editDoc_' + targetField + '  .input-group-btn');
+    buttonDiv = $('#editDoc_' + targetField + '  .btn');
     buttonDiv.replaceWith("<a href=\"#\" onclick=\"xfrmClearMedia('" + targetForm + "','" + targetField + "');return false\" title=\"Remove current Image reference\" class=\"btn btn-danger input-group-btn\"><i class=\"fas fa-times fa-white\"> </i> Clear</a>")
     var thisModal = bootstrap.Modal.getInstance($("#modal-" + targetField))
     thisModal.hide();
@@ -799,7 +799,7 @@ function passMediaToForm(targetForm, targetField, cUrl) {
 
 function passImgFileToForm(targetForm, targetField, cUrl) {
     $('#' + targetField).val(cUrl);
-    buttonDiv = $('#editImageFile_' + targetField + '  .input-group-btn');
+    buttonDiv = $('#editImageFile_' + targetField + '  .btn');
     buttonDiv.replaceWith("<a href=\"#\" onclick=\"xfrmClearImgFile('" + targetForm + "','" + targetField + "');return false\" title=\"Remove current File reference\" class=\"btn btn-danger input-group-btn\"><i class=\"fas fa-times fa-white\"> </i> Clear</a>")
     var thisModal = bootstrap.Modal.getInstance($("#modal-" + targetField))
     thisModal.hide();
@@ -819,20 +819,23 @@ function xfrmClearImage(formRef, fieldRef, className) {
 
 function xfrmClearDocument(formRef, fieldRef) {
     document.forms[formRef].elements[fieldRef].value = '';
-    buttonDiv = $('#editDoc_' + fieldRef + '  .input-group-btn');
-    buttonDiv.replaceWith('<a data-bs-toggle="modal" href="?contentType=popup&ewCmd=DocsLib&amp;targetForm=' + formRef + '&amp;targetField=' + fieldRef + '" title="pick an document from the image library" data-bs-target="#modal-' + fieldRef + '" class="btn btn-primary input-group-btn"><i class="fas fa-image fa-white"> </i> Pick</a>')
+    buttonDiv = $('#editDoc_' + fieldRef + '  a.btn');
+    buttonDiv.replaceWith('<a data-bs-toggle="modal" href="?contentType=popup&ewCmd=DocsLib&amp;targetForm=' + formRef + '&amp;targetField=' + fieldRef + '&targetClass=" title="pick an document from the image library" data-bs-target="#modal-' + fieldRef + '" class="btn btn-primary"><i class="fas fa-file fa-white"> </i> Pick</a>')
+    prepareAjaxModals()
 }
 
 function xfrmClearMedia(formRef, fieldRef) {
     document.forms[formRef].elements[fieldRef].value = '';
-    buttonDiv = $('#editDoc_' + fieldRef + '  .input-group-btn');
-    buttonDiv.replaceWith('<a data-bs-toggle="modal" href="?contentType=popup&ewCmd=MediaLib&amp;targetForm=' + formRef + '&amp;targetField=' + fieldRef + '" title="pick an document from the image library" data-bs-target="#modal-' + fieldRef + '" class="btn btn-primary input-group-btn"><i class="fa fa-music fa-white"> </i> Pick</a>')
+    buttonDiv = $('#editDoc_' + fieldRef + ' a.btn');
+    buttonDiv.replaceWith('<a data-bs-toggle="modal" href="?contentType=popup&ewCmd=MediaLib&amp;targetForm=' + formRef + '&amp;targetField=' + fieldRef + '&targetClass=" title="pick an document from the image library" data-bs-target="#modal-' + fieldRef + '" class="btn btn-primary"><i class="fa fa-music fa-white"> </i> Pick</a>')
+    prepareAjaxModals()
 }
 
 function xfrmClearImgFile(formRef, fieldRef) {
     document.forms[formRef].elements[fieldRef].value = '';
-    buttonDiv = $('#editImageFile_' + fieldRef + '  .input-group-btn');
-    buttonDiv.replaceWith('<a data-bs-toggle="modal" href="?contentType=popup&ewCmd=ImageLib&amp;ewCmd2=PathOnly&amp;targetForm=' + formRef + '&amp;targetField=' + fieldRef + '" title="pick an document from the image library" data-bs-target="#modal-' + fieldRef + '" class="btn btn-primary input-group-btn"><i class="fas fa-image fa-white"> </i> Pick</a>')
+    buttonDiv = $('#editImageFile_' + fieldRef + '  a.btn');
+    buttonDiv.replaceWith('<a data-bs-toggle="modal" href="?contentType=popup&ewCmd=ImageLib&amp;ewCmd2=PathOnly&amp;targetForm=' + formRef + '&amp;targetField=' + fieldRef + '&targetClass=" data-bs-target="#modal-' + fieldRef + '"  title="pick an document from the image library" class="btn btn-primary"><i class="fas fa-image fa-white"> </i> Pick</a>')
+    prepareAjaxModals()
 }
 
 function xfrmClearCalendar(formRef, fieldRef) {

@@ -5452,9 +5452,9 @@
 					if(newfilename!="")
 					{
 						$("#oldfilename").html(file.name);
-						<!--alert(newfilename);-->	
+						
 						if(newfilename.indexOf('true') != -1)
-						{ 
+						{ 					     	
 							const dataTransfer = new DataTransfer();							
 							dataTransfer.items.add(file);
 							existsFile.files = dataTransfer.files
@@ -5465,7 +5465,11 @@
 							$("#cleanFilename").val(arr[1]);	
 							changedfilename = arr[0];
 							file = new File([file.name], changedfilename);
-						}					
+						}
+						if(changedfilename == "")
+						{
+							file = new File([file.name], newfilename);
+						}
 						
 						<xsl:apply-templates select="." mode="newItemScript"/>
 						filename = "/" + filename + "/g";

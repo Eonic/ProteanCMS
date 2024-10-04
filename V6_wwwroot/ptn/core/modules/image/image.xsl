@@ -74,7 +74,30 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<figure>
-					<xsl:apply-templates select="node()" mode="cleanXhtml"/>
+					<xsl:choose>
+						<xsl:when test="img[contains(@src,'.svg')]">
+							<svg role="img" aria-label="{img/@alt}" id="svg-{@position}" width="{img/@width}" height="{img/@height}" viewbox="0 0 {img/@width} {img/@height}" xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xlink="http://www.w3.org/1999/xlink">
+								<image id="svg-img-{@position}" xlink:href="{img/@src}" src="{@svgFallback}" width="{img/@width}" height="{img/@height}" class="img-responsive">
+									<xsl:text> </xsl:text>
+								</image>
+							</svg>
+						</xsl:when>
+						<xsl:when test="@resize='true'">
+							<xsl:apply-templates select="." mode="resize-image">
+								<xsl:with-param name="noLazy" select="$noLazy"/>
+							</xsl:apply-templates>
+						</xsl:when>
+						<xsl:when test="$maxWidth!='' or $maxHeight!=''">
+							<xsl:apply-templates select="." mode="resize-image">
+								<xsl:with-param name="maxWidth" select="$maxWidth"/>
+								<xsl:with-param name="maxHeight" select="$maxHeight"/>
+								<xsl:with-param name="noLazy" select="$noLazy"/>
+							</xsl:apply-templates>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:apply-templates select="./node()" mode="cleanXhtml"/>
+						</xsl:otherwise>
+					</xsl:choose>
 					<xsl:if test="@caption!=''">
 						<figcaption>
 							<div class="image-caption">
@@ -96,19 +119,12 @@
 	<xsl:template match="Content[@moduleType='Image']" mode="displayBrief">
 		<xsl:param name="maxWidth"/>
 		<xsl:param name="maxHeight"/>
-		<figure>
+	
 			<xsl:apply-templates select="." mode="displayBriefImg">
 				<xsl:with-param name="maxWidth" select="$maxWidth"/>
 				<xsl:with-param name="maxHeight" select="$maxHeight"/>
 			</xsl:apply-templates>
-			<xsl:if test="@caption!=''">
-				<figcaption>
-					<div class="image-caption">
-						<xsl:value-of select="@caption"/>
-					</div>
-				</figcaption>
-			</xsl:if>
-		</figure>
+			
 	</xsl:template>
 
 	<xsl:template match="Content[@moduleType='Image']" mode="displayBriefImg">
@@ -129,6 +145,13 @@
 		<figure>
 			<xsl:if test="img/@src!=''">
 				<xsl:choose>
+					<xsl:when test="img[contains(@src,'.svg')]">
+						<svg role="img" aria-label="{img/@alt}" id="svg-{@position}" width="{img/@width}" height="{img/@height}" viewbox="0 0 {img/@width} {img/@height}" xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xlink="http://www.w3.org/1999/xlink">
+							<image id="svg-img-{@position}" xlink:href="{img/@src}" src="{@svgFallback}" width="{img/@width}" height="{img/@height}" class="img-responsive">
+								<xsl:text> </xsl:text>
+							</image>
+						</svg>
+					</xsl:when>
 					<xsl:when test="@resize='true'">
 						<xsl:apply-templates select="." mode="resize-image">
 							<xsl:with-param name="crop" select="$crop"/>

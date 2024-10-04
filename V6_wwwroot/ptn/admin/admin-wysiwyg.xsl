@@ -698,7 +698,7 @@
 								</xsl:when>
 								<xsl:otherwise>
 									<div class="dropdown pull-right">
-										<a href="#" class="btn btn-primary btn-primary-darker btn-xs" data-bs-toggle="dropdown">
+										<a href="#" class="btn btn-primary btn-primary-darker dropdown-toggle btn-xs" data-bs-toggle="dropdown">
 											<i class="fa fa-plus">&#160;</i>&#160;
 											<span class="sr-only">Add&#160;</span>
 											<!--<i class="fa fa-caret-down">&#160;</i>-->

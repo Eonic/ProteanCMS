@@ -5,7 +5,7 @@
                   xmlns:v-bind="http://example.com/xml/v-bind" xmlns:v-on="http://example.com/xml/v-on"
                   xmlns:v-for="http://example.com/xml/v-for" xmlns:v-slot="http://example.com/xml/v-slot"
                   xmlns:v-if="http://example.com/xml/v-if" xmlns:v-else="http://example.com/xml/v-else"
-                  xmlns:v-model="http://example.com/xml/v-model">
+                  xmlns:v-model="http://example.com/xml/v-model" xmlns:ew="urn:ew">
 
 
 	<!-- Default template for all admin forms-->
@@ -823,7 +823,7 @@
 
 				</xsl:when>
 				<xsl:otherwise>
-					<a data-bs-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;ewCmd2=PathOnly&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$scriptRef}&amp;targetClass={value/*/@class}" data-bs-target="#modal-{$scriptRef}" class="btn btn-primary input-group-btn">
+					<a data-bs-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;ewCmd2=PathOnly&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$scriptRef}&amp;targetClass={value/*/@class}" data-bs-target="#modal-{$scriptRef}" class="btn btn-primary">
 						<i class="fas fa-image">
 							<xsl:text> </xsl:text>
 						</i><xsl:text> </xsl:text>Pick
@@ -882,7 +882,7 @@
 			theme: "silver",
 			width: "auto",
 			relative_urls: false,
-			plugins: "table paste link image ptnimage media visualchars searchreplace emoticons anchor lists advlist code visualblocks contextmenu fullscreen searchreplace wordcount",
+			plugins: "table paste link image ptnimage media visualchars searchreplace emoticons anchor lists advlist code visualblocks contextmenu fullscreen searchreplace wordcount charmap",
 			entity_enconding: "numeric",
             image_advtab: true,
             menubar: "edit insert view format table tools",
@@ -2737,7 +2737,9 @@
 		<div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 col-xxl-2">
 			<button name="{$ref}" value="{value/node()}" class="{$isSelected}">
 				<!--<img src="{$imageURL}" class="card-img-top"/>-->
-				<i class="fas fa-3x {$icon}">&#160;</i>
+				<i class="fas fa-3x {$icon}">
+          <xsl:text> </xsl:text>
+        </i>
 				<h5>
 					<xsl:value-of select="label/node()"/>
 				</h5>
@@ -3744,5 +3746,40 @@
 		</div>
 	</xsl:template>
 
+<!--
+	<xsl:template match="group[contains(@class,'product-specs')]" mode="xform">
+		<xsl:param name="class"/>
+		<fieldset>
+			<xsl:if test=" @id!='' ">
+				<xsl:attribute name="id">
+					<xsl:value-of select="@id"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="$class!='' or @class!='' ">
+				<xsl:attribute name="class">
+					<xsl:value-of select="$class"/>
+					<xsl:if test="@class!=''">
+						<xsl:text> </xsl:text>
+						<xsl:value-of select="@class"/>
+					</xsl:if>
+					<xsl:for-each select="group">
+						<xsl:text> form-group li-</xsl:text>
+						<xsl:value-of select="./@class"/>
+					</xsl:for-each>
+					<xsl:if test="contains(@class,'inline-2-col') or contains(@class,'inline-3-col')">
+						<xsl:text> row</xsl:text>
+					</xsl:if>
+					<xsl:text> </xsl:text>
+				</xsl:attribute>
+			</xsl:if>
 
+			<xsl:variable name="catSpecs" select="ew:GetSpecsOnPageItems($page/@id,$page/@artid)"/>
+
+			<H1>Product Specs</H1>
+			<xsl:apply-templates select="label[position()=1]" mode="legend"/>			
+			<xsl:apply-templates select="repeat | trigger" mode="control-outer"/>
+			
+		</fieldset>
+	</xsl:template>
+-->
 </xsl:stylesheet>

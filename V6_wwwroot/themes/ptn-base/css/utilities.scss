@@ -49,6 +49,18 @@
     font-size: $font;
 }
 
+@mixin circle-icon-border($border: 2px solid $primary,$color: $primary,$size: 6rem,$font: 3rem) {
+    width: $size;
+    height: $size;
+    background: transparent;
+    border: $border;
+    color: $color;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100rem;
+    font-size: $font;
+}
 .module-centred {
     display: flex;
     flex-direction: column;
@@ -77,7 +89,13 @@
         }
     }
 }
+.two-col-text {
+    column-count: 2;
+}
 
+.three-col-text {
+    column-count: 3;
+}
 /*############### BUTTONS AND LINKS #################*/
 .skip {
     position: absolute;

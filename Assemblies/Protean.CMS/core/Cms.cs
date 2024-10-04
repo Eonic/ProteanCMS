@@ -817,7 +817,7 @@ namespace Protean
                             {
                                 newPageId = (long)this.moDbHelper.checkPagePermission((long)this.mnPageId);
                             }
-                            else if (!this.moDbHelper.checkPageExist((long)this.mnPageId))
+                            else if (!this.moDbHelper.checkPageExist((long)this.mnPageId) && !this.mbAdminMode)
                             {
                                 // And we still need to check it exists
                                 newPageId = gnPageNotFoundId;
@@ -1336,12 +1336,12 @@ namespace Protean
                             {
                                 if (gnResponseCode == 200L & this.moRequest.Form.Count == 0 & this.mnUserId == 0 & !this.moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"].Contains("?"))
                                 {
-                                    bPageCache = Conversions.ToBoolean(Interaction.IIf(Strings.LCase(this.moConfig["PageCache"]) == "on", true, false));
+                                    bPageCache = Strings.LCase(this.moConfig["PageCache"]) == "on" ? true : false;
                                 }
 
                                 if (this.moRequest["perfmon"] == "on" & this.moRequest.QueryString.Count == 1)
                                 {
-                                    bPageCache = Conversions.ToBoolean(Interaction.IIf(Strings.LCase(this.moConfig["PageCache"]) == "on", true, false));
+                                    bPageCache = Strings.LCase(this.moConfig["PageCache"]) == "on" ? true : false;
                                 }
 
                                 if (this.moRequest["reBundle"] != null)
@@ -4756,10 +4756,10 @@ namespace Protean
         /// <param name="pageNumber"></param>
         /// <param name="distinct"></param>
         /// <param name="cShowSpecificContentTypes"></param>
-        /// 
+        /// <param name="bShowContentDetails"></param>
+        ///
 
-
-        public void GetPageContentFromSelect(string sWhereSql, ref int nCount, ref XmlElement oContentsNode, ref XmlElement oPageDetail, bool bPrimaryOnly = false, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false, string cShowSpecificContentTypes = "", bool ignoreActiveAndDate = false, long nStartPos = 0L, long nItemCount = 0L, bool bShowContentDetails = true)
+        public void GetPageContentFromSelect(string sWhereSql, ref int nCount, ref XmlElement oContentsNode, ref XmlElement oPageDetail, bool bPrimaryOnly = false, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false, string cShowSpecificContentTypes = "", bool ignoreActiveAndDate = false, long nStartPos = 0L, long nItemCount = 0L, bool bShowContentDetails = true, string cAdditionalColumns = "")
         {
             this.PerfMon.Log("Web", "GetPageContentFromSelect");
             XmlElement oRoot;
@@ -4831,9 +4831,15 @@ namespace Protean
                 sSql = sSql + " SELECT " + Interaction.IIf(distinct, "DISTINCT ", "") + sTopSql + " c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentForiegnRef as ref, cContentName as name, c.cContentSchemaName as type, ";
                 sSql = sSql + "CAST(" + cContentField + " AS varchar(max)) as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner,CL.cPosition as position  ";
 
-                //if (distinct) { 
-                //    sSql = sSql + ",cl.nDisplayOrder ";
-                //}
+                // if distinct flag true and order by clause is also enabled then  required to bring all this column in select query too. 
+                // column which you are passing here is either 
+                // - agreegate function
+               // -or an xpath/xquery too eg : return Convert(XML, cContentXmlBrief).value("/Content/StockCode[1]",'varchar(10)')
+
+                if (cAdditionalColumns != string.Empty)
+                {
+                    sSql = sSql + cAdditionalColumns;
+                }
                 sSql += "FROM tblContent AS c INNER JOIN ";
                 sSql += "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN ";
                 sSql += "tblContentLocation AS CL ON c.nContentKey = CL.nContentId ";
@@ -4887,7 +4893,7 @@ namespace Protean
 
 
                         // Note : if we are checking permissions for a page, and we're not logged in, then we shouldn't check with the gnAuthUsers group
-                        // Ratehr, we should use the gnNonAuthUsers user group if it exists.
+                        // Rather, we should use the gnNonAuthUsers user group if it exists.
 
 
 
@@ -4974,23 +4980,51 @@ namespace Protean
 
                 if (!string.IsNullOrEmpty(cOrderBy))
                 {
-                    sSql = sSql + " ORDER BY ";
+
+
                     if (distinct)
                     {
-                        sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
+                        // additional column have agreegate function and distinct flag is true then group by needs to eanble with default column
+                        // along with orderby clause
+                        sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus,a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
+                        sSql = sSql + " ORDER BY ";
+                        sSql += cOrderBy;
+
+                        //this code is checking  if input cOrderby parameter is already contains nStatus field, then removing it from default column list
+                        // in order by clause.
+                        // else default column will have same columns.. 
+                        if (cOrderBy.Contains("a.nStatus"))
+                        {
+                            sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
+                        }
+                        else
+                        {
+                            sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
+                        }
                     }
-                    sSql += cOrderBy;
+                    else
+                    {
+                        sSql = sSql + " ORDER BY ";
+                        sSql += cOrderBy;
+                    }
+
 
                 }
                 else
                 {
-                    sSql = sSql + " ORDER BY";
+                    // additional column have agreegate function and distinct flag is true then group by needs to eanble with default column
+                    // along with orderby clause
                     if (distinct)
                     {
-                        sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
+                        sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)),a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
+                        sSql = sSql + " ORDER BY ";
+                        sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
+
                     }
                     else
                     {
+                        //default behaviour
+                        sSql = sSql + " ORDER BY";
                         sSql += "(SELECT NULL)";
                     }
                 }
@@ -5041,7 +5075,7 @@ namespace Protean
 
 
 
-        public void GetPageContentFromSelectFilterPagination(ref int nCount, ref XmlElement oContentsNode, ref XmlElement oPageDetail, string sWhereSql, bool bPrimaryOnly = false, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false, string cShowSpecificContentTypes = "", bool ignoreActiveAndDate = false, long nStartPos = 0L, long nItemCount = 0L, bool bShowContentDetails = true)
+        public void GetPageContentFromSelectFilterPagination(ref int nCount, ref XmlElement oContentsNode, ref XmlElement oPageDetail, string sWhereSql, bool bPrimaryOnly = false, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false, string cShowSpecificContentTypes = "", bool ignoreActiveAndDate = false, long nStartPos = 0L, long nItemCount = 0L, bool bShowContentDetails = true, string cAdditionalColumns = "", string cAdminMode = "false")
         {
             this.PerfMon.Log("Web", "GetPageContentFromSelect");
             XmlElement oRoot;
@@ -5056,9 +5090,43 @@ namespace Protean
             long nAuthUserId;
             long nAuthGroup;
             string cContentField = "";
+            string cFilterTarget = string.Empty;
 
             try
             {
+                if (oContentsNode != null)
+                {
+                    if (oContentsNode.Attributes["contentType"] != null)
+                    {
+                        cFilterTarget = oContentsNode.Attributes["contentType"].Value;
+                    }
+                    if (oContentsNode.Attributes["filterTarget"] != null)
+                    {
+                        cFilterTarget = oContentsNode.Attributes["filterTarget"].Value;
+                    }
+                    if (oContentsNode.Attributes["resultCount"] != null)
+                    {
+                        nCount = Convert.ToInt32(oContentsNode.Attributes["resultCount"].Value);
+                    }
+
+                }
+
+                // Apply the possiblity of getting contents into a node other than the page contents node
+                if (oContentsNode is null)
+                {
+                    oRoot = (XmlElement)moPageXml.DocumentElement.SelectSingleNode("Contents");
+                    if (oRoot is null)
+                    {
+                        oRoot = moPageXml.CreateElement("Contents");
+                        moPageXml.DocumentElement.AppendChild(oRoot);
+                    }
+                }
+                else
+                {
+                    oRoot = oContentsNode;
+                    nItemCount = Conversions.ToInteger("0" + oContentsNode.GetAttribute("stepCount"));
+                }
+
                 if (bContentDetail == false)
                 {
                     cContentField = "cContentXmlBrief";
@@ -5074,18 +5142,16 @@ namespace Protean
                 }
 
                 sSql = "SET ARITHABORT ON ";
-                sSql = Conversions.ToString(sSql + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT ", Interaction.IIf(distinct, "DISTINCT ", "")), sTopSql), " c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, CAST("), cContentField), " AS varchar(max)) as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, CL.cPosition as position "));
+                sSql = sSql + " SELECT " + Interaction.IIf(distinct, "DISTINCT ", "") + sTopSql + " c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentForiegnRef as ref, cContentName as name, c.cContentSchemaName as type, ";
+                sSql = sSql + "CAST(" + cContentField + " AS varchar(max)) as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner,CL.cPosition as position  ";
+
+                if (cAdditionalColumns != string.Empty)
+                {
+                    sSql = sSql + cAdditionalColumns;
+                }
                 sSql += "FROM tblContent AS c INNER JOIN ";
                 sSql += "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN ";
                 sSql += "tblContentLocation AS CL ON c.nContentKey = CL.nContentId ";
-                // sSql &= "INNER Join tblCartCatProductRelations On c.nContentKey = tblCartCatProductRelations.nContentId "   'uncomment by nita because resolving table not found error
-
-                // GCF - sql replaced by the above - 24/06/2011
-                // replaced JOIN to tblContentLocation with  LEFT OUTER JOIN
-                // as we were getting nothing back when content had no related 
-                // content location data
-
-                // sSql = "SET ARITHABORT ON SELECT " & sTopSql & " c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, CL.cPosition as position from tblContent c inner join tblContentLocation CL on c.nContentKey = CL.nContentId inner join tblAudit a on c.nAuditId = a.nAuditKey"
 
                 // ' Add the extra joins if specified.
                 if (!string.IsNullOrEmpty(cAdditionalJoins))
@@ -5099,6 +5165,13 @@ namespace Protean
                     sPrimarySql = " CL.bPrimary = 1 ";
                 }
 
+                object sFilterTargetSql = "";
+                if (!string.IsNullOrEmpty(cFilterTarget))
+                {
+                    cFilterTarget = " and c.cContentSchemaName ='" + cFilterTarget + "' ";
+                }
+
+
                 if (gbMembership == true & bIgnorePermissionsCheck == false)
                 {
 
@@ -5106,7 +5179,7 @@ namespace Protean
                     {
 
                         // Note : if we are checking permissions for a page, and we're not logged in, then we shouldn't check with the gnAuthUsers group
-                        // Ratehr, we should use the gnNonAuthUsers user group if it exists.
+                        // Rather, we should use the gnNonAuthUsers user group if it exists.
 
                         nAuthUserId = gnNonAuthUsers;
                         nAuthGroup = gnNonAuthUsers;
@@ -5126,16 +5199,8 @@ namespace Protean
                         nAuthGroup = gnAuthUsers;
                     }
 
-                    // Check the page is not denied
-                    if (!string.IsNullOrEmpty(cShowSpecificContentTypes))
-                    {
-                        sMembershipSql = " c.cContentSchemaName ='" + cShowSpecificContentTypes + "' and  NOT(dbo.fxn_checkPermission(CL.nStructId," + nAuthUserId + "," + nAuthGroup + ") LIKE '%DENIED%')";
-                    }
-                    else
-                    {
-                        sMembershipSql = "NOT(dbo.fxn_checkPermission(CL.nStructId," + nAuthUserId + "," + nAuthGroup + ") LIKE '%DENIED%')";
-                    }
-
+                    sMembershipSql = "NOT(dbo.fxn_checkPermission(CL.nStructId," + nAuthUserId + "," + nAuthGroup + ") LIKE '%DENIED%')";
+                   
 
                     // Commenting out the folowing as it wouldn't return items that were Inherited view etc.
                     // sMembershipSql = " (dbo.fxn_checkPermission(CL.nStructId," & mnUserId & "," & gnAuthUsers & ") = 'OPEN' or dbo.fxn_checkPermission(CL.nStructId," & mnUserId & "," & gnAuthUsers & ") = 'VIEW')"
@@ -5160,18 +5225,57 @@ namespace Protean
                     combinedWhereSQL = combinedWhereSQL.Substring(4);
                 }
 
+                if (cAdminMode == "true")
+                {
+                    cOrderBy = " a.nStatus desc," + cOrderBy;
+                }
+
                 sSql = sSql + " where (" + combinedWhereSQL + ")";
                 if (!string.IsNullOrEmpty(cOrderBy))
                 {
-                    sSql = sSql + " ORDER BY ";
-                    if (mbAdminMode)
+
+
+                    if (distinct)
                     {
-                        sSql = sSql + "a.nStatus desc,";
+                        sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus,a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
+                        sSql = sSql + " ORDER BY ";
+                        sSql += cOrderBy;
+
+                        if (cOrderBy.Contains("a.nStatus"))
+                        {
+                            sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
+                        }
+                        else
+                        {
+                            sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
+                        }
+                    }
+                    else
+                    {
+                        sSql = sSql + " ORDER BY ";
+                        sSql += cOrderBy;
                     }
 
-                    sSql += cOrderBy;
-                    //sSql += " ORDER BY " + cOrderBy;
+
                 }
+                else
+                {
+
+                    if (distinct)
+                    {
+                        sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)),a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
+                        sSql = sSql + " ORDER BY ";
+                        sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
+
+                    }
+                    else
+                    {
+                        sSql = sSql + " ORDER BY";
+                        sSql += "(SELECT NULL)";
+                    }
+                }
+
+                nItemCount = 24;
 
                 sSql += " offset " + nStartPos + " rows fetch next " + nItemCount + " rows only";
 
@@ -5384,7 +5488,7 @@ namespace Protean
                     {
 
                         // Note : if we are checking permissions for a page, and we're not logged in, then we shouldn't check with the gnAuthUsers group
-                        // Ratehr, we should use the gnNonAuthUsers user group if it exists.
+                        // Rather, we should use the gnNonAuthUsers user group if it exists.
 
                         nAuthUserId = gnNonAuthUsers;
                         nAuthGroup = gnNonAuthUsers;
@@ -7965,10 +8069,14 @@ namespace Protean
                         }
                         if (this.moSession["FilterWhereCondition"] != null && Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(this.moSession["FilterWhereCondition"], string.Empty, false)))
                         {
-                            string whereSQL = Conversions.ToString(this.moSession["FilterWhereCondition"]);
+                            string whereSQL = Convert.ToString(this.moSession["FilterWhereCondition"]);
+                            string cAdditionalColumn = Convert.ToString(this.moSession["AdditionalColumn"]);
+                            string cAdditionalJoins = Convert.ToString(this.moSession["AdditionalJoins"]);
+                            string cOrderBySql = Convert.ToString(this.moSession["OrderBy"]);
+                            string cAdminMode = Convert.ToString(this.moSession["AdminMode"]);
                             XmlElement argoPageDetail = null;
                             int nCount = 0;
-                            this.GetPageContentFromSelectFilterPagination(ref nCount, oContentsNode: ref oPageElmt, oPageDetail: ref argoPageDetail, whereSQL, bIgnorePermissionsCheck: true, cShowSpecificContentTypes: this.moRequest["singleContentType"], ignoreActiveAndDate: false, nStartPos: (long)nStart, nItemCount: (long)nRows);
+                            this.GetPageContentFromSelectFilterPagination(ref nCount, oContentsNode: ref oPageElmt, oPageDetail: ref argoPageDetail, whereSQL, bIgnorePermissionsCheck: true, cShowSpecificContentTypes: this.moRequest["singleContentType"], ignoreActiveAndDate: false, nStartPos: (long)nStart, nItemCount: (long)nRows, distinct: true, cAdditionalJoins: cAdditionalJoins, cAdditionalColumns: cAdditionalColumn, cOrderBy: cOrderBySql, cAdminMode: cAdminMode);
                         }
                         else
                         {
@@ -7989,6 +8097,9 @@ namespace Protean
                             if (this.moSession["FilterWhereCondition"] != null)
                             {
                                 this.moSession["FilterWhereCondition"] = (object)null;
+                                this.moSession["AdditionalColumn"] = null;
+                                this.moSession["AdditionalJoins"] = null;
+                                this.moSession["OrderBy"] = null;
                                 // moSession.Remove("FilterWhereCondition")
                             }
                         }

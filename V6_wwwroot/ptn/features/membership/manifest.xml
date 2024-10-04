@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PageLayouts imgPath="/ewcommon/images/pagelayouts">
   <ModuleTypes>
-    <ModuleGroup name="Membership features" icon="fas fa-users">
-      <Module type="MembershipLogon" formPath="logon"  name="Membership Logon"  icon="fas fa-user-check"></Module>
-      <Module type="MembershipRegister" formPath="register" name="Membership Register or My Account" icon="fas fa-user-plus"></Module>
-      <Module type="MembershipPasswordReminder" formPath="passwordreminder" name="Membership Password Reminder" icon="fas fa-user-lock"></Module>
-      <Module type="MembershipListUsers"  formPath="listusers" name="List users" icon="fas fa-user-friends"></Module>
-      <Module type="MembershipUserContacts" formPath="usercontacts" name="List user contacts" icon="fas fa-address-card">Usually used for a user to list and manage their addresses</Module>
+    <ModuleGroup name="Membership" icon="fas fa-users">
+      <Module type="MembershipLogon" formPath="logon"  name="Member Logon"  icon="fas fa-right-to-bracket"></Module>
+      <Module type="MembershipRegister" formPath="register" name="Register / My Account" icon="fas fa-user-plus"></Module>
+      <Module type="MembershipPasswordReminder" formPath="passwordreminder" name="Password Reminder" icon="fas fa-user-lock"></Module>
+      <Module type="MembershipListUsers"  formPath="listusers" name="List users" icon="fas fa-users"></Module>
+      <Module type="MembershipUserContacts" formPath="usercontacts" name="List user contacts" icon="fas fa-address-card">Allow a user to list and manage their addresses</Module>
     </ModuleGroup>
   </ModuleTypes>
 </PageLayouts>

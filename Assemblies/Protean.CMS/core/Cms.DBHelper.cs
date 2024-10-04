@@ -5,9 +5,13 @@
 // $Author:      Trevor Spink (trevor@eonic.co.uk)
 // &Website:     www.eonic.co.uk
 // &Licence:     All Rights Reserved.
-// $Copyright:   Copyright (c) 2002 - 2006 Eonic Ltd.
+// $Copyright:   Copyright (c) 2002 - 2024 Trevor Spink Consultants Ltd.
 // ***********************************************************************
 
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using Protean.Providers.Membership;
+using Protean.Providers.Messaging;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,18 +19,11 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.ServiceModel.Configuration;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web.Configuration;
 using System.Xml;
-using Lucene.Net.Support;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
-using Protean.Providers.Membership;
-using Protean.Providers.Messaging;
 using static Protean.Cms.dbImport;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
@@ -1117,11 +1114,11 @@ namespace Protean
                         }
                     case (objectTypes)14:
                         {
-                            return "cContactForeignRef";
+                            return "cContactForiegnRef";
                         }
                     case (objectTypes)15:
                         {
-                            return "cLocationForeignRef";
+                            return "cLocationForiegnRef";
                         }
                     case (objectTypes)16:
                         {
@@ -1590,7 +1587,7 @@ namespace Protean
                                         thisContentType = prefixs[i].Substring(prefixs[i].IndexOf("/") + 1, prefixs[i].Length - prefixs[i].IndexOf("/") - 1);
                                         if ((contentType ?? "") == (thisContentType ?? ""))
                                         {
-                                            redirectUrl += "/" + thisPrefix + "/" + contentName.ToString().Replace(" ", "-").Trim('-');
+                                            redirectUrl += "/" + thisPrefix + "/" + Protean.Tools.Text.CleanName(contentName).Replace(" ", "-").Trim('-');
                                             if (myWeb.moConfig["DetailPathTrailingSlash"] == "on")
                                             {
                                                 redirectUrl = redirectUrl + "/";
@@ -1617,13 +1614,16 @@ namespace Protean
 
                                 if (!string.IsNullOrEmpty(thisPrefix))
                                 {
+                                    string cContentName = SqlFmt(sPath).Replace("*", "%").Replace(" ", "%");
+
                                     if (gbAdminMode)
                                     {
-                                        sSql = "select TOP(1) nContentKey  from tblContent c inner join tblAudit a on a.nAuditKey = c.nAuditId where cContentName like '" + SqlFmt(sPath) + "' and cContentSchemaName like '" + thisContentType + "' order by nVersion desc";
+                                        // replace * with wildcard as content names replace / with * in cleanname
+                                        sSql = "select TOP(1) nContentKey  from tblContent c inner join tblAudit a on a.nAuditKey = c.nAuditId where cContentName like '" + cContentName + "' and cContentSchemaName like '" + thisContentType + "' order by nVersion desc";
                                     }
                                     else
                                     {
-                                        sSql = "select TOP(1) nContentKey from tblContent c inner join tblAudit a on a.nAuditKey = c.nAuditId where cContentName like '" + SqlFmt(sPath) + "' and cContentSchemaName like '" + thisContentType + "' " + myWeb.GetStandardFilterSQLForContent() + " order by nVersion desc";
+                                        sSql = "select TOP(1) nContentKey from tblContent c inner join tblAudit a on a.nAuditKey = c.nAuditId where cContentName like '" + cContentName + "' and cContentSchemaName like '" + thisContentType + "' " + myWeb.GetStandardFilterSQLForContent() + " order by nVersion desc";
                                     }
                                     ods = GetDataSet(sSql, "Content");
                                     if (ods != null)
@@ -1642,6 +1642,10 @@ namespace Protean
                                     if (nArtId > 0L)
                                     {
                                         sSql = "select nStructId from tblContentLocation where bPrimary = 1 and nContentId = " + nArtId;
+                                        //sSql = sSql + " union ";
+                                        //sSql = sSql + " select nStructId from tblContentLocation where bPrimary = 1 and nContentId IN(select cl.nContentParentId from tblContentRelation cl where cl.nContentChildId = " + nArtId + ")";
+
+
                                         ods = GetDataSet(sSql, "Pages");
                                         if (ods.Tables["Pages"].Rows.Count == 1)
                                         {
@@ -8763,6 +8767,9 @@ namespace Protean
                     valuesList.Add(artId.ToString());
                     valuesList.Add(SqlDate(DateTime.Now, true));
                     valuesList.Add(((int)loggedActivityType).ToString());
+                    if (activityDetail.Length >= 800) {
+                        activityDetail = "TRUNCATED:" + activityDetail.Substring(0, 785);
+                    }
                     valuesList.Add(SqlString(activityDetail));
                     valuesList.Add(SqlString(Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(sessionId), "Service_" + DateTime.Now.ToString(), sessionId))));
                     if (otherId > 0L)
@@ -10243,6 +10250,11 @@ namespace Protean
 
             public XmlElement GetContentDetailXml(long nArtId = 0L)
             {
+                return GetContentDetailXml(nArtId, false);
+            }
+
+            public XmlElement GetContentDetailXml(long nArtId = 0L, Boolean noFilter = false)
+            {
                 PerfMonLog("Web", "GetContentDetailXml");
                 XmlElement oRoot;
                 XmlElement oElmt = null;
@@ -10265,9 +10277,10 @@ namespace Protean
                     if (nArtId > 0L)
                     {
                         sProcessInfo = "loading content" + nArtId;
-
-                        sFilterSql += GetStandardFilterSQLForContent();
-
+                        if (noFilter = false)
+                        {
+                            sFilterSql += GetStandardFilterSQLForContent();
+                        }
                         oRoot = moPageXml.CreateElement("ContentDetail");
                         sSql = "select c.nContentKey as id, cContentForiegnRef as ref, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentName as name, cContentSchemaName as type, cContentXmlDetail as content, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, a.nStatus as status from tblContent c ";
                         sSql += "inner join tblAudit a on c.nAuditId = a.nAuditKey  ";
@@ -10647,6 +10660,10 @@ namespace Protean
                     // map the feilds to columns
                     if (oDs != null)
                     {
+                        if (oDs.Tables[0].Columns.Count >= 13)
+                        {
+                            oDs.Tables[0].Columns.RemoveAt(12);
+                        }
 
                         oDs.Tables[0].Columns["id"].ColumnMapping = MappingType.Attribute;
 
@@ -14399,7 +14416,7 @@ namespace Protean
                 }
             }
 
-            public int SetContact(ref Cms.Contact contact)
+            public int SetContact(ref Cms.modal.Contact contact)
             {
                 if (contact.nContactKey > 0)
                 {
@@ -14413,7 +14430,7 @@ namespace Protean
                 return default;
             }
 
-            public int AddContact(ref Cms.Contact contact)
+            public int AddContact(ref Cms.modal.Contact contact)
             {
                 PerfMonLog("DBHelper", "AddContact ([args])");
                 string sSql;
@@ -14424,6 +14441,14 @@ namespace Protean
                     sSql = "INSERT INTO [dbo].[tblCartContact] ([nContactDirId], [nContactCartId], [cContactType], [cContactName], [cContactCompany]," + " [cContactAddress], [cContactCity], [cContactState], [cContactZip], [cContactCountry], [cContactTel], [cContactFax], [cContactEmail]," + " [cContactXml], [nAuditId], [cContactForiegnRef], [nLat], [nLong], [cContactForeignRef], [cContactAddress2])" + " VALUES (" + contact.nContactDirId + "," + contact.nContactCartId + "" + ",'" + Tools.Database.SqlFmt(contact.cContactType) + "'" + ",'" + Tools.Database.SqlFmt(contact.cContactName) + "'" + ",'" + Tools.Database.SqlFmt(contact.cContactCompany) + "'" + ",'" + Tools.Database.SqlFmt(contact.cContactAddress) + "'" + ",'" + Tools.Database.SqlFmt(contact.cContactCity) + "'" + ",'" + Tools.Database.SqlFmt(contact.cContactState) + "'" + ",'" + Tools.Database.SqlFmt(contact.cContactZip) + "'" + ",'" + Tools.Database.SqlFmt(contact.cContactCountry) + "'" + ",'" + Tools.Database.SqlFmt(contact.cContactTel) + "'" + ",'" + Tools.Database.SqlFmt(contact.cContactFax) + "'" + ",'" + Tools.Database.SqlFmt(contact.cContactEmail) + "'" + ",'<Content><LocationSummary>" + Tools.Database.SqlFmt(contact.cContactLocationSummary) + "</LocationSummary></Content>'" + "," + getAuditId() + ",'" + Tools.Database.SqlFmt(contact.cContactForiegnRef) + "'" + ",'" + contact.nLat + "'" + ",'" + contact.nLong + "'" + ",'" + Tools.Database.SqlFmt(contact.cContactForeignRef) + "'" + ",'" + Tools.Database.SqlFmt(contact.cContactAddress2) + "')";
 
                     nId = GetIdInsertSql(sSql);
+
+                    if (nId == "0")
+                    {
+
+                        throw new Exception("Address not saved");
+
+                    }
+
                     return Conversions.ToInteger(nId);
                 }
 
@@ -14434,14 +14459,19 @@ namespace Protean
                 }
             }
 
-            public bool UpdateContact(ref Cms.Contact contact)
+            public bool UpdateContact(ref Cms.modal.Contact contact)
             {
                 PerfMonLog("DBHelper", "UpdateContact ([args])");
                 string sSql;
                 string cProcessInfo = "";
                 try
                 {
-                    sSql = "UPDATE [dbo].[tblCartContact]" + "SET [cContactName] = '" + Tools.Database.SqlFmt(contact.cContactName) + "'" + ", [cContactAddress] = '" + Tools.Database.SqlFmt(contact.cContactAddress) + "'" + ", [cContactAddress2] = '" + Tools.Database.SqlFmt(contact.cContactAddress2) + "'" + ", [cContactCity] = '" + Tools.Database.SqlFmt(contact.cContactCity) + "'" + ", [cContactState] = '" + Tools.Database.SqlFmt(contact.cContactState) + "'" + ", [cContactZip] = '" + Tools.Database.SqlFmt(contact.cContactZip) + "'" + ", [cContactCountry] = '" + Tools.Database.SqlFmt(contact.cContactCountry) + "'" + ", [cContactTel] = '" + Tools.Database.SqlFmt(contact.cContactTel) + "'" + ", [cContactFax] = '" + Tools.Database.SqlFmt(contact.cContactFax) + "'" + ", [cContactXml] = '<Content><LocationSummary>" + Tools.Database.SqlFmt(contact.cContactLocationSummary) + "</LocationSummary></Content>'" + "WHERE [nContactKey] = " + contact.nContactKey;
+                    if (contact.nContactKey == null)
+                    {
+                        contact.nContactKey = (int)myWeb.moDbHelper.getObjectByRef(objectTypes.CartContact, contact.cContactForiegnRef, "");
+                    }
+                    //sSql = "UPDATE [dbo].[tblCartContact]" + "SET [cContactName] = '" + Tools.Database.SqlFmt(contact.cContactName) + "'" + ", [cContactAddress] = '" + Tools.Database.SqlFmt(contact.cContactAddress) + "'" + ", [cContactAddress2] = '" + Tools.Database.SqlFmt(contact.cContactAddress2) + "'" + ", [cContactCity] = '" + Tools.Database.SqlFmt(contact.cContactCity) + "'" + ", [cContactState] = '" + Tools.Database.SqlFmt(contact.cContactState) + "'" + ", [cContactZip] = '" + Tools.Database.SqlFmt(contact.cContactZip) + "'" + ", [cContactCountry] = '" + Tools.Database.SqlFmt(contact.cContactCountry) + "'" + ", [cContactTel] = '" + Tools.Database.SqlFmt(contact.cContactTel) + "'" + ", [cContactFax] = '" + Tools.Database.SqlFmt(contact.cContactFax) + "'" + ", [cContactXml] = '<Content><LocationSummary>" + Tools.Database.SqlFmt(contact.cContactLocationSummary) + "</LocationSummary></Content>'" + "WHERE [nContactKey] = " + contact.nContactKey;
+                    sSql = "UPDATE [dbo].[tblCartContact]" + "SET [cContactName] = '" + Tools.Database.SqlFmt(contact.cContactName) + "'" + ", [cContactAddress] = '" + Tools.Database.SqlFmt(contact.cContactAddress) + "'" + ", [cContactCity] = '" + Tools.Database.SqlFmt(contact.cContactCity) + "'" + ", [cContactState] = '" + Tools.Database.SqlFmt(contact.cContactState) + "'" + ", [cContactZip] = '" + Tools.Database.SqlFmt(contact.cContactZip) + "'" + ", [cContactCountry] = '" + Tools.Database.SqlFmt(contact.cContactCountry) + "'" + ", [cContactTel] = '" + Tools.Database.SqlFmt(contact.cContactTel) + "'" + ", [cContactFax] = '" + Tools.Database.SqlFmt(contact.cContactFax) + "'" + ", [cContactXml] = '<Content><LocationSummary>" + Tools.Database.SqlFmt(contact.cContactLocationSummary) + "</LocationSummary></Content>'" + "WHERE [nContactKey] = " + contact.nContactKey;
 
                     ExeProcessSql(sSql);
                     return true;
@@ -14553,461 +14583,36 @@ namespace Protean
             }
             #endregion
 
-
-        }
-
-
-        public class dbImport : Tools.Database
-        {
-
-            #region New Error Handling
-            public new event OnErrorEventHandler OnError;
-
-            public new delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
-
-            private void _OnError(object sender, Tools.Errors.ErrorEventArgs e)
+            public string getProductIdFromOrder(string orderRef, string ContentName)
             {
-                OnError?.Invoke(sender, e);
-            }
-
-            #endregion
-
-            public string oConnString;
-            public long mnUserId;
-            public System.Web.HttpContext moCtx;
-            private string mcModuleName = "dbImport";
-
-            public dbImport(string cConnectionString, long nUserId, System.Web.HttpContext oCtx = null)
-            {
-                // MyBase.New(cConnectionString)
+                // Dim oDr As SqlDataReader
+                string sSql;
+                string nContentID = string.Empty;
+                
+                string cProcessInfo = "";
                 try
                 {
-                    oConnString = cConnectionString;
-                    mnUserId = nUserId;
-                    moCtx = oCtx;
+                    sSql = "execute spGetProductIdFromOrderReference @orderRef=" + orderRef + ", @ProductName=" + "'"+ ContentName + "'";
+                    using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql))
+                    {
+                        if (oDr != null)
+                        {
+                            while (oDr.Read())
+                            {
+                                nContentID = Convert.ToString(oDr["nItemId"]);                                
+                            }                            
+                        }
+                    }
+                    return nContentID.ToString();
                 }
-
-
                 catch (Exception ex)
                 {
-                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""));
-                }
-
-                base.OnError += _OnError;
-            }
-
-
-            public class ImportStateObj
-            {
-                public XmlElement oInstance;
-                public long LogId;
-                public string FeedRef;
-                public long CompleteCount;
-                public long totalInstances;
-                public bool bSkipExisting;
-                public bool bResetLocations;
-                public long nResetLocationIfHere;
-                public bool bOrphan;
-                public bool bDeleteNonEntries;
-                public string cDeleteTempTableName;
-                public string cDeleteTempType;
-                public dbHelper modbhelper;
-                public Protean.XmlHelper.Transform moTransform;
-                public ManualResetEvent oResetEvt;
-                public bool LastItem;
-                public string cDefiningWhereStmt;
-                public string cDefiningField;
-                public string cDefiningFieldValue;
-            }
-
-
-            public void ImportSingleObject(object importStateObjObj)
-            {
-                ImportStateObj importStateObj = (ImportStateObj)importStateObjObj;
-                string cTableName = "";
-                string cTableKey = "";
-                string cTableFRef = "";
-                string ErrorMsg = "";
-                var ErrorId = default(long);
-                string cProcessInfo;
-                string fRef = "";
-                var modbhelper = new dbHelper(oConnString, mnUserId, moCtx);
-                string logMessage;
-                try
-                {
-                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(importStateObj.totalInstances, 0, false)))
-                    {
-                        logMessage = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(importStateObj.cDeleteTempTableName, " Streaming Objects, "), importStateObj.CompleteCount), " Processed"));
-                    }
-                    else
-                    {
-                        logMessage = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(importStateObj.cDeleteTempTableName, " Importing "), importStateObj.totalInstances), " Objects, "), importStateObj.CompleteCount), " Processed"));
-                    }
-                    modbhelper.ResetConnection(oConnString);
-                    if (importStateObj.CompleteCount.ToString().EndsWith("0"))
-                    {
-                        modbhelper.updateActivity(Conversions.ToLong(importStateObj.LogId), logMessage);
-                    }
-
-                    // lets get the object type from the table name.
-                    cTableName = Conversions.ToString(importStateObj.oInstance.FirstChild.Name);
-
-                    // return the object type from the table name
-                    var oTblName = default(dbHelper.TableNames);
-                    foreach (dbHelper.TableNames currentOTblName in Enum.GetValues(typeof(dbHelper.objectTypes)))
-                    {
-                        oTblName = currentOTblName;
-                        if ((oTblName.ToString() ?? "") == (cTableName ?? ""))
-                            break;
-                    }
-                    var oObjType = new dbHelper.objectTypes();
-
-                    // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                    // Disabled on 16/09/2008 the following, due to the incompatible assignment of Value to the Object Types 
-                    // oTblName = oObjType
-                    oObjType = (dbHelper.objectTypes)oTblName;
-                    // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-                    // The purpose of this is to try to reduce the amount of table name/key/fref calls
-                    // so to optimise this for bulk use.
-                    // If cTableName <> cPreviousTableName Then
-                    cTableKey = modbhelper.getKey((int)oObjType);
-                    cTableFRef = modbhelper.getFRef(oObjType);
-                    // End If
-
-                    XmlElement fRefNode = (XmlElement)importStateObj.oInstance.SelectSingleNode(cTableName + "/" + cTableFRef);
-                    fRef = fRefNode.InnerText;
-
-                    string fRefOld = fRefNode.GetAttribute("oldValue");
-
-                    // We absolutly do not do anything if no fRef
-                    if (!string.IsNullOrEmpty(fRef))
-                    {
-                        long nId;
-                        // lets get an id if we are updating a record with a foriegn Ref
-
-                        nId = modbhelper.getObjectByRef(cTableName, cTableKey, cTableFRef, oObjType, fRef);
-
-                        if (!string.IsNullOrEmpty(fRefOld))
-                        {
-                            if (nId == 0L)
-                            {
-                                // we don't have an new one so we need to rename the old
-                                nId = modbhelper.getObjectByRef(cTableName, cTableKey, cTableFRef, oObjType, fRefOld);
-                            }
-                            else
-                            {
-                                // we have a new one and that is the one we need to update so we simply delete the old
-                                long nOldId = modbhelper.getObjectByRef(cTableName, cTableKey, cTableFRef, oObjType, fRefOld);
-                                if (nOldId > 0L)
-                                {
-                                    modbhelper.DeleteObject(oObjType, nOldId);
-                                }
-
-                            }
-                        }
-
-                        // if we want to replace the fRef
-                        if (!string.IsNullOrEmpty(fRefNode.GetAttribute("replaceWith")))
-                        {
-                            fRefNode.InnerText = fRefNode.GetAttribute("replaceWith");
-                        }
-
-                        importStateObj.oInstance.SelectSingleNode(cTableName + "/" + cTableFRef);
-
-                        modbhelper.ResetConnection(oConnString);
-
-                        if (Conversions.ToBoolean(Operators.AndObject(nId > 0L, importStateObj.oInstance.GetAttribute("delete").Contains("true"))))
-                        {
-
-                            modbhelper.DeleteObject(oObjType, nId);
-                        }
-
-
-
-                        else if (Conversions.ToBoolean(Operators.AndObject(nId > 0L, importStateObj.oInstance.GetAttribute("update").Contains("surgical"))))
-                        {
-                            // Get origional instance
-                            var origInstance = new XmlDocument();
-
-                            // Setupthrough nodes with @surgicalUpdate & update the origional instance
-                            origInstance.LoadXml("<instance>" + modbhelper.getObjectInstance(oObjType, nId) + "</instance>");
-                            foreach (XmlElement oUpdElmt in (IEnumerable)importStateObj.oInstance.SelectNodes("descendant-or-self::*[@updateSurgical!='']"))
-                            {
-                                string updXpath = oUpdElmt.GetAttribute("updateSurgical");
-                                XmlElement nodeToUpdate = (XmlElement)origInstance.SelectSingleNode("/instance/" + updXpath);
-                                if (nodeToUpdate != null)
-                                {
-                                    if (oUpdElmt.InnerText.Trim() != "surgicalIgnore")
-                                    {
-                                        nodeToUpdate.InnerText = oUpdElmt.InnerText;
-                                    }
-                                    foreach (XmlAttribute att in oUpdElmt.Attributes)
-                                        nodeToUpdate.SetAttribute(att.Name, att.Value);
-                                }
-                                else
-                                {
-                                    ErrorMsg = ErrorMsg + updXpath + " not found";
-                                }
-
-
-                                // clean up sugical update - just in case this failed on insert / can be deleted
-                            }
-                            foreach (XmlElement oRemoveElmt in origInstance.SelectNodes("descendant-or-self::*[@updateSurgical!='']"))
-                                oRemoveElmt.RemoveAttribute("updateSurgical");
-
-                            // save the origional instance
-                            nId = Conversions.ToLong(modbhelper.setObjectInstance(oObjType, origInstance.DocumentElement, nId));
-                            // run instance extras on update like relate and locate etc.
-                            if (Conversions.ToBoolean(importStateObj.oInstance.GetAttribute("update").Contains("locate")))
-                            {
-                                bool bResetLocations = Conversions.ToBoolean(importStateObj.bResetLocations);
-                                if (Conversions.ToBoolean(importStateObj.oInstance.GetAttribute("update").Contains("relocate")))
-                                {
-                                    bResetLocations = true;
-                                }
-                                else
-                                {
-                                    bResetLocations = false;
-                                }
-
-                                var xmlDoc = new XmlDocument();
-                                modbhelper.moPageXml = xmlDoc;
-                                modbhelper.ResetConnection(oConnString);
-                                long PrimaryLocation = Conversions.ToLong(Operators.ConcatenateObject("0", modbhelper.GetDataValue("select nStructId from tblContentLocation where bPrimary=1 and nContentId = " + nId)));
-
-                                if (PrimaryLocation == 0L)
-                                {
-                                    bResetLocations = true;
-                                }
-                                else
-                                {
-                                    long resetIfHere = Conversions.ToLong(Operators.ConcatenateObject("0", importStateObj.oInstance.GetAttribute("resetifhere")));
-                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectGreater(importStateObj.nResetLocationIfHere, 0, false)))
-                                    {
-                                        resetIfHere = Conversions.ToLong(importStateObj.nResetLocationIfHere);
-                                    }
-                                    if (resetIfHere > 0L)
-                                    {
-                                        if (PrimaryLocation == resetIfHere)
-                                        {
-                                            bResetLocations = true;
-                                        }
-                                    }
-
-                                }
-                                modbhelper.processInstanceExtras(nId, (XmlElement)importStateObj.oInstance, bResetLocations, Conversions.ToBoolean(importStateObj.bOrphan));
-                            }
-                        }
-                        else
-                        {
-
-                            if (Conversions.ToBoolean(importStateObj.oInstance.GetAttribute("delete").Contains("true")))
-                            {
-                                importStateObj.bSkipExisting = true;
-                                // clean up sugical update as we are doing inserts or straight replacements.
-                            }
-                            foreach (XmlElement oRemoveElmt in (IEnumerable)importStateObj.oInstance.SelectNodes("descendant-or-self::*[@updateSurgical!='']"))
-                            {
-                                oRemoveElmt.RemoveAttribute("updateSurgical");
-                                if (oRemoveElmt.InnerText.Trim() == "surgicalIgnore")
-                                {
-                                    oRemoveElmt.InnerText = "";
-                                }
-                            }
-
-                            XmlElement updateInstance = (XmlElement)importStateObj.oInstance;
-
-                            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(importStateObj.oInstance.GetAttribute("insert"), "reparse", false)))
-                            {
-                                // run XSL again on instance....
-                                TextWriter oTW = new StringWriter();
-                                XmlWriter sWriterOTW = XmlWriter.Create(oTW);
-                                TextReader oTR;
-                                string cFeedItemXML;
-                                XmlDocument oInstanceDoc = new XmlDocument();
-                                oInstanceDoc.LoadXml(Conversions.ToString(importStateObj.oInstance.OuterXml));
-                                XmlReader oXMLReaderInstance = new XmlNodeReader(oInstanceDoc);
-                                importStateObj.moTransform.Process(oXMLReaderInstance, ref sWriterOTW);
-                                oTR = new StringReader(oTW.ToString());
-                                cFeedItemXML = oTR.ReadToEnd();
-                                // remove whitespace
-                                var myRegex = new Regex(@">\s*<");
-                                cFeedItemXML = myRegex.Replace(cFeedItemXML, "><");
-                                // move up a node
-                                importStateObj.oInstance.InnerXml = cFeedItemXML;
-                                updateInstance = (XmlElement)importStateObj.oInstance.FirstChild;
-                            }
-
-                            bool bRelocate = false;
-
-                            object bCommitUpdate = true;
-
-                            if (nId > 0L)
-                            {
-                                // case for updates
-                                if (Conversions.ToBoolean(importStateObj.oInstance.GetAttribute("update").Contains("none")))
-                                {
-                                    importStateObj.bSkipExisting = true;
-                                    bCommitUpdate = false;
-                                }
-                                if (Conversions.ToBoolean(importStateObj.oInstance.GetAttribute("update").Contains("relocate")))
-                                {
-                                    bRelocate = true;
-                                }
-                            }
-                            else
-                            {
-                                bRelocate = true;
-                                // case for inserts
-                                if (Conversions.ToBoolean(importStateObj.oInstance.GetAttribute("insert").Contains("none")))
-                                {
-                                    importStateObj.bSkipExisting = true;
-                                    bCommitUpdate = false;
-                                }
-                            }
-
-                            if (Conversions.ToBoolean(bCommitUpdate))
-                            {
-                                nId = Conversions.ToLong(modbhelper.setObjectInstance(oObjType, updateInstance, nId));
-                                if (bRelocate)
-                                {
-                                    modbhelper.processInstanceExtras(nId, updateInstance, Conversions.ToBoolean(importStateObj.bResetLocations), Conversions.ToBoolean(importStateObj.bOrphan));
-                                }
-                                cProcessInfo = nId + " Saved";
-                            }
-                            else
-                            {
-                                cProcessInfo = nId + "Not Saved";
-                            }
-
-                            updateInstance = null;
-
-
-                        }
-
-                        if (Conversions.ToBoolean(importStateObj.bDeleteNonEntries))
-                        {
-
-                            string cSQL = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("INSERT INTO dbo.", importStateObj.cDeleteTempTableName), " (cImportID , cTableName) VALUES ('"), SqlFmt(fRef)), "','"), SqlFmt(cTableName)), "')"));
-                            modbhelper.ResetConnection(oConnString);
-                            modbhelper.ExeProcessSql(cSQL);
-
-                        }
-                        ErrorId = nId;
-
-                    }
-
-                    // update every 10 records
-                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(importStateObj.totalInstances, importStateObj.CompleteCount, false)))
-                    {
-                        modbhelper.updateActivity(Conversions.ToLong(importStateObj.LogId), Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(importStateObj.cDeleteTempTableName, " Imported "), importStateObj.totalInstances), " Objects, "), importStateObj.CompleteCount), " Completed")));
-                    }
-
-                    fRefNode = null;
-
-                    if (Conversions.ToBoolean(Operators.AndObject(importStateObj.bDeleteNonEntries, importStateObj.LastItem)))
-                    {
-
-                        string cSQL = "";
-
-                        // The following check ensures if the temp table is empty, nothing is deleted
-                        // This is incase nothing is imported, maybe due to wrong import XSL
-                        string nSizeCheck = "";
-                        cSQL = Conversions.ToString(Operators.ConcatenateObject("SELECT * FROM ", importStateObj.cDeleteTempTableName));
-                        nSizeCheck = "" + modbhelper.ExeProcessSqlScalar(cSQL);
-
-                        if (!nSizeCheck.Equals(""))
-                        {
-
-                            // Remove anything that's not from tblContent (future upgrade to support further tables maybe?)
-                            // cSQL = "DELETE FROM " & cDeleteTempTableName & " WHERE cTableName != 'tblContent'"
-                            // Me.ExeProcessSql(cSQL)
-                            switch (importStateObj.cDeleteTempType)
-                            {
-                                case "Content":
-                                    {
-                                        // Delete Content Items
-                                        cSQL = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Select nContentKey FROM tblContent " + "WHERE nContentKey IN (SELECT nContentKey FROM tblContent c " + " LEFT OUTER JOIN ", importStateObj.cDeleteTempTableName), " t "), " ON c.cContentForiegnRef = t.cImportID "));
-
-
-                                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(importStateObj.cDefiningWhereStmt, "", false)))
-                                        {
-                                            cSQL = Conversions.ToString(cSQL + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" WHERE t.cImportID is null AND c.", importStateObj.cDefiningField), " = '"), SqlFmt(Conversions.ToString(importStateObj.cDefiningFieldValue))), "'"));
-                                        }
-                                        else
-                                        {
-                                            cSQL = Conversions.ToString(cSQL + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" WHERE t.cImportID is null AND c.", importStateObj.cDefiningField), " = '"), SqlFmt(Conversions.ToString(importStateObj.cDefiningFieldValue))), "' AND "), importStateObj.cDefiningWhereStmt), ""));
-                                        }
-                                        cSQL += ")";
-
-                                        // Dim oDR As SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(cSQL)
-                                        using (var oDR = modbhelper.getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
-                                        {
-                                            while (oDR.Read())
-                                                modbhelper.DeleteObject(dbHelper.objectTypes.Content, Conversions.ToLong(oDR[0]));
-                                        }
-
-                                        break;
-                                    }
-                                case "Directory":
-                                    {
-                                        // Delete Directory Items
-                                        cSQL = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Select nDirKey FROM tblDirectory " + "WHERE nDirKey IN (SELECT nDirKey FROM tblDirectory d " + " LEFT OUTER JOIN ", importStateObj.cDeleteTempTableName), " t "), " ON d.cDirForiegnRef = t.cImportID "));
-
-
-                                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(importStateObj.cDefiningWhereStmt, "", false)))
-                                        {
-                                            cSQL = Conversions.ToString(cSQL + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" WHERE t.cImportID is null AND d.", importStateObj.cDefiningField), " = '"), SqlFmt(Conversions.ToString(importStateObj.cDefiningFieldValue))), "'"));
-                                        }
-                                        else
-                                        {
-                                            cSQL = Conversions.ToString(cSQL + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" WHERE t.cImportID is null AND d.", importStateObj.cDefiningField), " = '"), SqlFmt(Conversions.ToString(importStateObj.cDefiningFieldValue))), "' AND "), importStateObj.cDefiningWhereStmt), ""));
-                                        }
-                                        cSQL += ")";
-
-                                        using (var oDr = modbhelper.getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
-                                        {
-
-                                            while (oDr.Read())
-                                            {
-                                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDr[0], 1, false)))
-                                                {
-                                                    // dont delete admin logon
-                                                    modbhelper.DeleteObject(dbHelper.objectTypes.Directory, Conversions.ToLong(oDr[0]));
-                                                }
-                                            }
-                                        }
-
-                                        break;
-                                    }
-                            }
-
-
-
-                        }
-                        cSQL = Conversions.ToString(Operators.ConcatenateObject("DROP TABLE ", importStateObj.cDeleteTempTableName));
-                        modbhelper.ExeProcessSql(cSQL);
-                    }
-                }
-
-                catch (Exception ex)
-                {
-                    modbhelper.logActivity(dbHelper.ActivityType.ValidationError, 0L, 0L, ErrorId, Strings.Right(ex.Message + " - " + ex.StackTrace, 700), fRef);
-                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ImportSingleObject", ex, ""));
-
-                }
-                finally
-                {
-                    if (importStateObj.oResetEvt != null)
-                    {
-                        importStateObj.oResetEvt.Set();
-                    }
-                    modbhelper.CloseConnection();
-                    modbhelper = null;
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "UpdateContact", ex, cProcessInfo));
+                    return nContentID;
                 }
             }
         }
+
 
     }
 }

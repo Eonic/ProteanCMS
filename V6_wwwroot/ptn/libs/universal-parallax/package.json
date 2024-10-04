@@ -1,0 +1,32 @@
+{
+    "name": "universal-parallax",
+    "version": "1.3.2",
+    "description": "Easy parallax plugin using vanilla javascript. Works on mobile devices (really). Lightweight (2kb). Cross browser compatibility",
+    "main": "dist/universal-parallax.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/marrio-h/universal-parallax.git"
+    },
+    "keywords": [
+        "parallax",
+        "universal parallax",
+        "ios parallax",
+        "android parallax",
+        "mobile parallax",
+        "phone parallax",
+        "vanilla parallax",
+        "universal",
+        "parallax background",
+        "vanilla parallax",
+        "javascript parallax",
+        "javascript",
+        "mobile",
+        "phone"
+    ],
+    "author": "Marius Hansen <marius.o.hansen@gmail.com>",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/marrio-h/universal-parallax/issues"
+    },
+    "homepage": "https://github.com/marrio-h/universal-parallax#readme"
+}

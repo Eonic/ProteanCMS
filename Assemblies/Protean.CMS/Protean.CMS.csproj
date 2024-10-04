@@ -285,9 +285,10 @@
     <Compile Include="admin\AdminXforms.cs" />
     <Compile Include="api\rest.cs" />
     <Compile Include="api\soap.cs" />
+    <Compile Include="core\DBImport.cs" />
     <Compile Include="providers\Cache.BaseProvider.cs" />
     <Compile Include="tools\AppStart.cs" />
-    <Compile Include="App_Start\DynamicImage.cs" />
+    <Compile Include="bin\App_Start\DynamicImage.cs" />
     <Compile Include="Connected Services\AdminProxy\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -297,7 +298,7 @@
     <Compile Include="core\Cms.DBHelper.cs" />
     <Compile Include="core\Cms.xForm.cs" />
     <Compile Include="content\Calendar.cs" />
-    <Compile Include="content\Contact.cs" />
+    <Compile Include="modal\Contact.cs" />
     <Compile Include="content\Content.JSONActions.cs" />
     <Compile Include="content\Modules.cs" />
     <Compile Include="core\Base.cs" />

@@ -1,4 +1,24 @@
-﻿//------------------------
+﻿.phone-icon,
+.email-icon {
+    display: flex;
+    align-items: center;
+
+    &:before {
+        content: '\f095';
+        font-family: $font-awesome-version;
+        padding-right: 0.2rem;
+        font-weight: 900;
+    }
+}
+
+.email-icon {
+    &:before {
+        content: '\f0e0';
+        font-weight: 400;
+    }
+}
+
+//------------------------
 //ICON SHORTCUTS
 //------------------------
 @mixin angle-left() {
@@ -28,25 +48,25 @@
 @mixin chevron-left() {
     content: "\f053";
     font-weight: 900;
-    font-family: 'Font Awesome 5 Free';
+    font-family: $font-awesome-version;
 }
 
 @mixin chevron-right() {
     content: "\f054";
     font-weight: 900;
-    font-family: 'Font Awesome 5 Free';
+    font-family: $font-awesome-version;
 }
 
 @mixin chevron-down() {
     content: "\f107";
     font-weight: 900;
-    font-family: 'Font Awesome 5 Free';
+    font-family: $font-awesome-version;
 }
 
 @mixin chevron-up() {
     content: "\f106";
     font-weight: 900;
-    font-family: 'Font Awesome 5 Free';
+    font-family: $font-awesome-version;
 }
 
 //------------------------

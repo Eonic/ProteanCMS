@@ -32,6 +32,9 @@ using System.Web.UI.HtmlControls;
 using Protean.Providers.Membership;
 using Protean.Providers.Payment;
 using System.Windows.Shapes;
+using System.Data.SqlClient;
+using Protean.Models;
+using System.Windows.Controls;
 
 namespace Protean
 {
@@ -221,8 +224,8 @@ namespace Protean
                 }
 
 
-                [Obsolete("Don't use this routine any more. Use the new one in Membership Provider ", false)]
-                public virtual XmlElement xFrmUserLogon(string FormName = "UserLogon")
+               
+                public virtual XmlElement GetProviderXFrmUserLogon(string FormName = "UserLogon")
                 {
                     string cProcessInfo = "";
 
@@ -2849,6 +2852,10 @@ namespace Protean
 
                             GetModuleOptions(ref oSelElmt);
 
+                            var submitted = base.isSubmitted();
+                            var ewsubmit = !string.IsNullOrEmpty(this.goRequest.Form["ewsubmit.x"]);
+                            var cModuletype = !string.IsNullOrEmpty(this.goRequest.Form["cModuleType"]);
+
                             if (base.isSubmitted() | !string.IsNullOrEmpty(this.goRequest.Form["ewsubmit.x"]) | !string.IsNullOrEmpty(this.goRequest.Form["cModuleType"]))
                             {
                                 base.updateInstanceFromRequest();
@@ -3611,6 +3618,7 @@ namespace Protean
                                     prodCatElmt.SetAttribute("ids", Ids);
                                     oTempInstance.AppendChild(prodCatElmt);
                                 }
+                                AddPageSpecs(ref myWeb.mnPageId,ref oTempInstance);
                             }
                         }
                         else
@@ -3681,6 +3689,9 @@ namespace Protean
                         {
                             cXformPath = "/xforms/content/" + cXformPath;
                         }
+                        
+                        // TS we want to do this later after we have loaded specs etc.
+                        base.bProcessRepeats = false;
 
                         if (!base.load(cXformPath + ".xml", this.myWeb.maCommonFolders))
                         {
@@ -3778,6 +3789,25 @@ namespace Protean
                         }
                         else
                         {
+
+                            XmlElement myInstance = base.Instance;
+                            // if product
+                            string sProductTypes = "Product,SKU,Ticket";
+                            if (myWeb.Features.ContainsKey("Subscriptions"))
+                            {
+                                sProductTypes = sProductTypes + ",Subscription";
+                            }
+                            if (!string.IsNullOrEmpty(this.myWeb.moConfig["ProductTypes"]))
+                            {
+                                sProductTypes = this.myWeb.moConfig["ProductTypes"];
+                            }
+                            sProductTypes = sProductTypes.Trim().TrimEnd(',') + ",";
+                            if (sProductTypes.Contains(cContentSchemaName + ","))
+                            {
+                                AddPageSpecs(ref myWeb.mnPageId, ref myInstance);
+                            }
+                                this.bProcessRepeats = true;
+                                this.LoadInstance(myInstance);
 
                             if (this.goSession["oContentInstance"] != null)
                             {
@@ -4467,6 +4497,42 @@ namespace Protean
                     }
                 }
 
+                public void AddPageSpecs(ref int nPgId, ref XmlElement Instance) {
+
+                    if (Instance.SelectSingleNode("descendant-or-self::Specs") != null) { 
+
+                        Protean.Cms myCMS = new Protean.Cms(myWeb.moCtx);
+                        myCMS.InitializeVariables();
+                        myCMS.mnPageId = nPgId;
+                        myCMS.ibIndexMode = true;
+                        myCMS.mbAdminMode = false;
+                        XmlDocument myPageXml = myCMS.GetPageXML();
+
+                        XmlElement SpecsElmt = myPageXml.CreateElement("Specs");
+                        foreach (XmlElement SpecElmt in myPageXml.SelectNodes("descendant-or-self::Spec"))
+                        {
+                            string name = SpecElmt.GetAttribute("name");
+                            if (name != "")
+                            {
+                                if (SpecsElmt.SelectSingleNode($"Spec[@name='{name}']") == null)
+                                {
+                                    SpecElmt.InnerText = "";
+                                    XmlElement existingSpec = (XmlElement)Instance.SelectSingleNode($"descendant-or-self::Spec[@name='{name}']");
+                                    if (existingSpec != null)
+                                    {
+                                        SpecElmt.InnerText = existingSpec.InnerText;
+                                    }
+                                    SpecsElmt.AppendChild(SpecElmt);
+                                }
+                            }
+                        }
+
+                        foreach (XmlNode InstanceSpecs in Instance.SelectNodes("descendant-or-self::Specs")){
+                            InstanceSpecs.InnerXml = SpecsElmt.InnerXml;
+                        }
+                    }
+                }
+
                 public XmlElement xFrmDeleteContent(long artid)
                 {
 
@@ -4723,13 +4789,26 @@ namespace Protean
                         var oFsh = new Protean.fsHelper();
                         oFsh.initialiseVariables(nType);
                         string fileToFind = "/" + oFsh.mcRoot + cPath.Replace(@"\", "/") + "/" + cName;
+
+
                         //string sSQL = "select * from tblContent where cContentXmlBrief like '%" + fileToFind + "%' or cContentXmlDetail like '%" + fileToFind + "%'";
                         //string sSQL = "select nContentKey,cContentSchemaName,cContentName from tblContent where contains(cContentXmlBrief,'" + fileToFind + "') or contains(cContentXmlDetail,'" + fileToFind + "')";
-                        string sSQL = "spCheckDataExistsInContent";
-                        Hashtable arrParms = new System.Collections.Hashtable();
-                        arrParms.Add("TextToFind", fileToFind);
-                        using (var oDr = moDbHelper.getDataReaderDisposable(sSQL, CommandType.StoredProcedure, arrParms))  // Done by nita on 6/7/22
+                        SqlDataReader oDr;
+                        if (myWeb.moDbHelper.checkDBObjectExists("spCheckFileInUse",Database.objectTypes.StoredProcedure))
                         {
+                            string sSQL = "spCheckFileInUse";
+                            System.Collections.Hashtable arrParms = new System.Collections.Hashtable();
+                            arrParms.Add("filePath", fileToFind);
+                             oDr = moDbHelper.getDataReader(sSQL, CommandType.StoredProcedure, arrParms);
+                        }
+                        else
+                        {
+                            string sSQL = "select * from tblContent where cContentXmlBrief like '%" + fileToFind + "%' or cContentXmlDetail like '%" + fileToFind + "%'";
+                             oDr = moDbHelper.getDataReader(sSQL);
+                        }
+
+
+                       
                             if (oDr.HasRows)
                             {
                                 string contentFound = "<p>This file is used in these content Items</p><ul>";
@@ -4746,7 +4825,8 @@ namespace Protean
                                 base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet");
                                 //oFrmElmt = (XmlElement)argoNode2;
                             }
-                        }
+                        oDr.Close();
+                        oDr = null;
 
                         //XmlNode argoNode3 = oFrmElmt;
                         base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Are you sure you want to delete this file? - \"" + cPath + @"\" + cName + "\"", false, "alert-danger");
@@ -6365,7 +6445,7 @@ namespace Protean
                         // load the directory item to be deleted
                         moDbHelper.moPageXml = this.moPageXML;
 
-                        base.NewFrm("EditDeliveryMethod");
+                        base.NewFrm("DeleteDeliveryMethod");
 
                         // Lets get the object
                         oElmt = this.moPageXML.CreateElement("sType");
@@ -7379,6 +7459,16 @@ namespace Protean
                         base.addInput(ref oGrp1Elmt, "nShipOptWeightMax", true, "Maximum Weight", "short");
                         XmlElement argoBindParent9 = null;
                         base.addBind("nShipOptWeightMax", "tblCartShippingMethods/nShipOptWeightMax", oBindParent: ref argoBindParent9, "false()");
+
+                        if (myWeb.moDbHelper.checkTableColumnExists("tblCartShippingMethods","nShipOptWeightOverageRate")) {
+                            base.addInput(ref oGrp1Elmt, "nShipOptWeightOverageUnit", true, "Overage Unit", "short");
+                            XmlElement oElmtOverageUnit = null;
+                            base.addBind("nShipOptWeightOverageUnit", "tblCartShippingMethods/nShipOptWeightOverageUnit", oBindParent: ref oElmtOverageUnit, "false()");
+
+                            base.addInput(ref oGrp1Elmt, "nShipOptWeightOverageRate", true, "Overage Rate", "short");
+                            XmlElement oElmtOverageRate = null;
+                            base.addBind("nShipOptWeightOverageRate", "tblCartShippingMethods/nShipOptWeightOverageRate", oBindParent: ref oElmtOverageRate, "false()");
+                        }
 
                         base.addInput(ref oGrp1Elmt, "nShipOptPriceMin", true, "Minimum Price", "short");
                         XmlElement argoBindParent10 = null;
@@ -11060,7 +11150,11 @@ namespace Protean
 
                         // Build the form
                         base.NewFrm("MemberCodes");
-                        base.load("/xforms/directory/" + cFormName + ".xml", this.myWeb.maCommonFolders);
+                        string formPath = "/xforms/directory/" + cFormName + ".xml";
+                        if (myWeb.bs5) {
+                            formPath = "/admin/xforms/directory/" + cFormName + ".xml";
+                        }
+                        base.load(formPath, this.myWeb.maCommonFolders);
 
                         // Load the instance.
                         if (nCodesetKey > 0)
@@ -11251,7 +11345,7 @@ namespace Protean
                                     for (int i = 0, loopTo = nNoCodes - 1; i <= loopTo; i++)
                                     {
                                         // Generate a random password
-                                        object localgetNodeValueByType2() { XmlNode argoParent3 = oInstanceRoot; var ret = getNodeValueByType(ref argoParent3, "nRNDLength", vDefaultValue: "8"); oInstanceRoot = (XmlElement)argoParent3; return ret; }
+                                       // object localgetNodeValueByType2() { XmlNode argoParent3 = oInstanceRoot; var ret = getNodeValueByType(ref argoParent3, "nRNDLength", vDefaultValue: "8"); oInstanceRoot = (XmlElement)argoParent3; return ret; }
 
                                         object localgetNodeValueByType3() { XmlNode argoParent4 = oInstanceRoot; var ret = getNodeValueByType(ref argoParent4, "nRNDLength", vDefaultValue: "8"); oInstanceRoot = (XmlElement)argoParent4; return ret; }
 
@@ -11260,7 +11354,7 @@ namespace Protean
                                         // Check for duplicates
                                         while (!(Array.LastIndexOf(oCodes, cC) == -1 | string.IsNullOrEmpty(cC)))
                                         {
-                                            object localgetNodeValueByType4() { XmlNode argoParent5 = oInstanceRoot; var ret = getNodeValueByType(ref argoParent5, "nRNDLength", vDefaultValue: "8"); oInstanceRoot = (XmlElement)argoParent5; return ret; }
+                                         //   object localgetNodeValueByType4() { XmlNode argoParent5 = oInstanceRoot; var ret = getNodeValueByType(ref argoParent5, "nRNDLength", vDefaultValue: "8"); oInstanceRoot = (XmlElement)argoParent5; return ret; }
 
                                             object localgetNodeValueByType5() { XmlNode argoParent6 = oInstanceRoot; var ret = getNodeValueByType(ref argoParent6, "nRNDLength", vDefaultValue: "8"); oInstanceRoot = (XmlElement)argoParent6; return ret; }
 
@@ -11386,7 +11480,7 @@ namespace Protean
                             {
                                 // Dim oChoicesElmt As XmlElement = MyBase.addChoices(oSelectElmt, oChoices.GetAttribute("name"))
                                 // For Each oItem In oChoices.SelectNodes("Import")
-                                base.addOption(ref oSelectElmt, Strings.Replace(oChoices.GetAttribute("name"), "_", " "), oChoices.GetAttribute("xslFile"));
+                                base.addOption(ref oSelectElmt, oChoices.GetAttribute("name"), oChoices.GetAttribute("xslFile"));
                                 if (string.IsNullOrEmpty(sDefaultXslt))
                                     sDefaultXslt = oChoices.GetAttribute("xslFile");
                                 // Next
@@ -11452,7 +11546,7 @@ namespace Protean
                                     XmlElement oElmt = (XmlElement)base.Instance.FirstChild;
 
                                     string cFilename = oFs.mcStartFolder + Strings.Right(fUpld.FileName, Strings.Len(fUpld.FileName) - fUpld.FileName.LastIndexOf(@"\"));
-                                    cFilename = cFilename.Replace(" ", "-");
+                                    //cFilename = cFilename.Replace(" ", "-");
                                     oElmt.SetAttribute("filename", cFilename);
 
                                     if ((sValidResponse ?? "") == (fUpld.FileName ?? ""))
