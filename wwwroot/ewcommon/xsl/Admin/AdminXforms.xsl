@@ -2784,7 +2784,7 @@
 			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="class" select="../@class"/>
-		<div>
+		<span>
 			<xsl:attribute name="class">
 				<xsl:text>form-check form-check-inline</xsl:text>
 				<xsl:if test="contains($class,'multiline')">
@@ -2866,7 +2866,7 @@
 				&#160;
 				<xsl:value-of select="label/node()"/>
 			</label>
-		</div>
+		</span>
 		<xsl:variable name="showOther">
 			<xsl:choose>
 				<xsl:when test="preceding-sibling::item[value/node()=$value]">
