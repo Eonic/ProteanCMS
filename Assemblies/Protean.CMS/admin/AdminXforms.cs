@@ -1,5 +1,4 @@
-﻿
-// ***********************************************************************
+﻿// ***********************************************************************
 // $Library:     eonic.adminXforms
 // $Revision:    3.1  
 // $Date:        2006-03-02
@@ -76,7 +75,8 @@ namespace Protean
                         moRequest = this.myWeb.moRequest;
 
                         base.cLanguage = this.myWeb.mcPageLanguage;
-                        if (myWeb.bs5) {
+                        if (myWeb.bs5)
+                        {
                             ReportExportPath = "/ptn/tools/export.ashx?ewCmd=CartDownload";
                         }
                     }
@@ -1865,7 +1865,7 @@ namespace Protean
                         if (string.IsNullOrEmpty(cParId))
                         {
                             XmlElement xmlBase = base.Instance;
-                            Xml.NodeState(ref xmlBase, "tblContentStructure/nStructParId", (base.goRequest["parId"] == null? "": Convert.ToString(base.goRequest["parId"])));
+                            Xml.NodeState(ref xmlBase, "tblContentStructure/nStructParId", (base.goRequest["parId"] == null ? "" : Convert.ToString(base.goRequest["parId"])));
                         }
                         else
                         {
@@ -2820,14 +2820,14 @@ namespace Protean
                                 int argnReturnId = 0;
                                 string argzcReturnSchema = "";
                                 string argAlternateFormName = "";
-                                xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"],false, nReturnId: ref argnReturnId, zcReturnSchema: ref argzcReturnSchema, AlternateFormName: ref argAlternateFormName);
+                                xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId, zcReturnSchema: ref argzcReturnSchema, AlternateFormName: ref argAlternateFormName);
                             }
                             else
                             {
                                 int argnReturnId1 = 0;
                                 string argzcReturnSchema1 = "";
                                 string argAlternateFormName1 = "";
-                                xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"],false, nReturnId: ref argnReturnId1, zcReturnSchema: ref argzcReturnSchema1, AlternateFormName: ref argAlternateFormName1);
+                                xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId1, zcReturnSchema: ref argzcReturnSchema1, AlternateFormName: ref argAlternateFormName1);
                             }
 
 
@@ -2864,7 +2864,7 @@ namespace Protean
                                         int argnReturnId2 = 0;
                                         string argzcReturnSchema2 = "";
                                         string argAlternateFormName2 = "";
-                                        xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"],false, nReturnId: ref argnReturnId2, zcReturnSchema: ref argzcReturnSchema2, AlternateFormName: ref argAlternateFormName2);
+                                        xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId2, zcReturnSchema: ref argzcReturnSchema2, AlternateFormName: ref argAlternateFormName2);
                                     }
 
                                     else
@@ -2872,7 +2872,7 @@ namespace Protean
                                         int argnReturnId3 = 0;
                                         string argzcReturnSchema3 = "";
                                         string argAlternateFormName3 = "";
-                                        xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"],false, nReturnId: ref argnReturnId3, zcReturnSchema: ref argzcReturnSchema3, AlternateFormName: ref argAlternateFormName3);
+                                        xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId3, zcReturnSchema: ref argzcReturnSchema3, AlternateFormName: ref argAlternateFormName3);
                                     }
                                 }
                             }
@@ -3176,11 +3176,13 @@ namespace Protean
                                     // oModuleType.SetAttribute("formPath", filepath & "/" & formPath)
 
                                     XmlElement filterTypes = (XmlElement)ManifestDoc.SelectSingleNode("/PageLayouts/FilterTypes");
-                                    if (filterTypes == null){
+                                    if (filterTypes == null)
+                                    {
                                         filterTypes = ManifestDoc.CreateElement("FilterTypes");
                                         ManifestDoc.DocumentElement.AppendChild(filterTypes);
                                     }
-                                    if (filterTypes != null) {
+                                    if (filterTypes != null)
+                                    {
                                         if (filterTypes.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Module[@name='", FilterTypeName), "']"))) is null)
                                         {
                                             filterTypes.AppendChild(filterTypes.OwnerDocument.ImportNode(oModuleType.CloneNode(true), true));
@@ -4722,8 +4724,11 @@ namespace Protean
                         oFsh.initialiseVariables(nType);
                         string fileToFind = "/" + oFsh.mcRoot + cPath.Replace(@"\", "/") + "/" + cName;
                         //string sSQL = "select * from tblContent where cContentXmlBrief like '%" + fileToFind + "%' or cContentXmlDetail like '%" + fileToFind + "%'";
-                        string sSQL = "select nContentKey,cContentSchemaName,cContentName from tblContent where contains(cContentXmlBrief,'" + fileToFind + "') or contains(cContentXmlDetail,'" + fileToFind + "')";
-                        using (var oDr = moDbHelper.getDataReaderDisposable(sSQL))  // Done by nita on 6/7/22
+                        //string sSQL = "select nContentKey,cContentSchemaName,cContentName from tblContent where contains(cContentXmlBrief,'" + fileToFind + "') or contains(cContentXmlDetail,'" + fileToFind + "')";
+                        string sSQL = "spCheckDataExistsInContent";
+                        Hashtable arrParms = new System.Collections.Hashtable();
+                        arrParms.Add("TextToFind", fileToFind);
+                        using (var oDr = moDbHelper.getDataReaderDisposable(sSQL, CommandType.StoredProcedure, arrParms))  // Done by nita on 6/7/22
                         {
                             if (oDr.HasRows)
                             {
@@ -4770,6 +4775,11 @@ namespace Protean
                                     //oFrmElmt = (XmlElement)argoNode4;
                                     base.addValues();
                                 }
+                                else
+                                {
+                                    TryDeleteAllInstancesOfOrigianlFile(cPath, cName, oFs);
+                                    DeleteFileFromCache(cName);
+                                }
                             }
 
                             else
@@ -4789,6 +4799,88 @@ namespace Protean
                     {
                         stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
                         return null;
+                    }
+                }
+
+                private void TryDeleteAllInstancesOfOrigianlFile(string filePath, string fileName, Protean.fsHelper oFs)
+                {
+                    filePath = filePath.Contains(oFs.mcStartFolder) ? filePath : oFs.mcStartFolder + filePath;
+                    var subFolders = System.IO.Directory.GetDirectories(filePath, "~*");
+                    try
+                    {
+                        if (subFolders.Length > 0)
+                        {
+                            foreach (var sFolder in subFolders)
+                            {
+                                TryDeleteAllInstancesOfOrigianlFile(sFolder, fileName, oFs);
+                            }
+                        }
+                        DeleteFiles(filePath, fileName, oFs);
+                    }
+                    catch (Exception ex)
+                    {
+                        var x = 0;
+                    }
+                }
+
+                private void DeleteFiles(string directoryPath, string fileName, Protean.fsHelper oFs)
+                {
+                    string originalFileNameFull = System.IO.Path.Combine(directoryPath, fileName);
+
+                    var filesToDelete = System.IO.Directory.GetFiles(directoryPath, "*" + fileName);
+                    for (int i = 0; i < filesToDelete.Length; i++)
+                    {
+                        oFs.DeleteFile(filesToDelete[i]);
+                    }
+                    oFs.DeleteFile(originalFileNameFull);
+                }
+
+                private void DeleteFileFromCache(string fileName)
+                {
+                    if (this.myWeb.moConfig["CacheProvider"] != null)
+                    {
+                        string[] cacheProviderDetails = this.myWeb.moConfig["CacheProvider"].Split(',');
+                        //oFilterElmt = currentOFilterElmt1;
+                        Type calledType;
+                        string className = cacheProviderDetails[0];
+                        string providerName = cacheProviderDetails[1];
+                        if (!string.IsNullOrEmpty(className))
+                        {
+                            if (string.IsNullOrEmpty(providerName) | Strings.LCase(providerName) == "default")
+                            {
+                                providerName = "Protean.Providers." + className;
+                                calledType = Type.GetType(providerName, true);
+                            }
+                            else
+                            {
+                                var castObject = WebConfigurationManager.GetWebApplicationSection("protean/CacheProvider");
+                                Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)castObject;
+                                System.Configuration.ProviderSettings ourProvider = moPrvConfig.Providers[providerName];
+                                Assembly assemblyInstance;
+
+                                if (ourProvider.Parameters["path"] != "" && ourProvider.Parameters["path"] != null)
+                                {
+                                    assemblyInstance = Assembly.LoadFrom(goServer.MapPath(Conversions.ToString(ourProvider.Parameters["path"])));
+                                }
+                                else
+                                {
+                                    assemblyInstance = Assembly.Load(ourProvider.Type);
+                                }
+                                if (ourProvider.Parameters["rootClass"] == "")
+                                {
+                                    calledType = assemblyInstance.GetType("Protean.Providers" + providerName, true);
+                                }
+                                else
+                                {
+                                    calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], "."), className)), true);
+                                }
+                            }
+                            string methodname = "PurgeFile";
+                            var o = Activator.CreateInstance(calledType);
+                            var args = new object[1];
+                            args[0] = fileName;
+                            calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, null, o, args);
+                        }
                     }
                 }
 
@@ -5477,7 +5569,7 @@ namespace Protean
                 //}
 
                 [Obsolete("Don't use this routine any more. Use the new one in Membership Provider ", false)]
-                public virtual XmlElement xFrmEditDirectoryItem(ref XmlElement InstanceAppend,long id = 0L, string cDirectorySchemaName = "User", long parId = 0L, string cXformName = "", string FormXML = "")
+                public virtual XmlElement xFrmEditDirectoryItem(ref XmlElement InstanceAppend, long id = 0L, string cDirectorySchemaName = "User", long parId = 0L, string cXformName = "", string FormXML = "")
                 {
                     string cProcessInfo = "";
 
@@ -6621,7 +6713,7 @@ namespace Protean
                         // Rights Alert - to give a user an idea that Rights exists on this page, we'll highlight
                         // this on the Rights page in an alert
                         //If moDbHelper.GetDataValue("SELECT COUNT(*) As pCount FROM tblDirectoryPermission WHERE nAccessLevel > 2 AND nStructId=" & id, , , 0) > 0 Then
-                        if (Convert.ToInt32(moDbHelper.GetDataValue("SELECT COUNT(*) As pCount FROM tblDirectoryPermission WHERE nAccessLevel > 2 AND nStructId=" +id)) > 0)
+                        if (Convert.ToInt32(moDbHelper.GetDataValue("SELECT COUNT(*) As pCount FROM tblDirectoryPermission WHERE nAccessLevel > 2 AND nStructId=" + id)) > 0)
                         {
 
                             //XmlNode argoNode3 = oFrmElmt;
@@ -7840,12 +7932,13 @@ namespace Protean
 
                         string[] aSellerNotes = Strings.Split(sellerNotes, "/n");
                         string cSellerNotesHtml = "<ul>";
-                        for (int snCount = 0, loopTo = Information.UBound(aSellerNotes); snCount <= loopTo; snCount++) { 
-                        string replaceWith = " ";
-                        string removedBreaks = convertEntitiesToCodes(aSellerNotes[snCount]).Replace("\r\n", replaceWith).Replace("\n", replaceWith).Replace("\r", replaceWith).Replace("\\n", replaceWith);
-                        cSellerNotesHtml = cSellerNotesHtml + "<li>" + removedBreaks + "</li>";
+                        for (int snCount = 0, loopTo = Information.UBound(aSellerNotes); snCount <= loopTo; snCount++)
+                        {
+                            string replaceWith = " ";
+                            string removedBreaks = convertEntitiesToCodes(aSellerNotes[snCount]).Replace("\r\n", replaceWith).Replace("\n", replaceWith).Replace("\r", replaceWith).Replace("\\n", replaceWith);
+                            cSellerNotesHtml = cSellerNotesHtml + "<li>" + removedBreaks + "</li>";
                         };
-                    tempElement.InnerXml = cSellerNotesHtml + "</ul>";
+                        tempElement.InnerXml = cSellerNotesHtml + "</ul>";
 
                         string argsClass = "";
                         int argnRows = Conversions.ToInteger("5");
@@ -9053,7 +9146,8 @@ namespace Protean
                     string cProcessInfo = "";
                     try
                     {
-                        if (xFormPath == "/xforms/directory/UserContact.xml" && myWeb.bs5) {
+                        if (xFormPath == "/xforms/directory/UserContact.xml" && myWeb.bs5)
+                        {
                             xFormPath = "/features/membership/UserContact.xml";
                         }
 
@@ -10528,7 +10622,7 @@ namespace Protean
                         //bool bCascade = false;
                         //string cProcessInfo = "";
 
-                        
+
 
                         base.NewFrm("CartActivity");
                         base.submission("SeeReport", ReportExportPath, "get", "");
@@ -11759,7 +11853,7 @@ namespace Protean
                         base.addBind("bProductRefForSKU", "tblContentIndexDef/bProductRefForSKU", oBindParent: ref argoBindParent5, "false()");
 
 
-                       
+
 
                         base.addInput(ref oGrp1Elmt, "nKeywordGroupName", true, "nKeywordGroupName", "hidden");
                         XmlElement argoBindParent6 = null;
