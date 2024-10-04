@@ -2344,7 +2344,7 @@
 				</xsl:if>
 			</xsl:for-each>
 			};
-			showDependant(dict[selectedValue].toString() + '-dependant', ourRef + '-dependant',', false');
+			showDependant(dict[selectedValue] + '-dependant', ourRef + '-dependant',', false');
 			}
 			//
 			toggle_<xsl:value-of select="$ref"/>('<xsl:value-of select="$ref"/>');
