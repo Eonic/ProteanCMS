@@ -1157,7 +1157,7 @@ namespace Protean
                 }
                 else
                 {
-                    return "";
+                    return "0";
                 }
 
             }
