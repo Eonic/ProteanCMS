@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Content type="xform" name="SubscriptionExpiry">
+	<model class="ewXform">
+		<instance>
+			<AlertEmail existingGroupId="" newGroupId="" existingGroupName="" newGroupName="" sendEmail="1">
+				<RecordType/>
+				<id/>
+				<xFormName/>
+				<RecipientName/>
+				<Email/>
+				<emailer>
+					<oBodyXML>
+						<Items subjectLine="Thank you for taking the time to review Into The Blue.">
+							<Name />
+							<Message>
+								<div class="panel panel-default">
+									<div class="panel-body">
+										<div class="row" style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#000;">
+											<b>Thank you for taking the time to review Into The Blue.</b><br /><br />
+											Your feedback is very much appreciated and we read every review we get. What you tell us shows us how well we are doing. It also helps us in our work to continue to give our customers the best experience we can.
+											<br /><br />
+											As a thank you for your time, please accept this promo code to enjoy 15% off any of our activity gifts and experiences at
+											<a href='https://www.intotheblue.co.uk' target="_blank">intotheblue.co.uk.</a>*
+
+											<br /><br />
+											<b>REVIEW15</b>
+											<br /><br />
+											And of course, we’d love to hear from you again, so don’t hesitate to leave us another review when you’ve used your next voucher!<br /><br />
+											If you haven’t done so already, <a href='https://www.intotheblue.co.uk/sign-up-to-join-us/' target="_blank">subscribe to us</a> and we’ll make sure you’re the first to know about all our promotions, discount deals and competitions. <br /><br />
+
+										</div>
+										<div class="row" style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#000;">
+											<br />
+											<p align="left">
+												<br />
+												With many thanks&#44;<br />
+												<h1 style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#0679be;">Jim Maitland</h1>
+											</p>
+											<p align="left">
+												Managing Director of Into The Blue
+											</p>
+											<br />
+											<br />
+										</div>
+										<div class="row" style="font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000;">
+											<i>
+												* To redeem your 15% discount offer, simply enter the code when prompted at checkout.
+												Offer valid on products sold via the Into The Blue website only. Offer cannot be used in conjunction with any other offer. Only one discount may be used per order. The offer excludes selected experiences and all products over £250. For full terms and conditions, please visit www.intotheblue.co.uk.
+											</i>
+											<p align="left">
+												Please do not reply to this email.
+											</p>
+											<br />
+										</div>
+										<div width="10">
+											<img src="https://www.intotheblue.co.uk/images/email/spacer.gif" width="100%" height="10px" />
+										</div>
+									</div>
+								</div>
+							</Message>
+						</Items>
+					</oBodyXML>
+					<xsltPath>/xsl/subscription/subscriptionemail.xsl</xsltPath>
+					<fromName></fromName>
+					<fromEmail></fromEmail>
+					<recipientName></recipientName>
+					<recipientEmail></recipientEmail>
+					<ccRecipientName></ccRecipientName>
+					<ccRecipient></ccRecipient>
+					<SubjectLine></SubjectLine>
+				</emailer>
+			</AlertEmail>
+		</instance>
+		<submission method="post" id="AlertEmail" event="return SendEmail(this);" />
+		<bind id="AlertEmail" nodeset="AlertEmail">
+			<bind id="RecordType" nodeset="RecordType" required="false()" type="string" />
+			<bind id="id" nodeset="id" required="false()" type="string" />
+			<bind id="xFormName" nodeset="xFormName" required="false()" type="string" />
+			<bind id="bSendEmail" nodeset="@sendEmail" required="false()" type="number" />
+			<bind id="movefrom" nodeset="@existingGroupName" required="false()" type="number" />
+			<bind id="moveto" nodeset="@newGroupName" required="false()" type="number" />
+			<bind id="RecipientName" nodeset="RecipientName" required="false()" type="string" />
+			<bind id="Email" nodeset="Email" required="false()" type="string" />
+			<bind id="emailer" nodeset="emailer">
+				<bind id="oBodyXML" nodeset="oBodyXML/Items">
+					<bind id="Message" nodeset="Message" required="false()" type="string" />
+				</bind>
+				<bind id="Subject" nodeset="SubjectLine" required="false()" type="string" />
+			</bind>
+		</bind>
+	</model>
+	<group ref="AlertEmail">
+		<group class="ContentColumn1">
+			<label>Email To User</label>
+			<group ref="Content" class="Content">
+				<input bind="RecordType" class="hidden"></input>
+				<input bind="id" class="hidden"></input>
+				<input bind="xFormName"  class="hidden"></input>
+				<input bind="RecipientName" class="readonly">
+					<label>Recipient Name</label>
+				</input>
+				<input bind="Email" class="required">
+					<label>Email</label>
+					<label id="lblerrormessage" class="hidden">Please Enter Email First</label>
+					<label id="lblinvalidemail" class="hidden">Email-id is invalid</label>
+				</input>
+				<input bind="Subject" class="required">
+					<label>Subject</label>
+				</input>
+				<textarea bind="Message" class="textarea minxhtml xhtml" rows="10">
+					<label>Message</label>
+				</textarea>
+			</group>
+		</group>
+		<submit submission="AlertEmail" ref="EditContent" class="principle">
+			<label>Send Email</label>
+		</submit>
+
+	</group>
+
+</Content>
