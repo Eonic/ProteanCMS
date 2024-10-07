@@ -14238,10 +14238,12 @@
 	</xsl:template>
 
 	<xsl:template match="Page[@layout='EmailAlert']" mode="Admin">
-		<div class="container" id="emailAlertContainer">
+		<div class="container col-md-12" id="emailAlertContainer">
 			<xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+			
 		</div>
+		
+		
 	</xsl:template>
-
 
 </xsl:stylesheet>

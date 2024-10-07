@@ -60,7 +60,7 @@
 							</Message>
 						</Items>
 					</oBodyXML>
-					<xsltPath>/xsl/subscription/subscriptionemail.xsl</xsltPath>
+					<xsltPath></xsltPath>
 					<fromName></fromName>
 					<fromEmail></fromEmail>
 					<recipientName></recipientName>
