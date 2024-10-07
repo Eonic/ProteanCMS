@@ -574,9 +574,10 @@
 
 	<xsl:template match="help" mode="xform">
 		<div class="alert alert-info">
-			<i class="fa fa-info fa-2x pull-left">
+			<i class="fa fa-info-circle fa-2x">
 				<xsl:text> </xsl:text>
 			</i>
+			<xsl:text> </xsl:text>
 			<xsl:copy-of select="node()"/>
 		</div>
 	</xsl:template>
