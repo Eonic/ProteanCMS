@@ -26,6 +26,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
 using System.Xml;
+using System.Xml.Xsl;
 using static Protean.stdTools;
 using static Protean.Tools.Text;
 using static Protean.Tools.Xml;
@@ -12731,7 +12732,20 @@ namespace Protean
                                 AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/emailer/recipientName"));
                                 AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/RecipientName"));
 
+
+
+                                // Process the XSLT for the email content
+                                string emailContent = TransformEmailContent(emailContentXsltPath, base.Instance);
+
+                                // Insert the transformed content into the XML
+                                base.Instance.SelectSingleNode("AlertEmail/emailer/oBodyXML/Items/Message").InnerText = emailContent;
+                                //AlertEmail.SelectSingleNode("AlertEmail/emailer/oBodyXML/Items").AppendChild(base.Instance.SelectSingleNode("AlertEmail/emailer/oBodyXML/Items/Message"));
+                                //AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/emailer/oBodyXML/Items/Message"));
+
                                 AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/emailer"));
+
+
+
 
                                 base.LoadInstance(existingInstance);
                                 this.myWeb.moSession[InstanceSessionName.ToString()] = base.Instance;
@@ -12794,6 +12808,21 @@ namespace Protean
                         return null;
                     }
                 }
+
+                private string TransformEmailContent(string xsltPath, XmlElement instance)
+                {
+                    //Load the XSLT
+                    XslCompiledTransform xslt = new XslCompiledTransform();
+                    xslt.Load(xsltPath);
+
+                    using (StringWriter writer = new StringWriter()) using (XmlWriter xmlWriter = XmlWriter.Create(writer))
+                    {
+                        // Transform the instance of the XML
+                        xslt.Transform(new XmlNodeReader(instance), xmlWriter);
+                        return writer.ToString();
+                    }
+                }
+
                 public XmlElement xFrmRequestSettlement(int nOrderId, bool bForceSend = false)
                 {
                     string cProcessInfo = "";
