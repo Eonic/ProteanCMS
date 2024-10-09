@@ -9,41 +9,38 @@
 // ***********************************************************************
 
 
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using Protean.Tools;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Web.Configuration;
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using static Protean.Cms;
 using static Protean.stdTools;
-using Protean.Tools;
 using static Protean.Tools.Xml;
-using System.Dynamic;
-using System.Security.Policy;
-using AngleSharp.Io;
 
 
 namespace Protean.Providers
 {
     namespace Membership
     {
-       public interface IMembershipProvider {
+        public interface IMembershipProvider
+        {
             IMembershipProvider Initiate(ref Cms myWeb);
             //  void Initiate(ref Base myWeb);
-                       
+
             IMembershipAdminXforms AdminXforms { get; set; }
             IMembershipAdminProcess AdminProcess { get; set; }
             IMembershipActivities Activities { get; set; }
 
             void Dispose();
         }
-        public interface IMembershipAdminXforms 
+        public interface IMembershipAdminXforms
         {
             XmlElement xFrmUserLogon(string FormName = "UserLogon");
             XmlElement xFrmPasswordReminder();
@@ -60,7 +57,7 @@ namespace Protean.Providers
 
             XmlElement xFrmEditDirectoryContact(long id = 0L, int nUID = 0, string xFormPath = "/xforms/directory/UserContact.xml");
 
-            XmlElement xFrmUserIntegrations(long userid , string cmd);
+            XmlElement xFrmUserIntegrations(long userid, string cmd);
 
             void open(XmlDocument oPageXml);
 
@@ -78,7 +75,7 @@ namespace Protean.Providers
         {
 
         }
-       public interface IMembershipActivities
+        public interface IMembershipActivities
         {
             long GetUserSessionId(ref Cms myWeb);
             string GetUserId(ref Cms myWeb);
@@ -95,7 +92,7 @@ namespace Protean.Providers
 
         }
 
-        public class ReturnProvider 
+        public class ReturnProvider
         {
             private const string mcModuleName = "Protean.Providers.Membership.ReturnProvider";
             protected XmlNode moPaymentCfg;
@@ -103,7 +100,7 @@ namespace Protean.Providers
             public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
             public event OnErrorWithWebEventHandler OnErrorWithWeb;
             public delegate void OnErrorWithWebEventHandler(ref Cms myweb, object sender, Tools.Errors.ErrorEventArgs e);
-          
+
             public IMembershipProvider Get(ref Cms myWeb, string ProviderName)
             {
                 try
@@ -139,17 +136,17 @@ namespace Protean.Providers
                     }
 
                     var o = Activator.CreateInstance(calledType);
-                  
-                    var args = new object[1];                   
-                    args[0] = myWeb;                               
 
-                   return (IMembershipProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args);
-                   
+                    var args = new object[1];
+                    args[0] = myWeb;
+
+                    return (IMembershipProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args);
+
                 }
 
                 catch (Exception ex)
                 {
-                    
+
                     string argsException = Conversions.ToString(myWeb.msException);
                     returnException(ref argsException, mcModuleName, "New", ex, "", ProviderName + " Could Not be Loaded", gbDebug);
                     myWeb.msException = argsException;
@@ -166,7 +163,8 @@ namespace Protean.Providers
             private IMembershipAdminXforms _AdminXforms;
             private IMembershipAdminProcess _AdminProcess;
             private IMembershipActivities _Activities;
-            IMembershipAdminXforms IMembershipProvider.AdminXforms {
+            IMembershipAdminXforms IMembershipProvider.AdminXforms
+            {
                 set
                 {
                     _AdminXforms = value;
@@ -197,27 +195,27 @@ namespace Protean.Providers
                 {
                     return _Activities;
                 }
-            }         
-           
+            }
+
 
             public DefaultProvider()
             {
                 // do nothing
-            }           
+            }
             public IMembershipProvider Initiate(ref Cms myWeb)
             {
                 _AdminXforms = new AdminXForms(ref myWeb);
                 _AdminProcess = new AdminProcess(ref myWeb);
                 // MemProvider.AdminProcess.oAdXfm = MemProvider.AdminXforms
                 _Activities = new Activities();
-                return this;              
+                return this;
             }
 
             public void Dispose()
             {
                 _AdminXforms = null;
                 _AdminProcess = null;
-                _Activities = null;    
+                _Activities = null;
             }
 
             //public void Initiate(ref Protean.Base myWeb)
@@ -232,7 +230,8 @@ namespace Protean.Providers
                 private const string mcModuleName = "Protean.Providers.Membership.Default.AdminXForms";
                 public bool maintainMembershipsOnAdd = true;
 
-                XmlElement IMembershipAdminXforms.moXformElmt {
+                XmlElement IMembershipAdminXforms.moXformElmt
+                {
                     set
                     {
                         base.moXformElmt = value;
@@ -266,13 +265,13 @@ namespace Protean.Providers
                         if (myWeb.moConfig["RememberMeMode"] == "KeepCookieAfterLogoff" | myWeb.moConfig["RememberMeMode"] == "ClearCookieAfterLogoff")
                             bRememberMe = true;
                         string formPath = "/xforms/directory/" + FormName + ".xml";
-                        if (this.myWeb.moConfig["cssFramework"] == "bs5")
+                        if (myWeb.moConfig["cssFramework"] == "bs5")
                         {
                             formPath = "/features/membership/" + FormName + ".xml";
                         }
 
                         // maCommonFolders is an array of folder locations used to look locally, then in wellardscommon and finally eoniccommon.
-                        if (!base.load(formPath, this.myWeb.maCommonFolders))
+                        if (!base.load(formPath, myWeb.maCommonFolders))
                         {
                             // If this does not load manually then build a form to do it.
                             goto BuildForm;
@@ -292,13 +291,13 @@ namespace Protean.Providers
                         XmlElement userIpt = base.addInput(ref oFrmElmt, "cUserName", true, "Email");
                         base.addClientSideValidation(ref userIpt, true, "Please enter Email");
                         XmlElement oBindParent = null;
-                        base.addBind("cUserName", "user/username",ref oBindParent, "true()");
+                        base.addBind("cUserName", "user/username", ref oBindParent, "true()");
                         string cClass = "";
                         XmlElement pwdIpt = base.addSecret(ref oFrmElmt, "cPassword", true, "Password", ref cClass);
                         base.addClientSideValidation(ref pwdIpt, true, "Please enter Password");
                         base.addBind("cPassword", "user/password", ref oBindParent, "true()");
 
-                        base.addSubmit(ref oFrmElmt, "ewSubmit", "Sign In",default, default, "fa-solid fa-right-to-bracket");
+                        base.addSubmit(ref oFrmElmt, "ewSubmit", "Sign In", default, default, "fa-solid fa-right-to-bracket");
 
                         base.Instance.InnerXml = "<user rememberMe=\"\"><username/><password/></user>";
                     Check:
@@ -336,8 +335,8 @@ namespace Protean.Providers
 
                                 if (!string.IsNullOrEmpty(cRememberedUsername))
                                     bRemembered = true;
-                                XmlElement baseInstanceElmt = (XmlElement)base.Instance;                                
-                                if (Xml.NodeState(ref baseInstanceElmt, "user","","", XmlNodeState.NotInstantiated, oElmt) != XmlNodeState.NotInstantiated & !base.isSubmitted())
+                                XmlElement baseInstanceElmt = (XmlElement)base.Instance;
+                                if (Xml.NodeState(ref baseInstanceElmt, "user", "", "", XmlNodeState.NotInstantiated, oElmt) != XmlNodeState.NotInstantiated & !base.isSubmitted())
                                 {
 
                                     oElmt.SetAttribute("rememberMe", Strings.LCase(Conversions.ToString(bRemembered)));
@@ -391,7 +390,7 @@ namespace Protean.Providers
                                             if (myWeb.moRequest.Cookies["RememberMeUserId"] != null)
                                                 goResponse.Cookies.Remove("RememberMeUserId");
                                             oCookie = new System.Web.HttpCookie("RememberMeUserId");
-                                            oCookie.Value =Convert.ToString(myWeb.mnUserId);
+                                            oCookie.Value = Convert.ToString(myWeb.mnUserId);
                                             oCookie.Expires = DateAndTime.DateAdd(DateInterval.Day, 60d, DateTime.Now);
                                             goResponse.Cookies.Add(oCookie);
                                         }
@@ -406,7 +405,8 @@ namespace Protean.Providers
                                 {
                                     base.addNote(ref moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse);
 
-                                    if (sValidResponse.Contains("msg-1021")) {
+                                    if (sValidResponse.Contains("msg-1021"))
+                                    {
                                         XmlNode SubmitNode = moXformElmt.SelectSingleNode("descendant-or-self::submit");
                                         oFrmElmt = (XmlElement)SubmitNode.ParentNode;
                                         oFrmElmt.RemoveChild(SubmitNode);
@@ -447,12 +447,14 @@ namespace Protean.Providers
                         // Does the configuration setting indicate that email addresses are allowed.
                         if (myWeb.moConfig["EmailUsernames"] != null)
                         {
-                            if ((myWeb.moConfig["EmailUsernames"].ToLower()) == "on") {
+                            if ((myWeb.moConfig["EmailUsernames"].ToLower()) == "on")
+                            {
                                 //getRecordByEmail = true;
                             }
-                            else {
+                            else
+                            {
                                 //getRecordByEmail = false;
-                                }                                
+                            }
                         }
                         else
                         {
@@ -483,7 +485,7 @@ namespace Protean.Providers
 
                             base.addInput(ref oFrmElmt, "cEmail", true, "Email Address");
                             XmlElement oBindParent2 = null;
-                            base.addBind("cEmail", "user/email",ref oBindParent2, "true()", "email");
+                            base.addBind("cEmail", "user/email", ref oBindParent2, "true()", "email");
 
                             base.addSubmit(ref oFrmElmt, "", "Reset Password", "ewSubmitReminder");
                             base.Instance.InnerXml = "<user><email/></user>";
@@ -555,7 +557,7 @@ namespace Protean.Providers
 
                         XmlNode grpNode = oFrmElmt.SelectSingleNode("group[1]");
 
-                        this.addNote(ref grpNode, noteTypes.Hint, "Your account is now activated please logon", true, "term-1039");
+                        addNote(ref grpNode, noteTypes.Hint, "Your account is now activated please logon", true, "term-1039");
 
                         // Update the user Xform to say "Thank you for activating your account please logon, Pre-populating the username"
 
@@ -725,10 +727,15 @@ namespace Protean.Providers
                                     //Providers.Membership.ReturnProvider oMembershipProv = new Providers.Membership.ReturnProvider.Get(myWeb, myWeb.moConfig["MembershipProvider"]);
 
                                     cResponse = Conversions.ToString(oMembershipProv.Activities.ResetUserAcct(ref myWeb, nAcc));
+
+                                    base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, cResponse, true);
+
+
                                 }
                                 if (!string.IsNullOrEmpty(cResponse))
                                 {
                                     oFrmElmt.ParentNode.RemoveChild(oFrmElmt);
+                                    oFrmElmt = base.addGroup(ref base.moXformElmt, "ResetAccount", "", "");
                                     base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, cResponse, true);
                                 }
                             }
@@ -799,7 +806,7 @@ namespace Protean.Providers
                         base.submission("SetPassword", "", "POST");
                         oPI1 = base.addSecret(ref oGrp, "cDirPassword", true, "Password", ref passwordClass);
                         XmlElement oxmlBind = null;
-                        base.addBind("cDirPassword", "Password/cDirPassword",ref oxmlBind, "true()", passwordValidation);
+                        base.addBind("cDirPassword", "Password/cDirPassword", ref oxmlBind, "true()", passwordValidation);
                         string strrequired = "required";
                         oPI2 = base.addSecret(ref oGrp, "cDirPassword2", true, "Confirm Password", ref strrequired);
                         base.addBind("cDirPassword2", "Password/cDirPassword2", ref oxmlBind, "true()");
@@ -925,11 +932,11 @@ namespace Protean.Providers
                         oGrp = base.addGroup(ref base.moXformElmt, "Password", default, formTitle);
                         base.submission("SetPassword", "", "POST");
                         oPI1 = base.addSecret(ref oGrp, "cDirPassword", true, "Password", ref passwordClass);
-                        base.addBind("cDirPassword", "Password/cDirPassword",ref xmlObindparent, "true()", passwordValidation);
+                        base.addBind("cDirPassword", "Password/cDirPassword", ref xmlObindparent, "true()", passwordValidation);
                         string strReqSecr = "required secret";
-                        oPI2 = base.addSecret(ref oGrp, "cDirPassword2", true, "Confirm Password",ref strReqSecr);
+                        oPI2 = base.addSecret(ref oGrp, "cDirPassword2", true, "Confirm Password", ref strReqSecr);
                         base.addBind("cDirPassword2", "Password/cDirPassword2", ref xmlObindparent, "true()");
-                        oSB =(XmlElement)base.addSubmit(ref oGrp, "SetPassword", "Set Password","","principle","","");
+                        oSB = (XmlElement)base.addSubmit(ref oGrp, "SetPassword", "Set Password", "", "principle", "", "");
 
                         int nAccount = (int)nUserId;
                         if (nAccount == 0)
@@ -980,8 +987,8 @@ namespace Protean.Providers
                             if (base.valid)
                             {
 
-                                 nAccount = (int)nUserId;
-                               if (!oMembership.ReactivateAccount(nAccount, goRequest["cDirPassword"]))
+                                nAccount = (int)nUserId;
+                                if (!oMembership.ReactivateAccount(nAccount, goRequest["cDirPassword"]))
                                 {
                                     oGrp.InnerXml = "";
                                     base.addNote(ref oGrp, Protean.xForm.noteTypes.Alert, "<span class=\"msg-1022\">There was a problem activating your account</span>");
@@ -1017,7 +1024,7 @@ namespace Protean.Providers
                     }
                 }
 
-                public XmlElement xFrmEditDirectoryItem(ref XmlElement IntanceAppend,long id = 0L, string cDirectorySchemaName = "User", long parId = 0L, string cXformName = "", string FormXML = "")
+                public XmlElement xFrmEditDirectoryItem(ref XmlElement IntanceAppend, long id = 0L, string cDirectorySchemaName = "User", long parId = 0L, string cXformName = "", string FormXML = "")
                 {
 
                     XmlElement oGrpElmt;
@@ -1041,7 +1048,7 @@ namespace Protean.Providers
                         if (string.IsNullOrEmpty(FormXML))
                         {
                             string formPath = "/xforms/directory/" + cXformName + ".xml";
-                            if (this.myWeb.moConfig["cssFramework"] == "bs5")
+                            if (myWeb.moConfig["cssFramework"] == "bs5")
                             {
                                 formPath = "/features/membership/" + cXformName + ".xml";
                             }
@@ -1049,11 +1056,11 @@ namespace Protean.Providers
                             {
                                 base.bProcessRepeats = false;
                             }
-                            if (!base.load(formPath, this.myWeb.maCommonFolders))
+                            if (!base.load(formPath, myWeb.maCommonFolders))
                             {
                                 // load a default content xform if no alternative.
                                 base.NewFrm(cXformName);
-                                
+
                                 formFound = false;
                             }
                         }
@@ -1067,27 +1074,27 @@ namespace Protean.Providers
                         {
                             if (id > 0L)
                             {
-                                base.Instance.InnerXml = this.moDbHelper.getObjectInstance(Protean.Cms.dbHelper.objectTypes.Directory, id);
-                                cCurrentPassword = this.Instance.SelectSingleNode("*/cDirPassword").InnerText;
+                                base.Instance.InnerXml = moDbHelper.getObjectInstance(Protean.Cms.dbHelper.objectTypes.Directory, id);
+                                cCurrentPassword = Instance.SelectSingleNode("*/cDirPassword").InnerText;
                             }
 
                             if (IntanceAppend != null)
                             {
-                                if (this.goSession[$"tempInstance-{FormName}"] != null)
+                                if (goSession[$"tempInstance-{FormName}"] != null)
                                 {
-                                    base.Instance = (XmlElement)this.goSession[$"tempInstance-{FormName}"];
+                                    base.Instance = (XmlElement)goSession[$"tempInstance-{FormName}"];
                                     base.bProcessRepeats = true;
                                     base.LoadInstance(base.Instance, true);
-                                    this.goSession[$"tempInstance-{FormName}"] = base.Instance;
+                                    goSession[$"tempInstance-{FormName}"] = base.Instance;
                                 }
                                 else
                                 {
                                     // this enables an overload to add additional Xml for updating.
-                                    var importedNode = this.Instance.OwnerDocument.ImportNode(IntanceAppend, true);
+                                    var importedNode = Instance.OwnerDocument.ImportNode(IntanceAppend, true);
                                     base.Instance.AppendChild(importedNode);
                                     base.bProcessRepeats = true;
                                     base.LoadInstance(base.Instance, true);
-                                    this.goSession[$"tempInstance-{FormName}"] = base.Instance;
+                                    goSession[$"tempInstance-{FormName}"] = base.Instance;
                                 }
                             }
 
@@ -1354,7 +1361,8 @@ namespace Protean.Providers
                             base.addValues();
                             return base.moXformElmt;
                         }
-                        else {
+                        else
+                        {
                             return base.moXformElmt;
                         }
                     }
@@ -1595,7 +1603,7 @@ namespace Protean.Providers
                             myWeb.moDbHelper.UseCode(cCode, Convert.ToInt32(nUserId));
 
                             // Get the CSV list of directory items for membership
-                            string cCodeCSVList =Convert.ToString(myWeb.moDbHelper.GetDataValue("SELECT tblCodes.cCodeGroups FROM tblCodes INNER JOIN tblCodes Child ON tblCodes.nCodeKey = Child.nCodeParentId WHERE (Child.cCode = '" + cCode + "')", default, default, ""));
+                            string cCodeCSVList = Convert.ToString(myWeb.moDbHelper.GetDataValue("SELECT tblCodes.cCodeGroups FROM tblCodes INNER JOIN tblCodes Child ON tblCodes.nCodeKey = Child.nCodeParentId WHERE (Child.cCode = '" + cCode + "')", default, default, ""));
 
                             // Process the List
                             foreach (string cDirId in cCodeCSVList.Split(','))
@@ -1620,7 +1628,7 @@ namespace Protean.Providers
 
 
                         base.NewFrm("EditContact");
-                        base.load(xFormPath, this.myWeb.maCommonFolders);
+                        base.load(xFormPath, myWeb.maCommonFolders);
 
                         if (id > 0L)
                         {
@@ -1631,7 +1639,7 @@ namespace Protean.Providers
                         // Add the countries list to the form
                         if (base.moXformElmt.SelectSingleNode("//select1[@bind='cContactCountry']") != null)
                         {
-                            var oEc = new Cms.Cart(ref this.myWeb);
+                            var oEc = new Cms.Cart(ref myWeb);
                             Cms.xForm argoXform = (Cms.xForm)this;
                             XmlElement argoCountriesDropDown = (XmlElement)base.moXformElmt.SelectSingleNode("//select1[@bind='cContactCountry']");
                             oEc.populateCountriesDropDown(ref argoXform, ref argoCountriesDropDown, "Billing Address");
@@ -1672,13 +1680,13 @@ namespace Protean.Providers
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditDirectoryContact", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditDirectoryContact", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
             }
 
-            public class AdminProcess : Admin , IMembershipAdminProcess
+            public class AdminProcess : Admin, IMembershipAdminProcess
             {
 
                 public event OnErrorEventHandler OnError;
@@ -1731,9 +1739,10 @@ namespace Protean.Providers
 
                 #region ErrorHandling
 
-               public Activities() { 
-                 //empty constructor
-               }
+                public Activities()
+                {
+                    //empty constructor
+                }
 
                 // for anything controlling web
                 public event OnErrorEventHandler OnError;
@@ -1793,7 +1802,7 @@ namespace Protean.Providers
                 }
 
                 public string GetUserId(ref Protean.Cms myWeb)
-                    {
+                {
                     myWeb.PerfMon.Log(mcModuleName, "getUserId");
                     string sProcessInfo = "";
                     string sReturnValue = string.Empty;
@@ -2002,7 +2011,7 @@ namespace Protean.Providers
                     {
 
                         IMembershipAdminXforms adXfm = myWeb.moMemProv.AdminXforms;
-                        
+
                         adXfm.open(myWeb.moPageXml);
 
                         // logoff handler
@@ -2211,8 +2220,8 @@ namespace Protean.Providers
                             myWeb.AddContentXml(ref oXfmElmt);
                         }
                         else if (moRequest["ewCmd"] == "ResendActivation")
-                        { 
-                            
+                        {
+
                         }
                         else if (moRequest["ewCmd"] == "ActivateAccount")
                         {
@@ -2387,9 +2396,10 @@ namespace Protean.Providers
                             myWeb.SiteRedirection();
                         }
 
-                        if (!myWeb.bs5 && !myWeb.bs3) { 
-                             // behaviour based on layout page (not required in V5 sites, this behaviour uses modules instead)
-                             MembershipV4LayoutProcess(ref myWeb, adXfm);
+                        if (!myWeb.bs5 && !myWeb.bs3)
+                        {
+                            // behaviour based on layout page (not required in V5 sites, this behaviour uses modules instead)
+                            MembershipV4LayoutProcess(ref myWeb, adXfm);
                         }
 
                         LogSingleUserSession(ref myWeb);
@@ -2673,7 +2683,7 @@ namespace Protean.Providers
                                                 // Check if the redirect is another page or just redirect to the current url
                                                 if (oXfmElmt.SelectSingleNode("//instance/RedirectPage[number(.)=number(.)]") != null)
                                                 {
-                                                    myWeb.msRedirectOnEnd = moConfig["ProjectPath"] + "/?pgid=" +  adXfm.Instance.SelectSingleNode("RedirectPage").InnerText;
+                                                    myWeb.msRedirectOnEnd = moConfig["ProjectPath"] + "/?pgid=" + adXfm.Instance.SelectSingleNode("RedirectPage").InnerText;
                                                 }
                                                 else
                                                 {
@@ -3011,7 +3021,7 @@ namespace Protean.Providers
                             oEmailDoc.DocumentElement.AppendChild(oEmailDoc.ImportNode(oUserXml, true));
                             oEmailDoc.DocumentElement.SetAttribute("Link", oMembership.AccountResetLink(nUserId));
                             oEmailDoc.DocumentElement.SetAttribute("Url", myWeb.mcOriginalURL);
-                          //  oEmailDoc.DocumentElement.SetAttribute("logonRedirect", myWeb.moSession["LogonRedirectId"].ToString());
+                            //  oEmailDoc.DocumentElement.SetAttribute("logonRedirect", myWeb.moSession["LogonRedirectId"].ToString());
                             oEmailDoc.DocumentElement.SetAttribute("lang", myWeb.mcPageLanguage);
                             oEmailDoc.DocumentElement.SetAttribute("translang", myWeb.mcPreferredLanguage);
 
@@ -3025,8 +3035,9 @@ namespace Protean.Providers
                             }
                             Protean.Cms.dbHelper argodbHelper = null;
                             sReturnValue = Conversions.ToString(oMessage.emailer(oEmailDoc.DocumentElement, path, myWeb.moConfig["SiteAdminName"], myWeb.moConfig["SiteAdminEmail"], userEmail, "Account Reset ", odbHelper: ref argodbHelper));
-                            sReturnValue = Conversions.ToString(Interaction.IIf(sReturnValue == "Message Sent", "<span class=\"msg-1035\">" + sReturnValue + " to </span>" + userEmail, ""));
 
+                            //sReturnValue = Conversions.ToString(Interaction.IIf(sReturnValue == "Message Sent", "<span class=\"msg-1035\">Reset code sent to </span>" + userEmail, ""));
+                            sReturnValue = "If we have the user account supplied we will have emailed you a reset code";
                         } // endif oUserXml Is Nothing
 
 
