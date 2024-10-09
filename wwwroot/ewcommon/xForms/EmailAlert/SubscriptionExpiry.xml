@@ -16,7 +16,7 @@
 							</Message>
 						</Items>
 					</oBodyXML>
-					<xsltPath></xsltPath>
+					<xsltPath>xsl/email/SubscriptionRenewal.xsl</xsltPath>
 					<fromName></fromName>
 					<fromEmail></fromEmail>
 					<recipientName></recipientName>

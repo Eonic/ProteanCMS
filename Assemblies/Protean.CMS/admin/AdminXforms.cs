@@ -26,7 +26,6 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
 using System.Xml;
-using System.Xml.Xsl;
 using static Protean.stdTools;
 using static Protean.Tools.Text;
 using static Protean.Tools.Xml;
@@ -12678,83 +12677,46 @@ namespace Protean
                     }
                 }
 
-                public XmlElement xFrmAlertEmail(string recordType, int nUserId, string xFormPath, string subject, string senderName, string senderEmail, string ccName, string ccEmail, string recipientName, string recipientEmail, string emailContentXsltPath)
+                public XmlElement xFrmAlertEmail(string messageType, XmlElement PayloadData, string xFormPath, string subject, string senderName, string senderEmail, string ccName, string ccEmail, string recipientName, string recipientEmail, string emailContentXsltPath)
                 {
                     string cProcessInfo = "";
                     object FormTitle = "AlertEmail User";
-                    object InstanceSessionName = "tempInstance_alert" + nUserId.ToString();
                     try
                     {
-                        this.myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
+
                         base.NewFrm(Conversions.ToString(FormTitle));
                         base.bProcessRepeats = false;
 
                         // We load the xform from a file, it may be in local or in common folders.
                         base.load(xFormPath, this.myWeb.maCommonFolders);
 
-                        // We get the instance
-                        if (nUserId > 0)
-                        {
-                            string sNewGroupNames = string.Empty;
 
-                            base.bProcessRepeats = true;
-                            if (this.myWeb.moSession[InstanceSessionName.ToString()] is null)
-                            {
-                                var existingInstance = base.moXformElmt.OwnerDocument.CreateElement("instance");
-                                XmlElement AlertEmail = (XmlElement)existingInstance.AppendChild(base.moXformElmt.OwnerDocument.CreateElement("AlertEmail"));
-                                // AlertEmail.SetAttribute("existingGroupId", "")
-                                // AlertEmail.SetAttribute("existingGroupName", myWeb.moDbHelper.getNameByKey(dbHelper.objectTypes.Directory, existingGroupId))
-                                AlertEmail.SetAttribute("sendEmail", "1");
+                        string sNewGroupNames = string.Empty;
 
-                                base.Instance.SelectSingleNode("AlertEmail/id").InnerText = this.myWeb.moRequest["id"];
-                                base.Instance.SelectSingleNode("AlertEmail/xFormName").InnerText = this.myWeb.moRequest["xFormName"];
-                                base.Instance.SelectSingleNode("AlertEmail/Email").InnerText = recipientEmail;
-                                base.Instance.SelectSingleNode("AlertEmail/emailer/SubjectLine").InnerText = subject;
-                                base.Instance.SelectSingleNode("AlertEmail/RecordType").InnerText = recordType;
-                                base.Instance.SelectSingleNode("AlertEmail/emailer/fromName").InnerText = senderName;
-                                base.Instance.SelectSingleNode("AlertEmail/emailer/fromEmail").InnerText = senderEmail;
-                                base.Instance.SelectSingleNode("AlertEmail/emailer/ccRecipientName").InnerText = ccName;
-                                base.Instance.SelectSingleNode("AlertEmail/emailer/ccRecipient").InnerText = ccEmail;
-                                base.Instance.SelectSingleNode("AlertEmail/emailer/recipientEmail").InnerText = recipientEmail;
-                                base.Instance.SelectSingleNode("AlertEmail/emailer/recipientName").InnerText = recipientName;
-                                base.Instance.SelectSingleNode("AlertEmail/RecipientName").InnerText = recipientName;
+                        base.bProcessRepeats = true;
 
-                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/id"));
-                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/xFormName"));
-                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/RecordType"));
-                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/Email"));
-                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/emailer/SubjectLine"));
-                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/emailer/fromName"));
-                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/emailer/fromEmail"));
-                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/emailer/ccRecipientName"));
-                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/emailer/ccRecipient"));
-                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/emailer/recipientEmail"));
-                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/emailer/recipientName"));
-                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/RecipientName"));
+                        var existingInstance = base.moXformElmt.OwnerDocument.CreateElement("instance");
+
+                        base.Instance.SelectSingleNode("AlertEmail/id").InnerText = this.myWeb.moRequest["id"];
+                        base.Instance.SelectSingleNode("AlertEmail/xFormName").InnerText = this.myWeb.moRequest["xFormName"];
+                        base.Instance.SelectSingleNode("AlertEmail/Email").InnerText = recipientEmail;
+                        base.Instance.SelectSingleNode("AlertEmail/SubjectLine").InnerText = subject;
+                        base.Instance.SelectSingleNode("AlertEmail/Message").InnerText = messageType;
+                        base.Instance.SelectSingleNode("AlertEmail/efromName").InnerText = senderName;
+                        base.Instance.SelectSingleNode("AlertEmail/fromEmail").InnerText = senderEmail;
+                        base.Instance.SelectSingleNode("AlertEmail/ccRecipientName").InnerText = ccName;
+                        base.Instance.SelectSingleNode("AlertEmail/ccRecipient").InnerText = ccEmail;
+                        base.Instance.SelectSingleNode("AlertEmail/recipientEmail").InnerText = recipientEmail;
+                        base.Instance.SelectSingleNode("AlertEmail/recipientName").InnerText = recipientName;
+                        base.Instance.SelectSingleNode("AlertEmail/payload").InnerXml = PayloadData.OuterXml;
+
+                        // Process the XSLT for the email content
+                        string emailContent = TransformEmailContent(emailContentXsltPath, base.Instance).Replace("<?xml version=\"1.0\" encoding=\"utf-16\"?>", "");
+
+                        // Insert the transformed content into the XML
+                        base.Instance.SelectSingleNode("AlertEmail/emailer/oBodyXML/Items/Message").InnerXml = emailContent;
 
 
-
-                                // Process the XSLT for the email content
-                                string emailContent = TransformEmailContent(emailContentXsltPath, base.Instance);
-
-                                // Insert the transformed content into the XML
-                                base.Instance.SelectSingleNode("AlertEmail/emailer/oBodyXML/Items/Message").InnerText = emailContent;
-                                //AlertEmail.SelectSingleNode("AlertEmail/emailer/oBodyXML/Items").AppendChild(base.Instance.SelectSingleNode("AlertEmail/emailer/oBodyXML/Items/Message"));
-                                //AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/emailer/oBodyXML/Items/Message"));
-
-                                AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/emailer"));
-
-
-
-
-                                base.LoadInstance(existingInstance);
-                                this.myWeb.moSession[InstanceSessionName.ToString()] = base.Instance;
-                            }
-                            else
-                            {
-                                base.LoadInstance(this.myWeb.moSession["tempInstance"].ToString());
-                            }
-                        }
 
                         this.moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = base.Instance.InnerXml;
 
@@ -12768,31 +12730,19 @@ namespace Protean
 
                                 // Send Email
                                 var oMsg = new Protean.Messaging();
-                                XmlElement alertEmail = (XmlElement)base.Instance.SelectSingleNode("AlertEmail");
                                 string xsltPath = base.Instance.SelectSingleNode("AlertEmail/emailer/xsltPath").InnerText;
                                 string fromName = base.Instance.SelectSingleNode("AlertEmail/fromName").InnerText;
                                 string fromEmail = moMailConfig["FromEmail"];
                                 string email = base.Instance.SelectSingleNode("AlertEmail/Email").InnerText;
                                 string subjectLine = base.Instance.SelectSingleNode("AlertEmail/SubjectLine").InnerText;
+                                XmlElement BodyElmt = (XmlElement)base.Instance.SelectSingleNode("AlertEmail/emailer/oBodyXML");
 
                                 Cms.dbHelper argodbHelper = null;
-                                oMsg.emailer(alertEmail, xsltPath, fromName, fromEmail, email, subjectLine, odbHelper: ref argodbHelper);
+                                oMsg.emailer(BodyElmt, xsltPath, fromName, fromEmail, email, subjectLine, odbHelper: ref argodbHelper);
                                 // myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
 
-                                this.myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
 
                             }
-                        }
-                        else if (base.isTriggered)
-                        {
-                            // we have clicked a trigger so we must update the instance
-                            base.updateInstanceFromRequest();
-                            // lets save the instance
-                            this.goSession[InstanceSessionName.ToString()] = base.Instance;
-                        }
-                        else
-                        {
-                            this.goSession[InstanceSessionName.ToString()] = base.Instance;
                         }
 
                         // we populate the values onto the form.
@@ -12803,24 +12753,33 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        this.myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
                         stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmAlertEmail", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
 
-                private string TransformEmailContent(string xsltPath, XmlElement instance)
+                private string TransformEmailContent(string styleFile, XmlElement instance)
                 {
-                    //Load the XSLT
-                    XslCompiledTransform xslt = new XslCompiledTransform();
-                    xslt.Load(xsltPath);
-
-                    using (StringWriter writer = new StringWriter()) using (XmlWriter xmlWriter = XmlWriter.Create(writer))
+                    try
                     {
-                        // Transform the instance of the XML
-                        xslt.Transform(new XmlNodeReader(instance), xmlWriter);
-                        return writer.ToString();
+                        TextWriter sWriter = new StringWriter();
+                        var oTransform = new Protean.XmlHelper.Transform();
+                        oTransform.XSLFile = styleFile;
+                        oTransform.Compiled = false;
+                        XmlDocument ourDoc = new XmlDocument();
+                        ourDoc.LoadXml(instance.OuterXml);
+                        sWriter = new StringWriter();
+                        oTransform.Process(ourDoc, ref sWriter);
+
+                        return sWriter.ToString();
                     }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Exception Occured: " + e);
+                    }
+
+
+
                 }
 
                 public XmlElement xFrmRequestSettlement(int nOrderId, bool bForceSend = false)
