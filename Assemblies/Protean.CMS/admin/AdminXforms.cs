@@ -12695,20 +12695,22 @@ namespace Protean
 
                         base.bProcessRepeats = true;
 
-                        var existingInstance = base.moXformElmt.OwnerDocument.CreateElement("instance");
+                        XmlElement payloadXml = base.moXformElmt.OwnerDocument.CreateElement("Payload");
+                        payloadXml.InnerXml = PayloadData.OuterXml;
 
                         base.Instance.SelectSingleNode("AlertEmail/id").InnerText = this.myWeb.moRequest["id"];
                         base.Instance.SelectSingleNode("AlertEmail/xFormName").InnerText = this.myWeb.moRequest["xFormName"];
                         base.Instance.SelectSingleNode("AlertEmail/Email").InnerText = recipientEmail;
-                        base.Instance.SelectSingleNode("AlertEmail/SubjectLine").InnerText = subject;
-                        base.Instance.SelectSingleNode("AlertEmail/Message").InnerText = messageType;
-                        base.Instance.SelectSingleNode("AlertEmail/efromName").InnerText = senderName;
-                        base.Instance.SelectSingleNode("AlertEmail/fromEmail").InnerText = senderEmail;
-                        base.Instance.SelectSingleNode("AlertEmail/ccRecipientName").InnerText = ccName;
-                        base.Instance.SelectSingleNode("AlertEmail/ccRecipient").InnerText = ccEmail;
-                        base.Instance.SelectSingleNode("AlertEmail/recipientEmail").InnerText = recipientEmail;
-                        base.Instance.SelectSingleNode("AlertEmail/recipientName").InnerText = recipientName;
-                        base.Instance.SelectSingleNode("AlertEmail/payload").InnerXml = PayloadData.OuterXml;
+                        base.Instance.SelectSingleNode("AlertEmail/emailer/oBodyXML/Items/@subjectLine").InnerText = subject;
+                        base.Instance.SelectSingleNode("AlertEmail/emailer/SubjectLine").InnerText = subject;
+                        base.Instance.SelectSingleNode("AlertEmail/emailer/oBodyXML/Items/Message").InnerText = messageType;
+                        base.Instance.SelectSingleNode("AlertEmail/emailer/fromName").InnerText = senderName;
+                        base.Instance.SelectSingleNode("AlertEmail/emailer/fromEmail").InnerText = senderEmail;
+                        base.Instance.SelectSingleNode("AlertEmail/emailer/ccRecipientName").InnerText = ccName;
+                        base.Instance.SelectSingleNode("AlertEmail/emailer/ccRecipient").InnerText = ccEmail;
+                        base.Instance.SelectSingleNode("AlertEmail/RecipientName").InnerText = recipientName;
+                        base.Instance.SelectSingleNode("AlertEmail/emailer/recipientName").InnerText = recipientName;
+                        base.Instance.AppendChild(payloadXml);
 
                         // Process the XSLT for the email content
                         string emailContent = TransformEmailContent(emailContentXsltPath, base.Instance).Replace("<?xml version=\"1.0\" encoding=\"utf-16\"?>", "");
@@ -12716,7 +12718,22 @@ namespace Protean
                         // Insert the transformed content into the XML
                         base.Instance.SelectSingleNode("AlertEmail/emailer/oBodyXML/Items/Message").InnerXml = emailContent;
 
+                        string monthlyPremium = payloadXml.SelectSingleNode("instance/tblSubscription/cSubXml/Content/Notes/Policy/Quote/TotalPremium").InnerText;
+                        string startDate = payloadXml.SelectSingleNode("instance/tblSubscription/cSubXml/Content/Notes/Policy/Schedule/StartDate").InnerText;
+                        string endDate = payloadXml.SelectSingleNode("instance/tblSubscription/cSubXml/Content/Notes/Policy/Schedule/EndDate").InnerText;
+                        string policyId = payloadXml.SelectSingleNode("instance/tblSubscription/nAuditKey").InnerText;
 
+
+
+                        string message = base.Instance.SelectSingleNode("AlertEmail/emailer/oBodyXML/Items/Message").InnerXml;
+
+                        message = message.Replace("{FULLNAME}", recipientName);
+                        message = message.Replace("{STARTDATE}", startDate);
+                        message = message.Replace("{ENDDATE}", endDate);
+                        message = message.Replace("{POLICYID}", policyId);
+                        message = message.Replace("{BILLINGAMOUNT}", monthlyPremium);
+
+                        base.Instance.SelectSingleNode("AlertEmail/emailer/oBodyXML/Items/Message").InnerXml = message;
 
                         this.moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = base.Instance.InnerXml;
 
