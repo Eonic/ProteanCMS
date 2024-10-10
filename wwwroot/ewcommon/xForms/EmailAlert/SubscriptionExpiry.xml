@@ -10,57 +10,13 @@
 				<Email/>
 				<emailer>
 					<oBodyXML>
-						<Items subjectLine="Thank you for taking the time to review Into The Blue.">
+						<Items subjectLine="Subscription Renewal">
 							<Name />
 							<Message>
-								<div class="panel panel-default">
-									<div class="panel-body">
-										<div class="row" style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#000;">
-											<b>Thank you for taking the time to review Into The Blue.</b><br /><br />
-											Your feedback is very much appreciated and we read every review we get. What you tell us shows us how well we are doing. It also helps us in our work to continue to give our customers the best experience we can.
-											<br /><br />
-											As a thank you for your time, please accept this promo code to enjoy 15% off any of our activity gifts and experiences at
-											<a href='https://www.intotheblue.co.uk' target="_blank">intotheblue.co.uk.</a>*
-
-											<br /><br />
-											<b>REVIEW15</b>
-											<br /><br />
-											And of course, we’d love to hear from you again, so don’t hesitate to leave us another review when you’ve used your next voucher!<br /><br />
-											If you haven’t done so already, <a href='https://www.intotheblue.co.uk/sign-up-to-join-us/' target="_blank">subscribe to us</a> and we’ll make sure you’re the first to know about all our promotions, discount deals and competitions. <br /><br />
-
-										</div>
-										<div class="row" style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#000;">
-											<br />
-											<p align="left">
-												<br />
-												With many thanks&#44;<br />
-												<h1 style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#0679be;">Jim Maitland</h1>
-											</p>
-											<p align="left">
-												Managing Director of Into The Blue
-											</p>
-											<br />
-											<br />
-										</div>
-										<div class="row" style="font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000;">
-											<i>
-												* To redeem your 15% discount offer, simply enter the code when prompted at checkout.
-												Offer valid on products sold via the Into The Blue website only. Offer cannot be used in conjunction with any other offer. Only one discount may be used per order. The offer excludes selected experiences and all products over £250. For full terms and conditions, please visit www.intotheblue.co.uk.
-											</i>
-											<p align="left">
-												Please do not reply to this email.
-											</p>
-											<br />
-										</div>
-										<div width="10">
-											<img src="https://www.intotheblue.co.uk/images/email/spacer.gif" width="100%" height="10px" />
-										</div>
-									</div>
-								</div>
 							</Message>
 						</Items>
 					</oBodyXML>
-					<xsltPath></xsltPath>
+					<xsltPath>xsl/email/SubscriptionRenewal.xsl</xsltPath>
 					<fromName></fromName>
 					<fromEmail></fromEmail>
 					<recipientName></recipientName>
