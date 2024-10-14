@@ -12677,7 +12677,7 @@ namespace Protean
                     }
                 }
 
-                public XmlElement xFrmAlertEmail(string messageType, XmlElement PayloadData, string xFormPath, string subject, string senderName, string senderEmail, string ccName, string ccEmail, string recipientName, string recipientEmail, string emailContentXsltPath)
+                public XmlElement xFrmAlertEmail(string messageType, XmlElement PayloadData, string xFormPath, string subject, string senderName, string senderEmail, string ccName, string ccEmail, string recipientName, string recipientEmail, string emailContentXsltPath, Boolean autosend)
                 {
                     string cProcessInfo = "";
                     object FormTitle = "AlertEmail User";
@@ -12721,7 +12721,7 @@ namespace Protean
                         }
                         base.Instance.SelectSingleNode("emailer/SubjectLine").InnerText = subject;
 
-                        if (base.isSubmitted())
+                        if (base.isSubmitted() || autosend)
                         {
                             // MyBase.updateInstanceFromRequest()
                             base.validate();
@@ -12743,7 +12743,7 @@ namespace Protean
 
                                 Cms.dbHelper argodbHelper = null;
                                 oMsg.emailer(BodyElmt, xsltPath, fromName, fromEmail, email, subjectLine, odbHelper: ref argodbHelper);
-                                // myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
+                                myWeb.msRedirectOnEnd = myWeb.moSession["lastPage"].ToString();
 
 
                             }
@@ -12764,10 +12764,12 @@ namespace Protean
 
                 private XmlDocument TransformEmailContent(string styleFile, XmlElement instance)
                 {
+                    TextWriter sWriter = new StringWriter();
+                    Protean.XmlHelper.Transform oTransform = new Protean.XmlHelper.Transform();
+                    XmlDocument xContent = new XmlDocument();
                     try
                     {
-                        TextWriter sWriter = new StringWriter();
-                        var oTransform = new Protean.XmlHelper.Transform();
+
                         oTransform.XSLFile = styleFile;
                         oTransform.Compiled = false;
                         XmlDocument ourDoc = new XmlDocument();
@@ -12775,17 +12777,21 @@ namespace Protean
                         sWriter = new StringWriter();
                         oTransform.Process(ourDoc, ref sWriter);
 
-                        XmlDocument xContent = new XmlDocument();
 
                         xContent.LoadXml(sWriter.ToString());
                         return xContent;
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
-                        throw new Exception("Exception Occured: " + e);
+                        xContent.LoadXml("<body><h1>" + oTransform.transformException.Message + "</h1><p>" + oTransform.transformException.StackTrace + "</p></body>");
+                        return xContent;
                     }
+                    finally
+                    {
+                        sWriter = null;
+                        oTransform = null;
 
-
+                    }
 
                 }
 
