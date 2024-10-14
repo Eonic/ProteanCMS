@@ -10,7 +10,7 @@
 							</Message>
 						</Items>
 					</oBodyXML>
-					<xsltPath>xsl/email/SubscriptionRenewal.xsl</xsltPath>
+					<xsltPath>xsl/email/SubscriptionAlert.xsl</xsltPath>
 					<fromName></fromName>
 					<fromEmail></fromEmail>
 					<recipientName></recipientName>
@@ -26,7 +26,9 @@
 		<bind id="AlertEmail" nodeset="emailer">
 			<bind id="RecordType" nodeset="RecordType" required="false()" type="string" />	
 			<bind id="recipientName" nodeset="recipientName" required="false()" type="string" />
-			<bind id="recipientEmail" nodeset="recipientEmail" required="false()" type="string" />r
+			<bind id="recipientEmail" nodeset="recipientEmail" required="false()" type="string" />
+			<bind id="ccRecipientName" nodeset="ccRecipientName" required="false()" type="string" />
+			<bind id="ccRecipient" nodeset="ccRecipient" required="false()" type="string" />
 			<bind id="bccRecipientName" nodeset="bccRecipientName" required="false()" type="string" />
 			<bind id="bccRecipient" nodeset="bccRecipient" required="false()" type="string" />
 			<bind id="fromName" nodeset="fromName" required="false()" type="string" />
@@ -56,10 +58,20 @@
 					</input>
 				</group>
 				<group class="row">
+					<input bind="ccRecipientName" class="readonly col-md-6">
+						<label>CC Recipient Name</label>
+					</input>
+					<input bind="ccRecipient" class="required col-md-6">
+						<label>CC Email</label>
+						<label id="lblerrormessage" class="hidden">Please Enter Email First</label>
+						<label id="lblinvalidemail" class="hidden">Email-id is invalid</label>
+					</input>
+				</group>
+				<group class="row">
 					<input bind="bccRecipientName" class="readonly col-md-6">
 						<label>BCC Recipient Name</label>
 					</input>
-					<input bind="bccRecipientEmail" class="required col-md-6">
+					<input bind="bccRecipient" class="required col-md-6">
 						<label>BCC Email</label>
 						<label id="lblerrormessage" class="hidden">Please Enter Email First</label>
 						<label id="lblinvalidemail" class="hidden">Email-id is invalid</label>

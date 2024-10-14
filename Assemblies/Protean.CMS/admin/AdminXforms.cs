@@ -12677,7 +12677,7 @@ namespace Protean
                     }
                 }
 
-                public XmlElement xFrmAlertEmail(string messageType, XmlElement PayloadData, string xFormPath, string subject, string senderName, string senderEmail, string ccName, string ccEmail, string recipientName, string recipientEmail, string emailContentXsltPath, Boolean autosend)
+                public XmlElement xFrmAlertEmail(string messageType, XmlElement PayloadData, string xFormPath, string subject, string senderName, string senderEmail, string recipientName, string recipientEmail, string ccName, string ccEmail, string bccName, string bccEmail, string emailContentXsltPath, Boolean autosend)
                 {
                     string cProcessInfo = "";
                     object FormTitle = "AlertEmail User";
@@ -12707,6 +12707,8 @@ namespace Protean
                         base.Instance.SelectSingleNode("emailer/fromEmail").InnerText = senderEmail;
                         base.Instance.SelectSingleNode("emailer/ccRecipientName").InnerText = ccName;
                         base.Instance.SelectSingleNode("emailer/ccRecipient").InnerText = ccEmail;
+                        base.Instance.SelectSingleNode("emailer/bccRecipientName").InnerText = bccName;
+                        base.Instance.SelectSingleNode("emailer/bccRecipient").InnerText = bccEmail;
                         base.Instance.AppendChild(payloadXml.FirstChild);
 
                         // Process the XSLT for the email content
@@ -12735,15 +12737,25 @@ namespace Protean
                                 string fromName = base.Instance.SelectSingleNode("emailer/fromName").InnerText;
                                 string fromEmail = base.Instance.SelectSingleNode("emailer/fromEmail").InnerText;
                                 string email = base.Instance.SelectSingleNode("emailer/recipientEmail").InnerText;
+                                recipientName = base.Instance.SelectSingleNode("emailer/recipientEmail").InnerText;
                                 string subjectLine = base.Instance.SelectSingleNode("emailer/SubjectLine").InnerText;
+                                string ccName1 = base.Instance.SelectSingleNode("emailer/ccRecipientName").InnerText;
+                                string ccEmail1 = base.Instance.SelectSingleNode("emailer/ccRecipient").InnerText;
+                                string bccEmail1 = base.Instance.SelectSingleNode("emailer/bccRecipient").InnerText;
                                 XmlElement BodyElmt = (XmlElement)base.Instance.SelectSingleNode("emailer/oBodyXML");
 
                                 BodyElmt.SetAttribute("messageType", messageType);
                                 BodyElmt.SetAttribute("subjectId", PayloadData.GetAttribute("id"));
+                                BodyElmt.SetAttribute("subjectLine", subjectLine);
 
                                 Cms.dbHelper argodbHelper = null;
-                                oMsg.emailer(BodyElmt, xsltPath, fromName, fromEmail, email, subjectLine, odbHelper: ref argodbHelper);
-                                myWeb.msRedirectOnEnd = myWeb.moSession["lastPage"].ToString();
+                                oMsg.emailer(BodyElmt, xsltPath, fromName, fromEmail, email, subjectLine, odbHelper: ref argodbHelper, "Message Sent", "Message Failed", recipientName, ccEmail1, bccEmail1);
+
+                                if (myWeb.moSession["lastPage"] != null)
+                                {
+                                    myWeb.msRedirectOnEnd = myWeb.moSession["lastPage"].ToString();
+                                }
+
 
 
                             }
@@ -12781,10 +12793,18 @@ namespace Protean
                         xContent.LoadXml(sWriter.ToString());
                         return xContent;
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        xContent.LoadXml("<body><h1>" + oTransform.transformException.Message + "</h1><p>" + oTransform.transformException.StackTrace + "</p></body>");
-                        return xContent;
+                        if (oTransform.transformException != null)
+                        {
+                            xContent.LoadXml("<body><h1>" + oTransform.transformException.Message + "</h1><p>" + oTransform.transformException.StackTrace + "</p></body>");
+                            return xContent;
+                        }
+                        else
+                        {
+                            stdTools.returnException(ref myWeb.msException, mcModuleName, "TransformEmailContent", ex, "", "", gbDebug);
+                            return null;
+                        }
                     }
                     finally
                     {
