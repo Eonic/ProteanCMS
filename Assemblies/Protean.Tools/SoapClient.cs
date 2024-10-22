@@ -254,7 +254,7 @@ namespace Protean.Tools
                                 var loopTo1 = (long)Information.UBound(aCookies);
                                 for (j = 0L; j <= loopTo1; j++)
                                 {
-                                    string[] aCookies2 = aCookies[(int)j].Split(";";
+                                    string[] aCookies2 = aCookies[(int)j].Split(";");
                                     var loopTo2 = (long)Information.UBound(aCookies2);
                                     for (k = 0L; k <= loopTo2; k++)
                                     {
