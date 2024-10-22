@@ -258,7 +258,7 @@ namespace Protean.Tools
                                     var loopTo2 = (long)Information.UBound(aCookies2);
                                     for (k = 0L; k <= loopTo2; k++)
                                     {
-                                        string[] aCookies3 = Strings.Split(aCookies2[(int)k], "=");
+                                        string[] aCookies3 = aCookies2[(int)k].Split("=");
                                         moSession[aCookies3[0]] = aCookies3[1];
                                     }
                                 }
@@ -341,7 +341,7 @@ namespace Protean.Tools
         {
             try
             {
-                oSoapBody = Strings.Replace(oSoapBody, "exemelnamespace", "xmlns");
+                oSoapBody = oSoapBody.Replace("exemelnamespace", "xmlns");
                 oSoapBody = getSoapEnvelope(oSoapBody).OuterXml;
                 SendSoapRequest(oSoapBody);
                 return oResults.OuterXml;
@@ -357,7 +357,7 @@ namespace Protean.Tools
         {
             try
             {
-                oSoapBody = Strings.Replace(oSoapBody, "exemelnamespace", "xmlns");
+                oSoapBody = oSoapBody.Replace("exemelnamespace", "xmlns");
                 oSoapBody = getSoapEnvelope(oSoapBody).OuterXml;
                 SendSoapRequest(oSoapBody);
                 return oResults.OuterXml;

@@ -107,7 +107,7 @@ namespace Protean.Tools
             {
                 if (Value == null)
                     return 0;
-                if (Information.IsDBNull(Value))
+                if (Value == null)
                     return 0;
                 if (System.Convert.ToString(Value) == "")
                     return 0;

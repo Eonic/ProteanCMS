@@ -1179,9 +1179,9 @@ namespace Protean.Tools
             try
             {
 
-                sString = sString.Replace(Strings.Chr(0), Strings.Chr(32));
-                sString = sString.Replace(Strings.Chr(8), Strings.Chr(32));
-                sString = sString.Replace(Strings.Chr(20), Strings.Chr(32));
+                sString = sString.Replace(((char)0).ToString(), ((char)32).ToString());
+                sString = sString.Replace(((char)8).ToString(), ((char)32).ToString());
+                sString = sString.Replace(((char)20).ToString(), ((char)32).ToString());
                 sString = sString.Replace("&nbsp;", "&#160;");
                 sString = sString.Replace("¢", "&#162;");
                 sString = sString.Replace("£", "&#163;");
