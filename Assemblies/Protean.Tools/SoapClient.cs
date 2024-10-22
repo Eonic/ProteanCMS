@@ -254,7 +254,7 @@ namespace Protean.Tools
                                 var loopTo1 = (long)Information.UBound(aCookies);
                                 for (j = 0L; j <= loopTo1; j++)
                                 {
-                                    string[] aCookies2 = Strings.Split(aCookies[(int)j], ";");
+                                    string[] aCookies2 = aCookies[(int)j].Split(";";
                                     var loopTo2 = (long)Information.UBound(aCookies2);
                                     for (k = 0L; k <= loopTo2; k++)
                                     {
@@ -310,15 +310,15 @@ namespace Protean.Tools
             {
                 if (RemoveReturnSoapEnvelope)
                 {
-                    cReturn = Strings.Replace(cReturn, "soap:Envelope", "soapEnvelope");
-                    cReturn = Strings.Replace(cReturn, "soap:Body", "soapBody");
+                    cReturn = cReturn.Replace("soap:Envelope", "soapEnvelope");
+                    cReturn = cReturn.Replace("soap:Body", "soapBody");
 
                     // cReturn = Replace(cReturn, "xmlns", "exemelnamespace")
                     // cReturn = Replace(cReturn, ":soap", "")
                     var oNewXml = new XmlDocument();
                     oNewXml.LoadXml(cReturn);
                     oResults.LoadXml(oNewXml.SelectSingleNode("soapEnvelope/soapBody").InnerXml);
-                    oResults.InnerXml = Strings.Replace(oResults.InnerXml, "xmlns", "exemelnamespace");
+                    oResults.InnerXml = oResults.InnerXml.Replace("xmlns", "exemelnamespace");
                 }
                 else
                 {

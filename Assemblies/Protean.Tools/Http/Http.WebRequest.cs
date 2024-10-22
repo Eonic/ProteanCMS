@@ -214,7 +214,7 @@ namespace Protean.Tools.Http
 
                     // Set the optional headers
                     if (!string.IsNullOrEmpty(UserAgent))
-                        newRequest.UserAgent = UserAgent;
+                        newRequest.Headers["User-Agent"].ToString() = UserAgent;
 
                     // POST the request body
                     if (Method == "POST")

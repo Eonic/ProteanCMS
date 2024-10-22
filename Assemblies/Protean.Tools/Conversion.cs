@@ -343,7 +343,7 @@ namespace Protean.Tools
 
                                 // Make the Column Names XML Friendly
                                 foreach (DataColumn oExcelColumn in oExcelDataset.Tables[0].Columns)
-                                    oExcelColumn.ColumnName = Strings.Replace(Strings.Replace(oExcelColumn.ColumnName, " ", "_"), ":", "_");
+                                    oExcelColumn.ColumnName = oExcelColumn.ToString().Replace(" ", "_").Replace( ":", "_");
 
                                 // Turn the DS into XML
 
@@ -360,7 +360,7 @@ namespace Protean.Tools
                                 // Add the sheet
                                 if (oOutputWorksheet != null)
                                 {
-                                    oOutputWorksheet.SetAttribute("name", Strings.Replace(cWorksheetname, "$", ""));
+                                    oOutputWorksheet.SetAttribute("name", cWorksheetname.Replace("$", ""));
                                 }
                                 oOutputRoot.AppendChild(oOutputXml.ImportNode(oOutputWorksheet, true));
 
@@ -424,7 +424,7 @@ namespace Protean.Tools
                 string[] afieldsTitles;
                 if (CSVfirstLineTitles is object & firstRow)
                 {
-                    afieldsTitles = Strings.Split(CSVfirstLineTitles, Conversions.ToString(_separator));
+                    afieldsTitles = String.Split(CSVfirstLineTitles, Conversions.ToString(_separator));
                     for (int ii = 0, loopTo = afieldsTitles.Count() - 1; ii <= loopTo; ii++)
                     {
                         string _fName = "";
@@ -455,7 +455,7 @@ namespace Protean.Tools
                     {
                         object nextLine = sr.ReadLine();
                         // exit the loop if reached end of the file.
-                        if (Information.IsNothing(nextLine))
+                        if (nextLine == null)
                         {
                             break;
                         }
@@ -496,7 +496,7 @@ namespace Protean.Tools
                             for (int ii = 0, loopTo2 = fields.Count() - 1; ii <= loopTo2; ii++)
                             {
                                 object _fValue = fields[ii];
-                                if (!string.IsNullOrEmpty(Strings.Trim(Conversions.ToString(_fValue))))
+                                if (!string.IsNullOrEmpty(String.Trim(Conversions.ToString(_fValue))))
                                 {
                                     if (rowElmt.SelectSingleNode("*[position() = " + (long)(ii + 1) + "]") is null)
                                     {
@@ -564,7 +564,7 @@ namespace Protean.Tools
             if (_separator == ',')
             {
                 sLine = sLine.Replace(@"\""", string.Empty);
-                int countDoubleQuotes = Strings.Split(sLine, "\"").Length - 1;
+                int countDoubleQuotes = String.Split(sLine, "\"").Length - 1;
                 if (countDoubleQuotes > 0)
                 {
                     object result = countDoubleQuotes % 2;
@@ -998,20 +998,20 @@ namespace Protean.Tools
            
             
             m_lngFilePointer = 0;
-            if (Information.IsNothing(m_objTempReader) == false)
+            if (m_objTempReader != null)
             {
                 m_objTempReader.Close();
                 m_objTempReader = null;
             }
 
-            if (Information.IsNothing(m_objTempFile) == false)
+            if (m_objTempFile != null)
             {
                 m_objTempFile.Close();
                 m_objTempFile.Dispose();
                 m_objTempFile = null;
             }
 
-            if (Information.IsNothing(m_objInputFile) == false)
+            if (m_objInputFile != null)
             {
                 m_objInputFile.Close();
                 m_objInputFile.Dispose();
@@ -1031,7 +1031,7 @@ namespace Protean.Tools
             }
             catch (Exception ex)
             {
-                throw new Exception("Error: [" + Information.Err().Number + "] " + Information.Err().Description, ex);
+                throw new Exception("Error: [" + ex.Message + "] " + ex.Message, ex);
             }
         }
 
@@ -1100,7 +1100,7 @@ namespace Protean.Tools
             catch (Exception ex)
             {
                 strLine = "";
-                throw new Exception("Error: [" + Information.Err().Number + "] " + Information.Err().Description, ex);
+                throw new Exception("Error: [" + ex.Message + "] " + ex.Message, ex);
             }
 
             return strLine;

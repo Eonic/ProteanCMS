@@ -345,6 +345,7 @@
     <Compile Include="tools\fsHelper\FSHelper.WebFileExtendedProperties.cs" />
     <Compile Include="tools\FTPHelper.cs" />
     <Compile Include="tools\ImageHelper.cs" />
+    <Compile Include="tools\Impersonate.cs" />
     <Compile Include="tools\Integration\Integration.Directory.cs" />
     <Compile Include="tools\Integration\Integration.Directory.Facebook.cs" />
     <Compile Include="tools\Integration\Integration.Directory.Twitter.cs" />
@@ -353,6 +354,7 @@
     <Compile Include="tools\MailQueue.cs" />
     <Compile Include="tools\Messaging.cs" />
     <Compile Include="tools\Monitor.cs" />
+    <Compile Include="tools\pdf.cs" />
     <Compile Include="tools\PerfLog.cs" />
     <Compile Include="tools\Startup.cs" />
     <Compile Include="tools\stdTools.cs" />

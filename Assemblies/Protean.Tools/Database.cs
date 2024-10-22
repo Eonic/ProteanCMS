@@ -1376,6 +1376,7 @@ namespace Protean.Tools
         {
             try
             {
+                DateTime dateValue;
                 if (dDateTime is DateTime)
                 {
                     DateTime thisDate = (DateTime)dDateTime;
@@ -1396,10 +1397,10 @@ namespace Protean.Tools
                 {
                     return "null";
                 }
-                else if (Microsoft.VisualBasic.Information.IsDate(dDateTime.ToString()))
+                else if (DateTime.TryParse(dDateTime.ToString(), out dateValue))
                 {
                     // DateTime dxDate = (DateTime)dDateTime;
-                    DateTime dxDate = Convert.ToDateTime(dDateTime.ToString());
+                    DateTime dxDate = dateValue;
                     //DateTime dxDate = DateTime.ParseExact(dDateTime.ToString(), "yyyy-mm-dd", null);
                     if (dxDate == DateTime.Parse("0001-01-01") | dxDate == DateTime.Parse("0001-01-01"))
                         return "null";
@@ -1437,7 +1438,7 @@ namespace Protean.Tools
                     return text;
                 if (text == "''" | text == "")
                     return "''";
-                if (Microsoft.VisualBasic.Strings.Right(text, 1) == "'")
+                if (Right(text, 1) == "'")
                     text = text.Substring(0, text.Length - 1);
                 if (Microsoft.VisualBasic.Strings.Left(text, 1) == "'")
                     text = text.Substring(1, text.Length - 1);

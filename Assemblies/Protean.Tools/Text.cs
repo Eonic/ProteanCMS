@@ -542,15 +542,15 @@ namespace Protean.Tools
             {
                 if (cName != null)
                 {
-                    cName = Strings.Replace(cName, "/", "*");//TS need to remove any slashes from names replace with * so we can wildcard later.
-                    cName = Strings.Replace(cName, "'", "*");//TS need to remove any slashes from names replace with * so we can wildcard later.
-                    cName = Strings.Replace(cName, "(", "*");
-                    cName = Strings.Replace(cName, ")", "*");
-                    cName = Strings.Replace(cName, ".", "*");
-                    cName = Strings.Replace(cName, "'", "");
-                    cName = Strings.Replace(cName, "&amp;", "&");
+                    cName = cName.Replace("/", "*");//TS need to remove any slashes from names replace with * so we can wildcard later.
+                    cName = cName.Replace("'", "*");//TS need to remove any slashes from names replace with * so we can wildcard later.
+                    cName = cName.Replace("(", "*");
+                    cName = cName.Replace(")", "*");
+                    cName = cName.Replace(".", "*");
+                    cName = cName.Replace("'", "");
+                    cName = cName.Replace("&amp;", "&");
                     if (!bLeaveAmp)
-                        cName = Strings.Replace(cName, "&", "and");
+                        cName = cName.Replace("&", "and");
                     int i;
                     string cBuilt = "";
                     var loopTo = 0;
@@ -566,16 +566,16 @@ namespace Protean.Tools
                     }
                     cName = cBuilt;
                     // replace double spaces a few times
-                    cName = "" + Strings.Replace(cName, "  ", " ");
-                    cName = "" + Strings.Replace(cName, "  ", " ");
-                    cName = "" + Strings.Replace(cName, "  ", " ");
+                    cName = "" + cName.Replace("  ", " ");
+                    cName = "" + cName.Replace("  ", " ");
+                    cName = "" + cName.Replace("  ", " ");
 
                     if (bURLSafe)
                     {
                         cName = "" + cName.Replace(" ", "-");
                         // replace double hyphens a few times
-                        cName = "" + Strings.Replace(cName, "---", "-");
-                        cName = "" + Strings.Replace(cName, "--", "-");
+                        cName = "" + cName.Replace("---", "-");
+                        cName = "" + cName.Replace("--", "-");
                         //trim to max filename length with .html
 
                         if (cName.Length > 249)
@@ -657,8 +657,8 @@ namespace Protean.Tools
 
         public static string removeTagFromXml(string xmlString, string tagNames)
         {
-            tagNames = Strings.Replace(tagNames, " ", "");
-            tagNames = Strings.Replace(tagNames, ",", "|");
+            tagNames = tagNames.Replace(" ", "");
+            tagNames = tagNames.Replace(",", "|");
 
             xmlString = Regex.Replace(xmlString, "<[/]?(" + tagNames + @":\w+)[^>]*?>", "", RegexOptions.IgnoreCase);
 
