@@ -475,3 +475,7 @@ D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTes
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\obj\Debug\ProteanCMS.UnitTests.csproj.CopyComplete
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\obj\Debug\ProteanCMS.UnitTests.dll
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\obj\Debug\ProteanCMS.UnitTests.pdb
+C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\obj\Debug\ProteanCMS.UnitTests.csproj.AssemblyReference.cache
+C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\obj\Debug\ProteanCMS.UnitTests.csproj.CoreCompileInputs.cache
+C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\obj\Debug\ProteanCMS.UnitTests.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\obj\Debug\ProteanCMS.UnitTests.pdb

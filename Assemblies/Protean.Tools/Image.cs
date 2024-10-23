@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Drawing;
+//using TinifyAPI;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.VisualBasic; // Install-Package Microsoft.VisualBasic
-//using TinifyAPI;
-using System.Drawing.Drawing2D;
-using static Protean.Tools.Text;
 using TinifyAPI;
+using static Protean.Tools.Text;
 using Exception = System.Exception;
-using System.Runtime.InteropServices.ComTypes;
-using System.Text.RegularExpressions;
 
 
 namespace Protean.Tools
@@ -43,7 +40,7 @@ namespace Protean.Tools
             }
             set
             {
-                oImg =(System.Drawing.Bitmap)value;
+                oImg = (System.Drawing.Bitmap)value;
             }
         }
 
@@ -84,7 +81,7 @@ namespace Protean.Tools
                     oSourceImg.Dispose();
                     oSourceImg = null;
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -205,8 +202,8 @@ namespace Protean.Tools
             try
             {
 
-                cPath = cPath.Replace("/","\\");
-               // cPath = cPath.Replace("\\\\", "\\");
+                cPath = cPath.Replace("/", "\\");
+                // cPath = cPath.Replace("\\\\", "\\");
 
                 // check the compression ratio
                 if (nCompression > 100)
@@ -231,8 +228,8 @@ namespace Protean.Tools
             {
                 //string thumbnailVirtualPath = "";
                 var fi = new FileInfo(cLocation);
-                string thumbnailPath = cLocation.Remove(cLocation.Length - fi.Name.Length) + VirtualThumbnailPath.Replace("/","") + @"\";
-                var thfi = new FileInfo(thumbnailPath + fi.Name.Replace(".gif",".png"));
+                string thumbnailPath = cLocation.Remove(cLocation.Length - fi.Name.Length) + VirtualThumbnailPath.Replace("/", "") + @"\";
+                var thfi = new FileInfo(thumbnailPath + fi.Name.Replace(".gif", ".png"));
 
                 if (thfi.Exists == false)
                 {
@@ -285,7 +282,7 @@ namespace Protean.Tools
             }
             catch (Exception ex)
             {
-                Information.Err().Raise(8032, "PDFThumbNail", ex.Message);
+                throw new ApplicationException($"Error 8032 in PDFThumbNail: {ex.Message}");
             }
         }
 
@@ -407,7 +404,7 @@ namespace Protean.Tools
                 {
                     oImg = (Bitmap)ImageResize(oImg, nNewHeight, nNewWidth);
                 }
-              
+
             }
             catch (Exception ex)
             {
@@ -662,7 +659,8 @@ namespace Protean.Tools
                         //    theImg.Save(Strings.Replace(szFileName, ".gif", ".png"));
                         //    var imgFile = new FileInfo(Strings.Replace(szFileName, ".gif", ".png"));
 
-                        theImg.Save(Strings.Replace(szFileName, ".gif", ".png"));
+                        theImg.Save(szFileName.Replace(".gif", ".png"));
+
 
                         var imgFile = new FileInfo(szFileName);
 
@@ -748,10 +746,11 @@ namespace Protean.Tools
                     }//cProcessInfo = cProcessInfo;
                     return true;
                 }
-                else {
+                else
+                {
                     return false;
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -814,7 +813,7 @@ namespace Protean.Tools
             var difference = default(long);
             try
             {
-                string ext = Strings.LCase(imgfileInfo.Extension);
+                string ext = imgfileInfo.Extension?.ToLower();
                 if (ext == ".jpg" | ext == ".jpeg" | ext == ".png" | ext == ".gif" | ext == ".webp")
                 {
                     if (!string.IsNullOrEmpty(TinifyKey))
@@ -833,7 +832,7 @@ namespace Protean.Tools
                     {
 
                         // Compress the File using ImageMagick
-                        switch (Strings.LCase(imgfileInfo.Extension) ?? "")
+                        switch ((imgfileInfo.Extension ?? "").ToLower())
                         {
                             case ".gif":
                                 {
@@ -934,7 +933,7 @@ namespace Protean.Tools
 
                                         catch (Exception ex)
                                         {
-                                           
+
                                             optimizer = default;
                                             OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CompressImage", ex, ""));
                                         }
@@ -1010,7 +1009,7 @@ namespace Protean.Tools
 
             System.Drawing.Image _image = oImg;
             // Calculate the size of the new image
-            int height =Convert.ToInt32(_image.Height + _image.Height * (_Reflectivity / 255f));
+            int height = Convert.ToInt32(_image.Height + _image.Height * (_Reflectivity / 255f));
             var newImage = new Bitmap(_image.Width, height, PixelFormat.Format24bppRgb);
             newImage.SetResolution(_image.HorizontalResolution, _image.VerticalResolution);
 
@@ -1142,7 +1141,7 @@ namespace Protean.Tools
                 }
                 Save(cLocation);
                 grPhoto.Dispose();
-                return oImg;                
+                return oImg;
             }
 
             catch (Exception)
@@ -1183,7 +1182,7 @@ namespace Protean.Tools
                 }
                 // Place at the bottom
                 int yPixlesFromBottom = System.Convert.ToInt32(Math.Truncate(phHeight * 0.05));
-                float yPosFromBottom =(float) ((phHeight - yPixlesFromBottom) - (crSize.Height / (double)2));
+                float yPosFromBottom = (float)((phHeight - yPixlesFromBottom) - (crSize.Height / (double)2));
                 float xCenterOfImg = (float)(phWidth / (double)2);
 
                 // Write the text
@@ -1241,7 +1240,7 @@ namespace Protean.Tools
                 grPhoto.Dispose();
                 // Save(cLocation)
                 return oImg;
-                
+
             }
             catch (Exception)
             {
@@ -1346,7 +1345,7 @@ namespace Protean.Tools
                 // Save(cLocation)
                 grPhoto.Dispose();
                 return oImg;
-                
+
             }
 
             catch (Exception)
@@ -1385,7 +1384,7 @@ namespace Protean.Tools
             private BackgroundNoiseLevel _backgroundNoise;
             private LineNoiseLevel _lineNoise;
             private string _guid;
-            private string _fontWhitelist= "arial;arial black;comic sans ms;courier new;" + "lucida console;lucida sans unicode;microsoft sans serif;" + "tahoma;times new roman;trebuchet ms;verdana";
+            private string _fontWhitelist = "arial;arial black;comic sans ms;courier new;" + "lucida console;lucida sans unicode;microsoft sans serif;" + "tahoma;times new roman;trebuchet ms;verdana";
 
             public event OnErrorEventHandler OnError;
 
@@ -1664,11 +1663,11 @@ namespace Protean.Tools
                 try
                 {
                     string[] ff = null;
-                   
+
                     // -- small optimization so we don't have to split for each char
-                    if(_fontWhitelist != string.Empty)
+                    if (_fontWhitelist != string.Empty)
                     {
-                        ff = _fontWhitelist.Split(';');                        
+                        ff = _fontWhitelist.Split(';');
                     }
                     if (ff != null)
                     {

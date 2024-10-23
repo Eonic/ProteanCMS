@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Xml;
+using System.Collections;
 using System.Data;
 using System.Data.SqlClient;
-using System.Collections;
-using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Xml;
 
 namespace Protean.Tools
 {
@@ -351,7 +349,7 @@ namespace Protean.Tools
             }
         }
 
-       
+
         public bool CreateDatabase(string databasename)
         {
             string cProcessInfo = "createDB";
@@ -685,7 +683,7 @@ namespace Protean.Tools
             return nUpdateCount;
         }
 
-        
+
 
         public void ExeProcessSql(string sql, CommandType commandtype = CommandType.Text, Hashtable parameters = null)
         {
@@ -735,7 +733,7 @@ namespace Protean.Tools
             return ExeProcessSqlfromFile(filepath, ref errmsg);
         }
 
-    
+
         public int ExeProcessSqlfromFile(string filepath, ref string errmsg)
         {
             int nUpdateCount;
@@ -772,7 +770,7 @@ namespace Protean.Tools
             return nUpdateCount;
         }
 
-      
+
         public int ExeProcessSqlorIgnore(string sql)
         {
             int nUpdateCount;
@@ -900,10 +898,10 @@ namespace Protean.Tools
                             oCmd.Parameters.AddWithValue(oEntry.Key.ToString(), oEntry.Value);
                         }
                     }
-                        // Open the connection
-                        if (oLConn.State == ConnectionState.Closed)
-                            oLConn.Open();
-                        return oCmd.ExecuteReader(CommandBehavior.CloseConnection);
+                    // Open the connection
+                    if (oLConn.State == ConnectionState.Closed)
+                        oLConn.Open();
+                    return oCmd.ExecuteReader(CommandBehavior.CloseConnection);
 
                 }
             }
@@ -932,7 +930,7 @@ namespace Protean.Tools
         /// <remarks></remarks>
 
 
-        public DataSet GetDataSet(string sql, string tablename, string datasetname = "", bool bHandleTimeouts = false, Hashtable parameters = null/* TODO Change to default(_) if this is not a reference type */, CommandType querytype = CommandType.Text, int pageSize = 0, int pageNumber = 0, string cConn ="")
+        public DataSet GetDataSet(string sql, string tablename, string datasetname = "", bool bHandleTimeouts = false, Hashtable parameters = null/* TODO Change to default(_) if this is not a reference type */, CommandType querytype = CommandType.Text, int pageSize = 0, int pageNumber = 0, string cConn = "")
         {
             string cProcessInfo = "Running Sql:  " + sql;
             DataSet oDs = new DataSet();
@@ -943,7 +941,7 @@ namespace Protean.Tools
                 oConnection = oConn;
                 if (oConnection == null)
                     ResetConnection();
-                if(cConn!=string.Empty)
+                if (cConn != string.Empty)
                 {
                     oConnection = new SqlConnection(cConn);
                 }
@@ -1060,7 +1058,7 @@ namespace Protean.Tools
 
 
 
-        public object GetDataValue(string sql, string cConn, CommandType commandtype = CommandType.Text,  Hashtable parameters = null, object nullreturnvalue = null)
+        public object GetDataValue(string sql, string cConn, CommandType commandtype = CommandType.Text, Hashtable parameters = null, object nullreturnvalue = null)
         {
             string cProcessInfo = "Running Sql: " + sql;
             SqlConnection oConnection = null;
@@ -1214,7 +1212,7 @@ namespace Protean.Tools
             return oXmlValue;
         }
 
-       
+
         public XmlDocument GetXml(DataSet src)
         {
             // TS This function was added when we move to C# as GetXML does not return null fields in the XML. Need to convert to string and return empty string.
@@ -1279,7 +1277,7 @@ namespace Protean.Tools
         public void AddXMLValueToNode(string sql, ref XmlElement oElmt)
         {
             string cProcessInfo = "Running Sql: " + sql;
-            
+
             SqlCommand cmd = null/* TODO Change to default(_) if this is not a reference type */;
             try
             {
@@ -1289,17 +1287,18 @@ namespace Protean.Tools
 
                 using (cmd = new SqlCommand(sql, oConn))
                 {
-                    using (XmlReader reader = cmd.ExecuteXmlReader()) { 
-                            XmlDocument oXdoc = new XmlDocument();
-                            if (reader.Read())
-                                oXdoc.Load(reader);
+                    using (XmlReader reader = cmd.ExecuteXmlReader())
+                    {
+                        XmlDocument oXdoc = new XmlDocument();
+                        if (reader.Read())
+                            oXdoc.Load(reader);
 
-                            if (!(oXdoc.DocumentElement == null))
-                            {
-                                XmlNode newNode = oElmt.OwnerDocument.ImportNode(oXdoc.DocumentElement, true);
-                                oElmt.AppendChild(newNode);
-                            }
-                            oXdoc = null;
+                        if (!(oXdoc.DocumentElement == null))
+                        {
+                            XmlNode newNode = oElmt.OwnerDocument.ImportNode(oXdoc.DocumentElement, true);
+                            oElmt.AppendChild(newNode);
+                        }
+                        oXdoc = null;
                     };
                 };
             }
@@ -1342,7 +1341,7 @@ namespace Protean.Tools
         {
             int nInsertId = 0;
             SqlDataReader dr;
-            string cProcessInfo = "Running: " + sql; 
+            string cProcessInfo = "Running: " + sql;
             try
             {
                 SqlCommand oCmd = new SqlCommand(sql + ";select scope_identity();", oConn);
@@ -1435,13 +1434,21 @@ namespace Protean.Tools
             try
             {
                 if (text == "Null")
+                {
                     return text;
+                }
                 if (text == "''" | text == "")
+                {
                     return "''";
-                if (Right(text, 1) == "'")
+                }
+                if (text.Length > 0 && text[text.Length - 1] == '\'')
+                {
                     text = text.Substring(0, text.Length - 1);
-                if (Microsoft.VisualBasic.Strings.Left(text, 1) == "'")
+                }
+                if (text.StartsWith("'"))
+                {
                     text = text.Substring(1, text.Length - 1);
+                }
                 text = SqlFmt(text);
                 text = "'" + text + "'";
                 return text;
@@ -1517,7 +1524,7 @@ namespace Protean.Tools
             }
         }
 
-        public bool checkDBObjectExists(string cObjectName, objectTypes nObjectType,string cConn)
+        public bool checkDBObjectExists(string cObjectName, objectTypes nObjectType, string cConn)
         {
             string cObjectProperty = "";
             string cSql = "";
@@ -1525,7 +1532,7 @@ namespace Protean.Tools
 
             try
             {
-                
+
                 if (cObjectName != "")
                 {
                     if (nObjectType == objectTypes.Database)
@@ -1739,49 +1746,50 @@ namespace Protean.Tools
             string cProcessInfo = "returnNullsEmpty";
             try
             {
-                if (ds != null) { 
-                    foreach (DataTable oTable in ds.Tables)
+                if (ds != null)
                 {
-                    foreach (DataRow oRow in oTable.Rows)
+                    foreach (DataTable oTable in ds.Tables)
                     {
-                        foreach (DataColumn oColumn in oTable.Columns)
+                        foreach (DataRow oRow in oTable.Rows)
                         {
-                            if (oRow[oColumn.ColumnName] == DBNull.Value)
+                            foreach (DataColumn oColumn in oTable.Columns)
                             {
-                                cProcessInfo = "Error in Feild:" + oColumn.ColumnName + " DataType:" + oColumn.DataType.ToString();
-                                switch (oColumn.DataType.ToString())
+                                if (oRow[oColumn.ColumnName] == DBNull.Value)
                                 {
-                                    case "System.DateTime":
-                                        {
+                                    cProcessInfo = "Error in Feild:" + oColumn.ColumnName + " DataType:" + oColumn.DataType.ToString();
+                                    switch (oColumn.DataType.ToString())
+                                    {
+                                        case "System.DateTime":
+                                            {
                                                 oRow[oColumn.ColumnName] = (DateTime)DateTime.Parse("0001-01-01");
-                                            break;
-                                        }
+                                                break;
+                                            }
 
-                                    case "System.Integer":
-                                    case "System.Int32":
-                                    case "System.Double":
-                                    case "System.Decimal":
-                                        {
-                                            oRow[oColumn.ColumnName] = 0;
-                                            break;
-                                        }
+                                        case "System.Integer":
+                                        case "System.Int32":
+                                        case "System.Double":
+                                        case "System.Decimal":
+                                            {
+                                                oRow[oColumn.ColumnName] = 0;
+                                                break;
+                                            }
 
-                                    case "System.Boolean":
-                                        {
-                                            oRow[oColumn.ColumnName] = false;
-                                            break;
-                                        }
+                                        case "System.Boolean":
+                                            {
+                                                oRow[oColumn.ColumnName] = false;
+                                                break;
+                                            }
 
-                                    default:
-                                        {
-                                            oRow[oColumn.ColumnName] = "";
-                                            break;
-                                        }
+                                        default:
+                                            {
+                                                oRow[oColumn.ColumnName] = "";
+                                                break;
+                                            }
+                                    }
                                 }
                             }
                         }
                     }
-                }
                 }
             }
             catch (Exception ex)
@@ -1801,8 +1809,9 @@ namespace Protean.Tools
             try
             {
                 int i;
-                DataColumn[] returnColumns = new DataColumn[Microsoft.VisualBasic.Information.UBound(columnNames) + 1];
-                var loopTo = Microsoft.VisualBasic.Information.UBound(columnNames);
+                DataColumn[] returnColumns = new DataColumn[columnNames.Length];
+
+                var loopTo = columnNames.Length - 1;
                 for (i = 0; i <= loopTo; i++)
                     returnColumns[i] = oDs.Tables[tableName].Columns[columnNames[i]];
                 return returnColumns;

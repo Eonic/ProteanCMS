@@ -2,11 +2,11 @@
 using Microsoft.VisualBasic;
 using System;
 using System.IO;
-using System.Security;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
+using System.Xml;
 
 namespace Protean.Tools
 {
@@ -69,7 +69,8 @@ namespace Protean.Tools
                             if (RemoveLineBreaks)
                             {
                                 cResult = oEnc.Text.Replace(Constants.vbNewLine, ""); //Replace(oEnc.Text, Constants.vbNewLine, "");
-                                cResult = oEnc.Text.Replace(Strings.Chr(13).ToString(), "");
+                                cResult = System.Text.RegularExpressions.Regex.Replace(oEnc.Text, @"\r\n?|\n", "");
+
                             }
 
                             break;
@@ -91,7 +92,7 @@ namespace Protean.Tools
 
             try
             {
-                switch (Strings.LCase(Provider))
+                switch (Provider.ToLower())
                 {
                     case "":
                     case "plain":
@@ -174,7 +175,8 @@ namespace Protean.Tools
                     strBuilderResult.Append(newVal);
                 }
 
-                return Strings.LCase(strBuilderResult.ToString());
+                return strBuilderResult.ToString().ToLower();
+
             }
             catch (Exception ex)
             {
@@ -191,16 +193,18 @@ namespace Protean.Tools
                 StringBuilder strResult = new StringBuilder();
                 int nCount;
                 int nBaseTen;
-                VBMath.Randomize();
+                System.Random rnd = new System.Random();
 
                 for (nCount = 0; nCount <= 1; nCount++)
                 {
-                    nBaseTen = System.Convert.ToInt32(Math.Ceiling(VBMath.Rnd() * 15)); // random number between 0 and 15
+                    nBaseTen = rnd.Next(0, 16); // random number between 0 and 15
+
                     //strResult.Append(Conversion.Hex(nBaseTen));
                     strResult.Append(String.Format("0x{0:X}", nBaseTen));
                 }
 
-                return Strings.LCase(strResult.ToString());
+                return strResult.ToString().ToLowerInvariant();
+
             }
             catch (Exception ex)
             {
@@ -273,7 +277,8 @@ namespace Protean.Tools
             // //	The first 5 character of the string is formatted to store the actual length of the data.
             // //	This is the simplest way to remember to original length of the data, without resorting to complicated computations.
             // //	If anyone figure a good way to 'remember' the original length to facilite the decryption without having to use additional function parameters, pls let me know.
-            strData = Strings.Format(strData.Length, "00000") + strData;
+            strData = strData.Length.ToString("D5") + strData;
+
 
 
             // //4. Encrypt the Data
@@ -1486,15 +1491,12 @@ namespace Protean.Tools
                 {
                     _rsa.FromXmlString(keyXml);
                 }
-                catch (XmlSyntaxException ex)
+                catch (XmlException ex)
                 {
-                    string stringFormat;
-                    if (isPrivate)
-                        stringFormat = "private";
-                    else
-                        stringFormat = "public";
-                    throw new System.Security.XmlSyntaxException(string.Format("The provided {0} encryption key Xml does not appear to be valid.", stringFormat), ex);
+                    string stringFormat = isPrivate ? "private" : "public";
+                    throw new System.Security.SecurityException($"The provided {stringFormat} encryption key XML does not appear to be valid.", ex);
                 }
+
             }
 
             private EncData DecryptPrivate(EncData encryptedData)
@@ -1524,10 +1526,25 @@ namespace Protean.Tools
                 }
                 catch (CryptographicException ex)
                 {
-                    if (ex.Message.ToLower(System.Globalization.CultureInfo.CurrentCulture).IndexOf("csp for this implementation could not be acquired", System.StringComparison.CurrentCulture) > -1)
-                        throw new Exception("Unable to obtain Cryptographic Service Provider. " + "Either the permissions are incorrect on the " + @"'C:\Documents and Settings\All Users\Application EncData\Microsoft\Crypto\RSA\MachineKeys' " + "folder, or the current security context '" + System.Security.Principal.WindowsIdentity.GetCurrent().Name + "'" + " does not have access to this folder.", ex);
+                    // Check if the exception message contains the specific error
+                    if (ex.Message.ToLower(System.Globalization.CultureInfo.CurrentCulture)
+                        .IndexOf("csp for this implementation could not be acquired", StringComparison.CurrentCulture) > -1)
+                    {
+                        // Create a detailed error message
+                        string currentUser = WindowsIdentity.GetCurrent().Name;
+                        string errorMessage = $"Unable to obtain Cryptographic Service Provider. " +
+                                              $"Either the permissions are incorrect on the " +
+                                              @"'C:\Documents and Settings\All Users\Application EncData\Microsoft\Crypto\RSA\MachineKeys' " +
+                                              $"folder, or the current security context '{currentUser}' does not have access to this folder.";
+
+                        // Throw a new exception with the detailed message
+                        throw new Exception(errorMessage, ex);
+                    }
                     else
+                    {
+                        // Rethrow the original exception for other cases
                         throw;
+                    }
                 }
                 finally
                 {
@@ -1969,11 +1986,11 @@ namespace Protean.Tools
                 {
                     string returnValue = string.Empty;
                     StringBuilder sb = new StringBuilder();
-                   
 
-                    returnValue =EnDeCrypt(message, key);
-                   
-                    returnValue =StringToHex(returnValue);
+
+                    returnValue = EnDeCrypt(message, key);
+
+                    returnValue = StringToHex(returnValue);
                     returnValue = returnValue.Replace("-", "");
                     return returnValue;
                 }
@@ -2035,9 +2052,9 @@ namespace Protean.Tools
                 int a = 0;
                 while (a <= 255)
                 {
-                    char ctmp = (password.Substring((a % intLength), 1).ToCharArray()[0]);
+                    char ctmp = password[(a % intLength)];
 
-                    key[a] = Microsoft.VisualBasic.Strings.Asc(ctmp);
+                    key[a] = (int)ctmp;
                     sbox[a] = a;
                     System.Math.Max(System.Threading.Interlocked.Increment(ref a), a - 1);
                 }
@@ -2068,13 +2085,13 @@ namespace Protean.Tools
 
                     int k = sbox[(sbox[i] + sbox[j]) % 256];
 
-                    char ctmp = message.Substring(a - 1, 1).ToCharArray()[0];
+                    char ctmp = message[a - 1];
 
-                    itmp = Strings.Asc(ctmp);
+                    itmp = (int)ctmp;
 
                     int cipherby = itmp ^ k;
 
-                    cipher.Append(Strings.Chr(cipherby));
+                    cipher.Append((char)cipherby);
                     System.Math.Max(System.Threading.Interlocked.Increment(ref a), a - 1);
                 }
 
@@ -2097,7 +2114,7 @@ namespace Protean.Tools
                 StringBuilder hexSb = new StringBuilder();
                 string hexOut = string.Empty;
 
-                maxIndex = Strings.Len(message);
+                maxIndex = message.Length;
 
                 //for (index = 1; index <= maxIndex; index++)
                 //    //hexSb.Append(Strings.Right("0" + Conversion.Hex(Strings.Asc(Strings.Mid(message, System.Convert.ToInt32(index), 1))), 2));
@@ -2106,7 +2123,7 @@ namespace Protean.Tools
                 byte[] ba = Encoding.Default.GetBytes(message);
                 hexOut = BitConverter.ToString(ba);
 
-               // hexOut = hexSb.ToString();
+                // hexOut = hexSb.ToString();
                 hexSb.Length = 0;
 
                 return hexOut;
@@ -2120,16 +2137,19 @@ namespace Protean.Tools
             ///         ''' <remarks></remarks>
             private static string HexToString(string hex)
             {
-                try {
+                try
+                {
                     int index;
                     long maxIndex;
                     StringBuilder sb = new StringBuilder();
                     string returnString = string.Empty;
 
-                    maxIndex = Strings.Len(hex)/2;
+                    maxIndex = hex.Length / 2;
 
                     for (index = 0; index < maxIndex; index++)
-                        sb.Append(Strings.Chr(System.Convert.ToInt32(hex.Substring(index * 2, 2), 16)));
+                    {
+                        sb.Append((char)Convert.ToInt32(hex.Substring(index * 2, 2), 16));
+                    }
 
 
                     //byte[] raw = new byte[hex.Length / 2];
@@ -2145,11 +2165,11 @@ namespace Protean.Tools
                     return returnString;
 
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     return ex.Message;
                 }
-                
+
             }
         }
     }

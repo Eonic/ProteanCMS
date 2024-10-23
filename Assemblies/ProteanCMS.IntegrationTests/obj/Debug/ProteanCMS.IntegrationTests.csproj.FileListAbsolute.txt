@@ -475,3 +475,7 @@ D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Integra
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\obj\Debug\ProteanCMS.IntegrationTests.csproj.CopyComplete
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\obj\Debug\ProteanCMS.IntegrationTests.dll
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\obj\Debug\ProteanCMS.IntegrationTests.pdb
+C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\obj\Debug\ProteanCMS.IntegrationTests.csproj.AssemblyReference.cache
+C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\obj\Debug\ProteanCMS.IntegrationTests.csproj.CoreCompileInputs.cache
+C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\obj\Debug\ProteanCMS.IntegrationTests.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\obj\Debug\ProteanCMS.IntegrationTests.pdb

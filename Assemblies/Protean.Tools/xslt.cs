@@ -1,19 +1,8 @@
 ﻿using System;
-using System.Runtime;
 using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Security;
 using System.Xml;
-using System.Xml.Xsl;
-using System.Threading.Tasks;
-using Microsoft.VisualBasic;
 using System.Xml.XPath;
+using System.Xml.Xsl;
 
 namespace Protean.Tools.Xslt
 {
@@ -21,8 +10,8 @@ namespace Protean.Tools.Xslt
     {
         public int stringcompare(string stringX, string stringY)
         {
-            stringX = Strings.UCase(stringX);
-            stringY = Strings.UCase(stringY);
+            stringX = stringX.ToUpper();
+            stringY = stringY.ToUpper();
 
             if (stringX == stringY)
                 return 0;
@@ -74,7 +63,7 @@ namespace Protean.Tools.Xslt
         {
             try
             {
-                if (Information.IsDate(dateString))
+                if (DateTime.TryParse(dateString, out _))
                 {
                     return DateTime.Parse(dateString).ToString();
                 }
@@ -161,9 +150,11 @@ namespace Protean.Tools.Xslt
             try
             {
                 string[] ValidDatePart = new[] { "d", "y", "h", "n", "m", "q", "s", "w", "ww", "yyyy" };
-                if (Information.IsDate(date1String) && Information.IsDate(date2String) && Array.IndexOf(ValidDatePart, datePart) > (ValidDatePart.GetLowerBound(0) - 1))
-
+                if (DateTime.TryParse(date1String, out _) && DateTime.TryParse(date2String, out _) && Array.IndexOf(ValidDatePart, datePart) > ValidDatePart.GetLowerBound(0) - 1)
+                {
                     nDiff = Microsoft.VisualBasic.DateAndTime.DateDiff(datePart, DateTime.Parse(date1String), DateTime.Parse(date2String)).ToString();
+                }
+
                 return nDiff;
             }
             catch (Exception)
@@ -187,8 +178,8 @@ namespace Protean.Tools.Xslt
         private object oXslTExtensionsObject; // Any Class we want to use for additional functionality
         private string cXslTExtensionsURN; // The Urn for the class
 
-       
-       // private XslTransform oClassicTransform; // Classic Transform Object
+
+        // private XslTransform oClassicTransform; // Classic Transform Object
         private XslCompiledTransform oCompiledTransform; // Compiled Transform Object
         private XsltArgumentList XsltArgs; // Argurment List
         // Error Handling
@@ -462,7 +453,7 @@ namespace Protean.Tools.Xslt
             }
         }
 
-       
+
         private void ProcessClassic(ref string cResult)
         {
             try
@@ -542,9 +533,9 @@ namespace Protean.Tools.Xslt
 
         private void RemoveDeclaration(ref string cResult)
         {
-            cResult = Strings.Replace(cResult, "<?Xml version=\"1.0\" encoding=\"utf-8\"?>", "");
-            cResult = Strings.Replace(cResult, "<?Xml version=\"1.0\" encoding=\"utf-16\"?>", "");
-            cResult = Strings.Trim(cResult);
+            cResult = cResult.Replace("<?Xml version=\"1.0\" encoding=\"utf-8\"?>", "");
+            cResult = cResult.Replace("<?Xml version=\"1.0\" encoding=\"utf-16\"?>", "");
+            cResult = cResult.Trim();
         }
 
         public Transform()

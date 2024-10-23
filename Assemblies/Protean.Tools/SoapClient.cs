@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using Microsoft.VisualBasic; // Install-Package Microsoft.VisualBasic
 
 namespace Protean.Tools
 {
@@ -251,14 +249,14 @@ namespace Protean.Tools
                                 long j;
                                 long k;
 
-                                var loopTo1 = (long)Information.UBound(aCookies);
+                                long loopTo1 = aCookies.Length - 1;
                                 for (j = 0L; j <= loopTo1; j++)
                                 {
-                                    string[] aCookies2 = aCookies[(int)j].Split(";");
-                                    var loopTo2 = (long)Information.UBound(aCookies2);
+                                    string[] aCookies2 = aCookies[j].Split(';');
+                                    long loopTo2 = aCookies2.Length - 1;
                                     for (k = 0L; k <= loopTo2; k++)
                                     {
-                                        string[] aCookies3 = aCookies2[(int)k].Split("=");
+                                        string[] aCookies3 = aCookies2[k].Split('=');
                                         moSession[aCookies3[0]] = aCookies3[1];
                                     }
                                 }

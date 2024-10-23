@@ -2,9 +2,6 @@
 using System.Collections.Specialized;
 using System.Text;
 using System.Web;
-using static System.Web.HttpUtility;
-using Microsoft.VisualBasic; // Install-Package Microsoft.VisualBasic
-using Microsoft.VisualBasic.CompilerServices; // Install-Package Microsoft.VisualBasic
 
 // ' ---------------------------------------------------------
 // ' Class       :   Protean.Tools.Http.WebRequest
@@ -74,7 +71,8 @@ namespace Protean.Tools.Http
 
                 // Calculate the Absolute path from the original path (not the rewritten one)
                 string originalPath = currentRequest.RawUrl;
-                originalPath = originalPath.Substring(0, Conversions.ToInteger(Interaction.IIf(originalPath.Contains("?"), originalPath.IndexOf("?"), originalPath.Length)));
+                originalPath = originalPath.Substring(0, originalPath.Contains("?") ? originalPath.IndexOf("?") : originalPath.Length);
+
 
                 // Build the URI
                 return BuildURI(requestUri.Host, requestUri.Scheme + "://", originalPath, queryString.ToString());
