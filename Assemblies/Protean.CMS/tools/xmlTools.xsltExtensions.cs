@@ -1,34 +1,29 @@
-﻿using System;
+﻿using BundleTransformer.Core.Builders;
+using BundleTransformer.Core.Bundles;
+using BundleTransformer.Core.Orderers;
+using BundleTransformer.Core.Transformers;
+using Imazen.WebP;
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Globalization;
-using static System.Globalization.CultureInfo;
 using System.IO;
-
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Configuration;
+using System.Web.Optimization;
 using System.Windows.Media.Imaging;
 using System.Xml;
 using System.Xml.XPath;
-
-using BundleTransformer.Core.Builders;
-using BundleTransformer.Core.Orderers;
-using BundleTransformer.Core.Transformers;
-
-using Imazen.WebP;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
-using Protean.Tools.Integration.Twitter;
-using System.Web.UI;
-using System.Web.Optimization;
-using BundleTransformer.Core.Bundles;
+using static System.Globalization.CultureInfo;
 
 namespace Protean
 {
@@ -194,7 +189,8 @@ namespace Protean
             {
 
                 string[] results;
-                if (resultIndex == "") {
+                if (resultIndex == "")
+                {
                     resultIndex = "0";
                 }
 
@@ -210,7 +206,8 @@ namespace Protean
                         return ex.Message;
                     }
                 }
-                else {
+                else
+                {
                     return "input or pattern not defined";
                 }
             }
@@ -1088,11 +1085,13 @@ namespace Protean
 
 
             }
-            public XmlElement GetSpecsOnPageItems(string pageId, string artId) {
-                try {
+            public XmlElement GetSpecsOnPageItems(string pageId, string artId)
+            {
+                try
+                {
 
                     int nPgId = Convert.ToInt16(pageId);
-                  
+
 
                     Protean.Cms myCMS = new Protean.Cms(myWeb.moCtx);
                     myCMS.InitializeVariables();
@@ -1102,19 +1101,23 @@ namespace Protean
                     XmlDocument myPageXml = myCMS.GetPageXML();
 
                     XmlElement grpElmt = myPageXml.CreateElement("group");
-                    foreach (XmlElement SpecElmt in myPageXml.SelectNodes("descendant-or-self::Spec")) {
-                        string name  = SpecElmt.GetAttribute("name");
-                        if (name != "") {                       
-                            if (grpElmt.SelectSingleNode($"Spec[@name='{name}']") == null){
+                    foreach (XmlElement SpecElmt in myPageXml.SelectNodes("descendant-or-self::Spec"))
+                    {
+                        string name = SpecElmt.GetAttribute("name");
+                        if (name != "")
+                        {
+                            if (grpElmt.SelectSingleNode($"Spec[@name='{name}']") == null)
+                            {
                                 SpecElmt.InnerText = "";
                                 grpElmt.AppendChild(SpecElmt);
                             }
                         }
                     }
 
-                    if (artId != "") { 
-                    
-                    
+                    if (artId != "")
+                    {
+
+
                     };
 
 
@@ -1124,7 +1127,7 @@ namespace Protean
                 {
                     return null;
                 }
-    }
+            }
             public string GetDirIdFromFref(string fRef)
             {
 
@@ -1315,9 +1318,9 @@ namespace Protean
                 {
                     // Encrypt password.
                     sPassword = Tools.Encryption.HashString(sPassword, (myWeb.moConfig["MembershipEncryption"]).ToLower(), true); // plain - md5 - sha1
-                                                                                                                             // RJP removed the following two lines as they appear to be doing nothing  the encrypted string.
-                                                                                                                             // sPassword = Protean.Tools.Xml.EncodeForXml(sPassword)
-                                                                                                                             // sPassword = Protean.Tools.Xml.convertEntitiesToCodes(sPassword)
+                                                                                                                                  // RJP removed the following two lines as they appear to be doing nothing  the encrypted string.
+                                                                                                                                  // sPassword = Protean.Tools.Xml.EncodeForXml(sPassword)
+                                                                                                                                  // sPassword = Protean.Tools.Xml.convertEntitiesToCodes(sPassword)
                     return sPassword;
                 }
                 catch (Exception)
@@ -1632,12 +1635,12 @@ namespace Protean
                                 case "pdf":
                                     {
 
-                                        var ihelp = new Tools.Image("");
+                                        var ihelp = new Tools.PDF();
 
                                         System.Threading.ThreadPool.SetMaxThreads(10, 10);
                                         var doneEvents = new System.Threading.ManualResetEvent[2];
 
-                                        var newThumbnail = new Tools.Image.PDFThumbNail();
+                                        var newThumbnail = new Tools.PDF.PDFThumbNail();
                                         newThumbnail.FilePath = cVirtualPath;
                                         newThumbnail.newImageFilepath = newFilepath;
                                         newThumbnail.goServer = goServer;
@@ -1645,7 +1648,7 @@ namespace Protean
                                         ihelp.GeneratePDFThumbNail(newThumbnail);
 
 
-                                       // System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback((_) => ihelp.GeneratePDFThumbNail(newThumbnail)));
+                                        // System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback((_) => ihelp.GeneratePDFThumbNail(newThumbnail)));
                                         newThumbnail = null;
                                         ihelp.Close();
                                         ihelp = null;
@@ -1882,21 +1885,21 @@ namespace Protean
                                 case "pdf":
                                     {
 
-                                        var ihelp = new Tools.Image("");
+                                        //var ihelp = new Tools.PDF.PDFThumbNail();
 
-                                        System.Threading.ThreadPool.SetMaxThreads(10, 10);
-                                        var doneEvents = new System.Threading.ManualResetEvent[2];
+                                        //System.Threading.ThreadPool.SetMaxThreads(10, 10);
+                                        //var doneEvents = new System.Threading.ManualResetEvent[2];
 
-                                        var newThumbnail = new Tools.Image.PDFThumbNail();
-                                        newThumbnail.FilePath = cVirtualPath;
-                                        newThumbnail.newImageFilepath = newFilepath;
-                                        newThumbnail.goServer = goServer;
-                                        newThumbnail.maxWidth = (short)maxWidth;
+                                        //var newThumbnail = new Tools.PDF.PDFThumbNail();
+                                        //newThumbnail.FilePath = cVirtualPath;
+                                        //newThumbnail.newImageFilepath = newFilepath;
+                                        //newThumbnail.goServer = goServer;
+                                        //newThumbnail.maxWidth = (short)maxWidth;
 
-                                        System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback((_) => ihelp.GeneratePDFThumbNail(newThumbnail)));
-                                        newThumbnail = null;
-                                        ihelp.Close();
-                                        ihelp = null;
+                                        //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback((_) => ihelp.GeneratePDFThumbNail(newThumbnail)));
+                                        //newThumbnail = null;
+                                        //ihelp.Close();
+                                        //ihelp = null;
                                         break;
                                     }
 
@@ -2696,7 +2699,7 @@ namespace Protean
                     }
                     newWeb = default;
                     return oNodelist;
-                    
+
                 }
 
                 catch (Exception ex)
@@ -2928,8 +2931,9 @@ namespace Protean
                                 strFileName = "empty.js";
                                 scriptFile = fsh.SaveFile(ref strFileName, TargetPath, info);
                             }
-                            else {
-                                scriptFile = fsh.SaveFile(ref strFileName, TargetPath, info); 
+                            else
+                            {
+                                scriptFile = fsh.SaveFile(ref strFileName, TargetPath, info);
                             }
                             if (scriptFile.StartsWith("ERROR: "))
                             {
@@ -2971,7 +2975,7 @@ namespace Protean
                 catch (IOException ex)    // New changes on 9/12/21'
                 {
                     myWeb.bPageCache = false;
-                    sReturnString = TargetPath + "/script.js?error=" + ex.Message ;
+                    sReturnString = TargetPath + "/script.js?error=" + ex.Message;
                     // Return ioex.StackTrace
                     return sReturnString;
                 }
@@ -2997,7 +3001,7 @@ namespace Protean
                 string sReturnError = "";
                 bool bReset = false;
                 string cProjectPath = string.Empty;
-                if(myWeb.moConfig["ProjectPath"]!=null)
+                if (myWeb.moConfig["ProjectPath"] != null)
                 {
                     cProjectPath = myWeb.moConfig["ProjectPath"];
                 }
@@ -3056,7 +3060,7 @@ namespace Protean
                             {
                                 // check to see if the filename is saved in the application variable.
 
-                                sReturnString =Convert.ToString(myWeb.moCtx.Application.Get(AppVariableName));
+                                sReturnString = Convert.ToString(myWeb.moCtx.Application.Get(AppVariableName));
 
                                 if (!sReturnString.StartsWith("/" + cProjectPath + "css" + TargetPath.TrimStart('~')))
                                 {
@@ -3073,7 +3077,7 @@ namespace Protean
                                     if (oImp.ImpersonateValidUser(myWeb.moConfig["AdminAcct"], myWeb.moConfig["AdminDomain"], myWeb.moConfig["AdminPassword"], true, myWeb.moConfig["AdminGroup"]) == false)
                                     {
                                         sReturnString = "Admin-Account-Logon-Failure";
-                                        return sReturnString;                                        
+                                        return sReturnString;
                                     }
                                 }
 
@@ -3197,7 +3201,7 @@ namespace Protean
                             }
                         }
                         //sReturnString = null;
-                        return sReturnString.Replace("~", "");                        
+                        return sReturnString.Replace("~", "");
                     }
                     catch (IOException ioex)    // New changes on 9/12/21'
                     {

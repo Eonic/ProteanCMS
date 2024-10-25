@@ -60,14 +60,6 @@
     <OutputPath>bin\ARM64\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="JsonWebTokens, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\NonNuget\JsonWebTokens.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Web">
-      <HintPath>..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Web.dll</HintPath>
-    </Reference>
     <Reference Update="System.Xml">
       <HintPath>..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Xml.dll</HintPath>
     </Reference>
@@ -84,8 +76,6 @@
     <PackageReference Include="BouncyCastle.Cryptography" Version="2.4.0" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="3.0.2" />
     <PackageReference Include="DocumentFormat.OpenXml.Framework" Version="3.0.2" />
-    <PackageReference Include="DynamicImage" Version="2.1.2" />
-    <PackageReference Include="Fonet" Version="1.0.0" />
     <PackageReference Include="iTextSharp.LGPLv2.Core" Version="3.4.22" />
     <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="13.8.0" />
     <PackageReference Include="Magick.NET.Core" Version="13.8.0" />
@@ -106,7 +96,8 @@
     <PackageReference Include="System.Management" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters" Version="1.3.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.1" />
-    <PackageReference Include="TidyManaged" Version="1.0.0" />
+    <PackageReference Include="TidyHtml5Managed" Version="1.1.0" />
+    <PackageReference Include="TidyNetstandard" Version="1.0.2" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="IdentityModel\Tokens\JwtHelper.cs" />

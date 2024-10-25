@@ -59,7 +59,7 @@ namespace Protean
 
             var ci = new Tools.Image.CaptchaImage();
 
-            var b = ci.RenderImage();
+            System.Drawing.Bitmap b = ci.RenderImage();
 
             goSession["imgVerification"] = ci.Text;
 

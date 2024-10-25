@@ -1,11 +1,11 @@
 ﻿using DocumentFormat.OpenXml.Drawing.Charts;
 using Microsoft.VisualBasic;
 using System;
+using System.Configuration;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Web.Configuration;
 using System.Xml;
 
 namespace Protean.Tools
@@ -1531,7 +1531,7 @@ namespace Protean.Tools
                         .IndexOf("csp for this implementation could not be acquired", StringComparison.CurrentCulture) > -1)
                     {
                         // Create a detailed error message
-                        string currentUser = WindowsIdentity.GetCurrent().Name;
+                        string currentUser = "WindowsIdentity.GetCurrent().Name";
                         string errorMessage = $"Unable to obtain Cryptographic Service Provider. " +
                                               $"Either the permissions are incorrect on the " +
                                               @"'C:\Documents and Settings\All Users\Application EncData\Microsoft\Crypto\RSA\MachineKeys' " +
@@ -1920,7 +1920,7 @@ namespace Protean.Tools
             internal static string GetConfigString(string key, bool isRequired = true)
             {
                 string strReturn = "";
-                string s = System.Convert.ToString(WebConfigurationManager.AppSettings.Get(key));
+                string s = System.Convert.ToString(ConfigurationManager.AppSettings.Get(key));
                 if (s == null)
                 {
                     if (isRequired)

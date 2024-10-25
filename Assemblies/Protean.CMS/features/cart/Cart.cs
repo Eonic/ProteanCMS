@@ -1,28 +1,20 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.IO;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Web.Configuration;
-using System.Xml;
-using VB = Microsoft.VisualBasic;
-using Microsoft.VisualBasic;
+﻿using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using static Protean.stdTools;
-using static Protean.Tools.Xml;
-using System.Linq;
 using Protean.Providers.Membership;
 using Protean.Providers.Messaging;
 using Protean.Providers.Payment;
-using static Protean.Cms.dbImport;
-using Lucene.Net.Analysis;
-using System.Web.UI.WebControls;
-using Lucene.Net.Search;
-using Lucene.Net.Support;
-using static QRCoder.PayloadGenerator;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Web.Configuration;
+using System.Xml;
+using static Protean.stdTools;
+using static Protean.Tools.Xml;
+using VB = Microsoft.VisualBasic;
 
 namespace Protean
 {
@@ -71,7 +63,7 @@ namespace Protean
 
             public int mnCartId; // Unique Id refering to this session cart
             public string mcSessionId; // Session ID - Unique for each client browser
-           // private string mcRefSessionId; // Referrer Site Session ID - The session ID from the referrer site, if passed.
+                                       // private string mcRefSessionId; // Referrer Site Session ID - The session ID from the referrer site, if passed.
             public int mnEwUserId; // User Id for Membership integration
             public string mmcOrderType; // The order type associated with the current cart
             public string mcItemOrderType; // The order type associated with the current page (if provided)
@@ -2760,7 +2752,7 @@ namespace Protean
                 }
                 messageHtml = sWriter.ToString();
                 sWriter.Close();
-                var xMailingListDoc = htmlToXmlDoc(messageHtml);
+                var xMailingListDoc = Protean.Tools.Xml.HtmlConverter.htmlToXmlDoc(messageHtml);
                 var xListElement = xMailingListDoc.DocumentElement;
                 valDict = XmltoDictionary(xListElement, true);
                 return valDict;
@@ -2777,7 +2769,7 @@ namespace Protean
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "RemoveDeliveryOption", ex, "", "", gbDebug);
                 }
             }
- 
+
 
             /// <summary>
             /// This does the same as get cart without the item information, so we call get cart and delete any items we find
@@ -2922,7 +2914,8 @@ namespace Protean
                         quant = 0L; // get number of items & sum of collective prices (ie. cart total) from db
                         total = 0.0d;
                         weight = 0.0d;
-                        if (moCartConfig["TareWeight"] != "") {
+                        if (moCartConfig["TareWeight"] != "")
+                        {
                             weight = Convert.ToInt32(moCartConfig["TareWeight"]);
                         }
 
@@ -3138,31 +3131,31 @@ namespace Protean
 
                             //if (myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure))
                             //{
-                                //if (nStatusId > 100) {
+                            //if (nStatusId > 100) {
 
-                                //// Get Shipping Group from query if assigned to that product and add new node in order and use this node for displaying messages for x50 and t03 category.
-                                //if (moConfig["SelectShippingOptionForGroup"] != null)
-                                //{
-                                //    if ((moConfig["SelectShippingOptionForGroup"]) != "" && (moConfig["SelectShippingOptionForGroup"]).ToLower() == "on")
-                                //    {
-                                //        string sSqlShippingGroup = $"select csm.nShipOptKey,CPC.cCatName  from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey left join tblAudit A ON p.nAuditId= A.nAuditKey left join tblCartCatProductRelations cpr on p.nContentKey = cpr.nContentId left join tblCartProductCategories CPC ON cpr.nCatId= cpc.nCatKey Left JOIN tblCartShippingProductCategoryRelations cspcr ON cpr.nCatId= cspcr.nCatId LEFT join tblCartShippingMethods csm on csm.nShipOptKey=cspcr.nShipOptId where nCartOrderId={nCartIdUse.ToString()} and nCartItemKey={oRow["id"].ToString()} and cCatSchemaName = 'Shipping' and csm.nShipOptKey is not null and nItemId <>0 and cspcr.nRuleType=1 order by nShipOptCost asc";
+                            //// Get Shipping Group from query if assigned to that product and add new node in order and use this node for displaying messages for x50 and t03 category.
+                            //if (moConfig["SelectShippingOptionForGroup"] != null)
+                            //{
+                            //    if ((moConfig["SelectShippingOptionForGroup"]) != "" && (moConfig["SelectShippingOptionForGroup"]).ToLower() == "on")
+                            //    {
+                            //        string sSqlShippingGroup = $"select csm.nShipOptKey,CPC.cCatName  from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey left join tblAudit A ON p.nAuditId= A.nAuditKey left join tblCartCatProductRelations cpr on p.nContentKey = cpr.nContentId left join tblCartProductCategories CPC ON cpr.nCatId= cpc.nCatKey Left JOIN tblCartShippingProductCategoryRelations cspcr ON cpr.nCatId= cspcr.nCatId LEFT join tblCartShippingMethods csm on csm.nShipOptKey=cspcr.nShipOptId where nCartOrderId={nCartIdUse.ToString()} and nCartItemKey={oRow["id"].ToString()} and cCatSchemaName = 'Shipping' and csm.nShipOptKey is not null and nItemId <>0 and cspcr.nRuleType=1 order by nShipOptCost asc";
 
-                                //        using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sSqlShippingGroup))
-                                //        {
-                                //            if (oDr != null)
-                                //            {
-                                //                while (oDr.Read())
-                                //                {
-                                //                    ShippingOptionKey = Convert.ToInt64(oDr["nShipOptKey"]);
-                                //                    oRow["nShippingGroup"] = oDr["cCatName"];
-                                //                    oRow["nshippingType"] = ShippingOptionKey;
-                                //                    updateGCgetValidShippingOptionsDS(ShippingOptionKey.ToString());
-                                //                }
-                                //            }
-                                //        }
-                                //    }
-                                //}
-                                //}
+                            //        using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sSqlShippingGroup))
+                            //        {
+                            //            if (oDr != null)
+                            //            {
+                            //                while (oDr.Read())
+                            //                {
+                            //                    ShippingOptionKey = Convert.ToInt64(oDr["nShipOptKey"]);
+                            //                    oRow["nShippingGroup"] = oDr["cCatName"];
+                            //                    oRow["nshippingType"] = ShippingOptionKey;
+                            //                    updateGCgetValidShippingOptionsDS(ShippingOptionKey.ToString());
+                            //                }
+                            //            }
+                            //        }
+                            //    }
+                            //}
+                            //}
                             //}
 
 
@@ -3425,24 +3418,25 @@ namespace Protean
                                 {
                                     cDestinationCountry = oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country").InnerText;
                                     cDestinationPostalCode = oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/PostalCode").InnerText;
-                                  //  bGetLowest = false;
+                                    //  bGetLowest = false;
                                 }
                                 double lowestShipCost = 0;
                                 if (!string.IsNullOrEmpty(cDestinationCountry))
                                 {
                                     // Go and collect the valid shipping options available for this order
                                     int productId = 0;
-                                    
+
                                     var oDsShipOptions = getValidShippingOptionsDS(cDestinationCountry, cDestinationPostalCode, total, quant, weight, cPromoCode, productId);
                                     if (oDsShipOptions != null)
                                     {
                                         foreach (DataRow oRowSO in oDsShipOptions.Tables[0].Rows)
-                                        {                                          
-                                            
+                                        {
+
 
                                             shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"]));
-                                            if (lowestShipCost == 0) {
-                                                lowestShipCost = shipCost ;
+                                            if (lowestShipCost == 0)
+                                            {
+                                                lowestShipCost = shipCost;
                                             }
 
                                             bool bCollection = false;
@@ -3450,7 +3444,8 @@ namespace Protean
                                             {
                                                 bCollection = Conversions.ToBoolean(oRowSO["bCollection"]);
                                             }
-                                            if (oRowSO.Table.Columns.Contains("nShippingGroup")) {
+                                            if (oRowSO.Table.Columns.Contains("nShippingGroup"))
+                                            {
                                                 if (Convert.ToString(oRowSO["nShippingGroup"]) != "")
                                                 {
                                                     ShippingOptionKey = Convert.ToInt64(oRowSO["nShipOptKey"]);
@@ -3466,7 +3461,7 @@ namespace Protean
                                                     {
                                                         if (Convert.ToString(oRowSO["nShipOptKey"]) == Convert.ToString(ShippingOptionKey))
                                                         {
-                                                           
+
                                                             oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig["DefaultCountry"]);
                                                             oCartElmt.SetAttribute("shippingType", ShippingOptionKey + "");
                                                             oCartElmt.SetAttribute("shippingCost", shipCost + "");
@@ -4067,7 +4062,8 @@ namespace Protean
                             xPathStart = "";
                         }
                     }
-                    else {
+                    else
+                    {
                         xPathStart = "";
                     }
 
@@ -4423,8 +4419,9 @@ namespace Protean
                             foreach (DataRow oRow in oDs.Tables["Item"].Rows)
                             {
                                 //if this is empty it is not a real product like a donation therefore stock control is not relevent.
-                                if (Conversions.ToString(oRow["cContentXmlDetail"]) != "") { 
-                                    oProd.InnerXml = Conversions.ToString(oRow["cContentXmlDetail"]);                                
+                                if (Conversions.ToString(oRow["cContentXmlDetail"]) != "")
+                                {
+                                    oProd.InnerXml = Conversions.ToString(oRow["cContentXmlDetail"]);
                                     oStock = oProd.SelectSingleNode("//Stock/Location[@name='Default']");
                                     if (oStock is null)
                                     {
@@ -4777,7 +4774,7 @@ namespace Protean
                                     // set the billing address
                                     string sSql = "Select nContactKey from tblCartContact where cContactType = 'Delivery Address' and nContactCartid=" + mnCartId;
                                     string DeliveryAddressID = moDBHelper.ExeProcessSqlScalar(sSql);
-                                    useSavedAddressesOnCart(BillingAddressID, Conversions.ToLong(DeliveryAddressID),null);
+                                    useSavedAddressesOnCart(BillingAddressID, Conversions.ToLong(DeliveryAddressID), null);
 
                                     mcPaymentMethod = myWeb.moRequest[buttonRef];
 
@@ -5561,7 +5558,8 @@ namespace Protean
                             oXform.NewFrm(cAddressType);
                         }
                     }
-                    else {
+                    else
+                    {
                         oXform.NewFrm(cAddressType);
                     }
                     oXform.valid = false;
@@ -5861,11 +5859,12 @@ namespace Protean
                         if (!string.IsNullOrEmpty(myWeb.moRequest[submitPrefix + "contact" + contactId]))
                         {
                             string billingContactXml = null;
-                            if (!string.IsNullOrEmpty(cPickAddressXform)){
+                            if (!string.IsNullOrEmpty(cPickAddressXform))
+                            {
                                 billingContactXml = oXform.Instance.SelectSingleNode("tblCartContact/cContactXml").InnerXml;
                             }
 
-                             useSavedAddressesOnCart(billingAddId, contactId, billingContactXml);
+                            useSavedAddressesOnCart(billingAddId, contactId, billingContactXml);
                             // skip delivery
                             oContactXform.moXformElmt.SetAttribute("cartCmd", "ChoosePaymentShippingOption");
                         }
@@ -6033,7 +6032,8 @@ namespace Protean
                     billInstance.SelectSingleNode("*/cContactType").InnerText = "Billing Address";
                     billInstance.SelectSingleNode("*/nAuditId").InnerText = savedBillingAuditId;
                     billInstance.SelectSingleNode("*/nAuditKey").InnerText = savedBillingAuditId;
-                    if (billingContactXml != null) { 
+                    if (billingContactXml != null)
+                    {
                         billInstance.SelectSingleNode("*/cContactXml    ").InnerXml = billingContactXml;
                     }
 
@@ -6969,7 +6969,7 @@ namespace Protean
                     if (string.IsNullOrEmpty(cDestinationCountry))
                         cDestinationCountry = moCartConfig["DefaultCountry"];
                     // Go and collect the valid shipping options available for this order
-                    ods = getValidShippingOptionsDS(cDestinationCountry, cDestinationPostalCode, nAmount, nQuantity, nWeight,"",0);
+                    ods = getValidShippingOptionsDS(cDestinationCountry, cDestinationPostalCode, nAmount, nQuantity, nWeight, "", 0);
 
                     var oOptXform = new Cms.xForm(ref myWeb.msException);
                     oOptXform.moPageXML = moPageXml;
@@ -7418,7 +7418,7 @@ namespace Protean
                             // added by TS, if you need just the product amount without VAT or shipping we need to talk.
                             double totalAmount = Convert.ToDouble(cartElmt.GetAttribute("total"));
                             oPay.getPaymentMethodButtons(ref oOptXform, ref xmlXfromGroup, totalAmount);
-                            
+
                             foreach (XmlElement oSubmitBtn in oOptXform.moXformElmt.SelectNodes("descendant-or-self::submit"))
                                 AllowedPaymentMethods.Add(oSubmitBtn.GetAttribute("value"));
 
@@ -7926,7 +7926,8 @@ namespace Protean
                                             for (i = 0; i <= loopTo; i++)
                                             {
                                                 string cProdOpt1 = "";
-                                                if (oProdOptions[i].Length > 1) {
+                                                if (oProdOptions[i].Length > 1)
+                                                {
                                                     cProdOpt1 = oProdOptions[i][1].ToString();
                                                 }
 
@@ -8004,13 +8005,13 @@ namespace Protean
                                         if (oProdXml.SelectSingleNode("/Content/*[1]") != null)
                                         {
                                             cProductText = oProdXml.SelectSingleNode("/Content/*[1]").InnerText;
-                                        } 
+                                        }
                                         else
                                         {
                                             cProductText = "Donation";
                                         }
                                     }
-                                   
+
 
                                     if (nPrice == 0d)
                                     {
@@ -8058,9 +8059,10 @@ namespace Protean
                                         long nParentId = Conversions.ToLong(moDBHelper.ExeProcessSqlScalar(sSQL2));
                                         XmlNode argoNode7 = oProdXml.DocumentElement;
                                         var ItemParent = addNewTextNode("ParentProduct", ref argoNode7, "");
-                                        XmlElement parentElmt = moDBHelper.GetContentDetailXml(nParentId,true);
-                                        if (parentElmt != null) {
-                                            ItemParent.InnerXml = parentElmt.OuterXml; 
+                                        XmlElement parentElmt = moDBHelper.GetContentDetailXml(nParentId, true);
+                                        if (parentElmt != null)
+                                        {
+                                            ItemParent.InnerXml = parentElmt.OuterXml;
                                         }
                                     }
 
@@ -8090,7 +8092,7 @@ namespace Protean
                                     {
                                         strPrice1 = myWeb.moRequest["price_" + nProductId];
                                     }
-                                }                              
+                                }
                                 addNewTextNode("nPrice", ref oElmt, Conversions.ToString(Interaction.IIf(Information.IsNumeric(strPrice1), strPrice1, 0)));
                                 addNewTextNode("nShpCat", ref oElmt, (-1).ToString());
                                 addNewTextNode("nTaxRate", ref oElmt, nTaxRate.ToString());
@@ -8122,20 +8124,21 @@ namespace Protean
                                             oItemInstance = new XmlDocument();
                                             oItemInstance.AppendChild(oItemInstance.CreateElement("instance"));
                                             XmlElement docElmt = oItemInstance.DocumentElement;
-                                            oElmt = addNewTextNode("tblCartItem", ref docElmt);                                            
-                                            addNewTextNode("nCartOrderId", ref oElmt, mnCartId.ToString());                                          
+                                            oElmt = addNewTextNode("tblCartItem", ref docElmt);
+                                            addNewTextNode("nCartOrderId", ref oElmt, mnCartId.ToString());
 
                                             string cStockCode = "";
                                             string cOptName = "";
                                             bool bTextOption = false;
-                                           // string opt1stval = "";
+                                            // string opt1stval = "";
                                             string opt2ndval = "";
                                             if (oProdOptions[i].Count() == 2)
                                             {
                                                 opt2ndval = oProdOptions[i][1].ToString();
                                             }
-                                            else {
-                                               // opt2ndval
+                                            else
+                                            {
+                                                // opt2ndval
                                                 opt2ndval = "0";
                                             }
 
@@ -8181,14 +8184,14 @@ namespace Protean
                                                 cStockCode = "";
                                                 cOptName = "Invalid Option";
                                             }
-                                            addNewTextNode("cItemRef", ref oElmt, cStockCode);                             
-                                            addNewTextNode("nItemId", ref oElmt, nProductId.ToString());                            
+                                            addNewTextNode("cItemRef", ref oElmt, cStockCode);
+                                            addNewTextNode("nItemId", ref oElmt, nProductId.ToString());
                                             addNewTextNode("cItemURL", ref oElmt, myWeb.mcOriginalURL);
                                             addNewTextNode("cItemName", ref oElmt, cOptName);
                                             if (bTextOption)
                                             {
                                                 // save the option index as -1 for text option
-                                                addNewTextNode("nItemOptGrpIdx", ref oElmt, (i + 1).ToString());  
+                                                addNewTextNode("nItemOptGrpIdx", ref oElmt, (i + 1).ToString());
                                                 addNewTextNode("nItemOptIdx", ref oElmt, (-1).ToString());
                                                 // No price variation for text options
                                                 addNewTextNode("nPrice", ref oElmt, "0");
@@ -8202,12 +8205,12 @@ namespace Protean
                                                 if (oPriceElmt != null)
                                                     strPrice2 = oPriceElmt.InnerText;
                                                 addNewTextNode("nPrice", ref oElmt, Conversions.ToString(Interaction.IIf(Information.IsNumeric(strPrice2), strPrice2, 0)));
-                                            }                                           
-                                            addNewTextNode("nShpCat", ref oElmt, (-1).ToString());                                                                               
-                                            addNewTextNode("nTaxRate", ref oElmt, 0.ToString());                                       
-                                            addNewTextNode("nQuantity", ref oElmt, 1.ToString());                                
-                                            addNewTextNode("nWeight", ref oElmt, 0.ToString());                                   
-                                            addNewTextNode("nParentId", ref oElmt, nItemID.ToString());                         
+                                            }
+                                            addNewTextNode("nShpCat", ref oElmt, (-1).ToString());
+                                            addNewTextNode("nTaxRate", ref oElmt, 0.ToString());
+                                            addNewTextNode("nQuantity", ref oElmt, 1.ToString());
+                                            addNewTextNode("nWeight", ref oElmt, 0.ToString());
+                                            addNewTextNode("nParentId", ref oElmt, nItemID.ToString());
                                             moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement);
                                         }
                                     }
@@ -10864,7 +10867,7 @@ namespace Protean
             {
                 try
                 {
-                    var dsShippingOption = getValidShippingOptionsDS(cDestinationCountry,"", nAmount, nQuantity, nWeight, cPromoCode, ProductId);
+                    var dsShippingOption = getValidShippingOptionsDS(cDestinationCountry, "", nAmount, nQuantity, nWeight, cPromoCode, ProductId);
                     return dsShippingOption;
                 }
                 catch (Exception ex)
@@ -10896,17 +10899,19 @@ namespace Protean
 
                     }
                     int argnIndex = 1;
-                    string sCountryList = ""; 
+                    string sCountryList = "";
                     // Add code for checking shipping group is included/Excluded for delievry methods
                     var PublishExpireDate = DateTime.Now;
-                    if (moCartConfig["ShippingPostcodes"] == "on" && cDestinationPostalCode != "") {
+                    if (moCartConfig["ShippingPostcodes"] == "on" && cDestinationPostalCode != "")
+                    {
 
                         string PostcodePrefix = System.Text.RegularExpressions.Regex.Split(cDestinationPostalCode, "(?m)^([A-Z0-9]{2,4})(?:\\s*[A-Z0-9]{3})?$")[1];
                         sCountryList = getParentCountries(ref PostcodePrefix, ref argnIndex);
-                       
+
                     }
 
-                    if (sCountryList == "") {
+                    if (sCountryList == "")
+                    {
                         sCountryList = getParentCountries(ref cDestinationCountry, ref argnIndex);
                     }
 
@@ -11002,54 +11007,57 @@ namespace Protean
                         // Build Form
 
                         // Go and collect the valid shipping options available for this order
-                       oDS = moDBHelper.GetDataSet(sSql + " order by opt.nDisplayPriority, nShippingTotal", "Option", "Shipping");
+                        oDS = moDBHelper.GetDataSet(sSql + " order by opt.nDisplayPriority, nShippingTotal", "Option", "Shipping");
                     }
-                    if (oDS.Tables["Option"].Columns["cLocationNameShort"] != null) { 
-                            string overiddenLocations = "";                        
-                            foreach (DataRow oRow in oDS.Tables["Option"].Rows)
+                    if (oDS.Tables["Option"].Columns["cLocationNameShort"] != null)
+                    {
+                        string overiddenLocations = "";
+                        foreach (DataRow oRow in oDS.Tables["Option"].Rows)
+                        {
+                            // Calculate any shipping cost overage
+                            double nShippingCost;
+                            nShippingCost = Conversions.ToDouble(oRow["nShippingTotal"]);
+                            nShippingCost = Conversions.ToDouble(Strings.FormatNumber(nShippingCost, 2, TriState.True, TriState.False, TriState.False));
+
+                            double overageUnit = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShipOptWeightOverageUnit"]));
+                            double overageRate = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShipOptWeightOverageRate"]));
+                            if (overageUnit > 0)
                             {
-                                // Calculate any shipping cost overage
-                                double nShippingCost;
-                                nShippingCost = Conversions.ToDouble(oRow["nShippingTotal"]);
-                                nShippingCost = Conversions.ToDouble(Strings.FormatNumber(nShippingCost, 2, TriState.True, TriState.False, TriState.False));
-
-                                double overageUnit = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShipOptWeightOverageUnit"]));
-                                double overageRate = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShipOptWeightOverageRate"]));
-                                if (overageUnit > 0)
+                                double multiplier = 0;
+                                if (nWeight > Conversions.ToDouble(oRow["nShipOptWeightMax"]))
                                 {
-                                    double multiplier = 0;
-                                    if (nWeight > Conversions.ToDouble(oRow["nShipOptWeightMax"]))
-                                    {
-                                        multiplier = Math.Ceiling(nWeight - Conversions.ToDouble(oRow["nShipOptWeightMax"]));
-                                    }
-                                    nShippingCost = nShippingCost + ((multiplier / overageUnit) * overageRate);
+                                    multiplier = Math.Ceiling(nWeight - Conversions.ToDouble(oRow["nShipOptWeightMax"]));
                                 }
-                                oRow["nShippingTotal"] = nShippingCost;
+                                nShippingCost = nShippingCost + ((multiplier / overageUnit) * overageRate);
+                            }
+                            oRow["nShippingTotal"] = nShippingCost;
 
-                                // TODO delete any parent relations /  or remove if allready have child
-                                string delLocation = oRow["cLocationNameShort"].ToString();
-                                if (overiddenLocations.Contains("'" + delLocation + "'") == false && sCountryList!="") {
+                            // TODO delete any parent relations /  or remove if allready have child
+                            string delLocation = oRow["cLocationNameShort"].ToString();
+                            if (overiddenLocations.Contains("'" + delLocation + "'") == false && sCountryList != "")
+                            {
                                 Int32 startPos = sCountryList.IndexOf(delLocation) + delLocation.Length + 1;
                                 Int32 endPos = sCountryList.Length - sCountryList.IndexOf(delLocation) - delLocation.Length - 1;
-                                overiddenLocations = sCountryList.Substring(startPos,endPos);
-                                }
-                            }
-                            if (overiddenLocations != "") { 
-                                foreach (DataRow oRow in oDS.Tables["Option"].Rows)
-                                {
-                                    string delLocation = oRow["cLocationNameShort"].ToString();
-                                    if (overiddenLocations.Contains("'" + delLocation + "'"))
-                                    {
-                                        oRow.Delete();
-                                    }
-                                 }
+                                overiddenLocations = sCountryList.Substring(startPos, endPos);
                             }
                         }
+                        if (overiddenLocations != "")
+                        {
+                            foreach (DataRow oRow in oDS.Tables["Option"].Rows)
+                            {
+                                string delLocation = oRow["cLocationNameShort"].ToString();
+                                if (overiddenLocations.Contains("'" + delLocation + "'"))
+                                {
+                                    oRow.Delete();
+                                }
+                            }
+                        }
+                    }
 
                     oDS.AcceptChanges();
                     return oDS;
-                       
-                    
+
+
                 }
 
                 catch (Exception ex)

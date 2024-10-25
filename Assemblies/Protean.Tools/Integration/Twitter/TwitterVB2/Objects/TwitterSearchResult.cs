@@ -32,7 +32,6 @@
 // *
 
 using System;
-using Microsoft.VisualBasic; // Install-Package Microsoft.VisualBasic
 
 namespace Protean.Tools.Integration.Twitter.TwitterVB2.Objects
 {
@@ -242,7 +241,8 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2.Objects
             if (SearchResultNode["author"] != null)
             {
                 string AuthorName = SearchResultNode["author"].ChildNodes[0].InnerText;
-                _AuthorName = Strings.Left(AuthorName, AuthorName.IndexOf(" "));
+                _AuthorName = AuthorName.Substring(0, AuthorName.IndexOf(" "));
+
                 _AuthorUrl = SearchResultNode["author"].ChildNodes[1].InnerText;
             }
 

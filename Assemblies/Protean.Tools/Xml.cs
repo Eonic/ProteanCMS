@@ -201,36 +201,32 @@ namespace Protean.Tools
 
         public static class HtmlConverter
         {
-            public static XmlDocument HtmlToXmlDoc(string shtml)
+            public static XmlDocument htmlToXmlDoc(string shtml)
             {
                 XmlDocument oXmlDoc = new XmlDocument();
-                string sProcessInfo = "HtmlToXmlDoc";
+                string sProcessInfo = "htmlToXmlDoc";
 
                 try
                 {
-                    // Remove DOCTYPE declaration
-                    string regexOfDoctype = "<!DOCTYPE[^>]*>";
+                    //shtml = Strings.Replace(shtml, "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">", "");
+                    string regexOfDoctype = "<!DOCTYPE((.|\n|\r)*?)\">";
                     shtml = Regex.Replace(shtml, regexOfDoctype, string.Empty, RegexOptions.IgnoreCase);
-
-                    // Clean up unwanted attributes
-                    shtml = shtml.Replace(" Xmlns=\"http://www.w3.org/1999/xhtml\"", "");
+                    shtml = shtml.Replace(" Xmlns = \"http://www.w3.org/1999/xhtml\"", "");
                     shtml = shtml.Replace(" xmlns=\"http://www.w3.org/1999/xhtml\"", "");
                     shtml = shtml.Replace(" Xml:lang=\"\"", "");
                     shtml = shtml.Replace(" xml:lang=\"\"", "");
 
-                    // Load the cleaned HTML into the XmlDocument
                     oXmlDoc.LoadXml(shtml);
+
                     return oXmlDoc;
                 }
                 catch (Exception ex)
                 {
-                    // Assuming OnError is a delegate/event that you have defined elsewhere
-                    OnError?.Invoke(null, new Protean.Tools.Errors.ErrorEventArgs("ModuleName", sProcessInfo, ex, ""));
+                    OnError?.Invoke(null/* TODO Change to default(_) if this is not a reference type */, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, sProcessInfo, ex, ""));
                     return null;
                 }
             }
 
-            // Assuming the OnError event is defined somewhere in your class
             public static event Action<object, Protean.Tools.Errors.ErrorEventArgs> OnError;
         }
 

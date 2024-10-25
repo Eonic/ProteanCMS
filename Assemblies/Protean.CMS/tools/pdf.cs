@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SelectPdf;
+using System;
 using System.IO;
 using System.Xml;
-using SelectPdf;
-using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace Protean.Tools
 {
@@ -17,7 +12,7 @@ namespace Protean.Tools
         public delegate void ErrorEventHandler(object sender, Protean.Tools.Errors.ErrorEventArgs e);
         private const string mcModuleName = "Protean.Tools.PDF";
 
-        public MemoryStream GetPDFstream(XmlElement xPageXml, string XsltPath, string cFontPath,string cPageSize="")
+        public MemoryStream GetPDFstream(XmlElement xPageXml, string XsltPath, string cFontPath, string cPageSize = "")
         {
             {
                 try
@@ -34,9 +29,9 @@ namespace Protean.Tools
                     if (pdfDocumentXml.ToLower().Contains("<html"))
                     {  //PDF code
                         HtmlToPdf converter = new HtmlToPdf();
-                       
+
                         //PdfCustomPageSize pageSize = PdfCustomPageSize.A4;
-                       
+
                         if (cPageSize != string.Empty)
                         {
                             if (cPageSize.ToLower() == "a4")
@@ -45,11 +40,11 @@ namespace Protean.Tools
                             }
                             else if (cPageSize.ToLower() == "a5")
                             {
-                             
+
                                 converter.Options.AutoFitWidth = HtmlToPdfPageFitMode.ShrinkOnly;
                                 converter.Options.AutoFitHeight = HtmlToPdfPageFitMode.ShrinkOnly;
                                 converter.Options.PdfPageSize = PdfPageSize.A5;
-                                
+
                                 PdfCustomPageSize pageSize = PdfCustomPageSize.A5;
                             }
                             else
@@ -181,5 +176,57 @@ namespace Protean.Tools
                 }
             }
         }
+
+
+        public class PDFThumbNail
+        {
+            public string FilePath;
+            public string newImageFilepath;
+            public short maxWidth;
+            public System.Web.HttpServerUtility goServer;
         }
+
+        public void GeneratePDFThumbNail(PDFThumbNail PDFThumbNail)
+        {
+            try
+            {
+                string cCheckServerPath = PDFThumbNail.newImageFilepath.Substring(0, PDFThumbNail.newImageFilepath.LastIndexOf("/") + 1);
+                cCheckServerPath = PDFThumbNail.goServer.MapPath(cCheckServerPath);
+                if (Directory.Exists(cCheckServerPath) == false)
+                {
+                    Directory.CreateDirectory(cCheckServerPath);
+                }
+
+                var LayerBuilder = new SoundInTheory.DynamicImage.Fluent.PdfLayerBuilder().SourceFileName(PDFThumbNail.goServer.MapPath(PDFThumbNail.FilePath)).PageNumber(1).WithFilter(SoundInTheory.DynamicImage.Fluent.FilterBuilder.Resize.ToWidth(500)).WithFilter(SoundInTheory.DynamicImage.Fluent.FilterBuilder.Resize.ToWidth(PDFThumbNail.maxWidth)).WithFilter(SoundInTheory.DynamicImage.Fluent.FilterBuilder.Border.Width(1).Fill(SoundInTheory.DynamicImage.Colors.Black));
+
+
+                var imgComp = new SoundInTheory.DynamicImage.Fluent.CompositionBuilder().WithLayer(LayerBuilder);
+                imgComp.ImageFormat(SoundInTheory.DynamicImage.DynamicImageFormat.Png);
+                imgComp.SaveTo(PDFThumbNail.goServer.MapPath(PDFThumbNail.newImageFilepath));
+                imgComp = null;
+                LayerBuilder = null;
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Error 8032 in PDFThumbNail: {ex.Message}");
+            }
+        }
+
+        public void Close()
+        {
+            // closes
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Close", ex, ""));
+            }
+            finally
+            {
+
+            }
+        }
+    }
 }
