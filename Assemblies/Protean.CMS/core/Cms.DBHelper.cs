@@ -8140,7 +8140,7 @@ namespace Protean
                                     {
                                         myWeb.moDbHelper.logActivity(ActivityType.LogonInvalidPassword, nUserId, 0L, 0L, cPasswordForm, cForiegnRef: "");
 
-                                        string sSql2 = "select count(nActivityKey) from tblActivityLog where nActivityType=" + ((int)ActivityType.LogonInvalidPassword).ToString() + " and nUserDirId = " + nUserId;
+                                        string sSql2 = "select count(nActivityKey) from tblActivityLog where nActivityType=" + Convert.ToString((int)dbHelper.ActivityType.LogonInvalidPassword) + " and nUserDirId = " + nUserId;
                                         int earlierTries = Conversions.ToInteger(ExeProcessSqlScalar(sSql2));
                                         if (earlierTries >= nRetrys)
                                         {
@@ -8208,7 +8208,7 @@ namespace Protean
                         if (Information.IsNumeric(sReturn))
                         {
                             // delete failed logon attempts record
-                            string sSql2 = "delete from tblActivityLog where nActivityType = " + ((int)ActivityType.LogonInvalidPassword).ToString() + " and nUserDirId=" + sReturn;
+                            string sSql2 = "delete from tblActivityLog where nActivityType = " + Convert.ToString((int)dbHelper.ActivityType.LogonInvalidPassword) + " and nUserDirId=" + sReturn;
                             myWeb.moDbHelper.ExeProcessSql(sSql2);
 
                             // check mailinglist sync
