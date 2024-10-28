@@ -354,7 +354,6 @@
           <div class="modal-body">
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
             <div id="Search" class="search-wrapper">
-
               <form method="post" action="/information/search" id="searchInput" class="input-group">
                 <label for="searchString" class="visually-hidden">Search</label>
                 <input type="text" class="form-control CTAsearch" name="searchString" id="searchString" value="" placeholder="Search" />

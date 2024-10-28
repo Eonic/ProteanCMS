@@ -5258,14 +5258,14 @@
 					<xsl:when test="$startPos &gt; ($noPerPage - 1)">
 						<li class="page-item previous">
 							<a class="page-link" href="{$thisURL}={$startPos - $noPerPage}" title="click here to view the previous page in sequence">
-								<span class="pager-arrow">&#8592;</span> Back
+								<i class="fa-solid fa-chevron-left">&#160;</i> Back
 							</a>
 						</li>
 					</xsl:when>
 					<xsl:otherwise>
 						<li class="page-item previous disabled">
 							<a class="page-link" href="#">
-								<span class="pager-arrow">&#8592;</span> Back
+								<i class="fa-solid fa-chevron-left">&#160;</i> Back
 							</a>
 						</li>
 					</xsl:otherwise>
@@ -5294,14 +5294,16 @@
 					<xsl:when test="$totalCount &gt; ($startPos +$noPerPage)">
 						<li class="page-item next">
 							<a class="page-link" href="{$thisURL}={$startPos+$noPerPage}" title="click here to view the next page in sequence">
-								Next <span class="pager-arrow">&#8594;</span>
+								Next <i class="fa-solid fa-chevron-right">&#160;</i>
 							</a>
 						</li>
 					</xsl:when>
 					<xsl:otherwise>
 						<li class="page-item next disabled">
-							<span class="ghosted">
-								Next <span class="pager-arrow">&#8594;</span>
+							<span class="page-link">
+								Next <span class="pager-arrow">
+									<i class="fa-solid fa-chevron-right">&#160;</i>
+								</span>
 							</span>
 						</li>
 					</xsl:otherwise>
@@ -6073,9 +6075,11 @@
 						<xsl:text> </xsl:text>
 					</xsl:if>
 					<xsl:if test="@uploadIcon!='' and @uploadIcon!='_'">
-						<span class="upload-icon" role="img" aria-hidden="true">
-							<img src="{@uploadIcon}" alt="icon" class="center-block img-responsive" width="{@uploadIcon-w}" height="{@uploadIcon-h}"/>
-						</span>
+            <div class="center-block">
+              <span class="upload-icon" role="img" aria-hidden="true">
+                <img src="{@uploadIcon}" alt="icon" class="img-responsive" width="{@uploadIcon-w}" height="{@uploadIcon-h}"/>
+              </span>
+            </div>
 					</xsl:if>
 					<xsl:if test="@title!=''">
 						<span>
@@ -6119,9 +6123,11 @@
 						<xsl:text> </xsl:text>
 					</xsl:if>
 					<xsl:if test="@uploadIcon!='' and @uploadIcon!='_'">
-						<span class="upload-icon">
-							<img src="{@uploadIcon}" alt="icon" class="center-block img-responsive" width="{@uploadIcon-w}" height="{@uploadIcon-h}"/>
-						</span>
+            <div class="center-block">
+              <span class="upload-icon">
+                <img src="{@uploadIcon}" alt="icon" class="img-responsive" width="{@uploadIcon-w}" height="{@uploadIcon-h}"/>
+              </span>
+            </div>
 					</xsl:if>
 					<xsl:if test="@title!=''">
 						<span>

@@ -1,16 +1,13 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
 using System.Web;
-
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 
 namespace Protean
@@ -216,7 +213,10 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        transformException = ex;
+                        if (transformException is null)
+                        {
+                            transformException = ex;
+                        }
                         stdTools.returnException(ref myWeb.msException, "Protean.XmlHelper.Transform", "XSLFile.Set", ex, msXslFile, value);
                         bError = true;
                     }
@@ -500,7 +500,7 @@ namespace Protean
                 }
             }
 
-            public void Process(XmlReader xReader,ref XmlWriter xWriter)
+            public void Process(XmlReader xReader, ref XmlWriter xWriter)
             {
                 string sProcessInfo = "Processing:" + msXslFile;
                 try
@@ -920,7 +920,7 @@ namespace Protean
                     return null;
                 }
             }
-            #pragma warning restore 618
+#pragma warning restore 618
 
         }
 

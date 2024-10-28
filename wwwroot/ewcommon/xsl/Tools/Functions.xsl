@@ -1215,6 +1215,7 @@
 
     <xsl:choose>
       <xsl:when test="/Page/ContentDetail/Content">
+		 
         <xsl:apply-templates select="/Page/ContentDetail/Content" mode="contentDetailJS"/>
         <xsl:apply-templates select="/Page/Contents/Content[@type='FreeCookieConsent']" mode="contentJS"/>
       </xsl:when>

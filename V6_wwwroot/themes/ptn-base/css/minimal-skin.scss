@@ -5,6 +5,17 @@
 footer#pagefooter {
     border-top: 1px solid $grey;
 }
+.module-centred.nobox h2.title,
+h2.layout-title {
+    &:after {
+        content: '';
+        height: 2px;
+        width: 97px;
+        display: block;
+        background: $secondary;
+        margin: 0.9rem auto 0.9rem;
+    }
+}
 
 .main-nav {
     @include media-breakpoint-up($nav-breakpoint) {
@@ -41,14 +52,6 @@ footer#pagefooter {
         }
     }
 
-    .dropdown-menu {
-        border-top: 1px solid $grey;
-        border-bottom: 1px solid $grey;
-
-        @include media-breakpoint-up($nav-breakpoint) {
-            border: 1px solid $grey;
-        }
-    }
 }
 
 .header-menu-below .main-nav {

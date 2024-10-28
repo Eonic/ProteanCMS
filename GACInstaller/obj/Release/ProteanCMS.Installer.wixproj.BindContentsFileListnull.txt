@@ -27,6 +27,7 @@ Installer_Logo.jpg
 ..\packages\Microsoft.Web.Infrastructure.2.0.0\lib\net40\Microsoft.Web.Infrastructure.dll
 ..\packages\SharpZipLib.1.4.2\lib\netstandard2.0\ICSharpCode.SharpZipLib.dll
 ..\Assemblies\NonNuget\Imazen.WebP.dll
+..\Assemblies\NonNuget\iTextSharp.LGPLv2.Core.dll
 ..\packages\JavaScriptEngineSwitcher.V8.3.24.2\lib\net45\JavaScriptEngineSwitcher.V8.dll
 ..\Assemblies\NonNuget\libwebp.dll
 ..\packages\Magick.NET.Core.13.8.0\lib\netstandard20\Magick.NET.Core.dll
@@ -41,6 +42,7 @@ libraries\Newtonsoft.Json.dll
 ..\packages\PreMailer.Net.2.6.0\lib\net461\PreMailer.Net.dll
 ..\Assemblies\Protean.AppStart\bin\Release\Protean.AppStart.dll
 ..\packages\QRcoder.1.6.0\lib\net40\QRcoder.dll
+..\packages\SkiaSharp.2.88.8\lib\net462\SkiaSharp.dll
 ..\packages\System.Text.Encoding.CodePages.8.0.0\lib\netstandard2.0\System.Text.Encoding.CodePages.dll
 ..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll
 ..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll

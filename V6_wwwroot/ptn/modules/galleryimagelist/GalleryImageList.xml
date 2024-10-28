@@ -215,51 +215,32 @@
 					</group>
 					<group class="col-lg-6">
 						<select1 bind="nStepCount" appearance="full" class="form-group">
-							<label>Articles per page</label>
+							<label>Images per page</label>
 							<item>
 								<label>All</label>
 								<value>0</value>
-								<toggle case="cStepCounter_1" event="DOMActivate"/>
 							</item>
 							<item>
 								<label>3</label>
 								<value>3</value>
-								<toggle case="cStepCounter_2" event="DOMActivate"/>
 							</item>
 							<item>
 								<label>5</label>
 								<value>5</value>
-								<toggle case="cStepCounter_3" event="DOMActivate"/>
 							</item>
 							<item>
 								<label>10</label>
 								<value>10</value>
-								<toggle case="cStepCounter_4" event="DOMActivate"/>
 							</item>
 							<item>
 								<label>25</label>
 								<value>25</value>
-								<toggle case="cStepCounter_5" event="DOMActivate"/>
 							</item>
-							<item bindTo="cStepBy">
-								<input bind="cStepBy" class="hidden" />
+							<item>
 								<label>Other</label>
-								<value>Other</value>
-								<toggle case="cStepCounter_6" event="DOMActivate" />
+								<value></value>
 							</item>
 						</select1>
-						<switch class="disable">
-							<case id="cStepCounter_1"/>
-							<case id="cStepCounter_2"/>
-							<case id="cStepCounter_3"/>
-							<case id="cStepCounter_4"/>
-							<case id="cStepCounter_5"/>
-							<case id="cStepCounter_6">
-								<input bind="nStepCount" class="vshort">
-									<label>Other Stepper Value</label>
-								</input>
-							</case>
-						</switch>
 					</group>
 
 				</group>
@@ -305,7 +286,7 @@
 							</item>
 						</select1>
 					</group>
-					<!--<group class="col-lg-4">
+					<group class="col-lg-4">
 						<select1 bind="cLightbox" appearance="full" class="vshort inline-items">
 							<label>Lightbox</label>
 							<item>
@@ -317,7 +298,7 @@
 								<value>false</value>
 							</item>
 						</select1>
-					</group>-->
+					</group>
 					<group class="col-md-3">
 						<select1 bind="alignment">
 							<label>
