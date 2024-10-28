@@ -840,6 +840,7 @@
 			<xsl:apply-templates select="value/node()" mode="cleanXhtml"/>
 			<xsl:text> </xsl:text>
 		</textarea>
+		
 		<!--xsl:apply-templates select="." mode="tinymceConfig"/-->
 	</xsl:template>
 

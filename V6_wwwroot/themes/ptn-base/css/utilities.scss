@@ -89,12 +89,19 @@
         }
     }
 }
-.two-col-text {
-    column-count: 2;
-}
+@include media-breakpoint-up(md) {
+    .two-col-text {
+        column-count: 2;
+    }
 
-.three-col-text {
-    column-count: 3;
+    .three-col-text {
+        column-count: 3;
+    }
+}
+.match-content-height {
+    > div > div:not(.ptn-edit) {
+        height: calc(100% - $grid-gutter-height);
+    }
 }
 /*############### BUTTONS AND LINKS #################*/
 .skip {

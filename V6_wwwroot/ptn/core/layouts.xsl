@@ -1352,9 +1352,9 @@
             <xsl:value-of select="@position"/>
             <xsl:if test="@modAnim and @modAnim!=''">
               <xsl:text> moduleAnimate-invisible</xsl:text>
-            </xsl:if><!--
+            </xsl:if>
             <xsl:apply-templates select="." mode="hideScreens" />
-            <xsl:apply-templates select="." mode="marginBelow" />-->
+            <xsl:apply-templates select="." mode="marginBelow" />
             <!--<xsl:apply-templates select="." mode="themeModuleExtras"/>-->
           </xsl:attribute>
           <xsl:if test="@maxWidth!=''">

@@ -167,18 +167,13 @@ namespace Protean
         private string DocPDF()
         {
             // PerfMon.Log("FileDoc", "DocPDF")
-            Tools.IFilter.DefaultParser oIF;
             try
-            {
-                oIF = new Tools.IFilter.DefaultParser();
-                string cReturn = Tools.IFilter.DefaultParser.Extract(cPath);
-                oIF = null;
+            {          
+                string cReturn = Protean.Tools.FileHelper.GetPDFText(cPath); 
                 return cReturn;
             }
             catch (Exception)
             {
-
-                oIF = null;
                 return "";
             }
         }

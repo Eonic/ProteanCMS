@@ -40,7 +40,8 @@
 
     .socialLinks.iconset-plain, .socialLinks.iconset-default {
         a {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
+            padding:0 10px 10px;
         }
     }
 
@@ -55,12 +56,6 @@
 
         &.align-center {
             text-align: center;
-        }
-    }
-
-    .socialLinks {
-        i {
-            font-size: 2.5rem;
         }
     }
 
