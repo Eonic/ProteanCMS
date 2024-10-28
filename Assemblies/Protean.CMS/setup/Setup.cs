@@ -608,6 +608,12 @@ namespace Protean
             AddResponse("<p><i class=\"fa fa-check text-success\">&#160;</i>" + testResponse + "</p>");
             testCount = testCount + 1;
 
+
+            testResponse = oTests.TestReadPDF();
+
+            AddResponse("<p><i class=\"fa fa-check text-success\">&#160;</i>" + testResponse + "</p>");
+            testCount = testCount + 1;
+
             // 6 test the ability to update config settins
             // 7 test the ability to write to the index folder location
 

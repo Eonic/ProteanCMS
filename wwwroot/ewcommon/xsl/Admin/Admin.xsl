@@ -163,34 +163,34 @@
 
 	</xsl:template>
 
-  <xsl:template match="Page" mode="adminJs">
+	<xsl:template match="Page" mode="adminJs">
 
-    <xsl:if test="ContentDetail/Content[@type='xform']/descendant::submit[contains(@class,'getGeocodeButton')]">
-      <script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false&amp;key={$GoogleAPIKey}">&#160;</script>
-    </xsl:if>
-    <xsl:call-template name="bundle-js">
-      <xsl:with-param name="comma-separated-files">
-        <xsl:text>~/ewcommon/js/jQuery/jsScrollPane/jquery.jscrollpane.min.js,</xsl:text>
-        <xsl:text>~/ewcommon/js/jQuery/jsScrollPane/jquery.mousewheel.js,</xsl:text>
-        <xsl:text>~/ewcommon/js/codemirror/codemirror.js,</xsl:text>
-        <xsl:text>~/ewcommon/js/jQuery/jquery.magnific-popup.min.js,</xsl:text>
-        <xsl:text>~/ewcommon/js/codemirror/mirrorframe.js,</xsl:text>
-		<xsl:text>~/ewcommon/js/vuejs/vue.min.js,</xsl:text>
-		<xsl:text>~/ewcommon/js/vuejs/axios.min.js,</xsl:text>
-		<xsl:text>~/ewcommon/js/vuejs/polyfill.js,</xsl:text>
-		<xsl:text>~/ewcommon/js/vuejs/protean-vue.js,</xsl:text>
-		<xsl:text>~/ewcommon/js/ajaxtreeview/ajaxtreeview.js,</xsl:text>
-		<xsl:text>~/ewcommon/js/ewAdmin.js</xsl:text>
-      </xsl:with-param>
-      <xsl:with-param name="bundle-path">
-        <xsl:text>~/Bundles/Admin</xsl:text>
-      </xsl:with-param>
-      <xsl:with-param name="async" select="true()"/>
-    </xsl:call-template>
-    <xsl:apply-templates select="." mode="siteAdminJs"/>
-    <xsl:apply-templates select="." mode="LayoutAdminJs"/>
+		<xsl:if test="ContentDetail/Content[@type='xform']/descendant::submit[contains(@class,'getGeocodeButton')]">
+			<script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false&amp;key={$GoogleAPIKey}">&#160;</script>
+		</xsl:if>
+		<xsl:call-template name="bundle-js">
+			<xsl:with-param name="comma-separated-files">
+				<xsl:text>~/ewcommon/js/jQuery/jsScrollPane/jquery.jscrollpane.min.js,</xsl:text>
+				<xsl:text>~/ewcommon/js/jQuery/jsScrollPane/jquery.mousewheel.js,</xsl:text>
+				<xsl:text>~/ewcommon/js/codemirror/codemirror.js,</xsl:text>
+				<xsl:text>~/ewcommon/js/jQuery/jquery.magnific-popup.min.js,</xsl:text>
+				<xsl:text>~/ewcommon/js/codemirror/mirrorframe.js,</xsl:text>
+				<xsl:text>~/ewcommon/js/vuejs/vue.min.js,</xsl:text>
+				<xsl:text>~/ewcommon/js/vuejs/axios.min.js,</xsl:text>
+				<xsl:text>~/ewcommon/js/vuejs/polyfill.js,</xsl:text>
+				<xsl:text>~/ewcommon/js/vuejs/protean-vue.js,</xsl:text>
+				<xsl:text>~/ewcommon/js/ajaxtreeview/ajaxtreeview.js,</xsl:text>
+				<xsl:text>~/ewcommon/js/ewAdmin.js</xsl:text>
+			</xsl:with-param>
+			<xsl:with-param name="bundle-path">
+				<xsl:text>~/Bundles/Admin</xsl:text>
+			</xsl:with-param>
+			<xsl:with-param name="async" select="true()"/>
+		</xsl:call-template>
+		<xsl:apply-templates select="." mode="siteAdminJs"/>
+		<xsl:apply-templates select="." mode="LayoutAdminJs"/>
 
-  </xsl:template>
+	</xsl:template>
 
 	<xsl:template match="Page" mode="LayoutAdminJs"></xsl:template>
 
@@ -221,15 +221,15 @@
 		<script type="text/javascript" src="/ewcommon/js/jQuery/jsScrollPane/jquery.jscrollpane.min.js">&#160;</script>
 		<script type="text/javascript" src="/ewcommon/js/jQuery/jsScrollPane/jquery.mousewheel.js">&#160;</script>
 
-    <xsl:if test="@cssFramework!='bs3'">
-      <script type="text/javascript" src="/ewcommon/js/jQuery/jquery.magnific-popup.min.js">&#160;</script>
-    </xsl:if>
-	<script type="text/javascript" src="/ewcommon/js/ajaxtreeview/ajaxtreeview.js">&#160;</script>
-    <script type="text/javascript" src="/ewcommon/js/ewAdmin.js">&#160;</script>
-    <!--level: <xsl:value-of select="$menuLevelDepth"/>-->
+		<xsl:if test="@cssFramework!='bs3'">
+			<script type="text/javascript" src="/ewcommon/js/jQuery/jquery.magnific-popup.min.js">&#160;</script>
+		</xsl:if>
+		<script type="text/javascript" src="/ewcommon/js/ajaxtreeview/ajaxtreeview.js">&#160;</script>
+		<script type="text/javascript" src="/ewcommon/js/ewAdmin.js">&#160;</script>
+		<!--level: <xsl:value-of select="$menuLevelDepth"/>-->
 
 		<xsl:apply-templates select="." mode="LayoutAdminJs"/>
-<!-- this gets called elsewhere
+		<!-- this gets called elsewhere
 		<xsl:apply-templates select="." mode="xform_control_scripts"/>
 -->
 
@@ -296,11 +296,11 @@
 			<xsl:if test="/Page/@modalAlert!=''">
 				<script>
 					addEventListener("DOMContentLoaded", (event) => {
-						showAdminAlert("<xsl:value-of select="@modalAlert"/>")
+					showAdminAlert("<xsl:value-of select="@modalAlert"/>")
 					});
 				</script>
 			</xsl:if>
-			
+
 			<iframe id="keepalive" src="/ewCommon/tools/keepalive.ashx" frameborder="0" width="0" height="0" xmlns:ew="urn:ew">Keep Alive frame</iframe>
 		</body>
 	</xsl:template>
@@ -4642,11 +4642,11 @@
 					<tr>
 						<th colspan="3">Meta Tags - Hidden information for search engines.</th>
 					</tr>
-          <xsl:call-template name="editNamedContent">
-            <xsl:with-param name="desc">Canonical Tag</xsl:with-param>
-            <xsl:with-param name="name">Canonical Tag</xsl:with-param>
-            <xsl:with-param name="type">PlainText</xsl:with-param>
-          </xsl:call-template>
+					<xsl:call-template name="editNamedContent">
+						<xsl:with-param name="desc">Canonical Tag</xsl:with-param>
+						<xsl:with-param name="name">Canonical Tag</xsl:with-param>
+						<xsl:with-param name="type">PlainText</xsl:with-param>
+					</xsl:call-template>
 					<xsl:call-template name="editNamedContent">
 						<xsl:with-param name="desc">Page Description</xsl:with-param>
 						<xsl:with-param name="name">MetaDescription</xsl:with-param>
@@ -5184,15 +5184,15 @@
 
 			<div id="adminLayout" class="panel-body row">
 
-        <div id="MenuTree" class="list-group col-md-3 col-sm-4" data-lib-type="{@layout}" data-target-form="{$page/Request/*/Item[@name='targetForm']/node()}" data-target-field="{$page/Request/*/Item[@name='targetField']/node()}" data-target-class="{$page/Request/*/Item[@name='targetClass']/node()}">
-		 	<xsl:if test="$page/Request/*/Item[@name='multiple']/node()='true'">
-				<xsl:attribute name="data-multiple">true</xsl:attribute>
-			</xsl:if>
-			<xsl:apply-templates select="ContentDetail/folder" mode="FolderTree">
-            <xsl:with-param name="level">1</xsl:with-param>
-          </xsl:apply-templates>
-		
-        </div>
+				<div id="MenuTree" class="list-group col-md-3 col-sm-4" data-lib-type="{@layout}" data-target-form="{$page/Request/*/Item[@name='targetForm']/node()}" data-target-field="{$page/Request/*/Item[@name='targetField']/node()}" data-target-class="{$page/Request/*/Item[@name='targetClass']/node()}">
+					<xsl:if test="$page/Request/*/Item[@name='multiple']/node()='true'">
+						<xsl:attribute name="data-multiple">true</xsl:attribute>
+					</xsl:if>
+					<xsl:apply-templates select="ContentDetail/folder" mode="FolderTree">
+						<xsl:with-param name="level">1</xsl:with-param>
+					</xsl:apply-templates>
+
+				</div>
 
 				<div class="col-md-9 col-sm-8 ewXform">
 					<xsl:for-each select="descendant-or-self::folder[@active='true']">
@@ -5311,22 +5311,22 @@
 		</div>
 	</xsl:template>
 
-  <xsl:template match="Page[@ewCmd='EditContent' or @ewCmd='AddContent' or @ewCmd='EditPage' or @ewCmd='AddPage' or @ewCmd='AddModule'  or @ewCmd='EditMailContent' or @ewCmd='AddMailModule' or @ewCmd='WebSettings']" mode="LayoutAdminJs">
-    <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-    <script src="/ewcommon/js/jQuery/fileUploader/loadimage/load-image.all.min.js">/* */</script>
-    <!-- The Canvas to Blob plugin is included for image resizing functionality -->
-    <script src="/ewcommon/js/jQuery/fileUploader/loadimage/vendor/canvas-to-blob.js">/* */</script>
-    <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-    <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.iframe-transport.js">/* */</script>
-    <!-- The basic File Upload plugin -->
-    <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload.js">/* */</script>
-    <!-- The File Upload processing plugin -->
-    <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js">/* */</script>
-    <!-- The File Upload image preview & resize plugin -->
-    <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">/* */</script>
-    <!-- The Image Lazy load plugin-->
-    <script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">/* */</script> 
-  </xsl:template>
+	<xsl:template match="Page[@ewCmd='EditContent' or @ewCmd='AddContent' or @ewCmd='EditPage' or @ewCmd='AddPage' or @ewCmd='AddModule'  or @ewCmd='EditMailContent' or @ewCmd='AddMailModule' or @ewCmd='WebSettings']" mode="LayoutAdminJs">
+		<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+		<script src="/ewcommon/js/jQuery/fileUploader/loadimage/load-image.all.min.js">/* */</script>
+		<!-- The Canvas to Blob plugin is included for image resizing functionality -->
+		<script src="/ewcommon/js/jQuery/fileUploader/loadimage/vendor/canvas-to-blob.js">/* */</script>
+		<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.iframe-transport.js">/* */</script>
+		<!-- The basic File Upload plugin -->
+		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload.js">/* */</script>
+		<!-- The File Upload processing plugin -->
+		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js">/* */</script>
+		<!-- The File Upload image preview & resize plugin -->
+		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">/* */</script>
+		<!-- The Image Lazy load plugin-->
+		<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">/* */</script>
+	</xsl:template>
 
 	<xsl:template match="Page[@layout='ImageLib' or @layout='DocsLib' or @layout='MediaLib']" mode="LayoutAdminJs">
 
@@ -5404,8 +5404,8 @@
 			<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">/* */</script>
 		</xsl:if>
 
-		<script>		
-		    <!--Remove extra backdrop div from body-->
+		<script>
+			<!--Remove extra backdrop div from body-->
 			<!--if($('.modal-backdrop').length!==0){
 				$(".modal-backdrop").remove();
 			}-->
@@ -5440,78 +5440,74 @@
 			<!--$('#files').prepend(newItem);-->
 			var newfilename = "";
 			var changedfilename ="";
-			<!--var dataMsg = 'Filename=' + filename;-->			
+			<!--var dataMsg = 'Filename=' + filename;-->
 
 			var DataUrl = '/ewapi/Cms.Admin/GetExistsFileName';
 			$.ajax({
-				url: DataUrl,
-				data: '',
-				type: 'GET',
-				success: function (response) {
-					newfilename = response;					
-					if(newfilename!="")
-					{
-						$("#oldfilename").html(file.name);
-						
-						if(newfilename.indexOf('true') != -1)
-						{ 					     	
-							const dataTransfer = new DataTransfer();							
-							dataTransfer.items.add(file);
-							existsFile.files = dataTransfer.files
-							var arr = newfilename.split(',');
-							var extension = arr[0].substring(arr[0].length - 3);							
-							$("#changeFilename").modal("show");
-							$("#txtfilename").val(arr[0]);	
-							$("#cleanFilename").val(arr[1]);	
-							changedfilename = arr[0];
-							file = new File([file.name], changedfilename);
-						}
-						if(changedfilename == "")
-						{
-							file = new File([file.name], newfilename);
-						}
-						
-						<xsl:apply-templates select="." mode="newItemScript"/>
-						filename = "/" + filename + "/g";
-						<!--newItem = newItem.replace(eval(filename), changedfilename)-->
-						if(changedfilename == "")
-						{
-							$('#files').prepend(newItem);
-							$('#files .item-image .panel').prepareLibImages();	
-						}						
-						$("#divnewfileupdate").html(newItem);
-						
-						$("[data-toggle=popover]").popover({
-								html: true,
-								container: '#files',
-								trigger: 'hover',
-								viewport: '#files',
-								content: function() {
-									return $(this).prev('.popoverContent').html();
-								}
-						});
-						
-						if ($('.pickImageModal').exists()) {
-							$('.pickImageModal').find('a[data-toggle!="popover"]').click(function(ev) {
-								ev.preventDefault();					
-								$('.modal-dialog').addClass('loading')
-								$('.modal-body').html('<xsl:text disable-output-escaping="yes">&lt;</xsl:text>p class="text-center"<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>h4<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>i class="fa fa-cog fa-spin fa-2x fa-fw"<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/i<xsl:text disable-output-escaping="yes">&gt;</xsl:text>Loading ...<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/h4<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/p<xsl:text disable-output-escaping="yes">&gt;</xsl:text>');
-								var target = $(this).attr("href");
-								// load the url and show modal on success								
-								var currentModal = $(".pickImageModal:visible");
-								console.log(currentModal);
-								currentModal.load(target, function() {
-									$('.modal-dialog').removeClass('loading')
-									currentModal.modal("show");	
-									$(".modal-backdrop").remove()
-						
-								});
-							});
-						};
-					}
-				}
+			url: DataUrl,
+			data: '',
+			type: 'GET',
+			success: function (response) {
+			newfilename = response;
+			if(newfilename!="")
+			{
+			$("#oldfilename").html(file.name);
+			<!--alert(newfilename);-->
+			if(newfilename.indexOf('true') != -1)
+			{
+			const dataTransfer = new DataTransfer();
+			dataTransfer.items.add(file);
+			existsFile.files = dataTransfer.files
+			var arr = newfilename.split(',');
+			var extension = arr[0].substring(arr[0].length - 3);
+			$("#changeFilename").modal("show");
+			$("#txtfilename").val(arr[0]);
+			$("#cleanFilename").val(arr[1]);
+			changedfilename = arr[0];
+			file = new File([file.name], changedfilename);
+			}
+
+			<xsl:apply-templates select="." mode="newItemScript"/>
+			filename = "/" + filename + "/g";
+			<!--newItem = newItem.replace(eval(filename), changedfilename)-->
+			if(changedfilename == "")
+			{
+			$('#files').prepend(newItem);
+			$('#files .item-image .panel').prepareLibImages();
+			}
+			$("#divnewfileupdate").html(newItem);
+
+			$("[data-toggle=popover]").popover({
+			html: true,
+			container: '#files',
+			trigger: 'hover',
+			viewport: '#files',
+			content: function() {
+			return $(this).prev('.popoverContent').html();
+			}
 			});
-			
+
+			if ($('.pickImageModal').exists()) {
+			$('.pickImageModal').find('a[data-toggle!="popover"]').click(function(ev) {
+			ev.preventDefault();
+			$('.modal-dialog').addClass('loading')
+			$('.modal-body').html('<xsl:text disable-output-escaping="yes">&lt;</xsl:text>p class="text-center"<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>h4<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>i class="fa fa-cog fa-spin fa-2x fa-fw"<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/i<xsl:text disable-output-escaping="yes">&gt;</xsl:text>Loading ...<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/h4<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/p<xsl:text disable-output-escaping="yes">&gt;</xsl:text>');
+			var target = $(this).attr("href");
+			// load the url and show modal on success
+			var currentModal = $(".pickImageModal:visible");
+			console.log(currentModal);
+			currentModal.load(target, function() {
+			$('.modal-dialog').removeClass('loading')
+			currentModal.modal("show");
+			$(".modal-backdrop").remove()
+
+			});
+			});
+			};
+			}
+			}
+			});
+
 			});
 			},
 			progressall: function (e, data) {
@@ -5546,11 +5542,12 @@
 									<span id="oldfilename">&#160;</span>
 								</b> already exists, rename or overwrite?
 							</p>
-							<div class="form-group">								
+							<div class="form-group">
 								<label for="txtfilename">Rename file to </label>
-								<input type="text" id="txtfilename" value="" class="textbox form-control"/><br/>
-								<!--<input type="file" name="postedFile" id="postedFile" class="hidden"/>-->	
-							     <input type="file" name="existsFile" id="existsFile" class="hidden"/>	
+								<input type="text" id="txtfilename" value="" class="textbox form-control"/>
+								<br/>
+								<!--<input type="file" name="postedFile" id="postedFile" class="hidden"/>-->
+								<input type="file" name="existsFile" id="existsFile" class="hidden"/>
 							</div>
 						</div>
 						<div id="divnewfileupdate" class="hidden"></div>
@@ -5578,9 +5575,9 @@
 
 
 	<xsl:template match="Page[@layout='ImageLib']" mode="newItemScript">
-      
+
 		var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&amp;0x3|0x8;return v.toString(16);});
-		
+
 		<xsl:text disable-output-escaping="yes">var newItem=</xsl:text>'<xsl:text disable-output-escaping="yes">&lt;</xsl:text>div class="item item-image col-md-2 col-sm-4"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
 		<xsl:text disable-output-escaping="yes">&lt;</xsl:text>div class="panel"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
 		<xsl:text disable-output-escaping="yes">&lt;</xsl:text>div class="image-thumbnail"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
@@ -5740,7 +5737,7 @@
 						</div>
 						<div class="img-description">
 							<span class="image-description-name">
-								<xsl:value-of select="@name"/>								
+								<xsl:value-of select="@name"/>
 							</span>
 							<xsl:choose>
 								<xsl:when test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.tif'  or  @Extension='.tiff'">
@@ -5918,67 +5915,68 @@
 		</table>
 	</xsl:template>
 
-  <xsl:template match="folder" mode="FolderTree">
-    <xsl:param name="level"/>
-	  <xsl:variable name="contentType">
-		  <xsl:if test="/Page/Request/QueryString/Item[@name='popup']/node()='true'">
-			  <xsl:text>contentType=popup&amp;</xsl:text>
-		  </xsl:if>
-	   <xsl:if test="/Page/Request/QueryString/Item[@name='multiple']/node()='true'">
-			  <xsl:text>multiple=true&amp;</xsl:text>
-		  </xsl:if>
-	  </xsl:variable>
-	  <xsl:variable name="fld">
-		  <xsl:call-template name="url-encode">
-			  <xsl:with-param name="str">
-				  <xsl:value-of select="@path"/>
-			  </xsl:with-param>
-		  </xsl:call-template>
-	  </xsl:variable>
-    <li id="node{translate(@path,'\','~')}" data-tree-level="{$level}" data-tree-parent="{translate(parent::folder/@path,'\','~')}">
-      <xsl:attribute name="class">
-        <xsl:text>list-group-item level-</xsl:text>
-        <xsl:value-of select="$level"/>
-        <xsl:if test="@active='true'">
-          <xsl:text> active collapsable</xsl:text>
-        </xsl:if>
-		<xsl:if test="folder and not(descendant-or-self::folder[@active='true'])"> expandable</xsl:if>
-      </xsl:attribute>
-      <a href="{$appPath}?{$contentType}ewCmd={/Page/@ewCmd}&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}">
-		  <xsl:if test="/Page/Request/QueryString/Item[@name='popup']/node()='true'">
-			  <xsl:attribute name="data-toggle">modal</xsl:attribute>
-			  <xsl:attribute name="data-target">#modal-<xsl:value-of select="/Page/Request/QueryString/Item[@name='targetField']/node()"/>
-		  </xsl:attribute>
-		  </xsl:if>
-        <i>
-          <xsl:attribute name="class">
-            <xsl:text>fa fa-lg</xsl:text>
-            <xsl:choose>
-              <xsl:when test="@active='true'">
-                <xsl:text> fa-folder-open-o</xsl:text>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:text> fa-folder-o</xsl:text>
-              </xsl:otherwise>
-            </xsl:choose>
-            <xsl:if test="folder"> activeParent</xsl:if>
-          </xsl:attribute>
-          &#160;
-        </i>
-        <xsl:value-of select="@name"/>
-      </a>
-    </li>
-	  <!-- STOP LOADING NODES NOT SHOWN INITIALLY TO ALLOW THEM TO BE LOADED VIA AJAX-->
-    <xsl:if test="folder">
-		<xsl:if test="descendant-or-self::folder[@active='true']">
-      <xsl:apply-templates select="folder" mode="FolderTree">
-        <xsl:with-param name="level">
-          <xsl:value-of select="$level + 1"/>
-        </xsl:with-param>
-      </xsl:apply-templates>
+	<xsl:template match="folder" mode="FolderTree">
+		<xsl:param name="level"/>
+		<xsl:variable name="contentType">
+			<xsl:if test="/Page/Request/QueryString/Item[@name='popup']/node()='true'">
+				<xsl:text>contentType=popup&amp;</xsl:text>
+			</xsl:if>
+			<xsl:if test="/Page/Request/QueryString/Item[@name='multiple']/node()='true'">
+				<xsl:text>multiple=true&amp;</xsl:text>
+			</xsl:if>
+		</xsl:variable>
+		<xsl:variable name="fld">
+			<xsl:call-template name="url-encode">
+				<xsl:with-param name="str">
+					<xsl:value-of select="@path"/>
+				</xsl:with-param>
+			</xsl:call-template>
+		</xsl:variable>
+		<li id="node{translate(@path,'\','~')}" data-tree-level="{$level}" data-tree-parent="{translate(parent::folder/@path,'\','~')}">
+			<xsl:attribute name="class">
+				<xsl:text>list-group-item level-</xsl:text>
+				<xsl:value-of select="$level"/>
+				<xsl:if test="@active='true'">
+					<xsl:text> active collapsable</xsl:text>
+				</xsl:if>
+				<xsl:if test="folder and not(descendant-or-self::folder[@active='true'])"> expandable</xsl:if>
+			</xsl:attribute>
+			<a href="{$appPath}?{$contentType}ewCmd={/Page/@ewCmd}&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}">
+				<xsl:if test="/Page/Request/QueryString/Item[@name='popup']/node()='true'">
+					<xsl:attribute name="data-toggle">modal</xsl:attribute>
+					<xsl:attribute name="data-target">
+						#modal-<xsl:value-of select="/Page/Request/QueryString/Item[@name='targetField']/node()"/>
+					</xsl:attribute>
+				</xsl:if>
+				<i>
+					<xsl:attribute name="class">
+						<xsl:text>fa fa-lg</xsl:text>
+						<xsl:choose>
+							<xsl:when test="@active='true'">
+								<xsl:text> fa-folder-open-o</xsl:text>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:text> fa-folder-o</xsl:text>
+							</xsl:otherwise>
+						</xsl:choose>
+						<xsl:if test="folder"> activeParent</xsl:if>
+					</xsl:attribute>
+					&#160;
+				</i>
+				<xsl:value-of select="@name"/>
+			</a>
+		</li>
+		<!-- STOP LOADING NODES NOT SHOWN INITIALLY TO ALLOW THEM TO BE LOADED VIA AJAX-->
+		<xsl:if test="folder">
+			<xsl:if test="descendant-or-self::folder[@active='true']">
+				<xsl:apply-templates select="folder" mode="FolderTree">
+					<xsl:with-param name="level">
+						<xsl:value-of select="$level + 1"/>
+					</xsl:with-param>
+				</xsl:apply-templates>
+			</xsl:if>
 		</xsl:if>
-    </xsl:if>
-  </xsl:template>
+	</xsl:template>
 
 	<!-- -->
 	<!--   ##################  EditPermissions - dynamically generated from menu   ##############################   -->
@@ -7620,47 +7618,47 @@
 
 												<th>Paid</th>
 												<th>Outstanding</th>
-						  <th>Due by</th>
-					  </xsl:if>
-                    <th>&#160;</th>
-                    <th>
-						<div class="checkbox checkbox-primary">
-							<input type="checkbox" class="styled select-all"/>
-							<label>All</label>
-						</div>
-                    </th>
-                  </tr>
-                  <xsl:apply-templates select="ContentDetail/Content[@type='order']" mode="ListOrders">
-                    <xsl:with-param name="startPos"  select="$startPos"/>
-                    <xsl:with-param name="itemCount" select="'100'"/>
-                  </xsl:apply-templates>
-                </tbody>
-              </table>
-                
-                  </form>
-              <div class="panel-footer">
-                <div class="pull-right">
-                  <xsl:apply-templates select="/" mode="adminStepper">
-                    <xsl:with-param name="itemCount" select="'100'"/>
-                    <xsl:with-param name="itemTotal" select="$total"/>
-                    <xsl:with-param name="startPos" select="$startPos"/>
-                    <xsl:with-param name="path" select="$queryString"/>
-                    <xsl:with-param name="itemName" select="$title"/>
-                  </xsl:apply-templates>
-                </div>
-                <div class="terminus">
-					<xsl:text> </xsl:text>
-				</div>
-              </div>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:choose>
-                <xsl:when test="/Page/Request/QueryString/Item[@name='ewCmd2']">
-                  <a href="{$appPath}?ewCmd={$ewCmd}&amp;startPos={$startPos}" class="btn btn-primary pull-right">
-                    <i class="fa fa-chevron-left">
-						<xsl:text> </xsl:text>
-					</i>&#160;Back to <xsl:value-of select="$title"/>
-                  </a>
+												<th>Due by</th>
+											</xsl:if>
+											<th>&#160;</th>
+											<th>
+												<div class="checkbox checkbox-primary">
+													<input type="checkbox" class="styled select-all"/>
+													<label>All</label>
+												</div>
+											</th>
+										</tr>
+										<xsl:apply-templates select="ContentDetail/Content[@type='order']" mode="ListOrders">
+											<xsl:with-param name="startPos"  select="$startPos"/>
+											<xsl:with-param name="itemCount" select="'100'"/>
+										</xsl:apply-templates>
+									</tbody>
+								</table>
+
+							</form>
+							<div class="panel-footer">
+								<div class="pull-right">
+									<xsl:apply-templates select="/" mode="adminStepper">
+										<xsl:with-param name="itemCount" select="'100'"/>
+										<xsl:with-param name="itemTotal" select="$total"/>
+										<xsl:with-param name="startPos" select="$startPos"/>
+										<xsl:with-param name="path" select="$queryString"/>
+										<xsl:with-param name="itemName" select="$title"/>
+									</xsl:apply-templates>
+								</div>
+								<div class="terminus">
+									<xsl:text> </xsl:text>
+								</div>
+							</div>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:choose>
+								<xsl:when test="/Page/Request/QueryString/Item[@name='ewCmd2']">
+									<a href="{$appPath}?ewCmd={$ewCmd}&amp;startPos={$startPos}" class="btn btn-primary pull-right">
+										<i class="fa fa-chevron-left">
+											<xsl:text> </xsl:text>
+										</i>&#160;Back to <xsl:value-of select="$title"/>
+									</a>
 
 									<xsl:apply-templates select="ContentDetail/ActivityLog" mode="activityReport"/>
 
@@ -7830,21 +7828,21 @@
 						<xsl:text> Send Settlement Request</xsl:text>
 					</a>
 
-		  </xsl:if>
-                
-      </td>
-      <td>
-        <xsl:if test="@statusId=6">
-			<div class="checkbox checkbox-primary">				
-                <input type="checkbox" name="id" value="{@id}" class="styled"/>
-				<label>
-					<xsl:text> </xsl:text>
-				</label>
-				</div>
-        </xsl:if>
-      </td>
-    </tr>
-  </xsl:template>
+				</xsl:if>
+
+			</td>
+			<td>
+				<xsl:if test="@statusId=6">
+					<div class="checkbox checkbox-primary">
+						<input type="checkbox" name="id" value="{@id}" class="styled"/>
+						<label>
+							<xsl:text> </xsl:text>
+						</label>
+					</div>
+				</xsl:if>
+			</td>
+		</tr>
+	</xsl:template>
 
 	<!--################################################################-->
 	<xsl:template match="Page[@layout='RefundOrder']" mode="Admin">
@@ -14056,7 +14054,7 @@
 						<div class="form-group input-containing col-md-5">
 							<div class="control-wrapper input-wrapper appearance-">
 								<input type="text" v-bind:id="'NewUrl_'+index" class="col-md-5 textbox form-control redirecttext" v-bind:value="urls.attributes.value.nodeValue" />
-                <input type="hidden"  class="col-md-5 textbox form-control hiddenNewUrlText" v-bind:value="urls.attributes.value.nodeValue" />
+								<input type="hidden"  class="col-md-5 textbox form-control hiddenNewUrlText" v-bind:value="urls.attributes.value.nodeValue" />
 							</div>
 						</div>
 						<div class="form-group trigger-group col-md-1">
@@ -14236,6 +14234,12 @@
 				</div>
 			</div>
 
+		</div>
+	</xsl:template>
+
+	<xsl:template match="Page[@layout='EmailAlert']" mode="Admin">
+		<div class="container col-md-12" id="emailAlertContainer">
+			<xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
 		</div>
 	</xsl:template>
 

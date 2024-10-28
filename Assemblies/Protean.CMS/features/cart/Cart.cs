@@ -3420,23 +3420,31 @@ namespace Protean
 
                                 // Default Shipping Country.
                                 string cDestinationCountry = moCartConfig["DefaultCountry"];
+                                Boolean bGetLowest = true;
                                 string cDestinationPostalCode = "";
                                 if (oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country") != null)
                                 {
                                     cDestinationCountry = oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country").InnerText;
                                     cDestinationPostalCode = oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/PostalCode").InnerText;
+                                  //  bGetLowest = false;
                                 }
+                                double lowestShipCost = 0;
                                 if (!string.IsNullOrEmpty(cDestinationCountry))
                                 {
                                     // Go and collect the valid shipping options available for this order
                                     int productId = 0;
+                                    
                                     var oDsShipOptions = getValidShippingOptionsDS(cDestinationCountry, cDestinationPostalCode, total, quant, weight, cPromoCode, productId);
                                     if (oDsShipOptions != null)
                                     {
                                         foreach (DataRow oRowSO in oDsShipOptions.Tables[0].Rows)
-                                        {
+                                        {                                          
+                                            
 
                                             shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"]));
+                                            if (lowestShipCost == 0) {
+                                                lowestShipCost = shipCost ;
+                                            }
 
                                             bool bCollection = false;
                                             if (!(oRowSO["bCollection"] is DBNull))
@@ -3499,8 +3507,9 @@ namespace Protean
                                                     }
                                                 }
                                             }
-                                            else if ((shipCost == -1 || Convert.ToDouble("0" + oRowSO["nShipOptCost"].ToString()) < shipCost) & bCollection == false)
+                                            else if ((shipCost == -1 || shipCost <= lowestShipCost) & bCollection == false)
                                             {
+                                                lowestShipCost = shipCost;
                                                 oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig["DefaultCountry"]);
                                                 oCartElmt.SetAttribute("shippingType", Conversions.ToString(Operators.ConcatenateObject(oRowSO["nShipOptKey"], "")));
                                                 oCartElmt.SetAttribute("shippingCost", shipCost + "");
@@ -3512,9 +3521,15 @@ namespace Protean
                                         }
                                     }
                                 }
+                                if (bGetLowest)
+                                {
+                                    shipCost = lowestShipCost;
+                                }
+
                                 if (shipCost == -1)
                                     shipCost = 0d;
                             }
+
 
                             if (Conversions.ToDouble(oCartElmt.GetAttribute("shippingType")) > 0d)
                             {

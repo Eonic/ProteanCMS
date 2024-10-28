@@ -22,11 +22,11 @@ packages/
 /V6_wwwroot/images/**
 /V6_wwwroot/ptn/Bin/**
 
-/Assemblies/Protean.CMS/bin/**
-/Assemblies/Protean.CMS/obj/**
-/Assemblies/Protean.Tools/bin/**
-/Assemblies/Protean.Tools/obj/**
-/Assemblies/Protean.Tools.UnitTests/bin/**
-/Assemblies/Protean.Tools.UnitTests/obj/**
+Assemblies/Protean.CMS/bin/**
+Assemblies/Protean.CMS/obj/**
+Assemblies/Protean.Tools/bin/**
+Assemblies/Protean.Tools/obj/**
+Assemblies/Protean.Tools.UnitTests/bin/**
+Assemblies/Protean.Tools.UnitTests/obj/**
 
 

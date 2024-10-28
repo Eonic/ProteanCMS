@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Content type="xform" name="EmailAlwert">
+	<model class="ewXform">
+		<instance>			
+				<emailer>
+					<oBodyXML>
+						<Items subjectLine="">
+							<Name />
+							<Message>
+							</Message>
+						</Items>
+					</oBodyXML>
+					<xsltPath>xsl/email/SubscriptionAlert.xsl</xsltPath>
+					<fromName></fromName>
+					<fromEmail></fromEmail>
+					<recipientName></recipientName>
+					<recipientEmail></recipientEmail>
+					<ccRecipientName></ccRecipientName>
+					<ccRecipient></ccRecipient>
+					<bccRecipientName></bccRecipientName>
+					<bccRecipient></bccRecipient>
+					<SubjectLine></SubjectLine>
+				</emailer>
+		</instance>
+		<submission method="post" id="AlertEmail" />
+		<bind id="AlertEmail" nodeset="emailer">
+			<bind id="RecordType" nodeset="RecordType" required="false()" type="string" />	
+			<bind id="recipientName" nodeset="recipientName" required="false()" type="string" />
+			<bind id="recipientEmail" nodeset="recipientEmail" required="false()" type="string" />
+			<bind id="ccRecipientName" nodeset="ccRecipientName" required="false()" type="string" />
+			<bind id="ccRecipient" nodeset="ccRecipient" required="false()" type="string" />
+			<bind id="bccRecipientName" nodeset="bccRecipientName" required="false()" type="string" />
+			<bind id="bccRecipient" nodeset="bccRecipient" required="false()" type="string" />
+			<bind id="fromName" nodeset="fromName" required="false()" type="string" />
+			<bind id="fromEmail" nodeset="fromEmail" required="false()" type="string" />
+			<bind id="oBodyXML" nodeset="oBodyXML/Items">
+					<bind id="Message" nodeset="Message" required="false()" type="string" />
+				</bind>
+				<bind id="Subject" nodeset="SubjectLine" required="false()" type="string" />
+		</bind>
+	</model>
+	<group ref="AlertEmail">
+		<group class="ContentColumn1">
+			<label>Email To User</label>
+			<group ref="Content" class="Content">
+				<input bind="RecordType" class="hidden"></input>
+				<input bind="id" class="hidden"></input>
+				<input bind="xFormName"  class="hidden"></input>
+
+				<group class="row">
+					<input bind="recipientName" class="readonly col-md-6">
+						<label>Recipient Name</label>
+					</input>
+					<input bind="recipientEmail" class="required col-md-6">
+						<label>Email</label>
+						<label id="lblerrormessage" class="hidden">Please Enter Email First</label>
+						<label id="lblinvalidemail" class="hidden">Email-id is invalid</label>
+					</input>
+				</group>
+				<group class="row">
+					<input bind="ccRecipientName" class="readonly col-md-6">
+						<label>CC Recipient Name</label>
+					</input>
+					<input bind="ccRecipient" class="required col-md-6">
+						<label>CC Email</label>
+						<label id="lblerrormessage" class="hidden">Please Enter Email First</label>
+						<label id="lblinvalidemail" class="hidden">Email-id is invalid</label>
+					</input>
+				</group>
+				<group class="row">
+					<input bind="bccRecipientName" class="readonly col-md-6">
+						<label>BCC Recipient Name</label>
+					</input>
+					<input bind="bccRecipient" class="required col-md-6">
+						<label>BCC Email</label>
+						<label id="lblerrormessage" class="hidden">Please Enter Email First</label>
+						<label id="lblinvalidemail" class="hidden">Email-id is invalid</label>
+					</input>
+				</group>
+				<group class="row">
+					<input bind="fromName" class="readonly col-md-6">
+						<label>From Name</label>
+					</input>
+					<input bind="fromEmail" class="required col-md-6">
+						<label>From Email</label>
+						<label id="lblerrormessage" class="hidden">Please Enter Email First</label>
+						<label id="lblinvalidemail" class="hidden">Email-id is invalid</label>
+					</input>
+				</group>
+				<input bind="Subject" class="required">
+					<label>Subject</label>
+				</input>			
+				<textarea bind="Message" class="textarea xhtml" rows="20">
+					<label>Message</label>
+				</textarea>
+			</group>
+		</group>
+		<submit submission="AlertEmail" ref="AlertEmail" class="principle">
+			<label>Send Email</label>
+		</submit>
+
+	</group>
+
+</Content>

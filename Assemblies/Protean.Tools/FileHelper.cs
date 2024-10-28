@@ -1,4 +1,6 @@
-﻿using System;
+﻿using iTextSharp.text.pdf;
+using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Protean.Tools
@@ -6,6 +8,47 @@ namespace Protean.Tools
 
     public class FileHelper
     {
+
+
+        public static string GetPDFText(string filePath)
+        {
+            string filestring = "";
+            try
+            {
+
+                var reader = new PdfReader(File.ReadAllBytes(filePath));
+
+                for (var pageNum = 1; pageNum <= reader.NumberOfPages; pageNum++)
+                {
+                    // Get the page content and tokenize it.
+                    var contentBytes = reader.GetPageContent(pageNum);
+                    var tokenizer = new PrTokeniser(new RandomAccessFileOrArray(contentBytes));                
+                    var stringsList = new List<string>();
+                    while (tokenizer.NextToken())
+                    {
+                        if (tokenizer.TokenType == PrTokeniser.TK_STRING)
+                        {
+                            // Extract string tokens.
+                            stringsList.Add(tokenizer.StringValue);
+                        }
+                    }
+
+                    // Print the set of string tokens, one on each line.
+                    filestring = string.Join("", stringsList);
+                }
+
+                reader.Close();
+
+                return filestring;
+            }
+
+            catch (Exception)
+            {
+                return "";
+            }
+
+        }
+
 
         public static string ReplaceIllegalChars(string filePath, string replacementChar = "-")
         {
