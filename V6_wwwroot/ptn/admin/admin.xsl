@@ -835,13 +835,13 @@
                                   <xsl:value-of select="@name"/>
                                 </h1>
                               </header>
-                              <div class="metric-body">
-                                <div class="value">
-                                  <h1 class="metric-value" v-for="result in filterResultArray('metric_{position()}')">
-                                    <b>{{result.Key}}</b>: {{result.Value}}<br/>
-                                  </h1>
-                                </div>
-                              </div>
+								<div class="metric-body">
+									<div class="btn-group-vertical">
+										<a class="btn btn-primary metric-value" href="{@url}" v-for="result in filterResultArray('metric_{position()}')">
+											{{result.Key}} <span class="badge bg-secondary">{{result.Value}}</span><br/>
+										</a>
+									</div>
+								</div>
                             </div>
                           </div>
                         </xsl:if>
@@ -6001,6 +6001,7 @@
                 </a>
               </xsl:otherwise>
             </xsl:choose>
+			  <xsl:apply-templates select="." mode="bespokeUserButtons"/>
           </span>
         </td>
       </tr>
@@ -6008,7 +6009,12 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="company" mode="list">
+
+	<xsl:template match="user" mode="bespokeUserButtons">
+
+	</xsl:template>
+
+	<xsl:template match="company" mode="list">
     <xsl:param name="startPos"/>
     <xsl:param name="noOnPage"/>
     <xsl:if test="position() > $startPos and position() &lt;= ($startPos + $noOnPage)">
