@@ -333,6 +333,7 @@
     <Compile Include="providers\filters\PageFilter.cs" />
     <Compile Include="providers\Payment.BaseProvider.cs" />
     <Compile Include="providers\filters\PriceFilter.cs" />
+    <None Include="examples\modules\exampleModule\exampleCss.scss" />
     <None Include="providers\Streaming.BaseProvider.cs" />
     <Compile Include="setup\Setup.cs" />
     <Compile Include="setup\Tests.cs" />
@@ -406,6 +407,10 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <Content Include="examples\modules\exampleModule\exampleManifest.xml" />
+    <Content Include="examples\modules\exampleModule\exampleContentType.xml" />
+    <Content Include="examples\modules\exampleModule\exampleModuleList.xml" />
+    <Content Include="examples\modules\exampleModule\exampleModuleXsl.xsl" />
     <Content Include="tools\Encryption.cs" />
     <Content Include="tools\Object.cs" />
   </ItemGroup>
