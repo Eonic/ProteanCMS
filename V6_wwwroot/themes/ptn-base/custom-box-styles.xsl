@@ -238,7 +238,8 @@
     {title: 'Justify', block: 'div', styles : {textAlign : 'justify'}, icon: 'alignjustify'}
     ]},
 
-    {title: 'Button', inline: 'a', classes: 'btn btn-custom'}
+    {title: 'Button', inline: 'a', classes: 'btn btn-custom'},
+    {title: 'Button Outline', inline: 'a', classes: 'btn btn-outline-primary'}
     ],
   </xsl:template>
 </xsl:stylesheet>
