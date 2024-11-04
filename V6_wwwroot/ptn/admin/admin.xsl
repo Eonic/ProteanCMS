@@ -820,32 +820,11 @@
               <div class="col-lg-4">
                 <div class="card card-default">
                   <div class="card-header">
-                    <h4 >Insights</h4>
+                    <h4>To Do's</h4>
                   </div>
                   <div class="card-body">
-                    <div id="insights-section">
-                      <xsl:for-each select="$page/AdminMenu/MenuItem/Module">
-                        <xsl:if test="@name != ''">
-                          <xsl:variable name="id" select="@id"/>
-                          <xsl:variable name="jsonURL" select="@jsonURL"/>
-                          <div id="metric_{position()}" class="metric" data-json-url="{$jsonURL}">
-                            <div class="metric-inner">
-                              <header class="metric-header">
-                                <h1 class="metric-title">
-                                  <xsl:value-of select="@name"/>
-                                </h1>
-                              </header>
-								<div class="metric-body">
-									<div class="btn-group-vertical">
-										<a class="btn btn-primary metric-value" href="{@url}" v-for="result in filterResultArray('metric_{position()}')">
-											{{result.Key}} <span class="badge bg-secondary">{{result.Value}}</span><br/>
-										</a>
-									</div>
-								</div>
-                            </div>
-                          </div>
-                        </xsl:if>
-                      </xsl:for-each>
+                    <div id="insights-section" class="nav flex-column ">
+						<xsl:apply-templates select="$page/AdminMenu/MenuItem/Module[@pos='todo']" mode="admin-module"/>
                     </div>
                   </div>
                 </div>
@@ -1064,7 +1043,23 @@
     </section>
   </xsl:template>
 
-  <xsl:template match="Page[@layout='SettingsDash']" mode="Admin">
+	<xsl:template match="Module" mode="admin-module">
+		unknown module Type
+	</xsl:template>
+
+	<xsl:template match="Module[@type='single-metric']" mode="admin-module">
+		<xsl:if test="@name != ''">
+			<xsl:variable name="id" select="@id"/>
+			<xsl:variable name="jsonURL" select="@jsonURL"/>
+			<div id="metric_{position()}" class="metric btn-group-vertical" data-json-url="{$jsonURL}">
+				<a class="btn btn-outline-primary metric-value" href="{@url}" v-for="result in filterResultArray('metric_{position()}')">
+					<xsl:value-of select="@name"/>&#160;&#160;<span class="badge bg-primary">{{result.Value}}</span><br/>
+				</a>
+			</div>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="Page[@layout='SettingsDash']" mode="Admin">
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-3">

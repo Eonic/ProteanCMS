@@ -728,6 +728,7 @@ if (insightsSectionElement) {
 
                 axios.post(apiUrl, inputJson)
                     .then(function (response) {
+                      //  alert(JSON.stringify(response.data));
                         //handle success.
                         let metricElement = document.getElementById(metricId);
                         Vue.set(self.resultArray, metricId, response.data);
