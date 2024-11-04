@@ -1299,46 +1299,46 @@ namespace Protean
                 }
 
 
-                public string GetPaymentSession(ref Protean.rest myApi, ref JObject jObj)
-                {
-                    try
-                    {
-                        //bool bIsAuthorized = false;
-                        //string cValidGroup = (jObj["validGroup"] != null) ? (string)jObj["validGroup"] : "";
-                        //bIsAuthorized = this.ValidateAPICall(ref myWeb, Conversions.ToString(cValidGroup));
+                //public string GetPaymentSession(ref Protean.rest myApi, ref JObject jObj)
+                //{
+                //    try
+                //    {
+                //        //bool bIsAuthorized = false;
+                //        //string cValidGroup = (jObj["validGroup"] != null) ? (string)jObj["validGroup"] : "";
+                //        //bIsAuthorized = this.ValidateAPICall(ref myWeb, Conversions.ToString(cValidGroup));
 
 
-                        //if (bIsAuthorized == false)
-                        //    return "Error -Authorization Failed";
-                        string nOrderId = (jObj["orderId"] != null) ? jObj["orderId"].ToString() : "0";
-                        decimal nAmount = (jObj["amount"] != null) ? Convert.ToDecimal(jObj["amount"]) : 0;
-                        string cProviderName = (jObj["sProviderName"] != null) ? jObj["sProviderName"].ToString() : "";
-                        var oCart = new Cart(ref myWeb);
-                        string cPaymentSession = "";
-                        string josResult = "";
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(cProviderName, "", false)))
-                        {
-                            //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, Conversions.ToString(cProviderName));
-                            Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
-                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, Conversions.ToString(cProviderName));
-                            cPaymentSession = Conversions.ToString(oPaymentProv.Activities.GetPaymentSession(nOrderId, nAmount));
-                            var xmlDoc = new XmlDocument();
-                            var xmlResponse = xmlDoc.CreateElement("Response");
-                            xmlResponse.InnerXml = "<PaymentReceiptId>" + cPaymentSession + "</PaymentReceiptId>";
-                            xmlDoc.LoadXml(xmlResponse.InnerXml.ToString());
-                            josResult = JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented);
-                            josResult = josResult.Replace("\"@", "\"_");
-                            josResult = josResult.Replace("#cdata-section", "cDataValue");
-                        }
-                        return josResult;
-                    }
-                    catch (Exception ex)
-                    {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessNewPayment", ex, ""));
-                        return "Error";
+                //        //if (bIsAuthorized == false)
+                //        //    return "Error -Authorization Failed";
+                //        string nOrderId = (jObj["orderId"] != null) ? jObj["orderId"].ToString() : "0";
+                //        decimal nAmount = (jObj["amount"] != null) ? Convert.ToDecimal(jObj["amount"]) : 0;
+                //        string cProviderName = (jObj["sProviderName"] != null) ? jObj["sProviderName"].ToString() : "";
+                //        var oCart = new Cart(ref myWeb);
+                //        string cPaymentSession = "";
+                //        string josResult = "";
+                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(cProviderName, "", false)))
+                //        {
+                //            //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, Conversions.ToString(cProviderName));
+                //            Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
+                //            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, Conversions.ToString(cProviderName));
+                //            cPaymentSession = Conversions.ToString(oPaymentProv.Activities.GetPaymentSession(nOrderId, nAmount));
+                //            var xmlDoc = new XmlDocument();
+                //            var xmlResponse = xmlDoc.CreateElement("Response");
+                //            xmlResponse.InnerXml = "<PaymentReceiptId>" + cPaymentSession + "</PaymentReceiptId>";
+                //            xmlDoc.LoadXml(xmlResponse.InnerXml.ToString());
+                //            josResult = JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented);
+                //            josResult = josResult.Replace("\"@", "\"_");
+                //            josResult = josResult.Replace("#cdata-section", "cDataValue");
+                //        }
+                //        return josResult;
+                //    }
+                //    catch (Exception ex)
+                //    {
+                //        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessNewPayment", ex, ""));
+                //        return "Error";
 
-                    }
-                }
+                //    }
+                //}
 
                 #endregion
 

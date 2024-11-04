@@ -3426,24 +3426,25 @@ namespace Protean
                                 {
                                     cDestinationCountry = oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country").InnerText;
                                     cDestinationPostalCode = oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/PostalCode").InnerText;
-                                  //  bGetLowest = false;
+                                    //  bGetLowest = false;
                                 }
                                 double lowestShipCost = 0;
                                 if (!string.IsNullOrEmpty(cDestinationCountry))
                                 {
                                     // Go and collect the valid shipping options available for this order
                                     int productId = 0;
-                                    
+
                                     var oDsShipOptions = getValidShippingOptionsDS(cDestinationCountry, cDestinationPostalCode, total, quant, weight, cPromoCode, productId);
                                     if (oDsShipOptions != null)
                                     {
                                         foreach (DataRow oRowSO in oDsShipOptions.Tables[0].Rows)
-                                        {                                          
-                                            
+                                        {
+
 
                                             shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"]));
-                                            if (lowestShipCost == 0) {
-                                                lowestShipCost = shipCost ;
+                                            if (lowestShipCost == 0)
+                                            {
+                                                lowestShipCost = shipCost;
                                             }
 
                                             bool bCollection = false;
@@ -3839,18 +3840,31 @@ namespace Protean
 
                     if (xElmtPaymentProvider != null)
                     {
-                        var oWallets = moPageXml.CreateElement("Wallets");
+                        XmlElement oWallets;
+
+                        //if (moPageXml.SelectSingleNode("Wallets") == null)
+                        //{
+                        oWallets = moPageXml.CreateElement("Wallets");
+                        //}
+                        //else
+                        //{
+                        //    oWallets = null;
+                        //}
 
 
                         foreach (XmlElement opElmt in xElmtPaymentProvider)
                         {
 
-                            Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
-                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, opElmt.GetAttribute("name"));
-                            XmlElement oWallet = oPaymentProv.Activities.GetWalletPaymentDetails(opElmt);
-                            if (oWallet != null)
+
+                            if (oWallets != null)
                             {
-                                oWallets.AppendChild(oWallets.OwnerDocument.ImportNode(oWallet, true));
+                                Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
+                                IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, opElmt.GetAttribute("name"));
+                                XmlElement oWallet = oPaymentProv.Activities.GetWalletPaymentDetails(opElmt);
+                                if (oWallet != null)
+                                {
+                                    oWallets.AppendChild(oWallets.OwnerDocument.ImportNode(oWallet, true));
+                                }
                             }
 
                         }
