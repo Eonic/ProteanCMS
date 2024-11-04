@@ -331,7 +331,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Buffers.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Memory.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Net.FtpClient.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Text.Json.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Threading.Tasks.Extensions.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Web.Optimization.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\WebActivatorEx.dll

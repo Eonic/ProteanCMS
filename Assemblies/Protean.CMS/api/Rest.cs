@@ -1,17 +1,14 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using Newtonsoft.Json;
+using Protean.Providers.Membership;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-
-
 using System.Web.Configuration;
-using AngleSharp.Io;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
-using Newtonsoft.Json;
-using Protean.Providers.Membership;
 
 namespace Protean
 {
@@ -30,7 +27,7 @@ namespace Protean
 
         public void InitialiseVariables()
         {
-            this.PerfMon.Log("API", "Open");
+            PerfMon.Log("API", "Open");
             string sProcessInfo = "";
             string cCloneContext = string.Empty;
             string rootPageIdFromConfig = string.Empty;
@@ -38,19 +35,19 @@ namespace Protean
             {
 
                 // if we access base via soap the session is not available
-                if (this.moSession != null)
+                if (moSession != null)
                 {
 
                     // below code has beem moved to membership base provider
 
                     Protean.Cms myWeb = new Cms();
                     ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
-                    IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, this.moConfig["MembershipProvider"]);
-                    this.mnUserId = Conversions.ToInteger(oMembershipProv.Activities.GetUserId(ref myWeb));
+                    IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, moConfig["MembershipProvider"]);
+                    mnUserId = Conversions.ToInteger(oMembershipProv.Activities.GetUserId(ref myWeb));
 
-                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(this.moSession["adminMode"], "true", false)))
+                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(moSession["adminMode"], "true", false)))
                     {
-                        this.mbAdminMode = true;
+                        mbAdminMode = true;
                         // moDbHelper.gbAdminMode = mbAdminMode
                     }
                 }
@@ -58,9 +55,9 @@ namespace Protean
                 // We need the userId placed into dbhelper.
                 // moDbHelper.mnUserId = mnUserId
 
-                if (this.moConfig["Debug"] != null)
+                if (moConfig["Debug"] != null)
                 {
-                    switch (Strings.LCase(this.moConfig["Debug"]) ?? "")
+                    switch (Strings.LCase(moConfig["Debug"]) ?? "")
                     {
                         case "on":
                             {
@@ -86,7 +83,7 @@ namespace Protean
             catch (Exception ex)
             {
 
-                this.OnComponentError(this, new Tools.Errors.ErrorEventArgs(this.mcModuleName, "Open", ex, sProcessInfo));
+                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "Open", ex, sProcessInfo));
 
             }
 
@@ -95,13 +92,13 @@ namespace Protean
         public virtual void JSONRequest()
         {
 
-            this.PerfMon.Log("API", "Request");
+            PerfMon.Log("API", "Request");
             string sProcessInfo = "";
             string myResponse = "";
             try
             {
 
-                string path = this.moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"];
+                string path = moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"];
 
                 if (path.Contains("?"))
                 {
@@ -116,12 +113,12 @@ namespace Protean
                 string classPath = ProviderName + ".JSONActions";
                 string assemblytype = string.Empty;
 
-                var s = this.moRequest.InputStream;
+                var s = moRequest.InputStream;
                 var sr = new StreamReader(s);
                 string jsonString = sr.ReadLine();
                 if (string.IsNullOrEmpty(jsonString))
                 {
-                    jsonString = this.moRequest["data"];
+                    jsonString = moRequest["data"];
                 }
 
                 Newtonsoft.Json.Linq.JObject jObj = null;
@@ -147,9 +144,9 @@ namespace Protean
                     }
                 }
 
-                if (this.moCtx.Request.QueryString.Count > 1)
+                if (moCtx.Request.QueryString.Count > 1)
                 {
-                    paramDictionary = moCtx.Request.QueryString.AllKeys.ToDictionary(k => k, k => this.moCtx.Request.QueryString[k]);
+                    paramDictionary = moCtx.Request.QueryString.AllKeys.ToDictionary(k => k, k => moCtx.Request.QueryString[k]);
                 }
                 // add paramDict to jObj
 
@@ -185,13 +182,14 @@ namespace Protean
                             calledType = assemblyInstance.GetType(classPath, true);
 
                         }
-                        else {
+                        else
+                        {
                             if (!gbDebug)
                             {
-                                this.moResponse.StatusCode = 400;
+                                moResponse.StatusCode = 400;
                             }
 
-                            this.moResponse.StatusCode = 200;
+                            moResponse.StatusCode = 200;
                             myResponse = "Config Section - protean/" + Strings.LCase(pnArr[0]) + "Providers Not Found";
                         }
 
@@ -199,18 +197,19 @@ namespace Protean
                     else
                     {
                         Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders");
-                        var assemblyInstance = Assembly.LoadFrom(this.goServer.MapPath(moPrvConfig.Providers[ProviderName].Parameters["path"]));
+                        var assemblyInstance = Assembly.LoadFrom(goServer.MapPath(moPrvConfig.Providers[ProviderName].Parameters["path"]));
                         // Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(ProviderName).Type)
                         classPath = moPrvConfig.Providers[ProviderName].Parameters["className"] + ".JSONActions";
                         // classPath = "JSONActions";
                         try
-                        { 
+                        {
                             calledType = assemblyInstance.GetType(classPath, true);
                         }
-                        catch {
+                        catch
+                        {
                             classPath = moPrvConfig.Providers[ProviderName].Parameters["className"] + "+JSONActions";
                             calledType = assemblyInstance.GetType(classPath, true);
-                        }                        
+                        }
                     }
                 }
                 else
@@ -254,18 +253,19 @@ namespace Protean
             {
                 if (!gbDebug)
                 {
-                    this.moResponse.StatusCode = 400;
+                    moResponse.StatusCode = 400;
                 }
-                else {
+                else
+                {
                     //useful as Azure Web Apps does not return useful error messages
-                    this.moResponse.StatusCode = 200;
+                    moResponse.StatusCode = 200;
                 }
-                this.OnComponentError(this, new Tools.Errors.Error(mcModuleName, "JSONRequest", ex, sProcessInfo, 0, null, this.moResponse.Status, this.moResponse.StatusCode, "", "", ""));
+                OnComponentError(this, new Tools.Errors.Error(mcModuleName, "JSONRequest", ex, sProcessInfo, 0, null, moResponse.Status, moResponse.StatusCode, "", "", ""));
 
                 //this.OnComponentError(this, new Tools.Errors.ErrorEventArgs(this.mcModuleName, "JSONRequest", ex, sProcessInfo));
                 // returnException(mcModuleName, "getPageHtml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
                 if (gbDebug)
-                {                 
+                {
                     myResponse = JsonConvert.SerializeObject(ex);
                 }
                 else
@@ -274,8 +274,8 @@ namespace Protean
                 }
             }
             finally
-            {                
-                this.moResponse.Write(myResponse);
+            {
+                moResponse.Write(myResponse);
                 if (gbDebug)
                 {
                     Protean.Cms myWeb = new Cms();
@@ -284,7 +284,7 @@ namespace Protean
                     myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.Custom1, 0, 0, 0, myResponse);
                 }
             }
-            this.PerfMon.Write();
+            PerfMon.Write();
         }
 
 
