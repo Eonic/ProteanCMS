@@ -3840,36 +3840,20 @@ namespace Protean
 
                     if (xElmtPaymentProvider != null)
                     {
-                        XmlElement oWallets;
-
-                        //if (moPageXml.SelectSingleNode("Wallets") == null)
-                        //{
-                        oWallets = moPageXml.CreateElement("Wallets");
-                        //}
-                        //else
-                        //{
-                        //    oWallets = null;
-                        //}
-
 
                         foreach (XmlElement opElmt in xElmtPaymentProvider)
                         {
 
-
-                            if (oWallets != null)
+                            Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
+                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, opElmt.GetAttribute("name"));
+                            XmlElement oWallets = oPaymentProv.Activities.GetWalletPaymentDetails(opElmt);
+                            //just check if wallets object is empty.
+                            if (oWallets.InnerXml != string.Empty)
                             {
-                                Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
-                                IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, opElmt.GetAttribute("name"));
-                                XmlElement oWallet = oPaymentProv.Activities.GetWalletPaymentDetails(opElmt);
-                                if (oWallet != null)
-                                {
-                                    oWallets.AppendChild(oWallets.OwnerDocument.ImportNode(oWallet, true));
-                                }
+                                oCartElmt.AppendChild(oCartElmt.OwnerDocument.ImportNode(oWallets, true));
                             }
-
                         }
-                        //just check if wallets object is empty.
-                        oCartElmt.AppendChild(oCartElmt.OwnerDocument.ImportNode(oWallets, true));
+
                     }
                     return true;
 
