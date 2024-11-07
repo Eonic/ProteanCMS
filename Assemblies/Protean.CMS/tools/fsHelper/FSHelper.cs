@@ -8,6 +8,9 @@
 // $Copyright:   Copyright (c) 2002 - 2011 Eonicweb Ltd.
 // ***********************************************************************
 
+using DelegateWrappers;
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,10 +21,6 @@ using System.Threading;
 using System.Web;
 using System.Web.Configuration;
 using System.Xml;
-using AngleSharp.Io;
-using DelegateWrappers;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 
 namespace Protean
@@ -748,7 +747,7 @@ namespace Protean
                         if (oImp.ImpersonateValidUser(goConfig["AdminAcct"], goConfig["AdminDomain"], goConfig["AdminPassword"], cInGroup: goConfig["AdminGroup"]) == false)
                         {
                             return "Server admin permissions are not configured";
-                           // break;
+                            // break;
                         }
                     }
 
@@ -899,8 +898,8 @@ namespace Protean
         {
             // PerfMon.Log("fsHelper", "SaveFile")
             WebResponse response = null;
-            Stream remoteStream = new System.IO.MemoryStream(); 
-           //StreamReader readStream;
+            Stream remoteStream = new System.IO.MemoryStream();
+            //StreamReader readStream;
             WebRequest request;
             System.Drawing.Image img = null;
             try
@@ -965,6 +964,11 @@ namespace Protean
                                         img.Save(mcStartFolder + cFolderPath + @"\" + filename, System.Drawing.Imaging.ImageFormat.Jpeg);
                                         return Strings.Replace(Strings.Replace(cFolderPath, @"..\", "/"), @"\", "/") + "/" + filename;
                                     }
+                                case "jpeg":
+                                    {
+                                        img.Save(mcStartFolder + cFolderPath + @"\" + filename, System.Drawing.Imaging.ImageFormat.Jpeg);
+                                        return Strings.Replace(Strings.Replace(cFolderPath, @"..\", "/"), @"\", "/") + "/" + filename;
+                                    }
                                 case "png":
                                     {
                                         img.Save(mcStartFolder + cFolderPath + @"\" + filename, System.Drawing.Imaging.ImageFormat.Png);
@@ -981,7 +985,7 @@ namespace Protean
                         {
                             return "this root folder does not exist:" + mcStartFolder;
                         }
-                      
+
                     }
                     response.Close();
                     remoteStream.Close();
@@ -996,7 +1000,7 @@ namespace Protean
             {
                 response = null;
                 remoteStream = null;
-               // readStream = null;
+                // readStream = null;
                 img = null;
             }
 
@@ -1099,7 +1103,7 @@ namespace Protean
 
                     var oFileStream = new FileStream(FilePath, FileMode.Open, FileAccess.Read);
                     return oFileStream;
-                  
+
                 }
 
                 catch (Exception)
@@ -1411,7 +1415,7 @@ namespace Protean
 
             try
             {
-                string combineFile= string.Empty;
+                string combineFile = string.Empty;
                 string cCleanfileName = Regex.Replace(cFilename, @"\s+", "-");
                 cCleanfileName = Regex.Replace(cCleanfileName, @"(\s+|\$|\,|\'|\£|\:|\*|&|\?|\/)", "");
                 cCleanfileName = Regex.Replace(cCleanfileName, "-{2,}", "-", RegexOptions.None);
@@ -1443,8 +1447,8 @@ namespace Protean
             if (context.Request["storageRoot"] != "" && context.Request["storageRoot"] != null)
             {
                 cFilePath = context.Request["storageRoot"].Replace(@"\", "/").Replace("\"", "");
-            } 
-            
+            }
+
             try
             {
                 if (cFilePath != null)
@@ -1513,17 +1517,17 @@ namespace Protean
                     statuses.Add(new FilesStatus(fullName.Replace(" ", "-"), Conversions.ToInteger(file.ContentLength)));
                     context.Server.MapPath("/");
                     // We will add one node in ReviewFeedback.xml form and use it instead of config key = context.Request.Form("reviewimagepath")
-                      if (!string.IsNullOrEmpty(context.Request.Form["cImageBasePath"]) && !string.IsNullOrEmpty(context.Request.Form["cImageBasePath"]))
-                        {
+                    if (!string.IsNullOrEmpty(context.Request.Form["cImageBasePath"]) && !string.IsNullOrEmpty(context.Request.Form["cImageBasePath"]))
+                    {
 
-                            cleanUploadedPaths = "/" + mcStartFolder.Replace(context.Request.Form["cImageBasePath"], "").Replace(@"\", "/") + cfileName;
+                        cleanUploadedPaths = "/" + mcStartFolder.Replace(context.Request.Form["cImageBasePath"], "").Replace(@"\", "/") + cfileName;
 
-                        }
-                        else
-                        {
-                            cleanUploadedPaths = "/" + mcStartFolder.Replace(context.Server.MapPath("/"), "").Replace(@"\", "/") + cfileName;
-                        }
-                    
+                    }
+                    else
+                    {
+                        cleanUploadedPaths = "/" + mcStartFolder.Replace(context.Server.MapPath("/"), "").Replace(@"\", "/") + cfileName;
+                    }
+
                 }
 
                 catch (Exception)
@@ -1625,8 +1629,8 @@ namespace Protean
                                             if (fileCount < 100)
                                             {
                                                 var oWebFile = new fsHelper.WebFile(fi.FullName, sVirtualPath + "/" + fi.Name, true);
-                                                fileElem.Attributes.Append(this.XmlAttribute("height", oWebFile.ExtendedProperties.Height.ToString()));
-                                                fileElem.Attributes.Append(this.XmlAttribute("width", oWebFile.ExtendedProperties.Width.ToString()));
+                                                fileElem.Attributes.Append(XmlAttribute("height", oWebFile.ExtendedProperties.Height.ToString()));
+                                                fileElem.Attributes.Append(XmlAttribute("width", oWebFile.ExtendedProperties.Width.ToString()));
                                             }
 
                                             // check and return the thumbnail path
