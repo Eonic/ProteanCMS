@@ -12040,7 +12040,7 @@
 				<div class="form-group">
 					<label for="Category" >New Category Name</label>
 
-					<input name="Category" id="Category"/>
+					<input class="form-control" name="Category" id="Category"/>
 				</div>
 				<div class="form-group">
 					<button type="submit" value="Add New Category" class="btn btn-success principle">
