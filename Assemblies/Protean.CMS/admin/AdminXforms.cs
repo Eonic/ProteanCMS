@@ -3663,6 +3663,8 @@ namespace Protean
                         else if (goConfig["cssFramework"] == "bs5")
                         {
                             cXformPath = GetContentFormPath(cContentSchemaName);
+                            if (!string.IsNullOrEmpty(AlternateFormName))
+                                cXformPath = cXformPath.Remove(cXformPath.Length - cContentSchemaName.Length) + AlternateFormName;
                         }
                         if (moRequest["filter"] == "true")
                         {
