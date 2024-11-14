@@ -37,6 +37,7 @@
       <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
       <bind id="cModuleBox" nodeset="@background" required="false()" type="string"/>
       <bind id="backgroundImage" nodeset="@backgroundImage" required="false()" type="string"/>
+      <bind id="backgroundOpacity" nodeset="@backgroundOpacity" required="false()" type="string"/>
       <bind id="backgroundPosition" nodeset="@backgroundPosition" required="false()" type="string"/>
       <bind id="bgContentPosition" nodeset="@bgContentPosition" required="false()" type="string"/>
       <bind id="backgroundVideo-mp4" nodeset="@backgroundVideo-mp4" required="false()" type="string"/>
@@ -945,6 +946,66 @@
             <label>Background Image</label>
             <value></value>
           </input>
+          <group class="row row-cols-sm-2">
+            <select1 bind="backgroundPosition" appearance="minimal">
+              <label>Background Image Position</label>
+              <item>
+                <label>None</label>
+                <value>Default</value>
+              </item>
+              <item>
+                <label>Top</label>
+                <value>center top</value>
+              </item>
+              <item>
+                <label>Centre</label>
+                <value>center center</value>
+              </item>
+            </select1>
+            <!--<select1 bind="backgroundOpacity" appearance="minimal">
+              <label>Background Image Opacity</label>
+              <item>
+                <label>10%</label>
+                <value>0.1</value>
+              </item>
+              <item>
+                <label>20%</label>
+                <value>0.2</value>
+              </item>
+              <item>
+                <label>30%</label>
+                <value>0.3</value>
+              </item>
+              <item>
+                <label>40%</label>
+                <value>0.4</value>
+              </item>
+              <item>
+                <label>50%</label>
+                <value>0.5</value>
+              </item>
+              <item>
+                <label>60%</label>
+                <value>0.6</value>
+              </item>
+              <item>
+                <label>70%</label>
+                <value>0.7</value>
+              </item>
+              <item>
+                <label>80%</label>
+                <value>0.8</value>
+              </item>
+              <item>
+                <label>90%</label>
+                <value>0.9</value>
+              </item>
+              <item>
+                <label>100%</label>
+                <value>1</value>
+              </item>
+            </select1>-->
+          </group>
           <range bind="data-stellar-background-ratio" start="0" end="30" step="1">
             <label>Background Scroll Rate</label>
           </range>
@@ -994,21 +1055,6 @@
 								</group>-->
               </case>
             </switch>
-            <select1 bind="backgroundPosition" appearance="minimal">
-              <label>Background Image Position</label>
-              <item>
-                <label>None</label>
-                <value>Default</value>
-              </item>
-              <item>
-                <label>Top</label>
-                <value>center top</value>
-              </item>
-              <item>
-                <label>Centre</label>
-                <value>center center</value>
-              </item>
-            </select1>
             <select1 bind="bgContentPosition" appearance="minimal">
               <label>Content Position</label>
               <item>

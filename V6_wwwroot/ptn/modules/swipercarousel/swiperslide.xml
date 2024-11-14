@@ -209,7 +209,7 @@
 								</item>
 							</select1>
 						</group>
-						<!--<group class="col-lg-6">
+						<group class="col-lg-6">
 							<select1 appearance="minimal" bind="bg-cover">
 								<label>Background Cover</label>
 								<item>
@@ -221,7 +221,7 @@
 									<value>full-slide</value>
 								</item>
 							</select1>
-						</group>-->
+						</group>
 
 					</group>
 					<!--<input bind="cContentImageAuthor" class="short">

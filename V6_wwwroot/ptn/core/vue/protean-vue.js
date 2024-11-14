@@ -706,9 +706,12 @@ $(document).on("click", ".btnSaveProduct", function (event) {
 
 });
 
+
+
 //Insights
 const insightsSectionElement = document.querySelector("#insights-section");
 if (insightsSectionElement) {
+
     window.insightsSection = new Vue({
         el: "#insights-section",
         data: {
@@ -719,12 +722,13 @@ if (insightsSectionElement) {
                 let self = this;
                 let inputJson = this.getParamObject(apiUrl);
                 let metricElement = document.getElementById(metricId);
-
+              
                 //add loader
                 metricElement.classList.add("metric-loader");
 
                 axios.post(apiUrl, inputJson)
                     .then(function (response) {
+                      //  alert(JSON.stringify(response.data));
                         //handle success.
                         let metricElement = document.getElementById(metricId);
                         Vue.set(self.resultArray, metricId, response.data);

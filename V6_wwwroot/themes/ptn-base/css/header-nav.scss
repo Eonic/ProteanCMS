@@ -506,7 +506,7 @@ header {
 }
 /*############### INFO NAV #################*/
 .info-nav {
-    $info-nav-spacing: 0.7rem;
+    
     margin: 0 ($header-spacing/2) - $info-nav-spacing;
 
     ul {
@@ -642,13 +642,13 @@ header {
 
 .search-btn {
     color: $navbar-light-color;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+    padding-left: $header-spacing;
+    padding-right: $header-spacing;
 
     &:hover,
     &:focus {
-        padding-left: 1rem;
-        padding-right: 1rem;
+        padding-left: $header-spacing;
+        padding-right: $header-spacing;
         color: $nav-link-hover-color;
     }
 }

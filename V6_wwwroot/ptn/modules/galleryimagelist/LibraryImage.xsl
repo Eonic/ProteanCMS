@@ -11,6 +11,7 @@
     <xsl:param name="class"/>
     <xsl:param name="heading"/>
     <xsl:param name="title"/>
+    <xsl:param name="parentId"/>
     <xsl:variable name="cropSetting">
       <xsl:choose>
         <xsl:when test="$crop='false'">
@@ -89,7 +90,7 @@
       </xsl:apply-templates>
       <xsl:choose>
         <xsl:when test="$lightbox='true'">
-          <a data-src="{Images/img[@class='detail']/@src}" data-fancybox="" class="lightbox-link">
+          <a data-src="{Images/img[@class='detail']/@src}" data-fancybox="gallery-{@parentId}" class="lightbox-link">
             <div class="thumbnail">
               <xsl:apply-templates select="." mode="displayThumbnail">
                 <xsl:with-param name="crop" select="$cropSetting" />
