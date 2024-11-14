@@ -1075,6 +1075,47 @@ div[class$="List"].module {
         }
     }
 }
+.pagination-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+
+    .pagination a {
+        color: $primary;
+        border: 0;
+
+        &.disabled {
+            color: #666;
+        }
+    }
+
+    .page-link {
+        margin: 0 3px;
+
+        &.active {
+            background: transparent;
+            border-bottom-width: 2px;
+            border-style: solid;
+        }
+    }
+
+    i {
+        font-size: 0.8rem;
+    }
+
+    .previous,
+    .next {
+        a, span {
+            border: 0;
+            background: transparent;
+        }
+    }
+
+    .pager-caption {
+        display: none;
+    }
+}
 
 /*############### DETAIL PAGES #################*/
 
