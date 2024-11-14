@@ -1561,6 +1561,18 @@ namespace Protean
 
                                 GetWalletDetails(ref oElmt);
 
+                                //if (myWeb.moSession["paymentRecieved"] != null)
+                                //{
+                                //    if (Convert.ToString(myWeb.moSession["paymentReceived"]) != String.Empty)
+                                //    {
+                                //        string sPaymentId = myWeb.moSession["paymentRecieved"].ToString();
+                                //        mnPaymentId = Int32.Parse(sPaymentId);
+                                //        myWeb.moSession["paymentRecieved"] = null;
+                                //        mnProcessId = (short)cartProcess.Complete;
+                                //        mcCartCmd = "ShowInvoice";
+                                //        goto processFlow;
+                                //    }
+                                //}
 
 
                                 //we need have another method to getWallet details
@@ -2646,88 +2658,90 @@ namespace Protean
 
                         if (!string.IsNullOrEmpty(sMessagingProvider) | !string.IsNullOrEmpty(moMailConfig["InvoiceList"]) & !string.IsNullOrEmpty(moMailConfig["QuoteList"]))
                         {
-
-                            Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
-                            IMessagingProvider oMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
-                            string xsltPath = string.Empty;
-                            if (string.IsNullOrEmpty(Email))
-                                Email = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText;
-                            if (string.IsNullOrEmpty(Name))
-                                Name = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText;
-                            if (valDict is null)
-                                valDict = new Dictionary<string, string>();
-                            foreach (XmlAttribute Attribute in oCartElmt.Attributes)
+                            if (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email") != null)
                             {
-                                if (!"errorMsg,hideDeliveryAddress,orderType,statusId,complete".Contains(Attribute.Name))
+                                Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
+                                IMessagingProvider oMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
+                                string xsltPath = string.Empty;
+                                if (string.IsNullOrEmpty(Email))
+                                    Email = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText;
+                                if (string.IsNullOrEmpty(Name))
+                                    Name = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText;
+                                if (valDict is null)
+                                    valDict = new Dictionary<string, string>();
+                                foreach (XmlAttribute Attribute in oCartElmt.Attributes)
                                 {
-                                    valDict.Add(Attribute.Name, Attribute.Value);
-                                }
-                            }
-                            string[] fullName = Name.Split(' ');
-                            string firstName = "";
-                            string lastName = "";
-                            if (fullName.Length >= 3)
-                            {
-                                firstName = fullName[1];
-                                lastName = fullName[2];
-                            }
-
-                            string ListId = "";
-                            switch (StepName ?? "")
-                            {
-                                case "Invoice":
+                                    if (!"errorMsg,hideDeliveryAddress,orderType,statusId,complete".Contains(Attribute.Name))
                                     {
-                                        ListId = moMailConfig["InvoiceList"];
-                                        xsltPath = moMailConfig["GetDictionaryForInvoiceListXsl"];
-                                        if (!string.IsNullOrEmpty(moMailConfig["QuoteList"]))
+                                        valDict.Add(Attribute.Name, Attribute.Value);
+                                    }
+                                }
+                                string[] fullName = Name.Split(' ');
+                                string firstName = "";
+                                string lastName = "";
+                                if (fullName.Length >= 3)
+                                {
+                                    firstName = fullName[1];
+                                    lastName = fullName[2];
+                                }
+
+                                string ListId = "";
+                                switch (StepName ?? "")
+                                {
+                                    case "Invoice":
                                         {
-                                            // if we have invoiced the customer we don't want to send them quote reminders
-                                            if (oMessaging.Activities != null)
+                                            ListId = moMailConfig["InvoiceList"];
+                                            xsltPath = moMailConfig["GetDictionaryForInvoiceListXsl"];
+                                            if (!string.IsNullOrEmpty(moMailConfig["QuoteList"]))
                                             {
-                                                oMessaging.Activities.RemoveFromList(moMailConfig["QuoteList"], Email);
+                                                // if we have invoiced the customer we don't want to send them quote reminders
+                                                if (oMessaging.Activities != null)
+                                                {
+                                                    oMessaging.Activities.RemoveFromList(moMailConfig["QuoteList"], Email);
+                                                }
                                             }
-                                        }
 
-                                        break;
-                                    }
-                                case "Quote":
-                                    {
-                                        ListId = moMailConfig["QuoteList"];
-                                        xsltPath = moMailConfig["GetDictionaryForQuoteListXsl"];
-                                        break;
-                                    }
-                                case "Deposit":
-                                    {
-                                        ListId = moMailConfig["DepositList"];
-                                        break;
-                                    }
-                                case "Newsletter":
-                                    {
-                                        ListId = moMailConfig["NewsletterList"];
-                                        if (!string.IsNullOrEmpty(moMailConfig["NewsletterList"]))
+                                            break;
+                                        }
+                                    case "Quote":
                                         {
-                                            oMessaging.Activities.RemoveFromList(moMailConfig["NewsletterList"].ToString(), Email);
+                                            ListId = moMailConfig["QuoteList"];
+                                            xsltPath = moMailConfig["GetDictionaryForQuoteListXsl"];
+                                            break;
                                         }
+                                    case "Deposit":
+                                        {
+                                            ListId = moMailConfig["DepositList"];
+                                            break;
+                                        }
+                                    case "Newsletter":
+                                        {
+                                            ListId = moMailConfig["NewsletterList"];
+                                            if (!string.IsNullOrEmpty(moMailConfig["NewsletterList"]))
+                                            {
+                                                oMessaging.Activities.RemoveFromList(moMailConfig["NewsletterList"].ToString(), Email);
+                                            }
 
-                                        break;
+                                            break;
+                                        }
+                                }
+                                if (!string.IsNullOrEmpty(ListId))
+                                {
+
+                                    if (!string.IsNullOrEmpty(xsltPath))
+                                    {
+                                        valDict = GetDictionaryForCampaign(xsltPath, ref oCartElmt, valDict);
                                     }
-                            }
-                            if (!string.IsNullOrEmpty(ListId))
-                            {
-
-                                if (!string.IsNullOrEmpty(xsltPath))
-                                {
-                                    valDict = GetDictionaryForCampaign(xsltPath, ref oCartElmt, valDict);
-                                }
-                                else
-                                {
-                                    valDict.Add("email", Email);
-                                    valDict.Add("FirstName", firstName);
-                                    valDict.Add("LastName", lastName);
-                                }
-                                if (oMessaging.Activities != null)
-                                {
-                                    oMessaging.Activities.AddToList(ListId, firstName, Email, valDict);
+                                    else
+                                    {
+                                        valDict.Add("email", Email);
+                                        valDict.Add("FirstName", firstName);
+                                        valDict.Add("LastName", lastName);
+                                    }
+                                    if (oMessaging.Activities != null)
+                                    {
+                                        oMessaging.Activities.AddToList(ListId, firstName, Email, valDict);
+                                    }
                                 }
                             }
 
