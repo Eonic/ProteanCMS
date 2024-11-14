@@ -2579,6 +2579,10 @@ namespace Protean
                             {
                                 sAdminLayout = "AdminXForm";
                                 string xformPath = "/xforms/directory/regradeuser.xml";
+                                if (myWeb.bs5)
+                                {
+                                    xformPath = "/features/membership/regradeuser.xml";
+                                }
                                 oPageDetail.AppendChild(moAdXfm.xFrmRegradeUser(Conversions.ToInteger(myWeb.moRequest["id"]), Conversions.ToLong(myWeb.moRequest["existingGroupId"]), myWeb.moRequest["newGroupId"], "Regrade User", xformPath, myWeb.moRequest["messageId"]));
                                 if (moAdXfm.valid)
                                 {

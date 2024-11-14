@@ -157,7 +157,12 @@ namespace Protean
                         jObj = new Newtonsoft.Json.Linq.JObject();
                     }
                     foreach (KeyValuePair<string, string> kvp in paramDictionary)
-                        jObj.Add(new Newtonsoft.Json.Linq.JProperty(kvp.Key, kvp.Value));
+                    {
+                        if (!jObj.ContainsKey(kvp.Key))
+                        {
+                            jObj.Add(new Newtonsoft.Json.Linq.JProperty(kvp.Key, kvp.Value));
+                        }
+                    }
                 }
 
                 Type calledType = null;

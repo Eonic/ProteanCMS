@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+  <ContentTypes>
+	  <ContentTypeGroup name="FAQ">
+		  <ContentType type="prayer" formPath="prayer" name="prayer">Prayer</ContentType>
+	  </ContentTypeGroup>
+  </ContentTypes>
+  <ModuleTypes>
+    <ModuleGroup name="GNFE Bespoke" icon="fa-solid fa-book-bible">
+      <Module type="prayers" formPath="prayers" icon="fa-solid fa-hands-praying" name="Prayer List"></Module>
+    </ModuleGroup>
+  </ModuleTypes>
+</PageLayouts>

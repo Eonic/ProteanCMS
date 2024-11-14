@@ -761,7 +761,8 @@ namespace Protean
                             }
                             if (!string.IsNullOrEmpty(mcReEstablishSession))
                             {
-                                sSql = "select * from tblCartOrder where not(nCartStatus IN (6,9,13,14)) and nCartOrderKey = " + mnCartId + "And cCartSessionId Like '%" + mcSessionId + "'";
+                                sSql = "select * from tblCartOrder where not(nCartStatus IN (6,9,13,14)) and nCartOrderKey = " + myWeb.moRequest["id"] + "And cCartSessionId Like '%" + mcReEstablishSession + "'";
+                                // sSql = "select * from tblCartOrder where not(nCartStatus IN (6,9,13,14)) and nCartOrderKey = " + mnCartId + "And cCartSessionId Like '%" + mcSessionId + "'";
                             }
                             else
                             {
