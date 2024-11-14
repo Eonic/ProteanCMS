@@ -127,7 +127,7 @@
           <xsl:if test="descendant-or-self::*[contains(@class,'required')]">
             <span class="required">
               <span class="req">
-                *<span class="sr-only"> (required)</span>
+                *<span class="visually-hidden"> (required)</span>
               </span>
               <xsl:text> </xsl:text>
               <xsl:call-template name="msg_required"/>
@@ -162,7 +162,7 @@
           <xsl:if test="ancestor::group/descendant-or-self::*[contains(@class,'required')]">
             <label class="required required-message">
               <span class="req">
-                *<span class="sr-only"> (required)</span>
+                *<span class="visually-hidden"> (required)</span>
               </span>
               <xsl:text> </xsl:text>
               <xsl:call-template name="msg_required"/>
@@ -214,7 +214,7 @@
                 <xsl:if test="ancestor::group/descendant-or-self::*[contains(@class,'required')]">
                   <label class="required">
                     <span class="req">
-                      *<span class="sr-only"> (required)</span>
+                      *<span class="visually-hidden"> (required)</span>
                     </span>
                     <xsl:text> </xsl:text>
                     <xsl:call-template name="msg_required"/>
@@ -2388,7 +2388,7 @@
           <xsl:if test="descendant-or-self::*[contains(@class,'required')]">
             <label class="required">
               <span class="req">
-                *<span class="sr-only"> (required)</span>
+                *<span class="visually-hidden"> (required)</span>
               </span>
               <xsl:text> </xsl:text>
               <xsl:call-template name="msg_required"/>
@@ -3189,7 +3189,7 @@
         <!--<xsl:value-of select="./node()"/>-->
         <xsl:if test="$bRequired='true' and not(ancestor::select1[@appearance='full' and value/node()!=''])">
           <span class="req">
-            *<span class="sr-only"> (required)</span>
+            *<span class="visually-hidden"> (required)</span>
           </span>
         </xsl:if>
       </label>
