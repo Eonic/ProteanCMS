@@ -14154,7 +14154,7 @@ namespace Protean
 
 
                     // Update the filename
-                    if (!string.IsNullOrEmpty(outputFormat) && outputFormat != "rawxml")
+                    if (!string.IsNullOrEmpty(outputFormat) && outputFormat != "rawxml" && outputFormat != "html")
                     {
                         processInfo += "; Updating filename";
                         var filename = new List<string>();

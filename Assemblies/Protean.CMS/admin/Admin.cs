@@ -8,6 +8,11 @@
 // $Copyright:   Copyright (c) 2002 - 2024 Trevor Spink Consultants Ltd.
 // ***********************************************************************
 
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using Protean.Providers.Membership;
+using Protean.Providers.Messaging;
+using Protean.Tools;
 using System;
 using System.Collections;
 using System.Data;
@@ -16,16 +21,8 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
-using Protean.Tools;
 using static Protean.Tools.Xml;
-using System.Reflection.Emit;
-using Protean.Providers.Membership;
-using Protean.Providers.Messaging;
-using Lucene.Net.Support;
-using Microsoft.Ajax.Utilities;
 
 namespace Protean
 {
@@ -220,7 +217,8 @@ namespace Protean
                 try
                 {
 
-                    if (myWeb.moSession["modalAlert"] != null) {
+                    if (myWeb.moSession["modalAlert"] != null)
+                    {
                         modalAlert = myWeb.moSession["modalAlert"].ToString();
                         myWeb.moSession.Remove("modalAlert");
                     };
@@ -559,7 +557,7 @@ namespace Protean
                                 sAdminLayout = "AdminXForm";
                                 Cms argmyWeb = myWeb;
                                 Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
-                                IMembershipProvider oMembershipProv = RetProv.Get(ref argmyWeb, this.moConfig["MembershipProvider"]);
+                                IMembershipProvider oMembershipProv = RetProv.Get(ref argmyWeb, moConfig["MembershipProvider"]);
 
                                 switch (Strings.LCase(moConfig["MembershipEncryption"]) ?? "")
                                 {
@@ -586,7 +584,7 @@ namespace Protean
                                 sAdminLayout = "AdminXForm";
                                 Cms argmyWeb2 = myWeb;
                                 Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
-                                IMembershipProvider oMembershipProv = RetProv.Get(ref argmyWeb2, this.moConfig["MembershipProvider"]);
+                                IMembershipProvider oMembershipProv = RetProv.Get(ref argmyWeb2, moConfig["MembershipProvider"]);
 
                                 oPageDetail.AppendChild((XmlNode)oMembershipProv.AdminXforms.xFrmConfirmPassword(myWeb.moRequest["AI"]));
                                 if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oMembershipProv.AdminXforms.valid, true, false)))
@@ -873,10 +871,10 @@ namespace Protean
                                 {
 
                                     var argsettingsXml = moAdXfm.Instance;
-                                    this.updateLessVariables(moThemeConfig["CurrentTheme"], ref argsettingsXml);
+                                    updateLessVariables(moThemeConfig["CurrentTheme"], ref argsettingsXml);
                                     moAdXfm.Instance = argsettingsXml;
                                     var argsettingsXml1 = moAdXfm.Instance;
-                                    this.updateStandardXslVariables(moThemeConfig["CurrentTheme"], ref argsettingsXml1);
+                                    updateStandardXslVariables(moThemeConfig["CurrentTheme"], ref argsettingsXml1);
                                     moAdXfm.Instance = argsettingsXml1;
 
                                     if (!string.IsNullOrEmpty(myWeb.moRequest["SiteXsl"]))
@@ -2275,17 +2273,17 @@ namespace Protean
                             }
                         case "ImageLib":
                             {
-                                this.LibProcess(ref oPageDetail, ref sAdminLayout, Protean.fsHelper.LibraryType.Image);
+                                LibProcess(ref oPageDetail, ref sAdminLayout, Protean.fsHelper.LibraryType.Image);
                                 break;
                             }
                         case "DocsLib":
                             {
-                                this.LibProcess(ref oPageDetail, ref sAdminLayout, Protean.fsHelper.LibraryType.Documents);
+                                LibProcess(ref oPageDetail, ref sAdminLayout, Protean.fsHelper.LibraryType.Documents);
                                 break;
                             }
                         case "MediaLib":
                             {
-                                this.LibProcess(ref oPageDetail, ref sAdminLayout, Protean.fsHelper.LibraryType.Media);
+                                LibProcess(ref oPageDetail, ref sAdminLayout, Protean.fsHelper.LibraryType.Media);
                                 break;
                             }
                         case "ListUsers":
@@ -2581,6 +2579,10 @@ namespace Protean
                             {
                                 sAdminLayout = "AdminXForm";
                                 string xformPath = "/xforms/directory/regradeuser.xml";
+                                if (myWeb.bs5)
+                                {
+                                    xformPath = "/features/membership/regradeuser.xml";
+                                }
                                 oPageDetail.AppendChild(moAdXfm.xFrmRegradeUser(Conversions.ToInteger(myWeb.moRequest["id"]), Conversions.ToLong(myWeb.moRequest["existingGroupId"]), myWeb.moRequest["newGroupId"], "Regrade User", xformPath, myWeb.moRequest["messageId"]));
                                 if (moAdXfm.valid)
                                 {
@@ -3581,7 +3583,8 @@ namespace Protean
                         myWeb.moSession["editContext"] = EditContext;
                     }
 
-                    if (modalAlert != null) {
+                    if (modalAlert != null)
+                    {
                         moPageXML.DocumentElement.SetAttribute("modalAlert", modalAlert);
                     }
 
@@ -4654,11 +4657,12 @@ namespace Protean
                     }
                     Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
                     IMessagingProvider moMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
-                    if (moMessaging != null) { 
+                    if (moMessaging != null)
+                    {
                         moMessaging.AdminProcess.MailingListAdminMenu(ref oMenuRoot);
                         moMessaging = null;
                     };
-                    
+
 
                     // If this is a cloned page, then remove certain options under By Page
                     if (Cms.gbClone && moPageXML.DocumentElement.SelectSingleNode("//MenuItem[@id = /Page/@id and (@clone > 0 or (@cloneparent='" + myWeb.mnCloneContextPageId + "' and @cloneparent > 0 ))]") != null)
@@ -5653,12 +5657,12 @@ namespace Protean
                             votesDataset.Tables[0].Columns[2].ColumnMapping = MappingType.Attribute;
                         }
 
-                       // var votesReport = new XmlDataDocument(votesDataset);
+                        // var votesReport = new XmlDataDocument(votesDataset);
                         XmlDocument votesReport = new XmlDocument();
-                        if(votesDataset.Tables[0].Rows.Count > 0)
+                        if (votesDataset.Tables[0].Rows.Count > 0)
                         {
                             votesReport.LoadXml(votesDataset.GetXml());
-                        }                        
+                        }
 
                         votesDataset.EnforceConstraints = false;
 
@@ -5829,7 +5833,7 @@ namespace Protean
                 //long contentId = 0L;
                 string indexId = null;
                 string sSql;
-               
+
                 DataSet indexesDataset;
 
                 try
@@ -6952,10 +6956,10 @@ from tblContentIndexDef";
                                     myWeb.moDbHelper.ReturnNullsEmpty(ref oDS);
                                     oDS.EnforceConstraints = false;
                                     //oXml = new XmlDataDocument(oDS);
-                                    if(oDS.Tables[0].Rows.Count > 0)
+                                    if (oDS.Tables[0].Rows.Count > 0)
                                     {
                                         oXml.LoadXml(oDS.GetXml());
-                                    }                                   
+                                    }
                                     // Convert any text to xml
                                     foreach (XmlElement oElmt in oXml.SelectNodes("descendant-or-self::UserXml"))
                                     {
