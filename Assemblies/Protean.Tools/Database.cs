@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Xml;
+using System.Collections;
 using System.Data;
 using System.Data.SqlClient;
-using System.Collections;
-using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Xml;
 
 namespace Protean.Tools
 {
@@ -239,7 +237,7 @@ namespace Protean.Tools
                 {
                     bool convalid;
                     oConn.Open();
-                    convalid = this.checkDBObjectExists(DatabaseName, objectTypes.Database);
+                    convalid = checkDBObjectExists(DatabaseName, objectTypes.Database);
                     oConn.Close();
                     return true;
                 }
@@ -334,7 +332,7 @@ namespace Protean.Tools
             }
         }
 
-        private void ResetConnection()
+        public void ResetConnection()
         {
             try
             {
@@ -351,14 +349,14 @@ namespace Protean.Tools
             }
         }
 
-       
+
         public bool CreateDatabase(string databasename)
         {
             string cProcessInfo = "createDB";
             bool bReturn = false;
             try
             {
-                this.DatabaseName = "master";
+                DatabaseName = "master";
                 // Dim myConn As SqlConnection = New SqlConnection("Data Source=" & DatabaseServer & "; Initial Catalog=master; User ID=" & DatabaseUser & ";password=" & DatabasePassword & ";Persist Security Info=True")
                 string sSql;
 
@@ -423,7 +421,7 @@ namespace Protean.Tools
 
                 ExeProcessSql(String.Format(@"BACKUP DATABASE {0} TO DISK = N'{1}\{0}.bak' " + "WITH FORMAT, COPY_ONLY, INIT, NAME = N'{0} - Full Database " + "Backup', SKIP ", databasename, tempPath, databasename));
 
-                if (this.checkDBObjectExists(temporaryTableName, objectTypes.Table))
+                if (checkDBObjectExists(temporaryTableName, objectTypes.Table))
                     ExeProcessSql(String.Format("DROP TABLE {0}", temporaryTableName));
 
                 ExeProcessSql(String.Format("CREATE TABLE {0} (bck VARBINARY(MAX))", temporaryTableName));
@@ -431,7 +429,7 @@ namespace Protean.Tools
                 ExeProcessSql(String.Format("INSERT INTO {0} SELECT bck.* FROM " + @"OPENROWSET(BULK '{1}\{2}.bak',SINGLE_BLOB) bck", temporaryTableName, tempPath, databasename));
 
                 DataSet ds;
-                ds = this.GetDataSet(String.Format("SELECT bck FROM {0}", temporaryTableName), "temp");
+                ds = GetDataSet(String.Format("SELECT bck FROM {0}", temporaryTableName), "temp");
 
                 DataRow dr = ds.Tables[0].Rows[0];
                 byte[] backupFromServer = new byte[0] { };
@@ -534,7 +532,7 @@ namespace Protean.Tools
                 }
 
                 // then we need to copy the file and save it on the SQL server
-                if (this.DatabaseServer == "127.0.0.1")
+                if (DatabaseServer == "127.0.0.1")
                     restoreFilePath = filepath;
                 else
                 {
@@ -624,7 +622,7 @@ namespace Protean.Tools
 
         public virtual SqlDatabase GetDatabase(string databaseName)
         {
-            if (!this.checkDBObjectExists(databaseName, objectTypes.Database))
+            if (!checkDBObjectExists(databaseName, objectTypes.Database))
                 return null;
             else
             {
@@ -685,7 +683,7 @@ namespace Protean.Tools
             return nUpdateCount;
         }
 
-        
+
 
         public void ExeProcessSql(string sql, CommandType commandtype = CommandType.Text, Hashtable parameters = null)
         {
@@ -735,7 +733,7 @@ namespace Protean.Tools
             return ExeProcessSqlfromFile(filepath, ref errmsg);
         }
 
-    
+
         public int ExeProcessSqlfromFile(string filepath, ref string errmsg)
         {
             int nUpdateCount;
@@ -772,7 +770,7 @@ namespace Protean.Tools
             return nUpdateCount;
         }
 
-      
+
         public int ExeProcessSqlorIgnore(string sql)
         {
             int nUpdateCount;
@@ -900,10 +898,10 @@ namespace Protean.Tools
                             oCmd.Parameters.AddWithValue(oEntry.Key.ToString(), oEntry.Value);
                         }
                     }
-                        // Open the connection
-                        if (oLConn.State == ConnectionState.Closed)
-                            oLConn.Open();
-                        return oCmd.ExecuteReader(CommandBehavior.CloseConnection);
+                    // Open the connection
+                    if (oLConn.State == ConnectionState.Closed)
+                        oLConn.Open();
+                    return oCmd.ExecuteReader(CommandBehavior.CloseConnection);
 
                 }
             }
@@ -932,7 +930,7 @@ namespace Protean.Tools
         /// <remarks></remarks>
 
 
-        public DataSet GetDataSet(string sql, string tablename, string datasetname = "", bool bHandleTimeouts = false, Hashtable parameters = null/* TODO Change to default(_) if this is not a reference type */, CommandType querytype = CommandType.Text, int pageSize = 0, int pageNumber = 0, string cConn ="")
+        public DataSet GetDataSet(string sql, string tablename, string datasetname = "", bool bHandleTimeouts = false, Hashtable parameters = null/* TODO Change to default(_) if this is not a reference type */, CommandType querytype = CommandType.Text, int pageSize = 0, int pageNumber = 0, string cConn = "")
         {
             string cProcessInfo = "Running Sql:  " + sql;
             DataSet oDs = new DataSet();
@@ -943,7 +941,7 @@ namespace Protean.Tools
                 oConnection = oConn;
                 if (oConnection == null)
                     ResetConnection();
-                if(cConn!=string.Empty)
+                if (cConn != string.Empty)
                 {
                     oConnection = new SqlConnection(cConn);
                 }
@@ -978,7 +976,7 @@ namespace Protean.Tools
                 if (ex.Message.StartsWith("Timeout expired.") & bHandleTimeouts)
                 {
                     // Deal with timeouts, return emtpy dataset
-                    this.TimeOutException = true;
+                    TimeOutException = true;
                     oDs = null/* TODO Change to default(_) if this is not a reference type */;
                 }
                 else
@@ -1060,7 +1058,7 @@ namespace Protean.Tools
 
 
 
-        public object GetDataValue(string sql, string cConn, CommandType commandtype = CommandType.Text,  Hashtable parameters = null, object nullreturnvalue = null)
+        public object GetDataValue(string sql, string cConn, CommandType commandtype = CommandType.Text, Hashtable parameters = null, object nullreturnvalue = null)
         {
             string cProcessInfo = "Running Sql: " + sql;
             SqlConnection oConnection = null;
@@ -1214,7 +1212,7 @@ namespace Protean.Tools
             return oXmlValue;
         }
 
-       
+
         public XmlDocument GetXml(DataSet src)
         {
             // TS This function was added when we move to C# as GetXML does not return null fields in the XML. Need to convert to string and return empty string.
@@ -1279,7 +1277,7 @@ namespace Protean.Tools
         public void AddXMLValueToNode(string sql, ref XmlElement oElmt)
         {
             string cProcessInfo = "Running Sql: " + sql;
-            
+
             SqlCommand cmd = null/* TODO Change to default(_) if this is not a reference type */;
             try
             {
@@ -1289,17 +1287,18 @@ namespace Protean.Tools
 
                 using (cmd = new SqlCommand(sql, oConn))
                 {
-                    using (XmlReader reader = cmd.ExecuteXmlReader()) { 
-                            XmlDocument oXdoc = new XmlDocument();
-                            if (reader.Read())
-                                oXdoc.Load(reader);
+                    using (XmlReader reader = cmd.ExecuteXmlReader())
+                    {
+                        XmlDocument oXdoc = new XmlDocument();
+                        if (reader.Read())
+                            oXdoc.Load(reader);
 
-                            if (!(oXdoc.DocumentElement == null))
-                            {
-                                XmlNode newNode = oElmt.OwnerDocument.ImportNode(oXdoc.DocumentElement, true);
-                                oElmt.AppendChild(newNode);
-                            }
-                            oXdoc = null;
+                        if (!(oXdoc.DocumentElement == null))
+                        {
+                            XmlNode newNode = oElmt.OwnerDocument.ImportNode(oXdoc.DocumentElement, true);
+                            oElmt.AppendChild(newNode);
+                        }
+                        oXdoc = null;
                     };
                 };
             }
@@ -1342,7 +1341,7 @@ namespace Protean.Tools
         {
             int nInsertId = 0;
             SqlDataReader dr;
-            string cProcessInfo = "Running: " + sql; 
+            string cProcessInfo = "Running: " + sql;
             try
             {
                 SqlCommand oCmd = new SqlCommand(sql + ";select scope_identity();", oConn);
@@ -1505,7 +1504,7 @@ namespace Protean.Tools
                                 }
                         }
                         cSql = "SELECT COUNT(*) As c FROM sysobjects WHERE id = OBJECT_ID(N" + SqlString(cObjectName) + ")" + cObjectProperty;
-                        bReturn = ((int)this.GetDataValue(cSql, nullreturnvalue: 0) > 0);
+                        bReturn = ((int)GetDataValue(cSql, nullreturnvalue: 0) > 0);
                     }
                 }
                 return bReturn;
@@ -1516,7 +1515,7 @@ namespace Protean.Tools
             }
         }
 
-        public bool checkDBObjectExists(string cObjectName, objectTypes nObjectType,string cConn)
+        public bool checkDBObjectExists(string cObjectName, objectTypes nObjectType, string cConn)
         {
             string cObjectProperty = "";
             string cSql = "";
@@ -1524,7 +1523,7 @@ namespace Protean.Tools
 
             try
             {
-                
+
                 if (cObjectName != "")
                 {
                     if (nObjectType == objectTypes.Database)
@@ -1563,7 +1562,7 @@ namespace Protean.Tools
                                 }
                         }
                         cSql = "SELECT COUNT(*) As c FROM sysobjects WHERE id = OBJECT_ID(N" + SqlString(cObjectName) + ")" + cObjectProperty;
-                        bReturn = ((int)this.GetDataValue(cSql, cConn, nullreturnvalue: 0) > 0);
+                        bReturn = ((int)GetDataValue(cSql, cConn, nullreturnvalue: 0) > 0);
                     }
                 }
                 return bReturn;
@@ -1586,7 +1585,7 @@ namespace Protean.Tools
                 {
                     objectProperty = "OBJECTPROPERTY(id, N'IsUserTable') = 1 OR OBJECTPROPERTY(id, N'IsView') = 1 OR OBJECTPROPERTY(id, N'IsProcedure') = 1 OR xtype in (N'FN', N'IF', N'TF')";
                     sql = "SELECT COUNT(*) As c FROM sysobjects WHERE id = OBJECT_ID(N" + SqlString(dbObjectName) + ") AND (" + objectProperty + ")";
-                    objectExists = ((int)this.GetDataValue(sql, nullreturnvalue: 0) > 0);
+                    objectExists = ((int)GetDataValue(sql, nullreturnvalue: 0) > 0);
                 }
 
                 return objectExists;
@@ -1613,7 +1612,7 @@ namespace Protean.Tools
                     {
                         // Check the column existence using database system table.
                         string sql = "SELECT COUNT(*) As c FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '" + tableName + "' AND COLUMN_NAME = '" + columnName + "'";
-                        columnExists = ((int)this.GetDataValue(sql, nullreturnvalue: 0) > 0);
+                        columnExists = ((int)GetDataValue(sql, nullreturnvalue: 0) > 0);
                     }
                 }
 
@@ -1738,49 +1737,50 @@ namespace Protean.Tools
             string cProcessInfo = "returnNullsEmpty";
             try
             {
-                if (ds != null) { 
-                    foreach (DataTable oTable in ds.Tables)
+                if (ds != null)
                 {
-                    foreach (DataRow oRow in oTable.Rows)
+                    foreach (DataTable oTable in ds.Tables)
                     {
-                        foreach (DataColumn oColumn in oTable.Columns)
+                        foreach (DataRow oRow in oTable.Rows)
                         {
-                            if (oRow[oColumn.ColumnName] == DBNull.Value)
+                            foreach (DataColumn oColumn in oTable.Columns)
                             {
-                                cProcessInfo = "Error in Feild:" + oColumn.ColumnName + " DataType:" + oColumn.DataType.ToString();
-                                switch (oColumn.DataType.ToString())
+                                if (oRow[oColumn.ColumnName] == DBNull.Value)
                                 {
-                                    case "System.DateTime":
-                                        {
+                                    cProcessInfo = "Error in Feild:" + oColumn.ColumnName + " DataType:" + oColumn.DataType.ToString();
+                                    switch (oColumn.DataType.ToString())
+                                    {
+                                        case "System.DateTime":
+                                            {
                                                 oRow[oColumn.ColumnName] = (DateTime)DateTime.Parse("0001-01-01");
-                                            break;
-                                        }
+                                                break;
+                                            }
 
-                                    case "System.Integer":
-                                    case "System.Int32":
-                                    case "System.Double":
-                                    case "System.Decimal":
-                                        {
-                                            oRow[oColumn.ColumnName] = 0;
-                                            break;
-                                        }
+                                        case "System.Integer":
+                                        case "System.Int32":
+                                        case "System.Double":
+                                        case "System.Decimal":
+                                            {
+                                                oRow[oColumn.ColumnName] = 0;
+                                                break;
+                                            }
 
-                                    case "System.Boolean":
-                                        {
-                                            oRow[oColumn.ColumnName] = false;
-                                            break;
-                                        }
+                                        case "System.Boolean":
+                                            {
+                                                oRow[oColumn.ColumnName] = false;
+                                                break;
+                                            }
 
-                                    default:
-                                        {
-                                            oRow[oColumn.ColumnName] = "";
-                                            break;
-                                        }
+                                        default:
+                                            {
+                                                oRow[oColumn.ColumnName] = "";
+                                                break;
+                                            }
+                                    }
                                 }
                             }
                         }
                     }
-                }
                 }
             }
             catch (Exception ex)
@@ -1876,12 +1876,12 @@ namespace Protean.Tools
         // IDisposable
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposedValue)
+            if (!disposedValue)
             {
                 if (disposing)
                     CloseConnection();
             }
-            this.disposedValue = true;
+            disposedValue = true;
         }
         // This code added by Visual Basic to correctly implement the disposable pattern.
         public void Dispose()
@@ -2002,11 +2002,11 @@ namespace Protean.Tools
             {
                 get
                 {
-                    return this.m_location;
+                    return m_location;
                 }
                 set
                 {
-                    this.m_location = value;
+                    m_location = value;
                 }
             }
 
@@ -2014,11 +2014,11 @@ namespace Protean.Tools
             {
                 get
                 {
-                    return this.m_internalServerName;
+                    return m_internalServerName;
                 }
                 set
                 {
-                    this.m_internalServerName = value;
+                    m_internalServerName = value;
                 }
             }
 
@@ -2026,11 +2026,11 @@ namespace Protean.Tools
             {
                 get
                 {
-                    return this.m_externalServerName;
+                    return m_externalServerName;
                 }
                 set
                 {
-                    this.m_externalServerName = value;
+                    m_externalServerName = value;
                 }
             }
         }
