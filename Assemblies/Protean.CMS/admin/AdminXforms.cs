@@ -8253,7 +8253,7 @@ namespace Protean
                         string cParentContentName = Xml.convertEntitiesToCodes(moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Content, Conversions.ToLong(nParentID)));
 
                         base.NewFrm("FindRelatedContent");                      
-                        base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection/><nSearchChildren/><nIncludeRelated/><nRelatedtoItemsonPages/><cParentContentName>" + cParentContentName + "</cParentContentName><redirect>" + redirect + "</redirect><cSearch/>";                        
+                        base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection/><nSearchChildren/><nIncludeRelated/><cParentContentName>" + cParentContentName + "</cParentContentName><redirect>" + redirect + "</redirect><cSearch/>";                        
 
                         // MyBase.submission("AddRelated", "?ewCmd=RelateSearch&Type=Document&xml=x", "post", "form_check(this)")
                         base.submission("AddRelated", "", "post", "form_check(this)");
@@ -8360,7 +8360,15 @@ namespace Protean
 
                         else
                         {
-                            base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection>0</cSection>" + "<nSearchChildren>1</nSearchChildren>" + "<cParentContentName>" + cParentContentName + "</cParentContentName>" + "<redirect>" + redirect + "</redirect><cSearch/>";
+                            if (myWeb.moRequest["pgid"] != null)
+                            {
+                                base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection>"+ myWeb.moRequest["pgid"].ToString() + "</cSection>" + "<nSearchChildren>1</nSearchChildren>" + "<cParentContentName>" + cParentContentName + "</cParentContentName>" + "<redirect>" + redirect + "</redirect><cSearch/>";
+                            }
+                            else
+                            {
+                                base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection>0</cSection>" + "<nSearchChildren>1</nSearchChildren>" + "<cParentContentName>" + cParentContentName + "</cParentContentName>" + "<redirect>" + redirect + "</redirect><cSearch/>";
+                            }
+                                
                             base.addValues();
                         }
                         return base.moXformElmt;
