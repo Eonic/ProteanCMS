@@ -8252,15 +8252,8 @@ namespace Protean
                     {
                         string cParentContentName = Xml.convertEntitiesToCodes(moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Content, Conversions.ToLong(nParentID)));
 
-                        base.NewFrm("FindRelatedContent");
-                        if(myWeb.moRequest.QueryString["pgid"]!="")
-                        {
-                            base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection>"+ myWeb.moRequest.QueryString["pgid"] + "</cSection><nSearchChildren/><nIncludeRelated/><nRelatedtoItemsonPages/><cParentContentName>" + cParentContentName + "</cParentContentName><redirect>" + redirect + "</redirect><cSearch/>";
-                        }
-                        else
-                        {
-                            base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection/><nSearchChildren/><nIncludeRelated/><nRelatedtoItemsonPages/><cParentContentName>" + cParentContentName + "</cParentContentName><redirect>" + redirect + "</redirect><cSearch/>";
-                        }
+                        base.NewFrm("FindRelatedContent");                      
+                        base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection/><nSearchChildren/><nIncludeRelated/><nRelatedtoItemsonPages/><cParentContentName>" + cParentContentName + "</cParentContentName><redirect>" + redirect + "</redirect><cSearch/>";                        
 
                         // MyBase.submission("AddRelated", "?ewCmd=RelateSearch&Type=Document&xml=x", "post", "form_check(this)")
                         base.submission("AddRelated", "", "post", "form_check(this)");
@@ -8288,9 +8281,9 @@ namespace Protean
                         base.addBind("cSearch", "cSearch", oBindParent: ref argoBindParent3, "false()");
 
                         // Pages
-                        oSelElmt1 = base.addSelect1(ref oFrmElmt, "cSection", false, "Page", "selected", Protean.xForm.ApperanceTypes.Minimal);
-                        base.addOption(ref oSelElmt1, "All", 0.ToString());
-                        base.addOption(ref oSelElmt1, "All Orphan " + cContentType + "s", (-1).ToString());
+                        oSelElmt1 = base.addSelect1(ref oFrmElmt, "cSection", false, "Page", "", Protean.xForm.ApperanceTypes.Minimal);
+                        //base.addOption(ref oSelElmt1, "All", 0.ToString());
+                        //base.addOption(ref oSelElmt1, "All Orphan " + cContentType + "s", (-1).ToString());
                         string cSQL;
                         cSQL = "SELECT tblContentStructure.* FROM tblContentStructure ORDER BY nStructOrder";
                         var oDS = new DataSet();
