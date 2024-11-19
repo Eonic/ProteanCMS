@@ -1177,6 +1177,21 @@
 		</xsl:variable>
 		<input type="hidden" name="{$ref}" id="{$ref}" value="{$value}"/>
 	</xsl:template>
+
+  <xsl:template match="input[contains(@class,'configValue')]" mode="xform">
+    <xsl:variable name="ref">
+      <xsl:apply-templates select="." mode="getRefOrBind"/>
+    </xsl:variable>
+    <xsl:variable name="value">
+      <xsl:call-template name="getSettings">
+        <xsl:with-param name="sectionName" select="@sectionName"/>
+        <xsl:with-param name="valueName" select="@valueName"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <input type="hidden" name="{$ref}" id="{$ref}" value="{$value}"/>
+  </xsl:template>
+  
+  
 	<!-- -->
 	<!-- ========================== CONTROL : INPUT TEXT ========================== -->
 	<!-- -->
