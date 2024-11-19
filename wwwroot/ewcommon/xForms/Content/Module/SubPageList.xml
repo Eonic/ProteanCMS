@@ -106,27 +106,31 @@
 
         <select1 bind="nStepCount" appearance="full" class="required vshort">
           <label>Sub Pages per page</label>
-          <item>
-            <label>All</label>
-            <value>0</value>
-          </item>
-          <item>
-            <label>3</label>
-            <value>3</value>
-          </item>
-          <item>
-            <label>5</label>
-            <value>5</value>
-          </item>
-          <item>
-            <label>10</label>
-            <value>10</value>
-          </item>
-          <item>
-            <label>25</label>
-            <value>25</value>
-          </item>
-        </select1>
+			<item>
+				<label>All</label>
+				<value>0</value>
+			</item>
+			<item>
+				<label>3</label>
+				<value>3</value>
+			</item>
+			<item>
+				<label>5</label>
+				<value>5</value>
+			</item>
+			<item>
+				<label>10</label>
+				<value>10</value>
+			</item>
+			<item>
+				<label>25</label>
+				<value>25</value>
+			</item>
+			<item>
+				<label>Other</label>
+				<value>Other</value>
+			</item>
+		</select1>
 
         <select1 bind="cSortBy" appearance="full" class="form-group">
           <label>Order Pages</label>
