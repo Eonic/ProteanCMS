@@ -8251,7 +8251,14 @@ namespace Protean
                         string cParentContentName = Xml.convertEntitiesToCodes(moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Content, Conversions.ToLong(nParentID)));
 
                         base.NewFrm("FindRelatedContent");
-                        base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection/><nSearchChildren/><nIncludeRelated/><cParentContentName>" + cParentContentName + "</cParentContentName><redirect>" + redirect + "</redirect><cSearch/>";
+                        if(myWeb.moRequest.QueryString["pgid"]!="")
+                        {
+                            base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection>"+ myWeb.moRequest.QueryString["pgid"] + "</cSection><nSearchChildren/><nIncludeRelated/><nRelatedtoItemsonPages/><cParentContentName>" + cParentContentName + "</cParentContentName><redirect>" + redirect + "</redirect><cSearch/>";
+                        }
+                        else
+                        {
+                            base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection/><nSearchChildren/><nIncludeRelated/><nRelatedtoItemsonPages/><cParentContentName>" + cParentContentName + "</cParentContentName><redirect>" + redirect + "</redirect><cSearch/>";
+                        }
 
                         // MyBase.submission("AddRelated", "?ewCmd=RelateSearch&Type=Document&xml=x", "post", "form_check(this)")
                         base.submission("AddRelated", "", "post", "form_check(this)");
@@ -8279,7 +8286,7 @@ namespace Protean
                         base.addBind("cSearch", "cSearch", oBindParent: ref argoBindParent3, "false()");
 
                         // Pages
-                        oSelElmt1 = base.addSelect1(ref oFrmElmt, "cSection", false, "Page", "", Protean.xForm.ApperanceTypes.Minimal);
+                        oSelElmt1 = base.addSelect1(ref oFrmElmt, "cSection", false, "Page", "selected", Protean.xForm.ApperanceTypes.Minimal);
                         base.addOption(ref oSelElmt1, "All", 0.ToString());
                         base.addOption(ref oSelElmt1, "All Orphan " + cContentType + "s", (-1).ToString());
                         string cSQL;
@@ -8301,6 +8308,7 @@ namespace Protean
                             }
                             cNameString += oMenuElmt.SelectSingleNode("cStructName").InnerText;
                             base.addOption(ref oSelElmt1, cNameString, oMenuElmt.SelectSingleNode("nStructKey").InnerText);
+                               
                         }
                         XmlElement argoBindParent4 = null;
                         base.addBind("cSection", "cSection", oBindParent: ref argoBindParent4, "true()");
@@ -8313,7 +8321,7 @@ namespace Protean
                         if (cContentType.Contains("Product") & cContentType.Contains("SKU"))
                         {
                             oSelElmt2 = base.addSelect(ref oFrmElmt, "nIncludeRelated", true, "&#160;", "", Protean.xForm.ApperanceTypes.Full);
-                            base.addOption(ref oSelElmt2, "Include Related Sku's", 1.ToString());
+                            base.addOption(ref oSelElmt2, "Include Related Items", 1.ToString());
                             XmlElement argoBindParent6 = null;
                             base.addBind("nIncludeRelated", "nIncludeRelated", oBindParent: ref argoBindParent6, "false()");
                         }
@@ -8339,7 +8347,7 @@ namespace Protean
                                 bool bChilds = Conversions.ToBoolean(Interaction.IIf(base.Instance.SelectSingleNode("nSearchChildren").InnerText == "1", true, false));
                                 string cExpression = base.Instance.SelectSingleNode("cSearch").InnerText;
                                 bool bIncRelated = Conversions.ToBoolean(Interaction.IIf(base.Instance.SelectSingleNode("nIncludeRelated").InnerText == "1", true, false));
-
+                               
                                 string sSQL = "Select " + cSelectField + " From " + cTableName + " WHERE " + cFilterField + " = " + nParId;
                                 using (var oDre = moDbHelper.getDataReaderDisposable(sSQL))  // Done by nita on 6/7/22
                                 {
