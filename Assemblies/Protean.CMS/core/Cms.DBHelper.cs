@@ -2066,13 +2066,13 @@ namespace Protean
                     if (Cms.gbClone)
                     {
                         // If the page is cloned then we need to look at the page that it's cloned from
-                        long nClonePageId = Conversions.ToLong(this.GetDataValue("select nCloneStructId from tblContentStructure where nStructKey = " + nPageId, CommandType.Text, null, 0));
+                        long nClonePageId = Conversions.ToLong(GetDataValue("select nCloneStructId from tblContentStructure where nStructKey = " + nPageId, CommandType.Text, null, 0));
                         if (nClonePageId > 0L)
                             nPageId = nClonePageId;
                     }
 
                     cSql = "select cStructLayout from  tblContentStructure where nStructKey = " + nPageId;
-                    cLayout = Conversions.ToString(this.GetDataValue(cSql, CommandType.Text, null, "default"));
+                    cLayout = Conversions.ToString(GetDataValue(cSql, CommandType.Text, null, "default"));
                 }
 
                 catch (Exception ex)
@@ -2099,13 +2099,13 @@ namespace Protean
                     if (Cms.gbClone)
                     {
                         // If the page is cloned then we need to look at the page that it's cloned from
-                        long nClonePageId = Conversions.ToLong(this.GetDataValue("select nCloneStructId from tblContentStructure where nStructKey = " + nPageId));
+                        long nClonePageId = Conversions.ToLong(GetDataValue("select nCloneStructId from tblContentStructure where nStructKey = " + nPageId));
                         if (nClonePageId > 0L)
                             nPageId = nClonePageId;
                     }
 
                     cSql = "select cVersionLang from  tblContentStructure where nStructKey = " + nPageId;
-                    cLayout = this.GetDataValue(cSql, CommandType.Text, null, "default").ToString();
+                    cLayout = GetDataValue(cSql, CommandType.Text, null, "default").ToString();
                     if (string.IsNullOrEmpty(cLayout))
                         cLayout = "en-gb";
                 }
@@ -3199,7 +3199,7 @@ namespace Protean
                 try
                 {
                     string query = "SELECT " + getKey((int)objectType) + " FROM " + getTable(objectType) + " o INNER JOIN dbo.tblAudit a ON o.nauditId = a.nauditKey " + "WHERE " + myWeb.GetStandardFilterSQLForContent(false);
-                    return Conversions.ToBoolean(Operators.ConditionalCompareObjectGreater(this.GetDataValue(query), 0, false));
+                    return Conversions.ToBoolean(Operators.ConditionalCompareObjectGreater(GetDataValue(query), 0, false));
                 }
                 catch (Exception)
                 {
@@ -3213,7 +3213,7 @@ namespace Protean
                 try
                 {
                     string query = "select * from tblcontentstructure P inner join tblcontentstructure C on p.nStructKey = C.nStructParId where p.nStructKey =" + objectKey;
-                    return Conversions.ToBoolean(Operators.ConditionalCompareObjectGreater(this.GetDataValue(query), 0, false));
+                    return Conversions.ToBoolean(Operators.ConditionalCompareObjectGreater(GetDataValue(query), 0, false));
                 }
                 catch (Exception)
                 {
@@ -3675,7 +3675,7 @@ namespace Protean
                     // If not set then try getting the value from the DB
                     if (!(nAuditId > 0L))
                     {
-                        nAuditId = Conversions.ToLong(this.GetDataValue("SELECT nAuditId FROM " + getTable(objectType) + " WHERE " + getKey((int)objectType) + "=" + nKey));
+                        nAuditId = Conversions.ToLong(GetDataValue("SELECT nAuditId FROM " + getTable(objectType) + " WHERE " + getKey((int)objectType) + "=" + nKey));
                     }
                     XmlElement oTableNode = (XmlElement)oInstance.FirstChild;
 
@@ -3755,7 +3755,7 @@ namespace Protean
 
 
 
-                        nNewVersionNumber = Conversions.ToLong(Operators.AddObject(this.GetDataValue(cSql), 1));
+                        nNewVersionNumber = Conversions.ToLong(Operators.AddObject(GetDataValue(cSql), 1));
                     }
 
                     oInstance.SelectSingleNode("//nVersion").InnerText = nNewVersionNumber.ToString();
@@ -4071,7 +4071,7 @@ namespace Protean
                     // Add the filter
                     if (bGetContentSinceLastLogged)
                     {
-                        dLastRun = Conversions.ToString(this.GetDataValue("SELECT TOP 1 dDateTime FROM dbo.tblActivityLog WHERE nActivityType=" + ((int)ActivityType.PendingNotificationSent).ToString() + " ORDER BY 1 DESC"));
+                        dLastRun = Conversions.ToString(GetDataValue("SELECT TOP 1 dDateTime FROM dbo.tblActivityLog WHERE nActivityType=" + ((int)ActivityType.PendingNotificationSent).ToString() + " ORDER BY 1 DESC"));
                         if (!string.IsNullOrEmpty(dLastRun) && Information.IsDate(dLastRun))
                             cFilterSql = " WHERE Last_Updated > " + SqlDate(dLastRun, true);
                     }
@@ -4191,7 +4191,7 @@ namespace Protean
                     // Log the activity
                     if (bGetContentSinceLastLogged)
                     {
-                        this.CommitLogToDB(ActivityType.PendingNotificationSent, myWeb.mnUserId, "", DateTime.Now, bOverrideLoggingChecks: true);
+                        CommitLogToDB(ActivityType.PendingNotificationSent, myWeb.mnUserId, "", DateTime.Now, bOverrideLoggingChecks: true);
                     }
 
                     return pendingList;
@@ -4548,7 +4548,7 @@ namespace Protean
                         if (!foundLocation & checkRelatedIfOrphan)
                         {
                             XmlElement nContentNodeXmlElt = null;
-                            XmlElement relations = (XmlElement)this.getRelationsByContentId(contentId, ref nContentNodeXmlElt, contentRelationType: RelationType.Child);
+                            XmlElement relations = (XmlElement)getRelationsByContentId(contentId, ref nContentNodeXmlElt, contentRelationType: RelationType.Child);
                             foreach (XmlElement relation in relations.SelectNodes("//Relation"))
                             {
                                 foundLocation = checkContentLocationsInCurrentMenu(Conversions.ToLong(relation.GetAttribute("relatedContentId")));
@@ -5124,7 +5124,7 @@ namespace Protean
                 {
 
                     // Don't move if destination doesn't exist.
-                    int destination = Conversions.ToInteger(this.GetDataValue("SELECT TOP 1 nStructKey FROM tblContentStructure WHERE nStructKey=" + nNewStructParId));
+                    int destination = Conversions.ToInteger(GetDataValue("SELECT TOP 1 nStructKey FROM tblContentStructure WHERE nStructKey=" + nNewStructParId));
 
                     if (destination > 0)
                     {
@@ -5155,10 +5155,10 @@ namespace Protean
                         }
 
                         // Work out if the destination is primary
-                        int destinationPrimary = Conversions.ToInteger(this.GetDataValue("SELECT TOP 1 bPrimary from tblContentLocation where nStructId = " + nNewStructParId + " and nContentId = " + nContentKey + " AND bPrimary=1"));
+                        int destinationPrimary = Conversions.ToInteger(GetDataValue("SELECT TOP 1 bPrimary from tblContentLocation where nStructId = " + nNewStructParId + " and nContentId = " + nContentKey + " AND bPrimary=1"));
 
                         // Work out if the destination is the only primary
-                        int areThereOtherPrimaries = Conversions.ToInteger(this.GetDataValue("SELECT TOP 1 bPrimary from tblContentLocation where nStructId <> " + nNewStructParId + " and nContentId = " + nContentKey + " AND bPrimary=1"));
+                        int areThereOtherPrimaries = Conversions.ToInteger(GetDataValue("SELECT TOP 1 bPrimary from tblContentLocation where nStructId <> " + nNewStructParId + " and nContentId = " + nContentKey + " AND bPrimary=1"));
 
                         // If destination is the only primary then we are about to delete it so make the current location (being moved) primary
                         if (destinationPrimary > 0 & areThereOtherPrimaries == 0)
@@ -5888,7 +5888,7 @@ namespace Protean
                         {
                             if (!string.IsNullOrEmpty(myWeb.mcBehaviourNewContentOrder))
                             {
-                                this.ReorderContent(nStructId, nContentId, myWeb.mcBehaviourNewContentOrder);
+                                ReorderContent(nStructId, nContentId, myWeb.mcBehaviourNewContentOrder);
                             }
                         }
                     }
@@ -6196,7 +6196,7 @@ namespace Protean
                             foreach (XmlElement oContentElmt in oContent.SelectNodes("Content"))
                             {
                                 XmlElement xmloContentElmt = oContentElmt;
-                                this.addRelatedContent(ref xmloContentElmt, Conversions.ToInteger(oContentElmt.GetAttribute("id")), myWeb.mbAdminMode);
+                                addRelatedContent(ref xmloContentElmt, Conversions.ToInteger(oContentElmt.GetAttribute("id")), myWeb.mbAdminMode);
                             }
 
                         }
@@ -6249,7 +6249,7 @@ namespace Protean
                         foreach (XmlElement oContentElmt in oContent.SelectNodes("Content"))
                         {
                             XmlElement xmloContentElmt = oContentElmt;
-                            this.addRelatedContent(ref xmloContentElmt, Conversions.ToInteger(oContentElmt.GetAttribute("id")), myWeb.mbAdminMode);
+                            addRelatedContent(ref xmloContentElmt, Conversions.ToInteger(oContentElmt.GetAttribute("id")), myWeb.mbAdminMode);
                         }
                     }
                 }
@@ -8140,7 +8140,7 @@ namespace Protean
                                     {
                                         myWeb.moDbHelper.logActivity(ActivityType.LogonInvalidPassword, nUserId, 0L, 0L, cPasswordForm, cForiegnRef: "");
 
-                                        string sSql2 = "select count(nActivityKey) from tblActivityLog where nActivityType=" + ((int)ActivityType.LogonInvalidPassword).ToString() + " and nUserDirId = " + nUserId;
+                                        string sSql2 = "select count(nActivityKey) from tblActivityLog where nActivityType=" + Convert.ToString((int)dbHelper.ActivityType.LogonInvalidPassword) + " and nUserDirId = " + nUserId;
                                         int earlierTries = Conversions.ToInteger(ExeProcessSqlScalar(sSql2));
                                         if (earlierTries >= nRetrys)
                                         {
@@ -8197,7 +8197,7 @@ namespace Protean
                             // Find the latest activity for this user within a timeout period - if it isn't logoff then flag up an error
                             string lastSeenActivityQuery = "" + "SELECT TOP 1 nACtivityType FROM tblActivityLog l " + "WHERE nUserDirId = " + sReturn.ToString() + " " + "AND DATEDIFF(s,l.dDateTime,GETDATE()) < " + Cms.gnSingleLoginSessionTimeout.ToString() + " " + "ORDER BY dDateTime DESC ";
 
-                            int lastSeenActivity = Conversions.ToInteger(this.GetDataValue(lastSeenActivityQuery, CommandType.Text, null, ActivityType.Logoff));
+                            int lastSeenActivity = Conversions.ToInteger(GetDataValue(lastSeenActivityQuery, CommandType.Text, null, ActivityType.Logoff));
                             if (lastSeenActivity != (int)ActivityType.Logoff)
                             {
                                 sReturn = "<span class=\"msg-9017\">This username is currently logged on.  Please wait for them to log off or try another username.</span>";
@@ -8208,7 +8208,7 @@ namespace Protean
                         if (Information.IsNumeric(sReturn))
                         {
                             // delete failed logon attempts record
-                            string sSql2 = "delete from tblActivityLog where nActivityType = " + ((int)ActivityType.LogonInvalidPassword).ToString() + " and nUserDirId=" + sReturn;
+                            string sSql2 = "delete from tblActivityLog where nActivityType = " + Convert.ToString((int)dbHelper.ActivityType.LogonInvalidPassword) + " and nUserDirId=" + sReturn;
                             myWeb.moDbHelper.ExeProcessSql(sSql2);
 
                             // check mailinglist sync
@@ -8291,7 +8291,7 @@ namespace Protean
 
 
 
-                        nReturnId = Conversions.ToInteger(this.GetDataValue(cSql, CommandType.Text, Tools.Dictionary.getSimpleHashTable("email:" + SqlFmt(cEmail)), -1));
+                        nReturnId = Conversions.ToInteger(GetDataValue(cSql, CommandType.Text, Tools.Dictionary.getSimpleHashTable("email:" + SqlFmt(cEmail)), -1));
                     }
 
                     return nReturnId;
@@ -8764,8 +8764,12 @@ namespace Protean
                     valuesList.Add(artId.ToString());
                     valuesList.Add(SqlDate(DateTime.Now, true));
                     valuesList.Add(((int)loggedActivityType).ToString());
-                    if (activityDetail.Length >= 800) {
-                        activityDetail = "TRUNCATED:" + activityDetail.Substring(0, 785);
+                    if (activityDetail != null)
+                    {
+                        if (activityDetail.Length >= 800)
+                        {
+                            activityDetail = "TRUNCATED:" + activityDetail.Substring(0, 785);
+                        }
                     }
                     valuesList.Add(SqlString(activityDetail));
                     valuesList.Add(SqlString(Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(sessionId), "Service_" + DateTime.Now.ToString(), sessionId))));
@@ -8824,21 +8828,70 @@ namespace Protean
             }
 
 
-            public void checkForIpAddressCol()
+
+            public int CommitLogToDB(ActivityType nEventType, int nUserId, string cSessionId, DateTime dDateTime, int nPrimaryId = 0, int nSecondaryId = 0, string cDetail = "", bool bOverrideLoggingChecks = false)
             {
 
-                // check for gbIPLogging column
-                var strSqlCheckForIpCol = new System.Text.StringBuilder();
-                strSqlCheckForIpCol.Append("if NOT Exists(select * from sys.columns where Name = 'cIPAddress' and Object_ID = Object_ID('tblActivityLog')) ");
-                strSqlCheckForIpCol.Append("begin ");
-                strSqlCheckForIpCol.Append("alter table tblActivityLog add cIPAddress nvarchar(15) NULL  ");
-                strSqlCheckForIpCol.Append("end ");
+                if (myWeb != null & !bOverrideLoggingChecks)
+                {
+                    if (!myWeb.Features.ContainsKey("ActivityReporting"))
+                        return default;
+                }
 
-                ExeProcessSql(strSqlCheckForIpCol.ToString());
+                try
+                {
 
+                    // TS 04/12/11 this logall feature has been added in by someone but seems to break functionaility 
+                    // unless logAll is set, no reference to setting logAll is found anywhere else.
+                    // can only assume this was added to make some kind of overload work, but breaks standard activityLogging/Reporting
+                    // any logic as to wether this should be run prior to this.
 
+                    // If Not goSession Is Nothing And Not (bOverrideLoggingChecks) Then
+                    // If Not goSession("LogAll") = 1 And Not goSession("LogAll") = "true" And Not goSession("LogAll") = "on" Then
+                    // 'not logging everything if no user and logall not turned on
+                    // Exit Function
+                    // End If
+                    // End If
+
+                    // TS 04/12/11 however have assumed an overload sets negative values too so have reversed the logic.
+                    if (goSession != null & !bOverrideLoggingChecks)
+                    {
+                        if (Conversions.ToBoolean(Operators.OrObject(Operators.OrObject(Operators.ConditionalCompareObjectEqual(goSession["LogAll"], "0", false), Operators.ConditionalCompareObjectEqual(goSession["LogAll"], "false", false)), Operators.ConditionalCompareObjectEqual(goSession["LogAll"], "off", false))))
+                        {
+                            // not logging everything if no user and logall not turned on
+                            return default;
+                        }
+                    }
+
+                    if (myWeb is null)
+                    {
+                        Cms.gbIPLogging = false;
+                    }
+
+                    string cSQL = "INSERT INTO tblActivityLog (nUserDirId, nStructId, nArtId, dDateTime, nActivityType, cActivityDetail, cSessionId";
+                    if (Cms.gbIPLogging)
+                        cSQL += ",cIPAddress";
+                    cSQL += ") VALUES (";
+                    cSQL += nUserId + ",";
+                    cSQL += nPrimaryId + ",";
+                    cSQL += nSecondaryId + ",";
+                    cSQL += SqlDate(dDateTime, true) + ",";
+                    cSQL += ((int)nEventType).ToString() + ",";
+                    cSQL += "'" + cDetail + "',";
+                    cSQL += "'" + cSessionId + "'";
+                    if (Cms.gbIPLogging)
+                        cSQL += ",'" + SqlFmt(Strings.Left(myWeb.moRequest.ServerVariables["REMOTE_ADDR"], 15)) + "'";
+                    cSQL += ")";
+
+                    return Conversions.ToInteger(GetIdInsertSql(cSQL));
+                }
+
+                catch (Exception ex)
+                {
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "CommitLogToDB", ex, ""));
+                    return 0;
+                }
             }
-
 
 
             public bool AllowMigration()
@@ -8885,6 +8938,23 @@ namespace Protean
 
                 }
             }
+
+
+            public void checkForIpAddressCol()
+            {
+
+                // check for gbIPLogging column
+                var strSqlCheckForIpCol = new System.Text.StringBuilder();
+                strSqlCheckForIpCol.Append("if NOT Exists(select * from sys.columns where Name = 'cIPAddress' and Object_ID = Object_ID('tblActivityLog')) ");
+                strSqlCheckForIpCol.Append("begin ");
+                strSqlCheckForIpCol.Append("alter table tblActivityLog add cIPAddress nvarchar(15) NULL  ");
+                strSqlCheckForIpCol.Append("end ");
+
+                ExeProcessSql(strSqlCheckForIpCol.ToString());
+
+
+            }
+
 
             public bool isParent(int pageId)
             {
@@ -10080,7 +10150,7 @@ namespace Protean
                 try
                 {
 
-                    int nRefId = Conversions.ToInteger(this.GetDataValue("SELECT nContentKey, cContentForiegnRef FROM tblContent WHERE (cContentForiegnRef = '" + SqlFmt(cContentFRef) + "')"));
+                    int nRefId = Conversions.ToInteger(GetDataValue("SELECT nContentKey, cContentForiegnRef FROM tblContent WHERE (cContentForiegnRef = '" + SqlFmt(cContentFRef) + "')"));
 
                     if (!(nRefId == 0))
                     {
@@ -11490,11 +11560,17 @@ namespace Protean
                         // Now get content (filtered by locations)
 
                         // First get a subquery that gets distinct items according to the criteria
-                        string cSubquerySQL = "SELECT DISTINCT c.nContentKey AS id " + "FROM tblContent c " + "	INNER JOIN tblContentLocation l " + "		ON c.nContentKey = l.nContentId " + "WHERE (" + sWhere + ") " + "	AND NOT(c.nContentKey IN (0," + nIgnoreID + ")) " + "	AND l.nStructId IN (" + cLocations + ") ";
+                        string cSubquerySQL = string.Empty;
+                        //Modified query according to criteria for review
+                        if (cSchemaName == "Review")
+                        {
+                            cSubquerySQL = "SELECT DISTINCT c.nContentKey AS id " + "FROM tblContent c " + " "+ "Inner join tblContentRelation cr  On c.nContentKey= cr.nContentChildId INNER JOIN tblAudit cra ON cra.nAuditKey= cr.nAuditId and cra.nStatus=1 " + "	INNER JOIN tblContentLocation l " + "		ON l.nContentId = cr.nContentParentId INNER JOIN tblAudit cla ON cla.nAuditKey= l.nAuditId and cla.nStatus=1 " + "WHERE (" + sWhere + ") " + "	AND NOT(c.nContentKey IN (0," + nIgnoreID + ")) " + "	AND l.nStructId IN (" + cLocations + ") ";
 
+                        }else
+                        {
+                            cSubquerySQL = "SELECT DISTINCT c.nContentKey AS id " + "FROM tblContent c " + "	INNER JOIN tblContentLocation l " + "		ON c.nContentKey = l.nContentId " + "WHERE (" + sWhere + ") " + "	AND NOT(c.nContentKey IN (0," + nIgnoreID + ")) " + "	AND l.nStructId IN (" + cLocations + ") ";
 
-
-
+                        }
 
 
                         // No get more information
@@ -12708,69 +12784,6 @@ namespace Protean
                 }
             }
 
-            public int CommitLogToDB(ActivityType nEventType, int nUserId, string cSessionId, DateTime dDateTime, int nPrimaryId = 0, int nSecondaryId = 0, string cDetail = "", bool bOverrideLoggingChecks = false)
-            {
-
-                if (myWeb != null & !bOverrideLoggingChecks)
-                {
-                    if (!myWeb.Features.ContainsKey("ActivityReporting"))
-                        return default;
-                }
-
-                try
-                {
-
-                    // TS 04/12/11 this logall feature has been added in by someone but seems to break functionaility 
-                    // unless logAll is set, no reference to setting logAll is found anywhere else.
-                    // can only assume this was added to make some kind of overload work, but breaks standard activityLogging/Reporting
-                    // any logic as to wether this should be run prior to this.
-
-                    // If Not goSession Is Nothing And Not (bOverrideLoggingChecks) Then
-                    // If Not goSession("LogAll") = 1 And Not goSession("LogAll") = "true" And Not goSession("LogAll") = "on" Then
-                    // 'not logging everything if no user and logall not turned on
-                    // Exit Function
-                    // End If
-                    // End If
-
-                    // TS 04/12/11 however have assumed an overload sets negative values too so have reversed the logic.
-                    if (goSession != null & !bOverrideLoggingChecks)
-                    {
-                        if (Conversions.ToBoolean(Operators.OrObject(Operators.OrObject(Operators.ConditionalCompareObjectEqual(goSession["LogAll"], "0", false), Operators.ConditionalCompareObjectEqual(goSession["LogAll"], "false", false)), Operators.ConditionalCompareObjectEqual(goSession["LogAll"], "off", false))))
-                        {
-                            // not logging everything if no user and logall not turned on
-                            return default;
-                        }
-                    }
-
-                    if (myWeb is null)
-                    {
-                        Cms.gbIPLogging = false;
-                    }
-
-                    string cSQL = "INSERT INTO tblActivityLog (nUserDirId, nStructId, nArtId, dDateTime, nActivityType, cActivityDetail, cSessionId";
-                    if (Cms.gbIPLogging)
-                        cSQL += ",cIPAddress";
-                    cSQL += ") VALUES (";
-                    cSQL += nUserId + ",";
-                    cSQL += nPrimaryId + ",";
-                    cSQL += nSecondaryId + ",";
-                    cSQL += SqlDate(dDateTime, true) + ",";
-                    cSQL += ((int)nEventType).ToString() + ",";
-                    cSQL += "'" + cDetail + "',";
-                    cSQL += "'" + cSessionId + "'";
-                    if (Cms.gbIPLogging)
-                        cSQL += ",'" + SqlFmt(Strings.Left(myWeb.moRequest.ServerVariables["REMOTE_ADDR"], 15)) + "'";
-                    cSQL += ")";
-
-                    return Conversions.ToInteger(GetIdInsertSql(cSQL));
-                }
-
-                catch (Exception ex)
-                {
-                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "CommitLogToDB", ex, ""));
-                    return 0;
-                }
-            }
 
             public bool CheckCode(string cCode, string cCodeSet = "")
             {
@@ -13246,7 +13259,7 @@ namespace Protean
                     {
                         oInstance.SelectSingleNode("*/" + fieldName).InnerText = value;
                     }
-                    this.setObjectInstance(targetTable, oInstance, (long)keyValue);
+                    setObjectInstance(targetTable, oInstance, (long)keyValue);
                 }
 
                 catch (Exception ex)
@@ -13556,7 +13569,7 @@ namespace Protean
                 {
                     cProcessInfo = "Page ID: " + nPageId;
 
-                    return Conversions.ToInteger(this.GetDataValue("SELECT nCloneStructId FROM tblContentStructure WHERE nStructKey = " + nPageId, CommandType.Text, null, (object)0));
+                    return Conversions.ToInteger(GetDataValue("SELECT nCloneStructId FROM tblContentStructure WHERE nStructKey = " + nPageId, CommandType.Text, null, (object)0));
                 }
 
                 catch (Exception ex)
@@ -13587,7 +13600,7 @@ namespace Protean
                         // Assumes that there will only be one parent id.
                         cSql = "SELECT	TOP 1 nStructId " + "FROM tblContentLocation " + "WHERE	(nContentId = " + SqlFmt(nParentContentId.ToString()) + ") AND (bPrimary = 1) ";
 
-                        nPageId = Conversions.ToLong(this.GetDataValue(cSql));
+                        nPageId = Conversions.ToLong(GetDataValue(cSql));
 
                         // If the page retrieved is null (0) then this is orphan content
                         // Let's see if there's any other parents to this content
@@ -13597,7 +13610,7 @@ namespace Protean
 
                             cSql = "SELECT TOP 1 nContentParentId " + "FROM dbo.tblContentRelation " + "WHERE nContentChildId = " + SqlFmt(nParentContentId.ToString());
 
-                            nParentContentId = Conversions.ToInteger(this.GetDataValue(cSql));
+                            nParentContentId = Conversions.ToInteger(GetDataValue(cSql));
 
                             // If there is a parent related to the content then try to see if that's got a location
                             if (nParentContentId > 0)
@@ -13975,7 +13988,7 @@ namespace Protean
                     {
 
                         string reportsFolder = "/xforms/Reports";
-                        if (this.myWeb.bs5)
+                        if (myWeb.bs5)
                             reportsFolder = "/admin/xforms/reports";
                         dir = new DirectoryInfo(myWeb.moCtx.Server.MapPath(folder) + reportsFolder);
                         if (dir.Exists)
@@ -14147,7 +14160,7 @@ namespace Protean
 
 
                     // Update the filename
-                    if (!string.IsNullOrEmpty(outputFormat) && outputFormat != "rawxml")
+                    if (!string.IsNullOrEmpty(outputFormat) && outputFormat != "rawxml" && outputFormat != "html")
                     {
                         processInfo += "; Updating filename";
                         var filename = new List<string>();
@@ -14164,7 +14177,7 @@ namespace Protean
                             case "log":
                                 {
                                     // This is a sequential number based on the download activity log for this report.
-                                    int logCount = Conversions.ToInteger(this.GetDataValue("SELECT COUNT(*) FROM dbo.tblActivityLog WHERE cActivityDetail=" + SqlString(logDetail) + " AND nActivityType = " + ((int)ActivityType.ReportDownloaded).ToString()));
+                                    int logCount = Conversions.ToInteger(GetDataValue("SELECT COUNT(*) FROM dbo.tblActivityLog WHERE cActivityDetail=" + SqlString(logDetail) + " AND nActivityType = " + ((int)ActivityType.ReportDownloaded).ToString()));
                                     logCount += 1;
                                     filename.Add(logCount.ToString("00000"));
                                     break;
@@ -14580,7 +14593,34 @@ namespace Protean
             }
             #endregion
 
-
+            public string getContentIdFromOrder(string orderRef, string ContentName)
+            {
+                // Dim oDr As SqlDataReader
+                string sSql;
+                string nContentID = string.Empty;
+                
+                string cProcessInfo = "";
+                try
+                {
+                    sSql = "execute spGetContentIdFromOrderReference @orderRef=" + orderRef + ", @ProductName=" + "'"+ ContentName + "'";
+                    using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql))
+                    {
+                        if (oDr != null)
+                        {
+                            while (oDr.Read())
+                            {
+                                nContentID = Convert.ToString(oDr["nItemId"]);                                
+                            }                            
+                        }
+                    }
+                    return nContentID.ToString();
+                }
+                catch (Exception ex)
+                {
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "UpdateContact", ex, cProcessInfo));
+                    return nContentID;
+                }
+            }
         }
 
 

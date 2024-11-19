@@ -2,7 +2,7 @@
 html {
     height: 100%;
     //for sticky headers
-   /* scroll-padding-top: calc($fixed-height-xs + 10px);
+    /* scroll-padding-top: calc($fixed-height-xs + 10px);
 
     @include media-breakpoint-up($nav-breakpoint) {
         scroll-padding-top: calc($fixed-height-lg + 100px);
@@ -33,10 +33,110 @@ body {
         max-width: 2000px;
         margin: 0 auto;
     }
+
+    .navbar-fixed-top {
+        max-width: 2000px;
+    }
 }
 
 .container-wrapper.home-class {
     margin-top: 0;
+}
+//BREAKOUT BOXES
+.FormattedText .alignleft {
+    //margin-right: 1rem;
+    margin-bottom: 1rem;
+
+    @include media-breakpoint-down(sm) {
+        max-width: 50%;
+    }
+}
+
+.FormattedText .alignright {
+    //margin-left: 1rem;
+    margin-bottom: 1rem;
+
+    @include media-breakpoint-down(sm) {
+        max-width: 50%;
+    }
+}
+
+.FormattedText {
+    .align-left,
+    .alignleft,
+    .alignright {
+        margin-bottom: 1.5rem;
+        max-width: 100%;
+        width: 500px;
+
+        @include media-breakpoint-down(lg) {
+            margin-left: auto;
+            margin-right: auto;
+            float: none !important;
+        }
+
+        .listItem:last-child, .module:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    .align-left,
+    .alignleft {
+        @include media-breakpoint-up(lg) {
+            float: left;
+            position: relative;
+            left: -70px;
+            margin-right: -50px;
+
+            @include media-breakpoint-up(xl) {
+                margin-right: -170px;
+                left: -190px;
+            }
+
+            .module {
+                margin-right: 0.5rem;
+            }
+        }
+    }
+
+    .alignright {
+        @include media-breakpoint-up(lg) {
+            position: relative;
+            right: -47px;
+            margin-left: -50px;
+
+
+
+            .module {
+                //  margin-left: 0.5rem;
+            }
+        }
+
+        @include media-breakpoint-up(xl) {
+            position: relative;
+            right: -70px;
+            margin-left: -50px;
+
+
+
+            .module {
+                // margin-left: 0.5rem;
+            }
+        }
+
+        @include media-breakpoint-up(xxl) {
+            margin-left: -170px;
+            right: -190px;
+        }
+    }
+}
+
+img.alignright {
+    margin: 1rem 0 1rem 1rem;
+}
+
+img.alignleft {
+    margin: 1rem 1rem 1rem 0;
 }
 //FLUID CONTAINER
 .container-fluid {
@@ -172,6 +272,7 @@ h1, h2, h3 {
         }
     }
 }
+
 .nobox > .entryFooter,
 .nobox > .FormattedText {
     .btn-custom {
@@ -276,6 +377,7 @@ section {
         }
     }
 }
+
 .bg-content-center {
     @extend .section-center;
 }
@@ -367,7 +469,7 @@ section.stretchBG {
 
     .row > * {
         margin: 0;
-        padding:0;
+        padding: 0;
     }
 
     .module {
@@ -560,6 +662,7 @@ section.stretchBG {
         color: color-contrast($no-banner-bg);
     }
 }
+
 .no-banner-layout {
     padding-top: 3rem;
 }
@@ -972,6 +1075,47 @@ div[class$="List"].module {
         }
     }
 }
+.pagination-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+
+    .pagination a {
+        color: $primary;
+        border: 0;
+
+        &.disabled {
+            color: #666;
+        }
+    }
+
+    .page-link {
+        margin: 0 3px;
+
+        &.active {
+            background: transparent;
+            border-bottom-width: 2px;
+            border-style: solid;
+        }
+    }
+
+    i {
+        font-size: 0.8rem;
+    }
+
+    .previous,
+    .next {
+        a, span {
+            border: 0;
+            background: transparent;
+        }
+    }
+
+    .pager-caption {
+        display: none;
+    }
+}
 
 /*############### DETAIL PAGES #################*/
 
@@ -1268,6 +1412,55 @@ dd {
         }
     }
 }
+.searchListing {
+    margin-top: 2rem;
+
+    .input-group {
+        background: $light;
+        padding: 20px;
+        margin-bottom: 2rem;
+    }
+
+    .btn-primary {
+        width: auto;
+        margin-top: 0;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .search-count {
+        margin-bottom: 2rem;
+        font-size: 0.9rem;
+        display: block;
+    }
+
+    .search-result {
+        margin-bottom: 2rem;
+        padding-top: 0;
+    }
+
+    .list-group-item {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .result-text {
+        margin-bottom: 1rem;
+
+        a {
+            font-weight: bold;
+            padding-bottom: 0.2rem;
+            display: block;
+        }
+
+        p {
+            margin-bottom: 0;
+            font-size: 1rem;
+        }
+    }
+}
 
 .module.nobox {
     margin-bottom: $grid-gutter-height;
@@ -1302,24 +1495,6 @@ dd {
 
 .MembershipUserContacts .add {
     margin-bottom: 1rem;
-}
-
-.FormattedText .alignleft {
-    margin-right: 1rem;
-    margin-bottom: 1rem;
-
-    @include media-breakpoint-down(sm) {
-        max-width: 50%;
-    }
-}
-
-.FormattedText .alignright {
-    margin-left: 1rem;
-    margin-bottom: 1rem;
-
-    @include media-breakpoint-down(sm) {
-        max-width: 50%;
-    }
 }
 
 @media (prefers-reduced-motion: reduce) {

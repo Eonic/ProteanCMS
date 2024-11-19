@@ -4,7 +4,7 @@
 
 /*##################### COLOURS #######################*/
 //$body-bg: $white !default;
-$primary: #147CA9;
+$primary: #CC4B00;
 $secondary: #003e74;
 $info: #41b6df;
 $light: #efefef;
@@ -14,7 +14,7 @@ $grey: darken($light,6%);
 
 /*-- form colours --*/
 $success: #19be1b;
-$warning: #f39c12;
+$warning: #CC4B00;
 $danger: #e74c3c;
 
 /*-- contrast --*/
@@ -28,13 +28,23 @@ $img-border-radius: $border-radius;
 
 /*###################### TEXT #########################*/
 $body-color: #242424;
-$font-family-base: 'Lato', sans-serif;
-$headings-font-family: 'Lato', sans-serif;
+$font-family-base: 'Gantari', sans-serif;
+$headings-font-family: $font-family-base;
 
-$navbar-font: 'Lato', sans-serif;
+$navbar-font: $font-family-base;
 //$font-weight-base: 300;
 //$font-size-base: 1.1rem !default;
 $line-height-base: 1.3;
+
+/*###################### GRID ########################*/
+$spacer: 1.5rem;
+$grid-gutter-width: 1.5rem;
+$grid-gutter-height: $grid-gutter-width;
+$top-padding: $grid-gutter-height;
+$section-padding: $grid-gutter-height * 1.3;
+$nav-padding-y: 8px;
+$nav-padding-x: 0.75rem;
+$image-spacer: 1rem;
 
 /*################# BUTTONS & LINKS ###################*/
 $link-color: $primary !default;
@@ -55,7 +65,7 @@ $header-menu: "header-menu-right";
 $header-bg: transparent;
 $header-color: $body-color;
 $header-icon-color: $header-color;
-$header-spacing: 1.4rem;
+$header-spacing: $nav-padding-x;
 $header-icon-size: 1.3rem;
 $nav-breakpoint: lg;
 $fixed-height-xs: 100px;
@@ -68,6 +78,8 @@ $nav-link-hover-color: $secondary;
 $navbar-light-hover-color: $nav-link-hover-color;
 $main-nav-size: 1.1rem;
 //$navbar-font:$headings-font-family;
+$info-nav-spacing: $nav-padding-x;
+
 
 //$dropdown-font-size: $font-size-base !default;
 //$dropdown-color: var(--#{$prefix}body-color) !default;
@@ -83,15 +95,6 @@ $dropdown-item-padding-x:           1rem !default;
 $mobile-dd-background: #fff;
 $mobile-dd-color: $body-color;
 $mobile-dd-active: $primary;
-/*###################### GRID ########################*/
-$spacer: 1.5rem;
-$grid-gutter-width: 1.5rem;
-$grid-gutter-height: $grid-gutter-width;
-$top-padding: $grid-gutter-height;
-$section-padding: $grid-gutter-height * 1.3;
-$nav-padding-y: 8px;
-$nav-padding-x: 12px;
-$image-spacer: 1rem;
 
 /*##################### FOOTER #######################*/
 $footer-bg: $dark;

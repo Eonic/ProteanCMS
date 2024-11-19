@@ -5112,7 +5112,7 @@
 					<xsl:with-param name="input" select="$truncatedString" />
 					<xsl:with-param name="marker" select="' '" />
 				</xsl:call-template>
-				...
+        <xsl:text>...</xsl:text>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -5122,11 +5122,10 @@
 		<xsl:param name="input" />
 		<xsl:param name="marker" />
 		<xsl:if test="contains($input,$marker)">
-			<xsl:value-of select="substring-before($input,$marker)"/>
-			<xsl:value-of select="$marker"/>
+      <xsl:value-of select="$marker"/>
+      <xsl:value-of select="substring-before($input,$marker)"/>
 			<xsl:call-template name="substring-before-last">
-				<xsl:with-param name="input"
-							select="substring-after($input,$marker)" />
+				<xsl:with-param name="input" select="substring-after($input,$marker)" />
 				<xsl:with-param name="marker" select="$marker" />
 			</xsl:call-template>
 		</xsl:if>
@@ -5219,8 +5218,6 @@
 		<xsl:param name="queryString"/>
 		<xsl:param name="queryStringParam"/>
 		<xsl:param name="totalCount" />
-
-
 		<xsl:variable name="thisURL">
 			<xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]" mode="getHref" />
 			<xsl:choose>
@@ -5240,7 +5237,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<div class="col-md-12">
+		<div class="container-fluid pagination-wrapper">
 			<ul class="pagination">
 				<!-- Back Button-->
 				<xsl:choose>
@@ -5249,24 +5246,24 @@
 							<xsl:apply-templates select="$currentPage" mode="getHref"/>
 						</xsl:variable>
 						<li class="page-item previous">
-							<a class="page-link" href="{$origURL}" title="click here to view the previous page in sequence">
-								<span class="pager-arrow">&#8592;</span> Back
+							<a class="page-link" href="{$origURL}" title="view previous group">
+								<i class="fa-solid fa-chevron-left"> </i> Back
 							</a>
 						</li>
 					</xsl:when>
 
 					<xsl:when test="$startPos &gt; ($noPerPage - 1)">
 						<li class="page-item previous">
-							<a class="page-link" href="{$thisURL}={$startPos - $noPerPage}" title="click here to view the previous page in sequence">
-								<span class="pager-arrow">&#8592;</span> Back
+							<a class="page-link" href="{$thisURL}={$startPos - $noPerPage}" title="view previous group">
+								<i class="fa-solid fa-chevron-left"> </i> Back
 							</a>
 						</li>
 					</xsl:when>
 					<xsl:otherwise>
 						<li class="page-item previous disabled">
-							<a class="page-link" href="#">
-								<span class="pager-arrow">&#8592;</span> Back
-							</a>
+							<span class="page-link" href="#">
+								<i class="fa-solid fa-chevron-left"> </i> Back
+							</span>
 						</li>
 					</xsl:otherwise>
 				</xsl:choose>
@@ -5293,15 +5290,17 @@
 				<xsl:choose>
 					<xsl:when test="$totalCount &gt; ($startPos +$noPerPage)">
 						<li class="page-item next">
-							<a class="page-link" href="{$thisURL}={$startPos+$noPerPage}" title="click here to view the next page in sequence">
-								Next <span class="pager-arrow">&#8594;</span>
+							<a class="page-link" href="{$thisURL}={$startPos+$noPerPage}" title="view next group">
+								Next <i class="fa-solid fa-chevron-right"> </i>
 							</a>
 						</li>
 					</xsl:when>
 					<xsl:otherwise>
 						<li class="page-item next disabled">
-							<span class="ghosted">
-								Next <span class="pager-arrow">&#8594;</span>
+							<span class="page-link">
+								Next <span class="pager-arrow">
+									<i class="fa-solid fa-chevron-right"> </i>
+								</span>
 							</span>
 						</li>
 					</xsl:otherwise>
@@ -5338,7 +5337,7 @@
 		<a class="page-link {$active}" href="{$thisURL}={$startPos}" title="page {@step}">
 			<xsl:value-of select="$step"/>
 		</a>
-		<xsl:if test="$step * $noPerPage &lt;= $totalCount">
+		<xsl:if test="$step * $noPerPage &lt; $totalCount">
 			<xsl:call-template name="StepperStep">
 				<xsl:with-param name="noPerPage">
 					<xsl:value-of select="$noPerPage"/>
@@ -5360,7 +5359,6 @@
 				</xsl:with-param>
 			</xsl:call-template>
 		</xsl:if>
-
 	</xsl:template>
 
 	<!-- Retrieves the additional Params from the URL -->
