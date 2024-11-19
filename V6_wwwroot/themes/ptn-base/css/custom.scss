@@ -33,6 +33,10 @@ body {
         max-width: 2000px;
         margin: 0 auto;
     }
+
+    .navbar-fixed-top {
+        max-width: 2000px;
+    }
 }
 
 .container-wrapper.home-class {
@@ -1071,6 +1075,47 @@ div[class$="List"].module {
         }
     }
 }
+.pagination-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+
+    .pagination a {
+        color: $primary;
+        border: 0;
+
+        &.disabled {
+            color: #666;
+        }
+    }
+
+    .page-link {
+        margin: 0 3px;
+
+        &.active {
+            background: transparent;
+            border-bottom-width: 2px;
+            border-style: solid;
+        }
+    }
+
+    i {
+        font-size: 0.8rem;
+    }
+
+    .previous,
+    .next {
+        a, span {
+            border: 0;
+            background: transparent;
+        }
+    }
+
+    .pager-caption {
+        display: none;
+    }
+}
 
 /*############### DETAIL PAGES #################*/
 
@@ -1364,6 +1409,55 @@ dd {
             padding-right: 5px;
             font-weight: 700;
             font-size: 0.7rem;
+        }
+    }
+}
+.searchListing {
+    margin-top: 2rem;
+
+    .input-group {
+        background: $light;
+        padding: 20px;
+        margin-bottom: 2rem;
+    }
+
+    .btn-primary {
+        width: auto;
+        margin-top: 0;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .search-count {
+        margin-bottom: 2rem;
+        font-size: 0.9rem;
+        display: block;
+    }
+
+    .search-result {
+        margin-bottom: 2rem;
+        padding-top: 0;
+    }
+
+    .list-group-item {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .result-text {
+        margin-bottom: 1rem;
+
+        a {
+            font-weight: bold;
+            padding-bottom: 0.2rem;
+            display: block;
+        }
+
+        p {
+            margin-bottom: 0;
+            font-size: 1rem;
         }
     }
 }

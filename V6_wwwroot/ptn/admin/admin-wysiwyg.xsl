@@ -1188,6 +1188,7 @@
 									</a>
 								</li>
 							</xsl:if>
+						</xsl:if>
 							<xsl:if test="$page/AdminMenu/descendant-or-self::MenuItem[@cmd='MoveContent']">
 								<li>
 									<a href="?ewCmd=MoveContent&amp;pgid={$pageId}&amp;id={@id}" title="Click here to move to another page">
@@ -1202,7 +1203,6 @@
 									</a>
 								</li>
 							</xsl:if>
-						</xsl:if>
 						<xsl:choose>
 							<xsl:when test="$page/Contents/Content/Content[@id=$id] and (@parId != $pageId)">
 								<li>

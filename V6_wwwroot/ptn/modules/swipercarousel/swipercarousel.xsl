@@ -150,9 +150,17 @@
                   <xsl:value-of select="@position-vertical"/>
                   <xsl:choose>
                     <xsl:when test="@bg-color!=''">
-                      <xsl:text> bg-</xsl:text>
-                      <xsl:value-of select="@bg-color"/>
-                      <xsl:text>-o </xsl:text>
+                      <xsl:choose>
+                        <xsl:when test="@bg-cover='full-slide'">
+                          <xsl:text> full-slide slide-bg-</xsl:text>
+                          <xsl:value-of select="@bg-color"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                          <xsl:text> bg-</xsl:text>
+                          <xsl:value-of select="@bg-color"/>
+                          <xsl:text>-o </xsl:text>
+                        </xsl:otherwise>
+                      </xsl:choose>
                     </xsl:when>
                     <xsl:otherwise>
                       <xsl:text> nobg-slide</xsl:text>
@@ -280,9 +288,17 @@
                   <xsl:value-of select="@position-vertical"/>
                   <xsl:choose>
                     <xsl:when test="@bg-color!=''">
-                      <xsl:text> bg-</xsl:text>
-                      <xsl:value-of select="@bg-color"/>
-                      <xsl:text>-o </xsl:text>
+                      <xsl:choose>
+                        <xsl:when test="@bg-cover='full-slide'">
+                          <xsl:text> full-slide slide-bg-</xsl:text>
+                          <xsl:value-of select="@bg-color"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                          <xsl:text> bg-</xsl:text>
+                          <xsl:value-of select="@bg-color"/>
+                          <xsl:text>-o </xsl:text>
+                        </xsl:otherwise>
+                      </xsl:choose>
                     </xsl:when>
                     <xsl:otherwise>
                       <xsl:text> plain-slide</xsl:text>
@@ -397,9 +413,17 @@
                   <xsl:value-of select="@position-vertical"/>
                   <xsl:choose>
                     <xsl:when test="@bg-color!=''">
-                      <xsl:text> bg-</xsl:text>
-                      <xsl:value-of select="@bg-color"/>
-                      <xsl:text>-o </xsl:text>
+                      <xsl:choose>
+                        <xsl:when test="@bg-cover='full-slide'">
+                          <xsl:text> full-slide slide-bg-</xsl:text>
+                          <xsl:value-of select="@bg-color"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                          <xsl:text> bg-</xsl:text>
+                          <xsl:value-of select="@bg-color"/>
+                          <xsl:text>-o </xsl:text>
+                        </xsl:otherwise>
+                      </xsl:choose>
                     </xsl:when>
                     <xsl:otherwise>
                       <xsl:text> nobg-slide</xsl:text>
@@ -502,9 +526,17 @@
                   <xsl:value-of select="@position-vertical"/>
                   <xsl:choose>
                     <xsl:when test="@bg-color!=''">
-                      <xsl:text> bg-</xsl:text>
-                      <xsl:value-of select="@bg-color"/>
-                      <xsl:text>-o </xsl:text>
+                      <xsl:choose>
+                        <xsl:when test="@bg-cover='full-slide'">
+                          <xsl:text> full-slide slide-bg-</xsl:text>
+                          <xsl:value-of select="@bg-color"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                          <xsl:text> bg-</xsl:text>
+                          <xsl:value-of select="@bg-color"/>
+                          <xsl:text>-o </xsl:text>
+                        </xsl:otherwise>
+                      </xsl:choose>
                     </xsl:when>
                     <xsl:otherwise>
                       <xsl:text> plain-slide</xsl:text>
