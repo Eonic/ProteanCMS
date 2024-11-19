@@ -6,7 +6,7 @@
   <!-- ## Variables for all EonicWeb XSLT   #######################################################   -->
 
   <!-- General node trees -->
-
+ 
   <xsl:variable name="page" select="/Page"/>
   <xsl:variable name="pageId" select="/Page/@id"/>
   <xsl:variable name="artId" select="number(concat(0,/Page/Request/QueryString/Item[@name='artid']))"/>
@@ -5553,6 +5553,8 @@
     </xsl:choose>
   </xsl:template>
 
+  
+    
   <xsl:template match="*" mode="reportHeader">
     <xsl:param name="sort"/>
     <xsl:param name="bSortFormMethod"/>
@@ -10388,6 +10390,7 @@
             Returns a string. The First argument is the section from within the web.config.  The Second argument 
             is the key attribute name from the add node that you want the value of -->
 
+  
   <xsl:template name="getSettings">
     <xsl:param name="sectionName"/>
     <xsl:param name="valueName" />

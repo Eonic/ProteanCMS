@@ -11560,11 +11560,17 @@ namespace Protean
                         // Now get content (filtered by locations)
 
                         // First get a subquery that gets distinct items according to the criteria
-                        string cSubquerySQL = "SELECT DISTINCT c.nContentKey AS id " + "FROM tblContent c " + "	INNER JOIN tblContentLocation l " + "		ON c.nContentKey = l.nContentId " + "WHERE (" + sWhere + ") " + "	AND NOT(c.nContentKey IN (0," + nIgnoreID + ")) " + "	AND l.nStructId IN (" + cLocations + ") ";
+                        string cSubquerySQL = string.Empty;
+                        //Modified query according to criteria for review
+                        if (cSchemaName == "Review")
+                        {
+                            cSubquerySQL = "SELECT DISTINCT c.nContentKey AS id " + "FROM tblContent c " + " "+ "Inner join tblContentRelation cr  On c.nContentKey= cr.nContentChildId INNER JOIN tblAudit cra ON cra.nAuditKey= cr.nAuditId and cra.nStatus=1 " + "	INNER JOIN tblContentLocation l " + "		ON l.nContentId = cr.nContentParentId INNER JOIN tblAudit cla ON cla.nAuditKey= l.nAuditId and cla.nStatus=1 " + "WHERE (" + sWhere + ") " + "	AND NOT(c.nContentKey IN (0," + nIgnoreID + ")) " + "	AND l.nStructId IN (" + cLocations + ") ";
 
+                        }else
+                        {
+                            cSubquerySQL = "SELECT DISTINCT c.nContentKey AS id " + "FROM tblContent c " + "	INNER JOIN tblContentLocation l " + "		ON c.nContentKey = l.nContentId " + "WHERE (" + sWhere + ") " + "	AND NOT(c.nContentKey IN (0," + nIgnoreID + ")) " + "	AND l.nStructId IN (" + cLocations + ") ";
 
-
-
+                        }
 
 
                         // No get more information
@@ -14587,7 +14593,34 @@ namespace Protean
             }
             #endregion
 
-
+            public string getContentIdFromOrder(string orderRef, string ContentName)
+            {
+                // Dim oDr As SqlDataReader
+                string sSql;
+                string nContentID = string.Empty;
+                
+                string cProcessInfo = "";
+                try
+                {
+                    sSql = "execute spGetContentIdFromOrderReference @orderRef=" + orderRef + ", @ProductName=" + "'"+ ContentName + "'";
+                    using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql))
+                    {
+                        if (oDr != null)
+                        {
+                            while (oDr.Read())
+                            {
+                                nContentID = Convert.ToString(oDr["nItemId"]);                                
+                            }                            
+                        }
+                    }
+                    return nContentID.ToString();
+                }
+                catch (Exception ex)
+                {
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "UpdateContact", ex, cProcessInfo));
+                    return nContentID;
+                }
+            }
         }
 
 
