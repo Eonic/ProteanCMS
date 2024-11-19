@@ -5122,11 +5122,10 @@
 		<xsl:param name="input" />
 		<xsl:param name="marker" />
 		<xsl:if test="contains($input,$marker)">
-			<xsl:value-of select="substring-before($input,$marker)"/>
-			<xsl:value-of select="$marker"/>
+      <xsl:value-of select="$marker"/>
+      <xsl:value-of select="substring-before($input,$marker)"/>
 			<xsl:call-template name="substring-before-last">
-				<xsl:with-param name="input"
-							select="substring-after($input,$marker)" />
+				<xsl:with-param name="input" select="substring-after($input,$marker)" />
 				<xsl:with-param name="marker" select="$marker" />
 			</xsl:call-template>
 		</xsl:if>

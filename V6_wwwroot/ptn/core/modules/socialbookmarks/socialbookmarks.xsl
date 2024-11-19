@@ -659,15 +659,6 @@
                 </a>
               </li>
             </xsl:if>
-            <xsl:if test="@googlePlusURL!=''">
-              <li class="nav-item">
-                <a href="{@googlePlusURL}" target="_blank" title="{$myName} on Google+" class="nav-link social-id-gp">
-                  <i class="fab fa-google-plus">
-                    <xsl:text> </xsl:text>
-                  </i>
-                </a>
-              </li>
-            </xsl:if>
             <xsl:if test="@pinterestURL!=''">
               <li class="nav-item">
                 <a href="{@pinterestURL}" target="_blank" title="{$myName} on Pinterest" class="nav-link social-id-pi">
@@ -690,6 +681,15 @@
               <li class="nav-item">
                 <a href="{@instagramURL}" target="_blank" title="{$myName} on Instagram" id="nav-link social-id-ig">
                   <i class="fab fa-instagram">
+                    <xsl:text> </xsl:text>
+                  </i>
+                </a>
+              </li>
+            </xsl:if>
+            <xsl:if test="@blueSkyURL!=''">
+              <li class="nav-item">
+                <a href="{@blueSkyURL}" target="_blank" title="{$myName} on blue Sky" class="nav-link social-id-bs">
+                  <i class="fa-brands fa-bluesky">
                     <xsl:text> </xsl:text>
                   </i>
                 </a>
