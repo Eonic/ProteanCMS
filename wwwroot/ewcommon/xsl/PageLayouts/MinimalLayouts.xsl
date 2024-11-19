@@ -484,7 +484,7 @@
 							<xsl:text> panelImage </xsl:text>
 						</xsl:if>
 						<xsl:if test="@responsiveImg='true'">
-							<xsl:text> test module-img-responsive</xsl:text>
+							<xsl:text> module-img-responsive</xsl:text>
 						</xsl:if>
 						<xsl:if test="@modAnim and @modAnim!=''">
 							<xsl:text> moduleAnimate-invisible</xsl:text>

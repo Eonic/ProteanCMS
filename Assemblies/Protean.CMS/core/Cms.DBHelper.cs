@@ -14593,7 +14593,7 @@ namespace Protean
             }
             #endregion
 
-            public string getProductIdFromOrder(string orderRef, string ContentName)
+            public string getContentIdFromOrder(string orderRef, string ContentName)
             {
                 // Dim oDr As SqlDataReader
                 string sSql;
@@ -14602,7 +14602,7 @@ namespace Protean
                 string cProcessInfo = "";
                 try
                 {
-                    sSql = "execute spGetProductIdFromOrderReference @orderRef=" + orderRef + ", @ProductName=" + "'"+ ContentName + "'";
+                    sSql = "execute spGetContentIdFromOrderReference @orderRef=" + orderRef + ", @ProductName=" + "'"+ ContentName + "'";
                     using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql))
                     {
                         if (oDr != null)
