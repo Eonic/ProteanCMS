@@ -8282,8 +8282,8 @@ namespace Protean
 
                         // Pages
                         oSelElmt1 = base.addSelect1(ref oFrmElmt, "cSection", false, "Page", "", Protean.xForm.ApperanceTypes.Minimal);
-                        //base.addOption(ref oSelElmt1, "All", 0.ToString());
-                        //base.addOption(ref oSelElmt1, "All Orphan " + cContentType + "s", (-1).ToString());
+                        base.addOption(ref oSelElmt1, "All", 0.ToString());
+                        base.addOption(ref oSelElmt1, "All Orphan " + cContentType + "s", (-1).ToString());
                         string cSQL;
                         cSQL = "SELECT tblContentStructure.* FROM tblContentStructure ORDER BY nStructOrder";
                         var oDS = new DataSet();
