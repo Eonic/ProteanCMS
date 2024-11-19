@@ -1,15 +1,11 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using System.Web.Configuration;
-
 using System.Xml;
-using System.Xml.Xsl;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
-using Microsoft.VisualBasic.Logging;
 using static Protean.stdTools;
 
 
@@ -697,7 +693,7 @@ namespace Protean
                             if (whereSQL.ToLower().Trim().EndsWith(" and") == false)
                             {
                                 myWeb.moSession["FilterWhereCondition"] = whereSQL;
-                                myWeb.moSession["AdditionalColumn"] = cAdditionalColumns;
+                                myWeb.moSession["AdditionalColumns"] = cAdditionalColumns;
                                 myWeb.moSession["AdditionalJoins"] = cAdditionalJoins;
                                 myWeb.moSession["OrderBy"] = cOrderBySql;
                                 XmlElement argoPageDetail = null; int nCount = 0;

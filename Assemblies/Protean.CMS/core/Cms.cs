@@ -4831,7 +4831,7 @@ namespace Protean
                 // if distinct flag true and order by clause is also enabled then  required to bring all this column in select query too. 
                 // column which you are passing here is either 
                 // - agreegate function
-               // -or an xpath/xquery too eg : return Convert(XML, cContentXmlBrief).value("/Content/StockCode[1]",'varchar(10)')
+                // -or an xpath/xquery too eg : return Convert(XML, cContentXmlBrief).value("/Content/StockCode[1]",'varchar(10)')
 
                 if (cAdditionalColumns != string.Empty)
                 {
@@ -8068,13 +8068,13 @@ namespace Protean
                         if (moSession["FilterWhereCondition"] != null && Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(moSession["FilterWhereCondition"], string.Empty, false)))
                         {
                             string whereSQL = Convert.ToString(moSession["FilterWhereCondition"]);
-                            string cAdditionalColumn = Convert.ToString(moSession["AdditionalColumn"]);
+                            string cAdditionalColumns = Convert.ToString(moSession["AdditionalColumns"]);
                             string cAdditionalJoins = Convert.ToString(moSession["AdditionalJoins"]);
                             string cOrderBySql = Convert.ToString(moSession["OrderBy"]);
                             string cAdminMode = Convert.ToString(moSession["AdminMode"]);
                             XmlElement argoPageDetail = null;
                             int nCount = 0;
-                            GetPageContentFromSelectFilterPagination(ref nCount, oContentsNode: ref oPageElmt, oPageDetail: ref argoPageDetail, whereSQL, bIgnorePermissionsCheck: true, cShowSpecificContentTypes: moRequest["singleContentType"], ignoreActiveAndDate: false, nStartPos: (long)nStart, nItemCount: (long)nRows, distinct: true, cAdditionalJoins: cAdditionalJoins, cAdditionalColumn: cAdditionalColumn, cOrderBy: cOrderBySql, cAdminMode: cAdminMode);
+                            GetPageContentFromSelectFilterPagination(ref nCount, oContentsNode: ref oPageElmt, oPageDetail: ref argoPageDetail, whereSQL, bIgnorePermissionsCheck: true, cShowSpecificContentTypes: moRequest["singleContentType"], ignoreActiveAndDate: false, nStartPos: (long)nStart, nItemCount: (long)nRows, distinct: true, cAdditionalJoins: cAdditionalJoins, cAdditionalColumns: cAdditionalColumns, cOrderBy: cOrderBySql, cAdminMode: cAdminMode);
                         }
                         else
                         {
@@ -8095,7 +8095,7 @@ namespace Protean
                             if (moSession["FilterWhereCondition"] != null)
                             {
                                 moSession["FilterWhereCondition"] = (object)null;
-                                moSession["AdditionalColumn"] = null;
+                                moSession["AdditionalColumns"] = null;
                                 moSession["AdditionalJoins"] = null;
                                 moSession["OrderBy"] = null;
                                 // moSession.Remove("FilterWhereCondition")
