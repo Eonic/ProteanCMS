@@ -460,6 +460,14 @@ section.stretchBG {
 
         > * > .row {
             height: 100%;
+
+            .col {
+                height: 100%;
+
+                .layoutModule {
+                    background-size: cover;
+                }
+            }
         }
     }
 
@@ -480,6 +488,14 @@ section.stretchBG {
 
     .layoutModule .layoutModule {
         padding: $card-cap-padding-y $card-cap-padding-x;
+    }
+
+    .card {
+        justify-content: center;
+
+        .card-body {
+            flex-grow: 0;
+        }
     }
 }
 

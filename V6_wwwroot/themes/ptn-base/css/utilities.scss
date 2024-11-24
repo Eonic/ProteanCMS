@@ -37,7 +37,7 @@
     filter: progid:DXImageTransform.Microsoft.gradient(enabled = false) !important;
 }
 
-@mixin circle-icon($background: $primary,$color: #fff,$size: 6rem,$font: 3rem) {
+@mixin circle-icon($background: $primary,$color: color-contrast($background),$size: 6rem,$font: 3rem) {
     width: $size;
     height: $size;
     background: $background;

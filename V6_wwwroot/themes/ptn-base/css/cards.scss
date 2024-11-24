@@ -93,6 +93,10 @@
         .card-body-w-footer {
             padding-bottom: 1rem;
         }
+
+        .card-footer {
+            padding-top:0;
+        }
     }
 
     @include card-color-bg;

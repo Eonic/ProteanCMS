@@ -45,6 +45,8 @@
       <bind id="height" nodeset="@height" required="false()" type="string"/>
       <bind id="minHeightxs" nodeset="@minHeightxs" required="false()" type="string"/>
       <bind id="minHeight" nodeset="@minHeight" required="false()" type="string"/>
+      <bind id="padding-top" nodeset="@padding-top" required="false()" type="string"/>
+      <bind id="padding-bottom" nodeset="@padding-bottom" required="false()" type="string"/>
       <bind id="relHeight" nodeset="@relHeight" required="false()" type="string"/>
       <bind id="contentHeight" nodeset="@contentHeight" required="false()" type="string"/>
       <bind id="data-stellar-background-ratio" nodeset="@data-stellar-background-ratio" required="false()" type="string"/>
@@ -1021,40 +1023,18 @@
               <label>Minimum Height Mobile</label>
               <value></value>
             </input>-->
-            <select1 bind="height" appearance="full">
-              <item>
-                <label>Fixed Height</label>
-                <value>fixed</value>
-                <toggle case="height_1" event="DOMActivate"/>
-              </item>
-              <item>
-                <label>Relative Height</label>
-                <value>relative</value>
-                <toggle case="height_2" event="DOMActivate"/>
-              </item>
-            </select1>
-            <switch class="disable">
-              <case id="height_1">
-                <group  class="row row-cols-sm-2 row-cols-lg-3">
-                  <input bind="minHeightxs" class="bs-only" suffix="px">
-                    <label>Minimum Height Mobile</label>
-                    <value></value>
-                  </input>
-                  <input bind="minHeight" class="bs-only" suffix="px">
-                    <label>Minimum Height Desktop</label>
-                    <value></value>
-                  </input>
-                </group>
-              </case>
-              <case id="height_2">
-                <!--<group  class="row row-cols-sm-2 row-cols-lg-3">
-									<input bind="relHeight" class="bs-only short" suffix="%">
-										<label>Height relative to width</label>
-										<value></value>
-									</input>
-								</group>-->
-              </case>
-            </switch>
+
+            <group  class="row row-cols-sm-2 row-cols-lg-3">
+              <input bind="minHeightxs" class="bs-only" suffix="px">
+                <label>Minimum Height Mobile</label>
+                <value></value>
+              </input>
+              <input bind="minHeight" class="bs-only" suffix="px">
+                <label>Minimum Height Desktop</label>
+                <value></value>
+              </input>
+            </group>
+
             <select1 bind="bgContentPosition" appearance="minimal">
               <label>Content Position</label>
               <item>
@@ -1070,17 +1050,31 @@
                 <value>bottom</value>
               </item>-->
             </select1>
-            <select1 bind="contentHeight" appearance="full">
-              <label>Make content items equal heights?</label>
-              <item>
-                <label>Yes</label>
-                <value>true</value>
-              </item>
-              <item>
-                <label>No</label>
-                <value>false</value>
-              </item>
-            </select1>
+            <group class="row">
+              <group class="col-lg-4">
+                <select1 bind="contentHeight" appearance="full">
+                  <label>Make content items equal heights?</label>
+                  <item>
+                    <label>Yes</label>
+                    <value>true</value>
+                  </item>
+                  <item>
+                    <label>No</label>
+                    <value>false</value>
+                  </item>
+                </select1>
+              </group>
+              <group class="col-lg-4">
+                <input bind="padding-top">
+                  <label>Padding Top</label>
+                </input>
+              </group>
+              <group class="col-lg-4">
+                <input bind="padding-bottom">
+                  <label>Padding Bottom</label>
+                </input>
+              </group>
+            </group>
           </group>
         </group>
       </group>

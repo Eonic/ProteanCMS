@@ -6,7 +6,7 @@
 //$body-bg: $white !default;
 $primary: #CC4B00;
 $secondary: #003e74;
-$info: #41b6df;
+$info: #383838;
 $light: #efefef;
 $dark: #111;
 $mid-gray: #111;
@@ -55,7 +55,7 @@ $btn-list-style: $btn-style;
 $btn-color: $primary;
 //$btn-font-weight: 600;
 $content-btn-align: true;
-//$btn-border-radius: var(--#{$prefix}border-radius);
+$btn-border-radius: 0;
 $btn-border-width: 2px;
 $btn-padding-x: 1.5rem;
 $btn-padding-y: 0.4rem;
@@ -74,7 +74,7 @@ $header-btn-style: btn-outline-primary;
 
 /*################### NAVIGATION #####################*/
 $navbar-light-color: $body-color;
-$nav-link-hover-color: $secondary;
+$nav-link-hover-color: $primary;
 $navbar-light-hover-color: $nav-link-hover-color;
 $main-nav-size: 1.1rem;
 //$navbar-font:$headings-font-family;

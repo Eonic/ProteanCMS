@@ -175,6 +175,20 @@
                 <xsl:value-of select="(@data-stellar-background-ratio div 10)"/>
               </xsl:attribute>-->
             </xsl:if>
+            <xsl:if test="@backgroundImage='' or not(@backgroundImage)">
+              <xsl:attribute name="style">
+                <xsl:if test="@minHeight!=''">
+                  <xsl:text>height:</xsl:text>
+                  <xsl:value-of select="@minHeight"/>
+                  <xsl:text>px!important;</xsl:text>
+                </xsl:if>
+                <xsl:text>padding-top:</xsl:text>
+                <xsl:value-of select="@padding-top"/>
+                <xsl:text>;</xsl:text>
+                <xsl:text>padding-bottom:</xsl:text>
+              <xsl:value-of select="@padding-bottom"/>
+            </xsl:attribute>
+            </xsl:if>
             <xsl:if test="@backgroundImage!=''">
               <style>
                 <xsl:text>.bg-wrapper-</xsl:text>

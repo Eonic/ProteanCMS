@@ -32,7 +32,7 @@ h2.layout-title {
                 height: 2px;
                 bottom: 0;
                 left: 0;
-                background-color: $secondary;
+                background-color: $nav-link-hover-color;
                 transform: scaleX(0);
                 transition: transform 0.3s ease;
             }
@@ -51,7 +51,6 @@ h2.layout-title {
             }
         }
     }
-
 }
 
 .header-menu-below .main-nav {
@@ -85,6 +84,7 @@ h2.layout-title {
     @extend .btn-outline-primary;
 }
 .card-title i,
-.module-with-icon i{
-    @include circle-icon($color:$secondary);
+.module-with-icon i {
+    @include circle-icon-border($border:3px solid $primary,$color:$info);
+    //color:$info;
 }
