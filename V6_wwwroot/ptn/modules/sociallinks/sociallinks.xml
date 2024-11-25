@@ -44,7 +44,7 @@
 			<bind id="cContentFacebook" nodeset="@facebookURL" required="false()" type="format:/(?:https:\/\/)?(?:www\.)?facebook\.com\/*"/>
 			<bind id="cContentTwitter" nodeset="@twitterURL" required="false()" type="format:/(?:https:\/\/)?(?:www\.)?twitter\.com\/*"/>
 			<bind id="cContentLinkedIn" nodeset="@linkedInURL" required="false()" type="format:/(?:https:\/\/)?(?:*\.)?linkedin\.com\/*"/>
-			<bind id="cContentGooglePlus" nodeset="@googlePlusURL" required="false()" type="format:/(?:https:\/\/)?:www\.)\/*"/>
+			<bind id="cContentBlueSky" nodeset="@blueSkyURL" required="false()" type="format:/(?:https:\/\/)?:www\.)\/*"/>
 			<bind id="cContentPinterest" nodeset="@pinterestURL" required="false()" type="format:/(?:https:\/\/)?(?:www\.)\/*"/>
 			<bind id="cContentYoutube" nodeset="@youtubeURL" required="false()" type="format:/(?:https:\/\/)?(?:www\.)?youtube\.com\/*"/>
 			<bind id="cContentInstagram" nodeset="@instagramURL" required="false()" type="format:/(?:https:\/\/)?(?:www\.)?instagram\.com\/*"/>
@@ -143,9 +143,6 @@
 						<input bind="cContentLinkedIn" class="short">
 							<label>LinkedIn URL</label>
 						</input>
-						<!--<input bind="cContentGooglePlus" class="short">
-								<label>Google+ URL</label>
-							</input>-->
 					</group>
 					<group class="col-lg-6">
 						<input bind="cContentPinterest" class="short">
@@ -157,6 +154,9 @@
 						<input bind="cContentInstagram" class="short">
 							<label>Instagram URL</label>
 						</input>
+            <input bind="cContentBlueSky" class="short">
+              <label>Bluesky URL</label>
+            </input>
 					</group>
 				</group>
 				<!-- group class="inline">		

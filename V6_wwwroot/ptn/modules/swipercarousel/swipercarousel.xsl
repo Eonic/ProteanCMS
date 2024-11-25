@@ -495,7 +495,7 @@
         </div>
       </xsl:when>
       <xsl:otherwise>
-        <div style="background-image:url({Images/img[@class='detail']/@src})" class="swiper-slide">
+        <div style="background-image:url({Images/img[@class='detail']/@src});background-size:{@bg-cover};background-position:{@bg-position}" class="swiper-slide">
           <!--<xsl:if test="$cHeightOptions!='adapt'">
 						<xsl:attribute name="style">background-image:url({Images/img[@class='detail']/@src})</xsl:attribute>
 					</xsl:if>-->
@@ -518,6 +518,8 @@
                 <xsl:text> swiper-slide-padding justify-content-</xsl:text>
                 <xsl:value-of select="@position-horizontal"/>
               </xsl:attribute>
+
+              
               <!--<img src="{Images/img[@class='detail']/@src}" alt="{Title/node()}" />-->
               <div class="swiper-caption">
                 <xsl:attribute name="class">
@@ -542,8 +544,8 @@
                       <xsl:text> plain-slide</xsl:text>
                     </xsl:otherwise>
                   </xsl:choose>
-                  <!--<xsl:value-of select="@bg-cover"/>-->
                 </xsl:attribute>
+                <!--<xsl:value-of select="@bg-cover"/>-->
                 <div class="swiper-caption-inner">
                   <xsl:if test="Title/node()!='' and not(@showHeading='false')">
                     <xsl:choose>

@@ -239,7 +239,8 @@
     ]},
 
     {title: 'Button', inline: 'a', classes: 'btn btn-custom'},
-    {title: 'Button Outline', inline: 'a', classes: 'btn btn-outline-primary'}
+    {title: 'Button Outline', inline: 'a', classes: 'btn btn-outline-primary'},
+    {title: 'Button Outline Light', inline: 'a', classes: 'btn btn-outline-light'}
     ],
   </xsl:template>
 </xsl:stylesheet>

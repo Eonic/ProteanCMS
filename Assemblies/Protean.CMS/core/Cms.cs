@@ -8068,7 +8068,7 @@ namespace Protean
                         if (moSession["FilterWhereCondition"] != null && Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(moSession["FilterWhereCondition"], string.Empty, false)))
                         {
                             string whereSQL = Convert.ToString(moSession["FilterWhereCondition"]);
-                            string cAdditionalColumns = Convert.ToString(moSession["AdditionalColumn"]);
+                            string cAdditionalColumns = Convert.ToString(moSession["AdditionalColumns"]);
                             string cAdditionalJoins = Convert.ToString(moSession["AdditionalJoins"]);
                             string cOrderBySql = Convert.ToString(moSession["OrderBy"]);
                             string cAdminMode = Convert.ToString(moSession["AdminMode"]);
@@ -8095,7 +8095,7 @@ namespace Protean
                             if (moSession["FilterWhereCondition"] != null)
                             {
                                 moSession["FilterWhereCondition"] = (object)null;
-                                moSession["AdditionalColumn"] = null;
+                                moSession["AdditionalColumns"] = null;
                                 moSession["AdditionalJoins"] = null;
                                 moSession["OrderBy"] = null;
                                 // moSession.Remove("FilterWhereCondition")
