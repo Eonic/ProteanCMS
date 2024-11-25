@@ -1,18 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Security;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualBasic;
 using System.Text.RegularExpressions;
-using System.Xml;
-using System.Runtime.InteropServices;
 
 namespace Protean.Tools
 {
@@ -501,7 +490,7 @@ namespace Protean.Tools
                 string orig = text;
                 if (!(text == ""))
                 {
-       
+
                     text = text.Replace(@"\", @"\\");
                     text = text.Replace("&#13;", @"\r");
                     text = text.Replace("&#10;", @"\n");
@@ -599,7 +588,7 @@ namespace Protean.Tools
         {
 
             // PerfMon.Log("Web", "tidyXhtmlFrag")
-           // string sProcessInfo = "tidyXhtmlFrag";
+            // string sProcessInfo = "tidyXhtmlFrag";
             string sTidyXhtml = "";
             int crResult = 0;
 
@@ -627,14 +616,14 @@ namespace Protean.Tools
                 {
                     oTdyManaged.OutputNumericEntities = true;
                 }
-               oTdyManaged.CleanAndRepair();
+                oTdyManaged.CleanAndRepair();
                 try
                 {
                     sTidyXhtml = oTdyManaged.Save();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    sTidyXhtml = "<div>html import conversion error result="  + " <br/></div>";
+                    sTidyXhtml = "<div>html import conversion error result=" + ex.Message + " <br/></div>";
                 }
 
                 oTdyManaged.Dispose();
