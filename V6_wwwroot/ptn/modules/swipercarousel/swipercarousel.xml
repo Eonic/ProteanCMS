@@ -36,7 +36,7 @@
       <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
       <bind id="cInterval" nodeset="@interval" required="false()" type="string"/>
       <bind id="nSpeed" nodeset="@speed" required="false()" type="number"/>
-      <bind id="direction" nodeset="@direction" required="false()" type="number"/>
+      <!--<bind id="direction" nodeset="@direction" required="false()" type="number"/>-->
       <bind id="effect" nodeset="@effect" required="false()" type="number"/>
       <bind id="webp" nodeset="@webp" required="false()" type="number"/>
       <bind id="cHeightOptions" nodeset="@cHeightOptions" required="false()" type="string"/>
@@ -140,7 +140,7 @@
                   <value>true</value>
                 </item>
               </select>
-              <select1 appearance="full" bind="direction" class="short inline-items">
+              <!--<select1 appearance="full" bind="direction" class="short inline-items">
                 <label>Direction</label>
                 <item>
                   <label>Horizontal</label>
@@ -150,7 +150,7 @@
                   <label>Vertical</label>
                   <value>vertical</value>
                 </item>
-              </select1>
+              </select1>-->
               <select1 bind="marginBelow" appearance="full" class="form-group">
                 <item>
                   <label>Margin below module (default)</label>

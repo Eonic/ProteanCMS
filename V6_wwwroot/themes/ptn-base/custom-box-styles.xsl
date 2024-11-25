@@ -227,8 +227,8 @@
     {title: 'Blockquote', block: 'blockquote'},
     {title: 'Div', block: 'div'},
     {title: 'Pre', block: 'pre'},
-    {title: 'Two Columns', block: 'div', classes: 'two-col-text'},
-    {title: 'Three Columns', block: 'div', classes: 'three-col-text'}
+    {title: 'Two Columns', block: 'div', classes: 'two-col-text', wrapper : true},
+    {title: 'Three Columns', block: 'div', classes: 'three-col-text', wrapper : true}
     ]},
 
     {title: 'Alignment', items: [
@@ -238,7 +238,9 @@
     {title: 'Justify', block: 'div', styles : {textAlign : 'justify'}, icon: 'alignjustify'}
     ]},
 
-    {title: 'Button', inline: 'a', classes: 'btn btn-custom'}
+    {title: 'Button', inline: 'a', classes: 'btn btn-custom'},
+    {title: 'Button Outline', inline: 'a', classes: 'btn btn-outline-primary'},
+    {title: 'Button Outline Light', inline: 'a', classes: 'btn btn-outline-light'}
     ],
   </xsl:template>
 </xsl:stylesheet>

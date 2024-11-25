@@ -396,15 +396,6 @@
 					</i>
 				</a>
 			</xsl:if>
-			<xsl:if test="@googlePlusURL!=''">
-				<a href="{@googlePlusURL}" target="_blank" title="{$myName} on Google+" class="social-id-gp">
-					<i class="fab fa-google-plus">
-						<span class="visually-hidden">
-							<xsl:value-of select="$myName"/> on Google+
-						</span>
-					</i>
-				</a>
-			</xsl:if>
 			<xsl:if test="@pinterestURL!=''">
 				<a href="{@pinterestURL}" target="_blank" title="{$myName} on Pinterest" class="social-id-pi">
 					<i class="fab fa-pinterest">
@@ -432,6 +423,15 @@
 					</i>
 				</a>
 			</xsl:if>
+      <xsl:if test="@blueSkyURL!=''">
+        <a href="{@blueSkyURL}" target="_blank" title="{$myName} on Bluesky" class="social-id-bs">
+          <i class="fa-brands fa-bluesky">
+            <span class="visually-hidden">
+              <xsl:value-of select="$myName"/> on BlueSky
+            </span>
+          </i>
+        </a>
+      </xsl:if>
 		</div>
 	</xsl:template>
 	<!-- module -->
@@ -801,13 +801,6 @@
 					</i>
 				</a>
 			</xsl:if>
-			<xsl:if test="@googlePlusURL!=''">
-				<a href="{@googlePlusURL}" title="{$myName} on Google+" class="social-id-gp">
-					<i class="fab fa-google-plus">
-						<xsl:text> </xsl:text>
-					</i>
-				</a>
-			</xsl:if>
 			<xsl:if test="@pinterestURL!=''">
 				<a href="{@pinterestURL}" title="{$myName} on Pinterest" class="social-id-pi">
 					<i class="fab fa-pinterest">
@@ -836,6 +829,15 @@
 					</i>
 				</a>
 			</xsl:if>
+      <xsl:if test="@blueSkyURL!=''">
+        <a href="{@blueSkyURL}" target="_blank" title="{$myName} on Bluesky" class="social-id-bs">
+          <i class="fa-brands fa-bluesky">
+            <span class="visually-hidden">
+              <xsl:value-of select="$myName"/> on BlueSky
+            </span>
+          </i>
+        </a>
+      </xsl:if>
 		</div>
 	</xsl:template>
 

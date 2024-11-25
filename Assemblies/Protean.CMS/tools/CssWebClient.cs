@@ -78,19 +78,19 @@ namespace Protean
                 {
                     // check for fullpath
                     string origServiceUrl = Serviceurl;
-
+                    string serverPort = "";
                     // PerfMon.Log("CssWebClient", "SendCssHttpHandlerRequest", "start-" & Serviceurl)
 
                     if (goRequest.ServerVariables["SERVER_NAME"] == "localhost" & goRequest.ServerVariables["SERVER_PORT"] != "80")
                     {
-                        origServiceUrl = ":" + goRequest.ServerVariables["SERVER_PORT"] + Serviceurl;
+                        serverPort = ":" + goRequest.ServerVariables["SERVER_PORT"];
                     }
 
                     if (!(Strings.InStr(Serviceurl, "http") == 1))
                     {
                         if (Strings.LCase(goRequest.ServerVariables["HTTPS"]) == "on")
                         {
-                            origServiceUrl = "https://" + goRequest.ServerVariables["SERVER_NAME"] + Serviceurl;
+                            origServiceUrl = "https://" + goRequest.ServerVariables["SERVER_NAME"] + serverPort + Serviceurl;
                             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                             ServicePointManager.ServerCertificateValidationCallback +=
                                 (sender, cert, chain, error) =>
@@ -115,7 +115,7 @@ delegate (object sender, System.Security.Cryptography.X509Certificates.X509Certi
                         }
                         else
                         {
-                            origServiceUrl = "http://" + goRequest.ServerVariables["SERVER_NAME"] + Serviceurl;
+                            origServiceUrl = "http://" + goRequest.ServerVariables["SERVER_NAME"] + serverPort + Serviceurl;
                         }
                     }
                    

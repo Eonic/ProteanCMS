@@ -1143,13 +1143,13 @@ namespace Protean
                 }
 
             }
-            //getProductIDFromOrder(string orderRef, string ContentName)
-            public string GetProductIDFromOrder(string orderRef, string ContentName)
+            //GetContentIdFromOrder(string orderRef, string ContentName)
+            public string GetContentIdFromOrder(string orderRef, string ContentName)
             {
                 if (orderRef.Contains("V4-")) {
                     orderRef = orderRef.Replace("V4-", "");
                 }
-                string nContentID = myWeb.moDbHelper.getProductIdFromOrder(orderRef, ContentName);
+                string nContentID = myWeb.moDbHelper.getContentIdFromOrder(orderRef, ContentName);
                
                 if (nContentID != "")
                 {
@@ -1157,7 +1157,7 @@ namespace Protean
                 }
                 else
                 {
-                    return "";
+                    return "0";
                 }
 
             }

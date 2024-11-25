@@ -8,33 +8,27 @@
 // $Copyright:   Copyright (c) 2002 - 2022 Eonic Digital LLP.
 // ***********************************************************************
 
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using Protean.Providers.Membership;
+using Protean.Providers.Payment;
+using Protean.Tools;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
-using static System.Web.HttpUtility;
-
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
-using Protean.Tools;
 using static Protean.Tools.Text;
 using static Protean.Tools.Xml;
-using System.Web.UI.HtmlControls;
-using Protean.Providers.Membership;
-using Protean.Providers.Payment;
-using System.Windows.Shapes;
-using System.Data.SqlClient;
-using Protean.Models;
-using System.Windows.Controls;
+using static System.Web.HttpUtility;
 
 namespace Protean
 {
@@ -62,22 +56,22 @@ namespace Protean
 
                 private void _OnError(object sender, Tools.Errors.ErrorEventArgs err)
                 {
-                    stdTools.returnException(ref this.myWeb.msException, mcModuleName, err.ProcedureName, err.Exception, "", err.AddtionalInformation, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, err.ProcedureName, err.Exception, "", err.AddtionalInformation, gbDebug);
                 }
 
 
                 public AdminXforms(ref Cms aWeb) : base(ref aWeb)
                 {
 
-                    this.myWeb.PerfMon.Log("AdminXforms", "New");
+                    myWeb.PerfMon.Log("AdminXforms", "New");
                     try
                     {
-                        this.myWeb = aWeb;
-                        goConfig = this.myWeb.moConfig;
-                        moDbHelper = this.myWeb.moDbHelper;
-                        moRequest = this.myWeb.moRequest;
+                        myWeb = aWeb;
+                        goConfig = myWeb.moConfig;
+                        moDbHelper = myWeb.moDbHelper;
+                        moRequest = myWeb.moRequest;
 
-                        base.cLanguage = this.myWeb.mcPageLanguage;
+                        base.cLanguage = myWeb.mcPageLanguage;
                         if (myWeb.bs5)
                         {
                             ReportExportPath = "/ptn/tools/export.ashx?ewCmd=CartDownload";
@@ -86,7 +80,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "New", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "New", ex, "", "", gbDebug);
                     }
 
                     OnError += _OnError;
@@ -102,7 +96,7 @@ namespace Protean
                 {
                     try
                     {
-                        if (Conversions.ToBoolean(this.myWeb.impersonationMode))
+                        if (Conversions.ToBoolean(myWeb.impersonationMode))
                         {
                             moImp = new Tools.Security.Impersonate();
                             return moImp.ImpersonateValidUser(goConfig["AdminAcct"], goConfig["AdminDomain"], goConfig["AdminPassword"], cInGroup: goConfig["AdminGroup"]);
@@ -123,7 +117,7 @@ namespace Protean
                 {
                     try
                     {
-                        if (Conversions.ToBoolean(this.myWeb.impersonationMode))
+                        if (Conversions.ToBoolean(myWeb.impersonationMode))
                         {
                             moImp.UndoImpersonation();
                             moImp = null;
@@ -143,12 +137,12 @@ namespace Protean
                     string cProcessInfo = "";
                     try
                     {
-                        this.moPageXML = oPageXml;
+                        moPageXML = oPageXml;
                     }
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "Open", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "Open", ex, "", cProcessInfo, gbDebug);
                     }
                 }
 
@@ -167,26 +161,26 @@ namespace Protean
                         base.bProcessRepeats = false;
 
                         // We load the xform from a file, it may be in local or in common folders.
-                        base.load(xFormPath, this.myWeb.maCommonFolders);
+                        base.load(xFormPath, myWeb.maCommonFolders);
 
                         // We get the instance
                         if (nObjectId > 0)
                         {
                             base.bProcessRepeats = true;
-                            if (this.myWeb.moSession[InstanceSessionName.ToString()] is null)
+                            if (myWeb.moSession[InstanceSessionName.ToString()] is null)
                             {
                                 var existingInstance = base.moXformElmt.OwnerDocument.CreateElement("instance");
                                 existingInstance.InnerXml = moDbHelper.getObjectInstance(ptnObjectType, (long)nObjectId).Replace("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "").Replace("xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"", "");
                                 base.LoadInstance(existingInstance);
-                                this.myWeb.moSession[InstanceSessionName.ToString()] = base.Instance;
+                                myWeb.moSession[InstanceSessionName.ToString()] = base.Instance;
                             }
                             else
                             {
-                                base.LoadInstance(this.myWeb.moSession["tempInstance"].ToString());
+                                base.LoadInstance(myWeb.moSession["tempInstance"].ToString());
                             }
                         }
 
-                        this.moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = base.Instance.InnerXml;
+                        moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = base.Instance.InnerXml;
 
                         if (base.isSubmitted())
                         {
@@ -195,7 +189,7 @@ namespace Protean
                             if (base.valid)
                             {
                                 int nCId = Conversions.ToInteger(moDbHelper.setObjectInstance(ptnObjectType, base.Instance, (long)nObjectId));
-                                this.myWeb.moSession["tempInstance"] = (object)null;
+                                myWeb.moSession["tempInstance"] = (object)null;
                             }
                         }
                         else if (base.isTriggered)
@@ -203,11 +197,11 @@ namespace Protean
                             // we have clicked a trigger so we must update the instance
                             base.updateInstanceFromRequest();
                             // lets save the instance
-                            this.goSession[InstanceSessionName.ToString()] = base.Instance;
+                            goSession[InstanceSessionName.ToString()] = base.Instance;
                         }
                         else
                         {
-                            this.goSession[InstanceSessionName.ToString()] = base.Instance;
+                            goSession[InstanceSessionName.ToString()] = base.Instance;
                         }
 
                         // we populate the values onto the form.
@@ -218,13 +212,13 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
 
 
-               
+
                 public virtual XmlElement GetProviderXFrmUserLogon(string FormName = "UserLogon")
                 {
                     string cProcessInfo = "";
@@ -235,13 +229,13 @@ namespace Protean
                         IMembershipAdminXforms oAdXfm = myWeb.moMemProv.AdminXforms;
 
                         oAdXfm.xFrmUserLogon(FormName);
-                        this.valid = Convert.ToBoolean(oAdXfm.valid);
+                        valid = Convert.ToBoolean(oAdXfm.valid);
                         return oAdXfm.moXformElmt;
                     }
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmUserLogon", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmUserLogon", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -370,19 +364,19 @@ namespace Protean
                     try
                     {
 
-                        Cms argmyWeb = this.myWeb;
+                        Cms argmyWeb = myWeb;
 
                         IMembershipAdminXforms oAdXfm = myWeb.moMemProv.AdminXforms;
-                        this.myWeb = (Cms)argmyWeb;
+                        myWeb = (Cms)argmyWeb;
 
                         oAdXfm.xFrmPasswordReminder();
-                        this.valid = Conversions.ToBoolean(oAdXfm.valid);
+                        valid = Conversions.ToBoolean(oAdXfm.valid);
                         return (XmlElement)oAdXfm.moXformElmt;
                     }
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmPasswordReminder", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmPasswordReminder", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -399,13 +393,13 @@ namespace Protean
                         IMembershipAdminXforms oAdXfm = myWeb.moMemProv.AdminXforms;
 
                         oAdXfm.xFrmActivateAccount();
-                        this.valid = Conversions.ToBoolean(oAdXfm.valid);
+                        valid = Conversions.ToBoolean(oAdXfm.valid);
                         return (XmlElement)oAdXfm.moXformElmt;
                     }
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmActivateAccount", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmActivateAccount", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -422,13 +416,13 @@ namespace Protean
                         IMembershipAdminXforms oAdXfm = myWeb.moMemProv.AdminXforms;
 
                         oAdXfm.xFrmResetAccount(userId);
-                        this.valid = Conversions.ToBoolean(oAdXfm.valid);
+                        valid = Conversions.ToBoolean(oAdXfm.valid);
                         return (XmlElement)oAdXfm.moXformElmt;
                     }
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmResetAccount", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmResetAccount", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -446,13 +440,13 @@ namespace Protean
                         IMembershipAdminXforms oAdXfm = myWeb.moMemProv.AdminXforms;
 
                         oAdXfm.xFrmConfirmPassword(AccountHash);
-                        this.valid = Conversions.ToBoolean(oAdXfm.valid);
+                        valid = Conversions.ToBoolean(oAdXfm.valid);
                         return (XmlElement)oAdXfm.moXformElmt;
                     }
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmConfirmPassword", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmConfirmPassword", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -471,13 +465,13 @@ namespace Protean
                         IMembershipAdminXforms oAdXfm = myWeb.moMemProv.AdminXforms;
 
                         oAdXfm.xFrmConfirmPassword(nUserId);
-                        this.valid = Conversions.ToBoolean(oAdXfm.valid);
+                        valid = Conversions.ToBoolean(oAdXfm.valid);
                         return (XmlElement)oAdXfm.moXformElmt;
                     }
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmConfirmPassword", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmConfirmPassword", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -496,8 +490,8 @@ namespace Protean
                     {
 
                         // Handle the direct integration commands
-                        this.myWeb.CommonActions();
-                        provider = this.myWeb.moRequest["provider"];
+                        myWeb.CommonActions();
+                        provider = myWeb.moRequest["provider"];
 
                         // Create the form
                         if (!string.IsNullOrEmpty(secondaryCommand))
@@ -508,11 +502,11 @@ namespace Protean
                         if (!string.IsNullOrEmpty(provider))
                         {
                             string[] integrationsFormParameters = new string[] { provider };
-                            this.FormParameters = integrationsFormParameters;
+                            FormParameters = integrationsFormParameters;
                         }
 
                         // Load the form
-                        if (base.load("/xforms/directory/" + formName + ".xml", this.myWeb.maCommonFolders))
+                        if (base.load("/xforms/directory/" + formName + ".xml", myWeb.maCommonFolders))
                         {
 
 
@@ -583,7 +577,7 @@ namespace Protean
                                         // Go back to UserIntegrations
                                         var newCmd = new NameValueCollection(1);
                                         newCmd.Add("ewCmd", "UserIntegrations");
-                                        this.myWeb.msRedirectOnEnd = Tools.Http.Utils.BuildURIFromRequest(this.myWeb.moRequest, newCmd, "integration,provider").ToString();
+                                        myWeb.msRedirectOnEnd = Tools.Http.Utils.BuildURIFromRequest(myWeb.moRequest, newCmd, "integration,provider").ToString();
                                     }
                                 }
                             }
@@ -595,7 +589,7 @@ namespace Protean
                             }
 
                             // Because we have handled the integrations, we need to follow up any responses
-                            foreach (XmlElement response in this.myWeb.PageXMLResponses)
+                            foreach (XmlElement response in myWeb.PageXMLResponses)
                             {
 
                                 switch (response.GetAttribute("type") ?? "")
@@ -603,7 +597,7 @@ namespace Protean
 
                                     case "Redirect":
                                         {
-                                            this.myWeb.msRedirectOnEnd = response.InnerText;
+                                            myWeb.msRedirectOnEnd = response.InnerText;
                                             break;
                                         }
                                     case "Alert":
@@ -635,7 +629,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmUserIntegrations", ex, "", processInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmUserIntegrations", ex, "", processInfo, gbDebug);
                         return null;
                     }
 
@@ -651,7 +645,7 @@ namespace Protean
                     try
                     {
                         oFsh = new Protean.fsHelper();
-                        oFsh.open(this.moPageXML);
+                        oFsh.open(moPageXML);
 
                         base.NewFrm("WebSettings");
 
@@ -822,7 +816,7 @@ namespace Protean
 
                         base.addSubmit(ref oFrmElmt, "", "Save Settings");
 
-                        var oCfg = WebConfigurationManager.OpenWebConfiguration("/" + this.myWeb.moConfig["ProjectPath"]);
+                        var oCfg = WebConfigurationManager.OpenWebConfiguration("/" + myWeb.moConfig["ProjectPath"]);
                         DefaultSection oCgfSect = (DefaultSection)oCfg.GetSection("protean/web");
 
                         startImp();
@@ -843,7 +837,7 @@ namespace Protean
                             oElmt = (XmlElement)base.Instance.SelectSingleNode("web/add[@key='" + aSettingValues[(int)i] + "']");
                             if (oElmt is null)
                             {
-                                oElmt = this.moPageXML.CreateElement("add");
+                                oElmt = moPageXML.CreateElement("add");
                                 oElmt.SetAttribute("key", aSettingValues[(int)i]);
                                 oElmt.SetAttribute("value", "");
                                 if (oElmtAft is null)
@@ -878,7 +872,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmWebSettings", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmWebSettings", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -891,17 +885,17 @@ namespace Protean
                     string xFormPath = "/xforms/config/" + ConfigType + ".xml";
                     try
                     {
-                        if (this.myWeb.mcEWCommonFolder == "/ptn")
+                        if (myWeb.mcEWCommonFolder == "/ptn")
                         {
                             xFormPath = "/admin/xforms/config/" + ConfigType + ".xml";
                         }
 
                         oFsh = new Protean.fsHelper();
-                        oFsh.open(this.moPageXML);
+                        oFsh.open(moPageXML);
 
                         base.NewFrm("WebSettings");
 
-                        if (!base.load(xFormPath, this.myWeb.maCommonFolders))
+                        if (!base.load(xFormPath, myWeb.maCommonFolders))
                         {
 
                             oFrmElmt = base.addGroup(ref base.moXformElmt, "Config", "", "ConfigSettings");
@@ -913,13 +907,13 @@ namespace Protean
                         else
                         {
 
-                            var oCfg = WebConfigurationManager.OpenWebConfiguration("/" + this.myWeb.moConfig["ProjectPath"]);
+                            var oCfg = WebConfigurationManager.OpenWebConfiguration("/" + myWeb.moConfig["ProjectPath"]);
 
                             startImp();
                             // code here to replace any missing nodes
                             // all of the required config settings
 
-                            var oTemplateInstance = this.moPageXML.CreateElement("Instance");
+                            var oTemplateInstance = moPageXML.CreateElement("Instance");
                             oTemplateInstance.InnerXml = base.Instance.InnerXml;
                             string oCgfSectName = oTemplateInstance.FirstChild.Name;
                             string oCgfSectPath = "protean/" + oCgfSectName;
@@ -958,7 +952,7 @@ namespace Protean
                                 {
                                     if (oElmt is null)
                                     {
-                                        oElmt = this.moPageXML.CreateElement("add");
+                                        oElmt = moPageXML.CreateElement("add");
                                         oElmt.SetAttribute("key", Key);
                                         oElmt.SetAttribute("value", oTemplateElmt.GetAttribute("value"));
                                         base.Instance.SelectSingleNode(ConfigSectionName).AppendChild(oElmt);
@@ -979,29 +973,29 @@ namespace Protean
                                         var oNewCfgXml = new XmlDocument();
                                         oNewCfgXml.LoadXml(base.Instance.InnerXml);
                                         // save as web.config in the root
-                                        oNewCfgXml.Save(this.goServer.MapPath(@"\" + Strings.Replace(oCgfSectPath, "/", ".") + ".config"));
+                                        oNewCfgXml.Save(goServer.MapPath(@"\" + Strings.Replace(oCgfSectPath, "/", ".") + ".config"));
                                         var oMainCfgXml = new XmlDocument();
                                         // update the the web.config to include new file
-                                        cProcessInfo = "loading file:" + this.goServer.MapPath("/web.config");
-                                        oMainCfgXml.Load(this.goServer.MapPath("/web.config"));
+                                        cProcessInfo = "loading file:" + goServer.MapPath("/web.config");
+                                        oMainCfgXml.Load(goServer.MapPath("/web.config"));
                                         XmlElement oElmtEonic = (XmlElement)oMainCfgXml.SelectSingleNode("configuration/protean");
                                         var oNewElmt = oMainCfgXml.CreateElement(oCgfSectName);
                                         oNewElmt.SetAttribute("configSource", Strings.Replace(oCgfSectPath, "/", ".") + ".config");
                                         oElmtEonic.AppendChild(oNewElmt);
-                                        oMainCfgXml.Save(this.goServer.MapPath("/web.config"));
-                                        this.myWeb.msRedirectOnEnd = "/";
+                                        oMainCfgXml.Save(goServer.MapPath("/web.config"));
+                                        myWeb.msRedirectOnEnd = "/";
                                     }
                                     else
                                     {
                                         // check not read only
-                                        var oFileInfo = new FileInfo(this.goServer.MapPath(@"\" + Strings.Replace(oCgfSectPath, "/", ".") + ".config"));
+                                        var oFileInfo = new FileInfo(goServer.MapPath(@"\" + Strings.Replace(oCgfSectPath, "/", ".") + ".config"));
                                         oFileInfo.IsReadOnly = false;
 
                                         oCgfSect.SectionInformation.RestartOnExternalChanges = false;
                                         oCgfSect.SectionInformation.SetRawXml(base.Instance.InnerXml);
                                         oCfg.Save();
                                         //XmlNode argoNode2 = (XmlNode)this.moXformElmt;
-                                        base.addNote(ref this.moXformElmt, Protean.xForm.noteTypes.Alert, "Settings Saved");
+                                        base.addNote(ref moXformElmt, Protean.xForm.noteTypes.Alert, "Settings Saved");
                                         //this.moXformElmt = (XmlElement)argoNode2;
                                     }
 
@@ -1017,7 +1011,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmWebConfig", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmWebConfig", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -1032,17 +1026,17 @@ namespace Protean
                     string xFormPath = "/xforms/config/" + ConfigType + ".xml";
                     try
                     {
-                        if (this.myWeb.mcEWCommonFolder == "/ptn")
+                        if (myWeb.mcEWCommonFolder == "/ptn")
                         {
                             xFormPath = "/admin/xforms/config/" + ConfigType + ".xml";
                         }
                         oFsh = new Protean.fsHelper();
-                        oFsh.open(this.moPageXML);
+                        oFsh.open(moPageXML);
 
                         base.NewFrm("WebSettings");
                         base.bProcessRepeats = false;
 
-                        if (!base.load(xFormPath, this.myWeb.maCommonFolders))
+                        if (!base.load(xFormPath, myWeb.maCommonFolders))
                         {
 
                             oFrmElmt = base.addGroup(ref base.moXformElmt, "Config", "", "ConfigSettings");
@@ -1061,10 +1055,10 @@ namespace Protean
 
                             var rewriteXml = new XmlDocument();
 
-                            rewriteXml.Load(this.goServer.MapPath("/rewriteMaps.config"));
+                            rewriteXml.Load(goServer.MapPath("/rewriteMaps.config"));
 
 
-                            var oTemplateInstance = this.moPageXML.CreateElement("Instance");
+                            var oTemplateInstance = moPageXML.CreateElement("Instance");
                             oTemplateInstance.InnerXml = base.Instance.InnerXml;
                             //string oCgfSectName = "system.webServer";
                             string oCgfSectPath = "rewriteMaps/rewriteMap[@name='" + ConfigType + "']";
@@ -1076,14 +1070,14 @@ namespace Protean
                             if (rewriteXml.SelectSingleNode(oCgfSectPath) != null)
                             {
                                 base.bProcessRepeats = true;
-                                if (this.goSession["oTempInstance"] is null)
+                                if (goSession["oTempInstance"] is null)
                                 {
 
 
                                     int PerPageCount = 50;
-                                    if (this.goSession["totalCountTobeLoad"] != null)
+                                    if (goSession["totalCountTobeLoad"] != null)
                                     {
-                                        PerPageCount = Conversions.ToInteger(this.goSession["totalCountTobeLoad"]);
+                                        PerPageCount = Conversions.ToInteger(goSession["totalCountTobeLoad"]);
                                     }
                                     var props = rewriteXml.SelectSingleNode(oCgfSectPath);
                                     int TotalCount = props.ChildNodes.Count;
@@ -1104,12 +1098,12 @@ namespace Protean
                                         base.LoadInstanceFromInnerXml(rewriteXml.SelectSingleNode(oCgfSectPath).OuterXml);
                                     }
 
-                                    this.bProcessRepeats = false;
+                                    bProcessRepeats = false;
                                 }
                                 else
                                 {
-                                    var oTempInstance = this.moPageXML.CreateElement("instance");
-                                    oTempInstance = (XmlElement)this.goSession["oTempInstance"];
+                                    var oTempInstance = moPageXML.CreateElement("instance");
+                                    oTempInstance = (XmlElement)goSession["oTempInstance"];
                                     base.updateInstance(oTempInstance);
                                 }
                             }
@@ -1140,8 +1134,8 @@ namespace Protean
                                     if (base.Instance.FirstChild.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("descendant-or-self::add[@key='", newURL), "']"))) != null)
                                     {
                                         base.valid = false;
-                                        XmlElement argoContextNode = (XmlElement)this.moXformElmt.SelectSingleNode("group[1]");
-                                        var alertGrp = base.addGroup(ref argoContextNode, "alert", oInsertBeforeNode: (XmlElement)this.moXformElmt.SelectSingleNode("group[1]/group[1]"));
+                                        XmlElement argoContextNode = (XmlElement)moXformElmt.SelectSingleNode("group[1]");
+                                        var alertGrp = base.addGroup(ref argoContextNode, "alert", oInsertBeforeNode: (XmlElement)moXformElmt.SelectSingleNode("group[1]/group[1]"));
                                         //XmlNode argoNode2 = (XmlNode)alertGrp;
                                         base.addNote(ref alertGrp, Protean.xForm.noteTypes.Alert, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("<strong>", newURL), "</strong> cannot match an old URL")));
                                         //alertGrp = (XmlElement)argoNode2;
@@ -1157,7 +1151,7 @@ namespace Protean
                                     {
                                         // step through and create rules to deal with paths
                                         var rulesXml = new XmlDocument();
-                                        rulesXml.Load(this.myWeb.goServer.MapPath("/RewriteRules.config"));
+                                        rulesXml.Load(myWeb.goServer.MapPath("/RewriteRules.config"));
                                         XmlElement insertAfterElment = (XmlElement)rulesXml.SelectSingleNode("descendant-or-self::rule[@name='EW: 301 Redirects']");
                                         XmlElement oRule;
                                         foreach (XmlElement currentORule in replacerNode.SelectNodes("add"))
@@ -1191,8 +1185,8 @@ namespace Protean
                                             }
                                         }
 
-                                        rulesXml.Save(this.goServer.MapPath("/RewriteRules.config"));
-                                        this.myWeb.bRestartApp = true;
+                                        rulesXml.Save(goServer.MapPath("/RewriteRules.config"));
+                                        myWeb.bRestartApp = true;
 
                                     }
 
@@ -1222,7 +1216,7 @@ namespace Protean
                                             {
                                                 existingNode.ParentNode.RemoveChild(existingNode);
                                                 // existingNode.RemoveAll()
-                                                rewriteXml.Save(this.myWeb.goServer.MapPath("/rewriteMaps.config"));
+                                                rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"));
                                             }
                                         }
                                     }
@@ -1241,7 +1235,7 @@ namespace Protean
                                             // rewriteXml.SelectSingleNode(oCgfSectPath).FirstChild.AppendChild(replacingElement.FirstChild)
                                             rewriteXml.SelectSingleNode(oCgfSectPathobj).AppendChild(replacingElement.FirstChild);
 
-                                            rewriteXml.Save(this.myWeb.goServer.MapPath("/rewriteMaps.config"));
+                                            rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"));
                                         }
                                     }
 
@@ -1250,12 +1244,12 @@ namespace Protean
 
 
 
-                                    XmlElement argoContextNode1 = (XmlElement)this.moXformElmt.SelectSingleNode("group[1]");
-                                    var alertGrp = base.addGroup(ref argoContextNode1, "alert", oInsertBeforeNode: (XmlElement)this.moXformElmt.SelectSingleNode("group[1]/group[1]"));
+                                    XmlElement argoContextNode1 = (XmlElement)moXformElmt.SelectSingleNode("group[1]");
+                                    var alertGrp = base.addGroup(ref argoContextNode1, "alert", oInsertBeforeNode: (XmlElement)moXformElmt.SelectSingleNode("group[1]/group[1]"));
                                     //XmlNode argoNode3 = (XmlNode)alertGrp;
                                     base.addNote(ref alertGrp, Protean.xForm.noteTypes.Alert, "Settings Saved");
                                     //alertGrp = (XmlElement)argoNode3;
-                                    this.goSession["oTempInstance"] = (object)null;
+                                    goSession["oTempInstance"] = (object)null;
                                 }
                             }
                             else if (base.isTriggered)
@@ -1263,12 +1257,12 @@ namespace Protean
                                 // we have clicked a trigger so we must update the instance
                                 base.updateInstanceFromRequest();
                                 // lets save the instance
-                                this.goSession["oTempInstance"] = base.Instance;
+                                goSession["oTempInstance"] = base.Instance;
                             }
                             else
                             {
                                 // clear this if we are loading the first form
-                                this.goSession["oTempInstance"] = (object)null;
+                                goSession["oTempInstance"] = (object)null;
                             }
                             endImp();
                             base.addValues();
@@ -1279,7 +1273,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmWebConfig", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmWebConfig", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -1298,7 +1292,7 @@ namespace Protean
                     try
                     {
                         oFsh = new Protean.fsHelper();
-                        oFsh.open(this.moPageXML);
+                        oFsh.open(moPageXML);
 
 
                         NameValueCollection moThemeConfig = (NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/theme");
@@ -1306,7 +1300,7 @@ namespace Protean
 
                         base.NewFrm("WebSettings");
 
-                        if (!base.load(xFormPath, this.myWeb.maCommonFolders))
+                        if (!base.load(xFormPath, myWeb.maCommonFolders))
                         {
 
                             oFrmElmt = base.addGroup(ref base.moXformElmt, "Config", "", "ConfigSettings");
@@ -1325,7 +1319,7 @@ namespace Protean
                             // code here to replace any missing nodes
                             // all of the required config settings
 
-                            var oTemplateInstance = this.moPageXML.CreateElement("Instance");
+                            var oTemplateInstance = moPageXML.CreateElement("Instance");
                             oTemplateInstance.InnerXml = base.Instance.InnerXml;
                             string oCgfSectName = "protean/" + oTemplateInstance.FirstChild.Name;
                             DefaultSection oCgfSect = (DefaultSection)oCfg.GetSection(oCgfSectName);
@@ -1342,19 +1336,19 @@ namespace Protean
                                 currentPresetName = presetSetting.GetAttribute("value");
                             }
 
-                            if ((this.myWeb.moRequest["ThemePreset"] ?? "") != (currentPresetName ?? "") | string.IsNullOrEmpty(currentPresetName))
+                            if ((myWeb.moRequest["ThemePreset"] ?? "") != (currentPresetName ?? "") | string.IsNullOrEmpty(currentPresetName))
                             {
                                 // replace Instance Elements WITH VALUES IN NAMED THEME PRESET FILE.
 
-                                if (File.Exists(this.goServer.MapPath(themePath + "/" + currentTheme + "/themeManifest.xml")))
+                                if (File.Exists(goServer.MapPath(themePath + "/" + currentTheme + "/themeManifest.xml")))
                                 {
 
 
 
                                     var newXml = new XmlDocument();
                                     newXml.PreserveWhitespace = true;
-                                    newXml.Load(this.goServer.MapPath(themePath + "/" + currentTheme + "/themeManifest.xml"));
-                                    foreach (XmlElement oElmt2 in newXml.SelectNodes("/Theme/Presets/Preset[@name='" + this.myWeb.moRequest["ThemePreset"] + "']/add"))
+                                    newXml.Load(goServer.MapPath(themePath + "/" + currentTheme + "/themeManifest.xml"));
+                                    foreach (XmlElement oElmt2 in newXml.SelectNodes("/Theme/Presets/Preset[@name='" + myWeb.moRequest["ThemePreset"] + "']/add"))
                                     {
                                         // <add key="Bootswatch.Layout" value="TopNavSideSub"/>
                                         XmlElement changeElmt = (XmlElement)base.Instance.SelectSingleNode("descendant-or-self::add[@key='" + oElmt2.GetAttribute("key") + "']");
@@ -1382,7 +1376,7 @@ namespace Protean
                                 {
                                     if (oElmt is null)
                                     {
-                                        oElmt = this.moPageXML.CreateElement("add");
+                                        oElmt = moPageXML.CreateElement("add");
                                         oElmt.SetAttribute("key", Key);
                                         oElmt.SetAttribute("value", oTemplateElmt.GetAttribute("value"));
                                         base.Instance.SelectSingleNode(ConfigSectionName).AppendChild(oElmt);
@@ -1410,64 +1404,64 @@ namespace Protean
                                 {
 
                                     // check not read only
-                                    var oFileInfo = new FileInfo(this.goServer.MapPath("/protean.theme.config"));
+                                    var oFileInfo = new FileInfo(goServer.MapPath("/protean.theme.config"));
                                     oFileInfo.IsReadOnly = false;
 
                                     oCgfSect.SectionInformation.RestartOnExternalChanges = false;
                                     oCgfSect.SectionInformation.SetRawXml(base.Instance.InnerXml);
                                     oCfg.Save();
 
-                                    if (!string.IsNullOrEmpty(this.myWeb.moRequest["newPresetName"]))
+                                    if (!string.IsNullOrEmpty(myWeb.moRequest["newPresetName"]))
                                     {
 
-                                        if (File.Exists(this.goServer.MapPath(themePath + currentTheme + "/themeManifest.xml")))
+                                        if (File.Exists(goServer.MapPath(themePath + currentTheme + "/themeManifest.xml")))
                                         {
                                             var newXml = new XmlDocument();
                                             newXml.PreserveWhitespace = true;
-                                            newXml.Load(this.goServer.MapPath(themePath + currentTheme + "/themeManifest.xml"));
+                                            newXml.Load(goServer.MapPath(themePath + currentTheme + "/themeManifest.xml"));
                                             bool addNew = true;
                                             // update existing
-                                            foreach (XmlElement oElmt2 in newXml.SelectNodes("/Theme/Presets/Preset[@name='" + this.myWeb.moRequest["newPresetName"] + "']"))
+                                            foreach (XmlElement oElmt2 in newXml.SelectNodes("/Theme/Presets/Preset[@name='" + myWeb.moRequest["newPresetName"] + "']"))
                                             {
-                                                oElmt2.InnerXml = this.Instance.InnerXml;
+                                                oElmt2.InnerXml = Instance.InnerXml;
                                                 addNew = false;
                                             }
                                             if (addNew)
                                             {
                                                 XmlElement PresetsNode = (XmlElement)newXml.SelectSingleNode("/Theme/Presets");
                                                 var NewPreset = PresetsNode.OwnerDocument.CreateElement("Preset");
-                                                NewPreset.SetAttribute("name", this.myWeb.moRequest["newPresetName"]);
-                                                foreach (XmlElement matchingElmt in this.Instance.SelectNodes("descendant-or-self::add[starts-with(@key,'" + currentTheme + ".')]"))
+                                                NewPreset.SetAttribute("name", myWeb.moRequest["newPresetName"]);
+                                                foreach (XmlElement matchingElmt in Instance.SelectNodes("descendant-or-self::add[starts-with(@key,'" + currentTheme + ".')]"))
                                                 {
                                                     if ((matchingElmt.GetAttribute("key") ?? "") == (currentTheme + ".ThemePreset" ?? ""))
                                                     {
-                                                        matchingElmt.SetAttribute("value", this.myWeb.moRequest["newPresetName"]);
+                                                        matchingElmt.SetAttribute("value", myWeb.moRequest["newPresetName"]);
                                                     }
                                                     AddExistingNode(ref NewPreset, matchingElmt);
                                                 }
                                                 PresetsNode.AppendChild(NewPreset);
                                             }
                                             // check not read only
-                                            var oFileInfo2 = new FileInfo(this.goServer.MapPath(themePath + currentTheme + "/themeManifest.xml"));
+                                            var oFileInfo2 = new FileInfo(goServer.MapPath(themePath + currentTheme + "/themeManifest.xml"));
                                             oFileInfo2.IsReadOnly = false;
-                                            newXml.Save(this.goServer.MapPath(themePath + currentTheme + "/themeManifest.xml"));
+                                            newXml.Save(goServer.MapPath(themePath + currentTheme + "/themeManifest.xml"));
                                         }
 
                                         // XmlNode argoNode1 = (XmlNode)this.moXformElmt;
-                                        base.addNote(ref this.moXformElmt, Protean.xForm.noteTypes.Alert, "New Preset Saved");
+                                        base.addNote(ref moXformElmt, Protean.xForm.noteTypes.Alert, "New Preset Saved");
                                         // this.moXformElmt = (XmlElement)argoNode1;
                                     }
                                     else
                                     {
                                         //XmlNode argoNode2 = (XmlNode)this.moXformElmt;
-                                        base.addNote(ref this.moXformElmt, Protean.xForm.noteTypes.Alert, "Settings Saved");
+                                        base.addNote(ref moXformElmt, Protean.xForm.noteTypes.Alert, "Settings Saved");
                                         //this.moXformElmt = (XmlElement)argoNode2;
                                     }
                                 }
                                 else
                                 {
                                     //XmlNode argoNode3 = (XmlNode)this.moXformElmt;
-                                    base.addNote(ref this.moXformElmt, Protean.xForm.noteTypes.Alert, "Form Invalid:" + base.validationError);
+                                    base.addNote(ref moXformElmt, Protean.xForm.noteTypes.Alert, "Form Invalid:" + base.validationError);
                                     //this.moXformElmt = (XmlElement)argoNode3;
 
                                 }
@@ -1482,7 +1476,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmWebConfig", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmWebConfig", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -1498,7 +1492,7 @@ namespace Protean
                     try
                     {
                         oFsh = new Protean.fsHelper();
-                        oFsh.open(this.moPageXML);
+                        oFsh.open(moPageXML);
 
                         base.NewFrm("WebSettings");
                         // MyBase.Instance.InnerXml = "<web><add key=""SiteXsl"" value="""" /></web><theme><add key=""CurrentTheme"" value="""" /></theme>"
@@ -1506,7 +1500,7 @@ namespace Protean
 
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "WebSettings", "", "Select Theme");
 
-                        var rootdir = new DirectoryInfo(this.goServer.MapPath("/ewThemes"));
+                        var rootdir = new DirectoryInfo(goServer.MapPath("/ewThemes"));
                         if (!rootdir.Exists)
                         {
                             //XmlNode argoNode = oFrmElmt;
@@ -1535,10 +1529,10 @@ namespace Protean
                             startImp();
                             base.Instance.InnerXml = oWebCgfSect.SectionInformation.GetRawXml() + oThemeCgfSect.SectionInformation.GetRawXml();
 
-                            var oTemplateInstance = this.moPageXML.CreateElement("Instance");
+                            var oTemplateInstance = moPageXML.CreateElement("Instance");
                             oTemplateInstance.InnerXml = base.Instance.InnerXml;
 
-                            if (base.isSubmitted() | !string.IsNullOrEmpty(this.goRequest.Form["ewsubmit.x"]) | !string.IsNullOrEmpty(this.goRequest.Form["ewSiteTheme"]))
+                            if (base.isSubmitted() | !string.IsNullOrEmpty(goRequest.Form["ewsubmit.x"]) | !string.IsNullOrEmpty(goRequest.Form["ewSiteTheme"]))
                             {
                                 XmlElement oElmt;
                                 string Key;
@@ -1557,7 +1551,7 @@ namespace Protean
                                     {
                                         if (oElmt is null)
                                         {
-                                            oElmt = this.moPageXML.CreateElement("add");
+                                            oElmt = moPageXML.CreateElement("add");
                                             oElmt.SetAttribute("key", Key);
                                             oElmt.SetAttribute("value", oTemplateElmt.GetAttribute("value"));
                                             base.Instance.SelectSingleNode(ConfigSectionName).AppendChild(oElmt);
@@ -1581,7 +1575,7 @@ namespace Protean
                                     XmlElement cssElmt = (XmlElement)base.Instance.SelectSingleNode("web/add[@key='cssFramework']");
                                     if (cssElmt is null)
                                     {
-                                        oElmt = this.moPageXML.CreateElement("add");
+                                        oElmt = moPageXML.CreateElement("add");
                                         oElmt.SetAttribute("key", "cssFramework");
                                         oElmt.SetAttribute("value", cssFramework);
                                         base.Instance.SelectSingleNode("web").AppendChild(oElmt);
@@ -1597,7 +1591,7 @@ namespace Protean
 
                                     oCfg.Save();
                                     //XmlNode argoNode2 = (XmlNode)this.moXformElmt;
-                                    base.addNote(ref this.moXformElmt, Protean.xForm.noteTypes.Alert, "Settings Saved");
+                                    base.addNote(ref moXformElmt, Protean.xForm.noteTypes.Alert, "Settings Saved");
                                     //this.moXformElmt = (XmlElement)argoNode2;
                                 }
                             }
@@ -1612,7 +1606,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmSelectTheme", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmSelectTheme", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -1632,7 +1626,7 @@ namespace Protean
 
                         // for each folder found in ewskins
 
-                        var rootdir = new DirectoryInfo(this.goServer.MapPath(filepath));
+                        var rootdir = new DirectoryInfo(goServer.MapPath(filepath));
                         DirectoryInfo[] dir = rootdir.GetDirectories();
 
                         FileInfo[] files;
@@ -1643,8 +1637,8 @@ namespace Protean
                             files = di.GetFiles("themeManifest.xml");
                             foreach (var fi in files)
                             {
-                                cProcessInfo = "loading File:" + this.goServer.MapPath(filepath) + @"\" + di.Name + @"\" + fi.Name;
-                                oXformDoc.Load(this.goServer.MapPath(filepath) + @"\" + di.Name + @"\" + fi.Name);
+                                cProcessInfo = "loading File:" + goServer.MapPath(filepath) + @"\" + di.Name + @"\" + fi.Name;
+                                oXformDoc.Load(goServer.MapPath(filepath) + @"\" + di.Name + @"\" + fi.Name);
                                 foreach (XmlElement oChoices in oXformDoc.SelectNodes("/Theme"))
                                 {
                                     XmlElement RootXsltElmt = (XmlElement)oChoices.SelectSingleNode("/Theme/RootXslt");
@@ -1660,7 +1654,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "EnumberateThemeOptions", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "EnumberateThemeOptions", ex, "", cProcessInfo, gbDebug);
                     }
 
                 }
@@ -1684,7 +1678,7 @@ namespace Protean
                         {
                             cXmlFilePath = "/admin" + cXmlFilePath;
                         }
-                        if (!base.load(cXmlFilePath, this.myWeb.maCommonFolders))
+                        if (!base.load(cXmlFilePath, myWeb.maCommonFolders))
                         {
                             // If not a custom page is loaded, pull in the standard elements
                             base.NewFrm("EditPage");
@@ -1712,18 +1706,18 @@ namespace Protean
                             XmlElement argoBindParent3 = null;
                             base.addBind("cStructDescription", "tblContentStructure/cStructDescription/Description", oBindParent: ref argoBindParent3, "false()");
 
-                            if (Strings.LCase(this.myWeb.moConfig["ShowStructForiegnRef"]) == "yes" | Strings.LCase(this.myWeb.moConfig["ShowStructForiegnRef"]) == "on")
+                            if (Strings.LCase(myWeb.moConfig["ShowStructForiegnRef"]) == "yes" | Strings.LCase(myWeb.moConfig["ShowStructForiegnRef"]) == "on")
                             {
                                 base.addInput(ref oFrmElmt, "cStructForiegnRef", true, "Foriegn Reference");
                                 XmlElement argoBindParent4 = null;
                                 base.addBind("cStructForiegnRef", "tblContentStructure/cStructForiegnRef", oBindParent: ref argoBindParent4, "false()");
                             }
 
-                            if (this.myWeb.goLangConfig != null)
+                            if (myWeb.goLangConfig != null)
                             {
                                 oSelElmt = base.addSelect1(ref oFrmElmt, "cLang", true, "Language", "", Protean.xForm.ApperanceTypes.Full);
-                                base.addOption(ref oSelElmt, this.myWeb.goLangConfig.GetAttribute("default"), this.myWeb.goLangConfig.GetAttribute("code"));
-                                foreach (XmlElement langNode in this.myWeb.goLangConfig.SelectNodes("Language"))
+                                base.addOption(ref oSelElmt, myWeb.goLangConfig.GetAttribute("default"), myWeb.goLangConfig.GetAttribute("code"));
+                                foreach (XmlElement langNode in myWeb.goLangConfig.SelectNodes("Language"))
                                     base.addOption(ref oSelElmt, langNode.GetAttribute("systemName"), langNode.GetAttribute("code"));
                                 XmlElement argoBindParent5 = null;
                                 base.addBind("cLang", "tblContentStructure/cVersionLang", oBindParent: ref argoBindParent5, "tblContentStructure/nVersionType='3'");
@@ -1813,13 +1807,13 @@ namespace Protean
                             base.Instance.InnerXml = moDbHelper.getObjectInstance(Cms.dbHelper.objectTypes.ContentStructure, pgid);
 
                             // Set the default language if empty
-                            if (this.myWeb.goLangConfig != null)
+                            if (myWeb.goLangConfig != null)
                             {
                                 if (base.Instance.SelectSingleNode("tblContentStructure/cVersionLang") != null)
                                 {
                                     if (string.IsNullOrEmpty(base.Instance.SelectSingleNode("tblContentStructure/cVersionLang").InnerText))
                                     {
-                                        base.Instance.SelectSingleNode("tblContentStructure/cVersionLang").InnerText = this.myWeb.goLangConfig.GetAttribute("code");
+                                        base.Instance.SelectSingleNode("tblContentStructure/cVersionLang").InnerText = myWeb.goLangConfig.GetAttribute("code");
                                     }
                                 }
                             }
@@ -1829,9 +1823,9 @@ namespace Protean
                         {
                             base.Instance.InnerXml = "<tblContentStructure><nStructKey/><nStructParId/><cStructForiegnRef/><cStructName/><cStructDescription><DisplayName/><Images><img class=\"thumbnail\"/></Images><Description/></cStructDescription><cUrl/><nStructOrder/><cStructLayout>1_Column</cStructLayout><cVersionLang/><nAuditId/>" + "<nAuditKey/><dPublishDate/><dExpireDate/><dInsertDate/><nInsertDirId/><dUpdateDate/><nUpdateDirId/><nStatus>0</nStatus><cDescription></cDescription></tblContentStructure>";
                         }
-                        else if (this.myWeb.goLangConfig != null)
+                        else if (myWeb.goLangConfig != null)
                         {
-                            base.Instance.SelectSingleNode("tblContentStructure/cVersionLang").InnerText = this.myWeb.goLangConfig.GetAttribute("code");
+                            base.Instance.SelectSingleNode("tblContentStructure/cVersionLang").InnerText = myWeb.goLangConfig.GetAttribute("code");
                         }
 
 
@@ -1839,7 +1833,7 @@ namespace Protean
                         // Add the page name if passed through
                         if (!string.IsNullOrEmpty(cName))
                         {
-                            if (this.myWeb.moConfig["PageURLFormat"] == "hyphens")
+                            if (myWeb.moConfig["PageURLFormat"] == "hyphens")
                             {
                                 cName = cName.Replace("-", " ");
                             }
@@ -1849,7 +1843,7 @@ namespace Protean
 
                         // disable the status if we are editing the home page
 
-                        if (pgid == Conversions.ToLong(this.myWeb.moConfig["RootPageId"]))
+                        if (pgid == Conversions.ToLong(myWeb.moConfig["RootPageId"]))
                         {
                             XmlElement oStatusElmt;
                             oStatusElmt = (XmlElement)base.moXformElmt.SelectSingleNode("descendant-or-self::*[@bind='nStatus' or @ref='nStatus']");
@@ -1895,7 +1889,7 @@ namespace Protean
                         // End If
 
                         cName = base.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText;
-                        if (this.myWeb.moConfig["PageURLFormat"] == "hyphens")
+                        if (myWeb.moConfig["PageURLFormat"] == "hyphens")
                         {
                             cName = cName.Replace("-", " ");
                             base.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText = cName;
@@ -1914,10 +1908,10 @@ namespace Protean
                             {
 
                                 // TS reset system application page values
-                                this.goApp["PageNotFoundId"] = (object)null;
-                                this.goApp["PageAccessDeniedId"] = (object)null;
-                                this.goApp["PageLoginRequiredId"] = (object)null;
-                                this.goApp["PageLoginRequiredId"] = (object)null;
+                                goApp["PageNotFoundId"] = (object)null;
+                                goApp["PageAccessDeniedId"] = (object)null;
+                                goApp["PageLoginRequiredId"] = (object)null;
+                                goApp["PageLoginRequiredId"] = (object)null;
 
                                 // NB Notes: Extract RelatedContent Nodes here - is this old now?
 
@@ -1981,13 +1975,13 @@ namespace Protean
                                             if (nRContentId > 0)
                                             {
                                                 nRContentId = Conversions.ToInteger(moDbHelper.setObjectInstance(oObjType, (XmlElement)oInstance.FirstChild, (long)nRContentId));
-                                                moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.ContentEdited, this.myWeb.mnUserId, this.myWeb.moSession.SessionID, DateTime.Now, nRContentId, (int)pgid, "");
+                                                moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.ContentEdited, myWeb.mnUserId, myWeb.moSession.SessionID, DateTime.Now, nRContentId, (int)pgid, "");
                                                 moDbHelper.setContentLocation(pgid, (long)nRContentId);
                                             }
                                             else
                                             {
                                                 nRContentId = Conversions.ToInteger(moDbHelper.setObjectInstance(oObjType, (XmlElement)oInstance.FirstChild));
-                                                moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.ContentAdded, this.myWeb.mnUserId, this.myWeb.moSession.SessionID, DateTime.Now, nRContentId, (int)pgid, "");
+                                                moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.ContentAdded, myWeb.mnUserId, myWeb.moSession.SessionID, DateTime.Now, nRContentId, (int)pgid, "");
                                                 moDbHelper.setContentLocation(pgid, (long)nRContentId);
                                             }
                                         }
@@ -2002,7 +1996,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditPage", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditPage", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -2027,7 +2021,7 @@ namespace Protean
                         var loopTo = Information.UBound(aReservedDirs);
                         for (i = 0; i <= loopTo; i++)
                         {
-                            if ((this.goRequest["cStructName"] ?? "") == (aReservedDirs[i] ?? ""))
+                            if ((goRequest["cStructName"] ?? "") == (aReservedDirs[i] ?? ""))
                             {
                                 base.valid = false;
                                 XmlNode argoNode = (XmlNode)base.RootGroup;
@@ -2040,7 +2034,7 @@ namespace Protean
                         cProcessInfo = "Check for illegal characters";
                         var oUrlExp = new Regex(@"^[\w\u0020]+$");
 
-                        if (!oUrlExp.IsMatch(this.goRequest["cStructName"]))
+                        if (!oUrlExp.IsMatch(goRequest["cStructName"]))
                         {
                             base.valid = false;
                             base.addNote("cStructName", Protean.xForm.noteTypes.Alert, "Page names are used for the URL and only contain alphanumberic characters, underscores and spaces.");
@@ -2048,7 +2042,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "PageValidation", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "PageValidation", ex, "", cProcessInfo, gbDebug);
                     }
                 }
 
@@ -2146,10 +2140,10 @@ namespace Protean
                             string sDescText = base.Instance.SelectSingleNode("tblContentStructure/cStructDescription").InnerXml;
                             // make sure the description contains our xml  
 
-                            oElmt = this.moPageXML.CreateElement("DisplayName");
+                            oElmt = moPageXML.CreateElement("DisplayName");
                             base.Instance.SelectSingleNode("tblContentStructure/cStructDescription").AppendChild(oElmt);
 
-                            var oElmt2 = this.moPageXML.CreateElement("Description");
+                            var oElmt2 = moPageXML.CreateElement("Description");
                             oElmt2.InnerXml = sDescText;
                             base.Instance.SelectSingleNode("tblContentStructure/cStructDescription").AppendChild(oElmt2);
 
@@ -2166,7 +2160,7 @@ namespace Protean
                                 var loopTo = Information.UBound(aReservedDirs);
                                 for (i = 0; i <= loopTo; i++)
                                 {
-                                    if ((this.goRequest["cStructName"] ?? "") == (aReservedDirs[i] ?? ""))
+                                    if ((goRequest["cStructName"] ?? "") == (aReservedDirs[i] ?? ""))
                                     {
                                         base.valid = false;
                                         //XmlNode argoNode1 = oFrmElmt;
@@ -2178,7 +2172,7 @@ namespace Protean
                                 // check for illegal charactors within the page name.
                                 var oUrlExp = new Regex(@"^[\w\-\u0020\+]+$");
 
-                                if (!oUrlExp.IsMatch(this.goRequest["cStructName"]))
+                                if (!oUrlExp.IsMatch(goRequest["cStructName"]))
                                 {
                                     base.valid = false;
                                     base.addNote("cStructName", Protean.xForm.noteTypes.Alert, "Page names are used for the URL and only contain Alphanumberic, underscores, hyphens and spaces.");
@@ -2208,7 +2202,7 @@ namespace Protean
                                 // Else
                                 // nCopyType = False
                                 // End If
-                                moDbHelper.copyPageContent(pgid, nNewPgid, Conversions.ToBoolean(this.goRequest["nCopyType"]), (Cms.dbHelper.CopyContentType)Conversions.ToInteger(this.goRequest["nCopyContent"]));
+                                moDbHelper.copyPageContent(pgid, nNewPgid, Conversions.ToBoolean(goRequest["nCopyType"]), (Cms.dbHelper.CopyContentType)Conversions.ToInteger(goRequest["nCopyContent"]));
                             }
 
                         }
@@ -2219,7 +2213,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditPage", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditPage", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -2273,7 +2267,7 @@ namespace Protean
                         oSelElmt = base.addSelect1(ref oGrp4, "nVersionType", true, "Type", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt, "Personalisation", 1.ToString());
                         // MyBase.addOption(oSelElmt, "Working Copy", 2)
-                        if (this.myWeb.goLangConfig != null)
+                        if (myWeb.goLangConfig != null)
                         {
                             base.addOption(ref oSelElmt, "Language Version", 3.ToString());
                         }
@@ -2281,11 +2275,11 @@ namespace Protean
                         XmlElement argoBindParent5 = null;
                         base.addBind("nVersionType", "tblContentStructure/nVersionType", oBindParent: ref argoBindParent5, "true()");
 
-                        if (this.myWeb.goLangConfig != null)
+                        if (myWeb.goLangConfig != null)
                         {
                             oSelElmt = base.addSelect1(ref oGrp4, "cVersionLang", true, "Language", "", Protean.xForm.ApperanceTypes.Full);
-                            base.addOption(ref oSelElmt, this.myWeb.goLangConfig.GetAttribute("default"), this.myWeb.goLangConfig.GetAttribute("code"));
-                            foreach (XmlElement langNode in this.myWeb.goLangConfig.SelectNodes("Language"))
+                            base.addOption(ref oSelElmt, myWeb.goLangConfig.GetAttribute("default"), myWeb.goLangConfig.GetAttribute("code"));
+                            foreach (XmlElement langNode in myWeb.goLangConfig.SelectNodes("Language"))
                                 base.addOption(ref oSelElmt, langNode.GetAttribute("systemName"), langNode.GetAttribute("code"));
                             XmlElement argoBindParent6 = null;
                             base.addBind("cVersionLang", "tblContentStructure/cVersionLang", oBindParent: ref argoBindParent6, "tblContentStructure/nVersionType='3'");
@@ -2338,9 +2332,9 @@ namespace Protean
                         base.Instance.SelectSingleNode("tblContentStructure/nVersionType").InnerText = "1";
 
                         // set a default for lang type
-                        if (this.myWeb.goLangConfig != null)
+                        if (myWeb.goLangConfig != null)
                         {
-                            base.Instance.SelectSingleNode("tblContentStructure/cVersionLang").InnerText = this.myWeb.goLangConfig.GetAttribute("code");
+                            base.Instance.SelectSingleNode("tblContentStructure/cVersionLang").InnerText = myWeb.goLangConfig.GetAttribute("code");
                         }
 
                         oElmt = (XmlElement)base.Instance.SelectSingleNode("tblContentStructure");
@@ -2353,10 +2347,10 @@ namespace Protean
                             string sDescText = base.Instance.SelectSingleNode("tblContentStructure/cStructDescription").InnerXml;
                             // make sure the description contains our xml  
 
-                            oElmt = this.moPageXML.CreateElement("DisplayName");
+                            oElmt = moPageXML.CreateElement("DisplayName");
                             base.Instance.SelectSingleNode("tblContentStructure/cStructDescription").AppendChild(oElmt);
 
-                            var oElmt2 = this.moPageXML.CreateElement("Description");
+                            var oElmt2 = moPageXML.CreateElement("Description");
                             oElmt2.InnerXml = sDescText;
                             base.Instance.SelectSingleNode("tblContentStructure/cStructDescription").AppendChild(oElmt2);
 
@@ -2373,7 +2367,7 @@ namespace Protean
                                 var loopTo = Information.UBound(aReservedDirs);
                                 for (i = 0; i <= loopTo; i++)
                                 {
-                                    if ((this.goRequest["cStructName"] ?? "") == (aReservedDirs[i] ?? ""))
+                                    if ((goRequest["cStructName"] ?? "") == (aReservedDirs[i] ?? ""))
                                     {
                                         base.valid = false;
                                         //XmlNode argoNode1 = oFrmElmt;
@@ -2385,7 +2379,7 @@ namespace Protean
                                 // check for illegal charactors within the page name.
                                 var oUrlExp = new Regex(@"^[\w\-\u0020\+]+$");
 
-                                if (!oUrlExp.IsMatch(this.goRequest["cStructName"]))
+                                if (!oUrlExp.IsMatch(goRequest["cStructName"]))
                                 {
                                     base.valid = false;
                                     base.addNote("cStructName", Protean.xForm.noteTypes.Alert, "Page names are used for the URL and only contain Alphanumberic, underscores, hyphens and spaces.");
@@ -2415,7 +2409,7 @@ namespace Protean
                                 // Else
                                 // nCopyType = False
                                 // End If
-                                moDbHelper.copyPageContent(contentPageId, nNewPgid, Conversions.ToBoolean(0), (Cms.dbHelper.CopyContentType)Conversions.ToInteger(this.goRequest["nCopyContent"]));
+                                moDbHelper.copyPageContent(contentPageId, nNewPgid, Conversions.ToBoolean(0), (Cms.dbHelper.CopyContentType)Conversions.ToInteger(goRequest["nCopyContent"]));
                             }
 
                         }
@@ -2426,7 +2420,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmCopyPageVersion", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmCopyPageVersion", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -2465,7 +2459,7 @@ namespace Protean
                             try
                             {
                                 // if this file exists then add the bespoke templates
-                                oXformDoc.Load(this.goServer.MapPath(this.myWeb.moConfig["ProjectPath"] + "/xsl") + "/LayoutManifest.xml");
+                                oXformDoc.Load(goServer.MapPath(myWeb.moConfig["ProjectPath"] + "/xsl") + "/LayoutManifest.xml");
                                 sImgPath = oXformDoc.DocumentElement.GetAttribute("imgPath");
 
                                 foreach (XmlElement currentOChoices in oXformDoc.SelectNodes("/PageLayouts/LayoutGroup"))
@@ -2477,14 +2471,14 @@ namespace Protean
                                         oItem = currentOItem;
                                         oOptElmt = base.addOption(ref oChoicesElmt, Strings.Replace(oItem.GetAttribute("name"), "_", " "), oItem.GetAttribute("name"));
                                         // lets add an image tag
-                                        oDescElmt = this.moPageXML.CreateElement("img");
+                                        oDescElmt = moPageXML.CreateElement("img");
                                         oDescElmt.SetAttribute("src", sImgPath + "/" + oItem.GetAttribute("name") + ".gif");
                                         oOptElmt.AppendChild(oDescElmt);
 
                                         // lets insert a description html tag
                                         if (!string.IsNullOrEmpty(oItem.InnerXml))
                                         {
-                                            oDescElmt = this.moPageXML.CreateElement("div");
+                                            oDescElmt = moPageXML.CreateElement("div");
                                             oDescElmt.SetAttribute("class", "description");
                                             oDescElmt.InnerXml = oItem.InnerXml;
                                             oOptElmt.AppendChild(oDescElmt);
@@ -2507,7 +2501,7 @@ namespace Protean
                             }
                             else
                             {
-                                oXformDoc.Load(this.goServer.MapPath("/" + Cms.gcProjectPath + "ewcommon/xsl/pageLayouts") + "/LayoutManifest.xml");
+                                oXformDoc.Load(goServer.MapPath("/" + Cms.gcProjectPath + "ewcommon/xsl/pageLayouts") + "/LayoutManifest.xml");
                             }
                             sImgPath = oXformDoc.DocumentElement.GetAttribute("imgPath");
                         }
@@ -2529,14 +2523,14 @@ namespace Protean
                                 oOptElmt = base.addOption(ref oChoicesElmt, Strings.Replace(oItem.GetAttribute("name"), "_", " "), oItem.GetAttribute("name"));
 
                                 // lets add an image tag
-                                oDescElmt = this.moPageXML.CreateElement("img");
+                                oDescElmt = moPageXML.CreateElement("img");
                                 oDescElmt.SetAttribute("src", sImgPath + "/" + oItem.GetAttribute("name") + ".gif");
                                 oOptElmt.AppendChild(oDescElmt);
 
                                 // lets insert a description html tag
                                 if (!string.IsNullOrEmpty(oItem.InnerXml))
                                 {
-                                    oDescElmt = this.moPageXML.CreateElement("div");
+                                    oDescElmt = moPageXML.CreateElement("div");
                                     oDescElmt.SetAttribute("class", "description");
                                     oDescElmt.InnerXml = oItem.InnerXml;
                                     oOptElmt.AppendChild(oDescElmt);
@@ -2549,7 +2543,7 @@ namespace Protean
                         {
                             try
                             {
-                                oXformDoc.Load(this.goServer.MapPath("/" + Cms.gcProjectPath + "ewcommon/xsl/cart") + "/LayoutManifest.xml");
+                                oXformDoc.Load(goServer.MapPath("/" + Cms.gcProjectPath + "ewcommon/xsl/cart") + "/LayoutManifest.xml");
                                 sImgPath = oXformDoc.DocumentElement.GetAttribute("imgPath");
                             }
                             catch (Exception ex)
@@ -2569,14 +2563,14 @@ namespace Protean
                                     oOptElmt = base.addOption(ref oChoicesElmt, Strings.Replace(oItem.GetAttribute("name"), "_", " "), oItem.GetAttribute("name"));
 
                                     // lets add an image tag
-                                    oDescElmt = this.moPageXML.CreateElement("img");
+                                    oDescElmt = moPageXML.CreateElement("img");
                                     oDescElmt.SetAttribute("src", sImgPath + "/" + oItem.GetAttribute("name") + ".gif");
                                     oOptElmt.AppendChild(oDescElmt);
 
                                     // lets insert a description html tag
                                     if (!string.IsNullOrEmpty(oItem.InnerXml))
                                     {
-                                        oDescElmt = this.moPageXML.CreateElement("div");
+                                        oDescElmt = moPageXML.CreateElement("div");
                                         oDescElmt.SetAttribute("class", "description");
                                         oDescElmt.InnerXml = oItem.InnerXml;
                                         oOptElmt.AppendChild(oDescElmt);
@@ -2589,7 +2583,7 @@ namespace Protean
                         {
                             try
                             {
-                                oXformDoc.Load(this.goServer.MapPath("/" + Cms.gcProjectPath + "ewcommon/xsl/membership") + "/LayoutManifest.xml");
+                                oXformDoc.Load(goServer.MapPath("/" + Cms.gcProjectPath + "ewcommon/xsl/membership") + "/LayoutManifest.xml");
                                 sImgPath = oXformDoc.DocumentElement.GetAttribute("imgPath");
                             }
                             catch (Exception ex)
@@ -2609,14 +2603,14 @@ namespace Protean
                                     oOptElmt = base.addOption(ref oChoicesElmt, Strings.Replace(oItem.GetAttribute("name"), "_", " "), oItem.GetAttribute("name"));
 
                                     // lets add an image tag
-                                    oDescElmt = this.moPageXML.CreateElement("img");
+                                    oDescElmt = moPageXML.CreateElement("img");
                                     oDescElmt.SetAttribute("src", sImgPath + "/" + oItem.GetAttribute("name") + ".gif");
                                     oOptElmt.AppendChild(oDescElmt);
 
                                     // lets insert a description html tag
                                     if (!string.IsNullOrEmpty(oItem.InnerXml))
                                     {
-                                        oDescElmt = this.moPageXML.CreateElement("div");
+                                        oDescElmt = moPageXML.CreateElement("div");
                                         oDescElmt.SetAttribute("class", "description");
                                         oDescElmt.InnerXml = oItem.InnerXml;
                                         oOptElmt.AppendChild(oDescElmt);
@@ -2636,7 +2630,7 @@ namespace Protean
                             //oFrmElmt = (XmlElement)argoNode3;
                         }
 
-                        if (base.isSubmitted() | !string.IsNullOrEmpty(this.goRequest.Form["ewsubmit.x"]) | !string.IsNullOrEmpty(this.goRequest.Form["cStructLayout"]))
+                        if (base.isSubmitted() | !string.IsNullOrEmpty(goRequest.Form["ewsubmit.x"]) | !string.IsNullOrEmpty(goRequest.Form["cStructLayout"]))
                         {
                             base.updateInstanceFromRequest();
                             base.validate();
@@ -2655,7 +2649,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -2693,7 +2687,7 @@ namespace Protean
                         try
                         {
                             // if this file exists then add the bespoke templates
-                            oXformDoc.Load(this.goServer.MapPath(goConfig["ProjectPath"] + "/xsl/Mailer/") + "/LayoutManifest.xml");
+                            oXformDoc.Load(goServer.MapPath(goConfig["ProjectPath"] + "/xsl/Mailer/") + "/LayoutManifest.xml");
                             sImgPath = oXformDoc.DocumentElement.GetAttribute("imgPath");
 
                             foreach (XmlElement currentOChoices in oXformDoc.SelectNodes("/PageLayouts/LayoutGroup"))
@@ -2705,14 +2699,14 @@ namespace Protean
                                     oItem = currentOItem;
                                     oOptElmt = base.addOption(ref oChoicesElmt, Strings.Replace(oItem.GetAttribute("name"), "_", " "), oItem.GetAttribute("name"));
                                     // lets add an image tag
-                                    oDescElmt = this.moPageXML.CreateElement("img");
+                                    oDescElmt = moPageXML.CreateElement("img");
                                     oDescElmt.SetAttribute("src", sImgPath + "/" + oItem.GetAttribute("name") + ".gif");
                                     oOptElmt.AppendChild(oDescElmt);
 
                                     // lets insert a description html tag
                                     if (!string.IsNullOrEmpty(oItem.InnerXml))
                                     {
-                                        oDescElmt = this.moPageXML.CreateElement("div");
+                                        oDescElmt = moPageXML.CreateElement("div");
                                         oDescElmt.SetAttribute("class", "description");
                                         oDescElmt.InnerXml = oItem.InnerXml;
                                         oOptElmt.AppendChild(oDescElmt);
@@ -2730,7 +2724,7 @@ namespace Protean
                         // Lets load in the available common templates from XML file
                         try
                         {
-                            oXformDoc.Load(this.goServer.MapPath("/" + Cms.gcProjectPath + "ewcommon/xsl/mailer") + "/LayoutManifest.xml");
+                            oXformDoc.Load(goServer.MapPath("/" + Cms.gcProjectPath + "ewcommon/xsl/mailer") + "/LayoutManifest.xml");
                             sImgPath = oXformDoc.DocumentElement.GetAttribute("imgPath");
                         }
                         catch (Exception ex)
@@ -2750,14 +2744,14 @@ namespace Protean
                                 oOptElmt = base.addOption(ref oChoicesElmt, Strings.Replace(oItem.GetAttribute("name"), "_", " "), oItem.GetAttribute("name"));
 
                                 // lets add an image tag
-                                oDescElmt = this.moPageXML.CreateElement("img");
+                                oDescElmt = moPageXML.CreateElement("img");
                                 oDescElmt.SetAttribute("src", sImgPath + "/" + oItem.GetAttribute("name") + ".gif");
                                 oOptElmt.AppendChild(oDescElmt);
 
                                 // lets insert a description html tag
                                 if (!string.IsNullOrEmpty(oItem.InnerXml))
                                 {
-                                    oDescElmt = this.moPageXML.CreateElement("div");
+                                    oDescElmt = moPageXML.CreateElement("div");
                                     oDescElmt.SetAttribute("class", "description");
                                     oDescElmt.InnerXml = oItem.InnerXml;
                                     oOptElmt.AppendChild(oDescElmt);
@@ -2779,7 +2773,7 @@ namespace Protean
                             //oFrmElmt = (XmlElement)argoNode1;
                         }
 
-                        if (base.isSubmitted() | !string.IsNullOrEmpty(this.goRequest.Form["ewsubmit.x"]) | !string.IsNullOrEmpty(this.goRequest.Form["cStructLayout"]))
+                        if (base.isSubmitted() | !string.IsNullOrEmpty(goRequest.Form["ewsubmit.x"]) | !string.IsNullOrEmpty(goRequest.Form["cStructLayout"]))
                         {
                             base.updateInstanceFromRequest();
                             base.validate();
@@ -2798,7 +2792,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -2853,10 +2847,10 @@ namespace Protean
                             GetModuleOptions(ref oSelElmt);
 
                             var submitted = base.isSubmitted();
-                            var ewsubmit = !string.IsNullOrEmpty(this.goRequest.Form["ewsubmit.x"]);
-                            var cModuletype = !string.IsNullOrEmpty(this.goRequest.Form["cModuleType"]);
+                            var ewsubmit = !string.IsNullOrEmpty(goRequest.Form["ewsubmit.x"]);
+                            var cModuletype = !string.IsNullOrEmpty(goRequest.Form["cModuleType"]);
 
-                            if (base.isSubmitted() | !string.IsNullOrEmpty(this.goRequest.Form["ewsubmit.x"]) | !string.IsNullOrEmpty(this.goRequest.Form["cModuleType"]))
+                            if (base.isSubmitted() | !string.IsNullOrEmpty(goRequest.Form["ewsubmit.x"]) | !string.IsNullOrEmpty(goRequest.Form["cModuleType"]))
                             {
                                 base.updateInstanceFromRequest();
                                 base.validate();
@@ -2891,7 +2885,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -2915,7 +2909,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -2939,7 +2933,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -2963,7 +2957,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -2984,7 +2978,7 @@ namespace Protean
                                     object PathPrefix = @"ptn\";
 
                                     EnumberateManifest(ref ManifestDoc, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"core\modules")), "manifest.xml");
-                                    var rootFolder = new DirectoryInfo(this.myWeb.goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "modules"))));
+                                    var rootFolder = new DirectoryInfo(myWeb.goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "modules"))));
                                     DirectoryInfo fld;
                                     foreach (var currentFld in rootFolder.GetDirectories())
                                     {
@@ -2993,45 +2987,45 @@ namespace Protean
                                         // EnumberateManifest(ManifestDoc, "/" & gcProjectPath & "modules\" & fld.Name, "manifest.xml")
 
                                     }
-                                    if (!string.IsNullOrEmpty(this.myWeb.moConfig["ClientCommonFolder"]))
+                                    if (!string.IsNullOrEmpty(myWeb.moConfig["ClientCommonFolder"]))
                                     {
-                                        this.EnumberateManifest(ref ManifestDoc, this.myWeb.moConfig["ClientCommonFolder"] + @"\xsl", "manifest.xml");
+                                        EnumberateManifest(ref ManifestDoc, myWeb.moConfig["ClientCommonFolder"] + @"\xsl", "manifest.xml");
                                     }
 
                                     // new local modules
-                                    rootFolder = new DirectoryInfo(this.myWeb.goServer.MapPath("/" + Cms.gcProjectPath + "/modules"));
+                                    rootFolder = new DirectoryInfo(myWeb.goServer.MapPath("/" + Cms.gcProjectPath + "/modules"));
                                     if (rootFolder.Exists)
                                     {
                                         foreach (var currentFld1 in rootFolder.GetDirectories())
                                         {
                                             fld = currentFld1;
-                                            this.EnumberateManifest(ref ManifestDoc, "/" + Cms.gcProjectPath + @"\modules\" + fld.Name, "manifest.xml");
+                                            EnumberateManifest(ref ManifestDoc, "/" + Cms.gcProjectPath + @"\modules\" + fld.Name, "manifest.xml");
                                         }
                                     }
 
                                     EnumberateManifest(ref ManifestDoc, "/xsl", "manifest.xml");
 
-                                    if (this.myWeb.moConfig["Search"] == "on")
+                                    if (myWeb.moConfig["Search"] == "on")
                                     {
                                         EnumberateManifest(ref ManifestDoc, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\search")), "manifest.xml");
                                     }
-                                    if (this.myWeb.moConfig["Membership"] == "on")
+                                    if (myWeb.moConfig["Membership"] == "on")
                                     {
                                         EnumberateManifest(ref ManifestDoc, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\membership")), "manifest.xml");
                                     }
-                                    if (this.myWeb.moConfig["Cart"] == "on")
+                                    if (myWeb.moConfig["Cart"] == "on")
                                     {
                                         EnumberateManifest(ref ManifestDoc, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\cart")), "manifest.xml");
                                     }
-                                    if (this.myWeb.moConfig["Quote"] == "on")
+                                    if (myWeb.moConfig["Quote"] == "on")
                                     {
                                         EnumberateManifest(ref ManifestDoc, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\quote")), "manifest.xml");
                                     }
-                                    if (this.myWeb.moConfig["MailingList"] == "on")
+                                    if (myWeb.moConfig["MailingList"] == "on")
                                     {
                                         EnumberateManifest(ref ManifestDoc, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\mailer")), "manifest.xml");
                                     }
-                                    if (this.myWeb.moConfig["Subscriptions"] == "on")
+                                    if (myWeb.moConfig["Subscriptions"] == "on")
                                     {
                                         EnumberateManifest(ref ManifestDoc, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\subscriptions")), "manifest.xml");
                                     }
@@ -3042,9 +3036,9 @@ namespace Protean
                                 {
                                     object PathPrefix = @"ewcommon\";
                                     EnumberateManifest(ref ManifestDoc, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "xsl/PageLayouts")), "LayoutManifest.xml");
-                                    if (!string.IsNullOrEmpty(this.myWeb.moConfig["ClientCommonFolder"]))
+                                    if (!string.IsNullOrEmpty(myWeb.moConfig["ClientCommonFolder"]))
                                     {
-                                        this.EnumberateManifest(ref ManifestDoc, this.myWeb.moConfig["ClientCommonFolder"] + @"\xsl", "layoutManifest.xml");
+                                        EnumberateManifest(ref ManifestDoc, myWeb.moConfig["ClientCommonFolder"] + @"\xsl", "layoutManifest.xml");
                                     }
                                     EnumberateManifest(ref ManifestDoc, "/xsl", "layoutManifest.xml");
                                     break;
@@ -3054,7 +3048,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -3077,14 +3071,14 @@ namespace Protean
                         filepath = filepath.Replace(@"\", "/");
 
 
-                        if (File.Exists(this.myWeb.goServer.MapPath(filepath) + "/" + manifestFilename))
+                        if (File.Exists(myWeb.goServer.MapPath(filepath) + "/" + manifestFilename))
                         {
                             // if this file exists then add the bespoke templates
 
                             if (ManifestDoc is null)
                             {
                                 ManifestDoc = new XmlDocument();
-                                ManifestDoc.Load(this.myWeb.goServer.MapPath(filepath) + "/" + manifestFilename);
+                                ManifestDoc.Load(myWeb.goServer.MapPath(filepath) + "/" + manifestFilename);
                                 foreach (XmlElement currentOContentType in ManifestDoc.SelectNodes("/PageLayouts/ContentTypes/ContentTypeGroup/ContentType"))
                                 {
                                     oContentType = currentOContentType;
@@ -3108,7 +3102,7 @@ namespace Protean
                             else
                             {
                                 var ManifestTemp = new XmlDocument();
-                                ManifestTemp.Load(this.myWeb.goServer.MapPath(filepath) + "/" + manifestFilename);
+                                ManifestTemp.Load(myWeb.goServer.MapPath(filepath) + "/" + manifestFilename);
 
                                 // step through contentTypes to add to ManifestDoc
 
@@ -3211,7 +3205,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "EnumberateManifestOptions", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "EnumberateManifestOptions", ex, "", cProcessInfo, gbDebug);
                     }
 
                 }
@@ -3225,7 +3219,7 @@ namespace Protean
                         {
                             PathPrefix = @"ptn\";
                             EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"core\modules")), "ContentTypes/ContentTypeGroup", "ContentType", false, "manifest.xml");
-                            var rootFolder = new DirectoryInfo(this.goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "modules"))));
+                            var rootFolder = new DirectoryInfo(goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "modules"))));
                             DirectoryInfo fld;
                             foreach (var currentFld in rootFolder.GetDirectories())
                             {
@@ -3233,45 +3227,45 @@ namespace Protean
                                 EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"modules\"), fld.Name)), "ContentTypes/ContentTypeGroup", "ContentType", false, "manifest.xml");
 
                             }
-                            if (!string.IsNullOrEmpty(this.myWeb.moConfig["ClientCommonFolder"]))
+                            if (!string.IsNullOrEmpty(myWeb.moConfig["ClientCommonFolder"]))
                             {
-                                this.EnumberateManifestOptions(ref oSelElmt, this.myWeb.moConfig["ClientCommonFolder"] + @"\xsl", "ContentTypes/ContentTypeGroup", "ContentType", false, "manifest.xml");
+                                EnumberateManifestOptions(ref oSelElmt, myWeb.moConfig["ClientCommonFolder"] + @"\xsl", "ContentTypes/ContentTypeGroup", "ContentType", false, "manifest.xml");
                             }
 
                             // new local modules
-                            rootFolder = new DirectoryInfo(this.goServer.MapPath("/" + Cms.gcProjectPath + "/modules"));
+                            rootFolder = new DirectoryInfo(goServer.MapPath("/" + Cms.gcProjectPath + "/modules"));
                             if (rootFolder.Exists)
                             {
                                 foreach (var currentFld1 in rootFolder.GetDirectories())
                                 {
                                     fld = currentFld1;
-                                    this.EnumberateManifestOptions(ref oSelElmt, "/" + Cms.gcProjectPath + @"\modules\" + fld.Name, "ContentTypes/ContentTypeGroup", "ContentType", true, "manifest.xml");
+                                    EnumberateManifestOptions(ref oSelElmt, "/" + Cms.gcProjectPath + @"\modules\" + fld.Name, "ContentTypes/ContentTypeGroup", "ContentType", true, "manifest.xml");
                                 }
                             }
 
                             EnumberateManifestOptions(ref oSelElmt, "/xsl", "ContentTypes/ContentTypeGroup", "ContentType", false);
 
-                            if (this.myWeb.moConfig["Search"] == "on")
+                            if (myWeb.moConfig["Search"] == "on")
                             {
                                 EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\search")), "ContentTypes/ContentTypeGroup", "ContentType", false, "manifest.xml");
                             }
-                            if (this.myWeb.moConfig["Membership"] == "on")
+                            if (myWeb.moConfig["Membership"] == "on")
                             {
                                 EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\membership")), "ContentTypes/ContentTypeGroup", "ContentType", false, "manifest.xml");
                             }
-                            if (this.myWeb.moConfig["Cart"] == "on")
+                            if (myWeb.moConfig["Cart"] == "on")
                             {
                                 EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\cart")), "ContentTypes/ContentTypeGroup", "ContentType", false, "manifest.xml");
                             }
-                            if (this.myWeb.moConfig["Quote"] == "on")
+                            if (myWeb.moConfig["Quote"] == "on")
                             {
                                 EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\quote")), "ContentTypes/ContentTypeGroup", "ContentType", false, "manifest.xml");
                             }
-                            if (this.myWeb.moConfig["MailingList"] == "on")
+                            if (myWeb.moConfig["MailingList"] == "on")
                             {
                                 EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\mailer")), "ContentTypes/ContentTypeGroup", "ContentType", false, "manifest.xml");
                             }
-                            if (this.myWeb.moConfig["Subscriptions"] == "on")
+                            if (myWeb.moConfig["Subscriptions"] == "on")
                             {
                                 EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\subscriptions")), "ContentTypes/ContentTypeGroup", "ContentType", false, "manifest.xml");
                             }
@@ -3311,7 +3305,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
                     }
                 }
 
@@ -3325,53 +3319,53 @@ namespace Protean
                         {
                             PathPrefix = @"ptn\";
                             EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"core\modules")), "ModuleTypes/ModuleGroup", "Module", false, "manifest.xml");
-                            var rootFolder = new DirectoryInfo(this.goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "modules"))));
+                            var rootFolder = new DirectoryInfo(goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "modules"))));
                             DirectoryInfo fld;
                             foreach (var currentFld in rootFolder.GetDirectories())
                             {
                                 fld = currentFld;
                                 EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"modules\"), fld.Name)), "ModuleTypes/ModuleGroup", "Module", true, "manifest.xml");
                             }
-                            if (!string.IsNullOrEmpty(this.myWeb.moConfig["ClientCommonFolder"]))
+                            if (!string.IsNullOrEmpty(myWeb.moConfig["ClientCommonFolder"]))
                             {
-                                this.EnumberateManifestOptions(ref oSelElmt, this.myWeb.moConfig["ClientCommonFolder"] + @"\xsl", "ModuleTypes/ModuleGroup", "Module", false, "manifest.xml");
+                                EnumberateManifestOptions(ref oSelElmt, myWeb.moConfig["ClientCommonFolder"] + @"\xsl", "ModuleTypes/ModuleGroup", "Module", false, "manifest.xml");
                             }
 
                             // new local modules
-                            rootFolder = new DirectoryInfo(this.goServer.MapPath("/" + Cms.gcProjectPath + "/modules"));
+                            rootFolder = new DirectoryInfo(goServer.MapPath("/" + Cms.gcProjectPath + "/modules"));
                             if (rootFolder.Exists)
                             {
                                 foreach (var currentFld1 in rootFolder.GetDirectories())
                                 {
                                     fld = currentFld1;
-                                    this.EnumberateManifestOptions(ref oSelElmt, "/" + Cms.gcProjectPath + @"\modules\" + fld.Name, "ModuleTypes/ModuleGroup", "Module", true, "manifest.xml");
+                                    EnumberateManifestOptions(ref oSelElmt, "/" + Cms.gcProjectPath + @"\modules\" + fld.Name, "ModuleTypes/ModuleGroup", "Module", true, "manifest.xml");
                                 }
                             }
 
                             // legacy local modules
                             EnumberateManifestOptions(ref oSelElmt, "/xsl", "ModuleTypes/ModuleGroup", "Module", true);
 
-                            if (this.myWeb.moConfig["Search"] == "on")
+                            if (myWeb.moConfig["Search"] == "on")
                             {
                                 EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\search")), "ModuleTypes/ModuleGroup", "Module", false, "manifest.xml");
                             }
-                            if (this.myWeb.moConfig["Membership"] == "on")
+                            if (myWeb.moConfig["Membership"] == "on")
                             {
                                 EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\membership")), "ModuleTypes/ModuleGroup", "Module", false, "manifest.xml");
                             }
-                            if (this.myWeb.moConfig["Cart"] == "on")
+                            if (myWeb.moConfig["Cart"] == "on")
                             {
                                 EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\cart")), "ModuleTypes/ModuleGroup", "Module", false, "manifest.xml");
                             }
-                            if (this.myWeb.moConfig["Quote"] == "on")
+                            if (myWeb.moConfig["Quote"] == "on")
                             {
                                 EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\quote")), "ModuleTypes/ModuleGroup", "Module", false, "manifest.xml");
                             }
-                            if (this.myWeb.moConfig["MailingList"] == "on")
+                            if (myWeb.moConfig["MailingList"] == "on")
                             {
                                 EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\mailer")), "ModuleTypes/ModuleGroup", "Module", false, "manifest.xml");
                             }
-                            if (this.myWeb.moConfig["Subscriptions"] == "on")
+                            if (myWeb.moConfig["Subscriptions"] == "on")
                             {
                                 EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\subscriptions")), "ModuleTypes/ModuleGroup", "Module", false, "manifest.xml");
                             }
@@ -3380,32 +3374,32 @@ namespace Protean
                         {
                             EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "PageLayouts")), "ModuleTypes/ModuleGroup", "Module", false);
 
-                            if (!string.IsNullOrEmpty(this.myWeb.moConfig["ClientCommonFolder"]))
+                            if (!string.IsNullOrEmpty(myWeb.moConfig["ClientCommonFolder"]))
                             {
-                                this.EnumberateManifestOptions(ref oSelElmt, this.myWeb.moConfig["ClientCommonFolder"] + "/xsl", "ModuleTypes/ModuleGroup", "Module", false);
+                                EnumberateManifestOptions(ref oSelElmt, myWeb.moConfig["ClientCommonFolder"] + "/xsl", "ModuleTypes/ModuleGroup", "Module", false);
                             }
                             EnumberateManifestOptions(ref oSelElmt, "/xsl", "ModuleTypes/ModuleGroup", "Module", true);
-                            if (this.myWeb.moConfig["Search"] == "on")
+                            if (myWeb.moConfig["Search"] == "on")
                             {
                                 EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "Search")), "ModuleTypes/ModuleGroup", "Module", false);
                             }
-                            if (this.myWeb.moConfig["Membership"] == "on")
+                            if (myWeb.moConfig["Membership"] == "on")
                             {
                                 EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "Membership")), "ModuleTypes/ModuleGroup", "Module", false);
                             }
-                            if (this.myWeb.moConfig["Cart"] == "on")
+                            if (myWeb.moConfig["Cart"] == "on")
                             {
                                 EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "Cart")), "ModuleTypes/ModuleGroup", "Module", false);
                             }
-                            if (this.myWeb.moConfig["Quote"] == "on")
+                            if (myWeb.moConfig["Quote"] == "on")
                             {
                                 EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "Quote")), "ModuleTypes/ModuleGroup", "Module", false);
                             }
-                            if (this.myWeb.moConfig["MailingList"] == "on")
+                            if (myWeb.moConfig["MailingList"] == "on")
                             {
                                 EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "Mailer")), "ModuleTypes/ModuleGroup", "Module", false);
                             }
-                            if (this.myWeb.moConfig["Subscriptions"] == "on")
+                            if (myWeb.moConfig["Subscriptions"] == "on")
                             {
                                 EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "Subscriptions")), "ModuleTypes/ModuleGroup", "Module", false);
                             }
@@ -3414,7 +3408,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
                     }
                 }
 
@@ -3435,14 +3429,14 @@ namespace Protean
 
 
 
-                        if (File.Exists(this.goServer.MapPath(filepath) + "/" + manifestFilename))
+                        if (File.Exists(goServer.MapPath(filepath) + "/" + manifestFilename))
                         {
                             // if this file exists then add the bespoke templates
-                            oXformDoc.Load(this.goServer.MapPath(filepath) + "/" + manifestFilename);
+                            oXformDoc.Load(goServer.MapPath(filepath) + "/" + manifestFilename);
                             sImgPath = oXformDoc.DocumentElement.GetAttribute("imgPath");
                             foreach (XmlElement oChoices in oXformDoc.SelectNodes("/PageLayouts/" + groupName))
                             {
-                                if (string.IsNullOrEmpty(oChoices.GetAttribute("targetCssFramework")) | this.myWeb.moConfig["cssFramework"] != null & oChoices.GetAttribute("targetCssFramework").Contains("" + this.myWeb.moConfig["cssFramework"]))
+                                if (string.IsNullOrEmpty(oChoices.GetAttribute("targetCssFramework")) | myWeb.moConfig["cssFramework"] != null & oChoices.GetAttribute("targetCssFramework").Contains("" + myWeb.moConfig["cssFramework"]))
                                 {
                                     // do we have a choices element?
                                     XmlElement oChoicesElmt = (XmlElement)oSelectElmt.SelectSingleNode("choices[label/node()='" + oChoices.GetAttribute("name") + "']");
@@ -3458,7 +3452,7 @@ namespace Protean
                                     }
                                     foreach (XmlElement oItem in oChoices.SelectNodes(optionName))
                                     {
-                                        if (string.IsNullOrEmpty(oItem.GetAttribute("targetCssFramework")) | this.myWeb.moConfig["cssFramework"] != null & oItem.GetAttribute("targetCssFramework").Contains("" + this.myWeb.moConfig["cssFramework"]))
+                                        if (string.IsNullOrEmpty(oItem.GetAttribute("targetCssFramework")) | myWeb.moConfig["cssFramework"] != null & oItem.GetAttribute("targetCssFramework").Contains("" + myWeb.moConfig["cssFramework"]))
                                         {
                                             string FormPath = oItem.GetAttribute("type");
                                             oOptElmt = base.addOption(ref oChoicesElmt, Strings.Replace(oItem.GetAttribute("name"), "_", " "), FormPath);
@@ -3472,7 +3466,7 @@ namespace Protean
                                             {
                                                 oOptElmt.SetAttribute("formPath", oItem.GetAttribute("formPath"));
                                             }
-                                            oDescElmt = this.moPageXML.CreateElement("img");
+                                            oDescElmt = moPageXML.CreateElement("img");
                                             oDescElmt.SetAttribute("src", sImgPath + "/" + oItem.GetAttribute("name") + ".gif");
                                             if (!string.IsNullOrEmpty(oItem.GetAttribute("icon")))
                                             {
@@ -3482,7 +3476,7 @@ namespace Protean
                                             // lets insert a description html tag
                                             if (!string.IsNullOrEmpty(oItem.InnerXml))
                                             {
-                                                oDescElmt = this.moPageXML.CreateElement("div");
+                                                oDescElmt = moPageXML.CreateElement("div");
                                                 oDescElmt.SetAttribute("class", "description");
                                                 oDescElmt.InnerXml = oItem.InnerXml;
                                                 oOptElmt.AppendChild(oDescElmt);
@@ -3503,7 +3497,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "EnumberateManifestOptions", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "EnumberateManifestOptions", ex, "", cProcessInfo, gbDebug);
                     }
 
                 }
@@ -3524,7 +3518,7 @@ namespace Protean
                     // Dim oGrp1Elmt As XmlElement
                     // Dim oGrp2Elmt As XmlElement   'Never used
                     // Dim oSelElmt As XmlElement
-                    var oTempInstance = this.moPageXML.CreateElement("instance");
+                    var oTempInstance = moPageXML.CreateElement("instance");
                     bool bCascade = false;
                     string cProcessInfo = "";
                     XmlElement oCRNode;
@@ -3540,19 +3534,19 @@ namespace Protean
                     try
                     {
 
-                        var integrationHelper = new Integration.Directory.Helper(ref this.myWeb);
+                        var integrationHelper = new Integration.Directory.Helper(ref myWeb);
 
                         if (id > 0L)
                         {
                             // we may be halfway through a trigger so lets rescue the instance from the session
-                            if (this.goSession["oContentInstance"] is null)
+                            if (goSession["oContentInstance"] is null)
                             {
                                 if (nVersionId > 0L)
                                 {
 
                                     oTempInstance = moDbHelper.GetVersionInstance(id, nVersionId);
                                     // Only Update the status if the cmd is ewcmd is RollbackContent
-                                    if (this.myWeb.moRequest["ewCmd"] == "RollbackContent")
+                                    if (myWeb.moRequest["ewCmd"] == "RollbackContent")
                                     {
                                         oTempInstance.SelectSingleNode("tblContent/nStatus").InnerText = ((int)Cms.dbHelper.Status.Live).ToString();
                                     }
@@ -3564,11 +3558,11 @@ namespace Protean
                                 }
 
                                 // turn off process repeats when loading from file
-                                this.bProcessRepeats = false;
+                                bProcessRepeats = false;
                             }
                             else
                             {
-                                oTempInstance = (XmlElement)this.goSession["oContentInstance"];
+                                oTempInstance = (XmlElement)goSession["oContentInstance"];
                             }
 
                             if (string.IsNullOrEmpty(cContentSchemaName))
@@ -3602,9 +3596,9 @@ namespace Protean
                             {
                                 sProductTypes = sProductTypes + ",Subscription";
                             }
-                            if (!string.IsNullOrEmpty(this.myWeb.moConfig["ProductTypes"]))
+                            if (!string.IsNullOrEmpty(myWeb.moConfig["ProductTypes"]))
                             {
-                                sProductTypes = this.myWeb.moConfig["ProductTypes"];
+                                sProductTypes = myWeb.moConfig["ProductTypes"];
                             }
                             sProductTypes = sProductTypes.Trim().TrimEnd(',') + ",";
                             if (sProductTypes.Contains(cContentSchemaName + ",") & id > 0L)
@@ -3618,7 +3612,7 @@ namespace Protean
                                     prodCatElmt.SetAttribute("ids", Ids);
                                     oTempInstance.AppendChild(prodCatElmt);
                                 }
-                                AddPageSpecs(ref myWeb.mnPageId,ref oTempInstance);
+                                AddPageSpecs(ref myWeb.mnPageId, ref oTempInstance);
                             }
                         }
                         else
@@ -3626,10 +3620,10 @@ namespace Protean
                             cModuleType = moRequest["cModuleType"];
                         }
 
-                        if (this.goSession["oContentInstance"] != null)
+                        if (goSession["oContentInstance"] != null)
                         {
                             // turn off process repeats when loading from file if we are going to load the instance later.
-                            this.bProcessRepeats = false;
+                            bProcessRepeats = false;
                         }
 
                         // Set the return parameter
@@ -3668,6 +3662,8 @@ namespace Protean
                         else if (goConfig["cssFramework"] == "bs5")
                         {
                             cXformPath = GetContentFormPath(cContentSchemaName);
+                            if (!string.IsNullOrEmpty(AlternateFormName))
+                                cXformPath = cXformPath.Remove(cXformPath.Length - cContentSchemaName.Length) + AlternateFormName;
                         }
                         if (moRequest["filter"] == "true")
                         {
@@ -3689,11 +3685,11 @@ namespace Protean
                         {
                             cXformPath = "/xforms/content/" + cXformPath;
                         }
-                        
+
                         // TS we want to do this later after we have loaded specs etc.
                         base.bProcessRepeats = false;
 
-                        if (!base.load(cXformPath + ".xml", this.myWeb.maCommonFolders))
+                        if (!base.load(cXformPath + ".xml", myWeb.maCommonFolders))
                         {
                             // load a default content xform if no alternative.
                             cProcessInfo = cXformPath + ".xml - Not Found";
@@ -3748,7 +3744,7 @@ namespace Protean
                             base.updateInstance(oTempInstance);
 
                             // Add related content to the instance
-                            oCRNode = this.moPageXML.CreateElement("ContentRelations");
+                            oCRNode = moPageXML.CreateElement("ContentRelations");
                             moDbHelper.addRelatedContent(ref oCRNode, (int)id, true);
                             base.Instance.AppendChild(oCRNode);
 
@@ -3797,22 +3793,22 @@ namespace Protean
                             {
                                 sProductTypes = sProductTypes + ",Subscription";
                             }
-                            if (!string.IsNullOrEmpty(this.myWeb.moConfig["ProductTypes"]))
+                            if (!string.IsNullOrEmpty(myWeb.moConfig["ProductTypes"]))
                             {
-                                sProductTypes = this.myWeb.moConfig["ProductTypes"];
+                                sProductTypes = myWeb.moConfig["ProductTypes"];
                             }
                             sProductTypes = sProductTypes.Trim().TrimEnd(',') + ",";
                             if (sProductTypes.Contains(cContentSchemaName + ","))
                             {
                                 AddPageSpecs(ref myWeb.mnPageId, ref myInstance);
                             }
-                                this.bProcessRepeats = true;
-                                this.LoadInstance(myInstance);
+                            bProcessRepeats = true;
+                            LoadInstance(myInstance);
 
-                            if (this.goSession["oContentInstance"] != null)
+                            if (goSession["oContentInstance"] != null)
                             {
-                                this.bProcessRepeats = true;
-                                base.Instance = (XmlElement)this.goSession["oContentInstance"];
+                                bProcessRepeats = true;
+                                base.Instance = (XmlElement)goSession["oContentInstance"];
                             }
 
                             if (!string.IsNullOrEmpty(cContentName) & base.Instance.FirstChild != null)
@@ -3855,7 +3851,7 @@ namespace Protean
                         oContentLocations.ProcessSelects();
 
                         // Version Control: if on, copy the status node for use after submission
-                        if (this.myWeb.gbVersionControl)
+                        if (myWeb.gbVersionControl)
                         {
                             string nCurrentStatus = "";
                             XmlNodeState localNodeState() { var argoNode3 = base.Instance; var ret = Xml.NodeState(ref argoNode3, "//nStatus", "", "", XmlNodeState.IsEmpty, null, "", nCurrentStatus, bCheckTrimmedInnerText: false); base.Instance = argoNode3; return ret; }
@@ -3885,9 +3881,9 @@ namespace Protean
 
                                 bool bPreviewRedirect = false;
 
-                                if (!string.IsNullOrEmpty(this.goRequest["ptn-preview"]))
+                                if (!string.IsNullOrEmpty(goRequest["ptn-preview"]))
                                 {
-                                    if (this.myWeb.gbVersionControl)
+                                    if (myWeb.gbVersionControl)
                                     {
                                         // Leave the current version unchanged and live
 
@@ -3902,7 +3898,7 @@ namespace Protean
                                 Cms.dbHelper.ActivityType editResult = (Cms.dbHelper.ActivityType)default;
 
                                 // we don't need this now.
-                                this.goSession["oContentInstance"] = (object)null;
+                                goSession["oContentInstance"] = (object)null;
 
                                 // trim the contentName to no longer than 255 chars
                                 base.Instance.SelectSingleNode("*/cContentName").InnerXml = Strings.Left(base.Instance.SelectSingleNode("*/cContentName").InnerXml, 255);
@@ -3924,7 +3920,7 @@ namespace Protean
 
                                     object updatedVersionId = moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, base.Instance);
 
-                                    moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.ContentEdited, this.myWeb.mnUserId, this.myWeb.moSession.SessionID, DateTime.Now, (int)id, (int)pgid, "");
+                                    moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.ContentEdited, myWeb.mnUserId, myWeb.moSession.SessionID, DateTime.Now, (int)id, (int)pgid, "");
                                     // Redirection 
                                     string redirectType = "";
                                     string newUrl = "";
@@ -3945,7 +3941,7 @@ namespace Protean
 
                                     // Individual content location set
                                     // Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
-                                    if (!(this.myWeb.moRequest["contentParId"] != null & !string.IsNullOrEmpty(this.myWeb.moRequest["contentParId"])))
+                                    if (!(myWeb.moRequest["contentParId"] != null & !string.IsNullOrEmpty(myWeb.moRequest["contentParId"])))
                                     {
 
                                         // TS 28-11-2017 we only want to update the cascade information if the content is on this page.
@@ -3978,21 +3974,21 @@ namespace Protean
                                 {
                                     long nContentId;
                                     nContentId = Conversions.ToLong(moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, base.Instance));
-                                    moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.ContentAdded, this.myWeb.mnUserId, this.myWeb.moSession.SessionID, DateTime.Now, (int)nContentId, (int)pgid, "");
+                                    moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.ContentAdded, myWeb.mnUserId, myWeb.moSession.SessionID, DateTime.Now, (int)nContentId, (int)pgid, "");
 
 
                                     // If we have an action here we need to relate the item
-                                    if (Conversions.ToBoolean(Operators.OrObject(Operators.OrObject(Operators.ConditionalCompareObjectEqual(this.goSession["mcRelAction"], "Add", false), Operators.ConditionalCompareObjectEqual(this.goSession["mcRelAction"], "Find", false)), Operators.ConditionalCompareObjectEqual(this.goSession["mcRelAction"], "Edit", false))))
+                                    if (Conversions.ToBoolean(Operators.OrObject(Operators.OrObject(Operators.ConditionalCompareObjectEqual(goSession["mcRelAction"], "Add", false), Operators.ConditionalCompareObjectEqual(goSession["mcRelAction"], "Find", false)), Operators.ConditionalCompareObjectEqual(goSession["mcRelAction"], "Edit", false))))
                                     {
                                         bool b2Way = Conversions.ToBoolean(Interaction.IIf(moRequest["RelType"] == "2way" | moRequest["direction"] == "2Way", true, false));
                                         string sRelType = moRequest["relationType"];
-                                        moDbHelper.insertContentRelation(Conversions.ToInteger(this.goSession["mcRelParent"]), nContentId.ToString(), b2Way, sRelType);
+                                        moDbHelper.insertContentRelation(Conversions.ToInteger(goSession["mcRelParent"]), nContentId.ToString(), b2Way, sRelType);
                                     }
                                     // TS - Change 26/04/2016 We do not want added to the page if it is related.
 
                                     // Individual content location set
                                     // Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
-                                    else if (!(this.myWeb.moRequest["contentParId"] != null & !string.IsNullOrEmpty(this.myWeb.moRequest["contentParId"])))
+                                    else if (!(myWeb.moRequest["contentParId"] != null & !string.IsNullOrEmpty(myWeb.moRequest["contentParId"])))
                                     {
                                         moDbHelper.setContentLocation(pgid, nContentId, true, bCascade, cPosition: moRequest["cPosition"]);
                                     }
@@ -4007,7 +4003,7 @@ namespace Protean
                                         if (Conversions.ToString(item).StartsWith("Relate_"))
                                         {
                                             string[] arr = Conversions.ToString(item).Split('_');
-                                            var relateElmt = this.moPageXML.CreateElement("Relation");
+                                            var relateElmt = moPageXML.CreateElement("Relation");
                                             relateElmt.SetAttribute("relatedContentId", moRequest.Form[Conversions.ToString(item)]);
                                             relateElmt.SetAttribute("type", arr[1]);
                                             relateElmt.SetAttribute("direction", arr[2]);
@@ -4022,11 +4018,11 @@ namespace Protean
 
 
                                 // Check for related content redirection
-                                string mcRelRedirectString = Conversions.ToString(this.goSession["mcRelRedirectString"]);
+                                string mcRelRedirectString = Conversions.ToString(goSession["mcRelRedirectString"]);
                                 if (base.valid && !string.IsNullOrEmpty(mcRelRedirectString))
                                 {
 
-                                    string cQueryString = this.goRequest.QueryString.ToString();
+                                    string cQueryString = goRequest.QueryString.ToString();
                                     if (cQueryString.IndexOf("ewCmd=") > 0)
                                     {
                                         // here we fail because the ? is an & >=[
@@ -4037,7 +4033,7 @@ namespace Protean
                                     }
                                     else
                                     {
-                                        cQueryString = "?" + Strings.Replace(this.goRequest.QueryString.ToString(), "path=", "");
+                                        cQueryString = "?" + Strings.Replace(goRequest.QueryString.ToString(), "path=", "");
                                     }
                                     if (cQueryString.IndexOf("ewCmd=") != -1)
                                     {
@@ -4052,21 +4048,21 @@ namespace Protean
                                     if ((mcRelRedirectString.ToLower() ?? "") == (cQueryString.ToLower() ?? ""))
                                     {
                                         // Suppress last page being reset anywhere else
-                                        this.myWeb.mbSuppressLastPageOverrides = true;
-                                        this.myWeb.moSession.Remove("lastPage");
-                                        this.myWeb.msRedirectOnEnd = Conversions.ToString(this.goSession["mnContentRelationParent"]);
+                                        myWeb.mbSuppressLastPageOverrides = true;
+                                        myWeb.moSession.Remove("lastPage");
+                                        myWeb.msRedirectOnEnd = Conversions.ToString(goSession["mnContentRelationParent"]);
                                     }
 
                                 }
 
-                                this.goSession["mnContentRelationParent"] = (object)null;
-                                this.goSession["mcRelRedirectString"] = (object)null;
-                                this.goSession["mcRelAction"] = (object)null;
-                                this.goSession["mcRelParent"] = (object)null;
+                                goSession["mnContentRelationParent"] = (object)null;
+                                goSession["mcRelRedirectString"] = (object)null;
+                                goSession["mcRelAction"] = (object)null;
+                                goSession["mcRelParent"] = (object)null;
 
-                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(this.goSession["EwCmd"], "", false)))
+                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(goSession["EwCmd"], "", false)))
                                 {
-                                    this.goSession["EwCmd"] = "Normal";
+                                    goSession["EwCmd"] = "Normal";
                                 }
 
                                 // Submitted and valid - should have a content id let's process the relationships
@@ -4132,7 +4128,7 @@ namespace Protean
                                                 {
                                                     if (!string.IsNullOrEmpty(moPrvConfig.Providers[providerName + "Local"].Parameters["path"]))
                                                     {
-                                                        assemblyInstance = Assembly.LoadFrom(this.goServer.MapPath(moPrvConfig.Providers[providerName + "Local"].Parameters["path"]));
+                                                        assemblyInstance = Assembly.LoadFrom(goServer.MapPath(moPrvConfig.Providers[providerName + "Local"].Parameters["path"]));
                                                         calledType = assemblyInstance.GetType(contentEditAction, true);
                                                     }
                                                     else
@@ -4162,7 +4158,7 @@ namespace Protean
 
                                                         default:
                                                             {
-                                                                assemblyInstance = Assembly.LoadFrom(this.goServer.MapPath(moPrvConfig.Providers[providerName].Parameters["path"]));
+                                                                assemblyInstance = Assembly.LoadFrom(goServer.MapPath(moPrvConfig.Providers[providerName].Parameters["path"]));
 
                                                                 classPath = moPrvConfig.Providers[providerName].Parameters["classPrefix"] + classPath;
                                                                 calledType = assemblyInstance.GetType(classPath, true);
@@ -4187,7 +4183,7 @@ namespace Protean
                                             var o = Activator.CreateInstance(calledType);
 
                                             var args = new object[4];
-                                            args[0] = this.myWeb;
+                                            args[0] = myWeb;
                                             args[1] = contentEditActionHandler;
                                             args[2] = nReturnId;
                                             args[3] = editResult;
@@ -4216,7 +4212,7 @@ namespace Protean
                                 if (bPreviewRedirect)
                                 {
                                     //long VerId = 0L;
-                                    this.myWeb.msRedirectOnEnd = "/?ewCmd=PreviewOn&pgid=" + pgid + "&artid=" + id + "&verId=" + nReturnId;
+                                    myWeb.msRedirectOnEnd = "/?ewCmd=PreviewOn&pgid=" + pgid + "&artid=" + id + "&verId=" + nReturnId;
                                 }
 
                             }
@@ -4225,12 +4221,12 @@ namespace Protean
                         {
                             // This should really be taken over using  xForms Triggers
                             base.updateInstanceFromRequest();
-                            if (Conversions.ToBoolean(Operators.OrObject(this.goSession["mcRelRedirectString"] != null, !Operators.ConditionalCompareObjectEqual(this.goSession["mcRelRedirectString"], "", false))))
+                            if (Conversions.ToBoolean(Operators.OrObject(goSession["mcRelRedirectString"] != null, !Operators.ConditionalCompareObjectEqual(goSession["mcRelRedirectString"], "", false))))
                             {
                                 base.validate();
                                 if (base.valid)
                                 {
-                                    this.myWeb.msRedirectOnEnd = Conversions.ToString(this.goSession["mcRelRedirectString"]);
+                                    myWeb.msRedirectOnEnd = Conversions.ToString(goSession["mcRelRedirectString"]);
                                     base.valid = false;
                                 }
                             }
@@ -4239,7 +4235,7 @@ namespace Protean
                                 // we are re-ordering so we don't want a valid form
                                 base.valid = false;
                             }
-                            this.goSession["oContentInstance"] = (object)null;
+                            goSession["oContentInstance"] = (object)null;
                         }
 
                         else if (base.isTriggered)
@@ -4247,12 +4243,12 @@ namespace Protean
                             // we have clicked a trigger so we must update the instance
                             base.updateInstanceFromRequest();
                             // lets save the instance
-                            this.goSession["oContentInstance"] = base.Instance;
+                            goSession["oContentInstance"] = base.Instance;
                         }
                         else
                         {
                             // clear this if we are loading the first form
-                            this.goSession["oContentInstance"] = (object)null;
+                            goSession["oContentInstance"] = (object)null;
                         }
 
                         base.addValues();
@@ -4260,7 +4256,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditContent", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditContent", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -4286,13 +4282,13 @@ namespace Protean
 
                     try
                     {
-                        XmlElement oTmpNode = (XmlElement)this.moXformElmt.SelectSingleNode("model/instance/tblContent/nContentKey");
+                        XmlElement oTmpNode = (XmlElement)moXformElmt.SelectSingleNode("model/instance/tblContent/nContentKey");
                         if (oTmpNode != null)
                         {
                             if (Information.IsNumeric(oTmpNode.InnerText))
                                 nParId = Conversions.ToInteger(oTmpNode.InnerText);
                             var bCascade = default(bool);
-                            foreach (var myItem in this.goRequest.Form.Keys)
+                            foreach (var myItem in goRequest.Form.Keys)
                             {
                                 // ok, we need to check through all the things that would require a save first, 
                                 // save, then do the action
@@ -4321,9 +4317,9 @@ namespace Protean
                                         {
                                             nParId = Conversions.ToInteger(moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, base.Instance));
                                             moDbHelper.setContentLocation((long)pgid, (long)nParId, true, bCascade);
-                                            if (Conversions.ToBoolean(Operators.OrObject(Operators.ConditionalCompareObjectEqual(this.goSession["mcRelAction"], "Add", false), Operators.ConditionalCompareObjectEqual(this.goSession["mcRelAction"], "Find", false))))
+                                            if (Conversions.ToBoolean(Operators.OrObject(Operators.ConditionalCompareObjectEqual(goSession["mcRelAction"], "Add", false), Operators.ConditionalCompareObjectEqual(goSession["mcRelAction"], "Find", false))))
                                             {
-                                                moDbHelper.insertContentRelation(Conversions.ToInteger(this.goSession["mcRelParent"]), nParId.ToString());
+                                                moDbHelper.insertContentRelation(Conversions.ToInteger(goSession["mcRelParent"]), nParId.ToString());
                                             }
                                         }
                                     }
@@ -4336,52 +4332,52 @@ namespace Protean
                                     string[] relateCmdArr = Strings.Split(Strings.Replace(Conversions.ToString(myItem), "ewSubmitClone_", ""), "_");
 
                                     // ###############################-REORDER-########################
-                                    this.goSession["mnContentRelationParent"] = (object)null;
-                                    this.goSession["mcRelRedirectString"] = (object)null;
-                                    this.goSession["mcRelAction"] = (object)null;
-                                    this.goSession["mcRelParent"] = (object)null;
-                                    this.goSession["mcRelType"] = (object)null;
+                                    goSession["mnContentRelationParent"] = (object)null;
+                                    goSession["mcRelRedirectString"] = (object)null;
+                                    goSession["mcRelAction"] = (object)null;
+                                    goSession["mcRelParent"] = (object)null;
+                                    goSession["mcRelType"] = (object)null;
 
 
-                                    string pgidQueryString = Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(this.goRequest.QueryString["pgid"]), "", "&pgid=" + this.goRequest.QueryString["pgid"]));
+                                    string pgidQueryString = Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(goRequest.QueryString["pgid"]), "", "&pgid=" + goRequest.QueryString["pgid"]));
 
                                     if (Conversions.ToBoolean(myItem.ToString().Contains("RelateUp")))
                                     {
                                         nRelId = Conversions.ToInteger(relateCmdArr[1]);
-                                        this.myWeb.moDbHelper.ReorderContent((long)nParId, (long)nRelId, "MoveUp", true);
+                                        myWeb.moDbHelper.ReorderContent((long)nParId, (long)nRelId, "MoveUp", true);
                                         bResult = true;
                                     }
                                     else if (Conversions.ToBoolean(myItem.ToString().Contains("RelateDown")))
                                     {
                                         nRelId = Conversions.ToInteger(relateCmdArr[1]);
-                                        this.myWeb.moDbHelper.ReorderContent((long)nParId, (long)nRelId, "MoveDown", true);
+                                        myWeb.moDbHelper.ReorderContent((long)nParId, (long)nRelId, "MoveDown", true);
                                         bResult = true;
                                     }
                                     else if (Conversions.ToBoolean(myItem.ToString().Contains("RelateTop")))
                                     {
                                         nRelId = Conversions.ToInteger(relateCmdArr[1]);
-                                        this.myWeb.moDbHelper.ReorderContent((long)nParId, (long)nRelId, "MoveTop", true);
+                                        myWeb.moDbHelper.ReorderContent((long)nParId, (long)nRelId, "MoveTop", true);
                                         bResult = true;
                                     }
                                     else if (Conversions.ToBoolean(myItem.ToString().Contains("RelateBottom")))
                                     {
                                         nRelId = Conversions.ToInteger(relateCmdArr[1]);
-                                        this.myWeb.moDbHelper.ReorderContent((long)nParId, (long)nRelId, "MoveBottom", true);
+                                        myWeb.moDbHelper.ReorderContent((long)nParId, (long)nRelId, "MoveBottom", true);
                                         bResult = true;
                                     }
                                     // ###############################-ACTIONS-########################
                                     else if (Conversions.ToBoolean(myItem.ToString().Contains("RelateEdit")))
                                     {
                                         nRelId = Conversions.ToInteger(relateCmdArr[1]);
-                                        this.goSession["mnContentRelationParent"] = Operators.ConcatenateObject("/" + this.myWeb.moConfig["ProjectPath"] + this.goRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + nParId, Interaction.IIf(string.IsNullOrEmpty(this.goRequest.QueryString["pgid"]), "", "&pgid=" + this.goRequest.QueryString["pgid"]));
-                                        this.goSession["mcRelRedirectString"] = "/" + this.myWeb.moConfig["ProjectPath"] + this.goRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + nRelId;
+                                        goSession["mnContentRelationParent"] = Operators.ConcatenateObject("/" + myWeb.moConfig["ProjectPath"] + goRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + nParId, Interaction.IIf(string.IsNullOrEmpty(goRequest.QueryString["pgid"]), "", "&pgid=" + goRequest.QueryString["pgid"]));
+                                        goSession["mcRelRedirectString"] = "/" + myWeb.moConfig["ProjectPath"] + goRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + nRelId;
                                         bResult = true;
                                         break;
                                     }
                                     else if (Conversions.ToBoolean(myItem.ToString().Contains("RelateRemove")))
                                     {
                                         nRelId = Conversions.ToInteger(relateCmdArr[1]);
-                                        this.myWeb.moDbHelper.RemoveContentRelation((long)nParId, (long)nRelId);
+                                        myWeb.moDbHelper.RemoveContentRelation((long)nParId, (long)nRelId);
                                         bResult = true;
 
                                         break;
@@ -4389,19 +4385,19 @@ namespace Protean
                                     else if (Conversions.ToBoolean(myItem.ToString().Contains("RelateAdd")))
                                     {
 
-                                        this.goSession["mnContentRelationParent"] = "/" + this.myWeb.moConfig["ProjectPath"] + this.goRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + nParId + pgidQueryString;
+                                        goSession["mnContentRelationParent"] = "/" + myWeb.moConfig["ProjectPath"] + goRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + nParId + pgidQueryString;
 
                                         string cContentType = relateCmdArr[1];
                                         if (relateCmdArr.Length > 3)
                                         {
-                                            this.goSession["mcRelRedirectString"] = "/" + this.myWeb.moConfig["ProjectPath"] + this.goRequest.QueryString["Path"] + "?ewCmd=AddContent&type=" + cContentType + "&name=New+" + cContentType + "&direction=" + relateCmdArr[2] + "&RelType=" + relateCmdArr[2] + "&relationType=" + relateCmdArr[3] + pgidQueryString;
+                                            goSession["mcRelRedirectString"] = "/" + myWeb.moConfig["ProjectPath"] + goRequest.QueryString["Path"] + "?ewCmd=AddContent&type=" + cContentType + "&name=New+" + cContentType + "&direction=" + relateCmdArr[2] + "&RelType=" + relateCmdArr[2] + "&relationType=" + relateCmdArr[3] + pgidQueryString;
                                         }
                                         else
                                         {
-                                            this.goSession["mcRelRedirectString"] = "/" + this.myWeb.moConfig["ProjectPath"] + this.goRequest.QueryString["Path"] + "?ewCmd=AddContent&type=" + cContentType + "&name=New+" + cContentType + "&direction=" + relateCmdArr[2] + "&RelType=" + relateCmdArr[2] + pgidQueryString;
+                                            goSession["mcRelRedirectString"] = "/" + myWeb.moConfig["ProjectPath"] + goRequest.QueryString["Path"] + "?ewCmd=AddContent&type=" + cContentType + "&name=New+" + cContentType + "&direction=" + relateCmdArr[2] + "&RelType=" + relateCmdArr[2] + pgidQueryString;
                                         }
-                                        this.goSession["mcRelAction"] = "Add";
-                                        this.goSession["mcRelParent"] = (object)nParId;
+                                        goSession["mcRelAction"] = "Add";
+                                        goSession["mcRelParent"] = (object)nParId;
                                         bResult = true;
                                         break;
                                     }
@@ -4409,64 +4405,64 @@ namespace Protean
                                     {
                                         string cContentType = relateCmdArr[1];
                                         nRelId = Conversions.ToInteger(relateCmdArr[2]);
-                                        this.goSession["mnContentRelationParent"] = Operators.ConcatenateObject("/" + this.myWeb.moConfig["ProjectPath"] + this.goRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + nParId, Interaction.IIf(string.IsNullOrEmpty(this.goRequest.QueryString["pgid"]), "", "&pgid=" + this.goRequest.QueryString["pgid"]));
-                                        this.goSession["mcRelRedirectString"] = "/" + this.myWeb.moConfig["ProjectPath"] + this.goRequest.QueryString["Path"] + "?ewCmd=EditContent&type=" + cContentType + "&id=" + nRelId + "&filter=true";
+                                        goSession["mnContentRelationParent"] = Operators.ConcatenateObject("/" + myWeb.moConfig["ProjectPath"] + goRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + nParId, Interaction.IIf(string.IsNullOrEmpty(goRequest.QueryString["pgid"]), "", "&pgid=" + goRequest.QueryString["pgid"]));
+                                        goSession["mcRelRedirectString"] = "/" + myWeb.moConfig["ProjectPath"] + goRequest.QueryString["Path"] + "?ewCmd=EditContent&type=" + cContentType + "&id=" + nRelId + "&filter=true";
                                         bResult = true;
                                         break;
                                     }
                                     else if (Conversions.ToBoolean(myItem.ToString().Contains("FilterAdd")))
                                     {
 
-                                        this.goSession["mnContentRelationParent"] = "/" + this.myWeb.moConfig["ProjectPath"] + this.goRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + nParId + pgidQueryString + "&filter=true";
+                                        goSession["mnContentRelationParent"] = "/" + myWeb.moConfig["ProjectPath"] + goRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + nParId + pgidQueryString + "&filter=true";
 
                                         string cContentType = relateCmdArr[1];
                                         if (relateCmdArr.Length > 3)
                                         {
-                                            this.goSession["mcRelRedirectString"] = "/" + this.myWeb.moConfig["ProjectPath"] + this.goRequest.QueryString["Path"] + "?ewCmd=AddContent&type=" + cContentType + "&name=New+" + cContentType + "&direction=" + relateCmdArr[2] + "&RelType=" + relateCmdArr[2] + "&relationType=" + relateCmdArr[3] + pgidQueryString + "&filter=true";
+                                            goSession["mcRelRedirectString"] = "/" + myWeb.moConfig["ProjectPath"] + goRequest.QueryString["Path"] + "?ewCmd=AddContent&type=" + cContentType + "&name=New+" + cContentType + "&direction=" + relateCmdArr[2] + "&RelType=" + relateCmdArr[2] + "&relationType=" + relateCmdArr[3] + pgidQueryString + "&filter=true";
                                         }
                                         else
                                         {
-                                            this.goSession["mcRelRedirectString"] = "/" + this.myWeb.moConfig["ProjectPath"] + this.goRequest.QueryString["Path"] + "?ewCmd=AddContent&type=" + cContentType + "&name=New+" + cContentType + "&direction=" + relateCmdArr[2] + "&RelType=" + relateCmdArr[2] + pgidQueryString + "&filter=true";
+                                            goSession["mcRelRedirectString"] = "/" + myWeb.moConfig["ProjectPath"] + goRequest.QueryString["Path"] + "?ewCmd=AddContent&type=" + cContentType + "&name=New+" + cContentType + "&direction=" + relateCmdArr[2] + "&RelType=" + relateCmdArr[2] + pgidQueryString + "&filter=true";
                                         }
-                                        this.goSession["mcRelAction"] = "Add";
-                                        this.goSession["mcRelParent"] = (object)nParId;
+                                        goSession["mcRelAction"] = "Add";
+                                        goSession["mcRelParent"] = (object)nParId;
                                         bResult = true;
                                         break;
                                     }
                                     else if (Conversions.ToBoolean(myItem.ToString().Contains("FilterRemove")))
                                     {
                                         nRelId = Conversions.ToInteger(relateCmdArr[2]);
-                                        this.myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.Content, (long)nRelId);
+                                        myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.Content, (long)nRelId);
                                         bResult = true;
                                         break;
                                     }
                                     else if (Conversions.ToBoolean(myItem.ToString().Contains("RelateFind")))
                                     {
-                                        this.goSession["mnContentRelationParent"] = "/" + this.myWeb.moConfig["ProjectPath"] + this.goRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + nParId + pgidQueryString;
+                                        goSession["mnContentRelationParent"] = "/" + myWeb.moConfig["ProjectPath"] + goRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + nParId + pgidQueryString;
                                         string cContentType = relateCmdArr[1];
                                         if (relateCmdArr.Length > 3)
                                         {
-                                            this.goSession["mcRelRedirectString"] = "/" + this.myWeb.moConfig["ProjectPath"] + this.goRequest.QueryString["Path"] + "?ewCmd=RelateSearch&type=" + cContentType + "&direction=" + relateCmdArr[2] + "&RelType=" + relateCmdArr[2] + "&relationType=" + relateCmdArr[3] + pgidQueryString;
+                                            goSession["mcRelRedirectString"] = "/" + myWeb.moConfig["ProjectPath"] + goRequest.QueryString["Path"] + "?ewCmd=RelateSearch&type=" + cContentType + "&direction=" + relateCmdArr[2] + "&RelType=" + relateCmdArr[2] + "&relationType=" + relateCmdArr[3] + pgidQueryString;
                                         }
                                         else
                                         {
-                                            this.goSession["mcRelRedirectString"] = "/" + this.myWeb.moConfig["ProjectPath"] + this.goRequest.QueryString["Path"] + "?ewCmd=RelateSearch&type=" + cContentType + "&direction=" + relateCmdArr[2] + "&RelType=" + relateCmdArr[2] + pgidQueryString;
+                                            goSession["mcRelRedirectString"] = "/" + myWeb.moConfig["ProjectPath"] + goRequest.QueryString["Path"] + "?ewCmd=RelateSearch&type=" + cContentType + "&direction=" + relateCmdArr[2] + "&RelType=" + relateCmdArr[2] + pgidQueryString;
                                         }
-                                        this.goSession["mcRelAction"] = "Find";
-                                        this.goSession["mcRelParent"] = (object)nParId;
+                                        goSession["mcRelAction"] = "Find";
+                                        goSession["mcRelParent"] = (object)nParId;
                                         bResult = true;
                                         break;
                                     }
                                     // New condition for sku parent change functionality
                                     else if (Conversions.ToBoolean(myItem.ToString().Contains("RelateParentChange")))
                                     {
-                                        this.goSession["mnContentRelationParent"] = "/" + this.myWeb.moConfig["ProjectPath"] + this.goRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + nParId + pgidQueryString;
+                                        goSession["mnContentRelationParent"] = "/" + myWeb.moConfig["ProjectPath"] + goRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + nParId + pgidQueryString;
                                         string cContentType = relateCmdArr[1];
 
-                                        this.goSession["mcRelRedirectString"] = "/" + this.myWeb.moConfig["ProjectPath"] + this.goRequest.QueryString["Path"] + "?ewCmd=ParentChange&type=" + cContentType + "&direction=" + relateCmdArr[4] + "&RelType=" + relateCmdArr[4] + "&childId=" + relateCmdArr[2] + "&oldParentID=" + nParId + pgidQueryString;
+                                        goSession["mcRelRedirectString"] = "/" + myWeb.moConfig["ProjectPath"] + goRequest.QueryString["Path"] + "?ewCmd=ParentChange&type=" + cContentType + "&direction=" + relateCmdArr[4] + "&RelType=" + relateCmdArr[4] + "&childId=" + relateCmdArr[2] + "&oldParentID=" + nParId + pgidQueryString;
 
-                                        this.goSession["mcRelAction"] = "Find";
-                                        this.goSession["mcRelParent"] = (object)nParId;
+                                        goSession["mcRelAction"] = "Find";
+                                        goSession["mcRelParent"] = (object)nParId;
                                         bResult = true;
                                         break;
                                     }
@@ -4483,7 +4479,7 @@ namespace Protean
                             }
 
                             XmlElement oCRNode;
-                            oCRNode = this.moPageXML.CreateElement("ContentRelations");
+                            oCRNode = moPageXML.CreateElement("ContentRelations");
                             moDbHelper.addRelatedContent(ref oCRNode, nParId, true);
                             base.Instance.AppendChild(oCRNode);
                         }
@@ -4492,14 +4488,16 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "addInput", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", "", gbDebug);
                         return default;
                     }
                 }
 
-                public void AddPageSpecs(ref int nPgId, ref XmlElement Instance) {
+                public void AddPageSpecs(ref int nPgId, ref XmlElement Instance)
+                {
 
-                    if (Instance.SelectSingleNode("descendant-or-self::Specs") != null) { 
+                    if (Instance.SelectSingleNode("descendant-or-self::Specs") != null)
+                    {
 
                         Protean.Cms myCMS = new Protean.Cms(myWeb.moCtx);
                         myCMS.InitializeVariables();
@@ -4527,7 +4525,8 @@ namespace Protean
                             }
                         }
 
-                        foreach (XmlNode InstanceSpecs in Instance.SelectNodes("descendant-or-self::Specs")){
+                        foreach (XmlNode InstanceSpecs in Instance.SelectNodes("descendant-or-self::Specs"))
+                        {
                             InstanceSpecs.InnerXml = SpecsElmt.InnerXml;
                         }
                     }
@@ -4545,7 +4544,7 @@ namespace Protean
                     try
                     {
                         // load the xform to be edited
-                        moDbHelper.moPageXml = this.moPageXML;
+                        moDbHelper.moPageXml = moPageXML;
 
                         sContentName = moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Content, artid);
                         sContentSchemaName = moDbHelper.getContentType((int)artid);
@@ -4595,7 +4594,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -4614,7 +4613,7 @@ namespace Protean
                     try
                     {
                         // load the xform to be edited
-                        moDbHelper.moPageXml = this.moPageXML;
+                        moDbHelper.moPageXml = moPageXML;
 
                         base.NewFrm("DeleteContent");
 
@@ -4678,7 +4677,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -4693,7 +4692,7 @@ namespace Protean
                     try
                     {
                         // load the xform to be edited
-                        moDbHelper.moPageXml = this.moPageXML;
+                        moDbHelper.moPageXml = moPageXML;
 
 
                         base.NewFrm("DeleteFolder");
@@ -4724,7 +4723,7 @@ namespace Protean
                         {
                             base.updateInstanceFromRequest();
                             base.validate();
-                            if (string.IsNullOrEmpty(this.goRequest["cFolderName"]) | this.goRequest["cFolderName"] == @"\" | this.goRequest["cFolderName"] == "/")
+                            if (string.IsNullOrEmpty(goRequest["cFolderName"]) | goRequest["cFolderName"] == @"\" | goRequest["cFolderName"] == "/")
                             {
                                 base.valid = false;
                             }
@@ -4761,7 +4760,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmDeleteFolder", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmDeleteFolder", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -4774,7 +4773,7 @@ namespace Protean
                     try
                     {
                         // load the xform to be edited
-                        moDbHelper.moPageXml = this.moPageXML;
+                        moDbHelper.moPageXml = moPageXML;
 
 
                         base.NewFrm("DeleteFile");
@@ -4794,37 +4793,37 @@ namespace Protean
                         //string sSQL = "select * from tblContent where cContentXmlBrief like '%" + fileToFind + "%' or cContentXmlDetail like '%" + fileToFind + "%'";
                         //string sSQL = "select nContentKey,cContentSchemaName,cContentName from tblContent where contains(cContentXmlBrief,'" + fileToFind + "') or contains(cContentXmlDetail,'" + fileToFind + "')";
                         SqlDataReader oDr;
-                        if (myWeb.moDbHelper.checkDBObjectExists("spCheckFileInUse",Database.objectTypes.StoredProcedure))
+                        if (myWeb.moDbHelper.checkDBObjectExists("spCheckFileInUse", Database.objectTypes.StoredProcedure))
                         {
                             string sSQL = "spCheckFileInUse";
                             System.Collections.Hashtable arrParms = new System.Collections.Hashtable();
                             arrParms.Add("filePath", fileToFind);
-                             oDr = moDbHelper.getDataReader(sSQL, CommandType.StoredProcedure, arrParms);
+                            oDr = moDbHelper.getDataReader(sSQL, CommandType.StoredProcedure, arrParms);
                         }
                         else
                         {
                             string sSQL = "select * from tblContent where cContentXmlBrief like '%" + fileToFind + "%' or cContentXmlDetail like '%" + fileToFind + "%'";
-                             oDr = moDbHelper.getDataReader(sSQL);
+                            oDr = moDbHelper.getDataReader(sSQL);
                         }
 
 
-                       
-                            if (oDr.HasRows)
-                            {
-                                string contentFound = "<p>This file is used in these content Items</p><ul>";
-                                while (oDr.Read())
-                                    contentFound = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(contentFound + "<li><a href=\"?artid=", oDr["nContentKey"]), "\" target=\"_new\">"), oDr["cContentSchemaName"]), " - "), oDr["cContentName"]), "</a></li>"));
-                                //XmlNode argoNode1 = oFrmElmt;
-                                base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, contentFound + "</ul>");
-                                //oFrmElmt = (XmlElement)argoNode1;
-                            }
 
-                            else
-                            {
-                                //XmlNode argoNode2 = oFrmElmt;
-                                base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet");
-                                //oFrmElmt = (XmlElement)argoNode2;
-                            }
+                        if (oDr.HasRows)
+                        {
+                            string contentFound = "<p>This file is used in these content Items</p><ul>";
+                            while (oDr.Read())
+                                contentFound = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(contentFound + "<li><a href=\"?artid=", oDr["nContentKey"]), "\" target=\"_new\">"), oDr["cContentSchemaName"]), " - "), oDr["cContentName"]), "</a></li>"));
+                            //XmlNode argoNode1 = oFrmElmt;
+                            base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, contentFound + "</ul>");
+                            //oFrmElmt = (XmlElement)argoNode1;
+                        }
+
+                        else
+                        {
+                            //XmlNode argoNode2 = oFrmElmt;
+                            base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet");
+                            //oFrmElmt = (XmlElement)argoNode2;
+                        }
                         oDr.Close();
                         oDr = null;
 
@@ -4877,7 +4876,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -4972,7 +4971,7 @@ namespace Protean
                     try
                     {
                         // load the xform to be edited
-                        moDbHelper.moPageXml = this.moPageXML;
+                        moDbHelper.moPageXml = moPageXML;
                         base.NewFrm("MoveFile");
                         base.submission("MoveFile", "", "post");
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "folderItem", "", "Move File");
@@ -5049,15 +5048,15 @@ namespace Protean
 
                                 var oFs = new Protean.fsHelper();
                                 oFs.initialiseVariables(nType);
-                                string cDestPath = this.myWeb.moRequest["destPath"].Replace(oFs.mcRoot, "").Replace("//", "/");
+                                string cDestPath = myWeb.moRequest["destPath"].Replace(oFs.mcRoot, "").Replace("//", "/");
 
                                 if (oFs.MoveFile(cName, cPath, cDestPath))
                                 {
 
-                                    if (this.myWeb.moRequest["UpdatePaths"] != "0" & !string.IsNullOrEmpty(this.myWeb.moRequest["UpdatePaths"]))
+                                    if (myWeb.moRequest["UpdatePaths"] != "0" & !string.IsNullOrEmpty(myWeb.moRequest["UpdatePaths"]))
                                     {
                                         string fileToReplace = "/" + oFs.mcRoot + cDestPath.Replace(@"\", "/") + "/" + cName.Replace(" ", "-");
-                                        string sSQLUpd = "Update tblContent set cContentXmlBrief = REPLACE(CAST(cContentXmlBrief AS NVARCHAR(MAX)),'" + fileToFind + "','" + fileToReplace + "'), cContentXmlDetail = REPLACE(CAST(cContentXmlDetail AS NVARCHAR(MAX)),'" + fileToFind + "','" + fileToReplace + "') where nContentKey IN (" + this.myWeb.moRequest["UpdatePaths"] + ")";
+                                        string sSQLUpd = "Update tblContent set cContentXmlBrief = REPLACE(CAST(cContentXmlBrief AS NVARCHAR(MAX)),'" + fileToFind + "','" + fileToReplace + "'), cContentXmlDetail = REPLACE(CAST(cContentXmlDetail AS NVARCHAR(MAX)),'" + fileToFind + "','" + fileToReplace + "') where nContentKey IN (" + myWeb.moRequest["UpdatePaths"] + ")";
                                         moDbHelper.ExeProcessSql(sSQLUpd);
                                     }
                                 }
@@ -5089,7 +5088,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmMoveFile", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmMoveFile", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -5106,7 +5105,7 @@ namespace Protean
                     try
                     {
                         // load the xform to be edited
-                        moDbHelper.moPageXml = this.moPageXML;
+                        moDbHelper.moPageXml = moPageXML;
 
                         sContentName = moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.ContentStructure, pgid);
 
@@ -5149,7 +5148,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -5163,7 +5162,7 @@ namespace Protean
                     try
                     {
 
-                        SubmitPath = SubmitPath + this.myWeb.moRequest["ewcmd"] + "&ewCmd2=" + this.myWeb.moRequest["ewCmd2"] + "&pathonly=" + this.myWeb.moRequest["pathonly"] + "&targetForm=" + this.myWeb.moRequest["targetForm"] + "&targetField=" + this.myWeb.moRequest["targetField"];
+                        SubmitPath = SubmitPath + myWeb.moRequest["ewcmd"] + "&ewCmd2=" + myWeb.moRequest["ewCmd2"] + "&pathonly=" + myWeb.moRequest["pathonly"] + "&targetForm=" + myWeb.moRequest["targetForm"] + "&targetField=" + myWeb.moRequest["targetField"];
 
                         base.NewFrm("AddFolder");
 
@@ -5189,7 +5188,7 @@ namespace Protean
                             if (base.valid)
                             {
 
-                                string FolderName = this.goRequest["cFolderName"];
+                                string FolderName = goRequest["cFolderName"];
 
                                 var oFs = new Protean.fsHelper();
                                 oFs.initialiseVariables(nType);
@@ -5197,21 +5196,21 @@ namespace Protean
 
                                 if (Information.IsNumeric(sValidResponse))
                                 {
-                                    this.valid = true;
+                                    valid = true;
                                     cPath += @"\" + FolderName.Replace(" ", "-");
                                     cPath = cPath.Replace(@"\\", @"\");
                                 }
                                 else
                                 {
-                                    this.valid = false;
+                                    valid = false;
                                     //XmlNode argoNode = (XmlNode)this.moXformElmt;
-                                    base.addNote(ref this.moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse);
+                                    base.addNote(ref moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse);
                                     //this.moXformElmt = (XmlElement)argoNode;
                                 }
                             }
                             else
                             {
-                                this.valid = false;
+                                valid = false;
                             }
                         }
 
@@ -5221,7 +5220,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmAddFolder", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmAddFolder", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -5258,7 +5257,7 @@ namespace Protean
 
                             // lets do some hacking 
                             System.Web.HttpPostedFile fUpld;
-                            fUpld = this.goRequest.Files["uploadFile"];
+                            fUpld = goRequest.Files["uploadFile"];
 
                             if (fUpld != null)
                             {
@@ -5274,20 +5273,20 @@ namespace Protean
 
                                 if ((sValidResponse ?? "") == (fUpld.FileName ?? ""))
                                 {
-                                    this.valid = true;
+                                    valid = true;
                                 }
                                 // MyBase.addNote(moXformElmt, xForm.noteTypes.Alert, sValidResponse & " - File Saved")
                                 else
                                 {
-                                    this.valid = false;
+                                    valid = false;
                                     //XmlNode argoNode = (XmlNode)this.moXformElmt;
-                                    base.addNote(ref this.moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse);
+                                    base.addNote(ref moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse);
                                     // this.moXformElmt = (XmlElement)argoNode;
                                 }
                             }
                             else
                             {
-                                this.valid = false;
+                                valid = false;
                             }
                         }
 
@@ -5297,7 +5296,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmUpload", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmUpload", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -5315,22 +5314,22 @@ namespace Protean
                         {
                             case Protean.fsHelper.LibraryType.Image:
                                 {
-                                    rootDir = this.myWeb.moConfig["ImageRootPath"];
+                                    rootDir = myWeb.moConfig["ImageRootPath"];
                                     break;
                                 }
                             case Protean.fsHelper.LibraryType.Documents:
                                 {
-                                    rootDir = this.myWeb.moConfig["DocRootPath"];
+                                    rootDir = myWeb.moConfig["DocRootPath"];
                                     break;
                                 }
                             case Protean.fsHelper.LibraryType.Media:
                                 {
-                                    rootDir = this.myWeb.moConfig["MediaRootPath"];
+                                    rootDir = myWeb.moConfig["MediaRootPath"];
                                     break;
                                 }
                         }
 
-                        this.myWeb.moSession["allowUpload"] = "True";
+                        myWeb.moSession["allowUpload"] = "True";
 
                         base.NewFrm("UploadFile");
 
@@ -5363,8 +5362,8 @@ namespace Protean
                         {
 
                             // do nothing
-                            this.valid = true;
-                            this.myWeb.moSession["allowUpload"] = (object)null;
+                            valid = true;
+                            myWeb.moSession["allowUpload"] = (object)null;
 
                         }
 
@@ -5374,7 +5373,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmMultiUpload", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmMultiUpload", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -5442,20 +5441,20 @@ namespace Protean
 
                                 if (Information.IsNumeric(sValidResponse))
                                 {
-                                    this.valid = true;
+                                    valid = true;
                                 }
                                 // MyBase.jsOnLoad()
                                 else
                                 {
-                                    this.valid = false;
+                                    valid = false;
                                     //XmlNode argoNode = (XmlNode)this.moXformElmt;
-                                    base.addNote(ref this.moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse);
+                                    base.addNote(ref moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse);
                                     //this.moXformElmt = (XmlElement)argoNode;
                                 }
                             }
                             else
                             {
-                                this.valid = false;
+                                valid = false;
                             }
                         }
 
@@ -5465,7 +5464,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmPickImage", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmPickImage", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -5596,20 +5595,20 @@ namespace Protean
 
                                 if (Information.IsNumeric(sValidResponse))
                                 {
-                                    this.valid = true;
+                                    valid = true;
                                 }
                                 // MyBase.jsOnLoad()
                                 else
                                 {
-                                    this.valid = false;
+                                    valid = false;
                                     //XmlNode argoNode = (XmlNode)this.moXformElmt;
-                                    base.addNote(ref this.moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse);
+                                    base.addNote(ref moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse);
                                     // this.moXformElmt = (XmlElement)argoNode;
                                 }
                             }
                             else
                             {
-                                this.valid = false;
+                                valid = false;
                             }
                         }
 
@@ -5619,7 +5618,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditImage", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditImage", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -5660,15 +5659,15 @@ namespace Protean
 
                         oAdXfm.xFrmEditDirectoryItem(ref InstanceAppend, id, cDirectorySchemaName, parId, cXformName, FormXML);
 
-                        this.valid = Conversions.ToBoolean(oAdXfm.valid);
-                        this.moXformElmt = (XmlElement)oAdXfm.moXformElmt;
-                        this.updateInstance((XmlElement)oAdXfm.Instance);
-                        return this.moXformElmt;
+                        valid = Conversions.ToBoolean(oAdXfm.valid);
+                        moXformElmt = (XmlElement)oAdXfm.moXformElmt;
+                        updateInstance((XmlElement)oAdXfm.Instance);
+                        return moXformElmt;
                     }
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditDirectoryItem", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditDirectoryItem", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -5688,11 +5687,11 @@ namespace Protean
                     try
                     {
                         // load the directory item to be deleted
-                        moDbHelper.moPageXml = this.moPageXML;
+                        moDbHelper.moPageXml = moPageXML;
                         base.NewFrm("CopyGroupMembers");
 
                         // Lets get the object
-                        oElmt = this.moPageXML.CreateElement("sType");
+                        oElmt = moPageXML.CreateElement("sType");
                         oElmt.SetAttribute("id", dirId.ToString());
                         if (dirId != 0L)
                         {
@@ -5708,7 +5707,7 @@ namespace Protean
                                     }
                                     else
                                     {
-                                        oElmt.InnerXml = this.Instance.SelectSingleNode("*").InnerXml;
+                                        oElmt.InnerXml = Instance.SelectSingleNode("*").InnerXml;
                                     }
                                 }
                             }
@@ -5720,7 +5719,7 @@ namespace Protean
                             {
                                 while (oDr.Read())
                                 {
-                                    oElmt2 = this.moPageXML.CreateElement(Conversions.ToString(oDr["cDirSchema"]));
+                                    oElmt2 = moPageXML.CreateElement(Conversions.ToString(oDr["cDirSchema"]));
                                     oElmt2.SetAttribute("id", Conversions.ToString(oDr["nDirKey"]));
                                     oElmt2.SetAttribute("name", Conversions.ToString(oDr["cDirName"]));
                                     oElmt2.SetAttribute("relType", "child");
@@ -5735,7 +5734,7 @@ namespace Protean
                             {
                                 while (oDr.Read())
                                 {
-                                    oElmt3 = this.moPageXML.CreateElement(Conversions.ToString(oDr["cDirSchema"]));
+                                    oElmt3 = moPageXML.CreateElement(Conversions.ToString(oDr["cDirSchema"]));
                                     oElmt3.SetAttribute("id", Conversions.ToString(oDr["nDirKey"]));
                                     oElmt3.SetAttribute("name", Conversions.ToString(oDr["cDirName"]));
                                     oElmt3.SetAttribute("relType", "parent");
@@ -5805,7 +5804,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmCopyGroupMembers", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmCopyGroupMembers", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -5832,7 +5831,7 @@ namespace Protean
 
                             // ok lets load in an xform from the file location.
 
-                            if (!base.load("/xforms/directory/" + cXformName + ".xml", this.myWeb.maCommonFolders))
+                            if (!base.load("/xforms/directory/" + cXformName + ".xml", myWeb.maCommonFolders))
                             {
                                 // load a default content xform if no alternative.
 
@@ -5842,11 +5841,11 @@ namespace Protean
 
                             XmlElement oRoleRights = (XmlElement)base.Instance.SelectSingleNode("tblDirectory/cDirXml/Role/AdminRights");
 
-                            XmlElement siteRights = (XmlElement)this.moPageXML.SelectSingleNode("/Page/AdminMenu");
+                            XmlElement siteRights = (XmlElement)moPageXML.SelectSingleNode("/Page/AdminMenu");
 
                             if (oRoleRights is null)
                             {
-                                oRoleRights = this.moPageXML.CreateElement("AdminRights");
+                                oRoleRights = moPageXML.CreateElement("AdminRights");
                                 oRoleRights.InnerXml = siteRights.InnerXml;
                                 foreach (XmlElement currentOElmt in oRoleRights.SelectNodes("descendant-or-self::MenuItem"))
                                 {
@@ -5858,7 +5857,7 @@ namespace Protean
                             else
                             {
                                 XmlElement oRoleRights2;
-                                oRoleRights2 = this.moPageXML.CreateElement("AdminRights");
+                                oRoleRights2 = moPageXML.CreateElement("AdminRights");
                                 oRoleRights2.InnerXml = siteRights.InnerXml;
                                 foreach (XmlElement currentOElmt1 in oRoleRights2.SelectNodes("descendant-or-self::MenuItem"))
                                 {
@@ -5874,7 +5873,7 @@ namespace Protean
 
                                 }
                                 // remove the old admin rights
-                                foreach (XmlElement currentOElmt2 in this.Instance.SelectNodes("tblDirectory/cDirXml/Role/AdminRights"))
+                                foreach (XmlElement currentOElmt2 in Instance.SelectNodes("tblDirectory/cDirXml/Role/AdminRights"))
                                 {
                                     oElmt = currentOElmt2;
                                     oElmt.ParentNode.RemoveChild(oElmt);
@@ -5885,9 +5884,9 @@ namespace Protean
 
                             oRoleRights = (XmlElement)base.Instance.SelectSingleNode("tblDirectory/cDirXml/Role/AdminRights");
                             XmlElement oSelElmt;
-                            XmlElement oGrpRoot = (XmlElement)this.moXformElmt.SelectSingleNode("group[@class='2Col']/group[2]");
+                            XmlElement oGrpRoot = (XmlElement)moXformElmt.SelectSingleNode("group[@class='2Col']/group[2]");
                             if (oGrpRoot is null)
-                                oGrpRoot = this.moXformElmt;
+                                oGrpRoot = moXformElmt;
                             var oGrp = base.addGroup(ref oGrpRoot, "adminRights", "adminRights", "Admin Rights");
                             XmlElement oGrp2;
                             XmlElement oGrp3;
@@ -5990,7 +5989,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditRole", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditRole", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -6012,12 +6011,12 @@ namespace Protean
                     try
                     {
                         // load the directory item to be deleted
-                        moDbHelper.moPageXml = this.moPageXML;
+                        moDbHelper.moPageXml = moPageXML;
 
                         base.NewFrm("EditSelect");
 
                         // Lets get the object
-                        oElmt = this.moPageXML.CreateElement("sType");
+                        oElmt = moPageXML.CreateElement("sType");
                         oElmt.SetAttribute("id", dirId.ToString());
                         if (dirId != 0L)
                         {
@@ -6033,7 +6032,7 @@ namespace Protean
                                     }
                                     else
                                     {
-                                        oElmt.InnerXml = this.Instance.SelectSingleNode("*").InnerXml;
+                                        oElmt.InnerXml = Instance.SelectSingleNode("*").InnerXml;
                                     }
                                 }
                             }
@@ -6045,7 +6044,7 @@ namespace Protean
                             {
                                 while (oDr.Read())
                                 {
-                                    oElmt2 = this.moPageXML.CreateElement(Conversions.ToString(oDr["cDirSchema"]));
+                                    oElmt2 = moPageXML.CreateElement(Conversions.ToString(oDr["cDirSchema"]));
                                     oElmt2.SetAttribute("id", Conversions.ToString(oDr["nDirKey"]));
                                     oElmt2.SetAttribute("name", Conversions.ToString(oDr["cDirName"]));
                                     oElmt2.SetAttribute("relType", "child");
@@ -6060,7 +6059,7 @@ namespace Protean
                             {
                                 while (oDr.Read())
                                 {
-                                    oElmt3 = this.moPageXML.CreateElement(Conversions.ToString(oDr["cDirSchema"]));
+                                    oElmt3 = moPageXML.CreateElement(Conversions.ToString(oDr["cDirSchema"]));
                                     oElmt3.SetAttribute("id", Conversions.ToString(oDr["nDirKey"]));
                                     oElmt3.SetAttribute("name", Conversions.ToString(oDr["cDirName"]));
                                     oElmt3.SetAttribute("relType", "parent");
@@ -6235,7 +6234,7 @@ namespace Protean
                                             // Delete Company Permissions
                                             // Delete Company Users / or move to another Company / or leave oprhaned?
                                             // Move to another department / or leave oprhaned?
-                                            switch (this.goRequest["Options"] ?? "")
+                                            switch (goRequest["Options"] ?? "")
                                             {
                                                 case "RemoveDept":
                                                     {
@@ -6255,7 +6254,7 @@ namespace Protean
                                                 case "Transfer":
                                                     {
 
-                                                        sSql = "update tblDirectoryRelation set nDirParentId = " + this.goRequest["TransCompanyId"] + " where nDirParentId=" + dirId;
+                                                        sSql = "update tblDirectoryRelation set nDirParentId = " + goRequest["TransCompanyId"] + " where nDirParentId=" + dirId;
                                                         moDbHelper.ExeProcessSql(sSql);
 
                                                         // Delete Company Directory Relations, Company Permissions and Company
@@ -6279,12 +6278,12 @@ namespace Protean
                                         {
 
                                             // Move to another department / or leave oprhaned?
-                                            switch (this.goRequest["Options"] ?? "")
+                                            switch (goRequest["Options"] ?? "")
                                             {
                                                 case "Transfer":
                                                     {
 
-                                                        sSql = "update tblDirectoryRelation set nDirParentId = " + this.goRequest["TransDeptId"] + " where nDirParentId=" + dirId;
+                                                        sSql = "update tblDirectoryRelation set nDirParentId = " + goRequest["TransDeptId"] + " where nDirParentId=" + dirId;
                                                         moDbHelper.ExeProcessSql(sSql);
 
                                                         // Delete Department Directory Relations, Department Permissions and Department
@@ -6319,7 +6318,7 @@ namespace Protean
 
                                     case "Group":
                                         {
-                                            switch (this.goRequest["Options"] ?? "")
+                                            switch (goRequest["Options"] ?? "")
                                             {
                                                 case "Transfer":
                                                     {
@@ -6329,7 +6328,7 @@ namespace Protean
                                                         {
                                                             while (oDr.Read())
                                                             {
-                                                                moDbHelper.saveDirectoryRelations(Conversions.ToLong(oDr[1]), this.goRequest["Groups"]);
+                                                                moDbHelper.saveDirectoryRelations(Conversions.ToLong(oDr[1]), goRequest["Groups"]);
                                                                 moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.DirectoryRelation, Conversions.ToLong(oDr[0]));
                                                             }
                                                         }
@@ -6363,7 +6362,7 @@ namespace Protean
                                         }
                                     case "Role":
                                         {
-                                            switch (this.goRequest["Options"] ?? "")
+                                            switch (goRequest["Options"] ?? "")
                                             {
                                                 case "Transfer":
                                                     {
@@ -6374,7 +6373,7 @@ namespace Protean
                                                         {
                                                             while (oDr.Read())
                                                             {
-                                                                moDbHelper.saveDirectoryRelations(Conversions.ToLong(oDr[1]), this.goRequest["Roles"]);
+                                                                moDbHelper.saveDirectoryRelations(Conversions.ToLong(oDr[1]), goRequest["Roles"]);
                                                                 moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.DirectoryRelation, Conversions.ToLong(oDr[0]));
                                                             }
                                                         }
@@ -6425,7 +6424,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -6443,12 +6442,12 @@ namespace Protean
                     try
                     {
                         // load the directory item to be deleted
-                        moDbHelper.moPageXml = this.moPageXML;
+                        moDbHelper.moPageXml = moPageXML;
 
                         base.NewFrm("DeleteDeliveryMethod");
 
                         // Lets get the object
-                        oElmt = this.moPageXML.CreateElement("sType");
+                        oElmt = moPageXML.CreateElement("sType");
                         oElmt.SetAttribute("id", id.ToString());
                         if (id != 0L)
                         {
@@ -6498,7 +6497,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmDeleteDeliveryMethod", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmDeleteDeliveryMethod", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -6516,12 +6515,12 @@ namespace Protean
                     try
                     {
                         // load the directory item to be deleted
-                        moDbHelper.moPageXml = this.moPageXML;
+                        moDbHelper.moPageXml = moPageXML;
 
                         base.NewFrm("DeleteCarrier");
 
                         // Lets get the object
-                        oElmt = this.moPageXML.CreateElement("sType");
+                        oElmt = moPageXML.CreateElement("sType");
                         oElmt.SetAttribute("id", id.ToString());
                         if (id != 0L)
                         {
@@ -6571,7 +6570,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmDeleteCarrier", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmDeleteCarrier", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -6589,12 +6588,12 @@ namespace Protean
                     try
                     {
                         // load the directory item to be deleted
-                        moDbHelper.moPageXml = this.moPageXML;
+                        moDbHelper.moPageXml = moPageXML;
 
                         base.NewFrm("DeleteShippingLocation");
 
                         // Lets get the object
-                        oElmt = this.moPageXML.CreateElement("sType");
+                        oElmt = moPageXML.CreateElement("sType");
                         oElmt.SetAttribute("id", id.ToString());
                         if (id != 0L)
                         {
@@ -6643,7 +6642,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmDeleteShippingLocation", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmDeleteShippingLocation", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -6717,7 +6716,7 @@ namespace Protean
                             case "AllowSelected":
                                 {
                                     foreach (string cSchema in aDirectorySchemas)
-                                        moDbHelper.savePermissions(Conversions.ToLong(this.goRequest["pgid"]), this.goRequest[cSchema], Cms.dbHelper.PermissionLevel.View);
+                                        moDbHelper.savePermissions(Conversions.ToLong(goRequest["pgid"]), goRequest[cSchema], Cms.dbHelper.PermissionLevel.View);
                                     break;
                                 }
 
@@ -6725,19 +6724,19 @@ namespace Protean
                             case "DenySelected":
                                 {
                                     foreach (string cSchema in aDirectorySchemas)
-                                        moDbHelper.savePermissions(Conversions.ToLong(this.goRequest["pgid"]), this.goRequest[cSchema], Cms.dbHelper.PermissionLevel.Denied);
+                                        moDbHelper.savePermissions(Conversions.ToLong(goRequest["pgid"]), goRequest[cSchema], Cms.dbHelper.PermissionLevel.Denied);
                                     break;
                                 }
 
                             case "RemoveSelected":
                                 {
-                                    moDbHelper.savePermissions(Conversions.ToLong(this.goRequest["pgid"]), this.goRequest["Items"], Cms.dbHelper.PermissionLevel.Open);
+                                    moDbHelper.savePermissions(Conversions.ToLong(goRequest["pgid"]), goRequest["Items"], Cms.dbHelper.PermissionLevel.Open);
                                     break;
                                 }
 
                             case "RemoveAll":
                                 {
-                                    moDbHelper.savePermissions(Conversions.ToLong(this.goRequest["pgid"]), "", Cms.dbHelper.PermissionLevel.Open);
+                                    moDbHelper.savePermissions(Conversions.ToLong(goRequest["pgid"]), "", Cms.dbHelper.PermissionLevel.Open);
                                     break;
                                 }
 
@@ -6807,7 +6806,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -6886,8 +6885,8 @@ namespace Protean
                                 {
                                     foreach (string cSchema in aDirectorySchemas)
                                     {
-                                        if ((cSchema != "User" | bRightsByUser) & !string.IsNullOrEmpty("" + this.goRequest[cSchema]))
-                                            moDbHelper.savePermissions(Conversions.ToLong(this.goRequest["pgid"]), this.goRequest[cSchema], (Cms.dbHelper.PermissionLevel)Conversions.ToInteger(this.goRequest["Level"]));
+                                        if ((cSchema != "User" | bRightsByUser) & !string.IsNullOrEmpty("" + goRequest[cSchema]))
+                                            moDbHelper.savePermissions(Conversions.ToLong(goRequest["pgid"]), goRequest[cSchema], (Cms.dbHelper.PermissionLevel)Conversions.ToInteger(goRequest["Level"]));
                                     }
 
                                     break;
@@ -6897,8 +6896,8 @@ namespace Protean
                                 {
                                     foreach (string cSchema in aDirectorySchemas)
                                     {
-                                        if ((cSchema != "User" | bRightsByUser) & !string.IsNullOrEmpty("" + this.goRequest["Items" + cSchema]))
-                                            moDbHelper.savePermissions(Conversions.ToLong(this.goRequest["pgid"]), this.goRequest["Items" + cSchema], Cms.dbHelper.PermissionLevel.Open);
+                                        if ((cSchema != "User" | bRightsByUser) & !string.IsNullOrEmpty("" + goRequest["Items" + cSchema]))
+                                            moDbHelper.savePermissions(Conversions.ToLong(goRequest["pgid"]), goRequest["Items" + cSchema], Cms.dbHelper.PermissionLevel.Open);
                                     }
 
                                     break;
@@ -6906,7 +6905,7 @@ namespace Protean
 
                             case "RemoveAll":
                                 {
-                                    moDbHelper.savePermissions(Conversions.ToLong(this.goRequest["pgid"]), "", Cms.dbHelper.PermissionLevel.Open);
+                                    moDbHelper.savePermissions(Conversions.ToLong(goRequest["pgid"]), "", Cms.dbHelper.PermissionLevel.Open);
                                     break;
                                 }
 
@@ -6973,7 +6972,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmPageRights", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmPageRights", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -7021,14 +7020,14 @@ namespace Protean
 
                             case "AddSelected":
                                 {
-                                    moDbHelper.saveDirectoryRelations(Conversions.ToLong(this.goRequest["id"]), this.goRequest["Departments"]);
-                                    moDbHelper.saveDirectoryRelations(Conversions.ToLong(this.goRequest["id"]), this.goRequest["Groups"]);
+                                    moDbHelper.saveDirectoryRelations(Conversions.ToLong(goRequest["id"]), goRequest["Departments"]);
+                                    moDbHelper.saveDirectoryRelations(Conversions.ToLong(goRequest["id"]), goRequest["Groups"]);
                                     break;
                                 }
 
                             case "RemoveSelected":
                                 {
-                                    moDbHelper.saveDirectoryRelations(Conversions.ToLong(this.goRequest["id"]), this.goRequest["Items"], true);
+                                    moDbHelper.saveDirectoryRelations(Conversions.ToLong(goRequest["id"]), goRequest["Items"], true);
                                     break;
                                 }
                             case "Finish":
@@ -7045,7 +7044,7 @@ namespace Protean
                         // "left outer join tblDirectoryRelation dr on dr.nDirParentId = d.nDirKey and dr.nDirChildId = " & UserId & " " & _
                         // "where d.cDirSchema='Department' and dr.nRelKey is null order by d.cDirName"
 
-                        sSql = "execute getUsersCompanyDepartments @userId=" + UserId + ", @adminUserId=" + this.myWeb.mnUserId;
+                        sSql = "execute getUsersCompanyDepartments @userId=" + UserId + ", @adminUserId=" + myWeb.mnUserId;
 
                         using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
                         {
@@ -7056,7 +7055,7 @@ namespace Protean
 
                         oElmt2 = base.addSelect(ref oFrmGrp1, "Groups", false, "Groups", "scroll_10", Protean.xForm.ApperanceTypes.Minimal);
 
-                        sSql = "execute getUsersCompanyGroups @userId=" + UserId + ", @adminUserId=" + this.myWeb.mnUserId;
+                        sSql = "execute getUsersCompanyGroups @userId=" + UserId + ", @adminUserId=" + myWeb.mnUserId;
 
                         using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
                         {
@@ -7087,7 +7086,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmUserMemberships", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmUserMemberships", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -7178,12 +7177,12 @@ namespace Protean
                                 {
                                     var loopTo1 = Information.UBound(aChildTypes);
                                     for (i = 0; i <= loopTo1; i++)
-                                        moDbHelper.saveDirectoryRelations(Conversions.ToLong(this.goRequest["id"]), this.goRequest[aChildTypes[i] + "s"], false, Cms.dbHelper.RelationType.Child);
+                                        moDbHelper.saveDirectoryRelations(Conversions.ToLong(goRequest["id"]), goRequest[aChildTypes[i] + "s"], false, Cms.dbHelper.RelationType.Child);
                                     break;
                                 }
                             case "RemoveSelected":
                                 {
-                                    moDbHelper.saveDirectoryRelations(Conversions.ToLong(this.goRequest["id"]), this.goRequest["Items"], true, Cms.dbHelper.RelationType.Child);
+                                    moDbHelper.saveDirectoryRelations(Conversions.ToLong(goRequest["id"]), goRequest["Items"], true, Cms.dbHelper.RelationType.Child);
                                     break;
                                 }
                         }
@@ -7242,12 +7241,12 @@ namespace Protean
                                     if (aChildTypes[i] == "User")
                                     {
                                         var argoDr = oDr;
-                                        this.addUserOptionsFromSqlDataReader(ref oElmt1, ref argoDr, "name", "value");
+                                        addUserOptionsFromSqlDataReader(ref oElmt1, ref argoDr, "name", "value");
                                     }
                                     else
                                     {
                                         var argoDr1 = oDr;
-                                        this.addOptionsFromSqlDataReader(ref oElmt1, ref argoDr1, "name", "value");
+                                        addOptionsFromSqlDataReader(ref oElmt1, ref argoDr1, "name", "value");
                                     }
                                 }
                             }
@@ -7274,7 +7273,7 @@ namespace Protean
                         using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
                         {
                             var argoDr2 = oDr;
-                            this.addUserOptionsFromSqlDataReader(ref oElmt4, ref argoDr2, "name", "value");
+                            addUserOptionsFromSqlDataReader(ref oElmt4, ref argoDr2, "name", "value");
                         }
 
 
@@ -7289,7 +7288,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmDirMemberships", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmDirMemberships", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -7360,7 +7359,7 @@ namespace Protean
                         // set the parId for a new record
                         if (id < 0L)
                         {
-                            this.Instance.SelectSingleNode("tblCartShippingLocations/nLocationParId").InnerText = parId.ToString();
+                            Instance.SelectSingleNode("tblCartShippingLocations/nLocationParId").InnerText = parId.ToString();
                         }
                         if (base.isSubmitted())
                         {
@@ -7378,7 +7377,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditShippingLocation", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditShippingLocation", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -7460,7 +7459,8 @@ namespace Protean
                         XmlElement argoBindParent9 = null;
                         base.addBind("nShipOptWeightMax", "tblCartShippingMethods/nShipOptWeightMax", oBindParent: ref argoBindParent9, "false()");
 
-                        if (myWeb.moDbHelper.checkTableColumnExists("tblCartShippingMethods","nShipOptWeightOverageRate")) {
+                        if (myWeb.moDbHelper.checkTableColumnExists("tblCartShippingMethods", "nShipOptWeightOverageRate"))
+                        {
                             base.addInput(ref oGrp1Elmt, "nShipOptWeightOverageUnit", true, "Overage Unit", "short");
                             XmlElement oElmtOverageUnit = null;
                             base.addBind("nShipOptWeightOverageUnit", "tblCartShippingMethods/nShipOptWeightOverageUnit", oBindParent: ref oElmtOverageUnit, "false()");
@@ -7540,17 +7540,17 @@ namespace Protean
                         if (id == -1)
                         {
                             // set some default values in the instance.
-                            this.Instance.SelectSingleNode("tblCartShippingMethods/nShipOptPercentage").InnerText = "0";
-                            this.Instance.SelectSingleNode("tblCartShippingMethods/nShipOptQuantMin").InnerText = "0";
-                            this.Instance.SelectSingleNode("tblCartShippingMethods/nShipOptQuantMax").InnerText = "0";
-                            this.Instance.SelectSingleNode("tblCartShippingMethods/nShipOptWeightMin").InnerText = "0";
-                            this.Instance.SelectSingleNode("tblCartShippingMethods/nShipOptWeightMax").InnerText = "0";
-                            this.Instance.SelectSingleNode("tblCartShippingMethods/nShipOptPriceMin").InnerText = "0";
-                            this.Instance.SelectSingleNode("tblCartShippingMethods/nShipOptPriceMax").InnerText = "0";
-                            this.Instance.SelectSingleNode("tblCartShippingMethods/nShipOptHandlingPercentage").InnerText = "0";
-                            this.Instance.SelectSingleNode("tblCartShippingMethods/nShipOptHandlingFixedCost").InnerText = "0";
-                            this.Instance.SelectSingleNode("tblCartShippingMethods/nShipOptTaxRate").InnerText = "0";
-                            this.Instance.SelectSingleNode("tblCartShippingMethods/nDisplayPriority").InnerText = "0";
+                            Instance.SelectSingleNode("tblCartShippingMethods/nShipOptPercentage").InnerText = "0";
+                            Instance.SelectSingleNode("tblCartShippingMethods/nShipOptQuantMin").InnerText = "0";
+                            Instance.SelectSingleNode("tblCartShippingMethods/nShipOptQuantMax").InnerText = "0";
+                            Instance.SelectSingleNode("tblCartShippingMethods/nShipOptWeightMin").InnerText = "0";
+                            Instance.SelectSingleNode("tblCartShippingMethods/nShipOptWeightMax").InnerText = "0";
+                            Instance.SelectSingleNode("tblCartShippingMethods/nShipOptPriceMin").InnerText = "0";
+                            Instance.SelectSingleNode("tblCartShippingMethods/nShipOptPriceMax").InnerText = "0";
+                            Instance.SelectSingleNode("tblCartShippingMethods/nShipOptHandlingPercentage").InnerText = "0";
+                            Instance.SelectSingleNode("tblCartShippingMethods/nShipOptHandlingFixedCost").InnerText = "0";
+                            Instance.SelectSingleNode("tblCartShippingMethods/nShipOptTaxRate").InnerText = "0";
+                            Instance.SelectSingleNode("tblCartShippingMethods/nDisplayPriority").InnerText = "0";
                         }
 
                         if (base.isSubmitted())
@@ -7569,7 +7569,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditDeliveryMethod", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditDeliveryMethod", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -7646,7 +7646,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditCarrier", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditCarrier", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -7663,7 +7663,7 @@ namespace Protean
 
                         var oCfg = WebConfigurationManager.OpenWebConfiguration("/");
                         DefaultSection oCfgSect = (DefaultSection)oCfg.GetSection("protean/payment");
-                        oPaymentCfg = this.moPageXML.CreateElement("Config");
+                        oPaymentCfg = moPageXML.CreateElement("Config");
                         oPaymentCfg.InnerXml = oCfgSect.SectionInformation.GetRawXml();
 
                         // Replace Spaces with hypens
@@ -7675,7 +7675,7 @@ namespace Protean
                             formPath = "/providers/payment/";
                             filename = Operators.ConcatenateObject(Operators.ConcatenateObject(formPath, cProviderType), "/config.xml");
                         }
-                        if (!base.load(Conversions.ToString(filename), this.myWeb.maCommonFolders))
+                        if (!base.load(Conversions.ToString(filename), myWeb.maCommonFolders))
                         {
                         }
                         // show xform load error message
@@ -7704,7 +7704,7 @@ namespace Protean
                                     }
                                     else
                                     {
-                                        oPaymentCfg.SelectSingleNode("payment/provider[@name='" + cProviderType + "']").InnerXml = this.Instance.FirstChild.InnerXml;
+                                        oPaymentCfg.SelectSingleNode("payment/provider[@name='" + cProviderType + "']").InnerXml = Instance.FirstChild.InnerXml;
                                     }
 
                                     oCfgSect.SectionInformation.RestartOnExternalChanges = false;
@@ -7712,14 +7712,14 @@ namespace Protean
                                     oCfg.Save();
 
                                     // Copy file to secure if secure directory exists
-                                    if (File.Exists(this.goServer.MapPath("protean.payment.config")))
+                                    if (File.Exists(goServer.MapPath("protean.payment.config")))
                                     {
                                         var fsHelper = new Protean.fsHelper();
                                         fsHelper.CopyFile("protean.payment.config", "", @"\..\secure", true);
                                         fsHelper = (Protean.fsHelper)null;
                                     }
                                     // Copy file to secure if secure directory exists
-                                    if (File.Exists(this.goServer.MapPath("Protean.Config")))
+                                    if (File.Exists(goServer.MapPath("Protean.Config")))
                                     {
                                         var fsHelper = new Protean.fsHelper();
                                         fsHelper.CopyFile("Protean.Config", "", @"\..\secure", true);
@@ -7735,7 +7735,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditPaymentProvider", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditPaymentProvider", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -7752,7 +7752,7 @@ namespace Protean
 
                         var oCfg = WebConfigurationManager.OpenWebConfiguration("/");
                         DefaultSection oCfgSect = (DefaultSection)oCfg.GetSection("protean/payment");
-                        oPaymentCfg = this.moPageXML.CreateElement("Config");
+                        oPaymentCfg = moPageXML.CreateElement("Config");
                         oPaymentCfg.InnerXml = oCfgSect.SectionInformation.GetRawXml();
 
                         base.NewFrm("DeleteProvider");
@@ -7808,7 +7808,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditPaymentProvider", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditPaymentProvider", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -7845,11 +7845,11 @@ namespace Protean
                         bool sendEmailOnShipped = false;
                         if (moCartConfig != null)
                             customerShippedTemplate = moCartConfig["CustomerEmailShippedTemplatePath"];
-                        if (!string.IsNullOrEmpty(customerShippedTemplate) && nStatus != 9L && File.Exists(this.goServer.MapPath(customerShippedTemplate)))
+                        if (!string.IsNullOrEmpty(customerShippedTemplate) && nStatus != 9L && File.Exists(goServer.MapPath(customerShippedTemplate)))
 
                         {
                             sendEmailOnShipped = true;
-                            if (this.goRequest["nStatus"] != "9")
+                            if (goRequest["nStatus"] != "9")
                                 shippedStatus += " (Confirmation email will be sent to customer)";
                         }
 
@@ -7860,8 +7860,8 @@ namespace Protean
                         }
 
                         // update the status if we have submitted it allready
-                        if (!string.IsNullOrEmpty(this.goRequest["nStatus"]))
-                            nStatus = Conversions.ToInteger(this.goRequest["nStatus"]);
+                        if (!string.IsNullOrEmpty(goRequest["nStatus"]))
+                            nStatus = Conversions.ToInteger(goRequest["nStatus"]);
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "Update" + cSchemaName, "", "");
                         oGrp1Elmt = base.addGroup(ref oFrmElmt, "Status", "", cSchemaName + " Status");
                         oSelElmt = base.addSelect1(ref oGrp1Elmt, "nStatus", true, "Status", "", Protean.xForm.ApperanceTypes.Full);
@@ -7939,7 +7939,7 @@ namespace Protean
                         XmlElement argoBindParent = null;
                         base.addBind("nStatus", "tblCartOrder/nCartStatus", oBindParent: ref argoBindParent, "true()");
 
-                        if (nStatus == 6L | this.myWeb.moRequest["nStatus"] == "9" | nStatus == 17L)
+                        if (nStatus == 6L | myWeb.moRequest["nStatus"] == "9" | nStatus == 17L)
                         {
                             // Add carrier information
                             XmlElement argoInsertBeforeNode = null;
@@ -7952,7 +7952,7 @@ namespace Protean
 
                             // Turn of validation when switching back to completed
                             string validationOn = "true()";
-                            if (nStatus == 6L & this.myWeb.moRequest["nStatus"] == "6")
+                            if (nStatus == 6L & myWeb.moRequest["nStatus"] == "6")
                             {
                                 validationOn = "false()";
                             }
@@ -8001,7 +8001,7 @@ namespace Protean
                                 XmlElement argoBindParent5 = null;
                                 base.addBind("dCollectionDate", "tblCartOrderDelivery/dCollectionDate", oBindParent: ref argoBindParent5, validationOn);
 
-                                var deliveryInstance = this.moPageXML.CreateElement("instance");
+                                var deliveryInstance = moPageXML.CreateElement("instance");
                                 deliveryInstance.InnerXml = moDbHelper.getObjectInstance(Cms.dbHelper.objectTypes.CartDelivery);
 
                                 deliveryInstance.SelectSingleNode("tblCartOrderDelivery/dCollectionDate").InnerText = XmlDate(DateTime.Now);
@@ -8016,7 +8016,7 @@ namespace Protean
                         oGrp2Elmt = base.addGroup(ref oFrmElmt, "Notes", "", "Notes");
 
                         // Get the seller notes
-                        string sellerNotes = this.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText;
+                        string sellerNotes = Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText;
 
                         tempElement = (XmlElement)base.addDiv(ref oGrp2Elmt, sellerNotes, "orderNotes", false);
 
@@ -8040,9 +8040,9 @@ namespace Protean
                         if (base.isSubmitted())
                         {
                             // MyBase.updateInstanceFromRequest()
-                            base.Instance.SelectSingleNode("tblCartOrder/nCartStatus").InnerText = this.goRequest["nStatus"];
+                            base.Instance.SelectSingleNode("tblCartOrder/nCartStatus").InnerText = goRequest["nStatus"];
                             string sStatusDesc;
-                            switch (this.goRequest["nStatus"] ?? "")
+                            switch (goRequest["nStatus"] ?? "")
                             {
                                 case "0":
                                     {
@@ -8128,15 +8128,15 @@ namespace Protean
                                     }
                             }
 
-                            string updateNotes = this.goRequest["cNotesAmend"];
+                            string updateNotes = goRequest["cNotesAmend"];
                             // If Not String.IsNullOrEmpty(updateNotes) Then updateNotes = ControlChars.CrLf & Now.ToString() & ":" & updateNotes
 
-                            string notes = base.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText + "/n" + Conversions.ToString(DateTime.Now) + ": changed to: (" + this.goRequest["nStatus"] + ") " + sStatusDesc + " - " + updateNotes;
-                            string AdminUserName = this.myWeb.moPageXml.SelectSingleNode("Page/User/@name").InnerText;
+                            string notes = base.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText + "/n" + Conversions.ToString(DateTime.Now) + ": changed to: (" + goRequest["nStatus"] + ") " + sStatusDesc + " - " + updateNotes;
+                            string AdminUserName = myWeb.moPageXml.SelectSingleNode("Page/User/@name").InnerText;
                             notes += "by " + AdminUserName;
 
                             base.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText = notes;
-                            moDbHelper.logActivity(Cms.dbHelper.ActivityType.OrderStatusChange, (long)this.myWeb.mnUserId, 0L, 0L, notes);
+                            moDbHelper.logActivity(Cms.dbHelper.ActivityType.OrderStatusChange, (long)myWeb.mnUserId, 0L, 0L, notes);
 
                             aSellerNotes = Strings.Split(base.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText, "/n");
                             cSellerNotesHtml = "<ul>";
@@ -8150,15 +8150,15 @@ namespace Protean
                             {
                                 moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartOrder, base.Instance);
 
-                                if (Conversions.ToDouble(this.goRequest["nStatus"]) == 9d)
+                                if (Conversions.ToDouble(goRequest["nStatus"]) == 9d)
                                 {
 
                                     // Get the carrier name from the ID
                                     if (moDbHelper.checkDBObjectExists("tblCartCarrier") & moDbHelper.checkDBObjectExists("tblCartOrderDelivery"))
                                     {
                                         string CarrierName;
-                                        CarrierName = Conversions.ToString(moDbHelper.GetDataValue("select cCarrierName from tblCartCarrier where nCarrierKey = " + this.myWeb.moRequest["nCarrierId"]));
-                                        this.Instance.SelectSingleNode("tblCartOrderDelivery/cCarrierName").InnerText = CarrierName;
+                                        CarrierName = Conversions.ToString(moDbHelper.GetDataValue("select cCarrierName from tblCartCarrier where nCarrierKey = " + myWeb.moRequest["nCarrierId"]));
+                                        Instance.SelectSingleNode("tblCartOrderDelivery/cCarrierName").InnerText = CarrierName;
                                         moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartDelivery, base.Instance);
                                     }
 
@@ -8168,7 +8168,7 @@ namespace Protean
                                         if (string.IsNullOrEmpty(cSubject))
                                             cSubject = "Order Shipped";
                                         // send to customer
-                                        var oMsg = new Protean.Messaging(ref this.myWeb.msException);
+                                        var oMsg = new Protean.Messaging(ref myWeb.msException);
                                         var cartXml = new XmlDocument();
                                         var cartElement = cartXml.CreateElement("Cart");
                                         cartElement.InnerXml = base.Instance.SelectSingleNode("tblCartOrder/cCartXml").InnerXml;
@@ -8200,7 +8200,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmUpdateOrder", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmUpdateOrder", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -8210,12 +8210,12 @@ namespace Protean
 
                     string cProcessInfo = "";
                     NameValueCollection moCartConfig = (NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/cart");
-                    var oCfg = WebConfigurationManager.OpenWebConfiguration("/" + this.myWeb.moConfig["ProjectPath"]);
+                    var oCfg = WebConfigurationManager.OpenWebConfiguration("/" + myWeb.moConfig["ProjectPath"]);
                     DefaultSection oCgfSect = (DefaultSection)oCfg.GetSection("protean/web");
                     try
                     {
                         string IsRefund = "";
-                        var oCart = new Cms.Cart(ref this.myWeb);
+                        var oCart = new Cms.Cart(ref myWeb);
                         base.NewFrm("Refund");
                         base.submission("Refund", "", "post", "form_check(this)");
                         decimal refundAmount;
@@ -8227,7 +8227,7 @@ namespace Protean
                             string cartXmlSql = "select cCartXml from tblCartOrder where nCartOrderKey = " + nOrderId;
                             if (!string.IsNullOrEmpty(cartXmlSql))
                             {
-                                string orderXml = Convert.ToString(this.myWeb.moDbHelper.GetDataValue(cartXmlSql));
+                                string orderXml = Convert.ToString(myWeb.moDbHelper.GetDataValue(cartXmlSql));
                                 xdoc.LoadXml(orderXml);
                             }
                             if (!string.IsNullOrEmpty(xdoc.InnerXml))
@@ -8280,7 +8280,7 @@ namespace Protean
 
                                     //var oPayProv = new Protean.Providers.Payment.BaseProvider(ref this.myWeb, providerName);
                                     Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
-                                    IPaymentProvider oPaymentProv = oPayProv.Get(ref this.myWeb, providerName);
+                                    IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, providerName);
                                     IsRefund = Conversions.ToString(oPaymentProv.Activities.RefundPayment(providerPaymentReference, refundAmount));
                                     if (IsRefund.StartsWith("Error"))
                                     {
@@ -8293,7 +8293,7 @@ namespace Protean
                                     // Update Seller Notes:
                                     string sSql = "select * from tblCartOrder where nCartOrderKey = " + nOrderId;
                                     DataSet oDs;
-                                    oDs = this.myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
+                                    oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
                                     foreach (DataRow oRow in oDs.Tables["Order"].Rows)
                                     {
                                         if (IsRefund != null)
@@ -8305,11 +8305,11 @@ namespace Protean
                                             oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Refund Payment Failed) "), Constants.vbLf), "comment: "), "Refund amount:"), refundAmount), Constants.vbLf), "Full Response:' Refunded Amount is "), refundAmount), " And Error is: "), IsRefund), "'");
                                         }
                                     }
-                                    this.myWeb.moDbHelper.updateDataset(ref oDs, "Order");
+                                    myWeb.moDbHelper.updateDataset(ref oDs, "Order");
 
                                     if (IsRefund != null)
                                     {
-                                        moDbHelper.savePayment((int)nOrderId, this.mnUserId, providerName, providerPaymentReference, "Refund", (XmlElement)null, default(DateTime), false, (double)(refundAmount * -1), "refund");
+                                        moDbHelper.savePayment((int)nOrderId, mnUserId, providerName, providerPaymentReference, "Refund", (XmlElement)null, default(DateTime), false, (double)(refundAmount * -1), "refund");
                                     }
                                 }
                             }
@@ -8320,7 +8320,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmRefundOrder", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmRefundOrder", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -8331,15 +8331,15 @@ namespace Protean
                     XmlElement oFrmElmt;
                     XmlElement oSelElmt1;
                     XmlElement oSelElmt2;
-                    var oTempInstance = this.moPageXML.CreateElement("instance");
+                    var oTempInstance = moPageXML.CreateElement("instance");
                     //bool bCascade = false;
                     string cProcessInfo = "";
                     try
                     {
                         string cParentContentName = Xml.convertEntitiesToCodes(moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Content, Conversions.ToLong(nParentID)));
 
-                        base.NewFrm("FindRelatedContent");
-                        base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection/><nSearchChildren/><nIncludeRelated/><cParentContentName>" + cParentContentName + "</cParentContentName><redirect>" + redirect + "</redirect><cSearch/>";
+                        base.NewFrm("FindRelatedContent");                      
+                        base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection/><nSearchChildren/><nIncludeRelated/><cParentContentName>" + cParentContentName + "</cParentContentName><redirect>" + redirect + "</redirect><cSearch/>";                        
 
                         // MyBase.submission("AddRelated", "?ewCmd=RelateSearch&Type=Document&xml=x", "post", "form_check(this)")
                         base.submission("AddRelated", "", "post", "form_check(this)");
@@ -8389,6 +8389,7 @@ namespace Protean
                             }
                             cNameString += oMenuElmt.SelectSingleNode("cStructName").InnerText;
                             base.addOption(ref oSelElmt1, cNameString, oMenuElmt.SelectSingleNode("nStructKey").InnerText);
+                               
                         }
                         XmlElement argoBindParent4 = null;
                         base.addBind("cSection", "cSection", oBindParent: ref argoBindParent4, "true()");
@@ -8401,7 +8402,7 @@ namespace Protean
                         if (cContentType.Contains("Product") & cContentType.Contains("SKU"))
                         {
                             oSelElmt2 = base.addSelect(ref oFrmElmt, "nIncludeRelated", true, "&#160;", "", Protean.xForm.ApperanceTypes.Full);
-                            base.addOption(ref oSelElmt2, "Include Related Sku's", 1.ToString());
+                            base.addOption(ref oSelElmt2, "Include Related Items", 1.ToString());
                             XmlElement argoBindParent6 = null;
                             base.addBind("nIncludeRelated", "nIncludeRelated", oBindParent: ref argoBindParent6, "false()");
                         }
@@ -8427,7 +8428,7 @@ namespace Protean
                                 bool bChilds = Conversions.ToBoolean(Interaction.IIf(base.Instance.SelectSingleNode("nSearchChildren").InnerText == "1", true, false));
                                 string cExpression = base.Instance.SelectSingleNode("cSearch").InnerText;
                                 bool bIncRelated = Conversions.ToBoolean(Interaction.IIf(base.Instance.SelectSingleNode("nIncludeRelated").InnerText == "1", true, false));
-
+                               
                                 string sSQL = "Select " + cSelectField + " From " + cTableName + " WHERE " + cFilterField + " = " + nParId;
                                 using (var oDre = moDbHelper.getDataReaderDisposable(sSQL))  // Done by nita on 6/7/22
                                 {
@@ -8445,14 +8446,22 @@ namespace Protean
 
                         else
                         {
-                            base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection>0</cSection>" + "<nSearchChildren>1</nSearchChildren>" + "<cParentContentName>" + cParentContentName + "</cParentContentName>" + "<redirect>" + redirect + "</redirect><cSearch/>";
+                            if (myWeb.moRequest["pgid"] != null)
+                            {
+                                base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection>"+ myWeb.moRequest["pgid"].ToString() + "</cSection>" + "<nSearchChildren>1</nSearchChildren>" + "<cParentContentName>" + cParentContentName + "</cParentContentName>" + "<redirect>" + redirect + "</redirect><cSearch/>";
+                            }
+                            else
+                            {
+                                base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection>0</cSection>" + "<nSearchChildren>1</nSearchChildren>" + "<cParentContentName>" + cParentContentName + "</cParentContentName>" + "<redirect>" + redirect + "</redirect><cSearch/>";
+                            }
+                                
                             base.addValues();
                         }
                         return base.moXformElmt;
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmFindRelated", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmFindRelated", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -8463,7 +8472,7 @@ namespace Protean
                     XmlElement oFrmElmt;
                     XmlElement oSelElmt1;
                     XmlElement oSelElmt2;
-                    var oTempInstance = this.moPageXML.CreateElement("instance");
+                    var oTempInstance = moPageXML.CreateElement("instance");
                     //bool bCascade = false;
                     string cProcessInfo = "";
                     try
@@ -8584,7 +8593,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmFindRelated", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmFindRelated", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -8627,9 +8636,9 @@ namespace Protean
                         var oSchemaSelect = base.addSelect1(ref oGrp1Elmt, "cCatSchemaName", true, "Group Type", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSchemaSelect, SchemaName, SchemaName);
                         string[] aOptions = null;
-                        if (this.myWeb.moCart.moCartConfig["ProductCategoryTypes"] != null)
+                        if (myWeb.moCart.moCartConfig["ProductCategoryTypes"] != null)
                         {
-                            aOptions = this.myWeb.moCart.moCartConfig["ProductCategoryTypes"].Split(',');
+                            aOptions = myWeb.moCart.moCartConfig["ProductCategoryTypes"].Split(',');
                             if (aOptions.Length > 0)
                             {
                                 for (int i = 0, loopTo = aOptions.Length - 1; i <= loopTo; i++)
@@ -8671,7 +8680,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmProductGroup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmProductGroup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -8705,10 +8714,10 @@ namespace Protean
                         }
 
                         base.NewFrm("EditDiscountRules");
-                        if (!base.load("/xforms/discounts/" + cTypePath, this.myWeb.maCommonFolders))
+                        if (!base.load("/xforms/discounts/" + cTypePath, myWeb.maCommonFolders))
                         {
                             // not allot we can do really except try defaults
-                            if (!base.load("/xforms/discounts/DiscountRule.xml", this.myWeb.maCommonFolders))
+                            if (!base.load("/xforms/discounts/DiscountRule.xml", myWeb.maCommonFolders))
                             {
                                 // not allot we can do really 
                             }
@@ -8720,7 +8729,7 @@ namespace Protean
                         if (nDiscountId > 0)
                         {
                             existingInstance.InnerXml = moDbHelper.getObjectInstance(Cms.dbHelper.objectTypes.CartDiscountRules, (long)nDiscountId);
-                            this.LoadInstanceFromInnerXml(existingInstance.InnerXml);
+                            LoadInstanceFromInnerXml(existingInstance.InnerXml);
                         }
                         if (base.isSubmitted())
                         {
@@ -8737,7 +8746,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmDiscountRule", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmDiscountRule", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -8777,12 +8786,12 @@ namespace Protean
                         {
                             case "AddSelected":
                                 {
-                                    moDbHelper.saveDiscountProdGroupRelation((int)id, this.goRequest["Groups"]);
+                                    moDbHelper.saveDiscountProdGroupRelation((int)id, goRequest["Groups"]);
                                     break;
                                 }
                             case "RemoveSelected":
                                 {
-                                    moDbHelper.saveDiscountProdGroupRelation((int)id, this.goRequest["Items"], false);
+                                    moDbHelper.saveDiscountProdGroupRelation((int)id, goRequest["Items"], false);
                                     break;
                                 }
                         }
@@ -8818,7 +8827,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -8870,21 +8879,21 @@ namespace Protean
                         {
                             case "AddSelected":
                                 {
-                                    moDbHelper.saveDiscountDirRelation((int)id, this.goRequest["Groups"]);
+                                    moDbHelper.saveDiscountDirRelation((int)id, goRequest["Groups"]);
                                     break;
                                 }
                             case "DenySelected":
                                 {
                                     if (bDeny)
                                     {
-                                        moDbHelper.saveDiscountDirRelation((int)id, this.goRequest["Groups"], true, Cms.dbHelper.PermissionLevel.Denied);
+                                        moDbHelper.saveDiscountDirRelation((int)id, goRequest["Groups"], true, Cms.dbHelper.PermissionLevel.Denied);
                                     }
 
                                     break;
                                 }
                             case "RemoveSelected":
                                 {
-                                    moDbHelper.saveDiscountDirRelation((int)id, this.goRequest["Items"], false);
+                                    moDbHelper.saveDiscountDirRelation((int)id, goRequest["Items"], false);
                                     break;
                                 }
                         }
@@ -8939,7 +8948,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmDiscountDirRelations", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmDiscountDirRelations", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -8991,13 +9000,13 @@ namespace Protean
                         {
                             case "AddSelected":
                                 {
-                                    if (!string.IsNullOrEmpty(this.goRequest["Groups"]))
+                                    if (!string.IsNullOrEmpty(goRequest["Groups"]))
                                     {
-                                        moDbHelper.saveShippingDirRelation((int)id, this.goRequest["Groups"]);
+                                        moDbHelper.saveShippingDirRelation((int)id, goRequest["Groups"]);
                                     }
-                                    if (!string.IsNullOrEmpty(this.goRequest["Roles"]))
+                                    if (!string.IsNullOrEmpty(goRequest["Roles"]))
                                     {
-                                        moDbHelper.saveShippingDirRelation((int)id, this.goRequest["Roles"]);
+                                        moDbHelper.saveShippingDirRelation((int)id, goRequest["Roles"]);
                                     }
 
                                     break;
@@ -9006,13 +9015,13 @@ namespace Protean
                                 {
                                     if (bDeny)
                                     {
-                                        if (!string.IsNullOrEmpty(this.goRequest["Groups"]))
+                                        if (!string.IsNullOrEmpty(goRequest["Groups"]))
                                         {
-                                            moDbHelper.saveShippingDirRelation((int)id, this.goRequest["Groups"], true, Cms.dbHelper.PermissionLevel.Denied);
+                                            moDbHelper.saveShippingDirRelation((int)id, goRequest["Groups"], true, Cms.dbHelper.PermissionLevel.Denied);
                                         }
-                                        if (!string.IsNullOrEmpty(this.goRequest["Roles"]))
+                                        if (!string.IsNullOrEmpty(goRequest["Roles"]))
                                         {
-                                            moDbHelper.saveShippingDirRelation((int)id, this.goRequest["Roles"], true, Cms.dbHelper.PermissionLevel.Denied);
+                                            moDbHelper.saveShippingDirRelation((int)id, goRequest["Roles"], true, Cms.dbHelper.PermissionLevel.Denied);
                                         }
                                     }
 
@@ -9020,7 +9029,7 @@ namespace Protean
                                 }
                             case "RemoveSelected":
                                 {
-                                    moDbHelper.saveShippingDirRelation((int)id, this.goRequest["Items"], false);
+                                    moDbHelper.saveShippingDirRelation((int)id, goRequest["Items"], false);
                                     break;
                                 }
                         }
@@ -9085,7 +9094,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmShippingDirRelations", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmShippingDirRelations", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -9139,9 +9148,9 @@ namespace Protean
                         {
                             case "AddSelected":
                                 {
-                                    if (!string.IsNullOrEmpty(this.goRequest["Groups"]))
+                                    if (!string.IsNullOrEmpty(goRequest["Groups"]))
                                     {
-                                        moDbHelper.saveProductShippingGroupDirRelation((int)id, this.goRequest["Groups"]);
+                                        moDbHelper.saveProductShippingGroupDirRelation((int)id, goRequest["Groups"]);
                                     }
 
                                     break;
@@ -9151,9 +9160,9 @@ namespace Protean
                                 {
                                     if (bDeny)
                                     {
-                                        if (!string.IsNullOrEmpty(this.goRequest["Groups"]))
+                                        if (!string.IsNullOrEmpty(goRequest["Groups"]))
                                         {
-                                            moDbHelper.saveProductShippingGroupDirRelation((int)id, this.goRequest["Groups"], true, Cms.dbHelper.PermissionLevel.Denied);
+                                            moDbHelper.saveProductShippingGroupDirRelation((int)id, goRequest["Groups"], true, Cms.dbHelper.PermissionLevel.Denied);
                                         }
 
                                     }
@@ -9162,7 +9171,7 @@ namespace Protean
                                 }
                             case "RemoveSelected":
                                 {
-                                    moDbHelper.saveProductShippingGroupDirRelation((int)id, this.goRequest["Items"], false);
+                                    moDbHelper.saveProductShippingGroupDirRelation((int)id, goRequest["Items"], false);
                                     break;
                                 }
                         }
@@ -9227,7 +9236,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmProductShippingGroupRelations", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmProductShippingGroupRelations", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -9242,7 +9251,7 @@ namespace Protean
                         }
 
                         base.NewFrm("EditContact");
-                        base.load(xFormPath, this.myWeb.maCommonFolders);
+                        base.load(xFormPath, myWeb.maCommonFolders);
 
                         if (id > 0L)
                         {
@@ -9253,7 +9262,7 @@ namespace Protean
                         // Add the countries list to the form
                         if (base.moXformElmt.SelectSingleNode("//select1[@bind='cContactCountry']") != null)
                         {
-                            var oEc = new Cms.Cart(ref this.myWeb);
+                            var oEc = new Cms.Cart(ref myWeb);
                             Cms.xForm argoXform = (Cms.xForm)this;
                             XmlElement argoCountriesDropDown = (XmlElement)base.moXformElmt.SelectSingleNode("//select1[@bind='cContactCountry']");
                             oEc.populateCountriesDropDown(ref argoXform, ref argoCountriesDropDown, "Billing Address");
@@ -9294,7 +9303,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditDirectoryContact", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditDirectoryContact", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -9335,18 +9344,18 @@ namespace Protean
                             {
                                 bool bResult = Conversions.ToBoolean(Interaction.IIf(Conversions.ToDouble(base.Instance.SelectSingleNode("nRelType").InnerText) == 1d, true, false));
                                 bResult = moDbHelper.updateLocationsDetail((long)nContentId, nPageId, bResult);
-                                this.valid = true;
+                                valid = true;
                                 if (!bResult)
                                 {
                                     //XmlNode argoNode = oFrmElmt;
                                     base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, "Cannot remove the only Primary Relationship", true);
                                     //oFrmElmt = (XmlElement)argoNode;
-                                    this.valid = false;
+                                    valid = false;
                                 }
                             }
                             else
                             {
-                                this.valid = false;
+                                valid = false;
                             }
                         }
 
@@ -9356,7 +9365,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -9617,7 +9626,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -9627,18 +9636,18 @@ namespace Protean
                     string cProcessInfo = "";
                     try
                     {
-                        var dbh = new Cms.dbHelper(ref this.myWeb);
+                        var dbh = new Cms.dbHelper(ref myWeb);
                         dbh.ResetConnection(sSchedCon);
 
                         base.NewFrm("EditScheduleItem");
 
                         if (goConfig["cssFramework"] == "bs5")
                         {
-                            base.load("/admin/xforms/ScheduledItems/" + cActionType + ".xml", this.myWeb.maCommonFolders);
+                            base.load("/admin/xforms/ScheduledItems/" + cActionType + ".xml", myWeb.maCommonFolders);
                         }
                         else
                         {
-                            base.load("/xforms/ScheduledItems/" + cActionType + ".xml", this.myWeb.maCommonFolders);
+                            base.load("/xforms/ScheduledItems/" + cActionType + ".xml", myWeb.maCommonFolders);
                         }
 
                         if (nID > 0)
@@ -9701,7 +9710,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -9712,13 +9721,13 @@ namespace Protean
                     {
                         var oWeb = new Cms();
                         oWeb.Open();
-                        var oMenuElmt = this.myWeb.GetStructureXML((long)this.myWeb.mnUserId, 0L, 0L, "Site", false, false, false, true, false, "MenuItem", "Menu");
+                        var oMenuElmt = myWeb.GetStructureXML((long)myWeb.mnUserId, 0L, 0L, "Site", false, false, false, true, false, "MenuItem", "Menu");
                         foreach (XmlElement oMenuItem in oMenuElmt.SelectNodes("MenuItem"))
                             MenuReiterate(oMenuItem, ref oSelect, 0);
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "MenuSelect", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "MenuSelect", ex, "", "", gbDebug);
                     }
                 }
                 public void MenuReiterate(XmlElement oMenuItem, ref XmlElement oSelect, int nDepth)
@@ -9736,7 +9745,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "MenuReiterate", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "MenuReiterate", ex, "", "", gbDebug);
                     }
                 }
 
@@ -9747,12 +9756,12 @@ namespace Protean
 
                         string oNameStr = "";
 
-                        string cBasePath = this.goServer.MapPath("/" + cInitialFolder);
-                        string cCommonPath = this.goServer.MapPath("/ewcommon" + cInitialFolder);
+                        string cBasePath = goServer.MapPath("/" + cInitialFolder);
+                        string cCommonPath = goServer.MapPath("/ewcommon" + cInitialFolder);
 
                         if (goConfig["cssFramework"] == "bs5")
                         {
-                            cCommonPath = this.goServer.MapPath("/ptn" + cInitialFolder);
+                            cCommonPath = goServer.MapPath("/ptn" + cInitialFolder);
                         }
                         var dir = new DirectoryInfo(cBasePath);
 
@@ -9793,7 +9802,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "cInitialFolder", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "cInitialFolder", ex, "", "", gbDebug);
                     }
                 }
                 #endregion
@@ -9808,13 +9817,13 @@ namespace Protean
 
                         base.NewFrm("EditFeedItem");
 
-                        if (this.myWeb.moConfig["cssFramework"] == "bs5")
+                        if (myWeb.moConfig["cssFramework"] == "bs5")
                         {
-                            base.load("/core/xforms/content/feeditem.xml", this.myWeb.maCommonFolders);
+                            base.load("/core/xforms/content/feeditem.xml", myWeb.maCommonFolders);
                         }
                         else
                         {
-                            base.load("/xforms/content/feeditem.xml", this.myWeb.maCommonFolders);
+                            base.load("/xforms/content/feeditem.xml", myWeb.maCommonFolders);
                         }
 
                         var existingInstance = base.moXformElmt.OwnerDocument.CreateElement("instance");
@@ -9887,7 +9896,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmFeedItem", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmFeedItem", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -9902,30 +9911,30 @@ namespace Protean
 
                         if (Strings.LCase(moRequest["reset"]) == "true")
                         {
-                            this.myWeb.moSession["tempInstance"] = (object)null;
+                            myWeb.moSession["tempInstance"] = (object)null;
                         }
 
                         base.NewFrm("EditUserSubscription");
                         base.bProcessRepeats = false;
-                        base.load(xFormPath, this.myWeb.maCommonFolders);
+                        base.load(xFormPath, myWeb.maCommonFolders);
 
                         if (nSubId > 0)
                         {
                             base.bProcessRepeats = true;
-                            if (this.myWeb.moSession["tempInstance"] is null)
+                            if (myWeb.moSession["tempInstance"] is null)
                             {
                                 var existingInstance = base.moXformElmt.OwnerDocument.CreateElement("instance");
                                 existingInstance.InnerXml = moDbHelper.getObjectInstance(Cms.dbHelper.objectTypes.Subscription, (long)nSubId).Replace("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "").Replace("xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"", "");
                                 base.LoadInstance(existingInstance);
-                                this.myWeb.moSession["tempInstance"] = base.Instance;
+                                myWeb.moSession["tempInstance"] = base.Instance;
                             }
                             else
                             {
-                                base.LoadInstance((XmlElement)this.myWeb.moSession["tempInstance"]);
+                                base.LoadInstance((XmlElement)myWeb.moSession["tempInstance"]);
                             }
                         }
 
-                        this.moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = base.Instance.InnerXml;
+                        moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = base.Instance.InnerXml;
                         //int i = 1;
                         // bool bDone = false;
                         /// string cItems = "";
@@ -9938,7 +9947,7 @@ namespace Protean
                             base.updateInstanceFromRequest();
 
                             long ContentId = Conversions.ToLong("0" + base.Instance.SelectSingleNode("tblSubscription/nSubContentId").InnerText);
-                            var ContentXml = this.myWeb.moPageXml.CreateElement("Content");
+                            var ContentXml = myWeb.moPageXml.CreateElement("Content");
                             ContentXml.InnerXml = moDbHelper.getContentBrief((int)ContentId);
 
                             if (initialSubContentId != ContentId)
@@ -9960,7 +9969,7 @@ namespace Protean
                             {
                                 // we are creating a new subscription
                                 // first we get the subscription content XML
-                                base.Instance.SelectSingleNode("tblSubscription/nDirId").InnerText = this.myWeb.moRequest["userId"];
+                                base.Instance.SelectSingleNode("tblSubscription/nDirId").InnerText = myWeb.moRequest["userId"];
                                 base.Instance.SelectSingleNode("tblSubscription/nDirType").InnerText = "user";
                                 base.Instance.SelectSingleNode("tblSubscription/dPublishDate").InnerText = base.Instance.SelectSingleNode("tblSubscription/dStartDate").InnerText;
 
@@ -9990,11 +9999,11 @@ namespace Protean
                                         foreach (XmlElement oElmt in base.Instance.SelectNodes("tblSubscription/cSubXml/Content/UserGroups/Group[@id!='']"))
                                         {
                                             int nGrpID = Conversions.ToInteger(oElmt.Attributes["id"].Value);
-                                            this.myWeb.moDbHelper.saveDirectoryRelations((long)Conversions.ToInteger(base.Instance.SelectSingleNode("tblSubscription/nDirId").InnerText), nGrpID.ToString());
+                                            myWeb.moDbHelper.saveDirectoryRelations((long)Conversions.ToInteger(base.Instance.SelectSingleNode("tblSubscription/nDirId").InnerText), nGrpID.ToString());
                                         }
                                     }
                                 }
-                                this.myWeb.moSession["tempInstance"] = (object)null;
+                                myWeb.moSession["tempInstance"] = (object)null;
                             }
 
                             else if (base.isTriggered)
@@ -10002,11 +10011,11 @@ namespace Protean
                                 // we have clicked a trigger so we must update the instance
                                 base.updateInstanceFromRequest();
                                 // lets save the instance
-                                this.goSession["tempInstance"] = base.Instance;
+                                goSession["tempInstance"] = base.Instance;
                             }
                             else
                             {
-                                this.goSession["tempInstance"] = base.Instance;
+                                goSession["tempInstance"] = base.Instance;
                             }
                         }
 
@@ -10017,7 +10026,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -10029,7 +10038,7 @@ namespace Protean
                     try
                     {
 
-                        var oSub = new Cms.Cart.Subscriptions(ref this.myWeb);
+                        var oSub = new Cms.Cart.Subscriptions(ref myWeb);
 
                         base.NewFrm("RenewSubscription");
                         base.submission("RenewSubscription", "", "post");
@@ -10086,21 +10095,21 @@ namespace Protean
                         base.addSubmit(ref oFrmElmt, "Back", "Back", "Back", "btn-default", "fa-chevron-left");
                         base.addSubmit(ref oFrmElmt, "Confirm", "Confirm Renewal", "Confirm", "btn-success principle", "fa-repeat");
 
-                        if (this.isSubmitted())
+                        if (isSubmitted())
                         {
                             if (base.getSubmitted() == "Back")
                             {
-                                this.myWeb.msRedirectOnEnd = "/?ewCmd=RenewSubscription";
+                                myWeb.msRedirectOnEnd = "/?ewCmd=RenewSubscription";
                                 return base.moXformElmt;
                             }
                             else if (base.getSubmitted() == "Confirm")
                             {
                                 bool bEmailClient = false;
-                                if (this.myWeb.moRequest["emailClient"] == "yes")
+                                if (myWeb.moRequest["emailClient"] == "yes")
                                     bEmailClient = true;
                                 string RenewResponse;
                                 bool skipPayment = false;
-                                if (this.myWeb.moRequest["skipPayment"] == "yes")
+                                if (myWeb.moRequest["skipPayment"] == "yes")
                                     skipPayment = true;
 
                                 RenewResponse = oSub.RenewSubscription(Conversions.ToLong(nSubscriptionId), bEmailClient, skipPayment);
@@ -10123,7 +10132,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -10137,7 +10146,7 @@ namespace Protean
 
                         string nSubscriptionId = moDbHelper.ExeProcessSqlScalar("select nSubId from tblSubscriptionRenewal where nOrderId = " + nOrderId);
 
-                        var oSub = new Cms.Cart.Subscriptions(ref this.myWeb);
+                        var oSub = new Cms.Cart.Subscriptions(ref myWeb);
 
                         base.NewFrm("RenewSubscription");
                         base.submission("RenewSubscription", "", "post");
@@ -10163,17 +10172,17 @@ namespace Protean
                         base.addSubmit(ref oFrmElmt, "Back", "Back", "Back", "btn-default", "fa-chevron-left");
                         base.addSubmit(ref oFrmElmt, "Confirm", "Confirm Refresh and Resend", "Confirm", "btn-success principle", "fa-repeat");
 
-                        if (this.isSubmitted())
+                        if (isSubmitted())
                         {
                             if (base.getSubmitted() == "Back")
                             {
-                                this.myWeb.msRedirectOnEnd = "/?ewCmd=ResendSubscription";
+                                myWeb.msRedirectOnEnd = "/?ewCmd=ResendSubscription";
                                 return base.moXformElmt;
                             }
                             else if (base.getSubmitted() == "Confirm")
                             {
                                 bool bEmailClient = false;
-                                if (this.myWeb.moRequest["emailClient"] == "yes")
+                                if (myWeb.moRequest["emailClient"] == "yes")
                                     bEmailClient = true;
                                 string RenewResponse;
                                 RenewResponse = oSub.RefreshSubscriptionOrder((XmlElement)base.Instance.FirstChild, bEmailClient, Conversions.ToLong(nOrderId));
@@ -10196,7 +10205,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -10232,7 +10241,7 @@ namespace Protean
                         base.addSubmit(ref oFrmElmt, "Back", "Back", "Back", "btn-default", "fa-chevron-left");
                         base.addSubmit(ref oFrmElmt, "Cancel", "Cancel Subscription", "Cancel", "btn-warning principle", "fa-stop");
 
-                        if (this.isSubmitted())
+                        if (isSubmitted())
                         {
                             if (base.getSubmitted() == "Back")
                             {
@@ -10244,8 +10253,8 @@ namespace Protean
                                 bool bEmailClient = true;
                                 if (moRequest["emailClient"] != "yes")
                                     bEmailClient = false;
-                                var oSub = new Cms.Cart.Subscriptions(ref this.myWeb);
-                                oSub.CancelSubscription(Conversions.ToInteger(nSubscriptionId), this.myWeb.moRequest["cStatedReason"], bEmailClient);
+                                var oSub = new Cms.Cart.Subscriptions(ref myWeb);
+                                oSub.CancelSubscription(Conversions.ToInteger(nSubscriptionId), myWeb.moRequest["cStatedReason"], bEmailClient);
                                 base.valid = true;
                                 return base.moXformElmt;
                             }
@@ -10254,7 +10263,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmConfirmCancelSubscription", ex, "", bDebug: gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmConfirmCancelSubscription", ex, "", bDebug: gbDebug);
                         return null;
                     }
                 }
@@ -10286,7 +10295,7 @@ namespace Protean
                         base.addSubmit(ref oFrmElmt, "Back", "Back", "Back", "btn-default", "fa-chevron-left");
                         base.addSubmit(ref oFrmElmt, "Expire", "Expire Subscription", "Expire", "btn-warning principle", "fa-stop");
 
-                        if (this.isSubmitted())
+                        if (isSubmitted())
                         {
                             if (base.getSubmitted() == "Back")
                             {
@@ -10294,8 +10303,8 @@ namespace Protean
                             }
                             else if (base.getSubmitted() == "Expire")
                             {
-                                var oSub = new Cms.Cart.Subscriptions(ref this.myWeb);
-                                oSub.ExpireSubscription(Conversions.ToInteger(nSubscriptionId), this.myWeb.moRequest["cStatedReason"]);
+                                var oSub = new Cms.Cart.Subscriptions(ref myWeb);
+                                oSub.ExpireSubscription(Conversions.ToInteger(nSubscriptionId), myWeb.moRequest["cStatedReason"]);
                                 base.valid = true;
                                 return base.moXformElmt;
                             }
@@ -10304,7 +10313,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmConfirmCancelSubscription", ex, "", bDebug: gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmConfirmCancelSubscription", ex, "", bDebug: gbDebug);
                         return null;
                     }
                 }
@@ -10319,7 +10328,7 @@ namespace Protean
                     try
                     {
                         oFsh = new Protean.fsHelper();
-                        oFsh.open(this.moPageXML);
+                        oFsh.open(moPageXML);
 
                         base.NewFrm("WebSettings");
 
@@ -10460,7 +10469,7 @@ namespace Protean
                             oElmt = (XmlElement)base.Instance.SelectSingleNode("cart/add[@key='" + aSettingValues[(int)i] + "']");
                             if (oElmt is null)
                             {
-                                oElmt = this.moPageXML.CreateElement("add");
+                                oElmt = moPageXML.CreateElement("add");
                                 oElmt.SetAttribute("key", aSettingValues[(int)i]);
                                 oElmt.SetAttribute("value", "");
                                 if (oElmtAft is null)
@@ -10495,7 +10504,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmWebSettings", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmWebSettings", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -10509,7 +10518,7 @@ namespace Protean
                     XmlElement oFrmElmt;
                     XmlElement oSelElmt1;
                     XmlElement oSelElmt2;
-                    var oTempInstance = this.moPageXML.CreateElement("instance");
+                    var oTempInstance = moPageXML.CreateElement("instance");
                     //bool bCascade = false;
                     string cProcessInfo = "";
 
@@ -10583,7 +10592,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmFindRelated", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmFindRelated", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -10594,7 +10603,7 @@ namespace Protean
                     XmlElement oFrmElmt;
                     XmlElement oGrp1Elmt;
                     XmlElement oSelElmt2;
-                    var oTempInstance = this.moPageXML.CreateElement("instance");
+                    var oTempInstance = moPageXML.CreateElement("instance");
                     //bool bCascade = false;
                     string cProcessInfo = "";
 
@@ -10610,12 +10619,12 @@ namespace Protean
                         if (base.isSubmitted())
                         {
 
-                            string[] oItems = Strings.Split(this.myWeb.moRequest["Results"], ",");
-                            string cPosition = this.myWeb.moRequest["Position"];
+                            string[] oItems = Strings.Split(myWeb.moRequest["Results"], ",");
+                            string cPosition = myWeb.moRequest["Position"];
                             int i = 0;
                             var loopTo = oItems.Length - 1;
                             for (i = 0; i <= loopTo; i++)
-                                this.myWeb.moDbHelper.setContentLocation((long)nNewLocationPage, Conversions.ToLong(oItems[i]), false, false, false);
+                                myWeb.moDbHelper.setContentLocation((long)nNewLocationPage, Conversions.ToLong(oItems[i]), false, false, false);
                             base.valid = true;
                         }
                         else
@@ -10697,7 +10706,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmLocateContent", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmLocateContent", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -10708,7 +10717,7 @@ namespace Protean
                     {
                         // if nNewLocationPage =0 or nFromPage=0 or cContentType="" then 
                         XmlElement oFrmElmt;
-                        var oTempInstance = this.moPageXML.CreateElement("instance");
+                        var oTempInstance = moPageXML.CreateElement("instance");
                         //bool bCascade = false;
                         //string cProcessInfo = "";
 
@@ -10746,7 +10755,7 @@ namespace Protean
                         base.addInput(ref oGrp0Elmt, "dEnd", true, "To", "calendarTime");
                         XmlElement oSel1;
                         //oSel1 = base.addSelect1(ref oGrp0Elmt, "cCurrencySymbol", true, "Currency");
-                        if (this.myWeb.moConfig["Quote"] != "on")
+                        if (myWeb.moConfig["Quote"] != "on")
                         {
                             oSel1 = base.addSelect1(ref oGrp0Elmt, "cOrderType", true, "Cart Type");
                             base.addOption(ref oSel1, "Order", "Order");
@@ -10764,7 +10773,7 @@ namespace Protean
                         base.addOption(ref oSel1, "Excel", "excel");
                         base.addOption(ref oSel1, "CSV", "csv");
                         base.addOption(ref oSel1, "XML", "xml");
-                        if (this.myWeb.moConfig["Debug"] == "on")
+                        if (myWeb.moConfig["Debug"] == "on")
                         {
                             base.addOption(ref oSel1, "Raw XML", "rawxml");
                         }
@@ -10783,7 +10792,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmCartActivity", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmCartActivity", ex, "", "", gbDebug);
                         return null;
                     }
                 }
@@ -10795,7 +10804,7 @@ namespace Protean
                         // if nNewLocationPage =0 or nFromPage=0 or cContentType="" then 
                         XmlElement oFrmElmt;
 
-                        var oTempInstance = this.moPageXML.CreateElement("instance");
+                        var oTempInstance = moPageXML.CreateElement("instance");
                         //bool bCascade = false;
                         //string cProcessInfo = "";
 
@@ -10817,7 +10826,7 @@ namespace Protean
                         base.addOption(ref oSel1, "All", "");
                         base.addOption(ref oSel1, "GBP", "GBP");
 
-                        if (Strings.LCase(this.myWeb.moConfig["Quote"]) == "on")
+                        if (Strings.LCase(myWeb.moConfig["Quote"]) == "on")
                         {
                             oSel1 = base.addSelect1(ref oGrp0Elmt, "cOrderType", true, "Cart Type");
                             base.addOption(ref oSel1, "Orders", "Order");
@@ -10879,7 +10888,7 @@ namespace Protean
                             base.addBind("cCurrencySymbol", "Criteria/cCurrencySymbol", sType: "string", oBindParent: ref argoBindParent5);
                             XmlElement argoBindParent6 = null;
                             base.addBind("nOrderStatus", "Criteria/nOrderStatus", sType: "string", oBindParent: ref argoBindParent6);
-                            if (Strings.LCase(this.myWeb.moConfig["Quote"]) == "on")
+                            if (Strings.LCase(myWeb.moConfig["Quote"]) == "on")
                             {
                                 XmlElement argoBindParent7 = null;
                                 base.addBind("cOrderType", "Criteria/cOrderType", oBindParent: ref argoBindParent7, "true()", "string");
@@ -10900,7 +10909,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmCartActivity", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmCartActivity", ex, "", "", gbDebug);
                         return null;
                     }
                 }
@@ -10913,7 +10922,7 @@ namespace Protean
                         // if nNewLocationPage =0 or nFromPage=0 or cContentType="" then 
                         XmlElement oFrmElmt;
 
-                        var oTempInstance = this.moPageXML.CreateElement("instance");
+                        var oTempInstance = moPageXML.CreateElement("instance");
                         //bool bCascade = false;
                         //string cProcessInfo = "";
 
@@ -10989,7 +10998,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmCartActivityDrillDown", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmCartActivityDrillDown", ex, "", "", gbDebug);
                         return null;
                     }
                 }
@@ -11001,7 +11010,7 @@ namespace Protean
                         // if nNewLocationPage =0 or nFromPage=0 or cContentType="" then 
                         XmlElement oFrmElmt;
 
-                        var oTempInstance = this.moPageXML.CreateElement("instance");
+                        var oTempInstance = moPageXML.CreateElement("instance");
                         //bool bCascade = false;
                         //string cProcessInfo = "";
 
@@ -11076,7 +11085,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmCartActivityPeriod", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmCartActivityPeriod", ex, "", "", gbDebug);
                         return null;
                     }
                 }
@@ -11127,7 +11136,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmMemberVisits", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmMemberVisits", ex, "", "", gbDebug);
                         return null;
                     }
                 }
@@ -11151,10 +11160,11 @@ namespace Protean
                         // Build the form
                         base.NewFrm("MemberCodes");
                         string formPath = "/xforms/directory/" + cFormName + ".xml";
-                        if (myWeb.bs5) {
+                        if (myWeb.bs5)
+                        {
                             formPath = "/admin/xforms/directory/" + cFormName + ".xml";
                         }
-                        base.load(formPath, this.myWeb.maCommonFolders);
+                        base.load(formPath, myWeb.maCommonFolders);
 
                         // Load the instance.
                         if (nCodesetKey > 0)
@@ -11197,7 +11207,7 @@ namespace Protean
                                 }
 
                                 // Save the code set
-                                this.myWeb.moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Codes, base.Instance, (long)nCodesetKey);
+                                myWeb.moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Codes, base.Instance, (long)nCodesetKey);
 
                                 // Update any sub-codes
                                 if (nCodesetKey > 0)
@@ -11206,7 +11216,7 @@ namespace Protean
                                     cSQL += ", dExpireDate  = " + Database.SqlDate(base.Instance.SelectSingleNode("tblCodes/dExpireDate").InnerText, true);
                                     cSQL += ", nStatus  = " + base.Instance.SelectSingleNode("tblCodes/nStatus").InnerText;
                                     cSQL += " FROM tblAudit a INNER JOIN tblCodes c ON a.nauditkey = c.nauditid AND (c.nCodeParentId = " + nCodesetKey + " OR c.nCodeKey = " + nCodesetKey + ")";
-                                    this.myWeb.moDbHelper.ExeProcessSql(cSQL);
+                                    myWeb.moDbHelper.ExeProcessSql(cSQL);
                                 }
 
                             }
@@ -11235,7 +11245,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmMemberCodeset", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmMemberCodeset", ex, "", "", gbDebug);
                         return null;
                     }
                 }
@@ -11260,9 +11270,9 @@ namespace Protean
                         // Build the form
                         base.NewFrm("MemberCodes");
                         object formPath = "/xforms/directory/";
-                        if (this.myWeb.bs5)
+                        if (myWeb.bs5)
                             formPath = "/admin/xforms/directory/";
-                        base.load(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(formPath, cFormName), ".xml")), this.myWeb.maCommonFolders);
+                        base.load(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(formPath, cFormName), ".xml")), myWeb.maCommonFolders);
 
                         base.Instance.SelectSingleNode("tblCodes/nCodeType").InnerText = ((int)Cms.dbHelper.CodeType.Membership).ToString();
 
@@ -11345,7 +11355,7 @@ namespace Protean
                                     for (int i = 0, loopTo = nNoCodes - 1; i <= loopTo; i++)
                                     {
                                         // Generate a random password
-                                       // object localgetNodeValueByType2() { XmlNode argoParent3 = oInstanceRoot; var ret = getNodeValueByType(ref argoParent3, "nRNDLength", vDefaultValue: "8"); oInstanceRoot = (XmlElement)argoParent3; return ret; }
+                                        // object localgetNodeValueByType2() { XmlNode argoParent3 = oInstanceRoot; var ret = getNodeValueByType(ref argoParent3, "nRNDLength", vDefaultValue: "8"); oInstanceRoot = (XmlElement)argoParent3; return ret; }
 
                                         object localgetNodeValueByType3() { XmlNode argoParent4 = oInstanceRoot; var ret = getNodeValueByType(ref argoParent4, "nRNDLength", vDefaultValue: "8"); oInstanceRoot = (XmlElement)argoParent4; return ret; }
 
@@ -11354,7 +11364,7 @@ namespace Protean
                                         // Check for duplicates
                                         while (!(Array.LastIndexOf(oCodes, cC) == -1 | string.IsNullOrEmpty(cC)))
                                         {
-                                         //   object localgetNodeValueByType4() { XmlNode argoParent5 = oInstanceRoot; var ret = getNodeValueByType(ref argoParent5, "nRNDLength", vDefaultValue: "8"); oInstanceRoot = (XmlElement)argoParent5; return ret; }
+                                            //   object localgetNodeValueByType4() { XmlNode argoParent5 = oInstanceRoot; var ret = getNodeValueByType(ref argoParent5, "nRNDLength", vDefaultValue: "8"); oInstanceRoot = (XmlElement)argoParent5; return ret; }
 
                                             object localgetNodeValueByType5() { XmlNode argoParent6 = oInstanceRoot; var ret = getNodeValueByType(ref argoParent6, "nRNDLength", vDefaultValue: "8"); oInstanceRoot = (XmlElement)argoParent6; return ret; }
 
@@ -11380,7 +11390,7 @@ namespace Protean
                                         else
                                         {
                                             base.Instance.SelectSingleNode("tblCodes/cCode").InnerText = oCodes[i];
-                                            int nSubId = Conversions.ToInteger(this.myWeb.moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Codes, base.Instance));
+                                            int nSubId = Conversions.ToInteger(myWeb.moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Codes, base.Instance));
                                             nAdded += 1;
                                         }
                                     }
@@ -11398,7 +11408,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmMemberCodeGenerator", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmMemberCodeGenerator", ex, "", "", gbDebug);
                         return null;
                     }
                 }
@@ -11413,10 +11423,10 @@ namespace Protean
 
 
                         base.NewFrm("EditVoucherCode");
-                        if (!base.load("/xforms/codes/" + cTypePath, this.myWeb.maCommonFolders))
+                        if (!base.load("/xforms/codes/" + cTypePath, myWeb.maCommonFolders))
                         {
                             // not allot we can do really except try defaults
-                            if (!base.load("/xforms/code/Voucher.xml", this.myWeb.maCommonFolders))
+                            if (!base.load("/xforms/code/Voucher.xml", myWeb.maCommonFolders))
                             {
                                 // not allot we can do really 
                             }
@@ -11441,7 +11451,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmVoucherCode", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmVoucherCode", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -11457,7 +11467,7 @@ namespace Protean
                     {
                         try
                         {
-                            oImportManifestXml.Load(this.goServer.MapPath(this.myWeb.moConfig["ProjectPath"] + "/xsl/import") + "/ImportManifest.xml");
+                            oImportManifestXml.Load(goServer.MapPath(myWeb.moConfig["ProjectPath"] + "/xsl/import") + "/ImportManifest.xml");
                         }
                         catch
                         {
@@ -11527,7 +11537,7 @@ namespace Protean
 
                                 // lets do some hacking 
                                 System.Web.HttpPostedFile fUpld;
-                                fUpld = this.goRequest.Files["uploadFile"];
+                                fUpld = goRequest.Files["uploadFile"];
 
                                 if (fUpld != null)
                                 {
@@ -11539,7 +11549,7 @@ namespace Protean
 
                                     var oFs = new Protean.fsHelper();
                                     oFs.initialiseVariables(Protean.fsHelper.LibraryType.Documents);
-                                    oFs.mcStartFolder = this.goServer.MapPath("/") + cPath;
+                                    oFs.mcStartFolder = goServer.MapPath("/") + cPath;
 
                                     sValidResponse = oFs.SaveFile(ref fUpld, "");
 
@@ -11551,23 +11561,23 @@ namespace Protean
 
                                     if ((sValidResponse ?? "") == (fUpld.FileName ?? ""))
                                     {
-                                        this.valid = true;
+                                        valid = true;
                                         //XmlNode argoNode = (XmlNode)this.moXformElmt;
-                                        base.addNote(ref this.moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse + " - File Imported");
+                                        base.addNote(ref moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse + " - File Imported");
                                         //this.moXformElmt = (XmlElement)argoNode;
-                                        this.valid = true;
+                                        valid = true;
                                     }
                                     else
                                     {
-                                        this.valid = false;
+                                        valid = false;
                                         //XmlNode argoNode1 = (XmlNode)this.moXformElmt;
-                                        base.addNote(ref this.moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse);
+                                        base.addNote(ref moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse);
                                         //this.moXformElmt = (XmlElement)argoNode1;
                                     }
                                 }
                                 else
                                 {
-                                    this.valid = false;
+                                    valid = false;
                                 }
                             }
 
@@ -11591,7 +11601,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -11606,8 +11616,8 @@ namespace Protean
                     {
 
                         // load the xform to be edited
-                        moDbHelper.moPageXml = this.moPageXML;
-                        var idx = new Protean.IndexerAsync(ref this.myWeb);
+                        moDbHelper.moPageXml = moPageXML;
+                        var idx = new Protean.IndexerAsync(ref myWeb);
                         base.NewFrm("StartIndex");
 
                         base.submission("DeleteFile", "", "post");
@@ -11668,7 +11678,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmStartIndex", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmStartIndex", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -11684,15 +11694,15 @@ namespace Protean
                         // Replace Spaces with hypens
                         cReportName = Strings.Replace(cReportName, " ", "-");
                         string reportsFolder = "/xforms/Reports/";
-                        if (this.myWeb.bs5)
+                        if (myWeb.bs5)
                             reportsFolder = "/admin/xforms/reports/";
 
-                        if (!base.load(reportsFolder + cReportName + ".xml", this.myWeb.maCommonFolders))
+                        if (!base.load(reportsFolder + cReportName + ".xml", myWeb.maCommonFolders))
                         {
                             // show xform load error message
                         }
 
-                        XmlElement queryNode = (XmlElement)this.moXformElmt.SelectSingleNode("descendant-or-self::Query");
+                        XmlElement queryNode = (XmlElement)moXformElmt.SelectSingleNode("descendant-or-self::Query");
 
                         if (base.isSubmitted())
                         {
@@ -11711,7 +11721,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmGetReport", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmGetReport", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -11726,7 +11736,7 @@ namespace Protean
                     try
                     {
 
-                        string parentOptions = "" + this.myWeb.moConfig["LookupParentOptions"];
+                        string parentOptions = "" + myWeb.moConfig["LookupParentOptions"];
 
                         var oDict = new Dictionary<string, string>();
 
@@ -11739,7 +11749,7 @@ namespace Protean
                         if (nLookupId > 0)
                         {
                             sSqlcheck = "select nLkpId as id, * from tblLookup " + "WHERE nLkpId = " + nLookupId;
-                            lookupsSingleDataset = this.myWeb.moDbHelper.GetDataSet(sSqlcheck, "Lookup", "Lookups");
+                            lookupsSingleDataset = myWeb.moDbHelper.GetDataSet(sSqlcheck, "Lookup", "Lookups");
                             if (lookupsSingleDataset.Tables.Count > 0)
                             {
 
@@ -11836,7 +11846,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmLookup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmLookup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -11872,7 +11882,7 @@ namespace Protean
                         if (indexId > 0)
                         {
                             sSqlcheck = "select nContentIndexDefKey as id,nContentIndexDataType,RTRIM(LTRIM(cContentSchemaName)) AS cContentSchemaName, * from tblContentIndexDef " + "WHERE nContentIndexDefKey = " + indexId;
-                            lookupsSingleDataset = this.myWeb.moDbHelper.GetDataSet(sSqlcheck, "indexkey", "indexkeys");
+                            lookupsSingleDataset = myWeb.moDbHelper.GetDataSet(sSqlcheck, "indexkey", "indexkeys");
                             if (lookupsSingleDataset.Tables.Count > 0)
                             {
 
@@ -11981,7 +11991,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmIndexes", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmIndexes", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -11995,7 +12005,7 @@ namespace Protean
                     try
                     {
                         base.NewFrm("EditTemplate");
-                        switch (this.myWeb.moRequest["ewCmd2"] ?? "")
+                        switch (myWeb.moRequest["ewCmd2"] ?? "")
                         {
                             case "RenewalAlerts":
                                 {
@@ -12008,7 +12018,7 @@ namespace Protean
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "SelectTemplate");
 
                         var XslDocument = new XmlDocument();
-                        XslDocument.Load(this.goServer.MapPath(xslFilename));
+                        XslDocument.Load(goServer.MapPath(xslFilename));
                         base.submission("EditTemplate", "", "post", "form_check(this)");
 
                         XmlNamespaceManager xmlnsManager = new XmlNamespaceManager(XslDocument.NameTable);
@@ -12018,15 +12028,15 @@ namespace Protean
                         short i = 1;
                         foreach (XmlElement oTmpt in XslDocument.DocumentElement.SelectNodes("xsl:template", (XmlNamespaceManager)xmlnsManager))
                         {
-                            this.addOption(ref SelectElmt, oTmpt.GetAttribute("mode") + " - " + oTmpt.GetAttribute("match"), i.ToString());
+                            addOption(ref SelectElmt, oTmpt.GetAttribute("mode") + " - " + oTmpt.GetAttribute("match"), i.ToString());
 
-                            if (Conversions.ToInteger(this.myWeb.moRequest["Template"]) == (int)i)
+                            if (Conversions.ToInteger(myWeb.moRequest["Template"]) == (int)i)
                             {
 
-                                this.addInput(ref oFrmElmt, "tplt-mode", true, "Mode");
+                                addInput(ref oFrmElmt, "tplt-mode", true, "Mode");
                                 XmlElement argoBindParent = null;
                                 base.addBind("tplt-mode", "Template/TemplateContent/*/@mode", oBindParent: ref argoBindParent, "true()");
-                                this.addInput(ref oFrmElmt, "tplt-match", true, "Match");
+                                addInput(ref oFrmElmt, "tplt-match", true, "Match");
                                 XmlElement argoBindParent1 = null;
                                 base.addBind("tplt-match", "Template/TemplateContent/*/@match", oBindParent: ref argoBindParent1, "true()");
 
@@ -12044,9 +12054,9 @@ namespace Protean
                         }
 
                         var xmlElmt = base.addSelect1(ref oFrmElmt, "contentType", true, "contentType", ((int)Protean.xForm.ApperanceTypes.Minimal).ToString());
-                        this.addOption(ref xmlElmt, "xml", "xml");
+                        addOption(ref xmlElmt, "xml", "xml");
 
-                        if (Conversions.ToInteger(this.myWeb.moRequest["Template"]) > 0)
+                        if (Conversions.ToInteger(myWeb.moRequest["Template"]) > 0)
                         {
                             base.addSubmit(ref oFrmElmt, "EditTemplate", "Save Template", "SaveTemplate");
                         }
@@ -12061,7 +12071,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmLookup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmLookup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -12555,12 +12565,12 @@ namespace Protean
 
                         // The instance of the form needs to be saved in the session to allow repeating elements to be edited prior to saving in the database.
 
-                        this.myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
+                        myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
                         base.NewFrm(FormTitle);
                         base.bProcessRepeats = false;
 
                         // We load the xform from a file, it may be in local or in common folders.
-                        base.load(xFormPath, this.myWeb.maCommonFolders);
+                        base.load(xFormPath, myWeb.maCommonFolders);
 
                         // We get the instance
                         if (nUserId > 0)
@@ -12569,28 +12579,28 @@ namespace Protean
                             if (newGroupId.Contains(","))
                             {
                                 foreach (var i in Strings.Split(newGroupId, ","))
-                                    sNewGroupNames = sNewGroupNames + this.myWeb.moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Directory, Conversions.ToLong(i.ToString())) + ", ";
+                                    sNewGroupNames = sNewGroupNames + myWeb.moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Directory, Conversions.ToLong(i.ToString())) + ", ";
                                 sNewGroupNames.TrimEnd();
                                 sNewGroupNames.TrimEnd(',');
                             }
                             else
                             {
-                                sNewGroupNames = this.myWeb.moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Directory, Conversions.ToLong(newGroupId));
+                                sNewGroupNames = myWeb.moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Directory, Conversions.ToLong(newGroupId));
                             }
 
                             base.bProcessRepeats = true;
-                            if (this.myWeb.moSession[InstanceSessionName.ToString()] is null)
+                            if (myWeb.moSession[InstanceSessionName.ToString()] is null)
                             {
                                 var existingInstance = base.moXformElmt.OwnerDocument.CreateElement("instance");
                                 XmlElement regradeUser = (XmlElement)existingInstance.AppendChild(base.moXformElmt.OwnerDocument.CreateElement("RegradeUser"));
                                 regradeUser.SetAttribute("existingGroupId", existingGroupId.ToString());
-                                regradeUser.SetAttribute("existingGroupName", this.myWeb.moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Directory, existingGroupId));
+                                regradeUser.SetAttribute("existingGroupName", myWeb.moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Directory, existingGroupId));
                                 regradeUser.SetAttribute("newGroupId", newGroupId.ToString());
                                 regradeUser.SetAttribute("newGroupName", sNewGroupNames);
                                 regradeUser.SetAttribute("sendEmail", "1");
 
                                 // Remove Messages that don't match the messageId
-                                regradeUser.InnerXml = this.myWeb.GetUserXML((long)nUserId).OuterXml;
+                                regradeUser.InnerXml = myWeb.GetUserXML((long)nUserId).OuterXml;
                                 foreach (XmlElement msgNode in base.Instance.SelectNodes("RegradeUser/emailer/oBodyXML/Items/Message"))
                                 {
                                     if ((msgNode.GetAttribute("id") ?? "") == (messageId ?? ""))
@@ -12605,7 +12615,7 @@ namespace Protean
 
                                 regradeUser.AppendChild(base.Instance.SelectSingleNode("RegradeUser/emailer"));
                                 base.LoadInstance(existingInstance);
-                                this.myWeb.moSession[InstanceSessionName.ToString()] = base.Instance;
+                                myWeb.moSession[InstanceSessionName.ToString()] = base.Instance;
                             }
                             else
                             {
@@ -12613,7 +12623,7 @@ namespace Protean
                             }
                         }
 
-                        this.moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = base.Instance.InnerXml;
+                        moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = base.Instance.InnerXml;
 
                         if (base.isSubmitted())
                         {
@@ -12639,7 +12649,7 @@ namespace Protean
                                 Cms.dbHelper argodbHelper = null;
                                 oMsg.emailer((XmlElement)base.Instance.SelectSingleNode("RegradeUser"), base.Instance.SelectSingleNode("RegradeUser/emailer/xsltPath").InnerText, base.Instance.SelectSingleNode("RegradeUser/emailer/fromName").InnerText, base.Instance.SelectSingleNode("RegradeUser/emailer/fromEmail").InnerText, base.Instance.SelectSingleNode("RegradeUser/User/Email").InnerText, base.Instance.SelectSingleNode("RegradeUser/emailer/SubjectLine").InnerText, odbHelper: ref argodbHelper);
 
-                                this.myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
+                                myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
 
                             }
                         }
@@ -12648,11 +12658,11 @@ namespace Protean
                             // we have clicked a trigger so we must update the instance
                             base.updateInstanceFromRequest();
                             // lets save the instance
-                            this.goSession[InstanceSessionName.ToString()] = base.Instance;
+                            goSession[InstanceSessionName.ToString()] = base.Instance;
                         }
                         else
                         {
-                            this.goSession[InstanceSessionName.ToString()] = base.Instance;
+                            goSession[InstanceSessionName.ToString()] = base.Instance;
                         }
 
                         // we populate the values onto the form.
@@ -12663,8 +12673,8 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        this.myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
+                        myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -12676,12 +12686,12 @@ namespace Protean
                     object InstanceSessionName = "tempInstance_alert" + nUserId.ToString();
                     try
                     {
-                        this.myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
+                        myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
                         base.NewFrm(Conversions.ToString(FormTitle));
                         base.bProcessRepeats = false;
 
                         // We load the xform from a file, it may be in local or in common folders.
-                        base.load(xFormPath, this.myWeb.maCommonFolders);
+                        base.load(xFormPath, myWeb.maCommonFolders);
 
                         // We get the instance
                         if (nUserId > 0)
@@ -12689,7 +12699,7 @@ namespace Protean
                             string sNewGroupNames = string.Empty;
 
                             base.bProcessRepeats = true;
-                            if (this.myWeb.moSession[InstanceSessionName.ToString()] is null)
+                            if (myWeb.moSession[InstanceSessionName.ToString()] is null)
                             {
                                 var existingInstance = base.moXformElmt.OwnerDocument.CreateElement("instance");
                                 XmlElement AlertEmail = (XmlElement)existingInstance.AppendChild(base.moXformElmt.OwnerDocument.CreateElement("AlertEmail"));
@@ -12697,11 +12707,11 @@ namespace Protean
                                 // AlertEmail.SetAttribute("existingGroupName", myWeb.moDbHelper.getNameByKey(dbHelper.objectTypes.Directory, existingGroupId))
                                 AlertEmail.SetAttribute("sendEmail", "1");
 
-                                base.Instance.SelectSingleNode("AlertEmail/Email").InnerText = this.myWeb.moRequest["Email"];
-                                base.Instance.SelectSingleNode("AlertEmail/RecordType").InnerText = this.myWeb.moRequest["RecordType"];
-                                base.Instance.SelectSingleNode("AlertEmail/id").InnerText = this.myWeb.moRequest["id"];
-                                base.Instance.SelectSingleNode("AlertEmail/xFormName").InnerText = this.myWeb.moRequest["xFormName"];
-                                base.Instance.SelectSingleNode("AlertEmail/RecipientName").InnerText = this.myWeb.moRequest["RecipientName"];
+                                base.Instance.SelectSingleNode("AlertEmail/Email").InnerText = myWeb.moRequest["Email"];
+                                base.Instance.SelectSingleNode("AlertEmail/RecordType").InnerText = myWeb.moRequest["RecordType"];
+                                base.Instance.SelectSingleNode("AlertEmail/id").InnerText = myWeb.moRequest["id"];
+                                base.Instance.SelectSingleNode("AlertEmail/xFormName").InnerText = myWeb.moRequest["xFormName"];
+                                base.Instance.SelectSingleNode("AlertEmail/RecipientName").InnerText = myWeb.moRequest["RecipientName"];
                                 AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/Email"));
                                 AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/RecordType"));
                                 AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/id"));
@@ -12710,15 +12720,15 @@ namespace Protean
 
                                 AlertEmail.AppendChild(base.Instance.SelectSingleNode("AlertEmail/emailer"));
                                 base.LoadInstance(existingInstance);
-                                this.myWeb.moSession[InstanceSessionName.ToString()] = base.Instance;
+                                myWeb.moSession[InstanceSessionName.ToString()] = base.Instance;
                             }
                             else
                             {
-                                base.LoadInstance(this.myWeb.moSession["tempInstance"].ToString());
+                                base.LoadInstance(myWeb.moSession["tempInstance"].ToString());
                             }
                         }
 
-                        this.moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = base.Instance.InnerXml;
+                        moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = base.Instance.InnerXml;
 
                         if (base.isSubmitted())
                         {
@@ -12734,7 +12744,7 @@ namespace Protean
                                 oMsg.emailer((XmlElement)base.Instance.SelectSingleNode("AlertEmail"), base.Instance.SelectSingleNode("AlertEmail/emailer/xsltPath").InnerText, base.Instance.SelectSingleNode("AlertEmail/emailer/fromName").InnerText, moMailConfig["FromEmail"], base.Instance.SelectSingleNode("AlertEmail/Email").InnerText, base.Instance.SelectSingleNode("AlertEmail/emailer/SubjectLine").InnerText, odbHelper: ref argodbHelper);
                                 // myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
 
-                                this.myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
+                                myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
 
                             }
                         }
@@ -12743,11 +12753,11 @@ namespace Protean
                             // we have clicked a trigger so we must update the instance
                             base.updateInstanceFromRequest();
                             // lets save the instance
-                            this.goSession[InstanceSessionName.ToString()] = base.Instance;
+                            goSession[InstanceSessionName.ToString()] = base.Instance;
                         }
                         else
                         {
-                            this.goSession[InstanceSessionName.ToString()] = base.Instance;
+                            goSession[InstanceSessionName.ToString()] = base.Instance;
                         }
 
                         // we populate the values onto the form.
@@ -12758,11 +12768,150 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        this.myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
+                        myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
+
+                public XmlElement xFrmAlertEmail(string messageType, XmlElement PayloadData, string xFormPath, string subject, string senderName, string senderEmail, string recipientName, string recipientEmail, string ccName, string ccEmail, string bccName, string bccEmail, string emailContentXsltPath, Boolean autosend)
+                {
+                    string cProcessInfo = "";
+                    object FormTitle = "AlertEmail User";
+                    try
+                    {
+
+                        base.NewFrm(Conversions.ToString(FormTitle));
+                        base.bProcessRepeats = false;
+
+                        // We load the xform from a file, it may be in local or in common folders.
+                        base.load(xFormPath, myWeb.maCommonFolders);
+
+                        string sNewGroupNames = string.Empty;
+
+                        base.bProcessRepeats = true;
+
+                        XmlElement payloadXml = base.moXformElmt.OwnerDocument.CreateElement("AlertData");
+                        payloadXml.InnerXml = PayloadData.OuterXml;
+
+                        base.Instance.SetAttribute("messageType", messageType);
+
+                        base.Instance.SelectSingleNode("emailer/recipientEmail").InnerText = recipientEmail;
+                        base.Instance.SelectSingleNode("emailer/recipientName").InnerText = recipientName;
+
+                        base.Instance.SelectSingleNode("emailer/oBodyXML/Items/Message").InnerText = messageType;
+                        base.Instance.SelectSingleNode("emailer/fromName").InnerText = senderName;
+                        base.Instance.SelectSingleNode("emailer/fromEmail").InnerText = senderEmail;
+                        base.Instance.SelectSingleNode("emailer/ccRecipientName").InnerText = ccName;
+                        base.Instance.SelectSingleNode("emailer/ccRecipient").InnerText = ccEmail;
+                        base.Instance.SelectSingleNode("emailer/bccRecipientName").InnerText = bccName;
+                        base.Instance.SelectSingleNode("emailer/bccRecipient").InnerText = bccEmail;
+                        base.Instance.AppendChild(payloadXml.FirstChild);
+
+                        // Process the XSLT for the email content
+                        XmlDocument emailContent = TransformEmailContent(myWeb.goServer.MapPath(emailContentXsltPath), base.Instance);
+
+                        // Insert the transformed content into the XML
+                        base.Instance.SelectSingleNode("emailer/oBodyXML/Items/Message").InnerXml = emailContent.DocumentElement.InnerXml.Replace(" xmlns=\"http://www.w3.org/1999/xhtml\"", "");
+
+                        if (base.Instance.SelectSingleNode("emailer/oBodyXML/Items/Message/div/@subject") != null)
+                        {
+                            subject = base.Instance.SelectSingleNode("emailer/oBodyXML/Items/Message/div/@subject").InnerText;
+                        }
+                        base.Instance.SelectSingleNode("emailer/SubjectLine").InnerText = subject;
+
+                        if (base.isSubmitted() || autosend)
+                        {
+                            // MyBase.updateInstanceFromRequest()
+                            base.validate();
+                            if (base.valid)
+                            {
+                                NameValueCollection moMailConfig = (NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
+
+                                // Send Email
+                                var oMsg = new Protean.Messaging();
+                                string xsltPath = base.Instance.SelectSingleNode("emailer/xsltPath").InnerText;
+                                string fromName = base.Instance.SelectSingleNode("emailer/fromName").InnerText;
+                                string fromEmail = base.Instance.SelectSingleNode("emailer/fromEmail").InnerText;
+                                string email = base.Instance.SelectSingleNode("emailer/recipientEmail").InnerText;
+                                recipientName = base.Instance.SelectSingleNode("emailer/recipientEmail").InnerText;
+                                string subjectLine = base.Instance.SelectSingleNode("emailer/SubjectLine").InnerText;
+                                string ccName1 = base.Instance.SelectSingleNode("emailer/ccRecipientName").InnerText;
+                                string ccEmail1 = base.Instance.SelectSingleNode("emailer/ccRecipient").InnerText;
+                                string bccEmail1 = base.Instance.SelectSingleNode("emailer/bccRecipient").InnerText;
+                                XmlElement BodyElmt = (XmlElement)base.Instance.SelectSingleNode("emailer/oBodyXML");
+
+                                BodyElmt.SetAttribute("messageType", messageType);
+                                BodyElmt.SetAttribute("subjectId", PayloadData.GetAttribute("id"));
+                                BodyElmt.SetAttribute("subjectLine", subjectLine);
+
+                                Cms.dbHelper argodbHelper = null;
+                                oMsg.emailer(BodyElmt, xsltPath, fromName, fromEmail, email, subjectLine, odbHelper: ref argodbHelper, "Message Sent", "Message Failed", recipientName, ccEmail1, bccEmail1);
+
+                                if (myWeb.moSession["lastPage"] != null)
+                                {
+                                    myWeb.msRedirectOnEnd = myWeb.moSession["lastPage"].ToString();
+                                }
+
+
+
+                            }
+                        }
+
+                        // we populate the values onto the form.
+                        base.addValues();
+
+                        return base.moXformElmt;
+                    }
+
+                    catch (Exception ex)
+                    {
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmAlertEmail", ex, "", cProcessInfo, gbDebug);
+                        return null;
+                    }
+                }
+
+                private XmlDocument TransformEmailContent(string styleFile, XmlElement instance)
+                {
+                    TextWriter sWriter = new StringWriter();
+                    Protean.XmlHelper.Transform oTransform = new Protean.XmlHelper.Transform();
+                    XmlDocument xContent = new XmlDocument();
+                    try
+                    {
+
+                        oTransform.XSLFile = styleFile;
+                        oTransform.Compiled = false;
+                        XmlDocument ourDoc = new XmlDocument();
+                        ourDoc.LoadXml(instance.OuterXml);
+                        sWriter = new StringWriter();
+                        oTransform.Process(ourDoc, ref sWriter);
+
+
+                        xContent.LoadXml(sWriter.ToString());
+                        return xContent;
+                    }
+                    catch (Exception ex)
+                    {
+                        if (oTransform.transformException != null)
+                        {
+                            xContent.LoadXml("<body><h1>" + oTransform.transformException.Message + "</h1><p>" + oTransform.transformException.StackTrace + "</p></body>");
+                            return xContent;
+                        }
+                        else
+                        {
+                            stdTools.returnException(ref myWeb.msException, mcModuleName, "TransformEmailContent", ex, "", "", gbDebug);
+                            return null;
+                        }
+                    }
+                    finally
+                    {
+                        sWriter = null;
+                        oTransform = null;
+
+                    }
+
+                }
+
                 public XmlElement xFrmRequestSettlement(int nOrderId, bool bForceSend = false)
                 {
                     string cProcessInfo = "";
@@ -12771,25 +12920,25 @@ namespace Protean
                     {
 
 
-                        this.myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
+                        myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
                         base.NewFrm("Request Settlement");
                         base.bProcessRepeats = false;
 
                         // We load the xform from a file, it may be in local or in common folders.
-                        base.load("/xforms/cart/requestSettlement.xml", this.myWeb.maCommonFolders);
+                        base.load("/xforms/cart/requestSettlement.xml", myWeb.maCommonFolders);
 
                         // We get the instance
                         if (nOrderId > 0)
                         {
 
                             base.bProcessRepeats = true;
-                            if (this.myWeb.moSession[InstanceSessionName.ToString()] is null)
+                            if (myWeb.moSession[InstanceSessionName.ToString()] is null)
                             {
                                 var existingInstance = base.moXformElmt.OwnerDocument.CreateElement("instance");
                                 Cms.Cart oCart;
-                                oCart = new Cms.Cart(ref this.myWeb);
+                                oCart = new Cms.Cart(ref myWeb);
                                 // Get Cart Xml
-                                var oCartListElmt = this.moPageXML.CreateElement("Order");
+                                var oCartListElmt = moPageXML.CreateElement("Order");
                                 oCart.GetCart(ref oCartListElmt, nOrderId);
                                 existingInstance.InnerXml = oCartListElmt.OuterXml;
 
@@ -12819,16 +12968,16 @@ namespace Protean
                                 existingInstance.InsertBefore(emailerNode.CloneNode(true), existingInstance.FirstChild);
 
                                 base.LoadInstance(existingInstance);
-                                this.myWeb.moSession[InstanceSessionName.ToString()] = base.Instance;
+                                myWeb.moSession[InstanceSessionName.ToString()] = base.Instance;
                             }
 
                             else
                             {
-                                base.LoadInstance(this.myWeb.moSession["tempInstance"].ToString());
+                                base.LoadInstance(myWeb.moSession["tempInstance"].ToString());
                             }
                         }
 
-                        this.moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = base.Instance.InnerXml;
+                        moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = base.Instance.InnerXml;
 
                         if (base.isSubmitted() | bForceSend)
                         {
@@ -12842,8 +12991,8 @@ namespace Protean
                                 var oMsg = new Protean.Messaging();
                                 Cms.dbHelper argodbHelper = null;
                                 oMsg.emailer((XmlElement)base.Instance.SelectSingleNode("emailer/oBodyXML"), base.Instance.SelectSingleNode("emailer/xsltPath").InnerText, base.Instance.SelectSingleNode("emailer/fromName").InnerText, base.Instance.SelectSingleNode("emailer/fromEmail").InnerText, EmailTo, base.Instance.SelectSingleNode("emailer/SubjectLine").InnerText, odbHelper: ref argodbHelper);
-                                this.myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
-                                this.myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.Email, this.mnUserId, 0L, 0L, (long)nOrderId, "Payment Reminder Sent - " + DateTime.Now.ToString());
+                                myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
+                                myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.Email, mnUserId, 0L, 0L, (long)nOrderId, "Payment Reminder Sent - " + DateTime.Now.ToString());
 
                                 var oFrmElmt = base.moXformElmt;
                                 //XmlNode argoNode = (XmlNode)oFrmElmt;
@@ -12857,11 +13006,11 @@ namespace Protean
                             // we have clicked a trigger so we must update the instance
                             base.updateInstanceFromRequest();
                             // lets save the instance
-                            this.goSession[InstanceSessionName.ToString()] = base.Instance;
+                            goSession[InstanceSessionName.ToString()] = base.Instance;
                         }
                         else
                         {
-                            this.goSession[InstanceSessionName.ToString()] = base.Instance;
+                            goSession[InstanceSessionName.ToString()] = base.Instance;
                         }
 
                         // we populate the values onto the form.
@@ -12872,8 +13021,8 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        this.myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
-                        stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
+                        myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -12929,7 +13078,7 @@ namespace Protean
                     // Set the Web context variables
                     myWeb = aWeb;
                     _request = myWeb.moRequest;
-                    this.moPageXML = myWeb.moPageXml;
+                    moPageXML = myWeb.moPageXml;
 
                     // Create the form
                     CreateMasterForm(contentId);
@@ -12984,8 +13133,8 @@ namespace Protean
                     try
                     {
                         _masterXform = new Protean.xForm(ref myWeb.msException);
-                        _masterXform.moPageXML = this.moPageXML;
-                        _masterInstance = this.moPageXML.CreateElement("instance");
+                        _masterXform.moPageXML = moPageXML;
+                        _masterInstance = moPageXML.CreateElement("instance");
 
                         // If content id has been set, then get the instance
                         if (contentId > 0L)
@@ -13012,7 +13161,7 @@ namespace Protean
                         foreach (string schemaType in schemaPreferenceList)
                         {
 
-                            if (this.load(FORMPATH + "/" + schemaType + "." + controlType + ".xml", myWeb.maCommonFolders))
+                            if (load(FORMPATH + "/" + schemaType + "." + controlType + ".xml", myWeb.maCommonFolders))
                             {
                                 //success = true;
                                 break;
@@ -13053,7 +13202,7 @@ namespace Protean
                         cMode = Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(cRef), "Add", "Edit"));
 
                         // Create the form that we're going to populate for updating this xform control
-                        this.NewFrm("EditGroup");
+                        NewFrm("EditGroup");
 
                         // Load in the form from a file
                         loadControlForm("group");
@@ -13062,42 +13211,42 @@ namespace Protean
                         if (!string.IsNullOrEmpty(cRef))
                         {
                             oElmt = (XmlElement)_masterXform.moXformElmt.SelectSingleNode("descendant-or-self::*[@ref='" + cRef + "' or @bind='" + cRef + "']");
-                            this.LoadInstanceFromInnerXml(oElmt.OuterXml);
+                            LoadInstanceFromInnerXml(oElmt.OuterXml);
                         }
 
-                        if (this.isSubmitted())
+                        if (isSubmitted())
                         {
-                            this.updateInstanceFromRequest();
-                            this.validate();
-                            if (this.valid)
+                            updateInstanceFromRequest();
+                            validate();
+                            if (valid)
                             {
                                 if (!string.IsNullOrEmpty(cRef))
                                 {
                                     // drop the instance back into the full xform
                                     var oNode = _masterXform.moXformElmt.SelectSingleNode("descendant-or-self::*[@ref='" + cRef + "' or @bind='" + cRef + "']");
-                                    oNode.ParentNode.ReplaceChild(this.Instance.FirstChild, oNode);
+                                    oNode.ParentNode.ReplaceChild(Instance.FirstChild, oNode);
                                 }
                                 else
                                 {
                                     // add new
                                     var oNode = _masterXform.moXformElmt.SelectSingleNode("descendant-or-self::*[@ref='" + cParRef + "' or @bind='" + cParRef + "']");
-                                    newRef = _masterXform.getNewRef(this.goRequest["cRef"]);
-                                    oElmt = (XmlElement)this.Instance.FirstChild;
+                                    newRef = _masterXform.getNewRef(goRequest["cRef"]);
+                                    oElmt = (XmlElement)Instance.FirstChild;
                                     oElmt.SetAttribute("ref", newRef);
-                                    oNode.AppendChild(this.Instance.FirstChild);
+                                    oNode.AppendChild(Instance.FirstChild);
                                 }
                             }
                             else
                             {
-                                this.addValues();
+                                addValues();
                             }
                         }
                         else
                         {
-                            this.addValues();
+                            addValues();
                         }
 
-                        return this.moXformElmt;
+                        return moXformElmt;
                     }
 
                     catch (Exception ex)
@@ -13131,21 +13280,21 @@ namespace Protean
                         }
 
                         // Create the form
-                        this.NewFrm("EditSelect");
-                        this.submission("EditInput", "", "post");
-                        oFrmElmt = this.addGroup(ref this.moXformElmt, "EditGroup", "", "Delete Element");
+                        NewFrm("EditSelect");
+                        submission("EditInput", "", "post");
+                        oFrmElmt = addGroup(ref moXformElmt, "EditGroup", "", "Delete Element");
                         //XmlNode argoNode = oFrmElmt;
-                        this.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Are you sure you want to delete this element - \"" + oNode.SelectSingleNode("label").InnerText + "\"");
+                        addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Are you sure you want to delete this element - \"" + oNode.SelectSingleNode("label").InnerText + "\"");
                         //oFrmElmt = (XmlElement)argoNode;
-                        this.addSubmit(ref oFrmElmt, "", "Delete Element");
-                        this.LoadInstanceFromInnerXml("<delete/>");
+                        addSubmit(ref oFrmElmt, "", "Delete Element");
+                        LoadInstanceFromInnerXml("<delete/>");
 
                         // Handle the submission
-                        if (this.isSubmitted())
+                        if (isSubmitted())
                         {
-                            this.updateInstanceFromRequest();
-                            this.validate();
-                            if (this.valid)
+                            updateInstanceFromRequest();
+                            validate();
+                            if (valid)
                             {
 
                                 // Delete the node and/or bind
@@ -13154,15 +13303,15 @@ namespace Protean
 
                             else
                             {
-                                this.addValues();
+                                addValues();
                             }
                         }
                         else
                         {
-                            this.addValues();
+                            addValues();
                         }
 
-                        return this.moXformElmt;
+                        return moXformElmt;
                     }
 
                     catch (Exception ex)
@@ -13313,7 +13462,7 @@ namespace Protean
                         }
 
                         // Create the form that we're going to populate for updating this xform control
-                        this.NewFrm("EditSelect");
+                        NewFrm("EditSelect");
 
                         // Load in the form from a file
                         loadControlForm("item");
@@ -13322,10 +13471,10 @@ namespace Protean
                         if (nItemIndex != 0L)
                         {
 
-                            this.Instance.AppendChild(oElmt.CloneNode(true));
+                            Instance.AppendChild(oElmt.CloneNode(true));
 
                             // add weighting and correct flag to the item node from answer
-                            oElmt = (XmlElement)this.Instance.FirstChild;
+                            oElmt = (XmlElement)Instance.FirstChild;
                             sValue = oElmt.SelectSingleNode("value").InnerText;
                         }
 
@@ -13341,43 +13490,43 @@ namespace Protean
                                     nCount = Conversions.ToInteger(oNode.SelectSingleNode("value").InnerText);
                                 }
                             }
-                            this.LoadInstanceFromInnerXml("<item><label/><value>" + (nCount + 1L) + "</value></item>");
+                            LoadInstanceFromInnerXml("<item><label/><value>" + (nCount + 1L) + "</value></item>");
                         }
 
-                        if (this.isSubmitted())
+                        if (isSubmitted())
                         {
-                            this.updateInstanceFromRequest();
-                            this.validate();
-                            if (this.valid)
+                            updateInstanceFromRequest();
+                            validate();
+                            if (valid)
                             {
 
-                                sValue = this.Instance.SelectSingleNode("item/value").InnerText;
+                                sValue = Instance.SelectSingleNode("item/value").InnerText;
 
                                 if (nItemIndex != 0L)
                                 {
                                     // drop the instance back into the full xform
                                     oNode = _masterXform.moXformElmt.SelectSingleNode("group/descendant-or-self::*[@ref='" + cRef + "' or @bind='" + cRef + "']/item[" + nItemIndex + "]");
-                                    oNode.ParentNode.ReplaceChild(this.Instance.FirstChild, oNode);
+                                    oNode.ParentNode.ReplaceChild(Instance.FirstChild, oNode);
                                 }
                                 else
                                 {
                                     // add new
                                     oNode = _masterXform.moXformElmt.SelectSingleNode("group/descendant-or-self::*[@ref='" + cRef + "' or @bind='" + cRef + "']");
-                                    oNode.AppendChild(this.Instance.FirstChild);
+                                    oNode.AppendChild(Instance.FirstChild);
                                 }
                                 oNode = null;
                             }
                             else
                             {
-                                this.addValues();
+                                addValues();
                             }
                         }
                         else
                         {
-                            this.addValues();
+                            addValues();
                         }
 
-                        return this.moXformElmt;
+                        return moXformElmt;
                     }
 
                     catch (Exception ex)
@@ -13413,7 +13562,7 @@ namespace Protean
                                 {
 
                                     // Create a new form
-                                    this.NewFrm("EditSelect");
+                                    NewFrm("EditSelect");
 
                                     // Load in the form from a file
                                     loadControlForm("select1");
@@ -13424,7 +13573,7 @@ namespace Protean
                                 {
 
                                     // Create a new form
-                                    this.NewFrm("EditSelect");
+                                    NewFrm("EditSelect");
 
                                     // Load in the form from a file
                                     loadControlForm("select");
@@ -13435,7 +13584,7 @@ namespace Protean
                                 {
 
                                     // Create a new form
-                                    this.NewFrm("EditSelect");
+                                    NewFrm("EditSelect");
 
                                     // Load in the form from a file
                                     loadControlForm("input");
@@ -13446,7 +13595,7 @@ namespace Protean
                                 {
 
                                     // Create a new form
-                                    this.NewFrm("EditSelect");
+                                    NewFrm("EditSelect");
 
                                     // Load in the form from a file
                                     loadControlForm("textarea");
@@ -13459,16 +13608,16 @@ namespace Protean
                         if (!string.IsNullOrEmpty(cRef))
                         {
                             oElmt = (XmlElement)_masterXform.moXformElmt.SelectSingleNode("group/descendant-or-self::*[@ref='" + cRef + "' or @bind='" + cRef + "']");
-                            this.LoadInstanceFromInnerXml(oElmt.OuterXml);
+                            LoadInstanceFromInnerXml(oElmt.OuterXml);
                         }
 
 
-                        if (this.isSubmitted())
+                        if (isSubmitted())
                         {
-                            this.updateInstanceFromRequest();
-                            this.validate();
+                            updateInstanceFromRequest();
+                            validate();
 
-                            if (this.valid)
+                            if (valid)
                             {
 
                                 if (string.IsNullOrEmpty(cRef))
@@ -13489,7 +13638,7 @@ namespace Protean
                                     case "select":
                                         {
                                             // remove any empty item nodes
-                                            foreach (XmlNode currentONode in this.Instance.FirstChild.SelectNodes("item"))
+                                            foreach (XmlNode currentONode in Instance.FirstChild.SelectNodes("item"))
                                             {
                                                 oNode = currentONode;
                                                 if (oNode.FirstChild is null)
@@ -13511,13 +13660,13 @@ namespace Protean
                                 {
                                     // replace existing
                                     oNode = _masterXform.moXformElmt.SelectSingleNode("group/descendant-or-self::*[@ref='" + cRef + "' or @bind='" + cRef + "']");
-                                    oNode.ParentNode.ReplaceChild(this.Instance.FirstChild, oNode);
+                                    oNode.ParentNode.ReplaceChild(Instance.FirstChild, oNode);
                                 }
                                 else
                                 {
                                     // add new
                                     oNode = _masterXform.moXformElmt.SelectSingleNode("group/descendant-or-self::*[@ref='" + cParRef + "' or @bind='" + cParRef + "']");
-                                    oElmt = (XmlElement)this.Instance.FirstChild;
+                                    oElmt = (XmlElement)Instance.FirstChild;
 
                                     // TODO: XFormEditor (Generic) how do we identify the node xpath to create the bind.
                                     // This is just for the EonicWeb Generic xformeditor function
@@ -13527,21 +13676,21 @@ namespace Protean
                                     // oElmt.SetAttribute("bind", newRef)
                                     // _masterXform.addBind(newRef, cBind)
 
-                                    oNode.AppendChild(this.Instance.FirstChild);
+                                    oNode.AppendChild(Instance.FirstChild);
                                 }
                             }
 
                             else
                             {
-                                this.addValues();
+                                addValues();
                             }
                         }
                         else
                         {
-                            this.addValues();
+                            addValues();
                         }
 
-                        return this.moXformElmt;
+                        return moXformElmt;
                     }
 
                     catch (Exception ex)

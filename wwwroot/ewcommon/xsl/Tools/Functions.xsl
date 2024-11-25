@@ -1215,6 +1215,7 @@
 
     <xsl:choose>
       <xsl:when test="/Page/ContentDetail/Content">
+		 
         <xsl:apply-templates select="/Page/ContentDetail/Content" mode="contentDetailJS"/>
         <xsl:apply-templates select="/Page/Contents/Content[@type='FreeCookieConsent']" mode="contentJS"/>
       </xsl:when>
@@ -10389,6 +10390,7 @@
             Returns a string. The First argument is the section from within the web.config.  The Second argument 
             is the key attribute name from the add node that you want the value of -->
 
+  
   <xsl:template name="getSettings">
     <xsl:param name="sectionName"/>
     <xsl:param name="valueName" />

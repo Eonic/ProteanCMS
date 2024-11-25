@@ -1513,13 +1513,7 @@ namespace Protean
                     statuses.Add(new FilesStatus(fullName.Replace(" ", "-"), Conversions.ToInteger(file.ContentLength)));
                     context.Server.MapPath("/");
                     // We will add one node in ReviewFeedback.xml form and use it instead of config key = context.Request.Form("reviewimagepath")
-                    if (!string.IsNullOrEmpty(goConfig["ReviewImageBasePath"]) && !string.IsNullOrEmpty(goConfig["ReviewImageBasePath"]))
-                    {
-                        cleanUploadedPaths = "/" + mcStartFolder.Replace(goConfig["ReviewImageBasePath"], "").Replace(@"\", "/") + cfileName;
-                    }
-                    else
-                    {
-                        if (!string.IsNullOrEmpty(context.Request.Form["cImageBasePath"]) && !string.IsNullOrEmpty(context.Request.Form["cImageBasePath"]))
+                      if (!string.IsNullOrEmpty(context.Request.Form["cImageBasePath"]) && !string.IsNullOrEmpty(context.Request.Form["cImageBasePath"]))
                         {
 
                             cleanUploadedPaths = "/" + mcStartFolder.Replace(context.Request.Form["cImageBasePath"], "").Replace(@"\", "/") + cfileName;
@@ -1529,7 +1523,7 @@ namespace Protean
                         {
                             cleanUploadedPaths = "/" + mcStartFolder.Replace(context.Server.MapPath("/"), "").Replace(@"\", "/") + cfileName;
                         }
-                    }
+                    
                 }
 
                 catch (Exception)

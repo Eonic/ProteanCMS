@@ -162,21 +162,27 @@ header {
         animation-duration: 0.3s;
 
         .dropdown-item {
+            color: color-contrast($dropdown-bg);
+
             &:hover,
             &:active,
             &.active {
                 background: none;
+                opacity: 0.8;
             }
 
             &.active,
             &.on,
             &:focus {
-                color: $dropdown-link-active-color;
+                //color: $dropdown-link-active-color;
+                opacity: 0.8;
             }
 
             &:first-child {
+                color: color-contrast($dropdown-bg);
+
                 &.on {
-                    color: $navbar-light-color;
+                    color: color-contrast($dropdown-bg);
                 }
             }
         }
@@ -247,7 +253,7 @@ header {
 
         @include media-breakpoint-up($nav-breakpoint) {
             .dropdown-menu > li > a {
-                font-weight: 600;
+                font-weight: 300;
             }
 
             position: static;
@@ -267,15 +273,16 @@ header {
                 clear: both;
 
                 > a {
-                    color: $primary;
-                    border-bottom: 1px solid $primary;
+                    color: color-contrast($dropdown-bg);
+                    border-bottom: 2px solid color-contrast($dropdown-bg);
                     margin-bottom: 0.6rem;
                     padding-bottom: 0.5rem;
                     padding-left: 0;
                     padding-right: 0;
-                    margin-left: 1.5rem;
-                    margin-right: 1.5rem;
+                    margin-left: $dropdown-item-padding-x;
+                    margin-right: $dropdown-item-padding-x;
                     width: calc(100% - 3rem);
+                    font-weight: 600;
                 }
             }
         }
@@ -499,7 +506,7 @@ header {
 }
 /*############### INFO NAV #################*/
 .info-nav {
-    $info-nav-spacing: 0.7rem;
+    
     margin: 0 ($header-spacing/2) - $info-nav-spacing;
 
     ul {
@@ -515,6 +522,8 @@ header {
 /*############### SIGN IN #################*/
 .login-btn {
     white-space: nowrap;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
 
     &:hover {
         color: $nav-link-hover-color;
@@ -633,13 +642,13 @@ header {
 
 .search-btn {
     color: $navbar-light-color;
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-left: $header-spacing;
+    padding-right: $header-spacing;
 
     &:hover,
     &:focus {
-        padding-left: 1rem;
-        padding-right: 1rem;
+        padding-left: $header-spacing;
+        padding-right: $header-spacing;
         color: $nav-link-hover-color;
     }
 }
@@ -652,6 +661,10 @@ header {
         justify-content: flex-end;
     }
 
+    @include media-breakpoint-up($nav-breakpoint) {
+        padding-left: 0.5rem;
+    }
+
     a {
         @extend .btn;
         @extend .#{$header-btn-style};
@@ -660,6 +673,7 @@ header {
         display: flex;
         align-items: center;
         margin: 1px;
+        font-weight:600;
     }
 }
 

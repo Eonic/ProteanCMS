@@ -246,8 +246,8 @@
       <HintPath>..\..\packages\System.Text.Encodings.Web.8.0.0\lib\net462\System.Text.Encodings.Web.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Text.Json, Version=8.0.0.4, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Text.Json.8.0.4\lib\net462\System.Text.Json.dll</HintPath>
+    <Reference Include="System.Text.Json, Version=8.0.0.5, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Text.Json.8.0.5\lib\net462\System.Text.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
@@ -284,6 +284,9 @@
     <Compile Include="admin\Admin.Redirects.cs" />
     <Compile Include="admin\AdminXforms.cs" />
     <Compile Include="api\rest.cs" />
+    <Compile Include="api\Services.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="api\soap.cs" />
     <Compile Include="core\DBImport.cs" />
     <Compile Include="providers\Cache.BaseProvider.cs" />
@@ -302,9 +305,6 @@
     <Compile Include="content\Content.JSONActions.cs" />
     <Compile Include="content\Modules.cs" />
     <Compile Include="core\Base.cs" />
-    <Compile Include="core\Services.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="features\cart\Cart.cs" />
     <Compile Include="features\cart\Cart.JSONActions.cs" />
     <Compile Include="features\cart\Cart.Modules.cs" />
@@ -334,6 +334,7 @@
     <Compile Include="providers\filters\PageFilter.cs" />
     <Compile Include="providers\Payment.BaseProvider.cs" />
     <Compile Include="providers\filters\PriceFilter.cs" />
+    <None Include="examples\modules\exampleModule\exampleCss.scss" />
     <None Include="providers\Streaming.BaseProvider.cs" />
     <Compile Include="setup\Setup.cs" />
     <Compile Include="setup\Tests.cs" />
@@ -407,6 +408,10 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <Content Include="examples\modules\exampleModule\exampleManifest.xml" />
+    <Content Include="examples\modules\exampleModule\exampleContentType.xml" />
+    <Content Include="examples\modules\exampleModule\exampleModuleList.xml" />
+    <Content Include="examples\modules\exampleModule\exampleModuleXsl.xsl" />
     <Content Include="tools\Encryption.cs" />
     <Content Include="tools\Object.cs" />
   </ItemGroup>

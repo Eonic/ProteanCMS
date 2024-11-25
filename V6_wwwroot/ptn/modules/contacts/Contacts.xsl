@@ -315,7 +315,7 @@
 						<xsl:apply-templates select="Profile/node()" mode="cleanXhtml"/>
 					</p>
 				</xsl:if>
-				<a href="{$parentURL}" class="btn btn-sm btn-default">
+				<a href="{$parentURL}" class="btn btn-sm btn-custom">
 					<xsl:choose>
 						<xsl:when test="@morelinktext!=''">
 							<xsl:value-of select="@morelinktext"/>

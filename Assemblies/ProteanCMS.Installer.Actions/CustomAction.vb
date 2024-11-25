@@ -1,16 +1,8 @@
-﻿Imports System.ComponentModel
-Imports System.Configuration.Install
-Imports System.Web
-Imports System.Web.Configuration
-Imports System.Configuration
-Imports System.Xml
-Imports Microsoft.Web.Administration
-Imports System.windows.Forms
-Imports System.Web.Management
+﻿Imports System.Xml
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.1.21.0"
+    Public Shared ewAssemblyVersion As String = "6.1.24.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.1.0.0"
     Public Shared bundleAssemblyVersion As String = "1.14.1.0"
     Public Shared bundleLessAssemblyVersion As String = "1.14.0.0"
@@ -54,6 +46,11 @@ Public Class CustomActions
     Public Shared AngleSharpVersion As String = "1.1.2.0"
     Public Shared PreMailerVersion As String = "2.6.0.0"
     Public Shared QRCoderVersion As String = "1.6.0.0"
+
+    Public Shared iTextSharpVersion As String = "3.4.21.0"
+    Public Shared SkiaSharpVersion As String = "2.88.0.0"
+
+
     'do not use as no SNK - Public Shared ImazenWebPVersion As String = "10.0.1.0"
     Public Shared installFolder As String = "C:\Program Files\Eonic Digital LLP\ProteanCMS into GAC " & ewAssemblyVersion.Trim("0").Trim(".") & " (64bit)"
 
@@ -236,7 +233,7 @@ Public Class CustomActions
                     UpdateAssemblyRef(oAssembliesSect, "Protean.AppStart, Version=" & ptnAppStartAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
                     UpdateAssemblyRef(oAssembliesSect, "TidyHTML5Managed, Version=" & TidyHTML5ManagedAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
                     UpdateAssemblyRef(oAssembliesSect, "ICSharpCode.SharpZipLib, Version=" & SharpZipLibAssemblyVersion & ", Culture=neutral, PublicKeyToken=1b03e6acf1164f73")
-                   ' UpdateAssemblyRef(oAssembliesSect, "Google.Protobuf, Version=" & GoogleProtoBufAssemblyVersion & ", Culture=neutral, PublicKeyToken=a7d26565bac4d604")
+                    ' UpdateAssemblyRef(oAssembliesSect, "Google.Protobuf, Version=" & GoogleProtoBufAssemblyVersion & ", Culture=neutral, PublicKeyToken=a7d26565bac4d604")
                     UpdateAssemblyRef(oAssembliesSect, "Magick.NET.Core, Version=" & MagickNETCoreAssemblyVersion & ", Culture=neutral, PublicKeyToken=2004825badfa91ec")
                     UpdateAssemblyRef(oAssembliesSect, "Magick.NET-Q8-AnyCPU, Version=" & MagickNETAssemblyVersion & ", Culture=neutral, PublicKeyToken=2004825badfa91ec")
                     UpdateAssemblyRef(oAssembliesSect, "System.Buffers, Version=" & SystemBuffersVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
@@ -257,6 +254,8 @@ Public Class CustomActions
                     UpdateAssemblyRef(oAssembliesSect, "System.Text.Encodings.Web, Version=" & SystemTextEncodingsWebVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
                     UpdateAssemblyRef(oAssembliesSect, "System.Numerics.Vectors, Version=" & SystemNumericsVectorsVersion & ", Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
 
+                    UpdateAssemblyRef(oAssembliesSect, "iTextSharp.LGPLv2.Core, Version=" & iTextSharpVersion & ", Culture=neutral, PublicKeyToken=c1e5d94ab6402b0b")
+                    UpdateAssemblyRef(oAssembliesSect, "SkiaSharp, Version=" & SkiaSharpVersion & ", Culture=neutral, PublicKeyToken=0738eb9f132ed756")
 
 
 
@@ -570,6 +569,8 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "System.Text.Encodings.Web", "cc7b13ffcd2ddd51", SystemTextEncodingsWebVersion)
             UpdateDependantAssembly(oSectXml, "System.Numerics.Vectors", "b03f5f7f11d50a3a", SystemNumericsVectorsVersion)
 
+            UpdateDependantAssembly(oSectXml, "iTextSharp.LGPLv2.Core", "c1e5d94ab6402b0b", iTextSharpVersion)
+            UpdateDependantAssembly(oSectXml, "SkiaSharp", "0738eb9f132ed756", SkiaSharpVersion)
 
 
 
@@ -589,69 +590,69 @@ Public Class CustomActions
             'Add the AssetHandler for .Less
             Dim sm As New Microsoft.Web.Administration.ServerManager
 
-                '    Dim appHostConfig As Microsoft.Web.Administration.Configuration = sm.GetApplicationHostConfiguration()
-                'get default config section
-                Dim webDefaultLocationConfig As Microsoft.Web.Administration.Configuration = sm.GetWebConfiguration("")
+            '    Dim appHostConfig As Microsoft.Web.Administration.Configuration = sm.GetApplicationHostConfiguration()
+            'get default config section
+            Dim webDefaultLocationConfig As Microsoft.Web.Administration.Configuration = sm.GetWebConfiguration("")
 
-                If Not webDefaultLocationConfig Is Nothing Then
+            If Not webDefaultLocationConfig Is Nothing Then
 
-                    'Dim handlerSection As Microsoft.Web.Administration.ConfigurationElement = webDefaultLocationConfig.GetSection("system.webServer/handlers")
+                'Dim handlerSection As Microsoft.Web.Administration.ConfigurationElement = webDefaultLocationConfig.GetSection("system.webServer/handlers")
 
-                    'If handlerSection Is Nothing Then
+                'If handlerSection Is Nothing Then
 
-                    '    Dim handlerCollection As Microsoft.Web.Administration.ConfigurationElementCollection = handlerSection.GetCollection()
+                '    Dim handlerCollection As Microsoft.Web.Administration.ConfigurationElementCollection = handlerSection.GetCollection()
 
-                    '    Dim handlerElmt As Microsoft.Web.Administration.ConfigurationElement
-                    '    Dim lessHandlerElmt As Microsoft.Web.Administration.ConfigurationElement = Nothing
+                '    Dim handlerElmt As Microsoft.Web.Administration.ConfigurationElement
+                '    Dim lessHandlerElmt As Microsoft.Web.Administration.ConfigurationElement = Nothing
 
-                    '    For Each handlerElmt In handlerCollection
-                    '        If handlerElmt.GetAttribute("name").Value = "LessAssetHandler" Then
-                    '            lessHandlerElmt = handlerElmt
-                    '        End If
-                    '    Next
-                    '    If lessHandlerElmt Is Nothing Then
-                    '        lessHandlerElmt = handlerCollection.CreateElement("add")
-                    '        lessHandlerElmt.SetAttributeValue("name", "LessAssetHandler")
-                    '        lessHandlerElmt.SetAttributeValue("path", "*.less")
-                    '        lessHandlerElmt.SetAttributeValue("verb", "GET")
-                    '        lessHandlerElmt.SetAttributeValue("resourceType", "Unspecified")
-                    '        lessHandlerElmt.SetAttributeValue("requireAccess", "Script")
-                    '        lessHandlerElmt.SetAttributeValue("preCondition", "integratedMode")
-                    '        handlerCollection.AddAt(0, lessHandlerElmt)
-                    '    End If
+                '    For Each handlerElmt In handlerCollection
+                '        If handlerElmt.GetAttribute("name").Value = "LessAssetHandler" Then
+                '            lessHandlerElmt = handlerElmt
+                '        End If
+                '    Next
+                '    If lessHandlerElmt Is Nothing Then
+                '        lessHandlerElmt = handlerCollection.CreateElement("add")
+                '        lessHandlerElmt.SetAttributeValue("name", "LessAssetHandler")
+                '        lessHandlerElmt.SetAttributeValue("path", "*.less")
+                '        lessHandlerElmt.SetAttributeValue("verb", "GET")
+                '        lessHandlerElmt.SetAttributeValue("resourceType", "Unspecified")
+                '        lessHandlerElmt.SetAttributeValue("requireAccess", "Script")
+                '        lessHandlerElmt.SetAttributeValue("preCondition", "integratedMode")
+                '        handlerCollection.AddAt(0, lessHandlerElmt)
+                '    End If
 
-                    '    lessHandlerElmt.SetAttributeValue("type", "BundleTransformer.Less.HttpHandlers.LessAssetHandler, BundleTransformer.Less, Version=" & bundleLessAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
+                '    lessHandlerElmt.SetAttributeValue("type", "BundleTransformer.Less.HttpHandlers.LessAssetHandler, BundleTransformer.Less, Version=" & bundleLessAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
 
-                    '    sm.CommitChanges()
-                    '    sm = Nothing
-                    'Else
-                    '    Try
-                    '        System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS/setting-up-less?error=system.webServer/handlers-is-missing")
-                    '    Catch ex As Exception
-                    '        'do nuffing
-                    '    End Try
-                    'End If
+                '    sm.CommitChanges()
+                '    sm = Nothing
+                'Else
+                '    Try
+                '        System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS/setting-up-less?error=system.webServer/handlers-is-missing")
+                '    Catch ex As Exception
+                '        'do nuffing
+                '    End Try
+                'End If
 
-                Else
-                    Try
-                        System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS/setting-up-less?error=cannot-get-appHostConfig")
-                    Catch ex As Exception
-                        'do nuffing
-                    End Try
-                End If
+            Else
                 Try
-                    System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS")
+                    System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS/setting-up-less?error=cannot-get-appHostConfig")
                 Catch ex As Exception
                     'do nuffing
                 End Try
-                'MyBase.Install(savedState)
-                My.Computer.FileSystem.WriteAllText("c:\\ProteanInstallLog.txt", errstr, True)
-                Return ActionResult.Success
-
-
+            End If
+            Try
+                System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS")
             Catch ex As Exception
+                'do nuffing
+            End Try
+            'MyBase.Install(savedState)
+            My.Computer.FileSystem.WriteAllText("c:\\ProteanInstallLog.txt", errstr, True)
+            Return ActionResult.Success
 
-                Dim errorstr As String = ex.Message & ex.StackTrace
+
+        Catch ex As Exception
+
+            Dim errorstr As String = ex.Message & ex.StackTrace
 
             If Not ex.InnerException Is Nothing Then
                 errorstr = errorstr + ex.InnerException.Message & ex.InnerException.StackTrace
