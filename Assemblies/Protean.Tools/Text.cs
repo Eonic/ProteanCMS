@@ -1,5 +1,5 @@
-﻿using Microsoft.VisualBasic;
-using System;
+﻿using System;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -634,7 +634,7 @@ namespace Protean.Tools
                 shtml = removeTagFromXml(shtml, removeTags);
             Tidy.Core.HtmlTidy oTdyManaged = new Tidy.Core.HtmlTidy();
             Tidy.Core.TidyOptions oTdyOptions = new Tidy.Core.TidyOptions();
-            
+
             // Using 
             try
             {
@@ -647,7 +647,6 @@ namespace Protean.Tools
 
 
                 oTdyManaged.Options.MakeClean = true;
-                oTdyManaged.
                 oTdyManaged.Options.Xhtml = true;
                 oTdyManaged.Options.DropFontTags = true;
                 if (bReturnNumbericEntities)
