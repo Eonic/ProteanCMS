@@ -237,7 +237,7 @@ namespace Protean.Tools
                 {
                     bool convalid;
                     oConn.Open();
-                    convalid = this.checkDBObjectExists(DatabaseName, objectTypes.Database);
+                    convalid = checkDBObjectExists(DatabaseName, objectTypes.Database);
                     oConn.Close();
                     return true;
                 }
@@ -332,7 +332,7 @@ namespace Protean.Tools
             }
         }
 
-        private void ResetConnection()
+        public void ResetConnection()
         {
             try
             {
@@ -356,7 +356,7 @@ namespace Protean.Tools
             bool bReturn = false;
             try
             {
-                this.DatabaseName = "master";
+                DatabaseName = "master";
                 // Dim myConn As SqlConnection = New SqlConnection("Data Source=" & DatabaseServer & "; Initial Catalog=master; User ID=" & DatabaseUser & ";password=" & DatabasePassword & ";Persist Security Info=True")
                 string sSql;
 
@@ -421,7 +421,7 @@ namespace Protean.Tools
 
                 ExeProcessSql(String.Format(@"BACKUP DATABASE {0} TO DISK = N'{1}\{0}.bak' " + "WITH FORMAT, COPY_ONLY, INIT, NAME = N'{0} - Full Database " + "Backup', SKIP ", databasename, tempPath, databasename));
 
-                if (this.checkDBObjectExists(temporaryTableName, objectTypes.Table))
+                if (checkDBObjectExists(temporaryTableName, objectTypes.Table))
                     ExeProcessSql(String.Format("DROP TABLE {0}", temporaryTableName));
 
                 ExeProcessSql(String.Format("CREATE TABLE {0} (bck VARBINARY(MAX))", temporaryTableName));
@@ -429,7 +429,7 @@ namespace Protean.Tools
                 ExeProcessSql(String.Format("INSERT INTO {0} SELECT bck.* FROM " + @"OPENROWSET(BULK '{1}\{2}.bak',SINGLE_BLOB) bck", temporaryTableName, tempPath, databasename));
 
                 DataSet ds;
-                ds = this.GetDataSet(String.Format("SELECT bck FROM {0}", temporaryTableName), "temp");
+                ds = GetDataSet(String.Format("SELECT bck FROM {0}", temporaryTableName), "temp");
 
                 DataRow dr = ds.Tables[0].Rows[0];
                 byte[] backupFromServer = new byte[0] { };
@@ -532,7 +532,7 @@ namespace Protean.Tools
                 }
 
                 // then we need to copy the file and save it on the SQL server
-                if (this.DatabaseServer == "127.0.0.1")
+                if (DatabaseServer == "127.0.0.1")
                     restoreFilePath = filepath;
                 else
                 {
@@ -622,7 +622,7 @@ namespace Protean.Tools
 
         public virtual SqlDatabase GetDatabase(string databaseName)
         {
-            if (!this.checkDBObjectExists(databaseName, objectTypes.Database))
+            if (!checkDBObjectExists(databaseName, objectTypes.Database))
                 return null;
             else
             {
@@ -976,7 +976,7 @@ namespace Protean.Tools
                 if (ex.Message.StartsWith("Timeout expired.") & bHandleTimeouts)
                 {
                     // Deal with timeouts, return emtpy dataset
-                    this.TimeOutException = true;
+                    TimeOutException = true;
                     oDs = null/* TODO Change to default(_) if this is not a reference type */;
                 }
                 else
@@ -1513,7 +1513,7 @@ namespace Protean.Tools
                                 }
                         }
                         cSql = "SELECT COUNT(*) As c FROM sysobjects WHERE id = OBJECT_ID(N" + SqlString(cObjectName) + ")" + cObjectProperty;
-                        bReturn = ((int)this.GetDataValue(cSql, nullreturnvalue: 0) > 0);
+                        bReturn = ((int)GetDataValue(cSql, nullreturnvalue: 0) > 0);
                     }
                 }
                 return bReturn;
@@ -1571,7 +1571,7 @@ namespace Protean.Tools
                                 }
                         }
                         cSql = "SELECT COUNT(*) As c FROM sysobjects WHERE id = OBJECT_ID(N" + SqlString(cObjectName) + ")" + cObjectProperty;
-                        bReturn = ((int)this.GetDataValue(cSql, cConn, nullreturnvalue: 0) > 0);
+                        bReturn = ((int)GetDataValue(cSql, cConn, nullreturnvalue: 0) > 0);
                     }
                 }
                 return bReturn;
@@ -1594,7 +1594,7 @@ namespace Protean.Tools
                 {
                     objectProperty = "OBJECTPROPERTY(id, N'IsUserTable') = 1 OR OBJECTPROPERTY(id, N'IsView') = 1 OR OBJECTPROPERTY(id, N'IsProcedure') = 1 OR xtype in (N'FN', N'IF', N'TF')";
                     sql = "SELECT COUNT(*) As c FROM sysobjects WHERE id = OBJECT_ID(N" + SqlString(dbObjectName) + ") AND (" + objectProperty + ")";
-                    objectExists = ((int)this.GetDataValue(sql, nullreturnvalue: 0) > 0);
+                    objectExists = ((int)GetDataValue(sql, nullreturnvalue: 0) > 0);
                 }
 
                 return objectExists;
@@ -1621,7 +1621,7 @@ namespace Protean.Tools
                     {
                         // Check the column existence using database system table.
                         string sql = "SELECT COUNT(*) As c FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '" + tableName + "' AND COLUMN_NAME = '" + columnName + "'";
-                        columnExists = ((int)this.GetDataValue(sql, nullreturnvalue: 0) > 0);
+                        columnExists = ((int)GetDataValue(sql, nullreturnvalue: 0) > 0);
                     }
                 }
 
@@ -1886,12 +1886,12 @@ namespace Protean.Tools
         // IDisposable
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposedValue)
+            if (!disposedValue)
             {
                 if (disposing)
                     CloseConnection();
             }
-            this.disposedValue = true;
+            disposedValue = true;
         }
         // This code added by Visual Basic to correctly implement the disposable pattern.
         public void Dispose()
@@ -2012,11 +2012,11 @@ namespace Protean.Tools
             {
                 get
                 {
-                    return this.m_location;
+                    return m_location;
                 }
                 set
                 {
-                    this.m_location = value;
+                    m_location = value;
                 }
             }
 
@@ -2024,11 +2024,11 @@ namespace Protean.Tools
             {
                 get
                 {
-                    return this.m_internalServerName;
+                    return m_internalServerName;
                 }
                 set
                 {
-                    this.m_internalServerName = value;
+                    m_internalServerName = value;
                 }
             }
 
@@ -2036,11 +2036,11 @@ namespace Protean.Tools
             {
                 get
                 {
-                    return this.m_externalServerName;
+                    return m_externalServerName;
                 }
                 set
                 {
-                    this.m_externalServerName = value;
+                    m_externalServerName = value;
                 }
             }
         }

@@ -9455,20 +9455,18 @@
 	</xsl:template>
 
 	<xsl:template match="Report" mode="defaultReport">
-		<table class="table">
+		<div class="table-responsive">
+		<table class="table table-striped">
 			<tr>
 				<xsl:apply-templates select="Item[1]/descendant-or-self::*" mode="Report_ColsHeading"/>
 			</tr>
 			<xsl:for-each select="Item">
-				<span class="advancedModeRow" onmouseover="this.className='rowOver'" onmouseout="this.className='advancedModeRow'">
 					<tr>
-
 						<xsl:apply-templates select="descendant-or-self::*" mode="Report_ColsValues"/>
-
 					</tr>
-				</span>
 			</xsl:for-each>
 		</table>
+			</div>
 	</xsl:template>
 
 	<xsl:template match="Report[@name='MailFormSubmissions']" mode="defaultReport">
@@ -12042,7 +12040,7 @@
 				<div class="form-group">
 					<label for="Category" >New Category Name</label>
 
-					<input name="Category" id="Category"/>
+					<input class="form-control" name="Category" id="Category"/>
 				</div>
 				<div class="form-group">
 					<button type="submit" value="Add New Category" class="btn btn-success principle">
@@ -12878,7 +12876,7 @@
 	<!-- REPORT BODYS -->
 
 	<xsl:template match="Report" mode="reportBody">
-		<table class="table">
+		<table class="table table-responsive">
 			<xsl:for-each select="Item">
 				<xsl:if test="position()=1">
 					<tr>
@@ -12950,7 +12948,7 @@
 							<th>&#160;</th>
 						</tr>
 					</xsl:if>
-					<span class="advancedModeRow" onmouseover="this.className='rowOver'" onmouseout="this.className='advancedModeRow'">
+				
 						<tr>
 							<xsl:for-each select="*">
 								<xsl:if test="local-name()!='cCartXml' and local-name()!='Currency_Symbol' and local-name()!='Total_Cost'">
@@ -12971,7 +12969,6 @@
 								<a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Display&amp;id={Order_Id/node()}" class="btn btn-default">view order</a>
 							</td>
 						</tr>
-					</span>
 					<xsl:if test="position()=last()">
 						<tr>
 							<xsl:for-each select="*">

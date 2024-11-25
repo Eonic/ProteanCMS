@@ -1001,7 +1001,7 @@ namespace Protean.Providers
                                     oPI2.ParentNode.RemoveChild(oPI2);
                                     oSB.ParentNode.RemoveChild(oSB);
                                     // delete failed logon attempts record
-                                    string sSql = $"delete from tblActivityLog where nActivityType = {dbHelper.ActivityType.LogonInvalidPassword} and nUserDirId={nAccount}";
+                                    string sSql = $"delete from tblActivityLog where nActivityType = {Convert.ToString((int)dbHelper.ActivityType.LogonInvalidPassword)} and nUserDirId={nAccount}";
                                     myWeb.moDbHelper.ExeProcessSql(sSql);
 
                                     if (myWeb.mnUserId == 0)

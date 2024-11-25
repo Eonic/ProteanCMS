@@ -1145,7 +1145,24 @@ namespace Protean
                 }
 
             }
+            //GetContentIdFromOrder(string orderRef, string ContentName)
+            public string GetContentIdFromOrder(string orderRef, string ContentName)
+            {
+                if (orderRef.Contains("V4-")) {
+                    orderRef = orderRef.Replace("V4-", "");
+                }
+                string nContentID = myWeb.moDbHelper.getContentIdFromOrder(orderRef, ContentName);
+               
+                if (nContentID != "")
+                {
+                    return nContentID.ToString();
+                }
+                else
+                {
+                    return "0";
+                }
 
+            }
             public string GetPageIdFromFref(string fRef)
             {
 

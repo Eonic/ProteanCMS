@@ -312,6 +312,13 @@ namespace Protean.Providers
 
             public override string GetFilterOrderByClause()
             {
+                //cIndexDefinationName: Use name same as filter name, so that it will be easy to use in joins as per need.
+                // this is specific to filter functionality
+                // column which you are passing here is either 
+                // - agreegate function
+                // - column name from existing select query
+                // - returns empty then if order by clause is not required.
+                // -or an xpath/xquery too eg : return Convert(XML, cContentXmlBrief).value("/Content/StockCode[1]",'varchar(10)')
 
                 string cIndexDefinationName = "Price";
                 return " min(cii" + cIndexDefinationName + ".nNumberValue), ";

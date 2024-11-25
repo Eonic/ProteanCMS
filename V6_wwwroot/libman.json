@@ -82,6 +82,17 @@
       "destination": "ptn/libs/universal-parallax/"
     },
     {
+      "library": "jquery-form@4.3.0",
+      "destination": "ptn/libs/jquery-form/",
+      "files": [
+        "src/jquery.form.js",
+        "src/jquery.form.min.js",
+        "LICENSE",
+        "package.json",
+        "README.md"
+      ]
+    },
+    {
       "provider": "cdnjs",
       "library": "Swiper@11.0.5",
       "destination": "ptn/libs/Swiper/"

@@ -30,3 +30,5 @@ Assemblies/Protean.Tools.UnitTests/bin/**
 Assemblies/Protean.Tools.UnitTests/obj/**
 
 
+/Assemblies/Protean.CMS/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+/Assemblies/Protean.CMS/obj/Debug/Protean.CMS.csproj.AssemblyReference.cache
