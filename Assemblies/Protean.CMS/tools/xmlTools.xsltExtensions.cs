@@ -1148,11 +1148,12 @@ namespace Protean
             //GetContentIdFromOrder(string orderRef, string ContentName)
             public string GetContentIdFromOrder(string orderRef, string ContentName)
             {
-                if (orderRef.Contains("V4-")) {
+                if (orderRef.Contains("V4-"))
+                {
                     orderRef = orderRef.Replace("V4-", "");
                 }
                 string nContentID = myWeb.moDbHelper.getContentIdFromOrder(orderRef, ContentName);
-               
+
                 if (nContentID != "")
                 {
                     return nContentID.ToString();
@@ -1559,7 +1560,7 @@ namespace Protean
                 string newFilepath = "";
                 string cProcessInfo = "Resizing - " + cVirtualPath;
                 string awaitingImgPath = "/ewcommon/images/awaiting-image-thumbnail.gif";
-                if (this.myWeb.bs5)
+                if (myWeb.bs5)
                     awaitingImgPath = "/ptn/images/awaiting-image-thumbnail.gif";
 
                 try
@@ -1743,7 +1744,7 @@ namespace Protean
                     if (string.IsNullOrEmpty(cVirtualPath))
                     {
                         string awaitingImgPath = "/ewcommon/images/awaiting-image-thumbnail.gif";
-                        if (this.myWeb.bs5)
+                        if (myWeb.bs5)
                             awaitingImgPath = "/ptn/images/awaiting-image-thumbnail.gif";
                         return awaitingImgPath;
                     }
@@ -2504,7 +2505,7 @@ namespace Protean
                         case "availableIcons":
                             {
                                 string iconPath = "/ewcommon/icons/icons.xml";
-                                if (this.myWeb.bs5)
+                                if (myWeb.bs5)
                                     iconPath = "/ptn/core/icons/icons.xml";
 
                                 if (File.Exists(goServer.MapPath(iconPath)))

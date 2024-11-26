@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Tidy.Core;
 
 
 namespace Protean.Tools
@@ -585,9 +586,9 @@ namespace Protean.Tools
                     {
                         loopTo = loopTo + cName.Length;
                     }
-                    for (i = 0; i <= loopTo; i++)
+                    for (i = 0; i <= loopTo - 1; i++)
                     {
-                        string cTest = cName.Substring(0, i).Last().ToString();
+                        string cTest = cName.Substring(0, i + 1).Last().ToString();
                         if (cValids.Contains(cTest))
                             cBuilt += cTest;
                     }
@@ -615,8 +616,9 @@ namespace Protean.Tools
                 return cName;
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                string err = ex.Message;
                 return cName;
             }
         }
@@ -643,12 +645,16 @@ namespace Protean.Tools
                 shtml = Regex.Replace(shtml, "<\\?xml.*\\?>", "", RegexOptions.IgnoreCase);
 
                 //oTdyManaged.Options.XmlOut = true;
-                //oTdyManaged.Options.Word2000 = true;
 
+                oTdyManaged.Options.Word2000 = true;
+                oTdyManaged.Options.XmlOut = true;
 
                 oTdyManaged.Options.MakeClean = true;
+                oTdyManaged.Options.MakeBare = true;
                 oTdyManaged.Options.Xhtml = true;
                 oTdyManaged.Options.DropFontTags = true;
+                oTdyManaged.Options.BodyOnly = true;
+
                 if (bReturnNumbericEntities)
                 {
                     oTdyManaged.Options.NumEntities = true;
@@ -656,15 +662,28 @@ namespace Protean.Tools
 
                 Tidy.Core.TidyMessageCollection tidyMsg = new Tidy.Core.TidyMessageCollection();
 
+
+
+                //Stream stout = new MemoryStream();
+
+                //oTdyManaged.Parse(shtml, stout, tidyMsg);
+
+                //StreamReader sr = new StreamReader(stout);
+                //sTidyXhtml = sr.ReadToEnd();
+
                 sTidyXhtml = oTdyManaged.Parse(shtml, tidyMsg);
 
-                sTidyXhtml = oTdyManaged.ToString();
 
-                if (tidyMsg.Count > 0)
+                //sTidyXhtml = oTdyManaged.ToString();
+
+                foreach (TidyMessage tm in tidyMsg)
                 {
-
-                    sTidyXhtml = "<div>html import conversion error result=" + " <br/></div>";
+                    if (tm.Level == MessageLevel.Error)
+                    {
+                        sTidyXhtml = "<div>html import conversion error result=" + tm.Message + " <br/></div>";
+                    }
                 }
+
 
                 //oTdyManaged = TidyManaged.Document.FromString(shtml);
                 //oTdyManaged.OutputBodyOnly = TidyManaged.AutoBool.Yes;
@@ -694,7 +713,7 @@ namespace Protean.Tools
                 oTdyManaged = null/* TODO Change to default(_) if this is not a reference type */;
                 // End Using
 
-                return sTidyXhtml;
+                return sTidyXhtml.Replace("<body>", "").Replace("</body>", "");
             }
             catch (Exception ex)
             {
