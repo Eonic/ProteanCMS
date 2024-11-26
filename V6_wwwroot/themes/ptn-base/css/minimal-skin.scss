@@ -3,7 +3,11 @@
 }
 
 footer#pagefooter {
-    border-top: 1px solid $grey;
+
+    .module-Image svg {
+        filter: drop-shadow(100vw 0 0 #fff);
+        transform: translateX(-100vw);
+    }
 }
 .module-centred.nobox h2.title,
 h2.layout-title {
@@ -42,7 +46,7 @@ h2.layout-title {
             }
 
             &.active, &.on {
-                border-bottom: 2px solid $secondary;
+                border-bottom: 2px solid $nav-link-hover-color;
                 padding-bottom: $nav-padding-y - 2px !important;
 
                 &:hover::before {

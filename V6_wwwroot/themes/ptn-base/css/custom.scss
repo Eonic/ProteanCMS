@@ -652,13 +652,13 @@ section.stretchBG {
     }
 
     .intro-banner-inner {
-        padding: $card-spacer-y $card-spacer-x;
+       // padding: $card-spacer-y $card-spacer-x;
         text-align: center;
-        border-radius: $border-radius;
-        background: $no-banner-bg;
+      //  border-radius: $border-radius;
+       // background: $no-banner-bg;
     }
 
-    .breadcrumb {
+   /* .breadcrumb {
         justify-content: center;
 
         .breadcrumb-item.active {
@@ -668,14 +668,14 @@ section.stretchBG {
         .breadcrumb-item + .breadcrumb-item::before {
             color: color-contrast($no-banner-bg);
         }
-    }
+    }*/
 
     a {
-        color: color-contrast($no-banner-bg);
+     //   color: color-contrast($no-banner-bg);
     }
 
     h1 {
-        color: color-contrast($no-banner-bg);
+     //   color: color-contrast($no-banner-bg);
     }
 }
 
