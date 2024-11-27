@@ -13,7 +13,6 @@ using System.Text.RegularExpressions;
 using System.Web.Configuration;
 using System.Xml;
 using static Protean.stdTools;
-using static Protean.Tools.Xml;
 
 namespace Protean
 {
@@ -517,7 +516,7 @@ namespace Protean
                 }
 
                 // lets get the subjectline form the html title
-                var oEmailXmlDoc = htmlToXmlDoc(messageHtml);
+                var oEmailXmlDoc = Protean.Tools.Xml.HtmlConverter.htmlToXmlDoc(messageHtml);
                 if (oEmailXmlDoc != null)
                 {
                     // override the subject line from the template.
@@ -1392,7 +1391,7 @@ namespace Protean
                                 sWriter.Close();
                                 sWriter = null;
 
-                                oXml = htmlToXmlDoc(sMessage);
+                                oXml = Protean.Tools.Xml.HtmlConverter.htmlToXmlDoc(sMessage);
                             }
 
                             var oXmlRemoveHeader = oXml.FirstChild;
@@ -1777,8 +1776,7 @@ namespace Protean
                 // Lets get the title and override the one provided
                 var oXml = new XmlDocument();
 
-                oXml = htmlToXmlDoc(sEmailBody);
-
+                oXml = Protean.Tools.Xml.HtmlConverter.htmlToXmlDoc(sEmailBody);
                 if (oXml != null)
                 {
                     // override the subject line from the template.

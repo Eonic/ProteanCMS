@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualBasic;
 
 namespace Protean.Tools
 {
@@ -13,19 +8,25 @@ namespace Protean.Tools
         {
             try
             {
+                string[] parts = nNumber.ToString().Split('.');
+
+                string decimalPart = nNumber.ToString().Split('.')[1]; // Get the decimal part
+                string leftPart = decimalPart.Substring(0, Math.Min(nDecimalPlaces, decimalPart.Length));
+
                 // get the dross over with
-                if (!Information.IsNumeric(nNumber))
+                if (!double.TryParse(nNumber.ToString(), out _))
                     return 0;
                 // no decimal places to deal with
                 if (!nNumber.ToString().Contains("."))
                     return (decimal)nNumber;
                 // has correct number of decimal places
-                if (Strings.Split(nNumber.ToString(), ".")[1].Length <= nDecimalPlaces)
+                if (parts.Length > 1 && parts.Length <= nDecimalPlaces)
                     return (decimal)nNumber;
 
                 // now the fun
-                int nWholeNo = int.Parse(Strings.Split(nNumber.ToString(), ".")[0]); // the whole number before decimal point
-                int nTotalLength = Strings.Split(nNumber.ToString(), ".")[1].Length; // the total number of decimal places
+                int nWholeNo = int.Parse(nNumber.ToString().Split('.')[0]);
+                // the whole number before decimal point
+                int nTotalLength = parts.Length > 1 ? parts[1].Length : 0; // the total number of decimal places
 
                 int nI; // a counter
 
@@ -35,20 +36,22 @@ namespace Protean.Tools
                 // loop through until we reach the correct number of decimal places
                 for (nI = 0; nI <= loopTo; nI++)
                 {
+                    char lastChar = nNumber.ToString().Split('.')[1].Substring(0, nTotalLength - nI)[nNumber.ToString().Split('.')[1].Substring(0, nTotalLength - nI).Length - 1]; // Get the last character
+
                     int nCurrent; // the number we are working on
-                    nCurrent = int.Parse(Strings.Right(Strings.Left(Strings.Split(nNumber.ToString(), ".")[1], nTotalLength - nI), 1));
+                    nCurrent = nCurrent = int.Parse(lastChar.ToString()); // Convert to integer
                     nCurrent += nCarry; // add the carry
                     if (nCurrent >= nSplitNo)
                         nCarry = 1;
                     else
                         nCarry = 0; // make a new carry dependant on whaere we are
                 }
-                int nDecimal = int.Parse(Strings.Left(Strings.Split(nNumber.ToString(), ".")[1], nDecimalPlaces)); // the decimal value
+                int nDecimal = nDecimal = int.Parse(leftPart); // the decimal value
                 nDecimal += nCarry; // add last carry
                 if (nDecimal.ToString().Length > nDecimalPlaces)
                 {
                     nCarry = 1;
-                    nDecimal = int.Parse(Strings.Right(nDecimal.ToString(), nDecimalPlaces));
+                    nDecimal = int.Parse(nDecimal.ToString().Substring(Math.Max(0, nDecimal.ToString().Length - nDecimalPlaces)));
                 }
                 else
                     nCarry = 0;
@@ -121,7 +124,7 @@ namespace Protean.Tools
 
         public static bool IsStringNumeric(string input)
         {
-            return !(string.IsNullOrEmpty(input)) && Information.IsNumeric(input);
+            return !string.IsNullOrEmpty(input) && double.TryParse(input, out _);
         }
 
 

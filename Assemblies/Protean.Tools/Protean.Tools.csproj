@@ -1,17 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{12AF6171-9AAB-4C4D-A83B-85FE18A334C1}</ProjectGuid>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Protean.Tools</RootNamespace>
-    <AssemblyName>Protean.Tools</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
     <SccProjectName>
     </SccProjectName>
     <SccLocalPath>
@@ -30,20 +20,11 @@
     <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
     <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
     <AssemblyFileVersionSettings>None.None.None.None</AssemblyFileVersionSettings>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <TargetFrameworkProfile />
     <AssemblyInfoVersionSettings>None.None.None.None</AssemblyInfoVersionSettings>
     <_MigrateToProjectGuid>2bc0d1d1-6762-4d89-85dc-171cf3aeb636</_MigrateToProjectGuid>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <ShouldCreateLogs>True</ShouldCreateLogs>
     <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
     <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
@@ -56,14 +37,6 @@
     <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
     <NoWarn>0618</NoWarn>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
@@ -72,241 +45,63 @@
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+    <AssemblyTitle>Protean.Tools</AssemblyTitle>
+    <Company>Eonic Digital LLP.</Company>
+    <Product>ProteanCMS</Product>
+    <Copyright>Copyright © Eonic Digital LLP.  2024</Copyright>
+    <AssemblyVersion>6.1.22.77</AssemblyVersion>
+    <FileVersion>6.1.22.77</FileVersion>
+    <InformationalVersion>0.0.0.115</InformationalVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM64'">
-    <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\ARM64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>ARM64</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM64'">
     <OutputPath>bin\ARM64\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>ARM64</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|Mixed Platforms'">
-    <ShouldCreateLogs>True</ShouldCreateLogs>
-    <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
-    <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
-    <UpdateAssemblyFileVersion>True</UpdateAssemblyFileVersion>
-    <UpdateAssemblyInfoVersion>True</UpdateAssemblyInfoVersion>
-    <AssemblyVersionSettings>None.None.None.None</AssemblyVersionSettings>
-    <AssemblyFileVersionSettings>None.None.None.None</AssemblyFileVersionSettings>
-    <AssemblyInfoVersionSettings>None.None.None.None</AssemblyInfoVersionSettings>
-    <UpdatePackageVersion>False</UpdatePackageVersion>
-    <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
-    <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Mixed Platforms'">
-    <ShouldCreateLogs>True</ShouldCreateLogs>
-    <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
-    <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
-    <UpdateAssemblyFileVersion>True</UpdateAssemblyFileVersion>
-    <UpdateAssemblyInfoVersion>True</UpdateAssemblyInfoVersion>
-    <AssemblyVersionSettings>None.None.None.None</AssemblyVersionSettings>
-    <AssemblyFileVersionSettings>None.None.None.None</AssemblyFileVersionSettings>
-    <AssemblyInfoVersionSettings>None.None.None.None</AssemblyInfoVersionSettings>
-    <UpdatePackageVersion>False</UpdatePackageVersion>
-    <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
-    <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\BouncyCastle.Cryptography.2.4.0\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
-    </Reference>
-    <Reference Include="DocumentFormat.OpenXml, Version=3.0.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DocumentFormat.OpenXml.3.0.2\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
-    </Reference>
-    <Reference Include="DocumentFormat.OpenXml.Framework, Version=3.0.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DocumentFormat.OpenXml.Framework.3.0.2\lib\net46\DocumentFormat.OpenXml.Framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Fonet, Version=1.0.0.0, Culture=neutral, PublicKeyToken=52effa152c4a9dc6, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Fonet.1.0\lib\net20\Fonet.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib, Version=1.4.2.13, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SharpZipLib.1.4.2\lib\netstandard2.0\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
-    <Reference Include="iTextSharp.LGPLv2.Core, Version=3.4.22.0, Culture=neutral, PublicKeyToken=51d712e21b66ad36, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\iTextSharp.LGPLv2.Core.3.4.22\lib\net462\iTextSharp.LGPLv2.Core.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="JsonWebTokens, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\NonNuget\JsonWebTokens.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Magick.NET-Q8-AnyCPU, Version=13.8.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Magick.NET-Q8-AnyCPU.13.8.0\lib\netstandard20\Magick.NET-Q8-AnyCPU.dll</HintPath>
-    </Reference>
-    <Reference Include="Magick.NET.Core, Version=13.8.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Magick.NET.Core.13.8.0\lib\netstandard20\Magick.NET.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="Microsoft.Web.Infrastructure, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Web.Infrastructure.2.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Renci.SshNet, Version=2020.0.2.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SSH.NET.2020.0.2\lib\net40\Renci.SshNet.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Select.HtmlToPdf, Version=23.1.0.0, Culture=neutral, PublicKeyToken=e0ae9f6e27a97018, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Select.HtmlToPdf.23.1.0\lib\net40\Select.HtmlToPdf.dll</HintPath>
-    </Reference>
-    <Reference Include="SkiaSharp, Version=2.88.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SkiaSharp.2.88.8\lib\net462\SkiaSharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="SoundInTheory.DynamicImage, Version=3.1.1.1, Culture=neutral, PublicKeyToken=fa44558110383067, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\NonNuget\SoundInTheory.DynamicImage.dll</HintPath>
-    </Reference>
-    <Reference Include="SoundInTheory.DynamicImage.Extensions.Pdf, Version=1.0.0.4, Culture=neutral, PublicKeyToken=fa44558110383067, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\NonNuget\SoundInTheory.DynamicImage.Extensions.Pdf.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ComponentModel" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Configuration.Install" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.SqlXml" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Drawing.Design" />
-    <Reference Include="System.Management" />
-    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Transactions" />
-    <Reference Include="System.Web">
-      <HintPath>..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Web.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml">
+    <Reference Update="System.Xml">
       <HintPath>..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Xml.dll</HintPath>
-    </Reference>
-    <Reference Include="TidyHTML5Managed, Version=1.1.5.0, Culture=neutral, PublicKeyToken=0e5e11efc3341916, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\NonNuget\TidyHTML5Managed.dll</HintPath>
     </Reference>
     <Reference Include="Tinify">
       <HintPath>..\NonNuget\Tinify.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="WindowsBase" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="App_Start\DynamicImage.cs" />
-    <Compile Include="Calendar.cs" />
-    <Compile Include="Conversion.cs" />
-    <Compile Include="Counter.cs" />
-    <Compile Include="CSV.cs" />
-    <Compile Include="DelegateWrappers.cs" />
-    <Compile Include="Dictionary.cs" />
-    <Compile Include="DocReader.cs" />
-    <Compile Include="Encryption.cs" />
-    <Compile Include="Enum.cs" />
-    <Compile Include="Errors.cs" />
-    <Compile Include="FileHelper.cs" />
-    <Compile Include="FTPClient.cs" />
-    <Compile Include="GnuPG.cs" />
-    <Compile Include="Http\Http.Utils.cs" />
-    <Compile Include="Http\Http.WebRequest.cs" />
-    <Compile Include="Image.cs" />
-    <Compile Include="Impersonate.cs" />
-    <Compile Include="Integration\Authentication\OAuth.cs" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Globals.cs" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\ATwiCliAudioFile.cs" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\ATwiCliConnection.cs" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\ATwiCliFile.cs" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\ATwiCliPhotoFile.cs" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\ATwiCliVideoFile.cs" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\AyFrogConn.cs" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\PagedResults.cs" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterAPIException.cs" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterDirectMessage.cs" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterList.cs" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterParameters.cs" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterRelationships.cs" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterSearchParameters.cs" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterSearchResult.cs" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterStatus.cs" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterTrend.cs" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterTrendLocation.cs" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterUser.cs" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitVidConnection.cs" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\XmlNamespaceStripper.cs" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\XmlObjectBase.cs" />
-    <Compile Include="Integration\Twitter\TwitterVB2\TwitterAPI.cs" />
-    <Compile Include="Integration\Twitter\TwitterVB2\TwitterOAuth.cs" />
-    <Compile Include="Models\Contact.cs" />
-    <Compile Include="Models\Order.cs" />
-    <Compile Include="Database.cs" />
-    <Compile Include="Global.cs" />
-    <Compile Include="IdentityModel\Tokens\JwtHelper.cs" />
-    <Compile Include="Number.cs" />
-    <Compile Include="Number.Random.cs" />
-    <Compile Include="Object.cs" />
-    <Compile Include="PDF.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-    <Compile Include="RecaptchaHelper.cs" />
-    <Compile Include="SoapClient.cs" />
-    <Compile Include="Text.cs" />
-    <Compile Include="Xml.cs" />
-    <Compile Include="Xslt.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="eonic.snk" />
-    <None Include="Eonic.Tools.snk" />
-    <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Clients\" />
+    <Folder Include="IdentityModel\Tokens\" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\..\packages\Magick.NET-Q8-AnyCPU.13.8.0\build\netstandard20\Magick.NET-Q8-AnyCPU.targets" Condition="Exists('..\..\packages\Magick.NET-Q8-AnyCPU.13.8.0\build\netstandard20\Magick.NET-Q8-AnyCPU.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\Magick.NET-Q8-AnyCPU.13.8.0\build\netstandard20\Magick.NET-Q8-AnyCPU.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Magick.NET-Q8-AnyCPU.13.8.0\build\netstandard20\Magick.NET-Q8-AnyCPU.targets'))" />
-  </Target>
+  <ItemGroup>
+    <PackageReference Include="BouncyCastle.Cryptography" Version="2.4.0" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="3.0.2" />
+    <PackageReference Include="DocumentFormat.OpenXml.Framework" Version="3.0.2" />
+    <PackageReference Include="iTextSharp.LGPLv2.Core" Version="3.4.22" />
+    <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="13.8.0" />
+    <PackageReference Include="Magick.NET.Core" Version="13.8.0" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Select.HtmlToPdf" Version="24.1.0" />
+    <PackageReference Include="SharpZipLib" Version="1.4.2" />
+    <PackageReference Include="SkiaSharp" Version="2.88.8" />
+    <PackageReference Include="SkiaSharp.NativeAssets.macOS" Version="2.88.8" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="2.88.8" />
+    <PackageReference Include="SSH.NET" Version="2020.0.2" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="System.Data.OleDb" Version="8.0.1" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.10" />
+    <PackageReference Include="System.IO.Packaging" Version="9.0.0" />
+    <PackageReference Include="System.Management" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters" Version="1.3.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.1" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="TidyNetStandard5" Version="1.0.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="IdentityModel\Tokens\JwtHelper.cs" />
+    <Compile Remove="Properties\Resources.Designer.cs" />
+  </ItemGroup>
 </Project>
