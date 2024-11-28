@@ -634,7 +634,7 @@ namespace Protean.Tools
 
             if (!(removeTags == ""))
                 shtml = removeTagFromXml(shtml, removeTags);
-            Tidy.Core.HtmlTidy oTdyManaged = new Tidy.Core.HtmlTidy();
+            Tidy.Core.HtmlTidy oTdy = new Tidy.Core.HtmlTidy();
             Tidy.Core.TidyOptions oTdyOptions = new Tidy.Core.TidyOptions();
 
             // Using 
@@ -644,20 +644,20 @@ namespace Protean.Tools
                 shtml = shtml.Replace("&amp;nbsp;", "&#160;");
                 shtml = Regex.Replace(shtml, "<\\?xml.*\\?>", "", RegexOptions.IgnoreCase);
 
-                //oTdyManaged.Options.XmlOut = true;
+                //oTdy.Options.XmlOut = true;
 
-                oTdyManaged.Options.Word2000 = true;
-                oTdyManaged.Options.XmlOut = true;
+                oTdy.Options.Word2000 = true;
+                oTdy.Options.XmlOut = true;
 
-                oTdyManaged.Options.MakeClean = true;
-                oTdyManaged.Options.MakeBare = true;
-                oTdyManaged.Options.Xhtml = true;
-                oTdyManaged.Options.DropFontTags = true;
-                oTdyManaged.Options.BodyOnly = true;
+                oTdy.Options.MakeClean = true;
+                oTdy.Options.MakeBare = true;
+                oTdy.Options.Xhtml = true;
+                oTdy.Options.DropFontTags = true;
+                oTdy.Options.BodyOnly = true;
 
                 if (bReturnNumbericEntities)
                 {
-                    oTdyManaged.Options.NumEntities = true;
+                    oTdy.Options.NumEntities = true;
                 }
 
                 Tidy.Core.TidyMessageCollection tidyMsg = new Tidy.Core.TidyMessageCollection();
@@ -666,15 +666,15 @@ namespace Protean.Tools
 
                 //Stream stout = new MemoryStream();
 
-                //oTdyManaged.Parse(shtml, stout, tidyMsg);
+                //oTdy.Parse(shtml, stout, tidyMsg);
 
                 //StreamReader sr = new StreamReader(stout);
                 //sTidyXhtml = sr.ReadToEnd();
 
-                sTidyXhtml = oTdyManaged.Parse(shtml, tidyMsg);
+                sTidyXhtml = oTdy.Parse(shtml, tidyMsg);
 
 
-                //sTidyXhtml = oTdyManaged.ToString();
+                //sTidyXhtml = oTdy.ToString();
 
                 foreach (TidyMessage tm in tidyMsg)
                 {
@@ -685,32 +685,33 @@ namespace Protean.Tools
                 }
 
 
-                //oTdyManaged = TidyManaged.Document.FromString(shtml);
-                //oTdyManaged.OutputBodyOnly = TidyManaged.AutoBool.Yes;
-                //oTdyManaged.MakeClean = true;
-                //oTdyManaged.DropFontTags = true;
-                ////oTdyManaged.ErrorBuffer = true;
-                //oTdyManaged.ShowWarnings = true;
-                //oTdyManaged.OutputXhtml = true;
-                //oTdyManaged.MakeBare = true;//removed word tags
-                //oTdyManaged.CleanWord2000 = true;//removed word tags
+                //oTdy = TidyManaged.Document.FromString(shtml);
+                //oTdy.OutputBodyOnly = TidyManaged.AutoBool.Yes;
+                //oTdy.MakeClean = true;
+                //oTdy.DropFontTags = true;
+                ////oTdy.ErrorBuffer = true;
+                //oTdy.ShowWarnings = true;
+                //oTdy.OutputXhtml = true;
+                //oTdy.MakeBare = true;//removed word tags
+                //oTdy.CleanWord2000 = true;//removed word tags
 
                 //if (bReturnNumbericEntities)
                 //{
-                //    oTdyManaged.OutputNumericEntities = true;
+                //    oTdy.OutputNumericEntities = true;
                 //}
-                //oTdyManaged.CleanAndRepair();
+                //oTdy.CleanAndRepair();
                 //try
                 //{
-                //    oTdyManaged.Save();
+                //    oTdy.Save();
                 //}
                 //catch (Exception)
                 //{
                 //    sTidyXhtml = "<div>html import conversion error result=" + " <br/></div>";
                 //}
 
-                //oTdyManaged.Dispose();
-                oTdyManaged = null/* TODO Change to default(_) if this is not a reference type */;
+                //oTdy.Dispose();
+                oTdy = null;
+                oTdyOptions = null;/* TODO Change to default(_) if this is not a reference type */
                 // End Using
 
                 return sTidyXhtml.Replace("<body>", "").Replace("</body>", "");

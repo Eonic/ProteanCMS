@@ -2296,7 +2296,6 @@
         </div>
       </xsl:when>
       <xsl:otherwise>
-
         <div>
           <xsl:attribute name="class">
             <xsl:choose>
@@ -2304,7 +2303,6 @@
                 <xsl:text>form-text</xsl:text>
               </xsl:when>
               <xsl:otherwise>
-
                 <xsl:text>form-group form-margin </xsl:text>
               </xsl:otherwise>
             </xsl:choose>
@@ -2369,7 +2367,14 @@
     <xsl:param name="selectedCase" />
     <xsl:variable name="thisId" select="@id"/>
     <xsl:variable name="dependantClass">
-      <xsl:value-of select="ancestor::group[1]/*[item/toggle[@case=$thisId]]/@bind"/>
+		<xsl:choose>
+			<xsl:when test="parent::switch[@for!='']">
+				<xsl:value-of select="parent::switch/@for"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="ancestor::group[1]/*[item/toggle[@case=$thisId]]/@bind"/>
+			</xsl:otherwise>
+		</xsl:choose>
       <xsl:text>-dependant</xsl:text>
     </xsl:variable>
 
@@ -2496,9 +2501,22 @@
       </xsl:attribute>-->
 
     <xsl:param name="dependantClass"/>
+	  
+	  
     <xsl:variable name="ref">
       <xsl:apply-templates select="." mode="getRefOrBind"/>
     </xsl:variable>
+	  <xsl:variable name="dependantClassPassthru">
+		  <xsl:choose>
+			  <xsl:when test="$dependantClass!=''">
+				  <xsl:value-of select="$dependantClass"/>
+			  </xsl:when>
+			  <xsl:otherwise>
+				  <xsl:value-of select="$ref"/>
+			  </xsl:otherwise>
+		  </xsl:choose>
+	  </xsl:variable>
+	  
     <xsl:if test="contains(@class,'selectAll')">
       <span>
         <xsl:attribute name="class">
@@ -2515,7 +2533,7 @@
         </label>
       </span>
     </xsl:if>
-    <div class="{@class}">
+    <div class="{@class} {$ref}">
       <xsl:choose>
         <!-- when Query to get select options -->
         <xsl:when test="contains(@class,'ewQuery')">
@@ -2531,7 +2549,7 @@
             <xsl:with-param name="class" select="@class"/>
             <xsl:with-param name="ref" select="$ref"/>
             <xsl:with-param name="type">checkbox</xsl:with-param>
-            <xsl:with-param name="dependantClass" select="$dependantClass"/>
+            <xsl:with-param name="dependantClass" select="$dependantClassPassthru"/>
           </xsl:apply-templates>
         </xsl:when>
 
@@ -2540,7 +2558,7 @@
             <xsl:with-param name="type">checkbox</xsl:with-param>
             <xsl:with-param name="ref" select="$ref"/>
             <xsl:with-param name="class" select="'list-item-group'"/>
-            <xsl:with-param name="dependantClass" select="$dependantClass"/>
+            <xsl:with-param name="dependantClass" select="$dependantClassPassthru"/>
           </xsl:apply-templates>
         </xsl:otherwise>
 
@@ -2781,7 +2799,7 @@
           <xsl:value-of select="translate(toggle/@case,'[]#=/','')"/>
           <xsl:text>-dependant','</xsl:text>
           <xsl:value-of select="$dependantClass"/>
-          <xsl:text>');</xsl:text>
+          <xsl:text>-dependant');</xsl:text>
         </xsl:attribute>
         <xsl:if test="ancestor::select1/item[1]/value/node() = $value">
           <xsl:attribute name="data-fv-notempty">
