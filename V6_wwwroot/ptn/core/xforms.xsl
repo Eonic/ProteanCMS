@@ -2132,15 +2132,26 @@
         </xsl:choose>
 
       </xsl:attribute>
+		<xsl:variable name="targetId">
+			<xsl:choose>
+				<xsl:when test="contains($ref,'~')">
+					<xsl:value-of select="substring-before(translate($ref,'[]#=/',''),'~')"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="translate($ref,'[]#=/','')"/>
+				</xsl:otherwise>
+
+			</xsl:choose>
+	    </xsl:variable>
       <xsl:if test="contains(@class,'readonly')">
         <xsl:attribute name="readonly">readonly</xsl:attribute>
       </xsl:if>
       <xsl:if test="item[toggle]">
         <xsl:attribute name="onChange">
           <xsl:text>toggle_</xsl:text>
-          <xsl:value-of select="$ref"/>
+          <xsl:value-of select="$targetId"/>
           <xsl:text>('</xsl:text>
-          <xsl:value-of select="$ref"/>
+          <xsl:value-of select="$targetId"/>
           <xsl:text>')</xsl:text>
         </xsl:attribute>
       </xsl:if>
@@ -2279,7 +2290,14 @@
 
     </xsl:variable>
     <xsl:variable name="dependantClass">
-      <xsl:value-of select="translate($ref,'[]#=/','')"/>
+		<xsl:choose>
+			<xsl:when test="contains($ref,'~')">
+				<xsl:value-of select="substring-before(translate($ref,'[]#=/',''),'~')"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="translate($ref,'[]#=/','')"/>
+			</xsl:otherwise>
+		</xsl:choose>
       <xsl:text>-dependant</xsl:text>
     </xsl:variable>
     <xsl:choose>
@@ -2325,22 +2343,31 @@
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template match="select1[@appearance='minimal'] | select1" mode="xform_control_script">
+  <xsl:template match="select1[@appearance='minimal' and item/toggle]" mode="xform_control_script">
     <xsl:variable name="ref">
       <xsl:apply-templates select="." mode="getRefOrBind"/>
     </xsl:variable>
     <xsl:variable name="value">
       <xsl:apply-templates select="." mode="xform_value"/>
     </xsl:variable>
+	  <xsl:variable name="targetId">
+		  <xsl:choose>
+			  <xsl:when test="contains($ref,'~')">
+				  <xsl:value-of select="substring-before(translate($ref,'[]#=/',''),'~')"/>
+			  </xsl:when>
+			  <xsl:otherwise>
+				  <xsl:value-of select="translate($ref,'[]#=/','')"/>
+			  </xsl:otherwise>			  
+		  </xsl:choose>
+	  </xsl:variable> 
+	  
     <script>
-      function toggle_<xsl:value-of select="$ref"/>(ourRef) {
+      function toggle_<xsl:value-of select="$targetId"/>(ourRef) {
 
-      var selectedValue = $("input[name='<xsl:value-of select="$ref"/>']:checked").val();
-
-      //get the selected value for ref
-      //create array of values / toggle ids
-      var dict = {
-      <xsl:for-each select="item[toggle]">
+		//get the selected value for ref
+		//create array of values / toggle ids
+		var dict_<xsl:value-of select="$targetId"/> = {
+		<xsl:for-each select="item[toggle]">
         <xsl:text>'</xsl:text>
         <xsl:value-of select="value"/>
         <xsl:text>':'</xsl:text>
@@ -2350,11 +2377,11 @@
           <xsl:text>,</xsl:text>
         </xsl:if>
       </xsl:for-each>
-      };
-      showDependant(dict[selectedValue].toString() + '-dependant', ourRef + '-dependant',', false');
-      }
-      //
-      toggle_<xsl:value-of select="$ref"/>('<xsl:value-of select="$ref"/>');
+		};
+		showDependant(dict_<xsl:value-of select="$targetId"/>[ $("input[name='<xsl:value-of select="$targetId"/>']:checked").val()] + '-dependant', ourRef + '-dependant',', false');
+		}
+		//
+		toggle_<xsl:value-of select="$targetId"/>('<xsl:value-of select="$targetId"/>');
 
     </script>
   </xsl:template>
@@ -2512,7 +2539,15 @@
 				  <xsl:value-of select="$dependantClass"/>
 			  </xsl:when>
 			  <xsl:otherwise>
-				  <xsl:value-of select="$ref"/>
+				  <xsl:choose>
+					  <xsl:when test="contains($ref,'~')">
+						  <xsl:value-of select="substring-before(translate($ref,'[]#=/',''),'~')"/>
+					  </xsl:when>
+					  <xsl:otherwise>
+						  <xsl:value-of select="translate($ref,'[]#=/','')"/>
+					  </xsl:otherwise>
+				  </xsl:choose>
+				  <xsl:text>-dependant</xsl:text>
 			  </xsl:otherwise>
 		  </xsl:choose>
 	  </xsl:variable>
@@ -2795,11 +2830,19 @@
         </xsl:if>
 
         <xsl:attribute name="onclick">
-          <xsl:text>showDependant('</xsl:text>
-          <xsl:value-of select="translate(toggle/@case,'[]#=/','')"/>
-          <xsl:text>-dependant','</xsl:text>
-          <xsl:value-of select="$dependantClass"/>
-          <xsl:text>-dependant');</xsl:text>
+			
+                  <xsl:text>showDependant('</xsl:text>
+			      <xsl:for-each select="toggle">
+                    <xsl:value-of select="translate(@case,'[]#=/','')"/>
+					  <xsl:text>-dependant</xsl:text>
+					  <xsl:if test="position()!=last()">
+						  <xsl:text>,</xsl:text>
+					  </xsl:if>
+				  </xsl:for-each>
+                  <xsl:text>','</xsl:text>
+                  <xsl:value-of select="$dependantClass"/>
+                  <xsl:text>');</xsl:text>
+			
         </xsl:attribute>
         <xsl:if test="ancestor::select1/item[1]/value/node() = $value">
           <xsl:attribute name="data-fv-notempty">
