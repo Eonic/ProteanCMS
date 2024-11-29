@@ -633,6 +633,17 @@ $.fn.prepareXform = function () {
 
 
 /*  USED IN ALL EW:xFORMS - For when an Radio Button Toggles a switch /case */
+function checkboxshowDependant(checkboxId, dependant, allDependants) {
+ 
+    if ($("#" + checkboxId).is(':checked')) {
+        showDependant(dependant, allDependants)
+    }
+    else {
+        $("." + allDependants).addClass('hidden');
+    }
+}
+
+
 function showDependant(dependant, allDependants) {
 
 

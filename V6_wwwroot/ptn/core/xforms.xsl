@@ -2799,7 +2799,6 @@
         <xsl:if test="$ref!=''">
           <xsl:attribute name="name">
             <xsl:value-of select="$ref"/>
-
           </xsl:attribute>
           <xsl:attribute name="id">
             <xsl:value-of select="$ref"/>_<xsl:value-of select="position()"/>
@@ -2830,9 +2829,17 @@
         </xsl:if>
 
         <xsl:attribute name="onclick">
-			
-                  <xsl:text>showDependant('</xsl:text>
-			      <xsl:for-each select="toggle">
+			<xsl:if test="$type='checkbox'">
+				<xsl:text>checkbox</xsl:text>
+			</xsl:if>			
+                  <xsl:text>showDependant(</xsl:text>
+			<xsl:if test="$type='checkbox'">
+				<xsl:text>'</xsl:text>
+				<xsl:value-of select="$ref"/>_<xsl:value-of select="position()"/>
+				<xsl:text>',</xsl:text>
+			</xsl:if>
+			<xsl:text>'</xsl:text>
+			<xsl:for-each select="toggle">
                     <xsl:value-of select="translate(@case,'[]#=/','')"/>
 					  <xsl:text>-dependant</xsl:text>
 					  <xsl:if test="position()!=last()">
@@ -2841,9 +2848,9 @@
 				  </xsl:for-each>
                   <xsl:text>','</xsl:text>
                   <xsl:value-of select="$dependantClass"/>
-                  <xsl:text>');</xsl:text>
-			
+                  <xsl:text>');</xsl:text>			
         </xsl:attribute>
+		  
         <xsl:if test="ancestor::select1/item[1]/value/node() = $value">
           <xsl:attribute name="data-fv-notempty">
             <xsl:value-of select="ancestor::select1/@data-fv-notempty"/>
@@ -2852,6 +2859,7 @@
             <xsl:value-of select="ancestor::select1/@data-fv-notempty-message"/>
           </xsl:attribute>
         </xsl:if>
+		  
         <xsl:if test="ancestor::select/item[1]/value/node() = $value">
           <xsl:attribute name="data-fv-choice">
             <xsl:value-of select="ancestor::select/@data-fv-choice"/>
