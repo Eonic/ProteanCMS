@@ -3960,8 +3960,229 @@
 			</div>
 		</div>
 	</xsl:template>
+<!--   ##################  Related Search For Reviews   ##############################   -->
+	<!-- -->
+<xsl:template match="Page[@layout='RelatedSearch' and (ContentDetail/Content[@type='xform']/model/instance/cSchemaName ='Review')]" mode="Admin">
+		<div class="row" id="tpltRelatedSearch">
+			<div class="col-md-4">
+				<xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+			</div>
+			<div class="col-md-8">
 
+				<xsl:text> </xsl:text>
+				<xsl:if test="ContentDetail/RelatedResults">
+					<form name="myform" action="" method="post" class="panel panel-default">
+						<input type="hidden" name="id" value="{ContentDetail/RelatedResults/@nParentID}"/>
+						<input type="hidden" name="type" value="{ContentDetail/RelatedResults/@cSchemaName}"/>
+						<input type="hidden" name="redirect" value="{/Page/Request/Form/Item[@name='redirect']/node()}"/>
+						<div class="panel-heading">
+							<h3 class="panel-title">Search Results</h3>
+						</div>
 
+						<table cellpadding="0" cellspacing="1" class="table">
+							<tbody>
+								<tr>
+									<th colspan="6">
+										<xsl:choose>
+											<xsl:when test="ContentDetail/RelatedResults/Content">
+												<button type="submit" name="saveRelated" value="Add {ContentDetail/RelatedResults/@cSchemaName}s" class="btn btn-success pull-right">
+													<i class="fa fa-plus fa-white">
+														<xsl:text> </xsl:text>
+													</i><xsl:text> </xsl:text>Add
+													<xsl:value-of select="ContentDetail/RelatedResults/@cSchemaName"/>s
+												</button>
+											</xsl:when>
+											<xsl:otherwise>
+												<label>
+													<xsl:text>No </xsl:text><xsl:value-of select="ContentDetail/RelatedResults/@cSchemaName"/>s Found
+												</label>
+											</xsl:otherwise>
+										</xsl:choose>
+									</th>
+								</tr>
+								<tr>
+									<th width="15%;">Reviewer</th>
+									<th>Rating</th>
+									<th>Review Text</th>
+									<th>Review Date</th>
+									<th>
+										Tick to Relate<br/>
+										<button type="button" name="CheckAll" value="Check All" onClick="checkAll(document.myform.list)" class="btn btn-sm btn-success">
+											<i class="fa fa-check fa-white">
+												<xsl:text> </xsl:text>
+											</i> All
+										</button>
+										<xsl:text> </xsl:text>
+										<button type="button" name="UnCheckAll" value="Uncheck All" onClick="uncheckAll(document.myform.list)" class="btn btn-sm  btn-warning">
+											<i class="fa fa-close fa-white">
+												<xsl:text> </xsl:text>
+											</i> All
+										</button>
+									</th>
+									<th>
+										Tick to UnRelate<br/>
+										<button type="button" name="CheckAll" value="Check All" onClick="checkAll(document.myform.unrelate)" class="btn btn-sm btn-success">
+											<i class="fa fa-check fa-white">
+												<xsl:text> </xsl:text>
+											</i> All
+										</button>
+										<xsl:text> </xsl:text>
+										<button type="button" name="UnCheckAll" value="Uncheck All" onClick="uncheckAll(document.myform.unrelate)" class="btn btn-sm btn-warning">
+											<i class="fa fa-close fa-white">
+												<xsl:text> </xsl:text>
+											</i> All
+										</button>
+									</th>
+								</tr>
+								<tr>
+									<xsl:for-each select="ContentDetail/RelatedResults/Content">
+										<!--<xsl:sort select="@name" />-->
+										<xsl:sort select="@publishDate" order="descending" data-type="text"/>
+										<xsl:apply-templates select="." mode="LocateContentNodeForReviews">
+											<xsl:with-param name="indent">&#160;</xsl:with-param>
+										</xsl:apply-templates>
+
+									</xsl:for-each>
+								</tr>
+								<!--<xsl:apply-templates select="ContentDetail/RelatedResults/Content" mode="LocateContentNode"/>-->
+								<xsl:if test="ContentDetail/RelatedResults/Content">
+									<tr>
+										<th colspan="3">
+											<button type="button" name="CheckAll" value="Check All" onClick="checkAll(document.myform.list)" class="btn btn-primary">
+												<i class="fa fa-check fa-white">
+													<xsl:text> </xsl:text>
+												</i> Check All
+											</button>
+											<xsl:text> </xsl:text>
+											<button type="button" name="UnCheckAll" value="Uncheck All" onClick="uncheckAll(document.myform.list)" class="btn btn-primary">
+												<i class="fa fa-share fa-white">
+													<xsl:text> </xsl:text>
+												</i> Uncheck All
+											</button>
+										</th>
+										<th colspan="6">
+											<xsl:choose>
+												<xsl:when test="ContentDetail/RelatedResults/Content">
+													<button type="submit" name="saveRelated" value="Add {ContentDetail/RelatedResults/@cSchemaName}s" class="btn btn-success pull-right">
+														<i class="fa fa-plus fa-white">
+															<xsl:text> </xsl:text>
+														</i><xsl:text> </xsl:text>Add
+														<xsl:value-of select="ContentDetail/RelatedResults/@cSchemaName"/>s
+													</button>
+												</xsl:when>
+												<xsl:otherwise>
+													<label>
+														<xsl:text>No </xsl:text><xsl:value-of select="ContentDetail/RelatedResults/@cSchemaName"/>s Found
+													</label>
+												</xsl:otherwise>
+											</xsl:choose>
+										</th>
+									</tr>
+								</xsl:if>
+							</tbody>
+						</table>
+					</form>
+				</xsl:if>
+			</div>
+		</div>
+	</xsl:template>
+
+	<xsl:template match="Content" mode="LocateContentNodeForReviews">
+		<xsl:param name="indent"/>
+		<xsl:variable name="relationType" select="$page/Request/QueryString/Item[@name='relationType']/node()"/>
+
+		<span class="advancedModeRow locate-content-row" onmouseover="this.className='rowOver'" onmouseout="this.className='advancedModeRow'">
+			<tr>
+				<td>
+					<xsl:choose>
+						<xsl:when test="@name!=''">
+							<xsl:value-of select="@name"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:copy-of select="Name/node()"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</td>
+				<td>
+					<xsl:choose>
+						<xsl:when test="/Rating!=''">
+							<xsl:value-of select="@Rating"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:copy-of select="Rating/node()"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</td>
+				<td>
+					<xsl:variable name="Fullsummary" select="Summary/node()"></xsl:variable>					
+					<xsl:choose>
+						<xsl:when test="/Summary!='' or string-length(Summary/node()) &gt; 50">
+							<div data-bs-toggle="popover" data-bs-placement="top" title="{$Fullsummary}">
+								<xsl:value-of select="substring(Summary/node(),0,50)"/>...
+							</div>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:copy-of select="Summary/node()"/>
+						</xsl:otherwise>
+					</xsl:choose>					
+				</td>
+				<td>					
+					<xsl:if test="@publishDate!=''">						
+						<xsl:call-template name="DD_Mon_YYYY">
+							<xsl:with-param name="date">
+								<xsl:value-of select="@publishDate"/>
+							</xsl:with-param>
+							<xsl:with-param name="showTime">false</xsl:with-param>
+						</xsl:call-template>
+					</xsl:if>
+				</td>
+				<td class="relate">
+					<xsl:choose>
+						<xsl:when test="@related=1">
+						</xsl:when>
+						<xsl:when test="@related=1 and not(contains(@sType,$relationType))">
+							<xsl:text> </xsl:text>
+							<input type="checkbox" name="list" value="{@id}"/>
+							<xsl:text> (Related as </xsl:text>
+							<xsl:value-of select="@sType"/>
+							<xsl:text>)</xsl:text>
+							<input type="checkbox" name="unrelate" value="{@id}"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<!--<label>Relate</label>-->
+							<!--<input type="checkbox" name="relatecontent_{@id}" value="{@id}"/>-->
+							<xsl:text> </xsl:text>
+							<input type="checkbox" name="list" value="{@id}"/>
+							<!--<xsl:if test="/Page/Request/QueryString/Item[@name='type']">
+              <label>2-Way Relationship</label>
+              <input type="checkbox" name="reciprocate_{@id}" value="{@id}" />
+              </xsl:if>-->
+						</xsl:otherwise>
+					</xsl:choose>
+				</td>
+				<td class="unrelate">
+					<xsl:choose>
+						<xsl:when test="@related=1">
+							<input type="checkbox" name="unrelate" value="{@id}"/>
+							<xsl:text> </xsl:text>
+							<xsl:text>(Related)</xsl:text>
+							<xsl:value-of select="$relationType"/>
+						</xsl:when>
+						<xsl:when test="@related=1 and not(contains(@sType,$relationType))">
+							<input type="checkbox" name="unrelate" value="{@id}"/>
+							<xsl:text> </xsl:text>
+							<xsl:text> (Related as </xsl:text>
+							<xsl:value-of select="@sType"/>
+							<xsl:text>)</xsl:text>
+						</xsl:when>
+
+					</xsl:choose>
+				</td>
+			</tr>
+		</span>	
+
+	</xsl:template>
+	
 	<!--   ##################  Parent Change   ##############################   -->
 	<!-- -->
 	<xsl:template match="Page[@layout='ParentChange']" mode="Admin">
