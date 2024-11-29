@@ -11519,7 +11519,7 @@ namespace Protean
                     else if (nRootNode == -1)
                     {
                         // Orphans only
-                        cSQL = "SELECT c.nContentKey as id, c.cContentForiegnRef as ref, c.cContentName as name, c.cContentSchemaName as type, c.cContentXmlBrief as content " + "	a.dPublishDate AS publishDate " + " FROM tblContent c" + "	INNER JOIN tblAudit a ON a.nAuditKey = c.nAuditId " + " LEFT OUTER JOIN tblContentLocation cl ON tblContent.nContentKey = cl.nContentId WHERE ( " + sWhere + " ) AND (cl.nContentLocationKey IS NULL) ORDER BY c.cContentName";
+                        cSQL = "SELECT c.nContentKey as id, c.cContentForiegnRef as ref, c.cContentName as name, c.cContentSchemaName as type, c.cContentXmlBrief as content, " + "	a.dPublishDate AS publishDate " + " FROM tblContent c" + "	INNER JOIN tblAudit a ON a.nAuditKey = c.nAuditId " + " LEFT OUTER JOIN tblContentLocation cl ON c.nContentKey = cl.nContentId WHERE ( " + sWhere + " ) AND (cl.nContentLocationKey IS NULL) ORDER BY c.cContentName";
 
 
 
@@ -11564,9 +11564,10 @@ namespace Protean
                         //Modified query according to criteria for review
                         if (cSchemaName == "Review")
                         {
-                            cSubquerySQL = "SELECT DISTINCT c.nContentKey AS id " + "FROM tblContent c " + " "+ "Inner join tblContentRelation cr  On c.nContentKey= cr.nContentChildId INNER JOIN tblAudit cra ON cra.nAuditKey= cr.nAuditId and cra.nStatus=1 " + "	INNER JOIN tblContentLocation l " + "		ON l.nContentId = cr.nContentParentId INNER JOIN tblAudit cla ON cla.nAuditKey= l.nAuditId and cla.nStatus=1 " + "WHERE (" + sWhere + ") " + "	AND NOT(c.nContentKey IN (0," + nIgnoreID + ")) " + "	AND l.nStructId IN (" + cLocations + ") ";
+                            cSubquerySQL = "SELECT DISTINCT c.nContentKey AS id " + "FROM tblContent c " + " " + "Inner join tblContentRelation cr  On c.nContentKey= cr.nContentChildId INNER JOIN tblAudit cra ON cra.nAuditKey= cr.nAuditId and cra.nStatus=1 " + "	INNER JOIN tblContentLocation l " + "		ON l.nContentId = cr.nContentParentId INNER JOIN tblAudit cla ON cla.nAuditKey= l.nAuditId and cla.nStatus=1 " + "WHERE (" + sWhere + ") " + "	AND NOT(c.nContentKey IN (0," + nIgnoreID + ")) " + "	AND l.nStructId IN (" + cLocations + ") ";
 
-                        }else
+                        }
+                        else
                         {
                             cSubquerySQL = "SELECT DISTINCT c.nContentKey AS id " + "FROM tblContent c " + "	INNER JOIN tblContentLocation l " + "		ON c.nContentKey = l.nContentId " + "WHERE (" + sWhere + ") " + "	AND NOT(c.nContentKey IN (0," + nIgnoreID + ")) " + "	AND l.nStructId IN (" + cLocations + ") ";
 
@@ -14598,19 +14599,19 @@ namespace Protean
                 // Dim oDr As SqlDataReader
                 string sSql;
                 string nContentID = string.Empty;
-                
+
                 string cProcessInfo = "";
                 try
                 {
-                    sSql = "execute spGetContentIdFromOrderReference @orderRef=" + orderRef + ", @ProductName=" + "'"+ ContentName + "'";
+                    sSql = "execute spGetContentIdFromOrderReference @orderRef=" + orderRef + ", @ProductName=" + "'" + ContentName + "'";
                     using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql))
                     {
                         if (oDr != null)
                         {
                             while (oDr.Read())
                             {
-                                nContentID = Convert.ToString(oDr["nItemId"]);                                
-                            }                            
+                                nContentID = Convert.ToString(oDr["nItemId"]);
+                            }
                         }
                     }
                     return nContentID.ToString();
