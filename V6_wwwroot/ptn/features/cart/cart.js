@@ -187,8 +187,7 @@ function initialiseProductSKUs() {
         }
 
         if (salePrice != '') {
-            $(priceId + " span.price span[itemprop='price'], " + priceId + " span.price span[itemprop='price'],")
-                .html(salePrice);
+            $(priceId + " span.price span[itemprop='price']").html(salePrice);
         }
 
         if ($('.product .picture').length > 1) {

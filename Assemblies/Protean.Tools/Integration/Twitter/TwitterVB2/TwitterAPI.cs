@@ -653,7 +653,7 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
                                 case "as_of":
                                     {
                                         string AsOfString = GetNextQuotedString(Json, ref Position);
-                                        string DateString = Strings.Replace(AsOfString, ",", "");
+                                        string DateString = AsOfString.Replace( ",", "");
                                         var re = new Regex("(?<DayName>[^ ]+) (?<Day>[^ ]{1,2}) (?<MonthName>[^ ]+) (?<Year>[0-9]{4}) (?<Hour>[0-9]{1,2}):(?<Minute>[0-9]{1,2}):(?<Second>[0-9]{1,2}) (?<TimeZone>[+-][0-9]{4})");
                                         var CreatedAt = re.Match(DateString);
                                         AsOf = DateTime.Parse(string.Format("{0} {1} {2} {3}:{4}:{5}", CreatedAt.Groups["MonthName"].Value, CreatedAt.Groups["Day"].Value, CreatedAt.Groups["Year"].Value, CreatedAt.Groups["Hour"].Value, CreatedAt.Groups["Minute"].Value, CreatedAt.Groups["Second"].Value));

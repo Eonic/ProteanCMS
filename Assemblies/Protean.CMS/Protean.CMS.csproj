@@ -148,6 +148,9 @@
     <Reference Include="QRCoder, Version=1.6.0.0, Culture=neutral, PublicKeyToken=c4ed5b9ae8358a28, processorArchitecture=MSIL">
       <HintPath>..\..\packages\QRCoder.1.6.0\lib\net40\QRCoder.dll</HintPath>
     </Reference>
+    <Reference Include="Select.HtmlToPdf, Version=24.1.0.0, Culture=neutral, PublicKeyToken=e0ae9f6e27a97018, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Select.HtmlToPdf.24.1.0\lib\net40\Select.HtmlToPdf.dll</HintPath>
+    </Reference>
     <Reference Include="SoundInTheory.DynamicImage, Version=3.1.1.1, Culture=neutral, PublicKeyToken=fa44558110383067, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\NonNuget\SoundInTheory.DynamicImage.dll</HintPath>
@@ -170,7 +173,13 @@
     </Reference>
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.SqlClient, Version=4.6.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\YeomansClients\GNFE-Protean\GNFE-Protean_Sol\packages\System.Data.SqlClient.4.9.0\lib\net462\System.Data.SqlClient.dll</HintPath>
+    </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Common, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Drawing.Common.8.0.10\lib\net462\System.Drawing.Common.dll</HintPath>
+    </Reference>
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.IO, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.IO.4.3.0\lib\net462\System.IO.dll</HintPath>
@@ -345,7 +354,9 @@
     <Compile Include="tools\fsHelper\FSHelper.WebFile.cs" />
     <Compile Include="tools\fsHelper\FSHelper.WebFileExtendedProperties.cs" />
     <Compile Include="tools\FTPHelper.cs" />
+    <Compile Include="tools\Http.Utils.cs" />
     <Compile Include="tools\ImageHelper.cs" />
+    <Compile Include="tools\Impersonate.cs" />
     <Compile Include="tools\Integration\Integration.Directory.cs" />
     <Compile Include="tools\Integration\Integration.Directory.Facebook.cs" />
     <Compile Include="tools\Integration\Integration.Directory.Twitter.cs" />
@@ -354,6 +365,7 @@
     <Compile Include="tools\MailQueue.cs" />
     <Compile Include="tools\Messaging.cs" />
     <Compile Include="tools\Monitor.cs" />
+    <Compile Include="tools\pdf.cs" />
     <Compile Include="tools\PerfLog.cs" />
     <Compile Include="tools\Startup.cs" />
     <Compile Include="tools\stdTools.cs" />

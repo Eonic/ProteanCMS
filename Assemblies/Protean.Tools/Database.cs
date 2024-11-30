@@ -1375,6 +1375,7 @@ namespace Protean.Tools
         {
             try
             {
+                DateTime dateValue;
                 if (dDateTime is DateTime)
                 {
                     DateTime thisDate = (DateTime)dDateTime;
@@ -1395,10 +1396,10 @@ namespace Protean.Tools
                 {
                     return "null";
                 }
-                else if (Microsoft.VisualBasic.Information.IsDate(dDateTime.ToString()))
+                else if (DateTime.TryParse(dDateTime.ToString(), out dateValue))
                 {
                     // DateTime dxDate = (DateTime)dDateTime;
-                    DateTime dxDate = Convert.ToDateTime(dDateTime.ToString());
+                    DateTime dxDate = dateValue;
                     //DateTime dxDate = DateTime.ParseExact(dDateTime.ToString(), "yyyy-mm-dd", null);
                     if (dxDate == DateTime.Parse("0001-01-01") | dxDate == DateTime.Parse("0001-01-01"))
                         return "null";
@@ -1433,13 +1434,21 @@ namespace Protean.Tools
             try
             {
                 if (text == "Null")
+                {
                     return text;
+                }
                 if (text == "''" | text == "")
+                {
                     return "''";
-                if (Microsoft.VisualBasic.Strings.Right(text, 1) == "'")
+                }
+                if (text.Length > 0 && text[text.Length - 1] == '\'')
+                {
                     text = text.Substring(0, text.Length - 1);
-                if (Microsoft.VisualBasic.Strings.Left(text, 1) == "'")
+                }
+                if (text.StartsWith("'"))
+                {
                     text = text.Substring(1, text.Length - 1);
+                }
                 text = SqlFmt(text);
                 text = "'" + text + "'";
                 return text;
@@ -1800,8 +1809,9 @@ namespace Protean.Tools
             try
             {
                 int i;
-                DataColumn[] returnColumns = new DataColumn[Microsoft.VisualBasic.Information.UBound(columnNames) + 1];
-                var loopTo = Microsoft.VisualBasic.Information.UBound(columnNames);
+                DataColumn[] returnColumns = new DataColumn[columnNames.Length];
+
+                var loopTo = columnNames.Length - 1;
                 for (i = 0; i <= loopTo; i++)
                     returnColumns[i] = oDs.Tables[tableName].Columns[columnNames[i]];
                 return returnColumns;

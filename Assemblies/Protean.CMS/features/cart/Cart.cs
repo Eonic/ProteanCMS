@@ -2753,7 +2753,7 @@ namespace Protean
                 }
                 messageHtml = sWriter.ToString();
                 sWriter.Close();
-                var xMailingListDoc = htmlToXmlDoc(messageHtml);
+                var xMailingListDoc = Protean.Tools.Xml.HtmlConverter.htmlToXmlDoc(messageHtml);
                 var xListElement = xMailingListDoc.DocumentElement;
                 valDict = XmltoDictionary(xListElement, true);
                 return valDict;
