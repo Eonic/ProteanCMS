@@ -296,23 +296,23 @@ namespace Protean.Tools
                 // "Data Source=" & Me.oInput & ";" & _
                 // "Extended Properties=""Excel 8.0;HDR=Yes;IMEX=1;""")
 
-                if ((this.oInput).ToString().EndsWith(".xlsx"))
+                if ((oInput).ToString().EndsWith(".xlsx"))
                 {
 
-                    oOutputXml.LoadXml(GetXML(this.oInput.ToString()));
+                    oOutputXml.LoadXml(GetXML(oInput.ToString()));
                     this.oOutputXml = oOutputXml.DocumentElement;
                 }
 
-                else if ((this.oInput).ToString().EndsWith(".csv"))
+                else if ((oInput).ToString().EndsWith(".csv"))
                 {
 
-                    oOutputXml.LoadXml(GetXML(this.oInput.ToString()));
+                    oOutputXml.LoadXml(GetXML(oInput.ToString()));
                     this.oOutputXml = oOutputXml.DocumentElement;
                 }
                 else
                 {
 
-                    oExcelConn = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;" + "Data Source=" + this.oInput + ";" + "Extended Properties=Excel 12.0");
+                    oExcelConn = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;" + "Data Source=" + oInput + ";" + "Extended Properties=Excel 12.0");
 
                     oExcelConn.Open();
 
@@ -374,9 +374,8 @@ namespace Protean.Tools
             }
 
 
-            catch (Exception ex)
+            catch (Exception)
             {
-                ex = null;
                 SetStatus(Status.Failed, StatusReason.Undefined);
             }
 
