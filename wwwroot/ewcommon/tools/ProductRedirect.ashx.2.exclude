@@ -30,15 +30,14 @@ Public Class ProductDetail : Implements IHttpHandler, IRequiresSessionState
             'nPageId = odb.getPrimaryLocationByArtId(nContentId)
 
             Dim sSql As String
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             sSql = "SELECT nStructId FROM tblContentLocation WHERE nContentId = " & nContentId & " and bPrimary = 1"
-            oDr = odb.getDataReader(sSql)
-            While oDr.Read
-                nPageId = oDr(0)
-            End While
-            oDr.Close()
-            oDr = Nothing
-
+            Using oDr As SqlDataReader = odb.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                While oDr.Read
+                    nPageId = oDr(0)
+                End While
+                oDr.Close()
+            End Using
             oEw.mnPageId = nPageId
             oPageXml = oEw.GetPageXML()
 

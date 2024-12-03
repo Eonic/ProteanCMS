@@ -49,8 +49,8 @@
     <Company>Eonic Digital LLP.</Company>
     <Product>ProteanCMS</Product>
     <Copyright>Copyright © Eonic Digital LLP.  2024</Copyright>
-    <AssemblyVersion>6.1.22.77</AssemblyVersion>
-    <FileVersion>6.1.22.77</FileVersion>
+    <AssemblyVersion>6.1.24.91</AssemblyVersion>
+    <FileVersion>6.1.255.91</FileVersion>
     <InformationalVersion>0.0.0.115</InformationalVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM64'">
