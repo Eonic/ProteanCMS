@@ -1,16 +1,13 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
 using System.Web;
-
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 
 namespace Protean
@@ -216,7 +213,10 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        transformException = ex;
+                        if (transformException is null)
+                        {
+                            transformException = ex;
+                        }
                         stdTools.returnException(ref myWeb.msException, "Protean.XmlHelper.Transform", "XSLFile.Set", ex, msXslFile, value);
                         bError = true;
                     }
@@ -500,7 +500,7 @@ namespace Protean
                 }
             }
 
-            public void Process(XmlReader xReader,ref XmlWriter xWriter)
+            public void Process(XmlReader xReader, ref XmlWriter xWriter)
             {
                 string sProcessInfo = "Processing:" + msXslFile;
                 try
@@ -539,28 +539,30 @@ namespace Protean
                         resolver.Credentials = System.Net.CredentialCache.DefaultCredentials;
 
                         var ws = oCStyle.OutputSettings.Clone();
-
-                        // load the pagexml into a reader
-                        var oReader = new XmlTextReader(new StringReader(oXml.OuterXml));
-                        var sWriter = new StringWriter();
-
-                        if (myWeb.msException == "")
+                        if (oCStyle != null)
                         {
-                            // Run transformation
+                            // load the pagexml into a reader
+                            var oReader = new XmlTextReader(new StringReader(oXml.OuterXml));
+                            var sWriter = new StringWriter();
 
-                            // Dim xsltDomainProxy As ProxyDomain = xsltDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, GetType(ProxyDomain).FullName)
-                            // xsltDomainProxy._LocalContext = myWeb.moCtx
-                            // Dim responseString As String = xsltDomainProxy.RunTransform(AssemblyPath, ClassName, oXml.OuterXml)
-                            // oResponse.Write(responseString)
+                            if (myWeb.msException == "")
+                            {
+                                // Run transformation
 
-                            oCStyle.Transform(oReader, xsltArgs, XmlWriter.Create(oResponse.OutputStream, ws), resolver);
+                                // Dim xsltDomainProxy As ProxyDomain = xsltDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, GetType(ProxyDomain).FullName)
+                                // xsltDomainProxy._LocalContext = myWeb.moCtx
+                                // Dim responseString As String = xsltDomainProxy.RunTransform(AssemblyPath, ClassName, oXml.OuterXml)
+                                // oResponse.Write(responseString)
+
+                                oCStyle.Transform(oReader, xsltArgs, XmlWriter.Create(oResponse.OutputStream, ws), resolver);
+                            }
+                            else
+                            {
+                                oResponse.Write(myWeb.msException);
+                            }
+                            oReader.Close();
+                            sWriter.Dispose();
                         }
-                        else
-                        {
-                            oResponse.Write(myWeb.msException);
-                        }
-                        oReader.Close();
-                        sWriter.Dispose();
                     }
 
                     else
@@ -918,7 +920,7 @@ namespace Protean
                     return null;
                 }
             }
-            #pragma warning restore 618
+#pragma warning restore 618
 
         }
 

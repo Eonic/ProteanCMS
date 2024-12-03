@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+	<model>
+		<instance>
+			<tblContent>
+				<nContentKey/>
+				<nContentPrimaryId/>
+				<nVersion/>
+				<cContentForiegnRef/>
+				<cContentName/>
+				<cContentSchemaName>prayer</cContentSchemaName>
+				<cContentXmlBrief>
+					<Content>
+						<Title/>
+						<Request/>
+						<From/>
+					</Content>
+				</cContentXmlBrief>
+				<cContentXmlDetail/>
+				<nAuditId/>
+				<nAuditKey/>
+				<dPublishDate/>
+				<dExpireDate/>
+				<dInsertDate/>
+				<nInsertDirId/>
+				<dUpdateDate/>
+				<nUpdateDirId/>
+				<nStatus>1</nStatus>
+				<cDescription/>
+			</tblContent>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+		<bind nodeset="tblContent">
+			<bind id="cContentSourceName" nodeset="cContentName" required="true()" type="string"/>
+			<bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+			<bind id="dExpireDate" nodeset="dExpireDate" required="false()" type="string"/>
+			<bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
+			<bind id="cDescription" nodeset="cDescription" required="false()" type="string"/>
+			<bind nodeset="cContentXmlBrief/Content">
+				<bind id="cContentSourceName" nodeset="Title" required="true()" type="string"/>
+				<bind id="cContentRequest" nodeset="Request" required="false()" type="string"/>
+				<bind id="cContentFrom" nodeset="From" required="false()" type="string"/>
+			</bind>
+		</bind>
+	</model>
+	<group ref="EditContent">
+		<label>Prayer</label>
+		<group class="tabs">
+			<group>
+				<label>
+					<i class="fas fa-pen"> </i>
+					<span class="space"> </span>
+					<span>Content</span>
+				</label>
+				<group ref="Content" class="Content">
+					<label>Prayer Title *</label>
+					<input bind="cContentSourceName" class="required long">
+					</input>
+				</group>
+				<group ref="Content" class="Content">
+					<label>Prayer Request *</label>
+					<textarea bind="cContentRequest" class="TextArea xhtml Required" rows="6" cols="70">
+					</textarea>
+				</group>
+
+				<group ref="Content" class="Content">
+					<label>Prayer From</label>
+					<textarea bind="cContentFrom" class="long" rows="15" cols="70">
+					</textarea>
+				</group>
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-tachometer-alt"> </i>
+					<span class="space"> </span>
+					<span>Animate</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='animate']"/>
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-cog"> </i>
+					<span class="space"> </span>
+					<span>Advanced Settings</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+				<group>
+					<input bind="cDescription" class="short">
+						<label>Change Notes</label>
+					</input>
+
+				</group>
+			</group>
+		</group>
+
+	</group>
+
+	<group ref="submit" class="contentSubmit">
+		<submit submission="" ref="ewSubmit" class="principle">
+			<label>Save Prayer</label>
+		</submit>
+	</group>
+</Content>

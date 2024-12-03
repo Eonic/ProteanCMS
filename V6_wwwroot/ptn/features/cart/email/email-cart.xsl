@@ -171,7 +171,7 @@
 	  <xsl:if test="@payableType='settlement' or (@payableType='deposit' and @transStatus)">
 		  <br/>
 		  <a href="{$siteURL}?cartCmd=Settlement&amp;SettlementRef={@settlementID}">
-			 >> CLICK HERE TO PAY YOUR BALANCE 10 DAYS BEFORE YOUR EVENT
+			 >> CLICK HERE TO PAY YOUR BALANCE
 		  </a><br/>
 	  </xsl:if>
     <xsl:if test="/Page/Contents/Content[@name='cartMessage']">

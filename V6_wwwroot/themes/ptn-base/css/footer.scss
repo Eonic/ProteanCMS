@@ -6,12 +6,40 @@
 
     .footer-inner {
         background: $footer-bg;
-        padding-top: $grid-gutter-height;
-        padding-bottom: $grid-gutter-height;
+        padding-top: 3rem;
+        padding-bottom: 3rem;
 
         @media(min-width:2000px) {
             max-width: 2000px;
             margin: 0 auto;
+        }
+    }
+
+    .module-containing-icon {
+        position: relative;
+        font-size: 1rem;
+        padding-left: 1.5rem;
+        top: 5px;
+        margin-bottom: 1.1rem;
+
+
+        .title {
+            font-size: 1rem;
+            margin-bottom: 0.2rem;
+
+
+            i {
+                width: 1rem;
+                height: auto;
+                border: 0;
+                background: transparent;
+                float: left;
+                position: absolute;
+                left: 0;
+                top: 0;
+                color: #fff !important;
+                font-size: 1rem;
+            }
         }
     }
 
@@ -40,7 +68,8 @@
 
     .socialLinks.iconset-plain, .socialLinks.iconset-default {
         a {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
+            padding: 0 10px 10px;
         }
     }
 
@@ -55,12 +84,6 @@
 
         &.align-center {
             text-align: center;
-        }
-    }
-
-    .socialLinks {
-        i {
-            font-size: 2.5rem;
         }
     }
 

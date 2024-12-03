@@ -148,6 +148,9 @@
     <Reference Include="QRCoder, Version=1.6.0.0, Culture=neutral, PublicKeyToken=c4ed5b9ae8358a28, processorArchitecture=MSIL">
       <HintPath>..\..\packages\QRCoder.1.6.0\lib\net40\QRCoder.dll</HintPath>
     </Reference>
+    <Reference Include="Select.HtmlToPdf, Version=24.1.0.0, Culture=neutral, PublicKeyToken=e0ae9f6e27a97018, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Select.HtmlToPdf.24.1.0\lib\net40\Select.HtmlToPdf.dll</HintPath>
+    </Reference>
     <Reference Include="SoundInTheory.DynamicImage, Version=3.1.1.1, Culture=neutral, PublicKeyToken=fa44558110383067, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\NonNuget\SoundInTheory.DynamicImage.dll</HintPath>
@@ -164,13 +167,18 @@
     <Reference Include="System.ComponentModel.Composition.Registration" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
-    <Reference Include="System.Configuration.ConfigurationManager, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Configuration.ConfigurationManager.8.0.0\lib\net462\System.Configuration.ConfigurationManager.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="System.Configuration.ConfigurationManager, Version=8.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\..\EonicClients\MonarchChemicalsGit\packages\System.Configuration.ConfigurationManager.8.0.1\lib\net462\System.Configuration.ConfigurationManager.dll</HintPath>
     </Reference>
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.SqlClient, Version=4.6.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\YeomansClients\GNFE-Protean\GNFE-Protean_Sol\packages\System.Data.SqlClient.4.9.0\lib\net462\System.Data.SqlClient.dll</HintPath>
+    </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Common, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Drawing.Common.8.0.10\lib\net462\System.Drawing.Common.dll</HintPath>
+    </Reference>
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.IO, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.IO.4.3.0\lib\net462\System.IO.dll</HintPath>
@@ -246,8 +254,8 @@
       <HintPath>..\..\packages\System.Text.Encodings.Web.8.0.0\lib\net462\System.Text.Encodings.Web.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Text.Json, Version=8.0.0.4, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Text.Json.8.0.4\lib\net462\System.Text.Json.dll</HintPath>
+    <Reference Include="System.Text.Json, Version=8.0.0.5, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Text.Json.8.0.5\lib\net462\System.Text.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
@@ -284,6 +292,9 @@
     <Compile Include="admin\Admin.Redirects.cs" />
     <Compile Include="admin\AdminXforms.cs" />
     <Compile Include="api\rest.cs" />
+    <Compile Include="api\Services.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="api\soap.cs" />
     <Compile Include="core\DBImport.cs" />
     <Compile Include="tools\AppStart.cs" />
@@ -301,9 +312,6 @@
     <Compile Include="content\Content.JSONActions.cs" />
     <Compile Include="content\Modules.cs" />
     <Compile Include="core\Base.cs" />
-    <Compile Include="core\Services.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="features\cart\Cart.cs" />
     <Compile Include="features\cart\Cart.JSONActions.cs" />
     <Compile Include="features\cart\Cart.Modules.cs" />
@@ -333,6 +341,7 @@
     <Compile Include="providers\filters\PageFilter.cs" />
     <Compile Include="providers\Payment.BaseProvider.cs" />
     <Compile Include="providers\filters\PriceFilter.cs" />
+    <None Include="examples\modules\exampleModule\exampleCss.scss" />
     <None Include="providers\Streaming.BaseProvider.cs" />
     <Compile Include="setup\Setup.cs" />
     <Compile Include="setup\Tests.cs" />
@@ -344,7 +353,9 @@
     <Compile Include="tools\fsHelper\FSHelper.WebFile.cs" />
     <Compile Include="tools\fsHelper\FSHelper.WebFileExtendedProperties.cs" />
     <Compile Include="tools\FTPHelper.cs" />
+    <Compile Include="tools\Http.Utils.cs" />
     <Compile Include="tools\ImageHelper.cs" />
+    <Compile Include="tools\Impersonate.cs" />
     <Compile Include="tools\Integration\Integration.Directory.cs" />
     <Compile Include="tools\Integration\Integration.Directory.Facebook.cs" />
     <Compile Include="tools\Integration\Integration.Directory.Twitter.cs" />
@@ -353,6 +364,7 @@
     <Compile Include="tools\MailQueue.cs" />
     <Compile Include="tools\Messaging.cs" />
     <Compile Include="tools\Monitor.cs" />
+    <Compile Include="tools\pdf.cs" />
     <Compile Include="tools\PerfLog.cs" />
     <Compile Include="tools\Startup.cs" />
     <Compile Include="tools\stdTools.cs" />
@@ -406,6 +418,10 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <Content Include="examples\modules\exampleModule\exampleManifest.xml" />
+    <Content Include="examples\modules\exampleModule\exampleContentType.xml" />
+    <Content Include="examples\modules\exampleModule\exampleModuleList.xml" />
+    <Content Include="examples\modules\exampleModule\exampleModuleXsl.xsl" />
     <Content Include="tools\Encryption.cs" />
     <Content Include="tools\Object.cs" />
   </ItemGroup>

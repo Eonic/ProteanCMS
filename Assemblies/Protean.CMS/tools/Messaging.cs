@@ -1,20 +1,18 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using PreMailer.Net;
+using Protean.Providers.Messaging;
+using System;
 using System.Collections;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Mail;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
-using PreMailer.Net;
-using Protean.Providers.Messaging;
 using static Protean.stdTools;
-using static Protean.Tools.Xml;
 
 namespace Protean
 {
@@ -42,7 +40,7 @@ namespace Protean
         public string mcModuleName = "Protean.Messaging";
         public bool sendAsync = false;
 
-       // private string msAttachmentPath = "";
+        // private string msAttachmentPath = "";
         private Collection Attachments;
         private static bool mailSent = false;
 
@@ -398,7 +396,7 @@ namespace Protean
 
         public object emailer(XmlElement oBodyXML, string xsltPath, string fromName, string fromEmail, string recipientEmail, string SubjectLine, ref Protean.Cms.dbHelper odbHelper, string successMessage = "Message Sent", string failureMessage = "Message Failed", string recipientName = "", string ccRecipient = "", string bccRecipient = "", string cSeperator = "", string cPickupHost = "", string cPickupLocation = "")
         {
-           
+
             // PerfMon.Log("Messaging", "emailer")
             if (cSeperator is null)
             {
@@ -518,7 +516,7 @@ namespace Protean
                 }
 
                 // lets get the subjectline form the html title
-                var oEmailXmlDoc = htmlToXmlDoc(messageHtml);
+                var oEmailXmlDoc = Protean.Tools.Xml.HtmlConverter.htmlToXmlDoc(messageHtml);
                 if (oEmailXmlDoc != null)
                 {
                     // override the subject line from the template.
@@ -1017,8 +1015,19 @@ namespace Protean
                                 {
                                     activitySchema = oBodyXML.GetAttribute("id");
                                 }
+
+                                long otherId = 0;
+                                if (!string.IsNullOrEmpty(oBodyXML.GetAttribute("messageType")))
+                                {
+                                    activitySchema = oBodyXML.GetAttribute("messageType");
+                                    otherId = Convert.ToInt64("0" + oBodyXML.GetAttribute("subjectId"));
+                                }
+
+
                                 long logId = odbHelper.emailActivity((Int16)mnUserId, cActivityDetail, oMailn.To.ToString(), oMailn.From.ToString(), oXml.OuterXml);
-                                odbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Email, mnUserId, SessionId, DateTime.Now, (Int16)logId, 0, activitySchema);
+
+                                odbHelper.logActivity(Cms.dbHelper.ActivityType.Email, mnUserId, 0, (Int16)logId, otherId, activitySchema, false, null);
+                                //odbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Email, mnUserId, SessionId, DateTime.Now, (Int16)logId, 0, activitySchema);
                             }
 
                             else
@@ -1051,7 +1060,7 @@ namespace Protean
                     if (oXml.SelectSingleNode("descendant-or-self::optIn[node()='true']") != null)
                     {
 
-                        
+
                         System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
                         string sMessagingProvider = "";
                         if (moMailConfig != null)
@@ -1382,7 +1391,7 @@ namespace Protean
                                 sWriter.Close();
                                 sWriter = null;
 
-                                oXml = htmlToXmlDoc(sMessage);
+                                oXml = Protean.Tools.Xml.HtmlConverter.htmlToXmlDoc(sMessage);
                             }
 
                             var oXmlRemoveHeader = oXml.FirstChild;
@@ -1767,8 +1776,7 @@ namespace Protean
                 // Lets get the title and override the one provided
                 var oXml = new XmlDocument();
 
-                oXml = htmlToXmlDoc(sEmailBody);
-
+                oXml = Protean.Tools.Xml.HtmlConverter.htmlToXmlDoc(sEmailBody);
                 if (oXml != null)
                 {
                     // override the subject line from the template.
@@ -2149,7 +2157,7 @@ namespace Protean
                 cMessage = Strings.Replace(cMessage, ">," + Constants.vbCrLf + "<", ">,<");
                 string cSplitStr = "";
                 bool bMessageStarted = false;
-               // bool bMessageFinished = false;
+                // bool bMessageFinished = false;
                 var oXML = new XmlDocument();
                 oXML.AppendChild(oXML.CreateElement("MailMessage"));
                 var oMessageElement = oXML.CreateElement("Message");

@@ -14,22 +14,19 @@ packages/
 /.vs/ProteanCMSInstaller/v17
 /.vs/ProteanCMSInstaller/FileContentIndex
 
-/wwwroot/bin
-/wwwroot/images
-/wwwroot/ewcommon/bin
+/wwwroot/bin/**
+/wwwroot/images/**
+/wwwroot/ewcommon/bin/**
 
-/V6_wwwroot/bin
-/V6_wwwroot/images
-/V6_wwwroot/ptn/Bin
+/V6_wwwroot/bin/**
+/V6_wwwroot/images/**
+/V6_wwwroot/ptn/Bin/**
 
-/Assemblies/Protean.CMS/bin
-/Assemblies/Protean.CMS/obj
-/Assemblies/Protean.Tools/bin
-/Assemblies/Protean.Tools/obj
-/Assemblies/Protean.Tools.Csharp/bin
-/Assemblies/Protean.Tools.Csharp/obj
-/Assemblies/Protean.Tools.Csharp/bin
-/Assemblies/Protean.Tools.UnitTests/bin
-/Assemblies/Protean.Tools.UnitTests/obj
+Assemblies/Protean.CMS/bin/**
+Assemblies/Protean.CMS/obj/**
+Assemblies/Protean.Tools/bin/**
+Assemblies/Protean.Tools/obj/**
+Assemblies/Protean.Tools.UnitTests/bin/**
+Assemblies/Protean.Tools.UnitTests/obj/**
 
 

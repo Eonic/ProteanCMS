@@ -267,8 +267,8 @@
   <xsl:template match="Page[@layout='Logon']" mode="Admin">
     <div class="adminTemplate container" id="template_Logon">
 		<span class="text-light logo-text login-logo">
-			<img src="/ptn/admin/skin/images/ptn-logo.png" alt="ProteanCMS" class="cms-logo-dd"/>
-			<strong>Protean</strong>CMS
+			<img src="/ptn/admin/skin/images/ptn-logo.png" alt="proteanCMS" class="cms-logo-dd"/>
+			<strong>protean</strong>CMS
 		</span>
 		<div class="card">
 			<div class="card-header">
@@ -367,7 +367,7 @@
     <xsl:variable name="moduleType" select="/Page/ContentDetail/descendant::Content/@moduleType"/>
     <a target="_new" id="userGuideURL">
       <xsl:attribute name="href">
-        <xsl:text>/ewcommon/tools/UserGuide.ashx?fRef=</xsl:text>
+        <xsl:text>/ptn/tools/UserGuide.ashx?fRef=</xsl:text>
         <xsl:choose>
           <xsl:when test="$ewCmd='EditContent' or $ewCmd='AddModule' or $ewCmd='AddContent'">
             <xsl:choose>
@@ -695,8 +695,8 @@
         <div class="row">
           <div class="btn-group-spaced mb-3">
 			  <span class="text-light logo-text">
-				  <img src="/ptn/admin/skin/images/ptn-logo.png" alt="ProteanCMS" class="cms-logo-dd"/>
-					  <strong>Protean</strong>CMS
+				  <img src="/ptn/admin/skin/images/ptn-logo.png" alt="proteanCMS" class="cms-logo-dd"/>
+					  <strong>protean</strong>CMS
 				  </span>
 			  <xsl:for-each select="$page/AdminMenu/MenuItem/MenuItem">
 				  <a href="?ewCmd={@cmd}" class="btn btn-sm btn-primary">
@@ -755,7 +755,7 @@
                         </xsl:when>
                         <xsl:otherwise>
                           <h3>
-                            <strong>ProteanCMS</strong>
+                            <strong>proteanCMS</strong>
                           </h3>
                           <p>ProteanCMS is fully opensource.</p>
                           <a href="https://www.proteancms.com" target="_blank">For more information click here.</a>
@@ -820,32 +820,11 @@
               <div class="col-lg-4">
                 <div class="card card-default">
                   <div class="card-header">
-                    <h4 >Insights</h4>
+                    <h4>To Do's</h4>
                   </div>
                   <div class="card-body">
-                    <div id="insights-section">
-                      <xsl:for-each select="$page/AdminMenu/MenuItem/Module">
-                        <xsl:if test="@name != ''">
-                          <xsl:variable name="id" select="@id"/>
-                          <xsl:variable name="jsonURL" select="@jsonURL"/>
-                          <div id="metric_{position()}" class="metric" data-json-url="{$jsonURL}">
-                            <div class="metric-inner">
-                              <header class="metric-header">
-                                <h1 class="metric-title">
-                                  <xsl:value-of select="@name"/>
-                                </h1>
-                              </header>
-                              <div class="metric-body">
-                                <div class="value">
-                                  <h1 class="metric-value" v-for="result in filterResultArray('metric_{position()}')">
-                                    <b>{{result.Key}}</b>: {{result.Value}}<br/>
-                                  </h1>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </xsl:if>
-                      </xsl:for-each>
+                    <div id="insights-section" class="nav flex-column ">
+						<xsl:apply-templates select="$page/AdminMenu/MenuItem/Module[@pos='todo']" mode="admin-module"/>
                     </div>
                   </div>
                 </div>
@@ -1064,7 +1043,23 @@
     </section>
   </xsl:template>
 
-  <xsl:template match="Page[@layout='SettingsDash']" mode="Admin">
+	<xsl:template match="Module" mode="admin-module">
+		unknown module Type
+	</xsl:template>
+
+	<xsl:template match="Module[@type='single-metric']" mode="admin-module">
+		<xsl:if test="@name != ''">
+			<xsl:variable name="id" select="@id"/>
+			<xsl:variable name="jsonURL" select="@jsonURL"/>
+			<div id="metric_{position()}" class="metric btn-group-vertical" data-json-url="{$jsonURL}">
+				<a class="btn btn-outline-primary metric-value" href="{@url}" v-for="result in filterResultArray('metric_{position()}')">
+					<xsl:value-of select="@name"/>&#160;&#160;<span class="badge bg-primary">{{result.Value}}</span><br/>
+				</a>
+			</div>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="Page[@layout='SettingsDash']" mode="Admin">
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-3">
@@ -2733,7 +2728,7 @@
       <div class="row">
         <div class="col-md-3">
           <div class="card card-default">
-            <div class="card-header">Instructions</div>
+            <div class="card-header"><h3>Instructions</h3></div>
             <div class="card-body">
 
               <p>Any content can be located on any page throughout the site. However it will not be displayed unless the page contains a module that displays that kind of content.</p>
@@ -2742,7 +2737,7 @@
               </p>
             </div>
           </div>
-        </div>
+        </div> <div class="col-md-9">
         <form action="?ewCmd=LocateContent&amp;pgid={/Page/@id}&amp;id={/Page/Request/*/Item[@name='id']}" method="post" class="ewXform">
           <input type="hidden" name="id" value="{/Page/Request/*/Item[@name='id']}"/>
           <xsl:variable name="position">
@@ -2754,10 +2749,14 @@
             </xsl:choose>
           </xsl:variable>
           <input type="hidden" name="position" value="{$position}"/>
-          <div class="col-md-9">
+         
             <div class="card card-default">
               <div class="card-header">
-                <button type="submit" name="submit" class="float-end btn btn-primary btn-sm" value="submit">
+                <button type="submit" name="submit" class="float-end btn btn-primary" value="submit">
+					<i class="fas fa-save">
+						<xsl:text> </xsl:text>
+					</i>
+					<xsl:text> </xsl:text>
                   Save Locations
                 </button>
                 <div class="clearfix">&#160;</div>
@@ -2768,14 +2767,18 @@
                 </xsl:apply-templates>
               </ul>
               <div class="card-footer">
-                <button type="submit" name="submit" class="float-end btn btn-primary btn-sm" value="submit">
+                <button type="submit" name="submit" class="float-end btn btn-primary" value="submit">
+					<i class="fas fa-save">
+						<xsl:text> </xsl:text>
+					</i>
+					<xsl:text> </xsl:text>
                   Save Locations
                 </button>
                 <div class="clearfix">&#160;</div>
               </div>
             </div>
-          </div>
         </form>
+          </div>
       </div>
 
     </div>
@@ -5993,6 +5996,7 @@
                 </a>
               </xsl:otherwise>
             </xsl:choose>
+			  <xsl:apply-templates select="." mode="bespokeUserButtons"/>
           </span>
         </td>
       </tr>
@@ -6000,7 +6004,12 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="company" mode="list">
+
+	<xsl:template match="user" mode="bespokeUserButtons">
+
+	</xsl:template>
+
+	<xsl:template match="company" mode="list">
     <xsl:param name="startPos"/>
     <xsl:param name="noOnPage"/>
     <xsl:if test="position() > $startPos and position() &lt;= ($startPos + $noOnPage)">
@@ -10250,23 +10259,14 @@
   <xsl:template match="Page[@layout='LocateSearch']" mode="Admin">
     <div class="container-fluid" id="tpltLocateSearch">
       <div class="row">
-        <div class="col-lg-3">
-
-          <xsl:apply-templates select="ContentDetail/Content[@type='xform' and @name='FindContentToRelate']" mode="xform-card"/>
-
-          <div class="card card-default">
-            <div class="card-header">
-              <h3 >Instructions</h3>
-            </div>
-            <div class="card-body">
-              <p>This enables you to search for items of content that are on other pages of the site to be placed on this current page.</p>
-              <p>You can search by page, by section by selecting a parent page and clicking "search children" or by keyword by entering a word into the box.</p>
-              <p>To list all content items just hit search without entering anything into the form (This may take some time to come back if your site contains a lot of this type of content)</p>
-            </div>
-          </div>
+		<div class="col-lg-4 mb-3">
+            <xsl:apply-templates select="ContentDetail/Content[@type='xform' and @name='FindContentToRelate']" mode="xform-card"/>
         </div>
-        <div class="col-lg-9">
+		  <div class="col-lg-8">
           <div class="card card-default">
+			  <div class="card-header">
+				  <h3>Search Results</h3>
+			  </div>
             <div class="card-body">
               <xsl:apply-templates select="ContentDetail/Content[@type='xform' and @name='SelectContentToLocate']" mode="xform"/>
             </div>
@@ -11134,7 +11134,9 @@
 
 
   <!-- -->
-
+	<xsl:template match="*" mode="reportDetailbtn-group">
+		
+	</xsl:template>
   <!-- -->
   <!-- REPORT:  Generic Report Buttons - Empty By Default -->
   <xsl:template match="Pending" mode="reportDetailbtn-group">
@@ -11372,14 +11374,14 @@
       <div class="card-header">
         <div class="btn-group float-end">
           <a href="/ptn/tools/excel.ashx?{/Page/Request/ServerVariables/Item[@name='QUERY_STRING']/node()}" class="btn btn-primary btn-xs float-end" target="_new">
-            <i class="fa icon-file-excel">&#160;</i>&#160;Excel Download
+            <i class="fa-solid fa-file-excel">&#160;</i>&#160;Excel Download
           </a>
         </div>
         <div class="title">
           &#160;
         </div>
       </div>
-      <table cellpadding="0" class="table card-body" id="sort_{$sortCol}">
+	<table cellpadding="0" class="table card-body" id="sort_{$sortCol}">
         <xsl:variable name="scName">
           <xsl:apply-templates select="*[1]/*[number($sortCol)]" mode="getContectNodeName"/>
         </xsl:variable>
@@ -11393,9 +11395,9 @@
             <xsl:otherwise>text</xsl:otherwise>
           </xsl:choose>
         </xsl:variable>
-
+<!--
         <xsl:apply-templates select="*[1]" mode="reportDetailListHeader"/>
-
+-->
         <xsl:choose>
           <xsl:when test="(*[1]/*[number($sortCol)]//LastName and *[1]/*[number($sortCol)]//FirstName) and $scName!='Username'">
             <xsl:apply-templates select="*" mode="reportDetailList">
@@ -11408,6 +11410,7 @@
             <xsl:apply-templates select="*" mode="reportDetailList">
               <xsl:sort select="*[number($sortCol)]" order="{$order}" data-type="{$datatype}"/>
             </xsl:apply-templates>
+
           </xsl:otherwise>
         </xsl:choose>
         <!--xsl:if test="count(*[not(contains(name(),'Selector'))])=0 and name()!='summary'">
@@ -11417,7 +11420,7 @@
 			</xsl:if-->
       </table>
 
-      <xsl:apply-templates select="." mode="reportError"/>
+     <!-- <xsl:apply-templates select="." mode="reportError"/> -->
     </div>
   </xsl:template>
 

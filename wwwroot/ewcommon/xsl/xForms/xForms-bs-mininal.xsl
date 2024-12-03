@@ -574,9 +574,10 @@
 
 	<xsl:template match="help" mode="xform">
 		<div class="alert alert-info">
-			<i class="fa fa-info fa-2x pull-left">
+			<i class="fa fa-info-circle fa-2x">
 				<xsl:text> </xsl:text>
 			</i>
+			<xsl:text> </xsl:text>
 			<xsl:copy-of select="node()"/>
 		</div>
 	</xsl:template>
@@ -1176,6 +1177,21 @@
 		</xsl:variable>
 		<input type="hidden" name="{$ref}" id="{$ref}" value="{$value}"/>
 	</xsl:template>
+
+  <xsl:template match="input[contains(@class,'configValue')]" mode="xform">
+    <xsl:variable name="ref">
+      <xsl:apply-templates select="." mode="getRefOrBind"/>
+    </xsl:variable>
+    <xsl:variable name="value">
+      <xsl:call-template name="getSettings">
+        <xsl:with-param name="sectionName" select="@sectionName"/>
+        <xsl:with-param name="valueName" select="@valueName"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <input type="hidden" name="{$ref}" id="{$ref}" value="{$value}"/>
+  </xsl:template>
+  
+  
 	<!-- -->
 	<!-- ========================== CONTROL : INPUT TEXT ========================== -->
 	<!-- -->
@@ -3086,6 +3102,11 @@
 		<xsl:param name="selectedValue"/>
 		<xsl:variable name="value" select="value"/>
 		<option>
+			<xsl:if test="@title!=''">
+				<xsl:attribute name="title">
+					<xsl:value-of select="@title"/>
+				</xsl:attribute>
+			</xsl:if>
 			<xsl:attribute name="value">
 				<xsl:value-of select="value"/>
 			</xsl:attribute>
@@ -3101,6 +3122,11 @@
 		<xsl:param name="selectedValues"/>
 		<xsl:variable name="value" select="value"/>
 		<option>
+			<xsl:if test="@title!=''">
+				<xsl:attribute name="title">
+					<xsl:value-of select="@title"/>
+				</xsl:attribute>
+			</xsl:if>
 			<xsl:attribute name="value">
 				<xsl:value-of select="value"/>
 			</xsl:attribute>

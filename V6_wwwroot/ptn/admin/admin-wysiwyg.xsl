@@ -698,7 +698,7 @@
 								</xsl:when>
 								<xsl:otherwise>
 									<div class="dropdown pull-right">
-										<a href="#" class="btn btn-primary btn-primary-darker btn-xs" data-bs-toggle="dropdown">
+										<a href="#" class="btn btn-primary btn-primary-darker dropdown-toggle btn-xs" data-bs-toggle="dropdown">
 											<i class="fa fa-plus">&#160;</i>&#160;
 											<span class="sr-only">Add&#160;</span>
 											<!--<i class="fa fa-caret-down">&#160;</i>-->
@@ -1188,6 +1188,7 @@
 									</a>
 								</li>
 							</xsl:if>
+						</xsl:if>
 							<xsl:if test="$page/AdminMenu/descendant-or-self::MenuItem[@cmd='MoveContent']">
 								<li>
 									<a href="?ewCmd=MoveContent&amp;pgid={$pageId}&amp;id={@id}" title="Click here to move to another page">
@@ -1202,7 +1203,6 @@
 									</a>
 								</li>
 							</xsl:if>
-						</xsl:if>
 						<xsl:choose>
 							<xsl:when test="$page/Contents/Content/Content[@id=$id] and (@parId != $pageId)">
 								<li>

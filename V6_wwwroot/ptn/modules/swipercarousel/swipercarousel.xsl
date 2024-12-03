@@ -51,8 +51,9 @@
       <!--<xsl:apply-templates select="." mode="inlinePopupOptions">
 				<xsl:with-param name="class" select="swiper-container"/>
 			</xsl:apply-templates>-->
-      <div id="{$id}" class="swiper" data-id="{@id}" data-speed="{@speed}" data-effect="{@effect}" data-direction="{@direction}" data-xscol="1" data-smcol="1" data-mdcol="1" data-lgcol="1" data-xlcol="1" data-xxlcol="1" data-spacebetween="0" data-spacebetweenlg="0" data-autoplay="{@autoplay}" data-autoplayspeed="{@interval}">
-        <xsl:if test="@bullets!='true'">
+      <div id="{$id}" class="swiper" data-id="{@id}" data-speed="{@speed}" data-effect="{@effect}" data-xscol="1" data-smcol="1" data-mdcol="1" data-lgcol="1" data-xlcol="1" data-xxlcol="1" data-spacebetween="0" data-spacebetweenlg="0" data-autoplay="{@autoplay}" data-autoplayspeed="{@interval}">
+  <!--<div id="{$id}" class="swiper" data-id="{@id}" data-speed="{@speed}" data-effect="{@effect}" data-direction="{@direction}" data-xscol="1" data-smcol="1" data-mdcol="1" data-lgcol="1" data-xlcol="1" data-xxlcol="1" data-spacebetween="0" data-spacebetweenlg="0" data-autoplay="{@autoplay}" data-autoplayspeed="{@interval}">-->
+          <!--<xsl:if test="@bullets!='true'">
           <xsl:if test="Content[@type='SwiperSlide']">
             <ol class="carousel-indicators">
               <xsl:for-each select="Content[@type='SwiperSlide']">
@@ -65,42 +66,44 @@
               </xsl:for-each>
             </ol>
           </xsl:if>
+        </xsl:if>-->
+          <!--<div class="swiper-wrapper" style="height:{@height}px">-->
+          <div class="swiper-wrapper">
+            <xsl:choose>
+              <xsl:when test="@webp='true'">
+                <xsl:apply-templates select="Content[@type='SwiperSlide']" mode="displayBriefWebp">
+                  <xsl:with-param name="sortBy" select="@sortBy"/>
+                  <xsl:with-param name="cHeightOptions" select="@cHeightOptions"/>
+                  <xsl:with-param name="heading" select="$heading"/>
+                  <xsl:with-param name="title" select="@title"/>
+                </xsl:apply-templates>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:apply-templates select="Content[@type='SwiperSlide']" mode="displayBrief">
+                  <xsl:with-param name="sortBy" select="@sortBy"/>
+                  <xsl:with-param name="cHeightOptions" select="@cHeightOptions"/>
+                  <xsl:with-param name="heading" select="$heading"/>
+                  <xsl:with-param name="title" select="@title"/>
+                </xsl:apply-templates>
+              </xsl:otherwise>
+            </xsl:choose>
+          </div>
+          <xsl:if test="@bullets!='true'">
+            <div class="swiper-pagination" id="swiper-pagination-{@id}">
+              <xsl:text> </xsl:text>
+            </div>
+          </xsl:if>
+        </div>
+        <xsl:if test="@arrows!='true' or not(@arrows)">
+          <div class="swiper-button-prev" id="swiper-button-prev-{@id}">
+            <xsl:text> </xsl:text>
+          </div>
+          <div class="swiper-button-next" id="swiper-button-next-{@id}">
+            <xsl:text> </xsl:text>
+          </div>
         </xsl:if>
-        <!--<div class="swiper-wrapper" style="height:{@height}px">-->
-        <div class="swiper-wrapper">
-          <xsl:choose>
-            <xsl:when test="@webp='true'">
-              <xsl:apply-templates select="Content[@type='SwiperSlide']" mode="displayBriefWebp">
-                <xsl:with-param name="sortBy" select="@sortBy"/>
-                <xsl:with-param name="cHeightOptions" select="@cHeightOptions"/>
-                <xsl:with-param name="heading" select="$heading"/>
-                <xsl:with-param name="title" select="@title"/>
-              </xsl:apply-templates>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:apply-templates select="Content[@type='SwiperSlide']" mode="displayBrief">
-                <xsl:with-param name="sortBy" select="@sortBy"/>
-                <xsl:with-param name="cHeightOptions" select="@cHeightOptions"/>
-                <xsl:with-param name="heading" select="$heading"/>
-                <xsl:with-param name="title" select="@title"/>
-              </xsl:apply-templates>
-            </xsl:otherwise>
-          </xsl:choose>
-        </div>
-        <div class="swiper-pagination" id="swiper-pagination-{@id}">
-          <xsl:text> </xsl:text>
-        </div>
       </div>
-      <xsl:if test="@arrows!='true' or not(@arrows)">
-        <div class="swiper-button-prev" id="swiper-button-prev-{@id}">
-          <xsl:text> </xsl:text>
-        </div>
-        <div class="swiper-button-next" id="swiper-button-next-{@id}">
-          <xsl:text> </xsl:text>
-        </div>
-      </xsl:if>
-    </div>
-  </xsl:template>
+    </xsl:template>
 
   <!-- Library Image Brief Webp -->
   <xsl:template match="Content[@type='SwiperSlide']" mode="displayBriefWebp">
@@ -147,9 +150,17 @@
                   <xsl:value-of select="@position-vertical"/>
                   <xsl:choose>
                     <xsl:when test="@bg-color!=''">
-                      <xsl:text> bg-</xsl:text>
-                      <xsl:value-of select="@bg-color"/>
-                      <xsl:text>-o </xsl:text>
+                      <xsl:choose>
+                        <xsl:when test="@bg-cover='full-slide'">
+                          <xsl:text> full-slide slide-bg-</xsl:text>
+                          <xsl:value-of select="@bg-color"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                          <xsl:text> bg-</xsl:text>
+                          <xsl:value-of select="@bg-color"/>
+                          <xsl:text>-o </xsl:text>
+                        </xsl:otherwise>
+                      </xsl:choose>
                     </xsl:when>
                     <xsl:otherwise>
                       <xsl:text> nobg-slide</xsl:text>
@@ -277,9 +288,17 @@
                   <xsl:value-of select="@position-vertical"/>
                   <xsl:choose>
                     <xsl:when test="@bg-color!=''">
-                      <xsl:text> bg-</xsl:text>
-                      <xsl:value-of select="@bg-color"/>
-                      <xsl:text>-o </xsl:text>
+                      <xsl:choose>
+                        <xsl:when test="@bg-cover='full-slide'">
+                          <xsl:text> full-slide slide-bg-</xsl:text>
+                          <xsl:value-of select="@bg-color"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                          <xsl:text> bg-</xsl:text>
+                          <xsl:value-of select="@bg-color"/>
+                          <xsl:text>-o </xsl:text>
+                        </xsl:otherwise>
+                      </xsl:choose>
                     </xsl:when>
                     <xsl:otherwise>
                       <xsl:text> plain-slide</xsl:text>
@@ -394,9 +413,17 @@
                   <xsl:value-of select="@position-vertical"/>
                   <xsl:choose>
                     <xsl:when test="@bg-color!=''">
-                      <xsl:text> bg-</xsl:text>
-                      <xsl:value-of select="@bg-color"/>
-                      <xsl:text>-o </xsl:text>
+                      <xsl:choose>
+                        <xsl:when test="@bg-cover='full-slide'">
+                          <xsl:text> full-slide slide-bg-</xsl:text>
+                          <xsl:value-of select="@bg-color"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                          <xsl:text> bg-</xsl:text>
+                          <xsl:value-of select="@bg-color"/>
+                          <xsl:text>-o </xsl:text>
+                        </xsl:otherwise>
+                      </xsl:choose>
                     </xsl:when>
                     <xsl:otherwise>
                       <xsl:text> nobg-slide</xsl:text>
@@ -468,7 +495,7 @@
         </div>
       </xsl:when>
       <xsl:otherwise>
-        <div style="background-image:url({Images/img[@class='detail']/@src})" class="swiper-slide">
+        <div style="background-image:url({Images/img[@class='detail']/@src});background-size:{@bg-cover};background-position:{@bg-position}" class="swiper-slide">
           <!--<xsl:if test="$cHeightOptions!='adapt'">
 						<xsl:attribute name="style">background-image:url({Images/img[@class='detail']/@src})</xsl:attribute>
 					</xsl:if>-->
@@ -491,6 +518,8 @@
                 <xsl:text> swiper-slide-padding justify-content-</xsl:text>
                 <xsl:value-of select="@position-horizontal"/>
               </xsl:attribute>
+
+              
               <!--<img src="{Images/img[@class='detail']/@src}" alt="{Title/node()}" />-->
               <div class="swiper-caption">
                 <xsl:attribute name="class">
@@ -499,16 +528,24 @@
                   <xsl:value-of select="@position-vertical"/>
                   <xsl:choose>
                     <xsl:when test="@bg-color!=''">
-                      <xsl:text> bg-</xsl:text>
-                      <xsl:value-of select="@bg-color"/>
-                      <xsl:text>-o </xsl:text>
+                      <xsl:choose>
+                        <xsl:when test="@bg-cover='full-slide'">
+                          <xsl:text> full-slide slide-bg-</xsl:text>
+                          <xsl:value-of select="@bg-color"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                          <xsl:text> bg-</xsl:text>
+                          <xsl:value-of select="@bg-color"/>
+                          <xsl:text>-o </xsl:text>
+                        </xsl:otherwise>
+                      </xsl:choose>
                     </xsl:when>
                     <xsl:otherwise>
                       <xsl:text> plain-slide</xsl:text>
                     </xsl:otherwise>
                   </xsl:choose>
-                  <!--<xsl:value-of select="@bg-cover"/>-->
                 </xsl:attribute>
+                <!--<xsl:value-of select="@bg-cover"/>-->
                 <div class="swiper-caption-inner">
                   <xsl:if test="Title/node()!='' and not(@showHeading='false')">
                     <xsl:choose>

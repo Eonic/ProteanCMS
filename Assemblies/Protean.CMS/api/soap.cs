@@ -1,10 +1,10 @@
 ﻿
+using Microsoft.VisualBasic;
 using System;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Xml;
-using Microsoft.VisualBasic;
 
 namespace Protean
 {
@@ -90,6 +90,9 @@ namespace Protean
                 var encoding = new UTF8Encoding();
                 byte[] bodybytes = encoding.GetBytes(soapBody);
                 serviceRequest.ContentLength = bodybytes.Length;
+
+                serviceRequest.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+
                 var bodyStream = serviceRequest.GetRequestStream();
                 bodyStream.Write(bodybytes, 0, bodybytes.Length);
                 bodyStream.Close();
@@ -119,9 +122,8 @@ namespace Protean
 
             catch (WebException)
             {
-                HttpWebResponse serviceResponse;
-               //  serviceResponseStream = New StreamReader(serviceResponse.GetResponseStream, System.Text.Encoding.ASCII)
-             //    returnException(mcModuleName, "ReturnSoapResponse", ex, "", cProcessInfo, gbDebug)
+                //  serviceResponseStream = New StreamReader(serviceResponse.GetResponseStream, System.Text.Encoding.ASCII)
+                //    returnException(mcModuleName, "ReturnSoapResponse", ex, "", cProcessInfo, gbDebug)
             }
 
 
@@ -159,7 +161,7 @@ namespace Protean
                 return oXml;
             }
 
-            catch (Exception )
+            catch (Exception)
             {
                 // returnException(mcModuleName, "getSoapEnvelope", ex, "", cProcessInfo, gbDebug)
                 return null;

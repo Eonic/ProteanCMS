@@ -143,11 +143,12 @@ namespace Protean
                     // End If
 
                     XmlElement fRefNode = (XmlElement)importStateObj.oInstance.SelectSingleNode(cTableName + "/" + cTableFRef);
-                    fRef = fRefNode.InnerText;
-
-                    
+                    string fRefOld = "";
+                    if (fRefNode != null) {                     
+                        fRef = fRefNode.InnerText;
+                        fRefOld = fRefNode.GetAttribute("oldValue");
+                    }                    
                     long nId;
-                    string fRefOld = fRefNode.GetAttribute("oldValue");
                     if (!string.IsNullOrEmpty(fRef))
                     {
                         nId = modbhelper.getObjectByRef(cTableName, cTableKey, cTableFRef, oObjType, fRef);
@@ -306,7 +307,7 @@ namespace Protean
                                 cFeedItemXML = myRegex.Replace(cFeedItemXML, "><");
                                 // move up a node
                                 importStateObj.oInstance.InnerXml = cFeedItemXML;
-                                updateInstance = (XmlElement)importStateObj.oInstance.FirstChild;
+                                updateInstance = (XmlElement)importStateObj.oInstance.SelectSingleNode("*");
                             }
 
                             bool bRelocate = false;

@@ -1,18 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Security;
 using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualBasic;
 using System.Text.RegularExpressions;
-using System.Xml;
-using System.Runtime.InteropServices;
+using Tidy.Core;
+
 
 namespace Protean.Tools
 {
@@ -58,7 +49,8 @@ namespace Protean.Tools
                     else
                         cNewString += " ";
                 }
-                cNewString += Strings.Right(cInitialString, nNoCharsToLeave);
+                cNewString += cInitialString.Substring(cInitialString.Length - nNoCharsToLeave);
+
                 return cNewString;
             }
             catch (Exception)
@@ -94,91 +86,123 @@ namespace Protean.Tools
 
         public static string filenameFromPath(string path)
         {
-            string filename;
-            filename = Strings.Mid(path, Strings.InStrRev(path, @"\") + 1);
-            filename = Strings.Mid(filename, Strings.InStrRev(filename, "/") + 1);
-            filename = Strings.Replace(filename, " ", "-");
+            int lastBackslashIndex = path.LastIndexOf('\\');
+            int lastForwardSlashIndex = path.LastIndexOf('/');
+
+            int startIndex = Math.Max(lastBackslashIndex, lastForwardSlashIndex);
+
+            string filename = (startIndex >= 0) ? path.Substring(startIndex + 1) : path;
+
+            filename = filename.Replace(" ", "-");
+
             return filename;
         }
 
-        public static double EmptyNumber(object Value)
+        public static double EmptyNumber(object value)
         {
             try
             {
-                if (Value == null)
-                    return 0;
-                if (Information.IsDBNull(Value))
-                    return 0;
-                if (System.Convert.ToString(Value) == "")
-                    return 0;
-                if (!Information.IsNumeric(Value))
-                    return 0;
-                return System.Convert.ToDouble(Value);
-            }
-            catch (Exception)
-            {
-                return 0;
-            }
-        }
-
-        public static DateTime EmptyDate(object Value, DateTime DefaultDate = default(DateTime))
-        {
-            try
-            {
-                if (Value == null)
-                    return DefaultDate;
-                if (Information.IsDBNull(Value))
-                    return DefaultDate;
-                if (System.Convert.ToString(Value) == "")
-                    return DefaultDate;
-                if (!Information.IsDate(Value))
-                    return DefaultDate;
-                return (DateTime)Value;
-            }
-            catch (Exception)
-            {
-                return default(DateTime);
-            }
-        }
-
-        public static string AscString(string OriginalString, string Delimiter = ",")
-        {
-            try
-            {
-                int i = 0;
-                string cReturn = "";
-                var loopTo = OriginalString.Length - 1;
-                for (i = 0; i <= loopTo; i++)
+                // Check if the value is null or empty
+                if (value == null || System.Convert.ToString(value).Trim() == "")
                 {
-                    if (!(cReturn == ""))
-                        cReturn += Delimiter;
-                    cReturn += Strings.Asc(OriginalString.Substring(i, 1));
+                    return 0;
                 }
-                return cReturn;
+
+                // Try to convert the value to double
+                if (double.TryParse(System.Convert.ToString(value), out double result))
+                {
+                    return result;
+                }
+
+                return 0; // Return 0 if conversion fails
             }
             catch (Exception)
             {
-                return OriginalString;
+                return 0; // Return 0 in case of an exception
             }
         }
 
-        public static string DeAscString(string AscString, string Delimiter = ",")
+        public static DateTime EmptyDate(object value, DateTime defaultDate = default)
         {
             try
             {
-                string[] oAsc = Strings.Split(AscString, Delimiter);
-                int i = 0;
-                string cReturn = "";
-                var loopTo = oAsc.Length - 1;
-                for (i = 0; i <= loopTo; i++)
-                    cReturn += Strings.Chr(int.Parse(oAsc[i]));
-                return cReturn;
+                // Check if the value is null, DBNull, or empty
+                if (value == null ||
+                    (value is DBNull) ||
+                    string.IsNullOrWhiteSpace(System.Convert.ToString(value)))
+                {
+                    return defaultDate;
+                }
+
+                // Try to convert the value to DateTime
+                if (DateTime.TryParse(System.Convert.ToString(value), out DateTime result))
+                {
+                    return result;
+                }
+
+                return defaultDate; // Return default date if conversion fails
             }
             catch (Exception)
             {
-                return AscString;
+                return default; // Return the default DateTime in case of an exception
             }
         }
+
+
+        public static string AscString(string originalString, string delimiter = ",")
+        {
+            try
+            {
+                // Initialize a StringBuilder for efficient string concatenation
+                var cReturn = new System.Text.StringBuilder();
+
+                // Loop through each character in the original string
+                for (int i = 0; i < originalString.Length; i++)
+                {
+                    // Append the delimiter if it's not the first element
+                    if (i > 0)
+                    {
+                        cReturn.Append(delimiter);
+                    }
+
+                    // Append the ASCII value of the current character
+                    cReturn.Append((int)originalString[i]);
+                }
+
+                return cReturn.ToString(); // Convert StringBuilder to string
+            }
+            catch (Exception)
+            {
+                return originalString; // Return the original string in case of an exception
+            }
+        }
+
+
+        public static string DeAscString(string ascString, string delimiter = ",")
+        {
+            try
+            {
+                // Split the input string by the specified delimiter
+                string[] oAsc = ascString.Split(new[] { delimiter }, StringSplitOptions.None);
+
+                // Initialize a StringBuilder for efficient string concatenation
+                var cReturn = new System.Text.StringBuilder();
+
+                // Loop through the array of ASCII values
+                foreach (string asciiValue in oAsc)
+                {
+                    // Parse the ASCII value and convert to character, then append to result
+                    cReturn.Append(Convert.ToChar(int.Parse(asciiValue)));
+                }
+
+                return cReturn.ToString(); // Convert StringBuilder to string
+            }
+            catch (Exception)
+            {
+                return ascString; // Return the original string in case of an exception
+            }
+        }
+
 
         public static string[] CodeGen(string PrecedingText, int StartNumber, int NumberOfCodes, bool bKeepProceedingZeros, bool MD5Results)
         {
@@ -216,7 +240,7 @@ namespace Protean.Tools
                         cResult += ",";
                     cResult += cPart;
                 }
-                return Strings.Split(cResult, ",");
+                return cResult.Split(new[] { ',' }, StringSplitOptions.None);
             }
             catch (Exception)
             {
@@ -235,12 +259,16 @@ namespace Protean.Tools
         {
             try
             {
-                // Find if an IP address exists in a comma/pipe-delimited IP address range.
+                // Initialize found flag
                 bool bFound = false;
 
-                if (cIPAddress != "" & !(Information.IsNothing(cIPAddressList)))
+                // Check if the IP address is not empty and the list is not null
+                if (!string.IsNullOrEmpty(cIPAddress) && cIPAddressList != null)
                 {
-                    System.Text.RegularExpressions.Regex oRE = new System.Text.RegularExpressions.Regex("(,|^)" + Strings.Replace(cIPAddress, ".", @"\.") + "(,|$)");
+                    // Create a regex pattern to match the IP address
+                    Regex oRE = new Regex(@"(,|^)" + Regex.Escape(cIPAddress) + "(,|$)");
+
+                    // Check if the IP address matches the list
                     if (oRE.IsMatch(cIPAddressList))
                         bFound = true;
                 }
@@ -249,7 +277,7 @@ namespace Protean.Tools
             }
             catch (Exception)
             {
-                return false;
+                return false; // Return false in case of any exceptions
             }
         }
 
@@ -501,7 +529,7 @@ namespace Protean.Tools
                 string orig = text;
                 if (!(text == ""))
                 {
-       
+
                     text = text.Replace(@"\", @"\\");
                     text = text.Replace("&#13;", @"\r");
                     text = text.Replace("&#10;", @"\n");
@@ -537,16 +565,20 @@ namespace Protean.Tools
             cValids = "0123456789";
             cValids += "abcdefghijklmnopqrstuvwxyz";
             cValids += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            cValids += " -&";
+            cValids += " -&*,";
             try
             {
                 if (cName != null)
                 {
-
-                    cName = Strings.Replace(cName, "'", "");
-                    cName = Strings.Replace(cName, "&amp;", "&");
+                    cName = cName.Replace("/", "*");//TS need to remove any slashes from names replace with * so we can wildcard later.
+                    cName = cName.Replace("'", "*");//TS need to remove any slashes from names replace with * so we can wildcard later.
+                    cName = cName.Replace("(", "*");
+                    cName = cName.Replace(")", "*");
+                    cName = cName.Replace(".", "*");
+                    cName = cName.Replace("'", "");
+                    cName = cName.Replace("&amp;", "&");
                     if (!bLeaveAmp)
-                        cName = Strings.Replace(cName, "&", "and");
+                        cName = cName.Replace("&", "and");
                     int i;
                     string cBuilt = "";
                     var loopTo = 0;
@@ -554,24 +586,24 @@ namespace Protean.Tools
                     {
                         loopTo = loopTo + cName.Length;
                     }
-                    for (i = 0; i <= loopTo; i++)
+                    for (i = 0; i <= loopTo - 1; i++)
                     {
-                        string cTest = Strings.Right(Strings.Left(cName, i), 1);
+                        string cTest = cName.Substring(0, i + 1).Last().ToString();
                         if (cValids.Contains(cTest))
                             cBuilt += cTest;
                     }
                     cName = cBuilt;
                     // replace double spaces a few times
-                    cName = "" + Strings.Replace(cName, "  ", " ");
-                    cName = "" + Strings.Replace(cName, "  ", " ");
-                    cName = "" + Strings.Replace(cName, "  ", " ");
+                    cName = "" + cName.Replace("  ", " ");
+                    cName = "" + cName.Replace("  ", " ");
+                    cName = "" + cName.Replace("  ", " ");
 
                     if (bURLSafe)
                     {
                         cName = "" + cName.Replace(" ", "-");
                         // replace double hyphens a few times
-                        cName = "" + Strings.Replace(cName, "---", "-");
-                        cName = "" + Strings.Replace(cName, "--", "-");
+                        cName = "" + cName.Replace("---", "-");
+                        cName = "" + cName.Replace("--", "-");
                         //trim to max filename length with .html
 
                         if (cName.Length > 249)
@@ -584,8 +616,9 @@ namespace Protean.Tools
                 return cName;
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                string err = ex.Message;
                 return cName;
             }
         }
@@ -595,13 +628,15 @@ namespace Protean.Tools
         {
 
             // PerfMon.Log("Web", "tidyXhtmlFrag")
-           // string sProcessInfo = "tidyXhtmlFrag";
+            // string sProcessInfo = "tidyXhtmlFrag";
             string sTidyXhtml = "";
             int crResult = 0;
 
             if (!(removeTags == ""))
                 shtml = removeTagFromXml(shtml, removeTags);
-            TidyManaged.Document oTdyManaged;
+            Tidy.Core.HtmlTidy oTdy = new Tidy.Core.HtmlTidy();
+            Tidy.Core.TidyOptions oTdyOptions = new Tidy.Core.TidyOptions();
+
             // Using 
             try
             {
@@ -609,35 +644,77 @@ namespace Protean.Tools
                 shtml = shtml.Replace("&amp;nbsp;", "&#160;");
                 shtml = Regex.Replace(shtml, "<\\?xml.*\\?>", "", RegexOptions.IgnoreCase);
 
-                oTdyManaged = TidyManaged.Document.FromString(shtml);
-                oTdyManaged.OutputBodyOnly = TidyManaged.AutoBool.Yes;
-                oTdyManaged.MakeClean = true;
-                oTdyManaged.DropFontTags = true;
-                //oTdyManaged.ErrorBuffer = true;
-                oTdyManaged.ShowWarnings = true;
-                oTdyManaged.OutputXhtml = true;
-                oTdyManaged.MakeBare = true;//removed word tags
-                oTdyManaged.CleanWord2000 = true;//removed word tags
+                //oTdy.Options.XmlOut = true;
+
+                oTdy.Options.Word2000 = true;
+                oTdy.Options.XmlOut = true;
+
+                oTdy.Options.MakeClean = true;
+                oTdy.Options.MakeBare = true;
+                oTdy.Options.Xhtml = true;
+                oTdy.Options.DropFontTags = true;
+                oTdy.Options.BodyOnly = true;
 
                 if (bReturnNumbericEntities)
                 {
-                    oTdyManaged.OutputNumericEntities = true;
-                }
-               oTdyManaged.CleanAndRepair();
-                try
-                {
-                    sTidyXhtml = oTdyManaged.Save();
-                }
-                catch (Exception)
-                {
-                    sTidyXhtml = "<div>html import conversion error result="  + " <br/></div>";
+                    oTdy.Options.NumEntities = true;
                 }
 
-                oTdyManaged.Dispose();
-                oTdyManaged = null/* TODO Change to default(_) if this is not a reference type */;
+                Tidy.Core.TidyMessageCollection tidyMsg = new Tidy.Core.TidyMessageCollection();
+
+
+
+                //Stream stout = new MemoryStream();
+
+                //oTdy.Parse(shtml, stout, tidyMsg);
+
+                //StreamReader sr = new StreamReader(stout);
+                //sTidyXhtml = sr.ReadToEnd();
+
+                sTidyXhtml = oTdy.Parse(shtml, tidyMsg);
+
+
+                //sTidyXhtml = oTdy.ToString();
+
+                foreach (TidyMessage tm in tidyMsg)
+                {
+                    if (tm.Level == MessageLevel.Error)
+                    {
+                        sTidyXhtml = "<div>html import conversion error result=" + tm.Message + " <br/></div>";
+                    }
+                }
+
+
+                //oTdy = TidyManaged.Document.FromString(shtml);
+                //oTdy.OutputBodyOnly = TidyManaged.AutoBool.Yes;
+                //oTdy.MakeClean = true;
+                //oTdy.DropFontTags = true;
+                ////oTdy.ErrorBuffer = true;
+                //oTdy.ShowWarnings = true;
+                //oTdy.OutputXhtml = true;
+                //oTdy.MakeBare = true;//removed word tags
+                //oTdy.CleanWord2000 = true;//removed word tags
+
+                //if (bReturnNumbericEntities)
+                //{
+                //    oTdy.OutputNumericEntities = true;
+                //}
+                //oTdy.CleanAndRepair();
+                //try
+                //{
+                //    oTdy.Save();
+                //}
+                //catch (Exception)
+                //{
+                //    sTidyXhtml = "<div>html import conversion error result=" + " <br/></div>";
+                //}
+
+                //oTdy.Dispose();
+                oTdy = null;
+                oTdyOptions = null;/* TODO Change to default(_) if this is not a reference type */
                 // End Using
 
-                return sTidyXhtml;
+                return sTidyXhtml.Replace("<body>", "").Replace("</body>", "");
             }
             catch (Exception ex)
             {
@@ -653,8 +730,8 @@ namespace Protean.Tools
 
         public static string removeTagFromXml(string xmlString, string tagNames)
         {
-            tagNames = Strings.Replace(tagNames, " ", "");
-            tagNames = Strings.Replace(tagNames, ",", "|");
+            tagNames = tagNames.Replace(" ", "");
+            tagNames = tagNames.Replace(",", "|");
 
             xmlString = Regex.Replace(xmlString, "<[/]?(" + tagNames + @":\w+)[^>]*?>", "", RegexOptions.IgnoreCase);
 

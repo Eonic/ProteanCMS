@@ -1,4 +1,8 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -8,10 +12,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 /// <summary>
 ///   <para>   Protean.Tools.Conversion is designed to covert from one data source to another (e.g. Excel to Xml)</para>
 ///   <example>
@@ -295,24 +295,24 @@ namespace Protean.Tools
                 // "Provider=Microsoft.Jet.OLEDB.4.0;" & _
                 // "Data Source=" & Me.oInput & ";" & _
                 // "Extended Properties=""Excel 8.0;HDR=Yes;IMEX=1;""")
-               
-                if ((this.oInput).ToString().EndsWith(".xlsx"))
+
+                if ((oInput).ToString().EndsWith(".xlsx"))
                 {
 
-                    oOutputXml.LoadXml(GetXML(this.oInput.ToString()));
+                    oOutputXml.LoadXml(GetXML(oInput.ToString()));
                     this.oOutputXml = oOutputXml.DocumentElement;
                 }
 
-                else if ((this.oInput).ToString().EndsWith(".csv"))
+                else if ((oInput).ToString().EndsWith(".csv"))
                 {
 
-                    oOutputXml.LoadXml(GetXML(this.oInput.ToString()));
+                    oOutputXml.LoadXml(GetXML(oInput.ToString()));
                     this.oOutputXml = oOutputXml.DocumentElement;
                 }
                 else
                 {
 
-                    oExcelConn = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;" + "Data Source=" + this.oInput + ";" + "Extended Properties=Excel 12.0");
+                    oExcelConn = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;" + "Data Source=" + oInput + ";" + "Extended Properties=Excel 12.0");
 
                     oExcelConn.Open();
 
@@ -329,7 +329,7 @@ namespace Protean.Tools
                     else
                     {
                         foreach (DataRow oWorksheet in oWorksheets.Rows)
-                        {                            
+                        {
                             // .Trim("'") added to deal with worksheet names encompassed with 's
                             cWorksheetname = oWorksheet["TABLE_NAME"].ToString().Trim('\'');
                             if (cWorksheetname.EndsWith("$"))
@@ -343,24 +343,24 @@ namespace Protean.Tools
 
                                 // Make the Column Names XML Friendly
                                 foreach (DataColumn oExcelColumn in oExcelDataset.Tables[0].Columns)
-                                    oExcelColumn.ColumnName = Strings.Replace(Strings.Replace(oExcelColumn.ColumnName, " ", "_"), ":", "_");
+                                    oExcelColumn.ColumnName = oExcelColumn.ToString().Replace(" ", "_").Replace(":", "_");
 
                                 // Turn the DS into XML
 
                                 oExcelDataset.EnforceConstraints = false;
 
                                 // oXml = new XmlDataDocument(oExcelDataset);
-                                if (oExcelDataset.Tables[0].Rows.Count>0)
+                                if (oExcelDataset.Tables[0].Rows.Count > 0)
                                 {
                                     oXml.LoadXml(oExcelDataset.GetXml());
-                                }                                
+                                }
 
                                 oOutputWorksheet.AppendChild(oXml.FirstChild);
 
                                 // Add the sheet
                                 if (oOutputWorksheet != null)
                                 {
-                                    oOutputWorksheet.SetAttribute("name", Strings.Replace(cWorksheetname, "$", ""));
+                                    oOutputWorksheet.SetAttribute("name", cWorksheetname.Replace("$", ""));
                                 }
                                 oOutputRoot.AppendChild(oOutputXml.ImportNode(oOutputWorksheet, true));
 
@@ -374,9 +374,8 @@ namespace Protean.Tools
             }
 
 
-            catch (Exception ex)
+            catch (Exception)
             {
-                ex = null;
                 SetStatus(Status.Failed, StatusReason.Undefined);
             }
 
@@ -397,7 +396,7 @@ namespace Protean.Tools
         {
             bool firstRow = true;
             char _separator = CSVseparator;
-          //  string _fieldnames = null;
+            //  string _fieldnames = null;
             long succeeded = 0L;
             long failed = 0L;
             var ResponseXml = new XmlDocument();
@@ -424,7 +423,8 @@ namespace Protean.Tools
                 string[] afieldsTitles;
                 if (CSVfirstLineTitles is object & firstRow)
                 {
-                    afieldsTitles = Strings.Split(CSVfirstLineTitles, Conversions.ToString(_separator));
+                    afieldsTitles = CSVfirstLineTitles.Split(_separator.ToString().ToCharArray());
+
                     for (int ii = 0, loopTo = afieldsTitles.Count() - 1; ii <= loopTo; ii++)
                     {
                         string _fName = "";
@@ -455,7 +455,7 @@ namespace Protean.Tools
                     {
                         object nextLine = sr.ReadLine();
                         // exit the loop if reached end of the file.
-                        if (Information.IsNothing(nextLine))
+                        if (nextLine == null)
                         {
                             break;
                         }
@@ -496,7 +496,7 @@ namespace Protean.Tools
                             for (int ii = 0, loopTo2 = fields.Count() - 1; ii <= loopTo2; ii++)
                             {
                                 object _fValue = fields[ii];
-                                if (!string.IsNullOrEmpty(Strings.Trim(Conversions.ToString(_fValue))))
+                                if (!string.IsNullOrEmpty(_fValue?.ToString().Trim()))
                                 {
                                     if (rowElmt.SelectSingleNode("*[position() = " + (long)(ii + 1) + "]") is null)
                                     {
@@ -509,7 +509,7 @@ namespace Protean.Tools
                                     }
                                     else
                                     {
-                                        rowElmt.SelectSingleNode("*[position() = " + (long)(ii + 1) + "]").InnerText = Strings.Trim(Conversions.ToString(_fValue)).Replace(Constants.vbTab, "");
+                                        rowElmt.SelectSingleNode("*[position() = " + (ii + 1) + "]").InnerText = _fValue?.ToString().Trim().Replace("\t", "");
                                     }
                                 }
                             }
@@ -564,7 +564,7 @@ namespace Protean.Tools
             if (_separator == ',')
             {
                 sLine = sLine.Replace(@"\""", string.Empty);
-                int countDoubleQuotes = Strings.Split(sLine, "\"").Length - 1;
+                int countDoubleQuotes = sLine.Split('\"').Length - 1;
                 if (countDoubleQuotes > 0)
                 {
                     object result = countDoubleQuotes % 2;
@@ -656,6 +656,8 @@ namespace Protean.Tools
                                 // Expected input is a filepath in the form of a string
                                 if (!Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectNotEqual(oResource, "", false), File.Exists(Conversions.ToString(oResource)))))
                                     bCheck = false;
+
+
                             }
                             else if (oResource is StreamReader)
                             {
@@ -993,23 +995,23 @@ namespace Protean.Tools
 
         public void Dispose()
         {
-           
-            
+
+
             m_lngFilePointer = 0;
-            if (Information.IsNothing(m_objTempReader) == false)
+            if (m_objTempReader != null)
             {
                 m_objTempReader.Close();
                 m_objTempReader = null;
             }
 
-            if (Information.IsNothing(m_objTempFile) == false)
+            if (m_objTempFile != null)
             {
                 m_objTempFile.Close();
                 m_objTempFile.Dispose();
                 m_objTempFile = null;
             }
 
-            if (Information.IsNothing(m_objInputFile) == false)
+            if (m_objInputFile != null)
             {
                 m_objInputFile.Close();
                 m_objInputFile.Dispose();
@@ -1029,13 +1031,13 @@ namespace Protean.Tools
             }
             catch (Exception ex)
             {
-                throw new Exception("Error: [" + Information.Err().Number + "] " + Information.Err().Description, ex);
+                throw new Exception("Error: [" + ex.Message + "] " + ex.Message, ex);
             }
         }
 
         // Clean up our resources
         ~classFileLineReader()
-        {          
+        {
             Dispose();
         }
 
@@ -1045,7 +1047,7 @@ namespace Protean.Tools
             // Replaces the End Of File test for a normal stream
 
             get
-            {               
+            {
                 return m_objInputFile.EndOfStream;
             }
         }
@@ -1098,7 +1100,7 @@ namespace Protean.Tools
             catch (Exception ex)
             {
                 strLine = "";
-                throw new Exception("Error: [" + Information.Err().Number + "] " + Information.Err().Description, ex);
+                throw new Exception("Error: [" + ex.Message + "] " + ex.Message, ex);
             }
 
             return strLine;

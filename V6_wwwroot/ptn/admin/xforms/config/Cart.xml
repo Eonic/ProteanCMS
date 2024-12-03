@@ -43,8 +43,8 @@
       </cart>
     </instance>
     <submission id="WebSettings" action="" method="post" event="form_check(this)" />
-    <bind id="ewSiteURL" nodeset="cart/add[@key='SiteURL']/@value" required="true()" type="string" />
-    <bind id="ewSecureURL" nodeset="cart/add[@key='SecureURL']/@value" required="true()" type="string" />
+    <bind id="ewSiteURL" nodeset="cart/add[@key='SiteURL']/@value" required="false()" type="string" />
+    <bind id="ewSecureURL" nodeset="cart/add[@key='SecureURL']/@value" required="false()" type="string" />
     <bind id="ewTaxRate" nodeset="cart/add[@key='TaxRate']/@value" required="true()" type="string" />
     <bind id="ewMerchantName" nodeset="cart/add[@key='MerchantName']/@value" required="true()" type="string" />
     <bind id="ewMerchantEmail" nodeset="cart/add[@key='MerchantEmail']/@value" required="true()" type="string" />
@@ -53,7 +53,7 @@
     <bind id="ewCurrencySymbol" nodeset="cart/add[@key='CurrencySymbol']/@value" required="false()" type="string" />
     <bind id="ewDefaultCurrencyOveride" nodeset="cart/add[@key='DefaultCurrencyOveride']/@value" required="false()" type="string" />
     <bind id="ewStockControl" nodeset="cart/add[@key='StockControl']/@value" required="true()" type="string" />
-    <bind id="ewDeposit" nodeset="cart/add[@key='Deposit']/@value" required="true()" type="string" />
+    <bind id="ewDeposit" nodeset="cart/add[@key='Deposit']/@value" required="false()" type="string" />
     <bind id="ewDepositAmount" nodeset="cart/add[@key='DepositAmount']/@value" required="false()" type="string" />
     <bind id="ewNotesXForm" nodeset="cart/add[@key='NotesXForm']/@value" required="false()" type="string" />
     <bind id="ewBillingAddressXForm" nodeset="cart/add[@key='BillingAddressXForm']/@value" required="false()" type="string" />
@@ -72,21 +72,22 @@
     <bind id="ewPriceModOrder" nodeset="cart/add[@key='PriceModOrder']/@value" required="false()" type="string" />
     <bind id="ewClearOnAdd" nodeset="cart/add[@key='ClearOnAdd']/@value" required="false()" type="string" />
     <bind id="ewDontTaxShipping" nodeset="cart/add[@key='DontTaxShipping']/@value" required="false()" type="string" />
+	<bind id="ewTareWeight" nodeset="cart/add[@key='TareWeight']/@value" required="false()" type="string" />
     <bind id="DefaultDeliveryCountry" nodeset="cart/add[@key='DefaultDeliveryCountry']/@value" required="false()" type="string" />
     <bind id="ShippedValidation" nodeset="cart/add[@key='ShippedValidation']/@value" required="false()" type="string" />
     <bind id="PaymentTypeButtons" nodeset="cart/add[@key='PaymentTypeButtons']/@value" required="false()" type="string" />
     <bind id="ProductOptionOverideQuantity" nodeset="cart/add[@key='ProductOptionOverideQuantity']/@value" required="false()" type="string" />
     <bind id="ewTaxFromDeliveryAddress" nodeset="cart/add[@key='TaxFromDeliveryAddress']/@value" required="false()" type="string" />
   </model>
-  <group ref="CartSettings">
+  <group ref="CartSettings" class="admin-form-style">
     <label>Cart Settings</label>
     <alert>Any Changes you make to this form risk making this site completely non-functional. Please be sure you know what you are doing before making any changes, or call Eonic Technical Support on +44(0)1892 534044.</alert>
-    <group class="inline">
+	  <group class="tabs">
+		  <group ref="Cart Configuration">
+			  <label>Cart Configuration</label>
+			  <group  class="row row-cols-md-2">
     
-    <input bind="ewMerchantName" class="long">
-      <label>Merchant Name</label>
-      <value></value>
-    </input>
+
     <input bind="ewSiteURL">
       <label>Site URL</label>
       <value></value>
@@ -95,270 +96,285 @@
       <label>Secure URL</label>
       <value></value>
     </input>
-    </group>
-    <group class="inline">
-      <label>Email Settings</label>
-     <input bind="ewMerchantEmail">
-      <label>Merchant Email</label>
-      <value></value>
-    </input>
-    <input bind="ewOrderEmailSubject">
-      <label>Order Email Subject</label>
-      <value />
-    </input>
-      <select1 bind="ewEmailReceipts" appearance="full">
-        <label>Email Receipts</label>
-        <item>
-          <label>Yes</label>
-          <value>on</value>
-        </item>
-        <item>
-          <label>No</label>
-          <value>off</value>
-        </item>
-      </select1>
-      <input bind="ewMerchantEmailTemplatePath">
-        <label>Merchant Email Template Path</label>
-        <value />
-      </input>
-      <input bind="ewCustomerEmailTemplatePath">
-        <label>Customer Email Template Path</label>
-        <value />
-      </input>
-      <select1 bind="ShippedValidation" appearance="full">
-        <label>Force Shipping Dates</label>
-        <item>
-          <label>Yes</label>
-          <value>on</value>
-        </item>
-        <item>
-          <label>No</label>
-          <value>off</value>
-        </item>
-      </select1>
-      <input bind="CustomerEmailShippedTemplatePath">
-        <label>Customer Shipped Email Template Path</label>
-        <value />
-      </input>
-    </group>
-    <group class="inline">
-      <label>Configuration</label>
-      <input bind="ewTaxRate">
-        <label>Tax Rate</label>
-        <value></value>
-      </input>
-      <select1 bind="ewTaxFromDeliveryAddress" appearance="full">
-        <label>Tax Based on Delivery Address</label>
-        <item>
-          <label>On</label>
-          <value>on</value>
-        </item>
-        <item>
-          <label>Off</label>
-          <value>off</value>
-        </item>
-        <value />
-      </select1>
-    <input bind="ewOrderNoPrefix">
-      <label>Order No. Prefix</label>
-      <value />
-    </input>
-    <input bind="ewCurrencySymbol">
-      <label>Currency Symbol</label>
-      <value />
-    </input>
-      <input bind="ewDefaultCurrencyOveride">
-        <label>Default Transaction currency, overides GBP</label>
-        <value />
-      </input>
-      
-      <select1 bind="ewStockControl" appearance="full">
-      <label>Stock Control</label>
-      <item>
-        <label>On</label>
-        <value>on</value>
-      </item>
-      <item>
-        <label>Off</label>
-        <value>off</value>
-      </item>
-      <value />
-    </select1>
-     <select1 bind="ewSavePayments" appearance="full">
-        <label>SavePayments</label>
-        <item>
-          <label>On</label>
-          <value>on</value>
-        </item>
-        <item>
-          <label>Off</label>
-          <value>off</value>
-        </item>
-        <value />
-      </select1>
-      <select1 bind="ewVatAtUnit" appearance="full">
-        <label>Vat At Unit</label>
-        <item>
-          <label>Yes</label>
-          <value>yes</value>
-        </item>
-        <item>
-          <label>No</label>
-          <value>no</value>
-        </item>
-        <value />
-      </select1>
-        <select1 bind="ewDontTaxShipping" appearance="full">
-            <label>Do Not Tax Shipping</label>
-            <item>
-                <label>Yes</label>
-                <value>yes</value>
-            </item>
-            <item>
-                <label>No</label>
-                <value>no</value>
-            </item>
-            <value />
-        </select1>
-      <select1 bind="ewDiscounts" appearance="full">
-        <label>Discounts</label>
-        <item>
-          <label>On</label>
-          <value>on</value>
-        </item>
-        <item>
-          <label>Off</label>
-          <value>off</value>
-        </item>
-        <value />
-      </select1>
-		<select1 bind="ewCheckCartForDiscountToRequestDiscountCode" appearance="full">
-			<label>Check Cart For Discount To Request Discount Code</label>
-			<item>
-				<label>On</label>
-				<value>on</value>
-			</item>
-			<item>
-				<label>Off</label>
-				<value>off</value>
-			</item>
-			<value />
-		</select1>
-		
+				  <input bind="ewTaxRate">
+					  <label>Tax Rate</label>
+					  <value></value>
+				  </input>
+				  <select1 bind="ewTaxFromDeliveryAddress" appearance="full">
+					  <label>Tax Based on Delivery Address</label>
+					  <item>
+						  <label>On</label>
+						  <value>on</value>
+					  </item>
+					  <item>
+						  <label>Off</label>
+						  <value>off</value>
+					  </item>
+					  <value />
+				  </select1>
+				  <input bind="ewOrderNoPrefix">
+					  <label>Order No. Prefix</label>
+					  <value />
+				  </input>
+				  <input bind="ewCurrencySymbol">
+					  <label>Currency Symbol</label>
+					  <value />
+				  </input>
+				  <input bind="ewDefaultCurrencyOveride">
+					  <label>Default Transaction currency, overides GBP</label>
+					  <value />
+				  </input>
 
-		<input bind="ewPriceModOrder">
-        <label>Price Mod Order</label>
-        <value />
-      </input><input bind="ewPriorityCountries">
-        <label>Priority Countries</label>
-        <value />
-      </input>
-      <select1 bind="ewAddBehaviour" appearance="full">
-        <label>Add to Cart Behaviour</label>
-        <item>
-          <label>Cart Summary</label>
-          <value>none</value>
-        </item>
-        <item>
-          <label>Discounts Form</label>
-          <value>discounts</value>
-        </item>
-        <item>
-          <label>Notes Form</label>
-          <value>notes</value>
-        </item>
-        <item>
-          <label>Don't Show Cart</label>
-          <value>brief</value>
-        </item>
-        <value />
-      </select1>
+				  <select1 bind="ewStockControl" appearance="full">
+					  <label>Stock Control</label>
+					  <item>
+						  <label>On</label>
+						  <value>on</value>
+					  </item>
+					  <item>
+						  <label>Off</label>
+						  <value>off</value>
+					  </item>
+					  <value />
+				  </select1>
+				  <select1 bind="ewSavePayments" appearance="full">
+					  <label>SavePayments</label>
+					  <item>
+						  <label>On</label>
+						  <value>on</value>
+					  </item>
+					  <item>
+						  <label>Off</label>
+						  <value>off</value>
+					  </item>
+					  <value />
+				  </select1>
+				  <select1 bind="ewVatAtUnit" appearance="full">
+					  <label>Vat At Unit</label>
+					  <item>
+						  <label>Yes</label>
+						  <value>yes</value>
+					  </item>
+					  <item>
+						  <label>No</label>
+						  <value>no</value>
+					  </item>
+					  <value />
+				  </select1>
+				  <select1 bind="ewDontTaxShipping" appearance="full">
+					  <label>Do Not Tax Shipping</label>
+					  <item>
+						  <label>Yes</label>
+						  <value>yes</value>
+					  </item>
+					  <item>
+						  <label>No</label>
+						  <value>no</value>
+					  </item>
+					  <value />
+				  </select1>
+				  <input bind="ewTareWeight">
+					  <label>Tare Weight</label>
+					  <value />
+					  <hint>Weight that gets added on to every order to allow for empty packaging</hint>
+				  </input>
+				  <select1 bind="ewDiscounts" appearance="full">
+					  <label>Discounts</label>
+					  <item>
+						  <label>On</label>
+						  <value>on</value>
+					  </item>
+					  <item>
+						  <label>Off</label>
+						  <value>off</value>
+					  </item>
+					  <value />
+				  </select1>
+				  <select1 bind="ewCheckCartForDiscountToRequestDiscountCode" appearance="full">
+					  <label>Check Cart For Discount To Request Discount Code</label>
+					  <item>
+						  <label>On</label>
+						  <value>on</value>
+					  </item>
+					  <item>
+						  <label>Off</label>
+						  <value>off</value>
+					  </item>
+					  <value />
+				  </select1>
+
+
+				  <input bind="ewPriceModOrder">
+					  <label>Price Mod Order</label>
+					  <value />
+				  </input>
+				  <input bind="ewPriorityCountries">
+					  <label>Priority Countries</label>
+					  <value />
+				  </input>
+				  <select1 bind="ewAddBehaviour" appearance="full">
+					  <label>Add to Cart Behaviour</label>
+					  <item>
+						  <label>Cart Summary</label>
+						  <value>none</value>
+					  </item>
+					  <item>
+						  <label>Discounts Form</label>
+						  <value>discounts</value>
+					  </item>
+					  <item>
+						  <label>Notes Form</label>
+						  <value>notes</value>
+					  </item>
+					  <item>
+						  <label>Don't Show Cart</label>
+						  <value>brief</value>
+					  </item>
+					  <value />
+				  </select1>
+				  <select1 bind="ewClearOnAdd" appearance="full">
+					  <label>Clear cart when adding new items</label>
+					  <item>
+						  <label>On</label>
+						  <value>on</value>
+					  </item>
+					  <item>
+						  <label>Off</label>
+						  <value>off</value>
+					  </item>
+					  <value />
+				  </select1>
+				  <select1 bind="DefaultDeliveryCountry" class="ewQuery" query="Countries" appearance="minimal" >
+					  <label>Default Delivery Country</label>
+				  </select1>
+				  <select1 bind="PaymentTypeButtons" appearance="full">
+					  <label>Show buttons not radios for Payment Type</label>
+					  <item>
+						  <label>On</label>
+						  <value>on</value>
+					  </item>
+					  <item>
+						  <label>Off</label>
+						  <value>off</value>
+					  </item>
+					  <value />
+				  </select1>
+				  <select1 bind="ProductOptionOverideQuantity" appearance="full">
+					  <label>Ignore product quantity for price options, and use option quanity</label>
+					  <item>
+						  <label>On</label>
+						  <value>on</value>
+					  </item>
+					  <item>
+						  <label>Off</label>
+						  <value>off</value>
+					  </item>
+					  <value />
+				  </select1>
     </group>
-    <group class="inline">
-      <label>Deposit Collection</label>
-    <select1 bind="ewDeposit" appearance="full">
-      <label>Deposit</label>
-      <item>
-        <label>On</label>
-        <value>on</value>
-      </item>
-      <item>
-        <label>Off</label>
-        <value>off</value>
-      </item>
-      <value />
-    </select1>
-    <input bind="ewDepositAmount">
-      <label>DepositAmount</label>
-      <value>0</value>
-    </input>
-    </group>
-    <group class="inline">
-      <label>Bespoke Forms</label>
-    <input bind="ewNotesXForm" class="long">
-      <label>Notes Xform</label>
-      <value />
-    </input>
-    <select1 bind="ewNoDeliveryAddress" appearance="full">
-      <label>Disable Delivery Address</label>
-      <item>
-        <label>Yes</label>
-        <value>on</value>
-      </item>
-      <item>
-        <label>No</label>
-        <value>off</value>
-      </item>
-      <value />
-    </select1>
-    <input bind="ewBillingAddressXForm">
-      <label>Billing Address Xform</label>
-      <value />
-    </input>
-    <input bind="ewDeliveryAddressXForm">
-      <label>DeliveryAddress Xform</label>
-      <value />
-    </input>
-        <select1 bind="ewClearOnAdd" appearance="full">
-            <label>Clear cart when adding new items</label>
-            <item>
-                <label>On</label>
-                <value>on</value>
-            </item>
-            <item>
-                <label>Off</label>
-                <value>off</value>
-            </item>
-            <value />
-        </select1>
-      <select1 bind="DefaultDeliveryCountry" class="ewQuery" query="Countries" appearance="minimal" >
-        <label>Default Delivery Country</label>
-      </select1>
-      <select1 bind="PaymentTypeButtons" appearance="full">
-        <label>Show buttons not radios for Payment Type</label>
-        <item>
-          <label>On</label>
-          <value>on</value>
-        </item>
-        <item>
-          <label>Off</label>
-          <value>off</value>
-        </item>
-        <value />
-      </select1>
-      <select1 bind="ProductOptionOverideQuantity" appearance="full">
-        <label>Ignore product quantity for price options, and use option quanity</label>
-        <item>
-          <label>On</label>
-          <value>on</value>
-        </item>
-        <item>
-          <label>Off</label>
-          <value>off</value>
-        </item>
-        <value />
-      </select1>
-    </group>
+			  </group>
+		  <group ref="Email Settings">
+			  <label>Email Settings</label>
+			  <group  class="row row-cols-md-2">
+				  <input bind="ewMerchantName" class="long">
+					  <label>Merchant Name</label>
+					  <value></value>
+				  </input>
+				  <input bind="ewMerchantEmail">
+					  <label>Merchant Email</label>
+					  <value></value>
+				  </input>
+				  <input bind="ewOrderEmailSubject">
+					  <label>Order Email Subject</label>
+					  <value />
+				  </input>
+				  <select1 bind="ewEmailReceipts" appearance="full">
+					  <label>Email Receipts</label>
+					  <item>
+						  <label>Yes</label>
+						  <value>on</value>
+					  </item>
+					  <item>
+						  <label>No</label>
+						  <value>off</value>
+					  </item>
+				  </select1>
+				  <input bind="ewMerchantEmailTemplatePath">
+					  <label>Overide Merchant Email Template Path</label>
+					  <value />
+				  </input>
+				  <input bind="ewCustomerEmailTemplatePath">
+					  <label>Overide Customer Email Template Path</label>
+					  <value />
+				  </input>
+				  <select1 bind="ShippedValidation" appearance="full">
+					  <label>Force Shipping Dates</label>
+					  <item>
+						  <label>Yes</label>
+						  <value>on</value>
+					  </item>
+					  <item>
+						  <label>No</label>
+						  <value>off</value>
+					  </item>
+				  </select1>
+				  <input bind="CustomerEmailShippedTemplatePath">
+					  <label>Customer Shipped Email Template Path</label>
+					  <value />
+				  </input>
+			  </group>
+		  </group>
+		  <group ref="Deposit Collection">
+			  <label>Deposit Collection</label>
+			  <group  class="row row-cols-md-2">
+				  <select1 bind="ewDeposit" appearance="full">
+					  <label>Deposit</label>
+					  <item>
+						  <label>On</label>
+						  <value>on</value>
+					  </item>
+					  <item>
+						  <label>Off</label>
+						  <value>off</value>
+					  </item>
+					  <value />
+				  </select1>
+				  <input bind="ewDepositAmount">
+					  <label>DepositAmount</label>
+					  <value>0</value>
+				  </input>
+			  </group>
+		  </group>
+			  <group ref="Bespoke Forms">
+				  <label>Bespoke Forms</label>
+				  <group  class="row row-cols-md-2">
+					  	  <input bind="ewBillingAddressXForm">
+						  <label>Billing Address Xform</label>
+						  <value />
+					  </input>
+					  <input bind="ewDeliveryAddressXForm">
+						  <label>DeliveryAddress Xform</label>
+						  <value />
+					  </input>
+					  <input bind="ewNotesXForm" class="long">
+						  <label>Notes Xform</label>
+						  <value />
+					  </input>
+					  <select1 bind="ewNoDeliveryAddress" appearance="full">
+						  <label>Disable Delivery Address</label>
+						  <item>
+							  <label>Yes</label>
+							  <value>on</value>
+						  </item>
+						  <item>
+							  <label>No</label>
+							  <value>off</value>
+						  </item>
+						  <value />
+					  </select1>				
+				  </group>
+			  </group>
+		</group>	 
      <submit submission="" ref="submit" class="principle">
       <label>Save Settings</label>
     </submit>

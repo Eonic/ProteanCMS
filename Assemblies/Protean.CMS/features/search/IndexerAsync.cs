@@ -1075,20 +1075,53 @@ namespace Protean
                                                         else
                                                         {
                                                             cProcessInfo = "Indexing - " + oDocElmt.InnerText;
-                                                            string fileAsText = GetFileText(myWeb.goServer.MapPath(oDocElmt.InnerText), ref myWeb.msException);
-                                                            string argsException = oElmt.GetAttribute("name");
-                                                         
-                                                            DateTime date;
-                                                            DateTime? publishDate = DateTime.TryParse(oElmt.GetAttribute("publish"), out date) ? date : (DateTime?)null;
-                                                            DateTime? expireDate = DateTime.TryParse(oElmt.GetAttribute("update"), out date) ? date : (DateTime?)null;
-                                                            IndexPage(myWeb.mnPageId, "<h1>" + oElmt.GetAttribute("name") + "</h1>" + fileAsText, oDocElmt.InnerText, myWeb.msException, ref argsException, "Download", myWeb.mnArtId, cPageExtract, publishDate, expireDate);
 
-                                                            var oFileElmt = oInfoElmt.OwnerDocument.CreateElement("file");
-                                                            oPageElmt.SetAttribute("file", oDocElmt.InnerText);
-                                                            oInfoElmt.AppendChild(oPageElmt);
+                                                            string filepath = myWeb.goServer.MapPath(myWeb.goServer.UrlDecode(oDocElmt.InnerText));
 
-                                                            nIndexed += 1;
-                                                            nDocumentsIndexed += 1L;
+
+                                                            FileInfo xFilePath = new FileInfo(filepath);
+                                                            if (xFilePath.Exists)
+                                                            {
+                                                                string fileAsText = GetFileText(filepath, ref myWeb.msException);
+                                                                string DocName = oElmt.GetAttribute("name");
+                                                                if (oElmt.SelectSingleNode("Body") != null) { 
+                                                                    cPageExtract = oElmt.SelectSingleNode("Body").InnerText;
+                                                                }
+                                                                if (string.IsNullOrEmpty(DocName))
+                                                                {
+                                                                    DocName = xFilePath.Name;
+                                                                }
+                                                                if (string.IsNullOrEmpty(DocName))
+                                                                {
+                                                                    DocName = oElmt.SelectSingleNode("Title").InnerText;
+                                                                }
+                                                                if (string.IsNullOrEmpty(DocName))
+                                                                {
+                                                                    DocName = "Document for Download";
+                                                                }
+
+                                                                DateTime date;
+                                                                DateTime? publishDate = DateTime.TryParse(oElmt.GetAttribute("publish"), out date) ? date : (DateTime?)null;
+                                                                DateTime? expireDate = DateTime.TryParse(oElmt.GetAttribute("update"), out date) ? date : (DateTime?)null;
+                                                                IndexPage(myWeb.mnPageId, "<h1>" + oElmt.GetAttribute("name") + "</h1>" + fileAsText, oDocElmt.InnerText, DocName, ref myWeb.msException, "Download", myWeb.mnArtId, cPageExtract, publishDate, expireDate);
+
+                                                                var oFileElmt = oInfoElmt.OwnerDocument.CreateElement("download");
+                                                                oFileElmt.SetAttribute("name", DocName);
+                                                                oFileElmt.SetAttribute("file", filepath);
+
+                                                                oPageElmt.AppendChild(oFileElmt);
+
+                                                                nIndexed += 1;
+                                                                nDocumentsIndexed += 1L;
+                                                            }
+                                                            else {
+                                                                var oFileElmt = oInfoElmt.OwnerDocument.CreateElement("download");
+                                                                oFileElmt.SetAttribute("file", oDocElmt.InnerText);
+                                                                oFileElmt.SetAttribute("error", "file not found");
+                                                                oPageElmt.AppendChild(oFileElmt);
+
+                                                                nDocumentsSkipped += 1L;
+                                                            }
                                                         }
                                                     }
                                                 }

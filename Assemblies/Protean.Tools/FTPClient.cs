@@ -3,13 +3,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Text;
-using Microsoft.VisualBasic; // Install-Package Microsoft.VisualBasic // Install-Package Microsoft.VisualBasic
-using System.Configuration;
-using System.Resources;
 
 namespace Protean.Tools
 {
-   
+
     public class FTPClient
     {
 
@@ -99,7 +96,7 @@ namespace Protean.Tools
             try
             {
                 var outputStream = new FileStream(LocalFile, FileMode.Create);
-                FtpWebRequest reqFTP = (FtpWebRequest)WebRequest.Create(new Uri(Strings.Replace(cHost + RemoteFile, @"\", "/")));
+                FtpWebRequest reqFTP = (FtpWebRequest)WebRequest.Create(new Uri(cHost + RemoteFile.Replace(@"\", "/")));
                 reqFTP.Method = WebRequestMethods.Ftp.DownloadFile;
                 reqFTP.UseBinary = true;
                 reqFTP.KeepAlive = true;
@@ -132,7 +129,7 @@ namespace Protean.Tools
         {
             try
             {
-                FtpWebRequest reqFTP = (FtpWebRequest)WebRequest.Create(new Uri(Strings.Replace(cHost + RemoteFile, @"\", "/")));
+                FtpWebRequest reqFTP = (FtpWebRequest)WebRequest.Create(new Uri(cHost + RemoteFile.Replace(@"\", "/")));
                 reqFTP.Method = WebRequestMethods.Ftp.UploadFile;
                 reqFTP.UseBinary = true;
                 reqFTP.Proxy = null;

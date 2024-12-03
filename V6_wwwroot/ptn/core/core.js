@@ -633,7 +633,20 @@ $.fn.prepareXform = function () {
 
 
 /*  USED IN ALL EW:xFORMS - For when an Radio Button Toggles a switch /case */
+function checkboxshowDependant(checkboxId, dependant, allDependants) {
+ 
+    if ($("#" + checkboxId).is(':checked')) {
+        showDependant(dependant, allDependants)
+    }
+    else {
+        $("." + allDependants).addClass('hidden');
+    }
+}
+
+
 function showDependant(dependant, allDependants) {
+
+
 
     // Hide unwanted Dependants
     $("." + allDependants).addClass('hidden');
@@ -653,31 +666,43 @@ function showDependant(dependant, allDependants) {
         //   $(this).attr('id', $(this).attr('id') + '~inactive');
     });
 
-    // Show wanted Dependants
-    $("#" + dependant).removeClass('hidden');
+    const aDependant = dependant.split(",");
 
-    // Find all inactive required fields and make required again for JS Validation
-    $("#" + dependant).find('.reqinactive').each(function () {
-        $(this).removeClass('reqinactive');
-        $(this).addClass('required');
-    });
+    for (let index = 0; index < aDependant.length; ++index) {
+        const sDependant = aDependant[index];
+        // ...use `element`...
+        $("#" + sDependant).removeClass('hidden');
 
-    // Find all inactive inputs, and re-activate,
-    $("#" + dependant).find(":input").not(':button').not(':submit').each(function () {
-        var fieldName = $(this).attr('name');
-        var tempFieldName = fieldName.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
-        $(this).attr('name', tempFieldName);
-        var fieldId = $(this).attr('id');
-        var tempFieldId = fieldId.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
-        $(this).attr('id', tempFieldId);
-    });
-
-    $("#" + dependant).prepareXform();
-    $("#" + dependant).trigger('bespokeXform');
-
-
-
+        // Find all inactive required fields and make required again for JS Validation
+        $("#" + sDependant).find('.reqinactive').each(function () {
+            $(this).removeClass('reqinactive');
+            $(this).addClass('required');
+        });
+        // Find all inactive inputs, and re-activate,
+        $("#" + sDependant).find(":input").not(':button').not(':submit').each(function () {
+            var fieldName = $(this).attr('name');
+            var tempFieldName = fieldName.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
+            $(this).attr('name', tempFieldName);
+            var fieldId = $(this).attr('id');
+            var tempFieldId = fieldId.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
+            $(this).attr('id', tempFieldId);
+        });
+        $("#" + sDependant).prepareXform();
+        $("#" + sDependant).trigger('bespokeXform');
+    }
 }
+
+function clearRadioOther(ref,position) {
+    $("input[id='" + ref + "_other']").attr('type', 'input');
+    $("input[id='" + ref + "_other']").on('input', function () {
+        $("input[id='" + ref + "_" + position + "']").val($("input[id='" + ref + "_other']").val())
+    });
+
+    $("input[id^='" + ref + "_']").not("[id='" + ref + "_" + position + "']").not("[id='" + ref + "_other']").on('change', function () {
+        $("input[id='" + ref + "_other']").attr('type', 'hidden');
+    });
+}
+
 
 function showHideDependant(bindVar) {
 

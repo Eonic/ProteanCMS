@@ -106,6 +106,10 @@
 						<select1 bind="nStatus" appearance="full" class="required">
 							<label>Status</label>
 							<item>
+								<label>Awaiting Activation</label>
+								<value>3</value>
+							</item>
+							<item>
 								<label>Active</label>
 								<value>1</value>
 							</item>

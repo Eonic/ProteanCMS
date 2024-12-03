@@ -37,7 +37,7 @@
     filter: progid:DXImageTransform.Microsoft.gradient(enabled = false) !important;
 }
 
-@mixin circle-icon($background: $primary,$color: #fff,$size: 6rem,$font: 3rem) {
+@mixin circle-icon($background: $primary,$color: color-contrast($background),$size: 5rem,$font: 2rem) {
     width: $size;
     height: $size;
     background: $background;
@@ -49,7 +49,7 @@
     font-size: $font;
 }
 
-@mixin circle-icon-border($border: 2px solid $primary,$color: $primary,$size: 6rem,$font: 3rem) {
+@mixin circle-icon-border($border: 2px solid $primary,$color: $primary,$size: 5rem,$font: 2rem) {
     width: $size;
     height: $size;
     background: transparent;
@@ -89,12 +89,19 @@
         }
     }
 }
-.two-col-text {
-    column-count: 2;
-}
+@include media-breakpoint-up(md) {
+    .two-col-text {
+        column-count: 2;
+    }
 
-.three-col-text {
-    column-count: 3;
+    .three-col-text {
+        column-count: 3;
+    }
+}
+.match-content-height {
+    > div > div:not(.ptn-edit) {
+        height: calc(100% - $grid-gutter-height);
+    }
 }
 /*############### BUTTONS AND LINKS #################*/
 .skip {

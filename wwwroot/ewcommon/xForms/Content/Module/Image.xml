@@ -10,7 +10,7 @@
         <cContentName/>
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
-          <Content position="" moduleType="Image" box="" title="" link="" linkType="internal" resize="false" constrain="true" width="" height="" crop="" stretch="false" responsiveImg="true">
+          <Content position="" moduleType="Image" box="" title="" link="" linkType="internal" resize="false" constrain="true" width="" height="" crop="" stretch="false" responsiveImg="true" preloadImage="">
             <img class="image"/>
           </Content>
         </cContentXmlBrief>
@@ -46,6 +46,7 @@
       <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
       <bind id="cLightbox" nodeset="@lightbox" required="false()" type="string"/>
       <bind id="cContentImageDetail" nodeset="@imgDetail" required="false()" type="string"/>
+		<bind id="cpreloadImage" nodeset="@preloadImage" required="false()" type="string"/>
     </bind>
     <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
     <ewInclude filePath="/ewthemes/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
@@ -80,6 +81,12 @@
         <input bind="cContentImage" class="short pickImage">
           <label>Image</label>
         </input>
+		  <select bind="cpreloadImage" appearance="full" class="multiline bs-only">
+			  <item>
+				  <label>PRELOAD IMAGE</label>
+				  <value>true</value>
+			  </item>
+		  </select>
         <select bind="cLightbox" appearance="full" class="multiline bs-only">
           <item>
             <label>Add Lightbox</label>
@@ -184,7 +191,7 @@
         </switch>
         <input bind="cModuleLinkText" class="long">
           <label>Module footer link text</label>
-        </input>
+        </input>		
       </group>
     </group>
   </group>
