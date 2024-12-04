@@ -1034,14 +1034,15 @@ namespace Protean
 
                                 long logId = odbHelper.emailActivity((Int16)mnUserId, cActivityDetail, oMailn.To.ToString(), oMailn.From.ToString(), oXml.OuterXml);
 
-                                odbHelper.logActivity(Cms.dbHelper.ActivityType.Email, mnUserId, 0, (Int16)logId, otherId, activitySchema, false, null);
+                                odbHelper.logActivity(Cms.dbHelper.ActivityType.Email, mnUserId, (Int16)logId, 0, otherId, activitySchema, false, null);
                                 //odbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Email, mnUserId, SessionId, DateTime.Now, (Int16)logId, 0, activitySchema);
                             }
 
                             else
                             {
-                                odbHelper.emailActivity((Int16)mnUserId, cActivityDetail, oMailn.To.ToString(), oMailn.From.ToString());
-                                odbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Email, mnUserId, SessionId, DateTime.Now, 0, 0, "");
+                                long logId = odbHelper.emailActivity((Int16)mnUserId, cActivityDetail, oMailn.To.ToString(), oMailn.From.ToString());
+                                odbHelper.logActivity(Cms.dbHelper.ActivityType.Email, mnUserId, (Int16)logId, 0, 0, "", false, null);
+                                // odbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Email, mnUserId, SessionId, DateTime.Now,, 0, "");
                             }
                         }
 
