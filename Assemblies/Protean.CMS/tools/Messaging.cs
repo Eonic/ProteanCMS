@@ -424,6 +424,7 @@ namespace Protean
             int nTotalAddressesAttempted = 0;
             int nTotalAddressesSkipped = 0;
             string cAddressesSkipped = "";
+            Boolean failedSend = false;
 
             try
             {
@@ -891,11 +892,14 @@ namespace Protean
                                         if (gbDebug)
                                         {
                                             returnException(ref msException, mcModuleName, "emailer", ex, "", cProcessInfo, gbDebug);
-                                            return "ex: " + ex.ToString();
+                                            failureMessage = "ex: " + ex.ToString();
+                                            failedSend = true;
                                         }
                                         else
                                         {
-                                            return failureMessage + " - Error1: " + ex.Message + " - " + cProcessInfo + " - " + ex.StackTrace;
+                                            failureMessage = failureMessage + " - Error1: " + ex.Message + " - " + cProcessInfo + " - " + ex.StackTrace;
+
+                                            failedSend = true;
                                         }
                                     }
                                     else
@@ -910,11 +914,13 @@ namespace Protean
                                             if (gbDebug)
                                             {
                                                 returnException(ref msException, mcModuleName, "emailer", ex3, "", cProcessInfo, gbDebug);
-                                                return "ex3: " + ex3.ToString();
+                                                failureMessage = "ex3: " + ex3.ToString();
+                                                failedSend = true;
                                             }
                                             else
                                             {
-                                                return failureMessage + " - Error1: " + ex3.Message + " - " + cProcessInfo + " - " + ex.StackTrace;
+                                                failureMessage = failureMessage + " - Error1: " + ex3.Message + " - " + cProcessInfo + " - " + ex.StackTrace;
+                                                failedSend = true;
                                             }
 
                                         }
@@ -946,11 +952,13 @@ namespace Protean
                                 if (gbDebug)
                                 {
                                     returnException(ref msException, mcModuleName, "emailer", ex2, "", cProcessInfo, gbDebug);
-                                    return "ex2: " + ex2.ToString();
+                                    failureMessage = "ex2: " + ex2.ToString();
+                                    failedSend = true;
                                 }
                                 else
                                 {
-                                    return failureMessage + " - Error1: " + ex2.Message + " - " + cProcessInfo + " - " + ex.StackTrace;
+                                    failureMessage = failureMessage + " - Error1: " + ex2.Message + " - " + cProcessInfo + " - " + ex.StackTrace;
+                                    failedSend = true;
                                 }
                             }
                         }
@@ -1091,7 +1099,15 @@ namespace Protean
                             }
                         }
                     }
-                    return successMessage;
+
+                    if (failedSend)
+                    {
+                        return failureMessage;
+                    }
+                    else
+                    {
+                        return successMessage;
+                    }
                 }
             }
 
