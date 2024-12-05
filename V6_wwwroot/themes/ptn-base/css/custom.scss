@@ -28,6 +28,7 @@ body {
     flex-shrink: 0;
     flex-grow: 2;
     background: $body-bg;
+    padding-bottom: 2rem;
 
     @media(min-width:2000px) {
         max-width: 2000px;
@@ -280,6 +281,21 @@ h1, h2, h3 {
     }
 }
 
+.phone-icon,
+.email-icon {
+    &:before {
+        content: '\f095';
+        font-family: 'Font Awesome 6 Free';
+        padding-right: 12px;
+        font-weight: 900;
+        font-size: 0.85em;
+    }
+}
+
+.email-icon:before {
+    content: '\f0e0';
+}
+
 /*############### IMAGES #################*/
 img, svg {
     max-width: 100%;
@@ -290,6 +306,7 @@ img, svg {
 .img-module-flex {
     display: flex;
     flex-direction: column;
+    height:100%;
 }
 
 img {

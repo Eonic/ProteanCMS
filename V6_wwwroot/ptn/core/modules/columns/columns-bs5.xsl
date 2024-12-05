@@ -817,7 +817,7 @@
 		<xsl:variable name="containerID">
 			<xsl:value-of select="@id"/>
 		</xsl:variable>
-		<ul class="nav nav-pills" role="tablist">
+		<ul class="nav nav-pills responsive" role="tablist">
 			<xsl:if test="@tab-style='tab-style'">
 				<xsl:attribute name="class">nav nav-tabs</xsl:attribute>
 			</xsl:if>
