@@ -378,11 +378,9 @@
       <ul class="nav nav-tabs d-none d-lg-flex" role="tablist">
         <xsl:for-each select="group">
           <li role="presentation" class="nav-item">
-
             <xsl:if test="position()='1'">
               <xsl:attribute name="class">active nav-item</xsl:attribute>
             </xsl:if>
-
             <button data-bs-target="#tab-{@id}" role="tab" data-bs-toggle="tab" class="nav-link" aria-controls="tab-{@id}">
               <xsl:choose>
                 <xsl:when test="/Page/Request/Form/Item[@name='stepto']/node()=@id">
@@ -414,7 +412,7 @@
               </xsl:when>
             </xsl:choose>
             <h2 class="accordion-header d-lg-none">
-              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{@id}" aria-controls="collapseOne" id="button-{@id}">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{@id}" aria-controls="#collapse-{@id}" id="button-{@id}">
                 <xsl:if test="position()!='1'">
                   <xsl:attribute name="class">accordion-button collapsed </xsl:attribute>
                 </xsl:if>

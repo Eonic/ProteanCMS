@@ -134,6 +134,11 @@
               <xsl:if test="@marginBelow='false'">
                 <xsl:text> mb-0 </xsl:text>
               </xsl:if>
+              <xsl:if test="@marginBelow!='false' and @marginBelow!='true' and @marginBelow!='' and @marginBelow">
+                <xsl:text> </xsl:text>
+                <xsl:value-of select="@marginBelow"/>
+                <xsl:text> </xsl:text>
+              </xsl:if>
               <xsl:if test="@data-stellar-background-ratio!='10'">
                 <xsl:text> parallax-wrapper </xsl:text>
               </xsl:if>
@@ -182,11 +187,15 @@
                   <xsl:value-of select="@minHeight"/>
                   <xsl:text>px!important;</xsl:text>
                 </xsl:if>
-                <xsl:text>padding-top:</xsl:text>
-                <xsl:value-of select="@padding-top"/>
-                <xsl:text>;</xsl:text>
-                <xsl:text>padding-bottom:</xsl:text>
-              <xsl:value-of select="@padding-bottom"/>
+                <xsl:if test="@padding-top and @padding-top!=''">
+                  <xsl:text>padding-top:</xsl:text>
+                  <xsl:value-of select="@padding-top"/>
+                  <xsl:text>;</xsl:text>
+                </xsl:if>
+                <xsl:if test="@padding-bottom and @padding-bottom!=''">
+                  <xsl:text>padding-bottom:</xsl:text>
+                  <xsl:value-of select="@padding-bottom"/>
+                </xsl:if>
             </xsl:attribute>
             </xsl:if>
             <xsl:if test="@backgroundImage!=''">
@@ -941,6 +950,10 @@
           <xsl:text> char80-</xsl:text>
           <xsl:value-of select="@char80Layout"/>
         </xsl:if>
+        <xsl:if test="@v-align='center'">
+          <xsl:text> v-align-</xsl:text>
+          <xsl:value-of select="@v-align"/>
+        </xsl:if>
 
         <xsl:if test="@panelImage!=''">
           <xsl:text> panelImage </xsl:text>
@@ -1224,6 +1237,11 @@
     <xsl:if test="@marginBelow='false'">
       <xsl:text> mb-0 </xsl:text>
     </xsl:if>
+    <xsl:if test="@marginBelow!='false' and @marginBelow!='true' and @marginBelow!='' and @marginBelow">
+      <xsl:text> </xsl:text>
+      <xsl:value-of select="@marginBelow"/>
+      <xsl:text> </xsl:text>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="Content" mode="moduleBox">
@@ -1342,6 +1360,10 @@
               <xsl:text> char80-</xsl:text>
               <xsl:value-of select="@char80Layout"/>
               <xsl:text> </xsl:text>
+            </xsl:if>
+            <xsl:if test="@v-align='center' or @v-align='bottom'">
+              <xsl:text> v-align-</xsl:text>
+              <xsl:value-of select="@v-align"/>
             </xsl:if>
             <xsl:if test="@panelImage!=''">
               <xsl:text> panelImage </xsl:text>
