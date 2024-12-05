@@ -26,7 +26,7 @@ Public Class CartCallback : Implements IHttpHandler
             Select Case context.Request("provider")
                 Case Is = "NetBanx"
                     Dim oNetBanxCfg = moPaymentCfg.SelectSingleNode("provider[@name='NetBanx']")
-                    Dim oDictOpt = Protean.xmlTools.xmlToHashTable(oNetBanxCfg, "value")
+                    Dim oDictOpt = Protean.Tools.Xml.xmlToHashTable(oNetBanxCfg, "value")
 
                     Dim nCartId As String = context.Request("nbx_merchant_reference")
                     Dim cKey As String = oDictOpt("secretkey")
@@ -62,7 +62,7 @@ Public Class CartCallback : Implements IHttpHandler
 
                     oEw.moDbHelper.logActivity(Protean.Cms.dbHelper.ActivityType.Alert, 0, 0, 0, "CALLBACK : " & SellerNotes)
 
-                    sSql = "update tblCartOrder set cSellerNotes = '" & Protean.SqlFmt(SellerNotes) & "' where nCartOrderKey = " & nCartId
+                    sSql = "update tblCartOrder set cSellerNotes = '" & Protean.stdTools.SqlFmt(SellerNotes) & "' where nCartOrderKey = " & nCartId
                     oEw.moDbHelper.ExeProcessSql(sSql)
 
                 Case Is = "WorldPay"
@@ -125,7 +125,7 @@ Public Class CartCallback : Implements IHttpHandler
 
                     oEw.moDbHelper.logActivity(Protean.Cms.dbHelper.ActivityType.Alert, 0, 0, 0, "CALLBACK : " & SellerNotes)
 
-                    sSql = "update tblCartOrder set cSellerNotes = '" & Protean.SqlFmt(SellerNotes) & "' where nCartOrderKey = " & nCartId
+                    sSql = "update tblCartOrder set cSellerNotes = '" & Protean.stdTools.SqlFmt(SellerNotes) & "' where nCartOrderKey = " & nCartId
                     oEw.moDbHelper.ExeProcessSql(sSql)
                     'context.Response.Write(sSql)
 

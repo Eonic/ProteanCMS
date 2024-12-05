@@ -49,8 +49,8 @@
     <Company>Eonic Digital LLP.</Company>
     <Product>ProteanCMS</Product>
     <Copyright>Copyright © Eonic Digital LLP.  2024</Copyright>
-    <AssemblyVersion>6.1.22.77</AssemblyVersion>
-    <FileVersion>6.1.22.77</FileVersion>
+    <AssemblyVersion>6.1.24.91</AssemblyVersion>
+    <FileVersion>6.1.255.91</FileVersion>
     <InformationalVersion>0.0.0.115</InformationalVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM64'">
@@ -91,7 +91,7 @@
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="System.Data.OleDb" Version="8.0.1" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
     <PackageReference Include="System.Drawing.Common" Version="8.0.10" />
     <PackageReference Include="System.IO.Packaging" Version="9.0.0" />
     <PackageReference Include="System.Management" Version="8.0.0" />

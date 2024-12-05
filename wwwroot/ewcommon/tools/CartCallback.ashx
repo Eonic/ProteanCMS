@@ -62,7 +62,7 @@ Public Class CartCallback : Implements IHttpHandler
 
                     oEw.moDbHelper.logActivity(Protean.Cms.dbHelper.ActivityType.Alert, 0, 0, 0, "CALLBACK : " & SellerNotes)
 
-                    sSql = "update tblCartOrder set cSellerNotes = '" & Protean.stdTools.SqlFmt(SellerNotes) & "' where nCartOrderKey = " & nCartId
+                    sSql = "update tblCartOrder set cSellerNotes = '" & Protean.Tools.Database.SqlFmt(SellerNotes) & "' where nCartOrderKey = " & nCartId
                     oEw.moDbHelper.ExeProcessSql(sSql)
 
                 Case Is = "WorldPay"
@@ -125,7 +125,7 @@ Public Class CartCallback : Implements IHttpHandler
 
                     oEw.moDbHelper.logActivity(Protean.Cms.dbHelper.ActivityType.Alert, 0, 0, 0, "CALLBACK : " & SellerNotes)
 
-                    sSql = "update tblCartOrder set cSellerNotes = '" & Protean.stdTools.SqlFmt(SellerNotes) & "' where nCartOrderKey = " & nCartId
+                    sSql = "update tblCartOrder set cSellerNotes = '" & Protean.Tools.Database.SqlFmt(SellerNotes) & "' where nCartOrderKey = " & nCartId
                     oEw.moDbHelper.ExeProcessSql(sSql)
                     'context.Response.Write(sSql)
 
