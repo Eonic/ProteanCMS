@@ -375,7 +375,7 @@
   <!-- ========================== GROUP In Tabs ========================== -->
   <xsl:template match="group[contains(@class,'nav-tabs')]" mode="xform">
     <div>
-      <ul class="nav nav-tabs" role="tablist">
+      <ul class="nav nav-tabs d-none d-lg-flex" role="tablist">
         <xsl:for-each select="group">
           <li role="presentation" class="nav-item">
 
@@ -383,7 +383,7 @@
               <xsl:attribute name="class">active nav-item</xsl:attribute>
             </xsl:if>
 
-            <a data-bs-target="#tab-{@id}" aria-controls="home" role="tab" data-bs-toggle="tab" class="nav-link">
+            <button data-bs-target="#tab-{@id}" role="tab" data-bs-toggle="tab" class="nav-link" aria-controls="tab-{@id}">
               <xsl:choose>
                 <xsl:when test="/Page/Request/Form/Item[@name='stepto']/node()=@id">
                   <xsl:attribute name="class">active nav-link</xsl:attribute>
@@ -398,13 +398,13 @@
                 </xsl:otherwise>
               </xsl:choose>
               <xsl:apply-templates select="label"/>
-            </a>
+            </button>
           </li>
         </xsl:for-each>
       </ul>
-      <div class="tab-content">
+      <div class="tab-content accordion">
         <xsl:for-each select="group">
-          <div role="tabcard" class="tab-pane" id="tab-{@id}">
+          <div role="tabpanel" class="tab-pane accordion-item" id="tab-{@id}" aria-labelledby="button-{@id}">
             <xsl:choose>
               <xsl:when test="/Page/Request/Form/Item[@name='stepto']/node()=@id">
                 <xsl:attribute name="class">tab-pane active</xsl:attribute>
@@ -413,7 +413,37 @@
                 <xsl:attribute name="class">tab-pane active</xsl:attribute>
               </xsl:when>
             </xsl:choose>
-            <xsl:apply-templates select="." mode="xform"/>
+            <h2 class="accordion-header d-lg-none">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{@id}" aria-controls="collapseOne" id="button-{@id}">
+                <xsl:if test="position()!='1'">
+                  <xsl:attribute name="class">accordion-button collapsed </xsl:attribute>
+                </xsl:if>
+                <xsl:apply-templates select="label"/>
+              </button>
+              <xsl:choose>
+                <xsl:when test="/Page/Request/Form/Item[@name='stepto']/node()=@id">
+                  <xsl:attribute name="aria-expanded">true</xsl:attribute>
+                </xsl:when>
+                <xsl:when test="position()='1' and not(/Page/Request/Form/Item[@name='stepto'])">
+                  <xsl:attribute name="aria-expanded">true</xsl:attribute>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:attribute name="aria-expanded">false</xsl:attribute>
+                </xsl:otherwise>
+              </xsl:choose>
+            </h2>
+            <div id="collapse-{@id}" class="accordion-collapse collapse d-lg-block" aria-labelledby="#button-{@id}" data-bs-parent="#tab-{@id}">
+
+              <xsl:if test="/Page/Request/Form/Item[@name='stepto']/node()=@id">
+                <xsl:attribute name="class">accordion-collapse collapse d-lg-block show</xsl:attribute>
+              </xsl:if>
+              <xsl:if test="position()='1' and not(/Page/Request/Form/Item[@name='stepto'])">
+                <xsl:attribute name="class">accordion-collapse collapse d-lg-block show</xsl:attribute>
+              </xsl:if>
+              <div class="accordion-body">
+                <xsl:apply-templates select="." mode="xform"/>
+              </div>
+            </div>
           </div>
         </xsl:for-each>
       </div>
@@ -2132,17 +2162,17 @@
         </xsl:choose>
 
       </xsl:attribute>
-		<xsl:variable name="targetId">
-			<xsl:choose>
-				<xsl:when test="contains($ref,'~')">
-					<xsl:value-of select="substring-before(translate($ref,'[]#=/',''),'~')"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="translate($ref,'[]#=/','')"/>
-				</xsl:otherwise>
+      <xsl:variable name="targetId">
+        <xsl:choose>
+          <xsl:when test="contains($ref,'~')">
+            <xsl:value-of select="substring-before(translate($ref,'[]#=/',''),'~')"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="translate($ref,'[]#=/','')"/>
+          </xsl:otherwise>
 
-			</xsl:choose>
-	    </xsl:variable>
+        </xsl:choose>
+      </xsl:variable>
       <xsl:if test="contains(@class,'readonly')">
         <xsl:attribute name="readonly">readonly</xsl:attribute>
       </xsl:if>
@@ -2290,14 +2320,14 @@
 
     </xsl:variable>
     <xsl:variable name="dependantClass">
-		<xsl:choose>
-			<xsl:when test="contains($ref,'~')">
-				<xsl:value-of select="substring-before(translate($ref,'[]#=/',''),'~')"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="translate($ref,'[]#=/','')"/>
-			</xsl:otherwise>
-		</xsl:choose>
+      <xsl:choose>
+        <xsl:when test="contains($ref,'~')">
+          <xsl:value-of select="substring-before(translate($ref,'[]#=/',''),'~')"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="translate($ref,'[]#=/','')"/>
+        </xsl:otherwise>
+      </xsl:choose>
       <xsl:text>-dependant</xsl:text>
     </xsl:variable>
     <xsl:choose>
@@ -2350,24 +2380,24 @@
     <xsl:variable name="value">
       <xsl:apply-templates select="." mode="xform_value"/>
     </xsl:variable>
-	  <xsl:variable name="targetId">
-		  <xsl:choose>
-			  <xsl:when test="contains($ref,'~')">
-				  <xsl:value-of select="substring-before(translate($ref,'[]#=/',''),'~')"/>
-			  </xsl:when>
-			  <xsl:otherwise>
-				  <xsl:value-of select="translate($ref,'[]#=/','')"/>
-			  </xsl:otherwise>			  
-		  </xsl:choose>
-	  </xsl:variable> 
-	  
+    <xsl:variable name="targetId">
+      <xsl:choose>
+        <xsl:when test="contains($ref,'~')">
+          <xsl:value-of select="substring-before(translate($ref,'[]#=/',''),'~')"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="translate($ref,'[]#=/','')"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
     <script>
       function toggle_<xsl:value-of select="$targetId"/>(ourRef) {
 
-		//get the selected value for ref
-		//create array of values / toggle ids
-		var dict_<xsl:value-of select="$targetId"/> = {
-		<xsl:for-each select="item[toggle]">
+      //get the selected value for ref
+      //create array of values / toggle ids
+      var dict_<xsl:value-of select="$targetId"/> = {
+      <xsl:for-each select="item[toggle]">
         <xsl:text>'</xsl:text>
         <xsl:value-of select="value"/>
         <xsl:text>':'</xsl:text>
@@ -2377,11 +2407,11 @@
           <xsl:text>,</xsl:text>
         </xsl:if>
       </xsl:for-each>
-		};
-		showDependant(dict_<xsl:value-of select="$targetId"/>[ $("input[name='<xsl:value-of select="$targetId"/>']:checked").val()] + '-dependant', ourRef + '-dependant',', false');
-		}
-		//
-		toggle_<xsl:value-of select="$targetId"/>('<xsl:value-of select="$targetId"/>');
+      };
+      showDependant(dict_<xsl:value-of select="$targetId"/>[ $("input[name='<xsl:value-of select="$targetId"/>']:checked").val()] + '-dependant', ourRef + '-dependant',', false');
+      }
+      //
+      toggle_<xsl:value-of select="$targetId"/>('<xsl:value-of select="$targetId"/>');
 
     </script>
   </xsl:template>
@@ -2394,14 +2424,14 @@
     <xsl:param name="selectedCase" />
     <xsl:variable name="thisId" select="@id"/>
     <xsl:variable name="dependantClass">
-		<xsl:choose>
-			<xsl:when test="parent::switch[@for!='']">
-				<xsl:value-of select="parent::switch/@for"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="ancestor::group[1]/*[item/toggle[@case=$thisId]]/@bind"/>
-			</xsl:otherwise>
-		</xsl:choose>
+      <xsl:choose>
+        <xsl:when test="parent::switch[@for!='']">
+          <xsl:value-of select="parent::switch/@for"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="ancestor::group[1]/*[item/toggle[@case=$thisId]]/@bind"/>
+        </xsl:otherwise>
+      </xsl:choose>
       <xsl:text>-dependant</xsl:text>
     </xsl:variable>
 
@@ -2528,30 +2558,30 @@
       </xsl:attribute>-->
 
     <xsl:param name="dependantClass"/>
-	  
-	  
+
+
     <xsl:variable name="ref">
       <xsl:apply-templates select="." mode="getRefOrBind"/>
     </xsl:variable>
-	  <xsl:variable name="dependantClassPassthru">
-		  <xsl:choose>
-			  <xsl:when test="$dependantClass!=''">
-				  <xsl:value-of select="$dependantClass"/>
-			  </xsl:when>
-			  <xsl:otherwise>
-				  <xsl:choose>
-					  <xsl:when test="contains($ref,'~')">
-						  <xsl:value-of select="substring-before(translate($ref,'[]#=/',''),'~')"/>
-					  </xsl:when>
-					  <xsl:otherwise>
-						  <xsl:value-of select="translate($ref,'[]#=/','')"/>
-					  </xsl:otherwise>
-				  </xsl:choose>
-				  <xsl:text>-dependant</xsl:text>
-			  </xsl:otherwise>
-		  </xsl:choose>
-	  </xsl:variable>
-	  
+    <xsl:variable name="dependantClassPassthru">
+      <xsl:choose>
+        <xsl:when test="$dependantClass!=''">
+          <xsl:value-of select="$dependantClass"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:choose>
+            <xsl:when test="contains($ref,'~')">
+              <xsl:value-of select="substring-before(translate($ref,'[]#=/',''),'~')"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="translate($ref,'[]#=/','')"/>
+            </xsl:otherwise>
+          </xsl:choose>
+          <xsl:text>-dependant</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
     <xsl:if test="contains(@class,'selectAll')">
       <span>
         <xsl:attribute name="class">
@@ -2829,28 +2859,28 @@
         </xsl:if>
 
         <xsl:attribute name="onclick">
-			<xsl:if test="$type='checkbox'">
-				<xsl:text>checkbox</xsl:text>
-			</xsl:if>			
-                  <xsl:text>showDependant(</xsl:text>
-			<xsl:if test="$type='checkbox'">
-				<xsl:text>'</xsl:text>
-				<xsl:value-of select="$ref"/>_<xsl:value-of select="position()"/>
-				<xsl:text>',</xsl:text>
-			</xsl:if>
-			<xsl:text>'</xsl:text>
-			<xsl:for-each select="toggle">
-                    <xsl:value-of select="translate(@case,'[]#=/','')"/>
-					  <xsl:text>-dependant</xsl:text>
-					  <xsl:if test="position()!=last()">
-						  <xsl:text>,</xsl:text>
-					  </xsl:if>
-				  </xsl:for-each>
-                  <xsl:text>','</xsl:text>
-                  <xsl:value-of select="$dependantClass"/>
-                  <xsl:text>');</xsl:text>			
+          <xsl:if test="$type='checkbox'">
+            <xsl:text>checkbox</xsl:text>
+          </xsl:if>
+          <xsl:text>showDependant(</xsl:text>
+          <xsl:if test="$type='checkbox'">
+            <xsl:text>'</xsl:text>
+            <xsl:value-of select="$ref"/>_<xsl:value-of select="position()"/>
+            <xsl:text>',</xsl:text>
+          </xsl:if>
+          <xsl:text>'</xsl:text>
+          <xsl:for-each select="toggle">
+            <xsl:value-of select="translate(@case,'[]#=/','')"/>
+            <xsl:text>-dependant</xsl:text>
+            <xsl:if test="position()!=last()">
+              <xsl:text>,</xsl:text>
+            </xsl:if>
+          </xsl:for-each>
+          <xsl:text>','</xsl:text>
+          <xsl:value-of select="$dependantClass"/>
+          <xsl:text>');</xsl:text>
         </xsl:attribute>
-		  
+
         <xsl:if test="ancestor::select1/item[1]/value/node() = $value">
           <xsl:attribute name="data-fv-notempty">
             <xsl:value-of select="ancestor::select1/@data-fv-notempty"/>
@@ -2859,7 +2889,7 @@
             <xsl:value-of select="ancestor::select1/@data-fv-notempty-message"/>
           </xsl:attribute>
         </xsl:if>
-		  
+
         <xsl:if test="ancestor::select/item[1]/value/node() = $value">
           <xsl:attribute name="data-fv-choice">
             <xsl:value-of select="ancestor::select/@data-fv-choice"/>
