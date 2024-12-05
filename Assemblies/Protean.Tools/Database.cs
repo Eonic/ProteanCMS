@@ -1433,6 +1433,10 @@ namespace Protean.Tools
         {
             try
             {
+                if (text == null)
+                {
+                    return "''";
+                }
                 if (text == "Null")
                 {
                     return text;
