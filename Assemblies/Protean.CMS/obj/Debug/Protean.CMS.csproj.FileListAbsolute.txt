@@ -492,7 +492,3 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Drawing.Comm
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Data.SqlClient.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Drawing.Common.pdb
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Drawing.Common.xml
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\DocumentFormat.OpenXml.dll
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\DocumentFormat.OpenXml.Framework.dll
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\DocumentFormat.OpenXml.xml
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\DocumentFormat.OpenXml.Framework.xml
