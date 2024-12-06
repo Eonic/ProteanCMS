@@ -45,8 +45,11 @@
       <bind id="height" nodeset="@height" required="false()" type="string"/>
       <bind id="minHeightxs" nodeset="@minHeightxs" required="false()" type="string"/>
       <bind id="minHeight" nodeset="@minHeight" required="false()" type="string"/>
+      <bind id="flex-cols" nodeset="@flex-cols" required="false()" type="string"/>
       <bind id="padding-top" nodeset="@padding-top" required="false()" type="string"/>
       <bind id="padding-bottom" nodeset="@padding-bottom" required="false()" type="string"/>
+      <bind id="padding-top-xs" nodeset="@padding-top-xs" required="false()" type="string"/>
+      <bind id="padding-bottom-xs" nodeset="@padding-bottom-xs" required="false()" type="string"/>
       <bind id="relHeight" nodeset="@relHeight" required="false()" type="string"/>
       <bind id="contentHeight" nodeset="@contentHeight" required="false()" type="string"/>
       <bind id="data-stellar-background-ratio" nodeset="@data-stellar-background-ratio" required="false()" type="string"/>
@@ -62,6 +65,7 @@
       <bind id="alignment" nodeset="@alignment" required="false()" type="string"/>
       <bind id="alignmentV" nodeset="@alignmentV" required="false()" type="string"/>
       <bind id="itemWidth" nodeset="@width" required="false()" type="string"/>
+      <bind id="gutter" nodeset="@gutter" required="false()" type="string"/>
 
     </bind>
     <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
@@ -869,7 +873,7 @@
             </case>
           </switch>
           <group class="row row-cols-md-2">
-            <group class="inline-items">
+            <!--<group class="inline-items">
               <select1 bind="marginBelow" appearance="full">
                 <label>Margin Below Section</label>
                 <item>
@@ -884,7 +888,7 @@
                   <p>By default column modules have a margin below them. If you would like to remove this for this module, please select "no"</p>
                 </help>
               </select1>
-            </group>
+            </group>-->
             <group class="inline-items">
               <select1 bind="fullWidth"  appearance="minimal">
                 <label>Content Width</label>
@@ -1033,23 +1037,74 @@
                 <label>Minimum Height Desktop</label>
                 <value></value>
               </input>
+              <select1 bind="flex-cols" appearance="full">
+                <label>Flex columns</label>
+                <item>
+                  <label>Yes</label>
+                  <value>true</value>
+                </item>
+                <item>
+                  <label>No</label>
+                  <value>false</value>
+                </item>
+              </select1>
             </group>
-
-            <select1 bind="bgContentPosition" appearance="minimal">
-              <label>Content Position</label>
-              <item>
-                <label>Top</label>
-                <value>top</value>
-              </item>
-              <item>
-                <label>Centre</label>
-                <value>center</value>
-              </item>
-              <!--<item>
+            <group class="row row-cols-md-2">
+              <select1 bind="bgContentPosition" appearance="minimal">
+                <label>Content Position</label>
+                <item>
+                  <label>Top</label>
+                  <value>top</value>
+                </item>
+                <item>
+                  <label>Centre</label>
+                  <value>center</value>
+                </item>
+                <!--<item>
                 <label>Bottom</label>
                 <value>bottom</value>
               </item>-->
-            </select1>
+              </select1>
+              <select1 bind="gutter" appearance="minimal">
+                <label>Gutter Width</label>
+                <item>
+                  <label>1</label>
+                  <value>g-1</value>
+                </item>
+                <item>
+                  <label>2</label>
+                  <value>g-2</value>
+                </item>
+                <item>
+                  <label>3</label>
+                  <value>g-3</value>
+                </item>
+                <item>
+                  <label>4</label>
+                  <value>g-4</value>
+                </item>
+                <item>
+                  <label>5</label>
+                  <value>g-5</value>
+                </item>
+                <item>
+                  <label>6</label>
+                  <value>g-6</value>
+                </item>
+                <item>
+                  <label>7</label>
+                  <value>g-7</value>
+                </item>
+                <item>
+                  <label>8</label>
+                  <value>g-8</value>
+                </item>
+                <item>
+                  <label>9</label>
+                  <value>g-9</value>
+                </item>
+              </select1>
+            </group>
             <group class="row">
               <group class="col-lg-4">
                 <select1 bind="contentHeight" appearance="full">
@@ -1065,13 +1120,23 @@
                 </select1>
               </group>
               <group class="col-lg-4">
+                <input bind="padding-top-xs">
+                  <label>Padding Top Mobile</label>
+                </input>
+              </group>
+              <group class="col-lg-4">
+                <input bind="padding-bottom-xs">
+                  <label>Padding Bottom Mobile</label>
+                </input>
+              </group>
+              <group class="col-lg-4">
                 <input bind="padding-top">
-                  <label>Padding Top</label>
+                  <label>Padding Top Desktop</label>
                 </input>
               </group>
               <group class="col-lg-4">
                 <input bind="padding-bottom">
-                  <label>Padding Bottom</label>
+                  <label>Padding Bottom Desktop</label>
                 </input>
               </group>
             </group>

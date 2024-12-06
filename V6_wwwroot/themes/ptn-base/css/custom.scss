@@ -43,6 +43,14 @@ body {
 .container-wrapper.home-class {
     margin-top: 0;
 }
+.flex-cols > div[class^='column'] {
+    display: flex;
+}
+
+.v-align-center {
+    align-self: center;
+}
+
 //BREAKOUT BOXES
 .FormattedText .alignleft {
     //margin-right: 1rem;

@@ -679,8 +679,92 @@ header {
 
 /*############### TABBED MODULE #################*/
 .tabbed-module {
+    margin-bottom: $grid-gutter-height;
+
     .nav {
         margin-bottom: 1rem;
+
+        a.active {
+            background: $light;
+        }
+    }
+}
+
+.nav-tabs {
+    border-bottom: 0;
+    background: $primary;
+
+    li.nav-item button {
+        margin: 0;
+        border: 0;
+        font-weight: 600;
+        background: $primary;
+        color: #fff;
+        padding: 10px 22px 6px;
+
+        i {
+            font-size: 0.95rem;
+            padding-right: 4px;
+            position: relative;
+            top: -1px;
+        }
+
+        &.active {
+            background: $light;
+            border: 0;
+            color: $body-color;
+            font-weight: 7500;
+        }
+    }
+}
+
+@include media-breakpoint-down(lg) {
+    .tab-content > .tab-pane {
+        display: block;
+        opacity: 1;
+    }
+}
+.tab-pane {
+    @include media-breakpoint-up(lg) {
+        background: $light;
+        padding: $card-spacer-y $card-spacer-x;
+    }
+
+    button.accordion-button {
+        background: $primary;
+        color: #fff;
+        border: 0;
+        margin-top: 3px;
+
+        &:after {
+            font-family: 'Font Awesome 6 Free';
+            color: #fff;
+            content: '\f107';
+            font-weight: 900;
+        }
+
+        &.show {
+            &:after {
+                //     transform: rotate(0deg);
+            }
+        }
+
+        i {
+            padding-right: 0.5rem;
+        }
+    }
+
+    .accordion-body {
+        background-color: $light;
+    }
+
+    legend {
+        display: none;
+    }
+
+    .module,
+    .module.nobox {
+        margin-bottom: 0;
     }
 }
 
