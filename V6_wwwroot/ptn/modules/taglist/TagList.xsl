@@ -22,6 +22,16 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
+    <xsl:variable name="cropSetting">
+      <xsl:choose>
+        <xsl:when test="@crop='true'">
+          <xsl:text>true</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>false</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <!--responsive columns variables-->
     <xsl:variable name="xsColsToShow">
       <xsl:choose>
@@ -52,28 +62,7 @@
     <div class="TagsList">
 
       <div class="cols{@cols}">
-        <!--responsive columns-->
-        <xsl:attribute name="class">
-          <xsl:text>cols</xsl:text>
-          <xsl:choose>
-            <xsl:when test="@xsCol='2'"> mobile-2-col-content</xsl:when>
-            <xsl:otherwise> mobile-1-col-content</xsl:otherwise>
-          </xsl:choose>
-          <xsl:if test="@smCol and @smCol!=''">
-            <xsl:text> sm-content-</xsl:text>
-            <xsl:value-of select="@smCol"/>
-          </xsl:if>
-          <xsl:if test="@mdCol and @mdCol!=''">
-            <xsl:text> md-content-</xsl:text>
-            <xsl:value-of select="@mdCol"/>
-          </xsl:if>
-          <xsl:text> cols</xsl:text>
-          <xsl:value-of select="@cols"/>
-          <xsl:if test="@mdCol and @mdCol!=''">
-            <xsl:text> content-cols-responsive</xsl:text>
-          </xsl:if>
-        </xsl:attribute>
-        <!--end responsive columns-->
+        <xsl:apply-templates select="." mode="contentColumns"/>
         <!-- If Stepper, display Stepper -->
         <xsl:if test="@stepCount != '0'">
           <xsl:apply-templates select="/" mode="genericStepper">
@@ -213,18 +202,22 @@
 
   <!-- Tags Detail -->
   <xsl:template match="Content[@type='Tag']" mode="ContentDetail">
+    <!--<xsl:param name="cropSettings"/>-->
     <xsl:variable name="thisURL" select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url"></xsl:variable>
-    <div class="detail tag nobox">
+ 
+    <div class="detail tag nobox TagDetailList">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
         <xsl:with-param name="class" select="'detail tag nobox'"/>
       </xsl:apply-templates>
       <h1 class="detail-title">
         <xsl:value-of select="Name/node()"/>
       </h1>
-      <div class="tags  row cols row-cols-1 row-cols-1 row-cols-md-2 row-cols-lg-3">
+      <div class="">
+        <xsl:apply-templates select="." mode="contentColumns"/>
         <xsl:apply-templates select="Content" mode="displayBrief">
           <xsl:sort select="@publish" order="descending"/>
           <xsl:with-param name="linked">true</xsl:with-param>
+          <!--<xsl:with-param name="crop" select="$cropSetting"/>-->
         </xsl:apply-templates>
         <xsl:text> </xsl:text>
       </div>

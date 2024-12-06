@@ -48,6 +48,8 @@
       <bind id="flex-cols" nodeset="@flex-cols" required="false()" type="string"/>
       <bind id="padding-top" nodeset="@padding-top" required="false()" type="string"/>
       <bind id="padding-bottom" nodeset="@padding-bottom" required="false()" type="string"/>
+      <bind id="padding-top-xs" nodeset="@padding-top-xs" required="false()" type="string"/>
+      <bind id="padding-bottom-xs" nodeset="@padding-bottom-xs" required="false()" type="string"/>
       <bind id="relHeight" nodeset="@relHeight" required="false()" type="string"/>
       <bind id="contentHeight" nodeset="@contentHeight" required="false()" type="string"/>
       <bind id="data-stellar-background-ratio" nodeset="@data-stellar-background-ratio" required="false()" type="string"/>
@@ -1118,13 +1120,23 @@
                 </select1>
               </group>
               <group class="col-lg-4">
+                <input bind="padding-top-xs">
+                  <label>Padding Top Mobile</label>
+                </input>
+              </group>
+              <group class="col-lg-4">
+                <input bind="padding-bottom-xs">
+                  <label>Padding Bottom Mobile</label>
+                </input>
+              </group>
+              <group class="col-lg-4">
                 <input bind="padding-top">
-                  <label>Padding Top</label>
+                  <label>Padding Top Desktop</label>
                 </input>
               </group>
               <group class="col-lg-4">
                 <input bind="padding-bottom">
-                  <label>Padding Bottom</label>
+                  <label>Padding Bottom Desktop</label>
                 </input>
               </group>
             </group>

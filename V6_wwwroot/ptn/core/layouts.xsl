@@ -187,7 +187,7 @@
                   <xsl:value-of select="@minHeight"/>
                   <xsl:text>px!important;</xsl:text>
                 </xsl:if>
-                <xsl:if test="@padding-top and @padding-top!=''">
+                <!--<xsl:if test="@padding-top and @padding-top!=''">
                   <xsl:text>padding-top:</xsl:text>
                   <xsl:value-of select="@padding-top"/>
                   <xsl:text>;</xsl:text>
@@ -195,8 +195,38 @@
                 <xsl:if test="@padding-bottom and @padding-bottom!=''">
                   <xsl:text>padding-bottom:</xsl:text>
                   <xsl:value-of select="@padding-bottom"/>
-                </xsl:if>
-            </xsl:attribute>
+                </xsl:if>-->
+              </xsl:attribute>
+              <xsl:if test="(@padding-top and @padding-top!='') or (@padding-top-xs and @padding-top-xs!='') or (@padding-bottom and @padding-bottom!='') or (@padding-bottom-xs and @padding-bottom-xs!='')  ">
+                <style>
+                  <xsl:text>.bg-wrapper-</xsl:text>
+                  <xsl:value-of select="@id"/>{
+                  <xsl:if test="@padding-top-xs and @padding-top-xs!=''">
+                    <xsl:text>padding-top:</xsl:text>
+                    <xsl:value-of select="@padding-top-xs"/>
+                    <xsl:text>;</xsl:text>
+                  </xsl:if>
+                  <xsl:if test="@padding-bottom-xs and @padding-bottom-xs!=''">
+                    <xsl:text>padding-bottom:</xsl:text>
+                    <xsl:value-of select="@padding-bottom-xs"/>
+                    <xsl:text>;</xsl:text>
+                  </xsl:if>
+                  }
+                  @media(min-width:768px){
+                  <xsl:text>.bg-wrapper-</xsl:text>
+                  <xsl:value-of select="@id"/>{
+                  <xsl:if test="@padding-top and @padding-top!=''">
+                    <xsl:text>padding-top:</xsl:text>
+                    <xsl:value-of select="@padding-top"/>
+                    <xsl:text>;</xsl:text>
+                  </xsl:if>
+                  <xsl:if test="@padding-bottom and @padding-bottom!=''">
+                    <xsl:text>padding-bottom:</xsl:text>
+                    <xsl:value-of select="@padding-bottom"/>
+                    <xsl:text>;</xsl:text>
+                  </xsl:if>}}
+                </style>
+              </xsl:if>
             </xsl:if>
             <xsl:if test="@backgroundImage!=''">
               <style>

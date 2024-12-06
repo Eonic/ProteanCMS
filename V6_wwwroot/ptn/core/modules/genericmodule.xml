@@ -33,6 +33,7 @@
 			<bind id="cIcon" nodeset="@icon" required="false()" type="string"/>
 			<bind id="cIcon-size" nodeset="@icon-size" required="false()" type="string"/>
 			<bind id="cIconStyle" nodeset="@iconStyle" required="false()" type="string"/>
+			<bind id="cIcon-color" nodeset="@icon-color" required="false()" type="string"/>
 			<bind id="cModAnim" nodeset="@modAnim" required="false()" type="string"/>
 			<bind id="cModAnimDelay" nodeset="@modAnimDelay" required="false()" type="string"/>
 			<bind id="cModAnimSpeed" nodeset="@modAnimSpeed" required="false()" type="string"/>
@@ -300,6 +301,37 @@
 										<value>fa-10x</value>
 									</item>
 								</select1>
+                <select1 bind="cIcon-color" class="bs-only" appearance="minimal">
+                  <label>Icon Colour</label>
+                  <item>
+                    <label>Text Colour</label>
+                    <value>text-body</value>
+                  </item>
+                  <item>
+                    <label>Brand Primary Color</label>
+                    <value>text-primary</value>
+                  </item>
+                  <item>
+                    <label>Brand Secondary Color</label>
+                    <value>text-secondary</value>
+                  </item>
+                  <item>
+                    <label>Brand Info Color</label>
+                    <value>text-info</value>
+                  </item>
+                  <item>
+                    <label>Brand Light Color</label>
+                    <value>text-light</value>
+                  </item>
+                  <item>
+                    <label>Brand Dark Color</label>
+                    <value>text-dark</value>
+                  </item>
+                  <item>
+                    <label>White</label>
+                    <value>white-dark</value>
+                  </item>
+                </select1>
 							</group>
 							<group class="form-section-wrapper ">
 								<input bind="uploadIcon" class="pickImageFile bs-only">
