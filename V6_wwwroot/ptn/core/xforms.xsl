@@ -402,7 +402,7 @@
       </ul>
       <div class="tab-content accordion">
         <xsl:for-each select="group">
-          <div role="tabpanel" class="tab-pane fade accordion-item" id="tab-{@id}" aria-labelledby="button-{@id}">
+          <div role="tabpanel" class="tab-pane fade accordion-item" id="tab-{@id}">
             <xsl:choose>
               <xsl:when test="/Page/Request/Form/Item[@name='stepto']/node()=@id">
                 <xsl:attribute name="class">tab-pane active</xsl:attribute>
@@ -430,7 +430,7 @@
                 </xsl:otherwise>
               </xsl:choose>
             </h2>
-            <div id="collapse-{@id}" class="accordion-collapse collapse d-lg-block" aria-labelledby="#button-{@id}" data-bs-parent="#tab-{@id}">
+            <div id="collapse-{@id}" class="accordion-collapse collapse d-lg-block" data-bs-parent="#tab-{@id}">
               <xsl:if test="/Page/Request/Form/Item[@name='stepto']/node()=@id">
                 <xsl:attribute name="class">accordion-collapse collapse d-lg-block show</xsl:attribute>
               </xsl:if>

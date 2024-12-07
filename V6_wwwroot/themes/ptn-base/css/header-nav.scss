@@ -149,6 +149,10 @@ header {
                 &.show {
                     color: $nav-link-hover-color;
                 }
+
+                &:focus-visible {
+                    border-radius: 3px;
+                }
             }
         }
     }
@@ -528,6 +532,10 @@ header {
     &:hover {
         color: $nav-link-hover-color;
     }
+
+    &:focus-visible {
+        border-radius: 3px;
+    }
 }
 .logged-in-icon {
     //color: $secondary;
@@ -644,6 +652,12 @@ header {
     color: $navbar-light-color;
     padding-left: $header-spacing;
     padding-right: $header-spacing;
+
+    &:focus-visible {
+        border-radius: 3px;
+        box-shadow: 0 0 0 0.25rem rgba(23, 43, 84, 0.25);
+        outline:none;
+    }
 
     &:hover,
     &:focus {
