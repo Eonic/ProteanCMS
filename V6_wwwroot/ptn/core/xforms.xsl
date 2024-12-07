@@ -374,14 +374,14 @@
   <!-- -->
   <!-- ========================== GROUP In Tabs ========================== -->
   <xsl:template match="group[contains(@class,'nav-tabs')]" mode="xform">
-    <div>
+	  <div>
       <ul class="nav nav-tabs d-none d-lg-flex" role="tablist">
         <xsl:for-each select="group">
           <li role="presentation" class="nav-item">
             <xsl:if test="position()='1'">
               <xsl:attribute name="class">active nav-item</xsl:attribute>
             </xsl:if>
-            <button data-bs-target="#tab-{@id}" role="tab" data-bs-toggle="tab" class="nav-link" aria-controls="tab-{@id}">
+            <button type="button" id="tab-btn-{@id}" data-bs-target="#tab-{@id}" role="tab" data-bs-toggle="tab" class="nav-link" aria-controls="tab-{@id}">
               <xsl:choose>
                 <xsl:when test="/Page/Request/Form/Item[@name='stepto']/node()=@id">
                   <xsl:attribute name="class">active nav-link</xsl:attribute>
@@ -402,7 +402,7 @@
       </ul>
       <div class="tab-content accordion">
         <xsl:for-each select="group">
-          <div role="tabpanel" class="tab-pane accordion-item" id="tab-{@id}" aria-labelledby="button-{@id}">
+          <div role="tabpanel" class="tab-pane fade accordion-item" id="tab-{@id}" aria-labelledby="button-{@id}">
             <xsl:choose>
               <xsl:when test="/Page/Request/Form/Item[@name='stepto']/node()=@id">
                 <xsl:attribute name="class">tab-pane active</xsl:attribute>
@@ -431,7 +431,6 @@
               </xsl:choose>
             </h2>
             <div id="collapse-{@id}" class="accordion-collapse collapse d-lg-block" aria-labelledby="#button-{@id}" data-bs-parent="#tab-{@id}">
-
               <xsl:if test="/Page/Request/Form/Item[@name='stepto']/node()=@id">
                 <xsl:attribute name="class">accordion-collapse collapse d-lg-block show</xsl:attribute>
               </xsl:if>
@@ -483,6 +482,72 @@
     </div>
   </xsl:template>
 
+
+	<xsl:template match="submit[@ref='stepto']" mode="xform">
+		<xsl:variable name="class">
+			<xsl:text>btn</xsl:text>
+			<xsl:if test="not(contains(@class,'btn-'))">
+				<xsl:text> btn-custom</xsl:text>
+			</xsl:if>
+			<xsl:if test="@class!=''">
+				<xsl:text> </xsl:text>
+				<xsl:value-of select="@class"/>
+			</xsl:if>
+		</xsl:variable>
+		<xsl:variable name="name">
+			<xsl:choose>
+				<xsl:when test="@ref!=''">
+					<xsl:value-of select="@ref"/>
+				</xsl:when>
+				<xsl:when test="@submission!=''">
+					<xsl:value-of select="@submission"/>
+				</xsl:when>
+				<xsl:when test="@bind!=''">
+					<xsl:value-of select="@bind"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>ewSubmit</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="icon">
+			<xsl:choose>
+				<xsl:when test="@icon!=''">
+					<xsl:value-of select="@icon"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text> </xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="buttonValue">
+			<xsl:choose>
+				<xsl:when test="@value!=''">
+					<xsl:value-of select="@value"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="label/node()"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<button type="button" data-bs-toggle="tab"  data-bs-target="#tab-btn-{@value}" role="tab" aria-controls="tab-{@value}" aria-selected="false" class="{$class} btn-tab">
+			<!--<button type="button" onClick="bootstrap.Tab.getInstance($()).show()" class="{$class}">-->
+				<xsl:if test="not(contains($class,'icon-right')) and $icon!=''">
+				<i class="fa {$icon} fa-white">
+					<xsl:text> </xsl:text>
+				</i>
+				<xsl:text> </xsl:text>
+			</xsl:if>
+			<xsl:apply-templates select="label" mode="submitText"/>
+			<xsl:if test="contains($class,'icon-right') and $icon!=''">
+				<xsl:text> </xsl:text>
+				<i class="fa {$icon} fa-white">
+					<xsl:text> </xsl:text>
+				</i>
+			</xsl:if>
+		</button>
+	</xsl:template>
+	
   <!-- -->
   <!-- ========================== GROUP In Accordion ========================== -->
   <xsl:template match="group[contains(@class,'accordion')]" mode="xform">
