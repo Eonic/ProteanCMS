@@ -927,7 +927,7 @@
               </xsl:otherwise>
             </xsl:choose>
           </h2>
-          <div id="mod_{@id}" class="module nobox pos-{@position}" aria-labelledby="button-{@id}" data-bs-parent="#tab-{@id}">
+          <div id="mod_{@id}" class="module nobox pos-{@position}" data-bs-parent="#tab-{@id}">
             <xsl:attribute name="class">
               <xsl:text>accordion-collapse collapse d-lg-block module nobox pos-</xsl:text>
               <xsl:value-of select="@position"/>
