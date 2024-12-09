@@ -54,6 +54,7 @@
 
     a {
         color: rgba(color-contrast($footer-bg),1);
+        text-decoration-color: rgba(color-contrast($footer-bg),0.5);
 
         &:hover,
         &:focus {
