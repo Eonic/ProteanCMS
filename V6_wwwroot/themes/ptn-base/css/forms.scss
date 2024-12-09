@@ -86,3 +86,40 @@ form.ewXform {
         color: #fff;
     }
 }
+.searchListing {
+    > .list-group {
+        border-top: 1px solid #dee2e6;
+    }
+
+    h1 {
+        font-size: 24px;
+        margin-bottom: 0;
+        margin-top: 30px;
+    }
+
+    form {
+        background: $light;
+        padding: 2rem;
+
+        button {
+            border-radius: 0;
+
+            i {
+                display:none;
+            }
+        }
+    }
+}
+
+.search-result.list-group-item {
+    padding-left: 0;
+    padding-right: 0;
+
+    > a.float-start {
+        line-height: 1;
+
+        i {
+            font-size: 1.5rem;
+        }
+    }
+}
