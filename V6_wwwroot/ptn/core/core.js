@@ -634,7 +634,7 @@ $.fn.prepareXform = function () {
 };
 
 function validateForm(event){
-    alert("validating...");
+    //alert("validating...");
     if (!form.checkValidity()) {
         event.preventDefault();
         event.stopPropagation();
