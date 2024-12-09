@@ -264,7 +264,17 @@
 
   <!-- Switch -->
   <xsl:template match="switch" mode="xform">
-    <xsl:apply-templates select="case" mode="xform"/>
+	  <xsl:variable name="for" select="@for"/>
+	  <xsl:variable name="selectedValue" select="ancestor::Content/descendant::*[@bind=$for]/value"/>
+	  <xsl:variable name="selectedCases">
+		  <xsl:for-each select="ancestor::Content/descendant::select1[@bind=$for]/item[value=$selectedValue]/toggle">
+			  <xsl:value-of select="@case"/>
+			  <xsl:text>,</xsl:text>
+		  </xsl:for-each>
+	  </xsl:variable>
+	  <xsl:apply-templates select="case" mode="xform">
+		  <xsl:with-param name="selectedCase" select="$selectedCases"/>
+	  </xsl:apply-templates>
   </xsl:template>
 
   <!-- Case -->
@@ -375,7 +385,9 @@
   <!-- ========================== GROUP In Tabs ========================== -->
   <xsl:template match="group[contains(@class,'nav-tabs')]" mode="xform">
 	  <div>
-      <ul class="nav nav-tabs d-none d-lg-flex" role="tablist">
+		  <xsl:apply-templates select="hint | help | alert" mode="xform"/>
+
+		  <ul class="nav nav-tabs d-none d-lg-flex" role="tablist">
         <xsl:for-each select="group">
           <li role="presentation" class="nav-item">
             <xsl:if test="position()='1'">
@@ -2502,7 +2514,7 @@
       <!-- IF CHOSEN CASE - HIDE-->
       <xsl:attribute name="class">
         <xsl:value-of select="$dependantClass" />
-        <xsl:if test="@id!=$selectedCase and not(descendant-or-self::alert)">
+        <xsl:if test="not(contains($selectedCase,@id)) and not(descendant-or-self::alert)">
           <xsl:text> hidden</xsl:text>
         </xsl:if>
       </xsl:attribute>
