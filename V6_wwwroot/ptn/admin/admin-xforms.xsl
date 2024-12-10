@@ -2213,6 +2213,13 @@
 				</xsl:if>
 				<xsl:if test="not(@maxRelationNo) or @maxRelationNo='' or (@maxRelationNo &gt; $contentCount)">
 					<div class="btn-group-spaced">
+						<xsl:if test="contains(@search,'multiple')">
+							<a data-bs-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={@type}-{@relationType}&amp;targetClass={value/*/@class}&amp;fld={@targetFolder}&amp;multiple=true" data-bs-target="#modal-{@type}-{@relationType}" class="btn btn-primary btn-sm">
+								<i class="fa-solid fa-images fa-white">
+									<xsl:text> </xsl:text>
+								</i><xsl:text> </xsl:text>Add Multiple
+							</a>
+						</xsl:if>
 						<xsl:if test="contains(@search,'find')">
 							<button ref="repeat" type="button" name="RelateFind_{$contentType}_{$RelType}_{$relationType}" value="Find Existing {$contentType}" class="btn btn-primary btn-sm" onclick="disableButton(this);$('#{$formName}').submit();" >
 								<i class="fa fa-search fa-white">
@@ -2243,6 +2250,26 @@
 				</xsl:apply-templates>
 			</div>
 		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="relatedContent[contains(@search,'multiple')]" mode="xform_control_script">
+		<div id="modal-{@type}-{@relationType}" class="modal fade pickImageModal">
+	
+				<div class="modal-dialog" id="test">
+					<div class="modal-content">
+						<div class="modal-body">
+							<p class="text-center">
+								<h4>
+									<i class="fa fa-cog fa-spin fa-2x fa-fw">
+										<xsl:text> </xsl:text>
+									</i> Loading ...
+								</h4>
+							</p>
+						</div>
+					</div>
+				
+			</div>
+		</div>
 	</xsl:template>
 
 	<xsl:template match="relatedContent[@type='filter']" mode="xform">
@@ -3908,4 +3935,7 @@
 		</fieldset>
 	</xsl:template>
 -->
+
+
+	
 </xsl:stylesheet>

@@ -317,7 +317,12 @@
 			  <xsl:text> expandable</xsl:text>
 		  </xsl:if>
       </xsl:attribute>
-      <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" >
+		<xsl:variable name="queryStrExt">
+			<xsl:if test="contains(/Page/Request/QueryString/Item[@name='multiple'],'true')">
+				<xsl:text>&amp;multiple=true</xsl:text>
+			</xsl:if>
+		</xsl:variable>
+      <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}{$queryStrExt}" >
         <i>
           <xsl:attribute name="class">
             <xsl:text>fa fa-lg</xsl:text>
@@ -483,9 +488,20 @@
                     </xsl:when>
                     <!--Pick Other (so far images)-->
                     <xsl:otherwise>
-                      <a href="?ewcmd={/Page/@ewCmd}&amp;ewCmd2=pickImage&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}" class="btn btn-sm btn-primary">
+						<xsl:choose>
+							<!--Add new multiple=true condition for multiple library images-->
+							<xsl:when test="contains(/Page/Request/QueryString/Item[@name='multiple'],'true')">
+
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.svg' or @Extension='.tiff' or @Extension='.tif'">
+
+									<a href="?ewcmd={/Page/@ewCmd}&amp;ewCmd2=pickImage&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}" class="btn btn-sm btn-primary">
                         Pick Image
                       </a>
+								</xsl:if>
+							</xsl:otherwise>
+						</xsl:choose>
                     </xsl:otherwise>
                   </xsl:choose>
                 </xsl:otherwise>
@@ -544,7 +560,24 @@
                   <img src="{concat('/',@root,'/',translate(parent::folder/@path,'\', '/'),'/',@name)}" class="img-responsive"/>
                   <div class="popup-description">
                     <span class="image-description-name">
-                      <xsl:value-of select="@name"/>
+						<xsl:choose>
+							<xsl:when test="contains(/Page/Request/QueryString/Item[@name='multiple'],'true')">
+								<div class="checkbox checkbox-primary">
+									<input type="checkbox" value="/{@root}{translate($fld,'\', '/')}/{@name}" id="chkMultipleImage" class="multicheckbox styled" name="Select Multiple Images"></input>
+									<label>
+										<xsl:value-of select="@name"/>
+										<xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.tiff' or @Extension='.tif'">
+											<xsl:value-of select="@width"/>
+											<xsl:text> x </xsl:text>
+											<xsl:value-of select="@height"/>
+										</xsl:if>
+									</label>
+								</div>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="@name"/>						
+							</xsl:otherwise>
+						</xsl:choose>
                     </span>
                     <br/>
                     <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.tiff' or @Extension='.tif' ">
@@ -582,7 +615,19 @@
         </div>
         <div class="img-description">
           <span class="image-description-name">
-            <xsl:value-of select="@name"/>
+			  <xsl:choose>
+				  <xsl:when test="contains(/Page/Request/QueryString/Item[@name='multiple'],'true')">
+					  <div class="checkbox checkbox-primary">
+						  <input type="checkbox" value="/{@root}{translate($fld,'\', '/')}/{@name}" id="chkMultipleImage" class="form-check-input styled" name="Select Multiple Images"></input>
+						  <label>
+							  <xsl:value-of select="@name"/>
+						  </label>
+					  </div>
+				  </xsl:when>
+				  <xsl:otherwise>
+					  <xsl:value-of select="@name"/>
+				  </xsl:otherwise>
+			  </xsl:choose>
           </span>
           <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.tiff' or @Extension='.tif'">
             <xsl:value-of select="@width"/>
@@ -627,12 +672,20 @@
               </xsl:if>
             </xsl:when>
             <xsl:otherwise>
+				<xsl:choose>
+					<!--Add new multiple=true condition for multiple library images-->
+					<xsl:when test="contains(/Page/Request/QueryString/Item[@name='multiple'],'true')">
+
+					</xsl:when>
+					<xsl:otherwise>
               <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.svg' or @Extension='.tiff' or @Extension='.tif'">
                 <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}&amp;ewCmd2=pickImage&amp;fld={$fld}&amp;file={$filename}{@extension}" class="btn btn-sm btn-primary pickImage">
                   
                   Pick Image
                 </a>
               </xsl:if>
+					</xsl:otherwise>
+				</xsl:choose>
             </xsl:otherwise>
           </xsl:choose>
         </div>
