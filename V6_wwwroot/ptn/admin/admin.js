@@ -2015,3 +2015,71 @@ function uncheckAll(field) {
     }
 
 }
+
+
+function getImagePaths() {
+
+    alert();
+    var imagepaths = "";
+    for (var i = 0; i < $(".multicheckbox").length; i++) {
+        if ($(".multicheckbox")[i].checked === true) {
+            if (imagepaths == "") {
+                imagepaths = $(".multicheckbox")[i].value;
+            } else {
+                imagepaths = $(".multicheckbox")[i].value + ',' + imagepaths;
+            }
+            if (imagepaths.includes("%20")) {
+                imagepaths = imagepaths.replace("%20", " ");
+            }
+        }
+    }
+    var SaveMultipleLibraryImages = "/ewapi/Cms.Admin/SaveMultipleLibraryImages";
+    var contentId = this.getQueryStringParam('id');
+    //var RelatedLibraryImages = imagepaths;
+    //var cSkipAttribute = false;  
+    $("#cRelatedLibraryImages").val(imagepaths);
+    $("#contentId").val(contentId);
+    var formData = new FormData($("#EditContent")[0]);
+
+    $.ajax({
+        url: SaveMultipleLibraryImages,
+        data: formData,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        success: function (response) {
+            $("#modal-cProductImagesPaths").modal("hide");
+            location.reload();
+        }
+    });
+
+}
+function SaveFileName(isOverwrite) {
+    var newfilename; var oldfilename;
+    if (isOverwrite) {
+        oldfilename = $("#cleanFilename").val();
+    }
+    newfilename = $("#txtfilename").val();
+    var existsfilename = document.getElementById("existsFile").files[0];
+    var targetPath = $("#targetPath").val();
+    var ajaxurl = '?ewCmd=ImageLib&ewCmd2=FileUpload&isOverwrite=' + isOverwrite + '&oldfile="' + oldfilename + '"&storageRoot="' + targetPath + '"';
+    let list = new DataTransfer();
+    let file = new File([existsfilename], newfilename);
+    list.items.add(file);
+    let myFileList = list.files;
+    existsFile.files = myFileList;
+    var formData = new FormData($("#frmfileData")[0]);
+    $.ajax({
+        url: ajaxurl,
+        data: formData,
+        processData: false,
+        contentType: false,
+        type: 'POST',
+        success: function (result) {
+            $("#changeFilename").modal("hide");
+            var newItem = $("#divnewfileupdate").html();
+            $('#files').prepend(newItem);
+            $('#files .item-image .panel').prepareLibImages();
+        }
+    });
+}
