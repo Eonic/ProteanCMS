@@ -1608,7 +1608,7 @@ $(document).on('click', '.PrevPage', function () {
 function ValidateContentForm(event) {
 
     if (form_check(event)) {
-        var pageId = this.getQueryStringParam('pgid');
+        var pageId = this.\('pgid');
         $(".hiddenType").val("Page");
         $(".hiddenPageId").val(pageId);
         var newStructName = $("#cStructName").val();
