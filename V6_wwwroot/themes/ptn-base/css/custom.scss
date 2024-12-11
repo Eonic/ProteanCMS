@@ -1557,3 +1557,34 @@ dd {
         flex-grow: 0;
     }
 }
+.modal {
+    .modal-header {
+        background: $primary;
+        padding-bottom: 1rem;
+        color: color-contrast($primary);
+
+        h1, h2, h3, h4, h5, h6 {
+            color: color-contrast($primary);
+        }
+    }
+
+    .modal-body {
+        color: $body-color;
+        border-bottom: 0;
+    }
+
+    .modal-footer {
+        border-top: 0;
+    }
+
+    .btn-close {
+        background: none;
+
+        &:after {
+            content: '\f00d';
+            font-family: $font-awesome-version;
+            color: #fff;
+            font-weight: 600;
+        }
+    }
+}
