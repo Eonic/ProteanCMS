@@ -103,7 +103,7 @@ header {
     position: fixed;
     background: $header-bg;
     width: 100%;
-    z-index: 3;
+    z-index: 101;
     height: $fixed-height-xs !important;
 
     @include media-breakpoint-up($nav-breakpoint) {
