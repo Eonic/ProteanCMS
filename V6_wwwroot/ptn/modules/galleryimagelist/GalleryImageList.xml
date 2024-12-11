@@ -26,8 +26,6 @@
 				<bCascade/>
 			</tblContent>
 			<ImageBasePath/>
-			<RelatedLibraryImages/>
-			<ContentId/>
 		</instance>
 		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
 		<bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
@@ -58,8 +56,6 @@
 				<bind id="alignment" nodeset="@alignment" required="false()" type="string" />
 			</bind>
 			<bind id="cImageBasePath" nodeset="ImageBasePath" required="false()" type="string"/>
-			<bind id="cRelatedLibraryImages" nodeset="RelatedLibraryImages" required="false()" type="string"/>
-			<bind id="contentId" nodeset="ContentId" required="false()" type="string"/>
 		</bind>
 			<bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
 			<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>

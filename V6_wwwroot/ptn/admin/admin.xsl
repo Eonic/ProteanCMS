@@ -4199,7 +4199,7 @@
                   </xsl:if>
                   <i class="fas fa-folder-open fa-white">
                     <xsl:text> </xsl:text>
-                  </i>&#160;New Folder !!
+                  </i>&#160;New Folder
                 </a>
 
                 <!-- The fileinput-button span is used to style the file input field as button -->

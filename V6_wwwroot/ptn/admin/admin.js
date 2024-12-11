@@ -427,9 +427,8 @@ function preparePickImageModal(CurrentModalPath) {
 
     $("#SelectAll").click(function (ev) {
         ev.preventDefault();
-        $(".multicheckbox").each(function () {
-            $(".multicheckbox").attr("checked", "checked");
-        });
+        var checkBoxes = $(".multicheckbox");
+        checkBoxes.prop("checked", !checkBoxes.prop("checked"));
         return false;
     });
 

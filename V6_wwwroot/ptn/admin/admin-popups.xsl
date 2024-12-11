@@ -152,13 +152,13 @@
 								<xsl:if test="contains(/Page/Request/QueryString/Item[@name='multiple'],'true')">
 								
 										<a id="SelectAll" class="btn btn-sm btn-outline-primary " data-bs-toggle="popover">
-											<i class="fa fa-picture-o fa-white">
+											<i class="fa-regular fa-square-check">
 												<xsl:text> </xsl:text>
-											</i><xsl:text> </xsl:text>SelectAll
+											</i><xsl:text> </xsl:text>Select All
 										</a>
 								
 										<a href="javascript:;" onclick="getImagePaths();" class="btn btn-sm btn-outline-primary ">
-											<i class="fa fa-picture-o fa-white">
+											<i class="fa-solid fa-images">
 												<xsl:text> </xsl:text>
 											</i><xsl:text> </xsl:text>Add Selected
 										</a>
@@ -635,8 +635,8 @@
 			  <xsl:choose>
 				  <xsl:when test="contains(/Page/Request/QueryString/Item[@name='multiple'],'true')">
 					  <div class="checkbox checkbox-primary">
-						  <input type="checkbox" value="/{@root}{translate($fld,'\', '/')}/{@name}" class="chkMultipleImage form-check-input styled" name="Select Multiple Images"></input>
-						  <label class="img-description">
+						  <input type="checkbox" id="cb-{position()}" value="/{@root}{translate($fld,'\', '/')}/{@name}" class="chkMultipleImage multicheckbox form-check-input styled" name="Select Multiple Images"></input>
+						  <label for="cb-{position()}" class="img-description">
 							  <xsl:value-of select="@name"/><br/>
 							  <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.tiff' or @Extension='.tif'">
 								  <xsl:value-of select="@width"/>
