@@ -2019,27 +2019,31 @@ function uncheckAll(field) {
 
 function getImagePaths() {
 
-    alert();
+    
     var imagepaths = "";
-    for (var i = 0; i < $(".multicheckbox").length; i++) {
-        if ($(".multicheckbox")[i].checked === true) {
+    for (var i = 0; i < $(".chkMultipleImage").length; i++) {
+        if ($(".chkMultipleImage")[i].checked === true) {
             if (imagepaths == "") {
-                imagepaths = $(".multicheckbox")[i].value;
+                imagepaths = $(".chkMultipleImage")[i].value;
             } else {
-                imagepaths = $(".multicheckbox")[i].value + ',' + imagepaths;
-            }
-            if (imagepaths.includes("%20")) {
-                imagepaths = imagepaths.replace("%20", " ");
+                imagepaths = $(".chkMultipleImage")[i].value + ',' + imagepaths;
             }
         }
     }
+    if (imagepaths.includes("%20")) {
+        imagepaths = imagepaths.replace("%20", " ");
+    }
+    //alert("images>" +imagepaths);
+    var contentId = $('#add-multiple-btn').data('parentid')
+   // alert(contentId);
     var SaveMultipleLibraryImages = "/ewapi/Cms.Admin/SaveMultipleLibraryImages";
-    var contentId = this.getQueryStringParam('id');
+    //var contentId = this.getQueryStringParam('id');
     //var RelatedLibraryImages = imagepaths;
     //var cSkipAttribute = false;  
-    $("#cRelatedLibraryImages").val(imagepaths);
-    $("#contentId").val(contentId);
-    var formData = new FormData($("#EditContent")[0]);
+
+    var formData = new FormData();
+    formData.append('contentId', contentId);
+    formData.append('cRelatedLibraryImages', imagepaths);
 
     $.ajax({
         url: SaveMultipleLibraryImages,

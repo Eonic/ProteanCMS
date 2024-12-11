@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml">
+<xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml" 
+				xmlns:v-bind="http://example.com/xml/v-bind" xmlns:v-on="http://example.com/xml/v-on"
+                  xmlns:v-for="http://example.com/xml/v-for" xmlns:v-slot="http://example.com/xml/v-slot"
+                  xmlns:v-if="http://example.com/xml/v-if" xmlns:v-else="http://example.com/xml/v-else"
+                  xmlns:v-model="http://example.com/xml/v-model" xmlns:ew="urn:ew">
   <xsl:import href="../core/functions.xsl"/>
   <xsl:import href="../core/xforms.xsl"/>
   <xsl:import href="admin-xforms.xsl"/>
@@ -576,7 +580,7 @@
 						<xsl:choose>
 							<xsl:when test="contains(/Page/Request/QueryString/Item[@name='multiple'],'true')">
 								<div class="checkbox checkbox-primary">
-									<input type="checkbox" value="/{@root}{translate($fld,'\', '/')}/{@name}" id="chkMultipleImage" class="multicheckbox styled" name="Select Multiple Images"></input>
+									<input type="checkbox" value="/{@root}{translate($fld,'\', '/')}/{@name}" class="chkMultipleImage multicheckbox styled" name="Select Multiple Images"></input>
 									<label>
 										<xsl:value-of select="@name"/>
 										<xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.tiff' or @Extension='.tif'">
@@ -631,7 +635,7 @@
 			  <xsl:choose>
 				  <xsl:when test="contains(/Page/Request/QueryString/Item[@name='multiple'],'true')">
 					  <div class="checkbox checkbox-primary">
-						  <input type="checkbox" value="/{@root}{translate($fld,'\', '/')}/{@name}" id="chkMultipleImage" class="form-check-input styled" name="Select Multiple Images"></input>
+						  <input type="checkbox" value="/{@root}{translate($fld,'\', '/')}/{@name}" class="chkMultipleImage form-check-input styled" name="Select Multiple Images"></input>
 						  <label class="img-description">
 							  <xsl:value-of select="@name"/><br/>
 							  <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.tiff' or @Extension='.tif'">

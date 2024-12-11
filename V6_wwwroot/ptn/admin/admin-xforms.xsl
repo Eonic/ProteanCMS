@@ -2214,7 +2214,7 @@
 				<xsl:if test="not(@maxRelationNo) or @maxRelationNo='' or (@maxRelationNo &gt; $contentCount)">
 					<div class="btn-group-spaced">
 						<xsl:if test="contains(@search,'multiple')">
-							<a data-bs-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={@type}-{@relationType}&amp;targetClass={value/*/@class}&amp;fld={@targetFolder}&amp;multiple=true" data-bs-target="#modal-{@type}-{@relationType}" class="btn btn-primary btn-sm">
+							<a data-bs-toggle="modal" id="add-multiple-btn" data-parentid="{/Page/Request/QueryString/Item[@name='id']}"  href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={@type}-{@relationType}&amp;targetClass={value/*/@class}&amp;fld={@targetFolder}&amp;multiple=true" data-bs-target="#modal-{@type}-{@relationType}" class="btn btn-primary btn-sm">
 								<i class="fa-solid fa-images fa-white">
 									<xsl:text> </xsl:text>
 								</i><xsl:text> </xsl:text>Add Multiple
