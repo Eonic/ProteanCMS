@@ -7,8 +7,21 @@ form.ewXform {
     .form-label {
         margin-bottom: 0.3rem;
     }
-}
 
+    .principle {
+        float:right;
+    }
+}
+.card.bg-dark {
+    input, textarea {
+        background: lighten($dark,10%);
+        color: #fff;
+
+        &::placeholder {
+            color: darken(#fff,10%);
+        }
+    }
+}
 #Login {
     form .principle {
         float: right;

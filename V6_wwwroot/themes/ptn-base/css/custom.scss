@@ -28,7 +28,7 @@ body {
     flex-shrink: 0;
     flex-grow: 2;
     background: $body-bg;
-    padding-bottom: 2rem;
+    //padding-bottom: 2rem;
 
     @media(min-width:2000px) {
         max-width: 2000px;
@@ -43,6 +43,7 @@ body {
 .container-wrapper.home-class {
     margin-top: 0;
 }
+
 .flex-cols > div[class^='column'] {
     display: flex;
 }
@@ -227,6 +228,7 @@ strong, b {
 }
 
 h1, h2, h3 {
+    font-weight:900;
     a {
         text-underline-offset: 0.4rem;
     }
@@ -281,6 +283,18 @@ h1, h2, h3 {
         }
     }
 }
+.btn-outline-light,
+.btn-custom {
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 0.6rem 1.6rem;
+    font-size: 1.1rem;
+    transition:all ease 0.3s;
+
+    &:hover {
+        transform: scale(1.04);
+    }
+}
 
 .nobox > .entryFooter,
 .nobox > .FormattedText {
@@ -314,7 +328,7 @@ img, svg {
 .img-module-flex {
     display: flex;
     flex-direction: column;
-    height:100%;
+    height: 100%;
 }
 
 img {
@@ -379,6 +393,11 @@ section {
 .section-center {
     padding: 0;
 
+    > .fullwidthContainer,
+    .bg-content-center {
+        height: 100%;
+    }
+
     > .container {
         height: 100%;
         display: flex;
@@ -400,6 +419,12 @@ section {
                 height: auto;
             }
         }
+    }
+
+    .fullwidthContainer .col {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
 }
 
@@ -677,13 +702,12 @@ section.stretchBG {
     }
 
     .intro-banner-inner {
-       // padding: $card-spacer-y $card-spacer-x;
+        // padding: $card-spacer-y $card-spacer-x;
         text-align: center;
-      //  border-radius: $border-radius;
-       // background: $no-banner-bg;
+        //  border-radius: $border-radius;
+        // background: $no-banner-bg;
     }
-
-   /* .breadcrumb {
+    /* .breadcrumb {
         justify-content: center;
 
         .breadcrumb-item.active {
@@ -696,11 +720,11 @@ section.stretchBG {
     }*/
 
     a {
-     //   color: color-contrast($no-banner-bg);
+        //   color: color-contrast($no-banner-bg);
     }
 
     h1 {
-     //   color: color-contrast($no-banner-bg);
+        //   color: color-contrast($no-banner-bg);
     }
 }
 
@@ -795,7 +819,7 @@ section.stretchBG {
 }
 
 div[class$="List"].module {
-    @include listItem-spacing;
+    //@include listItem-spacing;
 }
 
 @mixin testimonial1 {
@@ -862,7 +886,7 @@ div[class$="List"].module {
 
 .nobox .listItem .lIinner,
 .relatedcontent .listItem .lIinner {
-    @include boxed-listItem;
+   // @include boxed-listItem;
 }
 
 .TestimonialList .listItem .lIinner {
@@ -874,11 +898,17 @@ div[class$="List"].module {
 }
 
 .linked-listItem {
+    .lIinner img {
+        transition:all ease 0.4s;
+    }
+
     &:hover {
         .lIinner {
-            transform: scale(1.04);
             cursor: pointer;
             //z-index: 2;
+            img {
+                transform: scale(1.04);
+            }
         }
     }
 }
@@ -1042,6 +1072,35 @@ div[class$="List"].module {
         margin-right: -($nav-link-padding-y*2);
     }
 }
+
+.SubPages {
+    .listItem .lIinner {
+        //background: $dark;
+        //color: color-contrast($dark);
+        //border: 0;
+
+        .title {
+            //    margin-bottom: 0;
+        }
+
+        .btn-custom {
+            border-color: $primary;
+            color: $primary;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+
+            &:hover {
+                transform: scale(1);
+                background: $primary;
+                color: #fff;
+            }
+
+            &:focus-visible {
+                outline:auto;
+            }
+        }
+    }
+}
 // GRIDS
 .Grid {
     .grid-item a.grid-link {
@@ -1116,6 +1175,7 @@ div[class$="List"].module {
         }
     }
 }
+
 .pagination-wrapper {
     display: flex;
     flex-direction: column;
@@ -1453,6 +1513,7 @@ dd {
         }
     }
 }
+
 .searchListing {
     margin-top: 2rem;
 
@@ -1557,6 +1618,7 @@ dd {
         flex-grow: 0;
     }
 }
+
 .modal {
     .modal-header {
         background: $primary;
@@ -1565,6 +1627,17 @@ dd {
 
         h1, h2, h3, h4, h5, h6 {
             color: color-contrast($primary);
+        }
+
+        .btn-close {
+            background: none;
+
+            &:after {
+                content: '\f00d';
+                font-family: $font-awesome-version;
+                color: #fff;
+                font-weight: 600;
+            }
         }
     }
 
@@ -1575,16 +1648,5 @@ dd {
 
     .modal-footer {
         border-top: 0;
-    }
-
-    .btn-close {
-        background: none;
-
-        &:after {
-            content: '\f00d';
-            font-family: $font-awesome-version;
-            color: #fff;
-            font-weight: 600;
-        }
     }
 }

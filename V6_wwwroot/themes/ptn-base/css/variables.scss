@@ -23,7 +23,7 @@ $color-contrast-dark: $dark !default;
 $color-contrast-light: #fff !default;
 
 /*################## BORDER RADIUS ####################*/
-$border-radius: .375rem !default;
+$border-radius: 0;
 $img-border-radius: $border-radius;
 
 /*###################### TEXT #########################*/
@@ -48,7 +48,7 @@ $image-spacer: 1rem;
 
 /*################# BUTTONS & LINKS ###################*/
 $link-color: $primary !default;
-$visited: lighten($link-color,30%);
+$visited: lighten($link-color,10%);
 $btn-style: btn-primary;
 $btn-list-style: $btn-style;
 
@@ -98,6 +98,7 @@ $mobile-dd-active: $primary;
 
 /*##################### FOOTER #######################*/
 $footer-bg: $dark;
+$footer-color:#fff;
 
 /*###################### FORMS #######################*/
 $input-border-color: #919191;

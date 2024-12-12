@@ -220,6 +220,7 @@
     {title: 'Code', inline: 'code', icon: 'code'},
     {title: 'Lead', inline: 'span', classes: 'lead'},
     {title: 'Small', inline: 'span', classes: 'small'},
+    {title: 'Circle Stat', inline: 'span', classes: 'circle-stat'}
     ]},
 
     {title: 'Blocks', items: [

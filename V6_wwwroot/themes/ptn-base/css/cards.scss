@@ -24,7 +24,7 @@
     }
 }
 .card {
-    @include card-contrast($light);
+   // @include card-contrast($light);
 }
 @mixin card-color-bg {
     .card-header,
@@ -43,7 +43,6 @@
 
     .card.bg-info {
         @include card-contrast($info);
-
     }
 
     .card.bg-light {
@@ -51,7 +50,26 @@
     }
 
     .card.bg-dark {
-        @include card-contrast($dark);
+        color: #fff;
+
+        h1, h2, h3, h4, h5, h6 {
+            color: #fff;
+        }
+
+        a:not(.btn) {
+            color: #fff;
+        }
+
+        .btn {
+            background: $primary;
+            color: #fff;
+
+            &:hover {
+                background:darken($primary,10%);
+            }
+        }
+
+        @extend .btn-primary;
     }
 }
 
@@ -87,11 +105,11 @@
         }
 
         .card-body-w-head {
-            padding-top: 1rem;
+            padding-top: 1.5rem;
         }
 
         .card-body-w-footer {
-            padding-bottom: 1rem;
+            padding-bottom: 1.5rem;
         }
 
         .card-footer {

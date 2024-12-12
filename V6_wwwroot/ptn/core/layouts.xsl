@@ -183,7 +183,7 @@
             <xsl:if test="@backgroundImage='' or not(@backgroundImage)">
               <xsl:attribute name="style">
                 <xsl:if test="@minHeight!=''">
-                  <xsl:text>height:</xsl:text>
+                  <xsl:text>min-height:</xsl:text>
                   <xsl:value-of select="@minHeight"/>
                   <xsl:text>px!important;</xsl:text>
                 </xsl:if>
@@ -2081,6 +2081,10 @@
         </xsl:when>
         <xsl:otherwise>
           <xsl:text> row cols row-cols-1</xsl:text>
+          <xsl:if test="@gutter and @gutter!=''">
+            <xsl:text> g-</xsl:text>
+            <xsl:value-of select="@gutter"/>
+          </xsl:if>
         </xsl:otherwise>
       </xsl:choose>
       <xsl:choose>

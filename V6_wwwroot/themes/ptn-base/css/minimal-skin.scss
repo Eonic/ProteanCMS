@@ -10,13 +10,13 @@ footer#pagefooter {
     }
 }
 .module-centred.nobox h2.title,
-h2.layout-title {
+h2.layout-title{
     &:after {
         content: '';
         height: 2px;
-        width: 97px;
+        width: 80px;
         display: block;
-        background: $secondary;
+        background: $primary;
         margin: 0.9rem auto 0.9rem;
     }
 }
@@ -91,4 +91,8 @@ h2.layout-title {
 .module-with-icon i {
     @include circle-icon-border($border:3px solid $info,$color:$info);
     //color:$info;
+}
+.circle-stat {
+    @include circle-icon-border($border:3px solid $primary,$color:$info,$size:100px);
+    margin: 0 auto;
 }
