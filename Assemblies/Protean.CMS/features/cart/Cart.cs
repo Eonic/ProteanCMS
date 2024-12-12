@@ -2753,9 +2753,9 @@ namespace Protean
                 }
                 messageHtml = sWriter.ToString();
                 sWriter.Close();
-                //var xMailingListDoc = htmlToXmlDoc(messageHtml);
-                //var xListElement = xMailingListDoc.DocumentElement;
-                //valDict = XmltoDictionary(xListElement, true);
+                var xMailingListDoc = htmlToXmlDoc(messageHtml);
+                var xListElement = xMailingListDoc.DocumentElement;
+                valDict = XmltoDictionary(xListElement, true);
                 return valDict;
             }
             private void RemoveDeliveryOption(int nOrderId)
@@ -3521,7 +3521,7 @@ namespace Protean
                                     shipCost = lowestShipCost;
                                     //code added for delivery promocode if it is applied then price set to 0 for selected delivery option.
                                     //condition for ITB
-                                    if(oCartElmt.GetAttribute("freeShippingMethods") != null)
+                                    if(oCartElmt.GetAttribute("freeShippingMethods") != "" && oCartElmt.GetAttribute("freeShippingMethods")!=null)
                                     {
                                         if (oCartElmt.GetAttribute("freeShippingMethods").Contains(oCartElmt.GetAttribute("shippingType")))
                                         {
