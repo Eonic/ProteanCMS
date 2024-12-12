@@ -2021,18 +2021,22 @@ function getImagePaths() {
     
     var imagepaths = "";
     for (var i = 0; i < $(".chkMultipleImage").length; i++) {
-        if ($(".chkMultipleImage")[i].checked === true) {
-            if (imagepaths == "") {
-                imagepaths = $(".chkMultipleImage")[i].value;
-            } else {
-                imagepaths = $(".chkMultipleImage")[i].value + ',' + imagepaths;
+        if ($(".chkMultipleImage")[i].checked === true) {            
+            var thisImgPath = $(".chkMultipleImage")[i].value;
+            //alert(thisImgPath)
+            if (imagepaths.includes(thisImgPath) == false) {
+                if (imagepaths == "") {
+                    imagepaths = thisImgPath;
+                } else {
+                    imagepaths = thisImgPath + ',' + imagepaths;
+                }
             }
         }
     }
     if (imagepaths.includes("%20")) {
         imagepaths = imagepaths.replace("%20", " ");
     }
-    //alert("images>" +imagepaths);
+   // alert("images>" +imagepaths);
     var contentId = $('#add-multiple-btn').data('parentid')
    // alert(contentId);
     var SaveMultipleLibraryImages = "/ewapi/Cms.Admin/SaveMultipleLibraryImages";
@@ -2043,18 +2047,23 @@ function getImagePaths() {
     var formData = new FormData();
     formData.append('contentId', contentId);
     formData.append('cRelatedLibraryImages', imagepaths);
+    if (imagepaths != '') {
 
-    $.ajax({
-        url: SaveMultipleLibraryImages,
-        data: formData,
-        contentType: false,
-        processData: false,
-        type: 'POST',
-        success: function (response) {
-            $("#modal-cProductImagesPaths").modal("hide");
-            location.reload();
-        }
-    });
+        $.ajax({
+            url: SaveMultipleLibraryImages,
+            data: formData,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function (response) {
+                $("#modal-cProductImagesPaths").modal("hide");
+                location.reload();
+            }
+        });
+    } else {
+        alert("no images selected")
+    }
+
 
 }
 function SaveFileName(isOverwrite) {
