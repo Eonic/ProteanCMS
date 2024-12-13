@@ -9,7 +9,15 @@ form.ewXform {
     }
 
     .principle {
-        float:right;
+        float: right;
+    }
+
+    input, textarea {
+        padding: 0.8rem;
+
+        &::placeholder {
+            font-weight: 600;
+        }
     }
 }
 .card.bg-dark {

@@ -227,8 +227,9 @@ strong, b {
     }
 }
 
-h1, h2, h3 {
-    font-weight:900;
+h1, h2, h3, h4 {
+    font-weight: 900;
+
     a {
         text-underline-offset: 0.4rem;
     }
@@ -283,13 +284,14 @@ h1, h2, h3 {
         }
     }
 }
+
 .btn-outline-light,
 .btn-custom {
     font-weight: 700;
     text-transform: uppercase;
     padding: 0.6rem 1.6rem;
     font-size: 1.1rem;
-    transition:all ease 0.3s;
+    transition: all ease 0.3s;
 
     &:hover {
         transform: scale(1.04);
@@ -297,27 +299,27 @@ h1, h2, h3 {
 }
 
 .nobox > .entryFooter,
-.nobox > .FormattedText {
+.nobox > .FormattedText,
+.nobox form {
     .btn-custom {
         @extend .#{$btn-style};
+        border-color: $btn-color;
+
+        &:hover {
+            border-color: darken($btn-color,10%);
+        }
     }
 }
 
-.phone-icon,
-.email-icon {
-    &:before {
-        content: '\f095';
-        font-family: 'Font Awesome 6 Free';
-        padding-right: 12px;
-        font-weight: 900;
-        font-size: 0.85em;
+.module-left.module-containing-icon {
+    .space {
+        display: none;
+    }
+
+    i {
+        padding-right: 0.6rem;
     }
 }
-
-.email-icon:before {
-    content: '\f0e0';
-}
-
 /*############### IMAGES #################*/
 img, svg {
     max-width: 100%;
@@ -328,6 +330,10 @@ img, svg {
 .img-module-flex {
     display: flex;
     flex-direction: column;
+    //height: 100%;
+}
+
+.img-flex-100 {
     height: 100%;
 }
 
@@ -439,6 +445,10 @@ section.bg-secondary {
     @extend .section-spacing;
 }
 
+section:not(.bg-light) .bg-light {
+    padding: 3rem;
+}
+
 section.bg-dark,
 section.bg-primary,
 section.bg-secondary,
@@ -517,6 +527,11 @@ section.stretchBG {
                 .layoutModule {
                     background-size: cover;
                 }
+            }
+
+            > div[class^=column] .module {
+                height: 100%;
+                background-size: cover;
             }
         }
     }
@@ -687,7 +702,7 @@ section.stretchBG {
 }
 
 .intro-banner {
-    margin-bottom: $spacer;
+    margin-bottom: 3rem;
     color: contrast($no-banner-bg);
 
     @if $banner-flush != true {
@@ -726,6 +741,11 @@ section.stretchBG {
     h1 {
         //   color: color-contrast($no-banner-bg);
     }
+
+    .intro-banner-info {
+        max-width: 45rem;
+        margin: 0 auto;
+    }
 }
 
 .no-banner-layout {
@@ -736,13 +756,27 @@ section.stretchBG {
 .dtstamp {
     font-size: 0.75rem;
     padding-bottom: 1rem;
+    font-weight: 600;
+    /*&:before {
+        content: '\f073';
+        font-family: $font-awesome-version;
+        color: $primary;
+        padding-right: 5px;
+    }*/
+}
 
+.dtstamp {
     &:before {
         content: '\f073';
         font-family: $font-awesome-version;
         color: $primary;
         padding-right: 5px;
     }
+}
+
+.top-date {
+    text-align: center;
+    margin-top: -2.6rem;
 }
 
 .entryFooter .tags {
@@ -818,8 +852,28 @@ section.stretchBG {
     }
 }
 
-div[class$="List"].module {
+div[class$="List"] {
     //@include listItem-spacing;
+    .list-image-link {
+        overflow: hidden;
+    }
+
+    .btn-custom {
+        border-color: $primary;
+        color: $primary;
+        margin-top: 1rem;
+        padding: 0.5rem 1rem;
+
+        &:hover {
+            transform: scale(1);
+            background: $primary;
+            color: #fff;
+        }
+
+        &:focus-visible {
+            outline: auto;
+        }
+    }
 }
 
 @mixin testimonial1 {
@@ -886,7 +940,7 @@ div[class$="List"].module {
 
 .nobox .listItem .lIinner,
 .relatedcontent .listItem .lIinner {
-   // @include boxed-listItem;
+    // @include boxed-listItem;
 }
 
 .TestimonialList .listItem .lIinner {
@@ -899,7 +953,7 @@ div[class$="List"].module {
 
 .linked-listItem {
     .lIinner img {
-        transition:all ease 0.4s;
+        transition: all ease 0.4s;
     }
 
     &:hover {
@@ -953,6 +1007,14 @@ div[class$="List"].module {
     .list-image-link {
         margin-bottom: 1rem;
         display: block;
+
+        img {
+            transition: all ease 0.4s;
+        }
+
+        img:hover {
+            transform: scale(1.04);
+        }
     }
 
     img.thumbnail {
@@ -1024,8 +1086,13 @@ div[class$="List"].module {
         flex-grow: 0;
     }
 
+    .date {
+        margin-bottom: 0;
+        margin-top: -1.3rem;
+    }
+
     .media-inner {
-        padding: 1rem;
+        padding: 1.5rem 0;
 
         .entryFooter {
             padding-top: 1rem;
@@ -1081,23 +1148,6 @@ div[class$="List"].module {
 
         .title {
             //    margin-bottom: 0;
-        }
-
-        .btn-custom {
-            border-color: $primary;
-            color: $primary;
-            margin-top: 1rem;
-            padding: 0.5rem 1rem;
-
-            &:hover {
-                transform: scale(1);
-                background: $primary;
-                color: #fff;
-            }
-
-            &:focus-visible {
-                outline:auto;
-            }
         }
     }
 }
@@ -1268,6 +1318,12 @@ dd {
 
 .detail-container > .detail {
     @extend .container;
+    padding-top: 3rem;
+
+    .detail-title {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
 
     .description {
         a:visited {
@@ -1279,7 +1335,7 @@ dd {
         position: relative;
         display: block;
         cursor: pointer;
-        margin-bottom: 1rem;
+        margin-bottom: 2rem;
 
         img {
             border-radius: $img-border-radius;
@@ -1371,7 +1427,47 @@ dd {
     }
 
     .relatedcontent {
-        padding-top: 3rem;
+        //padding-top: 3rem;
+        //padding: 2.5rem;
+        > h2 {
+            text-align: center;
+        }
+
+        .listItem {
+            margin-bottom: 2rem;
+            transition: all ease 0.2s;
+
+            &:hover .media-inner .title {
+                background: darken($light,3%)
+            }
+
+            &:hover {
+                .lIinner {
+                    cursor: pointer;
+                    //z-index: 2;
+                    img {
+                        transform: scale(1.04);
+                    }
+                }
+            }
+        }
+
+        .media-inner {
+            padding: 0;
+
+            .summary,
+            .entryFooter,
+            .date {
+                display: none;
+            }
+
+            .title {
+                font-size: 1.2rem;
+                margin-bottom: 0rem;
+                padding: 1rem;
+                background: $light;
+            }
+        }
 
         h2 {
             margin-bottom: 1rem;
@@ -1407,22 +1503,26 @@ dd {
     font-size: 1.2rem;
     position: relative;
     padding-left: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
+    background: $light;
+    padding: 2rem 1rem 1rem 3rem;
 
     p:last-of-type {
         margin-bottom: 0;
     }
 
     &:before {
-        content: '“';
+        content: '\f10d';
+        font-weight: 600;
+        font-family: $font-awesome-version;
         color: $primary;
         float: left;
-        font-size: 2.5rem;
+        font-size: 2rem;
         line-height: 1;
         vertical-align: top;
         position: absolute;
-        top: -5px;
-        left: 0;
+        top: 5px;
+        left: 12px;
     }
 }
 
@@ -1499,7 +1599,8 @@ dd {
 }
 
 .backlink {
-    margin-bottom: 0.5rem;
+    margin-bottom: 4.5rem;
+    margin-top: 2rem;
 
     a {
         text-decoration: none;

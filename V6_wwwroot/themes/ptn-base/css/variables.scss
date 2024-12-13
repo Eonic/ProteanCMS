@@ -32,13 +32,13 @@ $font-family-base: 'Gantari', sans-serif;
 $headings-font-family: $font-family-base;
 
 $navbar-font: $font-family-base;
-//$font-weight-base: 300;
-//$font-size-base: 1.1rem !default;
-$line-height-base: 1.3;
+$font-weight-base: 300;
+$font-size-base: 1.15rem ;
+$line-height-base: 1.4;
 
 /*###################### GRID ########################*/
-$spacer: 2rem;
-$grid-gutter-width: 2rem;
+$spacer: 3rem;
+$grid-gutter-width: 3rem;
 $grid-gutter-height: $grid-gutter-width;
 $top-padding: $grid-gutter-height;
 $section-padding: $grid-gutter-height * 1.3;
