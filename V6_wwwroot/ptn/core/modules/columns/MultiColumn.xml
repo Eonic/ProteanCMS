@@ -1107,6 +1107,16 @@
             </group>
             <group class="row">
               <group class="col-lg-4">
+                <input bind="padding-top-xs">
+                  <label>Padding Top Mobile</label>
+                </input>
+              </group>
+              <group class="col-lg-4">
+                <input bind="padding-bottom-xs">
+                  <label>Padding Bottom Mobile</label>
+                </input>
+              </group>
+              <group class="col-lg-4">
                 <select1 bind="contentHeight" appearance="full">
                   <label>Make content items equal heights?</label>
                   <item>
@@ -1118,16 +1128,6 @@
                     <value>false</value>
                   </item>
                 </select1>
-              </group>
-              <group class="col-lg-4">
-                <input bind="padding-top-xs">
-                  <label>Padding Top Mobile</label>
-                </input>
-              </group>
-              <group class="col-lg-4">
-                <input bind="padding-bottom-xs">
-                  <label>Padding Bottom Mobile</label>
-                </input>
               </group>
               <group class="col-lg-4">
                 <input bind="padding-top">

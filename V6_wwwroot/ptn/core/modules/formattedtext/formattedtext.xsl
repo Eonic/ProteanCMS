@@ -8,6 +8,12 @@
 		</xsl:variable>
 		<xsl:if test="node()">
 			<div class="{$div-class}">
+        <xsl:if test="@icon-offset and @icon-offset!='' and @iconStyle='Left'">
+          <xsl:attribute name="style">
+            <xsl:text>padding-left:</xsl:text>
+            <xsl:value-of select="@icon-offset"/>
+          </xsl:attribute>
+        </xsl:if>
 				<!--<xsl:if test="@maxWidth!=''">
 					<xsl:choose>
 						<xsl:when test="@iconStyle='Centre' or @iconStyle='CentreSmall'">

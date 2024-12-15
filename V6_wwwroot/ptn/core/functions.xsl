@@ -6053,6 +6053,7 @@
                   </xsl:otherwise>
                 </xsl:choose>
               </xsl:attribute>
+
               <!--<xsl:if test="@uploadIcon-w and @uploadIcon-w!='' or @uploadIcon-h and @uploadIcon-h!=''">
 								<xsl:attribute name="style">
 									<xsl:if test="@uploadIcon-w and @uploadIcon-w!=''">
@@ -6090,9 +6091,7 @@
         </div>
       </xsl:when>
       <xsl:when test="@iconStyle='CentreSmall'">
-
         <div class="center-block center-small">
-
           <xsl:if test="@icon!=''">
             <i>
               <xsl:attribute name="class">
@@ -6142,9 +6141,7 @@
         </div>
       </xsl:when>
       <xsl:when test="@iconStyle='Right'">
-
         <div class="title-align-right">
-
           <xsl:if test="@icon!=''">
             <i>
               <xsl:attribute name="class">
@@ -6158,7 +6155,6 @@
                     <xsl:value-of select="@icon"/>
                   </xsl:otherwise>
                 </xsl:choose>
-
                 <xsl:if test="@icon-color and @icon-color!=''">
                   <xsl:value-of select="@icon-color"/>
                   <xsl:text> </xsl:text>
@@ -6175,6 +6171,13 @@
                 </xsl:choose>
               </xsl:attribute>
               <xsl:text> </xsl:text>
+              <xsl:if test="@icon-offset and @icon-offset!=''">
+                <xsl:attribute name="style">
+                  <xsl:text>width:</xsl:text>
+                  <xsl:value-of select="@icon-offset"/>
+                  <xsl:text>;text-align:center;</xsl:text>
+                </xsl:attribute>
+              </xsl:if>
             </i>
             <xsl:text> </xsl:text>
           </xsl:if>
@@ -6194,6 +6197,13 @@
       <xsl:otherwise>
         <xsl:if test="@icon!='' or @icon-class!=''">
           <i>
+            <xsl:if test="@icon-offset and @icon-offset!=''">
+              <xsl:attribute name="style">
+                <xsl:text>width:</xsl:text>
+                <xsl:value-of select="@icon-offset"/>
+                <xsl:text>;text-align:center;</xsl:text>
+              </xsl:attribute>
+            </xsl:if>
             <xsl:attribute name="class">
               <xsl:text>fa </xsl:text>
               <xsl:choose>
@@ -6207,14 +6217,12 @@
                   <xsl:text> </xsl:text>
                 </xsl:otherwise>
               </xsl:choose>
-
               <xsl:if test="@icon-color and @icon-color!=''">
                 <xsl:value-of select="@icon-color"/>
                 <xsl:text> </xsl:text>
               </xsl:if>
               <xsl:choose>
                 <xsl:when test="@icon-size and @icon-size!=''">
-
                   <xsl:value-of select="@icon-size"/>
                   <xsl:text> </xsl:text>
                 </xsl:when>
@@ -6224,6 +6232,9 @@
               </xsl:choose>
             </xsl:attribute>
             <xsl:text> </xsl:text>
+
+
+
           </i>
           <span class="space">&#160;</span>
         </xsl:if>

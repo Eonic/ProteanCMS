@@ -55,6 +55,8 @@
 			<bind id="heading" nodeset="@heading" required="false()" type="string"/>
 			<bind id="icon-options" nodeset="@icon-options" required="false()" type="string"/>
 			<bind id="icon-class" nodeset="@icon-class" required="false()" type="string"/>
+			<bind id="icon-offset" nodeset="@icon-offset" required="false()" type="string"/>
+			<bind id="module-padding" nodeset="@module-padding" required="false()" type="string"/>
 		</bind>
 		<bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
 		<bind nodeset="tblContent">
@@ -123,11 +125,9 @@
 								<item>
 									<label>Match Height</label>
 									<value>true</value>
-
 									<toggle case="Match_true" event="DOMActivate"/>
 								</item>
 								<help class="inline">Tick this box on 2 or more modules within a page, and they will all be the same height. This only works on panel box styles and the match doesn't include the module footer link height.</help>
-
 							</select>
 
               <select1 bind="marginBelow" appearance="minimal">
@@ -173,6 +173,9 @@
                   <value>mb-9</value>
                 </item>
               </select1>
+              <input bind="module-padding" class="">
+                <label>Module Padding</label>
+              </input>
 							<switch class="disable">
 								<case id="Match_true">
 									<select bind="Screens" appearance="full" class="multiline bs-only">
@@ -332,6 +335,9 @@
                     <value>white-dark</value>
                   </item>
                 </select1>
+                <input bind="icon-offset" class="">
+                  <label>Offset width</label>
+                </input>
 							</group>
 							<group class="form-section-wrapper ">
 								<input bind="uploadIcon" class="pickImageFile bs-only">

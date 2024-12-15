@@ -183,7 +183,7 @@
             <xsl:if test="@backgroundImage='' or not(@backgroundImage)">
               <xsl:attribute name="style">
                 <xsl:if test="@minHeight!=''">
-                  <xsl:text>height:</xsl:text>
+                  <xsl:text>min-height:</xsl:text>
                   <xsl:value-of select="@minHeight"/>
                   <xsl:text>px!important;</xsl:text>
                 </xsl:if>
@@ -1000,14 +1000,21 @@
           <xsl:value-of select="@position-vertical"/>
           <xsl:text> align-items-</xsl:text>
           <xsl:value-of select="@position-horizontal"/>
+          <xsl:if test="@position-vertical and @position-vertical!=''">
+            <xsl:text> img-flex-100 </xsl:text>
+          </xsl:if>
         </xsl:if>
       </xsl:attribute>
-      <xsl:if test="@maxWidth!=''">
-        <xsl:attribute name='style'>
+      <xsl:attribute name='style'>
+        <xsl:if test="@maxWidth!=''">
           <xsl:text>max-width:</xsl:text>
           <xsl:value-of select="@maxWidth"/>
-        </xsl:attribute>
-      </xsl:if>
+        </xsl:if>
+        <xsl:if test="@module-padding and @module-padding!=''">
+          <xsl:text>padding:</xsl:text>
+          <xsl:value-of select="@module-padding"/>
+        </xsl:if>
+      </xsl:attribute>
       <xsl:if test="@contentType='Module'">
         <xsl:attribute name="class">
           <xsl:text>module noboxlayout layoutModule bg-content-</xsl:text>
@@ -2081,6 +2088,10 @@
         </xsl:when>
         <xsl:otherwise>
           <xsl:text> row cols row-cols-1</xsl:text>
+          <xsl:if test="@gutter and @gutter!=''">
+            <xsl:text> g-</xsl:text>
+            <xsl:value-of select="@gutter"/>
+          </xsl:if>
         </xsl:otherwise>
       </xsl:choose>
       <xsl:choose>

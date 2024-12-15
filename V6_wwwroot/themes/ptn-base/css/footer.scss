@@ -1,7 +1,7 @@
 /*############### FOOTER #################*/
 #pagefooter {
     margin-top: auto;
-    color: rgba(color-contrast($footer-bg),0.7);
+    color: $footer-color;
     background: #f4f6f7;
 
     .footer-inner {
@@ -71,6 +71,15 @@
         a {
             font-size: 1.6rem;
             padding: 0 10px 10px;
+        }
+    }
+
+    .social-id-bs {
+        svg {
+            filter: drop-shadow(100vw 0 0 $footer-color);
+            transform: translateX(-100vw);
+            margin-right: 0.7rem;
+            margin-top: -5px;
         }
     }
 

@@ -77,8 +77,25 @@
             <xsl:text>crop-setting-</xsl:text>
             <xsl:value-of select="$cropSetting"/>
           </xsl:attribute>
+          <xsl:if test="@gutter and @gutter!=''">
+            <xsl:attribute name="style">
+              <xsl:text>padding-left:</xsl:text>
+              <xsl:value-of select="@gutter"/>
+              <xsl:text>rem;padding-right:</xsl:text>
+              <xsl:value-of select="@gutter"/>
+              <xsl:text>rem;</xsl:text>
+            </xsl:attribute>
+          </xsl:if>
           <div data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}" data-height="{@carouselHeight}" >
-
+            <xsl:if test="@gutter and @gutter!=''">
+              <xsl:attribute name="style">
+                <xsl:text>margin-left:-</xsl:text>
+                <xsl:value-of select="@gutter"/>
+                <xsl:text>rem;margin-right:-</xsl:text>
+                <xsl:value-of select="@gutter"/>
+                <xsl:text>rem;</xsl:text>
+              </xsl:attribute>
+            </xsl:if>
             <xsl:apply-templates select="." mode="contentColumns"/>
 						<xsl:if test="@stepCount != '0'">
 							<xsl:apply-templates select="/" mode="genericStepper">
