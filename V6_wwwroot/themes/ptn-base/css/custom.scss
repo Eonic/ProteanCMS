@@ -1280,8 +1280,8 @@ div[class$="List"] {
         font-family: $font-awesome-version;
         font-weight: 900;
         padding: 5px;
-        background: $body-bg;
-        border: 1px solid fade($body-color,50%);
+        background: rgba(#fff,0.5);
+        //border: 1px solid fade($body-color,50%);
         border-radius: 100px;
         padding: 6px;
         display: block;
@@ -1318,7 +1318,7 @@ dd {
 
 .detail-container > .detail {
     @extend .container;
-    padding-top: 3rem;
+    padding-top: 4rem;
 
     .detail-title {
         text-align: center;
@@ -1524,6 +1524,39 @@ dd {
         top: 5px;
         left: 12px;
     }
+}
+.Contact-detail-container .detail {
+    .detail-title {
+        text-align: left;
+        margin-bottom: 0;
+    }
+
+    .contact-text > h2 {
+        margin-bottom: 1.5rem;
+    }
+
+    .contact-card {
+        background: $light;
+        border: 0;
+    }
+
+    .detail-img {
+        margin-bottom: 0;
+    }
+
+   
+}
+.Contact-detail-container,
+.contact {
+   /* dt.tel {
+        text-indent: -1000px;
+    }
+
+    dt.tel:after {
+        content: '\f095';
+        font-family: $font-awesome-version;
+        text-indent: 0;
+    }*/
 }
 
 //product

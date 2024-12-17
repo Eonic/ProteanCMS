@@ -1145,6 +1145,12 @@
                             <xsl:text> module-with-icon</xsl:text>
                           </xsl:if>
                         </xsl:attribute>
+                        <xsl:if test="@title-margin and @title-margin!=''">
+                          <xsl:attribute name="style">
+                            <xsl:text>margin-bottom:</xsl:text>
+                            <xsl:value-of select="@title-margin"/>
+                          </xsl:attribute>
+                        </xsl:if>
                         <xsl:apply-templates select="." mode="moduleLink"/>
                       </xsl:element>
                     </xsl:when>
@@ -1152,6 +1158,12 @@
                       <h3 class="title">
                         <xsl:if test="@icon!='' or @icon-class!='' or @uploadIcon!=''">
                           <xsl:attribute name="class">title module-with-icon</xsl:attribute>
+                        </xsl:if>
+                        <xsl:if test="@title-margin and @title-margin!=''">
+                          <xsl:attribute name="style">
+                            <xsl:text>margin-bottom:</xsl:text>
+                            <xsl:value-of select="@title-margin"/>
+                          </xsl:attribute>
                         </xsl:if>
                         <xsl:apply-templates select="." mode="moduleLink"/>
                       </h3>
@@ -1184,6 +1196,12 @@
                       <!--<xsl:if test="@icon!='' or @uploadIcon!=''">
 												<xsl:attribute name="class">title module-with-icon</xsl:attribute>
 											</xsl:if>-->
+                      <xsl:if test="@title-margin and @title-margin!=''">
+                        <xsl:attribute name="style">
+                          <xsl:text>margin-bottom:</xsl:text>
+                          <xsl:value-of select="@title-margin"/>
+                        </xsl:attribute>
+                      </xsl:if>
                       <xsl:apply-templates select="." mode="moduleLink"/>
                     </xsl:element>
                   </xsl:when>
@@ -1191,6 +1209,12 @@
                     <h3 class="title">
                       <xsl:if test="@icon!='' or @icon-class!='' or @uploadIcon!=''">
                         <xsl:attribute name="class">title module-with-icon</xsl:attribute>
+                      </xsl:if>
+                      <xsl:if test="@title-margin and @title-margin!=''">
+                        <xsl:attribute name="style">
+                          <xsl:text>margin-bottom:</xsl:text>
+                          <xsl:value-of select="@title-margin"/>
+                        </xsl:attribute>
                       </xsl:if>
                       <xsl:apply-templates select="." mode="moduleLink"/>
                     </h3>
@@ -1466,9 +1490,21 @@
                     </xsl:attribute>
                     <xsl:apply-templates select="." mode="moduleLink"/>
                   </xsl:element>
+                  <xsl:if test="@title-margin and @title-margin!=''">
+                    <xsl:attribute name="style">
+                      <xsl:text>margin-bottom:</xsl:text>
+                      <xsl:value-of select="@title-margin"/>
+                    </xsl:attribute>
+                  </xsl:if>
                 </xsl:when>
                 <xsl:otherwise>
                   <h5 class="card-title">
+                    <xsl:if test="@title-margin and @title-margin!=''">
+                      <xsl:attribute name="style">
+                        <xsl:text>margin-bottom:</xsl:text>
+                        <xsl:value-of select="@title-margin"/>
+                      </xsl:attribute>
+                    </xsl:if>
                     <xsl:apply-templates select="." mode="moduleLink"/>
                   </h5>
                 </xsl:otherwise>
