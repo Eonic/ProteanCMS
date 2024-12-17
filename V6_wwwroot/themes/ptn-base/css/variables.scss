@@ -23,7 +23,7 @@ $color-contrast-dark: $dark !default;
 $color-contrast-light: #fff !default;
 
 /*################## BORDER RADIUS ####################*/
-$border-radius: .375rem !default;
+$border-radius: 0;
 $img-border-radius: $border-radius;
 
 /*###################### TEXT #########################*/
@@ -32,13 +32,13 @@ $font-family-base: 'Gantari', sans-serif;
 $headings-font-family: $font-family-base;
 
 $navbar-font: $font-family-base;
-//$font-weight-base: 300;
-//$font-size-base: 1.1rem !default;
-$line-height-base: 1.3;
+$font-weight-base: 300;
+$font-size-base: 1.15rem ;
+$line-height-base: 1.4;
 
 /*###################### GRID ########################*/
-$spacer: 2rem;
-$grid-gutter-width: 2rem;
+$spacer: 3rem;
+$grid-gutter-width: 3rem;
 $grid-gutter-height: $grid-gutter-width;
 $top-padding: $grid-gutter-height;
 $section-padding: $grid-gutter-height * 1.3;
@@ -48,7 +48,7 @@ $image-spacer: 1rem;
 
 /*################# BUTTONS & LINKS ###################*/
 $link-color: $primary !default;
-$visited: lighten($link-color,30%);
+$visited: lighten($link-color,10%);
 $btn-style: btn-primary;
 $btn-list-style: $btn-style;
 
@@ -98,6 +98,7 @@ $mobile-dd-active: $primary;
 
 /*##################### FOOTER #######################*/
 $footer-bg: $dark;
+$footer-color:#fff;
 
 /*###################### FORMS #######################*/
 $input-border-color: #919191;

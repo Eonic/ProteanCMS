@@ -9966,13 +9966,22 @@ namespace Protean
                             string cXformPath = cContentSchemaName;
                             string cContentName = "New " + cRelatedImageType;
 
-                            cXformPath = "/xforms/content/" + cXformPath;
+
+                            cContentName = System.IO.Path.GetFileNameWithoutExtension(moCtx.Server.MapPath("/") + cImage);
+
+
+                               cXformPath = "/xforms/content/" + cXformPath;
+                            if (myWeb.bs5) {
+                                cXformPath = "/modules/galleryimagelist/" + cContentSchemaName;
+                            }
                             moAdXfm = (Cms.xForm)myWeb.getXform();
                             moAdXfm.load(cXformPath + ".xml", myWeb.maCommonFolders);
 
                             if (!string.IsNullOrEmpty(cContentName) & moAdXfm.Instance.FirstChild != null)
                             {
                                 moAdXfm.Instance.SelectSingleNode("tblContent/cContentName").InnerText = cContentName;
+                                moAdXfm.Instance.SelectSingleNode("tblContent/cContentXmlBrief/Content/Title").InnerText = cContentName;
+                                moAdXfm.Instance.SelectSingleNode("tblContent/cContentXmlDetail/Content/Title").InnerText = cContentName;
                                 moAdXfm.Instance.SelectSingleNode("tblContent/dPublishDate").InnerText = XmlDate(DateTime.Now);
                             }
 

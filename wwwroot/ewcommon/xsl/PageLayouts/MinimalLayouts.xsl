@@ -3006,16 +3006,15 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-
 		<xsl:if test="not(following-sibling::Content[@type='Module' and @moduleType='GoogleMapv3'])">
-			<script type="text/javascript">
-				<xsl:text>function initialiseGMaps(){</xsl:text>
-				<xsl:apply-templates select="$page/Contents/Content[@type='Module' and @moduleType='GoogleMapv3']" mode="initialiseGoogleMap"/>
-				<xsl:text>};</xsl:text>
-			</script>
-			<script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key={$apiKey}&amp;callback=initialiseGMaps">&#160;</script>
+			<script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key={$apiKey}&amp;callback=initialiseGMaps" async="async">&#160;</script>
+			  <script type="text/javascript">
+		            <xsl:text>function initialiseGMaps(){</xsl:text>
+		            <xsl:apply-templates select="$page/Contents/Content[@type='Module' and @moduleType='GoogleMapv3']" mode="initialiseGoogleMap"/>
+		            <xsl:text>};</xsl:text>
+		          </script>
 		</xsl:if>
-	</xsl:template>
+  </xsl:template>
 
 	<xsl:template match="Content[@type='Organisation' and descendant-or-self::latitude[node()!='']]" mode="contentDetailJS">
 		<!-- Initialise any Google Maps -->
@@ -3029,7 +3028,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key={$apiKey}">&#160;</script>
+		<script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key={$apiKey}&amp;callback=initialiseGMaps"  async="async">&#160;</script>
 		<script type="text/javascript">
 			<xsl:text>function initialiseGMaps(){</xsl:text>
 			<xsl:apply-templates select="." mode="initialiseGoogleMap"/>

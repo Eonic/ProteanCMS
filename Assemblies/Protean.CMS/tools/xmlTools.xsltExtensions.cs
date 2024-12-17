@@ -57,12 +57,17 @@ namespace Protean
             // RaiseEvent OnError(sender, e)
             // End Sub
 
+            public string awaitingImgPath = "/ewcommon/images/awaiting-image-thumbnail.gif";
+
             #endregion
 
             #region Initialisation/Private
             public xsltExtensions(ref Cms aWeb)
             {
                 myWeb = aWeb;
+                if (myWeb.bs5)
+                    awaitingImgPath = "/ptn/core/images/img-missing.png";
+
             }
 
             public xsltExtensions()
@@ -1559,9 +1564,7 @@ namespace Protean
             {
                 string newFilepath = "";
                 string cProcessInfo = "Resizing - " + cVirtualPath;
-                string awaitingImgPath = "/ewcommon/images/awaiting-image-thumbnail.gif";
-                if (myWeb.bs5)
-                    awaitingImgPath = "/ptn/images/awaiting-image-thumbnail.gif";
+
 
                 try
                 {
@@ -1737,15 +1740,12 @@ namespace Protean
             public string CreateWebPAlt(string cVirtualPath, bool forceCheck)
             {
                 string cProcessInfo = string.Empty;
-
                 try
                 {
 
                     if (string.IsNullOrEmpty(cVirtualPath))
                     {
-                        string awaitingImgPath = "/ewcommon/images/awaiting-image-thumbnail.gif";
-                        if (myWeb.bs5)
-                            awaitingImgPath = "/ptn/images/awaiting-image-thumbnail.gif";
+
                         return awaitingImgPath;
                     }
                     else
@@ -1792,11 +1792,11 @@ namespace Protean
                     if ((myWeb.moConfig["Debug"]).ToLower() == "on")
                     {
                         // reportException("xmlTools.xsltExtensions", "ResizeImage2", ex, , cProcessInfo)
-                        return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" + ex.Message + " - " + ex.StackTrace;
+                        return awaitingImgPath + "?Error=" + ex.Message + " - " + ex.StackTrace;
                     }
                     else
                     {
-                        return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" + ex.Message;
+                        return awaitingImgPath + "?Error=" + ex.Message;
                     }
 
                 }
@@ -1814,11 +1814,11 @@ namespace Protean
                     if ((myWeb.moConfig["Debug"]).ToLower() == "on")
                     {
                         // reportException("xmlTools.xsltExtensions", "ResizeImage2", ex, , cProcessInfo)
-                        return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" + ex.Message + " - " + ex.StackTrace;
+                        return awaitingImgPath + "?Error=" + ex.Message + " - " + ex.StackTrace;
                     }
                     else
                     {
-                        return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" + ex.Message;
+                        return awaitingImgPath + "?Error=" + ex.Message;
                     }
                 }
             }
@@ -1960,7 +1960,7 @@ namespace Protean
                     else
                     {
                         // PerfMon.Log("xmlTools", "ResizeImage - End")
-                        return "/ewcommon/images/awaiting-image-thumbnail.gif";
+                        return awaitingImgPath;
 
                     }
                 }
@@ -1972,11 +1972,11 @@ namespace Protean
                     if ((myWeb.moConfig["Debug"]).ToLower() == "on")
                     {
                         stdTools.reportException(ref myWeb.msException, "xmlTools.xsltExtensions", "ResizeImage2", ex, vstrFurtherInfo: cProcessInfo);
-                        return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" + ex.InnerException.Message + " - " + ex.Message + " - " + ex.StackTrace;
+                        return awaitingImgPath + "?Error=" + ex.InnerException.Message + " - " + ex.Message + " - " + ex.StackTrace;
                     }
                     else
                     {
-                        return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" + ex.Message;
+                        return awaitingImgPath + "?Error=" + ex.Message;
                     }
 
                 }

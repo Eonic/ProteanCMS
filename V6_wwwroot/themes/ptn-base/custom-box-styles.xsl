@@ -220,6 +220,7 @@
     {title: 'Code', inline: 'code', icon: 'code'},
     {title: 'Lead', inline: 'span', classes: 'lead'},
     {title: 'Small', inline: 'span', classes: 'small'},
+    {title: 'Circle Stat', inline: 'span', classes: 'circle-stat'}
     ]},
 
     {title: 'Blocks', items: [
@@ -237,10 +238,15 @@
     {title: 'Right', block: 'div', styles : {textAlign : 'right'}, icon: 'alignright'},
     {title: 'Justify', block: 'div', styles : {textAlign : 'justify'}, icon: 'alignjustify'}
     ]},
-
+    {title: 'Buttons', items: [
     {title: 'Button', inline: 'a', classes: 'btn btn-custom'},
     {title: 'Button Outline', inline: 'a', classes: 'btn btn-outline-primary'},
     {title: 'Button Outline Light', inline: 'a', classes: 'btn btn-outline-light'}
+    ]},
+    {title: 'Icons', items: [
+    {title: 'Phone Icon', inline: 'span', classes: 'phone-icon'},
+    {title: 'Email Icon', inline: 'span', classes: 'email-icon'}
+    ]},
     ],
   </xsl:template>
 </xsl:stylesheet>

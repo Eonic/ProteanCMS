@@ -4173,7 +4173,22 @@
 
               </xsl:if>
               <xsl:if test="not(starts-with(/Page/Request/QueryString/Item[@name='fld']/node(),'\FreeStock'))">
-
+				  <xsl:if test="contains(/Page/Request/QueryString/Item[@name='multiple'],'true')">
+					  <li>
+						  <a id="SelectAll" class="btn btn-success" data-toggle="popover">
+							  <i class="fa fa-picture-o fa-white">
+								  <xsl:text> </xsl:text>
+							  </i><xsl:text> </xsl:text>SelectAll
+						  </a>
+					  </li>
+					  <li>
+						  <a href="javascript:;" onclick="getImagePaths();" class="btn btn-success">
+							  <i class="fa fa-picture-o fa-white">
+								  <xsl:text> </xsl:text>
+							  </i><xsl:text> </xsl:text>Add Selected
+						  </a>
+					  </li>
+				  </xsl:if>
                 <a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;ewCmd2=addFolder&amp;fld={@path}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-sm btn-outline-primary">
                   <xsl:if test="$submitPath!='/?'">
                     <xsl:attribute name="data-bs-toggle">modal</xsl:attribute>

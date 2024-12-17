@@ -21,6 +21,7 @@
 header {
     background-color: $header-bg;
     color: $header-color;
+    box-shadow: 0px 1px 9px rgba(0, 0, 0, 0.3);
 
     a {
         color: $header-color;
@@ -103,7 +104,7 @@ header {
     position: fixed;
     background: $header-bg;
     width: 100%;
-    z-index: 3;
+    z-index: 101;
     height: $fixed-height-xs !important;
 
     @include media-breakpoint-up($nav-breakpoint) {
@@ -148,6 +149,10 @@ header {
                 &.on,
                 &.show {
                     color: $nav-link-hover-color;
+                }
+
+                &:focus-visible {
+                    border-radius: 3px;
                 }
             }
         }
@@ -528,6 +533,10 @@ header {
     &:hover {
         color: $nav-link-hover-color;
     }
+
+    &:focus-visible {
+        border-radius: 3px;
+    }
 }
 .logged-in-icon {
     //color: $secondary;
@@ -645,6 +654,12 @@ header {
     padding-left: $header-spacing;
     padding-right: $header-spacing;
 
+    &:focus-visible {
+        border-radius: 3px;
+        box-shadow: 0 0 0 0.25rem rgba(23, 43, 84, 0.25);
+        outline:none;
+    }
+
     &:hover,
     &:focus {
         padding-left: $header-spacing;
@@ -679,8 +694,92 @@ header {
 
 /*############### TABBED MODULE #################*/
 .tabbed-module {
+    margin-bottom: $grid-gutter-height;
+
     .nav {
         margin-bottom: 1rem;
+
+        a.active {
+            background: $light;
+        }
+    }
+}
+
+.nav-tabs {
+    border-bottom: 0;
+    background: $primary;
+
+    li.nav-item button {
+        margin: 0;
+        border: 0;
+        font-weight: 600;
+        background: $primary;
+        color: #fff;
+        padding: 10px 22px 6px;
+
+        i {
+            font-size: 0.95rem;
+            padding-right: 4px;
+            position: relative;
+            top: -1px;
+        }
+
+        &.active {
+            background: $light;
+            border: 0;
+            color: $body-color;
+            font-weight: 7500;
+        }
+    }
+}
+
+@include media-breakpoint-down(lg) {
+    .tab-content > .tab-pane {
+        display: block;
+        opacity: 1;
+    }
+}
+.tab-pane {
+    @include media-breakpoint-up(lg) {
+        background: $light;
+        padding: $card-spacer-y $card-spacer-x;
+    }
+
+    button.accordion-button {
+        background: $primary;
+        color: #fff;
+        border: 0;
+        margin-top: 3px;
+
+        &:after {
+            font-family: 'Font Awesome 6 Free';
+            color: #fff;
+            content: '\f107';
+            font-weight: 900;
+        }
+
+        &.show {
+            &:after {
+                //     transform: rotate(0deg);
+            }
+        }
+
+        i {
+            padding-right: 0.5rem;
+        }
+    }
+
+    .accordion-body {
+        background-color: $light;
+    }
+
+    legend {
+        display: none;
+    }
+
+    .module,
+    .module.nobox {
+        margin-bottom: 0;
     }
 }
 

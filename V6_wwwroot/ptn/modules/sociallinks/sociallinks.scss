@@ -1,3 +1,54 @@
-﻿.socialLinks a{
-    padding-right:10px;
+﻿.socialLinks a {
+    padding-right: 10px;
+    text-decoration: none;
+}
+
+.socialLinks.align-center {
+    text-align: center;
+    justify-content: center;
+
+    a {
+        justify-content: center;
+    }
+}
+
+.socialLinks.align-left {
+    text-align: left;
+    justify-content: flex-start;
+
+    a {
+        justify-content: flex-start;
+    }
+}
+
+.socialLinks.align-right {
+    text-align: right;
+    justify-content: flex-end;
+
+    a {
+        justify-content: flex-end;
+    }
+}
+
+.socialLinks.layout-vertical {
+    &.ordering {
+        flex-direction: column;
+    }
+
+    a {
+        display: block;
+        display: flex;
+        vertical-align: middle;
+        align-items: center;
+
+        i {
+            padding-right: 5px;
+            min-width: 2rem;
+            text-align: center;
+        }
+    }
+}
+
+.socialLinks.ordering {
+    display: flex;
 }

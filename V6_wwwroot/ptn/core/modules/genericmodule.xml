@@ -33,6 +33,7 @@
 			<bind id="cIcon" nodeset="@icon" required="false()" type="string"/>
 			<bind id="cIcon-size" nodeset="@icon-size" required="false()" type="string"/>
 			<bind id="cIconStyle" nodeset="@iconStyle" required="false()" type="string"/>
+			<bind id="cIcon-color" nodeset="@icon-color" required="false()" type="string"/>
 			<bind id="cModAnim" nodeset="@modAnim" required="false()" type="string"/>
 			<bind id="cModAnimDelay" nodeset="@modAnimDelay" required="false()" type="string"/>
 			<bind id="cModAnimSpeed" nodeset="@modAnimSpeed" required="false()" type="string"/>
@@ -54,6 +55,8 @@
 			<bind id="heading" nodeset="@heading" required="false()" type="string"/>
 			<bind id="icon-options" nodeset="@icon-options" required="false()" type="string"/>
 			<bind id="icon-class" nodeset="@icon-class" required="false()" type="string"/>
+			<bind id="icon-offset" nodeset="@icon-offset" required="false()" type="string"/>
+			<bind id="module-padding" nodeset="@module-padding" required="false()" type="string"/>
 		</bind>
 		<bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
 		<bind nodeset="tblContent">
@@ -122,22 +125,57 @@
 								<item>
 									<label>Match Height</label>
 									<value>true</value>
-
 									<toggle case="Match_true" event="DOMActivate"/>
 								</item>
 								<help class="inline">Tick this box on 2 or more modules within a page, and they will all be the same height. This only works on panel box styles and the match doesn't include the module footer link height.</help>
-
 							</select>
-							<select1 bind="marginBelow" appearance="full" class="form-group">
-								<item>
-									<label>Margin below module (default)</label>
-									<value>true</value>
-								</item>
-								<item>
-									<label>No margin below</label>
-									<value>false</value>
-								</item>
-							</select1>
+
+              <select1 bind="marginBelow" appearance="minimal">
+                <label>Margin Bottom</label>
+                <item>
+                  <label>0</label>
+                  <value>mb-0</value>
+                </item>
+                <item>
+                  <label>1</label>
+                  <value>mb-1</value>
+                </item>
+                <item>
+                  <label>2</label>
+                  <value>mb-2</value>
+                </item>
+                <item>
+                  <label>3</label>
+                  <value>mb-3</value>
+                </item>
+                <item>
+                  <label>4</label>
+                  <value>mb-4</value>
+                </item>
+                <item>
+                  <label>5</label>
+                  <value>mb-5</value>
+                </item>
+                <item>
+                  <label>6</label>
+                  <value>mb-6</value>
+                </item>
+                <item>
+                  <label>7</label>
+                  <value>mb-7</value>
+                </item>
+                <item>
+                  <label>8</label>
+                  <value>mb-8</value>
+                </item>
+                <item>
+                  <label>9</label>
+                  <value>mb-9</value>
+                </item>
+              </select1>
+              <input bind="module-padding" class="">
+                <label>Module Padding</label>
+              </input>
 							<switch class="disable">
 								<case id="Match_true">
 									<select bind="Screens" appearance="full" class="multiline bs-only">
@@ -266,6 +304,40 @@
 										<value>fa-10x</value>
 									</item>
 								</select1>
+                <select1 bind="cIcon-color" class="bs-only" appearance="minimal">
+                  <label>Icon Colour</label>
+                  <item>
+                    <label>Text Colour</label>
+                    <value>text-body</value>
+                  </item>
+                  <item>
+                    <label>Brand Primary Color</label>
+                    <value>text-primary</value>
+                  </item>
+                  <item>
+                    <label>Brand Secondary Color</label>
+                    <value>text-secondary</value>
+                  </item>
+                  <item>
+                    <label>Brand Info Color</label>
+                    <value>text-info</value>
+                  </item>
+                  <item>
+                    <label>Brand Light Color</label>
+                    <value>text-light</value>
+                  </item>
+                  <item>
+                    <label>Brand Dark Color</label>
+                    <value>text-dark</value>
+                  </item>
+                  <item>
+                    <label>White</label>
+                    <value>white-dark</value>
+                  </item>
+                </select1>
+                <input bind="icon-offset" class="">
+                  <label>Offset width</label>
+                </input>
 							</group>
 							<group class="form-section-wrapper ">
 								<input bind="uploadIcon" class="pickImageFile bs-only">

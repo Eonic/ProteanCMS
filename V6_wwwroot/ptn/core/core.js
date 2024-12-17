@@ -615,20 +615,33 @@ $.fn.prepareXform = function () {
         const forms = document.querySelectorAll('.needs-validation')
 
         // Loop over them and prevent submission
-        Array.from(forms).forEach(form => {
-            form.addEventListener('submit', event => {
-                if (!form.checkValidity()) {
-                    event.preventDefault()
-                    event.stopPropagation()
-                }
+    Array.from(forms).forEach(form => {
 
-                form.classList.add('was-validated')
-            }, false)
+            form.removeEventListener('submit', validateForm, false)
+            form.addEventListener('submit', validateForm, false)
+    })
+
+    // deals with next buttons in tabbed forms
+    $(".xform .tab-content button.btn-tab").click(function () {
+        const triggerTab = $(this).data('bs-target');
+        const tabInstance = new bootstrap.Tab(triggerTab)
+        console.log({
+            triggerTab,
+            tabInstance
         })
-
-
-
+        tabInstance.show()
+    });
 };
+
+function validateForm(event){
+    //alert("validating...");
+    if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+    form.classList.add('was-validated')
+}
+
 
 
 

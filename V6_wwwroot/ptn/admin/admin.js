@@ -427,9 +427,8 @@ function preparePickImageModal(CurrentModalPath) {
 
     $("#SelectAll").click(function (ev) {
         ev.preventDefault();
-        $(".multicheckbox").each(function () {
-            $(".multicheckbox").attr("checked", "checked");
-        });
+        var checkBoxes = $(".multicheckbox");
+        checkBoxes.prop("checked", !checkBoxes.prop("checked"));
         return false;
     });
 
@@ -2014,4 +2013,85 @@ function uncheckAll(field) {
         field[i].checked = false;
     }
 
+}
+
+
+function getImagePaths() {
+
+    
+    var imagepaths = "";
+    for (var i = 0; i < $(".chkMultipleImage").length; i++) {
+        if ($(".chkMultipleImage")[i].checked === true) {            
+            var thisImgPath = $(".chkMultipleImage")[i].value;
+            //alert(thisImgPath)
+            if (imagepaths.includes(thisImgPath) == false) {
+                if (imagepaths == "") {
+                    imagepaths = thisImgPath;
+                } else {
+                    imagepaths = thisImgPath + ',' + imagepaths;
+                }
+            }
+        }
+    }
+    if (imagepaths.includes("%20")) {
+        imagepaths = imagepaths.replace("%20", " ");
+    }
+   // alert("images>" +imagepaths);
+    var contentId = $('#add-multiple-btn').data('parentid')
+   // alert(contentId);
+    var SaveMultipleLibraryImages = "/ewapi/Cms.Admin/SaveMultipleLibraryImages";
+    //var contentId = this.getQueryStringParam('id');
+    //var RelatedLibraryImages = imagepaths;
+    //var cSkipAttribute = false;  
+
+    var formData = new FormData();
+    formData.append('contentId', contentId);
+    formData.append('cRelatedLibraryImages', imagepaths);
+    if (imagepaths != '') {
+
+        $.ajax({
+            url: SaveMultipleLibraryImages,
+            data: formData,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function (response) {
+                $("#modal-cProductImagesPaths").modal("hide");
+                location.reload();
+            }
+        });
+    } else {
+        alert("no images selected")
+    }
+
+
+}
+function SaveFileName(isOverwrite) {
+    var newfilename; var oldfilename;
+    if (isOverwrite) {
+        oldfilename = $("#cleanFilename").val();
+    }
+    newfilename = $("#txtfilename").val();
+    var existsfilename = document.getElementById("existsFile").files[0];
+    var targetPath = $("#targetPath").val();
+    var ajaxurl = '?ewCmd=ImageLib&ewCmd2=FileUpload&isOverwrite=' + isOverwrite + '&oldfile="' + oldfilename + '"&storageRoot="' + targetPath + '"';
+    let list = new DataTransfer();
+    let file = new File([existsfilename], newfilename);
+    list.items.add(file);
+    let myFileList = list.files;
+    existsFile.files = myFileList;
+    var formData = new FormData($("#frmfileData")[0]);
+    $.ajax({
+        url: ajaxurl,
+        data: formData,
+        processData: false,
+        contentType: false,
+        type: 'POST',
+        success: function (result) {
+            $("#changeFilename").modal("hide");
+            var newItem = $("#divnewfileupdate").html();
+            $('#files').prepend(newItem);
+            $('#files .item-image .panel').prepareLibImages();
+        }
+    });
 }

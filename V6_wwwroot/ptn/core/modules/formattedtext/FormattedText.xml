@@ -43,6 +43,7 @@
 			<bind id="imagePosition" nodeset="@imagePosition" required="false()" type="string" />
 			<bind id="maxWidth" nodeset="@maxWidth" required="false()" type="string" />
 			<bind id="char80Layout" nodeset="@char80Layout" required="false()" type="string" />
+			<bind id="v-align" nodeset="@v-align" required="false()" type="string" />
 		</bind>
 		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
 		<!--<ewInclude filePath="/ewthemes/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>-->
@@ -141,6 +142,23 @@
 							</item>
 						</select1>
 					</group>
+          <group class="col-lg-6">
+            <select1 bind="v-align" >
+              <label>Vertical alignment</label>
+              <item>
+                <label>Top</label>
+                <value>top</value>
+              </item>
+              <item>
+                <label>Center</label>
+                <value>center</value>
+              </item>
+              <item>
+                <label>Bottom</label>
+                <value>bottom</value>
+              </item>
+            </select1>
+          </group>
 				</group>
 			</group>
 			<group>

@@ -686,8 +686,9 @@ namespace Protean.Tools
                             }
                         }
 
-                        catch (Exception)
+                        catch (Exception ex)
                         {
+                            string err = ex.Message;
 
                             File.Delete(szFileName);
 
@@ -836,7 +837,7 @@ namespace Protean.Tools
                                         using (var mi = new ImageMagick.MagickImage(imgfileInfo.FullName, ImageMagick.MagickFormat.Png))
                                         {
                                             mi.Format = mi.Format; // Get Or Set the format Of the image.
-                                            mi.Quality = Quality;
+                                            mi.Quality = Convert.ToUInt16(Quality);
                                             mi.Write(NewFileName);
                                         }
                                     }
@@ -877,7 +878,7 @@ namespace Protean.Tools
                                         using (var mi = new ImageMagick.MagickImage(imgfileInfo.FullName, ImageMagick.MagickFormat.Jpg))
                                         {
                                             mi.Format = mi.Format; // Get Or Set the format Of the image.
-                                            mi.Quality = Quality;
+                                            mi.Quality = Convert.ToUInt16(Quality);
                                             mi.Write(NewFileName);
                                         }
                                     }
