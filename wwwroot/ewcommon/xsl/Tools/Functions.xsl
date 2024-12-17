@@ -1240,7 +1240,8 @@
           <xsl:apply-templates select="$page/Contents/Content[@type='Module' and @position = 'ExitModal']" mode="modalBox"/>
         </div>
       </div>
-      <script type="{$scriptType}" src="/ewcommon/js/jquery/exitmodal/jquery.exit-modal.js" async="async" cookie-consent="strictly-necessary">/* */</script>
+      <script type="{$scriptType}" src="/ewcommon/js/jquery/exitmodal/jquery.exit-modal.js"
+	cookie-consent="strictly-necessary">/* */</script>
     </xsl:if>
 
     <xsl:if test="/Page/Contents/Content[@type='MetaData' and @name='MetaGoogleRemarketingConversionId']">
