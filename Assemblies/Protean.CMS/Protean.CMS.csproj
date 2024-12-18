@@ -290,6 +290,7 @@
     <Compile Include="api\soap.cs" />
     <Compile Include="core\DBImport.cs" />
     <Compile Include="providers\Cache.BaseProvider.cs" />
+    <Compile Include="providers\CloudflareZoneId.cs" />
     <Compile Include="tools\AppStart.cs" />
     <Compile Include="bin\App_Start\DynamicImage.cs" />
     <Compile Include="Connected Services\AdminProxy\Reference.cs">
@@ -424,6 +425,7 @@
       <Name>Protean.Tools</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

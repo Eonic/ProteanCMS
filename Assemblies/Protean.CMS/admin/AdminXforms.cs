@@ -8,6 +8,7 @@
 // $Copyright:   Copyright (c) 2002 - 2022 Eonic Digital LLP.
 // ***********************************************************************
 
+using Microsoft.Ajax.Utilities;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Membership;
@@ -18,17 +19,27 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
+using System.Configuration.Provider;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web.Configuration;
 using System.Xml;
 using static Protean.stdTools;
 using static Protean.Tools.Text;
 using static Protean.Tools.Xml;
 using static System.Web.HttpUtility;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json.Nodes;
+using System.Web;
+using Newtonsoft.Json.Linq;
+using System.Windows.Documents;
+using Protean.Providers.Cache;
 
 namespace Protean
 {
@@ -48,6 +59,7 @@ namespace Protean
                 public System.Web.HttpRequest moRequest;
                 public Tools.Security.Impersonate moImp = null;
                 public string ReportExportPath = "/ewcommon/tools/export.ashx?ewCmd=CartDownload";
+                List<string> slist = new List<string>();                
 
                 // Error Handling hasn't been formally set up for AdminXforms so this is just for method invocation found in xfrmEditContent
                 public new event OnErrorEventHandler OnError;
@@ -4798,12 +4810,12 @@ namespace Protean
                             string sSQL = "spCheckFileInUse";
                             System.Collections.Hashtable arrParms = new System.Collections.Hashtable();
                             arrParms.Add("filePath", fileToFind);
-                            oDr = moDbHelper.getDataReader(sSQL, CommandType.StoredProcedure, arrParms);
+                            oDr = moDbHelper.getDataReaderDisposable(sSQL, CommandType.StoredProcedure, arrParms);
                         }
                         else
                         {
                             string sSQL = "select * from tblContent where cContentXmlBrief like '%" + fileToFind + "%' or cContentXmlDetail like '%" + fileToFind + "%'";
-                            oDr = moDbHelper.getDataReader(sSQL);
+                            oDr = moDbHelper.getDataReaderDisposable(sSQL);
                         }
 
 
@@ -4856,8 +4868,13 @@ namespace Protean
                                 }
                                 else
                                 {
-                                    TryDeleteAllInstancesOfOrigianlFile(cPath, cName, oFs);
-                                    DeleteFileFromCache(cName);
+                                    DeleteAllInstancesOfOrigianlFile(cPath, cName, oFs);
+                                    //Add method for deleteing images from cache
+                                    if(slist.Count != 0)
+                                    {
+                                        string[] myString = slist.ToArray();
+                                        DeleteFileFromCache(myString);
+                                    }                                    
                                 }
                             }
 
@@ -4881,8 +4898,8 @@ namespace Protean
                     }
                 }
 
-                private void TryDeleteAllInstancesOfOrigianlFile(string filePath, string fileName, Protean.fsHelper oFs)
-                {
+                private void DeleteAllInstancesOfOrigianlFile(string filePath, string fileName, Protean.fsHelper oFs)
+                {                    
                     filePath = filePath.Contains(oFs.mcStartFolder) ? filePath : oFs.mcStartFolder + filePath;
                     var subFolders = System.IO.Directory.GetDirectories(filePath, "~*");
                     try
@@ -4891,35 +4908,68 @@ namespace Protean
                         {
                             foreach (var sFolder in subFolders)
                             {
-                                TryDeleteAllInstancesOfOrigianlFile(sFolder, fileName, oFs);
+                               DeleteAllInstancesOfOrigianlFile(sFolder, fileName, oFs);
                             }
                         }
                         DeleteFiles(filePath, fileName, oFs);
                     }
                     catch (Exception ex)
                     {
-                        var x = 0;
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "TryDeleteAllInstancesOfOrigianlFile", ex, "", "TryDeleteAllInstancesOfOrigianlFile", gbDebug);                        
                     }
                 }
 
                 private void DeleteFiles(string directoryPath, string fileName, Protean.fsHelper oFs)
                 {
+                    NameValueCollection moCartConfig = (NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/cart");
                     string originalFileNameFull = System.IO.Path.Combine(directoryPath, fileName);
-
                     var filesToDelete = System.IO.Directory.GetFiles(directoryPath, "*" + fileName);
+                    string FilesToDeleteFromCache = string.Empty;
+                    string WebPath = moCartConfig["SiteURL"] + myWeb.moConfig["ImageRootPath"]; // used it from web.config and cart.config
                     for (int i = 0; i < filesToDelete.Length; i++)
                     {
                         oFs.DeleteFile(filesToDelete[i]);
+                        FilesToDeleteFromCache = WebPath + filesToDelete[i].Replace(oFs.mcStartFolder, "").Replace(@"\", "/");                        
+                        slist.Add(FilesToDeleteFromCache);     
+                        if(Strings.LCase(myWeb.moConfig["EnableWebP"])=="on")
+                        {
+                            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(FilesToDeleteFromCache);
+                            string newFilePath = Path.Combine(directoryPath, fileNameWithoutExtension + ".webp");
+                            newFilePath = WebPath + newFilePath.Replace(oFs.mcStartFolder, "").Replace(@"\", "/");
+                            slist.Add(newFilePath);
+                        }                       
                     }
-                    oFs.DeleteFile(originalFileNameFull);
+                    oFs.DeleteFile(originalFileNameFull);                    
                 }
 
-                private void DeleteFileFromCache(string fileName)
+                //public async Task<ICacheProvider> DeleteFileFromCache(string[] imageUrl)
+                //{                    
+                //    string providerName = "Protean.Providers.Cache.DefaultProvider";                    
+                //    Type calledType;                   
+                //    calledType = Type.GetType(providerName, true);
+                //    var cloudflareService = new Protean.Providers.Cache.DefaultProvider();
+                //    bool isPurged = await cloudflareService.PurgeImageCacheAsync(imageUrl);
+
+                //    if (isPurged)
+                //    {
+                //        return Json(new { success = true, message = "Image cache purged successfully!" });
+                //    }
+                //    else
+                //    {
+                //        return Json(new { success = false, message = "Failed to purge image cache." });
+                //    }
+                //}
+
+                private ICacheProvider Json(object value)
                 {
-                    if (this.myWeb.moConfig["CacheProvider"] != null)
+                    throw new NotImplementedException();
+                }
+
+                private void DeleteFileFromCache(string[] imageUrl)
+                {
+                    if (this.myWeb.moConfig["CloudCacheProvider"] != null)
                     {
-                        string[] cacheProviderDetails = this.myWeb.moConfig["CacheProvider"].Split(',');
-                        //oFilterElmt = currentOFilterElmt1;
+                        string[] cacheProviderDetails = this.myWeb.moConfig["CloudCacheProvider"].Split(',');                        
                         Type calledType;
                         string className = cacheProviderDetails[0];
                         string providerName = cacheProviderDetails[1];
@@ -4954,10 +5004,11 @@ namespace Protean
                                     calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], "."), className)), true);
                                 }
                             }
-                            string methodname = "PurgeFile";
+
+                            string methodname = "PurgeImageCacheAsync";
                             var o = Activator.CreateInstance(calledType);
                             var args = new object[1];
-                            args[0] = fileName;
+                            args[0] = imageUrl;
                             calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, null, o, args);
                         }
                     }
