@@ -68,7 +68,7 @@ namespace Protean.Providers
                                 files = new[] { imageUrl }
                             };
 
-                            var content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
+                            var content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(body).Replace(@"[[","[").Replace(@"]]","]"), Encoding.UTF8, "application/json");
 
                             // Send the POST request to purge the cache for the image
                             var response = client.PostAsync(url, content).Result;
