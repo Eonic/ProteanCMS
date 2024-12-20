@@ -4925,40 +4925,24 @@ namespace Protean
                     string originalFileNameFull = System.IO.Path.Combine(directoryPath, fileName);
                     var filesToDelete = System.IO.Directory.GetFiles(directoryPath, "*" + fileName);
                     string FilesToDeleteFromCache = string.Empty;
-                    string WebPath = moCartConfig["SiteURL"] + myWeb.moConfig["ImageRootPath"]; // used it from web.config and cart.config
+                    string WebPath = moCartConfig["SiteURL"]; // used it from web.config and cart.config
                     for (int i = 0; i < filesToDelete.Length; i++)
                     {
                         oFs.DeleteFile(filesToDelete[i]);
-                        FilesToDeleteFromCache = WebPath + filesToDelete[i].Replace(oFs.mcStartFolder, "").Replace(@"\", "/");                        
+                        FilesToDeleteFromCache = filesToDelete[i].Replace(oFs.mcStartFolder, "").Replace(@"\", "/");
+                        FilesToDeleteFromCache = WebPath + (myWeb.moConfig["ImageRootPath"] + FilesToDeleteFromCache).Replace("//", "/");
                         slist.Add(FilesToDeleteFromCache);     
                         if(Strings.LCase(myWeb.moConfig["EnableWebP"])=="on")
                         {
                             string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(FilesToDeleteFromCache);
                             string newFilePath = Path.Combine(directoryPath, fileNameWithoutExtension + ".webp");
-                            newFilePath = WebPath + newFilePath.Replace(oFs.mcStartFolder, "").Replace(@"\", "/");
+                            newFilePath = newFilePath.Replace(oFs.mcStartFolder, "").Replace(@"\", "/");
+                            newFilePath = WebPath + (myWeb.moConfig["ImageRootPath"] + newFilePath).Replace("//", "/");
                             slist.Add(newFilePath);
                         }                       
                     }
                     oFs.DeleteFile(originalFileNameFull);                    
-                }
-
-                //public async Task<ICacheProvider> DeleteFileFromCache(string[] imageUrl)
-                //{                    
-                //    string providerName = "Protean.Providers.Cache.DefaultProvider";                    
-                //    Type calledType;                   
-                //    calledType = Type.GetType(providerName, true);
-                //    var cloudflareService = new Protean.Providers.Cache.DefaultProvider();
-                //    bool isPurged = await cloudflareService.PurgeImageCacheAsync(imageUrl);
-
-                //    if (isPurged)
-                //    {
-                //        return Json(new { success = true, message = "Image cache purged successfully!" });
-                //    }
-                //    else
-                //    {
-                //        return Json(new { success = false, message = "Failed to purge image cache." });
-                //    }
-                //}
+                }               
 
                 private ICacheProvider Json(object value)
                 {

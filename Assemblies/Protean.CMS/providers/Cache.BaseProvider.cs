@@ -18,7 +18,7 @@ namespace Protean.Providers
         public interface ICacheProvider
         {
             void Initiate(ref Cms myWeb);
-            Task<bool> PurgeImageCacheAsync(string[] imageUrl);
+            string PurgeImageCacheAsync(string[] imageUrl);
             Task PurgeAllCacheAsync();
             //Task<string> GetZoneIdAsync(string domain);
         }
@@ -47,7 +47,7 @@ namespace Protean.Providers
                 throw new NotImplementedException();
             }           
 
-            public async Task<bool> PurgeImageCacheAsync(string[] imageUrl)
+            public string PurgeImageCacheAsync(string[] imageUrl)
             {
                 try
                 {
@@ -57,41 +57,44 @@ namespace Protean.Providers
                         // Prepare the API URL
                         var cloudfalreservice = new CloudflareService(client);
                         string zoneId = cloudfalreservice.GetZoneIdAsync(moCartConfig["SiteURL"]);
-                        var url = oConfig["CloudflareApiUrl"] + "/"+ zoneId + "/purge_cache";
 
-                        // Set up the headers
-                        client.DefaultRequestHeaders.Add("X-Auth-Email", Convert.ToString(oConfig["Cloudemail"]));
-                        client.DefaultRequestHeaders.Add("X-Auth-Key", Convert.ToString(oConfig["CloudapiKey"]));
-                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));                       
-
-
-                        // Prepare the body
-                        var body = new
+                        if(zoneId != "")
                         {
-                            files = new[] { imageUrl }
-                        };
+                            var url = oConfig["CloudflareApiUrl"] + "/" + zoneId + "/purge_cache";
 
-                        var content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
+                            // Prepare the body
+                            var body = new
+                            {
+                                files = new[] { imageUrl }
+                            };
 
-                        // Send the POST request to purge the cache for the image
-                        var response = await client.PostAsync(url, content);
+                            var content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
 
-                        if (response.IsSuccessStatusCode)
-                        {
-                            Console.WriteLine("Cache purged successfully!");
-                            return true;
+                            // Send the POST request to purge the cache for the image
+                            var response = client.PostAsync(url, content).Result;
+
+                            if (response.IsSuccessStatusCode)
+                            {
+                                Console.WriteLine("Cache purged successfully!");
+                                return "Cache Purged";
+                            }
+                            else
+                            {
+
+                                Console.WriteLine("Failed to purge cache: " + response.ReasonPhrase);
+                                return "Failed Cache Purged";
+                            }
                         }
                         else
                         {
-                            Console.WriteLine("Failed to purge cache: " + response.ReasonPhrase);
-                            return false;
-                        }
+                            return "Not able to find zoneId";
+                        }                       
                     }
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine("Error while purging cache: " + ex.Message);
-                    return false;
+                    return "Error";
                 }
             }
 
