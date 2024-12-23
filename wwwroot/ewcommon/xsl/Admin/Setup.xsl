@@ -407,6 +407,9 @@
             <li>
               <strong>Import V3 Data:</strong> Upgrade content schemas.
             </li>
+			   <li>
+              <strong>Clean Database:</strong> Removing unused data from system like cart order, items, discounts.
+            </li>
           </ul>
         </div>
       </div>
