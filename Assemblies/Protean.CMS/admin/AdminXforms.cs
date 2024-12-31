@@ -4925,20 +4925,30 @@ namespace Protean
                     string originalFileNameFull = System.IO.Path.Combine(directoryPath, fileName);
                     var filesToDelete = System.IO.Directory.GetFiles(directoryPath, "*" + fileName);
                     string FilesToDeleteFromCache = string.Empty;
+                    bool bFileExists = true;
                     string WebPath = moCartConfig["SiteURL"]; // used it from web.config and cart.config
                     for (int i = 0; i < filesToDelete.Length; i++)
                     {
                         oFs.DeleteFile(filesToDelete[i]);
-                        FilesToDeleteFromCache = filesToDelete[i].Replace(oFs.mcStartFolder, "").Replace(@"\", "/");
-                        FilesToDeleteFromCache = WebPath + (myWeb.moConfig["ImageRootPath"] + FilesToDeleteFromCache).Replace("//", "/");
-                        slist.Add(FilesToDeleteFromCache);     
+                        bFileExists = File.Exists(filesToDelete[i]);
+                        if(bFileExists)
+                        {
+                            FilesToDeleteFromCache = filesToDelete[i].Replace(oFs.mcStartFolder, "").Replace(@"\", "/");
+                            FilesToDeleteFromCache = WebPath + myWeb.moConfig["ImageRootPath"].Replace("/", "") + FilesToDeleteFromCache;
+                            slist.Add(FilesToDeleteFromCache);
+                        }
+                          
                         if(Strings.LCase(myWeb.moConfig["EnableWebP"])=="on")
                         {
-                            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(FilesToDeleteFromCache);
+                            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filesToDelete[i]);
                             string newFilePath = Path.Combine(directoryPath, fileNameWithoutExtension + ".webp");
-                            newFilePath = newFilePath.Replace(oFs.mcStartFolder, "").Replace(@"\", "/");
-                            newFilePath = WebPath + (myWeb.moConfig["ImageRootPath"] + newFilePath).Replace("//", "/");
-                            slist.Add(newFilePath);
+                            bFileExists = File.Exists(newFilePath);
+                            if (bFileExists)
+                            {
+                                newFilePath = newFilePath.Replace(oFs.mcStartFolder, "").Replace(@"\", "/");
+                                newFilePath = WebPath + myWeb.moConfig["ImageRootPath"].Replace("/", "") + newFilePath;
+                                slist.Add(newFilePath);
+                            }
                         }                       
                     }
                     oFs.DeleteFile(originalFileNameFull);                    
