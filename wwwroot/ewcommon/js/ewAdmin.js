@@ -3,6 +3,7 @@ var IsParentPageAPI = '/ewapi/Cms.Admin/IsParentPage';
 var checkiFrameLoaded;
 
 $(document).ready(function () {
+    
     $(".all-breadcrumb").click(function () {
         $(".admin-breadcrumb").addClass("breadcrumb-height");
         $(".all-breadcrumb").hide();
@@ -147,7 +148,7 @@ $(document).ready(function () {
         waitingDialog.show(pleasewaitmessage, pleasewaitdetail, { dialogSize: 'sm', progressType: 'warning' });
 
     });
-
+  
     // ON ADMIN MENU CLICK 
     $('#mainMenuButtonadminOptions').click(function (e) {
         e.preventDefault();
@@ -944,7 +945,67 @@ function initialiseGeocoderButton() {
         });
     });
 
+    $('.getGeoResponceBtn').click(function (e) {
+        debugger;
+        e.preventDefault();
+        var currentUrl = window.location.href;
+        var city;
+        if (currentUrl.indexOf('location') != -1 && currentUrl.indexOf('?') != -1) {
 
+            var stringArry = currentUrl.split("?");
+            var urlArry = stringArry[0].split("/");
+            city = urlArry[urlArry.length - 2];
+            city = city.charAt(0).toUpperCase() + city.slice(1);
+        }
+        findBoundary(city);
+    });
+    async function findBoundary(city) {
+        debugger;
+        city = city + " , UK";
+
+        const request = {
+            textQuery: city,
+            fields: ["id", "location"],
+            // includedType: "locality",
+            /*locationBias: center,*/
+        };
+       
+        var ValueOfZoom = 9;
+        var center = new google.maps.LatLng(53.8176, -3.035162);
+        var map = new google.maps.Map(document.getElementById('cLocationmap'), {
+            zoom: ValueOfZoom,
+            center: center,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            mapId: "8fa6d2c0b2259239",
+            styles: [
+                {
+                    elementType: 'labels',
+                    stylers: [{ visibility: 'on' }]
+                }
+            ]
+        });
+        var featureList = 'COUNTRY,POSTAL_CODE,ADMINISTRATIVE_AREA_LEVEL_1,ADMINISTRATIVE_AREA_LEVEL_2,LOCALITY,SCHOOL_DISTRICT'
+        const { Place } = await google.maps.importLibrary("places");
+        const { places } = await Place.searchByText(request);
+
+        if (places.length) {
+            const place = places[0];
+            const service = new google.maps.places.PlacesService(map);
+            service.getDetails({ placeId: place.id }, (placeResult, status) => {
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+
+                    var placeType = placeResult.types[0].toUpperCase();
+                    var responce = "Placeid=" + place.id + " ,location=" + place.location + " ,featureLayer=" + placeType;
+                    $("#cGoogleAPIResponce").val(responce);
+
+                }
+            });
+            map.setCenter(place.location);
+        } else {
+            return "";
+            console.log("No results");
+        }
+    }
 }
 
 function initialiseGetVimeoDataButton() {
