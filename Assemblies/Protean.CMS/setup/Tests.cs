@@ -318,7 +318,7 @@ namespace Protean
         {
             try
             {
-                string cVirtualPath = "/ptn/admin/skin/images/logosquare.png";
+                string cVirtualPath = "/ewcommon/images/logon-bg.png";
                 string webpFileName = Strings.Replace(cVirtualPath, ".png", ".webp");
                 string newFilepath = string.Empty;
                 var oEw = new Cms();
