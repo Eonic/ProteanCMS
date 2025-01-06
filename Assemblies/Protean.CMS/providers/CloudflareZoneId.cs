@@ -11,13 +11,15 @@ using System.Web.Configuration;
 using System.Net.Http.Headers;
 using static QRCoder.PayloadGenerator;
 using Newtonsoft.Json.Serialization;
+using System.Security.Authentication;
 
 
 namespace Protean.Providers
 {
     public class CloudflareService
     {
-        private readonly HttpClient _httpClient;
+        
+        private readonly HttpClient _httpClient = new HttpClient(new HttpClientHandler { SslProtocols = SslProtocols.Tls12 });
         NameValueCollection oConfig = (NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
         public CloudflareService(HttpClient httpClient)
         {

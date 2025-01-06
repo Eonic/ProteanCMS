@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Collections.Specialized;
 using System.Web.Configuration;
 using Newtonsoft.Json.Linq;
+using System.Security.Authentication;
 
 namespace Protean.Providers
 {
@@ -51,9 +52,9 @@ namespace Protean.Providers
             {
                 try
                 {
-
-                    using (var client = new HttpClient())
-                    {
+                    var client = new HttpClient(new HttpClientHandler { SslProtocols = SslProtocols.Tls12 });
+                    //using (var client = new HttpClient())
+                   //{
                         // Prepare the API URL
                         var cloudfalreservice = new CloudflareService(client);
                         string zoneId = cloudfalreservice.GetZoneIdAsync(moCartConfig["SiteURL"]);
@@ -89,7 +90,7 @@ namespace Protean.Providers
                         {
                             return "Not able to find zoneId";
                         }                       
-                    }
+                   // }
                 }
                 catch (Exception ex)
                 {
