@@ -996,7 +996,10 @@
         <xsl:apply-templates select="." mode="themeModuleClassExtras"/>
         <xsl:value-of select="$thisClass"/>
         <xsl:if test="@moduleType='Image'">
-          <xsl:text> img-module-flex justify-content-</xsl:text>
+          <xsl:if test="@flex-cols='true'">
+            <xsl:text> img-module-flex </xsl:text>
+          </xsl:if>
+          <xsl:text>test justify-content-</xsl:text>
           <xsl:value-of select="@position-vertical"/>
           <xsl:text> align-items-</xsl:text>
           <xsl:value-of select="@position-horizontal"/>
