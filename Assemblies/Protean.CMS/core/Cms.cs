@@ -4193,7 +4193,7 @@ namespace Protean
         private void ContentActions()
         {
 
-            PerfMon.Log("Web", "ContentActions");
+            PerfMon.Log("Web", "ContentActions - Start");
             string sProcessInfo = "";
             XmlElement ocNode;
 
@@ -4476,7 +4476,9 @@ namespace Protean
                 }
 
                 BespokeActions();
+                PerfMon.Log("Web", "ContentActions - End");
             }
+
 
 
 
