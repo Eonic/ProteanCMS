@@ -53,7 +53,6 @@
 				<bind id="carouselHeight" nodeset="@carouselHeight" required="false()" type="string"/>
 				<bind id="autoPlaySpeed" nodeset="@autoPlaySpeed" required="false()" type="string"/>
 				<bind id="autoplay" nodeset="@autoplay" required="false()" type="string"/>
-        <bind id="cCrop" nodeset="@crop" required="false()" type="string"/>
 				<bind id="alignment" nodeset="@alignment" required="false()" type="string" />
 			</bind>
 			<bind id="cImageBasePath" nodeset="ImageBasePath" required="false()" type="string"/>
@@ -247,19 +246,7 @@
 							</item>
 						</select1>
 					</group>
-          <group class="col-lg-6">
-            <select1 bind="cCrop" appearance="full" class="inline-items">
-              <label>Crop Images</label>
-              <item>
-                <label>Yes</label>
-                <value>true</value>
-              </item>
-              <item>
-                <label>No</label>
-                <value>false</value>
-              </item>
-            </select1>
-          </group>
+         
 
 				</group>
 				<group class="row">
