@@ -4945,9 +4945,10 @@ namespace Protean
                             bFileExists = File.Exists(newFilePath);
                             if (bFileExists)
                             {
+                                oFs.DeleteFile(newFilePath);
                                 newFilePath = newFilePath.Replace(oFs.mcStartFolder, "").Replace(@"\", "/");
                                 newFilePath = WebPath + myWeb.moConfig["ImageRootPath"].Replace("/", "") + newFilePath;
-                                slist.Add(newFilePath);
+                                slist.Add(newFilePath);                                
                             }
                         }                       
                     }
@@ -5001,8 +5002,9 @@ namespace Protean
 
                             string methodname = "PurgeImageCacheAsync";
                             var o = Activator.CreateInstance(calledType);
-                            var args = new object[1];
+                            var args = new object[2];
                             args[0] = imageUrl;
+                            args[1] = myWeb;
                             calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, null, o, args);
                         }
                     }

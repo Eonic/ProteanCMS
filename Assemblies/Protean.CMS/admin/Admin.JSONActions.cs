@@ -737,7 +737,7 @@ namespace Protean
 
                         // var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, Conversions.ToString(cProviderName));
                         Protean.Providers.Cache.ICacheProvider oCache = new Protean.Providers.Cache.DefaultProvider();
-                        jsonResult = oCache.PurgeImageCacheAsync(imageUrl);
+                        jsonResult = oCache.PurgeImageCacheAsync(imageUrl,ref myWeb);
                         return jsonResult;
 
                     }
