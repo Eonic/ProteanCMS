@@ -21,6 +21,7 @@ Public Class ewDefault : Implements IHttpHandler, IRequiresSessionState
         oPcms.GetPageHTML()
 
         oPcms = Nothing
+        'we are done
 
     End Sub
 

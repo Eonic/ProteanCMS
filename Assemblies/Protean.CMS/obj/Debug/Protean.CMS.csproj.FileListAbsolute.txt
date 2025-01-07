@@ -496,3 +496,7 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\DocumentFormat.Open
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\DocumentFormat.OpenXml.Framework.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\DocumentFormat.OpenXml.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\DocumentFormat.OpenXml.Framework.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\DocumentFormat.OpenXml.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\DocumentFormat.OpenXml.Framework.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\DocumentFormat.OpenXml.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\DocumentFormat.OpenXml.Framework.xml
