@@ -7105,7 +7105,7 @@ namespace Protean
                 }
             }
 
-            public XmlElement GetUserXML(long nUserId, bool bIncludeContacts = true)
+            public XmlElement GetUserXML(long nUserId, bool bIncludeContacts = true, bool bSkipCheckPagePerm = false)
             {
                 PerfMonLog("DBHelper", "GetUserXML");
 
@@ -7147,7 +7147,7 @@ namespace Protean
                                     root.InnerXml = root.SelectSingleNode("*").InnerXml;
                                 }
                                 // Ignore if myWeb is nothing
-                                if (myWeb != null)
+                                if (myWeb != null && bSkipCheckPagePerm != true)
                                 {
                                     PermLevel = getPagePermissionLevel((long)myWeb.mnPageId);
                                     root.SetAttribute("pagePermission", PermLevel.ToString());
@@ -7234,6 +7234,7 @@ namespace Protean
                             root.AppendChild(root.OwnerDocument.CreateElement("cContactTelCountryCode"));
                         }
                     }
+                    PerfMonLog("DBHelper", "GetUserXML - END");
                     return root;
                 }
 
