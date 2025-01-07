@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Collections.Specialized;
 using System.Web.Configuration;
 using Newtonsoft.Json.Linq;
+using System.Security.Authentication;
 
 namespace Protean.Providers
 {
@@ -18,13 +19,14 @@ namespace Protean.Providers
         public interface ICacheProvider
         {
             void Initiate(ref Cms myWeb);
-            string PurgeImageCacheAsync(string[] imageUrl);
+            string PurgeImageCacheAsync(string[] imageUrl, ref Cms myWeb);
             Task PurgeAllCacheAsync();
             //Task<string> GetZoneIdAsync(string domain);
         }
 
         public class DefaultProvider : ICacheProvider
         {
+            Protean.Cms myWeb;
             private readonly JsonSerializer Serializer = new JsonSerializer();
             private static readonly HttpClient client = new HttpClient();
             public System.Web.HttpContext moCtx = System.Web.HttpContext.Current;
@@ -47,13 +49,14 @@ namespace Protean.Providers
                 throw new NotImplementedException();
             }           
 
-            public string PurgeImageCacheAsync(string[] imageUrl)
+            public string PurgeImageCacheAsync(string[] imageUrl, ref Cms myWeb)
             {
                 try
                 {
-
-                    using (var client = new HttpClient())
-                    {
+                    myWeb.PerfMon.Log("CacheProvider", "PurgeImageCacheAsync"+ imageUrl);
+                    var client = new HttpClient(new HttpClientHandler { SslProtocols = SslProtocols.Tls12 });
+                    //using (var client = new HttpClient())
+                   //{
                         // Prepare the API URL
                         var cloudfalreservice = new CloudflareService(client);
                         string zoneId = cloudfalreservice.GetZoneIdAsync(moCartConfig["SiteURL"]);
@@ -72,7 +75,7 @@ namespace Protean.Providers
 
                             // Send the POST request to purge the cache for the image
                             var response = client.PostAsync(url, content).Result;
-
+                            myWeb.PerfMon.Log("CacheProvider", "response" + response);
                             if (response.IsSuccessStatusCode)
                             {
                                 Console.WriteLine("Cache purged successfully!");
@@ -89,7 +92,7 @@ namespace Protean.Providers
                         {
                             return "Not able to find zoneId";
                         }                       
-                    }
+                   // }
                 }
                 catch (Exception ex)
                 {
