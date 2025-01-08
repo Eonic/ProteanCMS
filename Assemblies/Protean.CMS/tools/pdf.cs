@@ -29,7 +29,7 @@ namespace Protean.Tools
                     if (pdfDocumentXml.ToLower().Contains("<html"))
                     {  //PDF code
                         HtmlToPdf converter = new HtmlToPdf();
-
+                        converter.Options.MaxPageLoadTime = 15;
                         //PdfCustomPageSize pageSize = PdfCustomPageSize.A4;
 
                         if (cPageSize != string.Empty)
