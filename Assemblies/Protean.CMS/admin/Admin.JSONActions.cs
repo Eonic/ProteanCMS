@@ -724,30 +724,6 @@ namespace Protean
                         return ex.Message;
                     }
                 }
-
-                //method added for testing only
-                public string PurgeFile(ref Protean.rest myApi, ref JObject jObj)
-                {
-                    try
-                    {
-
-                        string[] imageUrl = new string[] { "https://demo2019.intotheblue.co.uk/images/Suppliers/iPhotography/18-Part-General/~th-lg-260x260/~th-crop-camera-350.webp",
-  "https://demo2019.intotheblue.co.uk/images/Suppliers/iPhotography/Home-Projects/~th-lg-260x260/~th-crop-orange-juice-350.webp"}; 
-                        string jsonResult = "";
-
-                        // var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, Conversions.ToString(cProviderName));
-                        Protean.Providers.Cache.ICacheProvider oCache = new Protean.Providers.Cache.DefaultProvider();
-                        jsonResult = oCache.PurgeImageCacheAsync(imageUrl,ref myWeb);
-                        return jsonResult;
-
-                    }
-                    catch (Exception ex)
-                    {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "UpdateOrderWithPaymentResponse", ex, ""));
-                        return "Error"; // ex.Message
-                    }
-
-                }
             }
             #endregion
 
