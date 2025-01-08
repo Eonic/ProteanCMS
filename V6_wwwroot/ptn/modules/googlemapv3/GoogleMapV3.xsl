@@ -34,18 +34,16 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key={$apiKey}&amp;loading=async">/* */</script>
+		<script type="text/javascript" src="//maps.google.com/maps/api/js?key={$apiKey}&amp;loading=async&amp;callback=initMap">/* */</script>
 		<xsl:apply-templates select="$page/Contents/Content[@type='Module' and @moduleType='GoogleMapv3']" mode="GoogleMapv3-js"/>
 	</xsl:template>
 	
 	<xsl:template match="Content[@type='Module' and @moduleType='GoogleMapv3']" mode="GoogleMapv3-js">
 		<!-- Initialise any Google Maps -->
 		<script type="text/javascript">
-			<xsl:text>function initialiseGMaps(){</xsl:text>
+			<xsl:text>async function initMap(){</xsl:text>
 			<xsl:apply-templates select="." mode="initialiseGoogleMap"/>
 			<xsl:text>};</xsl:text>
-
-			initialiseGMaps();
 
 			function adjustGMapSizes(mapCanvas) {
 			if (mapCanvas.data('mapheight') == undefined || mapCanvas.data('mapheight') == '0') {
@@ -76,11 +74,11 @@
 		<xsl:choose>
 			<xsl:when test="Location/@loc='address'">
 				<!-- Initial set to a location - we will reset this after initialising options - as we have to convert the address -->
-				var <xsl:value-of select="$mCentreLoc"/> = new google.maps.LatLng(51.12732,0.260611);
+				const <xsl:value-of select="$mCentreLoc"/> = new google.maps.LatLng(51.12732,0.260611);
 			</xsl:when>
 			<xsl:otherwise>
 				<!-- if geo (lat/long) - initialise straight -->
-				var <xsl:value-of select="$mCentreLoc"/> = new google.maps.LatLng(<xsl:value-of select="Location/Geo/@latitude"/>
+				const <xsl:value-of select="$mCentreLoc"/> = new google.maps.LatLng(<xsl:value-of select="Location/Geo/@latitude"/>
 				<xsl:text>,</xsl:text>
 				<xsl:value-of select="Location/Geo/@longitude"/>
 				<xsl:text>);</xsl:text>
@@ -102,10 +100,11 @@
 		<xsl:value-of select="View/node()"/>
 		<xsl:if test="Zoom/@disableMouseWheel='true'">
 			,scrollwheel:  false
-		</xsl:if>
-		<xsl:text>};</xsl:text>
+		</xsl:if>		
+		<xsl:text>,mapId: 'gmap</xsl:text><xsl:value-of select="@id"/><xsl:text>'</xsl:text>
+		};
 		<!-- Initialise map item -->
-		<xsl:text>var </xsl:text>
+		<xsl:text>const </xsl:text>
 		<xsl:value-of select="$gMapId"/>
 		<xsl:text> = new google.maps.Map(document.getElementById("</xsl:text>
 		<xsl:value-of select="$gMapId"/>
@@ -150,9 +149,11 @@
 		<xsl:value-of select="$mCentreLoc"/>
 		<xsl:text>,mapTypeControl:true</xsl:text>
 		<xsl:text>,mapTypeId:google.maps.MapTypeId.ROADMAP</xsl:text>
-		<xsl:text>};</xsl:text>
+		<xsl:text>,mapId: 'gmap</xsl:text><xsl:value-of select="@id"/><xsl:text>'</xsl:text>
+		};
+		
 		<!-- Initialise map item -->
-		<xsl:text>var </xsl:text>
+		<xsl:text>const </xsl:text>
 		<xsl:value-of select="$gMapId"/>
 		<xsl:text> = new google.maps.Map(document.getElementById("</xsl:text>
 		<xsl:value-of select="$gMapId"/>
@@ -269,7 +270,9 @@
 				</div>
 			</div>
 		</xsl:variable>
-		var marker<xsl:value-of select="@id"/> = new google.maps.Marker({
+		const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker");
+		
+		const marker<xsl:value-of select="@id"/> = new google.maps.marker.AdvancedMarkerElement({
 		map: gmap<xsl:value-of select="@id"/>,
 		position: <xsl:value-of select="$jsPositionValue"/>
 		});
@@ -295,7 +298,7 @@
 	<xsl:template match="Content[@type='Location']" mode="setGMapMarker">
 		<xsl:param name="jsPositionValue"/>
 		<xsl:param name="mapId"/>
-		var marker<xsl:value-of select="@id"/> = new google.maps.Marker({
+		var marker<xsl:value-of select="@id"/> = new google.maps.marker.AdvancedMarkerElement({
 		map: gmap<xsl:value-of select="$mapId"/>,
 		position: <xsl:value-of select="$jsPositionValue"/>
 		});
@@ -321,7 +324,7 @@
 	<xsl:template match="Content[@type='Organisation']" mode="setGMapMarker">
 		<xsl:param name="jsPositionValue"/>
 		<xsl:param name="mapId"/>
-		var marker<xsl:value-of select="@id"/> = new google.maps.Marker({
+		var marker<xsl:value-of select="@id"/> = new google.maps.marker.AdvancedMarkerElement({
 		map: gmap<xsl:value-of select="$mapId"/>,
 		position: <xsl:value-of select="$jsPositionValue"/>
 		});
