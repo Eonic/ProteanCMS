@@ -22,6 +22,7 @@
 	</xsl:template>
 	<xsl:template match="Content[@type='Module' and @moduleType='GoogleMapv3']" mode="contentJS">
 	</xsl:template>
+	
 	<xsl:template match="Content[@type='Module' and @moduleType='GoogleMapv3'][1]" mode="contentJS">
 		<xsl:variable name="apiKey">
 			<xsl:choose>
@@ -33,9 +34,10 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key={$apiKey}">/* */</script>
+		<script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key={$apiKey}&amp;loading=async">/* */</script>
 		<xsl:apply-templates select="$page/Contents/Content[@type='Module' and @moduleType='GoogleMapv3']" mode="GoogleMapv3-js"/>
 	</xsl:template>
+	
 	<xsl:template match="Content[@type='Module' and @moduleType='GoogleMapv3']" mode="GoogleMapv3-js">
 		<!-- Initialise any Google Maps -->
 		<script type="text/javascript">
