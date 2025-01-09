@@ -1439,6 +1439,66 @@ namespace Protean
 
         }
 
+        public static string tidyXhtmlFrag(string shtml, bool bReturnNumbericEntities = false, bool bEncloseText = true, string removeTags = "")
+        {
+
+            // PerfMon.Log("Web", "tidyXhtmlFrag")
+            // string sProcessInfo = "tidyXhtmlFrag";
+            string sTidyXhtml = "";
+            int crResult = 0;
+
+            if (!(removeTags == ""))
+                shtml = removeTagFromXml(shtml, removeTags);
+            TidyManaged.Document oTdyManaged;
+            // Using 
+            try
+            {
+                // clear some nasties I haven't allready captured.
+                shtml = shtml.Replace("&amp;nbsp;", "&#160;");
+                shtml = Regex.Replace(shtml, "<\\?xml.*\\?>", "", RegexOptions.IgnoreCase);
+
+                oTdyManaged = TidyManaged.Document.FromString(shtml);
+                oTdyManaged.OutputBodyOnly = TidyManaged.AutoBool.Yes;
+                oTdyManaged.MakeClean = true;
+                oTdyManaged.DropFontTags = true;
+                //oTdyManaged.ErrorBuffer = true;
+                oTdyManaged.ShowWarnings = true;
+                oTdyManaged.OutputXhtml = true;
+                oTdyManaged.MakeBare = true;//removed word tags
+                oTdyManaged.CleanWord2000 = true;//removed word tags
+
+                if (bReturnNumbericEntities)
+                {
+                    oTdyManaged.OutputNumericEntities = true;
+                }
+                oTdyManaged.CleanAndRepair();
+                try
+                {
+                    sTidyXhtml = oTdyManaged.Save();
+                }
+                catch (Exception)
+                {
+                    sTidyXhtml = "<div>html import conversion error result=" + " <br/></div>";
+                }
+
+                oTdyManaged.Dispose();
+                oTdyManaged = null/* TODO Change to default(_) if this is not a reference type */;
+                // End Using
+
+                return sTidyXhtml;
+            }
+            catch (Exception ex)
+            {
+                // It is the desired behaviour for this to return nothing if not valid html don't turn this on apart from in development.            Return Nothing
+                return crResult + " - " + ex.Message + ex.StackTrace;
+            }
+            // Return Nothing
+            finally
+            {
+                sTidyXhtml = null;
+            }
+        }
+
         #region Deprecated
 
         [Obsolete("This method is deprecated, please use Protean.Tools.Text.IsEmail instead")]

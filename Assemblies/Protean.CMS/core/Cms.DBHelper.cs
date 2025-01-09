@@ -3111,7 +3111,7 @@ namespace Protean
                             catch
                             {
                                 // run tidy...
-                                oElmt.InnerXml = Tools.Text.tidyXhtmlFrag(sContent, true, false);
+                                oElmt.InnerXml = stdTools.tidyXhtmlFrag(sContent, true, false);
                             }
                             // empty empty dates
                             if (oElmt.InnerXml.StartsWith("0001-01-01T00:00:00"))

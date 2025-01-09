@@ -623,7 +623,7 @@ namespace Protean.Tools
             }
         }
 
-
+        [Obsolete("This method is awaiting update to tidyNetStandard5 to fix issues, please use Protean.stdTools.tidyXhtmlFrag instead")]
         public static string tidyXhtmlFrag(string shtml, bool bReturnNumbericEntities = false, bool bEncloseText = true, string removeTags = "")
         {
 

@@ -6567,7 +6567,7 @@ namespace Protean
                             }
                             catch
                             {
-                                oElmt2.InnerXml = Tools.Text.tidyXhtmlFrag(sContent);
+                                oElmt2.InnerXml = stdTools.tidyXhtmlFrag(sContent);
                             }
                         }
                     }

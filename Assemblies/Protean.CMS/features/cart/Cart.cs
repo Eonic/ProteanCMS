@@ -9976,7 +9976,7 @@ namespace Protean
                                         }
                                         catch (Exception)
                                         {
-                                            sellerNode.InnerXml = Tools.Text.tidyXhtmlFrag(cSellerNotesHtml + "</ul>");
+                                            sellerNode.InnerXml = stdTools.tidyXhtmlFrag(cSellerNotesHtml + "</ul>");
                                         }
 
                                         // Add the Delivery Details

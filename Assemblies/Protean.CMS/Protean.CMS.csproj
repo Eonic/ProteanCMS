@@ -275,6 +275,10 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="TidyHTML5Managed, Version=1.1.5.0, Culture=neutral, PublicKeyToken=0e5e11efc3341916, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NonNuget\TidyHTML5Managed.dll</HintPath>
+    </Reference>
     <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
       <HintPath>..\..\packages\WebActivatorEx.2.0.2\lib\net40\WebActivatorEx.dll</HintPath>
     </Reference>
