@@ -797,11 +797,6 @@
 
     <!-- admin javascripts -->
     <xsl:if test="$adminMode">
-      <xsl:if test="ContentDetail/Content[@type='xform']/descendant::submit[contains(@class,'getGeoResponceBtn')]">
-        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={$GoogleAPIKey}&amp;libraries=places&amp;v=4">
-
-        </script>
-      </xsl:if>
       <xsl:apply-templates select="." mode="adminJs"/>
     </xsl:if>
 
@@ -839,17 +834,6 @@
       </xsl:with-param>
       <xsl:with-param name="async" select="$async"/>
     </xsl:call-template>
-  </xsl:template>
-
-  <xsl:template match="Page" mode="adminJs">
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={$GoogleAPIKey}&amp;libraries=places&amp;v=4">
-
-    </script>
-    <!--<xsl:if test="ContentDetail/Content[@type='xform']/descendant::submit[contains(@class,'getGeoResponceBtn')]">
-      <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={$GoogleAPIKey}&amp;libraries=places&amp;v=4">
-
-      </script>
-    </xsl:if>-->
   </xsl:template>
 
   <xsl:template match="Page" mode="commonJsFiles">
