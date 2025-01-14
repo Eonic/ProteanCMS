@@ -364,7 +364,7 @@
 		  <xsl:text>&#160;</xsl:text>
 			<xsl:copy-of select="LastName"/>
 		  <xsl:text>&#160;</xsl:text>
-		  <a href="?ewCmd=logoff" title="Logout" class="btn btn-custom">
+		  <a href="?ewCmd=logoff" title="Logout" class="btn btn-link">
 			  <!--Logout-->
 			  <xsl:call-template name="term4019"/>
         <xsl:text> </xsl:text>
@@ -396,7 +396,7 @@
         </div>
         <div>
 
-          <button type="submit" name="Logout" class="btn btn-custom principle" onclick="window.location.href='?ewCmd=logoff'">
+          <button type="submit" name="Logout" class="btn btn-link principle" onclick="window.location.href='?ewCmd=logoff'">
 
             <xsl:call-template name="term4019"/>
             <xsl:text></xsl:text>
@@ -598,7 +598,7 @@
           </a>
         </p>
         <div>
-          <button type="submit" name="Logout" class="btn btn-custom principle" onclick="window.location.href='?ewCmd=logoff'">
+          <button type="submit" name="Logout" class="btn btn-link principle" onclick="window.location.href='?ewCmd=logoff'">
             <xsl:call-template name="term4019"/>
             <xsl:text> </xsl:text>
           </button>
@@ -634,7 +634,7 @@
       </a>
     </p>
     <div class="ewXform">
-      <button type="submit" name="Logout" class="btn btn-custom principle" onclick="window.location.href='?ewCmd=logoff'">
+      <button type="submit" name="Logout" class="btn btn-link principle" onclick="window.location.href='?ewCmd=logoff'">
         <xsl:call-template name="term4019"/>
         <xsl:text> </xsl:text>
       </button>
@@ -844,7 +844,7 @@
 				
 			</td>
 			<td class="view">
-				<a class="btn btn-custom button principle" href="{$href}" title="View order">View order</a>
+				<a class="btn btn-link button principle" href="{$href}" title="View order">View order</a>
 			</td>
 		</tr>
 	</xsl:template>
@@ -879,7 +879,7 @@
 			</h3>
 			<xsl:apply-templates select="." mode="orderItems"/>
 			<div class="morelink">
-				<a class="btn btn-custom button principle" href="{$href}">View order</a>
+				<a class="btn btn-link button principle" href="{$href}">View order</a>
 			</div>
 			<div class="terminus">&#160;</div>
 		</div>
@@ -1064,7 +1064,7 @@
 				<xsl:otherwise>
 					<!-- View addresses -->
 					<div class="add">
-            <a class="btn btn-custom principle" href="{$currentPage/@url}?memCmd=addContact">
+            <a class="btn btn-link principle" href="{$currentPage/@url}?memCmd=addContact">
               <i class="fa fa-plus">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>
