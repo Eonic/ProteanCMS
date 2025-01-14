@@ -2915,7 +2915,9 @@
           <span itemprop="name">
             <xsl:apply-templates select="." mode="getDisplayName"/>
           </span>
-          <meta itemprop="position" content="{count(parent::MenuItem)+1}" />
+			<meta itemprop="position" content="{count(parent::MenuItem)+1}">
+				<xsl:text> </xsl:text>
+			</meta>
         </xsl:when>
         <xsl:otherwise>
           <a itemprop="item">
@@ -2960,7 +2962,9 @@
             <span itemprop="name">
               <xsl:apply-templates select="." mode="getDisplayName"/>
             </span>
-            <meta itemprop="position" content="{count(parent::MenuItem)+1}" />
+			  <meta itemprop="position" content="{count(parent::MenuItem)+1}" >
+				  <xsl:text> </xsl:text>
+			  </meta>
           </a>
 
         </xsl:otherwise>

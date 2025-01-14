@@ -557,6 +557,7 @@
             <xsl:with-param name="class" select="$containerClass"/>
           </xsl:apply-templates>
         </xsl:if>
+		  <xsl:text> </xsl:text>
       </div>
     </div>
     <xsl:apply-templates select="." mode="layoutFooter">
@@ -1367,6 +1368,7 @@
                 <xsl:apply-templates select="." mode="inlinePopupOptions"/>
               </xsl:if>
               <xsl:apply-templates select="." mode="displayBrief"/>
+				<xsl:text> </xsl:text>
             </div>
           </xsl:if>
           <xsl:if test="@listGroup='true'">
