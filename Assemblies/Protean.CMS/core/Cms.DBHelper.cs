@@ -1611,7 +1611,7 @@ namespace Protean
 
                                 if (!string.IsNullOrEmpty(thisPrefix))
                                 {
-                                    string cContentName = SqlFmt(sPath).Replace("*", "%").Replace(" ", "%");
+                                    string cContentName = SqlFmt(sPath).Replace("*", "%").Replace(" ", "%").Replace(",", "%");
 
                                     if (gbAdminMode)
                                     {
