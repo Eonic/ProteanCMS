@@ -20,6 +20,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web.Configuration;
@@ -7108,7 +7109,7 @@ namespace Protean
                 }
             }
 
-            public XmlElement GetUserXML(long nUserId, bool bIncludeContacts = true)
+            public XmlElement GetUserXML(long nUserId, bool bIncludeContacts = true, bool bSkipCheckPagePerm = false)
             {
                 PerfMonLog("DBHelper", "GetUserXML");
 
@@ -7257,9 +7258,13 @@ namespace Protean
                 try
                 {
                     var oContacts = moPageXml.CreateElement("Contacts");
-                    string cSQL = "SELECT * FROM tblCartContact where nContactCartId = 0 and nContactDirId = " + nUserId;
+                    var cSQL = new StringBuilder();
+                    //string cSQL = "SELECT * FROM tblCartContact where nContactCartId = 0 and nContactDirId = " + nUserId;
+                    cSQL.Append("SELECT C.* ,SUBSTRING(convert(XML,replace( C.cContactXml,'&','and')).value('(/Content/LocationSummary)[1]', 'varchar(100)'), CHARINDEX(',', convert(XML,replace( C.cContactXml,'&','and')).value('(/Content/LocationSummary)[1]', 'varchar(100)')) + 1, LEN(convert(XML,replace( C.cContactXml,'&','and')).value('(/Content/LocationSummary)[1]', 'varchar(100)'))) AS county FROM tblCartContact C ");
+                    cSQL.Append($"WHERE nContactCartId = 0 and nContactDirId = {nUserId} ");
+                    cSQL.Append("AND SUBSTRING(cContactForeignRef, 1, 4) = 'SUP-' ");
                     var oDS = new DataSet();
-                    oDS = GetDataSet(cSQL, "Contact");
+                    oDS = GetDataSet(cSQL.ToString(), "Contact");
                     foreach (DataRow oDRow in oDS.Tables[0].Rows)
                     {
                         var oContact = moPageXml.CreateElement("Contact");
