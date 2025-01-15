@@ -957,55 +957,71 @@ function initialiseGeocoderButton() {
             city = urlArry[urlArry.length - 2];
             city = city.charAt(0).toUpperCase() + city.slice(1);
         }
-        /*findBoundary(city);*/
+        findBoundaryForLocation(city);
     });
-    //async function findBoundary(city) {
-    //    debugger;
-    //    city = city + " , UK";
+    async function findBoundaryForLocation(city) {
+        debugger;
+        city = city + " , UK";
 
-    //    const request = {
-    //        textQuery: city,
-    //        fields: ["id", "location"],
-    //        // includedType: "locality",
-    //        /*locationBias: center,*/
-    //    };
+        const request = {
+            textQuery: city,
+            fields: ["id", "location"],
+           
+        };
        
-    //    var ValueOfZoom = 9;
-    //    var center = new google.maps.LatLng(53.8176, -3.035162);
-    //    var map = new google.maps.Map(document.getElementById('cLocationmap'), {
-    //        zoom: ValueOfZoom,
-    //        center: center,
-    //        mapTypeId: google.maps.MapTypeId.ROADMAP,
-    //        mapId: "8fa6d2c0b2259239",
-    //        styles: [
-    //            {
-    //                elementType: 'labels',
-    //                stylers: [{ visibility: 'on' }]
-    //            }
-    //        ]
-    //    });
-    //    var featureList = 'COUNTRY,POSTAL_CODE,ADMINISTRATIVE_AREA_LEVEL_1,ADMINISTRATIVE_AREA_LEVEL_2,LOCALITY,SCHOOL_DISTRICT'
-    //    const { Place } = await google.maps.importLibrary("places");
-    //    const { places } = await Place.searchByText(request);
+        var ValueOfZoom = 9;
+        var center = new google.maps.LatLng(53.8176, -3.035162);
+        const { Map } = await google.maps.importLibrary("maps");
+        var mapvar = new Map(document.getElementById('cLocationmap'), {
+            zoom: ValueOfZoom,
+            center: center,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            mapId: "8fa6d2c0b2259239",
+            renderingType: Map.VECTOR,
+            styles: [
+                {
+                    elementType: 'labels',
+                    stylers: [{ visibility: 'on' }]
+                }
+            ]
+        });
+       
+        const { Place } = await google.maps.importLibrary("places");
+        const { places } = await Place.searchByText(request);
 
-    //    if (places.length) {
-    //        const place = places[0];
-    //        const service = new google.maps.places.PlacesService(map);
-    //        service.getDetails({ placeId: place.id }, (placeResult, status) => {
-    //            if (status === google.maps.places.PlacesServiceStatus.OK) {
+        if (places.length) {
+            const place = places[0];
+            const serviceRes = new google.maps.places.PlacesService(mapvar);
+            serviceRes.getDetails({ placeId: place.id }, (placeResult, status) => {
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                    var placeType = placeResult.types[0].toUpperCase();
+                    const boundArea = placeResult.geometry.viewport;
+                    let northEast;
+                    let northWest
+                    let southEast;
+                    let southWest;
+                    if (boundArea) {
+                        northEast = boundArea.getNorthEast(); // North-East corner
+                        southWest = boundArea.getSouthWest(); // South-West corner
+                        //narthEastArray = northEast.split(",").replace('(', '');
+                        //southWestArray = southWest.split(",").replace('(', '');
+                        northWest = "(" +northEast.lat()+","+ southWest.lng()+")";
+                        southEast = "(" + southWest.lat() + "," + northEast.lng() + ")";
+                        //northWest = { lat: northEast.lat(), lng: southWest.lng() };           
+                        //southEast = { lat: southWest.lat(), lng: northEast.lng() };
+                    } 
+                    var responce = "northEast=" + northEast + ",southWest=" + southWest + ",northWest=" + northWest + ",southEast=" + southEast;
+                        //+ " ,Placeid=" + place.id + " ,location=" + place.location + " ,featureLayer=" + placeType;
+                    $("#cGoogleAPIResponce").val(responce);
 
-    //                var placeType = placeResult.types[0].toUpperCase();
-    //                var responce = "Placeid=" + place.id + " ,location=" + place.location + " ,featureLayer=" + placeType;
-    //                $("#cGoogleAPIResponce").val(responce);
-
-    //            }
-    //        });
-    //        map.setCenter(place.location);
-    //    } else {
-    //        return "";
-    //        console.log("No results");
-    //    }
-    //}
+                }
+            });
+            map.setCenter(place.location);
+        } else {
+            return "";
+            console.log("No results");
+        }
+    }
 }
 
 function initialiseGetVimeoDataButton() {

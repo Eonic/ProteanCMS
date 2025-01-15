@@ -798,6 +798,9 @@
     <!-- admin javascripts -->
     <xsl:if test="$adminMode">
       <xsl:apply-templates select="." mode="adminJs"/>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={$GoogleAPIKey}&amp;libraries=places&amp;libraries=marker&amp;libraries=geometry&amp;v=3.exp">
+      <xsl:text> </xsl:text>
+    </script>
     </xsl:if>
 
     <xsl:apply-templates select="." mode="xform_control_scripts"/>
