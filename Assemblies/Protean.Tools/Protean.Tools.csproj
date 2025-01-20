@@ -2,10 +2,6 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <OutputType>Library</OutputType>
-    <SccProjectName></SccProjectName>
-    <SccLocalPath></SccLocalPath>
-    <SccAuxPath></SccAuxPath>
-    <SccProvider></SccProvider>
     <ShouldCreateLogs>True</ShouldCreateLogs>
     <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
     <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
@@ -44,10 +40,13 @@
     <AssemblyTitle>Protean.Tools</AssemblyTitle>
     <Company>Eonic Digital LLP.</Company>
     <Product>ProteanCMS</Product>
-    <Copyright>Copyright © Eonic Digital LLP.  2024</Copyright>
-    <AssemblyVersion>6.1.24.91</AssemblyVersion>
+    <Copyright>Copyright © Eonic Digital LLP.  2025</Copyright>
+    <AssemblyVersion>6.1.25.0</AssemblyVersion>
     <FileVersion>6.1.255.91</FileVersion>
     <InformationalVersion>0.0.0.115</InformationalVersion>
+    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+    <PackageProjectUrl>https://www.proteancms.com/</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM64'">
     <OutputPath>bin\ARM64\Debug\</OutputPath>
@@ -69,12 +68,12 @@
     <Folder Include="IdentityModel\Tokens\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="BouncyCastle.Cryptography" Version="2.4.0" />
+    <PackageReference Include="BouncyCastle.Cryptography" Version="2.5.0" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="3.0.2" />
     <PackageReference Include="DocumentFormat.OpenXml.Framework" Version="3.0.2" />
     <PackageReference Include="iTextSharp.LGPLv2.Core" Version="3.4.22" />
-    <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="14.2.0" />
-    <PackageReference Include="Magick.NET.Core" Version="14.2.0" />
+    <PackageReference Include="Magick.NET-Q8-x64" Version="14.4.0" />
+    <PackageReference Include="Magick.NET.Core" Version="14.4.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
@@ -99,5 +98,18 @@
   <ItemGroup>
     <Compile Remove="IdentityModel\Tokens\JwtHelper.cs" />
     <Compile Remove="Properties\Resources.Designer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 </Project>

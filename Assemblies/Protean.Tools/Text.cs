@@ -575,10 +575,12 @@ namespace Protean.Tools
                     cName = cName.Replace("(", "*");
                     cName = cName.Replace(")", "*");
                     cName = cName.Replace(".", "*");
+                    cName = cName.Replace(",", "*");
+                    cName = cName.Replace("+", "*");
                     cName = cName.Replace("'", "");
                     cName = cName.Replace("&amp;", "&");
                     if (!bLeaveAmp)
-                        cName = cName.Replace("&", "and");
+                        cName = cName.Replace("&", "*");
                     int i;
                     string cBuilt = "";
                     var loopTo = 0;

@@ -2408,13 +2408,15 @@
     <xsl:choose>
       <xsl:when test="name()='group'">
         <xsl:apply-templates select="." mode="xform">
-          <xsl:with-param name="dependantClass" />
+            <xsl:with-param name="dependantClass" select="$dependantClass" />
+          <xsl:with-param name="selectedCase" select="$selectedCase"/>
         </xsl:apply-templates>
       </xsl:when>
       <xsl:when test="contains(@class,'hidden')">
         <div class="form-group invisible">
           <xsl:apply-templates select="." mode="xform">
-            <xsl:with-param name="dependantClass" />
+            <xsl:with-param name="dependantClass" select="$dependantClass" />
+          <xsl:with-param name="selectedCase" select="$selectedCase"/>
           </xsl:apply-templates>
         </div>
       </xsl:when>
@@ -2435,6 +2437,7 @@
           </xsl:attribute>
           <xsl:apply-templates select="." mode="xform">
             <xsl:with-param name="dependantClass" select="$dependantClass" />
+          <xsl:with-param name="selectedCase" select="$selectedCase"/>
           </xsl:apply-templates>
         </div>
         <!-- Output Cases - that not empty -->
@@ -2514,6 +2517,10 @@
       <!-- IF CHOSEN CASE - HIDE-->
       <xsl:attribute name="class">
         <xsl:value-of select="$dependantClass" />
+		  
+		
+        |<xsl:value-of select="$selectedCase" />|
+			  
         <xsl:if test="not(contains($selectedCase,@id)) and not(descendant-or-self::alert)">
           <xsl:text> hidden</xsl:text>
         </xsl:if>

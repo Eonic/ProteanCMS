@@ -87,9 +87,6 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.Op
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.OpenXml.Framework.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.OpenXml.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.OpenXml.Framework.xml
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Magick.Native-Q8-arm64.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Magick.Native-Q8-x64.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Magick.Native-Q8-x86.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\ClearScriptV8.win-x64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\ProteanCMS.dll.config
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\ProteanCMS.dll
@@ -133,10 +130,8 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\WebActivatorEx.dl
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\WebGrease.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.OpenXml.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.OpenXml.Framework.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Magick.NET-Q8-AnyCPU.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Select.HtmlToPdf.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\TidyHTML5Managed.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Magick.NET.Core.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Protean.Tools.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Protean.Tools.dll.config
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\AdvancedStringBuilder.xml
@@ -170,9 +165,7 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Threading.
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Web.Optimization.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.OpenXml.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.OpenXml.Framework.xml
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Magick.NET-Q8-AnyCPU.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Select.HtmlToPdf.xml
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Magick.NET.Core.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\ru-ru\BundleTransformer.Core.resources.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\ru-ru\BundleTransformer.Less.resources.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\ru-ru\BundleTransformer.SassAndScss.resources.dll
@@ -189,3 +182,8 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Drawing.Co
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Data.SqlClient.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Drawing.Common.pdb
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Drawing.Common.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Data.SqlClient.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Drawing.Common.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Data.SqlClient.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Drawing.Common.pdb
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Drawing.Common.xml
