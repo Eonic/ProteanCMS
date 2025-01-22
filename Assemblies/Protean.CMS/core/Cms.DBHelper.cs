@@ -7258,13 +7258,9 @@ namespace Protean
                 try
                 {
                     var oContacts = moPageXml.CreateElement("Contacts");
-                    var cSQL = new StringBuilder();
-                    //string cSQL = "SELECT * FROM tblCartContact where nContactCartId = 0 and nContactDirId = " + nUserId;
-                    cSQL.Append("SELECT C.* ,SUBSTRING(convert(XML,replace( C.cContactXml,'&','and')).value('(/Content/LocationSummary)[1]', 'varchar(100)'), CHARINDEX(',', convert(XML,replace( C.cContactXml,'&','and')).value('(/Content/LocationSummary)[1]', 'varchar(100)')) + 1, LEN(convert(XML,replace( C.cContactXml,'&','and')).value('(/Content/LocationSummary)[1]', 'varchar(100)'))) AS county FROM tblCartContact C ");
-                    cSQL.Append($"WHERE nContactCartId = 0 and nContactDirId = {nUserId} ");
-                    cSQL.Append("AND SUBSTRING(cContactForeignRef, 1, 4) = 'SUP-' ");
+                    string cSQL = "SELECT * FROM tblCartContact where nContactCartId = 0 and nContactDirId = " + nUserId;
                     var oDS = new DataSet();
-                    oDS = GetDataSet(cSQL.ToString(), "Contact");
+                    oDS = GetDataSet(cSQL, "Contact");
                     foreach (DataRow oDRow in oDS.Tables[0].Rows)
                     {
                         var oContact = moPageXml.CreateElement("Contact");
