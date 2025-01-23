@@ -4,14 +4,14 @@ var checkiFrameLoaded;
 
 $(document).ready(function () {
     
-    if ($("#nShowMap_true").length > 0) {
-        if ($("#nShowMap_true").prop("checked")) {
-            $("#cViewMap").val('true');
-        }
-        else {
-            $("#cViewMap").val('false');
-        }
-    }
+    //if ($("#nShowMap_true").length > 0) {
+    //    if ($("#nShowMap_true").prop("checked")) {
+    //        $("#cViewMap").val('true');
+    //    }
+    //    else {
+    //        $("#cViewMap").val('false');
+    //    }
+    //}
 
 
     $(".all-breadcrumb").click(function () {
