@@ -1611,7 +1611,7 @@ namespace Protean
 
                                 if (!string.IsNullOrEmpty(thisPrefix))
                                 {
-                                    string cContentName = SqlFmt(sPath).Replace("+", "%").Replace("*", "%").Replace(" ", "%");
+                                    string cContentName = SqlFmt(sPath).Replace("+", "_").Replace("*", "_").Replace(" ", "_").Replace("__", "%").Replace("___", "%");
 
                                     if (gbAdminMode)
                                     {
@@ -1646,12 +1646,12 @@ namespace Protean
 
 
                                         ods = GetDataSet(sSql, "Pages");
-                                        if (ods.Tables["Pages"].Rows.Count == 1)
+                                        if (ods.Tables["Pages"].Rows.Count > 0)
                                         {
                                             if (bCheckPermissions)
                                             {
                                                 // Check the permissions for the page - this will either return 0, the page id or a system page.
-                                                long checkPermissionPageId = checkPagePermission(Conversions.ToLong(ods.Tables["Pages"].Rows[Conversions.ToInteger("0")]["nStructId"]));
+                                                long checkPermissionPageId = checkPagePermission(Conversions.ToLong(ods.Tables["Pages"].Rows[0]["nStructId"]));
                                                 if (Conversions.ToBoolean(Operators.AndObject(checkPermissionPageId != 0L, Operators.OrObject(Operators.ConditionalCompareObjectEqual(ods.Tables["Pages"].Rows[Conversions.ToInteger("0")]["nStructId"], checkPermissionPageId, false), IsSystemPage(checkPermissionPageId)))))
 
                                                 {
@@ -1660,9 +1660,9 @@ namespace Protean
                                             }
                                             else
                                             {
-                                                nPageId = Conversions.ToLong(ods.Tables["Pages"].Rows[Conversions.ToInteger("0")]["nStructId"]);
+                                                nPageId = Conversions.ToLong(ods.Tables["Pages"].Rows[0]["nStructId"]);
                                             }
-                                            nPageId = Conversions.ToLong(ods.Tables["Pages"].Rows[Conversions.ToInteger("0")]["nStructId"]);
+                                            nPageId = Conversions.ToLong(ods.Tables["Pages"].Rows[0]["nStructId"]);
 
 
                                             if (checkRedirect)

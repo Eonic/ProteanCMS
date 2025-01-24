@@ -7945,9 +7945,9 @@ namespace Protean
                         tempElement.InnerXml = cSellerNotesHtml + "</ul>";
 
                         string argsClass = "";
-                        int argnRows = Conversions.ToInteger("5");
+                        int argnRows = Conversions.ToInteger("2");
                         int argnCols = 0;
-                        base.addTextArea(ref oGrp2Elmt, "cNotesAmend", false, "Update Seller Notes", ref argsClass, ref argnRows, nCols: ref argnCols);
+                        base.addTextArea(ref oGrp2Elmt, "cNotesAmend", false, "Add comment to notes (not sent to customer)", ref argsClass, ref argnRows, nCols: ref argnCols);
 
                         base.addSubmit(ref oGrp2Elmt, "ewUpdate" + cSchemaName, "Update Order");
 
@@ -8047,7 +8047,7 @@ namespace Protean
 
                             string notes = base.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText + "/n" + Conversions.ToString(DateTime.Now) + ": changed to: (" + goRequest["nStatus"] + ") " + sStatusDesc + " - " + updateNotes;
                             string AdminUserName = myWeb.moPageXml.SelectSingleNode("Page/User/@name").InnerText;
-                            notes += "by " + AdminUserName;
+                            notes += " - By user: " + AdminUserName;
 
                             base.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText = notes;
                             moDbHelper.logActivity(Cms.dbHelper.ActivityType.OrderStatusChange, (long)myWeb.mnUserId, 0L, 0L, notes);

@@ -6649,13 +6649,13 @@
       </td>
       <td>
         <div class="btn-group-spaced">
-          <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Display&amp;id={@id}" class="btn btn-sm btn-outline-primary">
+          <a href="{$appPath}?ewCmd={$ewCmd}&amp;ewCmd2=Display&amp;id={@id}" class="btn btn-sm btn-outline-primary">
             <i class="fa fa-eye">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>view order
           </a>
           <xsl:if test="@statusId=6">
-            <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Print&amp;id={@id}" target="_new" class="btn btn-sm btn-outline-primary">
+            <a href="{$appPath}?ewCmd={$ewCmd}&amp;ewCmd2=Print&amp;id={@id}" target="_new" class="btn btn-sm btn-outline-primary">
               <i class="fa fa-print">
                 <xsl:text> </xsl:text>
               </i>
@@ -7018,9 +7018,9 @@
                 <table class="table collapse" id="paymentTable">
                   <thead>
                     <tr>
-                      <th scope="col">Provider</th>
                       <th scope="col">Date</th>
                       <th scope="col">Amount</th>
+                      <th scope="col">Provider</th>
                       <th scope="col">Other Info</th>
                     </tr>
                   </thead>
@@ -7042,8 +7042,11 @@
                           <xsl:value-of select="cPayMthdProviderName"/>
                         </td>
                         <td>
-                          AuthCode:
-                          <xsl:value-of select="cPayMthdDetailXml/instance/Response/@AuthCode"/>
+							<xsl:if test="cPayMthdDetailXml/instance/Response/@AuthCode!=''">
+								AuthCode:
+								<xsl:value-of select="cPayMthdDetailXml/instance/Response/@AuthCode"/>
+							</xsl:if>			
+                          
                         </td>
                       </tr>
                     </xsl:for-each>
@@ -11743,7 +11746,7 @@
             </xsl:if>-->
               </xsl:for-each>
               <td align="right">
-                <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Display&amp;id={Order_Id/node()}" class="view adminButton">view order</a>
+                <a href="{$appPath}?ewCmd={$ewCmd}&amp;ewCmd2=Display&amp;id={Order_Id/node()}" class="view adminButton">view order</a>
               </td>
             </tr>
           </span>
@@ -11874,7 +11877,7 @@
           </a>
         </td>
         <td align="right">
-          <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Display&amp;id={ancestor::Item/Order_Id/node()}" class="view adminButton">view order</a>
+          <a href="{$appPath}?ewCmd={$ewCmd}&amp;ewCmd2=Display&amp;id={ancestor::Item/Order_Id/node()}" class="view adminButton">view order</a>
         </td>
       </tr>
     </span>
