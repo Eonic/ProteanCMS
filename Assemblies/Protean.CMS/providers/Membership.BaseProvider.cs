@@ -88,6 +88,8 @@ namespace Protean.Providers
 
             XmlElement GetUserXML(ref Cms myWeb, long nUserId = 0L);
 
+            void sendRegistrationAlert(ref Cms myWeb, long mnUserId, Boolean clearUserId);
+
             void LogSingleUserSession();
             void LogSingleUserSession(ref Cms myWeb);
 
@@ -3058,16 +3060,22 @@ namespace Protean.Providers
                             var oMessage = new Protean.Messaging(ref myWeb.msException);
 
                             var fs = new Protean.fsHelper();
-                            string path = fs.FindFilePathInCommonFolders("/xsl/Email/passwordReset.xsl", myWeb.maCommonFolders);
+                            string path = "";
                             if (myWeb.moConfig["cssFramework"] == "bs5")
                             {
-                                path = "/features/membership/email/passwordReset.xsl";
+                                path = fs.FindFilePathInCommonFolders("/features/membership/email/password-reset.xsl", myWeb.maCommonFolders);
+                            }
+                            else {
+                                path = fs.FindFilePathInCommonFolders("/xsl/Email/passwordReset.xsl", myWeb.maCommonFolders);
+                             
                             }
                             Protean.Cms.dbHelper argodbHelper = null;
                             sReturnValue = Conversions.ToString(oMessage.emailer(oEmailDoc.DocumentElement, path, myWeb.moConfig["SiteAdminName"], myWeb.moConfig["SiteAdminEmail"], userEmail, "Account Reset ", odbHelper: ref argodbHelper));
 
                             //sReturnValue = Conversions.ToString(Interaction.IIf(sReturnValue == "Message Sent", "<span class=\"msg-1035\">Reset code sent to </span>" + userEmail, ""));
-                            sReturnValue = "If we have the user account supplied we will have emailed you a reset code";
+                            if (sReturnValue == "Message Sent") {
+                                 sReturnValue = "If we have the user account supplied we will have emailed you a reset code";
+                            }
                         } // endif oUserXml Is Nothing
 
 

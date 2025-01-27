@@ -325,20 +325,20 @@ namespace Protean
 
                         // add Eonic Bespoke Functions
                         var xsltArgs = new System.Xml.Xsl.XsltArgumentList();
-                        //Protean.Cms errWeb;
-                        //if (System.Web.HttpContext.Current != null)
-                        //{
-                        //    // so we compile errors out of debug mode too.
-                        //    errWeb = new Protean.Cms(System.Web.HttpContext.Current);
-                        //    errWeb.InitializeVariables();
-                        //    var ewXsltExt = new Protean.xmlTools.xsltExtensions(ref errWeb);
-                        //    xsltArgs.AddExtensionObject("urn:ew", ewXsltExt);
-                        //}
-                        //else
-                        //{
-                        //    var ewXsltExt = new Protean.xmlTools.xsltExtensions();
-                        //    xsltArgs.AddExtensionObject("urn:ew", ewXsltExt);
-                        //}
+                        Protean.Cms errWeb;
+                        if (System.Web.HttpContext.Current != null)
+                        {
+                            // so we compile errors out of debug mode too.
+                            errWeb = new Protean.Cms(System.Web.HttpContext.Current);
+                            errWeb.InitializeVariables();
+                            var ewXsltExt = new Protean.xmlTools.xsltExtensions(ref errWeb);
+                            xsltArgs.AddExtensionObject("urn:ew", ewXsltExt);
+                        }
+                        else
+                        {
+                            var ewXsltExt = new Protean.xmlTools.xsltExtensions();
+                            xsltArgs.AddExtensionObject("urn:ew", ewXsltExt);
+                        }
 
 
                         sProcessInfo = "Transform";
