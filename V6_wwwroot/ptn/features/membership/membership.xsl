@@ -174,76 +174,9 @@
 		</div>
 	</xsl:template>
 	
-   <xsl:template match="Page[@layout='Password_Reminder']" mode="Layout">
-    <div id="template_Logon_Register">
-      <xsl:apply-templates select="/" mode="layoutHeader"/>
-      <div id="body">
-        <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and (@name='PasswordReminder' or @name='ResetAccount')]" mode="xform"/>
-        <xsl:text> </xsl:text>
-      </div>
-     
-      <!-- Terminus class fix to floating columns -->
-      <div class="terminus">&#160;</div>
-      <xsl:apply-templates select="/" mode="layoutFooter"/>
-    </div>
-  </xsl:template>
-
-	<xsl:template match="Page[@layout='Password_Change']" mode="Layout">
-		<div id="template_Logon_Register" class="template">
-			<section class="wrapper-sm">
-				<div class="container content">
-				<xsl:apply-templates select="/Page/Contents/Content[@type='xform' and (@name='ResetPassword')]" mode="xform"/>
-					<xsl:text> </xsl:text>
-				</div>
-			</section>
-		</div>
-	</xsl:template>	
-	
-  <xsl:template match="Page[@layout='Account_Reset']" mode="Layout">
-    <div id="template_Logon_Register" class="template">
-		<div>
-		<section class="wrapper-sm">
-	        <div class="container content">
-                <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='ConfirmPassword']" mode="xform"/>
-                <xsl:text> </xsl:text>
-              </div>
-		</section>
-			</div>
-    </div>
-  </xsl:template>
 
 
-  <xsl:template match="Page[@layout='List_Quotes']" mode="Layout">
-    <div id="template_List_Quotes">
-      <xsl:apply-templates select="/" mode="layoutHeader"/>
-		<h3>
-			<!--Your Quotes-->
-			<xsl:call-template name="term4008"/>
-		</h3>
-      <xsl:if test="/Page/Request/QueryString/Item[@name='quoteCmd']/node()='Delete'">
-        <p class="deleted">
-			<!--The following Quote has been deleted.-->
-			<xsl:call-template name="term4009"/>
-        </p>
-      </xsl:if>
-      <xsl:choose>
-        <xsl:when test="not(/Page/ContentDetail/Content[@type='quote'])">
-          <h3>
-			<!--You have no quotes saved-->
-		    <xsl:call-template name="term4010"/>
-		  </h3>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:apply-templates select="/Page/ContentDetail/Content[@type='quote']" mode="listQuote">
-              <xsl:with-param name="editQty" select="'false'"/>
-          </xsl:apply-templates>
-        </xsl:otherwise>
-      </xsl:choose>
-      <!-- Terminus class fix to floating columns -->
-      <div class="terminus">&#160;</div>
-      <xsl:apply-templates select="/" mode="layoutFooter"/>
-    </div>
-  </xsl:template>
+
   <!-- -->
   <xsl:template match="Content[@type='quote']" mode="listQuote">
     <xsl:param name="editQty"/>
@@ -312,27 +245,7 @@
 	<xsl:call-template name="term4015"/>
 </a>
   </xsl:template>
-  <!-- -->
-	<xsl:template match="Page[@layout='List_Orders']" mode="Layout">
-		<div id="template_List_Orders">
-			<xsl:apply-templates select="/" mode="layoutHeader"/>
-			<xsl:choose>
-				<xsl:when test="not(/Page/ContentDetail/Content[@type='order'])">
-					<h3>You have no orders saved</h3>
-				</xsl:when>
-				<xsl:otherwise>
-					<h3>
-						<!--Your Orders-->
-						<xsl:call-template name="term4016"/>
-					</h3>
-					<xsl:apply-templates select="/Page/ContentDetail/Content[@type='order' and number(Order/@statusId) &gt;= 6]" mode="listOrders"/>
-				</xsl:otherwise>
-			</xsl:choose>
-			<!-- Terminus class fix to floating columns -->
-			<div class="terminus">&#160;</div>
-			<xsl:apply-templates select="/" mode="layoutFooter"/>
-		</div>
-	</xsl:template>
+
 	<!-- -->
 	<!-- -->
 	<xsl:template match="Content[@type='order']" mode="listOrders">
@@ -456,35 +369,7 @@
     </p>
   </xsl:template-->
   <!-- -->
-  <xsl:template match="Page[@layout='User_Contact']" mode="Layout">
-    <div class="template" id="template_User_Addresses">
-      <xsl:apply-templates select="/" mode="layoutHeader"/>
-      <xsl:choose>
-        <xsl:when test="/Page/User">
-          <xsl:choose>
-            <xsl:when test="Contents/Content[@type='xform' and @name='Edit_User_Contact']">
-              <xsl:apply-templates select="Contents/Content[@type='xform' and @name='Edit_User_Contact']" mode="xform"/>
-				<p class="backlink">
-					<a href="{$currentPage/@url}">
-						<xsl:text>&lt;&lt;&#160;</xsl:text>
-						<!--Back-->
-						<xsl:call-template name="term4007" />
-					</a>
-				</p>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:apply-templates select="/" mode="List_Contact_Details"/>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:apply-templates select="Contents/Content[@type='xform' and @name='UserLogon']" mode="xform"/>
-        </xsl:otherwise>
-      </xsl:choose>
-      <xsl:apply-templates select="/" mode="layoutFooter"/>
-    </div>
-  </xsl:template>
-  <!-- -->
+
   <xsl:template match="/" mode="List_Contact_Details">
     <p class="addButton">
       <a class="button" href="{$currentPage/@url}?memCmd=addContact">
@@ -773,7 +658,7 @@
 
 
 	<!-- ##### Ecommerce List Orders module ##### -->
-	<xsl:template match="Content[@type='Module' and @moduleType='EcommerceListOrders']" mode="displayBrief">
+	<xsl:template match="Content[@type='Module' and @moduleType='ListOrders']" mode="displayBrief">
 		<div class="EcommerceListOrders">
       <xsl:choose>
         <xsl:when test="Order[@statusId&gt;=6]">
@@ -932,10 +817,11 @@
     <xsl:variable name="parentURL">
       <xsl:call-template name="getContentParURL"/>
     </xsl:variable>
-    <div class="row" id="order-addresses">
-      <div class="col-md-4">
         <h4>Order Details</h4>
-        <dl class="dl-horizontal">
+    <div class="row container" id="order-addresses">
+     
+		  <div class="col-lg-3">
+        <dl class="">
           <dt>
             Order Date
           </dt>
@@ -1000,10 +886,11 @@
           </a>
           </xsl:if>
       </div>
+		<div class="col-lg-9">
       <xsl:if test="Contact[@type='Billing Address']">
-        <div class="col-md-4">
+       
           <div id="billingAddress" class="cartAddress box Default-Box">
-            <xsl:apply-templates select="Contact[@type='Billing Address']" mode="cart">
+            <xsl:apply-templates select="Contact[@type='Billing Address']" mode="cartlist">
               <xsl:with-param name="parentURL" select="$parentURL"/>
               <xsl:with-param name="cartType" select="'cart'"/>
             </xsl:apply-templates>
@@ -1014,43 +901,132 @@
 					</p>-->
             </xsl:if>
           </div>
-        </div>
       </xsl:if>
-      <xsl:if test="Contact[@type='Delivery Address'] and not(@hideDeliveryAddress)">
-        <div class="col-md-4">
-          <div id="deliveryAddress" class="cartAddress box Default-Box">
-            <xsl:choose>
-              <xsl:when test="@giftListId and false()">
-                <p class="addressTitle">
-                  <!--Delivery Address Details-->
-                  <xsl:call-template name="term3036" />
-                  <xsl:text>:</xsl:text>
-                </p>
-                <p>
-                  <!--Your order will be delivered to-->
-                  <xsl:call-template name="term3037" />
-                  <xsl:text>: </xsl:text>
-                  <strong>
-                    <xsl:value-of select="Contact[@type='Delivery Address']/GivenName"/>
-                  </strong>
-                </p>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:apply-templates select="Contact[@type='Delivery Address']" mode="cart">
-                  <xsl:with-param name="parentURL" select="$parentURL"/>
-                  <xsl:with-param name="cartType" select="'cart'"/>
-                </xsl:apply-templates>
-                <!-- THIS SHOULD BE DONE IN THE ABOVE TEMPLATE - WILL -->
-                <!--<p class="optionButtons">
-							<a href="{$parentURL}?pgid={/Page/@id}&amp;cartCmd=Delivery" title="Click here to edit the details you have entered for the delivery address" class="button">Edit Delivery Address</a>
-						</p>-->
-              </xsl:otherwise>
-            </xsl:choose>
-          </div>
-        </div>
-      </xsl:if>
+	</div>
     </div>
   </xsl:template>
+
+	<xsl:template match="Contact" mode="cartlist">
+		<xsl:param name="parentURL"/>
+		<xsl:param name="cartType"/>
+		<xsl:variable name="secureURL">
+			<xsl:call-template name="getSecureURL"/>
+		</xsl:variable>
+		<xsl:variable name="type">
+			<xsl:value-of select="substring-before(@type,' ')"/>
+		</xsl:variable>
+		<button class="btn btn-outline-secondary hidden-lg hidden-xl hidden-xxl order-address-btn" type="button" data-bs-toggle="collapse" data-bs-target="#cart-address-collapse" aria-expanded="false" aria-controls="cart-address-collapse">
+			<xsl:text>Address Details </xsl:text>
+			<i class="fas fa-caret-down">
+				<xsl:text> </xsl:text>
+			</i>
+		</button>
+		<div class="collapse dont-collapse-md" id="cart-address-collapse">
+			<div class="row">
+			
+				<div class="col-lg-6">
+					<xsl:apply-templates select="." mode="contact-cartlist"/>
+				</div>
+				<div class="col-lg-6">
+					<xsl:apply-templates select="parent::Order/Contact[@type='Delivery Address']" mode="contact-cartlist"/>
+				</div>
+				<div class="col-lg-12">
+					<xsl:if test="not(/Page/Cart/Order/@cmd='ShowInvoice') and not(/Page/Cart/Order/@cmd='MakePayment') and (ancestor::*[name()='Cart'])">
+						<xsl:if test="/Page/Cart/Order/@cmd!='MakePayment'">
+							<a href="{$parentURL}?pgid={/Page/@id}&amp;{$cartType}Cmd={$type}" class="btn  btn-sm btn-outline-primary address-edit-btn">
+								<i class="fa fa-pencil me-1">
+									<xsl:text> </xsl:text>
+								</i>
+								<xsl:call-template name="term4022"/>
+								<xsl:text> </xsl:text>
+							</a>
+						</xsl:if>
+					</xsl:if>
+				</div>
+			</div>
+		</div>
+
+	</xsl:template>
+
+	<xsl:template match="Contact" mode="contact-cartlist">
+		<xsl:param name="parentURL"/>
+		<xsl:param name="cartType"/>
+		<xsl:variable name="secureURL">
+			<xsl:call-template name="getSecureURL"/>
+		</xsl:variable>
+		<xsl:variable name="type">
+			<xsl:value-of select="substring-before(@type,' ')"/>
+		</xsl:variable>
+		<div class="card cart-address-card  mb-0">
+			<div class="card-body">
+
+				<h4 class="addressTitle card-title">
+					<xsl:choose>
+						<xsl:when test="@type = 'Billing Address'">
+							<xsl:call-template name="term4033"/>
+						</xsl:when>
+						<xsl:when test="@type = 'Delivery Address'">
+							<xsl:call-template name="term4034"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="@type"/>
+						</xsl:otherwise>
+					</xsl:choose>
+					<xsl:text> </xsl:text>
+
+				</h4>
+				<p>
+						<xsl:value-of select="GivenName"/>
+								<br/>
+								<xsl:if test="Company/node()!=''">
+									<xsl:value-of select="Company"/>
+									<br/>
+								</xsl:if>
+								<!--Tel-->
+								<xsl:call-template name="term3071" />
+								<xsl:text>:&#160;</xsl:text>
+								<xsl:value-of select="Telephone"/>
+								<br/>
+								<xsl:if test="Fax/node()!=''">
+									<!--Fax-->
+									<xsl:call-template name="term3072" />
+									<xsl:text>:&#160;</xsl:text>
+									<xsl:value-of select="Fax"/>
+									<br/>
+								</xsl:if>
+								<xsl:if test="Email/node()!=''">
+									<!--Email-->
+									<xsl:call-template name="term3073" />
+									<xsl:text>:&#160;</xsl:text>
+									<xsl:value-of select="Email"/>
+									<br/>
+								</xsl:if>
+								<xsl:if test="Details/GiftAid/node()!=''">
+									<!--Fax-->
+									GiftAid
+									<xsl:text>:&#160;</xsl:text>
+									Agreed
+									<br/>
+								</xsl:if>
+					<xsl:value-of select="Street/node()"/>
+					<br/>
+					<xsl:value-of select="City"/>
+					<br/>
+					<xsl:if test="State/node()!=''">
+						<xsl:value-of select="State"/>
+						<xsl:text> </xsl:text>
+						<br/>
+					</xsl:if>
+					<xsl:value-of select="PostalCode"/>
+					<br/>
+					<xsl:if test="Country/node()!=''">
+						<xsl:value-of select="Country"/>
+						<br/>
+					</xsl:if>
+				</p>
+			</div>
+		</div>
+	</xsl:template>
 	
 	<!-- ##### Membership User Contacts module ##### -->
 	<xsl:template match="Content[@moduleType='MembershipUserContacts']" mode="displayBrief">
@@ -1166,20 +1142,18 @@
        
 			<p class="buttons">
 				<a class="btn btn-primary" href="{$currentPage/@url}?memCmd=editContact&amp;id={nContactKey}">
-          <xsl:attribute name="title">
+                    <xsl:attribute name="title">
 						<!--Edit Contact-->
 						<xsl:call-template name="term4024" />
 					</xsl:attribute>
-          <i class="fa fa-pen">
-            <xsl:text> </xsl:text>
-          </i>
-          <xsl:text> </xsl:text>
-					
+                  <i class="fa fa-pen">
+                    <xsl:text> </xsl:text>
+                  </i>
+                  <xsl:text> </xsl:text>
 					<!--Edit-->
 					<xsl:call-template name="term4022" />
 				</a>
-				<xsl:text>&#160;&#160;&#160;</xsl:text>
-				<a class="btn btn-danger" href="{$currentPage/@url}?memCmd=delContact&amp;id={nContactKey}" onclick="return confirm('Are you sure you want to delete this address?');">
+				<a class="btn btn-primary" href="{$currentPage/@url}?memCmd=delContact&amp;id={nContactKey}" onclick="return confirm('Are you sure you want to delete this address?');">
 					<xsl:attribute name="title">
 						<!--Delete Contact-->
 						<xsl:call-template name="term4025" />
