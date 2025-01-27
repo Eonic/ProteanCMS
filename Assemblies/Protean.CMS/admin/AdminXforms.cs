@@ -39,7 +39,7 @@ using System.Text.Json.Nodes;
 using System.Web;
 using Newtonsoft.Json.Linq;
 using System.Windows.Documents;
-using Protean.Providers.Cache;
+using Protean.Providers.CDN;
 
 namespace Protean
 {
@@ -4872,8 +4872,13 @@ namespace Protean
                                     //Add method for deleteing images from cache
                                     if(slist.Count != 0)
                                     {
-                                        string[] myString = slist.ToArray();
-                                        DeleteFileFromCache(myString);
+                                        string result = "Cached";                                      
+                                        string[] myString = slist.ToArray();                                       
+                                        Protean.Providers.CDN.ReturnProvider oPayProv = new Protean.Providers.CDN.ReturnProvider();
+                                        ICDNProvider oCDNProv = oPayProv.Get(ref myWeb);
+                                        result = Conversions.ToString(oCDNProv.AdminXforms.PurgeImageCacheAsync(myString, ref myWeb));
+                                        
+                                        //DeleteFileFromCache(myString);
                                     }                                    
                                 }
                             }
@@ -4926,89 +4931,37 @@ namespace Protean
                     var filesToDelete = System.IO.Directory.GetFiles(directoryPath, "*" + fileName);
                     string FilesToDeleteFromCache = string.Empty;
                     bool bFileExists = true;
-                    string WebPath = moCartConfig["SiteURL"]; // used it from web.config and cart.config
-                    for (int i = 0; i < filesToDelete.Length; i++)
-                    {
-                        oFs.DeleteFile(filesToDelete[i]);
-                        bFileExists = File.Exists(filesToDelete[i]);
-                        if(bFileExists)
+                    if(moCartConfig["SiteURL"]!=null && myWeb.moConfig["ImageRootPath"]!=null && myWeb.moConfig["EnableWebP"]!= null)
+                    {                   
+                        string WebPath = moCartConfig["SiteURL"]; // used it from web.config and cart.config
+                        for (int i = 0; i < filesToDelete.Length; i++)
                         {
-                            FilesToDeleteFromCache = filesToDelete[i].Replace(oFs.mcStartFolder, "").Replace(@"\", "/");
-                            FilesToDeleteFromCache = WebPath + myWeb.moConfig["ImageRootPath"].Replace("/", "") + FilesToDeleteFromCache;
-                            slist.Add(FilesToDeleteFromCache);
-                        }
-                          
-                        if(Strings.LCase(myWeb.moConfig["EnableWebP"])=="on")
-                        {
-                            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filesToDelete[i]);
-                            string newFilePath = Path.Combine(directoryPath, fileNameWithoutExtension + ".webp");
-                            bFileExists = File.Exists(newFilePath);
-                            if (bFileExists)
+                            oFs.DeleteFile(filesToDelete[i]);
+                            bFileExists = File.Exists(filesToDelete[i]);
+                            if(bFileExists)
                             {
-                                oFs.DeleteFile(newFilePath);
-                                newFilePath = newFilePath.Replace(oFs.mcStartFolder, "").Replace(@"\", "/");
-                                newFilePath = WebPath + myWeb.moConfig["ImageRootPath"].Replace("/", "") + newFilePath;
-                                slist.Add(newFilePath);                                
+                                FilesToDeleteFromCache = filesToDelete[i].Replace(oFs.mcStartFolder, "").Replace(@"\", "/");
+                                FilesToDeleteFromCache = WebPath + myWeb.moConfig["ImageRootPath"].Replace("/", "") + FilesToDeleteFromCache;
+                                slist.Add(FilesToDeleteFromCache);
                             }
-                        }                       
+                          
+                            if(Strings.LCase(myWeb.moConfig["EnableWebP"])=="on")
+                            {
+                                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filesToDelete[i]);
+                                string newFilePath = Path.Combine(directoryPath, fileNameWithoutExtension + ".webp");
+                                bFileExists = File.Exists(newFilePath);
+                                if (bFileExists)
+                                {
+                                    oFs.DeleteFile(newFilePath);
+                                    newFilePath = newFilePath.Replace(oFs.mcStartFolder, "").Replace(@"\", "/");
+                                    newFilePath = WebPath + myWeb.moConfig["ImageRootPath"].Replace("/", "") + newFilePath;
+                                    slist.Add(newFilePath);                                
+                                }
+                            }                       
+                        }
                     }
                     oFs.DeleteFile(originalFileNameFull);                    
-                }               
-
-                private ICacheProvider Json(object value)
-                {
-                    throw new NotImplementedException();
-                }
-
-                private void DeleteFileFromCache(string[] imageUrl)
-                {
-                    if (this.myWeb.moConfig["CloudCacheProvider"] != null)
-                    {
-                        string[] cacheProviderDetails = this.myWeb.moConfig["CloudCacheProvider"].Split(',');                        
-                        Type calledType;
-                        string className = cacheProviderDetails[0];
-                        string providerName = cacheProviderDetails[1];
-                        if (!string.IsNullOrEmpty(className))
-                        {
-                            if (string.IsNullOrEmpty(providerName) | Strings.LCase(providerName) == "default")
-                            {
-                                providerName = "Protean.Providers." + className;
-                                calledType = Type.GetType(providerName, true);
-                            }
-                            else
-                            {
-                                var castObject = WebConfigurationManager.GetWebApplicationSection("protean/CacheProvider");
-                                Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)castObject;
-                                System.Configuration.ProviderSettings ourProvider = moPrvConfig.Providers[providerName];
-                                Assembly assemblyInstance;
-
-                                if (ourProvider.Parameters["path"] != "" && ourProvider.Parameters["path"] != null)
-                                {
-                                    assemblyInstance = Assembly.LoadFrom(goServer.MapPath(Conversions.ToString(ourProvider.Parameters["path"])));
-                                }
-                                else
-                                {
-                                    assemblyInstance = Assembly.Load(ourProvider.Type);
-                                }
-                                if (ourProvider.Parameters["rootClass"] == "")
-                                {
-                                    calledType = assemblyInstance.GetType("Protean.Providers" + providerName, true);
-                                }
-                                else
-                                {
-                                    calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], "."), className)), true);
-                                }
-                            }
-
-                            string methodname = "PurgeImageCacheAsync";
-                            var o = Activator.CreateInstance(calledType);
-                            var args = new object[2];
-                            args[0] = imageUrl;
-                            args[1] = myWeb;
-                            calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, null, o, args);
-                        }
-                    }
-                }
+                } 
 
                 public XmlElement xFrmMoveFile(string cPath, string cName, Protean.fsHelper.LibraryType nType)
                 {
