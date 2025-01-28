@@ -575,7 +575,7 @@ namespace Protean.Tools
                     cName = cName.Replace("(", "*");
                     cName = cName.Replace(")", "*");
                     cName = cName.Replace(".", "*");
-                    cName = cName.Replace(",", "*");
+                    cName = cName.Replace(",", "*"); //TS removed as commas seeem to be OK
                     cName = cName.Replace("+", "*");
                     cName = cName.Replace("'", "");
                     cName = cName.Replace("&amp;", "&");
@@ -595,17 +595,18 @@ namespace Protean.Tools
                             cBuilt += cTest;
                     }
                     cName = cBuilt;
+                    // TS commented out as breaks for url LIKE THIS "productname - 5mtrs"
                     // replace double spaces a few times
-                    cName = "" + cName.Replace("  ", " ");
-                    cName = "" + cName.Replace("  ", " ");
-                    cName = "" + cName.Replace("  ", " ");
+                    //cName = "" + cName.Replace("  ", " ");
+                    //cName = "" + cName.Replace("  ", " ");
+                    //cName = "" + cName.Replace("  ", " ");
 
                     if (bURLSafe)
                     {
                         cName = "" + cName.Replace(" ", "-");
                         // replace double hyphens a few times
-                        cName = "" + cName.Replace("---", "-");
-                        cName = "" + cName.Replace("--", "-");
+                       // cName = "" + cName.Replace("---", "-");
+                       // cName = "" + cName.Replace("--", "-");
                         //trim to max filename length with .html
 
                         if (cName.Length > 249)

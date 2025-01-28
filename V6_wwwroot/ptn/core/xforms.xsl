@@ -2516,11 +2516,7 @@
     <div id="{translate(@id,'[]#=/','')}-dependant">
       <!-- IF CHOSEN CASE - HIDE-->
       <xsl:attribute name="class">
-        <xsl:value-of select="$dependantClass" />
-		  
-		
-        |<xsl:value-of select="$selectedCase" />|
-			  
+        <xsl:value-of select="$dependantClass" />		  
         <xsl:if test="not(contains($selectedCase,@id)) and not(descendant-or-self::alert)">
           <xsl:text> hidden</xsl:text>
         </xsl:if>
