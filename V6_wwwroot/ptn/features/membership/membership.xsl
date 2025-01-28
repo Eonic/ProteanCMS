@@ -174,9 +174,76 @@
 		</div>
 	</xsl:template>
 	
+   <xsl:template match="Page[@layout='Password_Reminder']" mode="Layout">
+    <div id="template_Logon_Register">
+      <xsl:apply-templates select="/" mode="layoutHeader"/>
+      <div id="body">
+        <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and (@name='PasswordReminder' or @name='ResetAccount')]" mode="xform"/>
+        <xsl:text> </xsl:text>
+      </div>
+     
+      <!-- Terminus class fix to floating columns -->
+      <div class="terminus">&#160;</div>
+      <xsl:apply-templates select="/" mode="layoutFooter"/>
+    </div>
+  </xsl:template>
+
+	<xsl:template match="Page[@layout='Password_Change']" mode="Layout">
+		<div id="template_Logon_Register" class="template">
+			<section class="wrapper-sm">
+				<div class="container content">
+				<xsl:apply-templates select="/Page/Contents/Content[@type='xform' and (@name='ResetPassword')]" mode="xform"/>
+					<xsl:text> </xsl:text>
+				</div>
+			</section>
+		</div>
+	</xsl:template>	
+	
+  <xsl:template match="Page[@layout='Account_Reset']" mode="Layout">
+    <div id="template_Logon_Register" class="template">
+		<div>
+		<section class="wrapper-sm">
+	        <div class="container content">
+                <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='ConfirmPassword']" mode="xform"/>
+                <xsl:text> </xsl:text>
+              </div>
+		</section>
+			</div>
+    </div>
+  </xsl:template>
 
 
-
+  <xsl:template match="Page[@layout='List_Quotes']" mode="Layout">
+    <div id="template_List_Quotes">
+      <xsl:apply-templates select="/" mode="layoutHeader"/>
+		<h3>
+			<!--Your Quotes-->
+			<xsl:call-template name="term4008"/>
+		</h3>
+      <xsl:if test="/Page/Request/QueryString/Item[@name='quoteCmd']/node()='Delete'">
+        <p class="deleted">
+			<!--The following Quote has been deleted.-->
+			<xsl:call-template name="term4009"/>
+        </p>
+      </xsl:if>
+      <xsl:choose>
+        <xsl:when test="not(/Page/ContentDetail/Content[@type='quote'])">
+          <h3>
+			<!--You have no quotes saved-->
+		    <xsl:call-template name="term4010"/>
+		  </h3>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:apply-templates select="/Page/ContentDetail/Content[@type='quote']" mode="listQuote">
+              <xsl:with-param name="editQty" select="'false'"/>
+          </xsl:apply-templates>
+        </xsl:otherwise>
+      </xsl:choose>
+      <!-- Terminus class fix to floating columns -->
+      <div class="terminus">&#160;</div>
+      <xsl:apply-templates select="/" mode="layoutFooter"/>
+    </div>
+  </xsl:template>
   <!-- -->
   <xsl:template match="Content[@type='quote']" mode="listQuote">
     <xsl:param name="editQty"/>
@@ -245,7 +312,27 @@
 	<xsl:call-template name="term4015"/>
 </a>
   </xsl:template>
-
+  <!-- -->
+	<xsl:template match="Page[@layout='List_Orders']" mode="Layout">
+		<div id="template_List_Orders">
+			<xsl:apply-templates select="/" mode="layoutHeader"/>
+			<xsl:choose>
+				<xsl:when test="not(/Page/ContentDetail/Content[@type='order'])">
+					<h3>You have no orders saved</h3>
+				</xsl:when>
+				<xsl:otherwise>
+					<h3>
+						<!--Your Orders-->
+						<xsl:call-template name="term4016"/>
+					</h3>
+					<xsl:apply-templates select="/Page/ContentDetail/Content[@type='order' and number(Order/@statusId) &gt;= 6]" mode="listOrders"/>
+				</xsl:otherwise>
+			</xsl:choose>
+			<!-- Terminus class fix to floating columns -->
+			<div class="terminus">&#160;</div>
+			<xsl:apply-templates select="/" mode="layoutFooter"/>
+		</div>
+	</xsl:template>
 	<!-- -->
 	<!-- -->
 	<xsl:template match="Content[@type='order']" mode="listOrders">
@@ -369,7 +456,35 @@
     </p>
   </xsl:template-->
   <!-- -->
-
+  <xsl:template match="Page[@layout='User_Contact']" mode="Layout">
+    <div class="template" id="template_User_Addresses">
+      <xsl:apply-templates select="/" mode="layoutHeader"/>
+      <xsl:choose>
+        <xsl:when test="/Page/User">
+          <xsl:choose>
+            <xsl:when test="Contents/Content[@type='xform' and @name='Edit_User_Contact']">
+              <xsl:apply-templates select="Contents/Content[@type='xform' and @name='Edit_User_Contact']" mode="xform"/>
+				<p class="backlink">
+					<a href="{$currentPage/@url}">
+						<xsl:text>&lt;&lt;&#160;</xsl:text>
+						<!--Back-->
+						<xsl:call-template name="term4007" />
+					</a>
+				</p>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:apply-templates select="/" mode="List_Contact_Details"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:apply-templates select="Contents/Content[@type='xform' and @name='UserLogon']" mode="xform"/>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:apply-templates select="/" mode="layoutFooter"/>
+    </div>
+  </xsl:template>
+  <!-- -->
   <xsl:template match="/" mode="List_Contact_Details">
     <p class="addButton">
       <a class="button" href="{$currentPage/@url}?memCmd=addContact">
