@@ -551,6 +551,27 @@ header {
         bottom: -1px;
     }
 }
+#Login {
+    form .principle {
+        float: right;
+        width: auto;
+    }
+
+    .buttons {
+        padding-top: 13px;
+    }
+
+    .morelink a {
+        @extend .btn-clean;
+        float: left;
+        width: auto;
+        margin-top: -25px;
+        font-weight: 300;
+        text-decoration: underline;
+        text-underline-offset: 4px;
+        text-decoration-color: lighten($link-color,30%);
+    }
+}
 
 /*############### SOCIAL LINKS #################*/
 .socialLinks.iconset-plain {

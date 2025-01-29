@@ -2099,6 +2099,20 @@
           <xsl:text>required</xsl:text>
         </xsl:attribute>
       </xsl:if>
+      <xsl:if test="contains(@class,'strongPassword')">
+        <!--<a id="passwordPolicy" href="#">
+          <i class="fa fa-circle-info">
+            <xsl:text> </xsl:text>
+          </i>
+          <span class="visually-hidden"> view our password policy</span>
+        </a>-->
+        <button type="button" class="btn-clean password-policy-btn" data-bs-toggle="popover" title="Password Policy" data-bs-content="All passwords must be at least 6 characters long, include a combination of uppercase and lowercase letters, at least one number, and can contain special characters.">
+          <i class="fa fa-circle-info">
+            <xsl:text> </xsl:text>
+          </i>
+          <span class="visually-hidden"> view our password policy</span>
+        </button>
+      </xsl:if>
     </input>
     <xsl:if test="@data-fv-not-empty___message!='' and not(alert)">
       <div class="invalid-feedback">
@@ -2109,9 +2123,6 @@
       <div class="invalid-feedback">
         <xsl:copy-of select="alert/node()"/>
       </div>
-    </xsl:if>
-    <xsl:if test="contains(@class,'strongPassword')">
-      <a id="passwordPolicy" class="text-muted" href="#">view our password policy</a>
     </xsl:if>
   </xsl:template>
   <!-- -->

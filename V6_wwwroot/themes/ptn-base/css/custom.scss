@@ -1718,8 +1718,27 @@ dd {
 
 .modal {
     .modal-header {
-        padding-bottom: 0;
         border-bottom: 0;
+        background: $primary;
+        color: #fff;
+        padding: 1rem 1.5rem;
+
+        .modal-title {
+            color: #fff;
+            font-size: 1.3rem;
+        }
+
+        .btn-close {
+            background: none;
+            padding: 0.8rem;
+
+            &:after {
+                font-family: $font-awesome-version;
+                content: '\f00d';
+                color: #fff;
+                font-weight: 900;
+            }
+        }
     }
 
     .modal-body .btn-close {
