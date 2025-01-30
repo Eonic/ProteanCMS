@@ -320,7 +320,7 @@
             <!--~~~~~~~~~~~~~~ pages with no side nav ~~~~~~~~~~~~~~ -->
             <xsl:otherwise>
               <xsl:apply-templates select="." mode="mainLayout">
-                <xsl:with-param name="containerClass" select="$container"/>
+                <xsl:with-param name="containerClass">container</xsl:with-param>
               </xsl:apply-templates>
             </xsl:otherwise>
           </xsl:choose>

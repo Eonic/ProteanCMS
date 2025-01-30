@@ -204,12 +204,12 @@
                   <xsl:if test="@padding-top-xs and @padding-top-xs!=''">
                     <xsl:text>padding-top:</xsl:text>
                     <xsl:value-of select="@padding-top-xs"/>
-                    <xsl:text>;</xsl:text>
+                    <xsl:text>!important;</xsl:text>
                   </xsl:if>
                   <xsl:if test="@padding-bottom-xs and @padding-bottom-xs!=''">
                     <xsl:text>padding-bottom:</xsl:text>
                     <xsl:value-of select="@padding-bottom-xs"/>
-                    <xsl:text>;</xsl:text>
+                    <xsl:text>!important;</xsl:text>
                   </xsl:if>
                   }
                   @media(min-width:768px){
@@ -218,12 +218,12 @@
                   <xsl:if test="@padding-top and @padding-top!=''">
                     <xsl:text>padding-top:</xsl:text>
                     <xsl:value-of select="@padding-top"/>
-                    <xsl:text>;</xsl:text>
+                    <xsl:text>!important;</xsl:text>
                   </xsl:if>
                   <xsl:if test="@padding-bottom and @padding-bottom!=''">
                     <xsl:text>padding-bottom:</xsl:text>
                     <xsl:value-of select="@padding-bottom"/>
-                    <xsl:text>;</xsl:text>
+                    <xsl:text>!important;</xsl:text>
                   </xsl:if>}}
                 </style>
               </xsl:if>
@@ -557,7 +557,7 @@
             <xsl:with-param name="class" select="$containerClass"/>
           </xsl:apply-templates>
         </xsl:if>
-		  <xsl:text> </xsl:text>
+        <xsl:text> </xsl:text>
       </div>
     </div>
     <xsl:apply-templates select="." mode="layoutFooter">
@@ -1311,11 +1311,7 @@
 
   <xsl:template match="Content" mode="moduleBox">
     <xsl:param name="id"/>
-    <xsl:choose>
-      <xsl:when test="@linkBox='true'">
-
-      </xsl:when>
-      <xsl:otherwise>
+    
         <div id="mod_{@id}{$id}">
           <xsl:apply-templates select="." mode="themeModuleExtras"/>
           <!-- define classes for box -->
@@ -1341,6 +1337,9 @@
             <xsl:apply-templates select="." mode="hideScreens" />
             <xsl:apply-templates select="." mode="marginBelow" />
             <!-- <xsl:apply-templates select="." mode="themeModuleExtras"/>-->
+            <xsl:if test="@linkBox='true'">
+              <xsl:text> linked-card</xsl:text>
+            </xsl:if>
           </xsl:attribute>
           <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and @imagePosition='above'">
             <div class="panel-image">
@@ -1368,7 +1367,7 @@
                 <xsl:apply-templates select="." mode="inlinePopupOptions"/>
               </xsl:if>
               <xsl:apply-templates select="." mode="displayBrief"/>
-				<xsl:text> </xsl:text>
+              <xsl:text> </xsl:text>
             </div>
           </xsl:if>
           <xsl:if test="@listGroup='true'">
@@ -1406,17 +1405,12 @@
             </div>
           </xsl:if>
         </div>
-      </xsl:otherwise>
-    </xsl:choose>
+    
   </xsl:template>
 
   <xsl:template match="Content[starts-with(@box,'bg') or starts-with(@box,'border') or starts-with(@box,'Default') or starts-with(@box,'card')]" mode="moduleBox">
     <xsl:param name="id"/>
-    <xsl:choose>
-      <xsl:when test="@linkBox='true'">
-
-      </xsl:when>
-      <xsl:otherwise>
+   
         <div id="mod_{@id}{$id}" class="card">
           <xsl:apply-templates select="." mode="themeModuleExtras"/>
           <!-- define classes for box -->
@@ -1461,6 +1455,9 @@
             </xsl:if>
             <xsl:apply-templates select="." mode="hideScreens" />
             <xsl:apply-templates select="." mode="marginBelow" />
+            <xsl:if test="@linkBox='true'">
+              <xsl:text> linked-card</xsl:text>
+            </xsl:if>
             <!--<xsl:apply-templates select="." mode="themeModuleExtras"/>-->
           </xsl:attribute>
           <xsl:if test="@maxWidth!=''">
@@ -1516,21 +1513,21 @@
               </xsl:choose>
             </div>
           </xsl:if>
+          <xsl:variable name="thisClass">
+            <xsl:text>card-body</xsl:text>
+            <xsl:if test="@title!=''">
+              <xsl:text> card-body-w-head</xsl:text>
+            </xsl:if>
+            <xsl:if test="@linkText!='' and @link!=''">
+              <xsl:text> card-body-w-footer</xsl:text>
+            </xsl:if>
+          </xsl:variable>
           <xsl:if test="not(@listGroup='true')">
             <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and not(@imagePosition='above')">
               <div class="panel-image">
                 <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
               </div>
             </xsl:if>
-            <xsl:variable name="thisClass">
-              <xsl:text>card-body</xsl:text>
-              <xsl:if test="@title!=''">
-                <xsl:text> card-body-w-head</xsl:text>
-              </xsl:if>
-              <xsl:if test="@linkText!='' and @link!=''">
-                <xsl:text> card-body-w-footer</xsl:text>
-              </xsl:if>
-            </xsl:variable>
             <div class="{$thisClass}">
               <xsl:if test="not(@title!='')">
                 <xsl:apply-templates select="." mode="inlinePopupOptions">
@@ -1542,7 +1539,7 @@
             </div>
           </xsl:if>
           <xsl:if test="@listGroup='true'">
-            <div class="card-body">
+            <div class="{$thisClass}">
               <xsl:if test="not(@title!='')">
                 <xsl:apply-templates select="." mode="inlinePopupOptions">
                   <xsl:with-param name="class" select="'card-body'"/>
@@ -1553,7 +1550,7 @@
               <xsl:text> </xsl:text>
             </div>
           </xsl:if>
-          <xsl:if test="@linkText!='' and @link!=''">
+          <xsl:if test="(@linkText!='' and not(@accessibleText='true')) and @link!=''">
             <div class="card-footer">
               <xsl:if test="@iconStyle='Centre'">
                 <xsl:attribute name="class">card-footer center-block-footer</xsl:attribute>
@@ -1572,13 +1569,32 @@
                 </xsl:with-param>
                 <xsl:with-param name="linkText" select="@linkText"/>
                 <xsl:with-param name="altText" select="@title"/>
+                <xsl:with-param name="stretchLink">true</xsl:with-param>
               </xsl:apply-templates>
               <xsl:text> </xsl:text>
             </div>
           </xsl:if>
+          <xsl:if test="@linkBox='true' and @link!='' and @accessibleText='true'">
+            <xsl:apply-templates select="." mode="moreLink">
+              <xsl:with-param name="link">
+                <xsl:choose>
+                  <xsl:when test="format-number(@link,'0')!='NaN'">
+                    <xsl:variable name="pageId" select="@link"/>
+                    <xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId or PageVersion[@vParId=$pageId]]" mode="getHref"/>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:value-of select="@link"/>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:with-param>
+              <xsl:with-param name="stretchLink">true</xsl:with-param>
+              <xsl:with-param name="linkText" select="@linkText"/>
+              <xsl:with-param name="accessibleText" select="@accessibleText"/>
+              
+            </xsl:apply-templates>
+          </xsl:if>
         </div>
-      </xsl:otherwise>
-    </xsl:choose>
+    
   </xsl:template>
 
   <xsl:template match="Content" mode="modalBox">

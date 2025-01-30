@@ -4586,6 +4586,8 @@
     <xsl:param name="class"/>
     <xsl:param name="linkWindow"/>
     <xsl:param name="linkObject"/>
+    <xsl:param name="stretchLink"/>
+    <xsl:param name="accessibleText"/>
     <xsl:variable name="link" select="@link"/>
     <xsl:if test="$link!=''">
       <xsl:variable name="numbertest">
@@ -4604,6 +4606,7 @@
             </xsl:when>
             <xsl:otherwise>
               <a title="{@linkText}" class="btn btn-custom {$class}">
+                
                 <xsl:choose>
                   <xsl:when test="$numbertest = 'number'">
                     <xsl:variable name="pageId" select="@link"/>
@@ -4645,7 +4648,16 @@
 
                   </xsl:otherwise>
                 </xsl:choose>
-
+                <xsl:if test="$stretchLink='true'">
+                  <xsl:attribute name="class">
+                    <xsl:if test="not($accessibleText='true')">btn btn-custom </xsl:if>
+                    <xsl:text> stretched-link</xsl:text>
+                  </xsl:attribute>
+                  <xsl:if test="$stretchLink='true'"></xsl:if>
+                  <span class="visually-hidden">
+                    <xsl:value-of select="@linkText"/>
+                  </span>
+                </xsl:if>
                 <xsl:if test="$GoogleAnalyticsUniversalID!='' and contains($link,'.pdf')">
                   <xsl:attribute name="onclick">
                     <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
@@ -4653,8 +4665,9 @@
                     <xsl:text>');</xsl:text>
                   </xsl:attribute>
                 </xsl:if>
-
-                <xsl:value-of select="@linkText"/>
+                <xsl:if test="not(@accessibleText='true')">
+                  <xsl:value-of select="@linkText"/>
+                </xsl:if>
               </a>
             </xsl:otherwise>
           </xsl:choose>
