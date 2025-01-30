@@ -8780,7 +8780,7 @@ namespace Protean
                     valuesList.Add(SqlString(Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(sessionId), "Service_" + DateTime.Now.ToString(), sessionId))));
                     if (otherId > 0L)
                         valuesList.Add(otherId.ToString());
-                    if (Cms.gbIPLogging)
+                    if (Cms.gbIPLogging && myWeb !=null)
                         valuesList.Add(SqlString(Strings.Left(myWeb.moRequest.ServerVariables["REMOTE_ADDR"], 15)));
 
                     // Now build the SQL
