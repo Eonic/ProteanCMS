@@ -6069,7 +6069,9 @@
                     <xsl:value-of select="@icon"/>
                   </xsl:otherwise>
                 </xsl:choose>
+                <xsl:if test="@icon-weight='400'"> far </xsl:if>
               </xsl:attribute>
+              
 
               <!--<xsl:if test="@uploadIcon-w and @uploadIcon-w!='' or @uploadIcon-h and @uploadIcon-h!=''">
 								<xsl:attribute name="style">

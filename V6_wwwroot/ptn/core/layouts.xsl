@@ -1473,6 +1473,11 @@
           </xsl:if>
           <xsl:if test="@title!='' or @icon!='' or @icon-class!='' or @uploadIcon!=''">
             <div class="card-header">
+              <xsl:if test="not(node())">
+                <xsl:attribute name="class">
+                  <xsl:text>card-header card-no-body</xsl:text>
+                </xsl:attribute>
+              </xsl:if>
               <xsl:apply-templates select="." mode="inlinePopupOptions">
                 <xsl:with-param name="class" select="'card-header'"/>
               </xsl:apply-templates>
@@ -1518,7 +1523,7 @@
             <xsl:if test="@title!=''">
               <xsl:text> card-body-w-head</xsl:text>
             </xsl:if>
-            <xsl:if test="@linkText!='' and @link!=''">
+            <xsl:if test="@linkText!='' and @link!='' and not(@accessibleText='true')">
               <xsl:text> card-body-w-footer</xsl:text>
             </xsl:if>
           </xsl:variable>
@@ -1528,15 +1533,17 @@
                 <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
               </div>
             </xsl:if>
-            <div class="{$thisClass}">
-              <xsl:if test="not(@title!='')">
-                <xsl:apply-templates select="." mode="inlinePopupOptions">
-                  <xsl:with-param name="class" select="$thisClass"/>
-                </xsl:apply-templates>
-              </xsl:if>
-              <xsl:apply-templates select="." mode="displayBrief"/>
-              <xsl:text> </xsl:text>
-            </div>
+            <xsl:if test="node()">
+              <div class="{$thisClass}">
+                <xsl:if test="not(@title!='')">
+                  <xsl:apply-templates select="." mode="inlinePopupOptions">
+                    <xsl:with-param name="class" select="$thisClass"/>
+                  </xsl:apply-templates>
+                </xsl:if>
+                <xsl:apply-templates select="." mode="displayBrief"/>
+                <xsl:text> </xsl:text>
+              </div>
+            </xsl:if>
           </xsl:if>
           <xsl:if test="@listGroup='true'">
             <div class="{$thisClass}">
@@ -2146,7 +2153,7 @@
         <xsl:otherwise>
           <xsl:text> row cols row-cols-1</xsl:text>
           <xsl:if test="@gutter and @gutter!=''">
-            <xsl:text> g-</xsl:text>
+            <xsl:text> gutter-set g-</xsl:text>
             <xsl:value-of select="@gutter"/>
           </xsl:if>
         </xsl:otherwise>
