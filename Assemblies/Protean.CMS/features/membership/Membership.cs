@@ -548,10 +548,14 @@ namespace Protean
             }
 
 
-            public void RegistrationActions() {
+            public void RegistrationActions(string cmdPrefix = "") {
                 string cProcessInfo = "";
+                ReturnProvider RetProv;
+                IMembershipProvider moMemProv;
                 try
                 {
+                    RetProv = new Protean.Providers.Membership.ReturnProvider();
+                    moMemProv = RetProv.Get(ref myWeb, myWeb.moConfig["MembershipProvider"]);
                     switch (myWeb.moConfig["RegisterBehaviour"] ?? "")
                     {
                         case "validateByEmail":
@@ -577,64 +581,8 @@ namespace Protean
 
 
                     }
+                    moMemProv.Activities.sendRegistrationAlert(ref myWeb, myWeb.mnUserId, false, cmdPrefix);
 
-                    // send registration confirmation
-                    string xsltPath = "/xsl/email/registration.xsl";
-                    if (myWeb.moConfig["cssFramework"] == "bs5")
-                    {
-                        xsltPath = "/features/membership/email/registration.xsl";
-                    }
-                    var fsHelper = new Protean.fsHelper();
-                    xsltPath = fsHelper.checkCommonFilePath(xsltPath);
-
-                    if (!string.IsNullOrEmpty(xsltPath))
-                    {
-                        var oUserElmt = myWeb.moDbHelper.GetUserXML(myWeb.mnUserId);
-
-                        var oElmtPwd = myWeb.moPageXml.CreateElement("Password");
-                        oElmtPwd.InnerText = myWeb.moRequest["cDirPassword"];
-                        oUserElmt.AppendChild(oElmtPwd);
-
-                        oUserElmt.SetAttribute("Url", myWeb.mcOriginalURL);
-
-                        XmlElement oUserEmail = (XmlElement)oUserElmt.SelectSingleNode("Email");
-                        string fromName = myWeb.moConfig["SiteAdminName"];
-                        string fromEmail = myWeb.moConfig["SiteAdminEmail"];
-                        string recipientEmail = "";
-                        if (oUserEmail != null)
-                            recipientEmail = oUserEmail.InnerText;
-                        string SubjectLine = "Your Registration Details";
-                        var oMsg = new Protean.Messaging(ref myWeb.msException);
-                        // send an email to the new registrant
-                        if (!string.IsNullOrEmpty(recipientEmail))
-                        {
-                            Cms.dbHelper argodbHelper = null;
-                            cProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, odbHelper: ref argodbHelper, "Message Sent", "Message Failed"));
-                        }
-
-                        // send an email to the webadmin
-                        if (string.IsNullOrEmpty(myWeb.moConfig["RegistrationAlertEmail"]))
-                        {
-                            recipientEmail = myWeb.moConfig["SiteAdminEmail"];
-                        }
-                        else
-                        {
-                            recipientEmail = myWeb.moConfig["RegistrationAlertEmail"];
-                        }
-
-                        string xsltPathAlert = "/xsl/email/registrationAlert.xsl";
-                        if (myWeb.bs5)
-                        {
-                            xsltPathAlert = "/features/membership/email/registration-alert.xsl";
-                        }
-                        xsltPath = fsHelper.checkCommonFilePath(xsltPath);
-                        if (System.IO.File.Exists(myWeb.goServer.MapPath(myWeb.moConfig["ProjectPath"] + xsltPathAlert)))
-                        {
-                            Cms.dbHelper argodbHelper1 = null;
-                            cProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, myWeb.moConfig["ProjectPath"] + xsltPathAlert, "New User", recipientEmail, fromEmail, SubjectLine, odbHelper: ref argodbHelper1, "Message Sent", "Message Failed"));
-                        }
-                        oMsg = (Protean.Messaging)null;
-                    }
                 }
                 catch (Exception ex)
                 {

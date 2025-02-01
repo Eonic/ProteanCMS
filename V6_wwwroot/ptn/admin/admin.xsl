@@ -5734,9 +5734,14 @@
           </div>
           <xsl:if test="ContentDetail/directory/@parType='User'">
             <form action="?ewCmd=ListUsers" method="post" id="userSearch" class="col-md-4">
-              <div class="input-group">
-                <input type="text" name="search" value="{$page/Request/Form/Item[@name='search']}" class="form-control"/>
-                <button type="submit" name="previous" value="Search" class="btn btn-primary">
+			
+              <div class="input-group">	<button type="submit" name="UserSearch" value="Clear" class="btn btn-outline-primary">
+					<i class="fa-solid fa-x">
+						<xsl:text> </xsl:text>
+					</i>
+				</button>
+                <input type="text" name="search" value="{ContentDetail/directory/@UserSearchTerm}" class="form-control"/>
+                <button type="submit" name="UserSearch" value="Search" class="btn btn-primary">
                   <i class="fa fa-search">
                     <xsl:text> </xsl:text>
                   </i>

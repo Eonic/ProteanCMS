@@ -88,7 +88,7 @@ namespace Protean.Providers
 
             XmlElement GetUserXML(ref Cms myWeb, long nUserId = 0L);
 
-            void sendRegistrationAlert(ref Cms myWeb, long mnUserId, Boolean clearUserId);
+            void sendRegistrationAlert(ref Cms myWeb, long mnUserId, Boolean clearUserId, string cmdPrefix = "");
 
             void LogSingleUserSession();
             void LogSingleUserSession(ref Cms myWeb);
@@ -553,19 +553,21 @@ namespace Protean.Providers
                         // Find a user account with the right activation code.
 
                         // Change the account status and delete the activation code.
-                        var oMembership = new Cms.Membership(ref myWeb);
+
                         // AddHandler oMembership.OnError, AddressOf OnComponentError
 
-                        oMembership.ActivateAccount(moRequest["key"]);
 
-                        oFrmElmt = xFrmUserLogon();
+                        base.NewFrm("ActivateAccount");
+                        XmlElement oFrmGrp2 = (XmlElement)base.addGroup(ref base.moXformElmt, "ActivateAccount");
 
-                        XmlNode grpNode = oFrmElmt.SelectSingleNode("group[1]");
-
-                        addNote(ref grpNode, noteTypes.Hint, "Your account is now activated please logon", true, "term-1039");
-
-                        // Update the user Xform to say "Thank you for activating your account please logon, Pre-populating the username"
-
+                        var oMembership = new Cms.Membership(ref myWeb);
+                        if (oMembership.ActivateAccount(moRequest["key"]))
+                        {
+                            addNote(ref oFrmGrp2, noteTypes.Hint, "<span class=\"msg-1036\">Your account is now activated please logon</span>", true, "msg-1036");
+                        }
+                        else {
+                            addNote(ref oFrmGrp2, noteTypes.Hint, "<span class=\"msg-1037\">This activation code has allready been used or is invalid</span>", true, "msg-10376");
+                        }
 
                         return base.moXformElmt;
                     }
@@ -2230,21 +2232,18 @@ namespace Protean.Providers
                             if (mnUserId == 0) {
                                 mnUserId = Convert.ToInt16(myWeb.moRequest["userId"]);
                             }
-
                             sendRegistrationAlert(ref myWeb, mnUserId, false);
                         }
                         else if (moRequest["ewCmd"] == "ActivateAccount")
                         {
-
-                            var oMembership = new Cms.Membership(ref myWeb);
-                            oMembership.OnErrorWithWeb += OnComponentError;
-
-                            XmlElement oXfmElmt;
-                            oXfmElmt = (XmlElement)adXfm.xFrmActivateAccount();
-
-                            myWeb.AddContentXml(ref oXfmElmt);
-
+                            //moved to register module
+                            //var oMembership = new Cms.Membership(ref myWeb);
+                            //oMembership.OnErrorWithWeb += OnComponentError;
+                            //XmlElement oXfmElmt;
+                            //oXfmElmt = (XmlElement)adXfm.xFrmActivateAccount();
+                            //myWeb.AddContentXml(ref oXfmElmt);
                         }
+
                         string sharedKey = moConfig["SharedKey"];
                         if (!string.IsNullOrEmpty(sharedKey))
                         {
@@ -2738,7 +2737,7 @@ namespace Protean.Providers
                 /// <remarks>It is called in EonicWeb but has been extracted so that it may be called by lightweight EonicWeb calls (e.g. ajax calls)</remarks>
                 /// 
 
-                public void sendRegistrationAlert(ref Cms myWeb,long mnUserId, Boolean clearUserId) {
+                public void sendRegistrationAlert(ref Cms myWeb,long mnUserId, Boolean clearUserId, string cmdPrefix = "") {
                     System.Web.HttpRequest moRequest = myWeb.moRequest;
                     System.Collections.Specialized.NameValueCollection moConfig = myWeb.moConfig;
 
@@ -2768,6 +2767,10 @@ namespace Protean.Providers
                                 recipientEmail = oUserEmail.InnerText;
                             string SubjectLine = "Your Registration Details";
                             var oMsg = new Protean.Messaging(ref myWeb.msException);
+
+                            oUserElmt.SetAttribute("Url", myWeb.mcOriginalURL);
+                            oUserElmt.SetAttribute("activateCmd", cmdPrefix + "ActivateAccount");
+
                             // send an email to the new registrant
                             if (!string.IsNullOrEmpty(recipientEmail))
                             {

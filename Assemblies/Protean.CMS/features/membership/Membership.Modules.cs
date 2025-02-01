@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Runtime.InteropServices.ComTypes;
 using System.Xml;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
@@ -153,7 +154,8 @@ namespace Protean
 
                 public void Register(ref Cms myWeb, ref XmlElement oContentNode)
                 {
-
+                    ReturnProvider RetProv;
+                    IMembershipProvider moMemProv;
                     try
                     {
                         myWeb.bPageCache = false;
@@ -164,7 +166,6 @@ namespace Protean
                         var moSession = myWeb.moSession;
                         var moConfig = myWeb.moConfig;
                         var moRequest = myWeb.moRequest;
-
                         var goServer = myWeb.goServer;
 
                         string cLogonCmd = "";
@@ -174,6 +175,8 @@ namespace Protean
 
                         string AccountCreateForm = "UserRegister";
                         string AccountUpdateForm = "UserMyAccount";
+
+                        string CmdPrefix = "Register";
 
                         if (!string.IsNullOrEmpty(oContentNode.GetAttribute("accountCreateFormName")))
                             AccountCreateForm = oContentNode.GetAttribute("accountCreateFormName");
@@ -186,17 +189,18 @@ namespace Protean
 
                         bool bRedirect = true;
 
-                        if (moRequest["ewCmd"] == "ResendActivation")
+                        RetProv = new Protean.Providers.Membership.ReturnProvider();
+                        moMemProv = RetProv.Get(ref myWeb, moConfig["MembershipProvider"]);
+
+                        if (moRequest["ewCmd"] == CmdPrefix + "ResendActivation")
                         {
                             Membership oMembership = new Cms.Membership(ref myWeb);
                             //oMembership.OnErrorWithWeb += OnComponentError;
                             //oMembership.AccountActivateLink(Convert.ToInt16(mnUserId));
 
-                            ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
-                            IMembershipProvider moMemProv = RetProv.Get(ref myWeb, moConfig["MembershipProvider"]);
+             
 
-                            moMemProv.Activities.sendRegistrationAlert(ref myWeb, myWeb.mnUserId, false);
-
+                            moMemProv.Activities.sendRegistrationAlert(ref myWeb, myWeb.mnUserId, false, CmdPrefix);
                             oContentNode.SetAttribute("activationMsg", "Activation Link Sent");
 
                             //string xsltPath = "/xsl/email/registration.xsl";
@@ -229,9 +233,11 @@ namespace Protean
                         }
 
 
-                        if (moRequest["ewCmd"] == "ActivateAccount")
+                        if (moRequest["ewCmd"] == CmdPrefix + "ActivateAccount")
                         {
 
+                            oXfmElmt = (XmlElement)moMemProv.AdminXforms.xFrmActivateAccount();
+                            oContentNode.InnerXml = oXfmElmt.InnerXml;
                         }
 
                         // We should move activate account features here. Currently in membership process.
@@ -369,7 +375,7 @@ namespace Protean
                                 {
                                     myWeb.mnUserId = Conversions.ToInteger(oAdXfm.Instance.SelectSingleNode("tblDirectory/nDirKey").InnerText);
                                     var oMembership = new Membership(ref myWeb);
-                                    oMembership.RegistrationActions();
+                                    oMembership.RegistrationActions(CmdPrefix);
                                     switch (myWeb.moConfig["RegisterBehaviour"] ?? "")
                                     {
                                         case "validateByEmail":
@@ -383,8 +389,9 @@ namespace Protean
                                                 // create a new note
                                                 XmlElement frmElmt = oAdXfm.moXformElmt;
                                                 XmlElement oFrmGrp2 = (XmlElement)oAdXfm.addGroup(ref frmElmt, "validateByEmail");
-                                                //XmlNode oFrmGrp2Node = (XmlNode)oFrmGrp2;
                                                 oAdXfm.addNote(ref oFrmGrp2, Protean.xForm.noteTypes.Hint, "<span class=\"msg-1029\">Thanks for registering you have been sent an email with a link you must click to activate your account</span>", true);
+                                                mnUserId = 0;
+                                                
                                                 break;
                                             }
 
@@ -476,6 +483,7 @@ namespace Protean
                     }
                     finally
                     {
+                        moMemProv = null;
                     }
                 }
 

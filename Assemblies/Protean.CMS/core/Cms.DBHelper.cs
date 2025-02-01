@@ -6918,7 +6918,7 @@ namespace Protean
                 XmlElement oElmt;
                 XmlElement oElmt2;
                 XmlDocument oXml = new XmlDocument();
-
+                string searchterm = "";
                 string sContent;
 
                 string cProcessInfo = "";
@@ -6931,6 +6931,16 @@ namespace Protean
                         {
                             case "User":
                                 {
+                                    searchterm = (string)myWeb.moSession["UserSearch"];
+                                    if (goRequest["UserSearch"] == "Search") {
+                                        searchterm = goRequest["search"];
+                                        myWeb.moSession.Add("UserSearch", searchterm);
+                                    }
+                                    if (goRequest["UserSearch"] == "Clear") {
+                                        searchterm = "";
+                                        myWeb.moSession.Remove("UserSearch");
+                                    }
+                                    
                                     sSql = "execute spGetUsers";
                                     if (nParId != 0L)
                                     {
@@ -6945,9 +6955,10 @@ namespace Protean
                                         sSql = sSql + " @nStatus= " + nStatus;
                                     }
 
-                                    if (!string.IsNullOrEmpty(goRequest["search"]))
+                                    if (!string.IsNullOrEmpty(searchterm))
                                     {
-                                        sSql = "execute spSearchUsers @cSearch='" + goRequest["search"] + "'";
+                                        sSql = "execute spSearchUsers @cSearch='" + searchterm + "'";
+                                        
                                     }
 
                                     break;
@@ -7032,6 +7043,7 @@ namespace Protean
                         oXml = (XmlDocument)goSession["sDirListType"];
                     }
                     oElmt = moPageXml.CreateElement("directory");
+                    oElmt.SetAttribute(cSchemaName + "SearchTerm", searchterm);
                     if (oXml == null)
                     {
                         oXml = new XmlDocument();
