@@ -55,6 +55,7 @@
 			<bind id="heading" nodeset="@heading" required="false()" type="string"/>
 			<bind id="icon-options" nodeset="@icon-options" required="false()" type="string"/>
 			<bind id="icon-class" nodeset="@icon-class" required="false()" type="string"/>
+			<bind id="icon-weight" nodeset="@icon-weight" required="false()" type="string"/>
 			<bind id="icon-offset" nodeset="@icon-offset" required="false()" type="string"/>
 			<bind id="module-padding" nodeset="@module-padding" required="false()" type="string"/>
 			<bind id="title-margin" nodeset="@title-margin" required="false()" type="string"/>
@@ -338,6 +339,18 @@
                     <label>White</label>
                     <value>white-dark</value>
                   </item>
+                </select1>
+                <select1 bind="icon-weight" class="bs-only" appearance="minimal">
+                  <label>Icon font weight</label>
+                  <item>
+                    <label>Bold</label>
+                    <value>900</value>
+                  </item>
+                  <item>
+                    <label>Regular</label>
+                    <value>400</value>
+                  </item>
+                  
                 </select1>
                 <input bind="icon-offset" class="">
                   <label>Offset width</label>

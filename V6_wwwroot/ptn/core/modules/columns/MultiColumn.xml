@@ -50,6 +50,7 @@
       <bind id="padding-bottom" nodeset="@padding-bottom" required="false()" type="string"/>
       <bind id="padding-top-xs" nodeset="@padding-top-xs" required="false()" type="string"/>
       <bind id="padding-bottom-xs" nodeset="@padding-bottom-xs" required="false()" type="string"/>
+      <bind id="marginBelow" nodeset="@marginBelow" required="false()" type="string"/>
       <bind id="relHeight" nodeset="@relHeight" required="false()" type="string"/>
       <bind id="contentHeight" nodeset="@contentHeight" required="false()" type="string"/>
       <bind id="data-stellar-background-ratio" nodeset="@data-stellar-background-ratio" required="false()" type="string"/>
@@ -1138,6 +1139,51 @@
                 <input bind="padding-bottom">
                   <label>Padding Bottom Desktop</label>
                 </input>
+              </group>
+              <group class="col-lg-4">
+                <select1 bind="marginBelow" appearance="minimal">
+                  <label>Margin Bottom</label>
+                  <item>
+                    <label>0</label>
+                    <value>mb-0</value>
+                  </item>
+                  <item>
+                    <label>1</label>
+                    <value>mb-1</value>
+                  </item>
+                  <item>
+                    <label>2</label>
+                    <value>mb-2</value>
+                  </item>
+                  <item>
+                    <label>3</label>
+                    <value>mb-3</value>
+                  </item>
+                  <item>
+                    <label>4</label>
+                    <value>mb-4</value>
+                  </item>
+                  <item>
+                    <label>5</label>
+                    <value>mb-5</value>
+                  </item>
+                  <item>
+                    <label>6</label>
+                    <value>mb-6</value>
+                  </item>
+                  <item>
+                    <label>7</label>
+                    <value>mb-7</value>
+                  </item>
+                  <item>
+                    <label>8</label>
+                    <value>mb-8</value>
+                  </item>
+                  <item>
+                    <label>9</label>
+                    <value>mb-9</value>
+                  </item>
+                </select1>
               </group>
             </group>
           </group>
