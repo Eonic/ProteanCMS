@@ -8122,7 +8122,6 @@ namespace Protean
                                                 {
                                                     if (oUserXml.SelectSingleNode("ActivationKey").InnerText != "") {
                                                         sReturn = "<span class=\"msg-1021\">User account awaiting activation by email</span>";
-                                                        sReturn = sReturn + "<span><a href=\"?ewCmd=ResendActivation&amp;userId=" + nUserId + "\">Resend Activation</a></span>";
                                                   
                                                     }
                                                 }

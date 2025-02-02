@@ -353,6 +353,18 @@ namespace Protean.Providers
 
                         base.updateInstanceFromRequest();
 
+                        if (myWeb.moRequest["ResendActivation"] != "") {
+                            if (mnUserId == 0)
+                            {
+                                mnUserId = Convert.ToInt64(moDbHelper.ExeProcessSqlScalar("select nDirKey where cDirName like '" + base.Instance.SelectSingleNode("user/username").InnerText + "'"));
+                            }
+                            ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                            IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, myWeb.moConfig["MembershipProvider"]);
+                            oMembershipProv.Activities.sendRegistrationAlert(ref myWeb, mnUserId, false, "Login");
+
+                        }
+
+
                         if (base.isSubmitted())
                         {
                             base.validate();
@@ -408,14 +420,14 @@ namespace Protean.Providers
                                 }
                                 else
                                 {
-                                    base.addNote(ref moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse);
+                                    base.addNote(ref moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse,true);
 
                                     if (sValidResponse.Contains("msg-1021"))
                                     {
                                         XmlNode SubmitNode = moXformElmt.SelectSingleNode("descendant-or-self::submit");
                                         oFrmElmt = (XmlElement)SubmitNode.ParentNode;
                                         oFrmElmt.RemoveChild(SubmitNode);
-                                        base.addSubmit(ref oFrmElmt, "ewSubmit", "Resend Validation Code", default, default, "fa-solid fa-right-to-bracket");
+                                        base.addSubmit(ref oFrmElmt, "ewSubmit", "Resend Validation Code", "ResendActivation", default, "fa-solid fa-right-to-bracket");
                                     }
                                 }
                             }
