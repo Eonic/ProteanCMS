@@ -532,7 +532,7 @@
               <xsl:text> flex-cols </xsl:text>
             </xsl:if>
             <xsl:if test="@gutter and @gutter!=''">
-              <xsl:value-of select="@gutter"/>
+              <xsl:text> gutter-set </xsl:text><xsl:value-of select="@gutter"/>
             </xsl:if>
           </xsl:attribute>
           <div id="column1-{@id}" class="column1 {$unevenColumns1}">
@@ -597,8 +597,7 @@
               <xsl:text>match-content-height </xsl:text>
             </xsl:if>
             <xsl:if test="@gutter and @gutter!=''">
-              <xsl:value-of select="@gutter"/>
-              <xsl:text> </xsl:text>
+              <xsl:text> gutter-set </xsl:text><xsl:value-of select="@gutter"/>
             </xsl:if>
           </xsl:attribute>
           <div id="column1-{@id}" class="column1 {$responsiveColumns-bs5}">

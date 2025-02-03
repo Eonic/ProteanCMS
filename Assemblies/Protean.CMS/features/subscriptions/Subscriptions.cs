@@ -3,6 +3,7 @@ using System.Data;
 using System.Runtime.InteropServices;
 using System.Web.Configuration;
 using System.Xml;
+using Microsoft.ClearScript.Windows;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Payment;
@@ -1602,80 +1603,81 @@ namespace Protean
                             }
 
 
+                            if ((XmlElement)myWeb.moPageXml.FirstChild != null){
 
+                                // This resets the menu cache for the user session. Not always nessesary
+                                // Clear the cache
+                                // -- we need to also reload the menu and check if the page we came from is still accessible.
+                                myWeb.moDbHelper.clearStructureCacheUser();
 
+                                // Reload the menu
+                                var oMenu = myWeb.GetStructureXML(0L, 0L, 0L, "Site", false, false, true, false, false, "MenuItem", "Menu");
+                                XmlElement oCurrentMenu = (XmlElement)myWeb.moPageXml.SelectSingleNode("/Page/Menu");
+                                oCurrentMenu.ParentNode.ReplaceChild(oCurrentMenu.OwnerDocument.ImportNode(oMenu, true), oCurrentMenu);
 
-                            // Clear the cache
-                            // -- we need to also reload the menu and check if the page we came from is still accessible.
-                            myWeb.moDbHelper.clearStructureCacheUser();
-
-                            // Reload the menu
-                            var oMenu = myWeb.GetStructureXML(0L, 0L, 0L, "Site", false, false, true, false, false, "MenuItem", "Menu");
-                            XmlElement oCurrentMenu = (XmlElement)myWeb.moPageXml.SelectSingleNode("/Page/Menu");
-                            oCurrentMenu.ParentNode.ReplaceChild(oCurrentMenu.OwnerDocument.ImportNode(oMenu, true), oCurrentMenu);
-
-                            // Check if the current page is still valid.
-                            if (oMenu.SelectSingleNode("//MenuItem[@id=" + myWeb.mnPageId + "]") is null)
-                            {
-
-                                int nRootId = Conversions.ToInteger("0" + Conversions.ToString(Interaction.IIf(myWeb.moConfig["AuthenticatedRootPageId"] is null, Interaction.IIf(myWeb.moConfig["RootPageId"] is null, (object)1, myWeb.moConfig["RootPageId"]), myWeb.moConfig["AuthenticatedRootPageId"])));
-
-                                // Load in the last subscription
-                                if (string.IsNullOrEmpty(cLastSubXml))
+                                // Check if the current page is still valid.
+                                if (oMenu.SelectSingleNode("//MenuItem[@id=" + myWeb.mnPageId + "]") is null)
                                 {
 
-                                    // No sub set the page to be the root id
-                                    myWeb.mnPageId = nRootId;
-                                }
+                                    int nRootId = Conversions.ToInteger("0" + Conversions.ToString(Interaction.IIf(myWeb.moConfig["AuthenticatedRootPageId"] is null, Interaction.IIf(myWeb.moConfig["RootPageId"] is null, (object)1, myWeb.moConfig["RootPageId"]), myWeb.moConfig["AuthenticatedRootPageId"])));
 
-                                else
-                                {
+                                    // Load in the last subscription
+                                    if (string.IsNullOrEmpty(cLastSubXml))
+                                    {
 
-                                    var oSub = myWeb.moPageXml.CreateElement("Subscription");
-                                    try
-                                    {
-                                        oSub.InnerXml = cLastSubXml;
-                                        if (oSub.SelectSingleNode("//AccessPage[.!='']") is null)
-                                        {
-                                            myWeb.mnPageId = nRootId;
-                                        }
-                                        else
-                                        {
-                                            myWeb.mnPageId = Conversions.ToInteger(oSub.SelectSingleNode("//AccessPage[.!='']").InnerText);
-                                        }
-                                    }
-                                    catch (Exception)
-                                    {
-                                        // No xml sub set the page to be the root id
+                                        // No sub set the page to be the root id
                                         myWeb.mnPageId = nRootId;
                                     }
 
-                                }
-
-                                // Set the page id.
-                                myWeb.moPageXml.DocumentElement.SetAttribute("id", myWeb.mnPageId.ToString());
-                                if (myWeb.moConfig["UsePageIdsForURLs"] == "on")
-                                {
-                                    myWeb.moSession["returnPage"] = "?pgid=" + myWeb.mnPageId;
-                                }
-                                else
-                                {
-                                    XmlElement oMenuItem = (XmlElement)oMenu.SelectSingleNode("//MenuItem[@id=" + myWeb.mnPageId + "]");
-                                    string cMenuUrl;
-                                    if (oMenuItem is null)
+                                    else
                                     {
-                                        cMenuUrl = "/";
+
+                                        var oSub = myWeb.moPageXml.CreateElement("Subscription");
+                                        try
+                                        {
+                                            oSub.InnerXml = cLastSubXml;
+                                            if (oSub.SelectSingleNode("//AccessPage[.!='']") is null)
+                                            {
+                                                myWeb.mnPageId = nRootId;
+                                            }
+                                            else
+                                            {
+                                                myWeb.mnPageId = Conversions.ToInteger(oSub.SelectSingleNode("//AccessPage[.!='']").InnerText);
+                                            }
+                                        }
+                                        catch (Exception)
+                                        {
+                                            // No xml sub set the page to be the root id
+                                            myWeb.mnPageId = nRootId;
+                                        }
+
+                                    }
+
+                                    // Set the page id.
+                                    myWeb.moPageXml.DocumentElement.SetAttribute("id", myWeb.mnPageId.ToString());
+                                    if (myWeb.moConfig["UsePageIdsForURLs"] == "on")
+                                    {
+                                        myWeb.moSession["returnPage"] = "?pgid=" + myWeb.mnPageId;
                                     }
                                     else
                                     {
-                                        cMenuUrl = oMenuItem.GetAttribute("url");
-                                        if (myCart.mcSiteURL.EndsWith("/"))
-                                            cMenuUrl = cMenuUrl.TrimStart(@"/\".ToCharArray());
+                                        XmlElement oMenuItem = (XmlElement)oMenu.SelectSingleNode("//MenuItem[@id=" + myWeb.mnPageId + "]");
+                                        string cMenuUrl;
+                                        if (oMenuItem is null)
+                                        {
+                                            cMenuUrl = "/";
+                                        }
+                                        else
+                                        {
+                                            cMenuUrl = oMenuItem.GetAttribute("url");
+                                            if (myCart.mcSiteURL.EndsWith("/"))
+                                                cMenuUrl = cMenuUrl.TrimStart(@"/\".ToCharArray());
+                                        }
+                                        myWeb.moSession["returnPage"] = cMenuUrl;
+
                                     }
-                                    myWeb.moSession["returnPage"] = cMenuUrl;
 
                                 }
-
                             }
                         }
                     }

@@ -8,6 +8,8 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web.Security;
+using System.Web;
 using System.Xml;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
@@ -967,181 +969,7 @@ namespace Protean
                             XmlNodeList oContentElmts = myWeb.moPageXml.SelectNodes("/Page/Contents/Content[@type!='FormattedText' and @type!='PlainText' and @type!='MetaData' and @type!='Image' and @type!='xform' and @type!='report' and @type!='xformQuiz' and @type!='Module' and @parId=/Page/@id]");
                             foreach (XmlElement oElmt in oContentElmts)
                             {
-                                // If oElmt.GetAttribute("type") = "Company" Then
-                                // cProcessInfo = "Not Indexing - " & oElmt.GetAttribute("type")
-                                // End If
-                                // Dim wordToFind As String = oElmt.GetAttribute("type")
-                                // Dim wordIndex As Integer = Array.IndexOf(IndexDetailTypes, oElmt.GetAttribute("type"))
-                                if (!(Array.IndexOf(IndexDetailTypes, oElmt.GetAttribute("type")) >= 0))
-                                {
-                                    // Don't index we don't want this type.
-                                    cProcessInfo = "Not Indexing - " + oElmt.GetAttribute("type");
-                                }
-
-                                else
-                                {
-                                    cProcessInfo = "Indexing - " + oElmt.GetAttribute("type") + "id=" + oElmt.GetAttribute("id") + " name=" + oElmt.GetAttribute("name");
-
-                                    myWeb.moPageXml = new XmlDocument(); // we need to get this again with our content Detail
-                                    myWeb.moDbHelper.moPageXml = myWeb.moPageXml;
-                                    myWeb.mcEwSiteXsl = cXslPath;
-                                    myWeb.mnArtId = Convert.ToInt32(oElmt.GetAttribute("id"));
-                                    myWeb.moContentDetail = null;
-                                    cPageHtml = myWeb.ReturnPageHTML(0, true);
-                                    // remove any declarations that might affect and Xpath Search
-                                    cPageHtml = Strings.Replace(cPageHtml, "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">", "");
-                                    cPageHtml = Strings.Replace(cPageHtml, " xmlns=\"http://www.w3.org/1999/xhtml\"", "");
-
-                                    if (string.IsNullOrEmpty(cPageHtml))
-                                    {
-                                        // we have an error to handle
-                                        if (myWeb.msException == "")
-                                            myWeb.msException = null;
-                                        if (myWeb.msException != null)
-                                        {
-                                            var errorElmt = oIndexInfo.CreateElement("IndexElement");
-                                            errorElmt.InnerXml = myWeb.msException;
-                                            try
-                                            {
-                                                errorElmt.SetAttribute("pgid", "0");
-                                                errorElmt.SetAttribute("name", Conversions.ToString(oPage.pagename));
-                                            }
-                                            catch (Exception)
-                                            {
-                                                // Don't error if you can't set the above.
-                                            }
-                                            cExError += ControlChars.CrLf + errorElmt.OuterXml;
-                                        }
-                                        nPagesSkipped += 1L;
-                                    }
-                                    else
-                                    {
-                                        try
-                                        {
-                                            oPageXml.LoadXml(cPageHtml);
-
-                                            if (!(oElmt.GetAttribute("type") == "Document"))
-                                            {
-                                                oElmtRules = (XmlElement)oPageXml.SelectSingleNode("/html/head/meta[@name='ROBOTS']");
-                                                cRules = "";
-                                                string sPageUrl = "";
-                                                if (oElmtURL != null)
-                                                {
-                                                    sPageUrl = oElmtURL.GetAttribute("url");
-                                                }
-                                                if (oElmtRules != null)
-                                                    cRules = oElmtRules.GetAttribute("content");
-                                                if (!(Strings.InStr(cRules, "NOINDEX") > 0) & !sPageUrl.StartsWith("http"))
-                                                {
-
-                                                    // handle cannonical link tag
-                                                    if (oPageXml.DocumentElement.SelectSingleNode("descendant-or-self::link[@rel='canonical']") != null)
-                                                    {
-                                                        XmlElement oLinkElmt = (XmlElement)oPageXml.DocumentElement.SelectSingleNode("descendant-or-self::link[@rel='canonical']");
-                                                        if (!string.IsNullOrEmpty(oLinkElmt.GetAttribute("href")))
-                                                        {
-                                                            sPageUrl = oLinkElmt.GetAttribute("href");
-                                                        }
-                                                    }
-
-                                                    IndexPage(sPageUrl, oPageXml.DocumentElement, oElmt.GetAttribute("type"), ref myWeb.msException);
-
-                                                    var oContentElmt = oInfoElmt.OwnerDocument.CreateElement(oElmt.GetAttribute("type"));
-                                                    oContentElmt.SetAttribute("artId", myWeb.mnArtId.ToString());
-                                                    oContentElmt.SetAttribute("url", sPageUrl);
-
-                                                    oPageElmt.AppendChild(oContentElmt);
-
-                                                    nIndexed += 1;
-                                                    nContentsIndexed += 1L;
-                                                    itemContentCount += 1L;
-                                                }
-                                                else
-                                                {
-                                                    nContentSkipped += 1L;
-                                                }
-                                            }
-                                            else
-                                            {
-                                                foreach (XmlElement oDocElmt in oElmt.SelectNodes("descendant-or-self::Path"))
-                                                {
-                                                    if (!string.IsNullOrEmpty(oDocElmt.InnerText))
-                                                    {
-                                                        if (oDocElmt.InnerText.StartsWith("http"))
-                                                        {
-                                                            // don't index
-                                                            nDocumentsSkipped += 1L;
-                                                        }
-                                                        else
-                                                        {
-                                                            cProcessInfo = "Indexing - " + oDocElmt.InnerText;
-
-                                                            string filepath = myWeb.goServer.MapPath(myWeb.goServer.UrlDecode(oDocElmt.InnerText));
-
-
-                                                            FileInfo xFilePath = new FileInfo(filepath);
-                                                            if (xFilePath.Exists)
-                                                            {
-                                                                string fileAsText = GetFileText(filepath, ref myWeb.msException);
-                                                                string DocName = oElmt.GetAttribute("name");
-                                                                if (oElmt.SelectSingleNode("Body") != null) { 
-                                                                    cPageExtract = oElmt.SelectSingleNode("Body").InnerText;
-                                                                }
-                                                                if (string.IsNullOrEmpty(DocName))
-                                                                {
-                                                                    DocName = xFilePath.Name;
-                                                                }
-                                                                if (string.IsNullOrEmpty(DocName))
-                                                                {
-                                                                    DocName = oElmt.SelectSingleNode("Title").InnerText;
-                                                                }
-                                                                if (string.IsNullOrEmpty(DocName))
-                                                                {
-                                                                    DocName = "Document for Download";
-                                                                }
-
-                                                                DateTime date;
-                                                                DateTime? publishDate = DateTime.TryParse(oElmt.GetAttribute("publish"), out date) ? date : (DateTime?)null;
-                                                                DateTime? expireDate = DateTime.TryParse(oElmt.GetAttribute("update"), out date) ? date : (DateTime?)null;
-                                                                IndexPage(myWeb.mnPageId, "<h1>" + oElmt.GetAttribute("name") + "</h1>" + fileAsText, oDocElmt.InnerText, DocName, ref myWeb.msException, "Download", myWeb.mnArtId, cPageExtract, publishDate, expireDate);
-
-                                                                var oFileElmt = oInfoElmt.OwnerDocument.CreateElement("download");
-                                                                oFileElmt.SetAttribute("name", DocName);
-                                                                oFileElmt.SetAttribute("file", filepath);
-
-                                                                oPageElmt.AppendChild(oFileElmt);
-
-                                                                nIndexed += 1;
-                                                                nDocumentsIndexed += 1L;
-                                                            }
-                                                            else {
-                                                                var oFileElmt = oInfoElmt.OwnerDocument.CreateElement("download");
-                                                                oFileElmt.SetAttribute("file", oDocElmt.InnerText);
-                                                                oFileElmt.SetAttribute("error", "file not found");
-                                                                oPageElmt.AppendChild(oFileElmt);
-
-                                                                nDocumentsSkipped += 1L;
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            var oPageErrElmt = oIndexInfo.CreateElement("errorInfo");
-                                            oPageErrElmt.SetAttribute("pgid", myWeb.mnPageId.ToString());
-                                            oPageErrElmt.SetAttribute("type", oElmt.GetAttribute("type"));
-                                            oPageErrElmt.SetAttribute("artid", oElmt.GetAttribute("id"));
-                                            oPageErrElmt.InnerText = Protean.stdTools.exceptionReport(ex, oElmtURL.GetAttribute("url"), "");
-                                            oPageElmt.AppendChild(oPageErrElmt);
-                                            nContentSkipped += 1L;
-                                            cProcessInfo = cPageHtml;
-                                        }
-
-                                    }
-
-                                }
+                                indexContentDetail(ref oPage, ref oPageElmt, oElmt, ref myWeb, ref nIndexed, ref oElmtURL, ref itemContentCount);
                             }
                             oPageElmt.SetAttribute("contentCount", itemContentCount.ToString());
                         }
@@ -1213,6 +1041,207 @@ namespace Protean
                     myWeb = null;
                 }
             }
+
+            public void indexContentDetail(ref oPage oPage, ref XmlElement oPageElmt, XmlElement oElmt, ref Cms myWeb, ref int nIndexed, ref XmlElement oElmtURL, ref long itemContentCount) {
+                string cProcessInfo;
+                string cPageExtract = "";
+                string cPageHtml;
+                var oPageXml = new XmlDocument();
+                XmlElement oElmtRules;
+                string cRules = "";
+                try
+                {
+                    // If oElmt.GetAttribute("type") = "Company" Then
+                    // cProcessInfo = "Not Indexing - " & oElmt.GetAttribute("type")
+                    // End If
+                    // Dim wordToFind As String = oElmt.GetAttribute("type")
+                    // Dim wordIndex As Integer = Array.IndexOf(IndexDetailTypes, oElmt.GetAttribute("type"))
+                    if (!(Array.IndexOf(IndexDetailTypes, oElmt.GetAttribute("type")) >= 0))
+                {
+                    // Don't index we don't want this type.
+                    cProcessInfo = "Not Indexing - " + oElmt.GetAttribute("type");
+                }
+
+                else
+                {
+                    cProcessInfo = "Indexing - " + oElmt.GetAttribute("type") + "id=" + oElmt.GetAttribute("id") + " name=" + oElmt.GetAttribute("name");
+
+                    myWeb.moPageXml = new XmlDocument(); // we need to get this again with our content Detail
+                    myWeb.moDbHelper.moPageXml = myWeb.moPageXml;
+                    myWeb.mcEwSiteXsl = cXslPath;
+                    myWeb.mnArtId = Convert.ToInt32(oElmt.GetAttribute("id"));
+                    myWeb.moContentDetail = null;
+                    cPageHtml = myWeb.ReturnPageHTML(0, true);
+                    // remove any declarations that might affect and Xpath Search
+                    cPageHtml = Strings.Replace(cPageHtml, "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">", "");
+                    cPageHtml = Strings.Replace(cPageHtml, " xmlns=\"http://www.w3.org/1999/xhtml\"", "");
+
+                    if (string.IsNullOrEmpty(cPageHtml))
+                    {
+                        // we have an error to handle
+                        if (myWeb.msException == "")
+                            myWeb.msException = null;
+                        if (myWeb.msException != null)
+                        {
+                            var errorElmt = oIndexInfo.CreateElement("IndexElement");
+                            errorElmt.InnerXml = myWeb.msException;
+                            try
+                            {
+                                errorElmt.SetAttribute("pgid", "0");
+                                errorElmt.SetAttribute("name", Conversions.ToString(oPage.pagename));
+                            }
+                            catch (Exception)
+                            {
+                                // Don't error if you can't set the above.
+                            }
+                            cExError += ControlChars.CrLf + errorElmt.OuterXml;
+                        }
+                        nPagesSkipped += 1L;
+                    }
+                    else
+                    {
+                        try
+                        {
+                            oPageXml.LoadXml(cPageHtml);
+
+                            if (!(oElmt.GetAttribute("type") == "Document"))
+                            {
+                                oElmtRules = (XmlElement)oPageXml.SelectSingleNode("/html/head/meta[@name='ROBOTS']");
+                                cRules = "";
+                                string sPageUrl = "";
+                                if (oElmtURL != null)
+                                {
+                                    sPageUrl = oElmtURL.GetAttribute("url");
+                                }
+                                if (oElmtRules != null)
+                                    cRules = oElmtRules.GetAttribute("content");
+                                if (!(Strings.InStr(cRules, "NOINDEX") > 0) & !sPageUrl.StartsWith("http"))
+                                {
+
+                                    // handle cannonical link tag
+                                    if (oPageXml.DocumentElement.SelectSingleNode("descendant-or-self::link[@rel='canonical']") != null)
+                                    {
+                                        XmlElement oLinkElmt = (XmlElement)oPageXml.DocumentElement.SelectSingleNode("descendant-or-self::link[@rel='canonical']");
+                                        if (!string.IsNullOrEmpty(oLinkElmt.GetAttribute("href")))
+                                        {
+                                            sPageUrl = oLinkElmt.GetAttribute("href");
+                                        }
+                                    }
+
+                                    IndexPage(sPageUrl, oPageXml.DocumentElement, oElmt.GetAttribute("type"), ref myWeb.msException);
+
+                                    var oContentElmt = oInfoElmt.OwnerDocument.CreateElement(oElmt.GetAttribute("type"));
+                                    oContentElmt.SetAttribute("artId", myWeb.mnArtId.ToString());
+                                    oContentElmt.SetAttribute("url", sPageUrl);
+
+                                    oPageElmt.AppendChild(oContentElmt);
+
+                                    nIndexed += 1;
+                                    nContentsIndexed += 1L;
+                                    itemContentCount += 1L;
+                                }
+                                else
+                                {
+                                    nContentSkipped += 1L;
+                                }
+                            }
+                            else
+                            {
+                                foreach (XmlElement oDocElmt in oElmt.SelectNodes("descendant-or-self::Path"))
+                                {
+                                    if (!string.IsNullOrEmpty(oDocElmt.InnerText))
+                                    {
+                                        if (oDocElmt.InnerText.StartsWith("http"))
+                                        {
+                                            // don't index
+                                            nDocumentsSkipped += 1L;
+                                        }
+                                        else
+                                        {
+                                            cProcessInfo = "Indexing - " + oDocElmt.InnerText;
+
+                                            string filepath = myWeb.goServer.MapPath(myWeb.goServer.UrlDecode(oDocElmt.InnerText));
+
+
+                                            FileInfo xFilePath = new FileInfo(filepath);
+                                            if (xFilePath.Exists)
+                                            {
+                                                string fileAsText = GetFileText(filepath, ref myWeb.msException);
+                                                string DocName = oElmt.GetAttribute("name");
+                                                if (oElmt.SelectSingleNode("Body") != null)
+                                                {
+                                                    cPageExtract = oElmt.SelectSingleNode("Body").InnerText;
+                                                }
+                                                if (string.IsNullOrEmpty(DocName))
+                                                {
+                                                    DocName = xFilePath.Name;
+                                                }
+                                                if (string.IsNullOrEmpty(DocName))
+                                                {
+                                                    DocName = oElmt.SelectSingleNode("Title").InnerText;
+                                                }
+                                                if (string.IsNullOrEmpty(DocName))
+                                                {
+                                                    DocName = "Document for Download";
+                                                }
+
+                                                DateTime date;
+                                                DateTime? publishDate = DateTime.TryParse(oElmt.GetAttribute("publish"), out date) ? date : (DateTime?)null;
+                                                DateTime? expireDate = DateTime.TryParse(oElmt.GetAttribute("update"), out date) ? date : (DateTime?)null;
+                                                IndexPage(myWeb.mnPageId, "<h1>" + oElmt.GetAttribute("name") + "</h1>" + fileAsText, oDocElmt.InnerText, DocName, ref myWeb.msException, "Download", myWeb.mnArtId, cPageExtract, publishDate, expireDate);
+
+                                                var oFileElmt = oInfoElmt.OwnerDocument.CreateElement("download");
+                                                oFileElmt.SetAttribute("name", DocName);
+                                                oFileElmt.SetAttribute("file", filepath);
+
+                                                oPageElmt.AppendChild(oFileElmt);
+
+                                                nIndexed += 1;
+                                                nDocumentsIndexed += 1L;
+                                            }
+                                            else
+                                            {
+                                                var oFileElmt = oInfoElmt.OwnerDocument.CreateElement("download");
+                                                oFileElmt.SetAttribute("file", oDocElmt.InnerText);
+                                                oFileElmt.SetAttribute("error", "file not found");
+                                                oPageElmt.AppendChild(oFileElmt);
+
+                                                nDocumentsSkipped += 1L;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            var oPageErrElmt = oIndexInfo.CreateElement("errorInfo");
+                            oPageErrElmt.SetAttribute("pgid", myWeb.mnPageId.ToString());
+                            oPageErrElmt.SetAttribute("type", oElmt.GetAttribute("type"));
+                            oPageErrElmt.SetAttribute("artid", oElmt.GetAttribute("id"));
+                            oPageErrElmt.InnerText = Protean.stdTools.exceptionReport(ex, oElmtURL.GetAttribute("url"), "");
+                            oPageElmt.AppendChild(oPageErrElmt);
+                            nContentSkipped += 1L;
+                            cProcessInfo = cPageHtml;
+                        }
+
+                    }
+                    }
+                }
+
+                catch (Exception ex)
+                {
+                    cExError = ex.Message;
+                }
+                finally
+                {
+                    oPage = null;
+                    myWeb.Close();
+                    myWeb = null;
+                }
+            }
+
+
 
             public bool FileInUse(string sFile)
             {

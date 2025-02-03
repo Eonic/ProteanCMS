@@ -866,7 +866,9 @@ namespace Protean
                             }
                             if (Strings.LCase(goConfig["MailServerSSL"]) == "off")
                             {
+                                System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
                                 oSmtpn.EnableSsl = false;
+                                oSmtpn.DeliveryMethod = SmtpDeliveryMethod.Network;
                             }
                             if (sendAsync)
                             {

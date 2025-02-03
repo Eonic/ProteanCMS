@@ -1395,7 +1395,7 @@ namespace Protean.Tools
                 }
                 catch (XmlException ex)
                 {
-                    OnError?.Invoke(null/* TODO Change to default(_) if this is not a reference type */, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "SetInnerXmlThenInnerText", ex, ""));
+                   OnError?.Invoke(null/* TODO Change to default(_) if this is not a reference type */, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "SetInnerXmlThenInnerText", ex, ""));
                     element.InnerText = value;
                 }
 

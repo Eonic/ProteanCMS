@@ -51,7 +51,7 @@
         $(this).parent().removeClass('dropdown-active');
         $(this).parent('li').parent('ul').removeClass('menu-no-scroll');
     });
-    
+    $('[data-bs-toggle="popover"]').popover();
 });
 /*
 |--------------------------------------------------------------------------

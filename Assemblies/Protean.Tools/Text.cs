@@ -575,10 +575,12 @@ namespace Protean.Tools
                     cName = cName.Replace("(", "*");
                     cName = cName.Replace(")", "*");
                     cName = cName.Replace(".", "*");
+                    cName = cName.Replace(",", "*"); //TS removed as commas seeem to be OK
+                    cName = cName.Replace("+", "*");
                     cName = cName.Replace("'", "");
                     cName = cName.Replace("&amp;", "&");
                     if (!bLeaveAmp)
-                        cName = cName.Replace("&", "and");
+                        cName = cName.Replace("&", "*");
                     int i;
                     string cBuilt = "";
                     var loopTo = 0;
@@ -593,17 +595,18 @@ namespace Protean.Tools
                             cBuilt += cTest;
                     }
                     cName = cBuilt;
+                    // TS commented out as breaks for url LIKE THIS "productname - 5mtrs"
                     // replace double spaces a few times
-                    cName = "" + cName.Replace("  ", " ");
-                    cName = "" + cName.Replace("  ", " ");
-                    cName = "" + cName.Replace("  ", " ");
+                    //cName = "" + cName.Replace("  ", " ");
+                    //cName = "" + cName.Replace("  ", " ");
+                    //cName = "" + cName.Replace("  ", " ");
 
                     if (bURLSafe)
                     {
                         cName = "" + cName.Replace(" ", "-");
                         // replace double hyphens a few times
-                        cName = "" + cName.Replace("---", "-");
-                        cName = "" + cName.Replace("--", "-");
+                       // cName = "" + cName.Replace("---", "-");
+                       // cName = "" + cName.Replace("--", "-");
                         //trim to max filename length with .html
 
                         if (cName.Length > 249)
@@ -623,7 +626,7 @@ namespace Protean.Tools
             }
         }
 
-
+        [Obsolete("This method is awaiting update to tidyNetStandard5 to fix issues, please use Protean.stdTools.tidyXhtmlFrag instead")]
         public static string tidyXhtmlFrag(string shtml, bool bReturnNumbericEntities = false, bool bEncloseText = true, string removeTags = "")
         {
 

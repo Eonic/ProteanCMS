@@ -1090,7 +1090,7 @@ namespace Protean
                 string sTidyXhtml;
                 // PerfMon.Log("Web", "tidyXhtmlFrag")
 
-                sTidyXhtml = Tools.Text.tidyXhtmlFrag(shtml, bReturnNumbericEntities);
+                sTidyXhtml = stdTools.tidyXhtmlFrag(shtml, bReturnNumbericEntities);
 
                 return sTidyXhtml;
 
