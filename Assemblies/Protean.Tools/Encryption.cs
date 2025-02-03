@@ -1,12 +1,10 @@
 ﻿using DocumentFormat.OpenXml.Drawing.Charts;
 using Microsoft.VisualBasic;
 using System;
-using System.Configuration;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Xml;
 
 namespace Protean.Tools
 {
@@ -69,8 +67,7 @@ namespace Protean.Tools
                             if (RemoveLineBreaks)
                             {
                                 cResult = oEnc.Text.Replace(Constants.vbNewLine, ""); //Replace(oEnc.Text, Constants.vbNewLine, "");
-                                cResult = System.Text.RegularExpressions.Regex.Replace(oEnc.Text, @"\r\n?|\n", "");
-
+                                cResult = oEnc.Text.Replace(Strings.ChrW(13).ToString(), "");
                             }
 
                             break;
@@ -92,7 +89,7 @@ namespace Protean.Tools
 
             try
             {
-                switch (Provider.ToLower())
+                switch ((Provider.ToLower()))
                 {
                     case "":
                     case "plain":
@@ -175,8 +172,7 @@ namespace Protean.Tools
                     strBuilderResult.Append(newVal);
                 }
 
-                return strBuilderResult.ToString().ToLower();
-
+                return (strBuilderResult.ToString().ToLower());
             }
             catch (Exception ex)
             {
@@ -197,14 +193,12 @@ namespace Protean.Tools
 
                 for (nCount = 0; nCount <= 1; nCount++)
                 {
-                    nBaseTen = rnd.Next(0, 16); // random number between 0 and 15
-
+                    nBaseTen = System.Convert.ToInt32(rnd); // random number between 0 and 15
                     //strResult.Append(Conversion.Hex(nBaseTen));
                     strResult.Append(String.Format("0x{0:X}", nBaseTen));
                 }
 
-                return strResult.ToString().ToLowerInvariant();
-
+                return (strResult.ToString().ToLower());
             }
             catch (Exception ex)
             {
@@ -277,8 +271,7 @@ namespace Protean.Tools
             // //	The first 5 character of the string is formatted to store the actual length of the data.
             // //	This is the simplest way to remember to original length of the data, without resorting to complicated computations.
             // //	If anyone figure a good way to 'remember' the original length to facilite the decryption without having to use additional function parameters, pls let me know.
-            strData = strData.Length.ToString("D5") + strData;
-
+            strData = strData.Length.ToString("00000") + strData;
 
 
             // //4. Encrypt the Data
@@ -1491,12 +1484,16 @@ namespace Protean.Tools
                 {
                     _rsa.FromXmlString(keyXml);
                 }
-                catch (XmlException ex)
+                catch (Exception ex)
                 {
-                    string stringFormat = isPrivate ? "private" : "public";
-                    throw new System.Security.SecurityException($"The provided {stringFormat} encryption key XML does not appear to be valid.", ex);
+                    string stringFormat;
+                    if (isPrivate)
+                        stringFormat = "private";
+                    else
+                        stringFormat = "public";
+                    throw new System.Exception(string.Format("The provided {0} encryption key Xml does not appear to be valid.", stringFormat), ex);
+                    //throw new System.Security.(string.Format("The provided {0} encryption key Xml does not appear to be valid.", stringFormat), ex);
                 }
-
             }
 
             private EncData DecryptPrivate(EncData encryptedData)
@@ -1526,25 +1523,10 @@ namespace Protean.Tools
                 }
                 catch (CryptographicException ex)
                 {
-                    // Check if the exception message contains the specific error
-                    if (ex.Message.ToLower(System.Globalization.CultureInfo.CurrentCulture)
-                        .IndexOf("csp for this implementation could not be acquired", StringComparison.CurrentCulture) > -1)
-                    {
-                        // Create a detailed error message
-                        string currentUser = "WindowsIdentity.GetCurrent().Name";
-                        string errorMessage = $"Unable to obtain Cryptographic Service Provider. " +
-                                              $"Either the permissions are incorrect on the " +
-                                              @"'C:\Documents and Settings\All Users\Application EncData\Microsoft\Crypto\RSA\MachineKeys' " +
-                                              $"folder, or the current security context '{currentUser}' does not have access to this folder.";
-
-                        // Throw a new exception with the detailed message
-                        throw new Exception(errorMessage, ex);
-                    }
+                    if (ex.Message.ToLower(System.Globalization.CultureInfo.CurrentCulture).IndexOf("csp for this implementation could not be acquired", System.StringComparison.CurrentCulture) > -1)
+                        throw new Exception("Unable to obtain Cryptographic Service Provider. " + "Either the permissions are incorrect on the " + @"'C:\Documents and Settings\All Users\Application EncData\Microsoft\Crypto\RSA\MachineKeys' " + "folder, or the current security context  does not have access to this folder.", ex);
                     else
-                    {
-                        // Rethrow the original exception for other cases
                         throw;
-                    }
                 }
                 finally
                 {
@@ -1920,7 +1902,7 @@ namespace Protean.Tools
             internal static string GetConfigString(string key, bool isRequired = true)
             {
                 string strReturn = "";
-                string s = System.Convert.ToString(ConfigurationManager.AppSettings.Get(key));
+                string s = System.Convert.ToString(System.Configuration.ConfigurationManager.AppSettings.Get(key));
                 if (s == null)
                 {
                     if (isRequired)
@@ -1988,9 +1970,9 @@ namespace Protean.Tools
                     StringBuilder sb = new StringBuilder();
 
 
-                    returnValue = EnDeCrypt(message, key);
+                    //returnValue = EnDeCrypt(message, key);
 
-                    returnValue = StringToHex(returnValue);
+                    returnValue = StringToHex(message);
                     returnValue = returnValue.Replace("-", "");
                     return returnValue;
                 }
@@ -2020,7 +2002,7 @@ namespace Protean.Tools
                     string returnValue = string.Empty;
 
                     returnValue = HexToString(message);
-                    returnValue = EnDeCrypt(returnValue, key);
+                    // returnValue = EnDeCrypt(returnValue, key);
 
                     return returnValue;
                 }
@@ -2030,6 +2012,33 @@ namespace Protean.Tools
                 }
             }
 
+            private static string EnDeCrypt(string message, string password)
+            {
+                StringBuilder result = new StringBuilder();
+                int x, y, j = 0;
+                int[] box = new int[256];
+                for (int i = 0; i < 256; i++)
+                    box[i] = i;
+                for (int i = 0; i < 256; i++)
+                {
+                    j = (password[i % password.Length] + box[i] + j) % 256;
+                    x = box[i];
+                    box[i] = box[j];
+                    box[j] = x;
+                }
+                for (int i = 0; i < message.Length; i++)
+                {
+                    y = i % 256;
+                    j = (box[y] + j) % 256;
+                    x = box[y];
+                    box[y] = box[j];
+                    box[j] = x;
+                    result.Append((char)(message[i] ^ box[(box[y] + box[j]) % 256]));
+                }
+                return result.ToString();
+            }
+
+
             /// <summary>
             ///         ''' RC4 encryption method
             ///         ''' </summary>
@@ -2037,69 +2046,69 @@ namespace Protean.Tools
             ///         ''' <param name="password"></param>
             ///         ''' <returns></returns>
             ///         ''' <remarks></remarks>
-            private static string EnDeCrypt(string message, string password)
-            {
-                int i = 0;
-                int j = 0;
-                StringBuilder cipher = new StringBuilder();
-                string returnCipher = string.Empty;
+            //private static string EnDeCrypt(string message, string password)
+            //{
+            //    int i = 0;
+            //    int j = 0;
+            //    StringBuilder cipher = new StringBuilder();
+            //    string returnCipher = string.Empty;
 
-                int[] sbox = new int[257];
-                int[] key = new int[257];
+            //    int[] sbox = new int[257];
+            //    int[] key = new int[257];
 
-                int intLength = password.Length;
+            //    int intLength = password.Length;
 
-                int a = 0;
-                while (a <= 255)
-                {
-                    char ctmp = password[(a % intLength)];
+            //    int a = 0;
+            //    while (a <= 255)
+            //    {
+            //        char ctmp = (password.Substring((a % intLength), 1).ToCharArray()[0]);
 
-                    key[a] = (int)ctmp;
-                    sbox[a] = a;
-                    System.Math.Max(System.Threading.Interlocked.Increment(ref a), a - 1);
-                }
+            //        key[a] = Microsoft.VisualBasic.Strings.AscW(ctmp);
+            //        sbox[a] = a;
+            //        System.Math.Max(System.Threading.Interlocked.Increment(ref a), a - 1);
+            //    }
 
-                int x = 0;
+            //    int x = 0;
 
-                int b = 0;
-                while (b <= 255)
-                {
-                    x = (x + sbox[b] + key[b]) % 256;
-                    int tempSwap = sbox[b];
-                    sbox[b] = sbox[x];
-                    sbox[x] = tempSwap;
-                    System.Math.Max(System.Threading.Interlocked.Increment(ref b), b - 1);
-                }
+            //    int b = 0;
+            //    while (b <= 255)
+            //    {
+            //        x = (x + sbox[b] + key[b]) % 256;
+            //        int tempSwap = sbox[b];
+            //        sbox[b] = sbox[x];
+            //        sbox[x] = tempSwap;
+            //        System.Math.Max(System.Threading.Interlocked.Increment(ref b), b - 1);
+            //    }
 
-                a = 1;
+            //    a = 1;
 
-                while (a <= message.Length)
-                {
-                    int itmp = 0;
+            //    while (a <= message.Length)
+            //    {
+            //        int itmp = 0;
 
-                    i = (i + 1) % 256;
-                    j = (j + sbox[i]) % 256;
-                    itmp = sbox[i];
-                    sbox[i] = sbox[j];
-                    sbox[j] = itmp;
+            //        i = (i + 1) % 256;
+            //        j = (j + sbox[i]) % 256;
+            //        itmp = sbox[i];
+            //        sbox[i] = sbox[j];
+            //        sbox[j] = itmp;
 
-                    int k = sbox[(sbox[i] + sbox[j]) % 256];
+            //        int k = sbox[(sbox[i] + sbox[j]) % 256];
 
-                    char ctmp = message[a - 1];
+            //        char ctmp = message.Substring(a - 1, 1)[0];
 
-                    itmp = (int)ctmp;
+            //        itmp = Strings.AscW(ctmp);
 
-                    int cipherby = itmp ^ k;
+            //        int cipherby = itmp ^ k;
 
-                    cipher.Append((char)cipherby);
-                    System.Math.Max(System.Threading.Interlocked.Increment(ref a), a - 1);
-                }
+            //        cipher.Append(Strings.ChrW(cipherby));
+            //        System.Math.Max(System.Threading.Interlocked.Increment(ref a), a - 1);
+            //    }
 
-                returnCipher = cipher.ToString();
-                cipher.Length = 0;
+            //    returnCipher = cipher.ToString();
+            //    cipher.Length = 0;
 
-                return returnCipher;
-            }
+            //    return returnCipher;
+            //}
 
             /// <summary>
             ///         ''' Turns the provided string value into a hex value (for encryption)
@@ -2147,9 +2156,7 @@ namespace Protean.Tools
                     maxIndex = hex.Length / 2;
 
                     for (index = 0; index < maxIndex; index++)
-                    {
-                        sb.Append((char)Convert.ToInt32(hex.Substring(index * 2, 2), 16));
-                    }
+                        sb.Append(Strings.ChrW(System.Convert.ToInt32(hex.Substring(index * 2, 2), 16)));
 
 
                     //byte[] raw = new byte[hex.Length / 2];
