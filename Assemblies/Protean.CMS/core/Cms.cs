@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -1328,10 +1329,23 @@ namespace Protean
                             mcContentType = "text/html";
                             gcEwSiteXsl = moConfig["SiteXsl"];
                             moResponseType = pageResponseType.Page;
+                            Boolean bAllowCachePage = true;
+                           
                             // can we get a cached page
                             if (moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"] != null)
                             {
-                                if (gnResponseCode == 200L & moRequest.Form.Count == 0 & mnUserId == 0 & !moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"].Contains("?"))
+                                //check if webgains links open cached pages
+                                if(moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"].Contains("?"))
+                                {
+                                    bAllowCachePage = false;
+                                    if (moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"].Contains("utm_source"))
+                                    {
+                                        bAllowCachePage = true;
+                                    }
+                                }                              
+                               
+
+                                if (gnResponseCode == 200L & moRequest.Form.Count == 0 & mnUserId == 0 & bAllowCachePage) //!moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"].Contains("?"))
                                 {
                                     bPageCache = Strings.LCase(moConfig["PageCache"]) == "on" ? true : false;
                                 }
@@ -2539,15 +2553,13 @@ namespace Protean
                         oPageElmt.SetAttribute("cssFramework", moConfig["cssFramework"]);
 
                         if (mnPageId > 0)
-                        {
+                        {                           
                             GetContentXml(ref oPageElmt);
+                            
                             // only get the detail if we are not on a system page and not at root
                             if (RootPageId == mnPageId | !((long)mnPageId == gnPageNotFoundId | (long)mnPageId == gnPageAccessDeniedId | (long)mnPageId == gnPageLoginRequiredId | (long)mnPageId == gnPageErrorId))
                             {
-
-
                                 long validatedVersion = 0L;
-
                                 if (mbPreview & !string.IsNullOrEmpty(moRequest["verId"]))
                                 {
                                     validatedVersion = Conversions.ToLong(moRequest["verId"]);
@@ -2557,12 +2569,9 @@ namespace Protean
                                 {
                                     if ((Tools.Encryption.RC4.Decrypt(moRequest["previewKey"], moConfig["SharedKey"]) ?? "") == (moRequest["verId"] ?? ""))
                                     {
-
                                         validatedVersion = Conversions.ToLong(moRequest["verId"]);
-
                                     }
                                 }
-
 
                                 if (Conversions.ToBoolean(validatedVersion))
                                 {
@@ -2576,7 +2585,7 @@ namespace Protean
                                 {
                                     moContentDetail = GetContentDetailXml(oPageElmt, bCheckAccessToContentLocation: true);
                                 }
-                            }
+                            }                            
 
                             if (Strings.LCase(moConfig["CheckDetailPath"]) == "on" & mbAdminMode == false & mnArtId > 0 & (mcOriginalURL.Contains("-/") | mcOriginalURL.Contains("/Item")))
                             {
