@@ -2495,7 +2495,6 @@ namespace Protean
                         {
                             if (!string.IsNullOrEmpty(moRequest["artid"]))
                             {
-
                                 object sArtId = Regex.Replace("0" + moRequest["artid"], @"[^\d]", "");
                                 // check not too large for an int
                                 int argresult = 0;
@@ -2503,7 +2502,6 @@ namespace Protean
                                 {
                                     mnArtId = Conversions.ToInteger(sArtId);
                                 }
-
                             }
                         }
 
@@ -2544,25 +2542,18 @@ namespace Protean
                             // only get the detail if we are not on a system page and not at root
                             if (RootPageId == mnPageId | !((long)mnPageId == gnPageNotFoundId | (long)mnPageId == gnPageAccessDeniedId | (long)mnPageId == gnPageLoginRequiredId | (long)mnPageId == gnPageErrorId))
                             {
-
-
                                 long validatedVersion = 0L;
-
                                 if (mbPreview & !string.IsNullOrEmpty(moRequest["verId"]))
                                 {
                                     validatedVersion = Conversions.ToLong(moRequest["verId"]);
                                 }
-
                                 if (mbPreview == false & !string.IsNullOrEmpty(moRequest["verId"]))
                                 {
                                     if ((Tools.Encryption.RC4.Decrypt(moRequest["previewKey"], moConfig["SharedKey"]) ?? "") == (moRequest["verId"] ?? ""))
                                     {
-
                                         validatedVersion = Conversions.ToLong(moRequest["verId"]);
-
                                     }
                                 }
-
 
                                 if (Conversions.ToBoolean(validatedVersion))
                                 {
@@ -2616,7 +2607,6 @@ namespace Protean
                                                 msRedirectOnEnd = PathBefore + "/" + mnArtId + "-/" + cContentDetailName;
                                             }
                                         }
-
                                         else
                                         {
                                             string PathBefore = mcOriginalURL.Substring(0, mcOriginalURL.Length - RequestedContentName.Length);
@@ -2630,8 +2620,6 @@ namespace Protean
                                     }
                                 }
                             }
-
-
                             CheckMultiParents(ref oPageElmt, mnPageId);
                         }
                         else
@@ -8238,9 +8226,7 @@ namespace Protean
                     oRoot = moPageXml.CreateElement("Contents");
                     moPageXml.DocumentElement.AppendChild(oRoot);
                 }
-
-                string nCurrentPageId = nPageId.ToString();
-
+                  string nCurrentPageId = nPageId.ToString();
                 // Adjust the page id if it's a cloned page.
                 if (Conversions.ToDouble(nCurrentPageId) != (double)mnPageId)
                 {
@@ -8248,7 +8234,12 @@ namespace Protean
                     sFilterSql += " and CL.bCascade = 1 and CL.bPrimary = 1 ";
                 }
                 else
-                {
+                {   
+                    // If we have an article id we only want to show cascaded content
+                    if (moConfig["ContentDetailShowOnlyCascaded"].ToLower() == "on" && mnArtId != 0)
+                    {
+                        sFilterSql += " and CL.bCascade = 1 and CL.bPrimary = 1 ";
+                    }
                     // we are pulling in located and native items but not cascaded
                 }
 
@@ -8277,7 +8268,6 @@ namespace Protean
                 }
 
                 sSql = "select " + cContentLimit + "c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId ,cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, CL.cPosition as position from tblContent c" + " inner join tblContentLocation CL on c.nContentKey = CL.nContentId" + " inner join tblAudit a on c.nAuditId = a.nAuditKey" + " where( CL.nStructId = " + nPageId;
-
                 sSql = sSql + sFilterSql + ") order by type, cl.nDisplayOrder";
 
                 var oDs = new DataSet();

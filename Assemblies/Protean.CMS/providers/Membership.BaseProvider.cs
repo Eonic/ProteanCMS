@@ -353,10 +353,10 @@ namespace Protean.Providers
 
                         base.updateInstanceFromRequest();
 
-                        if (myWeb.moRequest["ResendActivation"] != "") {
+                        if (!string.IsNullOrEmpty(myWeb.moRequest["ResendActivation"])) {
                             if (mnUserId == 0)
                             {
-                                mnUserId = Convert.ToInt64(moDbHelper.ExeProcessSqlScalar("select nDirKey where cDirName like '" + base.Instance.SelectSingleNode("user/username").InnerText + "'"));
+                                mnUserId = Convert.ToInt64(moDbHelper.ExeProcessSqlScalar("select nDirKey from tblDirectory where cDirName like '" + base.Instance.SelectSingleNode("user/username").InnerText + "'"));
                             }
                             ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
                             IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, myWeb.moConfig["MembershipProvider"]);
