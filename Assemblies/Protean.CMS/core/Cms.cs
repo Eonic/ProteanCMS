@@ -2553,54 +2553,39 @@ namespace Protean
                         oPageElmt.SetAttribute("cssFramework", moConfig["cssFramework"]);
 
                         if (mnPageId > 0)
-                        {
-                            if(mnArtId>0)
-                            {
-                                long nPageId = Conversions.ToLong(oPageElmt.SelectSingleNode("/Page/Menu/descendant-or-self::MenuItem/@id").InnerText);
-                                GetPageContentXml(nPageId);                               
-                                moContentDetail = GetContentDetailXml(oPageElmt, bCheckAccessToContentLocation: true);
-                            }
-                            else
-                            {
-                                GetContentXml(ref oPageElmt);
+                        {                           
+                            GetContentXml(ref oPageElmt);
                             
-                                // only get the detail if we are not on a system page and not at root
-                                if (RootPageId == mnPageId | !((long)mnPageId == gnPageNotFoundId | (long)mnPageId == gnPageAccessDeniedId | (long)mnPageId == gnPageLoginRequiredId | (long)mnPageId == gnPageErrorId))
+                            // only get the detail if we are not on a system page and not at root
+                            if (RootPageId == mnPageId | !((long)mnPageId == gnPageNotFoundId | (long)mnPageId == gnPageAccessDeniedId | (long)mnPageId == gnPageLoginRequiredId | (long)mnPageId == gnPageErrorId))
+                            {
+                                long validatedVersion = 0L;
+                                if (mbPreview & !string.IsNullOrEmpty(moRequest["verId"]))
                                 {
+                                    validatedVersion = Conversions.ToLong(moRequest["verId"]);
+                                }
 
-
-                                    long validatedVersion = 0L;
-
-                                    if (mbPreview & !string.IsNullOrEmpty(moRequest["verId"]))
+                                if (mbPreview == false & !string.IsNullOrEmpty(moRequest["verId"]))
+                                {
+                                    if ((Tools.Encryption.RC4.Decrypt(moRequest["previewKey"], moConfig["SharedKey"]) ?? "") == (moRequest["verId"] ?? ""))
                                     {
                                         validatedVersion = Conversions.ToLong(moRequest["verId"]);
                                     }
-
-                                    if (mbPreview == false & !string.IsNullOrEmpty(moRequest["verId"]))
-                                    {
-                                        if ((Tools.Encryption.RC4.Decrypt(moRequest["previewKey"], moConfig["SharedKey"]) ?? "") == (moRequest["verId"] ?? ""))
-                                        {
-
-                                            validatedVersion = Conversions.ToLong(moRequest["verId"]);
-
-                                        }
-                                    }
-
-
-                                    if (Conversions.ToBoolean(validatedVersion))
-                                    {
-                                        moContentDetail = GetContentDetailXml(oPageElmt, bCheckAccessToContentLocation: true, nVersionId: Conversions.ToLong(moRequest["verId"]));
-                                    }
-                                    else if (Strings.LCase(moConfig["AllowContentDetailAccess"]) == "On")
-                                    {
-                                        moContentDetail = GetContentDetailXml(oPageElmt);
-                                    }
-                                    else
-                                    {
-                                        moContentDetail = GetContentDetailXml(oPageElmt, bCheckAccessToContentLocation: true);
-                                    }
                                 }
-                            }
+
+                                if (Conversions.ToBoolean(validatedVersion))
+                                {
+                                    moContentDetail = GetContentDetailXml(oPageElmt, bCheckAccessToContentLocation: true, nVersionId: Conversions.ToLong(moRequest["verId"]));
+                                }
+                                else if (Strings.LCase(moConfig["AllowContentDetailAccess"]) == "On")
+                                {
+                                    moContentDetail = GetContentDetailXml(oPageElmt);
+                                }
+                                else
+                                {
+                                    moContentDetail = GetContentDetailXml(oPageElmt, bCheckAccessToContentLocation: true);
+                                }
+                            }                            
 
                             if (Strings.LCase(moConfig["CheckDetailPath"]) == "on" & mbAdminMode == false & mnArtId > 0 & (mcOriginalURL.Contains("-/") | mcOriginalURL.Contains("/Item")))
                             {
