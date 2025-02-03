@@ -296,7 +296,7 @@ namespace Protean
 
                 string htmltotest = "<h1>HTMLTidy is Tidying</H1>";
 
-                string sResponse = Tools.Text.tidyXhtmlFrag(htmltotest, true, true, "");
+                string sResponse = stdTools.tidyXhtmlFrag(htmltotest, true, true, "");
 
                 if (sResponse.StartsWith("<h1>HTMLTidy is Tidying</h1>"))
                 {

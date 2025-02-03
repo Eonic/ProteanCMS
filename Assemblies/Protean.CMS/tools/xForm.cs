@@ -1443,7 +1443,7 @@ namespace Protean
                                                             }
                                                             catch
                                                             {
-                                                                oElmtTemp.InnerXml = Tools.Text.tidyXhtmlFrag((Tools.Xml.convertEntitiesToCodes(submittedValue) + "").Trim());
+                                                                oElmtTemp.InnerXml = stdTools.tidyXhtmlFrag((Tools.Xml.convertEntitiesToCodes(submittedValue) + "").Trim());
                                                             }
                                                             oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.ReplaceChild(oElmtTemp.FirstChild.Clone(), oInstance.SelectSingleNode(sXpath, nsMgr));
                                                         }

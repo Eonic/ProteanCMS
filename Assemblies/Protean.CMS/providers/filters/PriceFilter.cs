@@ -310,7 +310,7 @@ namespace Protean.Providers
                 return cWhereSql;
             }
 
-            public override string GetFilterOrderByClause()
+            public override string GetFilterOrderByClause(ref Cms myWeb)
             {
                 //cIndexDefinationName: Use name same as filter name, so that it will be easy to use in joins as per need.
                 // this is specific to filter functionality
@@ -321,7 +321,7 @@ namespace Protean.Providers
                 // -or an xpath/xquery too eg : return Convert(XML, cContentXmlBrief).value("/Content/StockCode[1]",'varchar(10)')
 
                 string cIndexDefinationName = "Price";
-                return " min(cii" + cIndexDefinationName + ".nNumberValue), ";
+                return " min(cii" + cIndexDefinationName + ".nNumberValue) ";
 
             }
 

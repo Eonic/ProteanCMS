@@ -2099,6 +2099,20 @@
           <xsl:text>required</xsl:text>
         </xsl:attribute>
       </xsl:if>
+      <xsl:if test="contains(@class,'strongPassword')">
+        <!--<a id="passwordPolicy" href="#">
+          <i class="fa fa-circle-info">
+            <xsl:text> </xsl:text>
+          </i>
+          <span class="visually-hidden"> view our password policy</span>
+        </a>-->
+        <button type="button" class="btn-clean password-policy-btn" data-bs-toggle="popover" title="Password Policy" data-bs-content="All passwords must be at least 6 characters long, include a combination of uppercase and lowercase letters, at least one number, and can contain special characters.">
+          <i class="fa fa-circle-info">
+            <xsl:text> </xsl:text>
+          </i>
+          <span class="visually-hidden"> view our password policy</span>
+        </button>
+      </xsl:if>
     </input>
     <xsl:if test="@data-fv-not-empty___message!='' and not(alert)">
       <div class="invalid-feedback">
@@ -2109,9 +2123,6 @@
       <div class="invalid-feedback">
         <xsl:copy-of select="alert/node()"/>
       </div>
-    </xsl:if>
-    <xsl:if test="contains(@class,'strongPassword')">
-      <a id="passwordPolicy" class="text-muted" href="#">view our password policy</a>
     </xsl:if>
   </xsl:template>
   <!-- -->
@@ -2408,13 +2419,15 @@
     <xsl:choose>
       <xsl:when test="name()='group'">
         <xsl:apply-templates select="." mode="xform">
-          <xsl:with-param name="dependantClass" />
+            <xsl:with-param name="dependantClass" select="$dependantClass" />
+          <xsl:with-param name="selectedCase" select="$selectedCase"/>
         </xsl:apply-templates>
       </xsl:when>
       <xsl:when test="contains(@class,'hidden')">
         <div class="form-group invisible">
           <xsl:apply-templates select="." mode="xform">
-            <xsl:with-param name="dependantClass" />
+            <xsl:with-param name="dependantClass" select="$dependantClass" />
+          <xsl:with-param name="selectedCase" select="$selectedCase"/>
           </xsl:apply-templates>
         </div>
       </xsl:when>
@@ -2435,6 +2448,7 @@
           </xsl:attribute>
           <xsl:apply-templates select="." mode="xform">
             <xsl:with-param name="dependantClass" select="$dependantClass" />
+          <xsl:with-param name="selectedCase" select="$selectedCase"/>
           </xsl:apply-templates>
         </div>
         <!-- Output Cases - that not empty -->
@@ -2513,7 +2527,7 @@
     <div id="{translate(@id,'[]#=/','')}-dependant">
       <!-- IF CHOSEN CASE - HIDE-->
       <xsl:attribute name="class">
-        <xsl:value-of select="$dependantClass" />
+        <xsl:value-of select="$dependantClass" />		  
         <xsl:if test="not(contains($selectedCase,@id)) and not(descendant-or-self::alert)">
           <xsl:text> hidden</xsl:text>
         </xsl:if>

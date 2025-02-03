@@ -39,6 +39,7 @@
       <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
       <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>-->
 			<bind id="bLinkBox" nodeset="@linkBox" required="false()" type="string"/>
+			<bind id="accessibleText" nodeset="@accessibleText" required="false()" type="string"/>
 			<bind id="panelImage" nodeset="@panelImage" required="false()" type="string" />
 			<bind id="imagePosition" nodeset="@imagePosition" required="false()" type="string" />
 			<bind id="maxWidth" nodeset="@maxWidth" required="false()" type="string" />
@@ -81,6 +82,13 @@
 							<value>true</value>
 						</item>
 						<help class="inline">This will make the whole of the box clickable, rather than just the button at the bottom. This is better for touchscreen devices, but don't use this if you have hyperlinks in the text.</help>
+					</select>
+					<select bind="accessibleText" appearance="full" class="multiline bs-only">
+						<item>
+							<label>Hide button</label>
+							<value>true</value>
+						</item>
+						<help class="inline">If this is hidden, it will only be available for screen readers</help>
 					</select>
 				</group>
 			</group>

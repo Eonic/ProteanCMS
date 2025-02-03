@@ -152,13 +152,13 @@ img.alignleft {
 .container-fluid {
     padding: 0 ($grid-gutter-width/2);
 
-    @include media-breakpoint-up(md) {
+   /* @include media-breakpoint-up(md) {
         padding: 0 2vw;
     }
 
     #main-footer > div > .row {
         margin: 0 -2vw;
-    }
+    }*/
 
     .nobox.module-FormattedText,
     .accordion-body .FormattedText,
@@ -318,6 +318,19 @@ h1, h2, h3, h4 {
 
     i {
         padding-right: 0.6rem;
+    }
+}
+
+.heading-only {
+    h1, h2, h3, h4, h5, h6 {
+        margin-bottom: 0;
+        font-size: $font-size-base;
+        font-family: $font-family-base;
+        font-weight: $font-weight-base;
+
+        i {
+            padding-right: 3px;
+        }
     }
 }
 /*############### IMAGES #################*/
@@ -1280,8 +1293,8 @@ div[class$="List"] {
         font-family: $font-awesome-version;
         font-weight: 900;
         padding: 5px;
-        background: $body-bg;
-        border: 1px solid fade($body-color,50%);
+        background: rgba(#fff,0.5);
+        //border: 1px solid fade($body-color,50%);
         border-radius: 100px;
         padding: 6px;
         display: block;
@@ -1318,7 +1331,7 @@ dd {
 
 .detail-container > .detail {
     @extend .container;
-    padding-top: 3rem;
+    padding-top: 4rem;
 
     .detail-title {
         text-align: center;
@@ -1526,6 +1539,39 @@ dd {
     }
 }
 
+.Contact-detail-container .detail {
+    .detail-title {
+        text-align: left;
+        margin-bottom: 0;
+    }
+
+    .contact-text > h2 {
+        margin-bottom: 1.5rem;
+    }
+
+    .contact-card {
+        background: $light;
+        border: 0;
+    }
+
+    .detail-img {
+        margin-bottom: 0;
+    }
+}
+
+.Contact-detail-container,
+.contact {
+    /* dt.tel {
+        text-indent: -1000px;
+    }
+
+    dt.tel:after {
+        content: '\f095';
+        font-family: $font-awesome-version;
+        text-indent: 0;
+    }*/
+}
+
 //product
 .col-product-info {
     @include media-breakpoint-up(lg) {
@@ -1685,8 +1731,27 @@ dd {
 
 .modal {
     .modal-header {
-        padding-bottom: 0;
         border-bottom: 0;
+        background: $primary;
+        color: #fff;
+        padding: 1rem 1.5rem;
+
+        .modal-title {
+            color: #fff;
+            font-size: 1.3rem;
+        }
+
+        .btn-close {
+            background: none;
+            padding: 0.8rem;
+
+            &:after {
+                font-family: $font-awesome-version;
+                content: '\f00d';
+                color: #fff;
+                font-weight: 900;
+            }
+        }
     }
 
     .modal-body .btn-close {

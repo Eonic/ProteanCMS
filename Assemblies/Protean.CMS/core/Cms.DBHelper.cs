@@ -1615,7 +1615,7 @@ namespace Protean
 
                                 if (!string.IsNullOrEmpty(thisPrefix))
                                 {
-                                    string cContentName = SqlFmt(sPath).Replace("*", "%").Replace(" ", "%");
+                                    string cContentName = SqlFmt(sPath).Replace("+", "_").Replace("*", "_").Replace(" ", "_").Replace("__", "%").Replace("___", "%");
 
                                     if (gbAdminMode)
                                     {
@@ -1643,17 +1643,19 @@ namespace Protean
                                     if (nArtId > 0L)
                                     {
                                         sSql = "select nStructId from tblContentLocation where bPrimary = 1 and nContentId = " + nArtId;
-                                        //sSql = sSql + " union ";
-                                        //sSql = sSql + " select nStructId from tblContentLocation where bPrimary = 1 and nContentId IN(select cl.nContentParentId from tblContentRelation cl where cl.nContentChildId = " + nArtId + ")";
+
+                                        //TS Why were these two lines commented out, they are required if a product is being shown that is not on a page but its parent product is
+                                        sSql = sSql + " union ";
+                                        sSql = sSql + " select nStructId from tblContentLocation where bPrimary = 1 and nContentId IN(select cl.nContentParentId from tblContentRelation cl where cl.nContentChildId = " + nArtId + ")";
 
 
                                         ods = GetDataSet(sSql, "Pages");
-                                        if (ods.Tables["Pages"].Rows.Count == 1)
+                                        if (ods.Tables["Pages"].Rows.Count > 0)
                                         {
                                             if (bCheckPermissions)
                                             {
                                                 // Check the permissions for the page - this will either return 0, the page id or a system page.
-                                                long checkPermissionPageId = checkPagePermission(Conversions.ToLong(ods.Tables["Pages"].Rows[Conversions.ToInteger("0")]["nStructId"]));
+                                                long checkPermissionPageId = checkPagePermission(Conversions.ToLong(ods.Tables["Pages"].Rows[0]["nStructId"]));
                                                 if (Conversions.ToBoolean(Operators.AndObject(checkPermissionPageId != 0L, Operators.OrObject(Operators.ConditionalCompareObjectEqual(ods.Tables["Pages"].Rows[Conversions.ToInteger("0")]["nStructId"], checkPermissionPageId, false), IsSystemPage(checkPermissionPageId)))))
 
                                                 {
@@ -1662,9 +1664,9 @@ namespace Protean
                                             }
                                             else
                                             {
-                                                nPageId = Conversions.ToLong(ods.Tables["Pages"].Rows[Conversions.ToInteger("0")]["nStructId"]);
+                                                nPageId = Conversions.ToLong(ods.Tables["Pages"].Rows[0]["nStructId"]);
                                             }
-                                            nPageId = Conversions.ToLong(ods.Tables["Pages"].Rows[Conversions.ToInteger("0")]["nStructId"]);
+                                            nPageId = Conversions.ToLong(ods.Tables["Pages"].Rows[0]["nStructId"]);
 
 
                                             if (checkRedirect)
@@ -3115,7 +3117,7 @@ namespace Protean
                             catch
                             {
                                 // run tidy...
-                                oElmt.InnerXml = Tools.Text.tidyXhtmlFrag(sContent, true, false);
+                                oElmt.InnerXml = stdTools.tidyXhtmlFrag(sContent, true, false);
                             }
                             // empty empty dates
                             if (oElmt.InnerXml.StartsWith("0001-01-01T00:00:00"))
@@ -6920,7 +6922,7 @@ namespace Protean
                 XmlElement oElmt;
                 XmlElement oElmt2;
                 XmlDocument oXml = new XmlDocument();
-
+                string searchterm = "";
                 string sContent;
 
                 string cProcessInfo = "";
@@ -6933,6 +6935,16 @@ namespace Protean
                         {
                             case "User":
                                 {
+                                    searchterm = (string)myWeb.moSession["UserSearch"];
+                                    if (goRequest["UserSearch"] == "Search") {
+                                        searchterm = goRequest["search"];
+                                        myWeb.moSession.Add("UserSearch", searchterm);
+                                    }
+                                    if (goRequest["UserSearch"] == "Clear") {
+                                        searchterm = "";
+                                        myWeb.moSession.Remove("UserSearch");
+                                    }
+                                    
                                     sSql = "execute spGetUsers";
                                     if (nParId != 0L)
                                     {
@@ -6947,9 +6959,10 @@ namespace Protean
                                         sSql = sSql + " @nStatus= " + nStatus;
                                     }
 
-                                    if (!string.IsNullOrEmpty(goRequest["search"]))
+                                    if (!string.IsNullOrEmpty(searchterm))
                                     {
-                                        sSql = "execute spSearchUsers @cSearch='" + goRequest["search"] + "'";
+                                        sSql = "execute spSearchUsers @cSearch='" + searchterm + "'";
+                                        
                                     }
 
                                     break;
@@ -7034,6 +7047,7 @@ namespace Protean
                         oXml = (XmlDocument)goSession["sDirListType"];
                     }
                     oElmt = moPageXml.CreateElement("directory");
+                    oElmt.SetAttribute(cSchemaName + "SearchTerm", searchterm);
                     if (oXml == null)
                     {
                         oXml = new XmlDocument();
@@ -7151,7 +7165,7 @@ namespace Protean
                                     root.InnerXml = root.SelectSingleNode("*").InnerXml;
                                 }
                                 // Ignore if myWeb is nothing
-                                if (myWeb != null)
+                                if (myWeb != null && bSkipCheckPagePerm != true)
                                 {
                                     PermLevel = getPagePermissionLevel((long)myWeb.mnPageId);
                                     root.SetAttribute("pagePermission", PermLevel.ToString());
@@ -7238,6 +7252,7 @@ namespace Protean
                             root.AppendChild(root.OwnerDocument.CreateElement("cContactTelCountryCode"));
                         }
                     }
+                    PerfMonLog("DBHelper", "GetUserXML - END");
                     return root;
                 }
 
@@ -8107,11 +8122,12 @@ namespace Protean
                                             {
                                                 XmlElement oUserXml = GetUserXML(nUserId);
 
-                                                if (oUserXml.SelectSingleNode("ActivationKey").InnerText != "")
+                                                if (oUserXml.SelectSingleNode("ActivationKey") != null)
                                                 {
-
-
-                                                    sReturn = "<span class=\"msg-1021\">User account awaiting activation by email</span>";
+                                                    if (oUserXml.SelectSingleNode("ActivationKey").InnerText != "") {
+                                                        sReturn = "<span class=\"msg-1021\">User account awaiting activation by email</span>";
+                                                  
+                                                    }
                                                 }
                                                 else
                                                 {
@@ -8779,7 +8795,7 @@ namespace Protean
                     valuesList.Add(SqlString(Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(sessionId), "Service_" + DateTime.Now.ToString(), sessionId))));
                     if (otherId > 0L)
                         valuesList.Add(otherId.ToString());
-                    if (Cms.gbIPLogging)
+                    if (Cms.gbIPLogging && myWeb !=null)
                         valuesList.Add(SqlString(Strings.Left(myWeb.moRequest.ServerVariables["REMOTE_ADDR"], 15)));
 
                     // Now build the SQL
@@ -10742,7 +10758,13 @@ namespace Protean
                     {
                         if (oDs.Tables[0].Columns.Count >= 13)
                         {
+                            if (oDs.Tables[0].Columns.Count == 14)
+                            {
+                                oDs.Tables[0].Columns.RemoveAt(13);
+
+                            }
                             oDs.Tables[0].Columns.RemoveAt(12);
+
                         }
 
                         oDs.Tables[0].Columns["id"].ColumnMapping = MappingType.Attribute;

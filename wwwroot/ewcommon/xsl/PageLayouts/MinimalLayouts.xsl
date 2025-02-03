@@ -2634,6 +2634,7 @@
 					</xsl:apply-templates>
 				</xsl:when>
 				<xsl:when test="$maxWidth!='' or $maxHeight!=''">
+					RESIZE IMAGE
 					<xsl:apply-templates select="." mode="resize-image">
 						<xsl:with-param name="maxWidth" select="$maxWidth"/>
 						<xsl:with-param name="maxHeight" select="$maxHeight"/>
