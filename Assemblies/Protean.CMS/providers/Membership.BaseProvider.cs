@@ -45,7 +45,7 @@ namespace Protean.Providers
         }
         public interface IMembershipAdminXforms
         {
-            XmlElement xFrmUserLogon(string FormName = "UserLogon");
+            XmlElement xFrmUserLogon(string FormName = "UserLogon", string cmdPrefix = "");
             XmlElement xFrmPasswordReminder();
             XmlElement xFrmActivateAccount();
             XmlElement xFrmResetPassword(long mnUserId);
@@ -251,7 +251,7 @@ namespace Protean.Providers
                 {
                 }
 
-                public XmlElement xFrmUserLogon(string FormName = "UserLogon") // Just replace Overridable to Overrides
+                public XmlElement xFrmUserLogon(string FormName = "UserLogon",string cmdPrefix = "") // Just replace Overridable to Overrides
                 {
 
                     // Called to get XML for the User Logon.
@@ -279,7 +279,7 @@ namespace Protean.Providers
                         if (!base.load(formPath, myWeb.maCommonFolders))
                         {
                             // If this does not load manually then build a form to do it.
-                            goto BuildForm;
+                           goto BuildForm;
                         }
                         else
                         {
@@ -353,96 +353,114 @@ namespace Protean.Providers
 
                         base.updateInstanceFromRequest();
 
-                        if (!string.IsNullOrEmpty(myWeb.moRequest["ResendActivation"])) {
+                        if (!string.IsNullOrEmpty(myWeb.moRequest["LoginResendActivation"]))
+                        {
                             if (mnUserId == 0)
                             {
                                 mnUserId = Convert.ToInt64(moDbHelper.ExeProcessSqlScalar("select nDirKey from tblDirectory where cDirName like '" + base.Instance.SelectSingleNode("user/username").InnerText + "'"));
                             }
                             ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
                             IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, myWeb.moConfig["MembershipProvider"]);
-                            oMembershipProv.Activities.sendRegistrationAlert(ref myWeb, mnUserId, false, "Login");
+                            oMembershipProv.Activities.sendRegistrationAlert(ref myWeb, mnUserId, false, cmdPrefix);
 
+                            base.addNote(ref moXformElmt, Protean.xForm.noteTypes.Alert, "sValidResponse", true);
+
+                            base.NewFrm("ActivateAccount");
+                            XmlElement oFrmGrp2 = (XmlElement)base.addGroup(ref base.moXformElmt, "ActivateAccount");
+                            var oMembership = new Cms.Membership(ref myWeb);                      
+                            addNote(ref oFrmGrp2, noteTypes.Hint, "<span class=\"msg-1036\">Your Activation Code has been resent</span>", true, "msg-1036");                         
+
+                            return base.moXformElmt;
                         }
-
-
-                        if (base.isSubmitted())
+                        else
                         {
-                            base.validate();
-                            if (base.valid)
+
+                            if (base.isSubmitted())
                             {
-
-                                // changed to get from instance rather than direct from querysting / form.
-                                string username = base.Instance.SelectSingleNode("user/username").InnerText;
-                                string password = base.Instance.SelectSingleNode("user/password").InnerText;
-
-                                sValidResponse = moDbHelper.validateUser(username, password);
-
-                                if (Information.IsNumeric(sValidResponse))
+                                base.validate();
+                                if (base.valid)
                                 {
-                                    myWeb.mnUserId = Convert.ToInt32(sValidResponse);
-                                    moDbHelper.mnUserId = Conversions.ToLong(sValidResponse);
-                                    if (goSession != null)
-                                    {
-                                        goSession["nUserId"] = myWeb.mnUserId;
 
-                                        XmlElement UserXml = myWeb.GetUserXML();
-                                        if (!string.IsNullOrEmpty(UserXml.GetAttribute("defaultCurrency")))
+                                    // changed to get from instance rather than direct from querysting / form.
+                                    string username = base.Instance.SelectSingleNode("user/username").InnerText;
+                                    string password = base.Instance.SelectSingleNode("user/password").InnerText;
+
+                                    sValidResponse = moDbHelper.validateUser(username, password);
+
+                                    if (Information.IsNumeric(sValidResponse))
+                                    {
+                                        myWeb.mnUserId = Convert.ToInt32(sValidResponse);
+                                        moDbHelper.mnUserId = Conversions.ToLong(sValidResponse);
+                                        if (goSession != null)
                                         {
-                                            goSession["cCurrency"] = UserXml.GetAttribute("defaultCurrency");
+                                            goSession["nUserId"] = myWeb.mnUserId;
+
+                                            XmlElement UserXml = myWeb.GetUserXML();
+                                            if (!string.IsNullOrEmpty(UserXml.GetAttribute("defaultCurrency")))
+                                            {
+                                                goSession["cCurrency"] = UserXml.GetAttribute("defaultCurrency");
+                                            }
+                                        }
+                                        // Set the remember me cookie
+                                        if (bRememberMe)
+                                        {
+                                            if (goRequest["cRemember"] == "true")
+                                            {
+                                                System.Web.HttpCookie oCookie;
+                                                if (myWeb.moRequest.Cookies["RememberMeUserName"] != null)
+                                                    goResponse.Cookies.Remove("RememberMeUserName");
+                                                oCookie = new System.Web.HttpCookie("RememberMeUserName");
+                                                oCookie.Value = myWeb.moRequest["cUserName"];
+                                                oCookie.Expires = DateAndTime.DateAdd(DateInterval.Day, 60d, DateTime.Now);
+                                                goResponse.Cookies.Add(oCookie);
+
+                                                if (myWeb.moRequest.Cookies["RememberMeUserId"] != null)
+                                                    goResponse.Cookies.Remove("RememberMeUserId");
+                                                oCookie = new System.Web.HttpCookie("RememberMeUserId");
+                                                oCookie.Value = Convert.ToString(myWeb.mnUserId);
+                                                oCookie.Expires = DateAndTime.DateAdd(DateInterval.Day, 60d, DateTime.Now);
+                                                goResponse.Cookies.Add(oCookie);
+                                            }
+                                            else
+                                            {
+                                                goResponse.Cookies["RememberMeUserName"].Expires = DateTime.Now.AddDays(-1);
+                                                goResponse.Cookies["RememberMeUserId"].Expires = DateTime.Now.AddDays(-1);
+                                            }
                                         }
                                     }
-                                    // Set the remember me cookie
-                                    if (bRememberMe)
+                                    else
                                     {
-                                        if (goRequest["cRemember"] == "true")
-                                        {
-                                            System.Web.HttpCookie oCookie;
-                                            if (myWeb.moRequest.Cookies["RememberMeUserName"] != null)
-                                                goResponse.Cookies.Remove("RememberMeUserName");
-                                            oCookie = new System.Web.HttpCookie("RememberMeUserName");
-                                            oCookie.Value = myWeb.moRequest["cUserName"];
-                                            oCookie.Expires = DateAndTime.DateAdd(DateInterval.Day, 60d, DateTime.Now);
-                                            goResponse.Cookies.Add(oCookie);
+                                        base.addNote(ref moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse, true);
 
-                                            if (myWeb.moRequest.Cookies["RememberMeUserId"] != null)
-                                                goResponse.Cookies.Remove("RememberMeUserId");
-                                            oCookie = new System.Web.HttpCookie("RememberMeUserId");
-                                            oCookie.Value = Convert.ToString(myWeb.mnUserId);
-                                            oCookie.Expires = DateAndTime.DateAdd(DateInterval.Day, 60d, DateTime.Now);
-                                            goResponse.Cookies.Add(oCookie);
-                                        }
-                                        else
+                                        if (sValidResponse.Contains("msg-1021"))
                                         {
-                                            goResponse.Cookies["RememberMeUserName"].Expires = DateTime.Now.AddDays(-1);
-                                            goResponse.Cookies["RememberMeUserId"].Expires = DateTime.Now.AddDays(-1);
+                                            //remove password
+                                            XmlNode passwordNode = moXformElmt.SelectSingleNode("descendant-or-self::secret");
+                                            oFrmElmt = (XmlElement)passwordNode.ParentNode;
+                                            oFrmElmt.RemoveChild(passwordNode);
+                                            //remove submit mode
+                                            XmlNode SubmitNode = moXformElmt.SelectSingleNode("descendant-or-self::submit");
+                                            oFrmElmt = (XmlElement)SubmitNode.ParentNode;
+                                            oFrmElmt.RemoveChild(SubmitNode);
+                                            base.addSubmit(ref oFrmElmt, "ewSubmit", "Resend Activation Code", "LoginResendActivation", default, "fa-solid fa-right-to-bracket");
                                         }
                                     }
                                 }
                                 else
                                 {
-                                    base.addNote(ref moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse,true);
-
-                                    if (sValidResponse.Contains("msg-1021"))
-                                    {
-                                        XmlNode SubmitNode = moXformElmt.SelectSingleNode("descendant-or-self::submit");
-                                        oFrmElmt = (XmlElement)SubmitNode.ParentNode;
-                                        oFrmElmt.RemoveChild(SubmitNode);
-                                        base.addSubmit(ref oFrmElmt, "ewSubmit", "Resend Validation Code", "ResendActivation", default, "fa-solid fa-right-to-bracket");
-                                    }
+                                    valid = false;
+                                }
+                                if (valid == false)
+                                {
+                                    myWeb.mnUserId = 0;
                                 }
                             }
-                            else
-                            {
-                                valid = false;
-                            }
-                            if (valid == false)
-                            {
-                                myWeb.mnUserId = 0;
-                            }
-                        }
 
-                        base.addValues();
-                        return base.moXformElmt;
+
+                            base.addValues();
+                            return base.moXformElmt;
+                        }
+                      
                     }
 
                     catch (Exception ex)
