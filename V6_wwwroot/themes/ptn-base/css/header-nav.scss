@@ -11,9 +11,32 @@
     }
 }
 
-.header-menu-right {
+header.header-menu-right {
     .main-nav ul.navbar-nav {
         justify-content: flex-end;
+    }
+
+    .navbar-content {
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    .header-tier1 > nav {
+        margin: 0;
+    }
+}
+
+.header-info-above {
+    display: block;
+
+    .header-above {
+        background: $info;
+
+        .container-fluid,
+        .container {
+            display: flex;
+            justify-content: flex-end;
+        }
     }
 }
 

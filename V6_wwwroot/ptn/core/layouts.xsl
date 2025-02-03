@@ -1576,6 +1576,29 @@
                 </xsl:with-param>
                 <xsl:with-param name="linkText" select="@linkText"/>
                 <xsl:with-param name="altText" select="@title"/>
+              </xsl:apply-templates>
+              <xsl:text> </xsl:text>
+            </div>
+          </xsl:if>
+          <xsl:if test="(@linkText!='' and not(@accessibleText='true')) and @link!='' and @linkBox='true'">
+            <div class="card-footer">
+              <xsl:if test="@iconStyle='Centre'">
+                <xsl:attribute name="class">card-footer center-block-footer</xsl:attribute>
+              </xsl:if>
+              <xsl:apply-templates select="." mode="moreLink">
+                <xsl:with-param name="link">
+                  <xsl:choose>
+                    <xsl:when test="format-number(@link,'0')!='NaN'">
+                      <xsl:variable name="pageId" select="@link"/>
+                      <xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId or PageVersion[@vParId=$pageId]]" mode="getHref"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:value-of select="@link"/>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </xsl:with-param>
+                <xsl:with-param name="linkText" select="@linkText"/>
+                <xsl:with-param name="altText" select="@title"/>
                 <xsl:with-param name="stretchLink">true</xsl:with-param>
               </xsl:apply-templates>
               <xsl:text> </xsl:text>
