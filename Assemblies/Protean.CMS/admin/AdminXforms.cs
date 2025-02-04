@@ -220,7 +220,7 @@ namespace Protean
 
 
 
-                public virtual XmlElement GetProviderXFrmUserLogon(string FormName = "UserLogon")
+                public virtual XmlElement GetProviderXFrmUserLogon(string FormName = "UserLogon", string cmdPrefix = "")
                 {
                     string cProcessInfo = "";
 
@@ -229,7 +229,7 @@ namespace Protean
 
                         IMembershipAdminXforms oAdXfm = myWeb.moMemProv.AdminXforms;
 
-                        oAdXfm.xFrmUserLogon(FormName);
+                        oAdXfm.xFrmUserLogon(FormName, cmdPrefix);
                         valid = Convert.ToBoolean(oAdXfm.valid);
                         return oAdXfm.moXformElmt;
                     }

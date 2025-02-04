@@ -8226,7 +8226,8 @@ namespace Protean
                     oRoot = moPageXml.CreateElement("Contents");
                     moPageXml.DocumentElement.AppendChild(oRoot);
                 }
-                  string nCurrentPageId = nPageId.ToString();
+                  
+                string nCurrentPageId = nPageId.ToString();
                 // Adjust the page id if it's a cloned page.
                 if (Conversions.ToDouble(nCurrentPageId) != (double)mnPageId)
                 {
