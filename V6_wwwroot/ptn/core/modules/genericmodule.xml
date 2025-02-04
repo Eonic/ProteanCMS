@@ -59,6 +59,8 @@
 			<bind id="icon-offset" nodeset="@icon-offset" required="false()" type="string"/>
 			<bind id="module-padding" nodeset="@module-padding" required="false()" type="string"/>
 			<bind id="title-margin" nodeset="@title-margin" required="false()" type="string"/>
+      <bind id="class-name" nodeset="@class-name" required="false()" type="string"/>
+      <bind id="custom-css" nodeset="@custom-css" required="false()" type="string"/>
 		</bind>
 		<bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
 		<bind nodeset="tblContent">
@@ -806,6 +808,17 @@
 							<label>Change Notes</label>
 						</input>
 					</group>
+
+          <group class="col-lg-4">
+            <input bind="class-name" class="short">
+              <label>custom class name</label>
+            </input>
+          </group>
+          <group class="col-lg-8">
+            <textarea bind="custom-css" class="short">
+              <label>custom css</label>
+            </textarea>
+          </group>
 				</group>
 				<group id="columns" class="inline-select">
 					<label>
