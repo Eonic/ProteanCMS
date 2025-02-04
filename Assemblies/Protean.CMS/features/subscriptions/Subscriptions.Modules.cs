@@ -467,8 +467,8 @@ namespace Protean
                                     var newContent = myWeb.moPageXml.CreateElement("Content");
                                     newContent.SetAttribute("type", "xform");
 
-                                    var memberMods = new Cms.Membership.Modules();
-                                    memberMods.Register(ref myWeb, ref newContent);
+                                   // var memberMods = new Cms.Membership.Modules();
+                                   // memberMods.Register(ref myWeb, ref newContent);
 
                                     contentNode.AppendChild(newContent);
 
