@@ -2,12 +2,12 @@
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.1.24.0"
+    Public Shared ewAssemblyVersion As String = "6.1.25.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.1.0.0"
     Public Shared bundleAssemblyVersion As String = "1.14.1.0"
     Public Shared bundleLessAssemblyVersion As String = "1.14.0.0"
     Public Shared bundleSassAssemblyVersion As String = "1.14.2.0"
-    Public Shared DartSassHostAssemblyVersion As String = "1.0.13.0"
+    Public Shared DartSassHostAssemblyVersion As String = "1.0.14.0"
     Public Shared jsSwitcherAssemblyVersion As String = "3.24.1.0"
     Public Shared jsSwitcherV8AssemblyVersion As String = "3.24.2.0"
     Public Shared jsSwitcherV8NativeWinx64AssemblyVersion As String = "3.23.2.0"
@@ -43,12 +43,13 @@ Public Class CustomActions
 
     Public Shared SystemNumericsVectorsVersion As String = "4.1.4.0"
 
-    Public Shared AngleSharpVersion As String = "1.1.2.0"
+    Public Shared AngleSharpVersion As String = "1.2.0.0"
     Public Shared PreMailerVersion As String = "2.6.0.0"
     Public Shared QRCoderVersion As String = "1.6.0.0"
 
     Public Shared iTextSharpVersion As String = "3.4.21.0"
     Public Shared SkiaSharpVersion As String = "2.88.0.0"
+    Public Shared BouncyCastleCrypto As String = "2.5.0.0"
 
 
     'do not use as no SNK - Public Shared ImazenWebPVersion As String = "10.0.1.0"

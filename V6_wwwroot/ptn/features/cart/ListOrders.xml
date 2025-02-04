@@ -35,17 +35,54 @@
       <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
       <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
       <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
-      <bind id="redirectPathId" nodeset="@redirectPathId" required="false()" type="string"/>
     </bind>
     <bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
       <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
       <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+      <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@id='columnBind']"/>
   </model>
-  <group ref="EditContent" class="2col">
-    <label>Edit Membership Form Module</label>
-    <group>
-      <group>
-        <label>Settings</label>
+  <group ref="EditContent">
+		<label>List Orders</label>
+		<group class="tabs">
+			<group>
+				<label>
+					<i class="fas fa-pen"> </i>
+					<span class="space"> </span>
+					<span>Content</span>
+				</label>
+				<group>
+
+					<input bind="cModuleTitle" class="long">
+						<label>Title or Name</label>
+					</input>
+					<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='columns']"/>
+
+				</group>
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-link"> </i>
+					<span class="space"> </span>
+					<span>Footer Links</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='FooterLinks']"/>
+
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-brush"> </i>
+					<span class="space"> </span>
+					<span>Presentation</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-cog"> </i>
+					<span class="space"> </span>
+					<span>Advanced Settings</span>
+				</label>
+				<group>
         <!-- These hidden fields and bindings are required for the component-->
         <input bind="nContentKey" class="hidden">
           <label>ContentId</label>
@@ -54,23 +91,11 @@
           <label>ModuleType</label>
         </input>
 
-        <!-- end of hidden fields -->
-          <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
           <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
-      </group>
-    </group>
-    <group>
-      <group>
-        <label>Content</label>
-        <input bind="cModuleTitle" class="long">
-          <label>Title or Name</label>
-        </input>
-        
-        <select1 bind="redirectPathId" class="siteTree">
-          <label>Redirect on Register</label>
-        </select1>
-      </group>
-    </group>
+				</group>
+
+			</group>
+		</group>
   </group>
   <group ref="submit" class="contentSubmit">
     <submit submission="" ref="ewSubmit" class="principle">

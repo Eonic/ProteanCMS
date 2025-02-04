@@ -23,7 +23,7 @@ Installer_Logo.jpg
 ..\Assemblies\NonNuget\EcmaScript.Net.dll
 ..\..\ProteanCMS Addons\Providers\Messaging\CampaignMonitor\bin\Release\Protean.Providers.Messaging.CampaignMonitor.dll
 ..\packages\BundleTransformer.Core.1.14.1\lib\net40\BundleTransformer.Core.dll
-..\Assemblies\Protean.Tools\bin\Release\Protean.Tools.dll
+..\Assemblies\Protean.Tools\bin\Release\netstandard2.0\Protean.Tools.dll
 ..\packages\Microsoft.Web.Infrastructure.2.0.0\lib\net40\Microsoft.Web.Infrastructure.dll
 ..\packages\SharpZipLib.1.4.2\lib\netstandard2.0\ICSharpCode.SharpZipLib.dll
 ..\Assemblies\NonNuget\Imazen.WebP.dll

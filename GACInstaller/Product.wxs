@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?define version="6.1.24"?>
+<?define version="6.1.25"?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi' xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
     <Product Id='*' Name='ProteanCMS GAC Installer $(var.version)' Language='1033' Version='$(var.version)' Manufacturer='Eonic Digital LLP' UpgradeCode='{577597F8-BE6F-46B4-8A9D-46E8A5360918}' Codepage='1252'>
         <Package AdminImage='no' Comments='ProteanCMS GAC Installer' Compressed='yes' Description='ProteanCMS GAC Installer (64bit)' InstallerVersion='300' InstallScope='perMachine' Languages='1033' Manufacturer='Eonic Digital LLP' Platform='x64' ReadOnly='no' ShortNames='no' />
@@ -17,11 +17,9 @@
         <Binary Id='InstallUtil' SourceFile='Resources\Binary\InstallUtil' />
         <Binary Id='InstallUtilConfig' SourceFile='Resources\Binary\InstallUtilConfig' />
         <Binary Id='ADXDPCADLL' SourceFile='Resources\Binary\adxdpca64.dll' />
-        <Binary Id="ProteanCMSInstallActions" SourceFile="..\Assemblies\ProteanCMS.Installer.Actions\bin\x64\$(var.Configuration)\ProteanCMSInstallActions.CA.dll" />
-      
+        <Binary Id="ProteanCMSInstallActions" SourceFile="..\Assemblies\ProteanCMS.Installer.Actions\bin\x64\$(var.Configuration)\ProteanCMSInstallActions.CA.dll" />      
         <CustomAction Id='CA_CreateConfig' BinaryKey='ADXDPCADLL' DllEntry='GetConfig' />
         <!-- The 'Primary output from ewInstaller (Active)' custom action. -->
-
         <CustomAction Id="ProteanInstallActionsInitial" Return="check" Execute="deferred" Impersonate="no" BinaryKey="ProteanCMSInstallActions" DllEntry="Install" />
         <CustomAction Id="ProteanUnInstallActions" Return="check" Execute="deferred" Impersonate="no" BinaryKey="ProteanCMSInstallActions" DllEntry="UnInstall" />
         <CustomAction Id="ProteanInstallActionsFinal" Return="check" Execute="deferred" Impersonate="no" BinaryKey="ProteanCMSInstallActions" DllEntry="InstallFinal" />
@@ -57,7 +55,7 @@
 					<File Id='_Protean_AppStart' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Protean.AppStart.dll' Source='..\Assemblies\Protean.AppStart\bin\$(var.Configuration)\Protean.AppStart.dll' Assembly='.net' KeyPath='yes' />
 				</Component>				
 				<Component Id='com_F2AD2069_BE06_11F8_0190_40CE3BBB25C8' Guid='16EAE569-B738-4819-BE9A-C6279AD16BE5' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_F2AD2069_BE06_11F8_0190_40CE3BBB25C8' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Protean.Tools.dll' Source='..\Assemblies\Protean.Tools\bin\$(var.Configuration)\Protean.Tools.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_F2AD2069_BE06_11F8_0190_40CE3BBB25C8' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Protean.Tools.dll' Source='..\Assemblies\Protean.Tools\bin\$(var.Configuration)\netstandard2.0\Protean.Tools.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 				<Component Id='com_47119BB9_5091_9F08_7BCB_3FC0FC9C7A3C' Guid='CA3ECC2F-BB9C-41C8-A73B-40739B106AE0' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_47119BB9_5091_9F08_7BCB_3FC0FC9C7A3C' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='ProteanCMS.dll' Source='..\Assemblies\Protean.CMS\bin\$(var.Configuration)\ProteanCMS.dll' Assembly='.net' KeyPath='yes' />
@@ -129,7 +127,7 @@
 					<File Id='_BundleTransformer_SassAndScss' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='BundleTransformer.SassAndScss.dll' Source='..\packages\BundleTransformer.SassAndScss.1.14.2\lib\net40\BundleTransformer.SassAndScss.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 				<Component Id='com_DartSassHost' Guid='ca155d09-e7d5-4aa8-99c0-fb3b3111545b' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_DartSassHost' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='DartSassHost.dll' Source='..\packages\DartSassHost.1.0.13\lib\net471\DartSassHost.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_DartSassHost' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='DartSassHost.dll' Source='..\packages\DartSassHost.1.0.14\lib\net471\DartSassHost.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 				<Component Id='com_MicrosoftAjax' Guid='b235af82-3a6c-4652-bcee-9ff1c1b6fef2' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                 <File Id='_MicrosoftAjax' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='BundleTransformer.MicrosoftAjax.dll' Source='..\packages\BundleTransformer.MicrosoftAjax.1.14.0\lib\net40\BundleTransformer.MicrosoftAjax.dll' Assembly='.net' KeyPath='yes' />
@@ -183,7 +181,7 @@
                 <File Id='_System_Text_Encoding_CodePages' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Encoding.CodePages.dll' Source='..\packages\System.Text.Encoding.CodePages.8.0.0\lib\netstandard2.0\System.Text.Encoding.CodePages.dll' Assembly='.net' KeyPath='yes' />
               </Component>
               <Component Id='com_AngleSharp' Guid='af54845d-f98c-43f5-9f9c-8b0c7c2d677e' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                <File Id='_AngleSharp' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='AngleSharp.dll' Source='..\packages\AngleSharp.1.1.2\lib\net472\AngleSharp.dll' Assembly='.net' KeyPath='yes' />
+                <File Id='_AngleSharp' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='AngleSharp.dll' Source='..\packages\AngleSharp.1.2.0\lib\net472\AngleSharp.dll' Assembly='.net' KeyPath='yes' />
               </Component>
               <Component Id='com_PreMailerNet' Guid='bc7a3deb-4135-44f4-ad2e-2099d2b18b64' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                 <File Id='_PreMailerNet' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='PreMailer.Net.dll' Source='..\packages\PreMailer.Net.2.6.0\lib\net461\PreMailer.Net.dll' Assembly='.net' KeyPath='yes' />
@@ -232,6 +230,11 @@
 				<Component Id='com_iTextSharp' Guid='0e056e40-fd99-4341-9fc5-cbac79ec3ca5' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_iTextSharp' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='iTextSharp.LGPLv2.Core.dll' Source='..\Assemblies\NonNuget\iTextSharp.LGPLv2.Core.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
+
+				<Component Id='com_BouncyCastle' Guid='2073991f-3fbf-42a1-b4a1-cd91bbccd3a6' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+					<File Id='_BouncyCastle' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='BouncyCastle.Cryptography.dll' Source='..\packages\BouncyCastle.Cryptography.2.4.0\lib\netstandard2.0\BouncyCastle.Cryptography.dll' Assembly='.net' KeyPath='yes' />
+				</Component>
+				
 <!--
 				<Component Id='com_SelectHtmlToPdf' Guid='8ecf5eae-ab8d-4390-95d0-234e54902a58' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_SelectHtmlToPdf' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Select.HtmlToPdf.dll' Source='..\packages\Select.HtmlToPdf.23.1.0\lib\net40\Select.HtmlToPdf.dll' Assembly='.net' KeyPath='yes' />
@@ -354,6 +357,7 @@
 			<ComponentRef Id='com_SystemNumericsVectors' />
 			<ComponentRef Id='com_SkiaSharp' />
 			<ComponentRef Id='com_iTextSharp' />
+			<ComponentRef Id='com_BouncyCastle' />
 			
 			<!--
 			<ComponentRef Id='com_SelectHtmlToPdf' />

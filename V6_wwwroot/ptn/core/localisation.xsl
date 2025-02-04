@@ -421,6 +421,22 @@
     </xsl:choose>
   </xsl:template>
 
+	<xsl:template match="span[@class='msg-1036']" mode="term">
+		<xsl:choose>
+			<xsl:when test="$lang='en-pr'">Your account is now activated please logon</xsl:when>
+			<xsl:otherwise>Your account is now activated please logon</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="span[@class='msg-1037']" mode="term">
+		<xsl:choose>
+			<xsl:when test="$lang='en-pr'">This activation code has allready been used or is invalid</xsl:when>
+			<xsl:otherwise>This activation code has allready been used or is invalid</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+
+
 	<xsl:template match="span[@class='msg-028']" mode="term">
 		<xsl:value-of select="span[@class='labelName']/node()"/>
 		<xsl:choose>

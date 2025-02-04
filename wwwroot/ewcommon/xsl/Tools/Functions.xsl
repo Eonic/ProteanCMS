@@ -1215,7 +1215,6 @@
 
     <xsl:choose>
       <xsl:when test="/Page/ContentDetail/Content">
-		 
         <xsl:apply-templates select="/Page/ContentDetail/Content" mode="contentDetailJS"/>
         <xsl:apply-templates select="/Page/Contents/Content[@type='FreeCookieConsent']" mode="contentJS"/>
       </xsl:when>
@@ -6366,30 +6365,22 @@
 
 
   <xsl:template match="a" mode="cleanXhtml">
-
     <xsl:element name="{name()}">
-
       <xsl:for-each select="@*">
         <xsl:attribute name="{name()}">
-
           <xsl:choose>
             <!-- when we doing the href attribute AND contains pgid -> get proper URL -->
             <xsl:when test="name()='href' and contains(.,'?pgid=')">
-
               <xsl:call-template name="getHrefFromPgid">
                 <xsl:with-param name="url" select="."/>
               </xsl:call-template>
-
             </xsl:when>
             <xsl:otherwise>
               <xsl:value-of select="." />
             </xsl:otherwise>
           </xsl:choose>
-
         </xsl:attribute>
-
       </xsl:for-each>
-
       <xsl:if test="$GoogleAnalyticsUniversalID!='' and contains(@href,'.pdf')">
         <xsl:attribute name="onclick">
           <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
@@ -6397,9 +6388,17 @@
           <xsl:text>');</xsl:text>
         </xsl:attribute>
       </xsl:if>
-
-      <xsl:apply-templates mode="cleanXhtml"/>
-      <xsl:text> </xsl:text>
+		<xsl:variable name="anchorText">
+			<xsl:apply-templates mode="cleanXhtml"/>
+		</xsl:variable>
+		<xsl:choose>
+			<xsl:when test="$anchorText!=''">
+				<xsl:value-of select="$anchorText"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text> </xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
     </xsl:element>
   </xsl:template>
 

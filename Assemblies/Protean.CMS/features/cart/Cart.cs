@@ -181,6 +181,8 @@ namespace Protean
 
             public bool mbQuitOnShowInvoice = true;
             private bool mbDepositOnly = false;
+            public bool mbBlockCartCmd = false; // Used for reseting payment on subscripitions
+
 
             public enum cartError
             {
@@ -734,12 +736,14 @@ namespace Protean
                         if (Information.IsNumeric(myWeb.moRequest.QueryString["cartErr"]))
                             mnProcessError = (short)Conversions.ToInteger(myWeb.moRequest.QueryString["cartErr"]);
 
+                        if (mbBlockCartCmd == false)
+                        { 
                         mcCartCmd = myWeb.moRequest.QueryString["cartCmd"];
                         if (string.IsNullOrEmpty(mcCartCmd))
                         {
                             mcCartCmd = myWeb.moRequest.Form["cartCmd"];
                         }
-
+                        }
                         mcPaymentMethod = Conversions.ToString(myWeb.moSession["mcPaymentMethod"]);
                         mmcOrderType = Conversions.ToString(myWeb.moSession["mmcOrderType"]);
                         mcItemOrderType = myWeb.moRequest.Form["ordertype"];
@@ -9976,7 +9980,7 @@ namespace Protean
                                         }
                                         catch (Exception)
                                         {
-                                            sellerNode.InnerXml = Tools.Text.tidyXhtmlFrag(cSellerNotesHtml + "</ul>");
+                                            sellerNode.InnerXml = stdTools.tidyXhtmlFrag(cSellerNotesHtml + "</ul>");
                                         }
 
                                         // Add the Delivery Details
@@ -10905,9 +10909,14 @@ namespace Protean
                     var PublishExpireDate = DateTime.Now;
                     if (moCartConfig["ShippingPostcodes"] == "on" && cDestinationPostalCode != "")
                     {
-
-                        string PostcodePrefix = System.Text.RegularExpressions.Regex.Split(cDestinationPostalCode, "(?m)^([A-Z0-9]{2,4})(?:\\s*[A-Z0-9]{3})?$")[1];
-                        sCountryList = getParentCountries(ref PostcodePrefix, ref argnIndex);
+                        try
+                        {
+                            string PostcodePrefix = System.Text.RegularExpressions.Regex.Split(cDestinationPostalCode, "(?m)^([A-Z0-9]{2,4})(?:\\s*[A-Z0-9]{3})?$")[1];
+                            sCountryList = getParentCountries(ref PostcodePrefix, ref argnIndex);
+                        }
+                        catch {
+                            sCountryList = "";
+                        }
 
                     }
 

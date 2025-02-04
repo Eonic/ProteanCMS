@@ -786,7 +786,7 @@ namespace Protean
                 {
                     string cTheString = Strings.Replace(Strings.Replace(cHTMLString, "&gt;", ">"), "&lt;", "<");
                     cTheString = convertEntitiesToCodes(cTheString);
-                    cTheString = Tools.Text.tidyXhtmlFrag(cTheString, true);
+                    cTheString = stdTools.tidyXhtmlFrag(cTheString, true);
                     return cTheString;
                 }
                 catch (Exception)
@@ -828,7 +828,7 @@ namespace Protean
                             //cHtml = cHtml;
                         }
 
-                        cHtmlOut = Tools.Text.tidyXhtmlFrag(cHtml, true, true, RemoveTags);
+                        cHtmlOut = stdTools.tidyXhtmlFrag(cHtml, true, true, RemoveTags);
 
                         cHtmlOut = Strings.Replace(cHtmlOut, "&#x0;", "");
                         cHtmlOut = Strings.Replace(cHtmlOut, " &#0;", "");
@@ -892,7 +892,7 @@ namespace Protean
                     cHtml = Strings.Replace(Strings.Replace(cHtml, "&gt;", ">"), "&lt;", "<");
                     cHtml = "<div>" + cHtml + "</div>";
 
-                    cHtmlOut = Tools.Text.tidyXhtmlFrag(cHtml, true, true, RemoveTags);
+                    cHtmlOut = stdTools.tidyXhtmlFrag(cHtml, true, true, RemoveTags);
 
                     cHtmlOut = Strings.Replace(cHtmlOut, "&#x0;", "");
                     cHtmlOut = Strings.Replace(cHtmlOut, " &#0;", "");
