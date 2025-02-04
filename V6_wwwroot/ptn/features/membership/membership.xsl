@@ -638,7 +638,7 @@
   <xsl:template match="Content[@type='Module' and (@moduleType='MembershipLogon')]" mode="displayBrief">
     <xsl:choose>
       <xsl:when test="not(/Page/User)">
-        <xsl:apply-templates select="//Content[@type='xform' and @name='UserLogon']" mode="xform"/>
+        <xsl:apply-templates select="." mode="xform"/>
       </xsl:when>
       <xsl:otherwise>
         <xsl:apply-templates select="/Page/User" mode="displayUserDetails" />
