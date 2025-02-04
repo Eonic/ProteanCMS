@@ -109,11 +109,19 @@ $form-check-input-border: 1px solid $input-border-color;
 /*##################### CARDS ########################*/
 //$card-border-radius: var(--#{$prefix}border-radius);
 $card-border-width: 2px;
-$bg-card-border: false; 
+$bg-card-border: false;
+
+//spacing
+$card-spacer-y-xs: 2rem;
+$card-spacer-x-xs: $card-spacer-y-xs;
+$card-cap-padding-y-xs: $card-spacer-y-xs;
+$card-cap-padding-x-xs: $card-spacer-x-xs;
+
 $card-spacer-y:3rem;
-$card-spacer-x:3rem;
-$card-cap-padding-y: 3rem;
-$card-cap-padding-x: 3rem;
+$card-spacer-x: $card-spacer-y;
+$card-cap-padding-y: $card-spacer-y;
+$card-cap-padding-x: $card-spacer-x;
+
 
 $listItem-padding: 1rem;
 
