@@ -228,8 +228,6 @@ strong, b {
 }
 
 h1, h2, h3, h4 {
-    font-weight: 900;
-
     a {
         text-underline-offset: 0.4rem;
     }
@@ -287,7 +285,6 @@ h1, h2, h3, h4 {
 
 .btn-outline-light,
 .btn-custom {
-    font-weight: 700;
     text-transform: uppercase;
     padding: 0.6rem 1.6rem;
     font-size: 1.1rem;

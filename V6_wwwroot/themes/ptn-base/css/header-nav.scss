@@ -21,8 +21,13 @@ header.header-menu-right {
         align-items: flex-end;
     }
 
-    .header-tier1 > nav {
-        margin: 0;
+    .header-tier1 {
+        display: flex;
+        align-items: center;
+
+        > nav {
+            margin: 0;
+        }
     }
 }
 
@@ -119,8 +124,14 @@ header {
     right: 0;
     top: 0;
     padding: 10px 15px;
-    color: $navbar-light-color !important;
+    color: color-contrast($mobile-dd-background) !important;
     z-index: 20;
+
+    &:after {
+        content: '\f00d';
+        font-weight: 900;
+        font-family: 'Font Awesome 6 Free';
+    }
 }
 
 #mainTable .navbar-fixed-top {
