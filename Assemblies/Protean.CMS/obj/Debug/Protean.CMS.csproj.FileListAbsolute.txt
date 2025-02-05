@@ -493,3 +493,4 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ProteanCMS.dll.conf
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ProteanCMS.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ProteanCMS.pdb
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\TidyHTML5Managed.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Threading.Tasks.Extensions.xml
