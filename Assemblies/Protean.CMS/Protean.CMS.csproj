@@ -298,6 +298,7 @@
     <Compile Include="api\soap.cs" />
     <Compile Include="core\DBImport.cs" />
     <Compile Include="features\membership\Membership.Modules.cs" />
+    <Compile Include="providers\CDN.BaseProvider.cs" />
     <Compile Include="tools\AppStart.cs" />
     <Compile Include="Connected Services\AdminProxy\Reference.cs">
       <AutoGen>True</AutoGen>

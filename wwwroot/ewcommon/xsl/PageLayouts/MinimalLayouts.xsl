@@ -2577,6 +2577,11 @@
 		</xsl:variable>
 		<xsl:variable name="src">
 			<xsl:choose>
+				<!-- We only bother preloading the webp version				
+				<xsl:when test="ms:node-set($image)/*[local-name() = 'picture']">
+					<xsl:value-of select="ms:node-set($image)/*/*[local-name() = 'img']/@src"/>
+				</xsl:when>
+				-->
 				<xsl:when test="$lazy='on'">
 					<xsl:value-of select="ms:node-set($image)/*/@data-src"/>
 				</xsl:when>
@@ -2598,7 +2603,12 @@
 				</xsl:when>
 			</xsl:choose>
 		</xsl:variable>
-		<link rel="preload" href="{$src}" as="image" type="{$MimeType}" />
+		<xsl:if test="$src!=''">
+			<link rel="preload" href="{$src}" as="image" type="{$MimeType}" />
+		</xsl:if>	
+		<xsl:for-each select="ms:node-set($image)/*[local-name() = 'picture']/*[local-name() = 'source' and contains(@srcset,'.webp')]">
+			<link rel="preload" href="{@srcset}" as="image" type="image/webp" />
+		</xsl:for-each>
 	</xsl:template>
 
 	<xsl:template match="Content[@moduleType='Image']" mode="displayBrief">
@@ -2631,10 +2641,11 @@
 					<xsl:apply-templates select="." mode="resize-image">
 						<xsl:with-param name="crop" select="$crop"/>
 						<xsl:with-param name="no-stretch" select="$no-stretch"/>
-					</xsl:apply-templates>
+						<xsl:with-param name="maxWidth" select="@width"/>
+						<xsl:with-param name="maxHeight" select="@height"/>
+					</xsl:apply-templates>			
 				</xsl:when>
 				<xsl:when test="$maxWidth!='' or $maxHeight!=''">
-					RESIZE IMAGE
 					<xsl:apply-templates select="." mode="resize-image">
 						<xsl:with-param name="maxWidth" select="$maxWidth"/>
 						<xsl:with-param name="maxHeight" select="$maxHeight"/>
