@@ -85,7 +85,7 @@
       <xsl:if test="$page/ContentDetail and $themeBreadcrumb='true' and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
         <section class="wrapper detail-breadcrumb-wrapper">
           <div class="{$container}">
-            <ol class="breadcrumb detail-breadcrumb">
+            <ol class="breadcrumb detail-breadcrumb" itemscope="itemscope" itemtype="https://schema.org/BreadcrumbList">
               <xsl:apply-templates select="Menu/MenuItem" mode="breadcrumb"/>
             </ol>
           </div>
@@ -154,7 +154,7 @@
                         <div class="banner-caption-inner">
                           <xsl:if test="$themeBreadcrumb='true'">
                             <nav aria-label="breadcrumb">
-                              <ol class="breadcrumb">
+                              <ol class="breadcrumb" itemscope="itemscope" itemtype="https://schema.org/BreadcrumbList">
                                 <xsl:apply-templates select="Menu/MenuItem" mode="breadcrumb"/>
                               </ol>
                             </nav>
@@ -181,7 +181,7 @@
                       <div id="mainTitle">
                         <xsl:if test="$themeBreadcrumb='true'">
                           <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
+                            <ol class="breadcrumb" itemscope="itemscope" itemtype="https://schema.org/BreadcrumbList">
                               <xsl:apply-templates select="Menu/MenuItem" mode="breadcrumb"/>
                             </ol>
                           </nav>
