@@ -59,7 +59,7 @@ namespace Protean
                 public System.Web.HttpRequest moRequest;
                 public Tools.Security.Impersonate moImp = null;
                 public string ReportExportPath = "/ewcommon/tools/export.ashx?ewCmd=CartDownload";
-                List<string> slist = new List<string>();                
+                List<string> sImageUrlslist = new List<string>();                
 
                 // Error Handling hasn't been formally set up for AdminXforms so this is just for method invocation found in xfrmEditContent
                 public new event OnErrorEventHandler OnError;
@@ -4870,13 +4870,16 @@ namespace Protean
                                 {
                                     DeleteAllInstancesOfOrigianlFile(cPath, cName, oFs);
                                     //Add method for deleteing images from cache
-                                    if(slist.Count != 0)
+                                    if(sImageUrlslist.Count != 0)
                                     {
                                         string result = "Cached";                                      
-                                        string[] myString = slist.ToArray();                                       
+                                        string[] myString = sImageUrlslist.ToArray();                                       
                                         Protean.Providers.CDN.ReturnProvider oCdnProv = new Protean.Providers.CDN.ReturnProvider();
                                         ICDNProvider oCDNProvider = oCdnProv.Get(ref myWeb);
-                                        result = Conversions.ToString(oCDNProvider.AdminXforms.PurgeImageCacheAsync(myString, ref myWeb));
+                                        if(oCDNProvider!=null)
+                                        {
+                                            result = Conversions.ToString(oCDNProvider.AdminXforms.PurgeImageCacheAsync(myString, ref myWeb));
+                                        }                                     
                                         
                                         //DeleteFileFromCache(myString);
                                     }                                    
@@ -4942,7 +4945,7 @@ namespace Protean
                             {
                                 FilesToDeleteFromCache = filesToDelete[i].Replace(oFs.mcStartFolder, "").Replace(@"\", "/");
                                 FilesToDeleteFromCache = WebPath + myWeb.moConfig["ImageRootPath"].Replace("/", "") + FilesToDeleteFromCache;
-                                slist.Add(FilesToDeleteFromCache);
+                                sImageUrlslist.Add(FilesToDeleteFromCache);
                             }
                           
                             if(Strings.LCase(myWeb.moConfig["EnableWebP"])=="on")
@@ -4955,7 +4958,7 @@ namespace Protean
                                     oFs.DeleteFile(newFilePath);
                                     newFilePath = newFilePath.Replace(oFs.mcStartFolder, "").Replace(@"\", "/");
                                     newFilePath = WebPath + myWeb.moConfig["ImageRootPath"].Replace("/", "") + newFilePath;
-                                    slist.Add(newFilePath);                                
+                                    sImageUrlslist.Add(newFilePath);                                
                                 }
                             }                       
                         }
