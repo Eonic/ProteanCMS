@@ -459,19 +459,14 @@ section:not(.bg-light) .bg-light {
     padding: 3rem;
 }
 
-section.bg-dark,
-section.bg-primary,
-section.bg-secondary,
-.layoutModule.bg-dark,
-.layoutModule.bg-primary,
-.layoutModule.bg-secondary {
-    @extend .text-white;
+@mixin section-contrast($color: $dark) {
+    color: color-contrast($color);
 
     h1, h2, h3, h4, h5, h6 {
-        color: #fff;
+        color: color-contrast($color);
 
         a {
-            color: #fff;
+            color: color-contrast($color);
         }
     }
 
@@ -482,22 +477,43 @@ section.bg-secondary,
     .nobox > .entryFooter,
     .nobox > .FormattedText {
         a:not(.btn) {
-            @extend .link-light;
+            //@extend .link-light;
+            color: color-contrast($color);
         }
 
         .btn-custom {
             &:not(:hover):not(:focus-visible) {
                 background: transparent;
             }
-
-            @extend .btn-outline-white;
+            //@extend .btn-outline-white;
+            border-color: color-contrast($color);
         }
     }
 
 
     .swiper-button-prev, .swiper-button-next {
-        color: #fff;
+        color: color-contrast($color);
     }
+}
+
+section.bg-dark,
+.layoutModule.bg-dark {
+    @include section-contrast();
+}
+
+section.bg-primary,
+.layoutModule.bg-primary {
+    @include section-contrast($primary);
+}
+
+section.bg-secondary,
+.layoutModule.bg-secondary {
+    @include section-contrast($secondary);
+}
+
+section.bg-info,
+.layoutModule.bg-info {
+    @include section-contrast($info);
 }
 
 section.whiteBG {
