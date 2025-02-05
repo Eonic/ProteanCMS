@@ -43,6 +43,7 @@
 			<bind id="panelImage" nodeset="@panelImage" required="false()" type="string" />
 			<bind id="imagePosition" nodeset="@imagePosition" required="false()" type="string" />
 			<bind id="maxWidth" nodeset="@maxWidth" required="false()" type="string" />
+			<bind id="padding" nodeset="@padding" required="false()" type="string" />
 			<bind id="char80Layout" nodeset="@char80Layout" required="false()" type="string" />
 			<bind id="v-align" nodeset="@v-align" required="false()" type="string" />
 		</bind>
@@ -167,7 +168,12 @@
               </item>
             </select1>
           </group>
-				</group>
+          <input bind="padding" class="col-lg-6">
+            <label>Padding</label>
+            <value></value>
+          </input>
+
+        </group>
 			</group>
 			<group>
 				<label>

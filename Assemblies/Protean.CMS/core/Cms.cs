@@ -8237,9 +8237,11 @@ namespace Protean
                 else
                 {   
                     // If we have an article id we only want to show cascaded content
+                    if (moConfig["ContentDetailShowOnlyCascaded"] != null) { 
                     if (moConfig["ContentDetailShowOnlyCascaded"].ToLower() == "on" && mnArtId != 0)
                     {
                         sFilterSql += " and CL.bCascade = 1 and CL.bPrimary = 1 ";
+                    }
                     }
                     // we are pulling in located and native items but not cascaded
                 }
