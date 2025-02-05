@@ -47,31 +47,38 @@ namespace Protean.Providers
                     Type calledType;
                     string ProviderClass = "";
                     Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/CDNProviders");
-                    ProviderClass =Convert.ToString(moPrvConfig.Providers[0].Name);
-
-                    if (string.IsNullOrEmpty(ProviderClass))
+                    if(moPrvConfig != null)
                     {
-                        ProviderClass = "Protean.Providers.CDN.DefaultProvider";
-                        calledType = Type.GetType(ProviderClass, true);
-                    }
-                    else
-                    {                        
-                        if (moPrvConfig.Providers[0].Name != null)
+                        ProviderClass = Convert.ToString(moPrvConfig.Providers[0].Name);
+
+                        if (string.IsNullOrEmpty(ProviderClass))
                         {
-                            var assemblyInstance = Assembly.Load(moPrvConfig.Providers[0].Type);
-                            calledType = assemblyInstance.GetType("Protean.Providers.CDN." + ProviderClass, true);
+                            ProviderClass = "Protean.Providers.CDN.DefaultProvider";
+                            calledType = Type.GetType(ProviderClass, true);
                         }
                         else
                         {
-                            calledType = Type.GetType("Protean.Providers.CDN." + ProviderClass, true);
+                            if (moPrvConfig.Providers[0].Name != null)
+                            {
+                                var assemblyInstance = Assembly.Load(moPrvConfig.Providers[0].Type);
+                                calledType = assemblyInstance.GetType("Protean.Providers.CDN." + ProviderClass, true);
+                            }
+                            else
+                            {
+                                calledType = Type.GetType("Protean.Providers.CDN." + ProviderClass, true);
+                            }
                         }
+
+                        var o = Activator.CreateInstance(calledType);
+                        var args = new object[1];
+                        args[0] = myWeb;
+
+                        return (ICDNProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args);
+                    }else
+                    {
+                        return null;
                     }
-
-                    var o = Activator.CreateInstance(calledType);
-                    var args = new object[1];
-                    args[0] = myWeb;
-
-                    return (ICDNProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args);
+                    
                 }
                 catch (Exception ex)
                 {
