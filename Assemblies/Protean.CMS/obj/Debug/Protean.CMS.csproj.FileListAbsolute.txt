@@ -355,7 +355,6 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Runtime.Comp
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Text.Json.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Threading.Tasks.Extensions.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Web.Optimization.dll
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\WebActivatorEx.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\WebGrease.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Protean.Tools.pdb
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Protean.Tools.dll.config
@@ -493,3 +492,4 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ProteanCMS.dll.conf
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ProteanCMS.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ProteanCMS.pdb
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\TidyHTML5Managed.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Threading.Tasks.Extensions.xml
