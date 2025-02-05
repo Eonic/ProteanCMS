@@ -2540,7 +2540,6 @@
 				<xsl:apply-templates select="node()" mode="cleanXhtml"/>
 			</xsl:otherwise>
 		</xsl:choose>
-	TEST
 	</xsl:template>
 
 	<xsl:template match="Content[@type='Module' and @moduleType='FormattedText']" mode="displayBrief">
