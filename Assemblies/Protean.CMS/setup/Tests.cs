@@ -319,14 +319,18 @@ namespace Protean
             try
             {
                 string cVirtualPath = string.Empty;
-                if (goConfig["cssFramework"].ToLower() == "bs3")
+                if (goConfig["cssFramework"] != null)
                 {
-                    cVirtualPath = "/ewcommon/images/logon-bg.png";
+                    if (goConfig["cssFramework"].ToLower() == "bs3")
+                    {
+                        cVirtualPath = "/ewcommon/images/logon-bg.png";
+                    }
+                    else
+                    {
+                        cVirtualPath = "/ptn/admin/skin/images/logosquare.png";
+                    }
                 }
-                else
-                {
-                    cVirtualPath = "/ptn/admin/skin/images/logosquare.png";
-                }
+
                 string webpFileName = Strings.Replace(cVirtualPath, ".png", ".webp");
                 string newFilepath = string.Empty;
                 var oEw = new Cms();
