@@ -1328,10 +1328,22 @@ namespace Protean
                             mcContentType = "text/html";
                             gcEwSiteXsl = moConfig["SiteXsl"];
                             moResponseType = pageResponseType.Page;
+                            Boolean bAllowCachePage = true;
+
                             // can we get a cached page
                             if (moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"] != null)
                             {
-                                if (gnResponseCode == 200L & moRequest.Form.Count == 0 & mnUserId == 0 & !moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"].Contains("?"))
+                                //check if webgains links open cached pages
+                                if (moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"].Contains("?"))
+                                {
+                                    bAllowCachePage = false;
+                                    if (moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"].Contains("utm_source"))
+                                    {
+                                        bAllowCachePage = true;
+                                    }
+                                }
+
+                                if (gnResponseCode == 200L & moRequest.Form.Count == 0 & mnUserId == 0 & bAllowCachePage) //!moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"].Contains("?"))
                                 {
                                     bPageCache = Strings.LCase(moConfig["PageCache"]) == "on" ? true : false;
                                 }
