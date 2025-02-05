@@ -798,12 +798,7 @@
     <!-- admin javascripts -->
     <xsl:if test="$adminMode">
       <xsl:apply-templates select="." mode="adminJs"/>
-      <!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={$GoogleAPIKey}&amp;libraries=places&amp;libraries=marker&amp;libraries=geometry&amp;v=3.exp">
-        <xsl:text></xsl:text>
-      </script>
-      <script src="https://unpkg.com/@googlemaps/markerclusterer"></script>-->
-
-    </xsl:if>
+     </xsl:if>
 
     <xsl:apply-templates select="." mode="xform_control_scripts"/>
     <!-- IF IE6 apply PNG Fix as standard -->
@@ -6403,8 +6398,18 @@
         </xsl:attribute>
       </xsl:if>
 
-      <xsl:apply-templates mode="cleanXhtml"/>
-      <xsl:text> </xsl:text>
+     	<xsl:variable name="anchorText">
+			<xsl:apply-templates mode="cleanXhtml"/>
+		</xsl:variable>
+		<xsl:choose>
+			<xsl:when test="$anchorText!=''">
+				<xsl:value-of select="$anchorText"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text> </xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+    
     </xsl:element>
   </xsl:template>
 
