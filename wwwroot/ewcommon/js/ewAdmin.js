@@ -956,7 +956,7 @@ function initialiseGeocoderButton() {
     });
 
     $('.getGeoResponceBtn').click(function (e) {
-        debugger;
+       // debugger;
         e.preventDefault();
         var currentUrl = window.location.href;
         var city;
@@ -970,7 +970,7 @@ function initialiseGeocoderButton() {
         findBoundaryForLocation(city);
     });
     async function findBoundaryForLocation(city) {
-        debugger;
+      //  debugger;
         city = city + " , UK";
 
         const request = {
