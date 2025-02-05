@@ -10758,6 +10758,7 @@ namespace Protean
                     {
                         if (oDs.Tables[0].Columns.Count >= 13)
                         {
+                            // This is added to remove extra column for price and location filter
                             if (oDs.Tables[0].Columns.Count == 14)
                             {
                                 oDs.Tables[0].Columns.RemoveAt(13);
