@@ -1,3 +1,6 @@
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using Protean.Providers.Membership;
 using System;
 using System.Collections;
 using System.Configuration;
@@ -8,9 +11,6 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
-using Protean.Providers.Membership;
 using static Protean.stdTools;
 
 namespace Protean
@@ -811,7 +811,7 @@ namespace Protean
                                 goSession["nUserId"] = 0;
                                 mcEwCmd = "";
                                 goto Recheck;
-                                
+
                             }
                         case "ClearDB":
                             {
@@ -899,6 +899,16 @@ namespace Protean
                                 if (goRequest["ewCmd2"] == "Do")
                                 {
                                     AddResponse(myWeb.moDbHelper.CleanAuditOrphans());
+                                    cStep = 1.ToString();
+                                }
+
+                                break;
+                            }
+                        case "CleanDatabase":
+                            {
+                                if (goRequest["ewCmd2"] == "Do")
+                                {
+                                    // AddResponse(myWeb.moDbHelper.CleanDatabase());
                                     cStep = 1.ToString();
                                 }
 
@@ -1069,6 +1079,8 @@ namespace Protean
                     oElmt9 = appendMenuItem(ref oElmt6, "Import Content", "ImportContent", icon: "fa-arrow-circle-right");
                     oElmt10 = appendMenuItem(ref oElmt6, "Upgrade Content", "UpgradeSchema", icon: "fa-angle-double-up");
                     oElmt10 = appendMenuItem(ref oElmt6, "Optimise Images", "OptimiseImages", icon: "fa-picture-o");
+                    oElmt10 = appendMenuItem(ref oElmt6, "Clean Database", "CleanDatabase", icon: "fa-eraser");
+
 
                     oElmt11 = appendMenuItem(ref oElmt1, "Backup/Restore", "BackupRestore", icon: "fa-save");
                     oElmt12 = appendMenuItem(ref oElmt11, "Backup", "Backup", icon: "fa-save");
@@ -1827,9 +1839,9 @@ namespace Protean
                         strXML = "<User><FirstName>" + oDirElmt.GetAttribute("cFirstName") + "</FirstName><LastName>" + oDirElmt.GetAttribute("cLastName") + "</LastName><Position/><Email>" + oDirElmt.GetAttribute("cDirEmail") + "</Email><Notes/></User>";
                     }
                     // other details
-                    strforiegnRef = Convert.ToString(Convert.ToBoolean(oDirElmt.GetAttribute("nDirId"))? "": oDirElmt.GetAttribute("nDirId"));
-                    strName = Convert.ToString(Convert.ToBoolean(oDirElmt.GetAttribute("cDirDN"))? "": oDirElmt.GetAttribute("cDirDN"));
-                    strPassword = Convert.ToString(Convert.ToBoolean(oDirElmt.GetAttribute("cDirPassword"))? "": oDirElmt.GetAttribute("cDirPassword"));
+                    strforiegnRef = Convert.ToString(Convert.ToBoolean(oDirElmt.GetAttribute("nDirId")) ? "" : oDirElmt.GetAttribute("nDirId"));
+                    strName = Convert.ToString(Convert.ToBoolean(oDirElmt.GetAttribute("cDirDN")) ? "" : oDirElmt.GetAttribute("cDirDN"));
+                    strPassword = Convert.ToString(Convert.ToBoolean(oDirElmt.GetAttribute("cDirPassword")) ? "" : oDirElmt.GetAttribute("cDirPassword"));
                     nDirId = myWeb.moDbHelper.insertDirectory(strforiegnRef, strSchema, strName, strPassword, strXML);
 
                     foreach (XmlElement oConElmt in oDirElmt.SelectNodes("Contacts"))
@@ -1895,7 +1907,7 @@ namespace Protean
                     {
                         oDirElmt.SetAttribute("cDirMemberOfIdArr", "");
                     }
-                        
+
                     if (!string.IsNullOrEmpty(oDirElmt.GetAttribute("cDirMemberOfIdArr")))
                     {
                         string[] myArr = Strings.Split(oDirElmt.GetAttribute("cDirMemberOfIdArr"), ",");
@@ -2011,7 +2023,7 @@ namespace Protean
                                 break;
                             }
                     }
-                    nParID = Convert.ToInt32(myWeb.moDbHelper.insertStructure(nParID, oMenuElmt.GetAttribute("nId"), CleanName(oMenuElmt.GetAttribute("cName")), "<DisplayName>" + oMenuElmt.GetAttribute("cName") + "</DisplayName><Description />", oMenuElmt.GetAttribute("cTemplateName"), nMenStatus, Convert.ToDateTime(Interaction.IIf(string.IsNullOrEmpty(oMenuElmt.GetAttribute("dPublishDate")), null, oMenuElmt.GetAttribute("dPublishDate"))),Convert.ToDateTime(Interaction.IIf(string.IsNullOrEmpty(oMenuElmt.GetAttribute("dExpireDate")), null, oMenuElmt.GetAttribute("dExpireDate"))), "", Convert.ToInt64(Interaction.IIf(string.IsNullOrEmpty(oMenuElmt.GetAttribute("nDisplayOrder")), 0, oMenuElmt.GetAttribute("nDisplayOrder")))));
+                    nParID = Convert.ToInt32(myWeb.moDbHelper.insertStructure(nParID, oMenuElmt.GetAttribute("nId"), CleanName(oMenuElmt.GetAttribute("cName")), "<DisplayName>" + oMenuElmt.GetAttribute("cName") + "</DisplayName><Description />", oMenuElmt.GetAttribute("cTemplateName"), nMenStatus, Convert.ToDateTime(Interaction.IIf(string.IsNullOrEmpty(oMenuElmt.GetAttribute("dPublishDate")), null, oMenuElmt.GetAttribute("dPublishDate"))), Convert.ToDateTime(Interaction.IIf(string.IsNullOrEmpty(oMenuElmt.GetAttribute("dExpireDate")), null, oMenuElmt.GetAttribute("dExpireDate"))), "", Convert.ToInt64(Interaction.IIf(string.IsNullOrEmpty(oMenuElmt.GetAttribute("nDisplayOrder")), 0, oMenuElmt.GetAttribute("nDisplayOrder")))));
                     oMenuElmt.SetAttribute("NewID", nParID.ToString());
                     AddResponse("   Writing Page:" + oMenuElmt.GetAttribute("cName") + "   ");
 
@@ -2194,7 +2206,7 @@ namespace Protean
                     else
                         cSQL += "'" + oLocElmt.GetAttribute("nLocationTaxRate") + "',";
                     cSQL += myWeb.moDbHelper.getAuditId() + ")";
-                    nParID =Convert.ToInt32(myWeb.moDbHelper.GetIdInsertSql(cSQL));
+                    nParID = Convert.ToInt32(myWeb.moDbHelper.GetIdInsertSql(cSQL));
                     oLocElmt.SetAttribute("NewID", nParID.ToString());
                 }
 
@@ -2271,7 +2283,7 @@ namespace Protean
                     else
                         cSQL += oMetElmt.GetAttribute("nShipOptTaxRate") + ",";
                     cSQL += myWeb.moDbHelper.getAuditId() + ")";
-                    nParID =Convert.ToInt32(myWeb.moDbHelper.GetIdInsertSql(cSQL));
+                    nParID = Convert.ToInt32(myWeb.moDbHelper.GetIdInsertSql(cSQL));
                     oMetElmt.SetAttribute("NewID", nParID.ToString());
                 }
                 AddResponse("Migrating Relations");
@@ -3628,7 +3640,7 @@ namespace Protean
                 if (value == "Content" | value == "Directory" | value == "ContentStructure")
                 {
                     cUpdateType = value;
-                    nUpdateTableType =(Cms.dbHelper.objectTypes)Enum.Parse(typeof(Cms.dbHelper.objectTypes), value);
+                    nUpdateTableType = (Cms.dbHelper.objectTypes)Enum.Parse(typeof(Cms.dbHelper.objectTypes), value);
                     cUpdateTableName = myWeb.moDbHelper.getTable(nUpdateTableType);
                     cUpdateKeyColumnName = myWeb.moDbHelper.getKey((int)nUpdateTableType);
 
@@ -4179,7 +4191,7 @@ namespace Protean
                     oXForm.load(cXFormPath);
                     oXForm.LoadInstance(oElmt);
                     int nNewContentId = 0;
-                    nNewContentId =Convert.ToInt32(myWeb.moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, oXForm.Instance));
+                    nNewContentId = Convert.ToInt32(myWeb.moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, oXForm.Instance));
                     myWeb.moDbHelper.setContentLocation(nContentID, nNewContentId, true, false);
                     oSetup.AddResponse("Imported Content, New ID: " + nNewContentId);
                 }
