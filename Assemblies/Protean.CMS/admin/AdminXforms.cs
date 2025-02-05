@@ -4874,9 +4874,9 @@ namespace Protean
                                     {
                                         string result = "Cached";                                      
                                         string[] myString = slist.ToArray();                                       
-                                        Protean.Providers.CDN.ReturnProvider oPayProv = new Protean.Providers.CDN.ReturnProvider();
-                                        ICDNProvider oCDNProv = oPayProv.Get(ref myWeb);
-                                        result = Conversions.ToString(oCDNProv.AdminXforms.PurgeImageCacheAsync(myString, ref myWeb));
+                                        Protean.Providers.CDN.ReturnProvider oCdnProv = new Protean.Providers.CDN.ReturnProvider();
+                                        ICDNProvider oCDNProvider = oCdnProv.Get(ref myWeb);
+                                        result = Conversions.ToString(oCDNProvider.AdminXforms.PurgeImageCacheAsync(myString, ref myWeb));
                                         
                                         //DeleteFileFromCache(myString);
                                     }                                    
