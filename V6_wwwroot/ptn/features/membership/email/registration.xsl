@@ -56,7 +56,8 @@
 							<xsl:variable name="secureLink">
 								<xsl:value-of select="$siteURL"/>
 								<xsl:value-of select="@Url"/>
-								<xsl:text>?ewCmd=ActivateAccount</xsl:text>
+								<xsl:text>?ewCmd=</xsl:text>
+								<xsl:value-of select="@activateCmd"/>
 								<xsl:text>&amp;key=</xsl:text>
 								<xsl:value-of select="ActivationKey/node()"/>
 							</xsl:variable>

@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Eonic Digital LLP")]
 [assembly: AssemblyProduct("Protean.CMS")]
-[assembly: AssemblyCopyright("Copyright © Eonic Digital LLP. 2024")]
+[assembly: AssemblyCopyright("Copyright © Eonic Digital LLP. 2025")]
 [assembly: AssemblyTrademark("Protean.CMS")]
 [assembly: AssemblyCulture("")]
 
@@ -33,8 +33,8 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("6.1.23.0")]
-[assembly: AssemblyFileVersion("6.1.23.0")]
+[assembly: AssemblyVersion("6.1.25.1")]
+[assembly: AssemblyFileVersion("6.1.25.1")]
 [assembly: NeutralResourcesLanguage("en")]
 
-[assembly: AssemblyInformationalVersion("0.0.0.798")]
+[assembly: AssemblyInformationalVersion("0.0.0.896")]

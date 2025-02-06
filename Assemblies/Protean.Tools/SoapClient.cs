@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using Microsoft.VisualBasic; // Install-Package Microsoft.VisualBasic
 
 namespace Protean.Tools
 {
@@ -251,14 +249,14 @@ namespace Protean.Tools
                                 long j;
                                 long k;
 
-                                var loopTo1 = (long)Information.UBound(aCookies);
+                                long loopTo1 = aCookies.Length - 1;
                                 for (j = 0L; j <= loopTo1; j++)
                                 {
-                                    string[] aCookies2 = Strings.Split(aCookies[(int)j], ";");
-                                    var loopTo2 = (long)Information.UBound(aCookies2);
+                                    string[] aCookies2 = aCookies[j].Split(';');
+                                    long loopTo2 = aCookies2.Length - 1;
                                     for (k = 0L; k <= loopTo2; k++)
                                     {
-                                        string[] aCookies3 = Strings.Split(aCookies2[(int)k], "=");
+                                        string[] aCookies3 = aCookies2[k].Split('=');
                                         moSession[aCookies3[0]] = aCookies3[1];
                                     }
                                 }
@@ -310,15 +308,15 @@ namespace Protean.Tools
             {
                 if (RemoveReturnSoapEnvelope)
                 {
-                    cReturn = Strings.Replace(cReturn, "soap:Envelope", "soapEnvelope");
-                    cReturn = Strings.Replace(cReturn, "soap:Body", "soapBody");
+                    cReturn = cReturn.Replace("soap:Envelope", "soapEnvelope");
+                    cReturn = cReturn.Replace("soap:Body", "soapBody");
 
                     // cReturn = Replace(cReturn, "xmlns", "exemelnamespace")
                     // cReturn = Replace(cReturn, ":soap", "")
                     var oNewXml = new XmlDocument();
                     oNewXml.LoadXml(cReturn);
                     oResults.LoadXml(oNewXml.SelectSingleNode("soapEnvelope/soapBody").InnerXml);
-                    oResults.InnerXml = Strings.Replace(oResults.InnerXml, "xmlns", "exemelnamespace");
+                    oResults.InnerXml = oResults.InnerXml.Replace("xmlns", "exemelnamespace");
                 }
                 else
                 {
@@ -341,7 +339,7 @@ namespace Protean.Tools
         {
             try
             {
-                oSoapBody = Strings.Replace(oSoapBody, "exemelnamespace", "xmlns");
+                oSoapBody = oSoapBody.Replace("exemelnamespace", "xmlns");
                 oSoapBody = getSoapEnvelope(oSoapBody).OuterXml;
                 SendSoapRequest(oSoapBody);
                 return oResults.OuterXml;
@@ -357,7 +355,7 @@ namespace Protean.Tools
         {
             try
             {
-                oSoapBody = Strings.Replace(oSoapBody, "exemelnamespace", "xmlns");
+                oSoapBody = oSoapBody.Replace("exemelnamespace", "xmlns");
                 oSoapBody = getSoapEnvelope(oSoapBody).OuterXml;
                 SendSoapRequest(oSoapBody);
                 return oResults.OuterXml;

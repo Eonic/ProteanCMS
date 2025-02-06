@@ -88,7 +88,7 @@ namespace Protean.Providers
                 return cWhereSql;
             }
 
-            public override string GetFilterOrderByClause()
+            public override string GetFilterOrderByClause(ref Cms myWeb)
             {
                 return " ci.nNumberValue ";
             }

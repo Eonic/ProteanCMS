@@ -3,11 +3,6 @@
 <script runat="server">
 
     Sub Application_Start(ByVal sender As Object, ByVal e As EventArgs)
-        ' Code that runs on application startup
-        '  Dim engineSwitcher As JavaScriptEngineSwitcher.Core.JsEngineSwitcher = JavaScriptEngineSwitcher.Core.JsEngineSwitcher.Current
-        ' engineSwitcher.EngineFactories.Add(New JavaScriptEngineSwitcher.V8.V8JsEngineFactory())
-        '  Dim sJsEngine As String = "V8JsEngine"
-        '  engineSwitcher.DefaultEngineName = sJsEngine
         Protean.AppStart.InitialiseJSEngine()
     End Sub
 

@@ -4173,7 +4173,22 @@
 
               </xsl:if>
               <xsl:if test="not(starts-with(/Page/Request/QueryString/Item[@name='fld']/node(),'\FreeStock'))">
-
+				  <xsl:if test="contains(/Page/Request/QueryString/Item[@name='multiple'],'true')">
+					  <li>
+						  <a id="SelectAll" class="btn btn-success" data-toggle="popover">
+							  <i class="fa fa-picture-o fa-white">
+								  <xsl:text> </xsl:text>
+							  </i><xsl:text> </xsl:text>SelectAll
+						  </a>
+					  </li>
+					  <li>
+						  <a href="javascript:;" onclick="getImagePaths();" class="btn btn-success">
+							  <i class="fa fa-picture-o fa-white">
+								  <xsl:text> </xsl:text>
+							  </i><xsl:text> </xsl:text>Add Selected
+						  </a>
+					  </li>
+				  </xsl:if>
                 <a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;ewCmd2=addFolder&amp;fld={@path}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-sm btn-outline-primary">
                   <xsl:if test="$submitPath!='/?'">
                     <xsl:attribute name="data-bs-toggle">modal</xsl:attribute>
@@ -5719,9 +5734,14 @@
           </div>
           <xsl:if test="ContentDetail/directory/@parType='User'">
             <form action="?ewCmd=ListUsers" method="post" id="userSearch" class="col-md-4">
-              <div class="input-group">
-                <input type="text" name="search" value="{$page/Request/Form/Item[@name='search']}" class="form-control"/>
-                <button type="submit" name="previous" value="Search" class="btn btn-primary">
+			
+              <div class="input-group">	<button type="submit" name="UserSearch" value="Clear" class="btn btn-outline-primary">
+					<i class="fa-solid fa-x">
+						<xsl:text> </xsl:text>
+					</i>
+				</button>
+                <input type="text" name="search" value="{ContentDetail/directory/@UserSearchTerm}" class="form-control"/>
+                <button type="submit" name="UserSearch" value="Search" class="btn btn-primary">
                   <i class="fa fa-search">
                     <xsl:text> </xsl:text>
                   </i>
@@ -6634,13 +6654,13 @@
       </td>
       <td>
         <div class="btn-group-spaced">
-          <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Display&amp;id={@id}" class="btn btn-sm btn-outline-primary">
+          <a href="{$appPath}?ewCmd={$ewCmd}&amp;ewCmd2=Display&amp;id={@id}" class="btn btn-sm btn-outline-primary">
             <i class="fa fa-eye">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>view order
           </a>
           <xsl:if test="@statusId=6">
-            <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Print&amp;id={@id}" target="_new" class="btn btn-sm btn-outline-primary">
+            <a href="{$appPath}?ewCmd={$ewCmd}&amp;ewCmd2=Print&amp;id={@id}" target="_new" class="btn btn-sm btn-outline-primary">
               <i class="fa fa-print">
                 <xsl:text> </xsl:text>
               </i>
@@ -7003,9 +7023,9 @@
                 <table class="table collapse" id="paymentTable">
                   <thead>
                     <tr>
-                      <th scope="col">Provider</th>
                       <th scope="col">Date</th>
                       <th scope="col">Amount</th>
+                      <th scope="col">Provider</th>
                       <th scope="col">Other Info</th>
                     </tr>
                   </thead>
@@ -7027,8 +7047,11 @@
                           <xsl:value-of select="cPayMthdProviderName"/>
                         </td>
                         <td>
-                          AuthCode:
-                          <xsl:value-of select="cPayMthdDetailXml/instance/Response/@AuthCode"/>
+							<xsl:if test="cPayMthdDetailXml/instance/Response/@AuthCode!=''">
+								AuthCode:
+								<xsl:value-of select="cPayMthdDetailXml/instance/Response/@AuthCode"/>
+							</xsl:if>			
+                          
                         </td>
                       </tr>
                     </xsl:for-each>
@@ -11728,7 +11751,7 @@
             </xsl:if>-->
               </xsl:for-each>
               <td align="right">
-                <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Display&amp;id={Order_Id/node()}" class="view adminButton">view order</a>
+                <a href="{$appPath}?ewCmd={$ewCmd}&amp;ewCmd2=Display&amp;id={Order_Id/node()}" class="view adminButton">view order</a>
               </td>
             </tr>
           </span>
@@ -11859,7 +11882,7 @@
           </a>
         </td>
         <td align="right">
-          <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Display&amp;id={ancestor::Item/Order_Id/node()}" class="view adminButton">view order</a>
+          <a href="{$appPath}?ewCmd={$ewCmd}&amp;ewCmd2=Display&amp;id={ancestor::Item/Order_Id/node()}" class="view adminButton">view order</a>
         </td>
       </tr>
     </span>

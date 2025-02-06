@@ -48,7 +48,8 @@
         <add key="LegacyRedirect" value="off" />
         <add key="PageURLFormat" value="" />
         <add key="AllowContentDetailAccess" value="" />
-        <add key="MenuContentCountTypes" value="" />
+		<add key="ContentDetailShowOnlyCascaded" value="on" />  
+		<add key="MenuContentCountTypes" value="" />
         <add key="MenuContentBriefTypes" value="" />
         <add key="CookieDomain" value="" />
         <add key="UserIntegrations" value="off" />
@@ -86,8 +87,8 @@
         <add key="ServerSenderEmailName" value="" />
         <add key="DisableServerSenderEmail" value="" />
  	    <add key="ExcludeFoldersFromPaths" value="header,footer" />
-	  </web>
-    </instance>
+	  </web> 
+    </instance> 
     <submission id="WebSettings" action="" method="post" event="form_check(this)" />
     <bind id="ewSiteName" nodeset="web/add[@key='SiteName']/@value" required="false()" type="string" />
     <bind id="ewSiteLogo" nodeset="web/add[@key='SiteLogo']/@value" required="false()" type="string" />
@@ -127,6 +128,7 @@
     <bind id="ewLegacyRedirect" nodeset="web/add[@key='LegacyRedirect']/@value" required="true()" type="string" />
     <bind id="ewPageURLFormat" nodeset="web/add[@key='PageURLFormat']/@value" required="true()" type="string" />
     <bind id="ewAllowContentDetailAccess" nodeset="web/add[@key='AllowContentDetailAccess']/@value" required="false()" type="string" />
+	<bind id="ContentDetailShowOnlyCascaded" nodeset="web/add[@key='ContentDetailShowOnlyCascaded']/@value" required="false()" type="string" /> 
     <bind id="ewMenuContentCountTypes" nodeset="web/add[@key='MenuContentCountTypes']/@value" required="false()" type="string" />
     <bind id="ewMenuContentBriefTypes" nodeset="web/add[@key='MenuContentBriefTypes']/@value" required="false()" type="string" />
     <bind id="ewUserIntegrations" nodeset="web/add[@key='UserIntegrations']/@value" required="true()" type="string" />
@@ -458,6 +460,18 @@
 						<value>off</value>
 					</item>
 					<value>off</value>
+				</select1>
+				<select1 bind="ContentDetailShowOnlyCascaded" appearance="full">
+					<label>Content Detail Show Only Cascaded</label>
+					<item>
+						<label>On</label>
+						<value>on</value>
+					</item>
+					<item>
+						<label>Off</label>
+						<value>off</value>
+					</item>
+					<value>on</value>
 				</select1>
 				<input bind="ewPageCacheTimeout" suffix="hrs">
 					<label>Timeout of Cache  (Recommended 24hrs)</label>

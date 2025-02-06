@@ -13,7 +13,6 @@ using System.Text.RegularExpressions;
 using System.Web.Configuration;
 using System.Xml;
 using static Protean.stdTools;
-using static Protean.Tools.Xml;
 
 namespace Protean
 {
@@ -425,6 +424,7 @@ namespace Protean
             int nTotalAddressesAttempted = 0;
             int nTotalAddressesSkipped = 0;
             string cAddressesSkipped = "";
+            Boolean failedSend = false;
 
             try
             {
@@ -517,7 +517,7 @@ namespace Protean
                 }
 
                 // lets get the subjectline form the html title
-                var oEmailXmlDoc = htmlToXmlDoc(messageHtml);
+                var oEmailXmlDoc = Protean.Tools.Xml.HtmlConverter.htmlToXmlDoc(messageHtml);
                 if (oEmailXmlDoc != null)
                 {
                     // override the subject line from the template.
@@ -866,7 +866,9 @@ namespace Protean
                             }
                             if (Strings.LCase(goConfig["MailServerSSL"]) == "off")
                             {
+                                System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
                                 oSmtpn.EnableSsl = false;
+                                oSmtpn.DeliveryMethod = SmtpDeliveryMethod.Network;
                             }
                             if (sendAsync)
                             {
@@ -892,11 +894,14 @@ namespace Protean
                                         if (gbDebug)
                                         {
                                             returnException(ref msException, mcModuleName, "emailer", ex, "", cProcessInfo, gbDebug);
-                                            return "ex: " + ex.ToString();
+                                            failureMessage = "ex: " + ex.ToString();
+                                            failedSend = true;
                                         }
                                         else
                                         {
-                                            return failureMessage + " - Error1: " + ex.Message + " - " + cProcessInfo + " - " + ex.StackTrace;
+                                            failureMessage = failureMessage + " - Error1: " + ex.Message + " - " + cProcessInfo + " - " + ex.StackTrace;
+
+                                            failedSend = true;
                                         }
                                     }
                                     else
@@ -911,11 +916,13 @@ namespace Protean
                                             if (gbDebug)
                                             {
                                                 returnException(ref msException, mcModuleName, "emailer", ex3, "", cProcessInfo, gbDebug);
-                                                return "ex3: " + ex3.ToString();
+                                                failureMessage = "ex3: " + ex3.ToString();
+                                                failedSend = true;
                                             }
                                             else
                                             {
-                                                return failureMessage + " - Error1: " + ex3.Message + " - " + cProcessInfo + " - " + ex.StackTrace;
+                                                failureMessage = failureMessage + " - Error1: " + ex3.Message + " - " + cProcessInfo + " - " + ex.StackTrace;
+                                                failedSend = true;
                                             }
 
                                         }
@@ -947,11 +954,13 @@ namespace Protean
                                 if (gbDebug)
                                 {
                                     returnException(ref msException, mcModuleName, "emailer", ex2, "", cProcessInfo, gbDebug);
-                                    return "ex2: " + ex2.ToString();
+                                    failureMessage = "ex2: " + ex2.ToString();
+                                    failedSend = true;
                                 }
                                 else
                                 {
-                                    return failureMessage + " - Error1: " + ex2.Message + " - " + cProcessInfo + " - " + ex.StackTrace;
+                                    failureMessage = failureMessage + " - Error1: " + ex2.Message + " - " + cProcessInfo + " - " + ex.StackTrace;
+                                    failedSend = true;
                                 }
                             }
                         }
@@ -1027,14 +1036,15 @@ namespace Protean
 
                                 long logId = odbHelper.emailActivity((Int16)mnUserId, cActivityDetail, oMailn.To.ToString(), oMailn.From.ToString(), oXml.OuterXml);
 
-                                odbHelper.logActivity(Cms.dbHelper.ActivityType.Email, mnUserId, 0, (Int16)logId, otherId, activitySchema, false, null);
+                                odbHelper.logActivity(Cms.dbHelper.ActivityType.Email, mnUserId, (Int16)logId, 0, otherId, activitySchema, false, null);
                                 //odbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Email, mnUserId, SessionId, DateTime.Now, (Int16)logId, 0, activitySchema);
                             }
 
                             else
                             {
-                                odbHelper.emailActivity((Int16)mnUserId, cActivityDetail, oMailn.To.ToString(), oMailn.From.ToString());
-                                odbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Email, mnUserId, SessionId, DateTime.Now, 0, 0, "");
+                                long logId = odbHelper.emailActivity((Int16)mnUserId, cActivityDetail, oMailn.To.ToString(), oMailn.From.ToString());
+                                odbHelper.logActivity(Cms.dbHelper.ActivityType.Email, mnUserId, (Int16)logId, 0, 0, "", false, null);
+                                // odbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Email, mnUserId, SessionId, DateTime.Now,, 0, "");
                             }
                         }
 
@@ -1092,7 +1102,15 @@ namespace Protean
                             }
                         }
                     }
-                    return successMessage;
+
+                    if (failedSend)
+                    {
+                        return failureMessage;
+                    }
+                    else
+                    {
+                        return successMessage;
+                    }
                 }
             }
 
@@ -1392,7 +1410,7 @@ namespace Protean
                                 sWriter.Close();
                                 sWriter = null;
 
-                                oXml = htmlToXmlDoc(sMessage);
+                                oXml = Protean.Tools.Xml.HtmlConverter.htmlToXmlDoc(sMessage);
                             }
 
                             var oXmlRemoveHeader = oXml.FirstChild;
@@ -1777,8 +1795,7 @@ namespace Protean
                 // Lets get the title and override the one provided
                 var oXml = new XmlDocument();
 
-                oXml = htmlToXmlDoc(sEmailBody);
-
+                oXml = Protean.Tools.Xml.HtmlConverter.htmlToXmlDoc(sEmailBody);
                 if (oXml != null)
                 {
                     // override the subject line from the template.

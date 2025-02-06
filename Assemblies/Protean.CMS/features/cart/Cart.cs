@@ -181,6 +181,8 @@ namespace Protean
 
             public bool mbQuitOnShowInvoice = true;
             private bool mbDepositOnly = false;
+            public bool mbBlockCartCmd = false; // Used for reseting payment on subscripitions
+
 
             public enum cartError
             {
@@ -734,12 +736,14 @@ namespace Protean
                         if (Information.IsNumeric(myWeb.moRequest.QueryString["cartErr"]))
                             mnProcessError = (short)Conversions.ToInteger(myWeb.moRequest.QueryString["cartErr"]);
 
+                        if (mbBlockCartCmd == false)
+                        { 
                         mcCartCmd = myWeb.moRequest.QueryString["cartCmd"];
                         if (string.IsNullOrEmpty(mcCartCmd))
                         {
                             mcCartCmd = myWeb.moRequest.Form["cartCmd"];
                         }
-
+                        }
                         mcPaymentMethod = Conversions.ToString(myWeb.moSession["mcPaymentMethod"]);
                         mmcOrderType = Conversions.ToString(myWeb.moSession["mmcOrderType"]);
                         mcItemOrderType = myWeb.moRequest.Form["ordertype"];
@@ -2753,7 +2757,7 @@ namespace Protean
                 }
                 messageHtml = sWriter.ToString();
                 sWriter.Close();
-                var xMailingListDoc = htmlToXmlDoc(messageHtml);
+                var xMailingListDoc = Protean.Tools.Xml.HtmlConverter.htmlToXmlDoc(messageHtml);
                 var xListElement = xMailingListDoc.DocumentElement;
                 valDict = XmltoDictionary(xListElement, true);
                 return valDict;
@@ -3402,18 +3406,19 @@ namespace Protean
 
                             if ((nShipMethod == 0 && nCartStatus != 5) | IsPromocodeValid == true)
                             {
+                                Boolean bGetLowest = true;
                                 // TS added to recalculate shipping cost !!!!!!
                                 shipCost = -1;
 
 
                                 if (!string.IsNullOrEmpty(oCartElmt.GetAttribute("bDiscountIsPercent")))
                                 {
-                                    shipCost = -1;
+                                    shipCost = -1;                                    
                                 }
 
                                 // Default Shipping Country.
                                 string cDestinationCountry = moCartConfig["DefaultCountry"];
-                                Boolean bGetLowest = true;
+                                
                                 string cDestinationPostalCode = "";
                                 if (oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country") != null)
                                 {
@@ -3438,7 +3443,7 @@ namespace Protean
                                             if (lowestShipCost == 0)
                                             {
                                                 lowestShipCost = shipCost;
-                                            }
+                                            }                                          
 
                                             bool bCollection = false;
                                             if (!(oRowSO["bCollection"] is DBNull))
@@ -3488,7 +3493,7 @@ namespace Protean
                                                 else if (IsPromocodeValid = true & Convert.ToString(oRowSO["NonDiscountedShippingCost"]) != "0")
                                                 {
                                                     if (oCartElmt.GetAttribute("freeShippingMethods").Contains(oCartElmt.GetAttribute("shippingType")))
-                                                    {
+                                                    {                                                        
                                                         oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig["DefaultCountry"]);
                                                         oCartElmt.SetAttribute("shippingType", Conversions.ToString(Operators.ConcatenateObject(oRowSO["nShipOptKey"], "")));
                                                         oCartElmt.SetAttribute("shippingCost", shipCost + "");
@@ -3497,7 +3502,7 @@ namespace Protean
                                                         if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oRowSO["NonDiscountedShippingCost"], "0", false)))
                                                         {
                                                             oCartElmt.SetAttribute("NonDiscountedShippingCost", Conversions.ToString(Operators.ConcatenateObject(oRowSO["NonDiscountedShippingCost"], "")));
-                                                        }
+                                                        }                                                       
                                                     }
                                                 }
                                             }
@@ -3518,6 +3523,15 @@ namespace Protean
                                 if (bGetLowest)
                                 {
                                     shipCost = lowestShipCost;
+                                    //code added for delivery promocode if it is applied then price set to 0 for selected delivery option.
+                                    //condition for ITB
+                                    if(oCartElmt.GetAttribute("freeShippingMethods") != "" && oCartElmt.GetAttribute("freeShippingMethods")!=null)
+                                    {
+                                        if (oCartElmt.GetAttribute("freeShippingMethods").Contains(oCartElmt.GetAttribute("shippingType")))
+                                        {
+                                            shipCost = 0;
+                                        }
+                                    }                                    
                                 }
 
                                 if (shipCost == -1)
@@ -9976,7 +9990,7 @@ namespace Protean
                                         }
                                         catch (Exception)
                                         {
-                                            sellerNode.InnerXml = Tools.Text.tidyXhtmlFrag(cSellerNotesHtml + "</ul>");
+                                            sellerNode.InnerXml = stdTools.tidyXhtmlFrag(cSellerNotesHtml + "</ul>");
                                         }
 
                                         // Add the Delivery Details
@@ -10905,9 +10919,14 @@ namespace Protean
                     var PublishExpireDate = DateTime.Now;
                     if (moCartConfig["ShippingPostcodes"] == "on" && cDestinationPostalCode != "")
                     {
-
-                        string PostcodePrefix = System.Text.RegularExpressions.Regex.Split(cDestinationPostalCode, "(?m)^([A-Z0-9]{2,4})(?:\\s*[A-Z0-9]{3})?$")[1];
-                        sCountryList = getParentCountries(ref PostcodePrefix, ref argnIndex);
+                        try
+                        {
+                            string PostcodePrefix = System.Text.RegularExpressions.Regex.Split(cDestinationPostalCode, "(?m)^([A-Z0-9]{2,4})(?:\\s*[A-Z0-9]{3})?$")[1];
+                            sCountryList = getParentCountries(ref PostcodePrefix, ref argnIndex);
+                        }
+                        catch {
+                            sCountryList = "";
+                        }
 
                     }
 

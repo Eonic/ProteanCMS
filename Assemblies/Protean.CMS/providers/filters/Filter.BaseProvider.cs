@@ -260,7 +260,7 @@ namespace Protean.Providers
 
             }
 
-            public virtual string GetFilterOrderByClause()
+            public virtual string GetFilterOrderByClause(ref Cms myWeb)
             {
                 return null;
             }

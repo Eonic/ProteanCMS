@@ -11,9 +11,37 @@
     }
 }
 
-.header-menu-right {
+header.header-menu-right {
     .main-nav ul.navbar-nav {
         justify-content: flex-end;
+    }
+
+    .navbar-content {
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    .header-tier1 {
+        display: flex;
+        align-items: center;
+
+        > nav {
+            margin: 0;
+        }
+    }
+}
+
+.header-info-above {
+    display: block;
+
+    .header-above {
+        background: $info;
+
+        .container-fluid,
+        .container {
+            display: flex;
+            justify-content: flex-end;
+        }
     }
 }
 
@@ -21,6 +49,7 @@
 header {
     background-color: $header-bg;
     color: $header-color;
+    box-shadow: 0px 1px 9px rgba(0, 0, 0, 0.3);
 
     a {
         color: $header-color;
@@ -95,15 +124,21 @@ header {
     right: 0;
     top: 0;
     padding: 10px 15px;
-    color: $navbar-light-color !important;
+    color: color-contrast($mobile-dd-background) !important;
     z-index: 20;
+
+    &:after {
+        content: '\f00d';
+        font-weight: 900;
+        font-family: 'Font Awesome 6 Free';
+    }
 }
 
 #mainTable .navbar-fixed-top {
     position: fixed;
     background: $header-bg;
     width: 100%;
-    z-index: 3;
+    z-index: 101;
     height: $fixed-height-xs !important;
 
     @include media-breakpoint-up($nav-breakpoint) {
@@ -148,6 +183,10 @@ header {
                 &.on,
                 &.show {
                     color: $nav-link-hover-color;
+                }
+
+                &:focus-visible {
+                    border-radius: 3px;
                 }
             }
         }
@@ -528,6 +567,10 @@ header {
     &:hover {
         color: $nav-link-hover-color;
     }
+
+    &:focus-visible {
+        border-radius: 3px;
+    }
 }
 .logged-in-icon {
     //color: $secondary;
@@ -540,6 +583,27 @@ header {
         content: '';
         position: relative;
         bottom: -1px;
+    }
+}
+#Login {
+    form .principle {
+        float: right;
+        width: auto;
+    }
+
+    .buttons {
+        padding-top: 13px;
+    }
+
+    .morelink a {
+        @extend .btn-clean;
+        float: left;
+        width: auto;
+        margin-top: -25px;
+        font-weight: 300;
+        text-decoration: underline;
+        text-underline-offset: 4px;
+        text-decoration-color: lighten($link-color,30%);
     }
 }
 
@@ -645,6 +709,12 @@ header {
     padding-left: $header-spacing;
     padding-right: $header-spacing;
 
+    &:focus-visible {
+        border-radius: 3px;
+        box-shadow: 0 0 0 0.25rem rgba(23, 43, 84, 0.25);
+        outline:none;
+    }
+
     &:hover,
     &:focus {
         padding-left: $header-spacing;
@@ -679,8 +749,92 @@ header {
 
 /*############### TABBED MODULE #################*/
 .tabbed-module {
+    margin-bottom: $grid-gutter-height;
+
     .nav {
         margin-bottom: 1rem;
+
+        a.active {
+            background: $light;
+        }
+    }
+}
+
+.nav-tabs {
+    border-bottom: 0;
+    background: $primary;
+
+    li.nav-item button {
+        margin: 0;
+        border: 0;
+        font-weight: 600;
+        background: $primary;
+        color: #fff;
+        padding: 10px 22px 6px;
+
+        i {
+            font-size: 0.95rem;
+            padding-right: 4px;
+            position: relative;
+            top: -1px;
+        }
+
+        &.active {
+            background: $light;
+            border: 0;
+            color: $body-color;
+            font-weight: 7500;
+        }
+    }
+}
+
+@include media-breakpoint-down(lg) {
+    .tab-content > .tab-pane {
+        display: block;
+        opacity: 1;
+    }
+}
+.tab-pane {
+    @include media-breakpoint-up(lg) {
+        background: $light;
+        padding: $card-spacer-y $card-spacer-x;
+    }
+
+    button.accordion-button {
+        background: $primary;
+        color: #fff;
+        border: 0;
+        margin-top: 3px;
+
+        &:after {
+            font-family: 'Font Awesome 6 Free';
+            color: #fff;
+            content: '\f107';
+            font-weight: 900;
+        }
+
+        &.show {
+            &:after {
+                //     transform: rotate(0deg);
+            }
+        }
+
+        i {
+            padding-right: 0.5rem;
+        }
+    }
+
+    .accordion-body {
+        background-color: $light;
+    }
+
+    legend {
+        display: none;
+    }
+
+    .module,
+    .module.nobox {
+        margin-bottom: 0;
     }
 }
 

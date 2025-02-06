@@ -516,7 +516,7 @@ namespace Protean
                         }
                         catch
                         {
-                            oBodyItem.InnerXml = Text.tidyXhtmlFrag(sContent);
+                            oBodyItem.InnerXml = stdTools.tidyXhtmlFrag(sContent);
                             oBodyItem.SetAttribute("htmlTransform", "tidyXhtml");
                         }
                     }

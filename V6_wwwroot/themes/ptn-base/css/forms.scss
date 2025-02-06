@@ -7,8 +7,29 @@ form.ewXform {
     .form-label {
         margin-bottom: 0.3rem;
     }
-}
 
+    .principle {
+        float: right;
+    }
+
+    input, textarea {
+        padding: 0.8rem;
+
+        &::placeholder {
+            font-weight: 600;
+        }
+    }
+}
+.card.bg-dark {
+    input, textarea {
+        background: lighten($dark,10%);
+        color: #fff;
+
+        &::placeholder {
+            color: darken(#fff,10%);
+        }
+    }
+}
 #Login {
     form .principle {
         float: right;
@@ -84,5 +105,42 @@ form.ewXform {
     .ui-state-active {
         background: $primary;
         color: #fff;
+    }
+}
+.searchListing {
+    > .list-group {
+        border-top: 1px solid #dee2e6;
+    }
+
+    h1 {
+        font-size: 24px;
+        margin-bottom: 0;
+        margin-top: 30px;
+    }
+
+    form {
+        background: $light;
+        padding: 2rem;
+
+        button {
+            border-radius: 0;
+
+            i {
+                display:none;
+            }
+        }
+    }
+}
+
+.search-result.list-group-item {
+    padding-left: 0;
+    padding-right: 0;
+
+    > a.float-start {
+        line-height: 1;
+
+        i {
+            font-size: 1.5rem;
+        }
     }
 }

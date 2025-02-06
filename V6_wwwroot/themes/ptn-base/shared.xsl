@@ -23,7 +23,7 @@
 	<xsl:variable name="headings-font-import">none</xsl:variable>
 	<xsl:variable name="color-mode">default</xsl:variable>
 	<xsl:variable name="HomeInfo">false</xsl:variable>
-	<xsl:variable name="HomeNav">false</xsl:variable>
+	<xsl:variable name="HomeNav">true</xsl:variable>
 	<xsl:variable name="NavFix">false</xsl:variable>
 	<xsl:variable name="nav-dropdown">true</xsl:variable>
 	<xsl:variable name="sub-nav">false</xsl:variable>

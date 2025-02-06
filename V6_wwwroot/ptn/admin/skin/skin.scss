@@ -284,11 +284,11 @@ body.ptn-edit.layout-AdmHome {
             padding-right: 1px;
         }*/
         .list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
-            color: $admin-header-color;
+            color: $admin-header-color !important;
             background-color: $admin-header-color-link;
 
             a {
-                color: $admin-header-color;
+                color: $admin-header-color !important;
             }
 
             a:hover {

@@ -202,6 +202,8 @@ namespace Protean
                                             oSubs.CancelPaymentMethod((int)oldPaymentId);
                                             // Set new payment method Id
                                             myWeb.moDbHelper.ExeProcessSql("update tblSubscription set nPaymentMethodId=" + pseudoCart.mnPaymentId + "where nSubKey = " + myWeb.moRequest["subId"]);
+                                            myWeb.moCart.mcCartCmd = "";
+                                            myWeb.moCart.mbBlockCartCmd = true;
                                             ewCmd = "";
                                             bPaymentMethodUpdated = true;
                                             goto processFlow;

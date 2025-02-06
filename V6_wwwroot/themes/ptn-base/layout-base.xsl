@@ -85,7 +85,7 @@
       <xsl:if test="$page/ContentDetail and $themeBreadcrumb='true' and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
         <section class="wrapper detail-breadcrumb-wrapper">
           <div class="{$container}">
-            <ol class="breadcrumb detail-breadcrumb">
+            <ol class="breadcrumb detail-breadcrumb" itemscope="itemscope" itemtype="https://schema.org/BreadcrumbList">
               <xsl:apply-templates select="Menu/MenuItem" mode="breadcrumb"/>
             </ol>
           </div>
@@ -110,7 +110,8 @@
           </xsl:attribute>
         </xsl:if>
         <div id="mainLayout" class="fullwidth activateAppearAnimation">
-          <xsl:if test="$currentPage/DisplayName/@banner='no-banner' or $currentPage/@name='Home' or $cartPage or $page/ContentDetail and ($sub-nav='left' or $sub-nav='top')">
+          <!--<xsl:if test="$currentPage/DisplayName/@banner='no-banner' or $currentPage/@name='Home' or $cartPage or $page/ContentDetail and ($sub-nav='left' or $sub-nav='top')">-->
+          <xsl:if test="$currentPage/DisplayName/@banner='no-banner' or $currentPage/@name='Home' or $cartPage or $page/ContentDetail">
             <div id="content" class="visually-hidden">&#160;</div>
           </xsl:if>
           <xsl:if test="not($cartPage) and $currentPage/@name!='Home' and not($page/ContentDetail) and not($currentPage/DisplayName/@banner='no-banner')">
@@ -153,7 +154,7 @@
                         <div class="banner-caption-inner">
                           <xsl:if test="$themeBreadcrumb='true'">
                             <nav aria-label="breadcrumb">
-                              <ol class="breadcrumb">
+                              <ol class="breadcrumb" itemscope="itemscope" itemtype="https://schema.org/BreadcrumbList">
                                 <xsl:apply-templates select="Menu/MenuItem" mode="breadcrumb"/>
                               </ol>
                             </nav>
@@ -180,12 +181,12 @@
                       <div id="mainTitle">
                         <xsl:if test="$themeBreadcrumb='true'">
                           <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
+                            <ol class="breadcrumb" itemscope="itemscope" itemtype="https://schema.org/BreadcrumbList">
                               <xsl:apply-templates select="Menu/MenuItem" mode="breadcrumb"/>
                             </ol>
-                            <div id="content" class="visually-hidden">&#160;</div>
                           </nav>
                         </xsl:if>
+                        <div id="content" class="visually-hidden">&#160;</div>
                         <xsl:apply-templates select="/" mode="getMainTitle" />
                         <xsl:if test="$currentPage/Description/node()">
                           <div class="intro-banner-info">
@@ -319,7 +320,7 @@
             <!--~~~~~~~~~~~~~~ pages with no side nav ~~~~~~~~~~~~~~ -->
             <xsl:otherwise>
               <xsl:apply-templates select="." mode="mainLayout">
-                <xsl:with-param name="containerClass" select="$container"/>
+                <xsl:with-param name="containerClass">container</xsl:with-param>
               </xsl:apply-templates>
             </xsl:otherwise>
           </xsl:choose>

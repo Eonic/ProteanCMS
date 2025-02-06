@@ -3,20 +3,27 @@
 }
 
 footer#pagefooter {
-    border-top: 1px solid $grey;
+
+    .module-Image svg {
+        filter: drop-shadow(100vw 0 0 #fff);
+        transform: translateX(-100vw);
+    }
 }
 .module-centred.nobox h2.title,
-h2.layout-title {
+h2.layout-title,
+.intro-banner-inner {
     &:after {
         content: '';
         height: 2px;
-        width: 97px;
+        width: 80px;
         display: block;
-        background: $secondary;
+        background: $primary;
         margin: 0.9rem auto 0.9rem;
     }
 }
-
+.intro-banner-inner:after {
+    margin-top: 1.7rem;
+}
 .main-nav {
     @include media-breakpoint-up($nav-breakpoint) {
         .nav-link {
@@ -32,7 +39,7 @@ h2.layout-title {
                 height: 2px;
                 bottom: 0;
                 left: 0;
-                background-color: $secondary;
+                background-color: $nav-link-hover-color;
                 transform: scaleX(0);
                 transition: transform 0.3s ease;
             }
@@ -42,7 +49,7 @@ h2.layout-title {
             }
 
             &.active, &.on {
-                border-bottom: 2px solid $secondary;
+                border-bottom: 2px solid $nav-link-hover-color;
                 padding-bottom: $nav-padding-y - 2px !important;
 
                 &:hover::before {
@@ -51,7 +58,6 @@ h2.layout-title {
             }
         }
     }
-
 }
 
 .header-menu-below .main-nav {
@@ -76,15 +82,17 @@ h2.layout-title {
     padding-bottom:1rem;
     margin-bottom:1rem;
 }*/
-.backlink {
-    margin-bottom: 2rem;
-}
 
 .back-link {
     @extend .btn;
     @extend .btn-outline-primary;
 }
-.card-title i,
-.module-with-icon i{
-    @include circle-icon($color:$secondary);
+.card-title .center-block i,
+.module-with-icon .center-block i {
+    @include circle-icon-border($border:3px solid $info,$color:$info);
+    //color:$info;
+}
+.circle-stat {
+    @include circle-icon-border($border:3px solid $primary,$color:$info,$size:100px);
+    margin: 0 auto;
 }

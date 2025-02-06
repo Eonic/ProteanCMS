@@ -39,10 +39,13 @@
       <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
       <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>-->
 			<bind id="bLinkBox" nodeset="@linkBox" required="false()" type="string"/>
+			<bind id="accessibleText" nodeset="@accessibleText" required="false()" type="string"/>
 			<bind id="panelImage" nodeset="@panelImage" required="false()" type="string" />
 			<bind id="imagePosition" nodeset="@imagePosition" required="false()" type="string" />
 			<bind id="maxWidth" nodeset="@maxWidth" required="false()" type="string" />
+			<bind id="padding" nodeset="@padding" required="false()" type="string" />
 			<bind id="char80Layout" nodeset="@char80Layout" required="false()" type="string" />
+			<bind id="v-align" nodeset="@v-align" required="false()" type="string" />
 		</bind>
 		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
 		<!--<ewInclude filePath="/ewthemes/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>-->
@@ -80,6 +83,13 @@
 							<value>true</value>
 						</item>
 						<help class="inline">This will make the whole of the box clickable, rather than just the button at the bottom. This is better for touchscreen devices, but don't use this if you have hyperlinks in the text.</help>
+					</select>
+					<select bind="accessibleText" appearance="full" class="multiline bs-only">
+						<item>
+							<label>Hide button</label>
+							<value>true</value>
+						</item>
+						<help class="inline">If this is hidden, it will only be available for screen readers</help>
 					</select>
 				</group>
 			</group>
@@ -141,7 +151,29 @@
 							</item>
 						</select1>
 					</group>
-				</group>
+          <group class="col-lg-6">
+            <select1 bind="v-align" >
+              <label>Vertical alignment</label>
+              <item>
+                <label>Top</label>
+                <value>top</value>
+              </item>
+              <item>
+                <label>Center</label>
+                <value>center</value>
+              </item>
+              <item>
+                <label>Bottom</label>
+                <value>bottom</value>
+              </item>
+            </select1>
+          </group>
+          <input bind="padding" class="col-lg-6">
+            <label>Padding</label>
+            <value></value>
+          </input>
+
+        </group>
 			</group>
 			<group>
 				<label>

@@ -360,7 +360,7 @@
 							</item>
 						</select1>
 					</group>
-				</group>
+        </group>
 				<group>
 					<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='carousel']"/>
 				</group>

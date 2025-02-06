@@ -50,8 +50,8 @@
       </xsl:for-each>
       <xsl:if test="@shippingCost &gt; 0">
         <tr>
-          <td colspan="4">&#160;</td>
-          <td class="shipping heading" align="right">
+          <td colspan="2">&#160;</td>
+          <td class="shipping heading" align="right" colspan="2">
             <font face="{$bodyFont}" size="2">
               <xsl:choose>
                 <xsl:when test="/Page/Contents/Content[@name='shippingCostLabel']!=''">
@@ -63,7 +63,9 @@
           </td>
           <td class="shipping amount" align="right">
             <font face="{$bodyFont}" size="2">
-              <xsl:value-of select="$currency"/>
+				<span class="currency">
+					<xsl:value-of select="$currencySymbol"/>
+				</span>
               <xsl:value-of select="format-number(@shippingCost,'0.00')"/>
             </font>
           </td>
@@ -71,7 +73,7 @@
       </xsl:if>
       <xsl:if test="@vatRate &gt; 0">
         <tr>
-          <td colspan="4">
+          <td colspan="2">
             <!--xsl:attribute name="rowspan">
 									<xsl:call-template name="calcRows">
 										<xsl:with-param name="r1"><xsl:choose><xsl:when test="@vatRate &gt; 0">1</xsl:when><xsl:otherwise>0</xsl:otherwise></xsl:choose>	</xsl:with-param>
@@ -82,22 +84,24 @@
 								</xsl:attribute-->
             &#160;
           </td>
-          <td class="subTotal heading" align="right">
+          <td class="subTotal heading" align="right" colspan="2">
             <font face="{$bodyFont}" size="2">
               Sub Total:
             </font>
           </td>
           <td class="subTotal amount" align="right">
             <font face="{$bodyFont}" size="2">
-              <xsl:value-of select="$currency"/>
+				<span class="currency">
+					<xsl:value-of select="$currencySymbol"/>
+				</span>
               <xsl:value-of select="format-number(@totalNet, '0.00')"/>
             </font>
           </td>
         </tr>
 
         <tr>
-          <td colspan="4">&#160;</td>
-          <td class="vat heading" align="right">
+          <td colspan="2">&#160;</td>
+          <td class="vat heading" align="right" colspan="2">
             <font face="{$bodyFont}" size="2">
               <xsl:choose>
                 <xsl:when test="//Cart/Contact/Address/Country='United Kingdom'">VAT at </xsl:when>
@@ -117,21 +121,23 @@
         </tr>
       </xsl:if>
       <tr>
-        <td colspan="3" class="total"></td>
-        <td class="total heading" align="right">
+        <td colspan="2" class="total"></td>
+        <td class="total heading" align="right" colspan="2">
           <font face="{$bodyFont}" size="2">Total Value:</font>
         </td>
         <td class="total amount" align="right">
           <font face="{$bodyFont}" size="2">
-            <xsl:value-of select="$currencySymbol"/>
+			  <span class="currency">
+				  <xsl:value-of select="$currencySymbol"/>
+			  </span>
             <xsl:value-of select="format-number(@total, '0.00')"/>
           </font>
         </td>
       </tr>
       <xsl:if test="@paymentMade &gt; 0">
         <tr>
-          <td colspan="3">&#160;</td>
-          <td class="total heading" align="right">
+          <td colspan="2">&#160;</td>
+          <td class="total heading" align="right" colspan="2">
             <font face="{$bodyFont}" size="2">
               <xsl:choose>
                 <xsl:when test="@transStatus">Deposit Paid</xsl:when>
@@ -141,7 +147,9 @@
           </td>
           <td class="total amount" align="right">
             <font face="{$bodyFont}" size="2" align="right">
-              <xsl:value-of select="$currencySymbol"/>
+				<span class="currency">
+					<xsl:value-of select="$currencySymbol"/>
+				</span>
               <xsl:value-of select="format-number(@paymentMade, '0.00')"/>
             </font>
           </td>
@@ -149,8 +157,8 @@
       </xsl:if>
       <xsl:if test="@payableAmount &gt; 0">
         <tr>
-          <td colspan="3">&#160;</td>
-          <td class="total heading" align="right">
+          <td colspan="2">&#160;</td>
+          <td class="total heading" align="right" colspan="2">
             <font face="{$bodyFont}" size="2">
               <xsl:choose>
                 <xsl:when test="@payableType='deposit' and not(@transStatus)">Deposit Payable</xsl:when>
@@ -160,7 +168,9 @@
           </td>
           <td class="total amount" align="right">
             <font face="{$bodyFont}" size="2">
-              <xsl:value-of select="$currencySymbol"/>
+				<span class="currency">
+					<xsl:value-of select="$currencySymbol"/>
+				</span>
               <xsl:value-of select="format-number(@payableAmount, '0.00')"/>
             </font>
           </td>

@@ -77,8 +77,25 @@
             <xsl:text>crop-setting-</xsl:text>
             <xsl:value-of select="$cropSetting"/>
           </xsl:attribute>
+          <xsl:if test="@gutter and @gutter!=''">
+            <xsl:attribute name="style">
+              <xsl:text>padding-left:</xsl:text>
+              <xsl:value-of select="@gutter"/>
+              <xsl:text>rem;padding-right:</xsl:text>
+              <xsl:value-of select="@gutter"/>
+              <xsl:text>rem;</xsl:text>
+            </xsl:attribute>
+          </xsl:if>
           <div data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}" data-height="{@carouselHeight}" >
-
+            <xsl:if test="@gutter and @gutter!=''">
+              <xsl:attribute name="style">
+                <xsl:text>margin-left:-</xsl:text>
+                <xsl:value-of select="@gutter"/>
+                <xsl:text>rem;margin-right:-</xsl:text>
+                <xsl:value-of select="@gutter"/>
+                <xsl:text>rem;</xsl:text>
+              </xsl:attribute>
+            </xsl:if>
             <xsl:apply-templates select="." mode="contentColumns"/>
 						<xsl:if test="@stepCount != '0'">
 							<xsl:apply-templates select="/" mode="genericStepper">
@@ -127,7 +144,7 @@
 		<xsl:variable name="pageName">
 			<xsl:apply-templates select="." mode="getDisplayName"/>
 		</xsl:variable>
-		<xsl:if test="(@name!='Information' and (not(DisplayName/@exclude='true'))) or (@name!='Information' and $showHidden='true')">
+		<xsl:if test="(@name!='Info Menu' and (not(DisplayName/@exclude='true'))) or (@name!='Info Menu' and $showHidden='true')">
 			<li class="nav-item">
 				<xsl:apply-templates select="." mode="inlinePopupOptions">
 					<xsl:with-param name="class" select="'nav-item'"/>
@@ -170,7 +187,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<xsl:if test="(@name!='Information' and (not(DisplayName/@exclude='true'))) or (@name!='Information' and $showHidden='true')">
+		<xsl:if test="(@name!='Info Menu' and (not(DisplayName/@exclude='true'))) or (@name!='Info Menu' and $showHidden='true')">
 			<xsl:variable name="classValues">
 				<xsl:text>listItem subpageItem</xsl:text>
 				<xsl:if test="$linked='true'">

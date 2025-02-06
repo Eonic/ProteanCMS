@@ -35,3 +35,4 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\obj\x86\Rele
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\bin\Release\Newtonsoft.Json.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\bin\Release\Newtonsoft.Json.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\obj\x86\Release\ProteanCMSInstallActions.CA.rsp
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\obj\x86\Release\ProteanCMSInstallActions.CA.rsp

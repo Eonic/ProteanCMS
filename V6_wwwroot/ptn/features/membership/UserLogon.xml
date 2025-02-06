@@ -38,6 +38,9 @@
         </item>
         <value>true</value>
       </select>-->
+      <div>
+        <a title="Reset Password" class="reset-password-login" href="https://local.css-worksafe.co.uk/info-menu/reset-password">Reset Password</a>
+      </div>
       <submit submission="UserLogon" ref="UserLogon" class="principle">
         <label>Log In</label>
       </submit>
