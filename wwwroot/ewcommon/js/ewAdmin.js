@@ -3,17 +3,6 @@ var IsParentPageAPI = '/ewapi/Cms.Admin/IsParentPage';
 var checkiFrameLoaded;
 
 $(document).ready(function () {
-    
-    //if ($("#nShowMap_true").length > 0) {
-    //    if ($("#nShowMap_true").prop("checked")) {
-    //        $("#cViewMap").val('true');
-    //    }
-    //    else {
-    //        $("#cViewMap").val('false');
-    //    }
-    //}
-
-
     $(".all-breadcrumb").click(function () {
         $(".admin-breadcrumb").addClass("breadcrumb-height");
         $(".all-breadcrumb").hide();
@@ -955,7 +944,9 @@ function initialiseGeocoderButton() {
         });
     });
 
-    
+
+}
+
 function initialiseGetVimeoDataButton() {
     $('a.get-vimeo-data').click(function (e) {
         e.preventDefault();
