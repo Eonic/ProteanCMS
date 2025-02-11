@@ -60,18 +60,6 @@ $btn-border-width: 2px;
 $btn-padding-x: 1.5rem;
 $btn-padding-y: 0.4rem;
 
-/*##################### HEADER #######################*/
-$header-menu: "header-menu-right";
-$header-bg: transparent;
-$header-color: $body-color;
-$header-icon-color: $header-color;
-$header-spacing: $nav-padding-x;
-$header-icon-size: 1.3rem;
-$nav-breakpoint: lg;
-$fixed-height-xs: 100px;
-$fixed-height-lg: 100px;
-$header-btn-style: btn-outline-primary;
-
 /*################### NAVIGATION #####################*/
 $navbar-light-color: $body-color;
 $nav-link-hover-color: $primary;
@@ -97,6 +85,18 @@ $dropdown-item-padding-x:           1rem !default;
 $mobile-dd-background: #fff;
 $mobile-dd-color: $body-color;
 $mobile-dd-active: $primary;
+
+/*##################### HEADER #######################*/
+$header-menu: "header-menu-right";
+$header-bg: transparent;
+$header-color: $body-color;
+$header-icon-color: $header-color;
+$header-spacing: $nav-padding-x;
+$header-icon-size: 1.3rem;
+$nav-breakpoint: lg;
+$fixed-height-xs: 100px;
+$fixed-height-lg: 100px;
+$header-btn-style: btn-outline-primary;
 
 /*##################### FOOTER #######################*/
 $footer-bg: $dark;

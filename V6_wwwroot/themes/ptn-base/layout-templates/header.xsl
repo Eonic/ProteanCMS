@@ -523,7 +523,7 @@
     <xsl:param name="social-links" />
     <xsl:param name="containerClass" />
     <xsl:param name="cartClass" />
-    <header class="navbar navbar-expand-xl header-info-above {$cartClass}">
+    <header class="navbar navbar-expand-lg header-info-above {$cartClass}">
       <xsl:if test="not($adminMode or /Page[@previewMode='true']) and $NavFix='true'">
         <xsl:attribute name="class">
           navbar navbar-expand-lg navbar-fixed-top header-info-above <xsl:value-of select="$cartClass"/>
