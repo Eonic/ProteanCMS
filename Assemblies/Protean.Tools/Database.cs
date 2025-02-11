@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Office.Word;
+using System;
 using System.Collections;
 using System.Data;
 using System.Data.SqlClient;
@@ -1149,15 +1150,21 @@ namespace Protean.Tools
                 if (oConn.State == ConnectionState.Closed)
                     oConn.Open();
 
-                IAsyncResult result;
-                result = oCmd.BeginExecuteXmlReader();
+                //IAsyncResult result;
+                //result = oCmd.BeginExecuteXmlReader();
 
-                using (XmlReader reader = oCmd.EndExecuteXmlReader(result))
+                //using (XmlReader reader = oCmd.EndExecuteXmlReader(result))
+                //{
+                //    cXmlValue += reader.ReadOuterXml();
+                //}
+
+                using (XmlReader reader = oCmd.ExecuteXmlReader())
                 {
-                    cXmlValue += reader.ReadOuterXml();
+                    while (reader.Read())
+                    {
+                        cXmlValue = reader.ReadOuterXml();                        
+                    }
                 }
-
-
                 bAsync = false;
                 ResetConnection();
                 // oConn.Close()

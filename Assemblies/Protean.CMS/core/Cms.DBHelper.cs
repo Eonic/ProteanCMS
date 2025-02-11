@@ -20,6 +20,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web.Configuration;
@@ -483,7 +484,10 @@ namespace Protean
                 IntegrationTwitterPost = 901,
 
                 // Order Status Change
-                OrderStatusChange = 400
+                OrderStatusChange = 400,
+
+                //Delete file
+                DeleteFileActivity = 401
 
             }
 
@@ -10754,7 +10758,14 @@ namespace Protean
                     {
                         if (oDs.Tables[0].Columns.Count >= 13)
                         {
+                            // This is added to remove extra column for price and location filter
+                            if (oDs.Tables[0].Columns.Count == 14)
+                            {
+                                oDs.Tables[0].Columns.RemoveAt(13);
+
+                            }
                             oDs.Tables[0].Columns.RemoveAt(12);
+
                         }
 
                         oDs.Tables[0].Columns["id"].ColumnMapping = MappingType.Attribute;
@@ -11544,7 +11555,7 @@ namespace Protean
                     else if (nRootNode == -1)
                     {
                         // Orphans only
-                        cSQL = "SELECT c.nContentKey as id, c.cContentForiegnRef as ref, c.cContentName as name, c.cContentSchemaName as type, c.cContentXmlBrief as content " + "	a.dPublishDate AS publishDate " + " FROM tblContent c" + "	INNER JOIN tblAudit a ON a.nAuditKey = c.nAuditId " + " LEFT OUTER JOIN tblContentLocation cl ON tblContent.nContentKey = cl.nContentId WHERE ( " + sWhere + " ) AND (cl.nContentLocationKey IS NULL) ORDER BY c.cContentName";
+                        cSQL = "SELECT c.nContentKey as id, c.cContentForiegnRef as ref, c.cContentName as name, c.cContentSchemaName as type, c.cContentXmlBrief as content, " + "	a.dPublishDate AS publishDate " + " FROM tblContent c" + "	INNER JOIN tblAudit a ON a.nAuditKey = c.nAuditId " + " LEFT OUTER JOIN tblContentLocation cl ON c.nContentKey = cl.nContentId WHERE ( " + sWhere + " ) AND (cl.nContentLocationKey IS NULL) ORDER BY c.cContentName";
 
 
 
