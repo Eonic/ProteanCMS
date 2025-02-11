@@ -147,7 +147,7 @@ $(document).ready(function () {
         waitingDialog.show(pleasewaitmessage, pleasewaitdetail, { dialogSize: 'sm', progressType: 'warning' });
 
     });
-
+  
     // ON ADMIN MENU CLICK 
     $('#mainMenuButtonadminOptions').click(function (e) {
         e.preventDefault();

@@ -28,6 +28,12 @@
       </xsl:if>
       <xsl:text>Secondary colour background</xsl:text>
     </option>
+    <option value="bg-info text-white">
+      <xsl:if test="$value='bg-info text-white'">
+        <xsl:attribute name="selected">selected</xsl:attribute>
+      </xsl:if>
+      <xsl:text>Info colour background</xsl:text>
+    </option>
     <option value="bg-dark">
       <xsl:if test="$value='bg-dark'">
         <xsl:attribute name="selected">selected</xsl:attribute>
