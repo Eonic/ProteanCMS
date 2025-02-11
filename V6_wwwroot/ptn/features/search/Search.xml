@@ -102,7 +102,7 @@
           <value>BESPOKE</value>
         </item>-->
         </select1>
-        <switch class="disable">
+        <switch class="disable" for="cSearchMode">
           <case id="cSearchMode_0">
             <select1 bind="cContentType" appearance="minimal">
               <label>Content type</label>
@@ -164,7 +164,7 @@
 						  <toggle case="cSortBy_3" event="DOMActivate"/>
 					  </item>
 				  </select1>
-				  <switch class="disable">
+				  <switch class="disable" for="cSortBy">
 					  <case id="cSortBy_0"/>
 					  <case id="cSortBy_1">
 						  <select1 bind="cPageOrder" appearance="minimal" class="vshort">
