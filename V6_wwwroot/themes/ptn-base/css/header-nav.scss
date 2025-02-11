@@ -29,6 +29,13 @@ header.header-menu-right {
             margin: 0;
         }
     }
+
+    .header-tier2 {
+        @include media-breakpoint-down($nav-breakpoint) {
+            display: flex;
+            align-items: center;
+        }
+    }
 }
 
 .header-info-above {

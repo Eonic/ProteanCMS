@@ -377,7 +377,7 @@
           </xsl:apply-templates>
         </div>
         <div class="navbar-content">
-          <div class="header-tier1">
+          <div class="header-tier1 not-xs">
             <!--INFO NAV-->
             <xsl:if test="Menu/MenuItem/MenuItem[@name='Info Menu']/MenuItem and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
               <nav class="info-nav" aria-label="Additional Navigation">
