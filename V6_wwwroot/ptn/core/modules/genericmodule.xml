@@ -183,7 +183,7 @@
               <input bind="title-margin" class="">
                 <label>Margin Below Title</label>
               </input>
-							<switch class="disable">
+							<switch class="disable" for="bMatchHeight">
 								<case id="Match_true">
 									<select bind="Screens" appearance="full" class="multiline bs-only">
 										<label>For Screens</label>
@@ -252,7 +252,7 @@
 										<toggle case="icon-class" event="DOMActivate"/>
 									</item>
 								</select1>
-								<switch class="disable">
+								<switch class="disable" for="icon-options">
 									<case id="icon-picker">
 										<select1 bind="cIcon" class="iconSelect ewQuery bs-only" query="availableIcons" appearance="minimal">
 											<label>Icon</label>
@@ -612,7 +612,7 @@
 						</item>
 						<help class="inline">If selected this option will display items in a single horizontal line with arrows to scroll through to the left and right.</help>
 					</select1>
-					<switch class="disable">
+					<switch class="disable" for="carousel">
 						<case id="Carousel_true" >
 							<group class="row">
 								<group class="col-lg-6">
@@ -1057,7 +1057,7 @@
 							<toggle case="cLinkType_3" event="DOMActivate"/>
 						</item>
 					</select1>
-					<switch class="disable">
+					<switch class="disable" for="cLinkType">
 						<case id="cLinkType_1">
 							<select1 bind="cModuleLink" class="siteTree">
 								<label>Link to page</label>

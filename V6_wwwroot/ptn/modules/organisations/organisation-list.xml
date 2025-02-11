@@ -77,7 +77,7 @@
 								<toggle case="cDisplay_2" event="DOMActivate"/>
 							</item>
 						</select1>
-						<switch class="disable">
+						<switch class="disable" for="cDisplay">
 							<case id="cDisplay_1"/>
 							<case id="cDisplay_2">
 								<relatedContent search="find add" type="Organisation" relationType="Organisation" direction="1way">

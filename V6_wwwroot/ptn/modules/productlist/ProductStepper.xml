@@ -88,7 +88,7 @@
             <toggle case="cDisplay_2" event="DOMActivate"/>
           </item>
         </select1>
-        <switch class="disable">
+        <switch class="disable" for="cDisplay">
           <case id="cDisplay_1"/>
           <case id="cDisplay_2">
             <relatedContent search="find add" type="Product" relationType="" direction="1way">
@@ -149,7 +149,7 @@
             <toggle case="cStepCounter_5" event="DOMActivate"/>
           </item>
         </select1>
-        <switch class="disable">
+        <switch class="disable" for="nStepCount">
           <case id="cStepCounter_1"/>
           <case id="cStepCounter_2"/>
           <case id="cStepCounter_3"/>
@@ -179,7 +179,7 @@
             <toggle case="cSortBy_3" event="DOMActivate"/>
           </item>
         </select1>
-        <switch class="disable">
+        <switch class="disable" for="cSortBy">
           <case id="cSortBy_1">
             <select1 bind="cPageOrder" appearance="minimal" class="form-group">
               <label>Order</label>
@@ -237,7 +237,7 @@
           </item>
           <help class="inline">If selected this option will display articles in a single horizontal line with arrows to scroll through to the left and right.</help>
         </select1>
-        <switch class="disable">
+        <switch class="disable" for="carousel">
 
           <case id="Carousel_true" >
             <select1 bind="autoplay"  appearance="full" class="form-group ">
@@ -298,7 +298,7 @@
             <toggle case="cLinkType_2" event="DOMActivate"/>
           </item>
         </select1>
-        <switch class="disable">
+        <switch class="disable" for="cLinkType">
           <case id="cLinkType_1">
             <select1 bind="cModuleLink" class="siteTree">
               <label>Link to page</label>
