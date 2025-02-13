@@ -2776,6 +2776,7 @@
 	
 	<xsl:template match="Page" mode="google-ga4-transaction">
 		{
+		transaction_id: "<xsl:value-of select="Cart/Order/@cartId"/>",
 		currency: "<xsl:value-of select="Cart/@currency"/>",
 		value: <xsl:value-of select="Cart/Order/@total"/>,
 		items: [
@@ -2786,6 +2787,7 @@
 
 	<xsl:template match="Page[Cart/Order/@cmd='EnterPaymentDetails' or Cart/Order/@cmd='SubmitPaymentDetails']" mode="google-ga4-transaction">
 		{
+		transaction_id: "<xsl:value-of select="Cart/Order/@cartId"/>",
 		currency: "<xsl:value-of select="Cart/@currency"/>",
 		value: <xsl:value-of select="Cart/Order/@total"/>,
 		shipping: "<xsl:value-of select="Cart/Order/@shippingCost"/>",
@@ -2802,7 +2804,7 @@
 
 	<xsl:template match="Page[Cart/Order/@cmd='ShowInvoice']" mode="google-ga4-transaction">
 		{
-		transaction_id: "<xsl:value-of select="Cart/Order/@invoiceRef"/>",
+		transaction_id: "<xsl:value-of select="Cart/Order/@cartId"/>",
 		currency: "<xsl:value-of select="Cart/@currency"/>",
 		value: <xsl:value-of select="Cart/Order/@total"/>,
 		shipping: "<xsl:value-of select="Cart/Order/@shippingCost"/>",
