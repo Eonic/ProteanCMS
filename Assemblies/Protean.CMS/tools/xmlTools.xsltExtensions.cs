@@ -72,7 +72,7 @@ namespace Protean
 
             public xsltExtensions()
             {
-
+                myWeb = null;
             }
             #endregion
 
@@ -3019,9 +3019,11 @@ namespace Protean
                 string sReturnError = "";
                 bool bReset = false;
                 string cProjectPath = string.Empty;
-                if (myWeb.moConfig["ProjectPath"] != null)
-                {
-                    cProjectPath = myWeb.moConfig["ProjectPath"];
+                if (myWeb != null) { 
+                    if (myWeb.moConfig["ProjectPath"] != null)
+                    {
+                        cProjectPath = myWeb.moConfig["ProjectPath"];
+                    }
                 }
                 string AppVariableName = Strings.LCase("css" + TargetPath.Replace("~", ""));
                 do

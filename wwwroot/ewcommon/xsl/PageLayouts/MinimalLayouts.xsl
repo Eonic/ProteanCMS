@@ -2575,38 +2575,38 @@
 		<xsl:variable name="image">
 			<xsl:apply-templates select="." mode="displayBrief" />
 		</xsl:variable>
-		<xsl:variable name="src">
-			<xsl:choose>
-				<!-- We only bother preloading the webp version				
-				<xsl:when test="ms:node-set($image)/*[local-name() = 'picture']">
-					<xsl:value-of select="ms:node-set($image)/*/*[local-name() = 'img']/@src"/>
-				</xsl:when>
-				-->
-				<xsl:when test="$lazy='on'">
-					<xsl:value-of select="ms:node-set($image)/*/@data-src"/>
-				</xsl:when>
-				<xsl:otherwise>
-				  <xsl:value-of select="ms:node-set($image)/*/@src"/>
-				</xsl:otherwise>
-			</xsl:choose>			
-		</xsl:variable>
-		<xsl:variable name="MimeType">
-			<xsl:choose>
-				<xsl:when test="contains($src,'.png')">
-					<xsl:text>image/png</xsl:text>
-				</xsl:when>
-				<xsl:when test="contains($src,'.jpg')">
-					<xsl:text>image/jpeg</xsl:text>
-				</xsl:when>
-				<xsl:when test="contains($src,'.gif')">
-					<xsl:text>image/gif</xsl:text>
-				</xsl:when>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:if test="$src!=''">
+
+		<xsl:if test="ms:node-set($image)/descendant-or-self::*[local-name() != 'picture']">
+			
+			<xsl:variable name="src">
+				<xsl:choose>
+					<xsl:when test="ms:node-set($image)/descendant-or-self::*[local-name()='img']/@data-src!=''">
+						<xsl:value-of select="ms:node-set($image)/descendant-or-self::*[local-name()='img']/@data-src"/>
+					</xsl:when>
+					<xsl:otherwise>
+					  <xsl:value-of select="ms:node-set($image)/descendant-or-self::*[local-name()='img']/@src"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>			
+			<xsl:variable name="MimeType">
+				<xsl:choose>
+					<xsl:when test="contains($src,'.png')">
+						<xsl:text>image/png</xsl:text>
+					</xsl:when>
+					<xsl:when test="contains($src,'.jpg')">
+						<xsl:text>image/jpeg</xsl:text>
+					</xsl:when>
+					<xsl:when test="contains($src,'.gif')">
+						<xsl:text>image/gif</xsl:text>
+					</xsl:when>
+				</xsl:choose>
+			</xsl:variable>
 			<link rel="preload" href="{$src}" as="image" type="{$MimeType}" />
+			<xsl:if test="not($src!='')">
+				<xsl:copy-of select="."/>
+			</xsl:if>
 		</xsl:if>	
-		<xsl:for-each select="ms:node-set($image)/*[local-name() = 'picture']/*[local-name() = 'source' and contains(@srcset,'.webp')]">
+		<xsl:for-each select="ms:node-set($image)/descendant-or-self::*[local-name() = 'picture']/*[local-name() = 'source' and @type='image/webp']">
 			<link rel="preload" href="{@srcset}" as="image" type="image/webp" />
 		</xsl:for-each>
 	</xsl:template>
