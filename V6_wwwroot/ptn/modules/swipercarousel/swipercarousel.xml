@@ -177,7 +177,7 @@
                 <toggle case="cHeightOptions_2" event="DOMActivate"/>
               </item>
             </select1>
-            <switch class="disable">
+            <switch class="disable" for="cHeightOptions">
               <case id="cHeightOptions_1">
                 <group class="row">
                   <group class="col-lg-4">

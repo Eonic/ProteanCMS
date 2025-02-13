@@ -123,7 +123,7 @@
             <toggle case="cDisplay_3" event="DOMActivate"/>
           </item>
         </select1>
-        <switch class="disable">
+        <switch class="disable" for="cDisplay">
           <case id="cDisplay_1"/>
           <case id="cDisplay_2">
             <relatedContent search="find add" type="Job" relationType="" direction="1way">
@@ -203,7 +203,7 @@
             <toggle case="cSortBy_3" event="DOMActivate"/>
           </item>
         </select1>
-        <switch class="disable">
+        <switch class="disable" for="cSortBy">
           <case id="cSortBy_1">
             <select1 bind="cPageOrder" appearance="minimal" class="vshort">
               <label>Order</label>
@@ -320,7 +320,7 @@
             <toggle case="cLinkType_2" event="DOMActivate"/>
           </item>
         </select1>
-        <switch class="disable">
+        <switch class="disable" for="cLinkType">
           <case id="cLinkType_1">
             <select1 bind="cModuleLink" class="siteTree">
               <label>Link to page</label>
