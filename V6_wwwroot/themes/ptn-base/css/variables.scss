@@ -51,6 +51,7 @@ $link-color: $primary !default;
 $visited: lighten($link-color,10%);
 $btn-style: btn-primary;
 $btn-list-style: $btn-style;
+$btn-list-btn:$primary;
 
 $btn-color: $primary;
 //$btn-font-weight: 600;
