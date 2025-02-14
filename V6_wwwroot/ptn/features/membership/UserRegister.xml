@@ -31,13 +31,11 @@
 				<cDescription/>
 			</tblDirectory>
 		</instance>
-		<submission id="EditUser" action="" method="post" event="return form_check(this)"/>
+		<submission id="UserRegister" action="" method="post" event="return form_check(this)"/>
 		<bind id="cDirName" nodeset="tblDirectory/cDirName" required="true()" type="string"/>
 		<bind id="cDirName" nodeset="tblDirectory/cDirEmail" required="true()" type="string"/>
 		<bind id="cDirPassword" nodeset="tblDirectory/cDirPassword" required="true()" type="string"/>
 		<bind id="cDirPassword2" nodeset="tblDirectory/cDirPassword" required="true()" type="string"/>
-		
-		<bind id="cDirName" nodeset="tblDirectory/cDirEmail" required="true()" type="string"/>
 		<bind nodeset="tblDirectory/cDirXml/User">
 			<bind id="cFirstName" nodeset="FirstName" required="true()" type="string"/>
 			<bind id="cMiddleName" nodeset="MiddleName" required="false()" type="string"/>
@@ -47,8 +45,11 @@
 			<bind id="cNotes" nodeset="Notes" required="false()" type="string"/>
 		</bind>
 	</model>
-	<group ref="EditUser">
-    <input bind="nDirKey" class="hidden"/>
+	<group ref="UserRegister" class="1Col">
+		<!--<label>Register on this site</label>-->
+		<input bind="nDirKey" class="hidden">
+			<label>DirId</label>
+		</input>
 		<input bind="cDirName" class="required">
 			<label>Email</label>
 		</input>
@@ -60,23 +61,15 @@
 		</secret>
 		<input bind="cFirstName" class="required">
 			<label>First Name</label>
-		</input><!--
-		<input bind="cMiddleName">
-			<label>Middle Name</label>
-		</input>-->
+		</input>
 		<input bind="cLastName" class="required">
 			<label>Last Name</label>
 		</input>
-
 		<input bind="cPosition">
 			<label>Company</label>
 		</input>
-		
-		<!--textarea bind="cNotes" class="TextAreaBrief xhtml" rows="10" cols="70">
-			<label>Notes</label>
-		</textarea-->
-		<submit submission="EditUser" ref="EditUser" class="principle">
-			<label>Update Account Details</label>
+		<submit submission="UserRegister" ref="ewRegisterSubmit" class="principle">
+			<label>Create Your Account</label>
 		</submit>
 	</group>
 </Content>
