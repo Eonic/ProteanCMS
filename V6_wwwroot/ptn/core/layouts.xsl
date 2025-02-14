@@ -248,7 +248,18 @@
                   <xsl:text>height:</xsl:text>
                   <xsl:value-of select="@minHeightxs"/>
                   <xsl:text>px!important;</xsl:text>
-                </xsl:if>}
+                </xsl:if>
+                <xsl:if test="@padding-top-xs and @padding-top-xs!=''">
+                  <xsl:text>padding-top:</xsl:text>
+                  <xsl:value-of select="@padding-top-xs"/>
+                  <xsl:text>!important;</xsl:text>
+                </xsl:if>
+                <xsl:if test="@padding-bottom-xs and @padding-bottom-xs!=''">
+                  <xsl:text>padding-bottom:</xsl:text>
+                  <xsl:value-of select="@padding-bottom-xs"/>
+                  <xsl:text>!important;</xsl:text>
+                </xsl:if>
+                }
                 @media(min-width:768px){
                 <xsl:text>.bg-wrapper-</xsl:text>
 
@@ -260,7 +271,18 @@
                   <xsl:text>height:</xsl:text>
                   <xsl:value-of select="@minHeight"/>
                   <xsl:text>px!important;</xsl:text>
-                </xsl:if>}}
+                </xsl:if>
+                <xsl:if test="@padding-top and @padding-top!=''">
+                  <xsl:text>padding-top:</xsl:text>
+                  <xsl:value-of select="@padding-top"/>
+                  <xsl:text>!important;</xsl:text>
+                </xsl:if>
+                <xsl:if test="@padding-bottom and @padding-bottom!=''">
+                  <xsl:text>padding-bottom:</xsl:text>
+                  <xsl:value-of select="@padding-bottom"/>
+                  <xsl:text>!important;</xsl:text>
+                </xsl:if>
+                }}
               </style>
               <xsl:if test="@data-stellar-background-ratio!='10'">
 
