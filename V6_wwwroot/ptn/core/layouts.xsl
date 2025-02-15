@@ -1035,14 +1035,17 @@
         <xsl:if test="@maxWidth!=''">
           <xsl:text>max-width:</xsl:text>
           <xsl:value-of select="@maxWidth"/>
+          <xsl:text>;</xsl:text>
         </xsl:if>
         <xsl:if test="@module-padding and @module-padding!=''">
           <xsl:text>padding:</xsl:text>
           <xsl:value-of select="@module-padding"/>
+          <xsl:text>;</xsl:text>
         </xsl:if>
         <xsl:if test="@padding and @padding!=''">
           <xsl:text>padding:</xsl:text>
           <xsl:value-of select="@padding"/>
+          <xsl:text>;</xsl:text>
         </xsl:if>
         <xsl:if test="@custom-css and @custom-css!=''">
           <xsl:value-of select="@custom-css"/>
@@ -1495,10 +1498,12 @@
         <xsl:if test="@maxWidth!=''">
           <xsl:text>max-width:</xsl:text>
           <xsl:value-of select="@maxWidth"/>
+          <xsl:text>;</xsl:text>
         </xsl:if>
         <xsl:if test="@padding and @padding!=''">
           <xsl:text>padding:</xsl:text>
           <xsl:value-of select="@padding"/>
+          <xsl:text>;</xsl:text>
         </xsl:if>
         <xsl:if test="@custom-css and @custom-css!=''">
           <xsl:value-of select="@custom-css"/>
