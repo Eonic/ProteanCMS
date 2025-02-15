@@ -654,7 +654,8 @@
       <xsl:when test="@activationMsg!=''">
         Your activation link has been sent.
       </xsl:when>
-      <xsl:when test="$page/User/@status!='1'">
+      <xsl:when test="$page/User/@status='3' or $page/User/@status='4'">
+		  <xsl:value-of select="$page/User/@status"/>
         You must activate your account before you can update your details.
         <br/>
         <a class="btn btn-primary" href="?ewCmd=RegisterResendActivation">Resend Activation Link</a>
