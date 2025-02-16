@@ -464,17 +464,17 @@
                     </xsl:if>
                     <xsl:choose>
                       <xsl:when test="$nav-dropdown='true'">
-                        <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenudropdown">
+                        <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer' and not(DisplayName/@featuredLink='true')]" mode="mainmenudropdown">
                           <xsl:with-param name="overviewLink">true</xsl:with-param>
                         </xsl:apply-templates>
                       </xsl:when>
                       <xsl:when test="$nav-dropdown='hover'">
-                        <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenudropdown">
+                        <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer' and not(DisplayName/@featuredLink='true')]" mode="mainmenudropdown">
                           <xsl:with-param name="hover">true</xsl:with-param>
                         </xsl:apply-templates>
                       </xsl:when>
                       <xsl:otherwise>
-                        <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenu"/>
+                        <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer' and not(DisplayName/@featuredLink='true')]" mode="mainmenu"/>
                       </xsl:otherwise>
                     </xsl:choose>
                   </ul>
