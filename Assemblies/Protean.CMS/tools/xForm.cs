@@ -3290,7 +3290,9 @@ namespace Protean
 
         public void addNote(ref XmlElement oNode, noteTypes nTypes, string sMessage, bool bInsertFirst = false, string sClass = "")
         {
-            valid = false;
+            // TS: why would adding a note make the form false ?? Have changed wonder what this might break ?
+            //valid = false;
+
             XmlNode frmNode = (XmlNode)oNode;
             addNote(ref frmNode, nTypes, sMessage, bInsertFirst, sClass);
         }

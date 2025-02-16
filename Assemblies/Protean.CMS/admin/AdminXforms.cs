@@ -1468,6 +1468,7 @@ namespace Protean
                                         //XmlNode argoNode2 = (XmlNode)this.moXformElmt;
                                         base.addNote(ref moXformElmt, Protean.xForm.noteTypes.Alert, "Settings Saved");
                                         //this.moXformElmt = (XmlElement)argoNode2;
+                                        base.valid = true;
                                     }
                                 }
                                 else
