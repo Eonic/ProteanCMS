@@ -903,7 +903,7 @@
 
   <xsl:template match="Content[@type='Module']" mode="themeModuleClassExtras">
     <xsl:if test="@modAnim and @modAnim!=''">
-      <xsl:text> moduleAnimate-invisible</xsl:text>
+      <xsl:text> animate__animated moduleAnimate-invisible</xsl:text>
     </xsl:if>
   </xsl:template>
 
@@ -929,7 +929,7 @@
     <xsl:variable name="parentModule" select="$page/Contents/Content[@id=$parentId]"/>
 
     <xsl:if test="$parentModule/@modAnim and $parentModule/@modAnim!=''">
-      <xsl:text> moduleAnimate-invisible</xsl:text>
+      <xsl:text> animate__animated moduleAnimate-invisible</xsl:text>
     </xsl:if>
   </xsl:template>
 
@@ -1370,7 +1370,7 @@
         </xsl:if>
         pos-<xsl:value-of select="@position"/>
         <xsl:if test="@modAnim and @modAnim!=''">
-          <xsl:text> moduleAnimate-invisible</xsl:text>
+          <xsl:text> animate__animated moduleAnimate-invisible</xsl:text>
         </xsl:if>
         <xsl:apply-templates select="." mode="hideScreens" />
         <xsl:apply-templates select="." mode="marginBelow" />
@@ -1489,7 +1489,7 @@
         <xsl:text> pos-</xsl:text>
         <xsl:value-of select="@position"/>
         <xsl:if test="@modAnim and @modAnim!=''">
-          <xsl:text> moduleAnimate-invisible</xsl:text>
+          <xsl:text> animate__animated moduleAnimate-invisible</xsl:text>
         </xsl:if>
         <xsl:apply-templates select="." mode="hideScreens" />
         <xsl:apply-templates select="." mode="marginBelow" />
@@ -1820,7 +1820,7 @@
                 </xsl:if>
                 pos-<xsl:value-of select="@position"/>
                 <xsl:if test="@modAnim and @modAnim!=''">
-                  <xsl:text> moduleAnimate-invisible</xsl:text>
+                  <xsl:text> animate__animated moduleAnimate-invisible</xsl:text>
                 </xsl:if>
                 <xsl:apply-templates select="." mode="hideScreens" />
                 <xsl:apply-templates select="." mode="marginBelow" />
@@ -1870,7 +1870,7 @@
           </xsl:if>
           pos-<xsl:value-of select="@position"/>
           <xsl:if test="@modAnim and @modAnim!=''">
-            <xsl:text> moduleAnimate-invisible</xsl:text>
+            <xsl:text> animate__animated moduleAnimate-invisible</xsl:text>
           </xsl:if>
           <xsl:apply-templates select="." mode="hideScreens" />
           <xsl:apply-templates select="." mode="marginBelow" />
