@@ -424,23 +424,24 @@
               </xsl:when>
             </xsl:choose>
             <h2 class="accordion-header d-lg-none">
+				<xsl:choose>
+					<xsl:when test="/Page/Request/Form/Item[@name='stepto']/node()=@id">
+						<xsl:attribute name="aria-expanded">true</xsl:attribute>
+					</xsl:when>
+					<xsl:when test="position()='1' and not(/Page/Request/Form/Item[@name='stepto'])">
+						<xsl:attribute name="aria-expanded">true</xsl:attribute>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:attribute name="aria-expanded">false</xsl:attribute>
+					</xsl:otherwise>
+				</xsl:choose>
               <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{@id}" aria-controls="#collapse-{@id}" id="button-{@id}">
                 <xsl:if test="position()!='1'">
                   <xsl:attribute name="class">accordion-button collapsed </xsl:attribute>
                 </xsl:if>
                 <xsl:apply-templates select="label"/>
               </button>
-              <xsl:choose>
-                <xsl:when test="/Page/Request/Form/Item[@name='stepto']/node()=@id">
-                  <xsl:attribute name="aria-expanded">true</xsl:attribute>
-                </xsl:when>
-                <xsl:when test="position()='1' and not(/Page/Request/Form/Item[@name='stepto'])">
-                  <xsl:attribute name="aria-expanded">true</xsl:attribute>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:attribute name="aria-expanded">false</xsl:attribute>
-                </xsl:otherwise>
-              </xsl:choose>
+
             </h2>
             <div id="collapse-{@id}" class="accordion-collapse collapse d-lg-block" data-bs-parent="#tab-{@id}">
               <xsl:if test="/Page/Request/Form/Item[@name='stepto']/node()=@id">

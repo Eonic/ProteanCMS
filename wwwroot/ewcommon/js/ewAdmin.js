@@ -3,17 +3,6 @@ var IsParentPageAPI = '/ewapi/Cms.Admin/IsParentPage';
 var checkiFrameLoaded;
 
 $(document).ready(function () {
-
-    //if ($("#nShowMap_true").length > 0) {
-    //    if ($("#nShowMap_true").prop("checked")) {
-    //        $("#cViewMap").val('true');
-    //    }
-    //    else {
-    //        $("#cViewMap").val('false');
-    //    }
-    //}
-
-
     $(".all-breadcrumb").click(function () {
         $(".admin-breadcrumb").addClass("breadcrumb-height");
         $(".all-breadcrumb").hide();
@@ -294,12 +283,12 @@ $(document).ready(function () {
     initialiseHelptips();
     //   $('.pickImageModal').on('shown.bs.modal', function () {
     $('.pickImageModal').on('loaded', function () {
-        var currentModal = $(this)
-        var multiple = ""
+        var currentModal = $(this);        
+        var multiple = "";
         if ($('#template_FileSystem #MenuTree').data('multiple') == 1) {
             multiple = "&multiple=true"
         }
-
+        
         if (currentModal.find('#template_FileSystem #MenuTree').exists()) {
             currentModal.find('#template_FileSystem #MenuTree').ajaxtreeview({
                 loadPath: treeviewPath + "&popup=true&libType=" + $('#template_FileSystem #MenuTree').data("lib-type").replace("Lib", "") + "&targetForm=" + $('#template_FileSystem #MenuTree').data("target-form") + "&targetField=" + $('#template_FileSystem #MenuTree').data("target-field") + "&targetClass=" + $('#template_FileSystem #MenuTree').data("target-class") + multiple,
@@ -321,26 +310,26 @@ $(document).ready(function () {
             }
         });
 
-        $(this).find('a[data-toggle!="popover"]').click(function (ev) {
+        currentModal.find('a[data-toggle!="popover"]').click(function (ev) {
             ev.preventDefault();
-            $('.modal-dialog').addClass('loading')
-            $('.modal-body').html('<div class="panel panel-default"><p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p></div>');
+            currentModal.find('.modal-dialog').addClass('loading')
+            currentModal.find('.modal-body').html('<div class="panel panel-default"><p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p></div>');
             var target = $(this).attr("href");
             // load the url and show modal on success
-            currentModal.load(target, function () {
-                $('.modal-dialog').removeClass('loading')
+            currentModal.load(target, function () {                
+                currentModal.find('.modal-dialog').removeClass('loading')
                 currentModal.modal("show");
 
             });
         });
 
-        $(this).find('form').on('submit', function (event) {
-
+        currentModal.find('form').on('submit', function (event) {
+          
             event.preventDefault()
             var formData = $(this).serialize();
             var targetUrl = $(this).attr("action") + '&contentType=popup';
-            $('.modal-dialog').addClass('loading')
-            $('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p>');
+            currentModal.find('.modal-dialog').addClass('loading')
+            currentModal.find('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p>');
 
             $.ajax({
                 type: 'post',
@@ -348,8 +337,8 @@ $(document).ready(function () {
                 data: formData,
                 dataType: 'html',
                 success: function (msg) {
-                    $('.modal-dialog').removeClass('loading')
-                    $(".modal").html(msg);
+                    currentModal.find('.modal-dialog').removeClass('loading')
+                    currentModal.find(".modal").html(msg);
                     currentModal.trigger('loaded');
                 }
             });
@@ -1765,7 +1754,7 @@ if (editPageElement) {
             originalStructureName: ""
         },
         methods: {
-            createRedirects: function () {
+            createRedirects: function () {                
                 $("#redirectModal").modal("hide");
                 var redirectType = $(".redirectStatus:checked").val();
 
@@ -1777,13 +1766,13 @@ if (editPageElement) {
                     var newUrl = $("#cStructName").val();
                     var inputJson = { redirectType: redirectType, oldUrl: newUrl };
                     axios.post(IsUrlPResentAPI, inputJson)
-                        .then(function (response) {
-
+                        .then(function (response) {  
+                            
                             if (response.data == "True") {
                                 if (confirm("Old url is already exist. Do you want to replace it?")) {
 
                                     $("#cRedirect").val(redirectType);
-
+                                    
                                     var inputJson = { redirectType: redirectType, oldUrl: localStorage.originalStructName, newUrl: newUrl };
                                     axios.post(redirectUrl, inputJson)
                                         .then(function (response) {
@@ -1813,8 +1802,8 @@ if (editPageElement) {
 
 
 
-            structNameOnChange: function (newStructName) {
-                if ($(".hidPageChangeFlag").val() == "1") {
+            structNameOnChange: function (newStructName) {                
+                if ($(".hidPageChangeFlag").val() == "1") {                    
                     if (localStorage.originalStructName && localStorage.originalStructName != "" && localStorage.originalStructName != newStructName) {
                         var redirectType = $(".hiddenRedirectType").val();
                         $('.btnRedirectSave').removeAttr("disabled");
@@ -1845,8 +1834,8 @@ if (editPageElement) {
             }
         },
 
-        mounted: function () {
-
+        mounted: function () {   
+            
             var cStructName = document.getElementById('cStructName');
             if (cStructName != null) {
                 this.structName = cStructName.value;
@@ -1886,7 +1875,7 @@ $(document).on("change", "#cContentPath", function (event) {
 });
 
 $(document).on("change", "#cStructName", function (event) {
-
+    
     $(".hidPageChangeFlag").val("1");
 
 });
