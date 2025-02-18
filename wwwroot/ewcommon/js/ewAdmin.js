@@ -147,7 +147,7 @@ $(document).ready(function () {
         waitingDialog.show(pleasewaitmessage, pleasewaitdetail, { dialogSize: 'sm', progressType: 'warning' });
 
     });
-  
+
     // ON ADMIN MENU CLICK 
     $('#mainMenuButtonadminOptions').click(function (e) {
         e.preventDefault();
@@ -286,7 +286,7 @@ $(document).ready(function () {
         var currentModal = $(this);        
         var multiple = "";
         if ($('#template_FileSystem #MenuTree').data('multiple') == 1) {
-            multiple = "&multiple=true"        
+            multiple = "&multiple=true"
         }
         
         if (currentModal.find('#template_FileSystem #MenuTree').exists()) {
@@ -344,12 +344,12 @@ $(document).ready(function () {
             });
         });
 
-       
-        $("#SelectAll").click(function (ev) {           
+
+        $("#SelectAll").click(function (ev) {
             ev.preventDefault();
             $(".multicheckbox").each(function () {
                 $(".multicheckbox").attr("checked", "checked");
-            });           
+            });
             return false;
         });
     });
@@ -627,7 +627,7 @@ function modalOpen(dialog) {
 }(jQuery));
 
 $.fn.prepareAdminXform = function () {
-    
+
     if ($("#_selectAll").exists()) {
         $("#_selectAll").click(function () {
             var checked = this.checked;
@@ -944,16 +944,14 @@ function initialiseGeocoderButton() {
         });
     });
 
-
 }
-
 function initialiseGetVimeoDataButton() {
     $('a.get-vimeo-data').click(function (e) {
         e.preventDefault();
         var id = $("input#cVimeoCode").val();
         id = id.split('?')[0];
         jsonURL = "https://vimeo.com/api/v2/video/" + id + ".json";
-        
+
         $.getJSON(jsonURL, function (result) {
             $("#cVimeoDuration").val(result[0].duration);
             $("#cVimeoByline").val(result[0].description);
@@ -1857,7 +1855,7 @@ if (editPageElement) {
 
 
 $(document).ready(function () {
-   // var cLocation = $(".admin-breadcrumb-inner ul li").last().text();
+    // var cLocation = $(".admin-breadcrumb-inner ul li").last().text();
     //$("#cLocation").val(cLocation);
     function scrollToAnchor(aid) {
         var aTag = $("li[id='" + aid + "']");
@@ -1867,7 +1865,7 @@ $(document).ready(function () {
         if ($("#MenuTree li.active").prop("id") != undefined) {
             scrollToAnchor($("#MenuTree li.active").prop("id"));
         }
-    }   
+    }
 });
 
 $(document).on("change", "#cContentPath", function (event) {
@@ -2058,7 +2056,7 @@ function SendEmail(event) {
 }
 
 $('.getPlaceIDButton').click(function (e) {
-   
+
     // Prevent form submission
     e.preventDefault();
     var latitude;
@@ -2101,69 +2099,68 @@ $('.getPlaceIDButton').click(function (e) {
 
 });
 
-function getImagePaths() {   
-    var imagepaths = "";  
+function getImagePaths() {
+    var imagepaths = "";
     for (var i = 0; i < $(".multicheckbox").length; i++) {
-        if ($(".multicheckbox")[i].checked === true) {           
+        if ($(".multicheckbox")[i].checked === true) {
             if (imagepaths == "") {
                 imagepaths = $(".multicheckbox")[i].value;
             } else {
-                imagepaths= $(".multicheckbox")[i].value + ',' + imagepaths;
+                imagepaths = $(".multicheckbox")[i].value + ',' + imagepaths;
             }
-            if (imagepaths.includes("%20"))
-            {               
+            if (imagepaths.includes("%20")) {
                 imagepaths = imagepaths.replace("%20", " ");
             }
         }
-    }   
+    }
     var SaveMultipleLibraryImages = "/ewapi/Cms.Admin/SaveMultipleLibraryImages";
     var contentId = this.getQueryStringParam('id');
     //var RelatedLibraryImages = imagepaths;
     //var cSkipAttribute = false;  
-    $("#cRelatedLibraryImages").val(imagepaths); 
+    $("#cRelatedLibraryImages").val(imagepaths);
     $("#contentId").val(contentId);
     var formData = new FormData($("#EditContent")[0]);
-   
+
     $.ajax({
         url: SaveMultipleLibraryImages,
         data: formData,
         contentType: false,
-        processData: false,       
+        processData: false,
         type: 'POST',
-        success: function (response) {           
+        success: function (response) {
             $("#modal-cProductImagesPaths").modal("hide");
             location.reload();
         }
     });
-   
+
 }
 
-function SaveFileName(isOverwrite) {    
+function SaveFileName(isOverwrite) {
     var newfilename; var oldfilename;
     if (isOverwrite) {
         oldfilename = $("#cleanFilename").val();
-    } 
-    newfilename = $("#txtfilename").val();       
+    }
+    newfilename = $("#txtfilename").val();
     var existsfilename = document.getElementById("existsFile").files[0];
     var targetPath = $("#targetPath").val();
-    var ajaxurl = '?ewCmd=ImageLib&ewCmd2=FileUpload&isOverwrite=' + isOverwrite + '&oldfile="' + oldfilename +'"&storageRoot="'+targetPath+'"';
+    var ajaxurl = '?ewCmd=ImageLib&ewCmd2=FileUpload&isOverwrite=' + isOverwrite + '&oldfile="' + oldfilename + '"&storageRoot="' + targetPath + '"';
     let list = new DataTransfer();
     let file = new File([existsfilename], newfilename);
     list.items.add(file);
     let myFileList = list.files;
     existsFile.files = myFileList;
-    var formData = new FormData($("#frmfileData")[0]);   
+    var formData = new FormData($("#frmfileData")[0]);
     $.ajax({
         url: ajaxurl,
         data: formData,
         processData: false,
         contentType: false,
         type: 'POST',
-        success: function (result) {            
-            $("#changeFilename").modal("hide");           
-            var newItem = $("#divnewfileupdate").html();  
+        success: function (result) {
+            $("#changeFilename").modal("hide");
+            var newItem = $("#divnewfileupdate").html();
             $('#files').prepend(newItem);
-            $('#files .item-image .panel').prepareLibImages();	    
+            $('#files .item-image .panel').prepareLibImages();
         }
     });
 }
