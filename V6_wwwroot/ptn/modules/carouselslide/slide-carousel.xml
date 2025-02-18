@@ -94,7 +94,7 @@
           </item>
         </select1>
 
-        <switch class="disable">
+        <switch class="disable" for="cDisplay">
           <case id="cDisplay_1"/>
           <case id="cDisplay_2">
             <relatedContent search="find add" type="Image" relationType="" direction="1way">

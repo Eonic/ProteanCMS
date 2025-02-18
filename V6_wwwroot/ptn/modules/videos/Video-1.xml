@@ -264,7 +264,7 @@
               </item>
             </select1>
 
-          <switch class="disable">
+          <switch class="disable" for="cVideoType">
             <!-- Local -->
             <case id="cTypeLocal">
               <input bind="cLocalUrl" class="pickMedia">
@@ -444,7 +444,7 @@
             </item>
           </select1>
 
-          <switch class="disable">
+          <switch class="disable" for="cVideoSize">
             <case id="cSizeAuto">
               <select1 bind="cVideoRatio" class="short">
                 <label>Ratio</label>

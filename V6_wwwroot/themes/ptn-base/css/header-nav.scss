@@ -29,6 +29,13 @@ header.header-menu-right {
             margin: 0;
         }
     }
+
+    .header-tier2 {
+        @include media-breakpoint-down($nav-breakpoint) {
+            display: flex;
+            align-items: center;
+        }
+    }
 }
 
 .header-info-above {
@@ -390,6 +397,11 @@ header {
             .dropdown-menu li:nth-child(2) a {
                 font-size: 1.3rem;
                 width: 100%;
+
+                &.active,
+                &.on {
+                    color: $mobile-dd-color;
+                }
             }
 
             .nav-link {
@@ -397,6 +409,13 @@ header {
                 width: 100%;
                 text-align: left;
 
+                &.active,
+                &.on {
+                    color: $mobile-dd-active;
+                }
+            }
+
+            a {
                 &.active,
                 &.on {
                     color: $mobile-dd-active;
@@ -473,6 +492,10 @@ header {
                 right: 0px;
                 top: 0px;
                 z-index: 1010;
+
+                &:after {
+                    display: none;
+                }
             }
 
             .emergency-xs-link {

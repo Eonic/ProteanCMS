@@ -67,7 +67,7 @@
       <input bind="ReplyEmail">
         <label>ReplyEmail</label>
       </input>
-      <switch class="disable">
+      <switch class="disable" for="MessagingProvider">
         <case id="cDisplay_1">
           <input bind="ApiKey" class="readonly">
             <label>Api Key</label>

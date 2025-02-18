@@ -6117,6 +6117,14 @@ from tblContentIndexDef";
 
                         ThemeLessFile = Protean.fsHelper.checkLeadingSlash(ThemeLessFile);
                         ThemeLessFile = ThemePath + ThemeName + "/" + ThemeLessFile;
+
+                        Boolean IsScss = false;
+
+                        if (ThemeLessFile.EndsWith(".scss")) {
+                            IsScss = true;
+                        }
+
+
                         if (Conversions.ToBoolean(oFsH.VirtualFileExists(ThemeLessFile)))
                         {
 
@@ -6145,7 +6153,9 @@ from tblContentIndexDef";
                             foreach (XmlElement oElmt in settingsXml.SelectNodes("theme/add[starts-with(@key,'" + ThemeName + ".')]"))
                             {
                                 string variableName = oElmt.GetAttribute("key").Replace(ThemeName + ".", "");
+
                                 string searchText = "(?<=" + VariablePrefix + variableName + ":).*(?=;)";
+
                                 string replaceText = oElmt.GetAttribute("value").Trim();
 
                                 // handle image files in CSS

@@ -271,7 +271,7 @@
 								<toggle case="cVenue_2" event="DOMActivate"/>
 							</item>
 						</select1>
-						<switch class="disable">
+						<switch class="disable" for="VenueType">
 							<case id="cVenue_1">
 								<label>Venue</label>
 								<relatedContent type="Organisation" search="add find" relationType="venue" direction="2way" />

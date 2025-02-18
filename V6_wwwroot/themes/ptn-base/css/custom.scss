@@ -901,6 +901,7 @@ div[class$="List"] {
 
     .btn-custom {
         margin-top: 1rem;
+        border-color: $btn-list-btn;
     }
     /*.btn-custom {
         border-color: $primary;
@@ -919,6 +920,7 @@ div[class$="List"] {
         }
     }*/
 }
+
 .ContactList {
     .lIinner {
         max-width: 496px;
@@ -1042,7 +1044,7 @@ div[class$="List"] {
 }
 
 .listItem {
-    margin-bottom: $grid-gutter-height;
+    //margin-bottom: $grid-gutter-height;
 
     .lIinner {
         position: relative;
@@ -1243,7 +1245,16 @@ div[class$="List"] {
     }
 }
 
+.module-GalleryImageList.module-centred {
+    display: block;
+
+    .entryFooter {
+        text-align: center;
+    }
+}
+
 .GalleryImageList {
+
     > .cols {
         display: flex;
     }
@@ -1393,7 +1404,7 @@ dd {
     padding-top: 4rem;
 
     .contact-text {
-        max-width:55rem;
+        max-width: 55rem;
     }
 
     .detail-title {
