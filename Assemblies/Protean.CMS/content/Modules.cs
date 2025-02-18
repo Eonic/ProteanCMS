@@ -476,7 +476,7 @@ namespace Protean
                         }
                         bool bShowMoreFilterButton = false;
 
-                        oFrmGroup = filterForm.addGroup(ref filterForm.moXformElmt, "main-group");
+                        oFrmGroup = filterForm.addGroup(ref filterForm.moXformElmt, "filter-main");
                         XmlElement oXml = filterForm.moPageXML.CreateElement("ShowMore");
                         oXml.InnerText = cShowMore;
                         filterForm.Instance.AppendChild(oXml);
