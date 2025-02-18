@@ -140,7 +140,7 @@
 							</item>
 
 						</select1>
-						<switch class="disable">
+						<switch class="disable" for="cResizeImage">
 							<case id="cResizeImage_1"/>
 							<case id="cResizeImage_2">
 								<group class="inline">

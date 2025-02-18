@@ -119,7 +119,7 @@
 							<toggle case="cStepCounter_6" event="DOMActivate" />
 						</item>
 					</select1>
-					<switch class="disable">
+					<switch class="disable" for="nStepCount">
 						<case id="cStepCounter_1"/>
 						<case id="cStepCounter_2"/>
 						<case id="cStepCounter_3"/>

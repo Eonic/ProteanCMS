@@ -10761,10 +10761,11 @@
                   <dd>
                     <xsl:value-of select="@startTime"/>
                   </dd>
+					<!--
                   <dt>End Time</dt>
                   <dd>
                     <xsl:value-of select="@endTime"/>
-                  </dd>
+                  </dd>-->
                   <dt>Pages Index</dt>
                   <dd>
                     <xsl:value-of select="@pagesIndexed"/>
@@ -10773,11 +10774,14 @@
                   <dd>
                     <xsl:value-of select="@pagesSkipped"/>
                   </dd>
-                  <dt>Articles Indexed</dt>
+                  <dt>
+					  Content Indexed</dt>
                   <dd>
                     <xsl:value-of select="@contentCount"/>
+					  <xsl:text> - </xsl:text>
+					  <xsl:value-of select="@IndexDetailTypes"/>
                   </dd>
-                  <dt>Articles Skipped</dt>
+                  <dt>Content Skipped</dt>
                   <dd>
                     <xsl:value-of select="@contentSkipped"/>
                   </dd>
