@@ -63,10 +63,12 @@
 				<xsl:if test="Images/img/@src!=''">
 					<xsl:choose>
 						<xsl:when test="@noLink='true'">
-							<xsl:apply-templates select="." mode="displayThumbnail">
-								<xsl:with-param name="crop" select="$cropSetting" />
-								<xsl:with-param name="class">list-image</xsl:with-param>
-							</xsl:apply-templates>
+              <span class="list-image-span">
+                <xsl:apply-templates select="." mode="displayThumbnail">
+                  <xsl:with-param name="crop" select="$cropSetting" />
+                  <xsl:with-param name="class">list-image</xsl:with-param>
+                </xsl:apply-templates>
+              </span>
 						</xsl:when>
 						<xsl:otherwise>
 							<a href="{$parentURL}" title="View more details on {GivenName/node()} {Surname/node()}" class="list-image-link">
@@ -315,7 +317,7 @@
 						<xsl:apply-templates select="Profile/node()" mode="cleanXhtml"/>
 					</p>
 				</xsl:if>
-				<a href="{$parentURL}" class="btn btn-sm btn-default">
+				<a href="{$parentURL}" class="btn btn-sm btn-custom">
 					<xsl:choose>
 						<xsl:when test="@morelinktext!=''">
 							<xsl:value-of select="@morelinktext"/>

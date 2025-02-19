@@ -3,7 +3,6 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Xml;
-using Microsoft.VisualBasic; // Install-Package Microsoft.VisualBasic
 
 namespace Protean.Tools.Integration.Twitter.TwitterVB2
 {
@@ -164,7 +163,7 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
 
             catch (Exception ex)
             {
-                Interaction.MsgBox(ex.Message);
+                //Interaction.MsgBox(ex.Message);
             }
             return UploadRet;
 

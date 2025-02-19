@@ -14,7 +14,7 @@ Public Class ewAjaxContentForm : Implements IHttpHandler, IRequiresSessionState
             oEw.mbOutputXml = True
         End If
 
-        oEw.mcEwSiteXsl = "/xsl/ajaxStandard.xsl"
+        oEw.mcEwSiteXsl = "/ptn/core/ajax.xsl"
         oEw.GetAjaxHTML()
 
         oEw = Nothing

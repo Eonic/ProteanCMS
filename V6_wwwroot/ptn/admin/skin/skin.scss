@@ -284,11 +284,11 @@ body.ptn-edit.layout-AdmHome {
             padding-right: 1px;
         }*/
         .list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
-            color: $admin-header-color;
+            color: $admin-header-color !important;
             background-color: $admin-header-color-link;
 
             a {
-                color: $admin-header-color;
+                color: $admin-header-color !important;
             }
 
             a:hover {
@@ -1482,40 +1482,10 @@ form#AddModule {
     }
 
     .metric {
-        //float: left;
-        margin-bottom: 20px;
-        margin-right: auto;
-        margin-left: auto;
-        background-color: #fff;
-        border-radius: 10px 10px 10px 10px;
-        box-shadow: 0px 0px 15px #A9BACB;
-        width: 300px;
-        height: 130px;
-        overflow: hidden;
+
 
         .metric-inner {
-            // margin:10px;
-            header.metric-header {
-                overflow: hidden;
-                // background: #f9f9f9;
-                margin: 0;
-                border-bottom: 1px solid #f0f0f0;
-                height: 50px;
-                line-height: 50px;
-                width: 100%;
-
-                h1.metric-title {
-                    // margin:20px auto 10px;
-                    width: 100%;
-                    margin: 0;
-                    padding: 15px;
-                    color: #666;
-                    display: block;
-                    text-align: center;
-                    font-weight: 400;
-                    font-size: 18px;
-                }
-            }
+           
 
             .metric-body {
                 width: 100%;

@@ -134,6 +134,11 @@
               <xsl:if test="@marginBelow='false'">
                 <xsl:text> mb-0 </xsl:text>
               </xsl:if>
+              <xsl:if test="@marginBelow!='false' and @marginBelow!='true' and @marginBelow!='' and @marginBelow">
+                <xsl:text> </xsl:text>
+                <xsl:value-of select="@marginBelow"/>
+                <xsl:text> </xsl:text>
+              </xsl:if>
               <xsl:if test="@data-stellar-background-ratio!='10'">
                 <xsl:text> parallax-wrapper </xsl:text>
               </xsl:if>
@@ -175,6 +180,54 @@
                 <xsl:value-of select="(@data-stellar-background-ratio div 10)"/>
               </xsl:attribute>-->
             </xsl:if>
+            <xsl:if test="@backgroundImage='' or not(@backgroundImage)">
+              <xsl:attribute name="style">
+                <xsl:if test="@minHeight!=''">
+                  <xsl:text>min-height:</xsl:text>
+                  <xsl:value-of select="@minHeight"/>
+                  <xsl:text>px!important;</xsl:text>
+                </xsl:if>
+                <!--<xsl:if test="@padding-top and @padding-top!=''">
+                  <xsl:text>padding-top:</xsl:text>
+                  <xsl:value-of select="@padding-top"/>
+                  <xsl:text>;</xsl:text>
+                </xsl:if>
+                <xsl:if test="@padding-bottom and @padding-bottom!=''">
+                  <xsl:text>padding-bottom:</xsl:text>
+                  <xsl:value-of select="@padding-bottom"/>
+                </xsl:if>-->
+              </xsl:attribute>
+              <xsl:if test="(@padding-top and @padding-top!='') or (@padding-top-xs and @padding-top-xs!='') or (@padding-bottom and @padding-bottom!='') or (@padding-bottom-xs and @padding-bottom-xs!='')  ">
+                <style>
+                  <xsl:text>.bg-wrapper-</xsl:text>
+                  <xsl:value-of select="@id"/>{
+                  <xsl:if test="@padding-top-xs and @padding-top-xs!=''">
+                    <xsl:text>padding-top:</xsl:text>
+                    <xsl:value-of select="@padding-top-xs"/>
+                    <xsl:text>!important;</xsl:text>
+                  </xsl:if>
+                  <xsl:if test="@padding-bottom-xs and @padding-bottom-xs!=''">
+                    <xsl:text>padding-bottom:</xsl:text>
+                    <xsl:value-of select="@padding-bottom-xs"/>
+                    <xsl:text>!important;</xsl:text>
+                  </xsl:if>
+                  }
+                  @media(min-width:768px){
+                  <xsl:text>.bg-wrapper-</xsl:text>
+                  <xsl:value-of select="@id"/>{
+                  <xsl:if test="@padding-top and @padding-top!=''">
+                    <xsl:text>padding-top:</xsl:text>
+                    <xsl:value-of select="@padding-top"/>
+                    <xsl:text>!important;</xsl:text>
+                  </xsl:if>
+                  <xsl:if test="@padding-bottom and @padding-bottom!=''">
+                    <xsl:text>padding-bottom:</xsl:text>
+                    <xsl:value-of select="@padding-bottom"/>
+                    <xsl:text>!important;</xsl:text>
+                  </xsl:if>}}
+                </style>
+              </xsl:if>
+            </xsl:if>
             <xsl:if test="@backgroundImage!=''">
               <style>
                 <xsl:text>.bg-wrapper-</xsl:text>
@@ -195,7 +248,18 @@
                   <xsl:text>height:</xsl:text>
                   <xsl:value-of select="@minHeightxs"/>
                   <xsl:text>px!important;</xsl:text>
-                </xsl:if>}
+                </xsl:if>
+                <xsl:if test="@padding-top-xs and @padding-top-xs!=''">
+                  <xsl:text>padding-top:</xsl:text>
+                  <xsl:value-of select="@padding-top-xs"/>
+                  <xsl:text>!important;</xsl:text>
+                </xsl:if>
+                <xsl:if test="@padding-bottom-xs and @padding-bottom-xs!=''">
+                  <xsl:text>padding-bottom:</xsl:text>
+                  <xsl:value-of select="@padding-bottom-xs"/>
+                  <xsl:text>!important;</xsl:text>
+                </xsl:if>
+                }
                 @media(min-width:768px){
                 <xsl:text>.bg-wrapper-</xsl:text>
 
@@ -207,7 +271,18 @@
                   <xsl:text>height:</xsl:text>
                   <xsl:value-of select="@minHeight"/>
                   <xsl:text>px!important;</xsl:text>
-                </xsl:if>}}
+                </xsl:if>
+                <xsl:if test="@padding-top and @padding-top!=''">
+                  <xsl:text>padding-top:</xsl:text>
+                  <xsl:value-of select="@padding-top"/>
+                  <xsl:text>!important;</xsl:text>
+                </xsl:if>
+                <xsl:if test="@padding-bottom and @padding-bottom!=''">
+                  <xsl:text>padding-bottom:</xsl:text>
+                  <xsl:value-of select="@padding-bottom"/>
+                  <xsl:text>!important;</xsl:text>
+                </xsl:if>
+                }}
               </style>
               <xsl:if test="@data-stellar-background-ratio!='10'">
 
@@ -369,6 +444,7 @@
   <!-- ## Layout Types are specified in the LayoutsManifest.XML file  ################################   -->
   <xsl:template match="Page" mode="mainLayout">
     <xsl:param name="containerClass"/>
+    <xsl:param name="hideFooter"/>
     <xsl:choose>
       <!-- IF QUOTE CMD SHOW QUOTE -->
       <xsl:when test="Cart[@type='quote']/Quote/@cmd!=''">
@@ -405,6 +481,7 @@
 
         <xsl:apply-templates select="." mode="Layout">
           <xsl:with-param name="containerClass" select="$containerClass"/>
+          <xsl:with-param name="hideFooter" select="$hideFooter"/>
         </xsl:apply-templates>
 
 
@@ -429,7 +506,8 @@
 
   <xsl:template match="Page" mode="layoutFooter">
     <xsl:param name="containerClass"/>
-    <xsl:if test="/Page/Contents/Content[@name='footer' or @position='footer'] or $show-layout-footer='true'">
+    <xsl:param name="hideFooter"/>
+    <xsl:if test="(/Page/Contents/Content[@name='footer' or @position='footer'] or $show-layout-footer='true') and not($hideFooter='true')">
       <xsl:apply-templates select="/Page" mode="addModule">
         <xsl:with-param name="text">Add Module</xsl:with-param>
         <xsl:with-param name="position">footer</xsl:with-param>
@@ -441,6 +519,7 @@
   <!-- ## Default Layout  ############################################################################   -->
   <xsl:template match="Page" mode="Layout">
     <xsl:param name="containerClass"/>
+    <xsl:param name="hideFooter"/>
     <div class="template" id="template_1_Column"  role="main">
       <xsl:apply-templates select="." mode="layoutHeader">
         <xsl:with-param name="containerClass" select="$containerClass"/>
@@ -464,6 +543,7 @@
       </div>
       <xsl:apply-templates select="." mode="layoutFooter">
         <xsl:with-param name="containerClass" select="$containerClass"/>
+        <xsl:with-param name="hideFooter" select="hideFooter"/>
       </xsl:apply-templates>
       <xsl:apply-templates select="." mode="socialBookmarks" />
     </div>
@@ -491,7 +571,7 @@
 
   <xsl:template match="Page[@layout='Modules_1_column' or @layout='1_Column' or @type='default']" mode="Layout">
     <xsl:param name="containerClass"/>
-
+    <xsl:param name="hideFooter"/>
     <div id="template_1_Column" class="template template_1_Column"  role="main">
       <xsl:apply-templates select="." mode="layoutHeader">
         <xsl:with-param name="containerClass" select="$containerClass"/>
@@ -504,10 +584,12 @@
             <xsl:with-param name="class" select="$containerClass"/>
           </xsl:apply-templates>
         </xsl:if>
+        <xsl:text> </xsl:text>
       </div>
     </div>
     <xsl:apply-templates select="." mode="layoutFooter">
       <xsl:with-param name="containerClass" select="$containerClass"/>
+      <xsl:with-param name="hideFooter" select="$hideFooter"/>
     </xsl:apply-templates>
   </xsl:template>
 
@@ -821,7 +903,7 @@
 
   <xsl:template match="Content[@type='Module']" mode="themeModuleClassExtras">
     <xsl:if test="@modAnim and @modAnim!=''">
-      <xsl:text> moduleAnimate-invisible</xsl:text>
+      <xsl:text> animate__animated moduleAnimate-invisible</xsl:text>
     </xsl:if>
   </xsl:template>
 
@@ -847,7 +929,7 @@
     <xsl:variable name="parentModule" select="$page/Contents/Content[@id=$parentId]"/>
 
     <xsl:if test="$parentModule/@modAnim and $parentModule/@modAnim!=''">
-      <xsl:text> moduleAnimate-invisible</xsl:text>
+      <xsl:text> animate__animated moduleAnimate-invisible</xsl:text>
     </xsl:if>
   </xsl:template>
 
@@ -927,6 +1009,10 @@
           <xsl:text> char80-</xsl:text>
           <xsl:value-of select="@char80Layout"/>
         </xsl:if>
+        <xsl:if test="@v-align='center'">
+          <xsl:text> v-align-</xsl:text>
+          <xsl:value-of select="@v-align"/>
+        </xsl:if>
 
         <xsl:if test="@panelImage!=''">
           <xsl:text> panelImage </xsl:text>
@@ -939,18 +1025,38 @@
         <xsl:apply-templates select="." mode="themeModuleClassExtras"/>
         <xsl:value-of select="$thisClass"/>
         <xsl:if test="@moduleType='Image'">
-          <xsl:text> img-module-flex justify-content-</xsl:text>
+          <xsl:if test="@flex-cols='true'">
+            <xsl:text> img-module-flex </xsl:text>
+          </xsl:if>
+          <xsl:text>test justify-content-</xsl:text>
           <xsl:value-of select="@position-vertical"/>
           <xsl:text> align-items-</xsl:text>
           <xsl:value-of select="@position-horizontal"/>
+          <xsl:if test="@position-vertical and @position-vertical!=''">
+            <xsl:text> img-flex-100 </xsl:text>
+          </xsl:if>
         </xsl:if>
       </xsl:attribute>
-      <xsl:if test="@maxWidth!=''">
-        <xsl:attribute name='style'>
+      <xsl:attribute name='style'>
+        <xsl:if test="@maxWidth!=''">
           <xsl:text>max-width:</xsl:text>
           <xsl:value-of select="@maxWidth"/>
-        </xsl:attribute>
-      </xsl:if>
+          <xsl:text>;</xsl:text>
+        </xsl:if>
+        <xsl:if test="@module-padding and @module-padding!=''">
+          <xsl:text>padding:</xsl:text>
+          <xsl:value-of select="@module-padding"/>
+          <xsl:text>;</xsl:text>
+        </xsl:if>
+        <xsl:if test="@padding and @padding!=''">
+          <xsl:text>padding:</xsl:text>
+          <xsl:value-of select="@padding"/>
+          <xsl:text>;</xsl:text>
+        </xsl:if>
+        <xsl:if test="@custom-css and @custom-css!=''">
+          <xsl:value-of select="@custom-css"/>
+        </xsl:if>
+      </xsl:attribute>
       <xsl:if test="@contentType='Module'">
         <xsl:attribute name="class">
           <xsl:text>module noboxlayout layoutModule bg-content-</xsl:text>
@@ -1050,10 +1156,14 @@
             <xsl:otherwise>
               <xsl:attribute name="style">
                 background-image: url('<xsl:value-of select="@backgroundImage"/>');
+                <!--<xsl:if test="@backgroundOpacity!=''">
+                  opacity:<xsl:value-of select="@backgroundOpacity"/>;
+                </xsl:if>-->
               </xsl:attribute>
             </xsl:otherwise>
           </xsl:choose>
         </xsl:if>
+
       </xsl:if>
       <xsl:choose>
         <xsl:when test="$page/AdminMenu/descendant-or-self::MenuItem[@cmd='Normal'] and $adminMode">
@@ -1077,6 +1187,12 @@
                             <xsl:text> module-with-icon</xsl:text>
                           </xsl:if>
                         </xsl:attribute>
+                        <xsl:if test="@title-margin and @title-margin!=''">
+                          <xsl:attribute name="style">
+                            <xsl:text>margin-bottom:</xsl:text>
+                            <xsl:value-of select="@title-margin"/>
+                          </xsl:attribute>
+                        </xsl:if>
                         <xsl:apply-templates select="." mode="moduleLink"/>
                       </xsl:element>
                     </xsl:when>
@@ -1084,6 +1200,12 @@
                       <h3 class="title">
                         <xsl:if test="@icon!='' or @icon-class!='' or @uploadIcon!=''">
                           <xsl:attribute name="class">title module-with-icon</xsl:attribute>
+                        </xsl:if>
+                        <xsl:if test="@title-margin and @title-margin!=''">
+                          <xsl:attribute name="style">
+                            <xsl:text>margin-bottom:</xsl:text>
+                            <xsl:value-of select="@title-margin"/>
+                          </xsl:attribute>
                         </xsl:if>
                         <xsl:apply-templates select="." mode="moduleLink"/>
                       </h3>
@@ -1116,6 +1238,12 @@
                       <!--<xsl:if test="@icon!='' or @uploadIcon!=''">
 												<xsl:attribute name="class">title module-with-icon</xsl:attribute>
 											</xsl:if>-->
+                      <xsl:if test="@title-margin and @title-margin!=''">
+                        <xsl:attribute name="style">
+                          <xsl:text>margin-bottom:</xsl:text>
+                          <xsl:value-of select="@title-margin"/>
+                        </xsl:attribute>
+                      </xsl:if>
                       <xsl:apply-templates select="." mode="moduleLink"/>
                     </xsl:element>
                   </xsl:when>
@@ -1123,6 +1251,12 @@
                     <h3 class="title">
                       <xsl:if test="@icon!='' or @icon-class!='' or @uploadIcon!=''">
                         <xsl:attribute name="class">title module-with-icon</xsl:attribute>
+                      </xsl:if>
+                      <xsl:if test="@title-margin and @title-margin!=''">
+                        <xsl:attribute name="style">
+                          <xsl:text>margin-bottom:</xsl:text>
+                          <xsl:value-of select="@title-margin"/>
+                        </xsl:attribute>
                       </xsl:if>
                       <xsl:apply-templates select="." mode="moduleLink"/>
                     </h3>
@@ -1206,261 +1340,340 @@
     <xsl:if test="@marginBelow='false'">
       <xsl:text> mb-0 </xsl:text>
     </xsl:if>
+    <xsl:if test="@marginBelow!='false' and @marginBelow!='true' and @marginBelow!='' and @marginBelow">
+      <xsl:text> </xsl:text>
+      <xsl:value-of select="@marginBelow"/>
+      <xsl:text> </xsl:text>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="Content" mode="moduleBox">
     <xsl:param name="id"/>
-    <xsl:choose>
-      <xsl:when test="@linkBox='true'">
 
-      </xsl:when>
-      <xsl:otherwise>
-        <div id="mod_{@id}{$id}">
-          <xsl:apply-templates select="." mode="themeModuleExtras"/>
-          <!-- define classes for box -->
-          <xsl:attribute name="class">
-            <xsl:if test="@panelImage!=''">
-              <xsl:text>panelImage </xsl:text>
-            </xsl:if>
-            <xsl:if test="@icon!='' or @icon-class!='' or @uploadIcon!=''">
-              <xsl:text>panel-icon </xsl:text>
-            </xsl:if>
-            <xsl:value-of select="translate(@box,' ','-')"/>
+    <div id="mod_{@id}{$id}">
+      <xsl:apply-templates select="." mode="themeModuleExtras"/>
+      <!-- define classes for box -->
+      <xsl:attribute name="class">
+        <xsl:if test="@panelImage!=''">
+          <xsl:text>panelImage </xsl:text>
+        </xsl:if>
+        <xsl:if test="@icon!='' or @icon-class!='' or @uploadIcon!=''">
+          <xsl:text>panel-icon </xsl:text>
+        </xsl:if>
+        <xsl:value-of select="translate(@box,' ','-')"/>
 
-            <xsl:text> module</xsl:text>
-            <!-- if no title, we may still want TL/TR for rounded boxs with no title bar,
+        <xsl:text> module</xsl:text>
+        <!-- if no title, we may still want TL/TR for rounded boxs with no title bar,
               stled differently to a title bar. -->
-            <xsl:if test="@title=''">
-              <xsl:text> boxnotitle</xsl:text>
-            </xsl:if>
-            pos-<xsl:value-of select="@position"/>
-            <xsl:if test="@modAnim and @modAnim!=''">
-              <xsl:text> moduleAnimate-invisible</xsl:text>
-            </xsl:if>
-            <xsl:apply-templates select="." mode="hideScreens" />
-            <xsl:apply-templates select="." mode="marginBelow" />
-            <!-- <xsl:apply-templates select="." mode="themeModuleExtras"/>-->
-          </xsl:attribute>
-          <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and @imagePosition='above'">
-            <div class="panel-image">
-              <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
-            </div>
-          </xsl:if>
-          <xsl:if test="@title!='' or @icon!='' or @icon-class!='' or @uploadIcon!=''">
-
-            <xsl:apply-templates select="." mode="inlinePopupOptions"/>
-            <xsl:if test="@rss and @rss!='false'">
-              <xsl:apply-templates select="." mode="rssLink" />
-            </xsl:if>
-            <h5>
-              <xsl:apply-templates select="." mode="moduleLink"/>
-            </h5>
-          </xsl:if>
-          <xsl:if test="not(@listGroup='true')">
-            <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and not(@imagePosition='above')">
-              <div class="panel-image">
-                <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
-              </div>
-            </xsl:if>
-            <div>
-              <xsl:if test="not(@title!='')">
-                <xsl:apply-templates select="." mode="inlinePopupOptions"/>
-              </xsl:if>
-              <xsl:apply-templates select="." mode="displayBrief"/>
-            </div>
-          </xsl:if>
-          <xsl:if test="@listGroup='true'">
-            <div class="card-body">
-              <xsl:if test="not(@title!='')">
-                <xsl:apply-templates select="." mode="inlinePopupOptions">
-                  <xsl:with-param name="class" select="'card-body'"/>
-                </xsl:apply-templates>
-              </xsl:if>
-              <xsl:apply-templates select="." mode="displayBrief"/>
-              <xsl:text> </xsl:text>
-            </div>
-          </xsl:if>
-          <xsl:if test="@linkText!='' and @link!=''">
-            <div>
-              <xsl:if test="@iconStyle='Centre'">
-                <xsl:attribute name="class">center-block-footer</xsl:attribute>
-              </xsl:if>
-              <xsl:apply-templates select="." mode="moreLink">
-                <xsl:with-param name="link">
-                  <xsl:choose>
-                    <xsl:when test="format-number(@link,'0')!='NaN'">
-                      <xsl:variable name="pageId" select="@link"/>
-                      <xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId or PageVersion[@vParId=$pageId]]" mode="getHref"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <xsl:value-of select="@link"/>
-                    </xsl:otherwise>
-                  </xsl:choose>
-                </xsl:with-param>
-                <xsl:with-param name="linkText" select="@linkText"/>
-                <xsl:with-param name="altText" select="@title"/>
-              </xsl:apply-templates>
-              <xsl:text> </xsl:text>
-            </div>
-          </xsl:if>
+        <xsl:if test="@title=''">
+          <xsl:text> boxnotitle</xsl:text>
+        </xsl:if>
+        pos-<xsl:value-of select="@position"/>
+        <xsl:if test="@modAnim and @modAnim!=''">
+          <xsl:text> animate__animated moduleAnimate-invisible</xsl:text>
+        </xsl:if>
+        <xsl:apply-templates select="." mode="hideScreens" />
+        <xsl:apply-templates select="." mode="marginBelow" />
+        <!-- <xsl:apply-templates select="." mode="themeModuleExtras"/>-->
+        <xsl:if test="@linkBox='true'">
+          <xsl:text> linked-card</xsl:text>
+        </xsl:if>
+      </xsl:attribute>
+      <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and @imagePosition='above'">
+        <div class="panel-image">
+          <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
         </div>
-      </xsl:otherwise>
-    </xsl:choose>
+      </xsl:if>
+      <xsl:if test="@title!='' or @icon!='' or @icon-class!='' or @uploadIcon!=''">
+
+        <xsl:apply-templates select="." mode="inlinePopupOptions"/>
+        <xsl:if test="@rss and @rss!='false'">
+          <xsl:apply-templates select="." mode="rssLink" />
+        </xsl:if>
+        <h5>
+          <xsl:apply-templates select="." mode="moduleLink"/>
+        </h5>
+      </xsl:if>
+      <xsl:if test="not(@listGroup='true')">
+        <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and not(@imagePosition='above')">
+          <div class="panel-image">
+            <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
+          </div>
+        </xsl:if>
+        <div>
+          <xsl:if test="not(@title!='')">
+            <xsl:apply-templates select="." mode="inlinePopupOptions"/>
+          </xsl:if>
+          <xsl:apply-templates select="." mode="displayBrief"/>
+          <xsl:text> </xsl:text>
+        </div>
+      </xsl:if>
+      <xsl:if test="@listGroup='true'">
+        <div class="card-body">
+          <xsl:if test="not(@title!='')">
+            <xsl:apply-templates select="." mode="inlinePopupOptions">
+              <xsl:with-param name="class" select="'card-body'"/>
+            </xsl:apply-templates>
+          </xsl:if>
+          <xsl:apply-templates select="." mode="displayBrief"/>
+          <xsl:text> </xsl:text>
+        </div>
+      </xsl:if>
+      <xsl:if test="@linkText!='' and @link!=''">
+        <div>
+          <xsl:if test="@iconStyle='Centre'">
+            <xsl:attribute name="class">center-block-footer</xsl:attribute>
+          </xsl:if>
+          <xsl:apply-templates select="." mode="moreLink">
+            <xsl:with-param name="link">
+              <xsl:choose>
+                <xsl:when test="format-number(@link,'0')!='NaN'">
+                  <xsl:variable name="pageId" select="@link"/>
+                  <xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId or PageVersion[@vParId=$pageId]]" mode="getHref"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:value-of select="@link"/>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:with-param>
+            <xsl:with-param name="linkText" select="@linkText"/>
+            <xsl:with-param name="altText" select="@title"/>
+          </xsl:apply-templates>
+          <xsl:text> </xsl:text>
+        </div>
+      </xsl:if>
+    </div>
+
   </xsl:template>
 
   <xsl:template match="Content[starts-with(@box,'bg') or starts-with(@box,'border') or starts-with(@box,'Default') or starts-with(@box,'card')]" mode="moduleBox">
     <xsl:param name="id"/>
-    <xsl:choose>
-      <xsl:when test="@linkBox='true'">
 
-      </xsl:when>
-      <xsl:otherwise>
-        <div id="mod_{@id}{$id}" class="card">
-         <xsl:apply-templates select="." mode="themeModuleExtras"/>
-          <!-- define classes for box -->
-          <xsl:attribute name="class">
-            <xsl:text>card </xsl:text>
-            <xsl:if test="@char80Layout and @char80Layout!=''">
-              <xsl:text> char80-</xsl:text>
-              <xsl:value-of select="@char80Layout"/>
-              <xsl:text> </xsl:text>
-            </xsl:if>
-            <xsl:if test="@panelImage!=''">
-              <xsl:text> panelImage </xsl:text>
-            </xsl:if>
-            <xsl:if test="@icon!='' or @icon-class!='' or @uploadIcon!=''">
-              <xsl:text>panel-icon </xsl:text>
-            </xsl:if>
-            <xsl:choose>
-              <xsl:when test="@box='Default Box'">card</xsl:when>
-              <xsl:otherwise>
-                <xsl:value-of select="translate(@box,' ','-')"/>
-              </xsl:otherwise>
-            </xsl:choose>
-            <xsl:text> module</xsl:text>
-            <xsl:text> module-</xsl:text>
-            <xsl:value-of select="@moduleType"/>
-            <!-- if no title, we may still want TL/TR for rounded boxs with no title bar,
+    <div id="mod_{@id}{$id}" class="card">
+      <xsl:apply-templates select="." mode="themeModuleExtras"/>
+      <!-- define classes for box -->
+      <xsl:attribute name="class">
+        <xsl:text>card </xsl:text>
+        <xsl:if test="@char80Layout and @char80Layout!=''">
+          <xsl:text> char80-</xsl:text>
+          <xsl:value-of select="@char80Layout"/>
+          <xsl:text> </xsl:text>
+        </xsl:if>
+        <xsl:if test="@v-align='center' or @v-align='bottom'">
+          <xsl:text> v-align-</xsl:text>
+          <xsl:value-of select="@v-align"/>
+        </xsl:if>
+        <xsl:if test="@panelImage!=''">
+          <xsl:text> panelImage </xsl:text>
+        </xsl:if>
+        <xsl:if test="@icon!='' or @icon-class!='' or @uploadIcon!=''">
+          <xsl:text>panel-icon </xsl:text>
+        </xsl:if>
+        <xsl:choose>
+          <xsl:when test="@box='Default Box'">card</xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="translate(@box,' ','-')"/>
+          </xsl:otherwise>
+        </xsl:choose>
+        <xsl:text> module</xsl:text>
+        <xsl:text> module-</xsl:text>
+        <xsl:value-of select="@moduleType"/>
+        <!-- if no title, we may still want TL/TR for rounded boxs with no title bar,
               stled differently to a title bar. -->
-            <xsl:if test="@title=''">
-              <xsl:text> boxnotitle</xsl:text>
-            </xsl:if>
-            <xsl:if test="@icon!='' or @icon-class!='' or @uploadIcon!=''">
-              <xsl:text> module-with-icon</xsl:text>
-            </xsl:if>
-			  <xsl:text> pos-</xsl:text>
-            <xsl:value-of select="@position"/>
-            <xsl:if test="@modAnim and @modAnim!=''">
-              <xsl:text> moduleAnimate-invisible</xsl:text>
-            </xsl:if><!--
-            <xsl:apply-templates select="." mode="hideScreens" />
-            <xsl:apply-templates select="." mode="marginBelow" />-->
-            <!--<xsl:apply-templates select="." mode="themeModuleExtras"/>-->
-          </xsl:attribute>
-          <xsl:if test="@maxWidth!=''">
-            <xsl:attribute name='style'>
-              <xsl:text>max-width:</xsl:text>
-              <xsl:value-of select="@maxWidth"/>
+        <xsl:if test="@title=''">
+          <xsl:text> boxnotitle</xsl:text>
+        </xsl:if>
+        <xsl:if test="@icon!='' or @icon-class!='' or @uploadIcon!=''">
+          <xsl:text> module-with-icon</xsl:text>
+        </xsl:if>
+        <xsl:text> pos-</xsl:text>
+        <xsl:value-of select="@position"/>
+        <xsl:if test="@modAnim and @modAnim!=''">
+          <xsl:text> animate__animated moduleAnimate-invisible</xsl:text>
+        </xsl:if>
+        <xsl:apply-templates select="." mode="hideScreens" />
+        <xsl:apply-templates select="." mode="marginBelow" />
+        <xsl:if test="@linkBox='true'">
+          <xsl:text> linked-card</xsl:text>
+        </xsl:if>
+        <!--<xsl:apply-templates select="." mode="themeModuleExtras"/>-->
+      </xsl:attribute>
+
+
+      <xsl:attribute name='style'>
+        <xsl:if test="@maxWidth!=''">
+          <xsl:text>max-width:</xsl:text>
+          <xsl:value-of select="@maxWidth"/>
+          <xsl:text>;</xsl:text>
+        </xsl:if>
+        <xsl:if test="@padding and @padding!=''">
+          <xsl:text>padding:</xsl:text>
+          <xsl:value-of select="@padding"/>
+          <xsl:text>;</xsl:text>
+        </xsl:if>
+        <xsl:if test="@custom-css and @custom-css!=''">
+          <xsl:value-of select="@custom-css"/>
+        </xsl:if>
+      </xsl:attribute>
+      <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and @imagePosition='above'">
+        <div class="panel-image">
+          <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
+        </div>
+      </xsl:if>
+      <xsl:if test="@title!='' or @icon!='' or @icon-class!='' or @uploadIcon!=''">
+        <div class="card-header">
+          <xsl:if test="not(node())">
+            <xsl:attribute name="class">
+              <xsl:text>card-header card-no-body</xsl:text>
             </xsl:attribute>
           </xsl:if>
-          <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and @imagePosition='above'">
-            <div class="panel-image">
-              <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
-            </div>
+          <xsl:apply-templates select="." mode="inlinePopupOptions">
+            <xsl:with-param name="class" select="'card-header'"/>
+          </xsl:apply-templates>
+          <xsl:if test="@rss and @rss!='false'">
+            <xsl:apply-templates select="." mode="rssLink" />
           </xsl:if>
-          <xsl:if test="@title!='' or @icon!='' or @icon-class!='' or @uploadIcon!=''">
-            <div class="card-header">
-              <xsl:apply-templates select="." mode="inlinePopupOptions">
-                <xsl:with-param name="class" select="'card-header'"/>
-              </xsl:apply-templates>
-              <xsl:if test="@rss and @rss!='false'">
-                <xsl:apply-templates select="." mode="rssLink" />
-              </xsl:if>
-              <!--<xsl:if test="@heading='h2'">
+          <!--<xsl:if test="@heading='h2'">
 					<h5 class="card-title">
 						<xsl:apply-templates select="." mode="moduleLink"/>
 					</h5>
 				</xsl:if>-->
+          <xsl:choose>
+            <xsl:when test="@heading and @heading!=''">
+              <xsl:element name="{@heading}">
+                <xsl:attribute name="class">
+                  <xsl:text>card-title</xsl:text>
+                </xsl:attribute>
+                <xsl:apply-templates select="." mode="moduleLink"/>
+              </xsl:element>
+              <xsl:if test="@title-margin and @title-margin!=''">
+                <xsl:attribute name="style">
+                  <xsl:text>margin-bottom:</xsl:text>
+                  <xsl:value-of select="@title-margin"/>
+                </xsl:attribute>
+              </xsl:if>
+            </xsl:when>
+            <xsl:otherwise>
+              <h5 class="card-title">
+                <xsl:if test="@title-margin and @title-margin!=''">
+                  <xsl:attribute name="style">
+                    <xsl:text>margin-bottom:</xsl:text>
+                    <xsl:value-of select="@title-margin"/>
+                  </xsl:attribute>
+                </xsl:if>
+                <xsl:apply-templates select="." mode="moduleLink"/>
+              </h5>
+            </xsl:otherwise>
+          </xsl:choose>
+        </div>
+      </xsl:if>
+      <xsl:variable name="thisClass">
+        <xsl:text>card-body</xsl:text>
+        <xsl:if test="@title!=''">
+          <xsl:text> card-body-w-head</xsl:text>
+        </xsl:if>
+        <xsl:if test="@linkText!='' and @link!='' and not(@accessibleText='true')">
+          <xsl:text> card-body-w-footer</xsl:text>
+        </xsl:if>
+      </xsl:variable>
+      <xsl:if test="not(@listGroup='true')">
+        <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and not(@imagePosition='above')">
+          <div class="panel-image">
+            <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
+          </div>
+        </xsl:if>
+        <xsl:if test="node()">
+          <div class="{$thisClass}">
+            <xsl:if test="not(@title!='')">
+              <xsl:apply-templates select="." mode="inlinePopupOptions">
+                <xsl:with-param name="class" select="$thisClass"/>
+              </xsl:apply-templates>
+            </xsl:if>
+            <xsl:apply-templates select="." mode="displayBrief"/>
+            <xsl:text> </xsl:text>
+          </div>
+        </xsl:if>
+      </xsl:if>
+      <xsl:if test="@listGroup='true'">
+        <div class="{$thisClass}">
+          <xsl:if test="not(@title!='')">
+            <xsl:apply-templates select="." mode="inlinePopupOptions">
+              <xsl:with-param name="class" select="'card-body'"/>
+            </xsl:apply-templates>
+          </xsl:if>
+          <xsl:apply-templates select="." mode="displayBrief"/>
+
+          <xsl:text> </xsl:text>
+        </div>
+      </xsl:if>
+      <xsl:if test="(@linkText!='' and not(@accessibleText='true')) and @link!=''">
+        <div class="card-footer">
+          <xsl:if test="@iconStyle='Centre'">
+            <xsl:attribute name="class">card-footer center-block-footer</xsl:attribute>
+          </xsl:if>
+          <xsl:apply-templates select="." mode="moreLink">
+            <xsl:with-param name="link">
               <xsl:choose>
-                <xsl:when test="@heading and @heading!=''">
-                  <xsl:element name="{@heading}">
-                    <xsl:attribute name="class">
-                      <xsl:text>card-title</xsl:text>
-                    </xsl:attribute>
-                    <xsl:apply-templates select="." mode="moduleLink"/>
-                  </xsl:element>
+                <xsl:when test="format-number(@link,'0')!='NaN'">
+                  <xsl:variable name="pageId" select="@link"/>
+                  <xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId or PageVersion[@vParId=$pageId]]" mode="getHref"/>
                 </xsl:when>
                 <xsl:otherwise>
-                  <h5 class="card-title">
-                    <xsl:apply-templates select="." mode="moduleLink"/>
-                  </h5>
+                  <xsl:value-of select="@link"/>
                 </xsl:otherwise>
               </xsl:choose>
-            </div>
-          </xsl:if>
-          <xsl:if test="not(@listGroup='true')">
-            <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and not(@imagePosition='above')">
-              <div class="panel-image">
-                <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
-              </div>
-            </xsl:if>
-			  <xsl:variable name="thisClass">
-				  <xsl:text>card-body</xsl:text>
-				  <xsl:if test="@title!=''">
-					  <xsl:text> card-body-w-head</xsl:text>
-				  </xsl:if>
-				  <xsl:if test="@linkText!='' and @link!=''">
-					  <xsl:text> card-body-w-footer</xsl:text>
-				  </xsl:if>
-			  </xsl:variable>
-            <div class="{$thisClass}">
-              <xsl:if test="not(@title!='')">
-                <xsl:apply-templates select="." mode="inlinePopupOptions">
-                  <xsl:with-param name="class" select="$thisClass"/>
-                </xsl:apply-templates>
-              </xsl:if>
-              <xsl:apply-templates select="." mode="displayBrief"/>
-              <xsl:text> </xsl:text>
-            </div>
-          </xsl:if>
-          <xsl:if test="@listGroup='true'">
-            <div class="card-body">
-              <xsl:if test="not(@title!='')">
-                <xsl:apply-templates select="." mode="inlinePopupOptions">
-                  <xsl:with-param name="class" select="'card-body'"/>
-                </xsl:apply-templates>
-              </xsl:if>
-              <xsl:apply-templates select="." mode="displayBrief"/>
-
-              <xsl:text> </xsl:text>
-            </div>
-          </xsl:if>
-          <xsl:if test="@linkText!='' and @link!=''">
-            <div class="card-footer">
-              <xsl:if test="@iconStyle='Centre'">
-                <xsl:attribute name="class">card-footer center-block-footer</xsl:attribute>
-              </xsl:if>
-              <xsl:apply-templates select="." mode="moreLink">
-                <xsl:with-param name="link">
-                  <xsl:choose>
-                    <xsl:when test="format-number(@link,'0')!='NaN'">
-                      <xsl:variable name="pageId" select="@link"/>
-                      <xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId or PageVersion[@vParId=$pageId]]" mode="getHref"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <xsl:value-of select="@link"/>
-                    </xsl:otherwise>
-                  </xsl:choose>
-                </xsl:with-param>
-                <xsl:with-param name="linkText" select="@linkText"/>
-                <xsl:with-param name="altText" select="@title"/>
-              </xsl:apply-templates>
-              <xsl:text> </xsl:text>
-            </div>
-          </xsl:if>
+            </xsl:with-param>
+            <xsl:with-param name="linkText" select="@linkText"/>
+            <xsl:with-param name="altText" select="@title"/>
+          </xsl:apply-templates>
+          <xsl:text> </xsl:text>
         </div>
-      </xsl:otherwise>
-    </xsl:choose>
+      </xsl:if>
+      <xsl:if test="(@linkText!='' and not(@accessibleText='true')) and @link!='' and @linkBox='true'">
+        <div class="card-footer">
+          <xsl:if test="@iconStyle='Centre'">
+            <xsl:attribute name="class">card-footer center-block-footer</xsl:attribute>
+          </xsl:if>
+          <xsl:apply-templates select="." mode="moreLink">
+            <xsl:with-param name="link">
+              <xsl:choose>
+                <xsl:when test="format-number(@link,'0')!='NaN'">
+                  <xsl:variable name="pageId" select="@link"/>
+                  <xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId or PageVersion[@vParId=$pageId]]" mode="getHref"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:value-of select="@link"/>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:with-param>
+            <xsl:with-param name="linkText" select="@linkText"/>
+            <xsl:with-param name="altText" select="@title"/>
+            <xsl:with-param name="stretchLink">true</xsl:with-param>
+          </xsl:apply-templates>
+          <xsl:text> </xsl:text>
+        </div>
+      </xsl:if>
+      <xsl:if test="@linkBox='true' and @link!='' and @accessibleText='true'">
+        <xsl:apply-templates select="." mode="moreLink">
+          <xsl:with-param name="link">
+            <xsl:choose>
+              <xsl:when test="format-number(@link,'0')!='NaN'">
+                <xsl:variable name="pageId" select="@link"/>
+                <xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId or PageVersion[@vParId=$pageId]]" mode="getHref"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="@link"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:with-param>
+          <xsl:with-param name="stretchLink">true</xsl:with-param>
+          <xsl:with-param name="linkText" select="@linkText"/>
+          <xsl:with-param name="accessibleText" select="@accessibleText"/>
+
+        </xsl:apply-templates>
+      </xsl:if>
+    </div>
+
   </xsl:template>
 
   <xsl:template match="Content" mode="modalBox">
@@ -1607,7 +1820,7 @@
                 </xsl:if>
                 pos-<xsl:value-of select="@position"/>
                 <xsl:if test="@modAnim and @modAnim!=''">
-                  <xsl:text> moduleAnimate-invisible</xsl:text>
+                  <xsl:text> animate__animated moduleAnimate-invisible</xsl:text>
                 </xsl:if>
                 <xsl:apply-templates select="." mode="hideScreens" />
                 <xsl:apply-templates select="." mode="marginBelow" />
@@ -1657,7 +1870,7 @@
           </xsl:if>
           pos-<xsl:value-of select="@position"/>
           <xsl:if test="@modAnim and @modAnim!=''">
-            <xsl:text> moduleAnimate-invisible</xsl:text>
+            <xsl:text> animate__animated moduleAnimate-invisible</xsl:text>
           </xsl:if>
           <xsl:apply-templates select="." mode="hideScreens" />
           <xsl:apply-templates select="." mode="marginBelow" />
@@ -2011,6 +2224,10 @@
         </xsl:when>
         <xsl:otherwise>
           <xsl:text> row cols row-cols-1</xsl:text>
+          <xsl:if test="@gutter and @gutter!=''">
+            <xsl:text> gutter-set g-</xsl:text>
+            <xsl:value-of select="@gutter"/>
+          </xsl:if>
         </xsl:otherwise>
       </xsl:choose>
       <xsl:choose>

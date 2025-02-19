@@ -1,11 +1,11 @@
 ﻿using Imazen.WebP;
+using Microsoft.VisualBasic;
+using Microsoft.Win32;
 using System;
 using System.Drawing;
 using System.IO;
 using System.Web.Configuration;
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.Win32;
 
 namespace Protean
 {
@@ -95,7 +95,7 @@ namespace Protean
                 }
 
                 oEw.moFSHelper.SaveFile(ref filename, oEw.goServer.MapPath("/" + Cms.gcProjectPath) + filepath, System.Text.Encoding.Unicode.GetBytes(htmltotest));
-                               
+
                 if (oEw.moConfig["AdminAcct"] != "")
                 {
                     oImp.UndoImpersonation();
@@ -160,7 +160,7 @@ namespace Protean
         }
 
         public string TestImpersonation()
-        { 
+        {
             var oEw = new Cms();
             oEw.InitializeVariables();
             try
@@ -176,7 +176,7 @@ namespace Protean
                     }
                     else
                     {
-                        returnValue =  "Error Impersonation Failed";
+                        returnValue = "Error Impersonation Failed";
                     }
                 }
                 else
@@ -225,7 +225,7 @@ namespace Protean
                     oImp.UndoImpersonation();
                     oImp = null;
                 }
-                return "File Written Using AlphaFS :" + filepath;                
+                return "File Written Using AlphaFS :" + filepath;
             }
 
             catch (Exception ex)
@@ -296,7 +296,7 @@ namespace Protean
 
                 string htmltotest = "<h1>HTMLTidy is Tidying</H1>";
 
-                string sResponse = Tools.Text.tidyXhtmlFrag(htmltotest, true, true, "");
+                string sResponse = stdTools.tidyXhtmlFrag(htmltotest, true, true, "");
 
                 if (sResponse.StartsWith("<h1>HTMLTidy is Tidying</h1>"))
                 {
@@ -318,7 +318,19 @@ namespace Protean
         {
             try
             {
-                string cVirtualPath = "/ptn/admin/skin/images/logosquare.png";
+                string cVirtualPath = string.Empty;
+                if (goConfig["cssFramework"] != null)
+                {
+                    if (goConfig["cssFramework"].ToLower() == "bs3")
+                    {
+                        cVirtualPath = "/ewcommon/images/logon-bg.png";
+                    }
+                    else
+                    {
+                        cVirtualPath = "/ptn/admin/skin/images/logosquare.png";
+                    }
+                }
+
                 string webpFileName = Strings.Replace(cVirtualPath, ".png", ".webp");
                 string newFilepath = string.Empty;
                 var oEw = new Cms();
@@ -327,18 +339,19 @@ namespace Protean
                 {
                     oEw.moFSHelper.DeleteFile(webpFileName);
                 }
-                catch {
+                catch
+                {
                 };
                 short WebPQuality = 60;
                 using (var bitMap = new Bitmap(oEw.goServer.MapPath(cVirtualPath)))
-                        {
-                            using (var saveImageStream = File.Open(oEw.goServer.MapPath(webpFileName), FileMode.Create))
-                            {
-                                var encoder = new SimpleEncoder();
-                                encoder.Encode(bitMap, saveImageStream, WebPQuality);
-                                encoder = null;
-                            }
-                        }          
+                {
+                    using (var saveImageStream = File.Open(oEw.goServer.MapPath(webpFileName), FileMode.Create))
+                    {
+                        var encoder = new SimpleEncoder();
+                        encoder.Encode(bitMap, saveImageStream, WebPQuality);
+                        encoder = null;
+                    }
+                }
                 return "Protean Logo converted to WebP <img src='" + webpFileName + "'/>";
             }
             catch (Exception ex)
@@ -352,7 +365,7 @@ namespace Protean
             string displayName = "Microsoft Visual C++ 2010";
             try
             {
-                
+
                 string uninstallKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
 
                 using (RegistryKey rk = Registry.LocalMachine.OpenSubKey(uninstallKey))
@@ -361,12 +374,13 @@ namespace Protean
                     {
                         using (RegistryKey sk = rk.OpenSubKey(skName))
                         {
-                            if (sk.GetValue("DisplayName") != null) { 
-                            string dispname = sk.GetValue("DisplayName").ToString();
-                            if (dispname.Contains(displayName))
+                            if (sk.GetValue("DisplayName") != null)
                             {
-                                return dispname + " Installed";
-                            }
+                                string dispname = sk.GetValue("DisplayName").ToString();
+                                if (dispname.Contains(displayName))
+                                {
+                                    return dispname + " Installed";
+                                }
                             }
                         }
                     }
@@ -377,6 +391,26 @@ namespace Protean
             catch (Exception ex)
             {
                 return ex.Message + "<br/>" + ex.StackTrace;
+            }
+        }
+
+        public string TestReadPDF()
+        {
+            try
+            {
+                Cms oEw = new Cms();
+                oEw.InitializeVariables();
+                string filepath = oEw.goServer.MapPath("/ewcommon/setup/test.pdf");
+                string response = "";
+
+                response = Protean.Tools.FileHelper.GetPDFText(filepath);
+
+                return response;
+            }
+
+            catch (Exception ex)
+            {
+                return ex.Message;
             }
         }
 

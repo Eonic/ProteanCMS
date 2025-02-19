@@ -307,7 +307,7 @@ namespace Protean
                                 cFeedItemXML = myRegex.Replace(cFeedItemXML, "><");
                                 // move up a node
                                 importStateObj.oInstance.InnerXml = cFeedItemXML;
-                                updateInstance = (XmlElement)importStateObj.oInstance.FirstChild;
+                                updateInstance = (XmlElement)importStateObj.oInstance.SelectSingleNode("*");
                             }
 
                             bool bRelocate = false;

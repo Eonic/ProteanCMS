@@ -73,6 +73,8 @@
 				<bind id="cContentBody" nodeset="Body" required="false()" type="string"/>
 				<bind id="cContentExtract" nodeset="Extract" required="false()" type="string"/>
 				<bind id="imgPosition" nodeset="@imgPosition" required="false()" type="string"/>
+        <bind id="date-position" nodeset="@date-position" required="false()" type="string"/>
+        <bind id="title-position" nodeset="@title-position" required="false()" type="string"/>
 
 			</bind>
 			<bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
@@ -139,6 +141,32 @@
 							<value>right</value>
 						</item>
 					</select1>
+          <group class="col-lg-6">
+            <select1 bind="date-position" appearance="full" class="inline-items">
+              <label>Date Position</label>
+              <item>
+                <label>Top</label>
+                <value>top</value>
+              </item>
+              <item>
+                <label>Below image</label>
+                <value>lower</value>
+              </item>
+            </select1>
+          </group>
+          <group class="col-lg-6">
+            <select1 bind="title-position" appearance="full" class="inline-items">
+              <label>Title Position</label>
+              <item>
+                <label>Full width</label>
+                <value>top</value>
+              </item>
+              <item>
+                <label>Left column width</label>
+                <value>lower</value>
+              </item>
+            </select1>
+          </group>
 
 					<input bind="cContentThumbnail" class="short pickImage">
 						<label>Alternative Thumbnail</label>

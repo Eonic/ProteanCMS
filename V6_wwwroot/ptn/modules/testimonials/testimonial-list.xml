@@ -95,7 +95,7 @@
               <toggle case="cDisplay_4" event="DOMActivate"/>
             </item>
           </select1>
-          <switch class="disable">
+          <switch class="disable" for="cDisplay">
             <case id="cDisplay_1"/>
             <case id="cDisplay_2">
               <group  class="form-section-wrapper">
@@ -170,7 +170,7 @@
                 <toggle case="cLinkType_2" event="DOMActivate"/>
               </item>
             </select1>
-            <switch class="disable">
+            <switch class="disable" for="cLinkType">
               <case id="cLinkType_1">
                 <select1 bind="cModuleLink" class="siteTree">
                   <label>Link to page</label>
@@ -223,7 +223,7 @@
                   <toggle case="cSortBy_3" event="DOMActivate"/>
                 </item>
               </select1>
-              <switch class="disable">
+              <switch class="disable" for="cSortBy">
                 <case id="cSortBy_1">
                   <select1 bind="cPageOrder" appearance="minimal" class="form-group">
                     <label>Order</label>
@@ -257,50 +257,31 @@
             <group class="col-lg-6">
               <select1 bind="nStepCount" appearance="full" class="required form-group">
                 <label>Articles per page</label>
-                <item>
-                  <label>all</label>
-                  <value>0</value>
-                  <toggle case="cStepCounter_1" event="DOMActivate"/>
-                </item>
-                <item>
-                  <label>3</label>
-                  <value>3</value>
-                  <toggle case="cStepCounter_2" event="DOMActivate"/>
-                </item>
-                <item>
-                  <label>5</label>
-                  <value>5</value>
-                  <toggle case="cStepCounter_3" event="DOMActivate"/>
-                </item>
-                <item>
-                  <label>10</label>
-                  <value>10</value>
-                  <toggle case="cStepCounter_4" event="DOMActivate"/>
-                </item>
-                <item>
-                  <label>25</label>
-                  <value>25</value>
-                  <toggle case="cStepCounter_5" event="DOMActivate"/>
-                </item>
-                <item bindTo="cStepBy">
-                  <input bind="cStepBy" class="hidden" />
-                  <label>Other</label>
-                  <value>Other</value>
-                  <toggle case="cStepCounter_6" event="DOMActivate" />
-                </item>
-              </select1>
-              <switch class="disable">
-                <case id="cStepCounter_1"/>
-                <case id="cStepCounter_2"/>
-                <case id="cStepCounter_3"/>
-                <case id="cStepCounter_4"/>
-                <case id="cStepCounter_5"/>
-                <case id="cStepCounter_6">
-                  <input bind="nStepCount" class="vshort">
-                    <label>Other Stepper Value</label>
-                  </input>
-                </case>
-              </switch>
+				  <item>
+					  <label>All</label>
+					  <value>0</value>
+				  </item>
+				  <item>
+					  <label>3</label>
+					  <value>3</value>
+				  </item>
+				  <item>
+					  <label>5</label>
+					  <value>5</value>
+				  </item>
+				  <item>
+					  <label>10</label>
+					  <value>10</value>
+				  </item>
+				  <item>
+					  <label>25</label>
+					  <value>25</value>
+				  </item>
+				  <item>
+					  <label>Other</label>
+					  <value></value>
+				  </item>
+			  </select1>
             </group>
           </group>
 
@@ -319,7 +300,7 @@
               </item>
               <help class="inline">If selected this option will display articles in a single horizontal line with arrows to scroll through to the left and right.</help>
             </select1>
-            <switch class="disable">
+            <switch class="disable" for="carousel">
               <case id="Carousel_true" >
                 <group class="row">
                   <group class="col-lg-6">

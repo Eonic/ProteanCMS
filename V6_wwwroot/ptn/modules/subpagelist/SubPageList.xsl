@@ -77,8 +77,25 @@
             <xsl:text>crop-setting-</xsl:text>
             <xsl:value-of select="$cropSetting"/>
           </xsl:attribute>
+          <xsl:if test="@gutter and @gutter!=''">
+            <xsl:attribute name="style">
+              <xsl:text>padding-left:</xsl:text>
+              <xsl:value-of select="@gutter"/>
+              <xsl:text>rem;padding-right:</xsl:text>
+              <xsl:value-of select="@gutter"/>
+              <xsl:text>rem;</xsl:text>
+            </xsl:attribute>
+          </xsl:if>
           <div data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}" data-height="{@carouselHeight}" >
-
+            <xsl:if test="@gutter and @gutter!=''">
+              <xsl:attribute name="style">
+                <xsl:text>margin-left:-</xsl:text>
+                <xsl:value-of select="@gutter"/>
+                <xsl:text>rem;margin-right:-</xsl:text>
+                <xsl:value-of select="@gutter"/>
+                <xsl:text>rem;</xsl:text>
+              </xsl:attribute>
+            </xsl:if>
             <xsl:apply-templates select="." mode="contentColumns"/>
 						<xsl:if test="@stepCount != '0'">
 							<xsl:apply-templates select="/" mode="genericStepper">
@@ -127,7 +144,7 @@
 		<xsl:variable name="pageName">
 			<xsl:apply-templates select="." mode="getDisplayName"/>
 		</xsl:variable>
-		<xsl:if test="(@name!='Information' and (not(DisplayName/@exclude='true'))) or (@name!='Information' and $showHidden='true')">
+		<xsl:if test="(@name!='Info Menu' and (not(DisplayName/@exclude='true'))) or (@name!='Info Menu' and $showHidden='true')">
 			<li class="nav-item">
 				<xsl:apply-templates select="." mode="inlinePopupOptions">
 					<xsl:with-param name="class" select="'nav-item'"/>
@@ -170,7 +187,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<xsl:if test="(@name!='Information' and (not(DisplayName/@exclude='true'))) or (@name!='Information' and $showHidden='true')">
+		<xsl:if test="(@name!='Info Menu' and (not(DisplayName/@exclude='true'))) or (@name!='Info Menu' and $showHidden='true')">
 			<xsl:variable name="classValues">
 				<xsl:text>listItem subpageItem</xsl:text>
 				<xsl:if test="$linked='true'">
@@ -223,68 +240,70 @@
 							</xsl:apply-templates>
 						</a>
 					</xsl:if>
-					<xsl:if test="not($imagePosition='below')">
-						<xsl:choose>
-							<xsl:when test="$heading='h2'">
-								<xsl:element name="{$heading}">
-									<xsl:attribute name="class">
-										<xsl:text>title text-</xsl:text>
-										<xsl:value-of select="$alignment"/>
-									</xsl:attribute>
-									<xsl:apply-templates select="." mode="menuLink"/>
-								</xsl:element>
-							</xsl:when>
-							<xsl:otherwise>
-								<h3 class="title">
-									<xsl:attribute name="class">
-										<xsl:text>title text-</xsl:text>
-										<xsl:value-of select="$alignment"/>
-									</xsl:attribute>
-									<xsl:apply-templates select="." mode="menuLink"/>
-								</h3>
-							</xsl:otherwise>
-						</xsl:choose>
+          <div class="media-inner">
+            <xsl:if test="not($imagePosition='below')">
+              <xsl:choose>
+                <xsl:when test="$heading='h2'">
+                  <xsl:element name="{$heading}">
+                    <xsl:attribute name="class">
+                      <xsl:text>title text-</xsl:text>
+                      <xsl:value-of select="$alignment"/>
+                    </xsl:attribute>
+                    <xsl:apply-templates select="." mode="menuLink"/>
+                  </xsl:element>
+                </xsl:when>
+                <xsl:otherwise>
+                  <h3 class="title">
+                    <xsl:attribute name="class">
+                      <xsl:text>title text-</xsl:text>
+                      <xsl:value-of select="$alignment"/>
+                    </xsl:attribute>
+                    <xsl:apply-templates select="." mode="menuLink"/>
+                  </h3>
+                </xsl:otherwise>
+              </xsl:choose>
 
-					</xsl:if>
-					<xsl:if test="Description/node()!='' and not($showDesc='false')">
-						<span class="listDescription">
-							<xsl:attribute name="class">
-								<xsl:text>title text-</xsl:text>
-								<xsl:value-of select="$alignment"/>
-							</xsl:attribute>
-							<xsl:apply-templates select="Description/node()" mode="cleanXhtml" />
-							<xsl:text> </xsl:text>
-						</span>
-					</xsl:if>
-					<xsl:if test="$linked='true' and $button='false'">
-						<a href="{$url}" class="stretched-link">
-							<span class="visually-hidden">
-								<xsl:apply-templates select="." mode="getTitleAttr"/>
-								<xsl:text> </xsl:text>
-							</span>
-						</a>
-					</xsl:if>
-					<xsl:if test="not($button='false')">
-						<div>
-							<xsl:attribute name="class">
-								<xsl:text>entryFooter light-flex justify-content-</xsl:text>
-								<xsl:value-of select="$alignment"/>
-							</xsl:attribute>
-							<xsl:apply-templates select="." mode="moreLink">
-								<!--<xsl:with-param name="linkText">
+            </xsl:if>
+            <xsl:if test="Description/node()!='' and not($showDesc='false')">
+              <span class="listDescription">
+                <xsl:attribute name="class">
+                  <xsl:text>description text-</xsl:text>
+                  <xsl:value-of select="$alignment"/>
+                </xsl:attribute>
+                <xsl:apply-templates select="Description/node()" mode="cleanXhtml" />
+                <xsl:text> </xsl:text>
+              </span>
+            </xsl:if>
+            <xsl:if test="$linked='true' and $button='false'">
+              <a href="{$url}" class="stretched-link">
+                <span class="visually-hidden">
+                  <xsl:apply-templates select="." mode="getTitleAttr"/>
+                  <xsl:text> </xsl:text>
+                </span>
+              </a>
+            </xsl:if>
+            <xsl:if test="not($button='false')">
+              <div>
+                <xsl:attribute name="class">
+                  <xsl:text>entryFooter light-flex justify-content-</xsl:text>
+                  <xsl:value-of select="$alignment"/>
+                </xsl:attribute>
+                <xsl:apply-templates select="." mode="moreLink">
+                  <!--<xsl:with-param name="linkText">
 									<xsl:call-template name="term2026" />
 									<xsl:text>&#160;</xsl:text>
 									<xsl:apply-templates select="." mode="getDisplayName" />
 								</xsl:with-param>-->
-								<xsl:with-param name="link" select="$url"/>
-								<xsl:with-param name="stretchLink" select="$linked"/>
-								<xsl:with-param name="altText">
-									<xsl:apply-templates select="." mode="getTitleAttr" />
-								</xsl:with-param>
-							</xsl:apply-templates>
-							<xsl:text> </xsl:text>
-						</div>
-					</xsl:if>
+                  <xsl:with-param name="link" select="$url"/>
+                  <xsl:with-param name="stretchLink" select="$linked"/>
+                  <xsl:with-param name="altText">
+                    <xsl:apply-templates select="." mode="getTitleAttr" />
+                  </xsl:with-param>
+                </xsl:apply-templates>
+                <xsl:text> </xsl:text>
+              </div>
+            </xsl:if>
+          </div>
 				</div>
 			</div>
 		</xsl:if>

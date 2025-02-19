@@ -4,23 +4,23 @@
 packages/
 !packages/repositories.config
 
-/.vs/ProteanCMS/v16
-/.vs/ProteanCMS/v17
-/.vs/ProteanCMS/FileContentIndex
-/.vs/ProteanCMS-V6/v16
-/.vs/ProteanCMS-V6/v17
-/.vs/ProteanCMS-V6/FileContentIndex
-/.vs/ProteanCMSInstaller/v16
-/.vs/ProteanCMSInstaller/v17
-/.vs/ProteanCMSInstaller/FileContentIndex
+.vs/ProteanCMS/v16
+.vs/ProteanCMS/v17
+.vs/ProteanCMS/FileContentIndex
+.vs/ProteanCMS-V6/v16
+.vs/ProteanCMS-V6/v17
+.vs/ProteanCMS-V6/FileContentIndex
+.vs/ProteanCMSInstaller/v16
+.vs/ProteanCMSInstaller/v17
+.vs/ProteanCMSInstaller/FileContentIndex
 
-/wwwroot/bin/**
-/wwwroot/images/**
-/wwwroot/ewcommon/bin/**
+wwwroot/bin/**
+wwwroot/images/**
+wwwroot/ewcommon/bin/**
 
-/V6_wwwroot/bin/**
-/V6_wwwroot/images/**
-/V6_wwwroot/ptn/Bin/**
+V6_wwwroot/bin/**
+V6_wwwroot/images/**
+V6_wwwroot/ptn/Bin/**
 
 Assemblies/Protean.CMS/bin/**
 Assemblies/Protean.CMS/obj/**
@@ -30,3 +30,6 @@ Assemblies/Protean.Tools.UnitTests/bin/**
 Assemblies/Protean.Tools.UnitTests/obj/**
 
 
+/Assemblies/Protean.CMS/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+/Assemblies/Protean.CMS/obj/Debug/Protean.CMS.csproj.AssemblyReference.cache
+/.vs/ProteanCMS-V6/v17/.suo

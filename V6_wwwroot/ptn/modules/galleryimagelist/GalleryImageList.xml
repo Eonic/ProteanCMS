@@ -25,39 +25,43 @@
 				<cDescription/>
 				<bCascade/>
 			</tblContent>
+			<ImageBasePath/>
 		</instance>
 		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
 		<bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
-		<bind nodeset="tblContent/cContentXmlBrief/Content">
-			<bind id="cPosition" nodeset="@position" required="true()" type="string"/>
-			<bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
-			<bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
-			<bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
-			<bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
-			<bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
-			<bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
-			<bind id="nColumns" nodeset="@cols" required="false()" type="string"/>
-			<bind id="nStepCount" nodeset="@stepCount" required="false()" type="string"/>
-			<bind id="cDisplay" nodeset="@display" required="false()" type="string"/>
-			<bind id="cSortBy" nodeset="@sortBy" required="false()" type="string"/>
-			<bind id="cStepBy" nodeset="@stepBy" required="false()" type="string"/>
-			<bind id="cPageOrder" nodeset="@order" required="false()" type="string"/>
-			<bind id="cCrop" nodeset="@crop" required="false()" type="string"/>
-			<bind id="cNoStretch" nodeset="@noStretch" required="false()" type="string"/>
-			<bind id="cLightbox" nodeset="@lightbox" required="false()" type="string"/>
-			<bind id="cTitles" nodeset="@showTitle" required="false()" type="string"/>
-			<bind id="carousel" nodeset="@carousel" required="false()" type="string"/>
-			<bind id="carouselBullets" nodeset="@carouselBullets" required="false()" type="string"/>
-			<bind id="carouselHeight" nodeset="@carouselHeight" required="false()" type="string"/>
-			<bind id="autoPlaySpeed" nodeset="@autoPlaySpeed" required="false()" type="string"/>
-			<bind id="autoplay" nodeset="@autoplay" required="false()" type="string"/>
-			<bind id="alignment" nodeset="@alignment" required="false()" type="string" />
+		<bind nodeset="tblContent">
+			<bind nodeset="cContentXmlBrief/Content">
+				<bind id="cPosition" nodeset="@position" required="true()" type="string"/>
+				<bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
+				<bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
+				<bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
+				<bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
+				<bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
+				<bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+				<bind id="nColumns" nodeset="@cols" required="false()" type="string"/>
+				<bind id="nStepCount" nodeset="@stepCount" required="false()" type="string"/>
+				<bind id="cDisplay" nodeset="@display" required="false()" type="string"/>
+				<bind id="cSortBy" nodeset="@sortBy" required="false()" type="string"/>
+				<bind id="cStepBy" nodeset="@stepBy" required="false()" type="string"/>
+				<bind id="cPageOrder" nodeset="@order" required="false()" type="string"/>
+				<bind id="cCrop" nodeset="@crop" required="false()" type="string"/>
+				<bind id="cNoStretch" nodeset="@noStretch" required="false()" type="string"/>
+				<bind id="cLightbox" nodeset="@lightbox" required="false()" type="string"/>
+				<bind id="cTitles" nodeset="@showTitle" required="false()" type="string"/>
+				<bind id="carousel" nodeset="@carousel" required="false()" type="string"/>
+				<bind id="carouselBullets" nodeset="@carouselBullets" required="false()" type="string"/>
+				<bind id="carouselHeight" nodeset="@carouselHeight" required="false()" type="string"/>
+				<bind id="autoPlaySpeed" nodeset="@autoPlaySpeed" required="false()" type="string"/>
+				<bind id="autoplay" nodeset="@autoplay" required="false()" type="string"/>
+				<bind id="alignment" nodeset="@alignment" required="false()" type="string" />
+			</bind>
+			<bind id="cImageBasePath" nodeset="ImageBasePath" required="false()" type="string"/>
 		</bind>
-
-		<bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
-		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
-		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@id='columnBind']"/>
-		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+			<bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
+			<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
+			<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@id='columnBind']"/>
+			<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+	
 
 	</model>
 	<group ref="EditContent">
@@ -87,10 +91,10 @@
 								<toggle case="cDisplay_2" event="DOMActivate"/>
 							</item>
 						</select1>
-						<switch class="disable">
+						<switch for="cDisplay" class="disable">
 							<case id="cDisplay_1"/>
 							<case id="cDisplay_2">
-								<relatedContent search="find add" type="LibraryImage" relationType="" direction="1way">
+								<relatedContent search="find add multiple" type="LibraryImage" relationType="" direction="1way" class="has-script">
 									<label>Library Image</label>
 								</relatedContent>
 							</case>
@@ -120,7 +124,7 @@
 								<toggle case="cLinkType_2" event="DOMActivate"/>
 							</item>
 						</select1>
-						<switch class="disable">
+						<switch class="disable" for="cLinkType">
 							<case id="cLinkType_1">
 								<select1 bind="cModuleLink" class="siteTree">
 									<label>Link to page</label>
@@ -183,7 +187,7 @@
 								<toggle case="cSortBy_3" event="DOMActivate"/>
 							</item>
 						</select1>
-						<switch class="disable">
+						<switch class="disable" for="cSortBy">
 							<case id="cSortBy_1">
 								<select1 bind="cPageOrder" appearance="minimal" class="form-group">
 									<label>Order</label>
@@ -215,52 +219,34 @@
 					</group>
 					<group class="col-lg-6">
 						<select1 bind="nStepCount" appearance="full" class="form-group">
-							<label>Articles per page</label>
+							<label>Images per page</label>
 							<item>
 								<label>All</label>
 								<value>0</value>
-								<toggle case="cStepCounter_1" event="DOMActivate"/>
 							</item>
 							<item>
 								<label>3</label>
 								<value>3</value>
-								<toggle case="cStepCounter_2" event="DOMActivate"/>
 							</item>
 							<item>
 								<label>5</label>
 								<value>5</value>
-								<toggle case="cStepCounter_3" event="DOMActivate"/>
 							</item>
 							<item>
 								<label>10</label>
 								<value>10</value>
-								<toggle case="cStepCounter_4" event="DOMActivate"/>
 							</item>
 							<item>
 								<label>25</label>
 								<value>25</value>
-								<toggle case="cStepCounter_5" event="DOMActivate"/>
 							</item>
-							<item bindTo="cStepBy">
-								<input bind="cStepBy" class="hidden" />
+							<item>
 								<label>Other</label>
-								<value>Other</value>
-								<toggle case="cStepCounter_6" event="DOMActivate" />
+								<value></value>
 							</item>
 						</select1>
-						<switch class="disable">
-							<case id="cStepCounter_1"/>
-							<case id="cStepCounter_2"/>
-							<case id="cStepCounter_3"/>
-							<case id="cStepCounter_4"/>
-							<case id="cStepCounter_5"/>
-							<case id="cStepCounter_6">
-								<input bind="nStepCount" class="vshort">
-									<label>Other Stepper Value</label>
-								</input>
-							</case>
-						</switch>
 					</group>
+         
 
 				</group>
 				<group class="row">
@@ -305,7 +291,7 @@
 							</item>
 						</select1>
 					</group>
-					<!--<group class="col-lg-4">
+					<group class="col-lg-4">
 						<select1 bind="cLightbox" appearance="full" class="vshort inline-items">
 							<label>Lightbox</label>
 							<item>
@@ -317,7 +303,7 @@
 								<value>false</value>
 							</item>
 						</select1>
-					</group>-->
+					</group>
 					<group class="col-md-3">
 						<select1 bind="alignment">
 							<label>

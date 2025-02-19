@@ -28,6 +28,12 @@
       </xsl:if>
       <xsl:text>Secondary colour background</xsl:text>
     </option>
+    <option value="bg-info text-white">
+      <xsl:if test="$value='bg-info text-white'">
+        <xsl:attribute name="selected">selected</xsl:attribute>
+      </xsl:if>
+      <xsl:text>Info colour background</xsl:text>
+    </option>
     <option value="bg-dark">
       <xsl:if test="$value='bg-dark'">
         <xsl:attribute name="selected">selected</xsl:attribute>
@@ -220,6 +226,7 @@
     {title: 'Code', inline: 'code', icon: 'code'},
     {title: 'Lead', inline: 'span', classes: 'lead'},
     {title: 'Small', inline: 'span', classes: 'small'},
+    {title: 'Circle Stat', inline: 'span', classes: 'circle-stat'}
     ]},
 
     {title: 'Blocks', items: [
@@ -227,8 +234,8 @@
     {title: 'Blockquote', block: 'blockquote'},
     {title: 'Div', block: 'div'},
     {title: 'Pre', block: 'pre'},
-    {title: 'Two Columns', block: 'div', classes: 'two-col-text'},
-    {title: 'Three Columns', block: 'div', classes: 'three-col-text'}
+    {title: 'Two Columns', block: 'div', classes: 'two-col-text', wrapper : true},
+    {title: 'Three Columns', block: 'div', classes: 'three-col-text', wrapper : true}
     ]},
 
     {title: 'Alignment', items: [
@@ -237,8 +244,15 @@
     {title: 'Right', block: 'div', styles : {textAlign : 'right'}, icon: 'alignright'},
     {title: 'Justify', block: 'div', styles : {textAlign : 'justify'}, icon: 'alignjustify'}
     ]},
-
-    {title: 'Button', inline: 'a', classes: 'btn btn-custom'}
+    {title: 'Buttons', items: [
+    {title: 'Button', inline: 'a', classes: 'btn btn-custom'},
+    {title: 'Button Outline', inline: 'a', classes: 'btn btn-outline-primary'},
+    {title: 'Button Outline Light', inline: 'a', classes: 'btn btn-outline-light'}
+    ]},
+    {title: 'Icons', items: [
+    {title: 'Phone Icon', inline: 'span', classes: 'phone-icon'},
+    {title: 'Email Icon', inline: 'span', classes: 'email-icon'}
+    ]},
     ],
   </xsl:template>
 </xsl:stylesheet>

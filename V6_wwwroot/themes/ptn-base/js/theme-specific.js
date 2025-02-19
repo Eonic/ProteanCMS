@@ -51,7 +51,7 @@
         $(this).parent().removeClass('dropdown-active');
         $(this).parent('li').parent('ul').removeClass('menu-no-scroll');
     });
-    
+    $('[data-bs-toggle="popover"]').popover();
 });
 /*
 |--------------------------------------------------------------------------
@@ -106,8 +106,7 @@ function fixedNav() {
 }
 /* Appear function */
 function AnimAppear() {
-    $("[data-modAnim]").each(function () {
-
+    $("[data-modanim]").each(function () {
         var $this = $(this);
 
         //$this.addClass("moduleAnimate-invisible");
@@ -119,8 +118,13 @@ function AnimAppear() {
                 var delay = ($this.data("modanimdelay") ? $this.data("modanimdelay") : 1);
                 if (delay > 1) $this.css("animation-delay", delay + "ms");
 
-                $this.addClass("moduleAnimate-animated");
-                $this.addClass('moduleAnimate-' + $this.data("modanim"));
+               $this.addClass("moduleAnimate-animated");
+               $this.addClass($this.data("modanim"));
+
+                $this.addClass('animate__' + $this.data("modanim"));
+                $this.addClass($this.data("modanimspeed"));
+
+              //  alert($this.data("modanim") + ' ' + $this.data("modanimspeed"));
 
                 setTimeout(function () {
                     $this.addClass("moduleAnimate-visible");

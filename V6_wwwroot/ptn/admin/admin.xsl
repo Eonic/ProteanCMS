@@ -820,32 +820,11 @@
               <div class="col-lg-4">
                 <div class="card card-default">
                   <div class="card-header">
-                    <h4 >Insights</h4>
+                    <h4>To Do's</h4>
                   </div>
                   <div class="card-body">
-                    <div id="insights-section">
-                      <xsl:for-each select="$page/AdminMenu/MenuItem/Module">
-                        <xsl:if test="@name != ''">
-                          <xsl:variable name="id" select="@id"/>
-                          <xsl:variable name="jsonURL" select="@jsonURL"/>
-                          <div id="metric_{position()}" class="metric" data-json-url="{$jsonURL}">
-                            <div class="metric-inner">
-                              <header class="metric-header">
-                                <h1 class="metric-title">
-                                  <xsl:value-of select="@name"/>
-                                </h1>
-                              </header>
-                              <div class="metric-body">
-                                <div class="value">
-                                  <h1 class="metric-value" v-for="result in filterResultArray('metric_{position()}')">
-                                    <b>{{result.Key}}</b>: {{result.Value}}<br/>
-                                  </h1>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </xsl:if>
-                      </xsl:for-each>
+                    <div id="insights-section" class="nav flex-column ">
+						<xsl:apply-templates select="$page/AdminMenu/MenuItem/Module[@pos='todo']" mode="admin-module"/>
                     </div>
                   </div>
                 </div>
@@ -1064,7 +1043,23 @@
     </section>
   </xsl:template>
 
-  <xsl:template match="Page[@layout='SettingsDash']" mode="Admin">
+	<xsl:template match="Module" mode="admin-module">
+		unknown module Type
+	</xsl:template>
+
+	<xsl:template match="Module[@type='single-metric']" mode="admin-module">
+		<xsl:if test="@name != ''">
+			<xsl:variable name="id" select="@id"/>
+			<xsl:variable name="jsonURL" select="@jsonURL"/>
+			<div id="metric_{position()}" class="metric btn-group-vertical" data-json-url="{$jsonURL}">
+				<a class="btn btn-outline-primary metric-value" href="{@url}" v-for="result in filterResultArray('metric_{position()}')">
+					<xsl:value-of select="@name"/>&#160;&#160;<span class="badge bg-primary">{{result.Value}}</span><br/>
+				</a>
+			</div>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="Page[@layout='SettingsDash']" mode="Admin">
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-3">
@@ -4178,7 +4173,22 @@
 
               </xsl:if>
               <xsl:if test="not(starts-with(/Page/Request/QueryString/Item[@name='fld']/node(),'\FreeStock'))">
-
+				  <xsl:if test="contains(/Page/Request/QueryString/Item[@name='multiple'],'true')">
+					  <li>
+						  <a id="SelectAll" class="btn btn-success" data-toggle="popover">
+							  <i class="fa fa-picture-o fa-white">
+								  <xsl:text> </xsl:text>
+							  </i><xsl:text> </xsl:text>SelectAll
+						  </a>
+					  </li>
+					  <li>
+						  <a href="javascript:;" onclick="getImagePaths();" class="btn btn-success">
+							  <i class="fa fa-picture-o fa-white">
+								  <xsl:text> </xsl:text>
+							  </i><xsl:text> </xsl:text>Add Selected
+						  </a>
+					  </li>
+				  </xsl:if>
                 <a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;ewCmd2=addFolder&amp;fld={@path}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-sm btn-outline-primary">
                   <xsl:if test="$submitPath!='/?'">
                     <xsl:attribute name="data-bs-toggle">modal</xsl:attribute>
@@ -5724,9 +5734,14 @@
           </div>
           <xsl:if test="ContentDetail/directory/@parType='User'">
             <form action="?ewCmd=ListUsers" method="post" id="userSearch" class="col-md-4">
-              <div class="input-group">
-                <input type="text" name="search" value="{$page/Request/Form/Item[@name='search']}" class="form-control"/>
-                <button type="submit" name="previous" value="Search" class="btn btn-primary">
+			
+              <div class="input-group">	<button type="submit" name="UserSearch" value="Clear" class="btn btn-outline-primary">
+					<i class="fa-solid fa-x">
+						<xsl:text> </xsl:text>
+					</i>
+				</button>
+                <input type="text" name="search" value="{ContentDetail/directory/@UserSearchTerm}" class="form-control"/>
+                <button type="submit" name="UserSearch" value="Search" class="btn btn-primary">
                   <i class="fa fa-search">
                     <xsl:text> </xsl:text>
                   </i>
@@ -6001,6 +6016,7 @@
                 </a>
               </xsl:otherwise>
             </xsl:choose>
+			  <xsl:apply-templates select="." mode="bespokeUserButtons"/>
           </span>
         </td>
       </tr>
@@ -6008,7 +6024,12 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="company" mode="list">
+
+	<xsl:template match="user" mode="bespokeUserButtons">
+
+	</xsl:template>
+
+	<xsl:template match="company" mode="list">
     <xsl:param name="startPos"/>
     <xsl:param name="noOnPage"/>
     <xsl:if test="position() > $startPos and position() &lt;= ($startPos + $noOnPage)">
@@ -6633,13 +6654,13 @@
       </td>
       <td>
         <div class="btn-group-spaced">
-          <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Display&amp;id={@id}" class="btn btn-sm btn-outline-primary">
+          <a href="{$appPath}?ewCmd={$ewCmd}&amp;ewCmd2=Display&amp;id={@id}" class="btn btn-sm btn-outline-primary">
             <i class="fa fa-eye">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>view order
           </a>
           <xsl:if test="@statusId=6">
-            <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Print&amp;id={@id}" target="_new" class="btn btn-sm btn-outline-primary">
+            <a href="{$appPath}?ewCmd={$ewCmd}&amp;ewCmd2=Print&amp;id={@id}" target="_new" class="btn btn-sm btn-outline-primary">
               <i class="fa fa-print">
                 <xsl:text> </xsl:text>
               </i>
@@ -7002,9 +7023,9 @@
                 <table class="table collapse" id="paymentTable">
                   <thead>
                     <tr>
-                      <th scope="col">Provider</th>
                       <th scope="col">Date</th>
                       <th scope="col">Amount</th>
+                      <th scope="col">Provider</th>
                       <th scope="col">Other Info</th>
                     </tr>
                   </thead>
@@ -7026,8 +7047,11 @@
                           <xsl:value-of select="cPayMthdProviderName"/>
                         </td>
                         <td>
-                          AuthCode:
-                          <xsl:value-of select="cPayMthdDetailXml/instance/Response/@AuthCode"/>
+							<xsl:if test="cPayMthdDetailXml/instance/Response/@AuthCode!=''">
+								AuthCode:
+								<xsl:value-of select="cPayMthdDetailXml/instance/Response/@AuthCode"/>
+							</xsl:if>			
+                          
                         </td>
                       </tr>
                     </xsl:for-each>
@@ -10737,10 +10761,11 @@
                   <dd>
                     <xsl:value-of select="@startTime"/>
                   </dd>
+					<!--
                   <dt>End Time</dt>
                   <dd>
                     <xsl:value-of select="@endTime"/>
-                  </dd>
+                  </dd>-->
                   <dt>Pages Index</dt>
                   <dd>
                     <xsl:value-of select="@pagesIndexed"/>
@@ -10749,11 +10774,14 @@
                   <dd>
                     <xsl:value-of select="@pagesSkipped"/>
                   </dd>
-                  <dt>Articles Indexed</dt>
+                  <dt>
+					  Content Indexed</dt>
                   <dd>
                     <xsl:value-of select="@contentCount"/>
+					  <xsl:text> - </xsl:text>
+					  <xsl:value-of select="@IndexDetailTypes"/>
                   </dd>
-                  <dt>Articles Skipped</dt>
+                  <dt>Content Skipped</dt>
                   <dd>
                     <xsl:value-of select="@contentSkipped"/>
                   </dd>
@@ -11727,7 +11755,7 @@
             </xsl:if>-->
               </xsl:for-each>
               <td align="right">
-                <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Display&amp;id={Order_Id/node()}" class="view adminButton">view order</a>
+                <a href="{$appPath}?ewCmd={$ewCmd}&amp;ewCmd2=Display&amp;id={Order_Id/node()}" class="view adminButton">view order</a>
               </td>
             </tr>
           </span>
@@ -11858,7 +11886,7 @@
           </a>
         </td>
         <td align="right">
-          <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Display&amp;id={ancestor::Item/Order_Id/node()}" class="view adminButton">view order</a>
+          <a href="{$appPath}?ewCmd={$ewCmd}&amp;ewCmd2=Display&amp;id={ancestor::Item/Order_Id/node()}" class="view adminButton">view order</a>
         </td>
       </tr>
     </span>

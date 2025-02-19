@@ -1,89 +1,100 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Content type="xform" name="EditContent">
-	<model>
-		<instance>
-			<tblContent>
-				<nContentKey/>
-				<nContentPrimaryId/>
-				<nVersion/>
-				<cContentForiegnRef/>
-				<cContentName/>
-				<cContentSchemaName>Module</cContentSchemaName>
-				<cContentXmlBrief>
-					<Content position="" moduleType="SocialLinks" box="" title="" link="" linkType="internal" linkText="Read more" bookmarkSettings="global" iconSet="default" align="right" blank="false"/>
-				</cContentXmlBrief>
-				<cContentXmlDetail/>
-				<nAuditId/>
-				<nAuditKey/>
-				<dPublishDate/>
-				<dExpireDate/>
-				<dInsertDate/>
-				<nInsertDirId/>
-				<dUpdateDate/>
-				<nUpdateDirId/>
-				<nStatus>1</nStatus>
-				<cDescription/>
-				<bCascade/>
-			</tblContent>
-		</instance>
-		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
-		<bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
-		<bind nodeset="tblContent/cContentXmlBrief/Content">
-			<bind id="cPosition" nodeset="@position" required="true()" type="string"/>
-			<bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
-			<bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
-			<bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
-			<bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
-			<bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
-			<bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
-			<bind id="cContentMyName" nodeset="@myName" required="true()" type="string"/>
-			<!--<bind id="cIconSet" nodeset="@iconSet" required="false()" type="string"/>-->
-			<bind id="cAlign" nodeset="@align" required="true()" type="string"/>
-			<bind id="cBlank" nodeset="@blank" required="true()" type="string"/>
-			<bind id="uploadSprite" nodeset="@uploadSprite" required="false()" type="string" />
-			<bind id="cContentFacebook" nodeset="@facebookURL" required="false()" type="format:/(?:https:\/\/)?(?:www\.)?facebook\.com\/*"/>
-			<bind id="cContentTwitter" nodeset="@twitterURL" required="false()" type="format:/(?:https:\/\/)?(?:www\.)?twitter\.com\/*"/>
-			<bind id="cContentLinkedIn" nodeset="@linkedInURL" required="false()" type="format:/(?:https:\/\/)?(?:*\.)?linkedin\.com\/*"/>
-			<bind id="cContentGooglePlus" nodeset="@googlePlusURL" required="false()" type="format:/(?:https:\/\/)?:www\.)\/*"/>
-			<bind id="cContentPinterest" nodeset="@pinterestURL" required="false()" type="format:/(?:https:\/\/)?(?:www\.)\/*"/>
-			<bind id="cContentYoutube" nodeset="@youtubeURL" required="false()" type="format:/(?:https:\/\/)?(?:www\.)?youtube\.com\/*"/>
-			<bind id="cContentInstagram" nodeset="@instagramURL" required="false()" type="format:/(?:https:\/\/)?(?:www\.)?instagram\.com\/*"/>
-		</bind>
-		<bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
-		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
-		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
-	</model>
-	<group ref="EditContent">
-		<label>Social Icons</label>
-		<group class="tabs">
-			<group>
-				<label>
-					<i class="fas fa-pen"> </i>
-					<span class="space"> </span>
-					<span>Content</span>
-				</label>
-				<group>
-					<group class="row">
-						<group class="col-lg-6">
-							<input bind="cContentMyName" class="short required">
-								<label>Organisation Name</label>
-							</input>
-						</group>
-						<group class="col-lg-6">
-							<select1 bind="cBlank" appearance="full" class="inline-items">
-								<label>Open in a new window</label>
-								<item>
-									<label>Yes</label>
-									<value>true</value>
-								</item>
-								<item>
-									<label>No</label>
-									<value>false</value>
-								</item>
-							</select1>
-						</group>
-					</group>
-					<!--<select1 bind="cIconSet" appearance="minimal" class="vshort">
+  <model>
+    <instance>
+      <tblContent>
+        <nContentKey/>
+        <nContentPrimaryId/>
+        <nVersion/>
+        <cContentForiegnRef/>
+        <cContentName/>
+        <cContentSchemaName>Module</cContentSchemaName>
+        <cContentXmlBrief>
+          <Content position="" moduleType="SocialLinks" box="" title="" link="" linkType="internal" linkText="Read more" bookmarkSettings="global" iconSet="default" align="right" blank="false"/>
+        </cContentXmlBrief>
+        <cContentXmlDetail/>
+        <nAuditId/>
+        <nAuditKey/>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nStatus>1</nStatus>
+        <cDescription/>
+        <bCascade/>
+      </tblContent>
+    </instance>
+    <submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+    <bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
+    <bind nodeset="tblContent/cContentXmlBrief/Content">
+      <bind id="cPosition" nodeset="@position" required="true()" type="string"/>
+      <bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
+      <bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
+      <bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
+      <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
+      <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
+      <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+      <bind id="cContentMyName" nodeset="@myName" required="true()" type="string"/>
+      <bind id="cIcon-size" nodeset="@icon-size" required="false()" type="string"/>
+      <bind id="spacing" nodeset="@spacing" required="false()" type="string"/>
+      <bind id="spacing-unit" nodeset="@spacing-unit" required="false()" type="string"/>
+      <bind id="layout" nodeset="@layout" required="false()" type="string"/>
+      <!--<bind id="cIconSet" nodeset="@iconSet" required="false()" type="string"/>-->
+      <bind id="cAlign" nodeset="@align" required="true()" type="string"/>
+      <bind id="cBlank" nodeset="@blank" required="true()" type="string"/>
+      <bind id="uploadSprite" nodeset="@uploadSprite" required="false()" type="string" />
+      <bind id="cContentFacebook" nodeset="@facebookURL" required="false()" type="format:/(?:https:\/\/)?(?:www\.)?facebook\.com\/*"/>
+      <bind id="cContentTwitter" nodeset="@twitterURL" required="false()" type="format:/(?:https:\/\/)?(?:www\.)?twitter\.com\/*"/>
+      <bind id="cContentLinkedIn" nodeset="@linkedInURL" required="false()" type="format:/(?:https:\/\/)?(?:*\.)?linkedin\.com\/*"/>
+      <bind id="cContentBlueSky" nodeset="@blueSkyURL" required="false()" type="format:/(?:https:\/\/)?:www\.)\/*"/>
+      <bind id="cContentPinterest" nodeset="@pinterestURL" required="false()" type="format:/(?:https:\/\/)?(?:www\.)\/*"/>
+      <bind id="cContentYoutube" nodeset="@youtubeURL" required="false()" type="format:/(?:https:\/\/)?(?:www\.)?youtube\.com\/*"/>
+      <bind id="cContentInstagram" nodeset="@instagramURL" required="false()" type="format:/(?:https:\/\/)?(?:www\.)?instagram\.com\/*"/>
+      <bind id="fb-order" nodeset="@fb-order" required="false()" type="string"/>
+      <bind id="x-order" nodeset="@x-order" required="false()" type="string"/>
+      <bind id="li-order" nodeset="@li-order" required="false()" type="string"/>
+      <bind id="p-order" nodeset="@p-order" required="false()" type="string"/>
+      <bind id="yt-order" nodeset="@yt-order" required="false()" type="string"/>
+      <bind id="i-order" nodeset="@i-order" required="false()" type="string"/>
+      <bind id="bs-order" nodeset="@bs-order" required="false()" type="string"/>
+    </bind>
+    <bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
+    <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
+    <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+  </model>
+  <group ref="EditContent">
+    <label>Social Icons</label>
+    <group class="tabs">
+      <group>
+        <label>
+          <i class="fas fa-pen"> </i>
+          <span class="space"> </span>
+          <span>Content</span>
+        </label>
+        <group>
+          <group class="row">
+            <group class="col-lg-6">
+              <input bind="cContentMyName" class="short required">
+                <label>Organisation Name</label>
+              </input>
+            </group>
+            <group class="col-lg-6">
+              <select1 bind="cBlank" appearance="full" class="inline-items">
+                <label>Open in a new window</label>
+                <item>
+                  <label>Yes</label>
+                  <value>true</value>
+                </item>
+                <item>
+                  <label>No</label>
+                  <value>false</value>
+                </item>
+              </select1>
+            </group>
+          </group>
+          <!--<select1 bind="cIconSet" appearance="minimal" class="vshort">
 							<label>Icon Set</label>
 							<item>
 								<label>Default Icons</label>
@@ -110,56 +121,80 @@
 								<value>plain</value>
 							</item>
 						</select1>-->
-					<group class="row">
-							<group class="col-lg-6">
-								<select1 bind="cAlign" appearance="full" class="inline-items">
-									<label>Alignment</label>
-									<item>
-										<label>Left</label>
-										<value>left</value>
-									</item>
-									<item>
-										<label>Center</label>
-										<value>center</value>
-									</item>
-									<item>
-										<label>Right</label>
-										<value>right</value>
-									</item>
-								</select1>
-							</group>
-							
-						</group>
-				</group>
-				<group class="row">
-					<div>All web links require the https:// prefix</div>
-					<group class="col-lg-6">
-						<input bind="cContentFacebook" class="short">
-							<label>Facebook URL</label>
-						</input>
-						<input bind="cContentTwitter" class="short">
-							<label>Twitter URL</label>
-						</input>
-						<input bind="cContentLinkedIn" class="short">
-							<label>LinkedIn URL</label>
-						</input>
-						<!--<input bind="cContentGooglePlus" class="short">
-								<label>Google+ URL</label>
-							</input>-->
-					</group>
-					<group class="col-lg-6">
-						<input bind="cContentPinterest" class="short">
-							<label>Pinterest URL</label>
-						</input>
-						<input bind="cContentYoutube" class="short">
-							<label>Youtube URL</label>
-						</input>
-						<input bind="cContentInstagram" class="short">
-							<label>Instagram URL</label>
-						</input>
-					</group>
-				</group>
-				<!-- group class="inline">		
+        </group>
+        <group class="row">
+          <div>All web links require the https:// prefix</div>
+          <group class="col-lg-5">
+            <input bind="cContentFacebook" class="short">
+              <label>Facebook URL</label>
+            </input>
+          </group>
+          <group class="col-lg-1">
+            <input bind="fb-order" class="short">
+              <label>Order</label>
+            </input>
+          </group>
+          <group class="col-lg-5">
+            <input bind="cContentTwitter" class="short">
+              <label>X URL</label>
+            </input>
+          </group>
+          <group class="col-lg-1">
+            <input bind="x-order" class="short">
+              <label>Order</label>
+            </input>
+          </group>
+          <group class="col-lg-5">
+            <input bind="cContentLinkedIn" class="short">
+              <label>LinkedIn URL</label>
+            </input>
+          </group>
+          <group class="col-lg-1">
+            <input bind="li-order" class="short">
+              <label>Order</label>
+            </input>
+          </group>
+          <group class="col-lg-5">
+            <input bind="cContentPinterest" class="short">
+              <label>Pinterest URL</label>
+            </input>
+          </group>
+          <group class="col-lg-1">
+            <input bind="p-order" class="short">
+              <label>Order</label>
+            </input>
+          </group>
+          <group class="col-lg-5">
+            <input bind="cContentYoutube" class="short">
+              <label>Youtube URL</label>
+            </input>
+          </group>
+          <group class="col-lg-1">
+            <input bind="yt-order" class="short">
+              <label>Order</label>
+            </input>
+          </group>
+          <group class="col-lg-5">
+            <input bind="cContentInstagram" class="short">
+              <label>Instagram URL</label>
+            </input>
+          </group>
+          <group class="col-lg-1">
+            <input bind="i-order" class="short">
+              <label>Order</label>
+            </input>
+          </group>
+          <group class="col-lg-5">
+            <input bind="cContentBlueSky" class="short">
+              <label>Bluesky URL</label>
+            </input>
+          </group>
+          <group class="col-lg-1">
+            <input bind="bs-order" class="short">
+              <label>Order</label>
+            </input>
+          </group>
+      <!-- group class="inline">		
 						<hint class="long">
 							All URL's must start with http:// ... etc.
 						</hint>
@@ -171,16 +206,120 @@
 							</hint>
 						</input>
 					</group -->
-			</group>
-			<!--<group>
-				<label>
-					<i class="fas fa-brush"> </i>
-					<span class="space"> </span>
-					<span>Presentation</span>
-				</label>
-				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
-			</group>
-			<group>
+    </group>
+  </group>
+    <group>
+      <label>
+        <i class="fas fa-brush"> </i>
+        <span class="space"> </span>
+        <span>Presentation</span>
+      </label>
+      <!--<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='presentation']"/>-->
+      <group>
+
+        <group class="row">
+          <group class="col-lg-4">
+            <select1 bind="cAlign" appearance="full" class="inline-items">
+              <label>Alignment</label>
+              <item>
+                <label>Left</label>
+                <value>left</value>
+              </item>
+              <item>
+                <label>Center</label>
+                <value>center</value>
+              </item>
+              <item>
+                <label>Right</label>
+                <value>right</value>
+              </item>
+            </select1>
+          </group>
+
+          <group class="col-lg-4">
+            <select1 bind="cIcon-size" class="bs-only" appearance="minimal">
+              <label>Icon Size</label>
+              <item>
+                <label>1x</label>
+                <value>fa-1x</value>
+              </item>
+              <item>
+                <label>2x</label>
+                <value>fa-2x</value>
+              </item>
+              <item>
+                <label>3x</label>
+                <value>fa-3x</value>
+              </item>
+              <item>
+                <label>4x</label>
+                <value>fa-4x</value>
+              </item>
+              <item>
+                <label>5x</label>
+                <value>fa-5x</value>
+              </item>
+              <item>
+                <label>6x</label>
+                <value>fa-6x</value>
+              </item>
+              <item>
+                <label>7x</label>
+                <value>fa-7x</value>
+              </item>
+              <item>
+                <label>8x</label>
+                <value>fa-8x</value>
+              </item>
+              <item>
+                <label>9x</label>
+                <value>fa-9x</value>
+              </item>
+              <item>
+                <label>10x</label>
+                <value>fa-10x</value>
+              </item>
+            </select1>
+          </group>
+
+          <group class="col-lg-4">
+            <select1 bind="layout" class="bs-only" appearance="minimal">
+              <label>Layout</label>
+              <item>
+                <label>Row</label>
+                <value>horizontal</value>
+              </item>
+              <item>
+                <label>Column</label>
+                <value>vertical</value>
+              </item>
+
+            </select1>
+          </group>
+        </group>
+        <group class="row">
+          <group class="col-lg-4">
+            <input bind="spacing" class="short required">
+              <label>Icon Spacing</label>
+            </input>
+          </group>
+          <group class="col-lg-4">
+            <select1 bind="spacing-unit" class="bs-only" appearance="minimal">
+              <label>Spacing Unit</label>
+              <item>
+                <label>px</label>
+                <value>px</value>
+              </item>
+              <item>
+                <label>rem</label>
+                <value>rem</value>
+              </item>
+            </select1>
+          </group>
+        </group>
+      </group>
+    </group>
+    <!--<group>
 				<label>
 					<i class="fas fa-link"> </i>
 					<span class="space"> </span>
@@ -190,37 +329,38 @@
 					<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='FooterLinks']"/>
 				</group>
 			</group>-->
-			<group>
-				<label>
-					<i class="fas fa-tachometer-alt"> </i>
-					<span class="space"> </span>
-					<span>Animate</span>
-				</label>
-				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='animate']"/>
-			</group>
-			<group>
-				<label>
-					<i class="fas fa-cog"> </i>
-					<span class="space"> </span>
-					<span>Advanced Settings</span>
-				</label>
-				<group>
-					<!-- These hidden fields and bindings are required for the component-->
-					<input bind="nContentKey" class="hidden">
-						<label>ContentId</label>
-					</input>
-					<input bind="cModuleType" class="hidden">
-						<label>ModuleType</label>
-					</input>
-					<!-- end of hidden fields -->
-					<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
-				</group>
-			</group>
-		</group>
-	</group>
-	<group ref="submit" class="contentSubmit">
-		<submit submission="" ref="ewSubmit" class="principle">
-			<label>Save Links</label>
-		</submit>
-	</group>
+    <group>
+      <label>
+        <i class="fas fa-tachometer-alt"> </i>
+        <span class="space"> </span>
+        <span>Animate</span>
+      </label>
+      <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='animate']"/>
+    </group>
+    <group>
+      <label>
+        <i class="fas fa-cog"> </i>
+        <span class="space"> </span>
+        <span>Advanced Settings</span>
+      </label>
+      <group>
+        <!-- These hidden fields and bindings are required for the component-->
+        <input bind="nContentKey" class="hidden">
+          <label>ContentId</label>
+        </input>
+        <input bind="cModuleType" class="hidden">
+          <label>ModuleType</label>
+        </input>
+        <!-- end of hidden fields -->
+        <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+
+      </group>
+    </group>
+  </group>
+  </group>
+  <group ref="submit" class="contentSubmit">
+    <submit submission="" ref="ewSubmit" class="principle">
+      <label>Save Links</label>
+    </submit>
+  </group>
 </Content>

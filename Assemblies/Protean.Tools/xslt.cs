@@ -1,19 +1,11 @@
 ﻿using System;
-using System.Runtime;
 using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Security;
-using System.Xml;
-using System.Xml.Xsl;
 using System.Threading.Tasks;
-using Microsoft.VisualBasic;
+using System.Xml;
 using System.Xml.XPath;
+using System.Xml.Xsl;
+
 
 namespace Protean.Tools.Xslt
 {
@@ -21,8 +13,8 @@ namespace Protean.Tools.Xslt
     {
         public int stringcompare(string stringX, string stringY)
         {
-            stringX = Strings.UCase(stringX);
-            stringY = Strings.UCase(stringY);
+            stringX = stringX.ToUpper();
+            stringY = stringY.ToUpper();
 
             if (stringX == stringY)
                 return 0;
@@ -74,7 +66,7 @@ namespace Protean.Tools.Xslt
         {
             try
             {
-                if (Information.IsDate(dateString))
+                if (DateTime.TryParse(dateString, out _))
                 {
                     return DateTime.Parse(dateString).ToString();
                 }
@@ -161,9 +153,56 @@ namespace Protean.Tools.Xslt
             try
             {
                 string[] ValidDatePart = new[] { "d", "y", "h", "n", "m", "q", "s", "w", "ww", "yyyy" };
-                if (Information.IsDate(date1String) && Information.IsDate(date2String) && Array.IndexOf(ValidDatePart, datePart) > (ValidDatePart.GetLowerBound(0) - 1))
 
-                    nDiff = Microsoft.VisualBasic.DateAndTime.DateDiff(datePart, DateTime.Parse(date1String), DateTime.Parse(date2String)).ToString();
+                // Check if date strings are valid and datePart is recognized
+                if (DateTime.TryParse(date1String, out DateTime date1) &&
+                    DateTime.TryParse(date2String, out DateTime date2) &&
+                    Array.IndexOf(ValidDatePart, datePart) > ValidDatePart.GetLowerBound(0) - 1)
+                {
+                    // Calculate date difference using TimeSpan or custom logic for specific cases
+                    TimeSpan ts = date2 - date1;
+
+                    switch (datePart.ToLower())
+                    {
+                        case "d": // Days
+                            nDiff = ts.TotalDays.ToString();
+                            break;
+                        case "h": // Hours
+                            nDiff = ts.TotalHours.ToString();
+                            break;
+                        case "n": // Minutes
+                            nDiff = ts.TotalMinutes.ToString();
+                            break;
+                        case "s": // Seconds
+                            nDiff = ts.TotalSeconds.ToString();
+                            break;
+                        case "y": // Years (custom logic)
+                            nDiff = (date2.Year - date1.Year).ToString();
+                            break;
+                        case "m": // Months (custom logic)
+                            nDiff = ((date2.Year - date1.Year) * 12 + date2.Month - date1.Month).ToString();
+                            break;
+                        case "q": // Quarters (custom logic)
+                            int quarter1 = (date1.Month - 1) / 3 + 1;
+                            int quarter2 = (date2.Month - 1) / 3 + 1;
+                            nDiff = ((date2.Year - date1.Year) * 4 + quarter2 - quarter1).ToString();
+                            break;
+                        case "w": // Weeks (approximate by dividing days by 7)
+                            nDiff = (ts.TotalDays / 7).ToString();
+                            break;
+                        case "ww": // Calendar weeks (custom logic)
+                            nDiff = (CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(date2, CalendarWeekRule.FirstDay, DayOfWeek.Sunday) -
+                                     CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(date1, CalendarWeekRule.FirstDay, DayOfWeek.Sunday)).ToString();
+                            break;
+                        case "yyyy": // Full years
+                            nDiff = (date2.Year - date1.Year).ToString();
+                            break;
+                        default:
+                            nDiff = "Invalid date part";
+                            break;
+                    }
+                }
+
                 return nDiff;
             }
             catch (Exception)
@@ -171,6 +210,7 @@ namespace Protean.Tools.Xslt
                 return nDiff;
             }
         }
+
     }
 
     public class Transform
@@ -187,8 +227,8 @@ namespace Protean.Tools.Xslt
         private object oXslTExtensionsObject; // Any Class we want to use for additional functionality
         private string cXslTExtensionsURN; // The Urn for the class
 
-       
-       // private XslTransform oClassicTransform; // Classic Transform Object
+
+        // private XslTransform oClassicTransform; // Classic Transform Object
         private XslCompiledTransform oCompiledTransform; // Compiled Transform Object
         private XsltArgumentList XsltArgs; // Argurment List
         // Error Handling
@@ -355,27 +395,25 @@ namespace Protean.Tools.Xslt
 
         private delegate void TransformCompiledDelegate(ref string cResult);
 
-        private void ProcessCompiledTimed(ref string cResult)
+        private async Task ProcessCompiledTimed(string cResult)
         {
             try
             {
-                TransformCompiledDelegate d = new TransformCompiledDelegate(ProcessCompiled);
-                IAsyncResult res = d.BeginInvoke(ref cResult, null, null);
-                if (res.IsCompleted == false)
+                var task = Task.Run(() => ProcessCompiled(ref cResult));
+
+                if (await Task.WhenAny(task, Task.Delay(nTimeoutMillisec)) == task)
                 {
-                    res.AsyncWaitHandle.WaitOne(nTimeoutMillisec, false);
-                    if (res.IsCompleted == false)
-                    {
-                        d.EndInvoke(ref cResult, (System.Runtime.Remoting.Messaging.AsyncResult)res);
-                        d = null;
-                        Hashtable oSettings = new Hashtable();
-                        oSettings.Add("TimeoutSeconds", this.TimeoutSeconds);
-                        oSettings.Add("Compiled", this.Compiled);
-                        OnTimeoutError_Private?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessCompiledTimed", new Exception("XsltTransformTimeout"), "", 0, oSettings));
-                    }
+                    await task;
                 }
-                if (!(d == null))
-                    d.EndInvoke(ref cResult, (System.Runtime.Remoting.Messaging.AsyncResult)res);
+                else
+                {
+                    Hashtable oSettings = new Hashtable
+            {
+                { "TimeoutSeconds", this.TimeoutSeconds },
+                { "Compiled", this.Compiled }
+            };
+                    OnTimeoutError_Private?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessCompiledTimed", new Exception("XsltTransformTimeout"), "", 0, oSettings));
+                }
             }
             catch (Exception ex)
             {
@@ -433,28 +471,27 @@ namespace Protean.Tools.Xslt
 
         private delegate void TransformClassicDelegate(ref string cResult);
 
-        private void ProcessClassicTimed(ref string cResult)
+        private async Task ProcessClassicTimed(string cResult)
         {
             string sProcessInfo = "ProcessClassicTimed";
             try
             {
-                TransformClassicDelegate d = new TransformClassicDelegate(ProcessClassic);
-                IAsyncResult res = d.BeginInvoke(ref cResult, null, null);
-                if (res.IsCompleted == false)
+                var task = Task.Run(() => ProcessClassic(ref cResult));
+
+                if (await Task.WhenAny(task, Task.Delay(nTimeoutMillisec)) == task)
                 {
-                    res.AsyncWaitHandle.WaitOne(nTimeoutMillisec, false);
-                    if (res.IsCompleted == false)
-                    {
-                        d.EndInvoke(ref cResult, (System.Runtime.Remoting.Messaging.AsyncResult)res);
-                        d = null;
-                        Hashtable oSettings = new Hashtable();
-                        oSettings.Add("TimeoutSeconds", this.TimeoutSeconds);
-                        oSettings.Add("Compiled", this.Compiled);
-                        OnTimeoutError_Private?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessClassicTimed", new Exception("XsltTransformTimeout"), "", 0, oSettings));
-                    }
+                    await task;
                 }
-                if (!(d == null))
-                    d.EndInvoke(ref cResult, (System.Runtime.Remoting.Messaging.AsyncResult)res);
+                else
+                {
+                    // Timeout occurred
+                    Hashtable oSettings = new Hashtable
+            {
+                { "TimeoutSeconds", this.TimeoutSeconds },
+                { "Compiled", this.Compiled }
+            };
+                    OnTimeoutError_Private?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, sProcessInfo, new Exception("XsltTransformTimeout"), "", 0, oSettings));
+                }
             }
             catch (Exception ex)
             {
@@ -462,7 +499,7 @@ namespace Protean.Tools.Xslt
             }
         }
 
-       
+
         private void ProcessClassic(ref string cResult)
         {
             try
@@ -517,9 +554,9 @@ namespace Protean.Tools.Xslt
             {
                 string cResult = "";
                 if (bCompiled & nTimeoutMillisec > 0)
-                    ProcessCompiledTimed(ref cResult);
+                    ProcessCompiledTimed(cResult);
                 else if (!bCompiled & nTimeoutMillisec > 0)
-                    ProcessClassicTimed(ref cResult);
+                    ProcessClassicTimed(cResult);
                 else if (bCompiled & nTimeoutMillisec == 0)
                     ProcessCompiled(ref cResult);
                 else if (!bCompiled & nTimeoutMillisec == 0)
@@ -542,9 +579,9 @@ namespace Protean.Tools.Xslt
 
         private void RemoveDeclaration(ref string cResult)
         {
-            cResult = Strings.Replace(cResult, "<?Xml version=\"1.0\" encoding=\"utf-8\"?>", "");
-            cResult = Strings.Replace(cResult, "<?Xml version=\"1.0\" encoding=\"utf-16\"?>", "");
-            cResult = Strings.Trim(cResult);
+            cResult = cResult.Replace("<?Xml version=\"1.0\" encoding=\"utf-8\"?>", "");
+            cResult = cResult.Replace("<?Xml version=\"1.0\" encoding=\"utf-16\"?>", "");
+            cResult = cResult.Trim();
         }
 
         public Transform()

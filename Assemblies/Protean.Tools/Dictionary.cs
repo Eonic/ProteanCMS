@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.CompilerServices; // Install-Package Microsoft.VisualBasic
+using System;
 using System.Collections;
-using Microsoft.VisualBasic; // Install-Package Microsoft.VisualBasic
-using Microsoft.VisualBasic.CompilerServices; // Install-Package Microsoft.VisualBasic
 namespace Protean.Tools
 {
     public static class Dictionary
@@ -42,7 +41,7 @@ namespace Protean.Tools
 
             catch (Exception)
             {
-               // ex = null;
+                // ex = null;
                 return new Hashtable();
             }
 
@@ -75,12 +74,12 @@ namespace Protean.Tools
                     {
                         case Dimension.Key:
                             {
-                                csvList += Strings.Replace(Conversions.ToString(Item.Key), Conversions.ToString(separator), "");
+                                csvList += Item.Key.ToString().Replace(separator.ToString(), "");
                                 break;
                             }
                         case Dimension.Value:
                             {
-                                csvList += Strings.Replace(Conversions.ToString(Item.Value), Conversions.ToString(separator), "");
+                                csvList += Item.Value.ToString().Replace(separator.ToString(), "");
                                 break;
                             }
                     }

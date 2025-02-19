@@ -1,15 +1,11 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using System.Web.Configuration;
-
 using System.Xml;
-using System.Xml.Xsl;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
-using Microsoft.VisualBasic.Logging;
 using static Protean.stdTools;
 
 
@@ -480,7 +476,7 @@ namespace Protean
                         }
                         bool bShowMoreFilterButton = false;
 
-                        oFrmGroup = filterForm.addGroup(ref filterForm.moXformElmt, "main-group");
+                        oFrmGroup = filterForm.addGroup(ref filterForm.moXformElmt, "filter-main");
                         XmlElement oXml = filterForm.moPageXML.CreateElement("ShowMore");
                         oXml.InnerText = cShowMore;
                         filterForm.Instance.AppendChild(oXml);
@@ -646,19 +642,28 @@ namespace Protean
                                             parentPageId = oFilterElmt.Attributes["parId"].Value;
 
                                         }
-                                        orderBySql = GetFilterOrderByClause(calledType, "");
+                                        orderBySql = GetFilterOrderByClause(calledType, "", ref myWeb);
+                                        if (orderBySql != "")
+                                        {
+                                            cOrderBySql = orderBySql + "," + cOrderBySql;
+                                        }
 
-                                        cOrderBySql = cOrderBySql + orderBySql;
 
                                         if (orderBySql.Length > 0)
 
                                         {
-                                            string cAlies = className.Replace("Filter", "");
-                                            cAdditionalColumns += "," + orderBySql.ToLower().Replace(",", "").Replace("asc", "").Replace("desc", "");
-                                            cAdditionalJoins += "inner join tblContentIndex cii" + cAlies + " on cii" + cAlies + ".nContentId=c.nContentKey inner join tblContentIndexDef cid" + cAlies;
-                                            cAdditionalJoins += " on cii" + cAlies + ".nContentIndexDefinitionKey=cid" + cAlies + ".nContentIndexDefKey ";
-                                            cAdditionalJoins += " and cid" + cAlies + ".cDefinitionName='" + cAlies + "'";
+                                            cAdditionalColumns += "," + orderBySql.ToLower().Replace("asc", "").Replace("desc", "");
+                                            if (myWeb.moConfig["ExcludeFilterForJoin"] != className)
+                                            {
+                                                string cAlies = className.Replace("Filter", "");
+                                                cAdditionalJoins += "inner join tblContentIndex cii" + cAlies + " on cii" + cAlies + ".nContentId=c.nContentKey inner join tblContentIndexDef cid" + cAlies;
+                                                cAdditionalJoins += " on cii" + cAlies + ".nContentIndexDefinitionKey=cid" + cAlies + ".nContentIndexDefKey ";
+                                                cAdditionalJoins += " and cid" + cAlies + ".cDefinitionName='" + cAlies + "'";
+
+
+                                            }
                                         }
+
 
                                     }
 
@@ -697,7 +702,7 @@ namespace Protean
                             if (whereSQL.ToLower().Trim().EndsWith(" and") == false)
                             {
                                 myWeb.moSession["FilterWhereCondition"] = whereSQL;
-                                myWeb.moSession["AdditionalColumn"] = cAdditionalColumns;
+                                myWeb.moSession["AdditionalColumns"] = cAdditionalColumns;
                                 myWeb.moSession["AdditionalJoins"] = cAdditionalJoins;
                                 myWeb.moSession["OrderBy"] = cOrderBySql;
                                 XmlElement argoPageDetail = null; int nCount = 0;
@@ -743,7 +748,7 @@ namespace Protean
                     }
                 }
 
-                public string GetFilterOrderByClause(Type calledType, string existingOrderBy)
+                public string GetFilterOrderByClause(Type calledType, string existingOrderBy, ref Cms myWeb)
                 {
                     string filterOrderByClause = string.Empty;
 
@@ -752,7 +757,9 @@ namespace Protean
                         string methodname = "GetFilterOrderByClause";
 
                         var o = Activator.CreateInstance(calledType);
-                        filterOrderByClause = Convert.ToString(calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, null, o, null));
+                        var args = new object[1];
+                        args[0] = myWeb;
+                        filterOrderByClause = Convert.ToString(calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, null, o, args));
                     }
 
                     if (!string.IsNullOrEmpty(existingOrderBy))

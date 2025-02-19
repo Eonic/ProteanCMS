@@ -18,7 +18,10 @@
 .module-SwiperCarousel {
     //slides
     .swiper-slide-padding {
-        padding: 50px 50px;
+        @include media-breakpoint-up(sm) {
+            padding: 50px 50px;
+        }
+
         position: absolute;
         top: 0;
         left: 0;
@@ -69,8 +72,6 @@
             margin-bottom: 0;
         }
     }
-
-    
     //controls
     .swiper-button-prev:after, .swiper-button-next:after {
         font-size: 30px;
@@ -85,5 +86,64 @@
     //general
     .swiper-container {
         padding: 0;
+    }
+
+    div[class*='tint'] {
+        &:before {
+            z-index: 1;
+            background: rgba(0, 0, 0, 0.7);
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        .swiper-caption-inner {
+            color: color-contrast($dark);
+            z-index: 2;
+            position: relative;
+        }
+    }
+
+    div[class*='light-tint'] {
+        &:before {
+            background: rgba($light, 0.7);
+        }
+
+        .swiper-caption-inner {
+            color: color-contrast($light);
+        }
+    }
+
+    div[class*='primary-tint'] {
+        &:before {
+            background: rgba($primary, 0.7);
+        }
+
+        .swiper-caption-inner {
+            color: color-contrast($primary);
+        }
+    }
+
+    div[class*='secondary-tint'] {
+        &:before {
+            background: rgba($secondary, 0.7);
+        }
+
+        .swiper-caption-inner {
+            color: color-contrast($secondary);
+        }
+    }
+
+    div[class*='info-tint'] {
+        &:before {
+            background: rgba($info, 0.7);
+        }
+
+        .swiper-caption-inner {
+            color: color-contrast($info);
+        }
     }
 }

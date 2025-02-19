@@ -146,7 +146,7 @@
             <toggle case="cLinkType_2" event="DOMActivate"/>
           </item>
         </select1>
-        <switch class="disable">
+        <switch class="disable" for="cLinkType">
           <case id="cLinkType_1">
             <select1 bind="cModuleLink" class="siteTree">
               <label>Link to page</label>

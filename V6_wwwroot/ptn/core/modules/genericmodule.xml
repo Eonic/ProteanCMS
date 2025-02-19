@@ -33,6 +33,7 @@
 			<bind id="cIcon" nodeset="@icon" required="false()" type="string"/>
 			<bind id="cIcon-size" nodeset="@icon-size" required="false()" type="string"/>
 			<bind id="cIconStyle" nodeset="@iconStyle" required="false()" type="string"/>
+			<bind id="cIcon-color" nodeset="@icon-color" required="false()" type="string"/>
 			<bind id="cModAnim" nodeset="@modAnim" required="false()" type="string"/>
 			<bind id="cModAnimDelay" nodeset="@modAnimDelay" required="false()" type="string"/>
 			<bind id="cModAnimSpeed" nodeset="@modAnimSpeed" required="false()" type="string"/>
@@ -54,6 +55,12 @@
 			<bind id="heading" nodeset="@heading" required="false()" type="string"/>
 			<bind id="icon-options" nodeset="@icon-options" required="false()" type="string"/>
 			<bind id="icon-class" nodeset="@icon-class" required="false()" type="string"/>
+			<bind id="icon-weight" nodeset="@icon-weight" required="false()" type="string"/>
+			<bind id="icon-offset" nodeset="@icon-offset" required="false()" type="string"/>
+			<bind id="module-padding" nodeset="@module-padding" required="false()" type="string"/>
+			<bind id="title-margin" nodeset="@title-margin" required="false()" type="string"/>
+      <bind id="class-name" nodeset="@class-name" required="false()" type="string"/>
+      <bind id="custom-css" nodeset="@custom-css" required="false()" type="string"/>
 		</bind>
 		<bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
 		<bind nodeset="tblContent">
@@ -122,23 +129,61 @@
 								<item>
 									<label>Match Height</label>
 									<value>true</value>
-
 									<toggle case="Match_true" event="DOMActivate"/>
 								</item>
 								<help class="inline">Tick this box on 2 or more modules within a page, and they will all be the same height. This only works on panel box styles and the match doesn't include the module footer link height.</help>
-
 							</select>
-							<select1 bind="marginBelow" appearance="full" class="form-group">
-								<item>
-									<label>Margin below module (default)</label>
-									<value>true</value>
-								</item>
-								<item>
-									<label>No margin below</label>
-									<value>false</value>
-								</item>
-							</select1>
-							<switch class="disable">
+
+              <select1 bind="marginBelow" appearance="minimal">
+                <label>Margin Bottom</label>
+                <item>
+                  <label>0</label>
+                  <value>mb-0</value>
+                </item>
+                <item>
+                  <label>1</label>
+                  <value>mb-1</value>
+                </item>
+                <item>
+                  <label>2</label>
+                  <value>mb-2</value>
+                </item>
+                <item>
+                  <label>3</label>
+                  <value>mb-3</value>
+                </item>
+                <item>
+                  <label>4</label>
+                  <value>mb-4</value>
+                </item>
+                <item>
+                  <label>5</label>
+                  <value>mb-5</value>
+                </item>
+                <item>
+                  <label>6</label>
+                  <value>mb-6</value>
+                </item>
+                <item>
+                  <label>7</label>
+                  <value>mb-7</value>
+                </item>
+                <item>
+                  <label>8</label>
+                  <value>mb-8</value>
+                </item>
+                <item>
+                  <label>9</label>
+                  <value>mb-9</value>
+                </item>
+              </select1>
+              <input bind="module-padding" class="">
+                <label>Module Padding</label>
+              </input>
+              <input bind="title-margin" class="">
+                <label>Margin Below Title</label>
+              </input>
+							<switch class="disable" for="bMatchHeight">
 								<case id="Match_true">
 									<select bind="Screens" appearance="full" class="multiline bs-only">
 										<label>For Screens</label>
@@ -207,7 +252,7 @@
 										<toggle case="icon-class" event="DOMActivate"/>
 									</item>
 								</select1>
-								<switch class="disable">
+								<switch class="disable" for="icon-options">
 									<case id="icon-picker">
 										<select1 bind="cIcon" class="iconSelect ewQuery bs-only" query="availableIcons" appearance="minimal">
 											<label>Icon</label>
@@ -266,6 +311,52 @@
 										<value>fa-10x</value>
 									</item>
 								</select1>
+                <select1 bind="cIcon-color" class="bs-only" appearance="minimal">
+                  <label>Icon Colour</label>
+                  <item>
+                    <label>Text Colour</label>
+                    <value>text-body</value>
+                  </item>
+                  <item>
+                    <label>Brand Primary Color</label>
+                    <value>text-primary</value>
+                  </item>
+                  <item>
+                    <label>Brand Secondary Color</label>
+                    <value>text-secondary</value>
+                  </item>
+                  <item>
+                    <label>Brand Info Color</label>
+                    <value>text-info</value>
+                  </item>
+                  <item>
+                    <label>Brand Light Color</label>
+                    <value>text-light</value>
+                  </item>
+                  <item>
+                    <label>Brand Dark Color</label>
+                    <value>text-dark</value>
+                  </item>
+                  <item>
+                    <label>White</label>
+                    <value>white-dark</value>
+                  </item>
+                </select1>
+                <select1 bind="icon-weight" class="bs-only" appearance="minimal">
+                  <label>Icon font weight</label>
+                  <item>
+                    <label>Bold</label>
+                    <value>900</value>
+                  </item>
+                  <item>
+                    <label>Regular</label>
+                    <value>400</value>
+                  </item>
+                  
+                </select1>
+                <input bind="icon-offset" class="">
+                  <label>Offset width</label>
+                </input>
 							</group>
 							<group class="form-section-wrapper ">
 								<input bind="uploadIcon" class="pickImageFile bs-only">
@@ -521,7 +612,7 @@
 						</item>
 						<help class="inline">If selected this option will display items in a single horizontal line with arrows to scroll through to the left and right.</help>
 					</select1>
-					<switch class="disable">
+					<switch class="disable" for="carousel">
 						<case id="Carousel_true" >
 							<group class="row">
 								<group class="col-lg-6">
@@ -717,6 +808,17 @@
 							<label>Change Notes</label>
 						</input>
 					</group>
+
+          <group class="col-lg-4">
+            <input bind="class-name" class="short">
+              <label>custom class name</label>
+            </input>
+          </group>
+          <group class="col-lg-8">
+            <textarea bind="custom-css" class="short">
+              <label>custom css</label>
+            </textarea>
+          </group>
 				</group>
 				<group id="columns" class="inline-select">
 					<label>
@@ -955,7 +1057,7 @@
 							<toggle case="cLinkType_3" event="DOMActivate"/>
 						</item>
 					</select1>
-					<switch class="disable">
+					<switch class="disable" for="cLinkType">
 						<case id="cLinkType_1">
 							<select1 bind="cModuleLink" class="siteTree">
 								<label>Link to page</label>

@@ -6,7 +6,7 @@
   <!-- ## Variables for all EonicWeb XSLT   #######################################################   -->
 
   <!-- General node trees -->
- 
+
   <xsl:variable name="page" select="/Page"/>
   <xsl:variable name="pageId" select="/Page/@id"/>
   <xsl:variable name="artId" select="number(concat(0,/Page/Request/QueryString/Item[@name='artid']))"/>
@@ -420,18 +420,18 @@
             <xsl:attribute name="prefix">og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#</xsl:attribute>
           </xsl:otherwise>
         </xsl:choose>
-        
-		<xsl:if test="not(/Page/@adminMode) and Contents/Content[@name='metaRefresh']/node()!=''">
+
+        <xsl:if test="not(/Page/@adminMode) and Contents/Content[@name='metaRefresh']/node()!=''">
           <meta http-equiv="refresh" content="0;URL='{Contents/Content[@name='metaRefresh']/node()}'" />
         </xsl:if>
-		  
+
         <xsl:apply-templates select="." mode="metacharset"/>
-		<!-- common css -->
+        <!-- common css -->
         <xsl:apply-templates select="/Page" mode="headerCommonStyle"/>
-       
-      
-        
-		<xsl:apply-templates select="." mode="headerOnlyJS"/>
+
+
+
+        <xsl:apply-templates select="." mode="headerOnlyJS"/>
 
         <xsl:if test="$GoogleTagManagerID!=''">
 
@@ -447,7 +447,7 @@
           <!-- End Google Tag Manager -->
 
         </xsl:if>
-		  <xsl:if test="$GoogleOptimizeID!=''">
+        <xsl:if test="$GoogleOptimizeID!=''">
           <script src="https://www.googleoptimize.com/optimize.js?id={$GoogleOptimizeID}" cookie-consent="functionality">&#160;</script>
         </xsl:if>
         <xsl:if test="$PayPalTagManagerID!=''">
@@ -509,7 +509,7 @@
         <xsl:apply-templates select="/Page/Contents/Content[@type='FeedControl']" mode="feedLinks"/>
         <xsl:apply-templates select="//Content[@rss and @rss!='false']" mode="feedLinks"/>
 
-     
+
         <!--<xsl:apply-templates select="." mode="headerOnlyJS"/>-->
         <xsl:if test="$ScriptAtBottom!='on' and not($adminMode)">
           <xsl:apply-templates select="." mode="js"/>
@@ -529,11 +529,11 @@
         <xsl:apply-templates select="." mode="criticalPathCSS"/>
       </xsl:otherwise>
     </xsl:choose>
-   <xsl:apply-templates select="Contents/Content" mode="headerOnlyContentCSS"/>
-  
+    <xsl:apply-templates select="Contents/Content" mode="headerOnlyContentCSS"/>
+
   </xsl:template>
-	
-	
+
+
 
   <xsl:template match="Page" mode="google-ga4-config-params">
     <!-- for overloading on specific actions -->
@@ -624,7 +624,7 @@
 
   <xsl:template match="Page" mode="headerOnlyJS">
     <xsl:apply-templates select="Contents/Content" mode="headerOnlyContentJS"/>
-  
+
   </xsl:template>
 
   <xsl:template match="Content" mode="opengraph-namespace">
@@ -798,7 +798,7 @@
     <!-- admin javascripts -->
     <xsl:if test="$adminMode">
       <xsl:apply-templates select="." mode="adminJs"/>
-    </xsl:if>
+     </xsl:if>
 
     <xsl:apply-templates select="." mode="xform_control_scripts"/>
     <!-- IF IE6 apply PNG Fix as standard -->
@@ -810,9 +810,9 @@
 
   <xsl:template match="Content" mode="headerOnlyContentJS">
   </xsl:template>
-	
-   <xsl:template match="Content" mode="headerOnlyContentCSS">
-   </xsl:template>
+
+  <xsl:template match="Content" mode="headerOnlyContentCSS">
+  </xsl:template>
 
   <xsl:template match="Content" mode="contentJS">
   </xsl:template>
@@ -1215,6 +1215,7 @@
 
     <xsl:choose>
       <xsl:when test="/Page/ContentDetail/Content">
+
         <xsl:apply-templates select="/Page/ContentDetail/Content" mode="contentDetailJS"/>
         <xsl:apply-templates select="/Page/Contents/Content[@type='FreeCookieConsent']" mode="contentJS"/>
       </xsl:when>
@@ -1239,7 +1240,8 @@
           <xsl:apply-templates select="$page/Contents/Content[@type='Module' and @position = 'ExitModal']" mode="modalBox"/>
         </div>
       </div>
-      <script type="{$scriptType}" src="/ewcommon/js/jquery/exitmodal/jquery.exit-modal.js" async="async" cookie-consent="strictly-necessary">/* */</script>
+      <script type="{$scriptType}" src="/ewcommon/js/jquery/exitmodal/jquery.exit-modal.js"
+	cookie-consent="strictly-necessary">/* */</script>
     </xsl:if>
 
     <xsl:if test="/Page/Contents/Content[@type='MetaData' and @name='MetaGoogleRemarketingConversionId']">
@@ -5552,8 +5554,8 @@
     </xsl:choose>
   </xsl:template>
 
-  
-    
+
+
   <xsl:template match="*" mode="reportHeader">
     <xsl:param name="sort"/>
     <xsl:param name="bSortFormMethod"/>
@@ -6396,8 +6398,18 @@
         </xsl:attribute>
       </xsl:if>
 
-      <xsl:apply-templates mode="cleanXhtml"/>
-      <xsl:text> </xsl:text>
+     	<xsl:variable name="anchorText">
+			<xsl:apply-templates mode="cleanXhtml"/>
+		</xsl:variable>
+		<xsl:choose>
+			<xsl:when test="$anchorText!=''">
+				<xsl:value-of select="$anchorText"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text> </xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+    
     </xsl:element>
   </xsl:template>
 
@@ -10388,6 +10400,7 @@
   <!-- ew:EonicConfigValue(string,string) Function 
             Returns a string. The First argument is the section from within the web.config.  The Second argument 
             is the key attribute name from the add node that you want the value of -->
+
 
   <xsl:template name="getSettings">
     <xsl:param name="sectionName"/>

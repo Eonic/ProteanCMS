@@ -716,4 +716,185 @@
 		</div>
 	</xsl:template>-->
 
+
+	<xsl:template match="Content[@type='Product' and parent::ContentDetail]" mode="JSONLD">
+
+		<xsl:variable name="shortDesc">
+			<xsl:call-template name="escape-js">
+				<xsl:with-param name="string">
+					<xsl:apply-templates select="ShortDescription" mode="flattenXhtml"/>
+				</xsl:with-param>
+			</xsl:call-template>
+		</xsl:variable>
+
+
+		<xsl:variable name="BodyText">
+			<xsl:call-template name="escape-js">
+				<xsl:with-param name="string">
+					<xsl:apply-templates select="Body" mode="flattenXhtml"/>
+				</xsl:with-param>
+			</xsl:call-template>
+		</xsl:variable>
+
+		<xsl:variable name="BodyTextStripped">
+
+			<xsl:value-of select="normalize-space(translate($BodyText, translate($BodyText,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ',''),''))"/>
+		</xsl:variable>
+
+
+		<xsl:variable name="highprice">
+			<xsl:choose>
+				<xsl:when test="not(Prices/Price[@type='sale']!='')">
+					<xsl:value-of select="Prices/Price[@type='rrp']/node()"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="Prices/Price[@type='sale']/node()"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
+		<xsl:variable name="lowprice">
+			<xsl:choose>
+				<xsl:when test="not(Prices/Price[@type='sale']!='')">
+					<xsl:value-of select="Prices/Price[@type='rrp']/node()"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="Prices/Price[@type='sale']/node()"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
+		<xsl:variable name="datediff">
+			<xsl:if test="DueInDate/node()!=''">
+				<xsl:call-template name="datediff">
+					<xsl:with-param name="startdate" select="$today"/>
+					<xsl:with-param name="enddate" select="DueInDate/node()"/>
+					<xsl:with-param name="datepart" select="'d'"/>
+				</xsl:call-template>
+			</xsl:if>
+		</xsl:variable>
+		<xsl:variable name="dueInDate">
+			<xsl:call-template name="formatdate">
+				<xsl:with-param name="date" select="DueInDate/node()"/>
+				<xsl:with-param name="format" select="'dd MMM yyyy'"/>
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:variable name="totalstock" select="sum(Stock/Location/node())"/>
+
+		<xsl:variable name="stockinfo">
+			<xsl:text>InStock</xsl:text>
+		</xsl:variable>
+
+		{
+		"@context": "https://schema.org/",
+		"@type": "Product",
+		"brand":"<xsl:value-of select="Manufacturer/node()"/>",
+		"name":"<xsl:call-template name="escape-json">
+			<xsl:with-param name="string">
+				<xsl:value-of select="Name/node()"/>
+			</xsl:with-param>
+		</xsl:call-template>",
+		"image":[
+		<xsl:if test="Images/img[@class='detail']/@src!=''">
+			"<xsl:value-of select="$siteURL"/><xsl:value-of select="Images/img[@class='detail']/@src"/>"
+		</xsl:if>
+		<xsl:if test="Content[@type='LibraryImage'] and Images/img[@class='detail']/@src!=''">,</xsl:if>
+
+		<xsl:for-each select="Content[@type='LibraryImage' and Images/img[@class='detail']/@src!='']">
+			"<xsl:value-of select="$siteURL"/><xsl:value-of select="Images/img[@class='detail']/@src"/>
+			<xsl:if test="position()!=last()">",</xsl:if> <xsl:if test="position()=last()">"</xsl:if>
+		</xsl:for-each>
+
+		],
+		"description": "<xsl:value-of select="$BodyTextStripped"/>",
+		"sku": "<xsl:value-of select="StockCode"/>",
+		"mpn": "<xsl:value-of select="StockCode/@mpn"/>",
+		<xsl:choose>
+			<xsl:when test="ShippingWeight/node()!=''">
+				"weight":{
+				"@type":"QuantitativeValue",
+				"unitCode":"kg",
+				"value":"<xsl:value-of select="ShippingWeight/node()"/> kg"
+				},
+			</xsl:when>
+			<xsl:otherwise>
+				"weight":{
+				"@type":"QuantitativeValue",
+				"unitCode":"kg",
+				"value":"0 kg"
+				},
+			</xsl:otherwise>
+		</xsl:choose>
+		"offers": {
+		"priceCurrency": "<xsl:value-of select="Prices/Price[@type='rrp']/@currency"/>",
+		"lowPrice": "<xsl:value-of select="$lowprice"/>",
+		"highPrice": "<xsl:value-of select="$highprice"/>",
+		"@type": "AggregateOffer",
+		"offerCount":"1",
+		"offers":[
+		{
+		"@type": "Offer",
+		"name": "<xsl:call-template name="escape-json">
+			<xsl:with-param name="string">
+				<xsl:value-of select="Name/node()"/>
+			</xsl:with-param>
+		</xsl:call-template>",
+		"price": "<xsl:value-of select="$lowprice"/>",
+		"priceCurrency": "GBP",
+		"url": "<xsl:value-of select="$href"/>",
+		"itemCondition": "new",
+		"availability": "<xsl:value-of select="$stockinfo"/>",
+		"shippingDetails":[
+		<xsl:for-each select="ShippingCosts/Shipping/Option">
+			{"@type": "OfferShippingDetails",
+			"shippingLabel": "<xsl:value-of select="cShipOptCarrier"/> - <xsl:value-of select="cShipOptTime"/>",
+			"shippingRate": {
+			"@type": "MonetaryAmount",
+			"value": "<xsl:value-of select="format-number(nShipOptCost, '#.00')"/>",
+			"currency": "GBP"
+			},
+			"shippingDestination": [{
+			"@type": "DefinedRegion",
+			"addressCountry": "UK"
+			}]
+			}<xsl:if test="position()!=last()">,</xsl:if>
+		</xsl:for-each>
+		]
+		}
+		]
+		<xsl:if test="Content[@type='FAQ']">
+			,  { "@context": "https://schema.org",
+			"@type": "FAQPage",
+			"mainEntity": [
+			<xsl:apply-templates select="Content[@type='FAQ']" mode="JSONLD-list"/>
+			]
+			}
+		</xsl:if>
+		<xsl:if test="Reviews/total&gt;0">
+			]
+			},
+			"review":[
+			<xsl:for-each select="Reviews/reviews">
+				{"@type": "Review",
+				"author": "<xsl:apply-templates select="user/username" mode="cleanXhtml"/>",
+				"datePublished": "<xsl:apply-templates select="since" mode="cleanXhtml"/>",
+				"description": "<xsl:apply-templates select="text" mode="cleanXhtml-escape-js"/>",
+				"reviewRating":{
+				"@type": "Rating",
+				"bestRating": "5",
+				"ratingValue": "<xsl:value-of select="grade"/>",
+				"worstRating": "1"
+				}
+				}
+				<xsl:if test="position()!=last()">
+					,
+				</xsl:if>
+			</xsl:for-each>
+
+		</xsl:if>
+
+		}
+		}
+	</xsl:template>
+
 </xsl:stylesheet>

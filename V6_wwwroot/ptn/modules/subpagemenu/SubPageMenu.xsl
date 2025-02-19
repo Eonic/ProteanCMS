@@ -109,7 +109,7 @@
     <xsl:variable name="pageName">
       <xsl:apply-templates select="." mode="getDisplayName"/>
     </xsl:variable>
-    <xsl:if test="@name!='Information'">
+    <xsl:if test="@name!='Info Menu'">
       <li class="nav-item">
         <xsl:apply-templates select="." mode="menuLink">
           <xsl:with-param name="class">nav-link</xsl:with-param>
