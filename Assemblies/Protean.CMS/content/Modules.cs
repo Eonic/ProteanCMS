@@ -476,7 +476,7 @@ namespace Protean
                         }
                         bool bShowMoreFilterButton = false;
 
-                        oFrmGroup = filterForm.addGroup(ref filterForm.moXformElmt, "filter-main");
+                        oFrmGroup = filterForm.addGroup(ref filterForm.moXformElmt, "", "filter-main");
                         XmlElement oXml = filterForm.moPageXML.CreateElement("ShowMore");
                         oXml.InnerText = cShowMore;
                         filterForm.Instance.AppendChild(oXml);
@@ -556,19 +556,19 @@ namespace Protean
                         string whereSQL = string.Empty;
                         string orderBySql = string.Empty;
                         string cCssClassName = "hidden";
-                        filterForm.addBind("cShowMore", "ShowMore", ref filterForm.model, "false()", "string");
+                        //  filterForm.addBind("cShowMore", "ShowMore", ref filterForm.model, "false()", "string");
 
-                        filterForm.addInput(ref oFrmGroup, "cShowMore", true, "ShowMore", "hidden");
-                        if (cShowMore == string.Empty)
-                        {
-                            if (bShowMoreFilterButton == true)
-                            {
-                                cCssClassName = string.Empty;
-                            }
-                        }
-                        filterForm.addInput(ref oFrmGroup, "", false, "More +", cCssClassName + " btnShowMoreFilter");
-                        filterForm.addSubmit(ref oFrmGroup, "< Less", "< Less ", "Submit", "hidden filter-xs-btn btnHideFilter");
-                        filterForm.addSubmit(ref oFrmGroup, "Show " + cFilterTarget, "Show " + cFilterTarget, "Show " + cFilterTarget, "hidden-sm hidden-md hidden-lg filter-xs-btn showfiltertarget");
+                        // filterForm.addInput(ref oFrmGroup, "cShowMore", true, "ShowMore", "hidden");
+                        //if (cShowMore == string.Empty)
+                        //{
+                        //    if (bShowMoreFilterButton == true)
+                        //    {
+                        //        cCssClassName = string.Empty;
+                        //    }
+                        //}
+                        // filterForm.addInput(ref oFrmGroup, "", false, "More +", cCssClassName + " btnShowMoreFilter");
+                        //  filterForm.addSubmit(ref oFrmGroup, "< Less", "< Less ", "Submit", "hidden filter-xs-btn btnHideFilter");
+                        //  filterForm.addSubmit(ref oFrmGroup, "Show " + cFilterTarget, "Show " + cFilterTarget, "Show " + cFilterTarget, "hidden-sm hidden-md hidden-lg filter-xs-btn showfiltertarget");
 
 
 
