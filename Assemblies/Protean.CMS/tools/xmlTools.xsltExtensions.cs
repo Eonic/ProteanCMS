@@ -2948,6 +2948,9 @@ namespace Protean
                                 info = new System.Text.UTF8Encoding(true).GetBytes(emptyerror);
                                 strFileName = "empty.js";
                                 scriptFile = fsh.SaveFile(ref strFileName, TargetPath, info);
+
+                                myWeb.moCtx.Application.Set(AppVariableName.ToString(), null);
+
                             }
                             else
                             {
