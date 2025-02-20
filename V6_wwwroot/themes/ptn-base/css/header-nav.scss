@@ -397,6 +397,11 @@ header {
             .dropdown-menu li:nth-child(2) a {
                 font-size: 1.3rem;
                 width: 100%;
+
+                &.active,
+                &.on {
+                    color: $mobile-dd-color;
+                }
             }
 
             .nav-link {
@@ -404,6 +409,13 @@ header {
                 width: 100%;
                 text-align: left;
 
+                &.active,
+                &.on {
+                    color: $mobile-dd-active;
+                }
+            }
+
+            a {
                 &.active,
                 &.on {
                     color: $mobile-dd-active;

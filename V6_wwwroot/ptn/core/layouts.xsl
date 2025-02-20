@@ -444,6 +444,7 @@
   <!-- ## Layout Types are specified in the LayoutsManifest.XML file  ################################   -->
   <xsl:template match="Page" mode="mainLayout">
     <xsl:param name="containerClass"/>
+    <xsl:param name="hideFooter"/>
     <xsl:choose>
       <!-- IF QUOTE CMD SHOW QUOTE -->
       <xsl:when test="Cart[@type='quote']/Quote/@cmd!=''">
@@ -480,6 +481,7 @@
 
         <xsl:apply-templates select="." mode="Layout">
           <xsl:with-param name="containerClass" select="$containerClass"/>
+          <xsl:with-param name="hideFooter" select="$hideFooter"/>
         </xsl:apply-templates>
 
 
@@ -504,7 +506,8 @@
 
   <xsl:template match="Page" mode="layoutFooter">
     <xsl:param name="containerClass"/>
-    <xsl:if test="/Page/Contents/Content[@name='footer' or @position='footer'] or $show-layout-footer='true'">
+    <xsl:param name="hideFooter"/>
+    <xsl:if test="(/Page/Contents/Content[@name='footer' or @position='footer'] or $show-layout-footer='true') and not($hideFooter='true')">
       <xsl:apply-templates select="/Page" mode="addModule">
         <xsl:with-param name="text">Add Module</xsl:with-param>
         <xsl:with-param name="position">footer</xsl:with-param>
@@ -516,6 +519,7 @@
   <!-- ## Default Layout  ############################################################################   -->
   <xsl:template match="Page" mode="Layout">
     <xsl:param name="containerClass"/>
+    <xsl:param name="hideFooter"/>
     <div class="template" id="template_1_Column"  role="main">
       <xsl:apply-templates select="." mode="layoutHeader">
         <xsl:with-param name="containerClass" select="$containerClass"/>
@@ -539,6 +543,7 @@
       </div>
       <xsl:apply-templates select="." mode="layoutFooter">
         <xsl:with-param name="containerClass" select="$containerClass"/>
+        <xsl:with-param name="hideFooter" select="hideFooter"/>
       </xsl:apply-templates>
       <xsl:apply-templates select="." mode="socialBookmarks" />
     </div>
@@ -566,7 +571,7 @@
 
   <xsl:template match="Page[@layout='Modules_1_column' or @layout='1_Column' or @type='default']" mode="Layout">
     <xsl:param name="containerClass"/>
-
+    <xsl:param name="hideFooter"/>
     <div id="template_1_Column" class="template template_1_Column"  role="main">
       <xsl:apply-templates select="." mode="layoutHeader">
         <xsl:with-param name="containerClass" select="$containerClass"/>
@@ -584,6 +589,7 @@
     </div>
     <xsl:apply-templates select="." mode="layoutFooter">
       <xsl:with-param name="containerClass" select="$containerClass"/>
+      <xsl:with-param name="hideFooter" select="$hideFooter"/>
     </xsl:apply-templates>
   </xsl:template>
 
@@ -897,7 +903,7 @@
 
   <xsl:template match="Content[@type='Module']" mode="themeModuleClassExtras">
     <xsl:if test="@modAnim and @modAnim!=''">
-      <xsl:text> moduleAnimate-invisible</xsl:text>
+      <xsl:text> animate__animated moduleAnimate-invisible</xsl:text>
     </xsl:if>
   </xsl:template>
 
@@ -923,7 +929,7 @@
     <xsl:variable name="parentModule" select="$page/Contents/Content[@id=$parentId]"/>
 
     <xsl:if test="$parentModule/@modAnim and $parentModule/@modAnim!=''">
-      <xsl:text> moduleAnimate-invisible</xsl:text>
+      <xsl:text> animate__animated moduleAnimate-invisible</xsl:text>
     </xsl:if>
   </xsl:template>
 
@@ -1364,7 +1370,7 @@
         </xsl:if>
         pos-<xsl:value-of select="@position"/>
         <xsl:if test="@modAnim and @modAnim!=''">
-          <xsl:text> moduleAnimate-invisible</xsl:text>
+          <xsl:text> animate__animated moduleAnimate-invisible</xsl:text>
         </xsl:if>
         <xsl:apply-templates select="." mode="hideScreens" />
         <xsl:apply-templates select="." mode="marginBelow" />
@@ -1483,7 +1489,7 @@
         <xsl:text> pos-</xsl:text>
         <xsl:value-of select="@position"/>
         <xsl:if test="@modAnim and @modAnim!=''">
-          <xsl:text> moduleAnimate-invisible</xsl:text>
+          <xsl:text> animate__animated moduleAnimate-invisible</xsl:text>
         </xsl:if>
         <xsl:apply-templates select="." mode="hideScreens" />
         <xsl:apply-templates select="." mode="marginBelow" />
@@ -1814,7 +1820,7 @@
                 </xsl:if>
                 pos-<xsl:value-of select="@position"/>
                 <xsl:if test="@modAnim and @modAnim!=''">
-                  <xsl:text> moduleAnimate-invisible</xsl:text>
+                  <xsl:text> animate__animated moduleAnimate-invisible</xsl:text>
                 </xsl:if>
                 <xsl:apply-templates select="." mode="hideScreens" />
                 <xsl:apply-templates select="." mode="marginBelow" />
@@ -1864,7 +1870,7 @@
           </xsl:if>
           pos-<xsl:value-of select="@position"/>
           <xsl:if test="@modAnim and @modAnim!=''">
-            <xsl:text> moduleAnimate-invisible</xsl:text>
+            <xsl:text> animate__animated moduleAnimate-invisible</xsl:text>
           </xsl:if>
           <xsl:apply-templates select="." mode="hideScreens" />
           <xsl:apply-templates select="." mode="marginBelow" />
