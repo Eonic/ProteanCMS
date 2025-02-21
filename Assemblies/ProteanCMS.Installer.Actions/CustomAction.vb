@@ -7,7 +7,7 @@ Public Class CustomActions
     Public Shared bundleAssemblyVersion As String = "1.14.1.0"
     Public Shared bundleLessAssemblyVersion As String = "1.14.0.0"
     Public Shared bundleSassAssemblyVersion As String = "1.14.2.0"
-    Public Shared DartSassHostAssemblyVersion As String = "1.0.14.0"
+    Public Shared DartSassHostAssemblyVersion As String = "1.1.0.0"
     Public Shared jsSwitcherAssemblyVersion As String = "3.24.1.0"
     Public Shared jsSwitcherV8AssemblyVersion As String = "3.24.2.0"
     Public Shared jsSwitcherV8NativeWinx64AssemblyVersion As String = "3.23.2.0"
@@ -30,26 +30,29 @@ Public Class CustomActions
     Public Shared MagickNETAssemblyVersion As String = "13.8.0.0"
     Public Shared GoogleProtoBufAssemblyVersion As String = "3.20.1.0"
     Public Shared SharpZipLibAssemblyVersion As String = "1.4.2.13"
-    Public Shared SystemBuffersVersion As String = "4.0.3.0"
-    Public Shared SystemMemoryVersion As String = "4.0.1.2"
-    Public Shared DocumentFormatOpenXmlVersion As String = "2.9.1.0"
+    Public Shared SystemBuffersVersion As String = "4.6.0.0"
+    Public Shared SystemMemoryVersion As String = "4.6.0.0"
+    Public Shared DocumentFormatOpenXmlVersion As String = "3.2.0.0"
     Public Shared SystemRuntimeCompilerServicesUnsafeVersion As String = "6.0.0.0"
     Public Shared MicrosoftWebInfrastructureVersion As String = "2.0.0.0"
     Public Shared SystemThreadingTasksExtensionsVersion As String = "4.2.0.1"
-    Public Shared SystemTextJsonVersion As String = "8.0.0.0"
+    Public Shared SystemTextJsonVersion As String = "9.0.2.0"
     Public Shared MicrosoftBclAsyncInterfacesVersion As String = "8.0.0.0"
-    Public Shared SystemTextEncodingsWebVersion As String = "8.0.0.0"
-    Public Shared SystemTextEncodingCodePagesAssemblyVersion As String = "8.0.0.0"
+    Public Shared SystemTextEncodingsWebVersion As String = "9.0.2.0"
+    Public Shared SystemTextEncodingCodePagesAssemblyVersion As String = "9.0.2.0"
 
-    Public Shared SystemNumericsVectorsVersion As String = "4.1.4.0"
+    Public Shared SystemNumericsVectorsVersion As String = "4.6.0.0"
 
     Public Shared AngleSharpVersion As String = "1.2.0.0"
     Public Shared PreMailerVersion As String = "2.6.0.0"
     Public Shared QRCoderVersion As String = "1.6.0.0"
 
-    Public Shared iTextSharpVersion As String = "3.4.21.0"
-    Public Shared SkiaSharpVersion As String = "2.88.0.0"
-    Public Shared BouncyCastleCrypto As String = "2.5.0.0"
+    Public Shared iTextSharpVersion As String = "3.7.1.0"
+    Public Shared SkiaSharpVersion As String = "3.116.1.0"
+    Public Shared BouncyCastleCrypto As String = "2.5.1.0"
+
+
+    Public Shared SystemDataSQLClient As String = "4.9.0.0"
 
 
     'do not use as no SNK - Public Shared ImazenWebPVersion As String = "10.0.1.0"
@@ -258,6 +261,8 @@ Public Class CustomActions
                     UpdateAssemblyRef(oAssembliesSect, "iTextSharp.LGPLv2.Core, Version=" & iTextSharpVersion & ", Culture=neutral, PublicKeyToken=c1e5d94ab6402b0b")
                     UpdateAssemblyRef(oAssembliesSect, "SkiaSharp, Version=" & SkiaSharpVersion & ", Culture=neutral, PublicKeyToken=0738eb9f132ed756")
 
+                    UpdateAssemblyRef(oAssembliesSect, "BouncyCastle.Cryptography, Version=" & BouncyCastleCrypto & ", Culture=neutral, PublicKeyToken=c1e5d94ab6402b0b")
+                    UpdateAssemblyRef(oAssembliesSect, "System.Data.SqlClient, Version=" & SystemDataSQLClient & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
 
 
 

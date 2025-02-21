@@ -1717,10 +1717,10 @@ namespace Protean
                 catch (Exception ex)
                 {
                     // PerfMon.Log("xmlTools", "ResizeImage - End")
-                    if ((myWeb.moConfig["Debug"]).ToLower() == "on")
+                    if (gbDebug)
                     {
                         stdTools.reportException(ref myWeb.msException, "xmlTools.xsltExtensions", "ResizeImage2", ex, vstrFurtherInfo: cProcessInfo);
-                        return awaitingImgPath + "?error=" + ex.InnerException.Message + " - " + ex.Message + " - " + ex.StackTrace;
+                        return awaitingImgPath + "?error=" + ex.Message + " - " + ex.StackTrace;
                     }
                     else
                     {

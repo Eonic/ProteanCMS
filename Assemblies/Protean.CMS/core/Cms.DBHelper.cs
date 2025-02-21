@@ -1607,8 +1607,8 @@ namespace Protean
                                         }
                                     }
                                     char[] charsToTrim = { '/' };
-                                    myWeb.mcOriginalURL = myWeb.mcOriginalURL.TrimEnd(charsToTrim);
-                                    if ((myWeb.mcOriginalURL.ToLower() ?? "") != (redirectUrl.ToLower() ?? ""))
+                                    string originalPath =  myWeb.mcOriginalURL.Split('?')[0].TrimEnd(charsToTrim);
+                                    if ((originalPath.ToLower() ?? "") != (redirectUrl.ToLower() ?? ""))
                                     {
                                         myWeb.msRedirectOnEnd = redirectUrl;
                                     }
@@ -1654,7 +1654,7 @@ namespace Protean
                                         }
 
                                         // we want to redirect to path with id
-                                        if (myWeb.moConfig["addPathArtId"] == "on")
+                                        if (myWeb.moConfig["addPathArtId"] == "on" && nArtId > 0)
                                         {
                                             ItemIdPath = nArtId + "-/";
                                             string redirectUrl = "/" + thisPrefix + "/" + ItemIdPath + sPath;

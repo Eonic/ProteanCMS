@@ -14,6 +14,26 @@
             Gets or sets a flag for whether to emit a <c>@charset</c> or BOM for CSS with non-ASCII characters
             </summary>
         </member>
+        <member name="P:DartSassHost.CompilationOptions.FatalDeprecations">
+            <summary>
+            Gets or sets a list of deprecations to treat as fatal
+            </summary>
+            <remarks>
+            <para>If a deprecation warning of any provided ID is encountered during compilation, the compiler will
+            error instead.</para>
+            <para>If a version is provided, then all deprecations that were active in that compiler version will be
+            treated as fatal.</para>
+            </remarks>
+        </member>
+        <member name="P:DartSassHost.CompilationOptions.FutureDeprecations">
+            <summary>
+            Gets or sets a list of future deprecations to opt into early
+            </summary>
+            <remarks>
+            <para>Future deprecations, whose IDs have been passed here, will be treated as active by the compiler,
+            emitting warnings as necessary.</para>
+            </remarks>
+        </member>
         <member name="P:DartSassHost.CompilationOptions.IncludePaths">
             <summary>
             Gets or sets a list of paths that library can look in to attempt to resolve <с>@import</с> declarations
@@ -58,6 +78,15 @@
             Gets or sets a flag for whether to silence compiler warnings from stylesheets loaded by using the
             <see cref="P:DartSassHost.CompilationOptions.IncludePaths"/> property
             </summary>
+        </member>
+        <member name="P:DartSassHost.CompilationOptions.SilenceDeprecations">
+            <summary>
+            Gets or sets a list of active deprecations to ignore
+            </summary>
+            <remarks>
+            <para>If a deprecation warning of any provided ID is encountered during compilation, the compiler will
+            ignore it instead.</para>
+            </remarks>
         </member>
         <member name="P:DartSassHost.CompilationOptions.SourceMap">
             <summary>
@@ -359,28 +388,28 @@
             <param name="sourceFragment">Source fragment</param>
             <returns>Compilation error message</returns>
         </member>
-        <member name="M:DartSassHost.Helpers.SassErrorHelpers.GetCompilationWarningType(System.Boolean)">
+        <member name="M:DartSassHost.Helpers.SassErrorHelpers.GetCompilationWarningType(System.String)">
             <summary>
             Gets a type of the compilation warning
             </summary>
-            <param name="isDeprecation">Value that indicates if the warning is a deprecation</param>
+            <param name="deprecationId">ID of deprecation</param>
             <returns>Type of the compilation warning</returns>
         </member>
-        <member name="M:DartSassHost.Helpers.SassErrorHelpers.GenerateCompilationWarningMessage(System.Boolean,System.String,System.String,System.String[])">
+        <member name="M:DartSassHost.Helpers.SassErrorHelpers.GenerateCompilationWarningMessage(System.String,System.String,System.String,System.String[])">
             <summary>
             Generates a compilation warning message
             </summary>
-            <param name="isDeprecation">Value that indicates if the warning is a deprecation</param>
+            <param name="deprecationId">ID of deprecation</param>
             <param name="description">Description of problem</param>
             <param name="sourceFragment">Source fragment</param>
             <param name="callStackLines">Call stack lines</param>
             <returns>Compilation warning message</returns>
         </member>
-        <member name="M:DartSassHost.Helpers.SassErrorHelpers.GenerateCompilationWarningMessage(System.Boolean,System.String,System.String,System.Int32,System.Int32,System.String)">
+        <member name="M:DartSassHost.Helpers.SassErrorHelpers.GenerateCompilationWarningMessage(System.String,System.String,System.String,System.Int32,System.Int32,System.String)">
             <summary>
             Generates a compilation warning message
             </summary>
-            <param name="isDeprecation">Value that indicates if the warning is a deprecation</param>
+            <param name="deprecationId">ID of deprecation</param>
             <param name="description">Description of problem</param>
             <param name="documentName">Document name</param>
             <param name="lineNumber">Line number</param>
@@ -561,6 +590,11 @@
         <member name="P:DartSassHost.ProblemInfo.Description">
             <summary>
             Gets or sets a description of problem
+            </summary>
+        </member>
+        <member name="P:DartSassHost.ProblemInfo.DeprecationId">
+            <summary>
+            Gets or sets a ID of deprecation
             </summary>
         </member>
         <member name="P:DartSassHost.ProblemInfo.IsDeprecation">
