@@ -504,3 +504,10 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Memory.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Numerics.Vectors.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Text.Encoding.CodePages.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Text.Encodings.Web.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\AjaxMin.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Fonet.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.ServiceModel.Primitives.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.ValueTuple.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Fonet.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Newtonsoft.Json.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.ServiceModel.Primitives.pdb
