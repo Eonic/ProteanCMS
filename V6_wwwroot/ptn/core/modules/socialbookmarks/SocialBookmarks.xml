@@ -80,7 +80,7 @@
             <toggle case="bmSettings_2" event="DOMActivate"/>
           </item>
         </select1>
-        <switch class="disable">
+        <switch class="disable" for="bmSettings">
           <case id="bmSettings_1">
             <label>If you have not already you will need to add them to the homepage and cascade them</label>
             <!--<relatedContent search="find" type="SocialNetworkingSettings" relationType="global" direction="1way" maxRelationNo="1">
@@ -111,7 +111,7 @@
             <toggle case="cLinkType_2" event="DOMActivate"/>
           </item>
         </select1>
-        <switch class="disable">
+        <switch class="disable" for="cLinkType">
           <case id="cLinkType_1">
             <select1 bind="cModuleLink" class="siteTree">
               <label>Link to page</label>

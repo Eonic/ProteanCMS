@@ -1468,6 +1468,7 @@ namespace Protean
                                         //XmlNode argoNode2 = (XmlNode)this.moXformElmt;
                                         base.addNote(ref moXformElmt, Protean.xForm.noteTypes.Alert, "Settings Saved");
                                         //this.moXformElmt = (XmlElement)argoNode2;
+                                        base.valid = true;
                                     }
                                 }
                                 else
@@ -8715,12 +8716,16 @@ namespace Protean
                         {
                             cTypePath = "DiscountRule.xml";
                         }
-
+                        string DiscountFormPath = "/xforms/discounts/";
+                        if (myWeb.bs5)
+                        {
+                            DiscountFormPath = "/features/cart/discounts/";
+                        }
                         base.NewFrm("EditDiscountRules");
-                        if (!base.load("/xforms/discounts/" + cTypePath, myWeb.maCommonFolders))
+                        if (!base.load(DiscountFormPath + cTypePath, myWeb.maCommonFolders))
                         {
                             // not allot we can do really except try defaults
-                            if (!base.load("/xforms/discounts/DiscountRule.xml", myWeb.maCommonFolders))
+                            if (!base.load(DiscountFormPath+"DiscountRule.xml", myWeb.maCommonFolders))
                             {
                                 // not allot we can do really 
                             }

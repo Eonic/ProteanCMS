@@ -67,6 +67,7 @@
 				<bind id="cContentBody" nodeset="Body" required="false()" type="string"/>
 				<bind id="maxWidth" nodeset="@maxWidth" required="false()" type="string"/>
 				<bind id="cContentURL" nodeset="Url" required="false()" type="string"/>
+				<bind id="logo-size" nodeset="@logo-size" required="false()" type="string"/>
 				<bind nodeset="Url">
 					<bind id="cLinkType" nodeset="@type" required="false()" type="string"/>
 					<bind id="cLinkTarget" nodeset="@target" required="false()" type="string"/>
@@ -129,7 +130,7 @@
 								<toggle case="cLinkType_3" event="DOMActivate"/>
 							</item>
 						</select1>
-						<switch class="disable">
+						<switch class="disable" for="cLinkType">
 							<case id="cLinkType_1">
 								<input bind="cContentURL" class="short">
 									<label>URL</label>
@@ -222,6 +223,17 @@
 								<value>0</value>
 							</item>
 						</select1>
+            <select1 bind="logo-size" appearance="full" class="vshort inline-items">
+              <label class="bold-label">For logo gallery</label>
+              <item>
+                <label>Wide/Tall</label>
+                <value></value>
+              </item>
+              <item>
+                <label>Square</label>
+                <value>square</value>
+              </item>
+            </select1>
 						<input bind="cDescription" class="short">
 							<label>Change Notes</label>
 						</input>

@@ -107,7 +107,7 @@
             </item>
             <help class="inline">If selected this option will display items in a single horizontal line with arrows to scroll through to the left and right.</help>
           </select1>
-          <switch>
+          <switch class="disable" for="colType">
             <case id="evenCols">
               <group class="row row-cols-auto row-cols-xxl-6 w-100">
                 <select1 bind="xsCol">

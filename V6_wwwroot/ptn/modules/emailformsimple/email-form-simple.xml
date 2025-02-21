@@ -206,6 +206,14 @@
 					</select1>
 				</group>
 			</group>
+      <group>
+        <label>
+          <i class="fas fa-tachometer-alt"> </i>
+          <span class="space"> </span>
+          <span>Animate</span>
+        </label>
+        <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='animate']"/>
+      </group>
 			<!--<group>
 				<label>
 					<i class="fas fa-info"> </i>

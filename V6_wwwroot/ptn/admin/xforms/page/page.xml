@@ -64,6 +64,7 @@
 				<bind id="menuBG" nodeset="@menuBG" required="false()" type="string" />
 				<bind id="bParalaxLoad" nodeset="@paralaxLoad" required="false()" type="string" />
 				<bind id="featuredLink" nodeset="@featuredLink" required="false()" type="string" />
+				<bind id="hideFooter" nodeset="@hideFooter" required="false()" type="string" />
 				<bind id="banner" nodeset="@banner" required="false()" type="string"/>
 				<bind id="menu" nodeset="@menu" required="false()" type="string"/>
 				<bind id="ModalID" nodeset="@ModalID" required="false()" type="string"/>
@@ -165,7 +166,7 @@
 						</help>
 					</item>
 				</select1>
-				<switch class="disable">
+				<switch class="disable" for="cLinkType">
 					<case id="cLinkType_1">
 						<select1 bind="cUrl" class="siteTree">
 							<label>Redirect this page to</label>
@@ -344,6 +345,17 @@
 							<p>If your site layout supports this, a featured link will be highlighted in the menu or styled as a button</p>
 						</help>
 					</select1>
+          <select1 bind="hideFooter" appearance="full" class="inline-items">
+            <label class="form-label">Hide Content Footer</label>
+            <item>
+              <label>Yes</label>
+              <value>true</value>
+            </item>
+            <item>
+              <label>No</label>
+              <value>false</value>
+            </item>
+          </select1>
 					<select bind="Screens" appearance="full" class="multiline bs-only">
 						<label>Hide from Screens</label>
 						<item>
@@ -393,7 +405,8 @@
 							</ul>
 						</help>
 					</select>
-				</group>
+          
+        </group>
 			</group>
 
 		</group>

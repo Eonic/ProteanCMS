@@ -322,7 +322,7 @@
             <summary>
             Initializes a new V8 runtime instance with the specified name.
             </summary>
-            <param name="name">A name to associate with the instance. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="name">A name to associate with the instance. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
         </member>
         <member name="M:Microsoft.ClearScript.V8.V8Runtime.#ctor(Microsoft.ClearScript.V8.V8RuntimeConstraints)">
             <summary>
@@ -334,7 +334,7 @@
             <summary>
             Initializes a new V8 runtime instance with the specified name and resource constraints.
             </summary>
-            <param name="name">A name to associate with the instance. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="name">A name to associate with the instance. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <param name="constraints">Resource constraints for the instance.</param>
         </member>
         <member name="M:Microsoft.ClearScript.V8.V8Runtime.#ctor(Microsoft.ClearScript.V8.V8RuntimeFlags)">
@@ -354,14 +354,14 @@
             <summary>
             Initializes a new V8 runtime instance with the specified name and options.
             </summary>
-            <param name="name">A name to associate with the instance. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="name">A name to associate with the instance. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <param name="flags">A value that selects options for the operation.</param>
         </member>
         <member name="M:Microsoft.ClearScript.V8.V8Runtime.#ctor(System.String,Microsoft.ClearScript.V8.V8RuntimeFlags,System.Int32)">
             <summary>
             Initializes a new V8 runtime instance with the specified name, options, and debug port.
             </summary>
-            <param name="name">A name to associate with the instance. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="name">A name to associate with the instance. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <param name="flags">A value that selects options for the operation.</param>
             <param name="debugPort">A TCP port on which to listen for a debugger connection.</param>
         </member>
@@ -384,7 +384,7 @@
             <summary>
             Initializes a new V8 runtime instance with the specified name, resource constraints, and options.
             </summary>
-            <param name="name">A name to associate with the instance. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="name">A name to associate with the instance. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <param name="constraints">Resource constraints for the instance.</param>
             <param name="flags">A value that selects options for the operation.</param>
         </member>
@@ -392,7 +392,7 @@
             <summary>
             Initializes a new V8 runtime instance with the specified name, resource constraints, options, and debug port.
             </summary>
-            <param name="name">A name to associate with the instance. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="name">A name to associate with the instance. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <param name="constraints">Resource constraints for the instance.</param>
             <param name="flags">A value that selects options for the operation.</param>
             <param name="debugPort">A TCP port on which to listen for a debugger connection.</param>
@@ -516,7 +516,7 @@
             <summary>
             Creates a new V8 script engine instance with the specified name.
             </summary>
-            <param name="engineName">A name to associate with the instance. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="engineName">A name to associate with the instance. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <returns>A new V8 script engine instance.</returns>
             <remarks>
             The new script engine instance shares the V8 runtime with other instances created by
@@ -564,7 +564,7 @@
             <summary>
             Creates a new V8 script engine instance with the specified name and options.
             </summary>
-            <param name="engineName">A name to associate with the instance. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="engineName">A name to associate with the instance. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <param name="flags">A value that selects options for the operation.</param>
             <returns>A new V8 script engine instance.</returns>
             <remarks>
@@ -583,7 +583,7 @@
             <summary>
             Creates a new V8 script engine instance with the specified name, options, and debug port.
             </summary>
-            <param name="engineName">A name to associate with the instance. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="engineName">A name to associate with the instance. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <param name="flags">A value that selects options for the operation.</param>
             <param name="debugPort">A TCP port on which to listen for a debugger connection.</param>
             <returns>A new V8 script engine instance.</returns>
@@ -610,7 +610,7 @@
             <summary>
             Creates a compiled script with an associated document name.
             </summary>
-            <param name="documentName">A document name for the compiled script. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="documentName">A document name for the compiled script. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <param name="code">The script code to compile.</param>
             <returns>A compiled script that can be executed by multiple V8 script engine instances.</returns>
         </member>
@@ -640,7 +640,7 @@
             <summary>
             Creates a compiled script with an associated document name, generating cache data for accelerated recompilation.
             </summary>
-            <param name="documentName">A document name for the compiled script. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="documentName">A document name for the compiled script. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <param name="code">The script code to compile.</param>
             <param name="cacheKind">The kind of cache data to be generated.</param>
             <param name="cacheBytes">Cache data for accelerated recompilation.</param>
@@ -687,7 +687,7 @@
             <summary>
             Creates a compiled script with an associated document name, consuming previously generated cache data.
             </summary>
-            <param name="documentName">A document name for the compiled script. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="documentName">A document name for the compiled script. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <param name="code">The script code to compile.</param>
             <param name="cacheKind">The kind of cache data to be consumed.</param>
             <param name="cacheBytes">Cache data for accelerated compilation.</param>
@@ -738,7 +738,7 @@
             <summary>
             Creates a compiled script with an associated document name, consuming previously generated cache data and updating it if necessary.
             </summary>
-            <param name="documentName">A document name for the compiled script. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="documentName">A document name for the compiled script. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <param name="code">The script code to compile.</param>
             <param name="cacheKind">The kind of cache data to be processed.</param>
             <param name="cacheBytes">Cache data for accelerated compilation.</param>
@@ -1222,7 +1222,7 @@
             <summary>
             Initializes a new V8 script engine instance with the specified name.
             </summary>
-            <param name="name">A name to associate with the instance. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="name">A name to associate with the instance. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <remarks>
             A separate V8 runtime is created for the new script engine instance.
             </remarks>
@@ -1240,7 +1240,7 @@
             <summary>
             Initializes a new V8 script engine instance with the specified name and resource constraints.
             </summary>
-            <param name="name">A name to associate with the instance. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="name">A name to associate with the instance. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <param name="constraints">Resource constraints for the V8 runtime (see remarks).</param>
             <remarks>
             A separate V8 runtime is created for the new script engine instance.
@@ -1269,7 +1269,7 @@
             <summary>
             Initializes a new V8 script engine instance with the specified name and options.
             </summary>
-            <param name="name">A name to associate with the instance. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="name">A name to associate with the instance. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <param name="flags">A value that selects options for the operation.</param>
             <remarks>
             A separate V8 runtime is created for the new script engine instance.
@@ -1279,7 +1279,7 @@
             <summary>
             Initializes a new V8 script engine instance with the specified name, options, and debug port.
             </summary>
-            <param name="name">A name to associate with the instance. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="name">A name to associate with the instance. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <param name="flags">A value that selects options for the operation.</param>
             <param name="debugPort">A TCP port on which to listen for a debugger connection.</param>
             <remarks>
@@ -1311,7 +1311,7 @@
             <summary>
             Initializes a new V8 script engine instance with the specified name, resource constraints, and options.
             </summary>
-            <param name="name">A name to associate with the instance. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="name">A name to associate with the instance. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <param name="constraints">Resource constraints for the V8 runtime (see remarks).</param>
             <param name="flags">A value that selects options for the operation.</param>
             <remarks>
@@ -1322,7 +1322,7 @@
             <summary>
             Initializes a new V8 script engine instance with the specified name, resource constraints, options, and debug port.
             </summary>
-            <param name="name">A name to associate with the instance. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="name">A name to associate with the instance. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <param name="constraints">Resource constraints for the V8 runtime (see remarks).</param>
             <param name="flags">A value that selects options for the operation.</param>
             <param name="debugPort">A TCP port on which to listen for a debugger connection.</param>
@@ -1452,7 +1452,7 @@
             <summary>
             Creates a compiled script with an associated document name.
             </summary>
-            <param name="documentName">A document name for the compiled script. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="documentName">A document name for the compiled script. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <param name="code">The script code to compile.</param>
             <returns>A compiled script that can be executed multiple times without recompilation.</returns>
         </member>
@@ -1482,7 +1482,7 @@
             <summary>
             Creates a compiled script with an associated document name, generating cache data for accelerated recompilation.
             </summary>
-            <param name="documentName">A document name for the compiled script. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="documentName">A document name for the compiled script. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <param name="code">The script code to compile.</param>
             <param name="cacheKind">The kind of cache data to be generated.</param>
             <param name="cacheBytes">Cache data for accelerated recompilation.</param>
@@ -1529,7 +1529,7 @@
             <summary>
             Creates a compiled script with an associated document name, consuming previously generated cache data.
             </summary>
-            <param name="documentName">A document name for the compiled script. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="documentName">A document name for the compiled script. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <param name="code">The script code to compile.</param>
             <param name="cacheKind">The kind of cache data to be consumed.</param>
             <param name="cacheBytes">Cache data for accelerated compilation.</param>
@@ -1580,7 +1580,7 @@
             <summary>
             Creates a compiled script with an associated document name, consuming previously generated cache data and updating it if necessary.
             </summary>
-            <param name="documentName">A document name for the compiled script. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="documentName">A document name for the compiled script. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <param name="code">The script code to compile.</param>
             <param name="cacheKind">The kind of cache data to be processed.</param>
             <param name="cacheBytes">Cache data for accelerated compilation.</param>
@@ -1993,7 +1993,7 @@
         <member name="F:Microsoft.ClearScript.V8.V8ScriptEngineFlags.EnableDynamicModuleImports">
             <summary>
             Specifies that
-            <see href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#Dynamic_Imports">dynamic module imports</see>
+            <see href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import">dynamic module imports</see>
             are to be enabled. This is an experimental feature and may be removed in a future release.
             </summary>
         </member>
@@ -2065,6 +2065,23 @@
             Specifies that support for synchronization contexts is to be enabled for task-promise
             interoperability. This option is ignored if
             <c><see cref="F:Microsoft.ClearScript.V8.V8ScriptEngineFlags.EnableTaskPromiseConversion"/></c> is not specified.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ClearScript.V8.V8ScriptEngineFlags.AddPerformanceObject">
+            <summary>
+            Specifies that the
+            <c><see href="https://microsoft.github.io/ClearScript/2024/03/21/performance-api.html">Performance</see></c>
+            object is to be added to the script engine's global namespace. This object provides a
+            set of low-level native facilities for performance-sensitive scripts.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ClearScript.V8.V8ScriptEngineFlags.SetTimerResolution">
+            <summary>
+            Specifies that native timers are to be set to the highest available resolution while
+            the current <c><see cref="T:Microsoft.ClearScript.V8.V8ScriptEngine"/></c> instance is active. This option is
+            ignored if <c><see cref="F:Microsoft.ClearScript.V8.V8ScriptEngineFlags.AddPerformanceObject"/></c> is not specified. It is only a
+            hint and may be ignored on some systems. On platforms that support it, this option can
+            degrade overall system performance or power efficiency, so caution is recommended.
             </summary>
         </member>
         <member name="T:Microsoft.ClearScript.V8.V8Settings">

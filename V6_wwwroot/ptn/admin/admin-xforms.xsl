@@ -2691,6 +2691,12 @@
 		</xsl:apply-templates>
 	</xsl:template>
 
+	<xsl:template match="Content[@type='Product']" mode="relatedBrief">
+		<xsl:apply-templates select="." mode="getDisplayName" />
+		<xsl:text> - </xsl:text>
+		<xsl:value-of select="StockCode"/>
+	</xsl:template>
+
 
 
 	<!-- -->

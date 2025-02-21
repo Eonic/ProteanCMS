@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?define version="6.1.25"?>
+<?define version="6.1.26"?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi' xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
     <Product Id='*' Name='ProteanCMS GAC Installer $(var.version)' Language='1033' Version='$(var.version)' Manufacturer='Eonic Digital LLP' UpgradeCode='{577597F8-BE6F-46B4-8A9D-46E8A5360918}' Codepage='1252'>
         <Package AdminImage='no' Comments='ProteanCMS GAC Installer' Compressed='yes' Description='ProteanCMS GAC Installer (64bit)' InstallerVersion='300' InstallScope='perMachine' Languages='1033' Manufacturer='Eonic Digital LLP' Platform='x64' ReadOnly='no' ShortNames='no' />
@@ -127,7 +127,7 @@
 					<File Id='_BundleTransformer_SassAndScss' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='BundleTransformer.SassAndScss.dll' Source='..\packages\BundleTransformer.SassAndScss.1.14.2\lib\net40\BundleTransformer.SassAndScss.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 				<Component Id='com_DartSassHost' Guid='ca155d09-e7d5-4aa8-99c0-fb3b3111545b' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_DartSassHost' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='DartSassHost.dll' Source='..\packages\DartSassHost.1.0.14\lib\net471\DartSassHost.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_DartSassHost' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='DartSassHost.dll' Source='..\packages\DartSassHost.1.1.0\lib\net471\DartSassHost.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 				<Component Id='com_MicrosoftAjax' Guid='b235af82-3a6c-4652-bcee-9ff1c1b6fef2' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                 <File Id='_MicrosoftAjax' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='BundleTransformer.MicrosoftAjax.dll' Source='..\packages\BundleTransformer.MicrosoftAjax.1.14.0\lib\net40\BundleTransformer.MicrosoftAjax.dll' Assembly='.net' KeyPath='yes' />
@@ -163,10 +163,10 @@
                   <File Id='com_TidyHTML5Managed' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='TidyHTML5Managed.dll' Source='..\Assemblies\NonNuget\TidyHTML5Managed.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
                 <Component Id='com_MagickNETCore' Guid='ef1e2c1c-123c-46f1-be4b-4baf7df7ebc2' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                  <File Id='_MagickNETCore' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Magick.NET.Core.dll' Source='..\packages\Magick.NET.Core.13.8.0\lib\netstandard20\Magick.NET.Core.dll' Assembly='.net' KeyPath='yes' />
+                  <File Id='_MagickNETCore' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Magick.NET.Core.dll' Source='..\packages\Magick.NET.Core.14.4.0\lib\netstandard20\Magick.NET.Core.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
-                <Component Id='com_MagickNETQ8AnyCPU' Guid='30b11aa1-f675-453a-b5b1-e8b44ee79450' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                  <File Id='_MagickNETQ8AnyCPU' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Magick.NET-Q8-AnyCPU.dll' Source='..\packages\Magick.NET-Q8-AnyCPU.13.8.0\lib\netstandard20\Magick.NET-Q8-AnyCPU.dll' Assembly='.net' KeyPath='yes' />
+                <Component Id='com_MagickNETQ8x64' Guid='ccd49c31-216c-44ce-9aae-6be3ab80cd4a' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+                  <File Id='_MagickNETQ8x64' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Magick.NET-Q8-x64.dll' Source='C:\Users\trevo\.nuget\packages\magick.net-q8-x64\14.4.0\lib\netstandard20\Magick.NET-Q8-x64.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
                 <Component Id='com_AlphaFS' Guid='a0007f46-be79-462d-8c6f-a9026225065b' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                   <File Id='_AlphaFS' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='AlphaFS.dll' Source='..\packages\AlphaFS.2.2.6\lib\net452\AlphaFS.dll' Assembly='.net' KeyPath='yes' />
@@ -178,7 +178,7 @@
 
               <!-- Libraies for PreMailer.Net - DONT UPDATE FROM NUGET!!!-->
               <Component Id='com_System_Text_Encoding_CodePages' Guid='a5b84f31-01e5-4904-af1e-d85a310cf875' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                <File Id='_System_Text_Encoding_CodePages' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Encoding.CodePages.dll' Source='..\packages\System.Text.Encoding.CodePages.8.0.0\lib\netstandard2.0\System.Text.Encoding.CodePages.dll' Assembly='.net' KeyPath='yes' />
+                <File Id='_System_Text_Encoding_CodePages' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Encoding.CodePages.dll' Source='..\packages\System.Text.Encoding.CodePages.9.0.2\lib\netstandard2.0\System.Text.Encoding.CodePages.dll' Assembly='.net' KeyPath='yes' />
               </Component>
               <Component Id='com_AngleSharp' Guid='af54845d-f98c-43f5-9f9c-8b0c7c2d677e' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                 <File Id='_AngleSharp' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='AngleSharp.dll' Source='..\packages\AngleSharp.1.2.0\lib\net472\AngleSharp.dll' Assembly='.net' KeyPath='yes' />
@@ -196,46 +196,61 @@
 				</Component>
 
 				<Component Id='com_SystemBuffers' Guid='87bfe201-a4ce-4cd8-85c3-118972fd8e9b' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_SystemBuffers' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Buffers.dll' Source='..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_SystemBuffers' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Buffers.dll' Source='..\packages\System.Buffers.4.6.0\lib\net462\System.Buffers.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 				<Component Id='com_SystemMemory' Guid='b076ef1f-c854-488b-a69b-4dafa0f94725' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_SystemMemory' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Memory.dll' Source='..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_SystemMemory' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Memory.dll' Source='..\packages\System.Memory.4.6.0\lib\net462\System.Memory.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 
 				<Component Id='com_SystemRuntimeCompilerServicesUnsafe' Guid='ee8a5f5d-a9c0-41e2-8ce9-e0b797582987' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_SystemRuntimeCompilerServicesUnsafe' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Runtime.CompilerServices.Unsafe.dll' Source='..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_SystemRuntimeCompilerServicesUnsafe' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Runtime.CompilerServices.Unsafe.dll' Source='..\packages\System.Runtime.CompilerServices.Unsafe.6.1.0\lib\net462\System.Runtime.CompilerServices.Unsafe.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 
 				<Component Id='com_SystemThreadingTasksExtensions' Guid='8b34d495-0c6c-4c9f-b0dd-cc3489579dc1' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_SystemThreadingTasksExtensions' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Threading.Tasks.Extensions.dll' Source='..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_SystemThreadingTasksExtensions' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Threading.Tasks.Extensions.dll' Source='..\packages\System.Threading.Tasks.Extensions.4.6.0\lib\net462\System.Threading.Tasks.Extensions.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 
 				<Component Id='com_SystemTextJson' Guid='221de48f-a70c-458b-aa0a-4c1d48519315' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_SystemTextJson' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Json.dll' Source='..\packages\System.Text.Json.8.0.5\lib\netstandard2.0\System.Text.Json.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_SystemTextJson' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Json.dll' Source='..\packages\System.Text.Json.9.0.2\lib\netstandard2.0\System.Text.Json.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 				
 				<Component Id='com_MicrosoftBclAsyncInterfaces' Guid='0b0f40f8-1240-4b30-b06b-93ebd7a717c4' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_MicrosoftBclAsyncInterfaces' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Microsoft.Bcl.AsyncInterfaces.dll' Source='..\packages\Microsoft.Bcl.AsyncInterfaces.8.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_MicrosoftBclAsyncInterfaces' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Microsoft.Bcl.AsyncInterfaces.dll' Source='..\packages\Microsoft.Bcl.AsyncInterfaces.9.0.2\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 				
 				<Component Id='com_SystemTextEncodingsWeb' Guid='4dfb277c-b692-4118-b0f2-e086ef193c53' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_SystemTextEncodingsWeb' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Encodings.Web.dll' Source='..\packages\System.Text.Encodings.Web.8.0.0\lib\net462\System.Text.Encodings.Web.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_SystemTextEncodingsWeb' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Encodings.Web.dll' Source='..\packages\System.Text.Encodings.Web.9.0.2\lib\net462\System.Text.Encodings.Web.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 				<Component Id='com_SystemNumericsVectors' Guid='5e62ecb1-4b75-4ba1-9dc4-9bbc032eb8cc' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_SystemNumericsVectors' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Numerics.Vectors.dll' Source='..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_SystemNumericsVectors' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Numerics.Vectors.dll' Source='..\packages\System.Numerics.Vectors.4.6.0\lib\net462\System.Numerics.Vectors.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 				<Component Id='com_SkiaSharp' Guid='926799c6-c370-40ce-8feb-e73ed8334b29' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_SkiaSharp' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='SkiaSharp.dll' Source='..\packages\SkiaSharp.2.88.8\lib\net462\SkiaSharp.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_SkiaSharp' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='SkiaSharp.dll' Source='C:\Users\trevo\.nuget\packages\skiasharp\3.116.1\lib\net462\SkiaSharp.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 				<Component Id='com_iTextSharp' Guid='0e056e40-fd99-4341-9fc5-cbac79ec3ca5' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_iTextSharp' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='iTextSharp.LGPLv2.Core.dll' Source='..\Assemblies\NonNuget\iTextSharp.LGPLv2.Core.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_iTextSharp' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='iTextSharp.LGPLv2.Core.dll' Source='..\packages\iTextSharp.LGPLv2.Core.3.4.22\lib\net462\iTextSharp.LGPLv2.Core.dll' Assembly='.net' KeyPath='yes' />
+				</Component>
+				<Component Id='com_BouncyCastle' Guid='2073991f-3fbf-42a1-b4a1-cd91bbccd3a6' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+					<File Id='_BouncyCastle' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='BouncyCastle.Cryptography.dll' Source='..\packages\BouncyCastle.Cryptography.2.5.0\lib\net461\BouncyCastle.Cryptography.dll' Assembly='.net' KeyPath='yes' />
+				</Component>
+				<Component Id='com_SystemDataSqlClient' Guid='79894c49-d36a-4a4f-a483-708f7ee4949b' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+					<File Id='_SystemDataSqlClient' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Data.SqlClient.dll' Source='..\packages\System.Data.SqlClient.4.8.6\lib\net461\System.Data.SqlClient.dll' Assembly='.net' KeyPath='yes' />
+				</Component>
+				<Component Id='com_SystemConfigManager' Guid='db92d0e9-105b-4c1c-af2b-21783516b47c' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+					<File Id='_SystemConfigManager' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Configuration.ConfigurationManager.dll' Source='..\packages\System.Configuration.ConfigurationManager.8.0.1\lib\net462\System.Configuration.ConfigurationManager.dll' Assembly='.net' KeyPath='yes' />
+				</Component>
+				<Component Id='com_SystemDataOleDb' Guid='2b5ef051-e26e-4bcd-8418-104b26ff7188' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+					<File Id='_SystemDataOleDb' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Data.OleDb.dll' Source='C:\Users\trevo\.nuget\packages\system.data.oledb\9.0.2\lib\net462\System.Data.OleDb.dll' Assembly='.net' KeyPath='yes' />
+				</Component>
+				<Component Id='com_SystemIOPackaging' Guid='5c02d89f-eece-473b-95a7-3b6fffae7681' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+					<File Id='_SystemIOPackaging' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.IO.Packaging.dll' Source='C:\Users\trevo\.nuget\packages\system.io.packaging\9.0.2\lib\net462\System.IO.Packaging.dll' Assembly='.net' KeyPath='yes' />
+				</Component>
+				<Component Id='com_SystemIOPipelines' Guid='875d2329-84ac-4137-bddd-e6088181c24c' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+					<File Id='_SystemIOPipelines' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.IO.Pipelines.dll' Source='..\packages\System.IO.Pipelines.9.0.2\lib\net462\System.IO.Pipelines.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 
-				<Component Id='com_BouncyCastle' Guid='2073991f-3fbf-42a1-b4a1-cd91bbccd3a6' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_BouncyCastle' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='BouncyCastle.Cryptography.dll' Source='..\packages\BouncyCastle.Cryptography.2.4.0\lib\netstandard2.0\BouncyCastle.Cryptography.dll' Assembly='.net' KeyPath='yes' />
-				</Component>
-				
-<!--
+
+				<!--
 				<Component Id='com_SelectHtmlToPdf' Guid='8ecf5eae-ab8d-4390-95d0-234e54902a58' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_SelectHtmlToPdf' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Select.HtmlToPdf.dll' Source='..\packages\Select.HtmlToPdf.23.1.0\lib\net40\Select.HtmlToPdf.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
@@ -326,7 +341,7 @@
             <ComponentRef Id='com_AjaxMin' />
             <ComponentRef Id='com_EcmaScript' />
             <ComponentRef Id='com_TidyHTML5Managed' />
-            <ComponentRef Id='com_MagickNETQ8AnyCPU' />
+            <ComponentRef Id='com_MagickNETQ8x64' />
             <ComponentRef Id='com_MagickNETCore' />
             <ComponentRef Id='com_AlphaFS' />
             <ComponentRef Id='com_tidy_x64' />
@@ -358,7 +373,13 @@
 			<ComponentRef Id='com_SkiaSharp' />
 			<ComponentRef Id='com_iTextSharp' />
 			<ComponentRef Id='com_BouncyCastle' />
+			<ComponentRef Id='com_SystemDataSqlClient' />
+			<ComponentRef Id='com_SystemConfigManager' />
+			<ComponentRef Id='com_SystemDataOleDb' />
+			<ComponentRef Id='com_SystemIOPackaging' />
+			<ComponentRef Id='com_SystemIOPipelines' />
 			
+
 			<!--
 			<ComponentRef Id='com_SelectHtmlToPdf' />
 			-->

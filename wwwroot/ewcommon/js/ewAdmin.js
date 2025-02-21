@@ -3,17 +3,6 @@ var IsParentPageAPI = '/ewapi/Cms.Admin/IsParentPage';
 var checkiFrameLoaded;
 
 $(document).ready(function () {
-    
-    //if ($("#nShowMap_true").length > 0) {
-    //    if ($("#nShowMap_true").prop("checked")) {
-    //        $("#cViewMap").val('true');
-    //    }
-    //    else {
-    //        $("#cViewMap").val('false');
-    //    }
-    //}
-
-
     $(".all-breadcrumb").click(function () {
         $(".admin-breadcrumb").addClass("breadcrumb-height");
         $(".all-breadcrumb").hide();
@@ -327,6 +316,9 @@ $(document).ready(function () {
             $('.modal-body').html('<div class="panel panel-default"><p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p></div>');
             var target = $(this).attr("href");
             // load the url and show modal on success
+
+            alert(currentModal.attr('id'));
+
             currentModal.load(target, function () {
                 $('.modal-dialog').removeClass('loading')
                 currentModal.modal("show");
@@ -955,7 +947,9 @@ function initialiseGeocoderButton() {
         });
     });
 
-    
+
+}
+
 function initialiseGetVimeoDataButton() {
     $('a.get-vimeo-data').click(function (e) {
         e.preventDefault();

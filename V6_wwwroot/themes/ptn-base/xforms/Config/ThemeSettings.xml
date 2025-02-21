@@ -3,46 +3,47 @@
 <Content type="xform" name="ThemeSettings">
   <model>
     <instance>
-      <theme>]
-	    <!--
-        <add key="CurrentTheme" value="ptn-base"/>
-        <add key="variablesPath" value="/css/variables.scss"/>
-        <add key="SiteXsl" value="/ewthemes/ptn-base/layout-header-banner.xsl" />
-        <add key="ptn-base.HeaderLayout" value="header-template1"/>
-        <add key="ptn-base.ThemePreset" value="Default" />
-        <add key="ptn-base.ThemeSkin" value="" />
-        -->
-        <add key="ptn-base.primary" value="#2C3E50" />
-        <add key="ptn-base.secondary" value="#18BC9C" />
-        <add key="ptn-base.info" value="#3498DB" />
-        <add key="ptn-base.success" value="#18BC9C" />
-        <add key="ptn-base.warning" value="#F39C12" />
-        <add key="ptn-base.danger" value="#E74C3C" />
-		<add key="ptn-base.light" value="#f5f5f5" />
-		<add key="ptn-base.dark" value="#1c1c1c" />
-		<add key="ptn-base.white" value="#ffffff" />
-		<add key="ptn-base.body-color" value="#666666" />
-    <!--
-        <add key="ptn-base.link-color" value="#18BC9C" />
-        <add key="ptn-base.text-color" value="#333" />
-        <add key="ptn-base.headings-font" value="'Lato', sans-serif" />
-        <add key="ptn-base.headings-font-family" value="'Lato', sans-serif" />
-        <add key="ptn-base.headings-font-import" value="Lato:300,400,700" />
-        <add key="ptn-base.base-font" value="'Lato', sans-serif" />
-        <add key="ptn-base.font-family-base" value="'Lato', sans-serif" />
-        <add key="ptn-base.font-import-base" value="Lato:300,400,700" />
-
-        <add key="ptn-base.btn-default-bg" value="#444" />
-        <add key="ptn-base.btn-default-color" value="#fff" />
-        <add key="ptn-base.headings-color" value="#333" />
-        -->
+      <theme>
+		  <add key="CurrentTheme" value="ptn-base" />
+		  <add key="variablesPath" value="/css/variables.scss" />
+		  <add key="SiteXsl" value="/themes/ptn-base/layout-base.xsl" />
+		  <add key="ptn-base.Layout" value="TopNavSideSub" />
+		  <add key="ptn-base.ThemePreset" value="Candy" />
+		  <add key="ptn-base.Breadcrumb" value="true" />
+		  <add key="ptn-base.MainTitle" value="true" />
+		  <add key="ptn-base.HomeNav" value="true" />
+		  <add key="ptn-base.HomeInfo" value="false" />
+		  <add key="ptn-base.body-bg" value="#ffffff" />
+		  <add key="ptn-base.brand-primary" value="#00a3c8" />
+		  <add key="ptn-base.brand-action" value="#f7c64c" />
+		  <add key="ptn-base.brand-info" value="#000000" />
+		  <add key="ptn-base.brand-success" value="#00c86c" />
+		  <add key="ptn-base.brand-warning" value="#f35b3b" />
+		  <add key="ptn-base.brand-danger" value="#f2496f" />
+		  <add key="ptn-base.link-color" value="#00a3c8" />
+		  <add key="ptn-base.text-color" value="#6a6a6a" />
+		  <add key="ptn-base.headings-font" value="" />
+		  <add key="ptn-base.headings-font-family" value="'Lato', sans-serif" />
+		  <add key="ptn-base.headings-font-import" value="Lato:300,400,700" />
+		  <add key="ptn-base.base-font" value="" />
+		  <add key="ptn-base.font-family-base" value="'Lato', sans-serif" />
+		  <add key="ptn-base.font-import-base" value="Lato:300,400,700" />
+		  <add key="ptn-base.border-radius-base" value="0px" />
+		  <add key="ptn-base.btn-default-bg" value="#000000" />
+		  <add key="ptn-base.headings-color" value="#000000" />
+		  <add key="ptn-base.background-image" value="" />
+		  <add key="ptn-base.background-repeat" value="repeat-x" />
+		  <add key="ptn-base.background-position" value="left top" />
+		  <add key="ptn-base.background-attachment" value="scroll" />
+		  <add key="ptn-base.contrast-color" value="#000" />
+		  <add key="ptn-base.header-bg" value="#fff" />
       </theme>
     </instance>
     <submission id="WebSettings" action="" method="post" event="form_check(this)" />
     <bind nodeset="theme">
 		<!--
       <bind id="Theme" nodeset="add[@key='CurrentTheme']/@value" required="true()" type="string" />-->
-		<bind id="SiteXsl" nodeset="add[@key='SiteXsl']/@value" required="true()" type="string" />
+	  <bind id="SiteXsl" nodeset="add[@key='SiteXsl']/@value" required="true()" type="string" />
 		
       <bind id="header-layout" nodeset="add[@key='ptn-base.header-layout']/@value" required="false()" type="string" />
 		<!--
@@ -63,6 +64,7 @@
 
       <bind id="link-color" nodeset="add[@key='ptn-base.link-color']/@value" required="true()" type="string" />
       <bind id="text-color" nodeset="add[@key='ptn-base.text-color']/@value" required="true()" type="string" />
+	  <bind id="headings-color" nodeset="add[@key='ptn-base.headings-color']/@value" required="true()" type="string" />
       <bind id="headings-font" nodeset="add[@key='ptn-base.headings-font']/@value" required="false()" type="string" />
       <bind id="headings-font-family" nodeset="add[@key='ptn-base.headings-font-family']/@value" required="true()" type="string" />
       <bind id="headings-font-import" nodeset="add[@key='ptn-base.headings-font-import']/@value" required="true()" type="string" />
@@ -72,7 +74,6 @@
 <!--
       <bind id="btn-default-bg" nodeset="add[@key='ptn-base.btn-default-bg']/@value" required="true()" type="string" />
       <bind id="btn-default-color" nodeset="add[@key='ptn-base.btn-default-color']/@value" required="true()" type="string" />
-      <bind id="headings-color" nodeset="add[@key='ptn-base.headings-color']/@value" required="true()" type="string" />
       -->
     </bind>
   </model>
@@ -147,12 +148,16 @@
 			<select1 bind="SiteXsl" appearance="full" class="fontSelect">
 				<label>Theme Layout</label>
 				<item>
+					<label>Default</label>
+					<value>/themes/ptn-base/layout-base.xsl</value>
+				</item>
+				<item>
 					<label>Top Banner</label>
-					<value>/themes/ptn-base/layout-header-banner.xsl</value>
+					<value>/themes/ptn-base/layout-templates/layout-header-banner.xsl</value>
 				</item>
 				<item>
 					<label>Side Menu</label>
-					<value>/themes/ptn-base/layout-side-menu.xsl</value>
+					<value>/themes/ptn-base/layout-templates/layout-side-menu.xsl</value>
 				</item>
 			</select1>
 			<select1 bind="header-layout" appearance="full" class="fontSelect">
@@ -254,6 +259,10 @@
           <label>Roboto Slab</label>
           <value>'Roboto Slab', sans-serif|Roboto+Slab:400,700,300</value>
         </item>
+		  <item>
+			  <label>Gantari</label>
+			  <value>'Gantari', sans-serif|Gantari:300,400,500,600,700</value>
+		  </item>
         <item>
           <label>Cabin</label>
           <value>'Cabin', sans-serif|Cabin:400,700,400italic,700italic</value>
@@ -298,7 +307,11 @@
       </select1>
       <select1 bind="headings-font" appearance="minimal" class="fontSelect">
         <label>Heading Fonts</label>
-        <item>
+		  <item>
+			  <label>Same as body</label>
+			  <value>$font-family-base</value>
+		  </item>		  
+		  <item>
           <label>Lato</label>
           <value>'Lato', sans-serif|Lato:300,400,700,300italic,400italic,700italic</value>
         </item>
@@ -314,6 +327,10 @@
           <label>Roboto Slab</label>
           <value>'Roboto Slab', sans-serif|Roboto+Slab:400,700,300</value>
         </item>
+		  <item>
+			  <label>Gantari</label>
+			  <value>'Gantari', sans-serif|Gantari:300,400,500,600,700</value>
+		  </item>
         <item>
           <label>Cabin</label>
           <value>'Cabin', sans-serif|Cabin:400,700,400italic,700italic</value>
