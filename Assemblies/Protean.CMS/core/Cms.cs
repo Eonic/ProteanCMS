@@ -1862,7 +1862,6 @@ namespace Protean
                                                         var oFS = new Protean.fsHelper(moCtx);
                                                         oFS.mcRoot = gcProjectPath;
                                                         oFS.mcStartFolder = goServer.MapPath(@"\" + gcProjectPath) + "xsltc";
-
                                                         oFS.DeleteFolderContents("", "");
                                                         var argmyWeb = this;
                                                         Protean.Config.UpdateConfigValue(ref argmyWeb, "protean/web", "CompiledTransform", "on");
@@ -7864,7 +7863,12 @@ namespace Protean
                                         thisContentType = prefixs[i].Substring(prefixs[i].IndexOf("/") + 1, prefixs[i].Length - prefixs[i].IndexOf("/") - 1);
                                         if ((thisContentType ?? "") == (oDR[5].ToString() ?? ""))
                                         {
-                                            cURL = "/" + thisPrefix + "/" + oRe.Replace(oDR[1].ToString(), "-").Trim('-');
+                                            string ItemIdPath = "";
+                                            if (moConfig["addPathArtId"] == "on")
+                                            {
+                                                ItemIdPath = oDR[0] + "-/";
+                                            }
+                                            cURL = "/" + thisPrefix + "/" + ItemIdPath + oRe.Replace(oDR[1].ToString(), "-").Trim('-');
                                             if (moConfig["DetailPathTrailingSlash"] == "on")
                                             {
                                                 cURL = cURL + "/";
@@ -11332,8 +11336,10 @@ namespace Protean
             string cProcessInfo = "";
             try
             {
-
                 moFSHelper.DeleteFolder(mcPageCacheFolder, goServer.MapPath("/" + gcProjectPath));
+
+
+
             }
 
             catch (Exception ex)
