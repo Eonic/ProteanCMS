@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCompany("Eonic Digital LLP.")]
 [assembly: AssemblyProduct("ProteanCMS")]
 [assembly: AssemblyCopyright("Copyright © Eonic Digital LLP.  2025")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyTrademark("ProteanCMS")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
@@ -33,8 +33,8 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion("6.1.26.0")]
-[assembly: AssemblyFileVersion("6.1.26.0")]
+[assembly: AssemblyVersion("6.1.27.0")]
+[assembly: AssemblyFileVersion("6.1.27.0")]
 
 
 [assembly: AssemblyInformationalVersion("0.0.0.115")]
