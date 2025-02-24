@@ -2,7 +2,7 @@
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.1.27.0"
+    Public Shared ewAssemblyVersion As String = "6.1.28.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.1.0.0"
     Public Shared bundleAssemblyVersion As String = "1.14.1.0"
     Public Shared bundleLessAssemblyVersion As String = "1.14.0.0"
@@ -46,7 +46,7 @@ Public Class CustomActions
     Public Shared PreMailerVersion As String = "2.6.0.0"
     Public Shared QRCoderVersion As String = "1.6.0.0"
 
-    Public Shared iTextSharpVersion As String = "3.4.22.0"
+    Public Shared iTextSharpVersion As String = "3.7.1.0"
     Public Shared SkiaSharpVersion As String = "3.116.0.0"
     Public Shared BouncyCastleCrypto As String = "2.0.0.0"
 
