@@ -19,6 +19,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Net.FtpClient.Extensions;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -8089,34 +8090,36 @@ namespace Protean
 
                             if (!(Strings.LCase(myWeb.moConfig["MembershipEncryption"]) == "plain") & !string.IsNullOrEmpty(myWeb.moConfig["MembershipEncryption"]))
                             {
-                                cPasswordForm = Tools.Encryption.HashString(cPasswordForm, Strings.LCase(myWeb.moConfig["MembershipEncryption"]), true); // plain - md5 - sha1
+                                string cHashedPassword = Tools.Encryption.HashString(cPasswordForm, Strings.LCase(myWeb.moConfig["MembershipEncryption"]), true); // plain - md5 - sha1
 
-                                if (Strings.LCase(myWeb.moConfig["MembershipEncryption"]) == "md5salt")
-                                {
-                                    // we need password from the database, as this has the salt in format: hashedpassword:salt
-                                    string[] arrPasswordFromDatabase = Strings.Split(cPasswordDatabase, ":");
-                                    if (arrPasswordFromDatabase.Length == 2)
-                                    {
-                                        // RJP 7 Nov 2012. Note leave the md5 hard coded in the line below.
-                                        if ((arrPasswordFromDatabase[0] ?? "") == (Tools.Encryption.HashString(arrPasswordFromDatabase[1] + ADPassword, "md5", true) ?? ""))
+                                switch (myWeb.moConfig["MembershipEncryption"]) {
+                                    case "md5salt": // we need password from the database, as this has the salt in format: hashedpassword:salt
+                                        string[] arrPasswordFromDatabase = Strings.Split(cPasswordDatabase, ":");
+                                        if (arrPasswordFromDatabase.Length == 2)
+                                        {
+                                            // RJP 7 Nov 2012. Note leave the md5 hard coded in the line below.
+                                            if ((arrPasswordFromDatabase[0] ?? "") == (Tools.Encryption.HashString(arrPasswordFromDatabase[1] + ADPassword, "md5", true) ?? ""))
+                                            {
+                                                bValidPassword = true;
+                                            }
+                                        }
+                                        break;
+                                    case "SHA2_512_SALT": // to replicate VMH
+                                        cHashedPassword = Tools.Encryption.HashString(cPasswordForm, "sha2_512", true);
+
+                                        break;
+                                    default:
+                                        var oConvDoc = new XmlDocument();
+                                        var oConvElmt = oConvDoc.CreateElement("PW");
+                                        oConvElmt.InnerText = cHashedPassword;
+                                        cHashedPassword = oConvElmt.InnerXml;
+                                        cHashedPassword = Strings.Replace(cHashedPassword, "&gt;", ">");
+                                        cHashedPassword = Strings.Replace(cHashedPassword, "&lt;", "<");
+                                        if (cPasswordDatabase == cHashedPassword)
                                         {
                                             bValidPassword = true;
                                         }
-                                    }
-                                }
-
-                                else
-                                {
-                                    var oConvDoc = new XmlDocument();
-                                    var oConvElmt = oConvDoc.CreateElement("PW");
-                                    oConvElmt.InnerText = cPasswordForm;
-                                    cPasswordForm = oConvElmt.InnerXml;
-                                    cPasswordForm = Strings.Replace(cPasswordForm, "&gt;", ">");
-                                    cPasswordForm = Strings.Replace(cPasswordForm, "&lt;", "<");
-                                    if (cPasswordDatabase == cPasswordForm)
-                                    {
-                                        bValidPassword = true;
-                                    }
+                                        break;
                                 }
                             }
                             else if (cPasswordDatabase == cPasswordForm)

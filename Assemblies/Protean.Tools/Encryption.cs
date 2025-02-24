@@ -1,10 +1,12 @@
 ﻿using DocumentFormat.OpenXml.Drawing.Charts;
 using Microsoft.VisualBasic;
+using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Parameters;
 using System;
 using System.Configuration;
 using System.IO;
+using System.Management;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -110,6 +112,15 @@ namespace Protean.Tools
                             cResult = MD5Hash(OriginalString);
                             break;
                         }
+                    case "sha2_512":
+
+                        //TS - Untested.
+                        Byte[] inputBytes = Encoding.UTF8.GetBytes(OriginalString);
+                        SHA512 shaM = new SHA512Managed();
+                        Byte[] hashedBytes = shaM.ComputeHash(inputBytes);
+                        //cResult = BitConverter.ToString(hashedBytes);
+                        cResult = Convert.ToBase64String(hashedBytes);
+                        break;
 
                     default:
                         {
