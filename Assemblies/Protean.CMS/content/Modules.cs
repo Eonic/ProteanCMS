@@ -469,17 +469,17 @@ namespace Protean
 
                             }
                         }
-                        string cShowMore = string.Empty;
-                        if (myWeb.moRequest.Form["cShowMore"] != null)
-                        {
-                            cShowMore = Convert.ToString(myWeb.moRequest.Form["cShowMore"]);
-                        }
-                        bool bShowMoreFilterButton = false;
+                        //string cShowMore = string.Empty;
+                        //if (myWeb.moRequest.Form["cShowMore"] != null)
+                        //{
+                        //    cShowMore = Convert.ToString(myWeb.moRequest.Form["cShowMore"]);
+                        //}
+                        //bool bShowMoreFilterButton = false;
 
                         oFrmGroup = filterForm.addGroup(ref filterForm.moXformElmt, "", "filter-main");
-                        XmlElement oXml = filterForm.moPageXML.CreateElement("ShowMore");
-                        oXml.InnerText = cShowMore;
-                        filterForm.Instance.AppendChild(oXml);
+                        // XmlElement oXml = filterForm.moPageXML.CreateElement("ShowMore");
+                        // oXml.InnerText = cShowMore;
+                        // filterForm.Instance.AppendChild(oXml);
                         foreach (XmlElement currentOFilterElmt in oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']"))
                         {
                             oFilterElmt = currentOFilterElmt;
@@ -523,16 +523,16 @@ namespace Protean
                                     }
                                 }
 
-                                if (oFilterElmt.Attributes["hideByDefault"] != null)
-                                {
-                                    if (Convert.ToString(oFilterElmt.Attributes["hideByDefault"].Value).ToLower() == "true")
-                                    {
-                                        if (bShowMoreFilterButton == false)
-                                        {
-                                            bShowMoreFilterButton = true;
-                                        }
-                                    }
-                                }
+                                //if (oFilterElmt.Attributes["hideByDefault"] != null)
+                                //{
+                                //    if (Convert.ToString(oFilterElmt.Attributes["hideByDefault"].Value).ToLower() == "true")
+                                //    {
+                                //        if (bShowMoreFilterButton == false)
+                                //        {
+                                //            bShowMoreFilterButton = true;
+                                //        }
+                                //    }
+                                //}
 
                                 string methodname = "AddControl";
 
@@ -568,7 +568,7 @@ namespace Protean
                         //}
                         // filterForm.addInput(ref oFrmGroup, "", false, "More +", cCssClassName + " btnShowMoreFilter");
                         //  filterForm.addSubmit(ref oFrmGroup, "< Less", "< Less ", "Submit", "hidden filter-xs-btn btnHideFilter");
-                        //  filterForm.addSubmit(ref oFrmGroup, "Show " + cFilterTarget, "Show " + cFilterTarget, "Show " + cFilterTarget, "hidden-sm hidden-md hidden-lg filter-xs-btn showfiltertarget");
+                        filterForm.addSubmit(ref oFrmGroup, "Show " + cFilterTarget, "Show " + cFilterTarget, "Show " + cFilterTarget, "hidden-sm hidden-md hidden-lg filter-xs-btn showfiltertarget");
 
 
 
