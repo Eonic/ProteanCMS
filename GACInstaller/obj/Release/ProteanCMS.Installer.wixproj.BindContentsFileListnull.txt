@@ -17,7 +17,7 @@ Installer_Logo.jpg
 ..\packages\AngleSharp.1.2.0\lib\net472\AngleSharp.dll
 ..\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll
 ..\..\ProteanCMS Addons\Providers\Messaging\CampaignMonitor\bin\Release\CampaignMonitorAPIWrapper.dll
-..\packages\BouncyCastle.Cryptography.2.5.0\lib\net461\BouncyCastle.Cryptography.dll
+..\packages\BouncyCastle.Cryptography.2.5.1\lib\net461\BouncyCastle.Cryptography.dll
 ..\packages\BundleTransformer.SassAndScss.1.14.2\lib\net40\BundleTransformer.SassAndScss.dll
 ..\Assemblies\NonNuget\CMPCDotNet.dll
 ..\packages\DartSassHost.1.1.0\lib\net471\DartSassHost.dll
@@ -28,7 +28,7 @@ Installer_Logo.jpg
 ..\packages\Microsoft.Web.Infrastructure.2.0.0\lib\net40\Microsoft.Web.Infrastructure.dll
 ..\packages\SharpZipLib.1.4.2\lib\netstandard2.0\ICSharpCode.SharpZipLib.dll
 ..\Assemblies\NonNuget\Imazen.WebP.dll
-..\packages\iTextSharp.LGPLv2.Core.3.4.22\lib\net462\iTextSharp.LGPLv2.Core.dll
+..\packages\iTextSharp.LGPLv2.Core.3.7.1\lib\net462\iTextSharp.LGPLv2.Core.dll
 ..\packages\JavaScriptEngineSwitcher.V8.3.24.2\lib\net45\JavaScriptEngineSwitcher.V8.dll
 ..\Assemblies\NonNuget\libwebp.dll
 ..\packages\Magick.NET.Core.14.4.0\lib\netstandard20\Magick.NET.Core.dll
@@ -43,12 +43,12 @@ libraries\Newtonsoft.Json.dll
 ..\packages\PreMailer.Net.2.6.0\lib\net461\PreMailer.Net.dll
 ..\Assemblies\Protean.AppStart\bin\Release\Protean.AppStart.dll
 ..\packages\QRcoder.1.6.0\lib\net40\QRcoder.dll
-C:\Users\trevo\.nuget\packages\skiasharp\3.116.1\lib\net462\SkiaSharp.dll
+..\packages\skiasharp.3.116.1\lib\net462\SkiaSharp.dll
 ..\packages\System.Text.Encoding.CodePages.9.0.2\lib\netstandard2.0\System.Text.Encoding.CodePages.dll
 ..\packages\System.Buffers.4.6.0\lib\net462\System.Buffers.dll
 ..\packages\System.Configuration.ConfigurationManager.8.0.1\lib\net462\System.Configuration.ConfigurationManager.dll
 C:\Users\trevo\.nuget\packages\system.data.oledb\9.0.2\lib\net462\System.Data.OleDb.dll
-..\packages\System.Data.SqlClient.4.8.6\lib\net461\System.Data.SqlClient.dll
+..\packages\System.Data.SqlClient.4.9.0\lib\net462\System.Data.SqlClient.dll
 C:\Users\trevo\.nuget\packages\system.io.packaging\9.0.2\lib\net462\System.IO.Packaging.dll
 ..\packages\System.IO.Pipelines.9.0.2\lib\net462\System.IO.Pipelines.dll
 ..\packages\System.Memory.4.6.0\lib\net462\System.Memory.dll
