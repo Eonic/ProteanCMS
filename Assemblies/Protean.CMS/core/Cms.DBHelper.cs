@@ -448,6 +448,7 @@ namespace Protean
                 PageEdited = 61,
                 PageHidden = 62,
                 PageDeleted = 63,
+                PageCacheDeleted = 64,
 
                 SetupDataUpgrade = 70,
 
