@@ -2758,8 +2758,8 @@ namespace Protean
                 messageHtml = sWriter.ToString();
                 sWriter.Close();
                 var xMailingListDoc = Protean.Tools.Xml.HtmlConverter.htmlToXmlDoc(messageHtml);
-                var xListElement = xMailingListDoc.DocumentElement;
-                valDict = XmltoDictionary(xListElement, true);
+               // var xListElement = xMailingListDoc.DocumentElement;
+                //valDict = XmltoDictionary(xListElement, true);
                 return valDict;
             }
             private void RemoveDeliveryOption(int nOrderId)
@@ -5430,7 +5430,13 @@ namespace Protean
 
                                 if (oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail[@optOut='true']") != null)
                                 {
-                                    moDBHelper.AddInvalidEmail(oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail[@optOut='true']").InnerText);
+                                    moDBHelper.AddInvalidEmail(oXform.Instance.SelectSingleNode("tblCartContact/cUserId[@optOut='true']").InnerText);
+                                }
+                                if (oXform.Instance.SelectSingleNode("tblCartContact/bEmailOptOut").InnerText != null)
+                                {
+                                    sSql = "Select nContactKey from tblCartContact where cContactType = 'Billing Address' and nContactCartid=" + mnCartId;
+                                    string sContactKey3 = moDBHelper.ExeProcessSqlScalar(sSql);
+                                    moDBHelper.AddOptOutEmail(oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail").InnerText, sContactKey3, oXform.Instance.SelectSingleNode("tblCartContact/bEmailOptOut").InnerText);
                                 }
                             }
 
