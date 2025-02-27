@@ -43,7 +43,7 @@ libraries\Newtonsoft.Json.dll
 ..\packages\PreMailer.Net.2.6.0\lib\net461\PreMailer.Net.dll
 ..\Assemblies\Protean.AppStart\bin\Release\Protean.AppStart.dll
 ..\packages\QRcoder.1.6.0\lib\net40\QRcoder.dll
-C:\Users\trevo\.nuget\packages\skiasharp\3.116.1\lib\net462\SkiaSharp.dll
+..\packages\skiasharp.3.116.1\lib\net462\SkiaSharp.dll
 ..\packages\System.Text.Encoding.CodePages.9.0.2\lib\netstandard2.0\System.Text.Encoding.CodePages.dll
 ..\packages\System.Buffers.4.6.0\lib\net462\System.Buffers.dll
 ..\packages\System.Configuration.ConfigurationManager.8.0.1\lib\net462\System.Configuration.ConfigurationManager.dll
