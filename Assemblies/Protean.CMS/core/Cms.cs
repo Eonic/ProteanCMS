@@ -1863,12 +1863,12 @@ namespace Protean
                                                         oFS.mcRoot = gcProjectPath;
                                                         oFS.mcStartFolder = goServer.MapPath(@"\" + gcProjectPath) + "xsltc";
 
-                                                        oFS.DeleteFolderContents("", "");
+                                                        oFS.DeleteFolderContents("", "");                                                       
                                                         var argmyWeb = this;
                                                         Protean.Config.UpdateConfigValue(ref argmyWeb, "protean/web", "CompiledTransform", "on");
                                                         var argmyWeb1 = this;
-                                                        Protean.Config.UpdateConfigValue(ref argmyWeb1, "", "recompile", "false");
-                                                        msRedirectOnEnd = "/?rebundle=true&SessionId=" + SessionID;
+                                                        Protean.Config.UpdateConfigValue(ref argmyWeb1, "", "recompile", "false");                                                       
+                                                        msRedirectOnEnd = "/?rebundle=true&SessionId=" + SessionID; 
                                                     }
                                                 }
 
@@ -1880,7 +1880,7 @@ namespace Protean
                                                     // to avoid skipping update functionality, we are just set it differently
                                                     var argmyWeb3 = this;
                                                     Protean.Config.UpdateConfigValue(ref argmyWeb3, "", "recompile", "recompiling");
-                                                    moDbHelper.logActivity(Cms.dbHelper.ActivityType.Recompile, (long)mnUserId, 0L);
+                                                    moDbHelper.logActivity(Cms.dbHelper.ActivityType.Recompile, (long)mnUserId, 0L, 0, 0, msException + "IIS reset and set value in web.config file is recompiling");
                                                     // we log to the activity log this action
                                                     msRedirectOnEnd = "/?recompile=del&SessionId=" + SessionID;
                                                 }
@@ -1902,8 +1902,8 @@ namespace Protean
                                                 TextWriter argoWriter = textWriter;
                                                 oTransform.ProcessTimed(moPageXml, ref argoWriter);
                                                 textWriter = (StringWriterWithEncoding)argoWriter;
-                                                PerfMon.Log("Web", "GetPageHTML-endxsl");
-
+                                                PerfMon.Log("Web", "GetPageHTML-endxsl"); 
+                                                
                                                 // save the page
                                                 if (!oTransform.bError)
                                                 {
@@ -1916,11 +1916,20 @@ namespace Protean
                                                             moResponse.TrySkipIisCustomErrors = true;
                                                             moResponse.StatusCode = (int)gnResponseCode;
                                                         }
-
-                                                        moResponse.Write(pagestring);
-                                                        moResponse.Flush();
-                                                        gnResponseCode = 200L; // we don't want this to happen again on line 1930
-                                                        SavePage(sCachePath, pagestring);
+                                                        //if(pagestring.ToLower().Contains("error message"))
+                                                        //{  
+                                                        //    var argWeb = this;
+                                                        //    Protean.Config.UpdateConfigValue(ref argWeb, "", "recompile", "recompiling");
+                                                        //    RestoreRedirectSession(moRequest["SessionId"], 10, true);
+                                                        //    msRedirectOnEnd = "/?rebundle=true&SessionId=" + SessionID;                                                            
+                                                        //}
+                                                        //else
+                                                        //{
+                                                            moResponse.Write(pagestring);
+                                                            moResponse.Flush();
+                                                            gnResponseCode = 200L; // we don't want this to happen again on line 1930
+                                                            SavePage(sCachePath, pagestring);
+                                                        //}                                                                                                               
                                                     }
                                                     // sServeFile = mcPageCacheFolder & sCachePath
                                                     else
@@ -11331,9 +11340,16 @@ namespace Protean
         {
             string cProcessInfo = "";
             try
-            {
-
-                moFSHelper.DeleteFolder(mcPageCacheFolder, goServer.MapPath("/" + gcProjectPath));
+            {               
+                string result = moFSHelper.DeleteFolder(mcPageCacheFolder, goServer.MapPath("/" + gcProjectPath));
+                if(result=="1")
+                {
+                    moDbHelper.logActivity(Cms.dbHelper.ActivityType.PageCacheDeleted, (long)mnUserId, 0L,0,0, "Successfully deleted ewCache folder"+ mcPageCacheFolder );
+                }
+                else
+                {
+                    moDbHelper.logActivity(Cms.dbHelper.ActivityType.PageCacheDeleted, (long)mnUserId, 0L, 0, 0, result);
+                }
             }
 
             catch (Exception ex)
@@ -11404,7 +11420,11 @@ namespace Protean
                     foreach (DirectoryInfo dir in rootfolder.GetDirectories())
                     {
                         foreach (FileInfo filepath in dir.GetFiles())
+                        {
                             filepath.Delete();
+                            moDbHelper.logActivity(Cms.dbHelper.ActivityType.PageDeleted, (long)mnUserId, 0L, 0, 0, "Successfully deleted js and css files" + filepath);
+                        }   
+                      
                         // "~/js/bundles/X"
                         string AppVarName = dir.FullName;
                         AppVarName = AppVarName.Substring(goServer.MapPath("/" + moConfig["ProjectPath"] + bundlePath).Length);
@@ -11415,7 +11435,10 @@ namespace Protean
                         if (moCtx.Application.Get(AppVarName) != null)
                         {
                             moCtx.Application.Remove(AppVarName);
+                            moDbHelper.logActivity(Cms.dbHelper.ActivityType.PageDeleted, (long)mnUserId, 0L, 0, 0, "Successfully deleted js and css files" + AppVarName);
                         }
+
+                        
                     }
                 }
             }

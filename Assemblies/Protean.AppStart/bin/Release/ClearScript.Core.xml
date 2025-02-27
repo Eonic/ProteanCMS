@@ -2016,7 +2016,7 @@
             </summary>
             <remarks>
             When not explicitly assigned to a non-<c>null</c> value, this property returns the
-            <see cref="P:Microsoft.ClearScript.CustomAttributeLoader.Default">default custom attribute loader.</see>.
+            <see cref="P:Microsoft.ClearScript.CustomAttributeLoader.Default">default custom attribute loader</see>.
             </remarks>
         </member>
         <member name="T:Microsoft.ClearScript.HostTypeCollection">
@@ -3038,7 +3038,7 @@
             <summary>
             Executes script code with an associated document name.
             </summary>
-            <param name="documentName">A document name for the script code. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="documentName">A document name for the script code. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <param name="code">The script code to execute.</param>
             <remarks>
             <para>
@@ -3056,7 +3056,7 @@
             <summary>
             Executes script code with an associated document name, optionally discarding the document after execution.
             </summary>
-            <param name="documentName">A document name for the script code. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="documentName">A document name for the script code. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <param name="discard"><c>True</c> to discard the script document after execution, <c>false</c> otherwise.</param>
             <param name="code">The script code to execute.</param>
             <remarks>
@@ -3161,7 +3161,7 @@
             <summary>
             Evaluates script code with an associated document name.
             </summary>
-            <param name="documentName">A document name for the script code. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="documentName">A document name for the script code. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <param name="code">The script code to evaluate.</param>
             <returns>The result value.</returns>
             <remarks>
@@ -3184,7 +3184,7 @@
             <summary>
             Evaluates script code with an associated document name, optionally discarding the document after execution.
             </summary>
-            <param name="documentName">A document name for the script code. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="documentName">A document name for the script code. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <param name="discard"><c>True</c> to discard the script document after execution, <c>false</c> otherwise.</param>
             <param name="code">The script code to evaluate.</param>
             <returns>The result value.</returns>
@@ -4230,13 +4230,13 @@
             <summary>
             Initializes a new script engine instance.
             </summary>
-            <param name="name">A name to associate with the instance. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="name">A name to associate with the instance. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
         </member>
         <member name="M:Microsoft.ClearScript.ScriptEngine.#ctor(System.String,System.String)">
             <summary>
             Initializes a new script engine instance with the specified list of supported file name extensions.
             </summary>
-            <param name="name">A name to associate with the instance. Currently this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
+            <param name="name">A name to associate with the instance. Currently, this name is used only as a label in presentation contexts such as debugger user interfaces.</param>
             <param name="fileNameExtensions">A semicolon-delimited list of supported file name extensions.</param>
         </member>
         <member name="P:Microsoft.ClearScript.ScriptEngine.Current">
@@ -4842,6 +4842,11 @@
             </summary>
             <param name="info">A structure containing meta-information for the document.</param>
             <param name="contents">A string containing the document's contents.</param>
+        </member>
+        <member name="P:Microsoft.ClearScript.StringDocument.StringContents">
+            <summary>
+            Gets the document's contents as a string.
+            </summary>
         </member>
         <member name="P:Microsoft.ClearScript.StringDocument.Info">
             <summary>

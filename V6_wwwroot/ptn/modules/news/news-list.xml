@@ -100,7 +100,7 @@
 					<switch class="disable" for="cDisplay">
 						<case id="cDisplay_1">
 							<group class="form-section-wrapper">
-								<label>3rd party commenting</label>
+								<label>Third Party Commenting</label>
 								<select1 bind="cCommentPlatform" appearance="full">
 									<label>Select Platform</label>
 									<item>

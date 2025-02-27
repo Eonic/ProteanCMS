@@ -1717,10 +1717,10 @@ namespace Protean
                 catch (Exception ex)
                 {
                     // PerfMon.Log("xmlTools", "ResizeImage - End")
-                    if ((myWeb.moConfig["Debug"]).ToLower() == "on")
+                    if (gbDebug)
                     {
                         stdTools.reportException(ref myWeb.msException, "xmlTools.xsltExtensions", "ResizeImage2", ex, vstrFurtherInfo: cProcessInfo);
-                        return awaitingImgPath + "?error=" + ex.InnerException.Message + " - " + ex.Message + " - " + ex.StackTrace;
+                        return awaitingImgPath + "?error=" + ex.Message + " - " + ex.StackTrace;
                     }
                     else
                     {
@@ -2948,6 +2948,9 @@ namespace Protean
                                 info = new System.Text.UTF8Encoding(true).GetBytes(emptyerror);
                                 strFileName = "empty.js";
                                 scriptFile = fsh.SaveFile(ref strFileName, TargetPath, info);
+
+                                myWeb.moCtx.Application.Set(AppVariableName.ToString(), null);
+
                             }
                             else
                             {

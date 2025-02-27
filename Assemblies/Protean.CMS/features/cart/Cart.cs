@@ -1618,19 +1618,15 @@ namespace Protean
                                         cGoogleTrackingCode = cGoogleTrackingCode + "&" + Conversions.ToString(item) + "=" + myWeb.moRequest.QueryString[Conversions.ToString(item)];
                                     }
                                 }
-
                                 if (mnCartId > 0)
                                 {
-
-                                    myWeb.msRedirectOnEnd = mcPagePath + "cartCmd=" + cRedirectCommand + "&refSessionId=" + mcSessionId + cGoogleTrackingCode;
+                                    myWeb.msRedirectOnEnd = myWeb.mcOriginalURL.Split('?')[0] + "?cartCmd=" + cRedirectCommand + "&refSessionId=" + mcSessionId + cGoogleTrackingCode;
                                 }
                                 else
                                 {
-
                                     mnProcessError = -1;
                                     GetCart(ref oElmt);
                                 }
-
                                 break;
                             }
 

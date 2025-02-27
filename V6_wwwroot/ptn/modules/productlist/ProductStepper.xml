@@ -275,7 +275,7 @@
             <value>all</value>
           </item>
           <help class="inline">
-            <img width="16" height="16" alt="RSS" src="/ewcommon/images/icons/rss16x16.png" style="float:left;margin:0 5px 0 0"/>
+            <img width="16" height="16" alt="RSS" src="/ptn/images/icons/rss16x16.png" style="float:left;margin:0 5px 0 0"/>
             <p>
               An <b>RSS feed</b> is a way for users or other websites to subscribe to your content, or be alerted to changes and new additions.
             </p>

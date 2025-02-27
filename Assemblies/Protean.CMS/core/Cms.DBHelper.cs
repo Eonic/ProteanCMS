@@ -19,6 +19,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Net.FtpClient.Extensions;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -448,6 +449,7 @@ namespace Protean
                 PageEdited = 61,
                 PageHidden = 62,
                 PageDeleted = 63,
+                PageCacheDeleted = 64,
 
                 SetupDataUpgrade = 70,
 
@@ -1487,7 +1489,7 @@ namespace Protean
 
                 try
                 {
-
+                    string ItemIdPath = "";
                     sPath = sFullPath;
                     sPath = goServer.UrlDecode(sPath);
 
@@ -1518,6 +1520,11 @@ namespace Protean
                     {
                         // get the last in line
                         sPath = aPath[Information.UBound(aPath)];
+                        ItemIdPath = aPath[Information.UBound(aPath) - 1];
+                        if (ItemIdPath.EndsWith("-"))
+                        {
+                            nArtId = Convert.ToInt64(ItemIdPath.Replace("-", ""));
+                        }
                     }
                     else
                     {
@@ -1584,111 +1591,143 @@ namespace Protean
                                     var loopTo1 = prefixs.Length - 1;
                                     for (i = 0; i <= loopTo1; i++)
                                     {
+
                                         thisPrefix = prefixs[i].Substring(0, prefixs[i].IndexOf("/"));
                                         thisContentType = prefixs[i].Substring(prefixs[i].IndexOf("/") + 1, prefixs[i].Length - prefixs[i].IndexOf("/") - 1);
                                         if ((contentType ?? "") == (thisContentType ?? ""))
                                         {
-                                            redirectUrl += "/" + thisPrefix + "/" + Protean.Tools.Text.CleanName(contentName).Replace(" ", "-").Trim('-');
+                                            if (myWeb.moConfig["addPathArtId"] == "on")
+                                            {
+                                                ItemIdPath = nArtId + "-/";
+                                            }
+
+                                            redirectUrl += "/" + thisPrefix + "/" + ItemIdPath + Protean.Tools.Text.CleanName(contentName).Replace(" ", "-").Trim('-');
                                             if (myWeb.moConfig["DetailPathTrailingSlash"] == "on")
                                             {
                                                 redirectUrl = redirectUrl + "/";
                                             }
                                         }
                                     }
-
-                                    if ((sFullPath ?? "") != (redirectUrl ?? ""))
+                                    char[] charsToTrim = { '/' };
+                                    string originalPath =  myWeb.mcOriginalURL.Split('?')[0].TrimEnd(charsToTrim);
+                                    if ((originalPath.ToLower() ?? "") != (redirectUrl.ToLower() ?? ""))
                                     {
                                         myWeb.msRedirectOnEnd = redirectUrl;
                                     }
 
                                 }
-
-                                var loopTo2 = prefixs.Length - 1;
-                                for (i = 0; i <= loopTo2; i++)
+                                else
                                 {
-                                    if ((prefixs[i].Substring(0, prefixs[i].IndexOf("/")) ?? "") == (aPath[0] ?? ""))
+                                    // We don't have an article id so we need to find it based on the final string in the path.
+                                    var loopTo2 = prefixs.Length - 1;
+                                    for (i = 0; i <= loopTo2; i++)
                                     {
-                                        thisPrefix = prefixs[i].Substring(0, prefixs[i].IndexOf("/"));
-                                        thisContentType = prefixs[i].Substring(prefixs[i].IndexOf("/") + 1, prefixs[i].Length - prefixs[i].IndexOf("/") - 1);
-                                    }
-                                }
-
-                                if (!string.IsNullOrEmpty(thisPrefix))
-                                {
-                                    string cContentName = SqlFmt(sPath).Replace("+", "_").Replace("*", "_").Replace(" ", "_").Replace("__", "%").Replace("___", "%");
-
-                                    if (gbAdminMode)
-                                    {
-                                        // replace * with wildcard as content names replace / with * in cleanname
-                                        sSql = "select TOP(1) nContentKey  from tblContent c inner join tblAudit a on a.nAuditKey = c.nAuditId where cContentName like '" + cContentName + "' and cContentSchemaName like '" + thisContentType + "' order by nVersion desc";
-                                    }
-                                    else
-                                    {
-                                        sSql = "select TOP(1) nContentKey from tblContent c inner join tblAudit a on a.nAuditKey = c.nAuditId where cContentName like '" + cContentName + "' and cContentSchemaName like '" + thisContentType + "' " + myWeb.GetStandardFilterSQLForContent() + " order by nVersion desc";
-                                    }
-                                    ods = GetDataSet(sSql, "Content");
-                                    if (ods != null)
-                                    {
-                                        if (ods.Tables["Content"].Rows.Count == 1)
+                                        if ((prefixs[i].Substring(0, prefixs[i].IndexOf("/")) ?? "") == (aPath[0] ?? ""))
                                         {
-                                            nArtId = Conversions.ToLong(ods.Tables["Content"].Rows[Conversions.ToInteger("0")]["nContentKey"]);
+                                            thisPrefix = prefixs[i].Substring(0, prefixs[i].IndexOf("/"));
+                                            thisContentType = prefixs[i].Substring(prefixs[i].IndexOf("/") + 1, prefixs[i].Length - prefixs[i].IndexOf("/") - 1);
+                                        }
+                                    }
+
+                                    if (!string.IsNullOrEmpty(thisPrefix))
+                                    {
+                                        string cContentName = SqlFmt(sPath).Replace("+", "_").Replace("*", "_").Replace(" ", "_").Replace("__", "%").Replace("___", "%");
+
+                                        if (gbAdminMode)
+                                        {
+                                            // replace * with wildcard as content names replace / with * in cleanname
+                                            sSql = "select TOP(1) nContentKey  from tblContent c inner join tblAudit a on a.nAuditKey = c.nAuditId where cContentName like '" + cContentName + "' and cContentSchemaName like '" + thisContentType + "' order by nVersion desc";
                                         }
                                         else
                                         {
-                                            // handling for content versions ?
+                                            sSql = "select TOP(1) nContentKey from tblContent c inner join tblAudit a on a.nAuditKey = c.nAuditId where cContentName like '" + cContentName + "' and cContentSchemaName like '" + thisContentType + "' " + myWeb.GetStandardFilterSQLForContent() + " order by nVersion desc";
                                         }
-                                    }
-
-                                    // now get the page id 
-                                    if (nArtId > 0L)
-                                    {
-                                        sSql = "select nStructId from tblContentLocation where bPrimary = 1 and nContentId = " + nArtId;
-
-                                        //TS Why were these two lines commented out, they are required if a product is being shown that is not on a page but its parent product is
-                                        sSql = sSql + " union ";
-                                        sSql = sSql + " select nStructId from tblContentLocation where bPrimary = 1 and nContentId IN(select cl.nContentParentId from tblContentRelation cl where cl.nContentChildId = " + nArtId + ")";
-
-
-                                        ods = GetDataSet(sSql, "Pages");
-                                        if (ods.Tables["Pages"].Rows.Count > 0)
+                                        ods = GetDataSet(sSql, "Content");
+                                        if (ods != null)
                                         {
-                                            if (bCheckPermissions)
+                                            if (ods.Tables["Content"].Rows.Count == 1)
                                             {
-                                                // Check the permissions for the page - this will either return 0, the page id or a system page.
-                                                long checkPermissionPageId = checkPagePermission(Conversions.ToLong(ods.Tables["Pages"].Rows[0]["nStructId"]));
-                                                if (Conversions.ToBoolean(Operators.AndObject(checkPermissionPageId != 0L, Operators.OrObject(Operators.ConditionalCompareObjectEqual(ods.Tables["Pages"].Rows[Conversions.ToInteger("0")]["nStructId"], checkPermissionPageId, false), IsSystemPage(checkPermissionPageId)))))
-
-                                                {
-                                                    nPageId = checkPermissionPageId;
-                                                }
+                                                nArtId = Conversions.ToLong(ods.Tables["Content"].Rows[Conversions.ToInteger("0")]["nContentKey"]);
                                             }
                                             else
                                             {
-                                                nPageId = Conversions.ToLong(ods.Tables["Pages"].Rows[0]["nStructId"]);
-                                            }
-                                            nPageId = Conversions.ToLong(ods.Tables["Pages"].Rows[0]["nStructId"]);
-
-
-                                            if (checkRedirect)
-                                            {
-                                                string redirectUrl;
-                                                redirectUrl = "/" + thisPrefix + "/" + sPath.ToString().Replace(" ", "-").Trim('-') + "/";
-                                                if ((sFullPath ?? "") != (redirectUrl ?? ""))
-                                                {
-                                                    myWeb.msRedirectOnEnd = redirectUrl;
-                                                }
+                                                // handling for content versions ?
                                             }
                                         }
 
-
-                                        else
+                                        // we want to redirect to path with id
+                                        if (myWeb.moConfig["addPathArtId"] == "on" && nArtId > 0)
                                         {
-                                            // handling for multiple parents versions ?
+                                            ItemIdPath = nArtId + "-/";
+                                            string redirectUrl = "/" + thisPrefix + "/" + ItemIdPath + sPath;
+                                            if (myWeb.moConfig["DetailPathTrailingSlash"] == "on")
+                                            {
+                                                redirectUrl = redirectUrl + "/";
+                                            }
+                                            myWeb.msRedirectOnEnd = redirectUrl;
                                         }
                                     }
+                                }
+                                // now get the page id 
+                                if (nArtId > 0L)
+                                        {
+                                            sSql = "select nStructId from tblContentLocation where bPrimary = 1 and nContentId = " + nArtId;
+                                            //TS Why were these two lines commented out? They are required if a product is being shown that is not on a page but its parent product is
+                                            sSql = sSql + " union ";
+                                            sSql = sSql + " select nStructId from tblContentLocation where bPrimary = 1 and nContentId IN(select cl.nContentParentId from tblContentRelation cl where cl.nContentChildId = " + nArtId + ")";
+
+                                            ods = GetDataSet(sSql, "Pages");
+                                            if (ods.Tables["Pages"].Rows.Count > 0)
+                                            {
+                                                if (bCheckPermissions)
+                                                {
+                                                    // Check the permissions for the page - this will either return 0, the page id or a system page.
+                                                    long checkPermissionPageId = checkPagePermission(Conversions.ToLong(ods.Tables["Pages"].Rows[0]["nStructId"]));
+                                                    if (Conversions.ToBoolean(Operators.AndObject(checkPermissionPageId != 0L, Operators.OrObject(Operators.ConditionalCompareObjectEqual(ods.Tables["Pages"].Rows[Conversions.ToInteger("0")]["nStructId"], checkPermissionPageId, false), IsSystemPage(checkPermissionPageId)))))
+
+                                                    {
+                                                        nPageId = checkPermissionPageId;
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    nPageId = Conversions.ToLong(ods.Tables["Pages"].Rows[0]["nStructId"]);
+                                                }
+                                                nPageId = Conversions.ToLong(ods.Tables["Pages"].Rows[0]["nStructId"]);
+
+
+                                                if (checkRedirect)
+                                                {
+                                                    string redirectUrl = "";
+                                                    if (myWeb.moConfig["addPathArtId"] == "on")
+                                                    {
+                                                        ItemIdPath = nArtId + "-/";
+                                                    }
+
+                                                    redirectUrl += "/" + thisPrefix + "/" + ItemIdPath + sPath.ToString().Replace(" ", "-").Trim('-') + "/";
+
+                                                    char[] charsToTrim = { '/' };
+                                                    myWeb.mcOriginalURL = myWeb.mcOriginalURL.TrimEnd(charsToTrim);
+                                                    if ((myWeb.mcOriginalURL.ToLower() ?? "") != (redirectUrl.ToLower() ?? ""))
+                                                    {
+                                                        myWeb.msRedirectOnEnd = redirectUrl;
+                                                    }
+
+                                                    if ((sFullPath ?? "") != (redirectUrl ?? ""))
+                                                    {
+                                                        myWeb.msRedirectOnEnd = redirectUrl;
+                                                    }
+                                                }
+                                            }
+
+
+                                            else
+                                            {
+                                                // handling for multiple parents versions ?
+                                            }
+                                      
 
                                 }
-
                                 break;
                             }
                     }
@@ -1751,32 +1790,33 @@ namespace Protean
                                         }
                                     }
                                 }
+
                             }
                         }
-                    }
-                    //   }
+                        //   }
 
-                    // Note : if sPath is empty the SQL call above WILL return pages, we don't want these, we want top level pgid
-                    if (!(nPageId > 1L && !string.IsNullOrEmpty(sPath)))
-                    {
-                        // page path cannot be found we have an error that we raise later
-                        if (sFullPath != "System+Pages/Page+Not+Found")
+                        // Note : if sPath is empty the SQL call above WILL return pages, we don't want these, we want top level pgid
+                        if (!(nPageId > 1L && !string.IsNullOrEmpty(sPath)))
                         {
-                            // first don't cache the page
-                            myWeb.bPageCache = false;
-                            nPageId = myWeb.gnPageNotFoundId;
+                            // page path cannot be found we have an error that we raise later
+                            if (sFullPath != "System+Pages/Page+Not+Found")
+                            {
+                                // first don't cache the page
+                                myWeb.bPageCache = false;
+                                nPageId = myWeb.gnPageNotFoundId;
+                            }
+                            else
+                            {
+                                nPageId = (long)myWeb.RootPageId;
+                            }
                         }
-                        else
-                        {
-                            nPageId = (long)myWeb.RootPageId;
-                        }
+
+                        // If bSetGlobalPageVariable Then gnPageId = nPageId
+
+                        // myWeb.PerfMon.Log("dbHelper", "getPageAndArticleIdFromPath-end")
+
+                        return (int)nPageId;
                     }
-
-                    // If bSetGlobalPageVariable Then gnPageId = nPageId
-
-                    // myWeb.PerfMon.Log("dbHelper", "getPageAndArticleIdFromPath-end")
-
-                    return (int)nPageId;
                 }
                 catch (Exception ex)
                 {
@@ -8051,34 +8091,36 @@ namespace Protean
 
                             if (!(Strings.LCase(myWeb.moConfig["MembershipEncryption"]) == "plain") & !string.IsNullOrEmpty(myWeb.moConfig["MembershipEncryption"]))
                             {
-                                cPasswordForm = Tools.Encryption.HashString(cPasswordForm, Strings.LCase(myWeb.moConfig["MembershipEncryption"]), true); // plain - md5 - sha1
+                                string cHashedPassword = Tools.Encryption.HashString(cPasswordForm, Strings.LCase(myWeb.moConfig["MembershipEncryption"]), true); // plain - md5 - sha1
 
-                                if (Strings.LCase(myWeb.moConfig["MembershipEncryption"]) == "md5salt")
-                                {
-                                    // we need password from the database, as this has the salt in format: hashedpassword:salt
-                                    string[] arrPasswordFromDatabase = Strings.Split(cPasswordDatabase, ":");
-                                    if (arrPasswordFromDatabase.Length == 2)
-                                    {
-                                        // RJP 7 Nov 2012. Note leave the md5 hard coded in the line below.
-                                        if ((arrPasswordFromDatabase[0] ?? "") == (Tools.Encryption.HashString(arrPasswordFromDatabase[1] + ADPassword, "md5", true) ?? ""))
+                                switch (myWeb.moConfig["MembershipEncryption"]) {
+                                    case "md5salt": // we need password from the database, as this has the salt in format: hashedpassword:salt
+                                        string[] arrPasswordFromDatabase = Strings.Split(cPasswordDatabase, ":");
+                                        if (arrPasswordFromDatabase.Length == 2)
+                                        {
+                                            // RJP 7 Nov 2012. Note leave the md5 hard coded in the line below.
+                                            if ((arrPasswordFromDatabase[0] ?? "") == (Tools.Encryption.HashString(arrPasswordFromDatabase[1] + ADPassword, "md5", true) ?? ""))
+                                            {
+                                                bValidPassword = true;
+                                            }
+                                        }
+                                        break;
+                                    case "SHA2_512_SALT": // to replicate VMH
+                                        cHashedPassword = Tools.Encryption.HashString(cPasswordForm, "sha2_512", true);
+
+                                        break;
+                                    default:
+                                        var oConvDoc = new XmlDocument();
+                                        var oConvElmt = oConvDoc.CreateElement("PW");
+                                        oConvElmt.InnerText = cHashedPassword;
+                                        cHashedPassword = oConvElmt.InnerXml;
+                                        cHashedPassword = Strings.Replace(cHashedPassword, "&gt;", ">");
+                                        cHashedPassword = Strings.Replace(cHashedPassword, "&lt;", "<");
+                                        if (cPasswordDatabase == cHashedPassword)
                                         {
                                             bValidPassword = true;
                                         }
-                                    }
-                                }
-
-                                else
-                                {
-                                    var oConvDoc = new XmlDocument();
-                                    var oConvElmt = oConvDoc.CreateElement("PW");
-                                    oConvElmt.InnerText = cPasswordForm;
-                                    cPasswordForm = oConvElmt.InnerXml;
-                                    cPasswordForm = Strings.Replace(cPasswordForm, "&gt;", ">");
-                                    cPasswordForm = Strings.Replace(cPasswordForm, "&lt;", "<");
-                                    if (cPasswordDatabase == cPasswordForm)
-                                    {
-                                        bValidPassword = true;
-                                    }
+                                        break;
                                 }
                             }
                             else if (cPasswordDatabase == cPasswordForm)
