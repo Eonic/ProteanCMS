@@ -782,6 +782,10 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
+                    if (goApp[msXslFile] != null)
+                    {
+                        goApp.Remove(msXslFile);
+                    }
                     bError = true;
                     currentError = ex;
                     stdTools.returnException(ref myWeb.msException, "Protean.XmlHelper.Transform", "ProcessDocument", ex, msXslFile, sProcessInfo, mbDebug);
@@ -822,9 +826,11 @@ namespace Protean
                             var fso = new fsHelper();
                             fso.DeleteFile(fi.FullName);
                         }
-                        catch (Exception)
+                        catch (Exception ex2)
                         {
-                            // returnException("Protean.XmlHelper.Transform", "ClearXSLTassemblyCache", ex2, msXslFile, sProcessInfo)
+                            transformException = ex2;
+                            bError = true;
+                            //returnException("Protean.XmlHelper.Transform", "ClearXSLTassemblyCache", ex2, msXslFile, sProcessInfo)
                         }
                     }
 
@@ -841,8 +847,9 @@ namespace Protean
 
                 catch (Exception ex)
                 {
+                    transformException = ex;
                     bError = true;
-                    stdTools.returnException(ref myWeb.msException, "Protean.XmlHelper.Transform", "ClearXSLTassemblyCache", ex, msXslFile, sProcessInfo, mbDebug);
+                    //stdTools.returnException(ref myWeb.msException, "Protean.XmlHelper.Transform", "ClearXSLTassemblyCache", ex, msXslFile, sProcessInfo, mbDebug);
                     return default;
                 }
 
@@ -870,7 +877,6 @@ namespace Protean
 
                     if (goApp["compileLock-" + classname] is null)
                     {
-
                         goApp["compileLock-" + classname] = true;
 
                         process1.EnableRaisingEvents = true;
@@ -905,6 +911,8 @@ namespace Protean
 
                     if (output.Contains("error"))
                     {
+                        throw new Exception(output);
+                        bError = true;
                         return output;
                     }
                     else
@@ -915,6 +923,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
+                    goApp["compileLock-" + classname] = null;
                     bError = true;
                     stdTools.returnException(ref myWeb.msException, "Protean.XmlHelper.Transform", "CompileXSLTassembly", ex, msXslFile, sProcessInfo, mbDebug);
                     return null;

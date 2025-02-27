@@ -1,5 +1,4 @@
-﻿
-// ***********************************************************************
+﻿// ***********************************************************************
 // $Library:     eonic.adminXforms
 // $Revision:    3.1  
 // $Date:        2006-03-02
@@ -9,6 +8,7 @@
 // $Copyright:   Copyright (c) 2002 - 2022 Eonic Digital LLP.
 // ***********************************************************************
 
+using Microsoft.Ajax.Utilities;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Membership;
@@ -19,17 +19,27 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
+using System.Configuration.Provider;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web.Configuration;
 using System.Xml;
 using static Protean.stdTools;
 using static Protean.Tools.Text;
 using static Protean.Tools.Xml;
 using static System.Web.HttpUtility;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json.Nodes;
+using System.Web;
+using Newtonsoft.Json.Linq;
+using System.Windows.Documents;
+using Protean.Providers.CDN;
 
 namespace Protean
 {
@@ -49,6 +59,7 @@ namespace Protean
                 public System.Web.HttpRequest moRequest;
                 public Tools.Security.Impersonate moImp = null;
                 public string ReportExportPath = "/ewcommon/tools/export.ashx?ewCmd=CartDownload";
+                List<string> sImageUrlslist = new List<string>();                
 
                 // Error Handling hasn't been formally set up for AdminXforms so this is just for method invocation found in xfrmEditContent
                 public new event OnErrorEventHandler OnError;
@@ -220,7 +231,7 @@ namespace Protean
 
 
 
-                public virtual XmlElement GetProviderXFrmUserLogon(string FormName = "UserLogon")
+                public virtual XmlElement GetProviderXFrmUserLogon(string FormName = "UserLogon", string cmdPrefix = "")
                 {
                     string cProcessInfo = "";
 
@@ -229,7 +240,7 @@ namespace Protean
 
                         IMembershipAdminXforms oAdXfm = myWeb.moMemProv.AdminXforms;
 
-                        oAdXfm.xFrmUserLogon(FormName);
+                        oAdXfm.xFrmUserLogon(FormName, cmdPrefix);
                         valid = Convert.ToBoolean(oAdXfm.valid);
                         return oAdXfm.moXformElmt;
                     }
@@ -1457,6 +1468,7 @@ namespace Protean
                                         //XmlNode argoNode2 = (XmlNode)this.moXformElmt;
                                         base.addNote(ref moXformElmt, Protean.xForm.noteTypes.Alert, "Settings Saved");
                                         //this.moXformElmt = (XmlElement)argoNode2;
+                                        base.valid = true;
                                     }
                                 }
                                 else
@@ -4799,12 +4811,12 @@ namespace Protean
                             string sSQL = "spCheckFileInUse";
                             System.Collections.Hashtable arrParms = new System.Collections.Hashtable();
                             arrParms.Add("filePath", fileToFind);
-                            oDr = moDbHelper.getDataReader(sSQL, CommandType.StoredProcedure, arrParms);
+                            oDr = moDbHelper.getDataReaderDisposable(sSQL, CommandType.StoredProcedure, arrParms);
                         }
                         else
                         {
                             string sSQL = "select * from tblContent where cContentXmlBrief like '%" + fileToFind + "%' or cContentXmlDetail like '%" + fileToFind + "%'";
-                            oDr = moDbHelper.getDataReader(sSQL);
+                            oDr = moDbHelper.getDataReaderDisposable(sSQL);
                         }
 
 
@@ -4855,6 +4867,24 @@ namespace Protean
                                     //oFrmElmt = (XmlElement)argoNode4;
                                     base.addValues();
                                 }
+                                else
+                                {
+                                    DeleteAllInstancesOfOrigianlFile(cPath, cName, oFs);
+                                    //Add method for deleteing images from cache
+                                    if(sImageUrlslist.Count != 0)
+                                    {
+                                        string result = "Cached";                                      
+                                        string[] myString = sImageUrlslist.ToArray();                                       
+                                        Protean.Providers.CDN.ReturnProvider oCdnProv = new Protean.Providers.CDN.ReturnProvider();
+                                        ICDNProvider oCDNProvider = oCdnProv.Get(ref myWeb);
+                                        if(oCDNProvider!=null)
+                                        {
+                                            result = Conversions.ToString(oCDNProvider.AdminXforms.PurgeImageCacheAsync(myString, ref myWeb));
+                                        }                                     
+                                        
+                                        //DeleteFileFromCache(myString);
+                                    }                                    
+                                }
                             }
 
                             else
@@ -4876,6 +4906,66 @@ namespace Protean
                         return null;
                     }
                 }
+
+                private void DeleteAllInstancesOfOrigianlFile(string filePath, string fileName, Protean.fsHelper oFs)
+                {                    
+                    filePath = filePath.Contains(oFs.mcStartFolder) ? filePath : oFs.mcStartFolder + filePath;
+                    var subFolders = System.IO.Directory.GetDirectories(filePath, "~*");
+                    try
+                    {
+                        if (subFolders.Length > 0)
+                        {
+                            foreach (var sFolder in subFolders)
+                            {
+                               DeleteAllInstancesOfOrigianlFile(sFolder, fileName, oFs);
+                            }
+                        }
+                        DeleteFiles(filePath, fileName, oFs);
+                    }
+                    catch (Exception ex)
+                    {
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "TryDeleteAllInstancesOfOrigianlFile", ex, "", "TryDeleteAllInstancesOfOrigianlFile", gbDebug);                        
+                    }
+                }
+
+                private void DeleteFiles(string directoryPath, string fileName, Protean.fsHelper oFs)
+                {
+                    NameValueCollection moCartConfig = (NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/cart");
+                    string originalFileNameFull = System.IO.Path.Combine(directoryPath, fileName);
+                    var filesToDelete = System.IO.Directory.GetFiles(directoryPath, "*" + fileName);
+                    string FilesToDeleteFromCache = string.Empty;
+                    bool bFileExists = true;
+                    if(moCartConfig["SiteURL"]!=null && myWeb.moConfig["ImageRootPath"]!=null && myWeb.moConfig["EnableWebP"]!= null)
+                    {                   
+                        string WebPath = moCartConfig["SiteURL"]; // used it from web.config and cart.config
+                        for (int i = 0; i < filesToDelete.Length; i++)
+                        {
+                            oFs.DeleteFile(filesToDelete[i]);
+                            bFileExists = File.Exists(filesToDelete[i]);
+                            if(bFileExists)
+                            {
+                                FilesToDeleteFromCache = filesToDelete[i].Replace(oFs.mcStartFolder, "").Replace(@"\", "/");
+                                FilesToDeleteFromCache = WebPath + myWeb.moConfig["ImageRootPath"].Replace("/", "") + FilesToDeleteFromCache;
+                                sImageUrlslist.Add(FilesToDeleteFromCache);
+                            }
+                          
+                            if(Strings.LCase(myWeb.moConfig["EnableWebP"])=="on")
+                            {
+                                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filesToDelete[i]);
+                                string newFilePath = Path.Combine(directoryPath, fileNameWithoutExtension + ".webp");
+                                bFileExists = File.Exists(newFilePath);
+                                if (bFileExists)
+                                {
+                                    oFs.DeleteFile(newFilePath);
+                                    newFilePath = newFilePath.Replace(oFs.mcStartFolder, "").Replace(@"\", "/");
+                                    newFilePath = WebPath + myWeb.moConfig["ImageRootPath"].Replace("/", "") + newFilePath;
+                                    sImageUrlslist.Add(newFilePath);                                
+                                }
+                            }                       
+                        }
+                    }
+                    oFs.DeleteFile(originalFileNameFull);                    
+                } 
 
                 public XmlElement xFrmMoveFile(string cPath, string cName, Protean.fsHelper.LibraryType nType)
                 {
@@ -8626,12 +8716,16 @@ namespace Protean
                         {
                             cTypePath = "DiscountRule.xml";
                         }
-
+                        string DiscountFormPath = "/xforms/discounts/";
+                        if (myWeb.bs5)
+                        {
+                            DiscountFormPath = "/features/cart/discounts/";
+                        }
                         base.NewFrm("EditDiscountRules");
-                        if (!base.load("/xforms/discounts/" + cTypePath, myWeb.maCommonFolders))
+                        if (!base.load(DiscountFormPath + cTypePath, myWeb.maCommonFolders))
                         {
                             // not allot we can do really except try defaults
-                            if (!base.load("/xforms/discounts/DiscountRule.xml", myWeb.maCommonFolders))
+                            if (!base.load(DiscountFormPath+"DiscountRule.xml", myWeb.maCommonFolders))
                             {
                                 // not allot we can do really 
                             }

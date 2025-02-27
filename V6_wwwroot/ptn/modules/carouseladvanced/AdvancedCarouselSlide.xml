@@ -588,7 +588,7 @@
               </p>
             </help>
           </select1>
-          <switch class="disable"> 
+          <switch class="disable" for="data-kenburns"> 
             <case id="cDisplay_0"/>
             <case id="cKenBurns_1">
               <group class="inline">
@@ -907,7 +907,7 @@
                   <toggle case="HTML5" event="DOMActivate"/>
                 </item>
               </select1>
-            <switch class="disable">
+            <switch class="disable" for="cCaptionType">
               <case id="text">
                 <textarea bind="cCaptionBody" class="TextArea xhtml" rows="5" cols="100">
                   <label>Caption Text</label>
@@ -2030,7 +2030,7 @@
             <toggle case="cLinkType_2" event="DOMActivate"/>
           </item>
         </select1>
-        <switch class="disable">
+        <switch class="disable" for="cLinkType">
           <case id="cLinkType_1">
             <select1 bind="cModuleLink" class="siteTree">
               <label>Link to page</label>

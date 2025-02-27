@@ -10,14 +10,15 @@
 				<cDirSchema>User</cDirSchema>
 				<cDirXml>
 					<User>
-            <FirstName label="First name"/>
-            <MiddleName label="Middle name"/>
-            <LastName label="Surname"/>
+						<FirstName label="First name"/>
+						<MiddleName label="Middle name"/>
+						<LastName label="Surname"/>
 						<Position/>
 						<Email/>
 						<Notes/>
 					</User>
 				</cDirXml>
+				<cDirEmail/>
 				<nAuditId/>
 				<nAuditKey/>
 				<dPublishDate/>
@@ -32,8 +33,11 @@
 		</instance>
 		<submission id="EditUser" action="" method="post" event="return form_check(this)"/>
 		<bind id="cDirName" nodeset="tblDirectory/cDirName" required="true()" type="string"/>
+		<bind id="cDirName" nodeset="tblDirectory/cDirEmail" required="true()" type="string"/>
 		<bind id="cDirPassword" nodeset="tblDirectory/cDirPassword" required="true()" type="string"/>
 		<bind id="cDirPassword2" nodeset="tblDirectory/cDirPassword" required="true()" type="string"/>
+		
+		<bind id="cDirName" nodeset="tblDirectory/cDirEmail" required="true()" type="string"/>
 		<bind nodeset="tblDirectory/cDirXml/User">
 			<bind id="cFirstName" nodeset="FirstName" required="true()" type="string"/>
 			<bind id="cMiddleName" nodeset="MiddleName" required="false()" type="string"/>
@@ -63,9 +67,10 @@
 		<input bind="cLastName" class="required">
 			<label>Last Name</label>
 		</input>
-		<!--<input bind="cPosition">
-			<label>Position</label>
-		</input>-->
+
+		<input bind="cPosition">
+			<label>Company</label>
+		</input>
 		
 		<!--textarea bind="cNotes" class="TextAreaBrief xhtml" rows="10" cols="70">
 			<label>Notes</label>

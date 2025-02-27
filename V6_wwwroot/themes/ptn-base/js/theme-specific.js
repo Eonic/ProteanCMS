@@ -106,8 +106,7 @@ function fixedNav() {
 }
 /* Appear function */
 function AnimAppear() {
-    $("[data-modAnim]").each(function () {
-
+    $("[data-modanim]").each(function () {
         var $this = $(this);
 
         //$this.addClass("moduleAnimate-invisible");

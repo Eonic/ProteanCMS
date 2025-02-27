@@ -124,7 +124,7 @@
 							<toggle case="cTypeLocal" event="DOMActivate"/>
 						</item>-->
 					</select1>
-					<switch class="disable">
+					<switch class="disable" for="cVideoType">
 						<!-- YouTube -->
 						<case id="cTypeYouTube">
 							<input bind="cYouTubeCode">
@@ -136,7 +136,7 @@
 										at the last 11 characters of "Link to this video" address (shown below).
 									</p>
 									<p>
-										<img src="/ewcommon/images/admin/help/video/youtube.png" alt="" width="504" height="62"/>
+										<img src="/ptn/images/admin/help/video/youtube.png" alt="" width="504" height="62"/>
 									</p>
 								</help>
 							</input>
@@ -309,7 +309,7 @@
 						</item>
 					</select1>
 
-					<switch class="disable">
+					<switch class="disable" for="cVideoSize">
 						<case id="cSizeAuto">
 							<select1 bind="cVideoRatio" class="short">
 								<label>Ratio</label>

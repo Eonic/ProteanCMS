@@ -31,6 +31,7 @@ $modal-content-border-radius: 0;
 $body-color: #242424;
 $font-family-base: 'Gantari', sans-serif;
 $headings-font-family: $font-family-base;
+$headings-color: #00aeef;
 
 $navbar-font: $font-family-base;
 $font-weight-base: 300;
@@ -43,15 +44,15 @@ $grid-gutter-width: 3rem;
 $grid-gutter-height: $grid-gutter-width;
 $top-padding: $grid-gutter-height;
 $section-padding: $grid-gutter-height * 1.3;
-$nav-padding-y: 8px;
-$nav-padding-x: 0.75rem;
 $image-spacer: 1rem;
+$listItem-padding: 2rem;
 
 /*################# BUTTONS & LINKS ###################*/
 $link-color: $primary !default;
 $visited: lighten($link-color,10%);
 $btn-style: btn-primary;
 $btn-list-style: $btn-style;
+$btn-list-btn:$primary;
 
 $btn-color: $primary;
 //$btn-font-weight: 600;
@@ -61,24 +62,14 @@ $btn-border-width: 2px;
 $btn-padding-x: 1.5rem;
 $btn-padding-y: 0.4rem;
 
-/*##################### HEADER #######################*/
-$header-menu: "header-menu-right";
-$header-bg: transparent;
-$header-color: $body-color;
-$header-icon-color: $header-color;
-$header-spacing: $nav-padding-x;
-$header-icon-size: 1.3rem;
-$nav-breakpoint: lg;
-$fixed-height-xs: 100px;
-$fixed-height-lg: 100px;
-$header-btn-style: btn-outline-primary;
-
 /*################### NAVIGATION #####################*/
 $navbar-light-color: $body-color;
 $nav-link-hover-color: $primary;
 $navbar-light-hover-color: $nav-link-hover-color;
 $main-nav-size: 1.1rem;
 //$navbar-font:$headings-font-family;
+$nav-padding-y: 8px;
+$nav-padding-x: 1rem;
 $info-nav-spacing: $nav-padding-x;
 
 
@@ -97,6 +88,18 @@ $mobile-dd-background: #fff;
 $mobile-dd-color: $body-color;
 $mobile-dd-active: $primary;
 
+/*##################### HEADER #######################*/
+$header-menu: "header-menu-right";
+$header-bg: transparent;
+$header-color: $body-color;
+$header-icon-color: $header-color;
+$header-spacing: $nav-padding-x;
+$header-icon-size: 1.3rem;
+$nav-breakpoint: lg;
+$fixed-height-xs: 100px;
+$fixed-height-lg: 100px;
+$header-btn-style: btn-outline-primary;
+
 /*##################### FOOTER #######################*/
 $footer-bg: $dark;
 $footer-color:#fff;
@@ -109,16 +112,22 @@ $form-check-input-border: 1px solid $input-border-color;
 /*##################### CARDS ########################*/
 //$card-border-radius: var(--#{$prefix}border-radius);
 $card-border-width: 2px;
-$bg-card-border: false; 
-$card-spacer-y:3rem;
-$card-spacer-x:3rem;
-$card-cap-padding-y: 3rem;
-$card-cap-padding-x: 3rem;
+$bg-card-border: false;
 
-$listItem-padding: 1rem;
+//spacing
+$card-spacer-y-xs: 2rem;
+$card-spacer-x-xs: $card-spacer-y-xs;
+$card-cap-padding-y-xs: $card-spacer-y-xs;
+$card-cap-padding-x-xs: $card-spacer-x-xs;
+
+$card-spacer-y:3rem;
+$card-spacer-x: $card-spacer-y;
+$card-cap-padding-y: $card-spacer-y;
+$card-cap-padding-x: $card-spacer-x;
 
 /*#################### BANNERS #######################*/
 $slide-opacity: 0.7;
-$no-banner-bg: $primary;
 $banner-bg: $primary;
+$basic-banner-bg: #fff;
+$basic-banner-padding:0rem;
 $banner-flush: false;

@@ -369,7 +369,7 @@
 							</item>
 						</select1>
 
-						<switch class="disable">
+						<switch class="disable" for="cSkuOptions">
 							<case id="cSkuOptions_0"/>
 							<case id="cSkuOptions_1">
 								<group>

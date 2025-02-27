@@ -50,26 +50,7 @@
     }
 
     .card.bg-dark {
-        color: #fff;
-
-        h1, h2, h3, h4, h5, h6 {
-            color: #fff;
-        }
-
-        a:not(.btn) {
-            color: #fff;
-        }
-
-        .btn {
-            background: $primary;
-            color: #fff;
-
-            &:hover {
-                background:darken($primary,10%);
-            }
-        }
-
-        @extend .btn-primary;
+        @include card-contrast($dark);
     }
 }
 
@@ -89,6 +70,10 @@
         .card-header {
             padding-bottom: 0;
 
+            @include media-breakpoint-down(lg) {
+                padding: $card-spacer-y-xs $card-spacer-x-xs 0;
+            }
+
             .card-title {
                 margin-bottom: 0;
             }
@@ -104,16 +89,34 @@
             }
         }
 
+        .card-body {
+            @include media-breakpoint-down(lg) {
+                padding: $card-spacer-y-xs $card-spacer-x-xs;
+            }
+        }
+
         .card-body-w-head {
-            padding-top: 1.5rem;
+            padding-top: ($card-spacer-y /2);
+
+            @include media-breakpoint-down(lg) {
+                padding-top: ($card-spacer-y-xs /2);
+            }
         }
 
         .card-body-w-footer {
-            padding-bottom: 1.5rem;
+            padding-bottom: ($card-spacer-y /2);
+
+            @include media-breakpoint-down(lg) {
+                padding-top: ($card-spacer-y-xs /2);
+            }
         }
 
         .card-footer {
-            padding-top:0;
+            padding-top: 0;
+
+            @include media-breakpoint-down(lg) {
+                padding: 0 $card-spacer-x-xs $card-spacer-y-xs;
+            }
         }
     }
 

@@ -638,7 +638,7 @@
   <xsl:template match="Content[@type='Module' and (@moduleType='MembershipLogon')]" mode="displayBrief">
     <xsl:choose>
       <xsl:when test="not(/Page/User)">
-        <xsl:apply-templates select="//Content[@type='xform' and @name='UserLogon']" mode="xform"/>
+        <xsl:apply-templates select="." mode="xform"/>
       </xsl:when>
       <xsl:otherwise>
         <xsl:apply-templates select="/Page/User" mode="displayUserDetails" />
@@ -654,10 +654,11 @@
       <xsl:when test="@activationMsg!=''">
         Your activation link has been sent.
       </xsl:when>
-      <xsl:when test="$page/User/@status!='1'">
-        You must activate your account before you can update your details.
-        <br/>
-        <a class="btn btn-primary" href="?ewCmd=RegisterResendActivation">Resend Activation Link</a>
+      <xsl:when test="$page/User/@status='3' or $page/User/@status='4'">
+		  <xsl:value-of select="$page/User/@status"/>
+        <p>You must activate your account before you can update your details.
+        </p>
+        <a class="btn btn-custom" href="?ewCmd=RegisterResendActivation">Resend Activation Link</a>
       </xsl:when>
       <xsl:otherwise>       
             <xsl:apply-templates select="." mode="xform"/>

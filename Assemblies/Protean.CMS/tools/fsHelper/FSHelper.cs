@@ -951,37 +951,42 @@ namespace Protean
                         CreatePath(cFolderPath + @"\");
 
                         var dir = new DirectoryInfo(mcStartFolder + cFolderPath + @"\");
-                        if (dir.Exists)
-                        {
-                            switch (Strings.Right(httpURL, httpURL.Length - httpURL.LastIndexOf(".") - 1) ?? "")
+                        if (img != null){ 
+                            if (dir.Exists)
                             {
-                                case "gif":
-                                    {
-                                        img.Save(mcStartFolder + cFolderPath + @"\" + filename, System.Drawing.Imaging.ImageFormat.Gif);
-                                        return Strings.Replace(Strings.Replace(cFolderPath, @"..\", "/"), @"\", "/") + "/" + filename;
-                                    }
-                                case "jpg":
-                                    {
-                                        img.Save(mcStartFolder + cFolderPath + @"\" + filename, System.Drawing.Imaging.ImageFormat.Jpeg);
-                                        return Strings.Replace(Strings.Replace(cFolderPath, @"..\", "/"), @"\", "/") + "/" + filename;
-                                    }
-                                case "png":
-                                    {
-                                        img.Save(mcStartFolder + cFolderPath + @"\" + filename, System.Drawing.Imaging.ImageFormat.Png);
-                                        return Strings.Replace(Strings.Replace(cFolderPath, @"..\", "/"), @"\", "/") + "/" + filename;
-                                    }
+                                switch (Strings.Right(httpURL, httpURL.Length - httpURL.LastIndexOf(".") - 1) ?? "")
+                                {
+                                    case "gif":
+                                        {
+                                            img.Save(mcStartFolder + cFolderPath + @"\" + filename, System.Drawing.Imaging.ImageFormat.Gif);
+                                            return Strings.Replace(Strings.Replace(cFolderPath, @"..\", "/"), @"\", "/") + "/" + filename;
+                                        }
+                                    case "jpg":
+                                        {
+                                            img.Save(mcStartFolder + cFolderPath + @"\" + filename, System.Drawing.Imaging.ImageFormat.Jpeg);
+                                            return Strings.Replace(Strings.Replace(cFolderPath, @"..\", "/"), @"\", "/") + "/" + filename;
+                                        }
+                                    case "png":
+                                        {
+                                            img.Save(mcStartFolder + cFolderPath + @"\" + filename, System.Drawing.Imaging.ImageFormat.Png);
+                                            return Strings.Replace(Strings.Replace(cFolderPath, @"..\", "/"), @"\", "/") + "/" + filename;
+                                        }
 
-                                default:
-                                    {
-                                        return "filetype not handled:" + filename;
-                                    }
+                                    default:
+                                        {
+                                            return "filetype not handled:" + filename;
+                                        }
+                                }
+                            }
+                            else
+                            {
+                                return "this root folder does not exist:" + mcStartFolder;
                             }
                         }
                         else
                         {
-                            return "this root folder does not exist:" + mcStartFolder;
+                            return httpURL + "?err=filenotfound";
                         }
-                      
                     }
                     response.Close();
                     remoteStream.Close();

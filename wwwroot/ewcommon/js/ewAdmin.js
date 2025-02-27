@@ -147,7 +147,7 @@ $(document).ready(function () {
         waitingDialog.show(pleasewaitmessage, pleasewaitdetail, { dialogSize: 'sm', progressType: 'warning' });
 
     });
-
+  
     // ON ADMIN MENU CLICK 
     $('#mainMenuButtonadminOptions').click(function (e) {
         e.preventDefault();
@@ -316,10 +316,11 @@ $(document).ready(function () {
             $('.modal-body').html('<div class="panel panel-default"><p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p></div>');
             var target = $(this).attr("href");
             // load the url and show modal on success
+           // alert(currentModal.attr('id'));
+
             currentModal.load(target, function () {
                 $('.modal-dialog').removeClass('loading')
                 currentModal.modal("show");
-
             });
         });
 
@@ -805,7 +806,7 @@ function xfrmClearCalendar(formRef, fieldRef) {
 }
 
 function xfrmClearPickPage(formRef, fieldRef) {
-    alert(fieldRef);
+    //alert(fieldRef);
     document.forms[formRef].elements[fieldRef].value = '';
     document.getElementById(fieldRef + '-name').innerHTML = '';
 }
