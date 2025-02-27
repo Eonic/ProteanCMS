@@ -122,7 +122,7 @@ namespace Protean.Providers
                                 {
                                     sText = oPageGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + aPages[cnt] + "']").FirstChild.FirstChild.InnerText;
 
-                                    oXform.addSubmit(ref oPageGroup, sText, sText, "PageFilter_" + aPages[cnt], " btnCross filter-applied", "fa-times");
+                                    oXform.addSubmit(ref oFromGroup, sText, sText, "PageFilter_" + aPages[cnt], " btnCross filter-applied", "fa-times");
 
                                 }
                             }
@@ -131,7 +131,7 @@ namespace Protean.Providers
                             {
 
                                 sText = oPageGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + oXml.InnerText + "']").FirstChild.FirstChild.InnerText;
-                                oXform.addSubmit(ref oPageGroup, sText, sText, "PageFilter", " btnCross filter-applied", "fa-times");
+                                oXform.addSubmit(ref oFromGroup, sText, sText, "PageFilter", " btnCross filter-applied", "fa-times");
                             }
                         }
                     }
