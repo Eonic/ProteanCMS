@@ -1582,7 +1582,7 @@
             <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
           </div>
         </xsl:if>
-        <xsl:if test="node()">
+        <!--<xsl:if test="node()"> TS this hides donate button-->
           <div class="{$thisClass}">
             <xsl:if test="not(@title!='')">
               <xsl:apply-templates select="." mode="inlinePopupOptions">
@@ -1592,7 +1592,7 @@
             <xsl:apply-templates select="." mode="displayBrief"/>
             <xsl:text> </xsl:text>
           </div>
-        </xsl:if>
+        <!--</xsl:if>-->
       </xsl:if>
       <xsl:if test="@listGroup='true'">
         <div class="{$thisClass}">

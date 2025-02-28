@@ -25,7 +25,7 @@
 	
    </xsl:template>
 		
-  <xsl:template match="Content[@type='Module' and (@moduleType='DonateButton')]" mode="displayBrief">
+  <xsl:template match="Content[@moduleType='DonateButton']" mode="displayBrief">
     
     <form action="" method="post" class="ewXform donate-form">
       <div class="qty-product hidden">

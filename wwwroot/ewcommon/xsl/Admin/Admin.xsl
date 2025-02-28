@@ -1906,14 +1906,26 @@
 									</li>
 								</xsl:otherwise>
 							</xsl:choose>
-							<li>
-								<a href="{$appPath}?recompile=true" class="btn btn-warning bs-please-wait" data-pleasewaitmessage="Recompiling - Please wait a moment.">
-									<i class="fas fa-recycle">
-										<xsl:text> </xsl:text>
-									</i>
-									<xsl:text> </xsl:text>Recompile XSLT and Rebundle
-								</a>
-							</li>
+							<xsl:choose>
+								<xsl:when test="/Page/ContentDetail/Status/Status/CompiledTransform/node() = 'on'">
+								<li>
+									<a href="{$appPath}?recompile=true" class="btn btn-info bs-please-wait" data-pleasewaitmessage="Recompiling - Please wait a moment.">
+										<i class="fas fa-recycle">
+											<xsl:text> </xsl:text>
+										</i>
+										<xsl:text> </xsl:text>Recompile XSLT and Rebundle
+									</a>
+								</li>
+								</xsl:when>
+								<xsl:otherwise>
+									<li>
+									<a href="" class="btn btn-default">
+										Compiled transform - off<br/>
+									Get a quote for increased performance
+									</a>
+									</li>
+								</xsl:otherwise>
+							</xsl:choose>
 							<xsl:if test="ContentDetail/Status/Status/DBVersion/node()!=ContentDetail/Status/Status/LatestDBVersion/node() and User/@name='Admin'">
 								<li>
 									<a href="/ewcommon/setup/?ewCmd=UpgradeDB" class="btn btn-default">
@@ -7973,6 +7985,9 @@
 	<!-- -->
 	<!--   ################################################   Cart Full  ##############################################   -->
 	<!-- -->
+	<xsl:template match="Order" mode="order-extras">
+		
+	</xsl:template>
 	<xsl:template match="Order" mode="displayCart">
 		<xsl:param name="currency"/>
 		<xsl:param name="statusId"/>
@@ -8004,6 +8019,7 @@
 
 						</xsl:otherwise>
 					</xsl:choose>
+					<xsl:apply-templates select="." mode="order-extras"/>
 					<h3 class="panel-title">
 						<xsl:choose>
 							<xsl:when test="$statusId='0'">New</xsl:when>
