@@ -12443,39 +12443,7 @@ namespace Protean
 
                 return default;
             }
-            public bool AddOptOutEmail(string cEmailAddress, string cUserId, string nStatus)
-            {
-                PerfMonLog("DBHelper", "AddOptOutEmail");
-                try
-                {
-                    if (string.IsNullOrEmpty(cEmailAddress))
-                        return false;
-                    string cSQL = "Select EmailAddress FROM tblOptOutAddresses WHERE (EmailAddress = '" + cEmailAddress + "')";
-                    if (!((ExeProcessSqlScalar(cSQL) ?? "") == (cEmailAddress ?? "")))
-                    {
-                        cSQL = "INSERT INTO tblOptOutAddresses (EmailAddress,userid,optout_reason,status,optout_date) VALUES ('" + cEmailAddress + "','" + cUserId + "','','" + nStatus + "'," + SqlDate(DateTime.Now, true) + ")";
-                        ExeProcessSql(cSQL);
-                        return true;
-                    }
-                    else
-                    {
-                        string cSQL1 = "Select status FROM tblOptOutAddresses WHERE (EmailAddress = '" + cEmailAddress + "')";
-                        if (!((ExeProcessSqlScalar(cSQL) ?? "") == (nStatus ?? "")))
-                        {
-                            cSQL = "update tblOptOutAddresses set status='" + nStatus + "' WHERE (EmailAddress = '" + cEmailAddress + "')";
-                            ExeProcessSql(cSQL);
-                            return true;
-                        }
-                            return false;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AddOptOutEmail", ex, ""));
-                }
-
-                return default;
-            }
+           
             public void RemoveInvalidEmail(string cEmailAddressesCSV)
             {
                 PerfMonLog("DBHelper", "RemoveInvalidEmail");
