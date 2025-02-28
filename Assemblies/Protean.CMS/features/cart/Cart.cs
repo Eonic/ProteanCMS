@@ -2754,8 +2754,8 @@ namespace Protean
                 messageHtml = sWriter.ToString();
                 sWriter.Close();
                 var xMailingListDoc = Protean.Tools.Xml.HtmlConverter.htmlToXmlDoc(messageHtml);
-               // var xListElement = xMailingListDoc.DocumentElement;
-                //valDict = XmltoDictionary(xListElement, true);
+                var xListElement = xMailingListDoc.DocumentElement;
+                valDict = XmltoDictionary(xListElement, true);
                 return valDict;
             }
             private void RemoveDeliveryOption(int nOrderId)
