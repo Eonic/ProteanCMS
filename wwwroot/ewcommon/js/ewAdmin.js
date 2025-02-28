@@ -804,8 +804,7 @@ function xfrmClearCalendar(formRef, fieldRef) {
     document.getElementById('dateDisplay-' + fieldRef).innerHTML = '';
 }
 
-function xfrmClearPickPage(formRef, fieldRef) {
-    alert(fieldRef);
+function xfrmClearPickPage(formRef, fieldRef) {   
     document.forms[formRef].elements[fieldRef].value = '';
     document.getElementById(fieldRef + '-name').innerHTML = '';
 }
