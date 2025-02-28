@@ -166,7 +166,9 @@
 	<xsl:template match="Page" mode="adminJs">
 
 		<xsl:if test="ContentDetail/Content[@type='xform']/descendant::submit[contains(@class,'getGeocodeButton')]">
-			<script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false&amp;key={$GoogleAPIKey}">&#160;</script>
+			<script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false&amp;key={$GoogleAPIKey}">
+        <xsl:text> </xsl:text>
+      </script>
 		</xsl:if>
 		<xsl:call-template name="bundle-js">
 			<xsl:with-param name="comma-separated-files">
@@ -218,14 +220,20 @@
 			</xsl:choose>
 		</xsl:variable>
 
-		<script type="text/javascript" src="/ewcommon/js/jQuery/jsScrollPane/jquery.jscrollpane.min.js">&#160;</script>
-		<script type="text/javascript" src="/ewcommon/js/jQuery/jsScrollPane/jquery.mousewheel.js">&#160;</script>
+		<script type="text/javascript" src="/ewcommon/js/jQuery/jsScrollPane/jquery.jscrollpane.min.js">
+      <xsl:text> </xsl:text>
+    </script>
+		<script type="text/javascript" src="/ewcommon/js/jQuery/jsScrollPane/jquery.mousewheel.js">
+      <xsl:text> </xsl:text>
+    </script>
 
 		<xsl:if test="@cssFramework!='bs3'">
-			<script type="text/javascript" src="/ewcommon/js/jQuery/jquery.magnific-popup.min.js">&#160;</script>
+			<script type="text/javascript" src="/ewcommon/js/jQuery/jquery.magnific-popup.min.js"><xsl:text> </xsl:text></script>
 		</xsl:if>
-		<script type="text/javascript" src="/ewcommon/js/ajaxtreeview/ajaxtreeview.js">&#160;</script>
-		<script type="text/javascript" src="/ewcommon/js/ewAdmin.js">&#160;</script>
+		<script type="text/javascript" src="/ewcommon/js/ajaxtreeview/ajaxtreeview.js"><xsl:text> </xsl:text></script>
+		<script type="text/javascript" src="/ewcommon/js/ewAdmin.js">
+      <xsl:text> </xsl:text>
+    </script>
 		<!--level: <xsl:value-of select="$menuLevelDepth"/>-->
 
 		<xsl:apply-templates select="." mode="LayoutAdminJs"/>
@@ -5324,19 +5332,29 @@
 
 	<xsl:template match="Page[@ewCmd='EditContent' or @ewCmd='AddContent' or @ewCmd='EditPage' or @ewCmd='AddPage' or @ewCmd='AddModule'  or @ewCmd='EditMailContent' or @ewCmd='AddMailModule' or @ewCmd='WebSettings']" mode="LayoutAdminJs">
 		<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-		<script src="/ewcommon/js/jQuery/fileUploader/loadimage/load-image.all.min.js">/* */</script>
+		<script src="/ewcommon/js/jQuery/fileUploader/loadimage/load-image.all.min.js"><xsl:text> </xsl:text></script>
 		<!-- The Canvas to Blob plugin is included for image resizing functionality -->
-		<script src="/ewcommon/js/jQuery/fileUploader/loadimage/vendor/canvas-to-blob.js">/* */</script>
+		<script src="/ewcommon/js/jQuery/fileUploader/loadimage/vendor/canvas-to-blob.js">
+      <xsl:text> </xsl:text>
+    </script>
 		<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.iframe-transport.js">/* */</script>
+		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.iframe-transport.js"><xsl:text> </xsl:text></script>
 		<!-- The basic File Upload plugin -->
-		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload.js">/* */</script>
+		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload.js">
+      <xsl:text> </xsl:text>
+    </script>
 		<!-- The File Upload processing plugin -->
-		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js">/* */</script>
+		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js">
+      <xsl:text> </xsl:text>
+    </script>
 		<!-- The File Upload image preview & resize plugin -->
-		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">/* */</script>
+		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">
+      <xsl:text> </xsl:text>
+    </script>
 		<!-- The Image Lazy load plugin-->
-		<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">/* */</script>
+		<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">
+      <xsl:text> </xsl:text>
+    </script>
 	</xsl:template>
 
 	<xsl:template match="Page[@layout='ImageLib' or @layout='DocsLib' or @layout='MediaLib']" mode="LayoutAdminJs">
@@ -5400,19 +5418,27 @@
 		</xsl:variable>
 		<xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup'))">
 			<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-			<script src="/ewcommon/js/jQuery/fileUploader/loadimage/load-image.all.min.js">/* */</script>
+			<script src="/ewcommon/js/jQuery/fileUploader/loadimage/load-image.all.min.js">
+        <xsl:text> </xsl:text>
+      </script>
 			<!-- The Canvas to Blob plugin is included for image resizing functionality -->
-			<script src="/ewcommon/js/jQuery/fileUploader/loadimage/vendor/canvas-to-blob.js">/* */</script>
+			<script src="/ewcommon/js/jQuery/fileUploader/loadimage/vendor/canvas-to-blob.js">
+        <xsl:text> </xsl:text>
+      </script>
 			<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.iframe-transport.js">/* */</script>
+			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.iframe-transport.js"><xsl:text> </xsl:text></script>
 			<!-- The basic File Upload plugin -->
-			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload.js">/* */</script>
+			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload.js">
+        <xsl:text> </xsl:text>
+      </script>
 			<!-- The File Upload processing plugin -->
-			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js">/* */</script>
+			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js"><xsl:text> </xsl:text></script>
 			<!-- The File Upload image preview & resize plugin -->
-			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">/* */</script>
+			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js"><xsl:text> </xsl:text></script>
 			<!-- The Image Lazy load plugin -->
-			<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">/* */</script>
+			<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">
+        <xsl:text> </xsl:text>
+      </script>
 		</xsl:if>
 
 		<script>

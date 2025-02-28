@@ -5570,7 +5570,7 @@ namespace Protean
                         // Optionally set cardholder name over billing address
                         if (moCartConfig["CardholderName"] == "on")
                         {
-                            oXform.addInput(ref oFrmGroup, "creditCard/cardholder", false, "Name of cardholder", "textbox required", "cc-name");
+                            oXform.addInput(ref oFrmGroup, "creditCard/cardholder", false, "Name of cardholder", "cc-name required", "cc-name");
                             oXform.addNote("creditCard/cardholder", Protean.xForm.noteTypes.Hint, "<span class=\"hint-trans-cardholder\">Enter name exactly as it appears on the card</span>");
 
                         }
@@ -5590,10 +5590,10 @@ namespace Protean
                             case "bs3":
                             case "bs5":
                                 {
-                                    oXform.addInput(ref oFrmGroup, "creditCard/number", false, "Card Number", "textbox required", "cc-number");
+                                    oXform.addInput(ref oFrmGroup, "creditCard/number", false, "Card Number", "cc-number required", "cc-number");
                                     // oGroup = oXform.addGroup(oFrmGroup, "cardDetails", "inline cardDetails")
                                     oXform.addInput(ref oFrmGroup, "creditCard/expireDate", false, "Expire Date", "ccExpire required", "cc-exp");
-                                    oXform.addInput(ref oFrmGroup, "creditCard/CV2", false, "Security Code (CV2)", "Cv2 textbox singleword required", "cc-csc");
+                                    oXform.addInput(ref oFrmGroup, "creditCard/CV2", false, "Security Code (CV2)", "Cv2 singleword required", "cc-csc");
                                     oXform.addNote("creditCard/CV2", Protean.xForm.noteTypes.Hint, "Please enter the last 3 digits printed on the signature strip on the back of your card.", false, "cv2hint");
                                     oXform.addInput(ref oFrmGroup, "creditCard/issueDate", false, "Issue Date", "ccIssue");
                                     // oXform.addNote("creditCard/issueDate", noteTypes.Hint, "If required")
