@@ -7959,6 +7959,9 @@
 	<!-- -->
 	<!--   ################################################   Cart Full  ##############################################   -->
 	<!-- -->
+	<xsl:template match="Order" mode="order-extras">
+		
+	</xsl:template>
 	<xsl:template match="Order" mode="displayCart">
 		<xsl:param name="currency"/>
 		<xsl:param name="statusId"/>
@@ -7990,6 +7993,7 @@
 
 						</xsl:otherwise>
 					</xsl:choose>
+					<xsl:apply-templates select="." mode="order-extras"/>
 					<h3 class="panel-title">
 						<xsl:choose>
 							<xsl:when test="$statusId='0'">New</xsl:when>

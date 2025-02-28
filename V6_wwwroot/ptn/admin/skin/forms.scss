@@ -1186,4 +1186,29 @@ div[class^="col"] .footer-btn-padding {
     padding-left:0;
     padding-right:0;
 }
+.inventory-container {
+    margin-top: 20px;
 
+    .header-panels {
+        margin-bottom: 20px;
+    }
+
+    #listReload {
+        position: relative;
+        top: -10px;
+        padding-left:30px;
+    }
+
+    .stepper-container .stepper {
+        position: relative;
+        top: 5px !important;
+        padding-left: 20px;
+    }
+
+    td.inner-cell{
+        border-bottom-width:0;
+    }
+    .float-end-stepper{
+        text-align:right
+    }
+}
