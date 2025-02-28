@@ -1361,8 +1361,11 @@ namespace Protean
                                     bAdminMode = false;
                                     sAdminLayout = "";
                                     mcEwCmd = Conversions.ToString(myWeb.moSession["ewCmd"]);
-
-                                    myWeb.ClearPageCache();
+                                    //clear cache when item is live only
+                                    if(myWeb.moRequest.Params["nStatus"] == "1")
+                                    {
+                                        myWeb.ClearPageCache();
+                                    }                                    
 
                                     // if we have a parent releationship lets add it
                                     if (!string.IsNullOrEmpty(myWeb.moRequest["contentParId"]) && Information.IsNumeric(myWeb.moRequest["contentParId"]))

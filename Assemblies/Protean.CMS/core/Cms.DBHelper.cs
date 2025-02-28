@@ -449,6 +449,7 @@ namespace Protean
                 PageEdited = 61,
                 PageHidden = 62,
                 PageDeleted = 63,
+                PageCacheDeleted = 64,
 
                 SetupDataUpgrade = 70,
 
@@ -1568,8 +1569,9 @@ namespace Protean
                                     }
                                 }
 
-                                if (nArtId > 0L & !gbAdminMode)
-                                {
+                               // if (nArtId > 0L & !gbAdminMode)
+                               if (nArtId > 0L)
+                                    {
                                     // article id was passed in the url so we may need to redirect
 
                                     sSql = "select cContentSchemaName, cContentName from tblContent c inner join tblAudit a on a.nAuditKey = c.nAuditId where nContentKey = " + nArtId;
@@ -1672,8 +1674,8 @@ namespace Protean
                                         {
                                             sSql = "select nStructId from tblContentLocation where bPrimary = 1 and nContentId = " + nArtId;
                                             //TS Why were these two lines commented out? They are required if a product is being shown that is not on a page but its parent product is
-                                            sSql = sSql + " union ";
-                                            sSql = sSql + " select nStructId from tblContentLocation where bPrimary = 1 and nContentId IN(select cl.nContentParentId from tblContentRelation cl where cl.nContentChildId = " + nArtId + ")";
+                                          //  sSql = sSql + " union ";
+                                          //  sSql = sSql + " select nStructId from tblContentLocation where bPrimary = 1 and nContentId IN(select cl.nContentParentId from tblContentRelation cl where cl.nContentChildId = " + nArtId + ")";
 
                                             ods = GetDataSet(sSql, "Pages");
                                             if (ods.Tables["Pages"].Rows.Count > 0)
@@ -1692,39 +1694,52 @@ namespace Protean
                                                 {
                                                     nPageId = Conversions.ToLong(ods.Tables["Pages"].Rows[0]["nStructId"]);
                                                 }
-                                                nPageId = Conversions.ToLong(ods.Tables["Pages"].Rows[0]["nStructId"]);
-
-
-                                                if (checkRedirect)
-                                                {
-                                                    string redirectUrl = "";
-                                                    if (myWeb.moConfig["addPathArtId"] == "on")
-                                                    {
-                                                        ItemIdPath = nArtId + "-/";
-                                                    }
-
-                                                    redirectUrl += "/" + thisPrefix + "/" + ItemIdPath + sPath.ToString().Replace(" ", "-").Trim('-') + "/";
-
-                                                    char[] charsToTrim = { '/' };
-                                                    myWeb.mcOriginalURL = myWeb.mcOriginalURL.TrimEnd(charsToTrim);
-                                                    if ((myWeb.mcOriginalURL.ToLower() ?? "") != (redirectUrl.ToLower() ?? ""))
-                                                    {
-                                                        myWeb.msRedirectOnEnd = redirectUrl;
-                                                    }
-
-                                                    if ((sFullPath ?? "") != (redirectUrl ?? ""))
-                                                    {
-                                                        myWeb.msRedirectOnEnd = redirectUrl;
-                                                    }
-                                                }
+                                                //nPageId = Conversions.ToLong(ods.Tables["Pages"].Rows[0]["nStructId"]);
                                             }
+                                    else
+                                    {
+                                        // get page if product related to product
 
+                                        sSql = " select nStructId from tblContentLocation where bPrimary = 1 and nContentId IN(select cl.nContentParentId from tblContentRelation cl where cl.nContentChildId = " + nArtId + ")";
+                                        ods = GetDataSet(sSql, "Pages");
+                                        if (bCheckPermissions)
+                                        {
+                                            // Check the permissions for the page - this will either return 0, the page id or a system page.
+                                            long checkPermissionPageId = checkPagePermission(Conversions.ToLong(ods.Tables["Pages"].Rows[0]["nStructId"]));
+                                            if (Conversions.ToBoolean(Operators.AndObject(checkPermissionPageId != 0L, Operators.OrObject(Operators.ConditionalCompareObjectEqual(ods.Tables["Pages"].Rows[Conversions.ToInteger("0")]["nStructId"], checkPermissionPageId, false), IsSystemPage(checkPermissionPageId)))))
 
-                                            else
                                             {
-                                                // handling for multiple parents versions ?
+                                                nPageId = checkPermissionPageId;
                                             }
-                                      
+                                        }
+                                        else
+                                        {
+                                            nPageId = Conversions.ToLong(ods.Tables["Pages"].Rows[0]["nStructId"]);
+                                        }
+                                    }
+
+                                    if (checkRedirect)
+                                    {
+                                        string redirectUrl = "";
+                                        if (myWeb.moConfig["addPathArtId"] == "on")
+                                        {
+                                            ItemIdPath = nArtId + "-/";
+                                        }
+
+                                        redirectUrl += "/" + thisPrefix + "/" + ItemIdPath + sPath.ToString().Replace(" ", "-").Trim('-') + "/";
+
+                                        char[] charsToTrim = { '/' };
+                                        myWeb.mcOriginalURL = myWeb.mcOriginalURL.TrimEnd(charsToTrim);
+                                        if ((myWeb.mcOriginalURL.ToLower() ?? "") != (redirectUrl.ToLower() ?? ""))
+                                        {
+                                            myWeb.msRedirectOnEnd = redirectUrl;
+                                        }
+
+                                        if ((sFullPath ?? "") != (redirectUrl ?? ""))
+                                        {
+                                            myWeb.msRedirectOnEnd = redirectUrl;
+                                        }
+                                    }
 
                                 }
                                 break;
@@ -12428,7 +12443,7 @@ namespace Protean
 
                 return default;
             }
-
+           
             public void RemoveInvalidEmail(string cEmailAddressesCSV)
             {
                 PerfMonLog("DBHelper", "RemoveInvalidEmail");
