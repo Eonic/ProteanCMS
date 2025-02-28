@@ -11343,13 +11343,17 @@ namespace Protean
         {
             string cProcessInfo = "";
             try
-            {
-                moFSHelper.DeleteFolder(mcPageCacheFolder, goServer.MapPath("/" + gcProjectPath));
-
-
-
+            {                
+                string result = moFSHelper.DeleteFolder(mcPageCacheFolder, goServer.MapPath("/" + gcProjectPath));
+                if (result == "1")
+                {
+                    moDbHelper.logActivity(Cms.dbHelper.ActivityType.PageCacheDeleted, (long)mnUserId, 0L, 0L, 0L, "Successfully deleted ewCache folder" + mcPageCacheFolder);
+                }
+                else
+                {
+                    moDbHelper.logActivity(Cms.dbHelper.ActivityType.PageCacheDeleted, (long)mnUserId, 0L, 0L, 0L, result);
+                }
             }
-
             catch (Exception ex)
             {
                 returnException(ref msException, mcModuleName, "ClearPageCache", ex, "", cProcessInfo, gbDebug);

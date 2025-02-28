@@ -449,6 +449,7 @@ namespace Protean
                 PageEdited = 61,
                 PageHidden = 62,
                 PageDeleted = 63,
+                PageCacheDeleted = 64,
 
                 SetupDataUpgrade = 70,
 
@@ -12442,7 +12443,7 @@ namespace Protean
 
                 return default;
             }
-
+           
             public void RemoveInvalidEmail(string cEmailAddressesCSV)
             {
                 PerfMonLog("DBHelper", "RemoveInvalidEmail");

@@ -972,8 +972,12 @@
 			height:600px;
 			}
 		</style>
-		<script src="/ewcommon/js/ace/ace.js" type="text/javascript" charset="utf-8">&#160;</script>
-		<script src="/ewcommon/js/xmlbeautify/xmlbeautify.js" type="text/javascript" charset="utf-8">&#160;</script>
+		<script src="/ewcommon/js/ace/ace.js" type="text/javascript" charset="utf-8">
+      <xsl:text> </xsl:text>
+    </script>
+		<script src="/ewcommon/js/xmlbeautify/xmlbeautify.js" type="text/javascript" charset="utf-8">
+      <xsl:text> </xsl:text>
+    </script>
 		<script>
 			alert($('#<xsl:value-of select="$ref"/>').text());
 			var xsl2edit = unescapeHTML($('#<xsl:value-of select="$ref"/>').text())
@@ -1174,9 +1178,13 @@
 
 
 		<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-		<script src="/ewcommon/js/jQuery/fileUploader/8.2.1/js/jquery.iframe-transport.js"></script>
+		<script src="/ewcommon/js/jQuery/fileUploader/8.2.1/js/jquery.iframe-transport.js">
+      <xsl:text> </xsl:text>
+    </script>
 		<!-- The basic File Upload plugin -->
-		<script src="/ewcommon/js/jQuery/fileUploader/8.2.1/js/jquery.fileupload.js"></script>
+		<script src="/ewcommon/js/jQuery/fileUploader/8.2.1/js/jquery.fileupload.js">
+      <xsl:text> </xsl:text>
+    </script>
 
 
 		<script>
@@ -3089,6 +3097,7 @@
 
 	<xsl:template match="group[@class='modal-confirm']" mode="xform_control_script">
 		<script>
+      <xsl:text> </xsl:text>
 			<!-- if  @showonchange id changes then we show on form submit-->
 		</script>
 	</xsl:template>

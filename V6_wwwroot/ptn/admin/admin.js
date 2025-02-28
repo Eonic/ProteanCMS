@@ -417,9 +417,9 @@ function preparePickImageModal(CurrentModalPath) {
         if (target != '#') {
         
             currentModal.find(".modal-content div").load(target, function () {
-                $('.modal-dialog').removeClass('loading')
+                currentModal.find('.modal-dialog').removeClass('loading')
                 preparePickImageModal(CurrentModalPath)
-                $('.lazy').lazy();
+                currentModal.find('.lazy').lazy();
                 primeFileUpload();
             });
         };

@@ -5426,8 +5426,9 @@ namespace Protean
 
                                 if (oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail[@optOut='true']") != null)
                                 {
-                                    moDBHelper.AddInvalidEmail(oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail[@optOut='true']").InnerText);
+                                    moDBHelper.AddInvalidEmail(oXform.Instance.SelectSingleNode("tblCartContact/cUserId[@optOut='true']").InnerText);
                                 }
+                               
                             }
 
                             else
