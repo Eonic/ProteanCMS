@@ -840,7 +840,7 @@ namespace Protean
                     }
 
                     // reset config to on
-                    Config.UpdateConfigValue(ref myWeb, "protean/web", "CompliedTransform", "on");
+                    Config.UpdateConfigValue(ref myWeb, "protean/web", "CompiledTransform", "on");
                 }
 
                 // di.Delete(True)
