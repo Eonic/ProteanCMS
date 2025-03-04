@@ -307,9 +307,8 @@ namespace Protean.Providers
                         base.Instance.InnerXml = "<user rememberMe=\"\"><username/><password/></user>";
                     Check:
                         ;
-
+                        XmlElement xmlGroupElmt = (XmlElement)base.moXformElmt.SelectSingleNode("group");
                         // Set the action URL
-
                         // Is the membership email address secure.
                         if (myWeb.moConfig["SecureMembershipAddress"] != "" & myWeb.moConfig["SecureMembershipAddress"] != null)
                         {
@@ -324,7 +323,7 @@ namespace Protean.Providers
                             // Add elements to the form if not present
                             if (Xml.NodeState(ref base.model, "bind[@id='cRemember']") == XmlNodeState.NotInstantiated)
                             {
-                                XmlElement xmlGroupElmt = (XmlElement)base.moXformElmt.SelectSingleNode("group");
+                                
                                 oSelElmt = base.addSelect(ref xmlGroupElmt, "cRemember", true, "&#160;", "", ApperanceTypes.Full);
                                 base.addOption(ref oSelElmt, "Remember me", "true");
                                 XmlElement oBindParent1 = null;
@@ -430,7 +429,8 @@ namespace Protean.Providers
                                     }
                                     else
                                     {
-                                        base.addNote(ref moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse, true);
+                                        base.valid = false;
+                                        base.addNote(ref xmlGroupElmt, Protean.xForm.noteTypes.Alert, sValidResponse, true);
 
                                         if (sValidResponse.Contains("msg-1021"))
                                         {
