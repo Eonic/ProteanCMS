@@ -1250,17 +1250,9 @@ namespace Protean
                     }
                     }
                 }
-
                 catch (Exception ex)
                 {
                     cExError = ex.Message;
-                }
-                finally
-                {
-                    oPage = null;
-                    //we dont dispose of myWeb as we need it.
-                   // myWeb.Close();
-                  //  myWeb = null;
                 }
             }
 
