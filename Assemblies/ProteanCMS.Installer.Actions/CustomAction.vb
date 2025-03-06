@@ -2,7 +2,7 @@
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.1.33.0"
+    Public Shared ewAssemblyVersion As String = "6.1.35.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.1.1.0"
     Public Shared bundleAssemblyVersion As String = "1.14.1.0"
     Public Shared bundleLessAssemblyVersion As String = "1.14.0.0"
@@ -42,20 +42,15 @@ Public Class CustomActions
     Public Shared SystemTextEncodingsWebVersion As String = "9.0.0.2"
     Public Shared SystemTextEncodingCodePagesAssemblyVersion As String = "9.0.0.0"
     Public Shared SystemNumericsVectorsVersion As String = "4.1.5.0"
-
     Public Shared AngleSharpVersion As String = "1.2.0.0"
     Public Shared PreMailerVersion As String = "2.6.0.0"
     Public Shared QRCoderVersion As String = "1.6.0.0"
-
     Public Shared iTextSharpVersion As String = "3.7.1.0"
     Public Shared SkiaSharpVersion As String = "3.116.0.0"
     Public Shared BouncyCastleCrypto As String = "2.0.0.0"
-
     Public Shared SystemIOPipelines As String = "9.0.0.2"
-
-
-
     Public Shared SystemDataSQLClient As String = "4.6.2.0" 'lib version 4.8.6
+    '  Public Shared SystemWebAdaptors As String = "2.0.0.0"
 
 
     'do not use as no SNK - Public Shared ImazenWebPVersion As String = "10.0.1.0"
@@ -267,6 +262,7 @@ Public Class CustomActions
                     UpdateAssemblyRef(oAssembliesSect, "BouncyCastle.Cryptography, Version=" & BouncyCastleCrypto & ", Culture=neutral, PublicKeyToken=072edcf4a5328938")
                     UpdateAssemblyRef(oAssembliesSect, "System.Data.SqlClient, Version=" & SystemDataSQLClient & ", Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
                     UpdateAssemblyRef(oAssembliesSect, "System.IO.Pipelines, Version=" & SystemIOPipelines & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+                    ' UpdateAssemblyRef(oAssembliesSect, "Microsoft.AspNetCore.SystemWebAdapters, Version=" & SystemWebAdaptors & ", Culture=neutral, PublicKeyToken=adb9793829ddae60")
 
 
 
@@ -587,6 +583,8 @@ Public Class CustomActions
 
             UpdateDependantAssembly(oSectXml, "System.IO.Pipelines", "cc7b13ffcd2ddd51", SystemIOPipelines)
             UpdateDependantAssembly(oSectXml, "System.Data.SqlClient", "b03f5f7f11d50a3a", SystemDataSQLClient)
+            'UpdateDependantAssembly(oSectXml, "Microsoft.AspNetCore.SystemWebAdapters", "adb9793829ddae60", SystemWebAdaptors)
+
             UpdateDependantAssembly(oSectXml, "QRCoder", "c4ed5b9ae8358a28", QRCoderVersion)
 
             Dim BindingElmt As XmlElement = oSectXml.DocumentElement.SelectSingleNode("assemblyBinding")

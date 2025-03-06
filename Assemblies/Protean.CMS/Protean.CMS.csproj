@@ -367,6 +367,7 @@
     <Compile Include="tools\Monitor.cs" />
     <Compile Include="tools\pdf.cs" />
     <Compile Include="tools\PerfLog.cs" />
+    <Compile Include="tools\RecaptchaHelper.cs" />
     <Compile Include="tools\Startup.cs" />
     <Compile Include="tools\stdTools.cs" />
     <Compile Include="tools\Synchronisation.cs" />
