@@ -2,8 +2,8 @@
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.1.32.0"
-    Public Shared ptnAppStartAssemblyVersion As String = "6.1.0.0"
+    Public Shared ewAssemblyVersion As String = "6.1.33.0"
+    Public Shared ptnAppStartAssemblyVersion As String = "6.1.1.0"
     Public Shared bundleAssemblyVersion As String = "1.14.1.0"
     Public Shared bundleLessAssemblyVersion As String = "1.14.0.0"
     Public Shared bundleSassAssemblyVersion As String = "1.14.2.0"
