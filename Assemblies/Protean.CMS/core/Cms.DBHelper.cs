@@ -10429,7 +10429,7 @@ namespace Protean
                     if (nArtId > 0L)
                     {
                         sProcessInfo = "loading content" + nArtId;
-                        if (noFilter = false)
+                        if (noFilter == false)
                         {
                             sFilterSql += GetStandardFilterSQLForContent();
                         }
@@ -14568,7 +14568,7 @@ namespace Protean
                 string cProcessInfo = "";
                 try
                 {
-                    if (contact.nContactKey == null)
+                    if (contact.nContactKey == 0)
                     {
                         contact.nContactKey = (int)myWeb.moDbHelper.getObjectByRef(objectTypes.CartContact, contact.cContactForiegnRef, "");
                     }

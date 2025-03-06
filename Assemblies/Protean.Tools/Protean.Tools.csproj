@@ -101,6 +101,7 @@
   <ItemGroup>
     <Compile Remove="IdentityModel\Tokens\JwtHelper.cs" />
     <Compile Remove="Properties\Resources.Designer.cs" />
+    <Compile Remove="RecaptchaHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Properties\Settings.Designer.cs">
