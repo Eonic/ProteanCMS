@@ -233,7 +233,7 @@ namespace Protean
                     // Else
                     // mbPreviewMode = False
                     // End If
-
+                                                          
                     string[] EwCmd = Strings.Split(myWeb.moRequest["ewCmd"], ".");
                     mcEwCmd = EwCmd[0];
                     if (Information.UBound(EwCmd) > 0)
