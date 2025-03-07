@@ -2291,13 +2291,13 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                     // RegEx to search for special characters in the punctuation list variable
                     var reSpecialChars = new Regex(@"([\[\\\^\$\.\|\?\*\+\(\)])");
                     // Remove Reserved Words - replace with a space
-                    cSearchString = Strings.Replace(cSearchString, @"\b(" + cReservedWords + @")\b", " ");
+                    cSearchString = Regex.Replace(cSearchString, @"\b(" + cReservedWords + @")\b", " ");
                     // Remove certain punctuation
-                    cSearchString = Strings.Replace(cSearchString, "[" + reSpecialChars.Replace(cPunctuation, @"\$1") + "]", " ");
+                    cSearchString = Regex.Replace(cSearchString, "[" + reSpecialChars.Replace(cPunctuation, @"\$1") + "]", " ");
                     // Remove any repeated whitespace
-                    cSearchString = Strings.Replace(cSearchString, @"\s+", " ");
+                    cSearchString = Regex.Replace(cSearchString, @"\s+", " ");
                     // Remove any doublequotes
-                    cSearchString = Strings.Replace(cSearchString, "\"", "");
+                    cSearchString = Regex.Replace(cSearchString, "\"", "");
                     // Finally Trim the WhiteSpace
                     return Strings.Trim(cSearchString);
                 }

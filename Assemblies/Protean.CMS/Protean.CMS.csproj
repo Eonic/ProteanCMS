@@ -157,12 +157,15 @@
     </Reference>
     <Reference Include="Select.HtmlToPdf, Version=24.1.0.0, Culture=neutral, PublicKeyToken=e0ae9f6e27a97018, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Select.HtmlToPdf.24.1.0\lib\net40\Select.HtmlToPdf.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="SoundInTheory.DynamicImage, Version=3.1.1.0, Culture=neutral, PublicKeyToken=fa44558110383067, processorArchitecture=MSIL">
       <HintPath>..\..\packages\DynamicImage.3.1.1\lib\net40\SoundInTheory.DynamicImage.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="SoundInTheory.DynamicImage.Extensions.Pdf, Version=3.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\DynamicImage.Extensions.Pdf.3.1.1\lib\net40\SoundInTheory.DynamicImage.Extensions.Pdf.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.4.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -364,6 +367,7 @@
     <Compile Include="tools\Monitor.cs" />
     <Compile Include="tools\pdf.cs" />
     <Compile Include="tools\PerfLog.cs" />
+    <Compile Include="tools\RecaptchaHelper.cs" />
     <Compile Include="tools\Startup.cs" />
     <Compile Include="tools\stdTools.cs" />
     <Compile Include="tools\Synchronisation.cs" />

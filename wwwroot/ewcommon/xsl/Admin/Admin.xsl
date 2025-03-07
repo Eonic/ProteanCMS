@@ -6860,15 +6860,20 @@
 					<xsl:if test="ContentDetail/directory/@parType='User'">
 						<form action="?ewCmd=ListUsers" method="post" id="userSearch" class="col-md-4">
 							<div class="input-group">
-								<input type="text" name="search" value="{$page/Request/Form/Item[@name='search']}" class="form-control"/>
 								<span class="input-group-btn">
-									<button type="submit" name="previous" value="Search" class="btn btn-success principle">
-										User Search
+								<button type="submit" name="UserSearch" value="Clear" class="btn btn-default">
+									<i class="fa fa-times">
 										<xsl:text> </xsl:text>
-										<i class="fa fa-search fa-white">
-											<xsl:text> </xsl:text>
-										</i>
-									</button>
+									</i>
+								</button></span>
+								<input type="text" name="search" value="{ContentDetail/directory/@UserSearchTerm}" class="form-control"/>
+									<span class="input-group-btn">
+								<button type="submit" name="UserSearch" value="Search" class="btn btn-primary">
+									<i class="fa fa-search">
+										<xsl:text> </xsl:text>
+									</i>
+									<xsl:text> </xsl:text>User Search
+								</button>
 								</span>
 							</div>
 						</form>
