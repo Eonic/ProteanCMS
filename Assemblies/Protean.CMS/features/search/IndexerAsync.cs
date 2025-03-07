@@ -1150,9 +1150,17 @@ namespace Protean
                                         }
                                     }
 
-                                    IndexPage(sPageUrl, oPageXml.DocumentElement, oElmt.GetAttribute("type"), ref myWeb.msException);
+                                    //IndexPage(sPageUrl, oPageXml.DocumentElement, oElmt.GetAttribute("type"), ref myWeb.msException);
 
-                                    var oContentElmt = oInfoElmt.OwnerDocument.CreateElement(oElmt.GetAttribute("type"));
+                                        DateTime date;
+                                        DateTime? publishDate = DateTime.TryParse(oElmt.GetAttribute("publish"), out date) ? date : (DateTime?)null;
+                                        DateTime? expireDate = DateTime.TryParse(oElmt.GetAttribute("update"), out date) ? date : (DateTime?)null;
+
+                                        IndexPage(myWeb.mnPageId, oPageXml.DocumentElement.OuterXml, sPageUrl, oElmt.GetAttribute("name"), ref myWeb.msException, oElmt.GetAttribute("type"), myWeb.mnArtId, oElmt.OuterXml, publishDate, expireDate);
+
+
+
+                                        var oContentElmt = oInfoElmt.OwnerDocument.CreateElement(oElmt.GetAttribute("type"));
                                     oContentElmt.SetAttribute("artId", myWeb.mnArtId.ToString());
                                     oContentElmt.SetAttribute("url", sPageUrl);
 
