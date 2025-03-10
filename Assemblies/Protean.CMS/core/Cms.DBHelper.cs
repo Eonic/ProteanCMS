@@ -10938,11 +10938,12 @@ namespace Protean
                     {
                         oElmt.InnerXml = sContentText;
                     }
-                    catch
+                    catch (Exception ex)
                     {
+                        sProcessInfo = ex.Message;
                         // try removing the declaration
-                        try
-                        {
+                        try 
+                        {                            
                             oElmt.InnerXml = Strings.Replace(sContentText, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "");
                         }
                         catch

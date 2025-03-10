@@ -8262,10 +8262,15 @@ namespace Protean
                 {   
                     // If we have an article id we only want to show cascaded content
                     if (moConfig["ContentDetailShowOnlyCascaded"] != null) { 
-                    if (moConfig["ContentDetailShowOnlyCascaded"].ToLower() == "on" && mnArtId != 0)
-                    {
-                        sFilterSql += " and CL.bCascade = 1 and CL.bPrimary = 1 ";
-                    }
+                        if (moConfig["ContentDetailShowOnlyCascaded"].ToLower() == "on" && mnArtId != 0)
+                        {      
+                                if (ibIndexMode) {
+                                    //when we are indexing we want to be able to index the brief because we use this as the abstract.
+                                    sFilterSql += " and ((CL.bCascade = 1 and CL.bPrimary = 1) or nContentKey = " + mnArtId + ") ";
+                                } else {
+                                    sFilterSql += " and CL.bCascade = 1 and CL.bPrimary = 1 ";
+                                }
+                        }
                     }
                     // we are pulling in located and native items but not cascaded
                 }

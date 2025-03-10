@@ -1277,6 +1277,7 @@ namespace Protean
                 return default;
             }
 
+            //Indexes each page and uses metatags on the page to determine what is stored in all the additional fields putting more control with the XSLT:
             private void IndexPage(string url, XmlElement pageXml, string pageType, ref string sException)
             {
 
@@ -1347,6 +1348,8 @@ namespace Protean
             }
 
 
+
+            //Indexes each page and does not use metatags on the page additional fields to be specified. used for indexing documents that do not return metadata, for webpages with metadate use other function:
             private void IndexPage(int nPageId, string cPageText, string cURL, string cPageTitle, ref string sException, string cContentType = "Page", long nContentId = 0L, string cAbstract = "", DateTime? dPublish = null, DateTime? dUpdate = null)
             {
                 // PerfMon.Log("Indexer", "IndexPage")
