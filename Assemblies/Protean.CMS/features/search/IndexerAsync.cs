@@ -1150,17 +1150,9 @@ namespace Protean
                                         }
                                     }
 
-                                    //IndexPage(sPageUrl, oPageXml.DocumentElement, oElmt.GetAttribute("type"), ref myWeb.msException);
+                                    IndexPage(sPageUrl, oPageXml.DocumentElement, oElmt.GetAttribute("type"), ref myWeb.msException);
 
-                                        DateTime date;
-                                        DateTime? publishDate = DateTime.TryParse(oElmt.GetAttribute("publish"), out date) ? date : (DateTime?)null;
-                                        DateTime? expireDate = DateTime.TryParse(oElmt.GetAttribute("update"), out date) ? date : (DateTime?)null;
-
-                                        IndexPage(myWeb.mnPageId, oPageXml.DocumentElement.OuterXml, sPageUrl, oElmt.GetAttribute("name"), ref myWeb.msException, oElmt.GetAttribute("type"), myWeb.mnArtId, oElmt.OuterXml, publishDate, expireDate);
-
-
-
-                                        var oContentElmt = oInfoElmt.OwnerDocument.CreateElement(oElmt.GetAttribute("type"));
+                                    var oContentElmt = oInfoElmt.OwnerDocument.CreateElement(oElmt.GetAttribute("type"));
                                     oContentElmt.SetAttribute("artId", myWeb.mnArtId.ToString());
                                     oContentElmt.SetAttribute("url", sPageUrl);
 
@@ -1285,6 +1277,7 @@ namespace Protean
                 return default;
             }
 
+            //Indexes each page and uses metatags on the page to determine what is stored in all the additional fields putting more control with the XSLT:
             private void IndexPage(string url, XmlElement pageXml, string pageType, ref string sException)
             {
 
@@ -1355,6 +1348,8 @@ namespace Protean
             }
 
 
+
+            //Indexes each page and does not use metatags on the page additional fields to be specified. used for indexing documents that do not return metadata, for webpages with metadate use other function:
             private void IndexPage(int nPageId, string cPageText, string cURL, string cPageTitle, ref string sException, string cContentType = "Page", long nContentId = 0L, string cAbstract = "", DateTime? dPublish = null, DateTime? dUpdate = null)
             {
                 // PerfMon.Log("Indexer", "IndexPage")
