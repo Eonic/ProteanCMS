@@ -9,6 +9,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
 using System.Xml;
@@ -8269,7 +8270,7 @@ namespace Protean
                     // If we have an article id we only want to show cascaded content
                     if (moConfig["ContentDetailShowOnlyCascaded"] != null)
                     {
-                        if (moConfig["ContentDetailShowOnlyCascaded"].ToLower() == "on" && mnArtId != 0)
+                        if (moConfig["ContentDetailShowOnlyCascaded"].ToLower() == "on" && mnArtId != 0 && !ibIndexMode)
                         {
                             sFilterSql += " and CL.bCascade = 1 and CL.bPrimary = 1 ";
                         }
@@ -11365,7 +11366,7 @@ namespace Protean
             {
                 returnException(ref msException, mcModuleName, "ClearPageCache", ex, "", cProcessInfo, gbDebug);
             }
-        }
+        }      
         /// <summary>
         /// get active productslist
         /// </summary>
