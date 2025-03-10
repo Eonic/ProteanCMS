@@ -1,18 +1,22 @@
-﻿using Lucene.Net.Analysis.Standard;
-using Lucene.Net.Documents;
-// This is the Indexer/Search items
-using Lucene.Net.Index;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web.Security;
+using System.Web;
 using System.Xml;
+using Lucene.Net.Analysis.Standard;
+using Lucene.Net.Documents;
+// This is the Indexer/Search items
+using Lucene.Net.Index;
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 // regular expressions
 using static Protean.Tools.FileHelper;
@@ -148,7 +152,7 @@ namespace Protean
             }
         }
 
-        public string DoIndex(ref bool bResult, int nPage = 0)
+        public string DoIndex(ref bool bResult,int nPage = 0 )
         {
             // nPage = 59
             // PerfMon.Log("Indexer", "DoIndex")
@@ -160,13 +164,12 @@ namespace Protean
             string cAlertXsl = "/ewcommon/xsl/Email/IndexerAlert.xsl";
             string cCommonPath = "/ewcommon";
 
-            if (myWeb.bs5)
-            {
+            if (myWeb.bs5) {
                 cPageXsl = "/features/search/clean-page.xsl";
                 cExtractXsl = "/features/search/extract.xsl";
                 cAlertXsl = "/ptn/features/search/indexer-alert-email.xsl";
                 cCommonPath = "/ptn";
-            }
+            } 
 
             var oPageXml = new XmlDocument();
 
@@ -372,7 +375,7 @@ namespace Protean
                     oInfoElmt.SetAttribute("endTime", XmlDate(DateTime.Now, true));
                     StopIndex();
 
-
+               
 
                     // any non-critical errors ?
                     if (!string.IsNullOrEmpty(cExError))
@@ -504,15 +507,14 @@ namespace Protean
                     bIsError = true;
                     try
                     {
-                        if (oIndexWriter != null)
-                        {
+                        if (oIndexWriter != null) {
                             oIndexWriter.Dispose();
                             oIndexWriter = null;
                         }
                     }
                     catch (Exception)
                     {
-
+              
                     }
                 }
             }
@@ -855,7 +857,7 @@ namespace Protean
 
 
             public void IndexSinglePage(IndexPageAsync.oPage oPage)
-            {
+            {               
                 string cPageHtml;
                 var oPageXml = new XmlDocument();
                 string cRules = "";
@@ -888,7 +890,7 @@ namespace Protean
                     // as the admin user would see it
                     // without bieng in admin mode
                     // so we can see everything
-                    myWeb.mnPageId = Convert.ToInt32(oPage.pgid);
+                    myWeb.mnPageId =Convert.ToInt32(oPage.pgid);
                     myWeb.moPageXml = new XmlDocument();
                     myWeb.mnArtId = 0;
                     myWeb.mbIgnorePath = true;
@@ -926,7 +928,7 @@ namespace Protean
                         {
                             oPageXml.LoadXml(cPageHtml);
                             oElmtRules = (XmlElement)oPageXml.SelectSingleNode("/html/head/meta[@name='ROBOTS']");
-                            oElmtURL = (XmlElement)myWeb.moPageXml.SelectSingleNode("/Page/Menu/descendant-or-self::MenuItem[@id='" + myWeb.mnPageId + "']");
+                            oElmtURL =(XmlElement)myWeb.moPageXml.SelectSingleNode("/Page/Menu/descendant-or-self::MenuItem[@id='" + myWeb.mnPageId + "']");
                             cRules = "";
 
                             // If xWeb.mnPageId = 156 Then
@@ -962,7 +964,7 @@ namespace Protean
                             var oPageErrElmt = oIndexInfo.CreateElement("errorInfo");
                             oPageErrElmt.SetAttribute("pgid", myWeb.mnPageId.ToString());
                             oPageErrElmt.SetAttribute("type", "Page");
-                            oPageErrElmt.InnerText = Protean.stdTools.exceptionReport(ex, oElmtURL.GetAttribute("url"), "");
+                            oPageErrElmt.InnerText = Protean.stdTools.exceptionReport(ex, oElmtURL.GetAttribute("url"),"") ;
                             oInfoElmt.AppendChild(oPageErrElmt);
                             nPagesSkipped += 1L;
                         }
@@ -976,20 +978,17 @@ namespace Protean
                             foreach (XmlElement oElmt in oContentElmts)
                             {
                                 indexContentDetail(ref oPage, ref oPageElmt, oElmt, ref myWeb, ref nIndexed, ref oElmtURL, ref itemContentCount);
-
+                                
                                 // we have sub products with there own pages which need to be indexed but they are not on the parent page
-                                if (cIndexDetailSubTypes != "")
-                                {
+                                if (cIndexDetailSubTypes != "") {
                                     string[] subArr = cIndexDetailSubTypes.Split();
-                                    foreach (string subType in subArr)
-                                    {
+                                    foreach (string subType in subArr) { 
                                         XmlNodeList oContentSubElmts = oElmt.SelectNodes("Content[@type='" + subType + "']");
-                                        foreach (XmlElement oElmtSub in oContentSubElmts)
-                                        {
+                                        foreach (XmlElement oElmtSub in oContentSubElmts) {
                                             indexContentDetail(ref oPage, ref oPageElmt, oElmtSub, ref myWeb, ref nIndexed, ref oElmtURL, ref itemContentCount);
                                         }
                                     }
-
+                                        
                                 }
                             }
                             oPageElmt.SetAttribute("contentCount", itemContentCount.ToString());
@@ -1058,16 +1057,14 @@ namespace Protean
                 finally
                 {
                     oPage = null;
-                    if (myWeb != null)
-                    {
+                    if (myWeb!= null){ 
                         myWeb.Close();
                     }
                     myWeb = null;
                 }
             }
 
-            public void indexContentDetail(ref oPage oPage, ref XmlElement oPageElmt, XmlElement oElmt, ref Cms myWeb, ref int nIndexed, ref XmlElement oElmtURL, ref long itemContentCount)
-            {
+            public void indexContentDetail(ref oPage oPage, ref XmlElement oPageElmt, XmlElement oElmt, ref Cms myWeb, ref int nIndexed, ref XmlElement oElmtURL, ref long itemContentCount) {
                 string cProcessInfo;
                 string cPageExtract = "";
                 string cPageHtml;
@@ -1082,183 +1079,175 @@ namespace Protean
                     // Dim wordToFind As String = oElmt.GetAttribute("type")
                     // Dim wordIndex As Integer = Array.IndexOf(IndexDetailTypes, oElmt.GetAttribute("type"))
                     if (!(Array.IndexOf(IndexDetailTypes, oElmt.GetAttribute("type")) >= 0))
+                {
+                    // Don't index we don't want this type.
+                    cProcessInfo = "Not Indexing - " + oElmt.GetAttribute("type");
+                }
+
+                else
+                {
+                    cProcessInfo = "Indexing - " + oElmt.GetAttribute("type") + "id=" + oElmt.GetAttribute("id") + " name=" + oElmt.GetAttribute("name");
+
+                    myWeb.moPageXml = new XmlDocument(); // we need to get this again with our content Detail
+                    myWeb.moDbHelper.moPageXml = myWeb.moPageXml;
+                    myWeb.mcEwSiteXsl = cXslPath;
+                    myWeb.mnArtId = Convert.ToInt32(oElmt.GetAttribute("id"));
+                    myWeb.moContentDetail = null;
+                    cPageHtml = myWeb.ReturnPageHTML(0, true);
+                    // remove any declarations that might affect and Xpath Search
+                    cPageHtml = Strings.Replace(cPageHtml, "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">", "");
+                    cPageHtml = Strings.Replace(cPageHtml, " xmlns=\"http://www.w3.org/1999/xhtml\"", "");
+
+                    if (string.IsNullOrEmpty(cPageHtml))
                     {
-                        // Don't index we don't want this type.
-                        cProcessInfo = "Not Indexing - " + oElmt.GetAttribute("type");
-                    }
-
-                    else
-                    {
-                        cProcessInfo = "Indexing - " + oElmt.GetAttribute("type") + "id=" + oElmt.GetAttribute("id") + " name=" + oElmt.GetAttribute("name");
-
-                        myWeb.moPageXml = new XmlDocument(); // we need to get this again with our content Detail
-                        myWeb.moDbHelper.moPageXml = myWeb.moPageXml;
-                        myWeb.mcEwSiteXsl = cXslPath;
-                        myWeb.mnArtId = Convert.ToInt32(oElmt.GetAttribute("id"));
-                        myWeb.moContentDetail = null;
-                        cPageHtml = myWeb.ReturnPageHTML(0, true);
-                        // remove any declarations that might affect and Xpath Search
-                        cPageHtml = Strings.Replace(cPageHtml, "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">", "");
-                        cPageHtml = Strings.Replace(cPageHtml, " xmlns=\"http://www.w3.org/1999/xhtml\"", "");
-
-                        if (string.IsNullOrEmpty(cPageHtml))
+                        // we have an error to handle
+                        if (myWeb.msException == "")
+                            myWeb.msException = null;
+                        if (myWeb.msException != null)
                         {
-                            // we have an error to handle
-                            if (myWeb.msException == "")
-                                myWeb.msException = null;
-                            if (myWeb.msException != null)
-                            {
-                                var errorElmt = oIndexInfo.CreateElement("IndexElement");
-                                errorElmt.InnerXml = myWeb.msException;
-                                try
-                                {
-                                    errorElmt.SetAttribute("pgid", "0");
-                                    errorElmt.SetAttribute("name", Conversions.ToString(oPage.pagename));
-                                }
-                                catch (Exception)
-                                {
-                                    // Don't error if you can't set the above.
-                                }
-                                cExError += ControlChars.CrLf + errorElmt.OuterXml;
-                            }
-                            nPagesSkipped += 1L;
-                        }
-                        else
-                        {
+                            var errorElmt = oIndexInfo.CreateElement("IndexElement");
+                            errorElmt.InnerXml = myWeb.msException;
                             try
                             {
-                                oPageXml.LoadXml(cPageHtml);
+                                errorElmt.SetAttribute("pgid", "0");
+                                errorElmt.SetAttribute("name", Conversions.ToString(oPage.pagename));
+                            }
+                            catch (Exception)
+                            {
+                                // Don't error if you can't set the above.
+                            }
+                            cExError += ControlChars.CrLf + errorElmt.OuterXml;
+                        }
+                        nPagesSkipped += 1L;
+                    }
+                    else
+                    {
+                        try
+                        {
+                            oPageXml.LoadXml(cPageHtml);
 
-                                if (!(oElmt.GetAttribute("type") == "Document"))
+                            if (!(oElmt.GetAttribute("type") == "Document"))
+                            {
+                                oElmtRules = (XmlElement)oPageXml.SelectSingleNode("/html/head/meta[@name='ROBOTS']");
+                                cRules = "";
+                                string sPageUrl = "";
+                                if (oElmtURL != null)
                                 {
-                                    oElmtRules = (XmlElement)oPageXml.SelectSingleNode("/html/head/meta[@name='ROBOTS']");
-                                    cRules = "";
-                                    string sPageUrl = "";
-                                    if (oElmtURL != null)
-                                    {
-                                        sPageUrl = oElmtURL.GetAttribute("url");
-                                    }
-                                    if (oElmtRules != null)
-                                        cRules = oElmtRules.GetAttribute("content");
-                                    if (!(Strings.InStr(cRules, "NOINDEX") > 0) & !sPageUrl.StartsWith("http"))
-                                    {
+                                    sPageUrl = oElmtURL.GetAttribute("url");
+                                }
+                                if (oElmtRules != null)
+                                    cRules = oElmtRules.GetAttribute("content");
+                                if (!(Strings.InStr(cRules, "NOINDEX") > 0) & !sPageUrl.StartsWith("http"))
+                                {
 
-                                        // handle cannonical link tag
-                                        if (oPageXml.DocumentElement.SelectSingleNode("descendant-or-self::link[@rel='canonical']") != null)
+                                    // handle cannonical link tag
+                                    if (oPageXml.DocumentElement.SelectSingleNode("descendant-or-self::link[@rel='canonical']") != null)
+                                    {
+                                        XmlElement oLinkElmt = (XmlElement)oPageXml.DocumentElement.SelectSingleNode("descendant-or-self::link[@rel='canonical']");
+                                        if (!string.IsNullOrEmpty(oLinkElmt.GetAttribute("href")))
                                         {
-                                            XmlElement oLinkElmt = (XmlElement)oPageXml.DocumentElement.SelectSingleNode("descendant-or-self::link[@rel='canonical']");
-                                            if (!string.IsNullOrEmpty(oLinkElmt.GetAttribute("href")))
-                                            {
-                                                sPageUrl = oLinkElmt.GetAttribute("href");
-                                            }
+                                            sPageUrl = oLinkElmt.GetAttribute("href");
                                         }
-
-                                        IndexPage(sPageUrl, oPageXml.DocumentElement, oElmt.GetAttribute("type"), ref myWeb.msException);
-
-                                        //DateTime date;
-                                        //DateTime? publishDate = DateTime.TryParse(oElmt.GetAttribute("publish"), out date) ? date : (DateTime?)null;
-                                        //DateTime? expireDate = DateTime.TryParse(oElmt.GetAttribute("update"), out date) ? date : (DateTime?)null;
-
-                                        //IndexPage(myWeb.mnPageId, oPageXml.DocumentElement.OuterXml, sPageUrl, oElmt.GetAttribute("name"), ref myWeb.msException, oElmt.GetAttribute("type"), myWeb.mnArtId, oElmt.OuterXml, publishDate, expireDate);
-
-
-
-                                        var oContentElmt = oInfoElmt.OwnerDocument.CreateElement(oElmt.GetAttribute("type"));
-                                        oContentElmt.SetAttribute("artId", myWeb.mnArtId.ToString());
-                                        oContentElmt.SetAttribute("url", sPageUrl);
-
-                                        oPageElmt.AppendChild(oContentElmt);
-
-                                        nIndexed += 1;
-                                        nContentsIndexed += 1L;
-                                        itemContentCount += 1L;
                                     }
-                                    else
-                                    {
-                                        nContentSkipped += 1L;
-                                    }
+
+                                    IndexPage(sPageUrl, oPageXml.DocumentElement, oElmt.GetAttribute("type"), ref myWeb.msException);
+
+                                    var oContentElmt = oInfoElmt.OwnerDocument.CreateElement(oElmt.GetAttribute("type"));
+                                    oContentElmt.SetAttribute("artId", myWeb.mnArtId.ToString());
+                                    oContentElmt.SetAttribute("url", sPageUrl);
+
+                                    oPageElmt.AppendChild(oContentElmt);
+
+                                    nIndexed += 1;
+                                    nContentsIndexed += 1L;
+                                    itemContentCount += 1L;
                                 }
                                 else
                                 {
-                                    foreach (XmlElement oDocElmt in oElmt.SelectNodes("descendant-or-self::Path"))
+                                    nContentSkipped += 1L;
+                                }
+                            }
+                            else
+                            {
+                                foreach (XmlElement oDocElmt in oElmt.SelectNodes("descendant-or-self::Path"))
+                                {
+                                    if (!string.IsNullOrEmpty(oDocElmt.InnerText))
                                     {
-                                        if (!string.IsNullOrEmpty(oDocElmt.InnerText))
+                                        if (oDocElmt.InnerText.StartsWith("http"))
                                         {
-                                            if (oDocElmt.InnerText.StartsWith("http"))
+                                            // don't index
+                                            nDocumentsSkipped += 1L;
+                                        }
+                                        else
+                                        {
+                                            cProcessInfo = "Indexing - " + oDocElmt.InnerText;
+
+                                            string filepath = myWeb.goServer.MapPath(myWeb.goServer.UrlDecode(oDocElmt.InnerText));
+
+
+                                            FileInfo xFilePath = new FileInfo(filepath);
+                                            if (xFilePath.Exists)
                                             {
-                                                // don't index
-                                                nDocumentsSkipped += 1L;
+                                                string fileAsText = GetFileText(filepath, ref myWeb.msException);
+                                                string DocName = oElmt.GetAttribute("name");
+                                                if (oElmt.SelectSingleNode("Body") != null)
+                                                {
+                                                    cPageExtract = oElmt.SelectSingleNode("Body").InnerText;
+                                                }
+                                                if (string.IsNullOrEmpty(DocName))
+                                                {
+                                                    DocName = xFilePath.Name;
+                                                }
+                                                if (string.IsNullOrEmpty(DocName))
+                                                {
+                                                    DocName = oElmt.SelectSingleNode("Title").InnerText;
+                                                }
+                                                if (string.IsNullOrEmpty(DocName))
+                                                {
+                                                    DocName = "Document for Download";
+                                                }
+
+                                                DateTime date;
+                                                DateTime? publishDate = DateTime.TryParse(oElmt.GetAttribute("publish"), out date) ? date : (DateTime?)null;
+                                                DateTime? expireDate = DateTime.TryParse(oElmt.GetAttribute("update"), out date) ? date : (DateTime?)null;
+                                                IndexPage(myWeb.mnPageId, "<h1>" + oElmt.GetAttribute("name") + "</h1>" + fileAsText, oDocElmt.InnerText, DocName, ref myWeb.msException, "Download", myWeb.mnArtId, cPageExtract, publishDate, expireDate);
+
+                                                var oFileElmt = oInfoElmt.OwnerDocument.CreateElement("download");
+                                                oFileElmt.SetAttribute("name", DocName);
+                                                oFileElmt.SetAttribute("file", filepath);
+
+                                                oPageElmt.AppendChild(oFileElmt);
+
+                                                nIndexed += 1;
+                                                nDocumentsIndexed += 1L;
                                             }
                                             else
                                             {
-                                                cProcessInfo = "Indexing - " + oDocElmt.InnerText;
+                                                var oFileElmt = oInfoElmt.OwnerDocument.CreateElement("download");
+                                                oFileElmt.SetAttribute("file", oDocElmt.InnerText);
+                                                oFileElmt.SetAttribute("error", "file not found");
+                                                oPageElmt.AppendChild(oFileElmt);
 
-                                                string filepath = myWeb.goServer.MapPath(myWeb.goServer.UrlDecode(oDocElmt.InnerText));
-
-
-                                                FileInfo xFilePath = new FileInfo(filepath);
-                                                if (xFilePath.Exists)
-                                                {
-                                                    string fileAsText = GetFileText(filepath, ref myWeb.msException);
-                                                    string DocName = oElmt.GetAttribute("name");
-                                                    if (oElmt.SelectSingleNode("Body") != null)
-                                                    {
-                                                        cPageExtract = oElmt.SelectSingleNode("Body").InnerText;
-                                                    }
-                                                    if (string.IsNullOrEmpty(DocName))
-                                                    {
-                                                        DocName = xFilePath.Name;
-                                                    }
-                                                    if (string.IsNullOrEmpty(DocName))
-                                                    {
-                                                        DocName = oElmt.SelectSingleNode("Title").InnerText;
-                                                    }
-                                                    if (string.IsNullOrEmpty(DocName))
-                                                    {
-                                                        DocName = "Document for Download";
-                                                    }
-
-                                                    DateTime date;
-                                                    DateTime? publishDate = DateTime.TryParse(oElmt.GetAttribute("publish"), out date) ? date : (DateTime?)null;
-                                                    DateTime? expireDate = DateTime.TryParse(oElmt.GetAttribute("update"), out date) ? date : (DateTime?)null;
-                                                    IndexPage(myWeb.mnPageId, "<h1>" + oElmt.GetAttribute("name") + "</h1>" + fileAsText, oDocElmt.InnerText, DocName, ref myWeb.msException, "Download", myWeb.mnArtId, cPageExtract, publishDate, expireDate);
-
-                                                    var oFileElmt = oInfoElmt.OwnerDocument.CreateElement("download");
-                                                    oFileElmt.SetAttribute("name", DocName);
-                                                    oFileElmt.SetAttribute("file", filepath);
-
-                                                    oPageElmt.AppendChild(oFileElmt);
-
-                                                    nIndexed += 1;
-                                                    nDocumentsIndexed += 1L;
-                                                }
-                                                else
-                                                {
-                                                    var oFileElmt = oInfoElmt.OwnerDocument.CreateElement("download");
-                                                    oFileElmt.SetAttribute("file", oDocElmt.InnerText);
-                                                    oFileElmt.SetAttribute("error", "file not found");
-                                                    oPageElmt.AppendChild(oFileElmt);
-
-                                                    nDocumentsSkipped += 1L;
-                                                }
+                                                nDocumentsSkipped += 1L;
                                             }
                                         }
                                     }
                                 }
                             }
-                            catch (Exception ex)
-                            {
-                                var oPageErrElmt = oIndexInfo.CreateElement("errorInfo");
-                                oPageErrElmt.SetAttribute("pgid", myWeb.mnPageId.ToString());
-                                oPageErrElmt.SetAttribute("type", oElmt.GetAttribute("type"));
-                                oPageErrElmt.SetAttribute("artid", oElmt.GetAttribute("id"));
-                                oPageErrElmt.InnerText = Protean.stdTools.exceptionReport(ex, oElmtURL.GetAttribute("url"), "");
-                                oPageElmt.AppendChild(oPageErrElmt);
-                                nContentSkipped += 1L;
-                                cProcessInfo = cPageHtml;
-                            }
-
                         }
+                        catch (Exception ex)
+                        {
+                            var oPageErrElmt = oIndexInfo.CreateElement("errorInfo");
+                            oPageErrElmt.SetAttribute("pgid", myWeb.mnPageId.ToString());
+                            oPageErrElmt.SetAttribute("type", oElmt.GetAttribute("type"));
+                            oPageErrElmt.SetAttribute("artid", oElmt.GetAttribute("id"));
+                            oPageErrElmt.InnerText = Protean.stdTools.exceptionReport(ex, oElmtURL.GetAttribute("url"), "");
+                            oPageElmt.AppendChild(oPageErrElmt);
+                            nContentSkipped += 1L;
+                            cProcessInfo = cPageHtml;
+                        }
+
+                    }
                     }
                 }
                 catch (Exception ex)
@@ -1288,6 +1277,7 @@ namespace Protean
                 return default;
             }
 
+            //Indexes each page and uses metatags on the page to determine what is stored in all the additional fields putting more control with the XSLT:
             private void IndexPage(string url, XmlElement pageXml, string pageType, ref string sException)
             {
 
@@ -1358,6 +1348,8 @@ namespace Protean
             }
 
 
+
+            //Indexes each page and does not use metatags on the page additional fields to be specified. used for indexing documents that do not return metadata, for webpages with metadate use other function:
             private void IndexPage(int nPageId, string cPageText, string cURL, string cPageTitle, ref string sException, string cContentType = "Page", long nContentId = 0L, string cAbstract = "", DateTime? dPublish = null, DateTime? dUpdate = null)
             {
                 // PerfMon.Log("Indexer", "IndexPage")
