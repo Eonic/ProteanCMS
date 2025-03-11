@@ -67,6 +67,7 @@
       <bind id="alignmentV" nodeset="@alignmentV" required="false()" type="string"/>
       <bind id="itemWidth" nodeset="@width" required="false()" type="string"/>
       <bind id="gutter" nodeset="@gutter" required="false()" type="string"/>
+      <bind id="bg-display" nodeset="@bg-display" required="false()" type="string"/>
 
     </bind>
     <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
@@ -938,7 +939,8 @@
 
         <!-- end of hidden fields -->
         <group id="columnPresentation">
-          <select1 bind="cModuleBox" class="bgStyle" appearance="minimal">
+
+          <select1 bind="cModuleBox" class="bgStyle form-select" appearance="minimal">
             <label>Background Style</label>
             <item>
               <label>None</label>
@@ -949,27 +951,48 @@
               <value>bg-light</value>
             </item>
           </select1>
-          <input bind="backgroundImage" class="pickImageFile">
-            <label>Background Image</label>
-            <value></value>
-          </input>
-          <group class="row row-cols-sm-2">
-            <select1 bind="backgroundPosition" appearance="minimal">
-              <label>Background Image Position</label>
-              <item>
-                <label>None</label>
-                <value>Default</value>
-              </item>
-              <item>
-                <label>Top</label>
-                <value>center top</value>
-              </item>
-              <item>
-                <label>Centre</label>
-                <value>center center</value>
-              </item>
-            </select1>
-            <!--<select1 bind="backgroundOpacity" appearance="minimal">
+          <select1 bind="bg-display" appearance="full">
+            <item>
+              <label>Background Image</label>
+              <value>bg-image</value>
+              <toggle case="cDisplay_1" event="DOMActivate"/>
+            </item>
+            <item>
+              <label>Background Video (MP4)</label>
+              <value>bg-mp4</value>
+              <toggle case="cDisplay_2" event="DOMActivate"/>
+            </item>
+            <item>
+              <label>Background Video (WebM)</label>
+              <value>bg-webm</value>
+              <toggle case="cDisplay_3" event="DOMActivate"/>
+            </item>
+          </select1>
+
+          <switch class="disable" for="bg-display">
+            <case id="cDisplay_1">
+              <group class="form-section-wrapper form-section-wrapper-wide">
+                <group class="row row-cols-sm-2">
+                  <input bind="backgroundImage" class="pickImageFile">
+                    <label>Background Image</label>
+                    <value></value>
+                  </input>
+                  <select1 bind="backgroundPosition" appearance="minimal">
+                    <label>Background Image Position</label>
+                    <item>
+                      <label>None</label>
+                      <value>Default</value>
+                    </item>
+                    <item>
+                      <label>Top</label>
+                      <value>center top</value>
+                    </item>
+                    <item>
+                      <label>Centre</label>
+                      <value>center center</value>
+                    </item>
+                  </select1>
+                  <!--<select1 bind="backgroundOpacity" appearance="minimal">
               <label>Background Image Opacity</label>
               <item>
                 <label>10%</label>
@@ -1012,135 +1035,77 @@
                 <value>1</value>
               </item>
             </select1>-->
-          </group>
-          <range bind="data-stellar-background-ratio" start="0" end="30" step="1">
-            <label>Background Scroll Rate</label>
-          </range>
-          <input bind="backgroundVideo-mp4" class="pickMedia">
-            <label>Background Video (MP4)</label>
-          </input>
-          <input bind="backgroundVideo-webm" class="pickMedia">
-            <label>Background Video (WebM)</label>
-          </input>
+                </group>
+                <range bind="data-stellar-background-ratio" start="0" end="30" step="1">
+                  <label>Background Scroll Rate</label>
+                </range>
+              </group>
+            </case>
+            <case id="cDisplay_2">
+              <group class="form-section-wrapper">
+                <input bind="backgroundVideo-mp4" class="pickMedia">
+                  <label>Background Video (MP4)</label>
+                </input>
+              </group>
+            </case>
+            <case id="cDisplay_3">
+              <group class="form-section-wrapper">
+                <input bind="backgroundVideo-webm" class="pickMedia">
+                  <label>Background Video (WebM)</label>
+                </input>
+              </group>
+            </case>
+          </switch>
 
           <group>
             <!--<input bind="minHeightxs" class="bs-only" suffix="px">
               <label>Minimum Height Mobile</label>
               <value></value>
             </input>-->
+            <group class="form-section-wrapper form-section-wrapper-wide">
+              <label>Height</label>
+              <group  class="row row-cols-sm-2">
+                <input bind="minHeightxs" class="bs-only" suffix="px">
+                  <label>Minimum Height Mobile</label>
+                  <value></value>
+                </input>
+                <input bind="minHeight" class="bs-only" suffix="px">
+                  <label>Minimum Height Desktop</label>
+                  <value></value>
+                </input>
+              </group>
+            </group>
+            <group class="form-section-wrapper form-section-wrapper-wide">
+              <label>Padding</label>
+              <group  class="row row-cols-sm-2 row-cols-lg-4">
 
-            <group  class="row row-cols-sm-2 row-cols-lg-3">
-              <input bind="minHeightxs" class="bs-only" suffix="px">
-                <label>Minimum Height Mobile</label>
-                <value></value>
-              </input>
-              <input bind="minHeight" class="bs-only" suffix="px">
-                <label>Minimum Height Desktop</label>
-                <value></value>
-              </input>
-              <select1 bind="flex-cols" appearance="full">
-                <label>Flex columns</label>
-                <item>
-                  <label>Yes</label>
-                  <value>true</value>
-                </item>
-                <item>
-                  <label>No</label>
-                  <value>false</value>
-                </item>
-              </select1>
-            </group>
-            <group class="row row-cols-md-2">
-              <select1 bind="bgContentPosition" appearance="minimal">
-                <label>Content Position</label>
-                <item>
-                  <label>Top</label>
-                  <value>top</value>
-                </item>
-                <item>
-                  <label>Centre</label>
-                  <value>center</value>
-                </item>
-                <!--<item>
-                <label>Bottom</label>
-                <value>bottom</value>
-              </item>-->
-              </select1>
-              <select1 bind="gutter" appearance="minimal">
-                <label>Gutter Width</label>
-                <item>
-                  <label>1</label>
-                  <value>g-1</value>
-                </item>
-                <item>
-                  <label>2</label>
-                  <value>g-2</value>
-                </item>
-                <item>
-                  <label>3</label>
-                  <value>g-3</value>
-                </item>
-                <item>
-                  <label>4</label>
-                  <value>g-4</value>
-                </item>
-                <item>
-                  <label>5</label>
-                  <value>g-5</value>
-                </item>
-                <item>
-                  <label>6</label>
-                  <value>g-6</value>
-                </item>
-                <item>
-                  <label>7</label>
-                  <value>g-7</value>
-                </item>
-                <item>
-                  <label>8</label>
-                  <value>g-8</value>
-                </item>
-                <item>
-                  <label>9</label>
-                  <value>g-9</value>
-                </item>
-              </select1>
-            </group>
-            <group class="row">
-              <group class="col-lg-4">
                 <input bind="padding-top-xs">
-                  <label>Padding Top Mobile</label>
+                  <label>
+                    <i class="fas fa-mobile-alt"> </i> Padding Top
+                  </label>
                 </input>
-              </group>
-              <group class="col-lg-4">
+
                 <input bind="padding-bottom-xs">
-                  <label>Padding Bottom Mobile</label>
+                  <label>
+                    <i class="fas fa-mobile-alt"> </i> Padding Bottom
+                  </label>
                 </input>
-              </group>
-              <group class="col-lg-4">
-                <select1 bind="contentHeight" appearance="full">
-                  <label>Make content items equal heights?</label>
-                  <item>
-                    <label>Yes</label>
-                    <value>true</value>
-                  </item>
-                  <item>
-                    <label>No</label>
-                    <value>false</value>
-                  </item>
-                </select1>
-              </group>
-              <group class="col-lg-4">
+
                 <input bind="padding-top">
-                  <label>Padding Top Desktop</label>
+                  <label>
+                    <i class="fas fa-desktop"> </i> Padding Top
+                  </label>
                 </input>
-              </group>
-              <group class="col-lg-4">
                 <input bind="padding-bottom">
-                  <label>Padding Bottom Desktop</label>
+                  <label>
+                    <i class="fas fa-desktop"> </i> Padding Bottom
+                  </label>
                 </input>
               </group>
-              <group class="col-lg-4">
+            </group>
+            <group class="form-section-wrapper form-section-wrapper-wide">
+              <label>Margins</label>
+              <group class="row row-cols-sm-2">
                 <select1 bind="marginBelow" appearance="minimal">
                   <label>Margin Bottom</label>
                   <item>
@@ -1182,6 +1147,87 @@
                   <item>
                     <label>9</label>
                     <value>mb-9</value>
+                  </item>
+                </select1>
+                <select1 bind="gutter" appearance="minimal">
+                  <label>Gutter Width</label>
+                  <item>
+                    <label>1</label>
+                    <value>g-1</value>
+                  </item>
+                  <item>
+                    <label>2</label>
+                    <value>g-2</value>
+                  </item>
+                  <item>
+                    <label>3</label>
+                    <value>g-3</value>
+                  </item>
+                  <item>
+                    <label>4</label>
+                    <value>g-4</value>
+                  </item>
+                  <item>
+                    <label>5</label>
+                    <value>g-5</value>
+                  </item>
+                  <item>
+                    <label>6</label>
+                    <value>g-6</value>
+                  </item>
+                  <item>
+                    <label>7</label>
+                    <value>g-7</value>
+                  </item>
+                  <item>
+                    <label>8</label>
+                    <value>g-8</value>
+                  </item>
+                  <item>
+                    <label>9</label>
+                    <value>g-9</value>
+                  </item>
+                </select1>
+              </group>
+            </group>
+            <group class="form-section-wrapper form-section-wrapper-wide">
+              <label>Flexbox</label>
+              <group class="row row-cols-sm-2 row-cols-lg-3">
+                <select1 bind="bgContentPosition" appearance="minimal">
+                  <label>Content Position</label>
+                  <item>
+                    <label>Top</label>
+                    <value>top</value>
+                  </item>
+                  <item>
+                    <label>Centre</label>
+                    <value>center</value>
+                  </item>
+                  <!--<item>
+                <label>Bottom</label>
+                <value>bottom</value>
+              </item>-->
+                </select1>
+                <select1 bind="contentHeight" appearance="full">
+                  <label>Make content items equal heights?</label>
+                  <item>
+                    <label>Yes</label>
+                    <value>true</value>
+                  </item>
+                  <item>
+                    <label>No</label>
+                    <value>false</value>
+                  </item>
+                </select1>
+                <select1 bind="flex-cols" appearance="full">
+                  <label>Flex columns</label>
+                  <item>
+                    <label>Yes</label>
+                    <value>true</value>
+                  </item>
+                  <item>
+                    <label>No</label>
+                    <value>false</value>
                   </item>
                 </select1>
               </group>

@@ -130,49 +130,55 @@
 						<value></value>
 						<help class="inline">Add a value ending either px or %.</help>
 					</input>
-					<group class="col-lg-6">
-						<select1 bind="char80Layout" >
-							<label>Layout of content</label>
-							<item>
-								<label>Centre</label>
-								<value>center</value>
-							</item>
-							<item>
-								<label>Left</label>
-								<value>left</value>
-							</item>
-							<item>
-								<label>Right</label>
-								<value>right</value>
-							</item>
-							<item>
-								<label>Wide</label>
-								<value>wide</value>
-							</item>
-						</select1>
-					</group>
-          <group class="col-lg-6">
-            <select1 bind="v-align" >
-              <label>Vertical alignment</label>
-              <item>
-                <label>Top</label>
-                <value>top</value>
-              </item>
-              <item>
-                <label>Center</label>
-                <value>center</value>
-              </item>
-              <item>
-                <label>Bottom</label>
-                <value>bottom</value>
-              </item>
-            </select1>
-          </group>
           <input bind="padding" class="col-lg-6">
             <label>Padding</label>
             <value></value>
           </input>
-
+          <group class="container-fluid">
+            <group class="form-section-wrapper form-section-wrapper-wide">
+              <label>Alignment</label>
+              <group class="row row-cols-sm-2">
+                <group class="col-lg-6">
+                  <select1 bind="char80Layout" >
+                    <label>Layout of content</label>
+                    <item>
+                      <label>Centre</label>
+                      <value>center</value>
+                    </item>
+                    <item>
+                      <label>Left</label>
+                      <value>left</value>
+                    </item>
+                    <item>
+                      <label>Right</label>
+                      <value>right</value>
+                    </item>
+                    <item>
+                      <label>Wide</label>
+                      <value>wide</value>
+                    </item>
+                  </select1>
+                </group>
+                <group class="col-lg-6">
+                  <select1 bind="v-align" >
+                    <label>Vertical alignment</label>
+                    <item>
+                      <label>Top</label>
+                      <value>top</value>
+                    </item>
+                    <item>
+                      <label>Center</label>
+                      <value>center</value>
+                    </item>
+                    <item>
+                      <label>Bottom</label>
+                      <value>bottom</value>
+                    </item>
+                  </select1>
+                </group>
+              </group>
+            </group>
+          </group>
         </group>
 			</group>
 			<group>
