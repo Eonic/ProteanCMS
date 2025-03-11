@@ -2860,17 +2860,16 @@ namespace Protean
 
                         if (myWeb.moCtx.Application.Get(AppVariableName.ToString()) != null & bReset == false)
                         {
-
                             sReturnString = Convert.ToString(myWeb.moCtx.Application.Get(AppVariableName.ToString()));
                         }
                         else
                         {
                             string appPath = myWeb.moRequest.ApplicationPath;
-                            if (appPath.EndsWith("ewcommon"))
+                            if (appPath.EndsWith("ewcommon") || appPath.EndsWith("ptn"))
                             {
                                 CommaSeparatedFilenames = CommaSeparatedFilenames.Replace("~/", "~/../");
                             }
-
+                          
                             CommaSeparatedFilenames = CommaSeparatedFilenames.TrimEnd(',');
 
                             string[] bundleFilePaths = Strings.Split(CommaSeparatedFilenames, ",");
@@ -2889,8 +2888,6 @@ namespace Protean
                             for (cntFile = 0; cntFile <= loopTo; cntFile++)
                             {
                                 url = Convert.ToString(bundleFilePaths[cntFile]);
-
-
                                 if (!string.IsNullOrEmpty(url) & url.Contains("https"))
                                 {
                                     fileNameToSave = url.Substring(url.LastIndexOf("/") + 1);
@@ -2944,12 +2941,13 @@ namespace Protean
 
                             if (info.Length < 10)
                             {
-                                string emptyerror = "This file is empty: " + bundleFilePaths.ToString();
-                                info = new System.Text.UTF8Encoding(true).GetBytes(emptyerror);
-                                strFileName = "empty.js";
-                                scriptFile = fsh.SaveFile(ref strFileName, TargetPath, info);
+                                sReturnString = CommaSeparatedFilenames.Replace("~", "");
 
-                                myWeb.moCtx.Application.Set(AppVariableName.ToString(), null);
+                                //string emptyerror = "This file is empty: " + bundleFilePaths.ToString();
+                                //info = new System.Text.UTF8Encoding(true).GetBytes(emptyerror);
+                                //strFileName = "empty.js";
+                                //scriptFile = fsh.SaveFile(ref strFileName, TargetPath, info);//
+                                //myWeb.moCtx.Application.Set(AppVariableName.ToString(), null);
 
                             }
                             else
@@ -3105,7 +3103,7 @@ namespace Protean
                                 }
 
                                 string appPath = myWeb.moRequest.ApplicationPath;
-                                if (appPath.EndsWith("ewcommon"))
+                                if (appPath.EndsWith("ewcommon") || appPath.EndsWith("ptn"))
                                 {
                                     CommaSeparatedFilenames = CommaSeparatedFilenames.Replace("~/", "~/../");
                                 }
