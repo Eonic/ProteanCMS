@@ -1345,14 +1345,7 @@ namespace Protean
                                     {
                                         bAllowCachePage = true;
                                     }
-                                }
-                                else
-                                { 
-                                    if (moSession["nUserId"] != null & Convert.ToInt32(moSession["nUserId"]) != 0)
-                                    {
-                                        bAllowCachePage = false;
-                                    }
-                                }
+                                }                              
 
                                 if (gnResponseCode == 200L & moRequest.Form.Count == 0 & mnUserId == 0 & bAllowCachePage) //!moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"].Contains("?"))
                                 {
@@ -11369,6 +11362,26 @@ namespace Protean
             catch (Exception ex)
             {
                 returnException(ref msException, mcModuleName, "ClearPageCache", ex, "", cProcessInfo, gbDebug);
+            }
+        }
+
+        public void ClearPageCache(string ContentId)
+        {
+
+            string filePath = goServer.MapPath("/") + mcPageCacheFolder;
+            // check startfolder exists
+            var rootDir = new DirectoryInfo(filePath);
+            string fileName = mcOriginalURL;
+            try
+            {
+                if (rootDir.Exists)
+                {
+                    string FilesToDeleteFromCache = moFSHelper.DeleteFolder(fileName, filePath);
+                }
+            }
+            catch (Exception ex)
+            {
+                stdTools.returnException(ref msException, mcModuleName, "ClearPageCache", ex, "", "ClearPageCache", gbDebug);
             }
         }
         /// <summary>
