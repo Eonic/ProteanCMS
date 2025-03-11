@@ -31,8 +31,8 @@ Installer_Logo.jpg
 ..\packages\iTextSharp.LGPLv2.Core.3.7.1\lib\net462\iTextSharp.LGPLv2.Core.dll
 ..\packages\JavaScriptEngineSwitcher.V8.3.24.2\lib\net45\JavaScriptEngineSwitcher.V8.dll
 ..\Assemblies\NonNuget\libwebp.dll
-..\packages\Magick.NET.Core.14.4.0\lib\netstandard20\Magick.NET.Core.dll
-C:\Users\trevo\.nuget\packages\magick.net-q8-x64\14.4.0\lib\netstandard20\Magick.NET-Q8-x64.dll
+..\packages\Magick.NET.Core.14.5.0\lib\netstandard20\Magick.NET.Core.dll
+..\packages\Magick.NET-Q8-x64.14.5.0\lib\netstandard20\Magick.NET-Q8-x64.dll
 ..\packages\Microsoft.ClearScript.Core.7.4.5\lib\net471\ClearScript.Core.dll
 ..\packages\Microsoft.ClearScript.V8.7.4.5\lib\net471\ClearScript.V8.dll
 ..\packages\Microsoft.ClearScript.V8.ICUData.7.4.5\lib\netstandard1.0\ClearScript.V8.ICUData.dll
