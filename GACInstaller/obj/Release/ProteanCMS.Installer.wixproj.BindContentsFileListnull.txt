@@ -49,6 +49,7 @@ libraries\Newtonsoft.Json.dll
 ..\packages\System.Configuration.ConfigurationManager.8.0.1\lib\net462\System.Configuration.ConfigurationManager.dll
 C:\Users\trevo\.nuget\packages\system.data.oledb\9.0.2\lib\net462\System.Data.OleDb.dll
 ..\packages\System.Data.SqlClient.4.9.0\lib\net462\System.Data.SqlClient.dll
+..\packages\System.Drawing.Common.9.0.2\lib\net462\System.Drawing.Common.dll
 C:\Users\trevo\.nuget\packages\system.io.packaging\9.0.2\lib\net462\System.IO.Packaging.dll
 ..\packages\System.IO.Pipelines.9.0.2\lib\net462\System.IO.Pipelines.dll
 ..\packages\System.Memory.4.6.0\lib\net462\System.Memory.dll
