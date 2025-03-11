@@ -645,9 +645,14 @@ table.membership-table {
 .form-select {
     -webkit-appearance: none;
 }
+div.form-select {
+    border: 0;
+    --bs-form-select-bg-img:none;
+    padding:0;
+}
 .related-content-rows {
     display: grid;
-    width:100%;
+    width: 100%;
 
     > .row {
         border-top: 1px solid #b3d2d9;
@@ -885,6 +890,11 @@ form.xform .form-section-wrapper {
     legend {
         float: left;
         margin-bottom: 10px;
+    }
+}
+.form-section-wrapper-wide {
+    &.row-cols-sm-2 > * {
+        width:100%!important;
     }
 }
 form.xform .relatedContent-group > label {

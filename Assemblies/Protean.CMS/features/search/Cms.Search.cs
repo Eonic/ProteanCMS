@@ -521,7 +521,7 @@ namespace Protean
                         if (pageSize == 0)
                             pageSize = 300;
                     }
-
+                    cQuery = CleanSearchString(cQuery);
 
                     if (!cQuery.Equals(""))
                     {
