@@ -1346,6 +1346,13 @@ namespace Protean
                                         bAllowCachePage = true;
                                     }
                                 }
+                                else
+                                { 
+                                    if (moSession["nUserId"] != null & Convert.ToInt32(moSession["nUserId"]) != 0)
+                                    {
+                                        bAllowCachePage = false;
+                                    }
+                                }
 
                                 if (gnResponseCode == 200L & moRequest.Form.Count == 0 & mnUserId == 0 & bAllowCachePage) //!moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"].Contains("?"))
                                 {
