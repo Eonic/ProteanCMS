@@ -944,6 +944,7 @@ namespace Protean
 
                     int resultsCount = 0;
                     var resultsXML = moContextNode.OwnerDocument.CreateElement("Content");
+                    cQuery = CleanSearchString(cQuery);
 
                     if (!cQuery.Equals(""))
                     {
