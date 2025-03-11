@@ -50,7 +50,7 @@ Public Class CustomActions
     Public Shared BouncyCastleCrypto As String = "2.0.0.0"
     Public Shared SystemIOPipelines As String = "9.0.0.2"
     Public Shared SystemDataSQLClient As String = "4.6.2.0" 'lib version 4.8.6
-    Public Shared SystemDrawingCommon As String = "9.0.2.0"
+    Public Shared SystemDrawingCommon As String = "9.0.0.0"
     '  Public Shared SystemWebAdaptors As String = "2.0.0.0"
 
 
