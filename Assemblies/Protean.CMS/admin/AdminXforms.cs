@@ -7917,6 +7917,7 @@ namespace Protean
                                     base.addOption(ref oSelElmt, "Deposit Paid", 10.ToString());
                                     base.addOption(ref oSelElmt, "New Sale" + completedMsg, 6.ToString());
                                     base.addOption(ref oSelElmt, shippedStatus, 9.ToString());
+                                    base.addOption(ref oSelElmt, "Shipped (No email)", 9.ToString() + ".1", false, "No email");
                                     base.addOption(ref oSelElmt, "Delete", 12.ToString());
                                     break;
                                 }
@@ -7926,6 +7927,7 @@ namespace Protean
                                     base.addOption(ref oSelElmt, "New Sale" + completedMsg, 6.ToString());
                                     base.addOption(ref oSelElmt, "Refunded", 7.ToString());
                                     base.addOption(ref oSelElmt, shippedStatus, 9.ToString());
+                                    base.addOption(ref oSelElmt, "Shipped (No email)", 9.ToString() + ".1", false, "No email");
                                     base.addOption(ref oSelElmt, "Delete", 12.ToString());
                                     break;
                                 }
@@ -7935,6 +7937,7 @@ namespace Protean
                                     base.addOption(ref oSelElmt, "New Sale", 6.ToString(), false, "New Sale");
                                     base.addOption(ref oSelElmt, "Refunded", 7.ToString(), false, "Refunded");
                                     base.addOption(ref oSelElmt, shippedStatus, 9.ToString(), false, "Shipped");
+                                    base.addOption(ref oSelElmt, "Shipped (No email)", 9.ToString() + ".1", false, "No email");
                                     base.addOption(ref oSelElmt, "Delete", 12.ToString());
                                     break;
                                 }

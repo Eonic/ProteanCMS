@@ -173,7 +173,8 @@ namespace Protean
                     }
                 }
 
-                // to call /ewapi/Cms.Content/SearchIndex?data={query:'driving',hitsLimit:'30'}
+                // to call /ewapi/Cms.Content/SearchIndex?data={query:'driving',hitslimit:'30'}
+                // in postman path ewapi/Cms.Content/SearchIndex/ set to post and raw json is {"query":"jack","hitlimits":"30","fuzzysearch":"on"}
 
                 public string SearchIndex(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject searchFilter)
                 {
@@ -186,7 +187,7 @@ namespace Protean
                         {
                             SearchString = (string)searchFilter["query"];
                             fuzzySearch = (string)searchFilter["fuzzysearch"];
-                            if ((string)searchFilter["hitslimit"] != "")
+                            if ((string)searchFilter["hitslimit"] != null)
                             {
                                 HitsLimit = (int)searchFilter["hitslimit"];
                             }
