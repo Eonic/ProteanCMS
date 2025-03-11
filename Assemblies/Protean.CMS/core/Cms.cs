@@ -613,6 +613,10 @@ namespace Protean
                 oElmt = oRXML.CreateElement("Search");
                 oElmt.InnerText = moConfig["Search"];
                 oResponseElmt.AppendChild(oElmt);
+
+                oElmt = oRXML.CreateElement("CompliedTransform");
+                oElmt.InnerText = moConfig["CompliedTransform"];
+                oResponseElmt.AppendChild(oElmt);
             }
 
             // End Enabledfeatures
@@ -1675,6 +1679,10 @@ namespace Protean
                                 // TS 21-06-2017 Moved from New() as not required for cached pages I think.
                                 Open();
 
+                                if (!string.IsNullOrEmpty(msException)) {
+                                    sProcessInfo = "we should stop now";
+                                }
+
                                 if (mbAdminMode & !ibIndexMode & !(gnResponseCode == 404L))
                                 {
                                     bPageCache = false;
@@ -1772,8 +1780,7 @@ namespace Protean
                                                     mbOutputXml = false;
                                             }
                                         }
-                                        if (mbOutputXml == true)
-                                        {
+                                        if (mbOutputXml == true) {
                                             switch (Strings.LCase(mcContentType) ?? "")
                                             {
                                                 case "application/xml":
@@ -1788,11 +1795,7 @@ namespace Protean
                                                     }
                                             }
                                         }
-
-
-
-                                        else
-                                        {
+                                        else {
 
                                             PerfMon.Log("Web", "GetPageHTML-loadxsl");
                                             string styleFile;
@@ -1823,9 +1826,7 @@ namespace Protean
                                                     styleFile = goServer.MapPath(mcEwSiteXsl);
                                                 }
                                             }
-
-                                            else
-                                            {
+                                            else  {
                                                 if (moResponseType == pageResponseType.Page)
                                                 {
                                                     if (!string.IsNullOrEmpty(moConfig["xframeoptions"]))
@@ -1850,39 +1851,45 @@ namespace Protean
 
                                             if (!string.IsNullOrEmpty(moRequest["recompile"]))
                                             {
-
+                                                // Only recompile if compilemode is on
                                                 if (moRequest["recompile"] == "del")
                                                 {
 
                                                     if (RestoreRedirectSession(moRequest["SessionId"], 10, true) == true)
                                                     {
-
                                                         // Protean.Config.UpdateConfigValue(Me, "", "recompile", "false")
-
-                                                        var oFS = new Protean.fsHelper(moCtx);
-                                                        oFS.mcRoot = gcProjectPath;
-                                                        oFS.mcStartFolder = goServer.MapPath(@"\" + gcProjectPath) + "xsltc";
-
-                                                        oFS.DeleteFolderContents("", "");
-                                                        var argmyWeb = this;
-                                                        Protean.Config.UpdateConfigValue(ref argmyWeb, "protean/web", "CompiledTransform", "on");
-                                                        var argmyWeb1 = this;
-                                                        Protean.Config.UpdateConfigValue(ref argmyWeb1, "", "recompile", "false");
-                                                        msRedirectOnEnd = "/?rebundle=true&SessionId=" + SessionID;
+                                                        XmlHelper.Transform oTransformClear = new XmlHelper.Transform();
+                                                        oTransformClear.myWeb = this;
+                                                        oTransformClear.ClearXSLTassemblyCache();
+                                                        if (oTransformClear.bError)
+                                                        {
+                                                            moDbHelper.logActivity(Cms.dbHelper.ActivityType.Recompile, (long)mnUserId, 0L, 0L, 0L, oTransformClear.transformException.Message);
+                                                            throw new Exception(oTransformClear.transformException.Message);
+                                                        }
+                                                        else {
+                                                            //only redirect if able to delete
+                                                            Protean.Cms myWeb = this;
+                                                            Protean.Config.UpdateConfigValue(ref myWeb, "protean/web", "CompiledTransform", "on");
+                                                            Protean.Config.UpdateConfigValue(ref myWeb, "", "recompile", "false");
+                                                            msRedirectOnEnd = "/?rebundle=true&SessionId=" + SessionID;
+                                                        }
                                                     }
                                                 }
 
                                                 else if (mbAdminMode)
                                                 {
-                                                    var argmyWeb2 = this;
-                                                    Protean.Config.UpdateConfigValue(ref argmyWeb2, "protean/web", "CompiledTransform", "off");
-                                                    // just sent value as it might be true when user did ResetConfig
-                                                    // to avoid skipping update functionality, we are just set it differently
-                                                    var argmyWeb3 = this;
-                                                    Protean.Config.UpdateConfigValue(ref argmyWeb3, "", "recompile", "recompiling");
-                                                    moDbHelper.logActivity(Cms.dbHelper.ActivityType.Recompile, (long)mnUserId, 0L);
-                                                    // we log to the activity log this action
-                                                    msRedirectOnEnd = "/?recompile=del&SessionId=" + SessionID;
+                                                    //we only want to recompile if compiled transform is on
+                                                    if(gbCompiledTransform) {
+                                                        
+                                                        Cms myWeb = this;
+                                                        Protean.Config.UpdateConfigValue(ref myWeb, "protean/web", "CompiledTransform", "off");
+                                                        // just sent value as it might be true when user did ResetConfig
+                                                        // to avoid skipping update functionality, we are just set it differently
+                                                        Protean.Config.UpdateConfigValue(ref myWeb, "", "recompile", "recompiling");
+                                                        moDbHelper.logActivity(Cms.dbHelper.ActivityType.Recompile, (long)mnUserId, 0L,0L, 0L, "Recompiling XSLT");
+                                                        // we log to the activity log this action
+                                                        msRedirectOnEnd = "/?recompile=del&SessionId=" + SessionID;
+                                                    }
                                                 }
                                             }
 
@@ -1904,8 +1911,8 @@ namespace Protean
                                                 textWriter = (StringWriterWithEncoding)argoWriter;
                                                 PerfMon.Log("Web", "GetPageHTML-endxsl");
 
-                                                // save the page
-                                                if (!oTransform.bError)
+                                                // save the page if not in error.
+                                                if (!oTransform.bError && string.IsNullOrEmpty(msException))
                                                 {
                                                     if (bPageCache)
                                                     {
@@ -7864,7 +7871,12 @@ namespace Protean
                                         thisContentType = prefixs[i].Substring(prefixs[i].IndexOf("/") + 1, prefixs[i].Length - prefixs[i].IndexOf("/") - 1);
                                         if ((thisContentType ?? "") == (oDR[5].ToString() ?? ""))
                                         {
-                                            cURL = "/" + thisPrefix + "/" + oRe.Replace(oDR[1].ToString(), "-").Trim('-');
+                                            string ItemIdPath = "";
+                                            if (moConfig["addPathArtId"] == "on")
+                                            {
+                                                ItemIdPath = oDR[0] + "-/";
+                                            }
+                                            cURL = "/" + thisPrefix + "/" + ItemIdPath + oRe.Replace(oDR[1].ToString(), "-").Trim('-');
                                             if (moConfig["DetailPathTrailingSlash"] == "on")
                                             {
                                                 cURL = cURL + "/";
@@ -8250,10 +8262,15 @@ namespace Protean
                 {   
                     // If we have an article id we only want to show cascaded content
                     if (moConfig["ContentDetailShowOnlyCascaded"] != null) { 
-                    if (moConfig["ContentDetailShowOnlyCascaded"].ToLower() == "on" && mnArtId != 0)
-                    {
-                        sFilterSql += " and CL.bCascade = 1 and CL.bPrimary = 1 ";
-                    }
+                        if (moConfig["ContentDetailShowOnlyCascaded"].ToLower() == "on" && mnArtId != 0)
+                        {      
+                                if (ibIndexMode) {
+                                    //when we are indexing we want to be able to index the brief because we use this as the abstract.
+                                    sFilterSql += " and ((CL.bCascade = 1 and CL.bPrimary = 1) or nContentKey = " + mnArtId + ") ";
+                                } else {
+                                    sFilterSql += " and CL.bCascade = 1 and CL.bPrimary = 1 ";
+                                }
+                        }
                     }
                     // we are pulling in located and native items but not cascaded
                 }
@@ -11331,11 +11348,17 @@ namespace Protean
         {
             string cProcessInfo = "";
             try
-            {
-
-                moFSHelper.DeleteFolder(mcPageCacheFolder, goServer.MapPath("/" + gcProjectPath));
+            {                
+                string result = moFSHelper.DeleteFolder(mcPageCacheFolder, goServer.MapPath("/" + gcProjectPath));
+                if (result == "1")
+                {
+                    moDbHelper.logActivity(Cms.dbHelper.ActivityType.PageCacheDeleted, (long)mnUserId, 0L, 0L, 0L, "Successfully deleted ewCache folder" + mcPageCacheFolder);
+                }
+                else
+                {
+                    moDbHelper.logActivity(Cms.dbHelper.ActivityType.PageCacheDeleted, (long)mnUserId, 0L, 0L, 0L, result);
+                }
             }
-
             catch (Exception ex)
             {
                 returnException(ref msException, mcModuleName, "ClearPageCache", ex, "", cProcessInfo, gbDebug);

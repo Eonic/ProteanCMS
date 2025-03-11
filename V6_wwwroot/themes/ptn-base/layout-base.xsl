@@ -33,6 +33,8 @@
     <xsl:variable name="layout-class">
       <xsl:if test="$currentPage/DisplayName/@banner='no-banner'"> no-banner-layout</xsl:if>
     </xsl:variable>
+    <xsl:variable name="hideFooter" select="$currentPage/DisplayName/@hideFooter"/>
+
     <div id="mainTable" class="Site activateAppearAnimation {$nav-padding}">
       <xsl:if test="$cartPage">
         <xsl:attribute name="class">Site activateAppearAnimation nav-no-padding</xsl:attribute>
@@ -321,6 +323,7 @@
             <xsl:otherwise>
               <xsl:apply-templates select="." mode="mainLayout">
                 <xsl:with-param name="containerClass">container</xsl:with-param>
+                <xsl:with-param name="hideFooter" select="$hideFooter"/>
               </xsl:apply-templates>
             </xsl:otherwise>
           </xsl:choose>

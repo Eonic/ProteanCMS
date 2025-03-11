@@ -702,7 +702,7 @@ namespace Protean
 
                        // oDsDiscounts.Dispose();
                         //oDsDiscounts = null;
-                        myWeb.moDbHelper.CloseConnection();
+                      //  myWeb.moDbHelper.CloseConnection();
                     }
 
                     catch (Exception ex)

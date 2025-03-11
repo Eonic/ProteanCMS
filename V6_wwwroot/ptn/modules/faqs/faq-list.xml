@@ -76,7 +76,7 @@
 								<toggle case="cDisplay_2" event="DOMActivate"/>
 							</item>
 						</select1>
-						<switch class="disable">
+						<switch class="disable" for="cDisplay">
 							<case id="cDisplay_1"/>
 							<case id="cDisplay_2">
 								<relatedContent search="find add" type="FAQ" relationType="" direction="1way">
@@ -87,7 +87,7 @@
 					</group>
 				</group>
 				<group>
-					<switch class="disable">
+					<switch class="disable" for="cSortBy">
 						<case id="cSortBy_1">
 							<select1 bind="cPageOrder" appearance="minimal" class="form-group">
 								<label>Order</label>
@@ -153,7 +153,7 @@
 							<toggle case="cLinkType_2" event="DOMActivate"/>
 						</item>
 					</select1>
-					<switch class="disable">
+					<switch class="disable" for="cLinkType">
 						<case id="cLinkType_1">
 							<select1 bind="cModuleLink" class="siteTree">
 								<label>Link to page</label>
@@ -211,7 +211,7 @@
 								<toggle case="cSortBy_3" event="DOMActivate"/>
 							</item>
 						</select1>
-						<switch class="disable">
+						<switch class="disable" for="cSortBy">
 							<case id="cSortBy_1">
 								<select1 bind="cPageOrder" appearance="minimal" class="form-group">
 									<label>Order</label>

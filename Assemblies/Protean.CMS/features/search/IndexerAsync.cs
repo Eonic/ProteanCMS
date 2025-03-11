@@ -180,6 +180,7 @@ namespace Protean
             //long nContentSkipped = 0L;
             //int nIndexed = 0; // count of the indexed items
             string cIndexDetailTypes = "NewsArticle,Event,Product,Contact,Document,Job";
+            string cIndexDetailSubTypes = "";
             var oDS = new DataSet();
             string cSQL = "";
             string[] IndexDetailTypes;
@@ -208,6 +209,10 @@ namespace Protean
                 if (!string.IsNullOrEmpty(moConfig["SiteSearchIndexDetailTypes"]))
                 {
                     cIndexDetailTypes = moConfig["SiteSearchIndexDetailTypes"];
+                }
+                if (!string.IsNullOrEmpty(moConfig["SiteSearchIndexDetailSubTypes"]))
+                {
+                    cIndexDetailSubTypes = moConfig["SiteSearchIndexDetailSubTypes"];
                 }
                 IndexDetailTypes = Strings.Split(Strings.Replace(cIndexDetailTypes, " ", ""), ",");
                 dStartTime = DateTime.Now;
@@ -324,6 +329,7 @@ namespace Protean
                         Tasks.mcIndexReadFolder = mcIndexReadFolder;
                         Tasks.mcIndexWriteFolder = mcIndexWriteFolder;
                         Tasks.cIndexDetailTypes = cIndexDetailTypes;
+                        Tasks.cIndexDetailSubTypes = cIndexDetailSubTypes;
                         Tasks.IndexDetailTypes = IndexDetailTypes;
                         Tasks.oInfoElmt = oInfoElmt;
                         Tasks.oIndexInfo = oIndexInfo;
@@ -366,9 +372,10 @@ namespace Protean
 
                     }
 
+                    oInfoElmt.SetAttribute("endTime", XmlDate(DateTime.Now, true));
                     StopIndex();
 
-                    oInfoElmt.SetAttribute("endTime", XmlDate(DateTime.Now, true));
+               
 
                     // any non-critical errors ?
                     if (!string.IsNullOrEmpty(cExError))
@@ -793,6 +800,7 @@ namespace Protean
             public bool bIsError = false;
             public XmlElement errElmt;
             public string cIndexDetailTypes;
+            public string cIndexDetailSubTypes;
             public string[] IndexDetailTypes;
             public bool bDebug;
             public XmlElement oInfoElmt;
@@ -970,6 +978,18 @@ namespace Protean
                             foreach (XmlElement oElmt in oContentElmts)
                             {
                                 indexContentDetail(ref oPage, ref oPageElmt, oElmt, ref myWeb, ref nIndexed, ref oElmtURL, ref itemContentCount);
+                                
+                                // we have sub products with there own pages which need to be indexed but they are not on the parent page
+                                if (cIndexDetailSubTypes != "") {
+                                    string[] subArr = cIndexDetailSubTypes.Split();
+                                    foreach (string subType in subArr) { 
+                                        XmlNodeList oContentSubElmts = oElmt.SelectNodes("Content[@type='" + subType + "']");
+                                        foreach (XmlElement oElmtSub in oContentSubElmts) {
+                                            indexContentDetail(ref oPage, ref oPageElmt, oElmtSub, ref myWeb, ref nIndexed, ref oElmtURL, ref itemContentCount);
+                                        }
+                                    }
+                                        
+                                }
                             }
                             oPageElmt.SetAttribute("contentCount", itemContentCount.ToString());
                         }
@@ -1037,7 +1057,9 @@ namespace Protean
                 finally
                 {
                     oPage = null;
-                    myWeb.Close();
+                    if (myWeb!= null){ 
+                        myWeb.Close();
+                    }
                     myWeb = null;
                 }
             }
@@ -1228,16 +1250,9 @@ namespace Protean
                     }
                     }
                 }
-
                 catch (Exception ex)
                 {
                     cExError = ex.Message;
-                }
-                finally
-                {
-                    oPage = null;
-                    myWeb.Close();
-                    myWeb = null;
                 }
             }
 
@@ -1262,6 +1277,7 @@ namespace Protean
                 return default;
             }
 
+            //Indexes each page and uses metatags on the page to determine what is stored in all the additional fields putting more control with the XSLT:
             private void IndexPage(string url, XmlElement pageXml, string pageType, ref string sException)
             {
 
@@ -1332,6 +1348,8 @@ namespace Protean
             }
 
 
+
+            //Indexes each page and does not use metatags on the page additional fields to be specified. used for indexing documents that do not return metadata, for webpages with metadate use other function:
             private void IndexPage(int nPageId, string cPageText, string cURL, string cPageTitle, ref string sException, string cContentType = "Page", long nContentId = 0L, string cAbstract = "", DateTime? dPublish = null, DateTime? dUpdate = null)
             {
                 // PerfMon.Log("Indexer", "IndexPage")

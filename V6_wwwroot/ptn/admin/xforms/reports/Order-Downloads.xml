@@ -78,7 +78,7 @@
 						<toggle case="DateFilter_1" event="DOMActivate"/>
 					</item>
 				</select1>
-				<switch >
+				<switch for="DateFilter">
 					<case id="DateFilter_0">
 						<input bind="dBegin" class="calendarTime">
 							<label>From</label>

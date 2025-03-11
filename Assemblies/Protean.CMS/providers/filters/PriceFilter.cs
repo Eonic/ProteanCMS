@@ -1,13 +1,10 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.CompilerServices;
+using Protean.Providers.Filter;
+using System;
 using System.Collections;
 using System.Data;
-
-
 using System.Data.SqlClient;
 using System.Xml;
-using Lucene.Net.Search;
-using Microsoft.VisualBasic.CompilerServices;
-using Protean.Providers.Filter;
 
 namespace Protean.Providers
 {
@@ -30,7 +27,8 @@ namespace Protean.Providers
                     var arrParams = new Hashtable();
                     string sCotrolDisplayName = "Price Filter";
                     string cFilterTarget = string.Empty;
-
+                    XmlElement oPriceGroup = oXform.addGroup(ref oXform.moXformElmt, "PriceFilter", "pricefilter filter");
+                    oFromGroup.AppendChild(oPriceGroup);
                     var oXml = oXform.moPageXML.CreateElement("PriceFilter");
                     var oMinPrice = oXform.moPageXML.CreateAttribute("MinPrice");
                     var oMaxPrice = oXform.moPageXML.CreateAttribute("MaxPrice");
@@ -118,7 +116,7 @@ namespace Protean.Providers
                                 if (cnt == 1)
                                 {
                                     nMinPriceProduct = Conversions.ToInteger(oDr["MinProductPrice"]);
-                                    
+
                                 }
                                 nMaxPRiceProduct = Conversions.ToInteger(oDr["MaxProductPrice"]);
                                 sProductCount = Convert.ToString(oDr["ContentCount"]);
@@ -130,13 +128,13 @@ namespace Protean.Providers
 
                         oSliderMinPrice.Value = Convert.ToString(nMinPriceProduct);// FilterConfig.GetAttribute("fromPrice");
 
-                       
 
-                       
+
+
 
                         oSliderMaxPrice.Value = nMaxPRiceProduct.ToString();
                         // oMaxPrice.Value = FilterConfig.GetAttribute("toPrice")
-                      
+
                         oStep.Value = FilterConfig.GetAttribute("step");
                         //oMinPrice.Value= Convert.ToString(nMinPriceProduct);
                         oXml.Attributes.Append(oMinPrice);
@@ -180,15 +178,15 @@ namespace Protean.Providers
                     oXform.addBind("PriceFilter", "PriceFilter/@MaxPrice", ref oXform.model, "false()", "string");
                     // oXform.addBind("PriceTotalCount", "PriceFilter/@PriceTotalCount", "false()", "string", oXform.model)
 
-                    oXform.addInput(ref oFromGroup, "MinPrice", true, "", "hidden");
-                    oXform.addInput(ref oFromGroup, "MaxPrice", true, "", "hidden");
-                    oXform.addInput(ref oFromGroup, "MaxPriceLimit", true, "", "hidden");
-                    oXform.addInput(ref oFromGroup, "SliderMinPrice", true, "", "hidden");
-                    oXform.addInput(ref oFromGroup, "SliderMaxPrice", true, "", "hidden");
-                    oXform.addInput(ref oFromGroup, "PriceStep", true, "", "hidden");
-                    oXform.addInput(ref oFromGroup, "PriceListCount", true, "", "hidden");
-                    oXform.addInput(ref oFromGroup, "PriceFilter", true, "", "hidden");
-                    oXform.addSubmit(ref oFromGroup, "", "Apply", "PriceFilter", "  btnPriceSubmit hidden", "");
+                    oXform.addInput(ref oPriceGroup, "MinPrice", true, "", "hidden");
+                    oXform.addInput(ref oPriceGroup, "MaxPrice", true, "", "hidden");
+                    oXform.addInput(ref oPriceGroup, "MaxPriceLimit", true, "", "hidden");
+                    oXform.addInput(ref oPriceGroup, "SliderMinPrice", true, "", "hidden");
+                    oXform.addInput(ref oPriceGroup, "SliderMaxPrice", true, "", "hidden");
+                    oXform.addInput(ref oPriceGroup, "PriceStep", true, "", "hidden");
+                    oXform.addInput(ref oPriceGroup, "PriceListCount", true, "", "hidden");
+                    oXform.addInput(ref oPriceGroup, "PriceFilter", true, "", "hidden");
+                    oXform.addSubmit(ref oPriceGroup, "", "Apply", "PriceFilter", "  btnPriceSubmit hidden", "");
 
 
                     if (aWeb.moRequest.Form["MinPrice"] != null & aWeb.moRequest.Form["MinPrice"] != "")
@@ -196,17 +194,17 @@ namespace Protean.Providers
 
                         // Dim sText As String = "From " + aWeb.moCart.mcCurrencySymbol + "" + oMinPrice.Value.Trim() + " to " + aWeb.moCart.mcCurrencySymbol + "" + oMaxPrice.Value.Trim()
                         string sText = "From " + aWeb.moCart.mcCurrencySymbol + "" + oMinPrice.Value.Trim() + " to " + aWeb.moCart.mcCurrencySymbol + "" + oMaxPrice.Value.Trim()/*"From " + oMinPrice.Value.Trim() + " to " + oMaxPrice.Value.Trim()*/;
-                        oXform.addSubmit(ref oFromGroup, sText, sText, "PriceFilter" + sText, "btnCrossForPrice filter-applied", "fa-times");
+                        oXform.addSubmit(ref oFromGroup, "PriceFilter", sText, "PriceFilter", "btnCrossForPrice filter-applied", "fa-times");
 
                     }
 
                     if (aWeb.moRequest.Form["MinPrice"] != null & aWeb.moRequest.Form["MinPrice"] != "")
                     {
-                        oXform.addInput(ref oFromGroup, "", false, sCotrolDisplayName, "histogramSliderMainDivPrice filter-selected");
+                        oXform.addInput(ref oPriceGroup, "", false, sCotrolDisplayName, "histogramSliderMainDivPrice histogramMain filter-selected");
                     }
                     else
                     {
-                        oXform.addInput(ref oFromGroup, "", false, sCotrolDisplayName, "histogramSliderMainDivPrice");
+                        oXform.addInput(ref oPriceGroup, "", false, sCotrolDisplayName, "histogramSliderMainDivPrice histogramMain");
                     }
                 }
 

@@ -883,9 +883,18 @@
 	<xsl:template match="Cart[Order[@cmd='Logon']]" mode="cartJS">
 		<script type="text/javascript">
 			$(function () {
-			if ($('#cartLogonBox .alert').exists()){
-				$('#cartLogonBox').modal('show');
-			}
+			if ($('#cartLogonBox .alert-warning').exists()){
+			$('#cartLogonBox').modal('show');
+			};
+			if ($('#cartLogonBox .alert-danger').exists()){
+			$('#cartLogonBox').modal('show');
+			};
+			if ($('#cartRegisterBox .alert-warning').exists()){
+			$('#cartRegisterBox').modal('show');
+			};
+			if ($('#cartRegisterBox .alert-danger').exists()){
+			$('#cartRegisterBox').modal('show');
+			};
 			});
 		</script>
 	</xsl:template>
@@ -2776,6 +2785,7 @@
 	
 	<xsl:template match="Page" mode="google-ga4-transaction">
 		{
+		transaction_id: "<xsl:value-of select="Cart/Order/@cartId"/>",
 		currency: "<xsl:value-of select="Cart/@currency"/>",
 		value: <xsl:value-of select="Cart/Order/@total"/>,
 		items: [
@@ -2786,6 +2796,7 @@
 
 	<xsl:template match="Page[Cart/Order/@cmd='EnterPaymentDetails' or Cart/Order/@cmd='SubmitPaymentDetails']" mode="google-ga4-transaction">
 		{
+		transaction_id: "<xsl:value-of select="Cart/Order/@cartId"/>",
 		currency: "<xsl:value-of select="Cart/@currency"/>",
 		value: <xsl:value-of select="Cart/Order/@total"/>,
 		shipping: "<xsl:value-of select="Cart/Order/@shippingCost"/>",
@@ -2802,7 +2813,7 @@
 
 	<xsl:template match="Page[Cart/Order/@cmd='ShowInvoice']" mode="google-ga4-transaction">
 		{
-		transaction_id: "<xsl:value-of select="Cart/Order/@invoiceRef"/>",
+		transaction_id: "<xsl:value-of select="Cart/Order/@cartId"/>",
 		currency: "<xsl:value-of select="Cart/@currency"/>",
 		value: <xsl:value-of select="Cart/Order/@total"/>,
 		shipping: "<xsl:value-of select="Cart/Order/@shippingCost"/>",

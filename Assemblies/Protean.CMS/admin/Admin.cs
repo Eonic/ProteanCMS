@@ -233,7 +233,7 @@ namespace Protean
                     // Else
                     // mbPreviewMode = False
                     // End If
-
+                                                          
                     string[] EwCmd = Strings.Split(myWeb.moRequest["ewCmd"], ".");
                     mcEwCmd = EwCmd[0];
                     if (Information.UBound(EwCmd) > 0)
@@ -683,7 +683,7 @@ namespace Protean
                             }
 
 
-                        case "adminDenied":
+                        case "AdminDenied":
                             {
 
                                 sAdminLayout = "adminDenied";
@@ -1361,8 +1361,11 @@ namespace Protean
                                     bAdminMode = false;
                                     sAdminLayout = "";
                                     mcEwCmd = Conversions.ToString(myWeb.moSession["ewCmd"]);
-
-                                    myWeb.ClearPageCache();
+                                    //clear cache when item is live only
+                                    if(myWeb.moRequest.Params["nStatus"] == "1")
+                                    {
+                                        myWeb.ClearPageCache();
+                                    }                                    
 
                                     // if we have a parent releationship lets add it
                                     if (!string.IsNullOrEmpty(myWeb.moRequest["contentParId"]) && Information.IsNumeric(myWeb.moRequest["contentParId"]))
@@ -3652,7 +3655,10 @@ namespace Protean
                     // RJP 7 Nov 2012. Added LCase to MembershipEncryption.
                     if (Conversions.ToBoolean(!Operators.ConditionalCompareObjectEqual(myWeb.moSession["ewAuth"], Encryption.HashString(myWeb.moSession.SessionID + moConfig["AdminPassword"], Strings.LCase(myWeb.moConfig["MembershipEncryption"]), true), false)))
                     {
-
+                        if (oUserXml is null) {
+                            mcEwCmd = "AdminDenied";
+                            return;
+                        }
                         // Are you an administrator user with no AdminRights yet set then you too are god ! this to cater for existing sites
                         if (oUserXml.SelectSingleNode("Role[@name='Administrator' and @isMember='yes' and not(AdminRights)]") is null)
                         {
@@ -3680,7 +3686,7 @@ namespace Protean
                                         if ((mcEwCmd ?? "") == (ewCmd ?? ""))
                                         {
                                             // Set the ewCmd to "adminDenied"
-                                            mcEwCmd = "adminDenied";
+                                            mcEwCmd = "AdminDenied";
                                             return;
                                         }
                                         else
@@ -3731,7 +3737,7 @@ namespace Protean
                                                                 if ((mcEwCmd ?? "") == (ewCmd ?? ""))
                                                                 {
                                                                     moDeniedAdminMenuElmt = (XmlElement)oMenuElmt.CloneNode(false);
-                                                                    mcEwCmd = "adminDenied";
+                                                                    mcEwCmd = "AdminDenied";
                                                                     return;
                                                                 }
                                                                 if (deleteCmds[ewCmd] is null)
@@ -3759,7 +3765,7 @@ namespace Protean
                                                                 if ((mcEwCmd ?? "") == (ewCmd ?? ""))
                                                                 {
                                                                     moDeniedAdminMenuElmt = (XmlElement)oMenuElmt.CloneNode(false);
-                                                                    mcEwCmd = "adminDenied";
+                                                                    mcEwCmd = "AdminDenied";
                                                                     return;
                                                                 }
                                                                 if (deleteCmds[ewCmd] is null)
@@ -6117,6 +6123,14 @@ from tblContentIndexDef";
 
                         ThemeLessFile = Protean.fsHelper.checkLeadingSlash(ThemeLessFile);
                         ThemeLessFile = ThemePath + ThemeName + "/" + ThemeLessFile;
+
+                        Boolean IsScss = false;
+
+                        if (ThemeLessFile.EndsWith(".scss")) {
+                            IsScss = true;
+                        }
+
+
                         if (Conversions.ToBoolean(oFsH.VirtualFileExists(ThemeLessFile)))
                         {
 
@@ -6145,7 +6159,9 @@ from tblContentIndexDef";
                             foreach (XmlElement oElmt in settingsXml.SelectNodes("theme/add[starts-with(@key,'" + ThemeName + ".')]"))
                             {
                                 string variableName = oElmt.GetAttribute("key").Replace(ThemeName + ".", "");
+
                                 string searchText = "(?<=" + VariablePrefix + variableName + ":).*(?=;)";
+
                                 string replaceText = oElmt.GetAttribute("value").Trim();
 
                                 // handle image files in CSS

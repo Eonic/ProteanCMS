@@ -1,16 +1,14 @@
-﻿using System;
-using System.Data;
-using System.Diagnostics;
-
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Xml;
-using Lucene.Net.Analysis.Standard;
+﻿using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
 // This is the Indexer/Search items
 using Lucene.Net.Index;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Data;
+using System.Diagnostics;
+using System.IO;
+using System.Xml;
 using static Protean.stdTools;
 // regular expressions
 using static Protean.Tools.FileHelper;

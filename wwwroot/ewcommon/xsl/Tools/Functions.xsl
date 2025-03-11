@@ -767,8 +767,12 @@
     <xsl:apply-templates select="." mode="resellerStyle"/>
     <xsl:if test="@cssFramework='bs3'">
       <xsl:if test="contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 8') or contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 7') or contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 6.0')">
-        <script src="/ewcommon/js/respond.min.js" cookie-consent="strictly-necessary">/* */</script>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js" cookie-consent="strictly-necessary">/* */</script>
+        <script src="/ewcommon/js/respond.min.js" cookie-consent="strictly-necessary">
+          <xsl:text> </xsl:text>
+        </script>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js" cookie-consent="strictly-necessary">
+          <xsl:text> </xsl:text>
+        </script>
       </xsl:if>
     </xsl:if>
   </xsl:template>
@@ -803,7 +807,9 @@
     <xsl:apply-templates select="." mode="xform_control_scripts"/>
     <!-- IF IE6 apply PNG Fix as standard -->
     <xsl:if test="contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 6.0') and not(contains(Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'Opera'))">
-      <script type="{$scriptType}" src="/ewcommon/js/pngfix.js" defer="" cookie-consent="strictly-necessary">/* */</script>
+      <script type="{$scriptType}" src="/ewcommon/js/pngfix.js" defer="" cookie-consent="strictly-necessary">
+        <xsl:text> </xsl:text>
+      </script>
     </xsl:if>
 
   </xsl:template>
@@ -905,36 +911,56 @@
             <xsl:text>~/Bundles/JqueryModules</xsl:text>
           </xsl:with-param>
         </xsl:call-template>
-        <script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js">/* */</script>
+        <script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js">
+          <xsl:text> </xsl:text>
+        </script>
       </xsl:when>
       <xsl:otherwise>
         <xsl:if test="@layout='Modules_Masonary'">
-          <script type="{$scriptType}" src="/ewcommon/js/jquery/isotope/jquery.isotope.min.js" cookie-consent="strictly-necessary">/* */</script>
+          <script type="{$scriptType}" src="/ewcommon/js/jquery/isotope/jquery.isotope.min.js" cookie-consent="strictly-necessary">
+            <xsl:text> </xsl:text>
+          </script>
         </xsl:if>
         <xsl:if test="//Content[@moduleType='SlideCarousel'] and not(/Page/@adminMode)">
-          <script src="/ewcommon/js/jquery/SlideCarousel/jquery.mousewheel.min.js">/* */</script>
-          <script src="/ewcommon/js/jquery/SlideCarousel/jquery.carousel-1.1.min.js">/* */</script>
+          <script src="/ewcommon/js/jquery/SlideCarousel/jquery.mousewheel.min.js">
+            <xsl:text> </xsl:text>
+          </script>
+          <script src="/ewcommon/js/jquery/SlideCarousel/jquery.carousel-1.1.min.js">
+            <xsl:text> </xsl:text>
+          </script>
         </xsl:if>
         <xsl:if test="//Content[@moduleType='ImageFader']">
-          <script src="/ewcommon/js/jquery/innerFade/jquery.innerfade.js">/* */</script>
+          <script src="/ewcommon/js/jquery/innerFade/jquery.innerfade.js">
+            <xsl:text> </xsl:text>
+          </script>
         </xsl:if>
         <xsl:if test="//Content[@carousel='true']">
-          <script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js">/* */</script>
+          <script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js">
+            <xsl:text> </xsl:text>
+          </script>
           <!-- !!! MIN VERSION CAUSES ERROR -->
         </xsl:if>
         <xsl:if test="//Content[@moduleType='SliderGallery' or @moduleType='Carousel'] and not(/Page/@adminMode)">
-          <script src="/ewcommon/js/jquery/SliderGallery/js/jquery.tn3.min.js">/* */</script>
+          <script src="/ewcommon/js/jquery/SliderGallery/js/jquery.tn3.min.js">
+            <xsl:text> </xsl:text>
+          </script>
         </xsl:if>
         <!-- code formatting plugin -->
         <xsl:if test="//Content[@moduleType='FormattedCode' or @moduleType='EmbeddedHTML']">
-          <script type="text/javascript" src="/ewcommon/js/jquery/beautyOfCode/boc.js" >/* */</script>
+          <script type="text/javascript" src="/ewcommon/js/jquery/beautyOfCode/boc.js" >
+            <xsl:text> </xsl:text>
+          </script>
         </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
 
     <xsl:if test="//Content[@moduleType='Audio']/Path/node()!=''">
-      <script type="text/javascript" src="/ewcommon/js/jquery/jplayer/jquery.jplayer.min.js">/* */</script>
-      <script type="text/javascript" src="/ewcommon/js/jquery/jplayer/jquery.jplayer.inspector.js">/* */</script>
+      <script type="text/javascript" src="/ewcommon/js/jquery/jplayer/jquery.jplayer.min.js">
+        <xsl:text> </xsl:text>
+      </script>
+      <script type="text/javascript" src="/ewcommon/js/jquery/jplayer/jquery.jplayer.inspector.js">
+        <xsl:text> </xsl:text>
+      </script>
       <script type="text/javascript">
         <xsl:apply-templates select="." mode="initialiseJplayer"/>
       </script>
@@ -1241,7 +1267,9 @@
         </div>
       </div>
       <script type="{$scriptType}" src="/ewcommon/js/jquery/exitmodal/jquery.exit-modal.js"
-	cookie-consent="strictly-necessary">/* */</script>
+	cookie-consent="strictly-necessary">
+        <xsl:text> </xsl:text>
+      </script>
     </xsl:if>
 
     <xsl:if test="/Page/Contents/Content[@type='MetaData' and @name='MetaGoogleRemarketingConversionId']">
@@ -1254,7 +1282,9 @@
         var google_custom_params = window.google_tag_params;
         var google_remarketing_only = true;
       </script>
-      <script type="{$scriptType}" src="//www.googleadservices.com/pagead/conversion.js"  cookie-consent="tracking">/* */</script>
+      <script type="{$scriptType}" src="//www.googleadservices.com/pagead/conversion.js"  cookie-consent="tracking">
+        <xsl:text> </xsl:text>
+      </script>
       <noscript>
         <div style="display:inline;">
           <img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/955616701/?value=0&amp;guid=ON&amp;script=0"/>
@@ -3096,7 +3126,9 @@
       <xsl:value-of select="node()"/>
     </xsl:variable>
     <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
-      <script type="{$scriptType}" src="https://secure.leadforensics.com/js/{$lfid}.js" async="async" cookie-consent="tracking">/* */</script>
+      <script type="{$scriptType}" src="https://secure.leadforensics.com/js/{$lfid}.js" async="async" cookie-consent="tracking">
+        <xsl:text> </xsl:text>
+      </script>
       <noscript>
         <img src="https://secure.leadforensics.com/{$lfid}.png" style="display:none;" />
       </noscript>

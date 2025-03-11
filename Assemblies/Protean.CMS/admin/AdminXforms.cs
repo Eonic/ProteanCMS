@@ -1468,6 +1468,7 @@ namespace Protean
                                         //XmlNode argoNode2 = (XmlNode)this.moXformElmt;
                                         base.addNote(ref moXformElmt, Protean.xForm.noteTypes.Alert, "Settings Saved");
                                         //this.moXformElmt = (XmlElement)argoNode2;
+                                        base.valid = true;
                                     }
                                 }
                                 else
@@ -7916,6 +7917,7 @@ namespace Protean
                                     base.addOption(ref oSelElmt, "Deposit Paid", 10.ToString());
                                     base.addOption(ref oSelElmt, "New Sale" + completedMsg, 6.ToString());
                                     base.addOption(ref oSelElmt, shippedStatus, 9.ToString());
+                                    base.addOption(ref oSelElmt, "Shipped (No email)", 9.ToString() + ".1", false, "No email");
                                     base.addOption(ref oSelElmt, "Delete", 12.ToString());
                                     break;
                                 }
@@ -7925,6 +7927,7 @@ namespace Protean
                                     base.addOption(ref oSelElmt, "New Sale" + completedMsg, 6.ToString());
                                     base.addOption(ref oSelElmt, "Refunded", 7.ToString());
                                     base.addOption(ref oSelElmt, shippedStatus, 9.ToString());
+                                    base.addOption(ref oSelElmt, "Shipped (No email)", 9.ToString() + ".1", false, "No email");
                                     base.addOption(ref oSelElmt, "Delete", 12.ToString());
                                     break;
                                 }
@@ -7934,6 +7937,7 @@ namespace Protean
                                     base.addOption(ref oSelElmt, "New Sale", 6.ToString(), false, "New Sale");
                                     base.addOption(ref oSelElmt, "Refunded", 7.ToString(), false, "Refunded");
                                     base.addOption(ref oSelElmt, shippedStatus, 9.ToString(), false, "Shipped");
+                                    base.addOption(ref oSelElmt, "Shipped (No email)", 9.ToString() + ".1", false, "No email");
                                     base.addOption(ref oSelElmt, "Delete", 12.ToString());
                                     break;
                                 }
@@ -8715,12 +8719,16 @@ namespace Protean
                         {
                             cTypePath = "DiscountRule.xml";
                         }
-
+                        string DiscountFormPath = "/xforms/discounts/";
+                        if (myWeb.bs5)
+                        {
+                            DiscountFormPath = "/features/cart/discounts/";
+                        }
                         base.NewFrm("EditDiscountRules");
-                        if (!base.load("/xforms/discounts/" + cTypePath, myWeb.maCommonFolders))
+                        if (!base.load(DiscountFormPath + cTypePath, myWeb.maCommonFolders))
                         {
                             // not allot we can do really except try defaults
-                            if (!base.load("/xforms/discounts/DiscountRule.xml", myWeb.maCommonFolders))
+                            if (!base.load(DiscountFormPath+"DiscountRule.xml", myWeb.maCommonFolders))
                             {
                                 // not allot we can do really 
                             }

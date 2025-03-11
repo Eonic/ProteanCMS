@@ -97,10 +97,10 @@
 							<toggle case="cDisplay_4" event="DOMActivate"/>
 						</item>
 					</select1>
-					<switch class="disable">
+					<switch class="disable" for="cDisplay">
 						<case id="cDisplay_1">
 							<group class="form-section-wrapper">
-								<label>3rd party commenting</label>
+								<label>Third Party Commenting</label>
 								<select1 bind="cCommentPlatform" appearance="full">
 									<label>Select Platform</label>
 									<item>
@@ -134,7 +134,7 @@
 										<toggle case="cCommentPlatform_EW" event="DOMActivate"/>
 									</item>
 								</select1>
-								<switch class="disable">
+								<switch class="disable" for="cCommentPlatform">
 									<case id="cCommentPlatform_none">
 										<div>No Commenting</div>
 									</case>
@@ -275,7 +275,7 @@
 								<toggle case="cSortBy_3" event="DOMActivate"/>
 							</item>
 						</select1>
-						<switch class="disable">
+						<switch class="disable" for="cSortBy">
 							<case id="cSortBy_1">
 								<select1 bind="cPageOrder" appearance="minimal" class="form-group">
 									<label>Order</label>
