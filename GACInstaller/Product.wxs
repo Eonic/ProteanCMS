@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?define version="6.1.35"?>
+<?define version="6.1.37"?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi' xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
     <Product Id='*' Name='ProteanCMS GAC Installer $(var.version)' Language='1033' Version='$(var.version)' Manufacturer='Eonic Digital LLP' UpgradeCode='{577597F8-BE6F-46B4-8A9D-46E8A5360918}' Codepage='1252'>
         <Package AdminImage='no' Comments='ProteanCMS GAC Installer' Compressed='yes' Description='ProteanCMS GAC Installer (64bit)' InstallerVersion='300' InstallScope='perMachine' Languages='1033' Manufacturer='Eonic Digital LLP' Platform='x64' ReadOnly='no' ShortNames='no' />
@@ -163,10 +163,10 @@
                   <File Id='com_TidyHTML5Managed' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='TidyHTML5Managed.dll' Source='..\Assemblies\NonNuget\TidyHTML5Managed.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
                 <Component Id='com_MagickNETCore' Guid='ef1e2c1c-123c-46f1-be4b-4baf7df7ebc2' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                  <File Id='_MagickNETCore' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Magick.NET.Core.dll' Source='..\packages\Magick.NET.Core.14.4.0\lib\netstandard20\Magick.NET.Core.dll' Assembly='.net' KeyPath='yes' />
+                  <File Id='_MagickNETCore' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Magick.NET.Core.dll' Source='..\packages\Magick.NET.Core.14.5.0\lib\netstandard20\Magick.NET.Core.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
                 <Component Id='com_MagickNETQ8x64' Guid='ccd49c31-216c-44ce-9aae-6be3ab80cd4a' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                  <File Id='_MagickNETQ8x64' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Magick.NET-Q8-x64.dll' Source='C:\Users\trevo\.nuget\packages\magick.net-q8-x64\14.4.0\lib\netstandard20\Magick.NET-Q8-x64.dll' Assembly='.net' KeyPath='yes' />
+                  <File Id='_MagickNETQ8x64' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Magick.NET-Q8-x64.dll' Source='..\packages\Magick.NET-Q8-x64.14.5.0\lib\netstandard20\Magick.NET-Q8-x64.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
                 <Component Id='com_AlphaFS' Guid='a0007f46-be79-462d-8c6f-a9026225065b' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                   <File Id='_AlphaFS' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='AlphaFS.dll' Source='..\packages\AlphaFS.2.2.6\lib\net452\AlphaFS.dll' Assembly='.net' KeyPath='yes' />

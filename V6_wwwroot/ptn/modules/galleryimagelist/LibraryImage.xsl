@@ -90,7 +90,7 @@
       </xsl:apply-templates>
       <xsl:choose>
         <xsl:when test="$lightbox='true'">
-          <a data-src="{Images/img[@class='detail']/@src}" data-fancybox="gallery-{@parentId}" class="lightbox-link">
+          <a data-src="{$lgImgSrc}" data-fancybox="gallery-{$parentId}" class="lightbox-link">
             <div class="thumbnail">
               <xsl:apply-templates select="." mode="displayThumbnail">
                 <xsl:with-param name="crop" select="$cropSetting" />

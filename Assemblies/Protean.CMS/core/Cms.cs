@@ -614,8 +614,8 @@ namespace Protean
                 oElmt.InnerText = moConfig["Search"];
                 oResponseElmt.AppendChild(oElmt);
 
-                oElmt = oRXML.CreateElement("CompliedTransform");
-                oElmt.InnerText = moConfig["CompliedTransform"];
+                oElmt = oRXML.CreateElement("CompiledTransform");
+                oElmt.InnerText = moConfig["CompiledTransform"];
                 oResponseElmt.AppendChild(oElmt);
             }
 
