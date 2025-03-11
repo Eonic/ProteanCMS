@@ -4418,7 +4418,7 @@
 
     <script>
       <xsl:text>
-
+$(document).ready(function () {
         var uploadUrl = '/?ewCmd=</xsl:text><xsl:value-of select="$page/@ewCmd"/>\u0026<xsl:text>ewCmd2=FileUpload</xsl:text>\u0026<xsl:text>storageRoot=</xsl:text><xsl:value-of select="$targetPath"/><xsl:text>'
 
         $('#fileupload').fileupload({
@@ -4484,12 +4484,12 @@
       $('.progress .loading-counter .count').html(progress);
       }
       });
-    </script>
 
-    <script>
       $(function() {
       $('.lazy').lazy();
       });
+	  
+	 });
     </script>
 
   </xsl:template>

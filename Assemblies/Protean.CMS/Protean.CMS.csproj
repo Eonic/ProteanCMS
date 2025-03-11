@@ -137,9 +137,6 @@
     <Reference Include="Lucene.Net, Version=3.0.3.0, Culture=neutral, PublicKeyToken=85089178b9ac3181, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
     </Reference>
-    <Reference Include="Magick.NET-Q8-AnyCPU, Version=14.5.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Magick.NET-Q8-AnyCPU.14.5.0\lib\netstandard20\Magick.NET-Q8-AnyCPU.dll</HintPath>
-    </Reference>
     <Reference Include="Magick.NET-Q8-x64, Version=14.5.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=AMD64">
       <HintPath>..\..\packages\Magick.NET-Q8-x64.14.5.0\lib\netstandard20\Magick.NET-Q8-x64.dll</HintPath>
     </Reference>
