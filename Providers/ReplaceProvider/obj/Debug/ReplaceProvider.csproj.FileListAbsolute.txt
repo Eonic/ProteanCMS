@@ -27,3 +27,6 @@ D:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.
 D:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.csproj.CoreCompileInputs.cache
 D:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.dll
 D:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.pdb
+D:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\bin\Debug\AdvancedStringBuilder.dll
+D:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\bin\Debug\AdvancedStringBuilder.xml
+D:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Debug\ReplaceP.431AF955.Up2Date

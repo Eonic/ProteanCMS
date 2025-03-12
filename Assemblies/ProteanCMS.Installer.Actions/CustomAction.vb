@@ -2,8 +2,8 @@
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.1.29.0"
-    Public Shared ptnAppStartAssemblyVersion As String = "6.1.0.0"
+    Public Shared ewAssemblyVersion As String = "6.1.37.0"
+    Public Shared ptnAppStartAssemblyVersion As String = "6.1.1.0"
     Public Shared bundleAssemblyVersion As String = "1.14.1.0"
     Public Shared bundleLessAssemblyVersion As String = "1.14.0.0"
     Public Shared bundleSassAssemblyVersion As String = "1.14.2.0"
@@ -18,6 +18,7 @@ Public Class CustomActions
     Public Shared MicrosoftAjaxAssemblyVersion As String = "1.14.0.0"
     Public Shared AjaxMinAssemblyVersion As String = "5.14.5506.26196"
     Public Shared ECMAAssemblyVersion As String = "1.0.1.0"
+    Public Shared DynamicImageAssemblyVersion As String = "3.1.1.1"
     Public Shared DynamicImagePDFAssemblyVersion As String = "1.0.0.4"
     Public Shared SystemNetFTPClientAssemblyVersion As String = "1.0.5824.34026"
     'We have real problems with this specific DLL' the one PreMailer.Net references is 4.6.0.0 but installs as 4.0.2.0 in GAC therefore old version encompasses 4.6.0.0 to scale back to 4.0.2.0
@@ -26,8 +27,8 @@ Public Class CustomActions
     Public Shared ClearScriptAssemblyVersion As String = "5.5.6.0"
     Public Shared MicrosoftClearScriptV8AssemblyVersion As String = "7.4.5.0"
     Public Shared AlphaFSAssemblyVersion As String = "2.2.0.0"
-    Public Shared MagickNETCoreAssemblyVersion As String = "14.4.0.0"
-    Public Shared MagickNETAssemblyVersion As String = "14.4.0.0"
+    Public Shared MagickNETCoreAssemblyVersion As String = "14.5.0.0"
+    Public Shared MagickNETAssemblyVersion As String = "14.5.0.0"
     Public Shared GoogleProtoBufAssemblyVersion As String = "3.20.1.0"
     Public Shared SharpZipLibAssemblyVersion As String = "1.4.2.13"
     Public Shared SystemBuffersVersion As String = "4.0.4.0"
@@ -41,20 +42,15 @@ Public Class CustomActions
     Public Shared SystemTextEncodingsWebVersion As String = "9.0.0.2"
     Public Shared SystemTextEncodingCodePagesAssemblyVersion As String = "9.0.0.0"
     Public Shared SystemNumericsVectorsVersion As String = "4.1.5.0"
-
     Public Shared AngleSharpVersion As String = "1.2.0.0"
     Public Shared PreMailerVersion As String = "2.6.0.0"
     Public Shared QRCoderVersion As String = "1.6.0.0"
-
     Public Shared iTextSharpVersion As String = "3.7.1.0"
     Public Shared SkiaSharpVersion As String = "3.116.0.0"
     Public Shared BouncyCastleCrypto As String = "2.0.0.0"
-
     Public Shared SystemIOPipelines As String = "9.0.0.2"
-
-
-
     Public Shared SystemDataSQLClient As String = "4.6.2.0" 'lib version 4.8.6
+    '  Public Shared SystemWebAdaptors As String = "2.0.0.0"
 
 
     'do not use as no SNK - Public Shared ImazenWebPVersion As String = "10.0.1.0"
@@ -266,6 +262,7 @@ Public Class CustomActions
                     UpdateAssemblyRef(oAssembliesSect, "BouncyCastle.Cryptography, Version=" & BouncyCastleCrypto & ", Culture=neutral, PublicKeyToken=072edcf4a5328938")
                     UpdateAssemblyRef(oAssembliesSect, "System.Data.SqlClient, Version=" & SystemDataSQLClient & ", Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
                     UpdateAssemblyRef(oAssembliesSect, "System.IO.Pipelines, Version=" & SystemIOPipelines & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+                    ' UpdateAssemblyRef(oAssembliesSect, "Microsoft.AspNetCore.SystemWebAdapters, Version=" & SystemWebAdaptors & ", Culture=neutral, PublicKeyToken=adb9793829ddae60")
 
 
 
@@ -556,6 +553,7 @@ Public Class CustomActions
 
             UpdateDependantAssembly(oSectXml, "WebGrease", "31bf3856ad364e35", WebGreaseAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "AdvancedStringBuilder", "e818a2fc08933ddb", AdvancedStringBuilderVersion)
+            UpdateDependantAssembly(oSectXml, "SoundInTheory.DynamicImage", "fa44558110383067", DynamicImageAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "SoundInTheory.DynamicImage.Extensions.Pdf", "fa44558110383067", DynamicImagePDFAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "System.Net.FTPClient", "fa4be07daa57c2b7", SystemNetFTPClientAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "createsend-dotnet", "0e5e11efc3341916", CreateSendAssemblyVersion)
@@ -585,6 +583,8 @@ Public Class CustomActions
 
             UpdateDependantAssembly(oSectXml, "System.IO.Pipelines", "cc7b13ffcd2ddd51", SystemIOPipelines)
             UpdateDependantAssembly(oSectXml, "System.Data.SqlClient", "b03f5f7f11d50a3a", SystemDataSQLClient)
+            'UpdateDependantAssembly(oSectXml, "Microsoft.AspNetCore.SystemWebAdapters", "adb9793829ddae60", SystemWebAdaptors)
+
             UpdateDependantAssembly(oSectXml, "QRCoder", "c4ed5b9ae8358a28", QRCoderVersion)
 
             Dim BindingElmt As XmlElement = oSectXml.DocumentElement.SelectSingleNode("assemblyBinding")
