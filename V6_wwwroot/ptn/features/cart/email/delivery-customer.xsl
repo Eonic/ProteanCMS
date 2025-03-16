@@ -64,31 +64,51 @@
       <tr>
         <td colspan="2" align="left" style="text-align:left !important;">
           <font face="verdana">
-            <xsl:apply-templates select="." mode="orderItemsEmail"/>
-          
+            <xsl:apply-templates select="." mode="orderItemsEmail"/>          
           <br/>
           <br/>
-          <h2>Thank you for your order !</h2>
+          <h2>Thank you for your order.</h2>
           </font>
         </td>
       </tr>
       <tr>
         <td colspan="2" align="left" style="text-align:left !important;">
           <font face="verdana">
-            <xsl:if test="/Page/Contents/Content[@name='cartMessage'] or Notes">
-              <h3>Additional Information</h3>
-              <font size="2">
-                <xsl:copy-of select="/Page/Contents/Content[@name='cartMessage']/node()" />
-                <br />
-                <xsl:copy-of select="Notes/Notes" />
-                <br />
-                <xsl:value-of select="/Page/Contents/Content[@name='cartTerms']"/>
-              </font>
-            </xsl:if>
+			  <xsl:apply-templates select="../Delivery" mode="delivery-info"/>
+             
           </font>
         </td>
       </tr>
     </table>
   </xsl:template>
+
+	<xsl:template match="Delivery" mode="bodyLayout"></xsl:template>
+
+
+    <xsl:template match="Delivery" mode="delivery-info">
+		<h3>Delivery Information</h3>
+		<font size="2">
+			Your package is being shipped by <strong><xsl:value-of select="cCarrierName"/></strong>
+			<br />
+			It is scheduled for collection from us on <strong>
+			<xsl:value-of select="dCollectionDate"/>
+		</strong><br />
+			And we expect you to recieve it on on <strong>
+				<xsl:value-of select="dExpectedDeliveryDate"/>
+			</strong>
+			<br />
+			The tracking reference is :<strong>
+			<xsl:value-of select="cCarrierRef"/>
+			</strong>
+				<br />
+				The following notes have been given to the carrier :<br />
+				<strong><xsl:value-of select="cCarrierNotes"/>
+		</strong>
+		</font>
+		
+	</xsl:template>
+	
+	
+	<xsl:template match="Carrier" mode="bodyLayout"></xsl:template>
   <!-- -->
 </xsl:stylesheet>
