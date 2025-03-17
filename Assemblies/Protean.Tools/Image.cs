@@ -247,7 +247,7 @@ namespace Protean.Tools
             catch (Exception ex)
             {
                 OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Save", ex, ""));
-                return "Error";
+                return "?error=" + ex.Message + ex.StackTrace;
             }
         }
 

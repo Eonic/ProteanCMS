@@ -98,148 +98,157 @@
 				<group id="presentation">
 					<group class="row">
 						<group class="col-lg-6">
-							<select1 bind="cIconStyle" appearance="minimal" class="bs-only">
-								<label>Heading / Icon Style</label>
-								<item>
-									<label>None</label>
-									<value>false</value>
-								</item>
-								<item>
-									<label>Left</label>
-									<value>Left</value>
-								</item>
-								<item>
-									<label>Right</label>
-									<value>Right</value>
-								</item>
-								<item>
-									<label>Centre</label>
-									<value>Centre</value>
-								</item>
-							</select1>
-							<select1 bind="cModuleBox" class="boxStyle" appearance="minimal">
-								<label>Box Style</label>
-								<item>
-									<label>None</label>
-									<value></value>
-								</item>
-
-							</select1>
-							<select bind="bMatchHeight" appearance="full" class="multiline bs-only">
-								<item>
-									<label>Match Height</label>
-									<value>true</value>
-									<toggle case="Match_true" event="DOMActivate"/>
-								</item>
-								<help class="inline">Tick this box on 2 or more modules within a page, and they will all be the same height. This only works on panel box styles and the match doesn't include the module footer link height.</help>
-							</select>
-
-              <select1 bind="marginBelow" appearance="minimal">
-                <label>Margin Bottom</label>
+              <select1 bind="cModuleBox" class="boxStyle" appearance="minimal">
+                <label>Box Style</label>
                 <item>
-                  <label>0</label>
-                  <value>mb-0</value>
-                </item>
-                <item>
-                  <label>1</label>
-                  <value>mb-1</value>
-                </item>
-                <item>
-                  <label>2</label>
-                  <value>mb-2</value>
-                </item>
-                <item>
-                  <label>3</label>
-                  <value>mb-3</value>
-                </item>
-                <item>
-                  <label>4</label>
-                  <value>mb-4</value>
-                </item>
-                <item>
-                  <label>5</label>
-                  <value>mb-5</value>
-                </item>
-                <item>
-                  <label>6</label>
-                  <value>mb-6</value>
-                </item>
-                <item>
-                  <label>7</label>
-                  <value>mb-7</value>
-                </item>
-                <item>
-                  <label>8</label>
-                  <value>mb-8</value>
-                </item>
-                <item>
-                  <label>9</label>
-                  <value>mb-9</value>
+                  <label>None</label>
+                  <value></value>
                 </item>
               </select1>
-              <input bind="module-padding" class="">
-                <label>Module Padding</label>
-              </input>
-              <input bind="title-margin" class="">
-                <label>Margin Below Title</label>
-              </input>
-							<switch class="disable" for="bMatchHeight">
-								<case id="Match_true">
-									<select bind="Screens" appearance="full" class="multiline bs-only">
-										<label>For Screens</label>
-										<item>
-											<label>
-												<i class="fas fa-mobile-alt"> </i> Extra small
-											</label>
-											<value>xs</value>
-										</item>
-										<item>
-											<label>
-												<i class="fas fa-mobile-alt"> </i> Small
-											</label>
-											<value>sm</value>
-										</item>
-										<item>
-											<label>
-												<i class="fas fa-tablet-alt"> </i> Medium
-											</label>
-											<value>md</value>
-										</item>
-										<item>
-											<label>
-												<i class="fas fa-laptop"> </i> Large
-											</label>
-											<value>lg</value>
-										</item>
-										<item>
-											<label>
-												<i class="fas fa-desktop"> </i> Extra Large
-											</label>
-											<value>xl</value>
-										</item>
-										<item>
-											<label>
-												<i class="fas fa-desktop"> </i> XXL
-											</label>
-											<value>xxl</value>
-										</item>
-										<help class="inline">
-											<ul>
-												<li>Extra small means screens under 576px wide</li>
-												<li>Small screens are 576px-767px</li>
-												<li>Medium screens are 768px-991px</li>
-												<li>Large screens are 992px-1199px</li>
-												<li>Extra large screens are 1200px-1399px</li>
-												<li>Extra extra large screens are 1400px and up</li>
-											</ul>
-										</help>
-									</select>
-								</case>
+              <select bind="bMatchHeight" appearance="full" class="multiline bs-only">
+                <item>
+                  <label>Match Height</label>
+                  <value>true</value>
+                  <toggle case="Match_true" event="DOMActivate"/>
+                </item>
+                <help class="inline">Tick this box on 2 or more modules within a page, and they will all be the same height. This only works on panel box styles and the match doesn't include the module footer link height.</help>
+              </select>
 
-							</switch>
+              <switch class="disable" for="bMatchHeight">
+                <case id="Match_true">
+                  <select bind="Screens" appearance="full" class="multiline bs-only">
+                    <label>For Screens</label>
+                    <item>
+                      <label>
+                        <i class="fas fa-mobile-alt"> </i> Extra small
+                      </label>
+                      <value>xs</value>
+                    </item>
+                    <item>
+                      <label>
+                        <i class="fas fa-mobile-alt"> </i> Small
+                      </label>
+                      <value>sm</value>
+                    </item>
+                    <item>
+                      <label>
+                        <i class="fas fa-tablet-alt"> </i> Medium
+                      </label>
+                      <value>md</value>
+                    </item>
+                    <item>
+                      <label>
+                        <i class="fas fa-laptop"> </i> Large
+                      </label>
+                      <value>lg</value>
+                    </item>
+                    <item>
+                      <label>
+                        <i class="fas fa-desktop"> </i> Extra Large
+                      </label>
+                      <value>xl</value>
+                    </item>
+                    <item>
+                      <label>
+                        <i class="fas fa-desktop"> </i> XXL
+                      </label>
+                      <value>xxl</value>
+                    </item>
+                    <help class="inline">
+                      <ul>
+                        <li>Extra small means screens under 576px wide</li>
+                        <li>Small screens are 576px-767px</li>
+                        <li>Medium screens are 768px-991px</li>
+                        <li>Large screens are 992px-1199px</li>
+                        <li>Extra large screens are 1200px-1399px</li>
+                        <li>Extra extra large screens are 1400px and up</li>
+                      </ul>
+                    </help>
+                  </select>
+                </case>
+
+              </switch>
+              <group class="form-section-wrapper form-section-wrapper-wide">
+                <label>Heading</label>
+                <select1 bind="cIconStyle" appearance="minimal" class="bs-only">
+                  <label>Heading / Icon Style</label>
+                  <item>
+                    <label>None</label>
+                    <value>false</value>
+                  </item>
+                  <item>
+                    <label>Left</label>
+                    <value>Left</value>
+                  </item>
+                  <item>
+                    <label>Right</label>
+                    <value>Right</value>
+                  </item>
+                  <item>
+                    <label>Centre</label>
+                    <value>Centre</value>
+                  </item>
+                </select1>
+                <input bind="title-margin" class="">
+                  <label>Margin Below Title</label>
+                </input>
+              </group>
+              <group class="form-section-wrapper form-section-wrapper-wide">
+                <label>Spacing</label>
+                <select1 bind="marginBelow" appearance="minimal">
+                  <label>Margin Bottom</label>
+                  <item>
+                    <label>0</label>
+                    <value>mb-0</value>
+                  </item>
+                  <item>
+                    <label>1</label>
+                    <value>mb-1</value>
+                  </item>
+                  <item>
+                    <label>2</label>
+                    <value>mb-2</value>
+                  </item>
+                  <item>
+                    <label>3</label>
+                    <value>mb-3</value>
+                  </item>
+                  <item>
+                    <label>4</label>
+                    <value>mb-4</value>
+                  </item>
+                  <item>
+                    <label>5</label>
+                    <value>mb-5</value>
+                  </item>
+                  <item>
+                    <label>6</label>
+                    <value>mb-6</value>
+                  </item>
+                  <item>
+                    <label>7</label>
+                    <value>mb-7</value>
+                  </item>
+                  <item>
+                    <label>8</label>
+                    <value>mb-8</value>
+                  </item>
+                  <item>
+                    <label>9</label>
+                    <value>mb-9</value>
+                  </item>
+                </select1>
+                <input bind="module-padding" class="">
+                  <label>Module Padding</label>
+                </input>
+              </group>
+							
+
+              
+              
 						</group>
 						<group class="col-lg-6">
-							<group class="form-section-wrapper ">
+							<group class="form-section-wrapper">
 								<select1 bind="icon-options" appearance="full"  class="form-group inline-items">
 									<item>
 										<label>Icon Picker</label>

@@ -2290,7 +2290,7 @@ namespace Protean
                                 }
                                 else
                                 {
-                                    myWeb.moSession["LogonRedirect"] = myWeb.mcPagePath;
+                                    myWeb.moSession["LogonRedirect"] = myWeb.mcOriginalURL;
                                     nPageId = myWeb.gnPageLoginRequiredId;
                                 }
                             }
