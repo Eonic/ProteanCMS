@@ -111,9 +111,11 @@
     </Reference>
     <Reference Include="ClearScript.Windows, Version=7.4.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.ClearScript.Windows.7.4.5\lib\net45\ClearScript.Windows.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="ClearScript.Windows.Core, Version=7.4.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.ClearScript.Windows.Core.7.4.5\lib\net45\ClearScript.Windows.Core.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DartSassHost, Version=1.1.0.0, Culture=neutral, PublicKeyToken=83ed06f2bd4ecb43, processorArchitecture=MSIL">
       <HintPath>..\..\packages\DartSassHost.1.1.0\lib\net471\DartSassHost.dll</HintPath>
@@ -136,6 +138,12 @@
     </Reference>
     <Reference Include="Lucene.Net, Version=3.0.3.0, Culture=neutral, PublicKeyToken=85089178b9ac3181, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="Magick.NET-Q8-x64, Version=14.5.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=AMD64">
+      <HintPath>..\..\packages\Magick.NET-Q8-x64.14.5.0\lib\netstandard20\Magick.NET-Q8-x64.dll</HintPath>
+    </Reference>
+    <Reference Include="Magick.NET.Core, Version=14.5.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Magick.NET.Core.14.5.0\lib\netstandard20\Magick.NET.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=9.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Bcl.AsyncInterfaces.9.0.2\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
@@ -177,6 +185,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.ConfigurationManager, Version=9.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Configuration.ConfigurationManager.9.0.2\lib\net462\System.Configuration.ConfigurationManager.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
@@ -245,15 +254,18 @@
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Primitives, Version=4.10.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.ServiceModel.Primitives.4.10.3\lib\net461\System.ServiceModel.Primitives.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System.Text.Encoding.CodePages, Version=9.0.0.2, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Text.Encoding.CodePages.9.0.2\lib\net462\System.Text.Encoding.CodePages.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System.Text.Encodings.Web, Version=9.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Text.Encodings.Web.9.0.2\lib\net462\System.Text.Encodings.Web.dll</HintPath>
     </Reference>
     <Reference Include="System.Text.Json, Version=9.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Text.Json.9.0.2\lib\net462\System.Text.Json.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Threading.Tasks.Extensions.4.6.0\lib\net462\System.Threading.Tasks.Extensions.dll</HintPath>
@@ -444,5 +456,9 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\Microsoft.ClearScript.V8.Native.win-x64.7.4.5\build\Microsoft.ClearScript.V8.Native.win-x64.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.ClearScript.V8.Native.win-x64.7.4.5\build\Microsoft.ClearScript.V8.Native.win-x64.props'))" />
+    <Error Condition="!Exists('..\..\packages\Magick.NET-Q8-AnyCPU.14.5.0\build\netstandard20\Magick.NET-Q8-AnyCPU.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Magick.NET-Q8-AnyCPU.14.5.0\build\netstandard20\Magick.NET-Q8-AnyCPU.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Magick.NET-Q8-x64.14.5.0\build\netstandard20\Magick.NET-Q8-x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Magick.NET-Q8-x64.14.5.0\build\netstandard20\Magick.NET-Q8-x64.targets'))" />
   </Target>
+  <Import Project="..\..\packages\Magick.NET-Q8-AnyCPU.14.5.0\build\netstandard20\Magick.NET-Q8-AnyCPU.targets" Condition="Exists('..\..\packages\Magick.NET-Q8-AnyCPU.14.5.0\build\netstandard20\Magick.NET-Q8-AnyCPU.targets')" />
+  <Import Project="..\..\packages\Magick.NET-Q8-x64.14.5.0\build\netstandard20\Magick.NET-Q8-x64.targets" Condition="Exists('..\..\packages\Magick.NET-Q8-x64.14.5.0\build\netstandard20\Magick.NET-Q8-x64.targets')" />
 </Project>

@@ -6863,20 +6863,20 @@ namespace Protean
                         oFrmGrp2 = base.addGroup(ref oFrmElmt, "EditPermissions", "PermissionButtons", "Buttons");
 
                         oElmt2 = base.addSelect1(ref oFrmGrp2, "Level", false, "Access Level", "multiline", Protean.xForm.ApperanceTypes.Full);
-                        base.addOption(ref oElmt2, "View", "2");
-                        base.addOption(ref oElmt2, "Add", "3");
-                        base.addOption(ref oElmt2, "Add and Update Own", "4");
-                        base.addOption(ref oElmt2, "Update All", "5");
-                        base.addOption(ref oElmt2, "Approve All", "6");
-                        base.addOption(ref oElmt2, "Add, Update and Publish Own ", "7");
-                        base.addOption(ref oElmt2, "Publish All", "8");
-                        base.addOption(ref oElmt2, "Full", "9");
+                        base.addOption(ref oElmt2, "View [2]", "2");
+                        base.addOption(ref oElmt2, "Add [3]", "3");
+                        base.addOption(ref oElmt2, "Add and Update Own [4]", "4");
+                        base.addOption(ref oElmt2, "Update All  [5]", "5");
+                        base.addOption(ref oElmt2, "Approve All  [6]", "6");
+                        base.addOption(ref oElmt2, "Add, Update and Publish Own [7]", "7");
+                        base.addOption(ref oElmt2, "Publish All [8]", "8");
+                        base.addOption(ref oElmt2, "Full [9]", "9");
 
                         // Add All does nothing, probably is not good for this screen either.
                         // MyBase.addSubmit(oFrmGrp2, "AddAll", "Add All", "", "PermissionButtons btn-all")
-                        base.addSubmit(ref oFrmGrp2, "AddSelected", "Add Selected", "", "PermissionButtons btn-add");
+                        base.addSubmit(ref oFrmGrp2, "AddSelected", "Add Selected", "", "PermissionButton btn-add");
                         base.addSubmit(ref oFrmGrp2, "RemoveSelected", "Remove Selected", "", "PermissionButton btn-remove");
-                        base.addSubmit(ref oFrmGrp2, "RemoveAll", "Clear All", "", "PermissionButtons btn-clear-all");
+                        base.addSubmit(ref oFrmGrp2, "RemoveAll", "Clear All", "", "PermissionButton btn-clear-all");
 
 
                         // Save the permissions on submission
@@ -7015,9 +7015,9 @@ namespace Protean
                         // add the buttons so we can test for submission
                         oFrmGrp2 = base.addGroup(ref oFrmElmt, "EditPermissions", "PermissionButtons", "Buttons");
 
-                        base.addSubmit(ref oFrmGrp2, "AddSelected", "Add Selected >", "", "PermissionButtons btn-add");
-                        base.addSubmit(ref oFrmGrp2, "RemoveSelected", "< Remove Selected", "", "PermissionButtons btn-remove");
-                        base.addSubmit(ref oFrmGrp2, "Finish", "Finish Editing", "", "PermissionButtons btmn-finish");
+                        base.addSubmit(ref oFrmGrp2, "AddSelected", "Add Selected >", "", "PermissionButton btn-add");
+                        base.addSubmit(ref oFrmGrp2, "RemoveSelected", "< Remove Selected", "", "PermissionButton btn-remove");
+                        base.addSubmit(ref oFrmGrp2, "Finish", "Finish Editing", "", "PermissionButton btmn-finish");
 
                         switch (base.getSubmitted() ?? "")
                         {
@@ -7170,9 +7170,9 @@ namespace Protean
 
 
                         // Add submit buttons (group specified by issue 1362)
-                        base.addSubmit(ref oFrmButtons, "AddSelected", "Add Selected", "", "PermissionButtons btn-add");
-                        base.addSubmit(ref oFrmButtons, "RemoveSelected", "Remove Selected", "", "PermissionButtons btn-remove");
-                        base.addSubmit(ref oFrmButtons, "Finish", "Finish Editing", "", "principle PermissionButtons btn-finish");
+                        base.addSubmit(ref oFrmButtons, "AddSelected", "Add Selected", "", "PermissionButton btn-add");
+                        base.addSubmit(ref oFrmButtons, "RemoveSelected", "Remove Selected", "", "PermissionButton btn-remove");
+                        base.addSubmit(ref oFrmButtons, "Finish", "Finish Editing", "", "principle PermissionButton btn-finish");
 
                         // lets add / remove before we populate
                         switch (base.getSubmitted() ?? "")
@@ -8790,8 +8790,8 @@ namespace Protean
 
                         // add the buttons so we can test for submission
                         oFrmGrp2 = base.addGroup(ref oFrmElmt, "EditRelations", "RelationButtons", "Buttons");
-                        base.addSubmit(ref oFrmGrp2, "AddSelected", "Add Selected", "", "PermissionButtons btn-add");
-                        base.addSubmit(ref oFrmGrp2, "RemoveSelected", "Remove Selected", "", "PermissionButtons btn-remove");
+                        base.addSubmit(ref oFrmGrp2, "AddSelected", "Add Selected", "", "PermissionButton btn-add");
+                        base.addSubmit(ref oFrmGrp2, "RemoveSelected", "Remove Selected", "", "PermissionButton btn-remove");
 
                         switch (base.getSubmitted() ?? "")
                         {
@@ -8879,12 +8879,12 @@ namespace Protean
 
                         // add the buttons so we can test for submission
                         oFrmGrp2 = base.addGroup(ref oFrmElmt, "EditDirs", "DirButtons", "Buttons");
-                        base.addSubmit(ref oFrmGrp2, "AddSelected", "Add Selected", "", "PermissionButtons btn-add");
+                        base.addSubmit(ref oFrmGrp2, "AddSelected", "Add Selected", "", "PermissionButton btn-add");
                         if (bDeny)
                         {
-                            base.addSubmit(ref oFrmGrp2, "DenySelected", "Deny Selected", "", "PermissionButtons btn-deny");
+                            base.addSubmit(ref oFrmGrp2, "DenySelected", "Deny Selected", "", "PermissionButton btn-deny");
                         }
-                        base.addSubmit(ref oFrmGrp2, "RemoveSelected", "Remove Selected", "", "PermissionButtons btn-remove");
+                        base.addSubmit(ref oFrmGrp2, "RemoveSelected", "Remove Selected", "", "PermissionButton btn-remove");
 
                         switch (base.getSubmitted() ?? "")
                         {
@@ -9000,12 +9000,12 @@ namespace Protean
 
                         // add the buttons so we can test for submission
                         oFrmGrp2 = base.addGroup(ref oFrmElmt, "EditDirs", "DirButtons", "Buttons");
-                        base.addSubmit(ref oFrmGrp2, "AddSelected", "Allow Selected", "", "PermissionButtons btn-allow");
+                        base.addSubmit(ref oFrmGrp2, "AddSelected", "Allow Selected", "", "PermissionButton btn-allow");
                         if (bDeny)
                         {
-                            base.addSubmit(ref oFrmGrp2, "DenySelected", "Deny Selected", "", "PermissionButtons btn-deny");
+                            base.addSubmit(ref oFrmGrp2, "DenySelected", "Deny Selected", "", "PermissionButton btn-deny");
                         }
-                        base.addSubmit(ref oFrmGrp2, "RemoveSelected", "Remove Selected", "", "PermissionButtons btn-remove");
+                        base.addSubmit(ref oFrmGrp2, "RemoveSelected", "Remove Selected", "", "PermissionButton btn-remove");
 
                         switch (base.getSubmitted() ?? "")
                         {
@@ -9148,12 +9148,12 @@ namespace Protean
 
                         // add the buttons so we can test for submission
                         oFrmGrp2 = base.addGroup(ref oFrmElmt, "EditDirs", "DirButtons", "Buttons");
-                        base.addSubmit(ref oFrmGrp2, "AddSelected", "Include Selected", "", "PermissionButtons btn-allow");
+                        base.addSubmit(ref oFrmGrp2, "AddSelected", "Include Selected", "", "PermissionButton btn-allow");
                         if (bDeny)
                         {
-                            base.addSubmit(ref oFrmGrp2, "DenySelected", "Exclude Selected", "", "PermissionButtons btn-deny");
+                            base.addSubmit(ref oFrmGrp2, "DenySelected", "Exclude Selected", "", "PermissionButton btn-deny");
                         }
-                        base.addSubmit(ref oFrmGrp2, "RemoveSelected", "Remove Selected", "", "PermissionButtons btn-remove");
+                        base.addSubmit(ref oFrmGrp2, "RemoveSelected", "Remove Selected", "", "PermissionButton btn-remove");
 
                         switch (base.getSubmitted() ?? "")
                         {

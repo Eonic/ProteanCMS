@@ -24,7 +24,7 @@ function form_check(oForm) {
 
 function keepAlive() {
     /* call keep alive every 10 mins */
-    $.get("/ptn/tools/keepalive.ashx", function () { setTimeout("keepAlive();", 600000); });
+    $.get("/ptn/tools/keepalive.ashx", function () { setTimeout("keepAlive();", 300000); });
 }
 
 var redirectAPIUrl = '/ewapi/Cms.Admin/RedirectPage';
