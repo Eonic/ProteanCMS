@@ -1,4 +1,10 @@
-﻿/*############### HEADER LAYOUT #################*/
+﻿@media(min-width:2000px) {
+    header {
+        max-width: 2000px;
+        margin: 0 auto;
+    }
+}
+/*############### HEADER LAYOUT #################*/
 //Specific Layout Settings
 .header-menu-below {
     display: block !important;
