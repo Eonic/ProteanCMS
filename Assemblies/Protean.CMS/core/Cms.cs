@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic;
+﻿using Lucene.Net.Support;
+using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Membership;
 using System;
@@ -10,6 +11,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using System.Web;
 using System.Web.Configuration;
 using System.Xml;
 using static Protean.stdTools;
@@ -1345,7 +1347,7 @@ namespace Protean
                                     {
                                         bAllowCachePage = true;
                                     }
-                                }                              
+                                }
 
                                 if (gnResponseCode == 200L & moRequest.Form.Count == 0 & mnUserId == 0 & bAllowCachePage) //!moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"].Contains("?"))
                                 {
@@ -1679,7 +1681,8 @@ namespace Protean
                                 // TS 21-06-2017 Moved from New() as not required for cached pages I think.
                                 Open();
 
-                                if (!string.IsNullOrEmpty(msException)) {
+                                if (!string.IsNullOrEmpty(msException))
+                                {
                                     sProcessInfo = "we should stop now";
                                 }
 
@@ -1780,7 +1783,8 @@ namespace Protean
                                                     mbOutputXml = false;
                                             }
                                         }
-                                        if (mbOutputXml == true) {
+                                        if (mbOutputXml == true)
+                                        {
                                             switch (Strings.LCase(mcContentType) ?? "")
                                             {
                                                 case "application/xml":
@@ -1795,7 +1799,8 @@ namespace Protean
                                                     }
                                             }
                                         }
-                                        else {
+                                        else
+                                        {
 
                                             PerfMon.Log("Web", "GetPageHTML-loadxsl");
                                             string styleFile;
@@ -1826,7 +1831,8 @@ namespace Protean
                                                     styleFile = goServer.MapPath(mcEwSiteXsl);
                                                 }
                                             }
-                                            else  {
+                                            else
+                                            {
                                                 if (moResponseType == pageResponseType.Page)
                                                 {
                                                     if (!string.IsNullOrEmpty(moConfig["xframeoptions"]))
@@ -1866,7 +1872,8 @@ namespace Protean
                                                             moDbHelper.logActivity(Cms.dbHelper.ActivityType.Recompile, (long)mnUserId, 0L, 0L, 0L, oTransformClear.transformException.Message);
                                                             throw new Exception(oTransformClear.transformException.Message);
                                                         }
-                                                        else {
+                                                        else
+                                                        {
                                                             //only redirect if able to delete
                                                             Protean.Cms myWeb = this;
                                                             Protean.Config.UpdateConfigValue(ref myWeb, "protean/web", "CompiledTransform", "on");
@@ -1879,14 +1886,15 @@ namespace Protean
                                                 else if (mbAdminMode)
                                                 {
                                                     //we only want to recompile if compiled transform is on
-                                                    if(gbCompiledTransform) {
-                                                        
+                                                    if (gbCompiledTransform)
+                                                    {
+
                                                         Cms myWeb = this;
                                                         Protean.Config.UpdateConfigValue(ref myWeb, "protean/web", "CompiledTransform", "off");
                                                         // just sent value as it might be true when user did ResetConfig
                                                         // to avoid skipping update functionality, we are just set it differently
                                                         Protean.Config.UpdateConfigValue(ref myWeb, "", "recompile", "recompiling");
-                                                        moDbHelper.logActivity(Cms.dbHelper.ActivityType.Recompile, (long)mnUserId, 0L,0L, 0L, "Recompiling XSLT");
+                                                        moDbHelper.logActivity(Cms.dbHelper.ActivityType.Recompile, (long)mnUserId, 0L, 0L, 0L, "Recompiling XSLT");
                                                         // we log to the activity log this action
                                                         msRedirectOnEnd = "/?recompile=del&SessionId=" + SessionID;
                                                     }
@@ -8250,7 +8258,7 @@ namespace Protean
                     oRoot = moPageXml.CreateElement("Contents");
                     moPageXml.DocumentElement.AppendChild(oRoot);
                 }
-                  
+
                 string nCurrentPageId = nPageId.ToString();
                 // Adjust the page id if it's a cloned page.
                 if (Conversions.ToDouble(nCurrentPageId) != (double)mnPageId)
@@ -8259,17 +8267,21 @@ namespace Protean
                     sFilterSql += " and CL.bCascade = 1 and CL.bPrimary = 1 ";
                 }
                 else
-                {   
+                {
                     // If we have an article id we only want to show cascaded content
-                    if (moConfig["ContentDetailShowOnlyCascaded"] != null) { 
+                    if (moConfig["ContentDetailShowOnlyCascaded"] != null)
+                    {
                         if (moConfig["ContentDetailShowOnlyCascaded"].ToLower() == "on" && mnArtId != 0)
-                        {      
-                                if (ibIndexMode) {
-                                    //when we are indexing we want to be able to index the brief because we use this as the abstract.
-                                    sFilterSql += " and ((CL.bCascade = 1 and CL.bPrimary = 1) or nContentKey = " + mnArtId + ") ";
-                                } else {
-                                    sFilterSql += " and CL.bCascade = 1 and CL.bPrimary = 1 ";
-                                }
+                        {
+                            if (ibIndexMode)
+                            {
+                                //when we are indexing we want to be able to index the brief because we use this as the abstract.
+                                sFilterSql += " and ((CL.bCascade = 1 and CL.bPrimary = 1) or nContentKey = " + mnArtId + ") ";
+                            }
+                            else
+                            {
+                                sFilterSql += " and CL.bCascade = 1 and CL.bPrimary = 1 ";
+                            }
                         }
                     }
                     // we are pulling in located and native items but not cascaded
@@ -11348,7 +11360,7 @@ namespace Protean
         {
             string cProcessInfo = "";
             try
-            {                
+            {
                 string result = moFSHelper.DeleteFolder(mcPageCacheFolder, goServer.MapPath("/" + gcProjectPath));
                 if (result == "1")
                 {
@@ -11367,16 +11379,104 @@ namespace Protean
 
         public void ClearPageCache(string ContentId)
         {
-
-            string filePath = goServer.MapPath("/") + mcPageCacheFolder;
-            // check startfolder exists
-            var rootDir = new DirectoryInfo(filePath);
-            string fileName = mcOriginalURL;
             try
             {
-                if (rootDir.Exists)
-                {
-                    string FilesToDeleteFromCache = moFSHelper.DeleteFolder(fileName, filePath);
+                string filePath = goServer.MapPath("/") + mcPageCacheFolder;
+                // check startfolder exists
+                var rootDir = new DirectoryInfo(filePath);
+                string folderName = string.Empty;//mcOriginalURL;
+                string sSql;
+                DataSet oDs;
+                string sProcessInfo;
+                sProcessInfo = "ClearPageCache-Start";
+                PerfMon.Log("Web", sProcessInfo);
+                XmlElement oElmt = null;
+                if(Strings.LCase(moConfig["PageCache"]) == "on" && rootDir.Exists)
+                {               
+                    sSql = "EXEC spGetContentDetailsForCache @nContentkey=" + ContentId + "";
+                    // Get the dataset
+                    oDs = moDbHelper.GetDataSet(sSql, "Content");
+                    if (oDs.Tables[0].Rows.Count > 0)
+                    {
+                        // COVERT DATASET TO XML
+                        // =====================
+                        oElmt = moPageXml.CreateElement("Parent");
+
+                        // TS added lines to avoid whitespace issues
+                        var oXml = new XmlDocument();
+                        oXml.LoadXml(oDs.GetXml());
+                        oXml.PreserveWhitespace = false;
+
+                        oElmt.InnerXml = oXml.DocumentElement.OuterXml;
+                        string sContent; int i; string contentType;
+                        string rootParentFolder;
+                        string subrootParentFolder;
+                        string childFolder;
+                        List<string> sFoldersUrlslist = new List<string>();
+                        // Convert any text to xml
+                        foreach (XmlElement oElmt2 in oElmt.SelectNodes("descendant-or-self::Content"))
+                        {
+                            if(oElmt2.SelectSingleNode("cContentName") != null)
+                            {                            
+                                sContent = oElmt2.SelectSingleNode("cContentName").InnerText;
+                                contentType = oElmt2.SelectSingleNode("cContentSchemaName").InnerText;
+                                string[] prefixs = moConfig["DetailPrefix"].Split(',');
+                                string thisPrefix = "";
+                                string thisContentType = "";
+                                var loopTo = prefixs.Length - 1;
+                                for (i = 0; i <= loopTo; i++)
+                                {
+                                    thisPrefix = prefixs[i].Substring(0, prefixs[i].IndexOf("/"));
+                                    thisContentType = prefixs[i].Substring(prefixs[i].IndexOf("/") + 1, prefixs[i].Length - prefixs[i].IndexOf("/") - 1);
+                                    if ((contentType ?? "") == (thisContentType ?? ""))
+                                    {
+                                        folderName += "/" + thisPrefix + "/" + Protean.Tools.Text.CleanName(sContent).Replace(" ", "-").Trim('-');
+                                        if (rootDir.Exists)
+                                        {
+                                            sFoldersUrlslist.Add(filePath + @"\" + folderName); 
+                                        }
+                                        folderName = "";
+                                    }
+                                }
+                                //add code to delete parent folders that are dependant to this product
+                                if(oElmt2.SelectSingleNode("rootParentFolder").InnerText != "")
+                                {
+                                    string RootPageId = oElmt2.SelectSingleNode("parent_id").InnerText;
+                                    rootParentFolder = oElmt2.SelectSingleNode("rootParentFolder").InnerText;
+                                    subrootParentFolder = oElmt2.SelectSingleNode("subrootParentFolder").InnerText;
+                                    childFolder = oElmt2.SelectSingleNode("childFolder").InnerText;
+
+                                    // if root page contains 'Home' then no need to append in url.
+                                    if(RootPageId == moConfig["RootPageId"])
+                                    {
+                                        folderName += "/" + Protean.Tools.Text.CleanName(subrootParentFolder).Replace(" ", "-").Trim('-') + "/" + Protean.Tools.Text.CleanName(childFolder).Replace(" ", "-").Trim('-');
+                                        string newfilePath = filePath + folderName; 
+                                        rootDir = new DirectoryInfo(newfilePath);
+                                        if (rootDir.Exists)
+                                        {
+                                            sFoldersUrlslist.Add(filePath + @"\" + folderName);  
+                                        }
+                                        folderName = "";
+                                    }
+                                    else
+                                    {
+                                        folderName += "/" + Protean.Tools.Text.CleanName(rootParentFolder).Replace(" ", "-").Trim('-') + "/" + Protean.Tools.Text.CleanName(subrootParentFolder).Replace(" ", "-").Trim('-') + "/" + Protean.Tools.Text.CleanName(childFolder).Replace(" ", "-").Trim('-');
+                                        string newfilePath = filePath + folderName;
+                                        rootDir = new DirectoryInfo(newfilePath);
+                                        if (rootDir.Exists)
+                                        {
+                                            sFoldersUrlslist.Add(filePath + @"\" + folderName);                                    
+                                        }
+                                        folderName = "";
+                                    }
+                                }
+                            }
+                        }
+                        // Remove duplicates using HashSet
+                        HashSet<string> uniqueFolderPaths = new HashSet<string>(sFoldersUrlslist);
+                        // delete all folders list which are exists 
+                        string FolderstoDeleteFromCache = moFSHelper.DeleteMultipleFolder(uniqueFolderPaths);
+                    }
                 }
             }
             catch (Exception ex)

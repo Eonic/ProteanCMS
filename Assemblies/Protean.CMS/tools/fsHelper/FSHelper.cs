@@ -670,8 +670,48 @@ namespace Protean
             while (false);
 
         }
+        public string DeleteMultipleFolder(HashSet<string> folderPaths)
+        {
+            do
+            {
+                try
+                {
+                    foreach (var folderPath in folderPaths)
+                    {
 
-
+                        Tools.Security.Impersonate oImp = null;
+                        if (ImpersonationMode)
+                        {
+                            oImp = new Tools.Security.Impersonate();
+                            if (oImp.ImpersonateValidUser(goConfig["AdminAcct"], goConfig["AdminDomain"], goConfig["AdminPassword"], cInGroup: goConfig["AdminGroup"]) == false)
+                            {
+                                return "Server admin permissions are not configured";
+                                //break;
+                            }
+                        }
+                        if (Directory.Exists(folderPath))
+                        {
+                            Directory.Delete(folderPath, true); // true for recursive delete                        
+                        }
+                        else
+                        {
+                            return "this folder does not exist - " + folderPath;
+                        }
+                        if (ImpersonationMode)
+                        {
+                            oImp.UndoImpersonation();
+                            oImp = null;
+                        } 
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return ex.Message;
+                }
+                return "1";
+            }
+            while (false);
+        }
         public int VirtualFileExists(string cVirtualPath)
         {
             try
@@ -748,7 +788,7 @@ namespace Protean
                         if (oImp.ImpersonateValidUser(goConfig["AdminAcct"], goConfig["AdminDomain"], goConfig["AdminPassword"], cInGroup: goConfig["AdminGroup"]) == false)
                         {
                             return "Server admin permissions are not configured";
-                           // break;
+                            // break;
                         }
                     }
 
@@ -899,8 +939,8 @@ namespace Protean
         {
             // PerfMon.Log("fsHelper", "SaveFile")
             WebResponse response = null;
-            Stream remoteStream = new System.IO.MemoryStream(); 
-           //StreamReader readStream;
+            Stream remoteStream = new System.IO.MemoryStream();
+            //StreamReader readStream;
             WebRequest request;
             System.Drawing.Image img = null;
             try
@@ -951,7 +991,8 @@ namespace Protean
                         CreatePath(cFolderPath + @"\");
 
                         var dir = new DirectoryInfo(mcStartFolder + cFolderPath + @"\");
-                        if (img != null){ 
+                        if (img != null)
+                        {
                             if (dir.Exists)
                             {
                                 switch (Strings.Right(httpURL, httpURL.Length - httpURL.LastIndexOf(".") - 1) ?? "")
@@ -1001,7 +1042,7 @@ namespace Protean
             {
                 response = null;
                 remoteStream = null;
-               // readStream = null;
+                // readStream = null;
                 img = null;
             }
 
@@ -1104,7 +1145,7 @@ namespace Protean
 
                     var oFileStream = new FileStream(FilePath, FileMode.Open, FileAccess.Read);
                     return oFileStream;
-                  
+
                 }
 
                 catch (Exception)
@@ -1416,7 +1457,7 @@ namespace Protean
 
             try
             {
-                string combineFile= string.Empty;
+                string combineFile = string.Empty;
                 string cCleanfileName = Regex.Replace(cFilename, @"\s+", "-");
                 cCleanfileName = Regex.Replace(cCleanfileName, @"(\s+|\$|\,|\'|\£|\:|\*|&|\?|\/)", "");
                 cCleanfileName = Regex.Replace(cCleanfileName, "-{2,}", "-", RegexOptions.None);
@@ -1448,8 +1489,8 @@ namespace Protean
             if (context.Request["storageRoot"] != "" && context.Request["storageRoot"] != null)
             {
                 cFilePath = context.Request["storageRoot"].Replace(@"\", "/").Replace("\"", "");
-            } 
-            
+            }
+
             try
             {
                 if (cFilePath != null)
@@ -1518,17 +1559,17 @@ namespace Protean
                     statuses.Add(new FilesStatus(fullName.Replace(" ", "-"), Conversions.ToInteger(file.ContentLength)));
                     context.Server.MapPath("/");
                     // We will add one node in ReviewFeedback.xml form and use it instead of config key = context.Request.Form("reviewimagepath")
-                      if (!string.IsNullOrEmpty(context.Request.Form["cImageBasePath"]) && !string.IsNullOrEmpty(context.Request.Form["cImageBasePath"]))
-                        {
+                    if (!string.IsNullOrEmpty(context.Request.Form["cImageBasePath"]) && !string.IsNullOrEmpty(context.Request.Form["cImageBasePath"]))
+                    {
 
-                            cleanUploadedPaths = "/" + mcStartFolder.Replace(context.Request.Form["cImageBasePath"], "").Replace(@"\", "/") + cfileName;
+                        cleanUploadedPaths = "/" + mcStartFolder.Replace(context.Request.Form["cImageBasePath"], "").Replace(@"\", "/") + cfileName;
 
-                        }
-                        else
-                        {
-                            cleanUploadedPaths = "/" + mcStartFolder.Replace(context.Server.MapPath("/"), "").Replace(@"\", "/") + cfileName;
-                        }
-                    
+                    }
+                    else
+                    {
+                        cleanUploadedPaths = "/" + mcStartFolder.Replace(context.Server.MapPath("/"), "").Replace(@"\", "/") + cfileName;
+                    }
+
                 }
 
                 catch (Exception)
