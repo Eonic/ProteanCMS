@@ -3724,7 +3724,7 @@ namespace Protean
                                             // do nothing alls good
                                             case "Add":
                                                 {
-                                                    switch (ewCmd ?? "")
+                                                    switch (ewCmd)
                                                     {
                                                         case "EditContent":
                                                         case "DeleteContent":
@@ -3734,7 +3734,7 @@ namespace Protean
                                                         case "LocateContent":
                                                         case "MoveContent":
                                                             {
-                                                                if ((mcEwCmd ?? "") == (ewCmd ?? ""))
+                                                                if (mcEwCmd  == ewCmd)
                                                                 {
                                                                     moDeniedAdminMenuElmt = (XmlElement)oMenuElmt.CloneNode(false);
                                                                     mcEwCmd = "AdminDenied";
@@ -3751,7 +3751,7 @@ namespace Protean
 
                                             default:
                                                 {
-                                                    switch (ewCmd ?? "")
+                                                    switch (ewCmd)
                                                     {
                                                         case "EditContent":
                                                         case "AddContent":
@@ -3762,7 +3762,7 @@ namespace Protean
                                                         case "LocateContent":
                                                         case "MoveContent":
                                                             {
-                                                                if ((mcEwCmd ?? "") == (ewCmd ?? ""))
+                                                                if (mcEwCmd == ewCmd )
                                                                 {
                                                                     moDeniedAdminMenuElmt = (XmlElement)oMenuElmt.CloneNode(false);
                                                                     mcEwCmd = "AdminDenied";
@@ -4140,9 +4140,7 @@ namespace Protean
                             {
 
                                 // lets just output our source xml
-                                var oPreviewElmt = moPageXML.CreateElement("PreviewFileXml");
-                                oPreviewElmt.InnerXml = oImportXml.OuterXml;
-                                oPageDetail.AppendChild(oPreviewElmt);
+                             
 
                                 // NB: Old Tools Transform----------------
                                 // then we transform to our standard import XML
@@ -4158,34 +4156,92 @@ namespace Protean
 
                                 // NB: New (Web) Transform
                                 string styleFile = myWeb.goServer.MapPath("/xsl/import/" + cXsltPath);
-                                var oTransform = new Protean.XmlHelper.Transform(ref myWeb, styleFile, false);
-                                myWeb.PerfMon.Log("Admin", "FileImportProcess-startxsl");
-                                oTransform.mbDebug = gbDebug;
-                                oTransform.ProcessDocument(oImportXml);
-                                myWeb.PerfMon.Log("Admin", "FileImportProcess-endxsl");
-                                // We display the results
-                                var oPreviewElmt2 = moPageXML.CreateElement("PreviewImport");
-                                if (oTransform.HasError)
+
+                                if (moConfig["AsyncFileImport"] == "on")
                                 {
-                                    oPreviewElmt2.SetAttribute("errorMsg", oTransform.currentError.Message);
-                                    oPreviewElmt2.InnerText = oTransform.currentError.StackTrace;
-                                }
-                                else
-                                {
-                                    oPreviewElmt2.InnerXml = oImportXml.InnerXml;
+                                    //preview the first 10 records
+                                    XmlDocument PreviewXml = new XmlDocument();
+                                    PreviewXml.LoadXml(oImportXml.OuterXml);
+                                    int count = 0;
+                                    foreach (XmlNode itemXml in PreviewXml.SelectNodes("/*/*")) {
+                                        count = count + 1;
+                                        if (count > 10) {
+                                            itemXml.ParentNode.RemoveChild(itemXml);
+                                        }                                    
+                                    }
+                                    var oPreviewElmt = moPageXML.CreateElement("PreviewFileXml");
+                                    oPreviewElmt.InnerXml = PreviewXml.OuterXml;
+                                    oPageDetail.AppendChild(oPreviewElmt);
+
+
+                                    var oTransform = new Protean.XmlHelper.Transform(ref myWeb, styleFile, false);
+                                    myWeb.PerfMon.Log("Admin", "FileImportProcess-startxsl");
+                                    oTransform.mbDebug = gbDebug;
+                                    oTransform.ProcessDocument(PreviewXml);
+                                    myWeb.PerfMon.Log("Admin", "FileImportProcess-endxsl");
+                                    // We display the results
+                                    var oPreviewElmt2 = moPageXML.CreateElement("PreviewImport");
+                                    if (oTransform.HasError)
+                                    {
+                                        oPreviewElmt2.SetAttribute("errorMsg", oTransform.currentError.Message);
+                                        oPreviewElmt2.InnerText = oTransform.currentError.StackTrace;
+                                    }
+                                    else
+                                    {
+                                        oPreviewElmt2.InnerXml = PreviewXml.InnerXml;
+                                    }
+                                    oPageDetail.AppendChild(oPreviewElmt2);
+                                    oTransform = (Protean.XmlHelper.Transform)null;
+
+
+                                    string cOppMode = moAdXfm.Instance.SelectSingleNode("file/@opsMode").InnerText;
+                                    if (cOppMode == "import")
+                                    {
+                                        // here we go lets do the do...!! whoah!
+                                        myWeb.moDbHelper.importObjects(oImportXml.DocumentElement,"", styleFile);
+
+                                    }
 
                                 }
-                                oPageDetail.AppendChild(oPreviewElmt2);
-                                oTransform = (Protean.XmlHelper.Transform)null;
+                                else {
+                                    var oPreviewElmt = moPageXML.CreateElement("PreviewFileXml");
+                                    oPreviewElmt.InnerXml = oImportXml.OuterXml;
+                                    oPageDetail.AppendChild(oPreviewElmt);
 
-                                // We save to database if OK
-                                string cOppMode = moAdXfm.Instance.SelectSingleNode("file/@opsMode").InnerText;
-                                if (cOppMode == "import")
-                                {
-                                    // here we go lets do the do...!! whoah!
-                                    myWeb.moDbHelper.importObjects((XmlElement)oPreviewElmt2.FirstChild);
+
+
+                                    var oTransform = new Protean.XmlHelper.Transform(ref myWeb, styleFile, false);
+                                    myWeb.PerfMon.Log("Admin", "FileImportProcess-startxsl");
+                                    oTransform.mbDebug = gbDebug;
+                                    oTransform.ProcessDocument(oImportXml);
+                                    myWeb.PerfMon.Log("Admin", "FileImportProcess-endxsl");
+                                    // We display the results
+                                    var oPreviewElmt2 = moPageXML.CreateElement("PreviewImport");
+                                    if (oTransform.HasError)
+                                    {
+                                        oPreviewElmt2.SetAttribute("errorMsg", oTransform.currentError.Message);
+                                        oPreviewElmt2.InnerText = oTransform.currentError.StackTrace;
+                                    }
+                                    else
+                                    {
+                                        oPreviewElmt2.InnerXml = oImportXml.InnerXml;
+
+                                    }
+                                    oPageDetail.AppendChild(oPreviewElmt2);
+                                    oTransform = (Protean.XmlHelper.Transform)null;
+
+                                    // We save to database if OK
+                                    string cOppMode = moAdXfm.Instance.SelectSingleNode("file/@opsMode").InnerText;
+                                    if (cOppMode == "import")
+                                    {
+                                        // here we go lets do the do...!! whoah!
+                                        myWeb.moDbHelper.importObjects((XmlElement)oPreviewElmt2.FirstChild);
+
+                                    }
 
                                 }
+
+                                    
                             }
 
                             else
