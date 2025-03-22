@@ -100,12 +100,13 @@
       <MenuItem name="Orders" cmd="Orders" display="true" icon="fa-shopping-basket">
         <MenuItem name="New Sales" cmd="Orders" display="true" icon="fa-shopping-cart"/>
         <MenuItem name="In Progress" cmd="OrdersInProgress" display="true" icon="fa-archive"/>
+		<MenuItem name="Confirmed" cmd="OrdersSaved" display="true" icon="fa-clock"/>
         <MenuItem name="Awaiting Payment" cmd="OrdersAwaitingPayment" display="true" icon="fa-clock"/>
         <MenuItem name="Shipped" cmd="OrdersShipped" display="true" icon="fa-truck"/>
         <MenuItem name="Failed Transactions" cmd="OrdersFailed" display="true" icon="fa-exclamation-triangle"/>
         <MenuItem name="Deposit Paid" cmd="OrdersDeposit" display="true" icon="fa-money-bill-wave-alt"/>
         <MenuItem name="Refunded" cmd="OrdersRefunded" display="true" icon="far fa-credit-card"/>
-        <MenuItem name="History" cmd="OrdersHistory" display="true" icon="fa-history"/>
+        <MenuItem name="All Activity" cmd="OrdersHistory" display="true" icon="fa-history"/>
       </MenuItem>
       <MenuItem name="Shipping Locations" cmd="ShippingLocations" display="true" icon="fa-map-marker-alt"/>
       <MenuItem name="Delivery Methods" cmd="DeliveryMethods" display="true" icon="fa-box">

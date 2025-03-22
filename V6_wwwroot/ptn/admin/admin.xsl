@@ -6479,6 +6479,54 @@ $(document).ready(function () {
 
   <!--   ##################  List Orders  ##############################   -->
   <!-- -->
+	<xsl:template name="getStatusTitle">
+		<xsl:param name="statusId"/>
+		<xsl:choose>
+			<xsl:when test="$statusId='0'">New</xsl:when>
+			<xsl:when test="$statusId='1'">Items Added</xsl:when>
+			<xsl:when test="$statusId='2'">Billing Address Added</xsl:when>
+			<xsl:when test="$statusId='3'">Delivery Address Added</xsl:when>
+			<xsl:when test="$statusId='4'">Confirmed</xsl:when>
+			<xsl:when test="$statusId='5'">Pass for Payment</xsl:when>
+			<xsl:when test="$statusId='6'">New Sale</xsl:when>
+			<xsl:when test="$statusId='7'">Refunded</xsl:when>
+			<xsl:when test="$statusId='8'">Failed</xsl:when>
+			<xsl:when test="$statusId='9'">Shipped</xsl:when>
+			<xsl:when test="$statusId='10'">Deposit Paid</xsl:when>
+			<xsl:when test="$statusId='11'">Abandoned</xsl:when>
+			<xsl:when test="$statusId='12'">Deleted</xsl:when>
+			<xsl:when test="$statusId='13'">AwaitingPayment</xsl:when>
+			<xsl:when test="$statusId='14'">Settlement Initiated</xsl:when>
+			<xsl:when test="$statusId='15'">Skip Address</xsl:when>
+			<xsl:when test="$statusId='16'">Archived</xsl:when>
+			<xsl:when test="$statusId='17'">In Progress</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="getStatusCmd">
+		<xsl:param name="statusId"/>
+		<xsl:choose>
+			<xsl:when test="$statusId='0'">OrdersHistory</xsl:when>
+			<xsl:when test="$statusId='1'">OrdersHistory</xsl:when>
+			<xsl:when test="$statusId='2'">OrdersHistory</xsl:when>
+			<xsl:when test="$statusId='3'">OrdersHistory</xsl:when>
+			<xsl:when test="$statusId='4'">OrdersSaved</xsl:when>
+			<xsl:when test="$statusId='5'">OrdersAwaitingPayment</xsl:when>
+			<xsl:when test="$statusId='6'">Orders</xsl:when>
+			<xsl:when test="$statusId='7'">OrdersRefunded</xsl:when>
+			<xsl:when test="$statusId='8'">OrdersFailed</xsl:when>
+			<xsl:when test="$statusId='9'">OrdersShipped</xsl:when>
+			<xsl:when test="$statusId='10'">OrdersDeposit</xsl:when>
+			<xsl:when test="$statusId='11'">OrdersHistory</xsl:when>
+			<xsl:when test="$statusId='12'">OrdersHistory</xsl:when>
+			<xsl:when test="$statusId='13'">OrdersAwaitingPayment</xsl:when>
+			<xsl:when test="$statusId='14'">OrdersHistory</xsl:when>
+			<xsl:when test="$statusId='15'">OrdersHistory</xsl:when>
+			<xsl:when test="$statusId='16'">OrdersHistory</xsl:when>
+			<xsl:when test="$statusId='17'">OrdersInProgress</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+	
   <xsl:template match="Page[@layout='Orders']" mode="Admin">
     <xsl:variable name="startPos" select="number(concat(0,/Page/Request/QueryString/Item[@name='startPos']))"/>
     <xsl:variable name="itemCount" select="'100'"/>
@@ -6488,17 +6536,19 @@ $(document).ready(function () {
       <xsl:call-template name="getQString"/>
     </xsl:variable>
     <xsl:variable name="ewCmd" select="/Page/Request/QueryString/Item[@name='ewCmd']"/>
-    <xsl:variable name="title">
-      <xsl:choose>
-        <xsl:when test="@ewCmd='Orders'">New Sales</xsl:when>
-        <xsl:when test="@ewCmd='OrdersInProgress'">In Progress</xsl:when>
-        <xsl:when test="@ewCmd='OrdersAwaitingPayment'">Awaiting Payment</xsl:when>
-        <xsl:when test="@ewCmd='OrdersShipped'">Shipped</xsl:when>
-        <xsl:when test="@ewCmd='OrdersFailed'">Failed Transactions</xsl:when>
-        <xsl:when test="@ewCmd='OrdersDeposit'">Deposit Paid</xsl:when>
-        <xsl:when test="@ewCmd='OrdersHistory'">Full Order History</xsl:when>
-      </xsl:choose>
+
+	  <xsl:variable name="statusId" select="ContentDetail/Content[@type='order']/@statusId"/>
+	<!--<xsl:variable name="statusId" select="/Page/ContentDetail/Content/model/instance/tblCartOrder/nCartStatus"/>-->
+    <xsl:variable name="backTitle">
+		<xsl:call-template name="getStatusTitle">
+			<xsl:with-param name="statusId" select="$statusId"/>
+		</xsl:call-template>     
     </xsl:variable>
+	  <xsl:variable name="backCmd">
+		  <xsl:call-template name="getStatusCmd">
+			<xsl:with-param name="statusId" select="$statusId"/>
+		</xsl:call-template>		 
+	  </xsl:variable>
     <div>
       <xsl:choose>
         <xsl:when test="ContentDetail/Content[@type='order'] and not(/Page/Request/QueryString/Item[@name='ewCmd2'])">
@@ -6526,7 +6576,7 @@ $(document).ready(function () {
                   <xsl:with-param name="itemTotal" select="$total"/>
                   <xsl:with-param name="startPos" select="$startPos"/>
                   <xsl:with-param name="path" select="$queryString"/>
-                  <xsl:with-param name="itemName" select="$title"/>
+                  <xsl:with-param name="itemName" select="$backTitle"/>
                 </xsl:apply-templates>
               </div>
               <!--<h3>
@@ -6563,7 +6613,7 @@ $(document).ready(function () {
                 <xsl:with-param name="itemTotal" select="$total"/>
                 <xsl:with-param name="startPos" select="$startPos"/>
                 <xsl:with-param name="path" select="$queryString"/>
-                <xsl:with-param name="itemName" select="$title"/>
+                <xsl:with-param name="itemName" select="$backTitle"/>
               </xsl:apply-templates>
             </div>
           </div>
@@ -6571,12 +6621,11 @@ $(document).ready(function () {
         <xsl:otherwise>
           <xsl:choose>
             <xsl:when test="/Page/Request/QueryString/Item[@name='ewCmd2']">
-              <a href="{$appPath}?ewCmd={$ewCmd}&amp;startPos={$startPos}" class="btn btn-sm btn-outline-primary padded-btn">
-                <i class="fa fa-chevron-left">&#160;</i>&#160;Back to <xsl:value-of select="$title"/>
+              <a href="{$appPath}?ewCmd={$backCmd}&amp;startPos={$startPos}" class="btn btn-sm btn-outline-primary padded-btn">
+                <i class="fa fa-chevron-left">&#160;</i>&#160;Back to <xsl:value-of select="$backTitle"/>
               </a>
               <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
               <xsl:variable name="currency" select="ContentDetail/Content[@type='order']/@currencySymbol"/>
-              <xsl:variable name="statusId" select="ContentDetail/Content[@type='order']/@statusId"/>
               <xsl:variable name="orderId" select="ContentDetail/Content[@type='order']/@id"/>
               <xsl:variable name="orderDate" select="ContentDetail/Content[@type='order']/@created"/>
               <xsl:for-each select="ContentDetail/Content[@type='order']/Order">
@@ -6592,7 +6641,7 @@ $(document).ready(function () {
               <div class="container-fluid">
                 <div class="alert alert-danger">
                   <h4 class="text-center">
-                    No <xsl:value-of select="$title"/> Found
+                    No <xsl:value-of select="$backTitle"/> Found
                   </h4>
                 </div>
               </div>
@@ -6608,13 +6657,23 @@ $(document).ready(function () {
   <xsl:template match="Content[@type='order']" mode="ListOrders">
     <xsl:variable name="startPos" select="number(concat(0,/Page/Request/QueryString/Item[@name='startPos']))"/>
     <xsl:variable name="ewCmd" select="/Page/Request/QueryString/Item[@name='ewCmd']"/>
+	  <xsl:variable name="backTitle">
+		  <xsl:call-template name="getStatusTitle">
+			  <xsl:with-param name="statusId" select="@statusId"/>
+		  </xsl:call-template>
+	  </xsl:variable>
+	  <xsl:variable name="backCmd">
+		  <xsl:call-template name="getStatusCmd">
+			  <xsl:with-param name="statusId" select="@statusId"/>
+		  </xsl:call-template>
+	  </xsl:variable>
     <tr>
       <td>
         <span class="xs-only">Order Id: </span>
         <xsl:value-of select="@id"/>
       </td>
       <td>
-        <xsl:value-of select="@statusId"/> - 	<xsl:choose>
+        [<xsl:value-of select="@statusId"/>]&#160;<xsl:choose>
           <xsl:when test="@statusId='0'">New</xsl:when>
           <xsl:when test="@statusId='1'">Items Added</xsl:when>
           <xsl:when test="@statusId='2'">Billing Address Added</xsl:when>
@@ -6629,6 +6688,10 @@ $(document).ready(function () {
           <xsl:when test="@statusId='11'">Abandoned</xsl:when>
           <xsl:when test="@statusId='12'">Deleted</xsl:when>
           <xsl:when test="@statusId='13'">Awaiting Payment</xsl:when>
+			<xsl:when test="@statusId='14'">Settlement Initiated</xsl:when>
+			<xsl:when test="@statusId='15'">Skip Address</xsl:when>
+			<xsl:when test="@statusId='16'">Archived</xsl:when>
+			<xsl:when test="@statusId='17'">In Progress</xsl:when>
         </xsl:choose>
       </td>
       <td>
@@ -6679,13 +6742,13 @@ $(document).ready(function () {
       </td>
       <td>
         <div class="btn-group-spaced">
-          <a href="{$appPath}?ewCmd={$ewCmd}&amp;ewCmd2=Display&amp;id={@id}" class="btn btn-sm btn-outline-primary">
+          <a href="{$appPath}?ewCmd={$backCmd}&amp;ewCmd2=Display&amp;id={@id}" class="btn btn-sm btn-outline-primary">
             <i class="fa fa-eye">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>view order
           </a>
           <xsl:if test="@statusId=6">
-            <a href="{$appPath}?ewCmd={$ewCmd}&amp;ewCmd2=Print&amp;id={@id}" target="_new" class="btn btn-sm btn-outline-primary">
+            <a href="{$appPath}?ewCmd={$backCmd}&amp;ewCmd2=Print&amp;id={@id}" target="_new" class="btn btn-sm btn-outline-primary">
               <i class="fa fa-print">
                 <xsl:text> </xsl:text>
               </i>
@@ -6746,7 +6809,7 @@ $(document).ready(function () {
                     <xsl:value-of select="@id"/>
                   </td>
                   <td>
-                    <xsl:value-of select="@statusId"/> - 	<xsl:choose>
+                    [<xsl:value-of select="@statusId"/>]<xsl:choose>
                       <xsl:when test="@statusId='0'">New</xsl:when>
                       <xsl:when test="@statusId='1'">Items Added</xsl:when>
                       <xsl:when test="@statusId='2'">Billing Address Added</xsl:when>
@@ -6759,6 +6822,12 @@ $(document).ready(function () {
                       <xsl:when test="@statusId='9'">Shipped</xsl:when>
                       <xsl:when test="@statusId='10'">Deposit Paid</xsl:when>
                       <xsl:when test="@statusId='11'">Abandoned</xsl:when>
+						<xsl:when test="@statusId='12'">Deleted</xsl:when>
+						<xsl:when test="@statusId='13'">AwaitingPayment</xsl:when>
+						<xsl:when test="@statusId='14'">Settlement Initiated</xsl:when>
+						<xsl:when test="@statusId='15'">Skip Address</xsl:when>
+						<xsl:when test="@statusId='16'">Archived</xsl:when>
+						<xsl:when test="@statusId='17'">In Progress</xsl:when>
                     </xsl:choose>
                   </td>
                   <td>
@@ -7599,6 +7668,13 @@ $(document).ready(function () {
           <xsl:when test="$statusId='9'">Shipped</xsl:when>
           <xsl:when test="$statusId='10'">Deposit Paid</xsl:when>
           <xsl:when test="$statusId='11'">Abandoned</xsl:when>
+
+			<xsl:when test="$statusId='12'">Deleted</xsl:when>
+			<xsl:when test="$statusId='13'">AwaitingPayment</xsl:when>
+			<xsl:when test="$statusId='14'">Settlement Initiated</xsl:when>
+			<xsl:when test="$statusId='15'">Skip Address</xsl:when>
+			<xsl:when test="$statusId='16'">Archived</xsl:when>
+			<xsl:when test="$statusId='17'">In Progress</xsl:when>
         </xsl:choose> Quote<xsl:choose>
           <xsl:when test="@cmd='Add' or @cmd='Cart'"> - Contents</xsl:when>
           <xsl:when test="@cmd='Billing'"> - Enter the billing address</xsl:when>
@@ -11780,7 +11856,7 @@ $(document).ready(function () {
             </xsl:if>-->
               </xsl:for-each>
               <td align="right">
-                <a href="{$appPath}?ewCmd={$ewCmd}&amp;ewCmd2=Display&amp;id={Order_Id/node()}" class="view adminButton">view order</a>
+                <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Display&amp;id={Order_Id/node()}" class="view adminButton">view order</a>
               </td>
             </tr>
           </span>
@@ -11911,7 +11987,7 @@ $(document).ready(function () {
           </a>
         </td>
         <td align="right">
-          <a href="{$appPath}?ewCmd={$ewCmd}&amp;ewCmd2=Display&amp;id={ancestor::Item/Order_Id/node()}" class="view adminButton">view order</a>
+          <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Display&amp;id={ancestor::Item/Order_Id/node()}" class="view adminButton">view order</a>
         </td>
       </tr>
     </span>
@@ -12970,7 +13046,7 @@ $(document).ready(function () {
 						<p class="btn-group headerButtons">
 							<xsl:if test="ContentDetail/Content[@type='xform']">
 								<a href="{$appPath}?ewCmd=FilterIndex&amp;pgid={/Page/@id}" class="btn btn-default" title="Back to FilterIndexes">
-									<i class="fa fa-caret-left">&#160; </i>&#160;Back to FilterIndexex List
+									<i class="fa fa-caret-left">&#160; </i>&#160;Back to Filter Index List
 								</a>
 							</xsl:if>
 						</p>
@@ -13090,7 +13166,7 @@ $(document).ready(function () {
 						<p class="btn-group headerButtons">
 							<xsl:if test="ContentDetail/Content[@type='xform']">
 								<a href="{$appPath}?ewCmd=FilterIndex&amp;pgid={/Page/@id}" class="btn btn-default" title="Back to FilterIndexes">
-									<i class="fa fa-caret-left">&#160; </i>&#160;Back to FilterIndexex List
+									<i class="fa fa-caret-left">&#160; </i>&#160;Back to Filter Index List
 								</a>
 							</xsl:if>
 						</p>

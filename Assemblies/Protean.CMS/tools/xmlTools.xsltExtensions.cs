@@ -817,6 +817,8 @@ namespace Protean
                         cHtml = Strings.Replace(cHtml, "&amp;", "&");
 
                         cHtml = convertEntitiesToCodes(cHtml);
+                        cHtml = convertStringToEntityCodes(cHtml);
+
                         cHtml = Strings.Replace(Strings.Replace(cHtml, "&gt;", ">"), "&lt;", "<");
                         cHtml = cHtml.Replace("&amp;#", "&#");
                         cHtml = "<div>" + cHtml + "</div>";
@@ -1317,6 +1319,10 @@ namespace Protean
                     var newDir = new DirectoryInfo(imgPath);
                     oFS.mcStartFolder = newDir.Parent.FullName;
 
+                    //handling for a mapped folder of a different name
+                    if (newDir.Name != "images") {
+                        cVirtualPath = cVirtualPath.Replace("images", newDir.Name);
+                    }
                     // 'check to see if images path is mapped.
                     // If cVirtualPath.StartsWith("/images/") Then
                     // Dim imgPath As String = goServer.MapPath("/images/")
@@ -1326,7 +1332,12 @@ namespace Protean
                     // oFS.mcStartFolder = goServer.MapPath("/")
                     // End If
 
-                    return oFS.SaveFile(imageUrl, cVirtualPath);
+                    string savedFile = oFS.SaveFile(imageUrl, cVirtualPath);
+                    if (newDir.Name != "images")
+                    {
+                        savedFile = savedFile.Replace(newDir.Name, "images");
+                    }
+                        return savedFile;
                 }
                 catch (Exception)
                 {
