@@ -879,6 +879,7 @@ namespace Protean
                 var oXML = new XmlDocument();
                 string cHtml;
                 string cHtmlOut;
+                string cError;
 
                 if (oContextNode is null)
                 {
@@ -914,19 +915,21 @@ namespace Protean
                             oXML.LoadXml(cHtmlOut);
                             return oXML.DocumentElement;
                         }
-                        catch (Exception)
+                        catch (Exception ex)
                         {
                             // Lets try option 2 first before we raise an error
                             // RaiseEvent XSLTError(ex.ToString)
                             try
                             {
+                                cError = ex.Message; //for breakpoint
                                 oXML = new XmlDocument();
                                 oXML.AppendChild(oXML.CreateElement("div"));
                                 oXML.DocumentElement.InnerXml = cHtmlOut;
                                 return oXML.DocumentElement;
                             }
-                            catch (Exception)
+                            catch (Exception ex2)
                             {
+                                cError = ex2.Message; //for breakpoint
                                 return cHtmlOut;
                             }
                         }
