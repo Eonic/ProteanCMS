@@ -365,6 +365,7 @@ namespace Protean.Tools
             }
             catch (Exception ex)
             {
+                strResult = ex.Message;
                 strResult = "Error. Input Data is not base64 encoded.";
                 return strResult;
             }

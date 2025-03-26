@@ -1226,6 +1226,13 @@ namespace Protean.Tools
                 sString = sString.Replace("≥", "&#8805;");
                 sString = sString.Replace("≠", "&#8800;");
 
+
+                sString = sString.Replace("�", "&#8211;");
+                
+
+                ConvertEmojiToEntities(sString);
+               
+
                 return sString == null ? "" : sString;
             }
             catch (Exception ex)
@@ -1234,6 +1241,29 @@ namespace Protean.Tools
                 return "";
             }
         }
+
+        public static string ConvertEmojiToEntities(string input)
+        {
+            var builder = new StringBuilder();
+
+            foreach (var ch in input)
+            {
+                int codePoint = char.ConvertToUtf32(input, input.IndexOf(ch));
+
+                // Emoji range: above basic ASCII/Unicode characters
+                if (codePoint > 127)
+                {
+                    builder.Append("&#" + codePoint + ";");
+                }
+                else
+                {
+                    builder.Append(ch);
+                }
+            }
+
+            return builder.ToString();
+        }
+
 
         public static string XmlDate(object dDate, bool bIncludeTime = false)
         {

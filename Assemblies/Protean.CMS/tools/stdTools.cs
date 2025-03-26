@@ -1449,13 +1449,17 @@ namespace Protean
 
             if (!(removeTags == ""))
                 shtml = removeTagFromXml(shtml, removeTags);
-            TidyManaged.Document oTdyManaged;
-            // Using 
+                TidyManaged.Document oTdyManaged;
+                // Using 
             try
             {
                 // clear some nasties I haven't allready captured.
                 shtml = shtml.Replace("&amp;nbsp;", "&#160;");
                 shtml = Regex.Replace(shtml, "<\\?xml.*\\?>", "", RegexOptions.IgnoreCase);
+
+                //temp fix for dirty VMH data
+                shtml = Strings.Replace(shtml, ":=", "=");
+
 
                 oTdyManaged = TidyManaged.Document.FromString(shtml);
                 oTdyManaged.OutputBodyOnly = TidyManaged.AutoBool.Yes;
@@ -1466,6 +1470,12 @@ namespace Protean
                 oTdyManaged.OutputXhtml = true;
                 oTdyManaged.MakeBare = true;//removed word tags
                 oTdyManaged.CleanWord2000 = true;//removed word tags
+
+                oTdyManaged.InputCharacterEncoding = TidyManaged.EncodingType.Utf8;
+
+                oTdyManaged.CharacterEncoding = TidyManaged.EncodingType.Utf16;
+
+
 
                 if (bReturnNumbericEntities)
                 {

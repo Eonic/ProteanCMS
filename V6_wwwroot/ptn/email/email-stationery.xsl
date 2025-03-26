@@ -2,7 +2,7 @@
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
- 	<xsl:import href="../../../../../ptn/core/functions.xsl"/>
+  <xsl:import href="../core/functions.xsl"/>
   <xsl:import href="email-styles.xsl"/>
 	
   <xsl:template match="*" mode="emailBody">
