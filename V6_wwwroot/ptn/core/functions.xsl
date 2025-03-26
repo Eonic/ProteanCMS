@@ -10058,6 +10058,7 @@
     <xsl:param name="text"/>
     <xsl:param name="position"/>
     <xsl:param name="class"/>
+	  
     <xsl:choose>
       <xsl:when test="/Page/Contents/Content[@position = $position]">
         <xsl:apply-templates select="/Page/Contents/Content[@type='Module' and @position = $position]" mode="displayModule"/>
@@ -10074,7 +10075,6 @@
     <xsl:param name="text"/>
     <xsl:param name="position"/>
     <xsl:param name="class"/>
-
     <!-- THIS IS OVERRIDDEN IN ADMIN MODE BY TEMPLATE IN ADMINWYSIWYG-->
     <xsl:choose>
       <xsl:when test="$position='header' or $position='footer' or ($position='column1' and @layout='Modules_1_column')">

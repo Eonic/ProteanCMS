@@ -3066,6 +3066,96 @@ namespace Protean
                     }
                 }
 
+
+                public string GetMailModuleFormPath(string SchemaName)
+                {
+                    string cProcessInfo = "";
+                    try
+                    {
+
+                        var oManifest = GetMailManifest();
+                        XmlElement thisModule = (XmlElement)oManifest.SelectSingleNode("descendant-or-self::Module[@type='" + SchemaName + "']");
+                        if (thisModule is null)
+                        {
+                            return SchemaName;
+                        }
+                        else
+                        {
+                            return thisModule.GetAttribute("formPath");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug);
+                        return null;
+                    }
+                }
+
+
+                public XmlDocument GetMailManifest(string sFramework = "bs5")
+                {
+                    string cProcessInfo = "";
+
+                    XmlDocument ManifestDoc = null;
+                    try
+                    {
+                        switch (sFramework ?? "")
+                        {
+                            case "bs5":
+                                {
+
+                                    object PathPrefix = @"ptn\";
+
+                                    EnumberateManifest(ref ManifestDoc,"/" + Cms.gcProjectPath + PathPrefix +  @"features/mailer/modules", "manifest.xml");
+
+                                    var rootFolder = new DirectoryInfo(myWeb.goServer.MapPath("/" + Cms.gcProjectPath + PathPrefix + @"features/mailer/modules"));
+                                    DirectoryInfo fld;
+                                    foreach (var currentFld in rootFolder.GetDirectories())
+                                    {
+                                        fld = currentFld;
+                                        EnumberateManifest(ref ManifestDoc, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"modules\"), fld.Name)), "manifest.xml");
+
+                                    }
+                                    if (!string.IsNullOrEmpty(myWeb.moConfig["ClientCommonFolder"]))
+                                    {
+                                        EnumberateManifest(ref ManifestDoc, myWeb.moConfig["ClientCommonFolder"] + @"\xsl", "manifest.xml");
+                                    }
+
+                                    // new local modules
+                                    rootFolder = new DirectoryInfo(myWeb.goServer.MapPath("/" + Cms.gcProjectPath + "/modules"));
+                                    if (rootFolder.Exists)
+                                    {
+                                        foreach (var currentFld1 in rootFolder.GetDirectories())
+                                        {
+                                            fld = currentFld1;
+                                            EnumberateManifest(ref ManifestDoc, "/" + Cms.gcProjectPath + @"\modules\" + fld.Name, "manifest.xml");
+                                        }
+                                    }
+
+                                    break;
+                                }
+                            default:
+                                {
+                                    object PathPrefix = @"ewcommon\";
+                                    EnumberateManifest(ref ManifestDoc, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "xsl/PageLayouts")), "LayoutManifest.xml");
+                                    if (!string.IsNullOrEmpty(myWeb.moConfig["ClientCommonFolder"]))
+                                    {
+                                        EnumberateManifest(ref ManifestDoc, myWeb.moConfig["ClientCommonFolder"] + @"\xsl", "layoutManifest.xml");
+                                    }
+                                    EnumberateManifest(ref ManifestDoc, "/xsl", "layoutManifest.xml");
+                                    break;
+                                }
+                        }
+                        return ManifestDoc;
+                    }
+                    catch (Exception ex)
+                    {
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                        return null;
+                    }
+                }
+
+
                 public void EnumberateManifest(ref XmlDocument ManifestDoc, string filepath, string manifestFilename = "LayoutManifest.xml")
                 {
 
@@ -3664,7 +3754,7 @@ namespace Protean
                         {
                             if (goConfig["cssFramework"] == "bs5")
                             {
-                                cXformPath = GetModuleFormPath(cModuleType);
+                               // cXformPath = GetModuleFormPath(cModuleType);
                             }
                             else if (!cXformPath.EndsWith("/" + cModuleType))
                             {

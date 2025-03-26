@@ -195,8 +195,8 @@ namespace Protean.Providers
 
             public IMessagingProvider Initiate(ref Cms myWeb)
             {
-                _AdminXforms = new AdminXForms(ref myWeb);
-                _AdminProcess = new AdminProcess(ref myWeb);
+                _AdminXforms = new DefaultProvider.AdminXForms(ref myWeb);
+                _AdminProcess = new DefaultProvider.AdminProcess(ref myWeb);
                 _AdminProcess.oAdXfm = _AdminXforms;
                 string exception = null; 
                 _Activities = new Activities(exception);
@@ -436,12 +436,22 @@ namespace Protean.Providers
 
                         if (!string.IsNullOrEmpty(moRequest["cModuleBox"]) | !string.IsNullOrEmpty(moRequest["cModuleType"]))
                         {
-
-                            int argnReturnId1 = 0;
-                            string argzcReturnSchema1 = "";
-                            string argAlternateFormName1 = "";
-                            xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, position, false, nReturnId: ref argnReturnId1, zcReturnSchema: ref argzcReturnSchema1, AlternateFormName: ref argAlternateFormName1);
-
+                            // case for when the content form is being submitted
+                            if (goConfig["cssFramework"] == "bs5")
+                            {
+                                string ModulePath = GetMailModuleFormPath(moRequest["cModuleType"]);
+                                int argnReturnId = 0;
+                                string argzcReturnSchema = "";
+                                string argAlternateFormName = "";
+                                xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId, zcReturnSchema: ref argzcReturnSchema, AlternateFormName: ref argAlternateFormName);
+                            }
+                            else
+                            {
+                                int argnReturnId1 = 0;
+                                string argzcReturnSchema1 = "";
+                                string argAlternateFormName1 = "";
+                                xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, position, false, nReturnId: ref argnReturnId1, zcReturnSchema: ref argzcReturnSchema1, AlternateFormName: ref argAlternateFormName1);
+                            }
 
                          //   xFrmEditContent(0, "Module/" + moRequest["cModuleType"], pgid, position);
                             return base.moXformElmt;
@@ -452,7 +462,7 @@ namespace Protean.Providers
                             XmlElement oBindParentElmt = null;
                             base.NewFrm("EditPageLayout");
                             base.submission("AddModule", "", "post", "form_check(this)");
-                            base.Instance.InnerXml = "<Module position=\"" + position + "\"></Module>";
+                            base.Instance.InnerXml = "<Module position=\"" + position + "\"/>";
                             oFrmElmt = base.addGroup(ref base.moXformElmt, "Add Module", "", "Select Module Type");
                             base.addInput(ref oFrmElmt, "nStructParId", true, "ParId", "hidden");
                             base.addInput(ref oFrmElmt, "cPosition", true, "Position", "hidden");
@@ -461,19 +471,39 @@ namespace Protean.Providers
                             base.addNote(oFrmElmt.ToString(), Protean.xForm.noteTypes.Hint, "Click the image to select Module Type");
 
                             oSelElmt = base.addSelect1(ref oFrmElmt, "cModuleType", true, "", "PickByImage", Protean.xForm.ApperanceTypes.Full);
-
-                            EnumberateManifestOptions(ref oSelElmt, "/xsl/Mailer", "ModuleTypes/ModuleGroup", "Module", true);
-                            EnumberateManifestOptions(ref oSelElmt, "/ewcommon/xsl/Mailer", "ModuleTypes/ModuleGroup", "Module", false);
-
-                            if (base.isSubmitted() | goRequest.Form["ewsubmit.x"] != "" | goRequest.Form["cModuleType"] != "")
+                            if (goConfig["cssFramework"] == "bs5")
+                            {
+                                EnumberateManifestOptions(ref oSelElmt, "/features/mailer/modules", "ModuleTypes/ModuleGroup", "Module", true, "manifest.xml");
+                                EnumberateManifestOptions(ref oSelElmt, "/ptn/features/mailer/modules", "ModuleTypes/ModuleGroup", "Module", false, "manifest.xml");
+                            }
+                            else {
+                                EnumberateManifestOptions(ref oSelElmt, "/xsl/Mailer", "ModuleTypes/ModuleGroup", "Module", true);
+                                EnumberateManifestOptions(ref oSelElmt, "/ewcommon/xsl/Mailer", "ModuleTypes/ModuleGroup", "Module", false);
+                            }
+                            if (base.isSubmitted() | !string.IsNullOrEmpty(goRequest.Form["ewsubmit.x"]) | !string.IsNullOrEmpty(goRequest.Form["cModuleType"]))
                             {
                                 base.updateInstanceFromRequest();
                                 base.validate();
                                 if (base.valid)
                                 {
-                                    // Do nothing
-                                    // or redirect to content form
-                                    xFrmEditContent(0, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"]);
+
+                                    if (goConfig["cssFramework"] == "bs5")
+                                    {
+                                        string ModulePath = GetModuleFormPath(moRequest["cModuleType"]);
+                                        int argnReturnId2 = 0;
+                                        string argzcReturnSchema2 = "";
+                                        string argAlternateFormName2 = "";
+                                        xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId2, zcReturnSchema: ref argzcReturnSchema2, AlternateFormName: ref argAlternateFormName2);
+                                    }
+
+                                    else { 
+                                    
+                                        // Do nothing
+                                        // or redirect to content form
+                                        xFrmEditContent(0, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"]);
+                                    }
+
+
                                 }
                             }
                             base.addValues();
@@ -780,7 +810,10 @@ namespace Protean.Providers
                                     nContentId = 0;
                                     string zcreturn = "";
                                     string AlernateForm = "";
-                                    oPageDetail.AppendChild(moAdXfm.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), "", Convert.ToInt64(myWeb.moRequest["pgid"]), "",false, ref nContentId,ref zcreturn,ref AlernateForm, Conversions.ToLong(cVersionKey)));
+
+                                    string ModulePath = _oAdXfm.GetMailModuleFormPath(myWeb.moRequest["cModuleType"]);
+
+                                    oPageDetail.AppendChild(_oAdXfm.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), ModulePath, Convert.ToInt64(myWeb.moRequest["pgid"]), "",false, ref nContentId,ref zcreturn,ref AlernateForm, Conversions.ToLong(cVersionKey)));
 
                                     if (moAdXfm.valid)
                                     {
