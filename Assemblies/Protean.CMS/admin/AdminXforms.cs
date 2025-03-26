@@ -3754,7 +3754,7 @@ namespace Protean
                         {
                             if (goConfig["cssFramework"] == "bs5")
                             {
-                               // cXformPath = GetModuleFormPath(cModuleType);
+                               cXformPath = GetModuleFormPath(cModuleType);
                             }
                             else if (!cXformPath.EndsWith("/" + cModuleType))
                             {
