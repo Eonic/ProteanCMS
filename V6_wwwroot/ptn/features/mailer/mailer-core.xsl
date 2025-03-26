@@ -98,6 +98,35 @@
 		
 	</xsl:template>
 
+	<xsl:template match="Page" mode="addModuleControls">
+		<xsl:param name="text"/>
+		<xsl:param name="class"/>
+		<xsl:param name="position"/>
+		<xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddModule'] and $page/@ewCmd!='PreviewOn'">
+			<xsl:attribute name="class">
+				<xsl:text>moduleContainer</xsl:text>
+				<xsl:if test="$class!=''">
+					<xsl:text> </xsl:text>
+					<xsl:value-of select="$class"/>
+				</xsl:if>
+			</xsl:attribute>
+			<div class="ptn-edit options addmodule">
+
+				<div class="addHere">
+					<strong>
+						<xsl:value-of select="$position"/>
+					</strong>
+					<xsl:text> - drag a module here</xsl:text>
+				</div>
+				<a class="btn btn-primary btn-xs pull-right" href="?ewCmd=AddMailModule&amp;pgid={/Page/@id}&amp;position={$position}">
+					<i class="fa fa-plus">&#160;</i>&#160;<span class="sr-only">
+						<xsl:value-of select="$text"/>
+					</span>
+				</a>
+			</div>
+		</xsl:if>
+	</xsl:template>
+
 	<xsl:template match="Page" mode="addModule">
 		<xsl:param name="text"/>
 		<xsl:param name="position"/>
