@@ -40,6 +40,7 @@ namespace Protean.Providers
 
         public interface IMessagingAdminXforms
         {
+                  
             XmlElement xFrmPreviewNewsLetter(int nPageId, ref XmlElement oPageDetail, string cSubject = "");
 
             XmlElement xFrmSendNewsLetter(int nPageId, string cPageName, string cDefaultEmail, string cDefaultEmailName, ref XmlElement oPageDetail);
@@ -50,6 +51,8 @@ namespace Protean.Providers
             XmlElement xFrmDeletePage(long pgid);
 
             XmlElement xFrmAddModule(long pgid, string position);
+
+            XmlElement xFrmEditContent(long id, string cContentSchemaName, long pgid, string cContentName, bool bCopy, ref int nReturnId, ref string zcReturnSchema, ref string AlternateFormName, long nVersionId = 0L);
 
             XmlElement xFrmAdminOptOut();
 
@@ -205,8 +208,8 @@ namespace Protean.Providers
 
             public class AdminXForms : Cms.Admin.AdminXforms, IMessagingAdminXforms
             {
-                private const string mcModuleName = "Providers.Messaging.Generic.AdminXForms";
 
+                string mcModuleName = "Providers.Messaging.Default.AdminXForms";
                 XmlElement IMessagingAdminXforms.moXformElmt { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
                 public AdminXForms(ref Cms aWeb) : base(ref aWeb)
@@ -517,6 +520,12 @@ namespace Protean.Providers
                         return null;
                     }
                 }
+
+                public new XmlElement xFrmEditContent(long id, string cContentSchemaName, long pgid, string cContentName, bool bCopy, ref int nReturnId, ref string zcReturnSchema, ref string AlternateFormName, long nVersionId = 0L) {
+                    base.cModuleName = mcModuleName;
+                    return base.xFrmEditContent(id, cContentSchemaName, pgid, cContentName, bCopy, ref nReturnId, ref zcReturnSchema, ref AlternateFormName, nVersionId);
+                }
+
 
             }
 

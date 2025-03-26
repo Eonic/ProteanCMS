@@ -530,7 +530,7 @@
 					</strong>
 					<xsl:text> - drag a module here</xsl:text>
 				</div>
-				<a class="btn btn-primary btn-xs pull-right" href="?ewCmd=AddMailModule&amp;pgid={/Page/@id}&amp;position={$position}">
+				<a class="btn btn-primary btn-xs pull-right" href="?ewCmd=AddModule&amp;pgid={/Page/@id}&amp;position={$position}">
 					<i class="fa fa-plus">&#160;</i>&#160;<span class="sr-only">
 						<xsl:value-of select="$text"/>
 					</span>
@@ -1032,7 +1032,6 @@
 				<xsl:if test="@contentType!=''">
 					<xsl:apply-templates select="." mode="inlinePopupRelateTop"/>
 				</xsl:if>
-
 				<xsl:if test="starts-with(@position,'column1') and $page/@layout='Modules_Masonary'">
 					<div class="dropdown pull-right">
 						<a href="#" class="btn btn-primary btn-xs" data-bs-toggle="dropdown">
