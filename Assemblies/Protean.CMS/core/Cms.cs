@@ -11485,7 +11485,7 @@ namespace Protean
             }
         }
         /// <summary>
-        /// get active productslist
+        /// get active productslist 
         /// </summary>
         /// <param name="nArtId"></param>
         /// <returns></returns>
