@@ -1035,7 +1035,7 @@ namespace Protean
 
 
                                 long logId = odbHelper.emailActivity((Int16)mnUserId, cActivityDetail, oMailn.To.ToString(), oMailn.From.ToString(), oXml.OuterXml);
-
+                                odbHelper.myWeb = new Cms(moCtx);
                                 odbHelper.logActivity(Cms.dbHelper.ActivityType.Email, mnUserId, (Int16)logId, 0, otherId, activitySchema, false, null);
                                 //odbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Email, mnUserId, SessionId, DateTime.Now, (Int16)logId, 0, activitySchema);
                             }
