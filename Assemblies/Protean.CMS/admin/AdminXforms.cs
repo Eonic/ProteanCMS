@@ -51,7 +51,7 @@ namespace Protean
             public class AdminXforms : xForm
             {
 
-                private const string mcModuleName = "ewcommon.AdminXForms";
+                public string _moduleName = "Cms.Admin.AdminXForms";
                 // Private Const gbDebug As Boolean = True
                 public Cms.dbHelper moDbHelper;
                 public NameValueCollection goConfig; // = WebConfigurationManager.GetWebApplicationSection("protean/web")
@@ -66,9 +66,18 @@ namespace Protean
 
                 public new delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs err);
 
+                public string cModuleName {
+                    get {
+                        return _moduleName;
+                    }
+                    set {
+                        _moduleName = value;
+                    }
+                }
+
                 private void _OnError(object sender, Tools.Errors.ErrorEventArgs err)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, err.ProcedureName, err.Exception, "", err.AddtionalInformation, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, _moduleName, err.ProcedureName, err.Exception, "", err.AddtionalInformation, gbDebug);
                 }
 
 
@@ -92,7 +101,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "New", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "New", ex, "", "", gbDebug);
                     }
 
                     OnError += _OnError;
@@ -154,7 +163,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "Open", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "Open", ex, "", cProcessInfo, gbDebug);
                     }
                 }
 
@@ -224,7 +233,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -247,7 +256,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmUserLogon", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmUserLogon", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -362,7 +371,7 @@ namespace Protean
                 // Return MyBase.moXformElmt
 
                 // Catch ex As Exception
-                // returnException(myWeb.msException, mcModuleName, "xFrmUserLogon", ex, "", cProcessInfo, gbDebug)
+                // returnException(myWeb.msException, _moduleName, "xFrmUserLogon", ex, "", cProcessInfo, gbDebug)
                 // Return Nothing
                 // End Try
                 // End Function
@@ -388,7 +397,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmPasswordReminder", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmPasswordReminder", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -411,7 +420,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmActivateAccount", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmActivateAccount", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -434,7 +443,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmResetAccount", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmResetAccount", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -458,7 +467,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmConfirmPassword", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmConfirmPassword", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -483,7 +492,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmConfirmPassword", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmConfirmPassword", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -641,7 +650,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmUserIntegrations", ex, "", processInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmUserIntegrations", ex, "", processInfo, gbDebug);
                         return null;
                     }
 
@@ -884,7 +893,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmWebSettings", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmWebSettings", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -1023,7 +1032,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmWebConfig", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmWebConfig", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -1285,7 +1294,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmWebConfig", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmWebConfig", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -1489,7 +1498,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmWebConfig", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmWebConfig", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -1619,7 +1628,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmSelectTheme", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmSelectTheme", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -1667,7 +1676,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "EnumberateThemeOptions", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "EnumberateThemeOptions", ex, "", cProcessInfo, gbDebug);
                     }
 
                 }
@@ -2009,7 +2018,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditPage", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditPage", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -2055,7 +2064,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "PageValidation", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "PageValidation", ex, "", cProcessInfo, gbDebug);
                     }
                 }
 
@@ -2226,7 +2235,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditPage", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditPage", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -2433,7 +2442,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmCopyPageVersion", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmCopyPageVersion", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -2662,7 +2671,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "addInput", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -2805,7 +2814,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "addInput", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -2898,7 +2907,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "addInput", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -2922,7 +2931,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -2946,7 +2955,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -2970,7 +2979,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -3061,10 +3070,100 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "addInput", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
+
+
+                public string GetMailModuleFormPath(string SchemaName)
+                {
+                    string cProcessInfo = "";
+                    try
+                    {
+
+                        var oManifest = GetMailManifest();
+                        XmlElement thisModule = (XmlElement)oManifest.SelectSingleNode("descendant-or-self::Module[@type='" + SchemaName + "']");
+                        if (thisModule is null)
+                        {
+                            return SchemaName;
+                        }
+                        else
+                        {
+                            return thisModule.GetAttribute("formPath");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug);
+                        return null;
+                    }
+                }
+
+
+                public XmlDocument GetMailManifest(string sFramework = "bs5")
+                {
+                    string cProcessInfo = "";
+
+                    XmlDocument ManifestDoc = null;
+                    try
+                    {
+                        switch (sFramework ?? "")
+                        {
+                            case "bs5":
+                                {
+
+                                    object PathPrefix = @"ptn\";
+
+                                    EnumberateManifest(ref ManifestDoc,"/" + Cms.gcProjectPath + PathPrefix +  @"features/mailer/modules", "manifest.xml");
+
+                                    var rootFolder = new DirectoryInfo(myWeb.goServer.MapPath("/" + Cms.gcProjectPath + PathPrefix + @"features/mailer/modules"));
+                                    DirectoryInfo fld;
+                                    foreach (var currentFld in rootFolder.GetDirectories())
+                                    {
+                                        fld = currentFld;
+                                        EnumberateManifest(ref ManifestDoc, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"modules\"), fld.Name)), "manifest.xml");
+
+                                    }
+                                    if (!string.IsNullOrEmpty(myWeb.moConfig["ClientCommonFolder"]))
+                                    {
+                                        EnumberateManifest(ref ManifestDoc, myWeb.moConfig["ClientCommonFolder"] + @"\xsl", "manifest.xml");
+                                    }
+
+                                    // new local modules
+                                    rootFolder = new DirectoryInfo(myWeb.goServer.MapPath("/" + Cms.gcProjectPath + "/modules"));
+                                    if (rootFolder.Exists)
+                                    {
+                                        foreach (var currentFld1 in rootFolder.GetDirectories())
+                                        {
+                                            fld = currentFld1;
+                                            EnumberateManifest(ref ManifestDoc, "/" + Cms.gcProjectPath + @"\modules\" + fld.Name, "manifest.xml");
+                                        }
+                                    }
+
+                                    break;
+                                }
+                            default:
+                                {
+                                    object PathPrefix = @"ewcommon\";
+                                    EnumberateManifest(ref ManifestDoc, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "xsl/PageLayouts")), "LayoutManifest.xml");
+                                    if (!string.IsNullOrEmpty(myWeb.moConfig["ClientCommonFolder"]))
+                                    {
+                                        EnumberateManifest(ref ManifestDoc, myWeb.moConfig["ClientCommonFolder"] + @"\xsl", "layoutManifest.xml");
+                                    }
+                                    EnumberateManifest(ref ManifestDoc, "/xsl", "layoutManifest.xml");
+                                    break;
+                                }
+                        }
+                        return ManifestDoc;
+                    }
+                    catch (Exception ex)
+                    {
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                        return null;
+                    }
+                }
+
 
                 public void EnumberateManifest(ref XmlDocument ManifestDoc, string filepath, string manifestFilename = "LayoutManifest.xml")
                 {
@@ -3218,7 +3317,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "EnumberateManifestOptions", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "EnumberateManifestOptions", ex, "", cProcessInfo, gbDebug);
                     }
 
                 }
@@ -3318,7 +3417,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "addInput", ex, "", cProcessInfo, gbDebug);
                     }
                 }
 
@@ -3421,7 +3520,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "addInput", ex, "", cProcessInfo, gbDebug);
                     }
                 }
 
@@ -3510,7 +3609,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "EnumberateManifestOptions", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "EnumberateManifestOptions", ex, "", cProcessInfo, gbDebug);
                     }
 
                 }
@@ -3664,7 +3763,17 @@ namespace Protean
                         {
                             if (goConfig["cssFramework"] == "bs5")
                             {
-                                cXformPath = GetModuleFormPath(cModuleType);
+                                if (_moduleName.Contains("Providers.Messaging")) {
+
+                                    cXformPath = GetMailModuleFormPath(cModuleType);
+
+                                } else {
+
+                                    cXformPath = GetModuleFormPath(cModuleType);
+
+                                }
+
+
                             }
                             else if (!cXformPath.EndsWith("/" + cModuleType))
                             {
@@ -4215,7 +4324,7 @@ namespace Protean
 
                                         catch (Exception)
                                         {
-                                            // OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ContentActions", ex, sProcessInfo))
+                                            // OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "ContentActions", ex, sProcessInfo))
                                             cProcessInfo = assemblyName + "." + contentEditAction + " not found";
 
                                         }
@@ -4269,7 +4378,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditContent", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditContent", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -4501,7 +4610,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "addInput", ex, "", "", gbDebug);
                         return default;
                     }
                 }
@@ -4607,7 +4716,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -4690,7 +4799,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -4773,7 +4882,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmDeleteFolder", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmDeleteFolder", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -4902,7 +5011,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -4924,7 +5033,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "TryDeleteAllInstancesOfOrigianlFile", ex, "", "TryDeleteAllInstancesOfOrigianlFile", gbDebug);                        
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "TryDeleteAllInstancesOfOrigianlFile", ex, "", "TryDeleteAllInstancesOfOrigianlFile", gbDebug);                        
                     }
                 }
 
@@ -5092,7 +5201,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmMoveFile", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmMoveFile", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -5152,7 +5261,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -5224,7 +5333,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmAddFolder", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmAddFolder", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -5300,7 +5409,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmUpload", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmUpload", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -5377,7 +5486,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmMultiUpload", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmMultiUpload", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -5468,7 +5577,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmPickImage", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmPickImage", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -5526,7 +5635,7 @@ namespace Protean
                 // Return MyBase.moXformElmt
 
                 // Catch ex As Exception
-                // returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+                // returnException(myWeb.msException, _moduleName, "addInput", ex, "", cProcessInfo, gbDebug)
                 // Return Nothing
                 // End Try
                 // End Function
@@ -5622,7 +5731,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditImage", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditImage", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -5671,7 +5780,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditDirectoryItem", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditDirectoryItem", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -5808,7 +5917,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmCopyGroupMembers", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmCopyGroupMembers", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -5993,7 +6102,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditRole", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditRole", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -6428,7 +6537,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -6501,7 +6610,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmDeleteDeliveryMethod", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmDeleteDeliveryMethod", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -6574,7 +6683,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmDeleteCarrier", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmDeleteCarrier", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -6646,7 +6755,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmDeleteShippingLocation", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmDeleteShippingLocation", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -6810,7 +6919,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -6976,7 +7085,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmPageRights", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmPageRights", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -7090,7 +7199,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmUserMemberships", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmUserMemberships", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -7292,7 +7401,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmDirMemberships", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmDirMemberships", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -7381,7 +7490,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditShippingLocation", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditShippingLocation", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -7573,7 +7682,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditDeliveryMethod", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditDeliveryMethod", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -7650,7 +7759,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditCarrier", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditCarrier", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -7739,7 +7848,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditPaymentProvider", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditPaymentProvider", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -7812,7 +7921,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditPaymentProvider", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditPaymentProvider", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -8207,7 +8316,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmUpdateOrder", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmUpdateOrder", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -8327,7 +8436,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmRefundOrder", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmRefundOrder", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -8468,7 +8577,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmFindRelated", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmFindRelated", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -8600,7 +8709,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmFindRelated", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmFindRelated", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -8687,7 +8796,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmProductGroup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmProductGroup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -8757,7 +8866,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmDiscountRule", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmDiscountRule", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -8838,7 +8947,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -8959,7 +9068,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmDiscountDirRelations", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmDiscountDirRelations", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -9105,7 +9214,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmShippingDirRelations", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmShippingDirRelations", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -9247,7 +9356,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmProductShippingGroupRelations", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmProductShippingGroupRelations", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -9314,7 +9423,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditDirectoryContact", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditDirectoryContact", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -9376,7 +9485,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "addInput", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -9449,7 +9558,7 @@ namespace Protean
                 // Return MyBase.moXformElmt
 
                 // Catch ex As Exception
-                // returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+                // returnException(myWeb.msException, _moduleName, "addInput", ex, "", cProcessInfo, gbDebug)
                 // Return Nothing
                 // End Try
                 // End Function
@@ -9543,7 +9652,7 @@ namespace Protean
                 // Return MyBase.moXformElmt
 
                 // Catch ex As Exception
-                // returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+                // returnException(myWeb.msException, _moduleName, "addInput", ex, "", cProcessInfo, gbDebug)
                 // Return Nothing
                 // End Try
                 // End Function
@@ -9637,7 +9746,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "addInput", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -9721,7 +9830,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -9738,7 +9847,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "MenuSelect", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "MenuSelect", ex, "", "", gbDebug);
                     }
                 }
                 public void MenuReiterate(XmlElement oMenuItem, ref XmlElement oSelect, int nDepth)
@@ -9756,7 +9865,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "MenuReiterate", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "MenuReiterate", ex, "", "", gbDebug);
                     }
                 }
 
@@ -9813,7 +9922,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "cInitialFolder", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "cInitialFolder", ex, "", "", gbDebug);
                     }
                 }
                 #endregion
@@ -9907,7 +10016,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmFeedItem", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmFeedItem", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -10037,7 +10146,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -10143,7 +10252,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -10216,7 +10325,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -10274,7 +10383,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmConfirmCancelSubscription", ex, "", bDebug: gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmConfirmCancelSubscription", ex, "", bDebug: gbDebug);
                         return null;
                     }
                 }
@@ -10324,7 +10433,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmConfirmCancelSubscription", ex, "", bDebug: gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmConfirmCancelSubscription", ex, "", bDebug: gbDebug);
                         return null;
                     }
                 }
@@ -10515,7 +10624,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmWebSettings", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmWebSettings", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -10603,7 +10712,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmFindRelated", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmFindRelated", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -10717,7 +10826,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmLocateContent", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmLocateContent", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -10803,7 +10912,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmCartActivity", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmCartActivity", ex, "", "", gbDebug);
                         return null;
                     }
                 }
@@ -10920,7 +11029,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmCartActivity", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmCartActivity", ex, "", "", gbDebug);
                         return null;
                     }
                 }
@@ -11009,7 +11118,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmCartActivityDrillDown", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmCartActivityDrillDown", ex, "", "", gbDebug);
                         return null;
                     }
                 }
@@ -11096,7 +11205,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmCartActivityPeriod", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmCartActivityPeriod", ex, "", "", gbDebug);
                         return null;
                     }
                 }
@@ -11147,7 +11256,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmMemberVisits", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmMemberVisits", ex, "", "", gbDebug);
                         return null;
                     }
                 }
@@ -11256,7 +11365,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmMemberCodeset", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmMemberCodeset", ex, "", "", gbDebug);
                         return null;
                     }
                 }
@@ -11419,7 +11528,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmMemberCodeGenerator", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmMemberCodeGenerator", ex, "", "", gbDebug);
                         return null;
                     }
                 }
@@ -11462,7 +11571,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmVoucherCode", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmVoucherCode", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -11612,7 +11721,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "addInput", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -11689,7 +11798,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmStartIndex", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmStartIndex", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -11732,7 +11841,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmGetReport", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmGetReport", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -11857,7 +11966,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmLookup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmLookup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -12002,7 +12111,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmIndexes", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmIndexes", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -12082,7 +12191,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmLookup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmLookup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -12095,7 +12204,7 @@ namespace Protean
                 {
 
                     #region  Declarations
-                    private string mcModuleName = "xFormContentLocations";
+                    private string _moduleName = "xFormContentLocations";
 
 
                     // Declarations
@@ -12115,7 +12224,7 @@ namespace Protean
                     #region  Initialisation
                     public xFormContentLocations(long ContentId, ref Cms.xForm Form)
                     {
-                        // myWeb.PerfMon.Log(mcModuleName, "New")
+                        // myWeb.PerfMon.Log(_moduleName, "New")
                         try
                         {
                             // Set variables
@@ -12127,39 +12236,39 @@ namespace Protean
 
                         catch (Exception ex)
                         {
-                            stdTools.returnException(ref Form.myWeb.msException, mcModuleName, "New", ex, "", "", gbDebug);
+                            stdTools.returnException(ref Form.myWeb.msException, _moduleName, "New", ex, "", "", gbDebug);
                         }
                     }
                     #endregion
                     #region  Public Methods
                     public void Refresh()
                     {
-                        // myWeb.PerfMon.Log(mcModuleName, "Refresh")
+                        // myWeb.PerfMon.Log(_moduleName, "Refresh")
                         try
                         {
                             _selects = _form.RootGroup.SelectNodes(_selectsXPath);
                         }
                         catch (Exception ex)
                         {
-                            stdTools.returnException(ref _form.myWeb.msException, mcModuleName, "Refresh", ex, "", "", gbDebug);
+                            stdTools.returnException(ref _form.myWeb.msException, _moduleName, "Refresh", ex, "", "", gbDebug);
                         }
                     }
                     public bool IsActive()
                     {
-                        // myWeb.PerfMon.Log(mcModuleName, "IsActive")
+                        // myWeb.PerfMon.Log(_moduleName, "IsActive")
                         try
                         {
                             return _selects.Count > 0;
                         }
                         catch (Exception ex)
                         {
-                            stdTools.returnException(ref _form.myWeb.msException, mcModuleName, "IsActive", ex, "", "", gbDebug);
+                            stdTools.returnException(ref _form.myWeb.msException, _moduleName, "IsActive", ex, "", "", gbDebug);
                             return false;
                         }
                     }
                     public void ProcessSelects()
                     {
-                        // myWeb.PerfMon.Log(mcModuleName, "ProcessSelects")
+                        // myWeb.PerfMon.Log(_moduleName, "ProcessSelects")
 
                         long menuId;
                         XmlElement bind;
@@ -12360,7 +12469,7 @@ namespace Protean
 
                         catch (Exception ex)
                         {
-                            stdTools.returnException(ref _form.myWeb.msException, mcModuleName, "ProcessSelects", ex, "", "", gbDebug);
+                            stdTools.returnException(ref _form.myWeb.msException, _moduleName, "ProcessSelects", ex, "", "", gbDebug);
 
                         }
                     }
@@ -12368,7 +12477,7 @@ namespace Protean
 
                     public void ProcessRequest(long ContentId)
                     {
-                        // myWeb.PerfMon.Log(mcModuleName, "ProcessRequest")
+                        // myWeb.PerfMon.Log(_moduleName, "ProcessRequest")
 
                         string InclusionList = "";
                         string ScopeList = "";
@@ -12406,7 +12515,7 @@ namespace Protean
 
                         catch (Exception ex)
                         {
-                            stdTools.returnException(ref _form.myWeb.msException, mcModuleName, "ProcessRequest", ex, "", "", gbDebug);
+                            stdTools.returnException(ref _form.myWeb.msException, _moduleName, "ProcessRequest", ex, "", "", gbDebug);
 
                         }
                     }
@@ -12418,7 +12527,7 @@ namespace Protean
                     {
 
                         #region  Declarations
-                        private string mcModuleName = "xFormContentLocationsSelect";
+                        private string _moduleName = "xFormContentLocationsSelect";
 
                         private XmlElement _selectItem;
                         private long _rootId;
@@ -12442,7 +12551,7 @@ namespace Protean
                             }
                             catch (Exception)
                             {
-                                // returnException(Form.myWeb.msException, mcModuleName, "New", ex, "", "", gbDebug)
+                                // returnException(Form.myWeb.msException, _moduleName, "New", ex, "", "", gbDebug)
                             }
                         }
 
@@ -12550,7 +12659,7 @@ namespace Protean
 
                             catch (Exception)
                             {
-                                // returnException(myWeb.msException, mcModuleName, "getPropertyFromClass", ex, "", "", gbDebug)
+                                // returnException(myWeb.msException, _moduleName, "getPropertyFromClass", ex, "", "", gbDebug)
                                 return "";
                             }
 
@@ -12685,7 +12794,7 @@ namespace Protean
                     catch (Exception ex)
                     {
                         myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -12780,7 +12889,7 @@ namespace Protean
                     catch (Exception ex)
                     {
                         myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -12877,7 +12986,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmAlertEmail", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmAlertEmail", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -12910,7 +13019,7 @@ namespace Protean
                         }
                         else
                         {
-                            stdTools.returnException(ref myWeb.msException, mcModuleName, "TransformEmailContent", ex, "", "", gbDebug);
+                            stdTools.returnException(ref myWeb.msException, _moduleName, "TransformEmailContent", ex, "", "", gbDebug);
                             return null;
                         }
                     }
@@ -13033,7 +13142,7 @@ namespace Protean
                     catch (Exception ex)
                     {
                         myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -13074,7 +13183,7 @@ namespace Protean
             public class XFormEditor : Protean.xForm
             {
 
-                private const string mcModuleName = "Protean.Cms.Admin.XFormEditor";
+                private const string _moduleName = "Protean.Cms.Admin.XFormEditor";
                 public const string FORMPATH = "/xforms/content";
 
                 private XmlElement _masterInstance;
@@ -13159,7 +13268,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "CreateMasterForm", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "CreateMasterForm", ex, "", "", gbDebug);
                     }
                 }
 
@@ -13182,7 +13291,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "loadForm", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "loadForm", ex, "", "", gbDebug);
                         return false;
                     }
 
@@ -13262,7 +13371,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -13327,7 +13436,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmDeleteElement", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmDeleteElement", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -13386,7 +13495,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "deleteElementAction", ex, "", processInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "deleteElementAction", ex, "", processInfo, gbDebug);
                     }
                 }
 
@@ -13447,7 +13556,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "moveElement", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "moveElement", ex, "", cProcessInfo, gbDebug);
                     }
 
                 }
@@ -13542,7 +13651,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditXFormItem", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditXFormItem", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -13706,7 +13815,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditXFormInput", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditXFormInput", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -14104,7 +14213,7 @@ namespace Protean
                 // Return Me.moXformElmt
 
                 // Catch ex As Exception
-                // returnException(myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug)
+                // returnException(myWeb.msException, _moduleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug)
                 // Return Nothing
                 // End Try
                 // End Function
@@ -14229,7 +14338,7 @@ namespace Protean
                 // Return Me.moXformElmt
 
                 // Catch ex As Exception
-                // returnException(myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug)
+                // returnException(myWeb.msException, _moduleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug)
                 // Return Nothing
                 // End Try
                 // End Function
@@ -14294,7 +14403,7 @@ namespace Protean
                 // Return oElmt
 
                 // Catch ex As Exception
-                // returnException(myWeb.msException, mcModuleName, "addAnswerNode", ex, "", cProcessInfo, gbDebug)
+                // returnException(myWeb.msException, _moduleName, "addAnswerNode", ex, "", cProcessInfo, gbDebug)
                 // Return Nothing
                 // End Try
                 // End Function
@@ -14316,7 +14425,7 @@ namespace Protean
                 // End If
 
                 // Catch ex As Exception
-                // returnException(myWeb.msException, mcModuleName, "clearAnswerScores", ex, "", cProcessInfo, gbDebug)
+                // returnException(myWeb.msException, _moduleName, "clearAnswerScores", ex, "", cProcessInfo, gbDebug)
                 // End Try
                 // End Sub
 
@@ -14333,7 +14442,7 @@ namespace Protean
 
                 // Return oElmt
                 // Catch ex As Exception
-                // returnException(myWeb.msException, mcModuleName, "addCorrectAnswer", ex, "", cProcessInfo, gbDebug)
+                // returnException(myWeb.msException, _moduleName, "addCorrectAnswer", ex, "", cProcessInfo, gbDebug)
                 // Return Nothing
                 // End Try
                 // End Function

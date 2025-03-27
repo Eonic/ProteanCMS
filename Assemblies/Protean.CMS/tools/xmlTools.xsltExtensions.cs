@@ -816,6 +816,8 @@ namespace Protean
 
                         cHtml = Strings.Replace(cHtml, "&amp;", "&");
 
+
+
                         cHtml = convertEntitiesToCodes(cHtml);
                         cHtml = convertStringToEntityCodes(cHtml);
 
@@ -894,6 +896,8 @@ namespace Protean
                     cHtml = convertEntitiesToCodes(cHtml);
                     cHtml = Strings.Replace(Strings.Replace(cHtml, "&gt;", ">"), "&lt;", "<");
                     cHtml = "<div>" + cHtml + "</div>";
+
+
 
                     cHtmlOut = stdTools.tidyXhtmlFrag(cHtml, true, true, RemoveTags);
 
