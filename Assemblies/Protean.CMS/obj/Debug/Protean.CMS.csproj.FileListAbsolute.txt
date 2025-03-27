@@ -327,8 +327,6 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\BundleTransformer.S
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.Core.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.V8.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.V8.ICUData.dll
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.Windows.Core.dll
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.Windows.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\DartSassHost.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Fonet.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ICSharpCode.SharpZipLib.dll
@@ -347,7 +345,6 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Drawing.Comm
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Memory.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Net.FtpClient.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Text.Json.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Threading.Tasks.Extensions.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Web.Optimization.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\WebGrease.dll
@@ -364,8 +361,6 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\BundleTransformer.S
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.Core.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.V8.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.V8.ICUData.xml
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.Windows.xml
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.Windows.Core.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\DartSassHost.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Fonet.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ICSharpCode.SharpZipLib.pdb
@@ -380,7 +375,6 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Drawing.Comm
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Drawing.Common.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Net.FtpClient.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Text.Json.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Threading.Tasks.Extensions.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Web.Optimization.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ru-ru\BundleTransformer.Core.resources.dll
@@ -395,21 +389,14 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Debug\ProteanCMS.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Debug\ProteanCMS.pdb
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\TidyHTML5Managed.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\AjaxMin.dll
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Configuration.ConfigurationManager.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.IO.Pipelines.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Numerics.Vectors.dll
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.ServiceModel.Primitives.dll
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Text.Encoding.CodePages.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Text.Encodings.Web.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\WebActivatorEx.dll
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.ValueTuple.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Newtonsoft.Json.xml
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Configuration.ConfigurationManager.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.IO.Pipelines.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Memory.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Numerics.Vectors.xml
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.ServiceModel.Primitives.pdb
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Text.Encoding.CodePages.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Text.Encodings.Web.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Select.Html.dep
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScriptV8.win-x64.dll

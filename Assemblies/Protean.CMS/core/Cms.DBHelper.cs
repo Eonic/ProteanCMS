@@ -13201,7 +13201,7 @@ namespace Protean
 
             }
 
-            public int saveInstance(ref XmlElement instanceElmt, string targetTable, string keyField, string whereStmt = "")
+            public long saveInstance(ref XmlElement instanceElmt, string targetTable, string keyField, string whereStmt = "")
             {
 
                 PerfMonLog("dbTools", "saveInstance");
@@ -13313,7 +13313,7 @@ namespace Protean
                     }
 
                     PerfMonLog("dbTools", "saveInstance-End", cProcessInfo);
-                    return Conversions.ToInteger(keyValue);
+                    return Conversions.ToLong(keyValue);
                 }
 
                 catch (Exception ex)
@@ -13485,6 +13485,8 @@ namespace Protean
 
                         case "Xml":
                             {
+                                //byte[] bytes = Encoding.UTF8.GetBytes(Convert.ToString(value.InnerXml));
+                                //return Encoding.Unicode.GetString(bytes);
 
                                 return value.InnerXml;
                             }
