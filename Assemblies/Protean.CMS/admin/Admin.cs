@@ -2845,6 +2845,7 @@ namespace Protean
                         case "Orders":
                         case "OrdersShipped":
                         case "OrdersFailed":
+                        case "OrdersConfirmed":
                         case "OrdersDeposit":
                         case "OrdersRefunded":
                         case "OrdersHistory":
@@ -5208,6 +5209,7 @@ namespace Protean
                                                 break;
                                             }
                                         case "OrdersSaved":
+                                        case "OrdersConfirmed":
                                             {
                                                 oCart.ListOrders(0.ToString(), true, (int)Cms.Cart.cartProcess.Confirmed, ref oPageDetail);
                                                 break;

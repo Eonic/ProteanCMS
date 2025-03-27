@@ -1467,6 +1467,12 @@ namespace Protean
                 oTdyManaged.MakeBare = true;//removed word tags
                 oTdyManaged.CleanWord2000 = true;//removed word tags
 
+                oTdyManaged.InputCharacterEncoding = TidyManaged.EncodingType.Utf8;
+
+                oTdyManaged.CharacterEncoding = TidyManaged.EncodingType.Utf16;
+
+
+
                 if (bReturnNumbericEntities)
                 {
                     oTdyManaged.OutputNumericEntities = true;
