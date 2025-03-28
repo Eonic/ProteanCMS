@@ -13,6 +13,7 @@
   <xsl:import href="../../core/localisation.xsl"/>
 
 	<xsl:import href="modules/news/news.xsl"/>
+	<xsl:import href="modules/image/image.xsl"/>
 
   <xsl:template match="Page" mode="footerJs"></xsl:template>
 
