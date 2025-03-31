@@ -7575,8 +7575,17 @@ namespace Protean
                                         }
                                     }
 
-                                    if (string.IsNullOrEmpty(pvUrlPrefix))
-                                        pvUrlPrefix = httpStart + goLangConfig.GetAttribute("defaultDomain");
+                                    if (string.IsNullOrEmpty(pvUrlPrefix)) {
+                                        if (string.IsNullOrEmpty(goLangConfig.GetAttribute("defaultDomain")))
+                                        {
+                                            pvUrlPrefix = "/";
+                                        }
+                                        else
+                                            pvUrlPrefix = httpStart + goLangConfig.GetAttribute("defaultDomain");
+                                    }
+
+                              
+                                       
                                     pvElmt.SetAttribute("url", pvUrlPrefix + sUrl);
 
                                 }

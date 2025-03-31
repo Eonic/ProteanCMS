@@ -4270,7 +4270,6 @@
           <xsl:choose>
             <xsl:when test="$menu/descendant-or-self::MenuItem[@id=$contentParId]/@url='/'">
               <xsl:call-template name="getSiteURL"/>
-
             </xsl:when>
             <xsl:otherwise>
               <xsl:apply-templates select="$menu/descendant-or-self::MenuItem[@id=$contentParId]" mode="getHref"/>

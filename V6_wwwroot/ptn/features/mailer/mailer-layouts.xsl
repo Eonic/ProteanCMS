@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml" xmlns:ew="urn:ew">
 
+
+
+
+	
+	
   <xsl:variable name="siteURL">
     <xsl:variable name="serverVariableURL">
       <xsl:call-template name="getServerVariable">
@@ -40,11 +45,7 @@
   </xsl:template>
 
   <xsl:template match="Page[@adminMode='false']" mode="adminStyle">
-    <link type="text/css" rel="stylesheet" href="/ewcommon/css/admin/admin.less"/>
-    <!-- IF IE6 BRING IN IE6 files -->
-    <xsl:if test="contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 6.0') and not(contains(Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 7')) and not(contains(Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'Opera'))">
-      <link type="text/css" rel="stylesheet" href="/ewcommon/css/admin/skins/ie6.css"/>
-    </xsl:if>
+    <link type="text/css" rel="stylesheet" href="/ptn/admin/admin.scss"/>
   </xsl:template>
 
   <!--####################### Page Level Templates, can be overridden later. ##############################-->
@@ -87,9 +88,9 @@
   </xsl:template>
 
   <xsl:template match="Page" mode="commonStyle">
-    <link rel="stylesheet" type="text/css" href="/ewcommon/css/base-bs.less"/>
+    <link rel="stylesheet" type="text/css" href="/ptn/css/base-bs.less"/>
     <xsl:apply-templates select="." mode="adminStyle"/>
-    <link rel="stylesheet" type="text/css" href="/ewcommon/css/admin/adminmailer.css"/>
+    <link rel="stylesheet" type="text/css" href="/ptn/admin/admin-wysiwyg.scss"/>
     <xsl:apply-templates select="." mode="siteStyle"/>
   </xsl:template>
 
@@ -133,10 +134,11 @@
               <xsl:value-of select="$colspan"/>
             </xsl:attribute>
           </xsl:if>
-          <xsl:apply-templates select="/Page"  mode="addMailModule">
+			
+          <xsl:apply-templates select="/Page"  mode="addModule">
             <xsl:with-param name="text">Add Module</xsl:with-param>
             <xsl:with-param name="position">header</xsl:with-param>
-          </xsl:apply-templates>
+          </xsl:apply-templates>			
         </td>
       </tr>
     </xsl:if>
@@ -152,7 +154,7 @@
               <xsl:value-of select="$colspan"/>
             </xsl:attribute>
           </xsl:if>
-          <xsl:apply-templates select="/Page"  mode="addMailModule">
+          <xsl:apply-templates select="/Page"  mode="addModule">
             <xsl:with-param name="text">Add Module</xsl:with-param>
             <xsl:with-param name="position">footer</xsl:with-param>
           </xsl:apply-templates>
@@ -213,7 +215,7 @@
       </xsl:apply-templates>
       <tr>
         <td class="moduleContainer" id="column1">
-          <xsl:apply-templates select="/Page"  mode="addMailModule">
+          <xsl:apply-templates select="/Page"  mode="addModule">
             <xsl:with-param name="text">Add Module</xsl:with-param>
             <xsl:with-param name="position">column1</xsl:with-param>
           </xsl:apply-templates>
@@ -232,13 +234,13 @@
       </xsl:apply-templates>
       <tr>
         <td style="width:50%;vertical-align:top;" valign="top" class="moduleContainer emailCol" id="column1">
-          <xsl:apply-templates select="/Page"  mode="addMailModule">
+          <xsl:apply-templates select="/Page"  mode="addModule">
             <xsl:with-param name="text">Add Module</xsl:with-param>
             <xsl:with-param name="position">column1</xsl:with-param>
           </xsl:apply-templates>
         </td>
         <td style="width:50%;vertical-align:top;" valign="top" class="moduleContainer emailCol" id="column2">
-          <xsl:apply-templates select="/Page"  mode="addMailModule">
+          <xsl:apply-templates select="/Page"  mode="addModule">
             <xsl:with-param name="text">Add Module</xsl:with-param>
             <xsl:with-param name="position">column2</xsl:with-param>
           </xsl:apply-templates>
@@ -257,13 +259,13 @@
       </xsl:apply-templates>
       <tr>
         <td id="column1" style="width:66%;vertical-align:top;" valign="top" class="moduleContainer emailCol">
-          <xsl:apply-templates select="/Page"  mode="addMailModule">
+          <xsl:apply-templates select="/Page"  mode="addModule">
             <xsl:with-param name="text">Add Module</xsl:with-param>
             <xsl:with-param name="position">column1</xsl:with-param>
           </xsl:apply-templates>
         </td>
         <td id="column2" style="width:34%;vertical-align:top;" valign="top" class="moduleContainer emailCol">
-          <xsl:apply-templates select="/Page"  mode="addMailModule">
+          <xsl:apply-templates select="/Page"  mode="addModule">
             <xsl:with-param name="text">Add Module</xsl:with-param>
             <xsl:with-param name="position">column2</xsl:with-param>
           </xsl:apply-templates>
@@ -282,13 +284,13 @@
       </xsl:apply-templates>
       <tr>
         <td id="column1" style="width:34%;vertical-align:top;" valign="top" class="moduleContainer emailCol">
-          <xsl:apply-templates select="/Page"  mode="addMailModule">
+          <xsl:apply-templates select="/Page"  mode="addModule">
             <xsl:with-param name="text">Add Module</xsl:with-param>
             <xsl:with-param name="position">column1</xsl:with-param>
           </xsl:apply-templates>
         </td>
         <td id="column2" style="width:66%;vertical-align:top;" valign="top" class="moduleContainer emailCol">
-          <xsl:apply-templates select="/Page"  mode="addMailModule">
+          <xsl:apply-templates select="/Page"  mode="addModule">
             <xsl:with-param name="text">Add Module</xsl:with-param>
             <xsl:with-param name="position">column2</xsl:with-param>
           </xsl:apply-templates>
@@ -308,19 +310,19 @@
       </xsl:apply-templates>
       <tr>
         <td style="width:33%;vertical-align:top;" valign="top" class="moduleContainer emailCol" id="column1">
-          <xsl:apply-templates select="/Page"  mode="addMailModule">
+          <xsl:apply-templates select="/Page"  mode="addModule">
             <xsl:with-param name="text">Add Module</xsl:with-param>
             <xsl:with-param name="position">column1</xsl:with-param>
           </xsl:apply-templates>
         </td>
         <td style="width:33%;vertical-align:top;" valign="top" class="moduleContainer emailCol" id="column2">
-          <xsl:apply-templates select="/Page"  mode="addMailModule">
+          <xsl:apply-templates select="/Page"  mode="addModule">
             <xsl:with-param name="text">Add Module</xsl:with-param>
             <xsl:with-param name="position">column2</xsl:with-param>
           </xsl:apply-templates>
         </td>
         <td style="width:33%;vertical-align:top;" valign="top" class="moduleContainer emailCol" id="column3">
-          <xsl:apply-templates select="/Page"  mode="addMailModule">
+          <xsl:apply-templates select="/Page"  mode="addModule">
             <xsl:with-param name="text">Add Module</xsl:with-param>
             <xsl:with-param name="position">column3</xsl:with-param>
           </xsl:apply-templates>
@@ -1060,7 +1062,7 @@
       <xsl:with-param name="sortBy" select="$sortBy"/>
     </xsl:apply-templates>
     <h3 class="title">
-      <a href="/ewcommon/tools/download.ashx?docId={@id}" rel="external">
+      <a href="/ptn/tools/download.ashx?docId={@id}" rel="external">
         <xsl:attribute name="title">
           <!-- click here to download a copy of this document -->
           <xsl:apply-templates select="." mode="getDisplayName"/>
@@ -1076,7 +1078,7 @@
       <xsl:text>&#160;</xsl:text>
     </xsl:if>
     <p class="link">
-      <a href="/ewcommon/tools/download.ashx?docId={@id}" rel="external" class="{substring-after(Path,'.')}icon">
+      <a href="/ptn/tools/download.ashx?docId={@id}" rel="external" class="{substring-after(Path,'.')}icon">
         <xsl:attribute name="title">
           <!-- click here to download a copy of this document -->
           <xsl:apply-templates select="." mode="getDisplayName"/>
@@ -1319,7 +1321,7 @@
 
   <!-- -->
   <xsl:template name="rssSubscribe">
-    <img src="{$siteURL}/ewcommon/images/icons/rss16x16.png" width="16" height="16" alt="RSS" style="border:none;"/>
+    <img src="{$siteURL}/ptn/images/icons/rss16x16.png" width="16" height="16" alt="RSS" style="border:none;"/>
   </xsl:template>
 
   <xsl:template name="eonicDeveloperLink">

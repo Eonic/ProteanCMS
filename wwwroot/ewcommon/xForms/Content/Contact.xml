@@ -82,7 +82,9 @@
       <bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
       <bind id="dExpireDate" nodeset="dExpireDate" required="false()" type="string"/>
       <bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
-      <bind nodeset="cContentXmlBrief/Content">
+		<bind id="cFref" nodeset="cContentForiegnRef" required="true()" type="string"/>
+		
+		<bind nodeset="cContentXmlBrief/Content">
         <bind id="cContentGivenName" nodeset="GivenName" required="false()" type="string"/>
         <bind id="cContentSurname" nodeset="Surname" required="true()" type="string"/>
         <bind id="cContentTitle" nodeset="Title" required="false()" type="string"/>
@@ -178,6 +180,9 @@
         <input bind="cDescription" class="short">
           <label>Change notes</label>
         </input>
+		  <input bind="cFref" class="short">
+			  <label>fRef</label>
+		  </input>
       </group>
       <group class="Content">
         <label>Images</label>
