@@ -1059,7 +1059,7 @@
 	</xsl:template>
 
 	<xsl:template match="Page[@ewCmd='MoveContent']" mode="adminBreadcrumb">
-		<xsl:text>[Move Content]</xsl:text>
+
 	</xsl:template>
 
 	<xsl:template match="Page[@ewCmd='AddPage']" mode="adminBreadcrumb">
