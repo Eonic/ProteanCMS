@@ -21,6 +21,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
 using System.Xml;
+using static Protean.FeedHandler;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
 
@@ -4009,6 +4010,8 @@ namespace Protean
                     sAdminLayout = "FileImport";
                     string sImportLoaction = @"..\imports\";
 
+                    string itemNodeName = "";
+
 
                     oPageDetail.AppendChild(moAdXfm.xFrmImportFile(sImportLoaction));
                     if (moAdXfm.valid)
@@ -4064,6 +4067,8 @@ namespace Protean
                                     case "mssql":
                                         {
                                             DBConn = "Data Source=" + oImportRootElmt.GetAttribute("databaseServer") + "; " + "Initial Catalog=" + oImportRootElmt.GetAttribute("databaseName") + "; " + "user id=" + oImportRootElmt.GetAttribute("databaseUsername") + "; password=" + oImportRootElmt.GetAttribute("databasePassword");
+
+                                            itemNodeName = oImportRootElmt.GetAttribute("tableName");
 
                                             var newDb = new Cms.dbHelper(DBConn, (long)mnAdminUserId, myWeb.moCtx);
                                             if (newDb.ConnectionValid == false)
@@ -4160,48 +4165,10 @@ namespace Protean
 
                                 if (moConfig["AsyncFileImport"] == "on")
                                 {
-                                    //preview the first 10 records
-                                    XmlDocument PreviewXml = new XmlDocument();
-                                    PreviewXml.LoadXml(oImportXml.OuterXml);
-                                    int count = 0;
-                                    foreach (XmlNode itemXml in PreviewXml.SelectNodes("/*/*")) {
-                                        count = count + 1;
-                                        if (count > 10) {
-                                            itemXml.ParentNode.RemoveChild(itemXml);
-                                        }                                    
-                                    }
-                                    var oPreviewElmt = moPageXML.CreateElement("PreviewFileXml");
-                                    oPreviewElmt.InnerXml = PreviewXml.OuterXml;
-                                    oPageDetail.AppendChild(oPreviewElmt);
-
-
-                                    var oTransform = new Protean.XmlHelper.Transform(ref myWeb, styleFile, false);
-                                    myWeb.PerfMon.Log("Admin", "FileImportProcess-startxsl");
-                                    oTransform.mbDebug = gbDebug;
-                                    oTransform.ProcessDocument(PreviewXml);
-                                    myWeb.PerfMon.Log("Admin", "FileImportProcess-endxsl");
-                                    // We display the results
-                                    var oPreviewElmt2 = moPageXML.CreateElement("PreviewImport");
-                                    if (oTransform.HasError)
-                                    {
-                                        oPreviewElmt2.SetAttribute("errorMsg", oTransform.currentError.Message);
-                                        oPreviewElmt2.InnerText = oTransform.currentError.StackTrace;
-                                    }
-                                    else
-                                    {
-                                        oPreviewElmt2.InnerXml = PreviewXml.InnerXml;
-                                    }
-                                    oPageDetail.AppendChild(oPreviewElmt2);
-                                    oTransform = (Protean.XmlHelper.Transform)null;
-
-
-                                    string cOppMode = moAdXfm.Instance.SelectSingleNode("file/@opsMode").InnerText;
-                                    if (cOppMode == "import")
-                                    {
-                                        // here we go lets do the do...!! whoah!
-                                        myWeb.moDbHelper.importObjects(oImportXml.DocumentElement,"", styleFile);
-
-                                    }
+                                    var oResElmt = myWeb.moPageXml.OwnerDocument.CreateElement("Response");
+                                    FeedHandler oFeeder = new FeedHandler(null, styleFile, 0, 2, ref oResElmt, itemNodeName);
+                                    oFeeder.cFeedData = oImportXml.OuterXml;
+                                    oFeeder.ImportStream();
 
                                 }
                                 else {

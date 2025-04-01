@@ -4270,7 +4270,6 @@
           <xsl:choose>
             <xsl:when test="$menu/descendant-or-self::MenuItem[@id=$contentParId]/@url='/'">
               <xsl:call-template name="getSiteURL"/>
-
             </xsl:when>
             <xsl:otherwise>
               <xsl:apply-templates select="$menu/descendant-or-self::MenuItem[@id=$contentParId]" mode="getHref"/>
@@ -6376,7 +6375,6 @@
 
       </xsl:otherwise>
     </xsl:choose>
-
   </xsl:template>
 
 
@@ -6429,9 +6427,11 @@
           <xsl:text>');</xsl:text>
         </xsl:attribute>
       </xsl:if>
-
+		<xsl:apply-templates mode="cleanXhtml"/>
+		<xsl:text> </xsl:text>
+		<!--
      	<xsl:variable name="anchorText">
-			<xsl:apply-templates mode="cleanXhtml"/>
+			<xsl:apply-templates select="*" mode="cleanXhtml"/>
 		</xsl:variable>
 		<xsl:choose>
 			<xsl:when test="$anchorText!=''">
@@ -6441,7 +6441,7 @@
 				<xsl:text> </xsl:text>
 			</xsl:otherwise>
 		</xsl:choose>
-    
+    -->
     </xsl:element>
   </xsl:template>
 
