@@ -7872,65 +7872,69 @@ namespace Protean
                     {
                         string cURL = "";
                         var oContElmt = moPageXml.CreateElement("MenuItem");
+                        cURL = GetDetailURL(Conversions.ToLong(oDR[0]), oDR[5].ToString(), oDR[1].ToString(), "", Conversions.ToLong(oDR[2]));
 
-                        switch (moConfig["DetailPathType"] ?? "")
-                        {
-                            case "ContentType/ContentName":
-                                {
-                                    string[] prefixs = moConfig["DetailPrefix"].Split(',');
-                                    string thisPrefix = "";
-                                    string thisContentType = "";
-                                    int i;
-                                    var loopTo = prefixs.Length - 1;
-                                    for (i = 0; i <= loopTo; i++)
-                                    {
-                                        thisPrefix = prefixs[i].Substring(0, prefixs[i].IndexOf("/"));
-                                        thisContentType = prefixs[i].Substring(prefixs[i].IndexOf("/") + 1, prefixs[i].Length - prefixs[i].IndexOf("/") - 1);
-                                        if ((thisContentType ?? "") == (oDR[5].ToString() ?? ""))
-                                        {
-                                            string ItemIdPath = "";
-                                            if (moConfig["addPathArtId"] == "on")
-                                            {
-                                                ItemIdPath = oDR[0] + "-/";
-                                            }
-                                            cURL = "/" + thisPrefix + "/" + ItemIdPath + oRe.Replace(oDR[1].ToString(), "-").Trim('-');
-                                            if (moConfig["DetailPathTrailingSlash"] == "on")
-                                            {
-                                                cURL = cURL + "/";
-                                            }
-                                            if (moConfig["LowerCaseUrl"] == "on")
-                                            {
-                                                cURL = cURL.ToLower();
-                                            }
-                                        }
-                                    }
+                        #region old code
+                        //switch (moConfig["DetailPathType"] ?? "")
+                        //{
+                        //    case "ContentType/ContentName":
+                        //        {
+                        //            string[] prefixs = moConfig["DetailPrefix"].Split(',');
+                        //            string thisPrefix = "";
+                        //            string thisContentType = "";
+                        //            int i;
+                        //            var loopTo = prefixs.Length - 1;
+                        //            for (i = 0; i <= loopTo; i++)
+                        //            {
+                        //                thisPrefix = prefixs[i].Substring(0, prefixs[i].IndexOf("/"));
+                        //                thisContentType = prefixs[i].Substring(prefixs[i].IndexOf("/") + 1, prefixs[i].Length - prefixs[i].IndexOf("/") - 1);
+                        //                if ((thisContentType ?? "") == (oDR[5].ToString() ?? ""))
+                        //                {
+                        //                    string ItemIdPath = "";
+                        //                    if (moConfig["addPathArtId"] == "on")
+                        //                    {
+                        //                        ItemIdPath = oDR[0] + "-/";
+                        //                    }
+                        //                    cURL = "/" + thisPrefix + "/" + ItemIdPath + oRe.Replace(oDR[1].ToString(), "-").Trim('-');
+                        //                    if (moConfig["DetailPathTrailingSlash"] == "on")
+                        //                    {
+                        //                        cURL = cURL + "/";
+                        //                    }
+                        //                    if (moConfig["LowerCaseUrl"] == "on")
+                        //                    {
+                        //                        cURL = cURL.ToLower();
+                        //                    }
+                        //                }
+                        //            }
 
-                                    break;
-                                }
+                        //            break;
+                        //        }
 
-                            default:
-                                {
-                                    if (pageDict.ContainsKey(Conversions.ToLong(oDR[2])))
-                                    {
-                                        cURL = pageDict[Conversions.ToLong(oDR[2])];
-                                        // If moConfig("LegacyRedirect") = "on" Then
-                                        cURL += "/" + oDR[0].ToString() + "-/" + Tools.Text.CleanName(oDR[1].ToString(), false, true);
-                                    }
-                                    // Else
-                                    // cURL &= "/Item" & oDR(0).ToString
-                                    // End If
-                                    else
-                                    {
-                                        cProcessInfo = "orphan Content";
-                                    }
+                        //    default:
+                        //        {
+                        //            if (pageDict.ContainsKey(Conversions.ToLong(oDR[2])))
+                        //            {
+                        //                cURL = pageDict[Conversions.ToLong(oDR[2])];
+                        //                // If moConfig("LegacyRedirect") = "on" Then
+                        //                cURL += "/" + oDR[0].ToString() + "-/" + Tools.Text.CleanName(oDR[1].ToString(), false, true);
+                        //            }
+                        //            // Else
+                        //            // cURL &= "/Item" & oDR(0).ToString
+                        //            // End If
+                        //            else
+                        //            {
+                        //                cProcessInfo = "orphan Content";
+                        //            }
 
-                                    break;
-                                }
-                        }
-                        if (moConfig["LowerCaseUrl"] == "on")
-                        {
-                            cURL = cURL.ToLower();
-                        }
+                        //            break;
+                        //        }
+                        //}
+                        //if (moConfig["LowerCaseUrl"] == "on")
+                        //{
+                        //    cURL = cURL.ToLower();
+                        //}
+                        #endregion
+
                         if (!string.IsNullOrEmpty(cURL))
                         {
                             oContElmt.SetAttribute("url", cURL);
@@ -11386,6 +11390,74 @@ namespace Protean
             }
         }
 
+        //GetDetailURL(long ContentId, schemaType, contentName, pagePath of the primary location) (if more than one primary location then run for both)
+        public string GetDetailURL(long ContentId, string schemaType, string contentName, string pagePath, long cChildId)
+        {
+            string cProcessInfo = string.Empty;
+            string cURL = "";
+            var oRe = new Regex("[^A-Z0-9]", RegexOptions.IgnoreCase);
+            var pageDict = new SortedDictionary<long, string>();
+
+            switch (moConfig["DetailPathType"] ?? "")
+            {
+                case "ContentType/ContentName":
+                    {
+                        string[] prefixs = moConfig["DetailPrefix"].Split(',');
+                        string thisPrefix = "";
+                        string thisContentType = "";
+                        int i;
+                        var loopTo = prefixs.Length - 1;
+                        for (i = 0; i <= loopTo; i++)
+                        {
+                            thisPrefix = prefixs[i].Substring(0, prefixs[i].IndexOf("/"));
+                            thisContentType = prefixs[i].Substring(prefixs[i].IndexOf("/") + 1, prefixs[i].Length - prefixs[i].IndexOf("/") - 1);
+                            if ((thisContentType ?? "") == (schemaType ?? ""))
+                            {
+                                string ItemIdPath = "";
+                                if (moConfig["addPathArtId"] == "on")
+                                {
+                                    ItemIdPath = ContentId + "-/";
+                                }
+                                cURL = "/" + thisPrefix + "/" + ItemIdPath + oRe.Replace(contentName.ToString(), "-").Trim('-');
+                                if (moConfig["DetailPathTrailingSlash"] == "on")
+                                {
+                                    cURL = cURL + "/";
+                                }
+                                if (moConfig["LowerCaseUrl"] == "on")
+                                {
+                                    cURL = cURL.ToLower();
+                                }
+                            }
+                        }
+
+                        break;
+                    }
+
+                default:
+                    {
+                        if (pageDict.ContainsKey(Conversions.ToLong(cChildId)))
+                        {
+                            cURL = pageDict[Conversions.ToLong(cChildId)];
+                            // If moConfig("LegacyRedirect") = "on" Then
+                            cURL += "/" + ContentId.ToString() + "-/" + Tools.Text.CleanName(contentName.ToString(), false, true);
+                        }
+                        // Else
+                        // cURL &= "/Item" & oDR(0).ToString
+                        // End If
+                        else
+                        {
+                            cProcessInfo = "orphan Content";
+                        }
+
+                        break;
+                    }
+            }
+            if (moConfig["LowerCaseUrl"] == "on")
+            {
+                cURL = cURL.ToLower();
+            }
+            return cURL;
+        }
         public void ClearPageCache(string ContentId)
         {
             try
@@ -11393,93 +11465,96 @@ namespace Protean
                 string filePath = goServer.MapPath("/") + mcPageCacheFolder;
                 // check startfolder exists
                 var rootDir = new DirectoryInfo(filePath);
-                string folderName = string.Empty;//mcOriginalURL;
+                string productUrl = string.Empty;//mcOriginalURL;
                 string sSql;
                 DataSet oDs;
+                string cChildID; string cContentSchemaName; string cContentName; string sPagePath;
                 string sProcessInfo;
                 sProcessInfo = "ClearPageCache-Start";
                 PerfMon.Log("Web", sProcessInfo);
-                XmlElement oElmt = null;
+              
                 if(Strings.LCase(moConfig["PageCache"]) == "on" && rootDir.Exists)
-                {               
-                    sSql = "EXEC spGetContentDetailsForCache @nContentkey=" + ContentId + "";
+                {       
+                    //spGetParentPagesForCache
+                    sSql = "EXEC spGetParentPagesForCache @nContentkey=" + ContentId + "";
                     // Get the dataset
                     oDs = moDbHelper.GetDataSet(sSql, "Content");
                     if (oDs.Tables[0].Rows.Count > 0)
-                    {
-                        // COVERT DATASET TO XML
-                        // =====================
-                        oElmt = moPageXml.CreateElement("Parent");
-
-                        // TS added lines to avoid whitespace issues
-                        var oXml = new XmlDocument();
-                        oXml.LoadXml(oDs.GetXml());
-                        oXml.PreserveWhitespace = false;
-
-                        oElmt.InnerXml = oXml.DocumentElement.OuterXml;
-                        string sContent; int i; string contentType;
-                        string rootParentFolder;
-                        string subrootParentFolder;
-                        string childFolder;
+                    {                        
                         List<string> sFoldersUrlslist = new List<string>();
+                        GetStructureXML("Site");
                         // Convert any text to xml
-                        foreach (XmlElement oElmt2 in oElmt.SelectNodes("descendant-or-self::Content"))
+                        foreach (DataRow oRow2 in oDs.Tables[0].Rows)
                         {
-                            if(oElmt2.SelectSingleNode("cContentName") != null)
-                            {                            
-                                sContent = oElmt2.SelectSingleNode("cContentName").InnerText;
-                                contentType = oElmt2.SelectSingleNode("cContentSchemaName").InnerText;
-                                string[] prefixs = moConfig["DetailPrefix"].Split(',');
-                                string thisPrefix = "";
-                                string thisContentType = "";
-                                var loopTo = prefixs.Length - 1;
-                                for (i = 0; i <= loopTo; i++)
-                                {
-                                    thisPrefix = prefixs[i].Substring(0, prefixs[i].IndexOf("/"));
-                                    thisContentType = prefixs[i].Substring(prefixs[i].IndexOf("/") + 1, prefixs[i].Length - prefixs[i].IndexOf("/") - 1);
-                                    if ((contentType ?? "") == (thisContentType ?? ""))
-                                    {
-                                        folderName += "/" + thisPrefix + "/" + Protean.Tools.Text.CleanName(sContent).Replace(" ", "-").Trim('-');
-                                        if (rootDir.Exists)
-                                        {
-                                            sFoldersUrlslist.Add(filePath + @"\" + folderName); 
-                                        }
-                                        folderName = "";
-                                    }
-                                }
-                                //add code to delete parent folders that are dependant to this product
-                                if(oElmt2.SelectSingleNode("rootParentFolder").InnerText != "")
-                                {
-                                    string RootPageId = oElmt2.SelectSingleNode("parent_id").InnerText;
-                                    rootParentFolder = oElmt2.SelectSingleNode("rootParentFolder").InnerText;
-                                    subrootParentFolder = oElmt2.SelectSingleNode("subrootParentFolder").InnerText;
-                                    childFolder = oElmt2.SelectSingleNode("childFolder").InnerText;
-
-                                    // if root page contains 'Home' then no need to append in url.
-                                    if(RootPageId == moConfig["RootPageId"])
-                                    {
-                                        folderName += "/" + Protean.Tools.Text.CleanName(subrootParentFolder).Replace(" ", "-").Trim('-') + "/" + Protean.Tools.Text.CleanName(childFolder).Replace(" ", "-").Trim('-');
-                                        string newfilePath = filePath + folderName; 
-                                        rootDir = new DirectoryInfo(newfilePath);
-                                        if (rootDir.Exists)
-                                        {
-                                            sFoldersUrlslist.Add(filePath + @"\" + folderName);  
-                                        }
-                                        folderName = "";
-                                    }
-                                    else
-                                    {
-                                        folderName += "/" + Protean.Tools.Text.CleanName(rootParentFolder).Replace(" ", "-").Trim('-') + "/" + Protean.Tools.Text.CleanName(subrootParentFolder).Replace(" ", "-").Trim('-') + "/" + Protean.Tools.Text.CleanName(childFolder).Replace(" ", "-").Trim('-');
-                                        string newfilePath = filePath + folderName;
-                                        rootDir = new DirectoryInfo(newfilePath);
-                                        if (rootDir.Exists)
-                                        {
-                                            sFoldersUrlslist.Add(filePath + @"\" + folderName);                                    
-                                        }
-                                        folderName = "";
-                                    }
-                                }
+                            cContentName = Convert.ToString(oRow2["cContentName"]);
+                            cContentSchemaName = Convert.ToString(oRow2["cContentSchemaName"]);
+                            cChildID = Convert.ToString(oRow2["child_id"]);                           
+                            foreach (XmlElement oElmt3 in moPageXml.SelectNodes($"/Page/Menu/descendant-or-self::MenuItem[@id='{cChildID}']"))
+                            {
+                                //catch child id from dataset and match into the mopagfexml and get the exact url of pages and pass it to delete.
+                                string[] paths = oElmt3.SelectSingleNode("@url").InnerText.Split('?'); //split ? from urls
+                                sPagePath = paths[0];
+                                sFoldersUrlslist.Add(filePath + @"\" + sPagePath);
+                                //Create Product Url here
+                                productUrl = GetDetailURL(Convert.ToInt32(ContentId), cContentSchemaName, cContentName, sPagePath, Conversions.ToLong(cChildID));
+                                sFoldersUrlslist.Add(filePath + @"\" + productUrl);
                             }
+                           
+                            //if(oElmt2.SelectSingleNode("cContentName") != null)
+                            //{                            
+                            //    sContent = oElmt2.SelectSingleNode("cContentName").InnerText;
+                            //    contentType = oElmt2.SelectSingleNode("cContentSchemaName").InnerText;
+                            //    string[] prefixs = moConfig["DetailPrefix"].Split(',');
+                            //    string thisPrefix = "";
+                            //    string thisContentType = "";
+                            //    var loopTo = prefixs.Length - 1;
+                            //    for (i = 0; i <= loopTo; i++)
+                            //    {
+                            //        thisPrefix = prefixs[i].Substring(0, prefixs[i].IndexOf("/"));
+                            //        thisContentType = prefixs[i].Substring(prefixs[i].IndexOf("/") + 1, prefixs[i].Length - prefixs[i].IndexOf("/") - 1);
+                            //        if ((contentType ?? "") == (thisContentType ?? ""))
+                            //        {
+                            //            folderName += "/" + thisPrefix + "/" + Protean.Tools.Text.CleanName(sContent).Replace(" ", "-").Trim('-');
+                            //            if (rootDir.Exists)
+                            //            {
+                            //                sFoldersUrlslist.Add(filePath + @"\" + folderName); 
+                            //            }
+                            //            folderName = "";
+                            //        }
+                            //    }
+                            //    //add code to delete parent folders that are dependant to this product
+                            //    if(oElmt2.SelectSingleNode("rootParentFolder").InnerText != "")
+                            //    {
+                            //        string RootPageId = oElmt2.SelectSingleNode("parent_id").InnerText;
+                            //        rootParentFolder = oElmt2.SelectSingleNode("rootParentFolder").InnerText;
+                            //        subrootParentFolder = oElmt2.SelectSingleNode("subrootParentFolder").InnerText;
+                            //        childFolder = oElmt2.SelectSingleNode("childFolder").InnerText;
+
+                            //        // if root page contains 'Home' then no need to append in url.
+                            //        if(RootPageId == moConfig["RootPageId"])
+                            //        {
+                            //            folderName += "/" + Protean.Tools.Text.CleanName(subrootParentFolder).Replace(" ", "-").Trim('-') + "/" + Protean.Tools.Text.CleanName(childFolder).Replace(" ", "-").Trim('-');
+                            //            string newfilePath = filePath + folderName; 
+                            //            rootDir = new DirectoryInfo(newfilePath);
+                            //            if (rootDir.Exists)
+                            //            {
+                            //                sFoldersUrlslist.Add(filePath + @"\" + folderName);  
+                            //            }
+                            //            folderName = "";
+                            //        }
+                            //        else
+                            //        {
+                            //            folderName += "/" + Protean.Tools.Text.CleanName(rootParentFolder).Replace(" ", "-").Trim('-') + "/" + Protean.Tools.Text.CleanName(subrootParentFolder).Replace(" ", "-").Trim('-') + "/" + Protean.Tools.Text.CleanName(childFolder).Replace(" ", "-").Trim('-');
+                            //            string newfilePath = filePath + folderName;
+                            //            rootDir = new DirectoryInfo(newfilePath);
+                            //            if (rootDir.Exists)
+                            //            {
+                            //                sFoldersUrlslist.Add(filePath + @"\" + folderName);                                    
+                            //            }
+                            //            folderName = "";
+                            //        }
+                            //    }
+                            //}
                         }
                         // Remove duplicates using HashSet
                         HashSet<string> uniqueFolderPaths = new HashSet<string>(sFoldersUrlslist);
