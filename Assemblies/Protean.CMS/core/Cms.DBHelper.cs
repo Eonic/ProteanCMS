@@ -8861,7 +8861,7 @@ namespace Protean
                     // Handle optional columns
                     if (otherId > 0L)
                         sSql += ",nOtherId";
-                    if (Cms.gbIPLogging)
+                    if (Cms.gbIPLogging && myWeb != null)
                         sSql += ",cIPAddress";
 
                     if (checkTableColumnExists("tblActivityLog", "cForeignRef"))

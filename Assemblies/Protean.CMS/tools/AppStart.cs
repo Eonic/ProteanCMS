@@ -27,7 +27,7 @@ namespace Protean
                     moApp["JSEngineEnabled"] = sJsEngine;
                 }
             }
-            catch (Exception ex)
+            catch (Exception )
             {
             }
         }
