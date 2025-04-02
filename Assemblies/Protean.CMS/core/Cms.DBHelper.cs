@@ -7401,6 +7401,7 @@ namespace Protean
                 string sContent;
 
                 string cProcessInfo = "";
+                string cDirXml = "";
                 try
                 {
 
@@ -7422,6 +7423,8 @@ namespace Protean
                                     oElmt.SetAttribute("childType", Conversions.ToString(oDr["cDirSchema"]));
                                     cChildSchema = Conversions.ToString(oDr["cDirSchema"]);
                                     oElmt.SetAttribute("childName", Conversions.ToString(oDr["cDirName"]));
+                                    cDirXml=Conversions.ToString(oDr["cDirXml"]);
+
                                 }
                             }
                         }
@@ -7494,10 +7497,9 @@ namespace Protean
                         else
                         {
                             sSql = "select d.nDirKey as id, d.cDirName as name, d.cDirXml as details, a.nStatus as status, dr.nDirChildId as related from tblDirectory d" + " inner join tblAudit a on nAuditId = a.nAuditKey " + " left outer join tblDirectoryRelation dr on nDirKey = dr.nDirParentId and dr.nDirChildId = " + nChildId + " where cDirSchema = '" + cSchemaName + "' " + " and a.nStatus <> 0 order by d.cDirName";
-
-
-
+                            
                         }
+
 
                     }
 
@@ -7544,14 +7546,13 @@ namespace Protean
                     // Else
                     // oXml = goSession("sDirListType")
                     // End If
-
+                   
                     if (oXml.FirstChild != null)
                     {
-                        oElmt.InnerXml = oXml.FirstChild.InnerXml;
+                        oElmt.InnerXml =cDirXml+ oXml.FirstChild.InnerXml;
                     }
 
-
-
+                   
                     return oElmt;
                 }
 
