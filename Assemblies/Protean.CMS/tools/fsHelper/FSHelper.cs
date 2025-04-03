@@ -672,30 +672,31 @@ namespace Protean
         }
         public string DeleteMultipleFolder(HashSet<string> folderPaths)
         {
+            string result = string.Empty;
             do
             {
                 try
-                {
+                {                   
                     foreach (var folderPath in folderPaths)
                     {
-
                         Tools.Security.Impersonate oImp = null;
                         if (ImpersonationMode)
                         {
                             oImp = new Tools.Security.Impersonate();
                             if (oImp.ImpersonateValidUser(goConfig["AdminAcct"], goConfig["AdminDomain"], goConfig["AdminPassword"], cInGroup: goConfig["AdminGroup"]) == false)
                             {
-                                return "Server admin permissions are not configured";
+                                result = "Server admin permissions are not configured";
                                 //break;
                             }
                         }
                         if (Directory.Exists(folderPath))
                         {
-                            Directory.Delete(folderPath, true); // true for recursive delete                        
+                            Directory.Delete(folderPath, true); // true for recursive delete
+                            result = "1";
                         }
                         else
                         {
-                            return "this folder does not exist - " + folderPath;
+                            result = "this folder does not exist - " + folderPath;
                         }
                         if (ImpersonationMode)
                         {
@@ -708,7 +709,7 @@ namespace Protean
                 {
                     return ex.Message;
                 }
-                return "1";
+                return result;
             }
             while (false);
         }

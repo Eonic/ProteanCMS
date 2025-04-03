@@ -7850,6 +7850,7 @@ namespace Protean
                 var pageDict = new SortedDictionary<long, string>();
                 foreach (XmlElement MenuItem in oMenuElmt.SelectNodes("descendant-or-self::MenuItem"))
                     pageDict.Add(Conversions.ToLong(MenuItem.GetAttribute("id")), MenuItem.GetAttribute("url"));
+
                 // Dim keys As List(Of Long) = pageDict.KeyCollection
                 // keys.Sort()
 
@@ -7872,7 +7873,7 @@ namespace Protean
                     {
                         string cURL = "";
                         var oContElmt = moPageXml.CreateElement("MenuItem");
-                        cURL = GetDetailURL(Conversions.ToLong(oDR[0]), oDR[5].ToString(), oDR[1].ToString(), "", Conversions.ToLong(oDR[2]));
+                        cURL = GetDetailURL(Conversions.ToLong(oDR[0]), oDR[5].ToString(), oDR[1].ToString(), "", Conversions.ToLong(oDR[2]), pageDict);
 
                         #region old code
                         //switch (moConfig["DetailPathType"] ?? "")
@@ -11391,12 +11392,11 @@ namespace Protean
         }
 
         //GetDetailURL(long ContentId, schemaType, contentName, pagePath of the primary location) (if more than one primary location then run for both)
-        public string GetDetailURL(long ContentId, string schemaType, string contentName, string pagePath, long cChildId)
+        public string GetDetailURL(long ContentId, string schemaType, string contentName, string pagePath, long cChildId, SortedDictionary<long, string> pageDict)
         {
             string cProcessInfo = string.Empty;
             string cURL = "";
-            var oRe = new Regex("[^A-Z0-9]", RegexOptions.IgnoreCase);
-            var pageDict = new SortedDictionary<long, string>();
+            var oRe = new Regex("[^A-Z0-9]", RegexOptions.IgnoreCase);           
 
             switch (moConfig["DetailPathType"] ?? "")
             {
@@ -11435,6 +11435,7 @@ namespace Protean
 
                 default:
                     {
+                        //This pageDict passed from addPageDetailLinksToStructure method.
                         if (pageDict.ContainsKey(Conversions.ToLong(cChildId)))
                         {
                             cURL = pageDict[Conversions.ToLong(cChildId)];
@@ -11469,7 +11470,7 @@ namespace Protean
                 string sSql;
                 DataSet oDs;
                 string cChildID; string cContentSchemaName; string cContentName; string sPagePath;
-                string sProcessInfo;
+                string sProcessInfo; var pageDict = new SortedDictionary<long, string> ();
                 sProcessInfo = "ClearPageCache-Start";
                 PerfMon.Log("Web", sProcessInfo);
               
@@ -11494,67 +11495,12 @@ namespace Protean
                                 //catch child id from dataset and match into the mopagfexml and get the exact url of pages and pass it to delete.
                                 string[] paths = oElmt3.SelectSingleNode("@url").InnerText.Split('?'); //split ? from urls
                                 sPagePath = paths[0];
-                                sFoldersUrlslist.Add(filePath + @"\" + sPagePath);
+                                sFoldersUrlslist.Add(filePath + @"\" + sPagePath.Replace("/", @"\"));
                                 //Create Product Url here
-                                productUrl = GetDetailURL(Convert.ToInt32(ContentId), cContentSchemaName, cContentName, sPagePath, Conversions.ToLong(cChildID));
-                                sFoldersUrlslist.Add(filePath + @"\" + productUrl);
-                            }
-                           
-                            //if(oElmt2.SelectSingleNode("cContentName") != null)
-                            //{                            
-                            //    sContent = oElmt2.SelectSingleNode("cContentName").InnerText;
-                            //    contentType = oElmt2.SelectSingleNode("cContentSchemaName").InnerText;
-                            //    string[] prefixs = moConfig["DetailPrefix"].Split(',');
-                            //    string thisPrefix = "";
-                            //    string thisContentType = "";
-                            //    var loopTo = prefixs.Length - 1;
-                            //    for (i = 0; i <= loopTo; i++)
-                            //    {
-                            //        thisPrefix = prefixs[i].Substring(0, prefixs[i].IndexOf("/"));
-                            //        thisContentType = prefixs[i].Substring(prefixs[i].IndexOf("/") + 1, prefixs[i].Length - prefixs[i].IndexOf("/") - 1);
-                            //        if ((contentType ?? "") == (thisContentType ?? ""))
-                            //        {
-                            //            folderName += "/" + thisPrefix + "/" + Protean.Tools.Text.CleanName(sContent).Replace(" ", "-").Trim('-');
-                            //            if (rootDir.Exists)
-                            //            {
-                            //                sFoldersUrlslist.Add(filePath + @"\" + folderName); 
-                            //            }
-                            //            folderName = "";
-                            //        }
-                            //    }
-                            //    //add code to delete parent folders that are dependant to this product
-                            //    if(oElmt2.SelectSingleNode("rootParentFolder").InnerText != "")
-                            //    {
-                            //        string RootPageId = oElmt2.SelectSingleNode("parent_id").InnerText;
-                            //        rootParentFolder = oElmt2.SelectSingleNode("rootParentFolder").InnerText;
-                            //        subrootParentFolder = oElmt2.SelectSingleNode("subrootParentFolder").InnerText;
-                            //        childFolder = oElmt2.SelectSingleNode("childFolder").InnerText;
-
-                            //        // if root page contains 'Home' then no need to append in url.
-                            //        if(RootPageId == moConfig["RootPageId"])
-                            //        {
-                            //            folderName += "/" + Protean.Tools.Text.CleanName(subrootParentFolder).Replace(" ", "-").Trim('-') + "/" + Protean.Tools.Text.CleanName(childFolder).Replace(" ", "-").Trim('-');
-                            //            string newfilePath = filePath + folderName; 
-                            //            rootDir = new DirectoryInfo(newfilePath);
-                            //            if (rootDir.Exists)
-                            //            {
-                            //                sFoldersUrlslist.Add(filePath + @"\" + folderName);  
-                            //            }
-                            //            folderName = "";
-                            //        }
-                            //        else
-                            //        {
-                            //            folderName += "/" + Protean.Tools.Text.CleanName(rootParentFolder).Replace(" ", "-").Trim('-') + "/" + Protean.Tools.Text.CleanName(subrootParentFolder).Replace(" ", "-").Trim('-') + "/" + Protean.Tools.Text.CleanName(childFolder).Replace(" ", "-").Trim('-');
-                            //            string newfilePath = filePath + folderName;
-                            //            rootDir = new DirectoryInfo(newfilePath);
-                            //            if (rootDir.Exists)
-                            //            {
-                            //                sFoldersUrlslist.Add(filePath + @"\" + folderName);                                    
-                            //            }
-                            //            folderName = "";
-                            //        }
-                            //    }
-                            //}
+                                productUrl = GetDetailURL(Convert.ToInt32(ContentId), cContentSchemaName, cContentName, sPagePath, Conversions.ToLong(cChildID), pageDict);
+                                sFoldersUrlslist.Add(filePath + @"\" + productUrl.Replace("/", @"\"));
+                            }                          
+                         
                         }
                         // Remove duplicates using HashSet
                         HashSet<string> uniqueFolderPaths = new HashSet<string>(sFoldersUrlslist);
