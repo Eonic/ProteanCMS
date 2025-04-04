@@ -1496,6 +1496,10 @@
         <xsl:if test="@linkBox='true'">
           <xsl:text> linked-card</xsl:text>
         </xsl:if>
+        <xsl:if test="@class-name">
+          <xsl:text> </xsl:text>
+          <xsl:value-of select="@class-name"/>
+        </xsl:if>
         <!--<xsl:apply-templates select="." mode="themeModuleExtras"/>-->
       </xsl:attribute>
 
