@@ -9,7 +9,6 @@
 			<!-- IF QUOTE CMD SHOW QUOTE -->
 			<xsl:when test="Cart[@type='quote']/Quote/@cmd!=''">
 				<div class="container">
-				<div class="container">
 					<xsl:apply-templates select="Cart[@type='quote']/Quote" mode="cartFull"/>
 				</div>
 			</xsl:when>

@@ -40,7 +40,7 @@ Public Class CustomActions
     Public Shared SystemTextJsonVersion As String = "9.0.0.0"
     Public Shared MicrosoftBclAsyncInterfacesVersion As String = "9.0.0.2"
     Public Shared SystemTextEncodingsWebVersion As String = "9.0.0.2"
-    Public Shared SystemTextEncodingCodePagesAssemblyVersion As String = "9.0.0.0"
+    Public Shared SystemTextEncodingCodePagesAssemblyVersion As String = "8.0.0.0"
     Public Shared SystemNumericsVectorsVersion As String = "4.1.5.0"
     Public Shared AngleSharpVersion As String = "1.2.0.0"
     Public Shared PreMailerVersion As String = "2.6.0.0"
@@ -561,7 +561,7 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "createsend-dotnet", "0e5e11efc3341916", CreateSendAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "TidyHTML5Managed", "0E50e5e11efc3341916", TidyHTML5ManagedAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "ClearScript", "935d0c957da47c73", ClearScriptAssemblyVersion)
-            UpdateDependantAssembly(oSectXml, "System.Text.Encoding.CodePages", "b03f5f7f11d50a3a", SystemTextEncodingCodePagesAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "System.Text.Encoding.CodePages", "b03f5f7f11d50a3a", SystemTextEncodingCodePagesAssemblyVersion, "0.0.0.0", "9.0.10.0")
             UpdateDependantAssembly(oSectXml, "AlphaFS", "4d31a58f7d7ad5c9", AlphaFSAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "Magick.NET.Core", "2004825badfa91ec", MagickNETCoreAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "Magick.NET-Q8-x64", "2004825badfa91ec", MagickNETAssemblyVersion)
