@@ -30,7 +30,7 @@
   </xsl:template>
 
   <xsl:template match="Page[@adminMode='false']" mode="bodyBuilder">
-    <body style="margin:0;padding:0;margin-top:106px!important;" id="pg{@id}">
+    <body style="margin:0;padding:0;padding-top:50px!important;" id="pg{@id}" class="email-wysiwyg-body">
       <div class="ptn-edit">
         <xsl:apply-templates select="AdminMenu"/>
       </div>
