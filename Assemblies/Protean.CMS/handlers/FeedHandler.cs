@@ -401,6 +401,10 @@ namespace Protean
                                 reader.Read();
                             }
                         }
+                        else {
+                            //force read to end
+                            reader.Read();
+                        }
                         eventsDoneEvt.Set();
 
                     }
