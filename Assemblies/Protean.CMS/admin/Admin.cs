@@ -4165,10 +4165,12 @@ namespace Protean
 
                                 if (moConfig["AsyncFileImport"] == "on")
                                 {
-                                    var oResElmt = myWeb.moPageXml.OwnerDocument.CreateElement("Response");
+                                    var oResElmt = myWeb.moPageXml.CreateElement("Response");
                                     FeedHandler oFeeder = new FeedHandler(null, styleFile, 0, 2, ref oResElmt, itemNodeName);
                                     oFeeder.cFeedData = oImportXml.OuterXml;
-                                    oFeeder.ImportStream();
+                                    string returnmsg = oFeeder.ImportStream();
+
+                                    moAdXfm.addNote(ref moAdXfm.moXformElmt, Protean.xForm.noteTypes.Alert, returnmsg);
 
                                 }
                                 else {

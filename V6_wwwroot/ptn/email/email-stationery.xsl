@@ -75,7 +75,7 @@
                   </xsl:comment>
                   <table cellpadding="0" cellspacing="0" style="width:100%;max-width:{$emailWidth}px;margin:0 auto;" class="emailWidthContainer">
                     <tr>
-                      <td class="emailContentWrapper">
+                      <td class="emailContentWrapper" style="padding:0px {$hPadding}px">
                         <xsl:apply-templates select="." mode="mainLayout"/>
                       </td>
                     </tr>
@@ -104,7 +104,7 @@
                   </xsl:comment>
                   <table cellpadding="0" cellspacing="0" style="width:100%;max-width:{$emailWidth}px;margin:0 auto;" class="emailWidthContainer">
                     <tr>
-                      <td style="padding:0px {$hPadding}px" width="50%" valign="top" class="emailCol">
+                      <td style="padding:10px {$hPadding}px 0px" width="50%" valign="top" class="emailCol">
                         <xsl:if test="$CompanyTel!=''">
                           <strong>Tel: </strong><a href="tel:{$CompanyTel}">
                             <xsl:value-of select="$CompanyTel"/>
@@ -121,7 +121,7 @@
                           </a>&#160;
                         </xsl:if>
                       </td>
-                      <td style="padding:0px {$hPadding}px" valign="top" class="emailCol">
+                      <td style="padding:10px {$hPadding}px 0px" valign="top" class="emailCol">
                         <xsl:if test="$CompanyAddress!=''">
                           <xsl:value-of select="$CompanyAddress"/>
                         </xsl:if>

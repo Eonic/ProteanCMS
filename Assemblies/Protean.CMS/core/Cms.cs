@@ -6033,7 +6033,7 @@ namespace Protean
 
         }
 
-        public virtual object getXform()
+        public virtual Protean.Cms.xForm getXform()
         {
             // this is to allow us to overide Xforms lower down
 
